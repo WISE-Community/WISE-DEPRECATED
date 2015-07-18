@@ -62,7 +62,7 @@ define(['app'], function(app) {
                     // get the node content for the show previous work node
                     NodeService.getNodeContentByNodeSrc(nodeSrc).then(angular.bind(this, function(showPreviousWorkNodeContent) {
                         
-                        // get the node content for the component we are showing previous work for
+                        // get the component content for the component we are showing previous work for
                         this.componentContent = NodeService.getComponentContentById(showPreviousWorkNodeContent, showPreviousWorkComponentId);
                         
                         if (this.componentContent != null) {
@@ -108,14 +108,12 @@ define(['app'], function(app) {
         };
         
         /**
-         * Get the student work object that will contain the student
-         * work for the node. This is only used when this node is
-         * part of another node such as a Questionnaire node.
-         * The Questionnaire node will call this function to obtain
-         * the student work.
-         * @return an object containing the student work
+         * Get the component state from this component. The parent node will 
+         * call this function to obtain the component state when it needs to
+         * save student data.
+         * @return a component state containing the student data
          */
-        $scope.getStudentWorkObject = function() {
+        $scope.getComponentState = function() {
             var studentWork = null;
             
             return studentWork;

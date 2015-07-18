@@ -79,12 +79,12 @@ define(['app', 'angular'], function(app, angular) {
                     // get the node content for the show previous work node
                     NodeService.getNodeContentByNodeSrc(nodeSrc).then(angular.bind(this, function(showPreviousWorkNodeContent) {
                         
-                        // get the node content for the component we are showing previous work for
+                        // get the component content for the component we are showing previous work for
                         this.componentContent = NodeService.getComponentContentById(showPreviousWorkNodeContent, showPreviousWorkComponentId);
                         
                         /*
                          * initialize the choices and buckets with the values from the
-                         * node content
+                         * component content
                          */
                         this.initializeChoices();
                         this.initializeBuckets();
@@ -109,7 +109,7 @@ define(['app', 'angular'], function(app, angular) {
                     
                     /*
                      * initialize the choices and buckets with the values from the
-                     * node content
+                     * component content
                      */
                     this.initializeChoices();
                     this.initializeBuckets();
@@ -150,7 +150,7 @@ define(['app', 'angular'], function(app, angular) {
         
         /**
          * Populate the student work into the component
-         * @param nodeState the component state to populate into the component
+         * @param componentState the component state to populate into the component
          */
         this.setStudentWork = function(componentState) {
             
@@ -162,24 +162,24 @@ define(['app', 'angular'], function(app, angular) {
                 if (studentData != null) {
                     
                     // get the buckets and number of submits
-                    var nodeStateBuckets = studentData.buckets;
-                    var nodeStateNumberOfSubmits = studentData.numberOfSubmits;
+                    var componentStateBuckets = studentData.buckets;
+                    var componentStateNumberOfSubmits = studentData.numberOfSubmits;
                     
                     // set the buckets
-                    if (nodeStateBuckets != null) {
-                        this.buckets = nodeStateBuckets;
+                    if (componentStateBuckets != null) {
+                        this.buckets = componentStateBuckets;
                     }
                     
                     // set the number of submits
-                    if (nodeStateNumberOfSubmits != null) {
-                        this.numberOfSubmits = nodeStateNumberOfSubmits;
+                    if (componentStateNumberOfSubmits != null) {
+                        this.numberOfSubmits = componentStateNumberOfSubmits;
                     }
                 }
             }
         };
         
         /**
-         * Initialize the available choices from the node content
+         * Initialize the available choices from the component content
          */
         this.initializeChoices = function() {
             
@@ -198,7 +198,7 @@ define(['app', 'angular'], function(app, angular) {
         };
         
         /**
-         * Initialize the available buckets from the node content
+         * Initialize the available buckets from the component content
          */
         this.initializeBuckets = function() {
             
@@ -206,7 +206,7 @@ define(['app', 'angular'], function(app, angular) {
             
             if(this.componentContent != null && this.componentContent.buckets != null) {
                 
-                // get the buckets from the node content
+                // get the buckets from the component content
                 var buckets = this.componentContent.buckets;
                 
                 /*
@@ -291,7 +291,7 @@ define(['app', 'angular'], function(app, angular) {
             this.checkAnswer();
             this.numberOfSubmits++;
             
-            // notify the parent that this child node has clicked submit
+            // notify the parent that this child component has clicked submit
             $scope.$emit('componentSubmitClicked');
         };
         
@@ -750,35 +750,6 @@ define(['app', 'angular'], function(app, angular) {
          */
         $scope.$on('exitNode', angular.bind(this, function(event, args) {
             // do nothing
-        }));
-        
-        /**
-         * Listen for the 'nodeVisitSavedToServer' event which is fired when
-         * we receive the response from saving a node visit to the server
-         */
-        $scope.$on('nodeVisitSavedToServer', angular.bind(this, function(event, args) {
-            
-            var nodeVisit = args.nodeVisit;
-            
-            if (nodeVisit != null) {
-                
-                var nodeVisitNodeId = nodeVisit.nodeId;
-                
-                // check that the node visit was for this node
-                if (this.nodeId === nodeVisitNodeId) {
-                    
-                    var workgroupId = ConfigService.getWorkgroupId();
-                    var nodeVisitId = nodeVisit.id;
-                    var nodeStates = nodeVisit.nodeStates;
-                    
-                    if (nodeStates != null && nodeStates.length > 0) {
-                        
-                        // get the latest node state
-                        var nodeState = nodeStates[nodeStates.length - 1];
-                        
-                    }
-                }
-            }
         }));
         
         /**

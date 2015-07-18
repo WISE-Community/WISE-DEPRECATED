@@ -43,9 +43,6 @@ define(['app',
         // whether the student work is dirty and needs saving
         this.isDirty = false;
         
-        // whether this is part of another node such as a Questionnaire node
-        this.isNodePart = false;
-        
         // holds all the series
         this.series = null;
         
@@ -87,7 +84,7 @@ define(['app',
                     // get the node content for the show previous work node
                     NodeService.getNodeContentByNodeSrc(nodeSrc).then(angular.bind(this, function(showPreviousWorkNodeContent) {
                         
-                        // get the node content for the component we are showing previous work for
+                        // get the component content for the component we are showing previous work for
                         this.componentContent = NodeService.getComponentContentById(showPreviousWorkNodeContent, showPreviousWorkComponentId);
                         
                         // get the component state for the show previous work
@@ -166,7 +163,7 @@ define(['app',
             if (this.xAxis == null && this.componentContent.xAxis != null) {
                 /*
                  * the student does not have x axis data so we will use the
-                 * x axis from the node content
+                 * x axis from the component content
                  */
                 xAxis = this.componentContent.xAxis;
             }
@@ -174,7 +171,7 @@ define(['app',
             if (this.yAxis == null && this.componentContent.yAxis != null) {
                 /*
                  * the student does not have y axis data so we will use the
-                 * y axis from the node content
+                 * y axis from the component content
                  */
                 yAxis = this.componentContent.yAxis;
             }
@@ -455,7 +452,7 @@ define(['app',
         };
         
         /**
-         * Reset the table data to its initial state from the node content
+         * Reset the table data to its initial state from the component content
          */
         this.resetGraph = function() {
             // get the original series from the step content

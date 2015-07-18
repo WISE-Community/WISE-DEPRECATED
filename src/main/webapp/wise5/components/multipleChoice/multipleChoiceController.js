@@ -73,7 +73,7 @@ define(['app'], function(app) {
                     // get the node content for the show previous work node
                     NodeService.getNodeContentByNodeSrc(nodeSrc).then(angular.bind(this, function(showPreviousWorkNodeContent) {
                         
-                        // get the node content for the component we are showing previous work for
+                        // get the component content for the component we are showing previous work for
                         this.componentContent = NodeService.getComponentContentById(showPreviousWorkNodeContent, showPreviousWorkComponentId);
                         
                         // get the component state for the show previous work
@@ -290,35 +290,35 @@ define(['app'], function(app) {
         };
         
         /**
-         * Check if this multiple choice node is using radio buttons
-         * @return whether this multiple choice node is using radio buttons
+         * Check if this multiple choice component is using radio buttons
+         * @return whether this multiple choice component is using radio buttons
          */
         this.isRadio = function() {
             return this.isChoiceType('radio');
         };
         
         /**
-         * Check if this multiple choice node is using checkboxes
-         * @return whether this multiple choice node is using checkboxes
+         * Check if this multiple choice component is using checkboxes
+         * @return whether this multiple choice component is using checkboxes
          */
         this.isCheckbox = function() {
             return this.isChoiceType('checkbox');
         };
         
         /**
-         * Check if the node is authored to use the given choice type
+         * Check if the component is authored to use the given choice type
          * @param choiceType the choice type ('radio' or 'checkbox')
-         * @return whether the node is authored to use the given
+         * @return whether the component is authored to use the given
          * choice type
          */
         this.isChoiceType = function(choiceType) {
             var result = false;
             
-            // get the node content
+            // get the component content
             var componentContent = this.componentContent;
             
             if (componentContent != null) {
-                // get the choice type from the node content
+                // get the choice type from the component content
                 var componentContentChoiceType = componentContent.choiceType;
                 
                 if (choiceType === componentContentChoiceType) {
@@ -480,7 +480,7 @@ define(['app'], function(app) {
         };
         
         /**
-         * Get the correct choice for a radio button node
+         * Get the correct choice for a radio button component
          * @return a choice id string
          */
         this.getCorrectChoice = function() {
@@ -494,7 +494,7 @@ define(['app'], function(app) {
         };
         
         /**
-         * Get the correct choices for a checkbox node
+         * Get the correct choices for a checkbox component
          * @return an array of correct choice ids
          */
         this.getCorrectChoices = function() {
@@ -541,7 +541,7 @@ define(['app'], function(app) {
         
         /**
          * Create a new component state populated with the student data
-         * @return the nodeState after it has been populated
+         * @return the componentState after it has been populated
          */
         this.createComponentState = function() {
             
@@ -565,7 +565,7 @@ define(['app'], function(app) {
                      */
                     var isCorrect = this.isCorrect;
                     
-                    // set the isCorrect value into the node state
+                    // set the isCorrect value into the student data
                     studentData.isCorrect = isCorrect;
                     
                     if (this.isSubmit != null) {
@@ -635,7 +635,7 @@ define(['app'], function(app) {
             if (studentChoices != null) {
                 
                 if (this.isRadio()) {
-                    // this is a radio button node
+                    // this is a radio button component
                     
                     // get the choice object
                     var choiceObject = this.getChoiceById(studentChoices);
@@ -650,7 +650,7 @@ define(['app'], function(app) {
                         studentChoiceObjects.push(studentChoiceObject);
                     }
                 } else if (this.isCheckbox()) {
-                    // this is a checkbox node
+                    // this is a checkbox component
                     
                     // loop through all the choices the student chose
                     for (var x = 0; x < studentChoices.length; x++) {
@@ -678,13 +678,13 @@ define(['app'], function(app) {
         };
         
         /**
-         * Check if the node has been authored with a correct choice
-         * @return whether the node has been authored with a correct choice
+         * Check if the component has been authored with a correct choice
+         * @return whether the component has been authored with a correct choice
          */
         this.hasCorrectChoices = function() {
             var result = false;
             
-            // get the node content
+            // get the component content
             var componentContent = this.componentContent;
             
             if (componentContent != null) {
@@ -723,7 +723,7 @@ define(['app'], function(app) {
             var choice = null;
             
             if (choiceId != null) {
-                // get the node content
+                // get the component content
                 var componentContent = this.componentContent;
                 
                 if (componentContent != null) {
@@ -758,13 +758,13 @@ define(['app'], function(app) {
         };
         
         /**
-         * Get the choice type for this node ('radio' or 'checkbox')
-         * @return the choice type for this node
+         * Get the choice type for this component ('radio' or 'checkbox')
+         * @return the choice type for this component
          */
         this.getChoiceType = function() {
             var choiceType = null;
             
-            // get the node content
+            // get the component content
             var componentContent = this.componentContent;
             
             if (componentContent != null) {
@@ -776,13 +776,13 @@ define(['app'], function(app) {
         };
         
         /**
-         * Get the available choices from node content
-         * @return the available choices from the node content
+         * Get the available choices from component content
+         * @return the available choices from the component content
          */
         this.getChoices = function() {
             var choices = null;
             
-            // get the node content
+            // get the component content
             var componentContent = this.componentContent;
             
             if (componentContent != null) {

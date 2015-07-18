@@ -70,7 +70,7 @@ define(['app'], function(app) {
                     // get the node content for the show previous work node
                     NodeService.getNodeContentByNodeSrc(nodeSrc).then(angular.bind(this, function(showPreviousWorkNodeContent) {
                         
-                        // get the node content for the component we are showing previous work for
+                        // get the component content for the component we are showing previous work for
                         this.componentContent = NodeService.getComponentContentById(showPreviousWorkNodeContent, showPreviousWorkComponentId);
                         
                         // get the component state for the show previous work
@@ -160,14 +160,14 @@ define(['app'], function(app) {
             if (this.tableData == null) {
                 /*
                  * the student does not have any table data so we will use
-                 * the table data from the node content
+                 * the table data from the component content
                  */
                 this.tableData = this.getCopyOfTableData(this.componentContent.tableData);
             }
         };
         
         /**
-         * Reset the table data to its initial state from the node content
+         * Reset the table data to its initial state from the component content
          */
         this.resetTable = function() {
             // get the original table from the step content
@@ -186,7 +186,7 @@ define(['app'], function(app) {
         
         /**
          * Populate the student work into the component
-         * @param nodeState the component state to populate into the component
+         * @param componentState the component state to populate into the component
          */
         this.setStudentWork = function(componentState) {
             
@@ -252,8 +252,8 @@ define(['app'], function(app) {
         };
         
         /**
-         * Create a new node state populated with the student data
-         * @return the nodeState after it has been populated
+         * Create a new component state populated with the student data
+         * @return the componentState after it has been populated
          */
         this.createComponentState = function() {
             

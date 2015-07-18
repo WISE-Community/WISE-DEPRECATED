@@ -323,38 +323,6 @@ define(['app'], function(app) {
              */
             this.exitListener = $scope.$on('exit', angular.bind(this, function(event, args) {
                 
-                /*
-                 * Check if this node is part of another node such as a
-                 * Questionnaire node. If this is part of another node we do
-                 * not need to perform any saving because the parent will
-                 * handle the saving.
-                 */
-                if (!this.isNodePart) {
-                    // this is a standalone node so we will save
-                    
-                    var saveTriggeredBy = 'exit';
-                    
-                    // create and add a node state to the latest node visit
-                    //this.createAndAddNodeState(saveTriggeredBy);
-                    
-                    // stop the auto save interval for this node
-                    //this.stopAutoSaveInterval();
-                    
-                    /*
-                     * tell the parent that this node is done performing
-                     * everything it needs to do before exiting
-                     */
-                    $scope.$parent.nodeController.nodeUnloaded(this.nodeId);
-                    
-                    // call this function to remove the listener
-                    this.exitListener();
-                    
-                    /*
-                     * tell the session service that this listener is done
-                     * performing everything it needs to do before exiting
-                     */
-                    $rootScope.$broadcast('doneExiting');
-                }
             }));
         };
         
