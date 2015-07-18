@@ -56,7 +56,7 @@ import org.wise.vle.domain.PersistableDomain;
 public class ComponentState extends PersistableDomain {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id = null;
 
 	@ManyToOne(targetEntity = RunImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
@@ -188,42 +188,52 @@ public class ComponentState extends PersistableDomain {
         try {
             
             // set the id
-            componentStateJSONObject.put("id", getId());
+			if (this.id != null) {
+				componentStateJSONObject.put("id", this.id);
+			}
             
             // set the run id
-            Run run = getRun();
-            Long runId = run.getId();
-            componentStateJSONObject.put("runId", runId);
+			if (this.run != null) {
+				Long runId = this.run.getId();
+				componentStateJSONObject.put("runId", runId);
+			}
             
             // set the period id
-            Group period = getPeriod();
-            Long periodId = period.getId();
-            componentStateJSONObject.put("periodId", periodId);
-            
+			if (this.period != null) {
+				Long periodId = this.period.getId();
+				componentStateJSONObject.put("periodId", periodId);
+			}
+
             // set the workgroup id
-            Workgroup workgroup = getWorkgroup();
-            Long workgroupId = workgroup.getId();
-            componentStateJSONObject.put("workgroupId", workgroupId);
+			if (this.workgroup != null) {
+				Long workgroupId = this.workgroup.getId();
+				componentStateJSONObject.put("workgroupId", workgroupId);
+			}
             
             // set the node id
-            String nodeId = getNodeId();
-            componentStateJSONObject.put("nodeId", nodeId);
+			if (this.nodeId != null) {
+				componentStateJSONObject.put("nodeId", this.nodeId);
+			}
             
             // set the component id
-            String componentId = getComponentId();
-            componentStateJSONObject.put("componentId", componentId);
-            
+			if (this.componentId != null) {
+				componentStateJSONObject.put("componentId", this.componentId);
+			}
+
             // set the component type
-            String componentType = getComponentType();
-            componentStateJSONObject.put("componentType", componentType);
-            
+			if (this.componentType != null) {
+				componentStateJSONObject.put("componentType", this.componentType);
+			}
+
             // set the post time
-            Timestamp postTime = getPostTime();
-            componentStateJSONObject.put("postTime", postTime.getTime());
-            
+			if (this.postTime != null) {
+				componentStateJSONObject.put("postTime", postTime.getTime());
+			}
+
             // set the student data
-            String studentData = getStudentData();
-            componentStateJSONObject.put("studentData", new JSONObject(studentData));
+			if (this.studentData != null) {
+				componentStateJSONObject.put("studentData", new JSONObject(studentData));
+			}
             
         } catch (JSONException e) {
             e.printStackTrace();
