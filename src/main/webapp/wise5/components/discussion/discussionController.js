@@ -17,6 +17,9 @@ define(['app', 'angular'], function(app, angular) {
         // the node id of the current node
         this.nodeId = null;
         
+        // the component id
+        this.componentId = null;
+        
         // field that will hold the component content
         this.componentContent = null;
         
@@ -41,7 +44,7 @@ define(['app', 'angular'], function(app, angular) {
         // the text that is being submitted
         this.submitText = null;
         
-        // map from node visit id and node state id to response
+        // map from component state id to response
         this.responsesMap = {};
         
         // used to hold a string that declares what triggered the save
@@ -62,6 +65,10 @@ define(['app', 'angular'], function(app, angular) {
             this.componentContent = $scope.component;
             
             if (this.componentContent != null) {
+                
+                // get the component id
+                this.componentId = this.componentContent.id;
+                
                 
                 // get the show previous work node id if it is provided
                 var showPreviousWorkNodeId = this.componentContent.showPreviousWorkNodeId;
@@ -133,20 +140,23 @@ define(['app', 'angular'], function(app, angular) {
             var runId = ConfigService.getRunId();
             var periodId = ConfigService.getPeriodId();
             var nodeId = this.nodeId;
-            var includeSelf = true;
-            var workgroupIds = ConfigService.getClassmateWorkgroupIds(includeSelf);
+            var componentId = this.componentId;
             
             // make the request for the classmate responses
-            DiscussionService.getClassmateResponses(runId, periodId, nodeId, workgroupIds).then(angular.bind(this, function(result) {
+            DiscussionService.getClassmateResponses(runId, periodId, nodeId, componentId).then(angular.bind(this, function(result) {
                 
-                // set the classmate responses
-                this.setClassResponses(result);
+                if (result != null) {
+                    var componentStates = result.componentStates;
+                    
+                    // set the classmate responses
+                    this.setClassResponses(componentStates);
+                }
             }));
         };
         
         /**
          * Populate the student work into the component
-         * @param nodeState the component state to populate into the component
+         * @param componentState the component state to populate into the component
          */
         this.setStudentWork = function(componentState) {
             
@@ -238,15 +248,9 @@ define(['app', 'angular'], function(app, angular) {
                 
                 studentData.studentResponse = studentResponse;
                 
-                if (this.nodeVisitIdReplyingTo != null) {
-                    // if this step is replying, set the node visit id replying to
-                    studentData.nodeVisitIdReplyingTo = this.nodeVisitIdReplyingTo;
-                }
-                
-                if (this.nodeStateIdReplyingTo != null) {
-                    // if this step is replying, set the node state id replying to
-                    studentData.nodeStateIdReplyingTo = this.nodeStateIdReplyingTo;
-                    
+                if (this.componentStateIdReplyingTo != null) {
+                    // if this step is replying, set the component state id replying to
+                    studentData.componentStateIdReplyingTo = this.componentStateIdReplyingTo;
                 }
                 
                 if(this.saveTriggeredBy != null) {
@@ -267,28 +271,25 @@ define(['app', 'angular'], function(app, angular) {
         };
         
         /**
-         * Clear the node values so they aren't accidentally used again
+         * Clear the component values so they aren't accidentally used again
          */
-        this.clearNodeValues = function() {
+        this.clearComponentValues = function() {
             
             // clear the student response
             this.studentResponse = '';
             
-            // clear the node visit id replying to
-            this.nodeVisitIdReplyingTo = null;
-            
-            // clear the node state id replying to
-            this.nodeStateIdReplyingTo = null;
+            // clear the component state id replying to
+            this.componentStateIdReplyingTo = null;
         }
         
         /**
-         * Check if we need to lock the node
+         * Check if we need to lock the component
          */
         this.calculateDisabled = function() {
             
             var nodeId = this.nodeId;
             
-            // get the node content
+            // get the component content
             var componentContent = this.componentContent;
             
             if (componentContent != null) {
@@ -420,55 +421,42 @@ define(['app', 'angular'], function(app, angular) {
         };
         
         /**
-         * Import work from another node
+         * Import work from another component
          */
         this.importWork = function() {
             
-            // get the node content
+            // get the component content
             var componentContent = this.componentContent;
             
             if (componentContent != null) {
                 
-                var importWork = componentContent.importWork;
+                var importWorkNodeId = componentContent.importWorkNodeId;
+                var importWorkComponentId = componentContent.importWorkComponentId;
                 
-                if (importWork != null) {
+                if (importWorkNodeId != null && importWorkComponentId != null) {
                     
-                    // get the latest node state for this node
-                    var nodeState = StudentDataService.getLatestNodeStateByNodeId(this.nodeId);
+                    // get the latest component state for this component
+                    var componentState = StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
                     
                     /*
-                     * we will only import work into this node if the student
-                     * has not done any work for this node
+                     * we will only import work into this component if the student
+                     * has not done any work for this component
                      */
-                    if(nodeState == null) {
-                        // the student has not done any work for this node
+                    if(componentState == null) {
+                        // the student has not done any work for this component
                         
-                        var importWorkNodeId = importWork.nodeId;
+                        // get the latest component state from the component we are importing from
+                        var importWorkComponentState = StudentDataService.getLatestComponentStateByNodeIdAndComponentId(importWorkNodeId, importWorkComponentId);
                         
-                        if (importWorkNodeId != null) {
+                        if (importWorkComponentState != null) {
+                            /*
+                             * populate a new component state with the work from the 
+                             * imported component state
+                             */
+                            var populatedComponentState = DiscussionService.populateComponentState(importWorkComponentState);
                             
-                            // get the node that we want to import work from
-                            var importWorkNode = ProjectService.getNodeById(importWorkNodeId);
-                            
-                            if (importWorkNode != null) {
-                                
-                                // get the node type of the node we are importing from
-                                var importWorkNodeType = importWorkNode.type;
-                                
-                                // get the latest node state from the node we are importing from
-                                var importWorkNodeState = StudentDataService.getLatestNodeStateByNodeId(importWorkNodeId);
-                                
-                                if (importWorkNodeState != null) {
-                                    /*
-                                     * populate a new component state with the work from the 
-                                     * imported node state
-                                     */
-                                    var populatedNodeState = OpenResponseService.populateNodeState(importWorkNodeState, importWorkNodeType);
-                                    
-                                    // populate the node state into this node
-                                    this.setStudentWork(populatedNodeState);
-                                }
-                            }
+                            // populate the component state into this component
+                            this.setStudentWork(populatedComponentState);
                         }
                     }
                 }
@@ -486,61 +474,46 @@ define(['app', 'angular'], function(app, angular) {
         };
         
         /**
-         * Set the class responses into the node
-         * @param responses the class responses
+         * Set the class responses into the controller
+         * @param componentStates the class component states
          */
-        this.setClassResponses = function(responses) {
+        this.setClassResponses = function(componentStates) {
             
-            if (responses != null) {
+            if (componentStates != null) {
                 
-                // loop through all the class responses
-                for (var r = 0; r < responses.length; r++) {
-                    var response = responses[r];
+                // loop through all the component states
+                for (var c = 0; c < componentStates.length; c++) {
+                    var componentState = componentStates[c];
                     
-                    if (response != null) {
+                    if (componentState != null) {
                         
-                        // get the node visit id
-                        var id = response.id;
+                        // get the component state id
+                        var id = componentState.id;
                         
                         // get the workgroup id
-                        var workgroupId = response.userId;
+                        var workgroupId = componentState.workgroupId;
                         
                         // get the student data
-                        var data = response.data;
+                        var studentData = componentState.studentData;
                         
-                        if (data != null) {
+                        if (studentData != null) {
                             
-                            // get the node states
-                            var nodeStates = data.nodeStates;
-                            
-                            // loop through all the node states
-                            for (var ns = 0; ns < nodeStates.length; ns++) {
-                                var tempNodeState = nodeStates[ns];
+                            if (studentData.isSubmit) {
                                 
-                                if (tempNodeState != null) {
-                                    var isSubmit = tempNodeState.isSubmit;
-                                    
-                                    if (isSubmit) {
-                                        /*
-                                         * the node state is a submit so we will add it to our
-                                         * class responses
-                                         */
-                                        
-                                        // get the node state part from the node state
-                                        var componentState = NodeService.getNodeStateByPartId(tempNodeState, this.getComponentId());
-                                        
-                                        if (componentState != null) {
-                                            // set the workgroup id, user name, and node visit id into the node state part
-                                            componentState.workgroupId = workgroupId;
-                                            componentState.userName = ConfigService.getUserNameByWorkgroupId(workgroupId);
-                                            componentState.nodeVisitId = id;
-                                            componentState.replies = [];
-                                            
-                                            // add the node state part to our array
-                                            this.classResponses.push(componentState);
-                                        }
-                                    }
-                                }
+                                /*
+                                 * add the user name to the component state so we can
+                                 * display it next to the response
+                                 */
+                                componentState.userName = ConfigService.getUserNameByWorkgroupId(workgroupId);
+                                
+                                /*
+                                 * add a replies array to the component state that
+                                 * we will fill with component state replies later
+                                 */
+                                componentState.replies = [];
+                                
+                                // add the component state to our array
+                                this.classResponses.push(componentState);
                             }
                         }
                     }
@@ -554,115 +527,112 @@ define(['app', 'angular'], function(app, angular) {
         /**
          * Process the class responses. This will put responses into the
          * replies arrays.
-         * @param classResponses an array of all the class responses
+         * @param classResponses an array of component states
          */
-        this.processResponses = function(classResponses) {
+        this.processResponses = function(componentStates) {
             
-            if (classResponses != null) {
+            if (componentStates != null) {
                 
-                // loop through all the class responses
-                for (var x = 0; x < classResponses.length; x++) {
-                    var classResponse = classResponses[x];
+                // loop through all the component states
+                for (var c = 0; c < componentStates.length; c++) {
+                    var componentState = componentStates[c];
                     
-                    if (classResponse != null) {
-                        var nodeVisitId = classResponse.nodeVisitId;
-                        var nodeStateId = classResponse.timestamp;
+                    if (componentState != null) {
+                        var componentStateId = componentState.id;
                         
-                        // create the key for this response
-                        var key = nodeVisitId + '-' + nodeStateId;
-                        
-                        // set the response into the map
-                        this.responsesMap[key] = classResponse;
+                        // set the component state into the map
+                        this.responsesMap[componentStateId] = componentState;
                     }
                 }
                 
-                // loop through all the class responses
-                for (var x = 0; x < classResponses.length; x++) {
-                    var classResponse = classResponses[x];
+                // loop through all the component states
+                for (var c = 0; c < componentStates.length; c++) {
+                    var componentState = componentStates[c];
                     
-                    if (classResponse != null && classResponse.studentData != null) {
+                    if (componentState != null && componentState.studentData != null) {
                         
                         // get the student data
-                        var studentData = classResponse.studentData;
+                        var studentData = componentState.studentData;
                         
-                        // get the replying to values if any
-                        var nodeVisitIdReplyingTo = studentData.nodeVisitIdReplyingTo;
-                        var nodeStateIdReplyingTo = studentData.nodeStateIdReplyingTo;
+                        // get the component state id replying to if any
+                        var componentStateIdReplyingTo = studentData.componentStateIdReplyingTo;
                         
-                        if (nodeVisitIdReplyingTo != null && nodeStateIdReplyingTo != null) {
-                            // this response is a reply to another response
+                        if (componentStateIdReplyingTo != null) {
                             
-                            // get the key for the response that was replied to
-                            var replyKey = nodeVisitIdReplyingTo + '-' + nodeStateIdReplyingTo;
-                            
-                            if (this.responsesMap[replyKey] != null &&
-                                    this.responsesMap[replyKey].replies != null) {
+                            if (this.responsesMap[componentStateIdReplyingTo] != null &&
+                                    this.responsesMap[componentStateIdReplyingTo].replies != null) {
                                 /*
-                                 * add this response to the replies array of the response
-                                 * that was replied to
+                                 * add this component state to the replies array of the 
+                                 * component state that was replied to
                                  */
-                                this.responsesMap[replyKey].replies.push(classResponse);
+                                this.responsesMap[componentStateIdReplyingTo].replies.push(componentState);
                             }
                         }
                     }
                 }
             }
-            
         };
         
         /**
          * Add a class response to our model
-         * @param workgroupId the workgroup id
-         * @param nodeVisitId the node visit id
-         * @param nodeState the node state
+         * @param componentState the component state to add to our model
          */
-        this.addClassResponse = function(workgroupId, nodeVisitId, componentState) {
+        this.addClassResponse = function(componentState) {
             
-            if (workgroupId != null && nodeVisitId != null && componentState != null) {
+            if (componentState != null) {
                 
-                var isSubmit = componentState.isSubmit;
+                // get the student data
+                var studentData = componentState.studentData;
                 
-                if (isSubmit) {
-                    // this node state is a submit so we will add it
+                if (studentData != null) {
                     
-                    if (componentState != null) {
-                        // set the workgroup id, user name, and node visit id into the node state
-                        componentState.workgroupId = workgroupId;
-                        componentState.userName = ConfigService.getUserNameByWorkgroupId(workgroupId);
-                        componentState.nodeVisitId = nodeVisitId;
-                        componentState.replies = [];
+                    // check if the student data was a submit
+                    var isSubmit = studentData.isSubmit;
+                    
+                    if (isSubmit) {
+                        // this component state is a submit so we will add it
                         
-                        // add the node state to our array of class responses
-                        this.classResponses.push(componentState);
-                        
-                        // get the node state id
-                        var componentStateId = componentState.timestamp;
-                        
-                        // get the response key
-                        var key = nodeVisitId + '-' + componentStateId;
-                        
-                        // add the response to our map
-                        this.responsesMap[key] = componentState;
-                        
-                        // get the student data
-                        var studentData = componentState.studentData;
-                        
-                        // get the replying to values if any
-                        var nodeVisitIdReplyingTo = studentData.nodeVisitIdReplyingTo;
-                        var componentStateIdReplyingTo = studentData.nodeStateIdReplyingTo;
-                        
-                        if (nodeVisitIdReplyingTo != null && componentStateIdReplyingTo != null) {
+                        if (componentState != null) {
                             
-                            // get the key for the response that was replied to
-                            var replyKey = nodeVisitIdReplyingTo + '-' + componentStateIdReplyingTo;
+                            // get the workgroup id
+                            var workgroupId = componentState.workgroupId;
                             
-                            if (this.responsesMap[replyKey] != null &&
-                                    this.responsesMap[replyKey].replies != null) {
-                                /*
-                                 * add this response to the replies array of the response
-                                 * that was replied to
-                                 */
-                                this.responsesMap[replyKey].replies.push(componentState);
+                            /*
+                             * add the user name to the component state so we can
+                             * display it next to the response
+                             */
+                            componentState.userName = ConfigService.getUserNameByWorkgroupId(workgroupId);
+                            
+                            
+                            /*
+                             * add a replies array to the component state that
+                             * we will fill with component state replies later
+                             */
+                            componentState.replies = [];
+                            
+                            // add the component state to our array of class responses
+                            this.classResponses.push(componentState);
+                            
+                            // get the component state id
+                            var componentStateId = componentState.timestamp;
+                            
+                            // add the response to our map
+                            this.responsesMap[componentStateId] = componentState;
+                            
+                            // get the component state id replying to if any
+                            var componentStateIdReplyingTo = studentData.componentStateIdReplyingTo;
+                            
+                            if (componentStateIdReplyingTo != null) {
+                                
+                                // check if we have the component state that was replied to
+                                if (this.responsesMap[componentStateIdReplyingTo] != null &&
+                                        this.responsesMap[componentStateIdReplyingTo].replies != null) {
+                                    /*
+                                     * add this response to the replies array of the response
+                                     * that was replied to
+                                     */
+                                    this.responsesMap[componentStateIdReplyingTo].replies.push(componentState);
+                                }
                             }
                         }
                     }
@@ -696,13 +666,12 @@ define(['app', 'angular'], function(app, angular) {
                     if (tempClassResponse != null && tempClassResponse.studentData) {
                         
                         // get the student data
-                        var studentData= tempClassResponse.studentData;
+                        var studentData = tempClassResponse.studentData;
                         
-                        // get the replying to values if any
-                        var nodeVisitIdReplyingTo = studentData.nodeVisitIdReplyingTo;
-                        var nodeStateIdReplyingTo = studentData.nodeStateIdReplyingTo;
+                        // get the component state id replying to if any
+                        var componentStateIdReplyingTo = studentData.componentStateIdReplyingTo;
                         
-                        if (nodeVisitIdReplyingTo == null && nodeStateIdReplyingTo == null) {
+                        if (componentStateIdReplyingTo == null) {
                             /*
                              * this response was not a reply to another post so it is a
                              * level 1 response
@@ -718,19 +687,19 @@ define(['app', 'angular'], function(app, angular) {
         
         /**
          * The reply button was clicked so we will show or hide the textarea
-         * used to reply to the specific node state
-         * @param nodeState the node state that the student wants to reply to
+         * used to reply to the specific component state
+         * @param componentState the component state that the student wants to reply to
          */
-        $scope.replybuttonclicked = function(nodeState) {
+        $scope.replybuttonclicked = function(componentState) {
             
             /*
              * get the value for whether the textarea is currently shown
              * or not
              */
-            var previousValue = nodeState.showReplyTextarea;
+            var previousValue = componentState.showReplyTextarea;
             
             // change the value to the opposite of what it was previously
-            nodeState.showReplyTextarea = !previousValue;
+            componentState.showReplyTextarea = !previousValue;
         };
         
         /**
@@ -756,18 +725,17 @@ define(['app', 'angular'], function(app, angular) {
             } else {
                 // this submit button was clicked for a reply textarea
                 
-                // get the values of the response
-                var nodeState = response;
-                var nodeVisitId = response.nodeVisitId;
-                var nodeStateId = response.timestamp;
+                var componentState = response;
+                
+                // get the component state id
+                var componentStateId = componentState.id;
                 
                 /*
                  * remember the values in the controller so we can read
                  * from them later when the student data is saved
                  */
-                $scope.discussionController.studentResponse = nodeState.replyText;
-                $scope.discussionController.nodeVisitIdReplyingTo = nodeVisitId;
-                $scope.discussionController.nodeStateIdReplyingTo = nodeStateId;
+                $scope.discussionController.studentResponse = componentState.replyText;
+                $scope.discussionController.componentStateIdReplyingTo = componentStateId;
                 
                 // clear the reply textarea
                 response.replyText = null;
@@ -797,10 +765,10 @@ define(['app', 'angular'], function(app, angular) {
                 componentState = $scope.discussionController.createComponentState();
                 
                 /*
-                 * clear the node values so they aren't accidentally used again
+                 * clear the component values so they aren't accidentally used again
                  * later
                  */
-                $scope.discussionController.clearNodeValues();
+                $scope.discussionController.clearComponentValues();
                 
                 // set isDirty to false since this student work is about to be saved
                 $scope.discussionController.isDirty = false;
@@ -838,35 +806,23 @@ define(['app', 'angular'], function(app, angular) {
         }));
         
         /**
-         * Listen for the 'nodeVisitSavedToServer' event which is fired when
-         * we receive the response from saving a node visit to the server
+         * Listen for the 'componentStateSavedToServer' event which is fired when
+         * we receive the response from saving a component state to the server
          */
-        $scope.$on('nodeVisitSavedToServer', angular.bind(this, function(event, args) {
+        $scope.$on('componentStateSavedToServer', angular.bind(this, function(event, args) {
             
-            var nodeVisit = args.nodeVisit;
+            var componentState = args.componentState;
             
-            if (nodeVisit != null) {
+            if (componentState != null) {
                 
-                var nodeVisitNodeId = nodeVisit.nodeId;
+                var nodeId = componentState.nodeId;
+                var componentId = componentState.componentId;
                 
-                // check that the node visit was for this node
-                if (this.nodeId === nodeVisitNodeId) {
+                // check that the component state is for this component
+                if (this.nodeId === nodeId && this.componentId == componentId) {
                     
-                    var workgroupId = ConfigService.getWorkgroupId();
-                    var nodeVisitId = nodeVisit.id;
-                    var nodeStates = nodeVisit.nodeStates;
-                    
-                    if (nodeStates != null && nodeStates.length > 0) {
-                        
-                        // get the latest node state
-                        var nodeState = nodeStates[nodeStates.length - 1];
-                        
-                        // get the work for this component
-                        componentState = NodeService.getNodeStateByPartId(nodeState, this.getComponentId());
-                        
-                        // add the node state to our collection of class responses
-                        this.addClassResponse(workgroupId, nodeVisitId, componentState);
-                    }
+                    // add the component state to our collection of class responses
+                    this.addClassResponse(componentState);
                 }
             }
             
@@ -890,7 +846,7 @@ define(['app', 'angular'], function(app, angular) {
             }));
         };
         
-        // perform setup of this node
+        // perform setup of this component
         this.setup();
     });
     

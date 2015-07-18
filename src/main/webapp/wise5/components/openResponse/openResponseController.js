@@ -754,7 +754,7 @@ define(['app'], function(app) {
             }));
         };
         
-        // perform setup of this node
+        // perform setup of this component
         this.setup();
     });
 });

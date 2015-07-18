@@ -998,6 +998,8 @@ define(['configService', 'projectService'], function(configService, projectServi
                                 localComponentState.id = savedComponentState.id;
                                 localComponentState.postTime = savedComponentState.postTime;
                                 localComponentState.requestToken = null; // requestToken is no longer needed.
+                                
+                                $rootScope.$broadcast('componentStateSavedToServer', {componentState: localComponentState});
                                 break;
                             }
                         }

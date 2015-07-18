@@ -17,6 +17,9 @@ define(['app'], function(app) {
         // the node id of the current node
         this.nodeId = null;
         
+        // the component id
+        this.componentId = null;
+        
         // field that will hold the component content
         this.componentContent = null;
         
@@ -43,43 +46,50 @@ define(['app'], function(app) {
                 this.nodeId = currentNode.id;
             }
             
-            // get the component from the scope
-            var component = $scope.component;
             this.componentContent = $scope.component;
             
-            // get the component state from the scope
-            var componentState = $scope.componentState;
-            
-            if (componentState == null) {
-                /*
-                 * only import work if the student does not already have
-                 * work for this component
-                 */
+            if (this.componentContent != null) {
                 
-                // check if we need to import work
-                var importWorkNodeId = this.componentContent.importWorkNodeId;
-                var importWorkComponentId = this.componentContent.importWorkComponentId;
+                // get the component id
+                this.componentId = this.componentContent.id;
                 
-                if (importWorkNodeId != null && importWorkComponentId != null) {
-                    // import the work from the other component
-                    this.importWork();
+                // get the component from the scope
+                var component = $scope.component;
+                
+                // get the component state from the scope
+                var componentState = $scope.componentState;
+                
+                if (componentState == null) {
+                    /*
+                     * only import work if the student does not already have
+                     * work for this component
+                     */
+                    
+                    // check if we need to import work
+                    var importWorkNodeId = this.componentContent.importWorkNodeId;
+                    var importWorkComponentId = this.componentContent.importWorkComponentId;
+                    
+                    if (importWorkNodeId != null && importWorkComponentId != null) {
+                        // import the work from the other component
+                        this.importWork();
+                    }
+                } else {
+                    // populate the student work into this component
+                    this.setStudentWork(componentState);
                 }
-            } else {
-                // populate the student work into this component
-                this.setStudentWork(componentState);
+                
+                // register this component with the parent node
+                $scope.$parent.registerComponentController($scope, component);
+                
+                //http://coderthoughts.blogspot.co.uk/2013/03/html5-video-fun.html - thanks :)
+                navigator.myGetMedia = (navigator.getUserMedia ||
+                    navigator.webkitGetUserMedia ||
+                    navigator.mozGetUserMedia ||
+                    navigator.msGetUserMedia);
+                navigator.myGetMedia({ video: true }, angular.bind(this, this.connect), function(e) {
+                    console.log('No live audio input: ' + e);
+                });
             }
-            
-            // register this component with the parent node
-            $scope.$parent.registerComponentController($scope, component);
-            
-            //http://coderthoughts.blogspot.co.uk/2013/03/html5-video-fun.html - thanks :)
-            navigator.myGetMedia = (navigator.getUserMedia ||
-                navigator.webkitGetUserMedia ||
-                navigator.mozGetUserMedia ||
-                navigator.msGetUserMedia);
-            navigator.myGetMedia({ video: true }, angular.bind(this, this.connect), function(e) {
-                console.log('No live audio input: ' + e);
-            });
         };
         
         this.connect = function(stream) {
@@ -487,7 +497,7 @@ define(['app'], function(app) {
             }));
         };
         
-        // perform setup of this node
+        // perform setup of this component
         this.setup();
     });
 });

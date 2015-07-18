@@ -122,52 +122,57 @@ define(['app'], function(app) {
             // get the component content from the scope
             this.componentContent = $scope.component;
             
-            // get the component from the scope
-            var component = $scope.component;
-            
-            // get the component state from the scope
-            var componentState = $scope.componentState;
-            
-            if (componentState == null) {
-                /*
-                 * only import work if the student does not already have
-                 * work for this component
-                 */
+            if (this.componentContent != null) {
                 
-                // check if we need to import work
-                var importWorkNodeId = this.componentContent.importWorkNodeId;
-                var importWorkComponentId = this.componentContent.importWorkComponentId;
+                // get the component id
+                this.componentId = this.componentContent.id;
                 
-                if (importWorkNodeId != null && importWorkComponentId != null) {
-                    // import the work from the other component
-                    this.importWork();
+                // get the component from the scope
+                var component = $scope.component;
+                
+                // get the component state from the scope
+                var componentState = $scope.componentState;
+                
+                if (componentState == null) {
+                    /*
+                     * only import work if the student does not already have
+                     * work for this component
+                     */
+                    
+                    // check if we need to import work
+                    var importWorkNodeId = this.componentContent.importWorkNodeId;
+                    var importWorkComponentId = this.componentContent.importWorkComponentId;
+                    
+                    if (importWorkNodeId != null && importWorkComponentId != null) {
+                        // import the work from the other component
+                        this.importWork();
+                    }
+                } else {
+                    // populate the student work into this component
+                    this.setStudentWork(componentState);
                 }
-            } else {
-                // populate the student work into this component
-                this.setStudentWork(componentState);
-            }
-            
-            // register this component with the parent node
-            $scope.$parent.registerComponentController($scope, component);
-            
-            try {
-                // webkit shim
-                window.AudioContext = window.AudioContext || window.webkitAudioContext;
-                navigator.getUserMedia = ( navigator.getUserMedia ||
-                                 navigator.webkitGetUserMedia ||
-                                 navigator.mozGetUserMedia ||
-                                 navigator.msGetUserMedia);
-                window.URL = window.URL || window.webkitURL;
                 
-                this.__log('Audio context set up.');
-                this.__log('navigator.getUserMedia ' + (navigator.getUserMedia ? 'available.' : 'not present!'));
-                navigator.getUserMedia({audio: true}, angular.bind(this,this.startUserMedia), function(e) {
-                    this.__log('No live audio input: ' + e);
-                });
-            } catch (e) {
-                alert('No web audio support in this browser!');
+                // register this component with the parent node
+                $scope.$parent.registerComponentController($scope, component);
+                
+                try {
+                    // webkit shim
+                    window.AudioContext = window.AudioContext || window.webkitAudioContext;
+                    navigator.getUserMedia = ( navigator.getUserMedia ||
+                                     navigator.webkitGetUserMedia ||
+                                     navigator.mozGetUserMedia ||
+                                     navigator.msGetUserMedia);
+                    window.URL = window.URL || window.webkitURL;
+                    
+                    this.__log('Audio context set up.');
+                    this.__log('navigator.getUserMedia ' + (navigator.getUserMedia ? 'available.' : 'not present!'));
+                    navigator.getUserMedia({audio: true}, angular.bind(this,this.startUserMedia), function(e) {
+                        this.__log('No live audio input: ' + e);
+                    });
+                } catch (e) {
+                    alert('No web audio support in this browser!');
+                }
             }
-            
         };
         
         /**
@@ -451,7 +456,7 @@ define(['app'], function(app) {
             
         }));
         
-        // perform setup of this node
+        // perform setup of this component
         this.setup();
     });
 });

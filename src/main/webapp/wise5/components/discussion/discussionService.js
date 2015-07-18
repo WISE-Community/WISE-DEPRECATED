@@ -89,31 +89,27 @@ define(['nodeService'], function(nodeService) {
                 
                 if (otherComponentType === 'OpenResponse') {
                     componentState.studentData = componentStateFromOtherComponent.studentData;
-                } else if (otherComponentType === 'Planning') {
-                    componentState.studentData = JSON.stringify(componentStateFromOtherComponent.studentNodes);
-                } 
+                }
             }
             
             return componentState;
         };
         
-        serviceObject.getClassmateResponses = function(runId, periodId, nodeId, workgroupIds) {
+        serviceObject.getClassmateResponses = function(runId, periodId, nodeId, componentId) {
             
-            if (runId != null && periodId != null && nodeId != null && workgroupIds != null) {
+            if (runId != null && periodId != null && nodeId != null && componentId != null) {
                 return $q(angular.bind(this, function(resolve, reject) {
                     
                     var httpParams = {};
                     httpParams.method = 'GET';
                     httpParams.url = ConfigService.getConfigParam('studentDataURL');
                     
-                    var classmateWorkgroupIds = workgroupIds.join(':');
-                    
                     var params = {};
-                    params.userId = classmateWorkgroupIds;
                     params.runId = runId;
-                    params.nodeId = nodeId;
-                    params.type= 'brainstorm';
                     params.periodId = periodId;
+                    params.nodeId = nodeId;
+                    params.componentId = componentId;
+                    params.getComponentStates = true;
                     httpParams.params = params;
                     
                     $http(httpParams).then(angular.bind(this, function(result) {

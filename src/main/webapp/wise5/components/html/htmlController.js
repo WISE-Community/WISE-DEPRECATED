@@ -13,6 +13,9 @@ define(['app'], function(app) {
         // the node id of the current node
         this.nodeId = null;
         
+        // the component id
+        this.componentId = null;
+        
         // field that will hold the component content
         this.componentContent = null;
         
@@ -34,6 +37,9 @@ define(['app'], function(app) {
             this.componentContent = $scope.component;
             
             if (this.componentContent != null) {
+                
+                // get the component id
+                this.componentId = this.componentContent.id;
                 
                 // get the show previous work node id if it is provided
                 var showPreviousWorkNodeId = this.componentContent.showPreviousWorkNodeId;
@@ -83,7 +89,7 @@ define(['app'], function(app) {
             }
         };
         
-        // perform setup of this node
+        // perform setup of this component
         this.setup();
     });
 });

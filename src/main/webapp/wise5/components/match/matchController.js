@@ -17,6 +17,9 @@ define(['app', 'angular'], function(app, angular) {
         // the node id of the current node
         this.nodeId = null;
         
+        // the component id
+        this.componentId = null;
+        
         // field that will hold the component content
         this.componentContent = null;
         
@@ -56,6 +59,9 @@ define(['app', 'angular'], function(app, angular) {
             this.componentContent = $scope.component;
             
             if (this.componentContent != null) {
+                
+                // get the component id
+                this.componentId = this.componentContent.id;
                 
                 // get the show previous work node id if it is provided
                 var showPreviousWorkNodeId = this.componentContent.showPreviousWorkNodeId;
@@ -513,13 +519,13 @@ define(['app', 'angular'], function(app, angular) {
         };
         
         /**
-         * Check if we need to lock the node
+         * Check if we need to lock the component
          */
         this.calculateDisabled = function() {
             
             var nodeId = this.nodeId;
             
-            // get the node content
+            // get the component content
             var componentContent = this.componentContent;
             
             if (componentContent != null) {
@@ -792,7 +798,7 @@ define(['app', 'angular'], function(app, angular) {
             }));
         };
         
-        // perform setup of this node
+        // perform setup of this component
         this.setup();
     });
     

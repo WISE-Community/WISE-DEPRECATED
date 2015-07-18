@@ -10,22 +10,39 @@ define(['app'], function(app) {
                     OpenResponseService,
                     ProjectService, 
                     StudentDataService) {
-        this.componentContent = null;
+        
+        // the node id of the current node
         this.nodeId = null;
+        
+        // the component id
+        this.componentId = null;
+        
+        // field that will hold the component content
+        this.componentContent = null;
+        
         this.studentNodes = [];
         
         this.setup = function() {
             
+            // get the current node and node id
+            var currentNode = CurrentNodeService.getCurrentNode();
+            if (currentNode != null) {
+                this.nodeId = currentNode.id;
+            }
+            
+            // get the component content from the scope
+            this.componentContent = $scope.component;
+            
+            if (this.componentContent != null) {
+                
+                // get the component id
+                this.componentId = this.componentContent.id;
+                
+            }
             
             // register this controller to listen for the exit event
             this.registerExitListener();
         };
-        
-        var currentNode = CurrentNodeService.getCurrentNode();
-        
-        if (currentNode != null) {
-            this.nodeId = currentNode.id;
-        }
         
         //this.componentContent = $scope.$parent.nodeController.componentContent;
         //$scope.$parent.nodeController.nodeLoaded(this.nodeId);
@@ -341,7 +358,7 @@ define(['app'], function(app) {
             }));
         };
         
-        // perform setup of this node
+        // perform setup of this component
         this.setup();
     });
 });
