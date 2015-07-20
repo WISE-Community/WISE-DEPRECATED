@@ -81,15 +81,6 @@ public interface WorkgroupService {
      * @return workgroup
      */
     public Workgroup getWorkgroupForPreviewOffering(Offering previewOffering, User previewUser);
-    
-    /**
-     * Creates a workgroup for a preview offering.
-     * 
-     * @param <code>Offering</code> previewOffering
-     * @param <code>User</code> previewUser
-     * @return <code>Workgroup</code>
-     */
-    public Workgroup getPreviewWorkgroupForRooloOffering(Offering previewOffering, User previewUser);
 
     /**
      * Gets a <code>List</code> of workgroups for a given offering with the

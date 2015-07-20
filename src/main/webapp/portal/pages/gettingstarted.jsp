@@ -48,7 +48,7 @@
 					<div class="sectionContent">
 						<ol>
 							
-							<li><spring:message code="pages.gettingstarted.registration_createAccount" /> <a href="${contextPath}/signup.html"><spring:message code="signUp" /></a></li>
+							<li><spring:message code="pages.gettingstarted.registration_createAccount" /> <a href="${contextPath}/join"><spring:message code="signUp" /></a></li>
 							
 							<li><spring:message code="pages.gettingstarted.registration_selectTeacher" /></li>
 							

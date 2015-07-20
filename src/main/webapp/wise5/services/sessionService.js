@@ -214,10 +214,10 @@ define(['configService'], function(configService) {
                     
                     if (userType == 'student'){
                         // send the user to the student home page
-                        homePageURL = contextPath + '/student/index.html';
+                        homePageURL = contextPath + '/student';
                     } else if (userType == 'teacher') {
                         // send the user to the teacher home page
-                        homePageURL = contextPath + '/teacher/index.html';
+                        homePageURL = contextPath + '/teacher';
                     } else {
                         // send the user to the main home page
                         homePageURL = mainHomePageURL;

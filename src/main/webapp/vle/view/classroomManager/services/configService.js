@@ -9,7 +9,7 @@ define(['angular'], function(angular) {
 			var parentHref = parent.window.location.href;
 			var runId = parent.window.location.search.split('runId=')[1].substring(0, parent.window.location.search.split('runId=')[1].indexOf('&'));
 			
-			return $http.get('http://localhost:8080/wise/vleconfig.html?runId=' + runId + '&gradingType=classroomManager&mode=grading&getRevisions=null').then(angular.bind(this, function(result) {
+			return $http.get('http://localhost:8080/wise/vleconfig?runId=' + runId + '&gradingType=classroomManager&mode=grading&getRevisions=null').then(angular.bind(this, function(result) {
 				var config = result.data;
 				this.config = config;
 				return config;

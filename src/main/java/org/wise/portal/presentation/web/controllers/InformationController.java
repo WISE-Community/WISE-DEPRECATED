@@ -129,7 +129,7 @@ public class InformationController {
 		Long runId = Long.parseLong(runIdString);
 		Run run = this.runService.retrieveById(runId);
 		
-		Workgroup workgroup = getWorkgroup(request, run);
+		Workgroup workgroup;
 		String workgroupIdStr = request.getParameter("workgroupId");
 		if (workgroupIdStr != null && workgroupIdStr != "") {
 			workgroup = workgroupService.retrieveById(new Long(workgroupIdStr));
@@ -137,7 +137,9 @@ public class InformationController {
 			if (workgroup.getOffering().getId() != run.getId()) {
 				return null;
 			}
-		} 
+		} else {
+            workgroup = getWorkgroup(request, run);
+        }
 		
 		/*
 		 * the group id of the period, this is the id in the db which is not
@@ -391,7 +393,7 @@ public class InformationController {
 	 * @throws ObjectNotFoundException
 	 * @throws IOException
 	 */
-    @RequestMapping("/vleconfig.html")
+    @RequestMapping("/vleconfig")
 	private void handleGetConfig(HttpServletRequest request, HttpServletResponse response)
 	        throws ObjectNotFoundException, IOException {
         String contextPath = request.getContextPath(); //get the context path e.g. /wise
@@ -720,22 +722,19 @@ public class InformationController {
 				= workgroupService.getWorkgroupListByOfferingAndUser(run, user);
 
 			if (workgroupListByOfferingAndUser.size() == 1) {
-				//this user is in one workgroup
+				// this user is in one workgroup
 				workgroup = workgroupListByOfferingAndUser.get(0);
 			} else if (workgroupListByOfferingAndUser.size() > 1) {
-				//this user is in more than one workgroup so we will just get the last one
+				// this user is in more than one workgroup so we will just get the last one
 				workgroup = workgroupListByOfferingAndUser.get(workgroupListByOfferingAndUser.size() - 1);
 			} else {
-				//this user is not in any workgroups
-				
+				// this user is not in any workgroups
 				String previewRequest = request.getParameter("preview");
 				if (previewRequest != null && Boolean.valueOf(previewRequest)) {
 					// if this is a preview, workgroupId should be specified, so use that
 					String workgroupIdStr = request.getParameter("workgroupId");
 					if (workgroupIdStr != null) {
 						workgroup = workgroupService.retrieveById(Long.parseLong(workgroupIdStr));
-					} else {
-						workgroup = workgroupService.getPreviewWorkgroupForRooloOffering(run, user);
 					}
 				}
 			}
