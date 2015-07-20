@@ -2,7 +2,7 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.10.0
+ * v0.10.1-rc2-master-eaa3324
  */
 (function( window, angular, undefined ){
 "use strict";
@@ -218,7 +218,7 @@ function SidenavFocusDirective() {
  *   - `<md-sidenav md-is-locked-open="$mdMedia('min-width: 1000px')"></md-sidenav>`
  *   - `<md-sidenav md-is-locked-open="$mdMedia('sm')"></md-sidenav>` (locks open on small screens)
  */
-function SidenavDirective($timeout, $animate, $parse, $log, $mdMedia, $mdConstant, $compile, $mdTheming, $q, $document) {
+function SidenavDirective($mdMedia, $mdUtil, $mdConstant, $mdTheming, $animate, $parse, $log, $compile, $q, $document) {
   return {
     restrict: 'E',
     scope: {
@@ -285,6 +285,7 @@ function SidenavDirective($timeout, $animate, $parse, $log, $mdMedia, $mdConstan
      */
     function updateIsOpen(isOpen) {
       var parent = element.parent();
+      var focusEl = sidenavCtrl.focusElement();
 
       parent[isOpen ? 'on' : 'off']('keydown', onKeyDown);
       backdrop[isOpen ? 'on' : 'off']('click', close);
@@ -293,7 +294,6 @@ function SidenavDirective($timeout, $animate, $parse, $log, $mdMedia, $mdConstan
         // Capture upon opening..
         triggeringElement = $document[0].activeElement;
       }
-      var focusEl = sidenavCtrl.focusElement();
 
       disableParentScroll(isOpen);
 
@@ -314,12 +314,16 @@ function SidenavDirective($timeout, $animate, $parse, $log, $mdMedia, $mdConstan
      */
     function disableParentScroll(disabled) {
       var parent = element.parent();
-      if ( disabled ) {
+      if ( disabled && !lastParentOverFlow ) {
+
         lastParentOverFlow = parent.css('overflow');
         parent.css('overflow', 'hidden');
+
       } else if (angular.isDefined(lastParentOverFlow)) {
+
         parent.css('overflow', lastParentOverFlow);
         lastParentOverFlow = undefined;
+
       }
     }
 
@@ -341,7 +345,7 @@ function SidenavDirective($timeout, $animate, $parse, $log, $mdMedia, $mdConstan
         // Toggle value to force an async `updateIsOpen()` to run
         scope.isOpen = isOpen;
 
-        $timeout(function() {
+        $mdUtil.nextTick(function() {
 
           // When the current `updateIsOpen()` animation finishes
           promise.then(function(result) {
@@ -355,7 +359,7 @@ function SidenavDirective($timeout, $animate, $parse, $log, $mdMedia, $mdConstan
             deferred.resolve(result);
           });
 
-        },0,false);
+        });
 
         return deferred.promise;
       }
@@ -384,7 +388,7 @@ function SidenavDirective($timeout, $animate, $parse, $log, $mdMedia, $mdConstan
 
   }
 }
-SidenavDirective.$inject = ["$timeout", "$animate", "$parse", "$log", "$mdMedia", "$mdConstant", "$compile", "$mdTheming", "$q", "$document"];
+SidenavDirective.$inject = ["$mdMedia", "$mdUtil", "$mdConstant", "$mdTheming", "$animate", "$parse", "$log", "$compile", "$q", "$document"];
 
 /*
  * @private
@@ -415,7 +419,7 @@ function SidenavController($scope, $element, $attrs, $mdComponentRegistry, $q) {
     return focusElement;
   };
 
-  self.$toggleOpen = function() { return $q.when($scope.isOpen); };
+  self.$toggleOpen = function(value) { return $q.when($scope.isOpen = value); };
 
   self.destroy = $mdComponentRegistry.register(self, $attrs.mdComponentId);
 }
