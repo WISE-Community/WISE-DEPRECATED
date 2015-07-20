@@ -25,3 +25,19 @@ h1, h2, h3 {
 
 // Layout
 // ------------------------------
+.fixed-top {
+  position: fixed;
+  top: 0;
+}
+
+.fixed-bottom {
+  position: fixed;
+  bottom: 0;
+}
+
+
+// Content
+// ------------------------------
+.logo {
+  cursor: auto;
+}

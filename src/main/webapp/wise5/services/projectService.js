@@ -9,6 +9,7 @@ define(['configService'], function(configService) {
         serviceObject.groupNodes = [];
         serviceObject.idToNode = {};
         serviceObject.idToElement = {};
+        serviceObject.metadata = {};
         
         serviceObject.getProject = function() {
             return this.project;
@@ -16,6 +17,9 @@ define(['configService'], function(configService) {
         
         serviceObject.setProject = function(project) {
             this.project = project;
+            if(project.metadata){
+                this.metadata = project.metadata;
+            }
             this.parseProject();
         };
         
@@ -26,6 +30,10 @@ define(['configService'], function(configService) {
                 style = project.style;
             }
             return style;
+        };
+
+        serviceObject.getProjectMetadata = function() {
+            return this.metadata;
         };
         
         serviceObject.getNodes = function() {

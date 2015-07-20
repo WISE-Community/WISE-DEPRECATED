@@ -1,0 +1,14 @@
+{
+  "name": "angular-audio",
+  "version": "0.0.0",
+  "dependencies": {
+    "browser-sync": "^2.7.12",
+    "gulp": "^3.9.0"
+  },
+  "devDependencies": {
+    "gulp-gh-pages": "^0.5.2"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  }
+}

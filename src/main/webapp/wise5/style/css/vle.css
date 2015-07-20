@@ -31,6 +31,15 @@ h1, h2, h3 { font-family: Hind, sans-serif; position: relative; top: 0.05em; }
 /* line 24, ../sass/base/_elements.scss */
 .material-icons.md-light.md-inactive { color: rgba(255, 255, 255, 0.3); }
 
+/* line 28, ../sass/base/_elements.scss */
+.fixed-top { position: fixed; top: 0; }
+
+/* line 33, ../sass/base/_elements.scss */
+.fixed-bottom { position: fixed; bottom: 0; }
+
+/* line 41, ../sass/base/_elements.scss */
+.logo { cursor: auto; }
+
 /* States
 */
 /* Modules

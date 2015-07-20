@@ -1,7 +1,7 @@
 define(['configService'], function(configService) {
 
-    var service = ['$http', '$q', '$upload', '$rootScope', 'ConfigService', 
-                                    function($http, $q, $upload, $rootScope, ConfigService) {
+    var service = ['$http', '$q', 'Upload', '$rootScope', 'ConfigService',
+                                    function($http, $q, Upload, $rootScope, ConfigService) {
         var serviceObject = {};
         
         serviceObject.retrieveAssets = function() {
@@ -75,7 +75,7 @@ define(['configService'], function(configService) {
         
         serviceObject.uploadAsset = function(file) {
             var studentAssetManagerURL = ConfigService.getStudentAssetManagerURL();
-            return $upload.upload({
+            return Upload.upload({
                 url: studentAssetManagerURL,
                 fields: {
                     'command': 'uploadAsset'
@@ -87,7 +87,7 @@ define(['configService'], function(configService) {
         serviceObject.uploadAssets = function(files) {
             var studentAssetManagerURL = ConfigService.getStudentAssetManagerURL();
             var promises = files.map(function(file) {
-                return $upload.upload({
+                return Upload.upload({
                     url: studentAssetManagerURL,
                     fields: {
                         'command': 'uploadAsset'
