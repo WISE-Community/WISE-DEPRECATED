@@ -62,40 +62,7 @@ define(['angular', 'projectService', 'currentNodeService'], function(angular, pr
             );
         };
     })
-    
-    /**
-     * Directive for making an element into a jquery dialog
-     */
-    .directive('jqueryDialog', function() {
-        return {
-            restrict: 'A',
-            link: function($scope, element, attrs) {
-                
-                var options = {};
-                
-                if (attrs != null) {
-                    // try to get the jquery dialog options if any
-                    jqueryDialogOptions = attrs.jqueryDialogOptions;
-                    
-                    if (jqueryDialogOptions != null) {
-                        // create the options object
-                        options = $scope.$eval(jqueryDialogOptions);
-                        
-                        if (options != null && options.hideTitlebarClose) {
-                            options.open = function(event, ui) {
-                                // hide the close button
-                                $(this).parent().find(".ui-dialog-titlebar-close").hide();
-                            };
-                        }
-                    }
-                }
-                
-                // create the dialog
-                element.dialog(options)
-            }
-        }
-    })
-    
+
     .directive('group', function(ProjectService, CurrentNodeService) {
         return {
             restrict: 'E',
