@@ -251,7 +251,13 @@ public class InformationController {
 		try {
 			myUserInfo.put("workgroupId", workgroupId);
 			myUserInfo.put("userName", userNames);
-			myUserInfo.put("periodId", Long.parseLong(periodId));
+
+            try {
+                myUserInfo.put("periodId", Long.parseLong(periodId));
+            } catch(NumberFormatException nfe) {
+                myUserInfo.put("periodId", periodId);
+            }
+
 			myUserInfo.put("periodName", periodName);
 			myUserInfo.put("userIds", userIds);
 		} catch (JSONException e) {
