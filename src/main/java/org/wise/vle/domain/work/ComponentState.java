@@ -52,7 +52,7 @@ import org.wise.vle.domain.PersistableDomain;
  * @author Hiroki Terashima
  */
 @Entity
-@Table(name = "componentState")
+@Table(name = "componentStates")
 public class ComponentState extends PersistableDomain {
 
 	@Id

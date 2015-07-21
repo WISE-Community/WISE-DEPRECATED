@@ -61,7 +61,7 @@
         primary key (id)
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-    create table componentState (
+    create table componentStates (
         id integer not null auto_increment,
         componentId varchar(255) not null,
         componentType varchar(255) not null,
