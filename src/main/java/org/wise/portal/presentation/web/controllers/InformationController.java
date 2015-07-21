@@ -256,7 +256,7 @@ public class InformationController {
 
             try {
                 myUserInfo.put("periodId", Long.parseLong(periodId));
-            } catch(NumberFormatException nfe) {
+            } catch (NumberFormatException nfe) {
                 myUserInfo.put("periodId", periodId);
             }
 

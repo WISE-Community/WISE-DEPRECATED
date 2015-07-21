@@ -31,9 +31,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -68,7 +65,7 @@ public class TeacherIndexController {
 	@Autowired
 	private NewsItemService newsItemService;
 
-	static final Comparator<Run> CREATED_ORDER =
+	static final Comparator<Run> ORDER_BY_STARTTIME =
 	new Comparator<Run>() {
 		public int compare(Run o1, Run o2) {
 			return o2.getStarttime().compareTo(o1.getStarttime());
@@ -78,32 +75,15 @@ public class TeacherIndexController {
 	@RequestMapping(method=RequestMethod.GET)
 	protected String handleGET(
 			ModelMap modelMap) throws Exception {
-		
-		boolean isRealTimeEnabled = false;
-		
-	    String isRealTimeEnabledStr = this.wiseProperties.getProperty("isRealTimeEnabled");
-	    if (isRealTimeEnabledStr != null) {
-	    	isRealTimeEnabled = Boolean.valueOf(isRealTimeEnabledStr);
-	    }
-		
+
 		User user = ControllerUtil.getSignedInUser();
-		
+
 		List<Run> runList = this.runService.getRunListByOwner(user);
 		runList.addAll(this.runService.getRunListBySharedOwner(user));
-		// this is a temporary solution to filtering out runs that the logged-in user owns.
-		// when the ACL entry permissions is figured out, we shouldn't have to do this filtering
-		// start temporary code
-		// hiroki commented out code 4/6/2008. remove after testing
-		List<Run> runList2 = new ArrayList<Run>();
-		for (Run run : runList) {
-			if (run.getOwner().equals(user) || run.getSharedowners().contains(user)) {
-				runList2.add(run);
-			}
-		}
-		// end temporary code
+
 		List<Run> current_run_list1 = new ArrayList<Run>();
 		Map<Run, List<Workgroup>> workgroupMap = new HashMap<Run, List<Workgroup>>();
-		for (Run run : runList2) {
+		for (Run run : runList) {
 			
 			List<Workgroup> workgroupList = this.workgroupService
 					.getWorkgroupListByOfferingAndUser(run, user);
@@ -115,8 +95,8 @@ public class TeacherIndexController {
 		}
 		
 		List<Run> current_run_list;
-		Collections.sort(current_run_list1, CREATED_ORDER);
-		if(current_run_list1.size() > 5){
+		Collections.sort(current_run_list1, ORDER_BY_STARTTIME);
+		if (current_run_list1.size() > 5) {
 			current_run_list = current_run_list1.subList(0,5);
 		} else {
 			current_run_list = current_run_list1;
@@ -125,9 +105,13 @@ public class TeacherIndexController {
 		modelMap.put("user", user);
 		modelMap.put("current_run_list", current_run_list);
 		modelMap.put("current_run_list1", current_run_list1);
+
+		String isRealTimeEnabledStr = this.wiseProperties.getProperty("isRealTimeEnabled");
+		boolean isRealTimeEnabled = isRealTimeEnabledStr != null ? Boolean.valueOf(isRealTimeEnabledStr) : false;
 		modelMap.put("isRealTimeEnabled", isRealTimeEnabled);
+
 		modelMap.put("workgroup_map", workgroupMap);
-		modelMap.put("teacherOnlyNewsItems",newsItemService.retrieveByType("teacherOnly"));
+		modelMap.put("teacherOnlyNewsItems", newsItemService.retrieveByType("teacherOnly"));
     	
     	// if discourse is enabled for this WISE instance, add the link to the model
     	// so the view can display it

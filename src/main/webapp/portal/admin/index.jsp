@@ -61,40 +61,40 @@
 							<spring:message code='admin.index.list' />
 							<sec:authorize access="hasRole('ROLE_ADMINISTRATOR')">
 								<spring:message code='admin.index.allUsersWhoLoggedIn' />
-								<a href="account/manageusers.html?onlyShowLoggedInUser=true">
+								<a href="${contextPath}/admin/account/manageusers.html?onlyShowLoggedInUser=true">
 									<spring:message code='now' /> (${numCurrentlyLoggedInUsers})</a> |
-								<a href="account/manageusers.html?onlyShowUsersWhoLoggedIn=today">
+								<a href="${contextPath}/admin/account/manageusers.html?onlyShowUsersWhoLoggedIn=today">
 									<spring:message code='today' /> (${numUsersWhoLoggedInToday})</a> |
-								<a href="account/manageusers.html?onlyShowUsersWhoLoggedIn=thisWeek">
+								<a href="${contextPath}/admin/account/manageusers.html?onlyShowUsersWhoLoggedIn=thisWeek">
 									<spring:message code='thisWeek' /></a> |
-								<a href="account/manageusers.html?onlyShowUsersWhoLoggedIn=thisMonth">
+								<a href="${contextPath}/admin/account/manageusers.html?onlyShowUsersWhoLoggedIn=thisMonth">
 									<spring:message code='thisMonth' /></a> |
-								<a href="account/manageusers.html?onlyShowUsersWhoLoggedIn=thisYear">
+								<a href="${contextPath}/admin/account/manageusers.html?onlyShowUsersWhoLoggedIn=thisYear">
 									<spring:message code='thisYear' /></a>
 							</sec:authorize>
 						</h5>
 						<h5>
 							<spring:message code='admin.index.list' />
-							<a href="account/manageusers.html?userType=teacher"><spring:message
+							<a href="${contextPath}/admin/account/manageusers.html?userType=teacher"><spring:message
 									code='admin.index.allTeachers' /></a> | <a
-								href="account/manageusers.html?userType=student"><spring:message
+								href="${contextPath}/admin/account/manageusers.html?userType=student"><spring:message
 								code='admin.index.allStudents' /></a>
 
 						</h5>
 						<h5>
 							<spring:message code='admin.index.find' />
-							<a href="account/lookupuser.html?userType=teacher"><spring:message
+							<a href="${contextPath}/admin/account/lookupuser.html?userType=teacher"><spring:message
 									code='teacher_cap' /></a> | <a
-								href="account/lookupuser.html?userType=student"><spring:message
+								href="${contextPath}/admin/account/lookupuser.html?userType=student"><spring:message
 								code='student_cap' /></a>
 						</h5>
 						<h5>
-							<a href="account/enabledisableuser.html"><spring:message
+							<a href="${contextPath}/admin/account/enabledisableuser.html"><spring:message
 									code='admin.index.enableDisableUser' /></a>
 						</h5>
 						<c:if test="${isBatchCreateUserAccountsEnabled}">
 							<h5>
-								<a href="account/batchcreateuseraccounts.html"><spring:message
+								<a href="${contextPath}/admin/account/batchcreateuseraccounts.html"><spring:message
 										code='admin.index.batchCreateUserAccounts' /></a>
 							</h5>
 						</c:if>
@@ -106,18 +106,18 @@
 					<div class="sectionContent">
 						<h5>
 							<spring:message code='admin.index.listRunsRun' />
-							(<a href="run/runstats.html?command=today"><spring:message
-								code='today' /></a> | <a href="run/runstats.html?command=week"><spring:message
+							(<a href="${contextPath}/admin/run/runstats.html?command=today"><spring:message
+								code='today' /></a> | <a href="${contextPath}/admin/run/runstats.html?command=week"><spring:message
 								code='thisWeek' /></a> | <a
-								href="run/runstats.html?command=month"><spring:message
+								href="${contextPath}/admin/run/runstats.html?command=month"><spring:message
 								code='thisMonth' /></a>) | <a
-								href="run/runstats.html?command=activity"><spring:message
+								href="${contextPath}/admin/run/runstats.html?command=activity"><spring:message
 								code='admin.index.runsByActivity' /></a>
 						</h5>
 
 						<h5>
 							<spring:message code='admin.index.findProjectRunsBy' />
-							<form style="display:inline" id="lookupProjectForm" action="run/manageprojectruns.html" method="GET" onsubmit="return validateForm('run')">
+							<form style="display:inline" id="lookupProjectForm" action="${contextPath}/admin/run/manageprojectruns.html" method="GET" onsubmit="return validateForm('run')">
 								<select name="runLookupType" id="runLookupType">
 									<option value="runId"><spring:message code='run_id' /></option>
 									<option value="projectId"><spring:message code='project_id' /></option>
@@ -148,15 +148,15 @@
 							</form>
 							<br />
 							<h5>
-								<a href="project/manageallprojects.html"><spring:message
+								<a href="${contextPath}/admin/project/manageallprojects.html"><spring:message
 										code='admin.index.manageAllProjects' /></a>
 							</h5>
 							<h5>
-								<a href="project/importproject.html"><spring:message
+								<a href="${contextPath}/admin/project/importproject.html"><spring:message
 										code='admin.index.importProject' /></a>
 							</h5>
 							<h5>
-								<a href="project/currentlyAuthoredProjects.html"><spring:message
+								<a href="${contextPath}/admin/project/currentlyAuthoredProjects.html"><spring:message
 										code='admin.index.viewCurrentAuthors' /></a>
 							</h5>
 						</div>
@@ -167,7 +167,7 @@
 						<spring:message code='misc' />
 					</div>
 					<div class="sectionContent">
-						<h5><a href="run/mergespreadsheets.html"><spring:message code='admin.index.mergeFiles' /></a></h5>
+						<h5><a href="${contextPath}/admin/run/mergespreadsheets.html"><spring:message code='admin.index.mergeFiles' /></a></h5>
 					</div>
 
 					<sec:authorize access="hasRole('ROLE_ADMINISTRATOR')">
@@ -176,7 +176,7 @@
 						</div>
 						<div class="sectionContent">
 							<h5>
-								<a href="news/managenewsitems.html"><spring:message
+								<a href="${contextPath}/admin/news/managenewsitems.html"><spring:message
 										code='admin.index.workWithNewsItems' /></a>
 							</h5>
 						</div>
@@ -186,7 +186,7 @@
 						</div>
 						<div class="sectionContent">
 							<h5>
-								<a href="portal/manageportal.html"><spring:message
+								<a href="${contextPath}/admin/portal/manageportal.html"><spring:message
 										code='admin.index.configureWISESettings' /></a>
 							</h5>
 							<h5>
