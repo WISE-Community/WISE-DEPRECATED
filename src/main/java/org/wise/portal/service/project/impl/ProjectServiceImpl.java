@@ -341,7 +341,7 @@ public class ProjectServiceImpl implements ProjectService {
 		if(project != null){
 			if(project.hasTags(tagNames) || 
 					project.getFamilytag().equals(FamilyTag.TELS) || this.canReadProject(project, user)){
-				String vleConfigUrl = wiseBaseURL + "/vleconfig.html" + "?projectId=" + project.getId() + "&mode=preview";
+				String vleConfigUrl = wiseBaseURL + "/vleconfig" + "?projectId=" + project.getId() + "&mode=preview";
 
 				if(step != null) {
 					//this is set if the request is to preview the project and load a specific step such as 1.2

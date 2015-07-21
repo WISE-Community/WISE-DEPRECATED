@@ -48,7 +48,8 @@ public interface VLEService {
 	 * Saves ComponentState in the data store
 	 */
 	ComponentState saveComponentState(Integer id, Integer runId, Integer periodId, Integer workgroupId,
-											 String nodeId, String componentId, String componentType, String studentData) throws ObjectNotFoundException;
+									  String nodeId, String componentId, String componentType,
+									  String clientSaveTime, String studentData) throws ObjectNotFoundException;
 
 
 	// ActionLog methods

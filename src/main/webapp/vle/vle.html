@@ -43,25 +43,15 @@ function getParameterByName(name) {
 /*
  * Listener that is run when the bootstrap loading is complete.
  */
-function bootstrapListener(type,args,obj){
-	if(args[0]=='bootstrap'){
+function bootstrapListener(type, args, obj){
+	if (args[0] == 'bootstrap') {
 		/* listens for when the components for this view have finished loading */
-		var loadListener = function(type,args,obj){
-			if(window.parent && window.parent.startWithConfig){
+		var loadListener = function(type,args,obj) {
+			if (window.parent && window.parent.startWithConfig) {
 				window.parent.startWithConfig();
-			} else if(window.opener && window.opener.startWithParams){
+			} else if (window.opener && window.opener.startWithParams) {
 				window.opener.startWithParams(eventManager);
 			} else {
-				var runId = getParameterByName("runId");
-				var vleConfigUrl = "";
-				if (runId != "") {
-					vleConfigUrl = "getConfig.html?runId="+runId;
-				} else {
-					var projectId = getParameterByName("projectId");					
-					vleConfigUrl = "getConfig.html?projectId="+projectId;
-				}
-				vleConfigUrl = getParameterByName("getConfigURL");
-				view.startVLEFromConfig(vleConfigUrl);
 				console.warn('No window.parent or window.opener, cannot start VLE');
 			};
 		};

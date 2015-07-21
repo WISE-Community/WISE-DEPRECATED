@@ -93,7 +93,8 @@ public class VLEServiceImpl implements VLEService {
 
     @Override
     public ComponentState saveComponentState(Integer id, Integer runId, Integer periodId, Integer workgroupId,
-                                             String nodeId, String componentId, String componentType, String studentData) {
+                                             String nodeId, String componentId, String componentType,
+                                             String clientSaveTime, String studentData) {
         ComponentState componentState;
         if (id != null) {
             // if the id is passed in, the client is requesting an update, so fetch the ComponentState from data store
@@ -140,10 +141,15 @@ public class VLEServiceImpl implements VLEService {
             componentState.setComponentType(componentType);
         }
 
+        if (clientSaveTime != null) {
+            Timestamp clientSaveTimestamp = new Timestamp(new Long(clientSaveTime));
+            componentState.setClientSaveTime(clientSaveTimestamp);
+        }
+
         // set postTime
         Calendar now = Calendar.getInstance();
-        Timestamp postTime = new Timestamp(now.getTimeInMillis());
-        componentState.setPostTime(postTime);
+        Timestamp serverSaveTimestamp = new Timestamp(now.getTimeInMillis());
+        componentState.setServerSaveTime(serverSaveTimestamp);
 
         if (studentData != null) {
             componentState.setStudentData(studentData);

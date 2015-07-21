@@ -35,6 +35,8 @@ define(['app'], function(app) {
          * Perform setup of the node
          */
         this.setup = function() {
+
+            // TODO: save node_entered action
             
             // get the current node and node id
             var currentNode = CurrentNodeService.getCurrentNode();
@@ -622,6 +624,9 @@ define(['app'], function(app) {
             var saveTriggeredBy = 'exitNode';
             
             this.createAndSaveComponentStates(saveTriggeredBy);
+
+            // TODO: save node_exited action
+
         };
         
         this.setCurrentNodeByNodeId = function(nodeId) {

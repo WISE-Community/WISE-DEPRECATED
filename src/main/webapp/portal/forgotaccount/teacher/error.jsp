@@ -17,7 +17,7 @@
 		
 		<div id="pageContent" style="min-height:400px;">
 			<div id="headerSmall">
-				<a id="name" href="${contextPath}/index.html" title="<spring:message code="wiseHomepage" />"><spring:message code="wise" /></a>
+				<a id="name" href="${contextPath}" title="<spring:message code="wiseHomepage" />"><spring:message code="wise" /></a>
 			</div>
 			
 			<div class="infoContent">
@@ -26,9 +26,9 @@
 					<div class="errorMsgNoBg"> 
 						<p><span style="font-weight:bold;">${email}${username}:</span> <spring:message code="forgotaccount.teacher.error.usernameEmailDoesNotMatch"/></p>
 					</div>
-					<div><a href="index.html"><spring:message code="forgotaccount.teacher.error.tryAgain"/></a></div>
+					<div><a href="${contextPath}"><spring:message code="forgotaccount.teacher.error.tryAgain"/></a></div>
 				</div>
-				<a href="${contextPath}/index.html" title="<spring:message code="wiseHome" />"><spring:message code="returnHome"/></a>
+				<a href="${contextPath}" title="<spring:message code="wiseHome" />"><spring:message code="returnHome"/></a>
 			</div>
 		</div>
 	</div>

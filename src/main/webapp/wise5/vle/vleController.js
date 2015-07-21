@@ -12,25 +12,28 @@ define(['app'],
                     NodeService,
                     SessionService,
                     StudentDataService,
-                    StudentWebSocketService) {
+                    StudentWebSocketService,
+                    $mdDialog) {
         this.mode = 'student';
         this.layoutLogic = ConfigService.layoutLogic;
         this.currentNode = null;
         this.isPortfolioVisible = false;
         
         $scope.$on('showSessionWarning', angular.bind(this, function() {
-            $('#sessionWarningDiv').dialog('open');
-        }));
-        
-        this.renewSession = function() {
-            $('#sessionWarningDiv').dialog('close');
+            // Appending dialog to document.body
+            var confirm = $mdDialog.confirm()
+                .parent(angular.element(document.body))
+                .title('Session Timeout')
+                .content('You have been inactive for a long time. Do you want to stay logged in?')
+                .ariaLabel('Session Timeout')
+                .ok('YES')
+                .cancel('No');
+            $mdDialog.show(confirm).then(function() {
             SessionService.renewSession();
-        };
-        
-        this.endSession = function() {
-            $('#sessionWarningDiv').dialog('close');
+            }, function() {
             SessionService.forceLogOut();
-        };
+            });
+        }));
         
         $scope.$on('currentNodeChanged', angular.bind(this, function(event, args) {
             var previousNode = args.previousNode;
@@ -223,12 +226,12 @@ define(['app'],
                 
         // Make sure if we drop something on the page we don't navigate away
         // https://developer.mozilla.org/En/DragDrop/Drag_Operations#drop
-        $(document.body).bind('dragover', function(e) {
+        $(document.body).on('dragover', function(e) {
             e.preventDefault();
             return false;
        });
 
-       $(document.body).bind('drop', function(e){
+       $(document.body).on('drop', function(e){
             e.preventDefault();
             return false;
         });

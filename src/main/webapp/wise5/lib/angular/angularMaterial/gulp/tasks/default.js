@@ -1,1 +1,0 @@
-exports.dependencies = ['build'];

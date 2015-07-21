@@ -49,13 +49,13 @@ $(document).ready(function() {
 				Cancel: function(){ $(this).dialog('destroy'); }
 			}
 		});
-		$("#addProjectDialog > #addProjectFrame").attr('src','addproject.html');
+		$("#addProjectDialog > #addProjectFrame").attr('src','${contextPath}/student/addproject');
 	});
 
 	// create change password dialog
 	$("#changePasswordLink").bind("click", function() {
 		var changePasswordDialogHtml = '<div style="display:none; overflow-y:hidden;" id="changePasswordDialog">'+
-		'<iframe id="changePasswordFrame" src="changestudentpassword.html" width="100%" height="99%" allowTransparency="false"> </iframe>'+			
+		'<iframe id="changePasswordFrame" src="${contextPath}/student/changestudentpassword.html" width="100%" height="99%" allowTransparency="false"> </iframe>'+
 		'</div>';
 		if ($("#changePasswordDialog").length == 0) {
 			$("#page").append(changePasswordDialogHtml);	
@@ -92,7 +92,7 @@ $(document).ready(function() {
 				Cancel: function(){ $(this).dialog('destroy'); }
 			}
 		});
-		$("#updateStudentAccountDialog > #updateStudentAccountFrame").attr("src", "updatestudentaccount.html");
+		$("#updateStudentAccountDialog > #updateStudentAccountFrame").attr("src", "${contextPath}/student/updatestudentaccount.html");
 
 	});
 	
@@ -221,7 +221,7 @@ $(document).ready(function() {
 									<a id="changePasswordLink" class="wisebutton altbutton-small"><spring:message code="changePassword" /></a>
 								</li>
 								<li>
-									<a class="wisebutton altbutton-small" href="/logout" id="studentsignout"><spring:message code="signOut" /></a>
+									<a class="wisebutton altbutton-small" href="${contextPath}/logout" id="studentsignout"><spring:message code="signOut" /></a>
 								</li>
 							</ul>
 						</div>

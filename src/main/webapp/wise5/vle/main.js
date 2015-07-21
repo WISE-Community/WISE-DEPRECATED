@@ -3,30 +3,30 @@ require.config({
     waitSeconds: 0,
     paths: {
         'angular': [
-            '//ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min',
-            'lib/angular/angular'
+            '//ajax.googleapis.com/ajax/libs/angularjs/1.3.16/angular.min',
+            'vendor/angular/angular.min'
             ],
-        'angularAnimate': 'lib/angular/angularAnimate/angular-animate.min',
-        'angularAria': 'lib/angular/angularAria/angular-aria.min',
-        'angularAudio': 'lib/angular/angularAudio/angular-audio',
-        'angularDragDrop': 'lib/angular/angularDragDrop/angular-dragdrop.min',
-        'angularFileUpload': 'lib/angular/angularFileUpload/angular-file-upload.min',
+        'angularAnimate': 'vendor/angular-animate/angular-animate.min',
+        'angularAria': 'vendor/angular-aria/angular-aria.min',
+        'angularAudio': 'vendor/angular-audio/app/angular.audio',
+        'angularDragDrop': 'vendor/angular-dragdrop/src/angular-dragdrop.min',
+        'angularFileUpload': 'vendor/ng-file-upload/ng-file-upload.min',
         'angularMaterial': [
             '//ajax.googleapis.com/ajax/libs/angular_material/0.10.0/angular-material.min',
-            'lib/angular/angularMaterial/dist/angular-material.min',
+            'vendor/angular-material/angular-material.min'
             ],
-        'angularSortable': 'lib/angular/angularSortable/angular-sortable',
-        'angularTextAngular': 'lib/angular/angularTextAngular/textAngular.min',
-        'angularTextAngularRangy': 'lib/angular/angularTextAngular/textAngular-rangy.min',
-        'angularTextAngularSanitize': 'lib/angular/angularTextAngular/textAngular-sanitize.min',
-        'angularUIRouter': 'lib/angular/angularUIRouter/angular-ui-router.min',
-        'angularUITree': 'lib/angular/angularUITree/angular-ui-tree.min',
-        'angularWebSocket': 'lib/angular/angularWebSocket/angular-websocket.min',
+        'angularSortable': 'vendor/angular-ui-sortable/sortable.min',
+        'angularTextAngular': 'lib/angularTextAngular/textAngular.min', // TODO: switch to using bower once loading errors are fixed
+        'angularTextAngularRangy': 'lib/angularTextAngular/textAngular-rangy.min', // TODO: switch to using bower once loading errors are fixed
+        'angularTextAngularSanitize': 'lib/angularTextAngular/textAngular-sanitize.min', // TODO: switch to using bower once loading errors are fixed
+        'angularUIRouter': 'vendor/angular-ui-router/release/angular-ui-router.min',
+        'angularUITree': 'vendor/angular-ui-tree/dist/angular-ui-tree.min',
+        'angularWebSocket': 'vendor/angular-websocket/angular-websocket.min',
         'annotationService': 'services/annotationService',
         'app': 'vle/app',
         'audioRecorderController': 'components/audioRecorder/audioRecorderController',
         'audioRecorderService': 'components/audioRecorder/audioRecorderService',
-        'bootstrap': [
+        'bootstrap': [ // TODO: remove once no longer using
             '//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min',
             'lib/bootstrap/bootstrap.min'
             ],
@@ -35,6 +35,7 @@ require.config({
         'cRaterService': 'services/cRaterService',
         'd3': 'lib/d3/d3',
         'drawingTool': 'lib/drawingTool/drawing-tool',
+        'vendor': 'lib/drawingTool/vendor',
         'directives': 'directives/directives',
         'discussionController': 'components/discussion/discussionController',
         'discussionService': 'components/discussion/discussionService',
@@ -43,18 +44,18 @@ require.config({
         'filters': 'filters/filters',
         'graphController': 'components/graph/graphController',
         'graphService': 'components/graph/graphService',
-        'highcharts': 'lib/highcharts/highcharts.src',
-        'highcharts-more': 'lib/highcharts/highcharts-more',
-        'highcharts-ng': 'lib/highcharts/highcharts-ng',
-        'highcharts-regression': 'lib/highcharts/plugins/highchartsRegression/highcharts-regression',
+        'highcharts': 'vendor/highcharts/highcharts',
+        'highcharts-more': 'vendor/highcharts/highcharts-more',
+        'highcharts-ng': 'vendor/highcharts-ng/dist/highcharts-ng',
+        'highcharts-regression': 'vendor/highcharts-regression/highcharts-regression',
         'htmlController': 'components/html/htmlController',
         'jquery': [
             '//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min',
-            'lib/jquery/jquery-2.1.3.min'
+            'vendor/jquery/dist/jquery.min'
             ],
-        'jqueryUI': [
+        'jqueryUI': [ // TODO: switch to pared down custom build
             '//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min',
-            'lib/jquery/jquery-ui.min'
+            'vendor/jquery-ui/jquery-ui.min'
             ],
         'matchController': 'components/match/matchController',
         'matchService': 'components/match/matchService',
@@ -81,17 +82,19 @@ require.config({
         'studentWebSocketService': 'services/studentWebSocketService',
         'tableController': 'components/table/tableController',
         'tableService': 'components/table/tableService',
-        'vendor': 'lib/drawingTool/vendor',
         'vleController': 'vle/vleController',
         'webfont': [
             '//ajax.googleapis.com/ajax/libs/webfont/1.5.18/webfont',
-            'lib/webfontloader/webfontloader'
+            'vendor/webfontloader/webfontloader'
             ],
         'webfonts': 'js/webfonts'
     },
     shim: {
         'angular': {
-            'exports': 'angular'
+            'exports': 'angular',
+            'deps': [
+                'jquery'
+            ]
         },
         'angularAnimate': {
             'exports': 'angularAnimate',
@@ -102,15 +105,13 @@ require.config({
         'angularAudio': {
             'exports': 'angularAudio',
             'deps': [
-                    'angular',
-                    'jquery'
+                    'angular'
                     ]
         },
         'angularDragDrop': {
             'exports': 'angularDragDrop',
             'deps': [
-                    'angular',
-                    'jqueryUI'
+                    'angular'
                     ]
         },
         'angularFileUpload': {
@@ -122,8 +123,7 @@ require.config({
         'angularSortable': {
             'exports': 'angularSortable',
             'deps': [
-                     'angular',
-                     'jqueryUI'
+                     'angular'
                      ]
         },
         'angularTextAngular': {
@@ -131,7 +131,6 @@ require.config({
             'deps': [
                      'angular',
                      'bootstrap',
-                     'angularTextAngularRangy',
                      'angularTextAngularSanitize'
                      ]
         },
@@ -144,7 +143,8 @@ require.config({
         'angularTextAngularSanitize': {
             'exports': 'angularTextAngularSanitize',
             'deps': [
-                    'angular'
+                    'angular',
+                    'angularTextAngularRangy'
                     ]
         },
         'angularUIRouter': {
@@ -177,6 +177,9 @@ require.config({
                     'vendor'
                     ]
         },
+        'vendor': {
+            'exports': 'vendor'
+        },
         'highcharts': {
             'exports': 'highcharts',
             'deps': [
@@ -204,6 +207,9 @@ require.config({
                     'angular',
                     'highcharts'
                     ]
+        },
+        'jquery': {
+            'exports': 'jquery'
         },
         'jqueryUI': {
             'exports': 'jqueryUI',

@@ -87,7 +87,6 @@ define([
              webfonts) {
 
     var app = angular.module('app', [
-        'angularFileUpload',
         'directives',
         'filters',
         'highcharts-ng',
@@ -98,6 +97,7 @@ define([
         'ngAudio',
         'ngAria',
         'ngDragDrop',
+        'ngFileUpload',
         'ngMaterial',
         'ngWebSocket',
         'textAngular'

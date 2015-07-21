@@ -61,16 +61,17 @@
         primary key (id)
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-    create table componentState (
+    create table componentStates (
         id integer not null auto_increment,
         componentId varchar(255) not null,
         componentType varchar(255) not null,
         nodeId varchar(255) not null,
-        postTime datetime not null,
         studentData mediumtext not null,
         periodId bigint not null,
         runId bigint not null,
         workgroupId bigint not null,
+        clientSaveTime datetime not null,
+        serverSaveTime datetime not null,
         primary key (id)
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 

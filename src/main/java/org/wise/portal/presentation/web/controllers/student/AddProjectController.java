@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2007-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -23,14 +23,10 @@
  */
 package org.wise.portal.presentation.web.controllers.student;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.hibernate.StaleObjectStateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.HibernateOptimisticLockingFailureException;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,13 +43,12 @@ import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.student.StudentService;
 
 /**
- * The Controller for Add a Project page for WISE students
+ * Controller for students to register for a project run
  *
  * @author Hiroki Terashima
- * @version $Id$
  */
 @Controller
-@RequestMapping("/student/addproject.html")
+@RequestMapping("/student/addproject")
 public class AddProjectController {
 
 	@Autowired
@@ -67,9 +62,9 @@ public class AddProjectController {
      * the project run.
      */
 	@RequestMapping(method=RequestMethod.POST)
-    protected synchronized ModelAndView onSubmit(@ModelAttribute("addProjectParameters")AddProjectParameters params, 
-    		BindingResult result, HttpServletRequest request,
-            HttpServletResponse response)
+    protected synchronized ModelAndView onSubmit(
+			@ModelAttribute("addProjectParameters") AddProjectParameters params,
+    		BindingResult result)
             throws Exception {
     	
     	addprojectparametersValidator.validate(params, result);
@@ -114,7 +109,7 @@ public class AddProjectController {
     }
     
     @RequestMapping(method=RequestMethod.GET) 
-    public ModelAndView initializeForm(ModelMap model) { 
+    public ModelAndView initializeForm() {
     	ModelAndView mav = new ModelAndView();
     	mav.addObject("addProjectParameters", new AddProjectParameters());
         return mav; 

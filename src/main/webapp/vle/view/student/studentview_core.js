@@ -156,10 +156,10 @@ View.prototype.displayGlobalTools = function() {
 	var contextPath = this.getConfig().getConfigParam('contextPath');
 	
 	// Insert sign out and exit to home links
-	var goHomeHref = contextPath + "/student/index.html";
+	var goHomeHref = contextPath + "/student";
 	var userType = this.config.getConfigParam('userType');
 	if (userType && userType == "teacher") {
-		goHomeHref = contextPath + "/teacher/index.html";
+		goHomeHref = contextPath + "/teacher";
 	}
 	var signOutLink = '<a id="signOutLink" title="'+this.getI18NString("signout_button_title")+'" onclick="view.logout()">'+this.getI18NString("signout_button_text")+'</a>';
 	var exitLink = '<a id="exitLink" target="_parent" title="'+this.getI18NString("gohome_button_title")+'" onclick="window.parent.location=\'' + goHomeHref + '\'">'+this.getI18NString("gohome_button_text")+'</a>';

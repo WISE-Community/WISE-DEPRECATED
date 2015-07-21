@@ -173,7 +173,7 @@
 		</constructor-arg>
 	</bean>
 
-	<!-- ~~~~~~~~~~~~~~~~~~ "BEFORE INVOCATION" AUTHORIZATION DEFINITIONS ~~~~~~~~~~~~~~~~ -->
+	<!--  "BEFORE INVOCATION" AUTHORIZATION DEFINITIONS  -->
 
 	<!-- An access decision manager used by the business objects -->
 	<bean id="groupAccessDecisionManager" class="org.springframework.security.access.vote.ConsensusBased">
@@ -996,7 +996,7 @@
 				<sec:intercept-url pattern="/join" access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/metadata.html" access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/runinfo.html" access="ROLE_ANONYMOUS,ROLE_USER" />
-				<sec:intercept-url pattern="/vleconfig.html" access="ROLE_ANONYMOUS,ROLE_USER" />
+				<sec:intercept-url pattern="/vleconfig" access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/userinfo.html" access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/pages/**/*.html" access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/contact/*.html" access="ROLE_ANONYMOUS,ROLE_USER" />

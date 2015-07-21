@@ -143,6 +143,7 @@ public class StudentDataController {
                                     componentStateJSONObject.isNull("nodeId") ? null : componentStateJSONObject.getString("nodeId"),
                                     componentStateJSONObject.isNull("componentId") ? null : componentStateJSONObject.getString("componentId"),
                                     componentStateJSONObject.isNull("componentType") ? null : componentStateJSONObject.getString("componentType"),
+                                    componentStateJSONObject.isNull("clientSaveTime") ? null : componentStateJSONObject.getString("clientSaveTime"),
                                     componentStateJSONObject.isNull("studentData") ? null : componentStateJSONObject.getString("studentData"));
 
                             // before returning saved ComponentState, strip all fields except id, token, and responseToken to minimize response size
@@ -153,6 +154,7 @@ public class StudentDataController {
                             componentState.setComponentId(null);
                             componentState.setComponentType(null);
                             componentState.setStudentData(null);
+                            componentState.setClientSaveTime(null);
                             JSONObject savedComponentStateJSONObject = componentState.toJSON();
                             savedComponentStateJSONObject.put("requestToken", requestToken);
                             componentStatesResultJSONArray.put(savedComponentStateJSONObject);

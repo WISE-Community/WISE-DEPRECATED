@@ -1,12 +1,20 @@
 require.config({
     baseUrl: 'wise5/',
     paths: {
-        'angular': 'lib/angular/angular',
-        'angularAnimate': 'lib/angular/angularAnimate/angular-animate.min',
-        'angularDragDrop': 'lib/angular/angularDragDrop/angular-dragdrop.min',
-        'angularSortable': 'lib/angular/angularSortable/angular-sortable',
-        'angularUIRouter': 'lib/angular/angularUIRouter/angular-ui-router.min',
-        'angularWebSocket': 'lib/angular/angularWebSocket/angular-websocket.min',
+        'angular': [
+            '//ajax.googleapis.com/ajax/libs/angularjs/1.3.16/angular.min',
+            'vendor/angular/angular.min'
+        ],
+        'angularAnimate': 'vendor/angular-animate/angular-animate.min',
+        'angularAria': 'vendor/angular-aria/angular-aria.min',
+        'angularDragDrop': 'vendor/angular-dragdrop/src/angular-dragdrop.min',
+        'angularMaterial': [
+            '//ajax.googleapis.com/ajax/libs/angular_material/0.10.0/angular-material.min',
+            'vendor/angular-material/angular-material.min'
+        ],
+        'angularSortable': 'vendor/angular-ui-sortable/sortable.min',
+        'angularUIRouter': 'vendor/angular-ui-router/release/angular-ui-router.min',
+        'angularWebSocket': 'vendor/angular-websocket/angular-websocket.min',
         'annotationService': 'services/annotationService',
         'app': 'classroomMonitor/app',
         'classroomMonitorController': 'classroomMonitor/classroomMonitorController',
@@ -19,7 +27,10 @@ require.config({
         'filters': 'filters/filters',
         'graphService': 'components/graph/graphService',
         'htmlController': 'components/html/htmlController',
-        'jquery': 'lib/jquery/jquery-2.1.3.min',
+        'jquery': [
+            '//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min',
+            'vendor/jquery/dist/jquery.min'
+        ],
         'jqueryUI': 'lib/jquery/jquery-ui-1.10.4.interactions.min',
         'matchService': 'components/match/matchService',
         'multipleChoiceService': 'components/multipleChoice/multipleChoiceService',
@@ -48,13 +59,15 @@ require.config({
     },
     shim: {
         'angular': {
-            'exports': 'angular'
+            'exports': 'angular',
+            'deps': [
+                'jquery'
+            ]
         },
         'angularAnimate': {
             'exports': 'angularAnimate',
             'deps': [
-                    'angular',
-                    'jqueryUI'
+                    'angular'
                     ]
         },
         'angularDragDrop': {
@@ -82,6 +95,22 @@ require.config({
             'deps': [
                     'angular'
                     ]
+        },
+        'angularAria': {
+            'exports': 'angularAria',
+            'deps': [
+                'angular'
+            ]
+        },
+        'angularMaterial': {
+            'exports': 'angularMaterial',
+            'deps': [
+                'angularAnimate',
+                'angularAria'
+            ]
+        },
+        'jquery': {
+            'exports': 'jquery'
         },
         'jqueryUI': {
             'exports': 'jqueryUI',
