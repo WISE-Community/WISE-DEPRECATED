@@ -249,7 +249,7 @@ define(['configService', 'studentDataService'], function(configService, studentD
             var nodeState = {};
             
             // set the timestamp
-            nodeState.timestamp = Date.parse(new Date());
+            nodeState.clientSaveTime = Date.parse(new Date());
             
             return nodeState;
         };

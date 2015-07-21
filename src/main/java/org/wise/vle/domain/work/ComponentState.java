@@ -80,8 +80,11 @@ public class ComponentState extends PersistableDomain {
 	@Column(name = "componentType", nullable = false)
 	private String componentType;
 
-	@Column(name = "postTime", nullable = false)
-	private Timestamp postTime;
+	@Column(name = "clientSaveTime", nullable = false)
+	private Timestamp clientSaveTime;
+
+	@Column(name = "serverSaveTime", nullable = false)
+	private Timestamp serverSaveTime;
 
 	@Column(name = "studentData", length = 5120000, columnDefinition = "mediumtext", nullable = false)
 	private String studentData;
@@ -146,12 +149,20 @@ public class ComponentState extends PersistableDomain {
 		this.componentId = componentId;
 	}
 
-	public Timestamp getPostTime() {
-		return postTime;
+	public Timestamp getServerSaveTime() {
+		return serverSaveTime;
 	}
 
-	public void setPostTime(Timestamp postTime) {
-		this.postTime = postTime;
+	public void setServerSaveTime(Timestamp serverSaveTime) {
+		this.serverSaveTime = serverSaveTime;
+	}
+
+	public Timestamp getClientSaveTime() {
+		return clientSaveTime;
+	}
+
+	public void setClientSaveTime(Timestamp clientSaveTime) {
+		this.clientSaveTime = clientSaveTime;
 	}
 
 	public String getStudentData() {
@@ -161,23 +172,7 @@ public class ComponentState extends PersistableDomain {
 	public void setStudentData(String studentData) {
 		this.studentData = studentData;
 	}
-    
-    public JSONObject getStudentDataJSON() {
-        JSONObject studentDataJSON = null;
-        
-        String studentData = getStudentData();
-        
-        if (studentData != null) {
-            try {
-                studentDataJSON = new JSONObject(studentData);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-        
-        return studentDataJSON;
-    }
-    
+
     /**
      * Get the JSON representation of the ComponentState
      * @return a JSONObject with the values from the ComponentState
@@ -225,9 +220,14 @@ public class ComponentState extends PersistableDomain {
 				componentStateJSONObject.put("componentType", this.componentType);
 			}
 
-            // set the post time
-			if (this.postTime != null) {
-				componentStateJSONObject.put("postTime", postTime.getTime());
+            // set the clientSaveTime time
+			if (this.clientSaveTime != null) {
+				componentStateJSONObject.put("clientSaveTime", clientSaveTime.getTime());
+			}
+
+			// set the serverSaveTime time
+			if (this.serverSaveTime != null) {
+				componentStateJSONObject.put("serverSaveTime", serverSaveTime.getTime());
 			}
 
             // set the student data

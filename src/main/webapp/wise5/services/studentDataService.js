@@ -983,7 +983,7 @@ define(['configService', 'projectService'], function(configService, projectServi
                     var saveStudentDataResponse = result.data;
                     var savedComponentStates = saveStudentDataResponse.componentStates;
 
-                    // set the id and postTime in the local componentState
+                    // set the id and serverSaveTime in the local componentState
                     for (var i = 0; i < savedComponentStates.length; i++) {
                         var savedComponentState = savedComponentStates[i];
                         
@@ -996,7 +996,7 @@ define(['configService', 'projectService'], function(configService, projectServi
                             if (localComponentState.requestToken != null &&
                                 localComponentState.requestToken === savedComponentState.requestToken) {
                                 localComponentState.id = savedComponentState.id;
-                                localComponentState.postTime = savedComponentState.postTime;
+                                localComponentState.serverSaveTime = savedComponentState.serverSaveTime;
                                 localComponentState.requestToken = null; // requestToken is no longer needed.
                                 
                                 $rootScope.$broadcast('componentStateSavedToServer', {componentState: localComponentState});
