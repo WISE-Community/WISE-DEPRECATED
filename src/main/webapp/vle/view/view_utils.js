@@ -2234,6 +2234,67 @@ View.prototype.getLatestMySystem2Score = function(nodeVisit) {
     return score;
 };
 
+/**
+ * Check if the logged in user is a shared teacher with read privilege
+ */
+View.prototype.isSignedInUserSharedTeacherWithReadPrivilege = function() {
+    return this.isSignedInUserSharedTeacherWithRole('read');
+};
+
+/**
+ * Check if the logged in user is a shared teacher with grading privilege
+ */
+View.prototype.isSignedInUserSharedTeacherWithGradingPrivilege = function() {
+    return this.isSignedInUserSharedTeacherWithRole('grade');
+};
+
+/**
+ * Check if the logged in user is a shared teacher with a specific role
+ * @param role the permission role ('read' or 'grade')
+ */
+View.prototype.isSignedInUserSharedTeacherWithRole = function(role) {
+    var result = false;
+
+    //get the user and class info
+    var userAndClassInfo = this.getUserAndClassInfo();
+
+    if(userAndClassInfo != null) {
+        //get the logged in user name and workgroup id
+        var userLoginName = userAndClassInfo.getUserLoginName();
+        var workgroupId = userAndClassInfo.getWorkgroupId();
+
+        //get all the shared teacher infos
+        var sharedTeacherUserInfos = userAndClassInfo.getSharedTeacherUserInfos();
+
+        if(sharedTeacherUserInfos != null) {
+            /*
+             * loop through all the shared teacher infos to see if the logged
+             * in user is a shared teacher
+             */
+            for(var x=0; x<sharedTeacherUserInfos.length; x++) {
+                //get a shared teacher info
+                var sharedTeacherUserInfo = sharedTeacherUserInfos[x];
+
+                if(sharedTeacherUserInfo != null) {
+                    //get the workgroup id for the shared teacher
+                    var tempWorkgroupId = sharedTeacherUserInfo.workgroupId;
+
+                    if(tempWorkgroupId == workgroupId) {
+                        //the logged in user is a shared teacher
+
+                        if(sharedTeacherUserInfo.role == role) {
+                            //the shared teacher has grading privilege
+                            result = true;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return result;
+};
+
 /* used to notify scriptloader that this script has finished loading */
 if(typeof eventManager != 'undefined'){
 	eventManager.fire('scriptLoaded', 'vle/view/view_utils.js');

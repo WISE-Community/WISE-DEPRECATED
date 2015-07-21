@@ -60,6 +60,14 @@ View.prototype.startClassroomMonitor = function() {
 
     this.fixedHeaders = [];
 
+    this.canViewStudentNames = true;
+    this.canGradeStudentWork = true;
+
+    if (this.isSignedInUserSharedTeacherWithReadPrivilege()) {
+        this.canViewStudentNames = false;
+        this.canGradeStudentWork = false;
+    }
+
     //set the classroom monitor header text
     $('#runTitle').text(this.getI18NString('classroomMonitor_title') + ' - ' + runName).attr('title', runName);
     $('#runId').text(this.getI18NStringWithParams('classroomMonitor_run', [runId]));
@@ -457,7 +465,8 @@ View.prototype.showStudentAssets = function() {
         for (var i = 0; i < workgroupAssetLists.length; i++) {
             var workgroupAssetList = workgroupAssetLists[i];
             var currWorkgroupId = workgroupAssetList.workgroupId;
-            var htmlForWorkgroup = "<div><h3>" + view.userAndClassInfo.getUserNameByUserId(currWorkgroupId) + "</h3>";
+            //var htmlForWorkgroup = "<div><h3>" + view.userAndClassInfo.getUserNameByUserId(currWorkgroupId) + "</h3>";
+            var htmlForWorkgroup = "<div><h3>" + this.getUsernamesForWorkgroup(currWorkgroupId) + "</h3>";
             if (workgroupAssetList.assets != null) {
                 var workgroupAssetsArr = workgroupAssetList.assets;
                 htmlForWorkgroup += "<div>";
@@ -1358,16 +1367,7 @@ View.prototype.createStudentProgressDisplay = function() {
                     <div class="progress-bar"  role="progressbar" aria-valuenow="' + studentCompletion + '" aria-valuemin="0" aria-valuemax="100" style="width: ' + studentCompletion + '%">\
                     <span class="sr-only">' + studentCompletion + '%</span></div></div>';
 
-            //get the student names for this workgroup
-            students = this.userAndClassInfo.getStudentNamesByWorkgroupId(workgroupId),
-                studentNames = '';
-
-            for(var i=0; i<students.length; i++){
-                if(i>0){
-                    studentNames += ', ';
-                }
-                studentNames += students[i];
-            }
+            var studentNames = this.getUsernamesForWorkgroup(workgroupId);
 
             //get the period name the workgroup is in
             var periodName = this.userAndClassInfo.getClassmatePeriodNameByWorkgroupId(workgroupId),
@@ -1734,9 +1734,6 @@ View.prototype.showIdeaBasketItem = function(workgroupId) {
     if(ideaBasket != null) {
         //the student has an idea basket
 
-        //get the student names for this workgroup
-        var studentNames = this.userAndClassInfo.getStudentNamesByWorkgroupId(workgroupId);
-
         //get the period id
         var periodId = this.userAndClassInfo.getClassmatePeriodIdByWorkgroupId(workgroupId);
 
@@ -1920,7 +1917,7 @@ View.prototype.displayGradeByStudent = function(workgroupId) {
     this.numberOfItemsToReview = 0;
 
     //get the student names for this workgroup
-    var studentNames = this.userAndClassInfo.getStudentNamesByWorkgroupId(workgroupId),
+    var studentNames = this.getUsernamesForWorkgroup(workgroupId),
 
     //get the period name
         periodName = this.userAndClassInfo.getClassmatePeriodNameByWorkgroupId(workgroupId),
@@ -1965,7 +1962,7 @@ View.prototype.displayGradeByStudent = function(workgroupId) {
     this.gradeByStudentTable.draw();
 
     // insert the workgroup names and id into grading header
-    $('#gradeByStudentNames').text(studentNames.join(', '));
+    $('#gradeByStudentNames').text(studentNames);
     $('#gradeByStudentWorkgroupId').text(' (' + workgroupId + ')');
 
     // set the number of items to review value
@@ -2012,8 +2009,7 @@ View.prototype.insertNodeRevisions = function(nodeId, workgroupId, position, mod
             }
 
             // get the student names for this workgroup
-            var studentNames = this.userAndClassInfo.getStudentNamesByWorkgroupId(workgroupId);
-            studentNames = studentNames.join(', ');
+            var studentNames = this.getUsernamesForWorkgroup(workgroupId);
             studentNames += ' (' + workgroupId + ')';
 
             if(vleState != null) {
@@ -2691,7 +2687,7 @@ View.prototype.populateWorkgroupSelect = function(period, tableId, workgroupId){
         var groupId = workgroupIds[x];
 
         //get the classmate names for the workroup id
-        var groupNames = this.getUserAndClassInfo().getStudentNamesByWorkgroupId(groupId).join(', ');
+        var groupNames = this.getUsernamesForWorkgroup(groupId);
 
         workgroups.push({ label: groupNames, value: groupId });
     }
@@ -4561,11 +4557,11 @@ View.prototype.getStudentsOnStepText = function(nodeId, periodId) {
                 var studentOnlineWorkgroupId = studentsOnline[x];
 
                 //get the student names
-                var studentNames = this.getUserAndClassInfo().getStudentNamesByWorkgroupId(studentOnlineWorkgroupId);
+                var studentNames = this.getUserAndClassInfo().getUsernamesForWorkgroup(studentOnlineWorkgroupId);
 
                 if(studentNames != null) {
                     //add the student names to the online section
-                    studentsOnStepText += studentNames.join(', ') + '\n';
+                    studentsOnStepText += studentNames + '\n';
                 }
             }
         }
@@ -4587,11 +4583,11 @@ View.prototype.getStudentsOnStepText = function(nodeId, periodId) {
                 var studentOfflineWorkgroupId = studentsOffline[x];
 
                 //get the student names
-                var studentNames = this.getUserAndClassInfo().getStudentNamesByWorkgroupId(studentOfflineWorkgroupId);
+                var studentNames = this.getUsernamesForWorkgroup(studentOfflineWorkgroupId);
 
                 if(studentNames != null) {
                     //add the student names to the offline section
-                    studentsOnStepText += studentNames.join(', ') + '\n';
+                    studentsOnStepText += studentNames + '\n';
                 }
             }
         }
@@ -4949,7 +4945,7 @@ View.prototype.createGradeByStepDisplayTableRow = function(nodeId, workgroupId) 
 
     if(nodeId != null && workgroupId != null) {
         //get the student names
-        var studentNames = this.userAndClassInfo.getStudentNamesByWorkgroupId(workgroupId);
+        var studentNames = this.getUsernamesForWorkgroup(workgroupId);
 
         //get the period
         var period = this.userAndClassInfo.getClassmatePeriodNameByWorkgroupId(workgroupId);
@@ -5010,7 +5006,7 @@ View.prototype.createGradeByStepDisplayTableRow = function(nodeId, workgroupId) 
         var studentNamesDiv = $('<div>');
         studentNamesDiv.css('float', 'left');
         studentNamesDiv.css('font-weight', 'bold');
-        studentNamesDiv.html(studentNames.join(', '));
+        studentNamesDiv.html(studentNames);
         studentNamesDiv.css('cursor', 'pointer');
 
         //highlight the user name yellow on mouse over
@@ -6421,11 +6417,11 @@ View.prototype.getStudentsOnStep = function(nodeId, periodId) {
                         numberOfStudentsOnStep++;
 
                         //get the student names
-                        var studentNames = view.getUserAndClassInfo().getStudentNamesByWorkgroupId(studentStatus.workgroupId);
+                        var studentNames = this.getUsernamesForWorkgroup(studentStatus.workgroupId);
 
                         if(studentNames !== null) {
                             //add the student names to the workgroups array
-                            workgroups.push(studentNames.join(', '));
+                            workgroups.push(studentNames);
                         }
                     }
                 }
@@ -7373,18 +7369,10 @@ View.prototype.createIdeaBasketListDisplay = function() {
             //check if the student is online
                 online = this.isStudentOnline(workgroupId),
                 rowClass = online ? 'online' : 'offline',
-                onlineHtml = view.getStudentOnlineHtml(online),
+                onlineHtml = view.getStudentOnlineHtml(online);
 
             //get the student names for this workgroup
-                students = this.userAndClassInfo.getStudentNamesByWorkgroupId(workgroupId),
-                studentNames = '';
-
-            for(var i=0; i<students.length; i++){
-                if(i>0){
-                    studentNames += ', ';
-                }
-                studentNames += students[i];
-            }
+            var studentNames = this.getUsernamesForWorkgroup(workgroupId);
 
             //get the period name the workgroup is in
             var periodName = this.userAndClassInfo.getClassmatePeriodNameByWorkgroupId(workgroupId),
@@ -8528,12 +8516,12 @@ View.prototype.createStudentHeaderTable = function(studentNames, workgroupId, pe
         var classmateWorkgroupId = classmateWorkgroupIdsInPeriod[x];
 
         //get the classmate names for the workroup id
-        var classmateNames = this.getUserAndClassInfo().getStudentNamesByWorkgroupId(classmateWorkgroupId);
+        var classmateNames = this.getUsernamesForWorkgroup(classmateWorkgroupId);
 
         //create the option for the classmates
         var classmateOption = $('<option>');
         classmateOption.val(classmateWorkgroupId);
-        classmateOption.text(classmateNames.join(', '));
+        classmateOption.text(classmateNames);
 
         //add the option to the drop down
         studentSelect.append(classmateOption);
@@ -12490,16 +12478,27 @@ View.prototype.getAllRawWorkByNodeId = function(nodeId) {
     return rawWorkByNodeId;
 };
 
+/**
+ * Get the user names for a workgroup. If the teacher is not allowed
+ * to view the student names, we will return the WISE ids instead.
+ * @param workgroupId the workgroup id
+ * @returns a string containing the usernames for a workgroup.
+ * the usernames are separated by a comma.
+ */
 View.prototype.getUsernamesForWorkgroup = function(workgroupId){
-    var students = this.getUserAndClassInfo().getStudentNamesByWorkgroupId(workgroupId),
-        usernames = '';
 
-    for(var i=0; i<students.length; i++){
-        if(i>0){
-            usernames += ', ';
-        }
-        usernames += students[i];
+    var usernames = '';
+    var students = [];
+
+    if (this.canViewStudentNames) {
+        // the teacher can view the student names so we will get the student names
+        students = this.getUserAndClassInfo().getStudentNamesByWorkgroupId(workgroupId);
+    } else {
+        // the teahcer is not allowed to view the student names so we will get the WISE ids
+        students = this.getUserAndClassInfo().getWISEIdsByWorkgroupId(workgroupId);
     }
+
+    usernames = students.join(', ');
 
     return usernames;
 };

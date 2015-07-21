@@ -628,6 +628,32 @@ View.prototype.createUserAndClassInfo = function(myUserInfo, periods, classmateU
 			
 			return studentNames;
 		}
+
+        /**
+         * Get the WISE ids for a workgroup
+         * @param workgroupId the workgroup id
+         * @returns an array containing the WISE ids of the users in the workgroup
+         */
+        var getWISEIdsByWorkgroupId = function(workgroupId) {
+            var wiseIds = [];
+
+            if(workgroupId == getWorkgroupId()) {
+                // the signed in user is in the workgroup we are looking for
+
+                // get the WISE ids of the signed in workgroup
+                wiseIds = getUserIds()
+            } else {
+                // the workgroup we are looking for is a classmate workgroup
+                var classmate = getClassmateByWorkgroupId(workgroupId);
+
+                if (classmate != null) {
+                    // get the WISE ids of the classmate workgroup
+                    wiseIds = classmate.userIds;
+                }
+            }
+
+            return wiseIds;
+        }
 		
 		return {
 			getWorkgroupId:function() {
@@ -719,7 +745,10 @@ View.prototype.createUserAndClassInfo = function(myUserInfo, periods, classmateU
 			},
 			getStudentFirstNamesByWorkgroupId:function(workgroupId) {
 				return getStudentFirstNamesByWorkgroupId(workgroupId);
-			}
+			},
+            getWISEIdsByWorkgroupId:function(workgroupId) {
+                return getWISEIdsByWorkgroupId(workgroupId);
+            }
 		};
 	}(myUserInfo, periods, classmateUserInfos, teacherUserInfo, sharedTeacherUserInfos);
 };
