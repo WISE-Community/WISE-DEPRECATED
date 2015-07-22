@@ -64,6 +64,11 @@ View.prototype.startClassroomMonitor = function() {
     this.canGradeStudentWork = true;
 
     if (this.isSignedInUserSharedTeacherWithReadPrivilege()) {
+        /*
+         * the user is a shared teacher with only read privilege so
+         * we will not allow them to view student names or grade
+         * student work
+         */
         this.canViewStudentNames = false;
         this.canGradeStudentWork = false;
     }
@@ -1096,6 +1101,14 @@ View.prototype.createPauseScreensDisplay = function() {
         //$('#pauseSelectPeriods').multiselect('destroy');
         $('#pauseScreensWrap').append($('#pauseScreensContent'));
     });
+
+    if (!this.canGradeStudentWork) {
+        /*
+         * disable the pause screens button since the user is a shared
+         * teacher with only read privilege
+         */
+        $('#pauseControls').attr('disabled', 'disabled');
+    }
 };
 
 /**
@@ -2126,6 +2139,11 @@ View.prototype.insertNodeRevisions = function(nodeId, workgroupId, position, mod
                         }
                     });
 
+                    if (!this.canGradeStudentWork) {
+                        // disable the score input since the teacher is not allowed to grade
+                        $('input[type=text]', $thisFeedbackCell).attr('disabled', 'disabled');
+                    }
+
                     //get the latest comment annotation if any
                     var latestCommentAnnotation = this.getLatestAnnotation(nodeId, workgroupId, 'comment');
                     var latestComment = null;
@@ -2156,6 +2174,11 @@ View.prototype.insertNodeRevisions = function(nodeId, workgroupId, position, mod
                     $('textarea', $thisFeedbackCell).attr('id', commentTextAreaId);
                     $('textarea', $thisFeedbackCell).on('input', {thisView:view, stepWorkId:stepWorkId, nodeId:nodeId, workgroupId:workgroupId, mode:mode}, view.commentChanged);
                     $('textarea', $thisFeedbackCell).on('change', {thisView:view, stepWorkId:stepWorkId, nodeId:nodeId, workgroupId:workgroupId, mode:mode}, view.saveComment);
+
+                    if (!this.canGradeStudentWork) {
+                        // disable the feedback textarea since the teacher is not allowed to grade
+                        $('textarea', $thisFeedbackCell).attr('disabled', 'disabled');
+                    }
 
                     // get the latest timestamp between the score and comment
                     var annotationPostTime = Math.max(scorePostTime, commentPostTime);
@@ -2360,6 +2383,11 @@ View.prototype.insertNodeRevisions = function(nodeId, workgroupId, position, mod
                                 $(this).blur();
                             }
                         });
+
+                        if (!this.canGradeStudentWork) {
+                            // disable the score input since the teacher is not allowed to grade
+                            $('input[type=text]', $thisFeedbackCell).attr('disabled', 'disabled');
+                        }
 
                         // add max score, and step work score, and latest score to table
                         $stepWork.append('<td>' + score + '</td>');
@@ -2573,6 +2601,11 @@ View.prototype.insertNodeRevisions = function(nodeId, workgroupId, position, mod
                         //set the event for when anything is changed in the comment textarea
                         $('textarea', $thisFeedbackCell).on('input', {thisView:view, stepWorkId:stepWorkId, nodeId:nodeId, workgroupId:workgroupId, mode:mode}, view.commentChanged);
                         $('textarea', $thisFeedbackCell).on('change', {thisView:view, stepWorkId:stepWorkId, nodeId:nodeId, workgroupId:workgroupId, mode:mode}, view.saveComment);
+
+                        if (!this.canGradeStudentWork) {
+                            // disable the feedback textarea since the teacher is not allowed to grade
+                            $('textarea', $thisFeedbackCell).attr('disabled', 'disabled');
+                        }
 
                         // insert comment input 'for' attribute
                         $commentLabel.attr('for', $('textarea', $thisFeedbackCell).attr('id'));
