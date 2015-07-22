@@ -36,14 +36,22 @@ define(['app'], function(app) {
          */
         this.setup = function() {
 
-            // TODO: save node_entered action
-            
             // get the current node and node id
             var currentNode = CurrentNodeService.getCurrentNode();
             if (currentNode != null) {
                 this.nodeId = currentNode.id;
             }
-            
+
+            // save nodeEntered event
+            var nodeId = this.nodeId;
+            var componentId = null;
+            var componentType = null;
+            var category = "Navigation";
+            var event = "nodeEntered";
+            var eventData = {};
+            eventData.nodeId = nodeId;
+            StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
+
             // get the source for the node content
             var nodeSrc = ProjectService.getNodeSrcByNodeId(this.nodeId);
             
@@ -373,10 +381,11 @@ define(['app'], function(app) {
             
             if (componentStates != null) {
                 // save the component states to the server
-                StudentDataService.saveComponentStatesToServer(componentStates);
+                var events = null;
+                StudentDataService.saveToServer(componentStates, events);
             }
         };
-        
+
         this.createComponentStates = function(saveTriggeredBy) {
             var componentStates = [];
             
@@ -622,13 +631,19 @@ define(['app'], function(app) {
         
         this.nodeUnloaded = function(nodeId) {
             var saveTriggeredBy = 'exitNode';
-            
+
             this.createAndSaveComponentStates(saveTriggeredBy);
 
-            // TODO: save node_exited action
-
+            // save nodeExited event
+            var componentId = null;
+            var componentType = null;
+            var category = "Navigation";
+            var event = "nodeExited";
+            var eventData = {};
+            eventData.nodeId = nodeId;
+            StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
         };
-        
+
         this.setCurrentNodeByNodeId = function(nodeId) {
             var node = ProjectService.getNodeById(nodeId);
             CurrentNodeService.setCurrentNode(node);

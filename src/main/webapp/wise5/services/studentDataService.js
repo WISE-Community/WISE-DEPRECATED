@@ -118,6 +118,7 @@ define(['configService', 'projectService'], function(configService, projectServi
                 params.workgroupId = ConfigService.getWorkgroupId();
                 params.runId = ConfigService.getRunId();
                 params.getComponentStates = true;
+                params.getEvents = true;
                 httpParams.params = params;
                 
                 // make the request for the student data
@@ -127,8 +128,11 @@ define(['configService', 'projectService'], function(configService, projectServi
                         
                         this.studentData = {};
                         
-                        // obtain the student data
+                        // get student work
                         this.studentData.componentStates = resultData.componentStates;
+
+                        // get events
+                        this.studentData.events = resultData.events;
 
                         // uncomment me when actionLog is implemented
                         //this.studentData.actionLogs = resultData.actionLogs;
@@ -156,6 +160,7 @@ define(['configService', 'projectService'], function(configService, projectServi
         /**
          * Retrieve the student data from the server
          */
+        /*
         serviceObject.retrieveStudentData0 = function() {
             
             // get the mode
@@ -190,7 +195,7 @@ define(['configService', 'projectService'], function(configService, projectServi
                 params.runId = ConfigService.getRunId();
                 params.workgroupId = ConfigService.getWorkgroupId();
                 params.getComponentStates = true;
-                //params.getActionLog = true;
+                params.getEvents = true;
                 //params.getAnnotations = true;
                 httpParams.params = params;
                 
@@ -219,7 +224,8 @@ define(['configService', 'projectService'], function(configService, projectServi
                 }));
             }
         };
-        
+        */
+
         /**
          * Save the node visit to the server
          * @param nodeVisit the node visit to save to the server
@@ -884,36 +890,11 @@ define(['configService', 'projectService'], function(configService, projectServi
                 this.studentData.componentStates.push(componentState);
             }
         };
-        
-        serviceObject.saveComponentStateToServer = function(componentState) {
-            
-            // get the url to get the student data
-            var studentDataURL = ConfigService.getConfigParam('studentDataURL');
-            
-            var httpParams = {};
-            httpParams.method = 'POST';
-            httpParams.url = studentDataURL;
-            
-            // set the workgroup id and run id
-            var params = {};
-            params.runId = ConfigService.getRunId();
-            params.periodId = ConfigService.getPeriodId();
-            params.workgroupId = ConfigService.getWorkgroupId();
-            params.nodeId = componentState.nodeId;
-            params.componentId = componentState.componentId;
-            params.componentType = componentState.componentType;
-            params.studentData = componentState;
-            httpParams.params = params;
-            
-            // make the request to post the student data
-            return $http(httpParams).then(angular.bind(this, function(result) {
-                var componentStateResponse = result.data;
-                if (componentStateResponse != null) {
-                    componentState.id = componentStateResponse.id;
-                }
-                return componentStateResponse;
-            }));
-            
+
+        serviceObject.addEvent = function(event) {
+           if (this.studentData != null && this.studentData.events != null) {
+               this.studentData.events.push(event);
+           }
         };
 
        /**
@@ -940,75 +921,171 @@ define(['configService', 'projectService'], function(configService, projectServi
             return key;
         };
 
+        serviceObject.saveComponentEvent = function(component, category, event, data) {
+            if (component == null || category == null || event == null) {
+                console.error("StudentDataService.saveComponentEvent: component, category, event args must not be null");
+                return;
+            }
+            var context = "Component";
+            var nodeId = component.nodeId;
+            var componentId = component.componentId;
+            var componentType = component.componentType;
+            if (nodeId == null || componentId == null || componentType == null) {
+                console.error("StudentDataService.saveComponentEvent: nodeId, componentId, componentType must not be null");
+                return;
+            }
+            this.saveEvent(context, nodeId, componentId, componentType, category, event, data);
+        };
 
-        serviceObject.saveComponentStatesToServer = function(componentStates) {
+        serviceObject.saveVLEEvent = function(nodeId, componentId, componentType, category, event, data) {
+           if (category == null || event == null) {
+               console.error("StudentDataService.saveVLEEvent: category and event args must not be null");
+               return;
+           }
+           var context = "VLE";
+           this.saveEvent(context, nodeId, componentId, componentType, category, event, data);
+        };
+
+        serviceObject.saveEvent = function(context, nodeId, componentId, componentType, category, event, data) {
+            var events = [];
+            var newEvent = this.createNewEvent();
+            newEvent.context = context;
+            newEvent.nodeId = nodeId;
+            newEvent.componentId = componentId;
+            newEvent.componentType = componentType;
+            newEvent.category = category;
+            newEvent.event = event;
+            newEvent.data = data;
+            events.push(newEvent);
+            var componentStates = null;
+            this.saveToServer(componentStates, events);
+        };
+
+        /**
+        * Create a new empty event
+        * @return a new empty event
+        */
+        serviceObject.createNewEvent = function() {
+            var event = {};
+
+            event.runId = ConfigService.getRunId();
+            event.periodId = ConfigService.getPeriodId();
+            event.workgroupId = ConfigService.getWorkgroupId();
+            event.clientSaveTime = Date.parse(new Date());
+
+            return event;
+        };
+
+        serviceObject.saveToServer = function(componentStates, events) {
             
             if (componentStates != null && componentStates.length > 0) {
                 for (var c = 0; c < componentStates.length; c++) {
                     var componentState = componentStates[c];
 
                     if (componentState != null) {
-                        componentState.requestToken = this.generateKey() // use this to keep track of unsaved componentStates.
+                        componentState.requestToken = this.generateKey(); // use this to keep track of unsaved componentStates.
                         this.addComponentState(componentState);
                     }
                 }
+            }
 
-                // get the url to get the student data
-                var httpParams = {};
-                httpParams.method = 'POST';
-                httpParams.url = ConfigService.getConfigParam('studentDataURL');
+            if (events != null && events.length > 0) {
+                for (var e = 0; e < events.length; e++) {
+                    var event = events[e];
 
-                // set the workgroup id and run id
-                var params = {};
-                params.runId = ConfigService.getRunId();
-                params.workgroupId = ConfigService.getWorkgroupId();
-                params.data = {};
-                params.data.componentStates = componentStates;
-                httpParams.params = params;
-
-                // make the request to post the student data
-                return $http(httpParams).then(angular.bind(this, function(result) {
-                    
-                    var componentStates = [];
-                    
-                    // get the local references to the component states that were posted
-                    if (result != null &&
-                            result.config != null &&
-                            result.config.params != null &&
-                            result.config.params.data != null &&
-                            result.config.params.data.componentStates != null) {
-                        componentStates = result.config.params.data.componentStates;
+                    if (event != null) {
+                        event.requestToken = this.generateKey(); // use this to keep track of unsaved componentStates.
+                        this.addEvent(event);
                     }
-                    
-                    var saveStudentDataResponse = result.data;
-                    var savedComponentStates = saveStudentDataResponse.componentStates;
+                }
+            }
 
-                    // set the id and serverSaveTime in the local componentState
-                    for (var i = 0; i < savedComponentStates.length; i++) {
-                        var savedComponentState = savedComponentStates[i];
-                        
-                        /*
-                         * loop through all the component states that were posted
-                         * to find the one with the matching request token
-                         */
-                        for (var l = 0; l < componentStates.length; l++) {
-                            var localComponentState = componentStates[l];
-                            if (localComponentState.requestToken != null &&
-                                localComponentState.requestToken === savedComponentState.requestToken) {
-                                localComponentState.id = savedComponentState.id;
-                                localComponentState.serverSaveTime = savedComponentState.serverSaveTime;
-                                localComponentState.requestToken = null; // requestToken is no longer needed.
-                                
-                                $rootScope.$broadcast('componentStateSavedToServer', {componentState: localComponentState});
-                                break;
+            // get the url to POST the student data
+            var httpParams = {};
+            httpParams.method = 'POST';
+            httpParams.url = ConfigService.getConfigParam('studentDataURL');
+
+            // set the workgroup id and run id
+            var params = {};
+            params.runId = ConfigService.getRunId();
+            params.workgroupId = ConfigService.getWorkgroupId();
+            params.data = {};
+            params.data.componentStates = componentStates;
+            params.data.events = events;
+            httpParams.params = params;
+
+            // make the request to post the student data
+            return $http(httpParams).then(angular.bind(this, function(result) {
+
+                var saveStudentDataResponse = result.data;
+
+                // get the local references to the component states that were posted and set their id and serverSaveTime
+                if (result != null &&
+                        result.config != null &&
+                        result.config.params != null &&
+                        result.config.params.data != null) {
+                    if (result.config.params.data.componentStates != null &&
+                        saveStudentDataResponse.componentStates != null) {
+                        var localComponentStates = result.config.params.data.componentStates;
+
+                        var savedComponentStates = saveStudentDataResponse.componentStates;
+
+                        // set the id and serverSaveTime in the local componentState
+                        for (var i = 0; i < savedComponentStates.length; i++) {
+                            var savedComponentState = savedComponentStates[i];
+
+                            /*
+                             * loop through all the component states that were posted
+                             * to find the one with the matching request token
+                             */
+                            for (var l = 0; l < localComponentStates.length; l++) {
+                                var localComponentState = localComponentStates[l];
+                                if (localComponentState.requestToken != null &&
+                                    localComponentState.requestToken === savedComponentState.requestToken) {
+                                    localComponentState.id = savedComponentState.id;
+                                    localComponentState.serverSaveTime = savedComponentState.serverSaveTime;
+                                    localComponentState.requestToken = null; // requestToken is no longer needed.
+
+                                    $rootScope.$broadcast('componentStateSavedToServer', {componentState: localComponentState});
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    if (result.config.params.data.events != null &&
+                        saveStudentDataResponse.events != null) {
+                        var localEvents = result.config.params.data.events;
+
+                        var savedEvents = saveStudentDataResponse.events;
+
+                        // set the id and serverSaveTime in the local event
+                        for (var i = 0; i < savedEvents.length; i++) {
+                            var savedEvent = savedEvents[i];
+
+                            /*
+                             * loop through all the events that were posted
+                             * to find the one with the matching request token
+                             */
+                            for (var l = 0; l < localEvents.length; l++) {
+                                var localEvent = localEvents[l];
+                                if (localEvent.requestToken != null &&
+                                    localEvent.requestToken === savedEvent.requestToken) {
+                                    localEvent.id = savedEvent.id;
+                                    localEvent.serverSaveTime = savedEvent.serverSaveTime;
+                                    localEvent.requestToken = null; // requestToken is no longer needed.
+
+                                    $rootScope.$broadcast('eventSavedToServer', {event: localEvent});
+                                    break;
+                                }
                             }
                         }
                     }
 
-                    return saveStudentDataResponse;
-                }));
+                }
 
-            }
+
+                return saveStudentDataResponse;
+            }));
         };
         
         serviceObject.retrieveComponentStates = function(runId, periodId, workgroupId) {
@@ -1155,8 +1232,8 @@ define(['configService', 'projectService'], function(configService, projectServi
             }
             
             return componentStatesByNodeIdAndComponentId;
-        }
-        
+        };
+
         /**
          * Create a copy of a JSON object
          * @param jsonObject the JSON object to get a copy of

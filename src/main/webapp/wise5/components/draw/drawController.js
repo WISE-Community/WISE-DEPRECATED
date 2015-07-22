@@ -98,6 +98,9 @@ define(['app', 'drawingTool', 'vendor'], function(app) {
                 
                 // get the component id
                 this.componentId = this.componentContent.id;
+
+                // get the component type
+                this.componentType = this.componentContent.componentType;
                 
                 // get the show previous work node id if it is provided
                 var showPreviousWorkNodeId = this.componentContent.showPreviousWorkNodeId;
@@ -169,6 +172,16 @@ define(['app', 'drawingTool', 'vendor'], function(app) {
                     
                     // listen for the drawing changed event
                     this.drawingTool.on('drawing:changed', angular.bind(this, this.studentDataChanged));
+
+                    // listen for selected tool changed event
+                    this.drawingTool.on('tool:changed', function (toolName) {
+                        // log this event
+                        var category = "Tool";
+                        var event = "toolSelected";
+                        var data = {};
+                        data.selectedToolName = toolName;
+                        StudentDataService.saveComponentEvent(this, category, event, data);
+                    }.bind(this));
                 }
             }
         };

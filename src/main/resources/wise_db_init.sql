@@ -63,15 +63,15 @@
 
     create table componentStates (
         id integer not null auto_increment,
-        componentId varchar(255) not null,
-        componentType varchar(255) not null,
-        nodeId varchar(255) not null,
+        clientSaveTime datetime not null,
+        componentId varchar(30) not null,
+        componentType varchar(30) not null,
+        nodeId varchar(30) not null,
+        serverSaveTime datetime not null,
         studentData mediumtext not null,
         periodId bigint not null,
         runId bigint not null,
         workgroupId bigint not null,
-        clientSaveTime datetime not null,
-        serverSaveTime datetime not null,
         primary key (id)
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -93,6 +93,23 @@
         id bigint not null auto_increment,
         name varchar(255),
         OPTLOCK integer,
+        primary key (id)
+    ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+    create table events (
+        id integer not null auto_increment,
+        category varchar(255) not null,
+        clientSaveTime datetime not null,
+        componentId varchar(30),
+        componentType varchar(30),
+        context varchar(30) not null,
+        data text,
+        event varchar(255) not null,
+        nodeId varchar(30),
+        serverSaveTime datetime not null,
+        periodId bigint not null,
+        runId bigint not null,
+        workgroupId bigint not null,
         primary key (id)
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -518,6 +535,14 @@
     alter table acl_sid 
         add constraint UK_meabypi3cnm8604op6qvd517v  unique (sid, principal);
 
+    create index runIdIndex on componentStates (runId);
+
+    create index workgroupIdIndex on componentStates (workgroupId);
+
+    create index runIdIndex on events (runId);
+
+    create index workgroupIdIndex on events (workgroupId);
+
     alter table granted_authorities 
         add constraint UK_cgffgw24ojv4o1oe9cpgdy60k  unique (authority);
 
@@ -599,18 +624,18 @@
         foreign key (toUser_id) 
         references userinfo (id);
 
-    alter table componentState 
-        add constraint FK_e33hlmfvdbycehx6kosedo0gs 
+    alter table componentStates 
+        add constraint FK_mimnejycw7u1bgltxkf3wbxwh 
         foreign key (periodId) 
         references groups (id);
 
-    alter table componentState 
-        add constraint FK_qhe19ei4dyjpfnux2eujb575w 
+    alter table componentStates 
+        add constraint FK_1bx4p6cs0itbhbugx9a1ov8fq 
         foreign key (runId) 
         references runs (id);
 
-    alter table componentState 
-        add constraint FK_j2bpj63byky1tlkx346b6osq4 
+    alter table componentStates 
+        add constraint FK_4hqdejeubrrob2lvlgkqgw63k 
         foreign key (workgroupId) 
         references wiseworkgroups (id);
 
@@ -618,6 +643,21 @@
         add constraint FK_rx43blmi6te4f1ttt3j1s9vr1 
         foreign key (stepWorkId) 
         references stepwork (id);
+
+    alter table events 
+        add constraint FK_hvs65ix9oss3abisglg7r502r 
+        foreign key (periodId) 
+        references groups (id);
+
+    alter table events 
+        add constraint FK_18ony502dcyxdrgjriir0u8bm 
+        foreign key (runId) 
+        references runs (id);
+
+    alter table events 
+        add constraint FK_jh9ptmwgfdnyq9flj9mly66qd 
+        foreign key (workgroupId) 
+        references wiseworkgroups (id);
 
     alter table groups 
         add constraint FK_x1sf5l9k6d5g1t7kemday5ib 

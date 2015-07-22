@@ -44,10 +44,11 @@ import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.vle.wise5.VLEService;
 import org.wise.vle.domain.work.ComponentState;
+import org.wise.vle.domain.work.Event;
 
 /**
  * Controller for handling GET and POST requests of WISE5 student data
- * WISE5 student data is stored as ComponentState and ActionLog domain objects
+ * WISE5 student data is stored as ComponentState and Event domain objects
  * @author Hiroki Terashima
  */
 @Controller("wise5StudentDataController")
@@ -64,7 +65,7 @@ public class StudentDataController {
     public void handleGETWISE5StudentDataController(
             HttpServletResponse response,
             @RequestParam(value = "getComponentStates", defaultValue = "false") boolean getComponentStates,
-            @RequestParam(value = "getActionLogs", defaultValue = "false") boolean getActionLogs,
+            @RequestParam(value = "getEvents", defaultValue = "false") boolean getEvents,
             @RequestParam(value = "getAnnotations", defaultValue = "false") boolean getAnnotations,
             @RequestParam(value = "id", required = false) Integer id,
             @RequestParam(value = "runId", required = false) Integer runId,
@@ -72,7 +73,10 @@ public class StudentDataController {
             @RequestParam(value = "workgroupId", required = false) Integer workgroupId,
             @RequestParam(value = "nodeId", required = false) String nodeId,
             @RequestParam(value = "componentId", required = false) String componentId,
-            @RequestParam(value = "componentType", required = false) String componentType
+            @RequestParam(value = "componentType", required = false) String componentType,
+            @RequestParam(value = "context", required = false) String context,
+            @RequestParam(value = "category", required = false) String category,
+            @RequestParam(value = "event", required = false) String event
             ) {
         JSONObject result = new JSONObject();
         if (getComponentStates) {
@@ -94,6 +98,25 @@ public class StudentDataController {
                 e.printStackTrace();
             }
         }
+        if (getEvents) {
+            List<Event> events = vleService.getEvents(id, runId, periodId, workgroupId,
+                    nodeId, componentId, componentType, context, category, event);
+
+            JSONArray eventsJSONArray = new JSONArray();
+
+            // loop through all the component states
+            for (int e = 0; e < events.size(); e++) {
+                Event eventObject = events.get(e);
+
+                // get the JSON representation of the component state and add to componentStatesJSONArray
+                eventsJSONArray.put(eventObject.toJSON());
+            }
+            try {
+                result.put("events", eventsJSONArray);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
 
         // write the result to the response
         try {
@@ -105,7 +128,7 @@ public class StudentDataController {
     }
 
     /**
-     * Handles batch POSTing student data (ComponentState, ActionLog, Annotations)
+     * Handles batch POSTing student data (ComponentState, Action, Annotation)
      * @param runId Run that the POSTer (student) is in
      * @param data JSON string containing batch student data
      *             ex: { "componentStates":[{"runId":2,"nodeId":"node4",...},{"runId":2,"nodeId":"node5",...}],
@@ -143,8 +166,8 @@ public class StudentDataController {
                                     componentStateJSONObject.isNull("nodeId") ? null : componentStateJSONObject.getString("nodeId"),
                                     componentStateJSONObject.isNull("componentId") ? null : componentStateJSONObject.getString("componentId"),
                                     componentStateJSONObject.isNull("componentType") ? null : componentStateJSONObject.getString("componentType"),
-                                    componentStateJSONObject.isNull("clientSaveTime") ? null : componentStateJSONObject.getString("clientSaveTime"),
-                                    componentStateJSONObject.isNull("studentData") ? null : componentStateJSONObject.getString("studentData"));
+                                    componentStateJSONObject.isNull("studentData") ? null : componentStateJSONObject.getString("studentData"),
+                                    componentStateJSONObject.isNull("clientSaveTime") ? null : componentStateJSONObject.getString("clientSaveTime"));
 
                             // before returning saved ComponentState, strip all fields except id, token, and responseToken to minimize response size
                             componentState.setRun(null);
@@ -161,7 +184,44 @@ public class StudentDataController {
                         }
                         result.put("componentStates", componentStatesResultJSONArray);
                     }
+                    JSONArray eventsJSONArray = dataJSONObject.optJSONArray("events");
+                    if (eventsJSONArray != null) {
+                        JSONArray eventsResultJSONArray = new JSONArray();
+                        for (int e = 0; e < eventsJSONArray.length(); e++) {
+                            JSONObject eventJSONObject = eventsJSONArray.getJSONObject(e);
+                            String requestToken = eventJSONObject.getString("requestToken");
+                            Event event = vleService.saveEvent(
+                                    eventJSONObject.isNull("id") ? null : eventJSONObject.getInt("id"),
+                                    eventJSONObject.isNull("runId") ? null : eventJSONObject.getInt("runId"),
+                                    eventJSONObject.isNull("periodId") ? null : eventJSONObject.getInt("periodId"),
+                                    eventJSONObject.isNull("workgroupId") ? null : eventJSONObject.getInt("workgroupId"),
+                                    eventJSONObject.isNull("nodeId") ? null : eventJSONObject.getString("nodeId"),
+                                    eventJSONObject.isNull("componentId") ? null : eventJSONObject.getString("componentId"),
+                                    eventJSONObject.isNull("componentType") ? null : eventJSONObject.getString("componentType"),
+                                    eventJSONObject.isNull("context") ? null : eventJSONObject.getString("context"),
+                                    eventJSONObject.isNull("category") ? null : eventJSONObject.getString("category"),
+                                    eventJSONObject.isNull("event") ? null : eventJSONObject.getString("event"),
+                                    eventJSONObject.isNull("data") ? null : eventJSONObject.getString("data"),
+                                    eventJSONObject.isNull("clientSaveTime") ? null : eventJSONObject.getString("clientSaveTime"));
 
+                            // before returning saved ComponentState, strip all fields except id, token, and responseToken to minimize response size
+                            event.setRun(null);
+                            event.setPeriod(null);
+                            event.setWorkgroup(null);
+                            event.setNodeId(null);
+                            event.setComponentId(null);
+                            event.setComponentType(null);
+                            event.setContext(null);
+                            event.setCategory(null);
+                            event.setEvent(null);
+                            event.setData(null);
+                            event.setClientSaveTime(null);
+                            JSONObject savedEventJSONObject = event.toJSON();
+                            savedEventJSONObject.put("requestToken", requestToken);
+                            eventsResultJSONArray.put(savedEventJSONObject);
+                        }
+                        result.put("events", eventsResultJSONArray);
+                    }
                 } catch (Exception e) {
 
                 }

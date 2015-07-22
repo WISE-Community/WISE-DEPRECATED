@@ -56,6 +56,9 @@ define(['app'], function(app) {
                 
                 // get the component id
                 this.componentId = this.componentContent.id;
+
+                // get the component type
+                this.componentType = this.componentContent.componentType;
                 
                 // get the show previous work node id if it is provided
                 var showPreviousWorkNodeId = this.componentContent.showPreviousWorkNodeId;
@@ -261,7 +264,7 @@ define(['app'], function(app) {
                  * student clicked the most current check box
                  */
                 var studentChoices = this.studentChoices;
-                
+
                 if (studentChoices != null) {
                     /*
                      * check if the newest check is in the array of checked
@@ -283,9 +286,17 @@ define(['app'], function(app) {
                         studentChoices.splice(index, 1);
                     }
                 }
-                
+
                 // notify this node that the student choice has changed
                 this.studentDataChanged();
+
+                // log this event
+                var category = "StudentInteraction";
+                var event = "choiceSelected";
+                var data = {};
+                data.selectedChoiceId = choiceId;
+                data.choicesAfter = studentChoices;
+                StudentDataService.saveComponentEvent(this, category, event, data);
             }
         };
         

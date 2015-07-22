@@ -25,6 +25,7 @@ package org.wise.portal.service.vle.wise5;
 
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.vle.domain.work.ComponentState;
+import org.wise.vle.domain.work.Event;
 
 import java.util.List;
 
@@ -34,12 +35,9 @@ import java.util.List;
  */
 public interface VLEService {
 
-	// ComponentState methods
-
 	/**
-	 * Returns List of ComponentState with the specified fields
-	 * @return List of ComponentState object with the specified fields. If none matches,
-	 * will return an empty list.
+	 * @return List of ComponentState objects with the specified fields. If none matches,
+	 *     return an empty list.
 	 */
 	List<ComponentState> getComponentStates(Integer id, Integer runId, Integer periodId, Integer workgroupId,
 												   String nodeId, String componentId, String componentType);
@@ -49,9 +47,25 @@ public interface VLEService {
 	 */
 	ComponentState saveComponentState(Integer id, Integer runId, Integer periodId, Integer workgroupId,
 									  String nodeId, String componentId, String componentType,
-									  String clientSaveTime, String studentData) throws ObjectNotFoundException;
+									  String studentData, String clientSaveTime) throws ObjectNotFoundException;
 
 
-	// ActionLog methods
+    /**
+     * @return List of Event objects with the specified fields. If none matches,
+     *     return an empty list.
+     */
+    List<Event> getEvents(Integer id, Integer runId, Integer periodId, Integer workgroupId,
+                                            String nodeId, String componentId, String componentType,
+                                            String context, String category, String event);
+
+    /**
+     * Saves Event in the data store
+     */
+    Event saveEvent(Integer id, Integer runId, Integer periodId, Integer workgroupId,
+                                        String nodeId, String componentId, String componentType,
+                                        String context, String category, String event, String data,
+                                        String clientSaveTime) throws ObjectNotFoundException;
+
+
 
 }

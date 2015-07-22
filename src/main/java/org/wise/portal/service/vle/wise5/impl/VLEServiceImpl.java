@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.work.ComponentStateDao;
+import org.wise.portal.dao.work.EventDao;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.workgroup.WISEWorkgroup;
@@ -35,6 +36,7 @@ import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.vle.wise5.VLEService;
 import org.wise.portal.service.workgroup.WorkgroupService;
 import org.wise.vle.domain.work.ComponentState;
+import org.wise.vle.domain.work.Event;
 
 import java.sql.Timestamp;
 import java.util.Calendar;
@@ -49,6 +51,9 @@ public class VLEServiceImpl implements VLEService {
 
     @Autowired
     private ComponentStateDao componentStateDao;
+
+    @Autowired
+    private EventDao eventDao;
 
     @Autowired
     private RunService runService;
@@ -94,7 +99,7 @@ public class VLEServiceImpl implements VLEService {
     @Override
     public ComponentState saveComponentState(Integer id, Integer runId, Integer periodId, Integer workgroupId,
                                              String nodeId, String componentId, String componentType,
-                                             String clientSaveTime, String studentData) {
+                                             String studentData, String clientSaveTime) {
         ComponentState componentState;
         if (id != null) {
             // if the id is passed in, the client is requesting an update, so fetch the ComponentState from data store
@@ -156,7 +161,115 @@ public class VLEServiceImpl implements VLEService {
         }
 
         componentStateDao.save(componentState);
-
         return componentState;
+    }
+
+    @Override
+    public List<Event> getEvents(Integer id, Integer runId, Integer periodId, Integer workgroupId,
+                                 String nodeId, String componentId, String componentType,
+                                 String context, String category, String event) {
+        Run run = null;
+        if (runId != null) {
+            try {
+                boolean doEagerFetch = false;
+                run = runService.retrieveById(new Long(runId), doEagerFetch);
+            } catch (ObjectNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        Group period = null;
+        if (periodId != null) {
+            try {
+                period = groupService.retrieveById(new Long(periodId));
+            } catch (ObjectNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        WISEWorkgroup workgroup = null;
+        if (workgroupId != null) {
+            try {
+                workgroup = (WISEWorkgroup) workgroupService.retrieveById(new Long(workgroupId));
+            } catch (ObjectNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return eventDao.getEventsByParams(id, run, period, workgroup, nodeId, componentId, componentType,
+                context, category, event);
+    }
+
+    @Override
+    public Event saveEvent(Integer id, Integer runId, Integer periodId, Integer workgroupId,
+                           String nodeId, String componentId, String componentType,
+                           String context, String category, String eventString, String data,
+                           String clientSaveTime) throws ObjectNotFoundException {
+        Event event;
+        if (id != null) {
+            // if the id is passed in, the client is requesting an update, so fetch the Event from data store
+            List<Event> events = getEvents(id, null, null, null, null, null, null, null, null, null);
+            if (events != null && events.size() > 0) {
+                // TODO: maybe we want a getEventById method here?
+                event = events.get(0);
+            } else {
+                return null;
+            }
+        } else {
+            // the id was not passed in, so we're creating a new Event from scratch
+            event = new Event();
+        }
+        if (runId != null) {
+            try {
+                boolean doEagerFetch = false;
+                event.setRun(runService.retrieveById(new Long(runId), doEagerFetch));
+            } catch (ObjectNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        if (periodId != null) {
+            try {
+                event.setPeriod(groupService.retrieveById(new Long(periodId)));
+            } catch (ObjectNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        if (workgroupId != null) {
+            try {
+                event.setWorkgroup((WISEWorkgroup) workgroupService.retrieveById(new Long(workgroupId)));
+            } catch (ObjectNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        if (nodeId != null) {
+            event.setNodeId(nodeId);
+        }
+        if (componentId != null) {
+            event.setComponentId(componentId);
+        }
+        if (componentType != null) {
+            event.setComponentType(componentType);
+        }
+        if (context != null) {
+            event.setContext(context);
+        }
+        if (category != null) {
+            event.setCategory(category);
+        }
+        if (eventString != null) {
+            event.setEvent(eventString);
+        }
+        if (data != null) {
+            event.setData(data);
+        }
+        if (clientSaveTime != null) {
+            Timestamp clientSaveTimestamp = new Timestamp(new Long(clientSaveTime));
+            event.setClientSaveTime(clientSaveTimestamp);
+        }
+        // set postTime
+        Calendar now = Calendar.getInstance();
+        Timestamp serverSaveTimestamp = new Timestamp(now.getTimeInMillis());
+        event.setServerSaveTime(serverSaveTimestamp);
+
+        eventDao.save(event);
+        return event;
     }
 }

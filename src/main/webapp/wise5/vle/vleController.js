@@ -79,11 +79,34 @@ define(['app'],
         
         this.showPortfolio = function() {
             this.isPortfolioVisible = true;
+
+            // save showPortfolio event
+            var nodeId = null;
+            var componentId = null;
+            var componentType = null;
+            var category = "Portfolio";
+            var event = "portfolioOpened";
+            var eventData = {};
+            var currentNode = CurrentNodeService.getCurrentNode();
+            eventData.curentNodeId = currentNode == null ? null : currentNode.id;
+            StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
         };
         
 
         this.hidePortfolio = function() {
             this.isPortfolioVisible = false;
+
+            // save hidePortfolio event
+            var nodeId = null;
+            var componentId = null;
+            var componentType = null;
+            var category = "Portfolio";
+            var event = "portfolioClosed";
+            var eventData = {};
+            var currentNode = CurrentNodeService.getCurrentNode();
+            eventData.curentNodeId = currentNode == null ? null : currentNode.id;
+            StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
+
         };
 
         this.showNavigation = function() {
@@ -91,10 +114,28 @@ define(['app'],
         };
         
         this.goHome = function() {
+            // save goHome event
+            var nodeId = null;
+            var componentId = null;
+            var componentType = null;
+            var category = "Navigation";
+            var event = "goHomeButtonClicked";
+            var eventData = {};
+            StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
+
             $rootScope.$broadcast('goHome');
         };
         
         this.logOut = function() {
+            // save logOut event
+            var nodeId = null;
+            var componentId = null;
+            var componentType = null;
+            var category = "Navigation";
+            var event = "logOutButtonClicked";
+            var eventData = {};
+            StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
+
             $rootScope.$broadcast('logOut');
         };
           

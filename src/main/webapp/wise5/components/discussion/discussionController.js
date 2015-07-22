@@ -116,7 +116,7 @@ define(['app', 'angular'], function(app, angular) {
                     // populate the student work into this component
                     //this.setStudentWork(componentState);
                     
-                    if(ConfigService.isPreview()) {
+                    if (ConfigService.isPreview()) {
                         // we are in preview mode
                     } else {
                         // we are in regular student run mode

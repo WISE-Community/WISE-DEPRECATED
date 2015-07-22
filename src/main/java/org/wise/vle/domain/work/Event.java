@@ -23,10 +23,7 @@
  */
 package org.wise.vle.domain.work;
 
-import java.sql.Timestamp;
-
-import javax.persistence.*;
-
+import org.hibernate.annotations.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wise.portal.domain.group.Group;
@@ -38,15 +35,23 @@ import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.domain.workgroup.impl.WISEWorkgroupImpl;
 import org.wise.vle.domain.PersistableDomain;
 
+import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.Index;
+import javax.persistence.Table;
+import java.sql.Timestamp;
+
 /**
- * Domain object representing work for a component (used in WISE5)
+ * Domain object representing an event that occur in the VLE (used in WISE5). An Event can be
+ * a mouse click, step_enter, model_state_changed, etc.
  * @author Hiroki Terashima
  */
 @Entity
-@Table(name = "componentStates",  indexes = {
-        @Index(columnList = "runId", name = "runIdIndex"),
-        @Index(columnList = "workgroupId", name = "workgroupIdIndex")})
-public class ComponentState extends PersistableDomain {
+@Table(name = "events",  indexes = {
+		@Index(columnList = "runId", name = "runIdIndex"),
+		@Index(columnList = "workgroupId", name = "workgroupIdIndex")})
+public class Event extends PersistableDomain {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -64,14 +69,26 @@ public class ComponentState extends PersistableDomain {
 	@JoinColumn(name = "workgroupId", nullable = false)
 	private WISEWorkgroup workgroup;
 
-    @Column(name = "nodeId", nullable = false, length = 30)
+    @Column(name = "nodeId", length = 30)
     private String nodeId;
 
-	@Column(name = "componentId", nullable = false, length = 30)
+	@Column(name = "componentId", length = 30)
 	private String componentId;
 
-	@Column(name = "componentType", nullable = false, length = 30)
+	@Column(name = "componentType", length = 30)
 	private String componentType;
+
+	@Column(name = "context", nullable = false, length = 30)
+	private String context;
+
+	@Column(name = "category", nullable = false)
+	private String category;
+
+	@Column(name = "event", nullable = false)
+	private String event;
+
+	@Column(name = "data", length = 65536, columnDefinition = "text")
+	private String data;
 
 	@Column(name = "clientSaveTime", nullable = false)
 	private Timestamp clientSaveTime;
@@ -79,12 +96,9 @@ public class ComponentState extends PersistableDomain {
 	@Column(name = "serverSaveTime", nullable = false)
 	private Timestamp serverSaveTime;
 
-	@Column(name = "studentData", length = 5120000, columnDefinition = "mediumtext", nullable = false)
-	private String studentData;
-
 	@Override
 	protected Class<?> getObjectClass() {
-		return ComponentState.class;
+		return Event.class;
 	}
 
 	public Integer getId() {
@@ -142,6 +156,38 @@ public class ComponentState extends PersistableDomain {
 		this.componentId = componentId;
 	}
 
+	public String getContext() {
+		return context;
+	}
+
+	public void setContext(String context) {
+		this.context = context;
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
+
+	public String getEvent() {
+		return event;
+	}
+
+	public void setEvent(String event) {
+		this.event = event;
+	}
+
+	public String getData() {
+		return data;
+	}
+
+	public void setData(String data) {
+		this.data = data;
+	}
+
 	public Timestamp getServerSaveTime() {
 		return serverSaveTime;
 	}
@@ -158,80 +204,87 @@ public class ComponentState extends PersistableDomain {
 		this.clientSaveTime = clientSaveTime;
 	}
 
-	public String getStudentData() {
-		return studentData;
-	}
-
-	public void setStudentData(String studentData) {
-		this.studentData = studentData;
-	}
-
     /**
-     * Get the JSON representation of the ComponentState
-     * @return a JSONObject with the values from the ComponentState
+     * Get the JSON representation of the Event
+     * @return a JSONObject with the values from the Event
      */
     public JSONObject toJSON() {
-        JSONObject componentStateJSONObject = new JSONObject();
+        JSONObject eventJSONObject = new JSONObject();
         
         try {
             
             // set the id
 			if (this.id != null) {
-				componentStateJSONObject.put("id", this.id);
+				eventJSONObject.put("id", this.id);
 			}
             
             // set the run id
 			if (this.run != null) {
 				Long runId = this.run.getId();
-				componentStateJSONObject.put("runId", runId);
+				eventJSONObject.put("runId", runId);
 			}
             
             // set the period id
 			if (this.period != null) {
 				Long periodId = this.period.getId();
-				componentStateJSONObject.put("periodId", periodId);
+				eventJSONObject.put("periodId", periodId);
 			}
 
             // set the workgroup id
 			if (this.workgroup != null) {
 				Long workgroupId = this.workgroup.getId();
-				componentStateJSONObject.put("workgroupId", workgroupId);
+				eventJSONObject.put("workgroupId", workgroupId);
 			}
             
             // set the node id
 			if (this.nodeId != null) {
-				componentStateJSONObject.put("nodeId", this.nodeId);
+				eventJSONObject.put("nodeId", this.nodeId);
 			}
             
             // set the component id
 			if (this.componentId != null) {
-				componentStateJSONObject.put("componentId", this.componentId);
+				eventJSONObject.put("componentId", this.componentId);
 			}
 
             // set the component type
 			if (this.componentType != null) {
-				componentStateJSONObject.put("componentType", this.componentType);
+				eventJSONObject.put("componentType", this.componentType);
 			}
 
-            // set the clientSaveTime time
+			// set the context
+			if (this.context != null) {
+				eventJSONObject.put("context", this.context);
+			}
+
+			// set the category
+			if (this.category != null) {
+				eventJSONObject.put("category", this.category);
+			}
+
+			// set the event
+			if (this.event != null) {
+				eventJSONObject.put("event", this.event);
+			}
+
+			// set the data
+			if (this.data != null) {
+				eventJSONObject.put("data", this.data);
+			}
+
+			// set the clientSaveTime time
 			if (this.clientSaveTime != null) {
-				componentStateJSONObject.put("clientSaveTime", clientSaveTime.getTime());
+				eventJSONObject.put("clientSaveTime", clientSaveTime.getTime());
 			}
 
 			// set the serverSaveTime time
 			if (this.serverSaveTime != null) {
-				componentStateJSONObject.put("serverSaveTime", serverSaveTime.getTime());
+				eventJSONObject.put("serverSaveTime", serverSaveTime.getTime());
 			}
 
-            // set the student data
-			if (this.studentData != null) {
-				componentStateJSONObject.put("studentData", new JSONObject(studentData));
-			}
-            
         } catch (JSONException e) {
             e.printStackTrace();
         }
         
-        return componentStateJSONObject;
+        return eventJSONObject;
     }
 }
