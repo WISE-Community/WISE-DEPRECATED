@@ -18,7 +18,12 @@ define(['app'],
         this.layoutLogic = ConfigService.layoutLogic;
         this.currentNode = null;
         this.isPortfolioVisible = false;
-        
+        this.theme = ProjectService.getTheme();
+        if (this.theme == null) {
+            this.theme = "default";
+        }
+        // TODO: check if this is a valid theme
+
         $scope.$on('showSessionWarning', angular.bind(this, function() {
             // Appending dialog to document.body
             var confirm = $mdDialog.confirm()

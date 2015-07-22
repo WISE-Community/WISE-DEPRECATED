@@ -122,64 +122,8 @@
         </style>
     </head>
     <body>
-        <div ng-controller='VLEController as vleController'
-            data-drop="true"
-            jqyoui-droppable="{onDrop: 'vleController.portfolioDropCallback()'}"
-            ng-mousemove='vleController.mouseMoved()'
-            layout="column" layout-fill>
-
-            <style>
-                {{vleController.projectStyle}}
-            </style>
-
-            <div layout="column" flex>
-                <header>
-                </header>
-
-
-                <md-content flex>
-                    <main role="main">
-                        <span ng-if="vleController.currentNode"> CurrentNode:
-                            "{{vleController.currentNode.title}}"
-                            ({{vleController.currentNode.type}}, {{vleController.currentNode.id}})
-                        </span>
-                        <span ng-if="vleController.mode"> Current Mode:
-                        {{vleController.mode}} </span>
-
-                        <select ng-model="vleController.layoutState"
-                                ng-options="layoutState for layoutState in vleController.layoutStates"
-                                ng-change="vleController.updateLayout()">
-                        </select>
-                        <hr/>
-                        <div id="globalTools">
-                            <button ng-repeat="globalTool in vleController.globalTools"
-                                    ng-click="vleController.globalToolButtonClicked(globalTool)">{{globalTool}}</button>
-                        </div>
-
-                        <div id="prev" class={{vleController.layoutState}} ng-click="vleController.goToPrevNode()">Prev</div>
-                        <div id="next" class={{vleController.layoutState}} ng-click="vleController.goToNextNode()">Next</div>
-                        <div ui-view='navigationView'></div>
-                        <div ui-view='nodeView'></div>
-                        <br/>
-                        <button id='homeButton' ng-click='vleController.goHome()'>Home</button>
-                        <button id='logOutButton' ng-click='vleController.logOut()'>Log Out</button>
-                        <button id='showNavigationButton' ng-click='vleController.showNavigation()'>Show Navigation</button>
-                        <div ng-switch on='vleController.isPortfolioVisible'>
-                            <div ng-switch-when='true'
-                                 id='portfolio'
-                                 data-drag='true'
-                                 data-jqyoui-options="{}"
-                                 jqyoui-draggable="{animate:true, placeholder: 'keep', onStart:'vleController.portfolioDragStartCallback()'}">
-                                <button id='closePortfolio' ng-click='vleController.hidePortfolio()'>X</button>
-                                <div ng-include="'wise5/vle/portfolio/portfolio.html'"></div>
-                            </div>
-                            <div ng-switch-when='false'>
-                                <button id='portfolioOpenButton' ng-click='vleController.showPortfolio()'>Open Portfolio</button>
-                            </div>
-                        </div>
-                    </main>
-                </md-content>
-            </div>
-        </div>
+    <div ng-controller='VLEController as vleController'>
+        <div ng-include="'wise5/vle/themes/' + vleController.theme + '/vle.html'"></div>
+    </div>
     </body>
 </html>

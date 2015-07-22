@@ -1,16 +1,3 @@
-<div ng-controller='NodeController as nodeController'>
-<input type='button' value='X' ng-click='nodeController.closeNode()'></input>
-<input type='button' value='+Portfolio' ng-click='nodeController.addNodeVisitItemToPortfolio()'></input>
-<div compile='nodeController.getPrompt()'></div>
-<div ng-repeat='component in nodeController.getComponents()' 
-    ng-include='nodeController.getComponentTypeHTML(component.componentType)' 
-    ng-init='componentState = nodeController.getComponentStateByComponent(component)'></div>
-<button id='saveButton' 
-    ng-click='nodeController.saveButtonClicked()' 
-    ng-disabled='nodeController.isDisabled' 
-    ng-show='nodeController.showSaveButton()'>Save</button>
-<button id='submitButton' 
-    ng-click='nodeController.submitButtonClicked()' 
-    ng-disabled='nodeController.isDisabled' 
-    ng-show='nodeController.showSubmitButton()'>Submit</button>
+<div ng-controller='VLEController as vleController'>
+    <div ng-include="'wise5/vle/themes/' + vleController.theme + '/node.html'"></div>
 </div>
