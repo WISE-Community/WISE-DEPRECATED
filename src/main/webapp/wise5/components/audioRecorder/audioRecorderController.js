@@ -126,13 +126,10 @@ define(['app'], function(app) {
                 
                 // get the component id
                 this.componentId = this.componentContent.id;
-                
-                // get the component from the scope
-                var component = $scope.component;
-                
+
                 // get the component state from the scope
                 var componentState = $scope.componentState;
-                
+
                 if (componentState == null) {
                     /*
                      * only import work if the student does not already have
@@ -153,7 +150,7 @@ define(['app'], function(app) {
                 }
                 
                 // register this component with the parent node
-                $scope.$parent.registerComponentController($scope, component);
+                $scope.$parent.registerComponentController($scope, this.componentContent);
                 
                 try {
                     // webkit shim

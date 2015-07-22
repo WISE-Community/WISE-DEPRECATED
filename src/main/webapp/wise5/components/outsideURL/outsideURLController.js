@@ -72,12 +72,9 @@ define(['app'], function(app) {
                         
                         // disable the component since we are just showing previous work
                         this.isDisabled = true;
-                        
-                        // get the component
-                        var component = $scope.component;
-                        
+
                         // register this component with the parent node
-                        $scope.$parent.registerComponentController($scope, component);
+                        $scope.$parent.registerComponentController($scope, this.componentContent);
                     }));
                 } else {
                     // this is a regular component
@@ -86,12 +83,9 @@ define(['app'], function(app) {
                         // set the url
                         this.setURL(this.componentContent.url);
                     }
-                    
-                    // get the component from the scope
-                    var component = $scope.component;
-                    
+
                     // register this component with the parent node
-                    $scope.$parent.registerComponentController($scope, component);
+                    $scope.$parent.registerComponentController($scope, this.componentContent);
                 }
             }
         };

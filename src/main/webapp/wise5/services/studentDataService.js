@@ -1,17 +1,20 @@
 define(['configService', 'projectService'], function(configService, projectService) {
 
-    var service = ['$http', 
-                   '$injector', 
-                   '$q', 
-                   '$rootScope', 
-                   'ConfigService', 
-                   'ProjectService',
-                       function($http, 
-                               $injector, 
-                               $q, 
-                               $rootScope, 
-                               ConfigService, 
-                               ProjectService) {
+    var service = [
+        '$http',
+        '$injector',
+        '$q',
+        '$rootScope',
+        'ConfigService',
+        'ProjectService',
+        function (
+            $http,
+            $injector,
+            $q,
+            $rootScope,
+            ConfigService,
+            ProjectService) {
+
         var serviceObject = {};
         
         serviceObject.studentData = null;
@@ -20,7 +23,7 @@ define(['configService', 'projectService'], function(configService, projectServi
         serviceObject.nodeStatuses = null;
         
         serviceObject.currentNode = null;
-        
+
         serviceObject.getCurrentNode = function() {
             return this.currentNode;
         };
@@ -43,7 +46,7 @@ define(['configService', 'projectService'], function(configService, projectServi
                 
             }
         };
-        
+
         serviceObject.updateCurrentNode = function(latestNodeVisit) {
             if (latestNodeVisit != null) {
                 nodeId = latestNodeVisit.nodeId;
@@ -52,36 +55,7 @@ define(['configService', 'projectService'], function(configService, projectServi
                 this.setCurrentNode(node);
             }
         };
-        
-        serviceObject.getNodeVisits = function() {
-            var nodeVisits = null;
-            var studentData = this.studentData;
-            
-            if (studentData != null) {
-                nodeVisits = studentData.nodeVisits;
-            }
-            
-            return nodeVisits;
-        };
-        
-        serviceObject.getNodeVisitAtIndex = function(index) {
-            var nodeVisitResult = null;
-            var nodeVisits = this.getNodeVisits();
-            
-            if (index < 0) {
-                index = nodeVisits.length + index;
-            }
-            
-            if (nodeVisits != null && nodeVisits.length > 0) {
-                nodeVisitResult = nodeVisits[index];
-            }
-            return nodeVisitResult;
-        };
-        
-        serviceObject.getLatestNodeVisit = function() {
-            return this.getNodeVisitAtIndex(-1);
-        };
-        
+
         serviceObject.retrieveStudentData = function() {
             
             // get the mode
@@ -96,13 +70,11 @@ define(['configService', 'projectService'], function(configService, projectServi
                 this.studentData.userName = 'Preview Student';
                 this.studentData.userId = '0';
                 
-                // TODO
                 // populate the student history
                 this.populateHistories(this.studentData.componentStates);
                 
-                // TODO
                 // update the node statuses
-                //this.updateNodeStatuses();
+                this.updateNodeStatuses();
             } else {
                 // we are in a run
                 
@@ -136,11 +108,7 @@ define(['configService', 'projectService'], function(configService, projectServi
 
                         // uncomment me when actionLog is implemented
                         //this.studentData.actionLogs = resultData.actionLogs;
-                        
-                        // get the node visits
-                        //var nodeVisits = this.getNodeVisits();
-                        //var latestNodeVisit = this.getLatestNodeVisit();
-                        
+
                         // load the student planning nodes
                         //this.loadStudentNodes();
                         
@@ -150,151 +118,14 @@ define(['configService', 'projectService'], function(configService, projectServi
                         
                         // TODO
                         // update the node statuses
-                        //this.updateNodeStatuses();
-                    }
-                    return this.studentData;
-                }));
-            }
-        };
-        
-        /**
-         * Retrieve the student data from the server
-         */
-        /*
-        serviceObject.retrieveStudentData0 = function() {
-            
-            // get the mode
-            var mode = ConfigService.getConfigParam('mode');
-            
-            if (mode === 'preview') {
-                // we are previewing the project
-                
-                // initialize dummy student data
-                this.studentData = {};
-                this.studentData.nodeVisits = [];
-                this.studentData.userName = 'Preview Student';
-                this.studentData.userId = '0';
-                
-                // populate the student history
-                this.populateHistories(this.studentData.nodeVisits);
-                
-                // update the node statuses
-                this.updateNodeStatuses();
-            } else {
-                // we are in a run
-                
-                // get the url to get the student data
-                var studentDataURL = ConfigService.getConfigParam('studentDataURL');
-                
-                var httpParams = {};
-                httpParams.method = 'GET';
-                httpParams.url = studentDataURL;
-                
-                // set the workgroup id and run id
-                var params = {};
-                params.runId = ConfigService.getRunId();
-                params.workgroupId = ConfigService.getWorkgroupId();
-                params.getComponentStates = true;
-                params.getEvents = true;
-                //params.getAnnotations = true;
-                httpParams.params = params;
-                
-                // make the request for the student data
-                return $http(httpParams).then(angular.bind(this, function(result) {
-                    var vleStates = result.data.vleStates;
-                    if (vleStates != null) {
-                        
-                        // obtain the student data
-                        this.studentData = vleStates[0];
-                        
-                        // get the node visits
-                        var nodeVisits = this.getNodeVisits();
-                        var latestNodeVisit = this.getLatestNodeVisit();
-                        
-                        // load the student planning nodes
-                        this.loadStudentNodes();
-                        
-                        // populate the student history
-                        this.populateHistories(nodeVisits);
-                        
-                        // update the node statuses
+
                         this.updateNodeStatuses();
                     }
                     return this.studentData;
                 }));
             }
         };
-        */
 
-        /**
-         * Save the node visit to the server
-         * @param nodeVisit the node visit to save to the server
-         */
-        serviceObject.saveNodeVisitToServer = function(nodeVisit) {
-            
-            // get the mode
-            var mode = ConfigService.getConfigParam('mode');
-            
-            if (mode === 'preview') {
-                // we are in preview mode
-                
-                var deferred = $q.defer();
-                
-                // create a fake node visit
-                var date = new Date();
-                
-                nodeVisit.id = 1; // TODO: update this id with a counter
-                nodeVisit.visitPostTime = date.getTime();
-                
-                deferred.resolve(nodeVisit);
-                
-                return deferred.promise;
-            } else {
-                // we are in a run
-                
-                // get the student data url used to save the student data
-                var studentDataURL = ConfigService.getConfigParam('studentDataURL');
-                
-                var httpConfig = {};
-                httpConfig.method = 'POST';
-                httpConfig.url = studentDataURL;
-                httpConfig.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
-                
-                // set the params for the request
-                var params = {};
-                if (nodeVisit != null && nodeVisit.id != null) {
-                    params.id = nodeVisit.id;
-                }
-                params.userId = ConfigService.getWorkgroupId();
-                params.runId = ConfigService.getRunId();
-                params.periodId = ConfigService.getPeriodId();
-                params.data = angular.toJson(nodeVisit);
-                params.nodeVisit = nodeVisit;
-                httpConfig.data = $.param(params);
-                
-                // make the request to save the student data
-                return $http(httpConfig).then(angular.bind(this, function(nodeVisit, result) {
-                    
-                    // get the response from saving the student data
-                    var postNodeVisitResult = result.data;
-                    
-                    // get the node visit post time
-                    var visitPostTime = postNodeVisitResult.visitPostTime;
-                    
-                    // get the node visit id
-                    var nodeVisitId = postNodeVisitResult.id;
-                    
-                    // save the values to our local node visit
-                    nodeVisit.id = nodeVisitId;
-                    nodeVisit.visitPostTime = visitPostTime;
-                    
-                    $rootScope.$broadcast('nodeVisitSavedToServer', {nodeVisit: nodeVisit});
-                    
-                    return nodeVisit;
-                }, nodeVisit));
-            }
-        };
-        
         serviceObject.loadStudentNodes = function() {
             var nodes = ProjectService.getApplicationNodes();
             
@@ -319,34 +150,6 @@ define(['configService', 'projectService'], function(configService, projectServi
                     }
                 }
             }
-        };
-        
-        /**
-         * Get the latest node visit that has non-null visitStartTime and
-         * non-null visitEndTime
-         * @return the latest NODE_VISIT that has a visitStartTime and visitEndTime
-         */
-        serviceObject.getLatestCompletedNodeVisit = function() {
-            var latestCompletedVisit = null;
-            
-            var nodeVisits = this.getNodeVisits();
-
-            //loop through the node visits backwards
-            for (var n = nodeVisits.length - 1; n >= 0; n--) {
-                //get a node visit
-                var nodeVisit = nodeVisits[n];
-
-                //check that visitStartTime and visitEndTime are not null
-                if (nodeVisit.visitStartTime != null && nodeVisit.visitEndTime != null) {
-                    //we found a node visit with visitStartTime and visitEndTime
-                    latestCompletedVisit = nodeVisit;
-
-                    //break out of the for loop since we found what a node visit
-                    break;
-                }
-            }
-
-            return latestCompletedVisit;
         };
         
         serviceObject.getNodeStatuses = function() {
@@ -440,7 +243,7 @@ define(['configService', 'projectService'], function(configService, projectServi
                                             
                                             if (transitionsToNodeId != null && transitionsToNodeId.length > 0) {
                                                 // there is a transition between the current node and the node status node
-                                                
+
                                                 // check if the current node has branches
                                                 
                                                 if (transitions.length > 1) {
@@ -523,20 +326,6 @@ define(['configService', 'projectService'], function(configService, projectServi
             }));
         };
 
-        serviceObject.populateHistories0 = function(nodeVisits) {
-            if (nodeVisits != null) {
-                this.stackHistory = [];
-                this.visitedNodesHistory = [];
-                
-                for (var i = 0; i < nodeVisits.length; i++) {
-                    var nodeVisit = nodeVisits[i];
-                    var nodeVisitNodeId = nodeVisit.nodeId;
-                    this.updateStackHistory(nodeVisitNodeId);
-                    this.updateVisitedNodesHistory(nodeVisitNodeId);
-                }
-            }
-        };
-        
         serviceObject.populateHistories = function(componentStates) {
             if (componentStates != null) {
                 this.stackHistory = [];
@@ -601,201 +390,15 @@ define(['configService', 'projectService'], function(configService, projectServi
             
             return result;
         };
-        
-        serviceObject.getNodeVisits = function() {
-            return this.studentData.nodeVisits;
-        };
-        
-        serviceObject.addNodeVisit = function(nodeVisit) {
-            var nodeVisits = this.getNodeVisits();
-            
-            if (nodeVisits !== null) {
-                nodeVisits.push(nodeVisit);
-                
-                $rootScope.$broadcast('studentDataChanged');
-            }
-            
-            return nodeVisit;
-        };
-        
-        serviceObject.createNodeVisit = function(nodeId) {
-            /*
-             *         {
-            "visitPostTime": 1424728225000,
-            "visitStartTime": 1424728201000,
-            "hintStates": [],
-            "nodeType": "OutsideURLNode",
-            "nodeStates": [],
-            "nodeId": "node_2.json",
-            "visitEndTime": 1424728224000,
-            "id": 123
-        }
-             */
-            
-            var newNodeVisit = {};
-            newNodeVisit.visitPostTime = null;
-            newNodeVisit.visitStartTime = new Date().getTime();
-            newNodeVisit.visitEndTime = null;
-            newNodeVisit.hintStates = null;
-            newNodeVisit.nodeStates = [];
-            newNodeVisit.nodeId = nodeId;
-            var node = ProjectService.getNodeById(nodeId);
-            if (node != null) {
-                newNodeVisit.nodeType = node.type;
-            }
-            newNodeVisit.id = null;
-            
-            this.addNodeVisit(newNodeVisit);
-            
-            return newNodeVisit;
-        };
-        
-        serviceObject.endNodeVisitByNodeId = function(nodeId) {
-            var latestNodeVisitByNodeId = this.getLatestNodeVisitByNodeId(nodeId);
-            if (latestNodeVisitByNodeId != null) {
-                latestNodeVisitByNodeId.visitEndTime = new Date().getTime();
-            }
-        };
-        
-        serviceObject.getNodeVisitsByNodeId = function(nodeId) {
-            var nodeVisitsForNode = [];
-            var nodeVisits = this.getNodeVisits();
-            
-            for (var x = 0; x < nodeVisits.length; x++) {
-                var nodeVisit = nodeVisits[x];
-                
-                if (nodeVisit !== null) {
-                    var tempNodeId = nodeVisit.nodeId;
-                    
-                    if (nodeId === tempNodeId) {
-                        nodeVisitsForNode.push(nodeVisit);
-                    }
-                }
-            }
-            
-            return nodeVisitsForNode;
-        };
-        
-        serviceObject.getNodeVisitsByNodeType = function(nodeType) {
-            var nodeVisitsByNodeType = [];
-            var nodeVisits = this.getNodeVisits();
-            
-            for (var x = 0; x < nodeVisits.length; x++) {
-                var nodeVisit = nodeVisits[x];
-                
-                if (nodeVisit !== null) {
-                    var nodeId = nodeVisit.nodeId;
-                    
-                    var node = ProjectService.getNodeById(nodeId);
-                    
-                    if (node != null) {
-                        var tempNodeType = node.type;
-                        
-                        if (tempNodeType === nodeType) {
-                            nodeVisitsByNodeType.push(nodeVisit);
-                        }
-                    }
-                }
-            }
-            
-            return nodeVisitsByNodeType;
-        };
-        
-        serviceObject.getLatestNodeStateByNodeId = function(nodeId) {
-            var latestNodeState = null;
-            var nodeVisits = this.getNodeVisits();
-            
-            for (var x = nodeVisits.length - 1; x >= 0; x--) {
-                var nodeVisit = nodeVisits[x];
-                
-                if (nodeVisit !== null) {
-                    var tempNodeId = nodeVisit.nodeId;
-                    
-                    if (nodeId === tempNodeId) {
-                        var nodeStates = nodeVisit.nodeStates;
-                        
-                        if (nodeStates !== null) {
-                            if (nodeStates.length > 0) {
-                                latestNodeState = nodeStates[nodeStates.length - 1];
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-            
-            return latestNodeState;
-        };
-        
-        serviceObject.getAllNodeStatesByNodeId = function(nodeId) {
-            var allNodeStates = [];
-            
-            var nodeVisits = this.getNodeVisits();
-            
-            for (var x = 0; x < nodeVisits.length; x++) {
-                var nodeVisit = nodeVisits[x];
-                
-                if (nodeVisit !== null) {
-                    var tempNodeId = nodeVisit.nodeId;
-                    
-                    if (nodeId === tempNodeId) {
-                        var nodeStates = nodeVisit.nodeStates;
-                        
-                        if (nodeStates != null) {
-                            allNodeStates = allNodeStates.concat(nodeStates);
-                        }
-                    }
-                }
-            }
-            
-            return allNodeStates;
-        };
-        
-        serviceObject.getLatestNodeVisitByNodeId = function(nodeId) {
-            var latestNodeVisit = null;
-            var nodeVisits = this.getNodeVisits();
-            
-            for (var x = nodeVisits.length - 1; x >= 0; x--) {
-                var tempNodeVisit = nodeVisits[x];
-                
-                if (tempNodeVisit !== null) {
-                    var tempNodeId = tempNodeVisit.nodeId;
-                    
-                    if (nodeId === tempNodeId) {
-                        latestNodeVisit = tempNodeVisit;
-                        break;
-                    }
-                }
-            }
-            
-            return latestNodeVisit;
-        };
-        
-        serviceObject.addNodeStateToLatestNodeVisit = function(nodeId, nodeState) {
-            var latestNodeVisit = this.getLatestNodeVisitByNodeId(nodeId);
-            
-            return this.addNodeStateToNodeVisit(nodeState, latestNodeVisit);
-        };
-        
-        serviceObject.addNodeStateToNodeVisit = function(nodeState, nodeVisit) {
-            if (nodeState != null && nodeVisit != null) {
-                if (nodeVisit.nodeStates == null) {
-                    nodeVisit.nodeStates = [];
-                }
-                nodeVisit.nodeStates.push(nodeState);
-                
-                $rootScope.$broadcast('studentDataChanged');
-            }
-        };
-        
+
         serviceObject.getLatestStudentWorkForNodeAsHTML = function(nodeId) {
             var studentWorkAsHTML = null;
             
             var node = ProjectService.getNodeById(nodeId);
             
             if (node != null) {
-                var nodeType = node.type;
-                var latestNodeState = this.getLatestNodeStateByNodeId(nodeId);
+                //var nodeType = node.type;
+                //var latestNodeState = this.getLatestNodeStateByNodeId(nodeId);
                 
                 // TODO: make this dynamically call the correct {{nodeType}}Service
                 if (nodeType === 'OpenResponse') {
@@ -813,78 +416,7 @@ define(['configService', 'projectService'], function(configService, projectServi
             
             return componentState;
         };
-        
-        /**
-         * TODO: rewrite this
-         * Get the latest component state for the given node id and component id
-         * @param nodeId the node id to look for
-         * @param componentId the component id to look for
-         */
-        serviceObject.getLatestComponentState0 = function(nodeId, componentId) {
-            
-            if (nodeId != null && componentId != null) {
-                
-                // get all the node visits
-                var nodeVisits = this.getNodeVisits();
-                
-                if (nodeVisits != null) {
-                    
-                    // loop through all the node visits from newest to oldest
-                    for (var nv = nodeVisits.length - 1; nv >= 0; nv--) {
-                        var tempNodeVisit = nodeVisits[nv];
-                        
-                        if (tempNodeVisit !== null) {
-                            var tempNodeId = tempNodeVisit.nodeId;
-                            
-                            // check if the node id matches the one we want
-                            if (nodeId === tempNodeId) {
-                                
-                                var nodeStates = tempNodeVisit.nodeStates;
-                                
-                                if (nodeStates != null) {
-                                    
-                                    // loop through all the node states
-                                    for (var ns = nodeStates.length - 1; ns >= 0; ns--) {
-                                        var nodeState = nodeStates[ns];
-                                        
-                                        if (nodeState != null) {
-                                            var parts = nodeState.parts;
-                                            
-                                            if (parts != null) {
-                                                
-                                                // loop through all the parts
-                                                for (var p = parts.length - 1; p >= 0; p--) {
-                                                    var part = parts[p];
-                                                    
-                                                    if (part != null) {
-                                                        var partId = part.id;
-                                                        
-                                                        // check if the component id matches the one we want
-                                                        if (componentId == partId) {
-                                                            
-                                                            // get the student data from the part
-                                                            var studentData = part.studentData;
-                                                            
-                                                            if (studentData != null) {
-                                                                // we have found the latest component state that we want
-                                                                return part;
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            
-            return null;
-        };
-        
+
         serviceObject.addComponentState = function(componentState) {
             if (this.studentData != null && this.studentData.componentStates != null) {
                 this.studentData.componentStates.push(componentState);

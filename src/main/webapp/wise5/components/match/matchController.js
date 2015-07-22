@@ -97,12 +97,9 @@ define(['app', 'angular'], function(app, angular) {
                         
                         // disable the component since we are just showing previous work
                         this.isDisabled = true;
-                        
-                        // get the component
-                        var component = $scope.component;
-                        
+
                         // register this component with the parent node
-                        $scope.$parent.registerComponentController($scope, component);
+                        $scope.$parent.registerComponentController($scope, this.componentContent);
                     }));
                 } else {
                     // this is a regular component
@@ -113,10 +110,7 @@ define(['app', 'angular'], function(app, angular) {
                      */
                     this.initializeChoices();
                     this.initializeBuckets();
-                    
-                    // get the component from the scope
-                    var component = $scope.component;
-                    
+
                     // get the component state from the scope
                     var componentState = $scope.componentState;
                     
@@ -143,7 +137,7 @@ define(['app', 'angular'], function(app, angular) {
                     this.calculateDisabled();
                     
                     // register this component with the parent node
-                    $scope.$parent.registerComponentController($scope, component);
+                    $scope.$parent.registerComponentController($scope, this.componentContent);
                 }
             }
         };

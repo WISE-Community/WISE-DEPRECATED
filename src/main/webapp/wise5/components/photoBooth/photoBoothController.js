@@ -52,10 +52,7 @@ define(['app'], function(app) {
                 
                 // get the component id
                 this.componentId = this.componentContent.id;
-                
-                // get the component from the scope
-                var component = $scope.component;
-                
+
                 // get the component state from the scope
                 var componentState = $scope.componentState;
                 
@@ -79,7 +76,7 @@ define(['app'], function(app) {
                 }
                 
                 // register this component with the parent node
-                $scope.$parent.registerComponentController($scope, component);
+                $scope.$parent.registerComponentController($scope, this.componentContent);
                 
                 //http://coderthoughts.blogspot.co.uk/2013/03/html5-video-fun.html - thanks :)
                 navigator.myGetMedia = (navigator.getUserMedia ||

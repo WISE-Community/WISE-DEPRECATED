@@ -98,19 +98,13 @@ define(['app',
                         
                         // disable the component since we are just showing previous work
                         this.isDisabled = true;
-                        
-                        // get the component
-                        var component = $scope.component;
-                        
+
                         // register this component with the parent node
-                        $scope.$parent.registerComponentController($scope, component);
+                        $scope.$parent.registerComponentController($scope, this.componentContent);
                     }));
                 } else {
                     // this is a regular component
-                    
-                    // get the component from the scope
-                    var component = $scope.component;
-                    
+
                     // get the component state from the scope
                     var componentState = $scope.componentState;
                     
@@ -140,7 +134,7 @@ define(['app',
                     this.setupGraph();
                     
                     // register this component with the parent node
-                    $scope.$parent.registerComponentController($scope, component);
+                    $scope.$parent.registerComponentController($scope, this.componentContent);
                 }
             }
         };
@@ -180,7 +174,7 @@ define(['app',
              * remember this graph controller so we can access it in the click
              * event for the graph
              */
-            thisGraphController = this;
+            var thisGraphController = this;
             
             // get all the series from the student data
             var series = this.series;

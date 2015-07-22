@@ -23,12 +23,6 @@
  */
 package org.wise.vle.web.wise5;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.List;
-
-import javax.servlet.http.HttpServletResponse;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,6 +39,11 @@ import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.vle.wise5.VLEService;
 import org.wise.vle.domain.work.ComponentState;
 import org.wise.vle.domain.work.Event;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
 
 /**
  * Controller for handling GET and POST requests of WISE5 student data
