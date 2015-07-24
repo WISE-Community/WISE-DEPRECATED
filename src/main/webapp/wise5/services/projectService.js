@@ -651,8 +651,10 @@ define(['configService'], function(configService) {
         };
         serviceObject.getTheme = function() {
             var project = this.getProject();
-            if (project != null) {
+            if (project != null && !!project.theme) { // TODO: check if this is a valid theme (using ConfigService) rather than just falsey
                 return project.theme;
+            } else {
+                return "default"; // TODO: get default theme name from ConfigService
             }
         };
 
