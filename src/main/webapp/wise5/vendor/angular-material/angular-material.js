@@ -2,7 +2,7 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.10.1-rc2-master-eaa3324
+ * v0.10.1-rc3-master-eda4782
  */
 (function( window, angular, undefined ){
 "use strict";
@@ -690,7 +690,7 @@ mdMediaFactory.$inject = ["$mdConstant", "$rootScope", "$window"];
 var nextUniqueId = 0;
 
 angular.module('material.core')
-  .factory('$mdUtil', ["$cacheFactory", "$document", "$timeout", "$q", "$window", "$mdConstant", "$$rAF", "$rootScope", "$$mdAnimate", function ($cacheFactory, $document, $timeout, $q, $window, $mdConstant, $$rAF, $rootScope, $$mdAnimate) {
+  .factory('$mdUtil', ["$cacheFactory", "$document", "$timeout", "$q", "$compile", "$window", "$mdConstant", "$$rAF", "$rootScope", "$$mdAnimate", function ($cacheFactory, $document, $timeout, $q, $compile, $window, $mdConstant, $$rAF, $rootScope, $$mdAnimate) {
     var $mdUtil = {
           dom : { },
           now: window.performance ?
@@ -730,14 +730,14 @@ angular.module('material.core')
           },
 
           // Disables scroll around the passed element.
-          disableScrollAround: function (element) {
+          disableScrollAround: function (element, parent) {
             $mdUtil.disableScrollAround._count = $mdUtil.disableScrollAround._count || 0;
             ++$mdUtil.disableScrollAround._count;
             if ($mdUtil.disableScrollAround._enableScrolling) return $mdUtil.disableScrollAround._enableScrolling;
             element = angular.element(element);
             var body = $document[0].body,
               restoreBody = disableBodyScroll(),
-              restoreElement = disableElementScroll();
+              restoreElement = disableElementScroll(parent);
 
             return $mdUtil.disableScrollAround._enableScrolling = function () {
               if (!--$mdUtil.disableScrollAround._count) {
@@ -748,13 +748,14 @@ angular.module('material.core')
             };
 
             // Creates a virtual scrolling mask to absorb touchmove, keyboard, scrollbar clicking, and wheel events
-            function disableElementScroll() {
+            function disableElementScroll(element) {
+              element = angular.element(element || body)[0];
               var zIndex = 50;
               var scrollMask = angular.element(
                 '<div class="md-scroll-mask" style="z-index: ' + zIndex + '">' +
                 '  <div class="md-scroll-mask-bar"></div>' +
                 '</div>');
-              body.appendChild(scrollMask[0]);
+              element.appendChild(scrollMask[0]);
 
               scrollMask.on('wheel', preventDefault);
               scrollMask.on('touchmove', preventDefault);
@@ -855,6 +856,14 @@ angular.module('material.core')
             newEvent.$material = true;
             newEvent.$focus = true;
             node.dispatchEvent(newEvent);
+          },
+
+          /**
+           * facade to build md-backdrop element with desired styles
+           * NOTE: Use $compile to trigger backdrop postLink function
+           */
+          createBackdrop : function(scope, addClass){
+            return $compile( $mdUtil.supplant('<md-backdrop class="{0}">',[addClass]) )(scope);
           },
 
           /**
@@ -1220,7 +1229,8 @@ AriaService.$inject = ["$$rAF", "$log", "$window"];
 (function(){
 "use strict";
 
-angular.module('material.core')
+angular
+  .module('material.core')
   .service('$mdCompiler', mdCompilerService);
 
 function mdCompilerService($q, $http, $injector, $compile, $controller, $templateCache) {
@@ -2203,6 +2213,9 @@ function InterimElementProvider() {
         processTemplate  = usesStandardSymbols ? angular.identity : replaceInterpolationSymbols;
 
     return function createInterimElementService() {
+      var SHOW_CANCELLED = false;
+      var SHOW_CLOSED = true;
+
       /*
        * @ngdoc service
        * @name $$interimElement.$service
@@ -2248,7 +2261,7 @@ function InterimElementProvider() {
           interimElement
             .show()
             .catch(function( reason ) {
-              $log.error("InterimElement.show() error: " + reason );
+              // $log.error("InterimElement.show() error: " + reason );
             });
 
         });
@@ -2273,14 +2286,15 @@ function InterimElementProvider() {
        */
       function hide(reason) {
         var interim = stack.shift();
+        if ( !interim ) return $q.when(reason);
 
         interim
-          .remove(reason || true, false)
+          .remove(reason || SHOW_CLOSED, false)
           .catch(function( reason ) {
-            $log.error("InterimElement.hide() error: " + reason );
+            // $log.error("InterimElement.hide() error: " + reason );
           });
 
-        return !interim ? $q.when(reason) : interim.deferred.promise;
+        return interim.deferred.promise;
       }
 
       /*
@@ -2297,14 +2311,15 @@ function InterimElementProvider() {
        */
       function cancel(reason) {
         var interim = stack.shift();
+        if ( !interim ) return $q.when(reason);
 
         interim
-          .remove(reason || false, true)
+          .remove(reason || SHOW_CANCELLED, true)
           .catch(function( reason ) {
-            $log.error("InterimElement.cancel() error: " + reason );
+            // $log.error("InterimElement.cancel() error: " + reason );
           });
 
-        return !interim ? $q.when(reason) : interim.deferred.promise;
+        return interim.deferred.promise;
       }
 
 
@@ -2407,16 +2422,16 @@ function InterimElementProvider() {
             scope: options.scope || $rootScope.$new(options.isolateScope),
 
             /**
-             * Use $animate to transition-in; can be easily overridden via 'options'
+             * Default usage to enable $animate to transition-in; can be easily overridden via 'options'
              */
-            onShow: function(scope, element, options) {
+            onShow: function transitionIn(scope, element, options) {
               return $animate.enter(element, options.parent);
             },
 
             /**
-             * Use $animate to transition-out; can be easily overridden via 'options'
+             * Default usage to enable $animate to transition-out; can be easily overridden via 'options'
              */
-            onRemove: function(scope, element, options) {
+            onRemove: function transitionOut(scope, element) {
               // Element could be undefined if a new element is shown before
               // the old one finishes compiling.
               return element && $animate.leave(element) || $q.when();
@@ -4315,15 +4330,38 @@ angular.module('material.components.autocomplete', [
  *
  */
 
-angular.module('material.components.backdrop', [
-  'material.core'
-])
-  .directive('mdBackdrop', BackdropDirective);
+angular
+  .module('material.components.backdrop', ['material.core'])
+  .directive('mdBackdrop', ["$mdTheming", "$animate", "$rootElement", "$window", "$log", "$$rAF", function BackdropDirective($mdTheming, $animate, $rootElement, $window, $log, $$rAF) {
+    var ERROR_CSS_POSITION = "<md-backdrop> may not work properly in a scrolled, static-positioned parent container.";
 
-function BackdropDirective($mdTheming) {
-  return $mdTheming;
-}
-BackdropDirective.$inject = ["$mdTheming"];
+    return {
+        restrict: 'E',
+        link: postLink
+      };
+
+    function postLink(scope, element, attrs) {
+      // backdrop may be outside the $rootElement, tell ngAnimate to animate regardless
+      if( $animate.pin ) $animate.pin(element,$rootElement);
+
+      $$rAF(function(){
+        // Often $animate.enter() is used to append the backDrop element
+        // so let's wait until $animate is done...
+
+        var parent = element.parent()[0];
+        if ( parent ) {
+          var position = $window.getComputedStyle(parent).getPropertyValue('position');
+          if (position == 'static') {
+            // backdrop uses position:absolute and will not work properly with parent position:static (default)
+            $log.warn( ERROR_CSS_POSITION );
+          }
+        }
+
+        $mdTheming.inherit(element, element.parent());
+      });
+
+    };
+  }]);
 
 })();
 (function(){
@@ -4449,7 +4487,7 @@ function MdBottomSheetProvider($$interimElementProvider) {
   var CLOSING_VELOCITY = 0.5;
   var PADDING = 80; // same as css
 
-  bottomSheetDefaults.$inject = ["$animate", "$mdConstant", "$mdUtil", "$compile", "$mdTheming", "$mdBottomSheet", "$rootElement", "$mdGesture"];
+  bottomSheetDefaults.$inject = ["$animate", "$mdConstant", "$mdUtil", "$mdTheming", "$mdBottomSheet", "$rootElement", "$mdGesture"];
   return $$interimElementProvider('$mdBottomSheet')
     .setDefaults({
       methods: ['disableParentScroll', 'escapeToClose', 'targetEvent'],
@@ -4457,7 +4495,7 @@ function MdBottomSheetProvider($$interimElementProvider) {
     });
 
   /* @ngInject */
-  function bottomSheetDefaults($animate, $mdConstant, $mdUtil, $compile, $mdTheming, $mdBottomSheet, $rootElement, $mdGesture) {
+  function bottomSheetDefaults($animate, $mdConstant, $mdUtil, $mdTheming, $mdBottomSheet, $rootElement, $mdGesture) {
     var backdrop;
 
     return {
@@ -4475,7 +4513,7 @@ function MdBottomSheetProvider($$interimElementProvider) {
       element = $mdUtil.extractElementByName(element, 'md-bottom-sheet');
 
       // Add a backdrop that will close on click
-      backdrop = $compile('<md-backdrop class="md-opaque md-bottom-sheet-backdrop">')(scope);
+      backdrop = $mdUtil.createBackdrop(scope, "md-bottom-sheet-backdrop md-opaque");
       backdrop.on('click', function() {
         $mdUtil.nextTick($mdBottomSheet.cancel,true);
       });
@@ -5444,7 +5482,7 @@ MdDialogDirective.$inject = ["$$rAF", "$mdTheming"];
 function MdDialogProvider($$interimElementProvider) {
 
   advancedDialogOptions.$inject = ["$mdDialog", "$mdTheming"];
-  dialogDefaultOptions.$inject = ["$mdAria", "$document", "$mdUtil", "$mdConstant", "$mdTheming", "$mdDialog", "$animate", "$q"];
+  dialogDefaultOptions.$inject = ["$mdDialog", "$mdAria", "$mdUtil", "$mdConstant", "$animate", "$document"];
   return $$interimElementProvider('$mdDialog')
     .setDefaults({
       methods: ['disableParentScroll', 'hasBackdrop', 'clickOutsideToClose', 'escapeToClose', 'targetEvent', 'parent'],
@@ -5490,8 +5528,7 @@ function MdDialogProvider($$interimElementProvider) {
   }
 
   /* @ngInject */
-  function dialogDefaultOptions($mdAria, $document, $mdUtil, $mdConstant, $mdTheming, $mdDialog, $animate, $q ) {
-
+  function dialogDefaultOptions($mdDialog, $mdAria, $mdUtil, $mdConstant, $animate, $document) {
     return {
       hasBackdrop: true,
       isolateScope: true,
@@ -5516,7 +5553,7 @@ function MdDialogProvider($$interimElementProvider) {
 
       captureSourceAndParent(element, options);
       configureAria(element.find('md-dialog'), options);
-      showBackdrop(element, options);
+      showBackdrop(scope, element, options);
 
       return dialogPopIn(element, options)
         .then(function () {
@@ -5552,10 +5589,11 @@ function MdDialogProvider($$interimElementProvider) {
       options.deactivateListeners();
       options.unlockScreenReader();
 
+      options.hideBackdrop();
+
       return dialogPopOut(element, options)
         .finally(function () {
           angular.element($document[0].body).removeClass('md-dialog-is-showing');
-          options.hideBackdrop();
           element.remove();
 
           options.origin.focus();
@@ -5582,7 +5620,7 @@ function MdDialogProvider($$interimElementProvider) {
          options.parent = angular.element(options.parent);
 
          if (options.disableParentScroll) {
-           options.restoreScroll = $mdUtil.disableScrollAround(element);
+           options.restoreScroll = $mdUtil.disableScrollAround(element,options.parent);
          }
        }
 
@@ -5654,7 +5692,7 @@ function MdDialogProvider($$interimElementProvider) {
     /**
      * Show modal backdrop element...
      */
-    function showBackdrop(element, options) {
+    function showBackdrop(scope, element, options) {
 
       if (options.hasBackdrop) {
         // Fix for IE 10
@@ -5665,9 +5703,7 @@ function MdDialogProvider($$interimElementProvider) {
 
         element.css('top', parentOffset + 'px');
 
-        options.backdrop = angular.element('<md-backdrop class="md-dialog-backdrop md-opaque">');
-        options.backdrop.css('top', parentOffset + 'px');
-        $mdTheming.inherit(options.backdrop, options.parent);
+        options.backdrop = $mdUtil.createBackdrop(scope, "md-dialog-backdrop md-opaque");
 
         $animate.enter(options.backdrop, options.parent);
       }
@@ -9068,7 +9104,7 @@ function MenuProvider($$interimElementProvider) {
           target: angular.element(opts.target), //make sure it's not a naked dom node
           parent: angular.element(opts.parent),
           menuContentEl: angular.element(element[0].querySelector('md-menu-content')),
-          backdrop: opts.hasBackdrop && angular.element('<md-backdrop class="md-menu-backdrop md-click-catcher">')
+          backdrop: opts.hasBackdrop && $mdUtil.createBackdrop(scope, "md-menu-backdrop md-click-catcher")
         });
       }
 
@@ -10671,7 +10707,7 @@ function OptgroupDirective() {
 }
 
 function SelectProvider($$interimElementProvider) {
-  selectDefaultOptions.$inject = ["$mdSelect", "$mdConstant", "$$rAF", "$mdUtil", "$mdTheming", "$window", "$q", "$log"];
+  selectDefaultOptions.$inject = ["$mdSelect", "$mdConstant", "$$rAF", "$mdUtil", "$mdTheming", "$window", "$q", "$compile"];
   return $$interimElementProvider('$mdSelect')
     .setDefaults({
       methods: ['target'],
@@ -10679,7 +10715,7 @@ function SelectProvider($$interimElementProvider) {
     });
 
   /* @ngInject */
-  function selectDefaultOptions($mdSelect, $mdConstant, $$rAF, $mdUtil, $mdTheming, $window, $q, $log ) {
+  function selectDefaultOptions($mdSelect, $mdConstant, $$rAF, $mdUtil, $mdTheming, $window, $q, $compile ) {
     var animator = $mdUtil.dom.animator;
 
     return {
@@ -10705,7 +10741,7 @@ function SelectProvider($$interimElementProvider) {
         parent: angular.element(opts.parent),
         selectEl: element.find('md-select-menu'),
         contentEl: element.find('md-content'),
-        backdrop: opts.hasBackdrop && angular.element('<md-backdrop class="md-select-backdrop md-click-catcher">')
+        backdrop: opts.hasBackdrop && $mdUtil.createBackdrop(scope, "md-select-backdrop md-click-catcher")
       });
 
       opts.resizeFn = function() {
@@ -10778,8 +10814,6 @@ function SelectProvider($$interimElementProvider) {
         element.addClass('md-clickable');
 
         opts.backdrop && opts.backdrop.on('click', function(e) {
-          $log.debug("backdrop click");
-
           e.preventDefault();
           e.stopPropagation();
           opts.restoreFocus = false;
@@ -11280,7 +11314,7 @@ function SidenavFocusDirective() {
  *   - `<md-sidenav md-is-locked-open="$mdMedia('min-width: 1000px')"></md-sidenav>`
  *   - `<md-sidenav md-is-locked-open="$mdMedia('sm')"></md-sidenav>` (locks open on small screens)
  */
-function SidenavDirective($mdMedia, $mdUtil, $mdConstant, $mdTheming, $animate, $parse, $log, $compile, $q, $document) {
+function SidenavDirective($mdMedia, $mdUtil, $mdConstant, $mdTheming, $animate, $compile, $parse, $log, $q, $document) {
   return {
     restrict: 'E',
     scope: {
@@ -11312,9 +11346,7 @@ function SidenavDirective($mdMedia, $mdUtil, $mdConstant, $mdTheming, $animate, 
         $mdMedia: $mdMedia
       });
     };
-    var backdrop = $compile(
-      '<md-backdrop class="md-sidenav-backdrop md-opaque ng-enter">'
-    )(scope);
+    var backdrop = $mdUtil.createBackdrop(scope, "md-sidenav-backdrop md-opaque ng-enter");
 
     element.on('$destroy', sidenavCtrl.destroy);
     $mdTheming.inherit(backdrop, element);
@@ -11450,7 +11482,7 @@ function SidenavDirective($mdMedia, $mdUtil, $mdConstant, $mdTheming, $animate, 
 
   }
 }
-SidenavDirective.$inject = ["$mdMedia", "$mdUtil", "$mdConstant", "$mdTheming", "$animate", "$parse", "$log", "$compile", "$q", "$document"];
+SidenavDirective.$inject = ["$mdMedia", "$mdUtil", "$mdConstant", "$mdTheming", "$animate", "$compile", "$parse", "$log", "$q", "$document"];
 
 /*
  * @private
@@ -14471,6 +14503,7 @@ function MdAutocompleteCtrl ($scope, $element, $mdUtil, $mdConstant, $mdTheming,
       if (searchText !== $scope.searchText) return; //-- just cache the results if old request
       ctrl.matches = matches;
       ctrl.hidden  = shouldHide();
+      if ($scope.selectOnMatch) selectItemOnMatch();
       updateMessages();
       positionDropdown();
     }
@@ -14533,6 +14566,20 @@ function MdAutocompleteCtrl ($scope, $element, $mdUtil, $mdConstant, $mdTheming,
       fetchResults(searchText);
     }
     if (hasFocus) ctrl.hidden = shouldHide();
+  }
+
+  /**
+   * If there is only one matching item and the search text matches its display value exactly,
+   * automatically select that item.  Note: This function is only called if the user uses the
+   * `md-select-on-match` flag.
+   */
+  function selectItemOnMatch () {
+    var searchText = $scope.searchText,
+        matches    = ctrl.matches,
+        item       = matches[ 0 ];
+    if (matches.length === 1) getDisplayValue(item).then(function (displayValue) {
+      if (searchText == displayValue) select(0);
+    });
   }
 
 }
@@ -14602,6 +14649,8 @@ angular
  *     FormController
  * @param {number=} md-input-minlength The minimum length for the input's value for validation
  * @param {number=} md-input-maxlength The maximum length for the input's value for validation
+ * @param {boolean=} md-select-on-match When set, autocomplete will automatically select exact
+ *     the item if the search text is an exact match
  *
  * @usage
  * ###Basic Example
@@ -14672,6 +14721,7 @@ function MdAutocomplete () {
       itemText:       '&mdItemText',
       placeholder:    '@placeholder',
       noCache:        '=?mdNoCache',
+      selectOnMatch:  '=?mdSelectOnMatch',
       itemChange:     '&?mdSelectedItemChange',
       textChange:     '&?mdSearchTextChange',
       minLength:      '=?mdMinLength',
@@ -14805,20 +14855,43 @@ angular
     .controller('MdHighlightCtrl', MdHighlightCtrl);
 
 function MdHighlightCtrl ($scope, $element, $interpolate) {
-  this.init = init;
+  var ctrl = this;
 
-  return init();
+  ctrl.term     = null;
+  ctrl.template = null;
+  ctrl.watchers = [];
+  ctrl.init     = init;
 
-  function init (term) {
-    var unsafeText = $interpolate($element.html())($scope),
+  function init (term, template) {
+    createWatchers(term, template);
+    $element.on('$destroy', cleanup);
+  }
+
+  function createWatchers (term, template) {
+    ctrl.watchers.push($scope.$watch(term, function (term) {
+      ctrl.term = term;
+      updateHTML(term, ctrl.template);
+    }));
+    ctrl.watchers.push($scope.$watch(compileTemplate, function (template) {
+      ctrl.template = template;
+      updateHTML(ctrl.term, template);
+    }));
+
+    function compileTemplate () { return $interpolate(template)($scope); }
+  }
+
+  function cleanup () {
+    ctrl.watchers.forEach(function (watcher) { watcher(); });
+  }
+
+  function updateHTML () {
+    if (ctrl.term === null || ctrl.template === null) return;
+    var unsafeText = $interpolate(ctrl.template)($scope),
         text       = angular.element('<div>').text(unsafeText).html(),
         flags      = $element.attr('md-highlight-flags') || '',
-        watcher    = $scope.$watch(term, function (term) {
-          var regex = getRegExp(term, flags),
-              html  = text.replace(regex, '<span class="highlight">$&</span>');
-          $element.html(html);
-        });
-    $element.on('$destroy', function () { watcher(); });
+        regex      = getRegExp(ctrl.term, flags),
+        html       = text.replace(regex, '<span class="highlight">$&</span>');
+    $element.html(html);
   }
 
   function sanitize (term) {
@@ -14878,8 +14951,11 @@ function MdHighlight () {
     terminal:   true,
     scope:      false,
     controller: 'MdHighlightCtrl',
-    link:       function (scope, element, attr, ctrl) {
-      ctrl.init(attr.mdHighlightText);
+    compile:    function (element, attr) {
+      var template = element.html();
+      return function (scope, element, attr, ctrl) {
+        ctrl.init(attr.mdHighlightText, template);
+      };
     }
   };
 }
@@ -16218,8 +16294,6 @@ function MdTabsController ($scope, $element, $window, $mdConstant, $mdTabInkRipp
   function cleanup () {
     destroyed = true;
     angular.element($window).off('resize', handleWindowResize);
-    angular.element(elements.paging).off('DOMSubtreeModified', ctrl.updateInkBarStyles);
-    angular.element(elements.paging).off('DOMSubtreeModified', updatePagination);
   }
 
   // Change handlers
@@ -17009,7 +17083,7 @@ function MdTemplate ($compile, $mdUtil) {
   };
   function link (scope, element, attr, ctrl) {
     if (!ctrl) return;
-    var compileScope = scope.compileScope.$new();
+    var compileScope = scope.compileScope;
     element.html(scope.template);
     $compile(element.contents())(compileScope);
     element.on('DOMSubtreeModified', function () {

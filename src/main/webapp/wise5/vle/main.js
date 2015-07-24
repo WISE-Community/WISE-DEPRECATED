@@ -11,10 +11,7 @@ require.config({
         'angularAudio': 'vendor/angular-audio/app/angular.audio',
         'angularDragDrop': 'vendor/angular-dragdrop/src/angular-dragdrop.min',
         'angularFileUpload': 'vendor/ng-file-upload/ng-file-upload.min',
-        'angularMaterial': [
-            '//ajax.googleapis.com/ajax/libs/angular_material/0.10.0/angular-material.min',
-            'vendor/angular-material/angular-material.min'
-            ],
+        'angularMaterial': 'vendor/angular-material/angular-material.min',
         'angularSortable': 'vendor/angular-ui-sortable/sortable.min',
         'angularTextAngular': 'lib/angularTextAngular/textAngular.min', // TODO: switch to using bower once loading errors are fixed
         'angularTextAngularRangy': 'lib/angularTextAngular/textAngular-rangy.min', // TODO: switch to using bower once loading errors are fixed
