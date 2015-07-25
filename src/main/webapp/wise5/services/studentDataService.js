@@ -771,7 +771,7 @@ define(['configService', 'projectService'], function(configService, projectServi
          * @param jsonObject the JSON object to get a copy of
          * @return a copy of the JSON object that was passed in
          */
-        serviceObject.getCopyOfJSONObject = function(jsonObject) {
+        serviceObject.makeCopyOfJSONObject = function(jsonObject) {
             var copyOfJSONObject = null;
             
             if (jsonObject != null) {

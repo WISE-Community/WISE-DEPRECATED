@@ -3,14 +3,12 @@ define(['app',
         'highcharts', 
         'highcharts-more',
         'highcharts-ng', 
-        'highcharts-regression', 
-        'jquery'], 
+        'jquery'],
         function(app, 
                 bootstrap, 
                 highcharts, 
                 highchartsMore, 
                 highchartsng, 
-                highchartsRegression, 
                 $) {
     
     app.$controllerProvider.register('GraphController', 
@@ -44,10 +42,13 @@ define(['app',
         this.isDirty = false;
         
         // holds all the series
-        this.series = null;
-        
+        this.series = [];
+
         // whether this part is showing previous work
         this.isShowPreviousWork = false;
+
+        // the index of the active student series
+        this.activeSeriesIndex = 0;
         
         /**
          * Perform setup of the component
@@ -177,50 +178,56 @@ define(['app',
             var thisGraphController = this;
             
             // get all the series from the student data
-            var series = this.series;
+            var series = this.getSeries();
             
-            if (this.series == null && this.componentContent.series != null) {
+            if (series == null && this.componentContent.series != null) {
                 /*
-                 * use the series from the step content if the student does not
+                 * use the series from the component content if the student does not
                  * have any series data
                  */
-                series = this.componentContent.series;
+                series = StudentDataService.makeCopyOfJSONObject(this.componentContent.series);
+                this.setSeries(series);
             }
-            
-            if (this.canClickToAddData() && !this.isDisabled) {
-                /*
-                 * the student can click to add a point so we will also allow
-                 * them to click to remove a point
-                 */
-                
-                if (series != null) {
-                    
-                    // loop through all the series
-                    for (var s = 0; s < series.length; s++) {
-                        
-                        /*
-                         * create a point click event to remove a point when
-                         * it is clicked
-                         */
-                        var point = {
-                            events: {
-                                click: function (e) {
-                                    this.remove();
-                                    
-                                    thisGraphController.studentDataChanged();
-                                    
-                                    $scope.$apply();
-                                }
-                            }
-                        };
-                        
-                        series[s].point = point;
+
+            // add the event that will remove a point when clicked
+            this.addClickToRemovePointEvent(series);
+
+            // loop through all the series and
+            for (var s = 0; s < series.length; s++) {
+                var tempSeries = series[s];
+
+                // check if the series should have a regression line generated for it
+                if (tempSeries != null && tempSeries.regression) {
+                    if (tempSeries.regressionSettings == null) {
+                        // initialize the regression settings object if necessary
+                        tempSeries.regressionSettings = {};
                     }
+
+                    // get the regression settings object
+                    var regressionSettings = tempSeries.regressionSettings;
+
+                    // add these regression settings
+                    regressionSettings.xMin = xAxis.min;
+                    regressionSettings.xMax = xAxis.max;
+                    regressionSettings.numberOfPoints = 100;
                 }
             }
-            
-            series = GraphService.generateRegressionSeries(series);
-            
+
+            /*
+             * generate an array of regression series for the series that
+             * requrie a regression line
+             */
+            var regressionSeries = GraphService.generateRegressionSeries(series);
+            this.regressionSeries = regressionSeries;
+
+            /*
+             * create an array that will contain all the regular series and all
+             * the regression series
+             */
+            var allSeries = [];
+            allSeries = allSeries.concat(series);
+            allSeries = allSeries.concat(regressionSeries);
+
             this.chartConfig = {
                 options: {
                     chart: {
@@ -233,37 +240,46 @@ define(['app',
                                  * check if the student can click to add data
                                  * on the graph
                                  */
-                                if (thisGraphController.canClickToAddData() && !thisGraphController.isDisabled) {
+                                if (!thisGraphController.isDisabled) {
                                     
-                                    // TODO: check for point with existing x value
-                                    
-                                    // get the x and y positions that were clicked
-                                    var x = e.xAxis[0].value;
-                                    var y = e.yAxis[0].value;
-                                    
-                                    // get the series for the graph, there should only be one in this case
-                                    var series = this.series[0];
-                                    
-                                    // round the values to the nearest hundredth
-                                    x = Math.round(x * 100) / 100;
-                                    y = Math.round(y * 100) / 100;
-                                    
-                                    // add the point to the series
-                                    series.addPoint([x, y]);
-                                    
-                                    /*
-                                     * notify the controller that the student 
-                                     * data has changed
-                                     */
-                                    thisGraphController.studentDataChanged();
-                                    
-                                    $scope.$apply();
+                                    // get the index of the active series
+                                    var activeSeriesIndex = thisGraphController.activeSeriesIndex;
+
+                                    if (activeSeriesIndex != null) {
+
+                                        // get the active series
+                                        var series = thisGraphController.series[activeSeriesIndex];
+
+                                        // check if the student is allowed to add points to the active series
+                                        if (series != null && thisGraphController.canClickToAddData(series)) {
+
+                                            // get the x and y positions that were clicked
+                                            var x = e.xAxis[0].value;
+                                            var y = e.yAxis[0].value;
+
+                                            // round the values to the nearest hundredth
+                                            x = Math.round(x * 100) / 100;
+                                            y = Math.round(y * 100) / 100;
+
+                                            // remove any point with the given x value
+                                            thisGraphController.removePointFromSeries(series, x);
+
+                                            // add the point to the series
+                                            thisGraphController.addPointToSeries(series, x, y);
+
+                                            /*
+                                             * notify the controller that the student data has changed
+                                             * so that the graph will be redrawn
+                                             */
+                                            thisGraphController.studentDataChanged();
+                                        }
+                                    }
                                 }
                             }
                         }
                     }
                 },
-                series: series,
+                series: allSeries,
                 title: {
                     text: title
                 },
@@ -272,190 +288,264 @@ define(['app',
                 loading: false
             };
         };
-        
+
         /**
-         * Check whether the student is allowed to click on the graph to
-         * add data
+         * Add a point to a series. The point will be inserted into the series
+         * in the appropriate position that will keep the series data sorted.
+         * @param series the series
+         * @param x the x value
+         * @param y the y value
          */
-        this.canClickToAddData = function() {
-            var result = false;
-            
-            if (this.componentContent.canClickToAddData) {
-                result = this.componentContent.canClickToAddData;
-            }
-            
-            return result;
-        };
-        
-        /**
-         * Get the series object from the graph
-         */
-        this.getSeries = function() {
-            
-            // get the highcharts object
-            var highchartsObject = $('#chart1').highcharts();
-            
-            var series = null;
-            
-            if (highchartsObject != null && highchartsObject.series != null) {
-                
-                // get the series
-                highchartsObjectSeries = highchartsObject.series;
-                
-                /*
-                 * get all the plain series data and not any of the extra
-                 * attributes that highcharts adds to the data
-                 */
-                series = this.getAllPlainSeriesData(highchartsObjectSeries);
-            }
-            
-            return series;
-        };
-        
-        /**
-         * Get all the plain series data
-         * @param allSeries an array of series
-         */
-        this.getAllPlainSeriesData = function(allSeries) {
-            var allPlainSeriesData = [];
-            
-            if (allSeries) {
-                
-                // loop through all the series
-                for (var x = 0 ; x < allSeries.length; x++) {
-                    var series = allSeries[x];
-                    
-                    // get the plain data for a single series
-                    var plainSeriesData = this.getPlainSeriesData(series);
-                    
-                    // add the plain series data to our array
-                    allPlainSeriesData.push(plainSeriesData);
+        this.addPointToSeries = function(series, x, y) {
+            if (series != null && x != null && y != null) {
+
+                // get the data points from the series
+                var data = series.data;
+
+                if (data != null) {
+                    var pointAdded = false;
+
+                    // loop through the data points
+                    for (var d = 0; d < data.length; d++) {
+                        var tempPoint = data[d];
+
+                        if (tempPoint != null) {
+                            // get the x value of the temp point
+                            var tempDataXValue = tempPoint[0];
+
+                            /*
+                             * check if the x value of the point we want to add is
+                             * less than the x value of the temp point
+                             */
+                            if (x < tempDataXValue) {
+                                /*
+                                 * the x value is less so we will insert the point
+                                 * before this current temp point
+                                 */
+                                data.splice(d, 0, [x, y]);
+                                pointAdded = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    /*
+                     * add the point to the end of the series if we haven't
+                     * already added the point to the series
+                     */
+                    if (!pointAdded) {
+                        data.push([x, y]);
+                    }
                 }
             }
-            
-            return allPlainSeriesData;
         };
-        
+
         /**
-         * Get the plain series data for a single series
-         * @param series a single series
+         * Remove a point from a series. We will remove all points that
+         * have the given x value.
+         * @param series the series to remove the point from
+         * @param x the x value of the point to remove
          */
-        this.getPlainSeriesData = function(series) {
-            
-            // the series object
-            var plainSeriesData = {};
-            
-            // the array that will hold our data points
-            plainSeriesData.data = [];
-            
-            if (series != null) {
-                
-                // get the data from the series
-                var seriesData = series.data;
-                
-                if (seriesData != null) {
-                    
+        this.removePointFromSeries = function(series, x) {
+            if (series != null && x != null) {
+                var data = series.data;
+
+                if (data != null) {
+
                     // loop through all the points
-                    for (var p = 0; p < seriesData.length; p++) {
-                        
-                        // get a point
-                        var point = seriesData[p];
-                        
-                        if (point != null) {
-                            
-                            // get the x and y values
-                            var x = point.x;
-                            var y = point.y;
-                            
-                            if (x != null && y != null) {
-                                
-                                // create an array to hold the x and y values
-                                var dataPoint = [x , y];
-                                
-                                // add the data point array to our data array
-                                plainSeriesData.data.push(dataPoint);
+                    for (var d = 0; d < data.length; d++) {
+                        var tempData = data[d];
+
+                        if (tempData != null) {
+                            // get the x value of the point
+                            var tempDataXValue = tempData[0];
+
+                            if (x == tempDataXValue) {
+                                // the x value matches the one we want
+
+                                // remove the point from the data
+                                data.splice(d, 1);
+
+                                /*
+                                 * move the counter back one since we have just
+                                 * removed an element from the data array
+                                 */
+                                d--;
                             }
                         }
                     }
                 }
-                
-                if (series.color != null) {
-                    plainSeriesData.color = series.color;
-                }
-                
-                if (series.regression) {
-                    plainSeriesData.regression = series.regression;
-                    plainSeriesData.regressionSettings = series.regressionSettings;
-                }
-                
-                if (series.options != null && series.options.regressionGenerated) {
-                    var regressionGenerated = series.options.regressionGenerated;
-                    plainSeriesData.regressionGenerated = true;
-                }
-                
-                if (series.options.isRegressionLine) {
-                    plainSeriesData.isRegressionLine = series.options.isRegressionLine;
-                    plainSeriesData.name = series.options.name;
-                    plainSeriesData.regressionOutputs = series.options.regressionOutputs;
-                    plainSeriesData.type = series.options.type;
-                    //plainSeriesData.lineWidth = series.options.lineWidth;
+            }
+        };
+
+        /**
+         * Check if we need to add the click to remove event to the series
+         * @param series an array of series
+         */
+        this.addClickToRemovePointEvent = function(series) {
+
+            if (!this.isDisabled) {
+                /*
+                 * the student can click to add a point so we will also allow
+                 * them to click to remove a point
+                 */
+
+                if (series != null) {
+                    var thisGraphController = this;
+
+                    // loop through all the series
+                    for (var s = 0; s < series.length; s++) {
+
+                        var tempSeries = series[s];
+
+                        if (this.canClickToAddData(tempSeries)) {
+                            /*
+                             * create a point click event to remove a point when
+                             * it is clicked
+                             */
+                            var point = {
+                                events: {
+                                    click: function (e) {
+
+                                        /*
+                                         * make sure the point that was clicked is from the active series.
+                                         * if it isn't from the active series we will not do anything.
+                                         */
+
+                                        // get the series that was clicked
+                                        var series = this.series;
+
+                                        if (series != null && series.userOptions != null) {
+
+                                            // get the id of the series that was clicked
+                                            var seriesId = series.userOptions.id;
+
+                                            // get the index of the active series
+                                            var activeSeriesIndex = thisGraphController.activeSeriesIndex;
+
+                                            if (thisGraphController != null &&
+                                                thisGraphController.series != null &&
+                                                thisGraphController.series[activeSeriesIndex] != null) {
+
+                                                // get the active series
+                                                var activeSeries = thisGraphController.series[activeSeriesIndex];
+
+                                                if (activeSeries != null) {
+
+                                                    // get the active series id
+                                                    var activeSeriesId = activeSeries.id;
+
+                                                    // check if the series that was clicked is the active series
+                                                    if (seriesId == activeSeriesId) {
+
+                                                        // get the data from the active series
+                                                        var data = activeSeries.data;
+
+                                                        if (data != null) {
+
+                                                            // get the index of the point
+                                                            var index = this.index;
+
+                                                            // remove the element at the given index
+                                                            data.splice(index, 1);
+
+                                                            /*
+                                                             * notify the controller that the student data has changed
+                                                             * so that the graph will be redrawn
+                                                             */
+                                                            thisGraphController.studentDataChanged();
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            };
+
+                            // set this point event into the series
+                            tempSeries.point = point;
+                        }
+                    }
                 }
             }
-            
-            return plainSeriesData;
         };
         
+        /**
+         * Check whether the student is allowed to click on given series to
+         * add a data point
+         * @param series the series to check
+         * @return whether the series can be clicked to add data
+         */
+        this.canClickToAddData = function(series) {
+            var result = false;
+
+            if (series != null && series.canClickToAddData) {
+                result = true;
+            }
+
+            return result;
+        };
+
+        /**
+         * Set all the series
+         * @param series an array of series
+         */
+        this.setSeries = function(series) {
+            this.series = series;
+        };
+
+        /**
+         * Get all the series
+         * @returns an array of series
+         */
+        this.getSeries = function() {
+            return this.series;
+        };
+
+        /**
+         * Set the xAxis object
+         * @param xAxis the xAxis object that can be used to render the graph
+         */
+        this.setXAxis = function(xAxis) {
+            this.xAxis = xAxis;
+        };
+
         /**
          * Get the xAxis object
          * @return the xAxis object that can be used to render the graph
          */
         this.getXAxis = function() {
-            var xAxis = null;
-            
-            /*
-            var highchartsObject = $('#chart1').highcharts();
-            
-            if (highchartsObject != null) {
-                var highchartsObjectXAxis = highchartsObject.xAxis;
-                
-                if (highchartsObjectXAxis != null && highchartsObjectXAxis.length > 0) {
-                    var tempXAxis = highchartsObjectXAxis[0];
-                    
-                    if (tempXAxis != null) {
-                        var min = tempXAxis.min;
-                        var max = tempXAxis.max;
-                        
-                        xAxis.min = min;
-                        xAxis.max = max;
-                    }
-                }
-            }
-            */
-            
-            return xAxis;
+            return this.xAxis;
         };
-        
+
+        /**
+         * Set the yAxis object
+         * @param yAxis the yAxis object that can be used to render the graph
+         */
+        this.setYAxis = function(yAxis) {
+            this.yAxis = yAxis;
+        };
+
         /**
          * Get the yAxis object
          * @return the yAxis object that can be used to render the graph
          */
         this.getYAxis = function() {
-            var yAxis = null;
-            
-            return yAxis;
+            return this.yAxis;
         };
         
         /**
          * Reset the table data to its initial state from the component content
          */
         this.resetGraph = function() {
-            // get the original series from the step content
-            this.series = this.componentContent.series;
-            
-            // redraw the graph
-            //this.setupGraph();
-            
-            // the graph has changed so we will perform additional processing
+            // get the original series from the component content
+            this.setSeries(StudentDataService.makeCopyOfJSONObject(this.componentContent.series));
+
+            /*
+             * notify the controller that the student data has changed
+             * so that the graph will be redrawn
+             */
             this.studentDataChanged();
         };
         
@@ -472,9 +562,9 @@ define(['app',
                 
                 if (studentData != null) {
                     // populate the student data into the component
-                    this.series = studentData.series;
-                    this.xAxis = studentData.xAxis;
-                    this.yAxis = studentData.yAxis;
+                    this.setSeries(StudentDataService.makeCopyOfJSONObject(studentData.series));
+                    this.setXAxis(studentData.xAxis);
+                    this.setYAxis(studentData.yAxis);
                 }
             }
         };
@@ -499,10 +589,14 @@ define(['app',
             if (this.isLockAfterSubmit()) {
                 this.isDisabled = true;
                 
-                // re-draw the graph and make it read only
+                // re-draw the graph
                 this.setupGraph();
             }
-            
+
+            /*
+             * notify the parent node that the submit button in this component
+             * was clicked
+             */
             $scope.$emit('componentSubmitClicked');
         };
         
@@ -516,16 +610,10 @@ define(['app',
              */
             this.isDirty = true;
             
-            //var series = this.getSeries();
-            //this.series = this.updateSeriesFromHighcharts(this.series);
-            
-            //
-            //this.series = this.removeRegressionLines(this.series);
-            
-            // redraw the graph
+            // re-draw the graph
             this.setupGraph();
             
-            // get this part id
+            // get this component id
             var componentId = this.getComponentId();
             
             // create a component state populated with the student data
@@ -539,45 +627,7 @@ define(['app',
              */
             $scope.$emit('componentStudentDataChanged', {componentId: componentId, componentState: componentState});
         };
-        
-        this.removeRegressionLines = function(series) {
-            
-            if (series != null) {
-                for (var s = 0; s < series.length; s++) {
-                    var tempSeries = series[s];
-                    
-                    if (tempSeries != null) {
-                        if (tempSeries.isRegressionLine) {
-                            series.splice(s, 1);
-                            s--;
-                        } else if (tempSeries.regressionGenerated) {
-                            tempSeries.regressionGenerated = false;
-                        }
-                    }
-                }
-            }
-            
-            return series;
-        };
-        
-        this.updateSeriesFromHighcharts = function(series) {
-            
-            if (series != null) {
-                var highchartsSeries = this.getSeries();
-                
-                for (var s = 0; s < series.length; s++) {
-                    if (highchartsSeries[s] != null) {
-                        var tempHighchartsSeries = highchartsSeries[s];
-                        var tempSeries = series[s];
-                        
-                        tempSeries.data = tempHighchartsSeries.data;
-                    }
-                }
-            }
-            
-            return series;
-        };
-        
+
         /**
          * Create a new component state populated with the student data
          * @return the componentState after it has been populated
@@ -591,8 +641,8 @@ define(['app',
                 var studentData = {};
                 
                 // insert the series data
-                studentData.series = this.getSeries();
-                
+                studentData.series = StudentDataService.makeCopyOfJSONObject(this.getSeries());
+
                 // insert the x axis data
                 studentData.xAxis = this.getXAxis();
                 
@@ -698,6 +748,7 @@ define(['app',
         
         /**
          * Get the prompt to show to the student
+         * @return a string containing the prompt
          */
         this.getPrompt = function() {
             var prompt = null;
@@ -751,21 +802,7 @@ define(['app',
                 }
             }
         };
-        
-        this.setRegressionLine = function(series, regressionType, xMin, xMax, numberOfRegressionPoints) {
-            if (series != null) {
-                series.regression = true;
-                series.regressionSettings = {
-                    type: regressionType,
-                    color: 'rgba(223, 83, 83, .9)',
-                    xMin: xMin,
-                    xMax: xMax,
-                    numberOfPoints: numberOfRegressionPoints
-                };
-                series.rendered = false;
-            }
-        };
-        
+
         /**
          * A connected component has changed its student data so we will
          * perform any necessary changes to this component

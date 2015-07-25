@@ -91,7 +91,7 @@ define(['nodeService', 'studentDataService'], function(nodeService, studentDataS
                     var studentData = componentStateFromOtherComponent.studentData;
                     
                     // create a copy of the student data
-                    var studentDataCopy = StudentDataService.getCopyOfJSONObject(studentData);
+                    var studentDataCopy = StudentDataService.makeCopyOfJSONObject(studentData);
                     
                     // set the student data into the new component state
                     componentState.studentData = studentDataCopy;

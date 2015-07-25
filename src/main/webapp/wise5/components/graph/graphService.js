@@ -53,7 +53,7 @@ define(['nodeService', 'studentDataService'], function(nodeService, studentDataS
                     var studentData = componentStateFromOtherComponent.studentData;
                     
                     // create a copy of the student data
-                    var studentDataCopy = StudentDataService.getCopyOfJSONObject(studentData);
+                    var studentDataCopy = StudentDataService.makeCopyOfJSONObject(studentData);
                     
                     // set the student data into the new component state
                     componentState.studentData = studentDataCopy;
@@ -62,14 +62,21 @@ define(['nodeService', 'studentDataService'], function(nodeService, studentDataS
             
             return componentState;
         };
-        
+
+        /**
+         * Code extracted from https://github.com/streamlinesocial/highcharts-regression
+         * Loop through all the series that are passed in and find the ones that we
+         * need to generate a regression series for. Return the regression series
+         * that are generated in an array.
+         * @param series an array of series
+         * @return an array of regression series
+         */
         serviceObject.generateRegressionSeries = function(series) {
-            //var series = arguments[1].series ;
-            var extraSeries = [];
+            var regressionSeries = [];
             var i = 0 ;
             for (i = 0 ; i < series.length ; i++){
                 var s = series[i];
-                if ( s.regression && !s.rendered && !s.regressionGenerated ) {
+                if ( s.regression ) {
                     s.regressionSettings =  s.regressionSettings || {} ;
                     var regressionType = s.regressionSettings.type || "linear" ;
                     var regression; 
@@ -104,7 +111,6 @@ define(['nodeService', 'studentDataService'], function(nodeService, studentDataS
                         break;
                     }
 
-                    
                     regression.rSquared =  coefficientOfDetermination(s.data, regression.points).toFixed(2);
                     regression.rValue = Math.sqrt(regression.rSquared,2).toFixed(2) ;
                     extraSerie.data = regression.points ;
@@ -113,19 +119,12 @@ define(['nodeService', 'studentDataService'], function(nodeService, studentDataS
                     extraSerie.name = extraSerie.name.replace("%eq",regression.string);
                     
                     extraSerie.regressionOutputs = regression ;
-                    extraSeries.push(extraSerie) ;
-                    //arguments[1].series[i].rendered = true;
-                    s.regressionGenerated = true;
+
+                    regressionSeries.push(extraSerie);
                 }
             }
 
-
-            //arguments[1].series = series.concat(extraSeries);
-
-            //proceed.apply(this, Array.prototype.slice.call(arguments, 1));
-
-            series = series.concat(extraSeries);
-            return series;
+            return regressionSeries;
         };
         
 
