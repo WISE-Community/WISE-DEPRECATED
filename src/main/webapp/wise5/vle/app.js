@@ -164,12 +164,12 @@ define([
                     url: '',
                     abstract: true,
                     templateUrl: 'wise5/vle/vle.html',
+                    controller: 'VLEController as vleController',
                     resolve: {
                         vleController: app.loadController('vleController'),
                         portfolioController: app.loadController('portfolioController'),
                         config: function (ConfigService) {
                             var configUrl = window.configUrl;
-
                             return ConfigService.retrieveConfig(configUrl);
                         },
                         project: function (ProjectService, config) {

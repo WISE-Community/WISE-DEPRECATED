@@ -2,7 +2,7 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.10.1-rc2-master-eaa3324
+ * v0.10.1-rc3-master-eda4782
  */
 goog.provide('ng.material.components.autocomplete');
 goog.require('ng.material.components.icon');
@@ -550,6 +550,7 @@ function MdAutocompleteCtrl ($scope, $element, $mdUtil, $mdConstant, $mdTheming,
       if (searchText !== $scope.searchText) return; //-- just cache the results if old request
       ctrl.matches = matches;
       ctrl.hidden  = shouldHide();
+      if ($scope.selectOnMatch) selectItemOnMatch();
       updateMessages();
       positionDropdown();
     }
@@ -612,6 +613,20 @@ function MdAutocompleteCtrl ($scope, $element, $mdUtil, $mdConstant, $mdTheming,
       fetchResults(searchText);
     }
     if (hasFocus) ctrl.hidden = shouldHide();
+  }
+
+  /**
+   * If there is only one matching item and the search text matches its display value exactly,
+   * automatically select that item.  Note: This function is only called if the user uses the
+   * `md-select-on-match` flag.
+   */
+  function selectItemOnMatch () {
+    var searchText = $scope.searchText,
+        matches    = ctrl.matches,
+        item       = matches[ 0 ];
+    if (matches.length === 1) getDisplayValue(item).then(function (displayValue) {
+      if (searchText == displayValue) select(0);
+    });
   }
 
 }
@@ -677,6 +692,8 @@ angular
  *     FormController
  * @param {number=} md-input-minlength The minimum length for the input's value for validation
  * @param {number=} md-input-maxlength The maximum length for the input's value for validation
+ * @param {boolean=} md-select-on-match When set, autocomplete will automatically select exact
+ *     the item if the search text is an exact match
  *
  * @usage
  * ###Basic Example
@@ -747,6 +764,7 @@ function MdAutocomplete () {
       itemText:       '&mdItemText',
       placeholder:    '@placeholder',
       noCache:        '=?mdNoCache',
+      selectOnMatch:  '=?mdSelectOnMatch',
       itemChange:     '&?mdSelectedItemChange',
       textChange:     '&?mdSearchTextChange',
       minLength:      '=?mdMinLength',
@@ -876,20 +894,43 @@ angular
     .controller('MdHighlightCtrl', MdHighlightCtrl);
 
 function MdHighlightCtrl ($scope, $element, $interpolate) {
-  this.init = init;
+  var ctrl = this;
 
-  return init();
+  ctrl.term     = null;
+  ctrl.template = null;
+  ctrl.watchers = [];
+  ctrl.init     = init;
 
-  function init (term) {
-    var unsafeText = $interpolate($element.html())($scope),
+  function init (term, template) {
+    createWatchers(term, template);
+    $element.on('$destroy', cleanup);
+  }
+
+  function createWatchers (term, template) {
+    ctrl.watchers.push($scope.$watch(term, function (term) {
+      ctrl.term = term;
+      updateHTML(term, ctrl.template);
+    }));
+    ctrl.watchers.push($scope.$watch(compileTemplate, function (template) {
+      ctrl.template = template;
+      updateHTML(ctrl.term, template);
+    }));
+
+    function compileTemplate () { return $interpolate(template)($scope); }
+  }
+
+  function cleanup () {
+    ctrl.watchers.forEach(function (watcher) { watcher(); });
+  }
+
+  function updateHTML () {
+    if (ctrl.term === null || ctrl.template === null) return;
+    var unsafeText = $interpolate(ctrl.template)($scope),
         text       = angular.element('<div>').text(unsafeText).html(),
         flags      = $element.attr('md-highlight-flags') || '',
-        watcher    = $scope.$watch(term, function (term) {
-          var regex = getRegExp(term, flags),
-              html  = text.replace(regex, '<span class="highlight">$&</span>');
-          $element.html(html);
-        });
-    $element.on('$destroy', function () { watcher(); });
+        regex      = getRegExp(ctrl.term, flags),
+        html       = text.replace(regex, '<span class="highlight">$&</span>');
+    $element.html(html);
   }
 
   function sanitize (term) {
@@ -945,8 +986,11 @@ function MdHighlight () {
     terminal:   true,
     scope:      false,
     controller: 'MdHighlightCtrl',
-    link:       function (scope, element, attr, ctrl) {
-      ctrl.init(attr.mdHighlightText);
+    compile:    function (element, attr) {
+      var template = element.html();
+      return function (scope, element, attr, ctrl) {
+        ctrl.init(attr.mdHighlightText, template);
+      };
     }
   };
 }

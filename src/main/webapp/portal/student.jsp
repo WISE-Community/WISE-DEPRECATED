@@ -14,16 +14,12 @@
 		<link rel="apple-touch-icon" href="apple-touch-icon.png">
 		<!-- Place favicon.ico in the root directory -->
 
-		<link rel="stylesheet" href="${contextPath}/wise5/vendor/angular-material/angular-material.min.css">
-		<link rel="stylesheet" href="${contextPath}/wise5/lib/jquery/jquery-ui.min.css"><!-- TODO: remove when jquery-ui dep is removed -->
-		<link rel="stylesheet" href="${contextPath}/wise5/style/css/vle.css">
-
 		<script src="${contextPath}/wise5/lib/modernizr/modernizr.custom.js"></script>
 
 	</head>
 	<body>
-		<div ng-view layout-fill>
-		<div ui-view layout-fill></div>
+		<div ng-view>
+			<div ui-view></div>
 		</div>
 		<script>
 			var configUrl = '${vleConfigUrl}';
