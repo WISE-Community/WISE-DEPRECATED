@@ -2,8 +2,10 @@
     <div>{{graphController.getPrompt()}}</div>
     <button ng-click='graphController.resetGraph()'>Reset Graph</button>
 
-    <select ng-model='graphController.activeSeriesIndex'>
-        <option ng-repeat='series in graphController.series' value='{{$index}}'>{{series.name}}</option>
+    <select ng-model='graphController.activeSeries'
+            ng-options='series.name for series in graphController.series'
+            ng-change='graphController.activeSeriesChanged()'
+            ng-show='graphController.series.length > 1'>
     </select>
 
     <highchart id="chart1" config="graphController.chartConfig" class="span10"></highchart>

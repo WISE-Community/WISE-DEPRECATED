@@ -451,6 +451,7 @@ define(['app'], function(app) {
             var skipFirstRow = false;
             var xColumn = 0;
             var yColumn = 1;
+            var seriesIndex = 0;
             
             if (params != null) {
                 
@@ -467,6 +468,11 @@ define(['app'], function(app) {
                 if (params.yColumn != null) {
                     // get the y column
                     yColumn = params.yColumn;
+                }
+
+                if (params.seriesIndex != null) {
+                    // get the series index
+                    seriesIndex = params.seriesIndex;
                 }
             }
             
@@ -486,8 +492,8 @@ define(['app'], function(app) {
                     
                     if (series != null && series.length > 0) {
                         
-                        // get the first series
-                        var tempSeries = series[0];
+                        // get the series that we will get data from
+                        var tempSeries = series[seriesIndex];
                         
                         if (tempSeries != null) {
                             

@@ -127,7 +127,8 @@
                     "id": "adb3a92fak",
                     "skipFirstRow": true,
                     "xColumn": 1,
-                    "yColumn": 2
+                    "yColumn": 2,
+                    "seriesIndex": 1
                 }
             ]
         },
@@ -151,14 +152,38 @@
                 "min": 0,
                 "max": 50
             },
-            "series": [],
+            "series": [
+                {
+                    "name": "Static Data",
+                    "data": [[0, 5], [5, 10], [10, 15], [15, 25]],
+                    "color": "red",
+                    "regression": true,
+                    "regressionSettings": {
+                        "type": "linear",
+                        "color": "red"
+                    },
+                    "canClickToAddData": false
+                },
+                {
+                    "name": "Data From Table",
+                    "data": [],
+                    "color": "blue",
+                    "regression": true,
+                    "regressionSettings": {
+                        "type": "exponential",
+                        "color": "blue"
+                    },
+                    "canClickToAddData": true
+                }
+            ],
             "canClickToAddData": true,
             "connectedComponents": [
                 {
                     "id": "2b9db2q0am",
                     "skipFirstRow": true,
                     "xColumn": 1,
-                    "yColumn": 2
+                    "yColumn": 2,
+                    "seriesIndex": 1
                 }
             ]
         }

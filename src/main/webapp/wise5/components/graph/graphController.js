@@ -47,8 +47,8 @@ define(['app',
         // whether this part is showing previous work
         this.isShowPreviousWork = false;
 
-        // the index of the active student series
-        this.activeSeriesIndex = 0;
+        // will hold the active series
+        this.activeSeries = null;
         
         /**
          * Perform setup of the component
@@ -228,6 +228,11 @@ define(['app',
             allSeries = allSeries.concat(series);
             allSeries = allSeries.concat(regressionSeries);
 
+            if (this.activeSeries == null && series.length > 0) {
+                // the active series has not been set so we will set the active series to the first series
+                this.setActiveSeriesByIndex(0);
+            }
+
             this.chartConfig = {
                 options: {
                     chart: {
@@ -241,38 +246,32 @@ define(['app',
                                  * on the graph
                                  */
                                 if (!thisGraphController.isDisabled) {
-                                    
-                                    // get the index of the active series
-                                    var activeSeriesIndex = thisGraphController.activeSeriesIndex;
 
-                                    if (activeSeriesIndex != null) {
+                                    // get the active series
+                                    var series = thisGraphController.activeSeries;
 
-                                        // get the active series
-                                        var series = thisGraphController.series[activeSeriesIndex];
+                                    // check if the student is allowed to add points to the active series
+                                    if (series != null && thisGraphController.canClickToAddData(series)) {
 
-                                        // check if the student is allowed to add points to the active series
-                                        if (series != null && thisGraphController.canClickToAddData(series)) {
+                                        // get the x and y positions that were clicked
+                                        var x = e.xAxis[0].value;
+                                        var y = e.yAxis[0].value;
 
-                                            // get the x and y positions that were clicked
-                                            var x = e.xAxis[0].value;
-                                            var y = e.yAxis[0].value;
+                                        // round the values to the nearest hundredth
+                                        x = Math.round(x * 100) / 100;
+                                        y = Math.round(y * 100) / 100;
 
-                                            // round the values to the nearest hundredth
-                                            x = Math.round(x * 100) / 100;
-                                            y = Math.round(y * 100) / 100;
+                                        // remove any point with the given x value
+                                        thisGraphController.removePointFromSeries(series, x);
 
-                                            // remove any point with the given x value
-                                            thisGraphController.removePointFromSeries(series, x);
+                                        // add the point to the series
+                                        thisGraphController.addPointToSeries(series, x, y);
 
-                                            // add the point to the series
-                                            thisGraphController.addPointToSeries(series, x, y);
-
-                                            /*
-                                             * notify the controller that the student data has changed
-                                             * so that the graph will be redrawn
-                                             */
-                                            thisGraphController.studentDataChanged();
-                                        }
+                                        /*
+                                         * notify the controller that the student data has changed
+                                         * so that the graph will be redrawn
+                                         */
+                                        thisGraphController.studentDataChanged();
                                     }
                                 }
                             }
@@ -420,41 +419,33 @@ define(['app',
                                             // get the id of the series that was clicked
                                             var seriesId = series.userOptions.id;
 
-                                            // get the index of the active series
-                                            var activeSeriesIndex = thisGraphController.activeSeriesIndex;
+                                            // get the active series
+                                            var activeSeries = thisGraphController.activeSeries;
 
-                                            if (thisGraphController != null &&
-                                                thisGraphController.series != null &&
-                                                thisGraphController.series[activeSeriesIndex] != null) {
+                                            if (activeSeries != null) {
 
-                                                // get the active series
-                                                var activeSeries = thisGraphController.series[activeSeriesIndex];
+                                                // get the active series id
+                                                var activeSeriesId = activeSeries.id;
 
-                                                if (activeSeries != null) {
+                                                // check if the series that was clicked is the active series
+                                                if (seriesId == activeSeriesId) {
 
-                                                    // get the active series id
-                                                    var activeSeriesId = activeSeries.id;
+                                                    // get the data from the active series
+                                                    var data = activeSeries.data;
 
-                                                    // check if the series that was clicked is the active series
-                                                    if (seriesId == activeSeriesId) {
+                                                    if (data != null) {
 
-                                                        // get the data from the active series
-                                                        var data = activeSeries.data;
+                                                        // get the index of the point
+                                                        var index = this.index;
 
-                                                        if (data != null) {
+                                                        // remove the element at the given index
+                                                        data.splice(index, 1);
 
-                                                            // get the index of the point
-                                                            var index = this.index;
-
-                                                            // remove the element at the given index
-                                                            data.splice(index, 1);
-
-                                                            /*
-                                                             * notify the controller that the student data has changed
-                                                             * so that the graph will be redrawn
-                                                             */
-                                                            thisGraphController.studentDataChanged();
-                                                        }
+                                                        /*
+                                                         * notify the controller that the student data has changed
+                                                         * so that the graph will be redrawn
+                                                         */
+                                                        thisGraphController.studentDataChanged();
                                                     }
                                                 }
                                             }
@@ -534,7 +525,36 @@ define(['app',
         this.getYAxis = function() {
             return this.yAxis;
         };
-        
+
+        /**
+         * Set the active series
+         * @param series the series
+         */
+        this.setActiveSeries = function(series) {
+            this.activeSeries = series;
+        };
+
+        /**
+         * Set the active series by the index
+         * @param index the index
+         */
+        this.setActiveSeriesByIndex = function(index) {
+
+            if (index == null) {
+                // the index is null so we will set the active series to null
+                this.setActiveSeries(null);
+            } else {
+                // get the series at the index
+                var series = this.getSeriesByIndex(index);
+
+                if (series == null) {
+                    this.setActiveSeries(null);
+                } else {
+                    this.setActiveSeries(series);
+                }
+            }
+        };
+
         /**
          * Reset the table data to its initial state from the component content
          */
@@ -565,6 +585,7 @@ define(['app',
                     this.setSeries(StudentDataService.makeCopyOfJSONObject(studentData.series));
                     this.setXAxis(studentData.xAxis);
                     this.setYAxis(studentData.yAxis);
+                    this.setActiveSeriesByIndex(studentData.activeSeriesIndex);
                 }
             }
         };
@@ -598,6 +619,15 @@ define(['app',
              * was clicked
              */
             $scope.$emit('componentSubmitClicked');
+        };
+
+        /**
+         * The active series has changed
+         */
+        this.activeSeriesChanged = function() {
+
+            // the student data has changed
+            this.studentDataChanged();
         };
         
         /**
@@ -648,7 +678,15 @@ define(['app',
                 
                 // insert the y axis data
                 studentData.yAxis = this.getYAxis();
-                
+
+                // get the active series index
+                var activeSeriesIndex  = this.getSeriesIndex(this.activeSeries);
+
+                if (activeSeriesIndex != null) {
+                    // set the active series index
+                    studentData.activeSeriesIndex = activeSeriesIndex;
+                }
+
                 componentState.studentData = studentData;
                 
                 if(this.saveTriggeredBy != null) {
@@ -759,6 +797,58 @@ define(['app',
             
             return prompt;
         };
+
+        /**
+         * Get the index of a series
+         * @param series the series
+         * @return the index of the series
+         */
+        this.getSeriesIndex = function(series) {
+            var index = null;
+
+            if (series != null) {
+
+                // get all of the series
+                var seriesArray = this.getSeries();
+
+                if (seriesArray != null) {
+
+                    // loop through all the series
+                    for (var s = 0; s < seriesArray.length; s++) {
+                        var tempSeries = seriesArray[s];
+
+                        // check if this is the series we are looking for
+                        if (series == tempSeries) {
+                            index = s;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            return index;
+        };
+
+        /**
+         * Get a series by the index
+         * @param index the index of the series in the series array
+         * @returns the series object or null if not found
+         */
+        this.getSeriesByIndex = function(index) {
+            var series = null;
+
+            if (index != null && index >= 0) {
+                // get all of the series
+                var seriesArray = this.getSeries();
+
+                if (seriesArray != null && seriesArray.length > 0) {
+                    // get the series at the index
+                    series = seriesArray[index];
+                }
+            }
+
+            return series;
+        }
         
         /**
          * Import work from another component
@@ -822,21 +912,25 @@ define(['app',
                     
                     // convert the table data to series data
                     var data = $scope.graphController.convertTableDataToSeriesData(componentState, connectedComponentParams);
-                    
-                    // create a new series object
-                    var series = {};
-                    
-                    // set the data into the series
-                    series.data = data;
-                    
-                    if ($scope.graphController.series == null) {
-                        // initialize the series in the controller
-                        $scope.graphController.series = [];
+
+                    // get the index of the series that we will put the data into
+                    var seriesIndex = connectedComponentParams.seriesIndex;
+
+                    if (seriesIndex != null) {
+
+                        // get the series
+                        var series = $scope.graphController.series[seriesIndex];
+
+                        if(series == null) {
+                            // the series is null so we will create a series
+                            series = {};
+                            $scope.graphController.series[seriesIndex] = series;
+                        }
+
+                        // set the data into the series
+                        series.data = data;
                     }
-                    
-                    // set the series into the array of series
-                    $scope.graphController.series[0] = series;
-                    
+
                     // render the graph
                     $scope.graphController.setupGraph();
                     
