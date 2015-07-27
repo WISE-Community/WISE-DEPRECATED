@@ -317,7 +317,6 @@
         curnit_fk bigint,
         metadata_fk bigint,
         owner_fk bigint not null,
-        run_fk bigint,
         primary key (id)
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -555,9 +554,6 @@
     alter table projects 
         add constraint UK_t592fa1q3xyjf1qsx8t4qkrt5  unique (metadata_fk);
 
-    alter table projects 
-        add constraint UK_104cg4gaepu7x3hw1meqakld1  unique (run_fk);
-
     alter table runs 
         add constraint UK_dxea1ifhea203qe2ie4lsd8vb  unique (run_code);
 
@@ -748,11 +744,6 @@
         add constraint FK_lglinci94nt1chg4acxpds1nh 
         foreign key (owner_fk) 
         references users (id);
-
-    alter table projects 
-        add constraint FK_104cg4gaepu7x3hw1meqakld1 
-        foreign key (run_fk) 
-        references runs (id);
 
     alter table projects_related_to_bookmarkers 
         add constraint FK_fenusge1cdckorb9yur1o2rh8 
