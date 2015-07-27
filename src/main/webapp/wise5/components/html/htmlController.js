@@ -73,8 +73,8 @@ define(['app'], function(app) {
                 } else {
                     // this is a regular component
 
-                    if (component != null) {
-                        this.componentContent = component.html;
+                    if (this.componentContent != null) {
+                        this.html = this.componentContent.html;
                     }
                     
                     // register this component with the parent node
