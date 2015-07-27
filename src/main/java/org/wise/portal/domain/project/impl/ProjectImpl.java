@@ -100,9 +100,6 @@ public class ProjectImpl implements Project {
 	public static final String COLUMN_NAME_PARENT_PROJECT_ID = "parentprojectid";
 
 	@Transient
-	public static final String COLUMN_NAME_PREVIEWOFFERING_FK = "run_fk";
-
-	@Transient
 	private static final String COLUMN_NAME_PROJECTTYPE = "projecttype";
 
 	@Transient
@@ -162,10 +159,6 @@ public class ProjectImpl implements Project {
     @Cascade( { org.hibernate.annotations.CascadeType.SAVE_UPDATE })
 	@JoinColumn(name = COLUMN_NAME_CURNIT_FK, nullable = true, unique = false)
 	protected Curnit curnit;
-		
-	@OneToOne(targetEntity = RunImpl.class, fetch = FetchType.LAZY)
-	@JoinColumn(name = COLUMN_NAME_PREVIEWOFFERING_FK, unique = true)
-	protected Run previewRun;
 
 	@ManyToOne(targetEntity = UserImpl.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "owner_fk", nullable = false, unique = false)
@@ -253,20 +246,6 @@ public class ProjectImpl implements Project {
         this.id = id;
     }
 
-	/**
-	 * @return the previewOffering
-	 */
-	public Run getPreviewRun() {
-		return previewRun;
-	}
-
-	/**
-	 * @param previewOffering the previewOffering to set
-	 */
-	public void setPreviewRun(Run previewRun) {
-		this.previewRun = previewRun;
-	}
-    
     @SuppressWarnings("unused")
     private Integer getVersion() {
         return this.version;

@@ -55,99 +55,85 @@ public interface Project extends Persistable {
 	 * Set the <code>Curnit</code> of this project
 	 * @param Curnit
 	 */
-	public void setCurnit(Curnit curnit);
+	void setCurnit(Curnit curnit);
 
 	/**
 	 * Get the <code>Curnit</code> of this project
 	 * @return Curnit
 	 */
-	public Curnit getCurnit();
-	
-	/**
-	 * Get the <code>Run</code> that will be used to preview
-	 * this project
-	 * @return
-	 */
-	public Run getPreviewRun();
-	
-	/**
-	 * Set the <code>Run</code> that will be used to
-	 * preview this project
-	 * @param run
-	 */
-	public void setPreviewRun(Run run);
+	Curnit getCurnit();
 
 	/**
 	 * @return The id of the project in the persistent data store
 	 */
-	public Serializable getId();
+	Serializable getId();
 	
 	/**
 	 * @return the familyTag
 	 */
-	public FamilyTag getFamilytag();
+	FamilyTag getFamilytag();
 
 	/**
 	 * @param familyTag the familyTag to set
 	 */
-	public void setFamilytag(FamilyTag familytag);
+	void setFamilytag(FamilyTag familytag);
 
 	/**
 	 * @return the projectInfo
 	 */
-	public ProjectInfo getProjectInfo();
+	ProjectInfo getProjectInfo();
 
 	/**
 	 * @param projectInfoTag the projectInfoTag to set
 	 */
-	public void setProjectInfo(ProjectInfo projectInfo);
+	void setProjectInfo(ProjectInfo projectInfo);
 	
 	/**
 	 * Indicates if the project is available to use in classrooms
 	 */
-	public boolean isCurrent();
+	boolean isCurrent();
 	
 	/**
 	 * @param isCurrent
 	 */
-	public void setCurrent(boolean isCurrent);
+	void setCurrent(boolean isCurrent);
 	
-	public Set<User> getSharedowners();
+	Set<User> getSharedowners();
 
-	public void setSharedowners(Set<User> sharedowners);
+	void setSharedowners(Set<User> sharedowners);
 	
-	public User getOwner();
+	User getOwner();
 
-	public void setOwner(User owner);
+	void setOwner(User owner);
 	
-	public Set<User> getBookmarkers();
+	Set<User> getBookmarkers();
 	
-	public void setBookmarkers(Set<User> bookmarkers);
+	void setBookmarkers(Set<User> bookmarkers);
 	
 	/**
 	 * @return the projectType
 	 */
-	public ProjectType getProjectType();
+	ProjectType getProjectType();
 
 	/**
 	 * @param projectType the projectType to set
 	 */
-	public void setProjectType(ProjectType projectType);
+	void setProjectType(ProjectType projectType);
 	
 	/**
 	 * @return the name
 	 */
-	public String getName();
+	String getName();
 
 	/**
 	 * @param name the name to set
 	 */
-	public void setName(String name);
+	void setName(String name);
 
 	/**
 	 * Populates the projectInfo for this project.
 	 */
-	public void populateProjectInfo();
+	void populateProjectInfo();
 	
 	/**
 	 * Visitor pattern, accepts ProjectVisitors
@@ -158,42 +144,42 @@ public interface Project extends Persistable {
 	/**
 	 * @return <code>ProjectMetadata</code>
 	 */
-	public ProjectMetadata getMetadata();
+	ProjectMetadata getMetadata();
 	
 	/**
 	 * @param <code>ProjectMetadata</code> data
 	 */
-	public void setMetadata(ProjectMetadata data);
+	void setMetadata(ProjectMetadata data);
 	
 	/**
 	 * @return <code>boolean</code> is public
 	 */
-	public boolean isPublic();
+	boolean isPublic();
 	
 	/**
 	 * @param <code>boolean</code> isPublic
 	 */
-	public void setPublic(boolean isPublic);
+	void setPublic(boolean isPublic);
 	
 	/**
 	 * @return <code>Date</code> date created
 	 */
-	public Date getDateCreated();
+	Date getDateCreated();
 	
 	/**
 	 * @param <code>Date</code> date created
 	 */
-	public void setDateCreated(Date datecreated);
+	void setDateCreated(Date datecreated);
 	
 	/**
 	 * @return the tags
 	 */
-	public Set<Tag> getTags();
+	Set<Tag> getTags();
 	
 	/**
 	 * @param tags the tags to set
 	 */
-	public void setTags(Set<Tag> tags);
+	void setTags(Set<Tag> tags);
 	
 	/**
 	 * Returns true iff this project has at least all of the tags
@@ -202,7 +188,7 @@ public interface Project extends Persistable {
 	 * @param tagnames
 	 * @return
 	 */
-	public boolean hasTags(Set<String> tagnames);
+	boolean hasTags(Set<String> tagnames);
 
 	/**
 	 * Sets this project's parent project id where the project was copied from
@@ -210,71 +196,71 @@ public interface Project extends Persistable {
 	 * 
 	 * @param parentProjectId
 	 */
-	public void setParentProjectId(Long parentProjectId);
+	void setParentProjectId(Long parentProjectId);
 	
 	/**
 	 * 
 	 * @return
 	 */
-	public Long getParentProjectId();
+	Long getParentProjectId();
 	
 	/**
 	 * 
 	 * @param rootProjectId
 	 */
-	public void setRootProjectId(Long rootProjectId);
+	void setRootProjectId(Long rootProjectId);
 	
 	/**
 	 * 
 	 * @return
 	 */
-	public Long getRootProjectId();
+	Long getRootProjectId();
 	
 	/**
 	 * Whether this project is deleted
 	 * @return
 	 */
-	public boolean isDeleted();
+	boolean isDeleted();
 
 	/**
 	 * Set whether this project is deleted
 	 * @param isDeleted
 	 */
-	public void setDeleted(boolean isDeleted);
+	void setDeleted(boolean isDeleted);
 
 	/**
 	 * Get the date the project was deleted
 	 * @return
 	 */
-	public Date getDateDeleted();
+	Date getDateDeleted();
 
 	/**
 	 * Set the date the project was deleted
 	 * @param dateDeleted
 	 */
-	public void setDateDeleted(Date dateDeleted);
+	void setDateDeleted(Date dateDeleted);
 	
 	/**
 	 * Gets the maximum total asset size
 	 * @return
 	 */
-	public Long getMaxTotalAssetsSize();
+	Long getMaxTotalAssetsSize();
 	
 	/**
 	 * Sets the maximum total asset size
 	 * @return
 	 */
-	public void setMaxTotalAssetsSize(Long maxTotalAssetsSize);
+	void setMaxTotalAssetsSize(Long maxTotalAssetsSize);
 	
 	/**
 	 * Returns the WISE version of this project [4, 5, etc]
 	 * @return integer representing WISE version
 	 */
-	public Integer getWiseVersion();
+	Integer getWiseVersion();
 	
 	/**
 	 * Sets the WISE version of this project [4, 5, etc]
 	 * @param wiseVersion integer representing WISE version
 	 */
-	public void setWISEVersion(Integer wiseVersion);
+	void setWISEVersion(Integer wiseVersion);
 }
