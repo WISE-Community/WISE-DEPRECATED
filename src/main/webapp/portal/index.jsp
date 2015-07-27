@@ -88,7 +88,7 @@
 			</div>
 			
 			<div class="showcase">
-				<div id="projectHeader" class="feature"><span class="featureContent"><spring:message code="index.projects" /></span><a class="projectsLink" href="previewprojectlist.html" title="<spring:message code="index.projects" />"><spring:message code="index.browseCurricula" /></a></div>
+				<div id="projectHeader" class="feature"><span class="featureContent"><spring:message code="index.projects" /></span><a class="projectsLink" href="projectlibrary" title="<spring:message code="index.projects" />"><spring:message code="index.browseCurricula" /></a></div>
 				<div id="features">
 					<div id="featureHeader" class="feature"><span class="featureContent"><spring:message code="index.features" /></span></div>
 					<div id="featuresContent">
