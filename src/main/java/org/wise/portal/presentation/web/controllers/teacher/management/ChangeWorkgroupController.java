@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2007-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -46,7 +46,6 @@ import org.wise.portal.service.workgroup.WorkgroupService;
 
 /**
  * @author Sally Ahn
- * @version $Id: $
  */
 @Controller
 @SessionAttributes("changeWorkgroupParameters")
@@ -88,7 +87,7 @@ public class ChangeWorkgroupController {
 	 * @return the path of the view to display
 	 * @throws Exception
 	 */
-	@RequestMapping(method=RequestMethod.GET)
+	@RequestMapping(method = RequestMethod.GET)
     public String initializeForm(ModelMap model, HttpServletRequest request) throws Exception {
 		ChangeWorkgroupParameters params = new ChangeWorkgroupParameters();
 		params.setStudent(userService.retrieveUserByUsername(request.getParameter(STUDENT_PARAM_NAME)));
@@ -115,7 +114,7 @@ public class ChangeWorkgroupController {
 	 * @param bindingResult the object used for validation in which errors will be stored
 	 * @return the path of the view to display
 	 */
-    @RequestMapping(method=RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST)
     protected String onSubmit(
     		@ModelAttribute("changeWorkgroupParameters") ChangeWorkgroupParameters params,
     		BindingResult bindingResult,

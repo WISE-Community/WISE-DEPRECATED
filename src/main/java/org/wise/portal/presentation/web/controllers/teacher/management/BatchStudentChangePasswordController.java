@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2007-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -52,7 +52,6 @@ import org.wise.portal.service.user.UserService;
 
 /**
  * @author Sally Ahn
- * @version $Id: $
  */
 @Controller
 @SessionAttributes("batchStudentChangePasswordParameters")
@@ -94,9 +93,9 @@ public class BatchStudentChangePasswordController {
 		User user = ControllerUtil.getSignedInUser();
 		Run run = this.runService.retrieveById(Long.parseLong(request.getParameter("runId")));
 		
-		if(user.isAdmin() ||
+		if (user.isAdmin() ||
 				this.aclService.hasPermission(run, BasePermission.ADMINISTRATION, user) ||
-				this.aclService.hasPermission(run, BasePermission.WRITE, user)){
+				this.aclService.hasPermission(run, BasePermission.WRITE, user)) {
 			BatchStudentChangePasswordParameters params = new BatchStudentChangePasswordParameters();
 			params.setGroupId(Long.parseLong(request.getParameter(GROUPID_PARAM_NAME)));
 			params.setTeacherUser(user);
@@ -128,7 +127,7 @@ public class BatchStudentChangePasswordController {
     		//validate the parameters
     		changePasswordParametersValidator.validate(batchStudentChangePasswordParameters, bindingResult);
     		
-    		if(bindingResult.hasErrors()) {
+    		if (bindingResult.hasErrors()) {
     			//there were errors
     			view = formView;
     		} else {

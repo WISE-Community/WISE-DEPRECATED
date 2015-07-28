@@ -41,58 +41,58 @@ public interface Workgroup extends Persistable {
     /**
      * @return the members
      */
-    public Set<User> getMembers();
+    Set<User> getMembers();
 
     /**
      * @param members
      *            the members to set
      */
-    public void setMembers(Set<User> members);
+    void setMembers(Set<User> members);
 
     /**
      * @param member
      *            the member to add
      */
-    public void addMember(User member);
+    void addMember(User member);
     
     /**
      * @param member
      *            the member to remove
      */
-    public void removeMember(User member);
+    void removeMember(User member);
 
     /**
      * @return the offering
      */
-    public Offering getOffering();
+    Offering getOffering();
 
     /**
      * @param offering
      *            the offering to set
      */
-    public void setOffering(Offering offering);
+    void setOffering(Offering offering);
     
     /**
      * @return the group
      */
-    public Group getGroup();
+    Group getGroup();
     
     /**
      * @param group
      *           the group to set
      */
-    public void setGroup(Group group);
+    void setGroup(Group group);
 
 	/**
 	 * @return the id
 	 */
-	public Long getId();
+	Long getId();
 
 	/**
 	 * Generates a name for this workgroup.
 	 * 
 	 * @return <code>String</code> a name for this workgroup
 	 */
-	public String generateWorkgroupName();
+	String generateWorkgroupName();
 
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2014 Encore Research Group, University of Toronto
+ * Copyright (c) 2007-2015 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -38,7 +38,6 @@ import org.wise.portal.service.authentication.UserDetailsService;
 
 /**
  * @author Hiroki Terashima
- * @version $Id$
  */
 public class UserDetailsServiceImpl
 		implements UserDetailsService {

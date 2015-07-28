@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2014 Encore Research Group, University of Toronto
+ * Copyright (c) 2007-2015 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -43,14 +43,11 @@ import org.wise.portal.domain.authentication.ImmutableAclEntry;
 import org.wise.portal.domain.authentication.MutableAclSid;
 import org.wise.portal.domain.authentication.MutableAclTargetObjectIdentity;
 
-
 /**
  * Concrete implementation of <code>MutableAclEntry</code> marked with EJB3
  * annotations for persistence.
  * 
  * @author Cynick Young
- * 
- * @version $Id$
  */
 @Entity
 @Table(name = PersistentAclEntry.DATA_STORE_NAME, uniqueConstraints = { @UniqueConstraint(columnNames = {

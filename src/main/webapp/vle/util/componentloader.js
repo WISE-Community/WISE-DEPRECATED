@@ -3,7 +3,7 @@
  * This includes loading variables, scripts, events, styling and 
  * methods into the view as well as initializing necessary variables.
  * 
- * @author patrick lawler
+ * @author Patrick Lawler
  */
 var componentloader = function(em, sl){
 	var eventManager = em;

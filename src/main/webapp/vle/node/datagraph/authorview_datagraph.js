@@ -1,7 +1,7 @@
 /**
  * Sets the DataGraphNode type as an object of this view
  * @constructor
- * @author patrick lawler
+ * @author Patrick Lawler
  */
 View.prototype.DataGraphNode = {};
 View.prototype.DataGraphNode.commonComponents = ['Prompt', 'LinkTo'];

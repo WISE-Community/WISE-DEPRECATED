@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2008-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -32,7 +32,6 @@ import org.wise.portal.domain.workgroup.Workgroup;
 
 /**
  * @author Hiroki Terashima
- * @version $Id$
  */
 public interface WorkgroupDao<T extends Workgroup> extends SimpleDao<T> {
 
@@ -41,14 +40,14 @@ public interface WorkgroupDao<T extends Workgroup> extends SimpleDao<T> {
      * 
      * @return a <code>Workgroup</code> <code>List</code>
      */
-    public List<T> getListByOfferingAndUser(Offering offering, User user);
+    List<T> getListByOfferingAndUser(Offering offering, User user);
     
     /**
      * Gets a list of workgroups for the specified user
      * 
      * @return a <code>Workgroup</code> <code>List</code>
      */
-    public List<T> getListByUser(User user);
+    List<T> getListByUser(User user);
 
     /**
      * Get specified workgroup id. Fetch all fields is specified
@@ -56,6 +55,6 @@ public interface WorkgroupDao<T extends Workgroup> extends SimpleDao<T> {
      * @param doEagerFetch true if we should fetch all fields eagerly
      * @return
      */
-	public Workgroup getById(Long workgroupId, boolean doEagerFetch);
+	Workgroup getById(Long workgroupId, boolean doEagerFetch);
 
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2007-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -42,7 +42,6 @@ import org.wise.portal.service.user.UserService;
  * Validator for the TeamSignIn form
  *
  * @author Hiroki Terashima
- * @version $Id$
  */
 @Component
 public class TeamSignInFormValidator implements Validator {
@@ -97,7 +96,7 @@ public class TeamSignInFormValidator implements Validator {
 					MutableUserDetails userDetails2 = user2.getUserDetails();
 					String hashedPassword2 = encoder.encodePassword(teamSignInForm.getPassword2(), systemSaltSource.getSystemWideSalt());
 
-					if(userDetails2 instanceof TeacherUserDetails) {
+					if (userDetails2 instanceof TeacherUserDetails) {
 						//username is for a teacher and that is not allowed
 						errors.rejectValue("username2", "error.teamsignin-teacher-username-specified");
 					} else if (!user2.getUserDetails().getPassword().equals(hashedPassword2)) {
@@ -123,7 +122,7 @@ public class TeamSignInFormValidator implements Validator {
 					MutableUserDetails userDetails3 = user3.getUserDetails();
 					String hashedPassword3 = encoder.encodePassword(teamSignInForm.getPassword3(), systemSaltSource.getSystemWideSalt());
 
-					if(userDetails3 instanceof TeacherUserDetails) {
+					if (userDetails3 instanceof TeacherUserDetails) {
 						//username is for a teacher and that is not allowed
 						errors.rejectValue("username3", "error.teamsignin-teacher-username-specified");
 					} else if (!user3.getUserDetails().getPassword().equals(hashedPassword3)) {
@@ -149,7 +148,7 @@ public class TeamSignInFormValidator implements Validator {
 					MutableUserDetails userDetails4 = user4.getUserDetails();
 					String hashedPassword4 = encoder.encodePassword(teamSignInForm.getPassword4(), systemSaltSource.getSystemWideSalt());
 
-					if(userDetails4 instanceof TeacherUserDetails) {
+					if (userDetails4 instanceof TeacherUserDetails) {
 						//username is for a teacher and that is not allowed
 						errors.rejectValue("username4", "error.teamsignin-teacher-username-specified");
 					} else if (!user4.getUserDetails().getPassword().equals(hashedPassword4)) {
@@ -175,7 +174,7 @@ public class TeamSignInFormValidator implements Validator {
 					MutableUserDetails userDetails5 = user5.getUserDetails();
 					String hashedPassword5 = encoder.encodePassword(teamSignInForm.getPassword5(), systemSaltSource.getSystemWideSalt());
 
-					if(userDetails5 instanceof TeacherUserDetails) {
+					if (userDetails5 instanceof TeacherUserDetails) {
 						//username is for a teacher and that is not allowed
 						errors.rejectValue("username5", "error.teamsignin-teacher-username-specified");
 					} else if (!user5.getUserDetails().getPassword().equals(hashedPassword5)) {
@@ -201,7 +200,7 @@ public class TeamSignInFormValidator implements Validator {
 					MutableUserDetails userDetails6 = user6.getUserDetails();
 					String hashedPassword6 = encoder.encodePassword(teamSignInForm.getPassword6(), systemSaltSource.getSystemWideSalt());
 
-					if(userDetails6 instanceof TeacherUserDetails) {
+					if (userDetails6 instanceof TeacherUserDetails) {
 						//username is for a teacher and that is not allowed
 						errors.rejectValue("username6", "error.teamsignin-teacher-username-specified");
 					} else if (!user6.getUserDetails().getPassword().equals(hashedPassword6)) {
@@ -227,7 +226,7 @@ public class TeamSignInFormValidator implements Validator {
 					MutableUserDetails userDetails7 = user7.getUserDetails();
 					String hashedPassword7 = encoder.encodePassword(teamSignInForm.getPassword7(), systemSaltSource.getSystemWideSalt());
 
-					if(userDetails7 instanceof TeacherUserDetails) {
+					if (userDetails7 instanceof TeacherUserDetails) {
 						//username is for a teacher and that is not allowed
 						errors.rejectValue("username7", "error.teamsignin-teacher-username-specified");
 					} else if (!user7.getUserDetails().getPassword().equals(hashedPassword7)) {
@@ -253,7 +252,7 @@ public class TeamSignInFormValidator implements Validator {
 					MutableUserDetails userDetails8 = user8.getUserDetails();
 					String hashedPassword8 = encoder.encodePassword(teamSignInForm.getPassword8(), systemSaltSource.getSystemWideSalt());
 
-					if(userDetails8 instanceof TeacherUserDetails) {
+					if (userDetails8 instanceof TeacherUserDetails) {
 						//username is for a teacher and that is not allowed
 						errors.rejectValue("username8", "error.teamsignin-teacher-username-specified");
 					} else if (!user8.getUserDetails().getPassword().equals(hashedPassword8)) {
@@ -279,7 +278,7 @@ public class TeamSignInFormValidator implements Validator {
 					MutableUserDetails userDetails9 = user9.getUserDetails();
 					String hashedPassword9 = encoder.encodePassword(teamSignInForm.getPassword9(), systemSaltSource.getSystemWideSalt());
 
-					if(userDetails9 instanceof TeacherUserDetails) {
+					if (userDetails9 instanceof TeacherUserDetails) {
 						//username is for a teacher and that is not allowed
 						errors.rejectValue("username9", "error.teamsignin-teacher-username-specified");
 					} else if (!user9.getUserDetails().getPassword().equals(hashedPassword9)) {
@@ -305,7 +304,7 @@ public class TeamSignInFormValidator implements Validator {
 					MutableUserDetails userDetails10 = user10.getUserDetails();
 					String hashedPassword10 = encoder.encodePassword(teamSignInForm.getPassword10(), systemSaltSource.getSystemWideSalt());
 
-					if(userDetails10 instanceof TeacherUserDetails) {
+					if (userDetails10 instanceof TeacherUserDetails) {
 						//username is for a teacher and that is not allowed
 						errors.rejectValue("username10", "error.teamsignin-teacher-username-specified");
 					} else if (!user10.getUserDetails().getPassword().equals(hashedPassword10)) {

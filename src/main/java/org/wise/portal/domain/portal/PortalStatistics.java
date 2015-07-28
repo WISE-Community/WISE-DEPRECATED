@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2008-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -28,39 +28,42 @@ import java.util.Date;
 import org.json.JSONObject;
 import org.wise.portal.domain.Persistable;
 
+/**
+ * @author Geoffrey Kwan
+ */
 public interface PortalStatistics extends Persistable {
 
-    public Date getTimestamp();
+    Date getTimestamp();
 
-	public void setTimestamp(Date timestamp);
+	void setTimestamp(Date timestamp);
 	
-	public Long getTotalNumberStudents();
+	Long getTotalNumberStudents();
 	
-	public void setTotalNumberStudents(Long totalNumberStudents);
+	void setTotalNumberStudents(Long totalNumberStudents);
 
-	public Long getTotalNumberStudentLogins();
+	Long getTotalNumberStudentLogins();
 
-	public void setTotalNumberStudentLogins(Long totalNumberStudentLogins);
+	void setTotalNumberStudentLogins(Long totalNumberStudentLogins);
 
-	public Long getTotalNumberTeachers();
+	Long getTotalNumberTeachers();
 
-	public void setTotalNumberTeachers(Long totalNumberTeachers);
+	void setTotalNumberTeachers(Long totalNumberTeachers);
 
-	public Long getTotalNumberTeacherLogins();
+	Long getTotalNumberTeacherLogins();
 
-	public void setTotalNumberTeacherLogins(Long totalNumberTeacherLogins);
+	void setTotalNumberTeacherLogins(Long totalNumberTeacherLogins);
 
-    public Long getTotalNumberProjects();
+    Long getTotalNumberProjects();
 
-	public void setTotalNumberProjects(Long totalNumberProjects);
+	void setTotalNumberProjects(Long totalNumberProjects);
 	
-	public Long getTotalNumberRuns();
+	Long getTotalNumberRuns();
 
-	public void setTotalNumberRuns(Long totalNumberRuns);
+	void setTotalNumberRuns(Long totalNumberRuns);
 
-	public Long getTotalNumberProjectsRun();
+	Long getTotalNumberProjectsRun();
 
-	public void setTotalNumberProjectsRun(Long totalNumberProjectsRun);
+	void setTotalNumberProjectsRun(Long totalNumberProjectsRun);
 	
-	public JSONObject getJSONObject();
+	JSONObject getJSONObject();
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2008-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -73,7 +73,7 @@ public class DeleteProjectController {
 		//set the default response string
 		String responseString = "failure";
 		
-		if(projectIdStr != null && !projectIdStr.equals("")) {
+		if (projectIdStr != null && !projectIdStr.equals("")) {
 			Long projectId = Long.parseLong(projectIdStr);
 			
 			if (projectId != null) {
@@ -93,10 +93,10 @@ public class DeleteProjectController {
 						Long signedInUserId = signedInUser.getId();
 						Long ownerId = owner.getId();
 						
-						if(signedInUserId == ownerId) {
+						if (signedInUserId == ownerId) {
 							//the owner is trying to delete the project so we will allow it
 							
-							if(revive != null && revive.equals("true")) {
+							if (revive != null && revive.equals("true")) {
 								//we are unarchiving the project
 								project.setDeleted(false);
 								project.setDateDeleted(null);
@@ -111,7 +111,7 @@ public class DeleteProjectController {
 								// also, if project is used in a run, unarchive it also
 								try {
 									List<Run> runsUsingProject = this.runService.getProjectRuns(projectId);
-									if (!runsUsingProject.isEmpty()){
+									if (!runsUsingProject.isEmpty()) {
 										// since a project can now only be run once, just use the first run in the list
 										Run run = runsUsingProject.get(0);
 										runService.startRun(run);
@@ -135,7 +135,7 @@ public class DeleteProjectController {
 								// also, if project is used in a run, archive it also
 								try {
 									List<Run> runsUsingProject = this.runService.getProjectRuns(projectId);
-									if (!runsUsingProject.isEmpty()){
+									if (!runsUsingProject.isEmpty()) {
 										// since a project can now only be run once, just use the first run in the list
 										Run run = runsUsingProject.get(0);
 										runService.endRun(run);

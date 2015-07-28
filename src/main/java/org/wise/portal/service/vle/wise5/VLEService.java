@@ -66,6 +66,4 @@ public interface VLEService {
                                         String context, String category, String event, String data,
                                         String clientSaveTime) throws ObjectNotFoundException;
 
-
-
 }

@@ -1,7 +1,7 @@
 /**
  * Sets the SVGDrawNode type as an object of this view
  * @constructor
- * @author patrick lawler
+ * @author Patrick Lawler
  */
 View.prototype.SVGDrawNode = {};
 View.prototype.SVGDrawNode.commonComponents = ['Prompt', 'LinkTo'];

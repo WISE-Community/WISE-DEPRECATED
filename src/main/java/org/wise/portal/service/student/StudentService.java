@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2007-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -24,7 +24,6 @@
 package org.wise.portal.service.student;
 
 import java.util.List;
-
 
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
@@ -39,7 +38,6 @@ import org.wise.portal.domain.user.User;
  * Represents the set of operations on a WISE Student user.
  *
  * @author Hiroki Terashima
- * @version $Id$
  */
 public interface StudentService {
 
@@ -62,7 +60,7 @@ public interface StudentService {
 	 *      of the periods that the run has been set up for
 	 */
 	@Transactional
-	public void addStudentToRun(User studentUser, Projectcode projectcode) 
+	void addStudentToRun(User studentUser, Projectcode projectcode)
 	     throws ObjectNotFoundException, PeriodNotFoundException, StudentUserAlreadyAssociatedWithRunException;
 	
 	/**
@@ -72,7 +70,7 @@ public interface StudentService {
 	 * @param studentUser
 	 * @return
 	 */
-	public List<User> getTeachersOfStudent(User studentUser);
+	List<User> getTeachersOfStudent(User studentUser);
 	
 	/**
 	 * Returns true iff the specified student is associated with the specified
@@ -81,7 +79,7 @@ public interface StudentService {
 	 * @param teacherUser
 	 * @return
 	 */
-	public boolean isStudentAssociatedWithTeacher(User studentUser, User teacherUser);
+	boolean isStudentAssociatedWithTeacher(User studentUser, User teacherUser);
 	
 	/**
 	 * Removes the student from association with the run.  If the specified
@@ -92,7 +90,7 @@ public interface StudentService {
 	 * @param studentUser <code>User</code> student to remove from the run.
 	 * @param run <code>Run</code> the run to remove the student from.
 	 */
-	public void removeStudentFromRun(User studentUser, Run run);
+	void removeStudentFromRun(User studentUser, Run run);
 	
 	/**
 	 * Given a student user and a run, returns a populated
@@ -101,5 +99,5 @@ public interface StudentService {
 	 * @param studentUser <code>User</code> student to lookup
 	 * @param run <code>Run</code> run to lookup
 	 */
-	public StudentRunInfo getStudentRunInfo(User studentUser, Run run);
+	StudentRunInfo getStudentRunInfo(User studentUser, Run run);
 }

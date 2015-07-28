@@ -54,7 +54,7 @@ import org.wise.portal.service.project.ProjectService;
  * @author Hiroki Terashima
  */
 @Controller
-@RequestMapping(value={
+@RequestMapping(value = {
 		"/teacher/run/manage/*.html",
 		"/teacher/run/updaterun.html",
 		"/teacher/run/editrun.html",

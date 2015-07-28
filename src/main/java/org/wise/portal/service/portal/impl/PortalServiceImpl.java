@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2008-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -40,8 +40,7 @@ import org.wise.portal.domain.portal.Portal;
 import org.wise.portal.service.portal.PortalService;
 
 /**
- * @author hirokiterashima
- * @version $Id$
+ * @author Hiroki Terashima
  */
 @Service
 public class PortalServiceImpl implements PortalService {
@@ -53,7 +52,7 @@ public class PortalServiceImpl implements PortalService {
 	 * @throws ObjectNotFoundException 
 	 * @see org.wise.portal.service.portal.PortalService#getById(java.lang.Long)
 	 */
-	@Cacheable(value="portal")
+	@Cacheable(value = "portal")
 	public Portal getById(Serializable id) throws ObjectNotFoundException {
 		return portalDao.getById(id);
 	}
@@ -62,7 +61,7 @@ public class PortalServiceImpl implements PortalService {
 	 * @see org.wise.portal.service.portal.PortalService#updatePortal(org.wise.portal.domain.portal.Portal)
 	 */
 	@Transactional()
-	@CacheEvict(value="portal", allEntries=true)
+	@CacheEvict(value = "portal", allEntries = true)
 	public void updatePortal(Portal portal) {
 		this.portalDao.save(portal);
 	}

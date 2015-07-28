@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2014 Encore Research Group, University of Toronto
+ * Copyright (c) 2007-2015 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -39,8 +39,6 @@ import org.wise.portal.service.authentication.UserDetailsService;
 
 /**
  * @author Laurel Williams
- * 
- * @version $Id$
  */
 @Entity
 @Table(name = UserImpl.DATA_STORE_NAME)
@@ -95,7 +93,6 @@ public class UserImpl implements User {
     	return this.userDetails.hasGrantedAuthority(UserDetailsService.TRUSTED_AUTHOR_ROLE);
     }
 
-    
     /**
      * @return the id
      */

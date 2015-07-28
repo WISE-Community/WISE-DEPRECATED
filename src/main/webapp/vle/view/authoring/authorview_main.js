@@ -1,7 +1,7 @@
 /**
  * Functions related to the main layout of the project in the authoring view
  * 
- * @author patrick lawler
+ * @author Patrick Lawler
  */
 
 /**

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2014 Encore Research Group, University of Toronto
+ * Copyright (c) 2007-2015 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -20,7 +20,6 @@
  */
 package org.wise.portal.dao.authentication;
 
-
 import org.wise.portal.dao.SimpleDao;
 import org.wise.portal.domain.authentication.MutableGrantedAuthority;
 
@@ -29,9 +28,6 @@ import org.wise.portal.domain.authentication.MutableGrantedAuthority;
  * <code>GrantedAuthority</code>.
  * 
  * @author Cynick Young
- * 
- * @version $Id$
- * 
  */
 public interface GrantedAuthorityDao<T extends MutableGrantedAuthority> extends
         SimpleDao<T> {
@@ -44,7 +40,7 @@ public interface GrantedAuthorityDao<T extends MutableGrantedAuthority> extends
      *            The role string
      * @return True if the GrantedAuthority has this role, false otherwise.
      */
-    public boolean hasRole(String authority);
+    boolean hasRole(String authority);
 
     /**
      * Given an input string retrieve a corresponding record from data store.
@@ -53,5 +49,5 @@ public interface GrantedAuthorityDao<T extends MutableGrantedAuthority> extends
      *            A string representing the name of the data in the data store.
      * @return A new instance of a data object.
      */
-    public T retrieveByName(String name);
+    T retrieveByName(String name);
 }

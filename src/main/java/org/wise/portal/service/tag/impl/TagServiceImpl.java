@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2008-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -33,8 +33,7 @@ import org.wise.portal.domain.project.impl.TagImpl;
 import org.wise.portal.service.tag.TagService;
 
 /**
- * @author patrick lawler
- * @version $Id:$
+ * @author Patrick Lawler
  */
 @Service
 public class TagServiceImpl implements TagService {
@@ -46,7 +45,7 @@ public class TagServiceImpl implements TagService {
 	 * @see org.wise.portal.service.tag.TagService#getTagById(java.lang.Long)
 	 */
 	@Transactional(readOnly = true)
-	public Tag getTagById(Long id){
+	public Tag getTagById(Long id) {
 		try{
 			return this.tagDao.getById(id);
 		} catch (ObjectNotFoundException e) {
@@ -59,12 +58,12 @@ public class TagServiceImpl implements TagService {
 	 * @see org.wise.portal.service.tag.TagService#createOrGetTag(java.lang.String)
 	 */
 	@Transactional
-	public Tag createOrGetTag(String name){
+	public Tag createOrGetTag(String name) {
 		/* attempt to retrieve the tag with the given name */
 		Tag tag = this.tagDao.getTagByName(name);
 		
 		/* if it doesn't exist, let's create it */
-		if(tag == null){
+		if (tag == null) {
 			tag = new TagImpl();
 			tag.setName(name.toLowerCase());
 			this.tagDao.save(tag);
@@ -77,8 +76,8 @@ public class TagServiceImpl implements TagService {
 	/**
 	 * @see org.wise.portal.service.tag.TagService#isFromDatabase(org.wise.portal.domain.project.Tag)
 	 */
-	public boolean isFromDatabase(Tag tag){
-		if(tag.getId() == null){
+	public boolean isFromDatabase(Tag tag) {
+		if (tag.getId() == null) {
 			return false;
 		} else {
 			return true;
@@ -89,7 +88,7 @@ public class TagServiceImpl implements TagService {
 	 * @see org.wise.portal.service.tag.TagService#removeIfOrphaned(java.lang.Long)
 	 */
 	@Transactional
-	public void removeIfOrphaned(Long tagId){
+	public void removeIfOrphaned(Long tagId) {
 		this.tagDao.removeIfOrphaned(tagId);
 	}
 	

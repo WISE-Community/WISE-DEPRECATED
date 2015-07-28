@@ -2,7 +2,7 @@
  * Set the constraint object in this view. The constraint object is responsible
  * for handling all tasks associated with authoring constraints.
  * 
- * @author patrick lawler
+ * @author Patrick Lawler
  */
 View.prototype.Constraint = {view:undefined, currentProjectConstraints:undefined};
 

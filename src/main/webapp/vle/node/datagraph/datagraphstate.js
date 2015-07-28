@@ -1,7 +1,7 @@
 /**
  * Datagraph state object
  * @constructor
- * @author patrick lawler
+ * @author Patrick Lawler
  */
 function DATAGRAPHSTATE(args){
 	this.timestamp = args[1];

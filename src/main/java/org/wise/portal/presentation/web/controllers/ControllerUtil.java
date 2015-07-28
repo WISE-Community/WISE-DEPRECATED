@@ -32,9 +32,9 @@ import org.wise.portal.domain.user.User;
 import org.wise.portal.service.user.UserService;
 
 /**
- * @author Laurel Williams
+ * A utility class for use by all controllers
  *
- * A utility class for use by all controllers.
+ * @author Laurel Williams
  */
 @Component
 public class ControllerUtil {

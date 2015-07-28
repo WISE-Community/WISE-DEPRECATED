@@ -32,68 +32,67 @@ import org.wise.portal.domain.user.User;
  * but includes the date of creation.
  * 
  * @author Patrick Lawler
- *
  */
 public interface NewsItem {
 	
 	/**
 	 * @return the News Item
 	 */
-	public String getNews();
+	String getNews();
 	
 	/** 
 	 * @param news - the News Item to set
 	 */
-	public void setNews(String news);
+	void setNews(String news);
 	
 	/**
 	 * @return the object id
 	 */
-	public Long getId();
+	Long getId();
 	
 	/**
 	 * @param id - the id to set
 	 */
-	public void setId(Long id);
+	void setId(Long id);
 	
 	/**
 	 * @return the Date of the News Item
 	 */
-	public Date getDate();
+	Date getDate();
 	
 	/**
 	 * @param date - the Date of the News Item to set
 	 */
-	public void setDate(Date date);
+	void setDate(Date date);
 	
 	/**
 	 * @return User - the Owner of the News Item
 	 */
-	public User getOwner();
+	User getOwner();
 	
 	/**
 	 * @param User - the Owner of the News Item
 	 */
-	public void setOwner(User owner);
+	void setOwner(User owner);
 	
 	/**
 	 * @return String - the Title of the News Item
 	 */
-	public String getTitle();
+	String getTitle();
 	
 	/**
 	 * @param String - the Title of the News Item
 	 */
-	public void setTitle(String title);
+	void setTitle(String title);
 
 	/**
 	 * @return String - the Type of the News Item
 	 */
-	public String getType();
+	String getType();
 	
 	/**
 	 * @param String - the Type of the News Item
 	 */
-	public void setType(String type);
+	void setType(String type);
 
 }

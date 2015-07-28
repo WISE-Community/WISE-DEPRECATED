@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2014 Encore Research Group, University of Toronto
+ * Copyright (c) 2007-2015 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -26,13 +26,11 @@ import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.acls.model.Permission;
 import org.wise.portal.domain.user.User;
 
-
 /**
  * An interface for a Access Control list (acl) service which allows user to
  * create an acl for an object.
  * 
  * @author Laurel Williams
- * @version $Id$
  */
 public interface AclService<T> extends PermissionEvaluator {
 
@@ -46,7 +44,7 @@ public interface AclService<T> extends PermissionEvaluator {
 	 * @param permission
 	 *            The permission to grant to the user on the object.
 	 */
-	public void addPermission(T object, Permission permission);
+	void addPermission(T object, Permission permission);
 	
 	/**
 	 * Creates an acl for an object if neccessary and adds an ace for that
@@ -60,7 +58,7 @@ public interface AclService<T> extends PermissionEvaluator {
 	 *            A <code>User</code> who will be granted the permission on
 	 *            the object.
 	 */
-	public void addPermission(T object, Permission permission, User user);
+	void addPermission(T object, Permission permission, User user);
 
 	/**
 	 * Removes the permission of a user on an object. If the object does not
@@ -74,7 +72,7 @@ public interface AclService<T> extends PermissionEvaluator {
 	 *           The <code>User</code> who will lose the permission on
 	 *           the object.
 	 */
-	public void removePermission(T object, Permission permission, User user);
+	void removePermission(T object, Permission permission, User user);
 	
 	/**
 	 * Gets a list of Permissions that the user has on the specified object.
@@ -86,12 +84,12 @@ public interface AclService<T> extends PermissionEvaluator {
 	 *          the object.
 	 * @return A <code>Permission</code> containing the 
 	 */
-	public List<Permission> getPermissions(T object, User user);
+	List<Permission> getPermissions(T object, User user);
 
 	/**
 	 * Returns <code>boolean</code> true if the given <code>User</code> principle
 	 * has the given <code>Permission</code> on the give <code>Object</code>, returns
 	 * fale otherwise.
 	 */
-	public boolean hasPermission(T object, Permission permission, User user);
+	boolean hasPermission(T object, Permission permission, User user);
 }

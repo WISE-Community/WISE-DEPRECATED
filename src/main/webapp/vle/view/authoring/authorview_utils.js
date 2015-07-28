@@ -1,7 +1,7 @@
 /**
  * Util functions for the authoring view
  * 
- * @author patrick lawler
+ * @author Patrick Lawler
  */
 /**
  * Returns the content base from the given full url to a file.

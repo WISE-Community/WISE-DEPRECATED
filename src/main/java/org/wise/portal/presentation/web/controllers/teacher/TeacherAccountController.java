@@ -88,7 +88,7 @@ public class TeacherAccountController {
 	 * @param modelMap the model object that contains values for the page to use when rendering the view
 	 * @return the path of the view to display
 	 */
-	@RequestMapping(value={"/teacher/join"},method=RequestMethod.GET)
+	@RequestMapping(value = {"/teacher/join"}, method = RequestMethod.GET)
 	public String initializeFormNewTeacher(ModelMap modelMap) throws Exception {
 		//create the teacher account form object
 		TeacherAccountForm teacherAccountForm = new TeacherAccountForm();

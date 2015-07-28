@@ -1,7 +1,7 @@
 /**
  * Functions that handle adding/editing/removing previuos work for nodes
  * 
- * @author patrick lawler
+ * @author Patrick Lawler
  */
 
 /**

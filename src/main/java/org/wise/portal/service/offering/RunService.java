@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2007-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -41,7 +41,6 @@ import org.wise.portal.domain.workgroup.Workgroup;
  * A service for working with <code>Run</code> objects
  *
  * @author Hiroki Terashima
- * @version $Id$
  */
 public interface RunService extends OfferingService {
 
@@ -52,7 +51,7 @@ public interface RunService extends OfferingService {
      *            The object that encapsulate parameters for creating a run
      * @return the run created.
      */
-	public Run createRun(RunParameters runParameters) throws ObjectNotFoundException;
+	Run createRun(RunParameters runParameters) throws ObjectNotFoundException;
 	
 	/**
 	 * Ends this run. The side effect is that the run's endtime gets set.
@@ -62,7 +61,7 @@ public interface RunService extends OfferingService {
 	 * 
 	 * @param run the <code>Run</code> to end
 	 */
-	public void endRun(Run run);
+	void endRun(Run run);
 
 	/**
 	 * Starts this run. The side effect is that the run's endtime gets set to null.
@@ -72,7 +71,7 @@ public interface RunService extends OfferingService {
 	 * 
 	 * @param run the <code>Run</code> to start
 	 */
-	public void startRun(Run run);
+	void startRun(Run run);
 
 	/**
 	 * Retrieves a list of <code>Run</code>
@@ -80,7 +79,7 @@ public interface RunService extends OfferingService {
 	 * @return <code>List</code> of <code>Run</code>
 	 */
     @Secured( { "ROLE_USER", "AFTER_ACL_COLLECTION_READ" })
-    public List<Run> getRunList();
+    List<Run> getRunList();
     
 	/**
 	 * Retrieves a list of <code>Run</code> that the specified user owns
@@ -88,7 +87,7 @@ public interface RunService extends OfferingService {
 	 * @return <code>List</code> of <code>Run</code>
 	 */
     @Secured( { "ROLE_USER", "AFTER_ACL_COLLECTION_READ" })
-    public List<Run> getRunListByOwner(User owner);
+    List<Run> getRunListByOwner(User owner);
     
 	/**
 	 * Retrieves a list of <code>Run</code> that the specified user is an shared-owner
@@ -96,7 +95,7 @@ public interface RunService extends OfferingService {
 	 * @return <code>List</code> of <code>Run</code>
 	 */
     @Secured( { "ROLE_USER", "AFTER_ACL_COLLECTION_READ" })
-	public List<Run> getRunListBySharedOwner(User user);
+	List<Run> getRunListBySharedOwner(User user);
 
     /**
      * Retrieves a list of all <code>Runs</code>. Only
@@ -105,7 +104,7 @@ public interface RunService extends OfferingService {
      * @return <code>List</code> of <code>Run</code>
      */
     @Secured( { "ROLE_ADMINISTRATOR", "ROLE_RESEARCHER" })
-    public List<Run> getAllRunList();
+    List<Run> getAllRunList();
 
     /**
      * Retrieves a list of <code>Run</code> that the given user
@@ -114,7 +113,7 @@ public interface RunService extends OfferingService {
      * @param user <code>User</code> that is associated with 0 or more runs
      * @return list of <code>Run</code> that the user is associated with
      */
-    public List<Run> getRunList(User user);
+    List<Run> getRunList(User user);
     
     /**
      * Allows a user to add another user as a shared teacher of a run.
@@ -138,7 +137,7 @@ public interface RunService extends OfferingService {
      *          to find an existing run   
      */
     @Secured( {"ROLE_TEACHER"} )
-    public void addSharedTeacherToRun(Long runId, Long userId) 
+    void addSharedTeacherToRun(Long runId, Long userId)
         throws ObjectNotFoundException;
 
     
@@ -166,21 +165,21 @@ public interface RunService extends OfferingService {
      *          to find an existing run   
      */
     @Secured( {"ROLE_TEACHER"} )
-    public void addRolesToSharedTeacher(Long runId, Long userId, Set<String> roles) throws ObjectNotFoundException;
+    void addRolesToSharedTeacher(Long runId, Long userId, Set<String> roles) throws ObjectNotFoundException;
 
     /**
      * @param addSharedTeacherParameters
      */
     @Secured( {"ROLE_TEACHER"} )
     @Transactional()
-	public void addSharedTeacherToRun(AddSharedTeacherParameters addSharedTeacherParameters) throws ObjectNotFoundException;
+	void addSharedTeacherToRun(AddSharedTeacherParameters addSharedTeacherParameters) throws ObjectNotFoundException;
 
     /**
      * @param addSharedTeacherParameters
      */
     @Secured( {"ROLE_TEACHER"} )
     @Transactional()
-	public void updateSharedTeacherForRun(AddSharedTeacherParameters addSharedTeacherParameters) throws ObjectNotFoundException;
+	void updateSharedTeacherForRun(AddSharedTeacherParameters addSharedTeacherParameters) throws ObjectNotFoundException;
     
     /**
      * Removes specified teacher user from specified run. If user or run does not exist, ignore.
@@ -188,7 +187,7 @@ public interface RunService extends OfferingService {
      */
     @Secured( {"ROLE_TEACHER"} )
     @Transactional()
-	public void removeSharedTeacherFromRun(String username, Long runId) throws ObjectNotFoundException;
+	void removeSharedTeacherFromRun(String username, Long runId) throws ObjectNotFoundException;
 
     /**
      * Returns the permission that the specified user has on the specified run
@@ -200,7 +199,7 @@ public interface RunService extends OfferingService {
      *     null is returned.
      */
     @Transactional(readOnly = true)
-    public String getSharedTeacherRole(Run run, User user);
+    String getSharedTeacherRole(Run run, User user);
     
     /**
      * Retrieves the Run domain object using the unique runcode
@@ -212,7 +211,7 @@ public interface RunService extends OfferingService {
      * @throws <code>RunNotFoundException</code> when runcode cannot be used 
      *          to find an existing run    
      */
-    public Run retrieveRunByRuncode(String runcode) throws ObjectNotFoundException;
+    Run retrieveRunByRuncode(String runcode) throws ObjectNotFoundException;
     
     /**
      * Retrieves the Run domain object using a unique runId
@@ -224,7 +223,7 @@ public interface RunService extends OfferingService {
      * @throws <code>RunNotFoundException</code> when runId cannot be used 
      *          to find an existing run   
      */
-    public Run retrieveById(Long runId) throws ObjectNotFoundException;
+    Run retrieveById(Long runId) throws ObjectNotFoundException;
     
     /**
      * Retrieves the Run domain object using a unique runId
@@ -238,7 +237,7 @@ public interface RunService extends OfferingService {
      * @throws <code>RunNotFoundException</code> when runId cannot be used 
      *          to find an existing run   
      */
-    public Run retrieveById(Long runId, boolean doEagerFetch) throws ObjectNotFoundException;
+    Run retrieveById(Long runId, boolean doEagerFetch) throws ObjectNotFoundException;
     
     /**
      * Gets all of the Workgroups that are associated with this run
@@ -246,7 +245,7 @@ public interface RunService extends OfferingService {
      * @throws ObjectNotFoundException when runId cannot be used 
      *     to find an existing run 
      */
-    public Set<Workgroup> getWorkgroups(Long runId) throws ObjectNotFoundException;
+    Set<Workgroup> getWorkgroups(Long runId) throws ObjectNotFoundException;
     
     /**
      * Gets all of the Workgroups that are associated with this run
@@ -258,7 +257,7 @@ public interface RunService extends OfferingService {
      * @param groupId
      *         <code>Long</code> periodId to which all returned workgroups belong
      */
-    public Set<Workgroup> getWorkgroups(Long runId, Long periodId) throws ObjectNotFoundException;
+    Set<Workgroup> getWorkgroups(Long runId, Long periodId) throws ObjectNotFoundException;
     
     /**
      * Adds an Announcement to this run
@@ -267,7 +266,7 @@ public interface RunService extends OfferingService {
      * @param <code>Announcement</code> announcement
      * @throws <code>Exception</code>
      */
-    public void addAnnouncementToRun(Long runId, Announcement announcement) throws Exception;
+    void addAnnouncementToRun(Long runId, Announcement announcement) throws Exception;
     
     /**
      * Removes an Announcement from this run
@@ -276,7 +275,7 @@ public interface RunService extends OfferingService {
      * @param <code>Announcement</code> announcement
      * @throws <code>Exception</code>
      */
-    public void removeAnnouncementFromRun(Long runId, Announcement announcement) throws Exception;
+    void removeAnnouncementFromRun(Long runId, Announcement announcement) throws Exception;
     
     /**
      * Sets whether the run is paused
@@ -284,7 +283,7 @@ public interface RunService extends OfferingService {
      * @param isPaused a String that is "true" or "false"
      * @throws Exception
      */
-    public void setInfo(Long runId, String isPaused, String showNodeId) throws Exception;
+    void setInfo(Long runId, String isPaused, String showNodeId) throws Exception;
     
     /**
      * Sets whether idea manager is enabled for this run or not.
@@ -292,7 +291,7 @@ public interface RunService extends OfferingService {
      * @param isEnabled
      * @throws ObjectNotFoundException 
      */
-    public void setIdeaManagerEnabled(Long runId, boolean isEnabled) throws ObjectNotFoundException;
+    void setIdeaManagerEnabled(Long runId, boolean isEnabled) throws ObjectNotFoundException;
 
     /**
      * Sets whether portfolio is enabled for this run or not.
@@ -300,7 +299,7 @@ public interface RunService extends OfferingService {
      * @param isEnabled
      * @throws ObjectNotFoundException 
      */
-    public void setPortfolioEnabled(Long runId, boolean isEnabled) throws ObjectNotFoundException;
+    void setPortfolioEnabled(Long runId, boolean isEnabled) throws ObjectNotFoundException;
     
     /**
      * Sets whether student asset uploader is enabled for this run or not.
@@ -308,7 +307,7 @@ public interface RunService extends OfferingService {
      * @param isEnabled
      * @throws ObjectNotFoundException 
      */
-    public void setStudentAssetUploaderEnabled(Long runId, boolean isEnabled) throws ObjectNotFoundException;
+    void setStudentAssetUploaderEnabled(Long runId, boolean isEnabled) throws ObjectNotFoundException;
     
     /**
      * Sets whether real time is enabled for this run
@@ -316,7 +315,7 @@ public interface RunService extends OfferingService {
      * @param isEnabled
      * @throws ObjectNotFoundException
      */
-    public void setRealTimeEnabled(Long runId, boolean isEnabled) throws ObjectNotFoundException;
+    void setRealTimeEnabled(Long runId, boolean isEnabled) throws ObjectNotFoundException;
 
     /**
      * Update private run notes for this run
@@ -324,7 +323,7 @@ public interface RunService extends OfferingService {
      * @param privateNotes String private notes
      * @throws ObjectNotFoundException
      */
-    public void updateNotes(Long runId, String privateNotes) throws ObjectNotFoundException;
+    void updateNotes(Long runId, String privateNotes) throws ObjectNotFoundException;
 
     /**
      * Update survey for the specified run
@@ -332,7 +331,7 @@ public interface RunService extends OfferingService {
      * @param survey String survey
      * @throws ObjectNotFoundException
      */
-    public void updateSurvey(Long runId, String survey) throws ObjectNotFoundException;
+    void updateSurvey(Long runId, String survey) throws ObjectNotFoundException;
 
     /**
      * Given a <code>Long</code> runId, changes the archiveReminderTime to be 30 days
@@ -341,7 +340,7 @@ public interface RunService extends OfferingService {
      * @param <code>Long</code> runId
      * @throws <code>ObjectNotFoundException</code>
      */
-    public void extendArchiveReminderTime(Long runId) throws ObjectNotFoundException;
+    void extendArchiveReminderTime(Long runId) throws ObjectNotFoundException;
     
     /**
      * Given a <code>Long</code> projectId, returns the <code>Integer</code> number of
@@ -350,7 +349,7 @@ public interface RunService extends OfferingService {
      * @param <code>Long</code> id
      * @return <code>Integer</code>
      */
-    public Integer getProjectUsage(Long id);
+    Integer getProjectUsage(Long id);
     
     /**
      * Given a <code>Long</code> projectId, returns a <code>List<Run></code> list of
@@ -359,7 +358,7 @@ public interface RunService extends OfferingService {
      * @param <code>Long</code> id
      * @return <code>Integer</code>
      */
-    public List<Run> getProjectRuns(Long id);
+    List<Run> getProjectRuns(Long id);
     
     /**
      * 
@@ -367,7 +366,7 @@ public interface RunService extends OfferingService {
      * @param nodeId
      * @param maxScoreValue
      */
-    public void setExtras(Run run, String extras) throws Exception;
+    void setExtras(Run run, String extras) throws Exception;
     
     /**
 	 * Returns <code>boolean</code> true if the given <code>User</code> user has the
@@ -379,7 +378,7 @@ public interface RunService extends OfferingService {
 	 * @param permission
 	 * @return boolean
 	 */
-    public boolean hasRunPermission(Run run, User user, Permission permission);
+    boolean hasRunPermission(Run run, User user, Permission permission);
     
     /**
      * Returns a <code>List<Run></code> list of runs that were run within the
@@ -388,7 +387,7 @@ public interface RunService extends OfferingService {
      * @param String - period
      * @return List<Run> - run list
      */
-    public List<Run> getRunsRunWithinPeriod(String period);
+    List<Run> getRunsRunWithinPeriod(String period);
     
     /**
      * Returns a <code>List<Run></code> list of runs ordered descending by how
@@ -396,7 +395,7 @@ public interface RunService extends OfferingService {
      * 
      * @return List<Run> - list of runs descending by activity
      */
-    public List<Run> getRunsByActivity();
+    List<Run> getRunsByActivity();
     
     /**
      * Returns a <code>List<Run></code> list of runs that have a run title similar to the
@@ -405,7 +404,7 @@ public interface RunService extends OfferingService {
      * @param runTitle
      * @return List<Run> - list of runs with the run title similar to the param
      */
-    public List<Run> getRunsByTitle(String runTitle);
+    List<Run> getRunsByTitle(String runTitle);
     
     /**
      * Updates the given <code>Run</code> run's statistics which are currently
@@ -413,7 +412,7 @@ public interface RunService extends OfferingService {
      * 
      * @param Run - the run whose statistics should be updated.
      */
-    public void updateRunStatistics(Long runId);
+    void updateRunStatistics(Long runId);
     
     /**
      * Update the name of the run with the given <code>Long</code> to that of
@@ -422,7 +421,7 @@ public interface RunService extends OfferingService {
      * @param Long - runId
      * @param String - name
      */
-    public void updateRunName(Long runId, String name);
+    void updateRunName(Long runId, String name);
     
     /**
      * Creates and adds a period with the given <code>String</code> name to
@@ -431,5 +430,5 @@ public interface RunService extends OfferingService {
      * @param Long - runId
      * @param String - name
      */
-    public void addPeriodToRun(Long runId, String name);
+    void addPeriodToRun(Long runId, String name);
 }

@@ -40,12 +40,12 @@ import org.wise.vle.domain.user.UserInfo;
  * @author Geoffrey Kwan
  */
 @Entity
-@Table(name="stepwork")
-@Inheritance(strategy=InheritanceType.JOINED)
+@Table(name = "stepwork")
+@Inheritance(strategy = InheritanceType.JOINED)
 public class StepWork extends PersistableDomain {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id = null;
 
 	@ManyToOne(cascade = {CascadeType.PERSIST})
@@ -56,16 +56,16 @@ public class StepWork extends PersistableDomain {
 	@JoinColumn(name = "node_id", nullable = false)
 	private Node node;
 
-	@Column(name="postTime", nullable = false)
+	@Column(name = "postTime", nullable = false)
 	private Timestamp postTime;
 
-	@Column(name="startTime")
+	@Column(name = "startTime")
 	private Timestamp startTime;
 
-	@Column(name="endTime")
+	@Column(name = "endTime")
 	private Timestamp endTime;
 
-	@Column(name="data", length=5120000, columnDefinition = "mediumtext", nullable = false)
+	@Column(name = "data", length = 5120000, columnDefinition = "mediumtext", nullable = false)
 	private String data;
 	
     public Long getId() {

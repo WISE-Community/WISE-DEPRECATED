@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2008-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -36,8 +36,6 @@ import org.wise.portal.domain.general.contactwise.impl.ContactWISEForm;
  * 
  * @author Hiroki Terashima
  * @author Geoffrey Kwan
- *
- * @version $Id$
  */
 @Component
 public class ContactWISEValidator implements Validator {
@@ -67,7 +65,7 @@ public class ContactWISEValidator implements Validator {
 				"error.contactwise-name");
 		
 		//email is not required for students
-		if(!isStudent) {
+		if (!isStudent) {
 			ValidationUtils.rejectIfEmptyOrWhitespace(errors, "email",
 				"error.contactwise-email-empty");	
 		}
@@ -82,7 +80,7 @@ public class ContactWISEValidator implements Validator {
 		
 		/* validate email if user is not a student and email is not null and 
 		   not empty */
-		if(!isStudent && email != null && !email.trim().equals("")) {
+		if (!isStudent && email != null && !email.trim().equals("")) {
 			validateEmail(email, errors);
 		}
 	}
@@ -91,7 +89,7 @@ public class ContactWISEValidator implements Validator {
 	 * Validates the email against the email regular expression
 	 */
 	private void validateEmail(String email, Errors errors) {
-		if(email != null && !Pattern.matches(EMAIL_REGEXP, email)) {
+		if (email != null && !Pattern.matches(EMAIL_REGEXP, email)) {
 			errors.rejectValue("email", "error.email-invalid");
 		}
 	}

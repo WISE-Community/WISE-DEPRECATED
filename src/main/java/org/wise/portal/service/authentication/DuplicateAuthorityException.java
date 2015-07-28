@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2006-2014 Encore Research Group, University of Toronto
+ * Copyright (c) 2006-2015 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -25,8 +25,6 @@ package org.wise.portal.service.authentication;
  * object with the same username.
  * 
  * @author Laurel Williams
- * 
- * @version $Id$
  */
 public class DuplicateAuthorityException extends Exception {
 

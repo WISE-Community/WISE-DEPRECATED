@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2008-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -48,7 +48,6 @@ import org.wise.portal.service.user.UserService;
 /**
  * @author Patrick Lawler
  * @author Hiroki Terashima
- * @version $Id:$
  */
 @Controller
 @RequestMapping("/admin/account/lookupuser.html")
@@ -61,7 +60,7 @@ public class LookupUserController {
 	private LookupUserParametersValidator lookupUserParametersValidator;
 
 	@RequestMapping(method=RequestMethod.POST)
-	protected ModelAndView onSubmit(@ModelAttribute("lookupUserParameters")LookupUserParameters param, 
+	protected ModelAndView onSubmit(@ModelAttribute("lookupUserParameters") LookupUserParameters param,
 			BindingResult result, HttpServletRequest request){
 		
 		lookupUserParametersValidator.validate(param, result);
@@ -134,8 +133,8 @@ public class LookupUserController {
     } 
 
 	private Schoollevel getLevel(String level){
-		for(Schoollevel schoolLevel : Schoollevel.values()){
-			if(schoolLevel.toString().toUpperCase().contains(level.toUpperCase()))
+		for (Schoollevel schoolLevel : Schoollevel.values()) {
+			if (schoolLevel.toString().toUpperCase().contains(level.toUpperCase()))
 				return schoolLevel;
 		}
 		return Schoollevel.OTHER;

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2014 Encore Research Group, University of Toronto
+ * Copyright (c) 2007-2015 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -20,17 +20,13 @@
  */
 package org.wise.portal.dao.module;
 
-
 import org.wise.portal.dao.SimpleDao;
 import org.wise.portal.domain.module.Curnit;
 
 /**
  * @author Cynick Young
- * 
- * @version $Id$
- * 
  */
 public interface CurnitDao<T extends Curnit> extends SimpleDao<T> {
 
-	public Long getLatestId();
+	Long getLatestId();
 }

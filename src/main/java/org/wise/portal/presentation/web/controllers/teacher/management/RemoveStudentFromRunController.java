@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2008-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -53,7 +53,6 @@ import org.wise.portal.service.workgroup.WorkgroupService;
  * as well as their work.
  * 
  * @author Hiroki Terashima
- * @version $Id$
  */
 @Controller
 @SessionAttributes("removeStudentFromRunParameters")
@@ -107,8 +106,9 @@ public class RemoveStudentFromRunController {
      * @param sessionStatus the session status object
      * @return the path of the view to display
      */
-    @RequestMapping(method=RequestMethod.POST)
-    protected String onSubmit(@ModelAttribute("removeStudentFromRunParameters") RemoveStudentFromRunParameters params, BindingResult bindingResult, SessionStatus sessionStatus) {
+    @RequestMapping(method = RequestMethod.POST)
+    protected String onSubmit(@ModelAttribute("removeStudentFromRunParameters") RemoveStudentFromRunParameters params,
+							  BindingResult bindingResult, SessionStatus sessionStatus) {
     	String view = "";
     	Long runId = params.getRunId();
     	Long userId = params.getUserId();
@@ -117,7 +117,7 @@ public class RemoveStudentFromRunController {
     	
     	removeStudentFromRunParametersValidator.validate(params, bindingResult);
     	
-    	if(bindingResult.hasErrors()) {
+    	if (bindingResult.hasErrors()) {
     		//there were errors
     		view = "redirect:/accessdenied.html";
     	} else {
@@ -127,8 +127,8 @@ public class RemoveStudentFromRunController {
         		studentUser = userService.retrieveById(userId);
         		User callingUser = ControllerUtil.getSignedInUser();
         		
-        		if(callingUser.getUserDetails().hasGrantedAuthority(UserDetailsService.ADMIN_ROLE) ||
-        				this.runService.hasRunPermission(run, callingUser, BasePermission.WRITE)){
+        		if (callingUser.getUserDetails().hasGrantedAuthority(UserDetailsService.ADMIN_ROLE) ||
+        				this.runService.hasRunPermission(run, callingUser, BasePermission.WRITE)) {
     	    		studentService.removeStudentFromRun(studentUser, run);
     	
     	    		view = successView;

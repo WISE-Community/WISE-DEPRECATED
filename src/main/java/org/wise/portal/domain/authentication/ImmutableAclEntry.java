@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2014 Encore Research Group, University of Toronto
+ * Copyright (c) 2007-2015 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -24,14 +24,11 @@ import org.springframework.security.acls.model.AccessControlEntry;
 import org.springframework.security.acls.model.AuditableAccessControlEntry;
 import org.wise.portal.domain.Persistable;
 
-
 /**
  * Represents the Access Control List (ACL) entry (ACE) that grants permissions
  * to a Security ID (SID) for a particular secured object.
  * 
  * @author Cynick Young
- * 
- * @version $Id$
  */
 public interface ImmutableAclEntry extends AccessControlEntry,
         AuditableAccessControlEntry, Persistable {

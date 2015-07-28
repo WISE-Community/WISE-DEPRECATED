@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2006-2014 Encore Research Group, University of Toronto
+ * Copyright (c) 2006-2015 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -26,18 +26,14 @@ import java.util.Map;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.wise.vle.domain.webservice.HttpStatusCodeException;
 
-
 /**
  * An HTTP REST facade.
  * 
  * @author Cynick Young
- * 
- * @version $Id$
- * 
  */
 public interface HttpRestTransport {
 
-	public static final String APPLICATION_XML = "application/xml";
+	String APPLICATION_XML = "application/xml";
 
 	/**
 	 * Performs the POST operation given the data required for the post.
@@ -51,7 +47,7 @@ public interface HttpRestTransport {
 	 * @throws RuntimeExceptions
 	 *             for exceptions we can ignore because they are unrecoverable
 	 */
-	public PostMethod post(HttpPostRequest httpRequestData)
+	PostMethod post(HttpPostRequest httpRequestData)
 			throws HttpStatusCodeException;
 
 	/**
@@ -67,7 +63,7 @@ public interface HttpRestTransport {
 	 * @throws RuntimeExceptions
 	 *             for exceptions we can ignore because they are unrecoverable
 	 */
-	public InputStream get(HttpGetRequest httpRequestData)
+	InputStream get(HttpGetRequest httpRequestData)
 			throws HttpStatusCodeException;
 
 	/**
@@ -82,7 +78,7 @@ public interface HttpRestTransport {
 	 * @throws RuntimeExceptions
 	 *             for exceptions we can ignore because they are unrecoverable
 	 */
-	public Map<String, String> put(HttpPutRequest httpRequestData)
+	Map<String, String> put(HttpPutRequest httpRequestData)
 			throws HttpStatusCodeException;
 
 	/**
@@ -90,5 +86,5 @@ public interface HttpRestTransport {
 	 * 
 	 * @return the baseUrl
 	 */
-	public String getBaseUrl();
+	String getBaseUrl();
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2008-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -35,8 +35,6 @@ import org.wise.portal.domain.user.User;
 
 /**
  * @author Hiroki Terashima
- *
- * @version $Id$
  */
 public interface ProjectDao<T extends Project> extends SimpleDao<T> {
 	
@@ -45,9 +43,8 @@ public interface ProjectDao<T extends Project> extends SimpleDao<T> {
 	 * Create a new Project
 	 * @return An empty project
 	 */
-	public T createEmptyProject();
-	
-	
+	T createEmptyProject();
+
     /**
 	 * Given an input string retrieve a list of corresponding records from data store.
 	 * 
@@ -57,7 +54,7 @@ public interface ProjectDao<T extends Project> extends SimpleDao<T> {
 	 * @return A list of project objects.
 	 * @throws ObjectNotFoundException if list is not found.
 	 */
-	public List<T> retrieveListByTag(FamilyTag familytag) throws ObjectNotFoundException;
+	List<T> retrieveListByTag(FamilyTag familytag) throws ObjectNotFoundException;
 
     /**
 	 * Given an input string retrieve a list of corresponding records from data store.
@@ -68,7 +65,7 @@ public interface ProjectDao<T extends Project> extends SimpleDao<T> {
 	 * @return A list of project objects.
 	 * @throws ObjectNotFoundException if list is not found.
 	 */
-	public List<T> retrieveListByTag(String projectinfotag) throws ObjectNotFoundException;
+	List<T> retrieveListByTag(String projectinfotag) throws ObjectNotFoundException;
 
 	
 	/**
@@ -80,7 +77,7 @@ public interface ProjectDao<T extends Project> extends SimpleDao<T> {
 	 * @return A list of project objects.
 	 * @throws ObjectNotFoundException if list is not found.
 	 */
-	public List<T> retrieveListByInfo(ProjectInfo projectinfo) throws ObjectNotFoundException;
+	List<T> retrieveListByInfo(ProjectInfo projectinfo) throws ObjectNotFoundException;
 	
 	/**
 	 * Returns a <code>List</code> of <code>Project</code> from the data store that
@@ -90,7 +87,7 @@ public interface ProjectDao<T extends Project> extends SimpleDao<T> {
 	 * @param <code>String</code> role
 	 * @return <code>List<T></code>
 	 */
-	public List<T> getProjectListByUAR(User user, String role);
+	List<T> getProjectListByUAR(User user, String role);
 	
 	/**
 	 * Returns a <code>List</code> of <code>Project</code> from the data store that
@@ -99,14 +96,14 @@ public interface ProjectDao<T extends Project> extends SimpleDao<T> {
 	 * @param <code>String</code> query
 	 * @return <code>List<Project></code>
 	 */
-	public List<T> getProjectList(String query);
+	List<T> getProjectList(String query);
 
 	/**
 	 * Returns a list of Projects that is owned by the specified user
 	 * @param owner <code>User</code>
 	 * @return List<Project> - list of projects owned by the specified user
 	 */
-	public List<Project> getProjectListByOwner(User owner);
+	List<Project> getProjectListByOwner(User owner);
 
 	/**
 	 * Given a <code>Set<String></code> set of tag names, returns a <code>List<Project></code>
@@ -115,7 +112,7 @@ public interface ProjectDao<T extends Project> extends SimpleDao<T> {
 	 * @param Set<String> - set of tags
 	 * @return List<Project> - list of projects
 	 */
-	public List<T> getProjectListByTagNames(Set<String> tagNames);
+	List<T> getProjectListByTagNames(Set<String> tagNames);
 	
 	/**
 	 * Given a partial author name (e.g. "hiro", "hiroki"), returns a list of projects
@@ -123,7 +120,7 @@ public interface ProjectDao<T extends Project> extends SimpleDao<T> {
 	 * @param authorName<String> partial or full author name
 	 * @return List<Project> - list of projects
 	 */
-	public List<Project> getProjectListByAuthorName(String authorName);
+	List<Project> getProjectListByAuthorName(String authorName);
 
 	/**
 	 * Given a partial title (e.g. "Global", "Global Climate"), returns a list of projects
@@ -131,7 +128,7 @@ public interface ProjectDao<T extends Project> extends SimpleDao<T> {
 	 * @param projectLookupValue <String> partial or full project title
 	 * @return List<Project> - list of projects
 	 */
-	public List<Project> getProjectListByTitle(String title);
+	List<Project> getProjectListByTitle(String title);
 
 	/**
 	 * Retrieves and returns a <code>Project</code> from the data store without
@@ -141,7 +138,7 @@ public interface ProjectDao<T extends Project> extends SimpleDao<T> {
 	 * @param Long - id
 	 * @return Project - project
 	 */
-	public Project getProjectWithoutMetadata(Long projectId);
+	Project getProjectWithoutMetadata(Long projectId);
 
 
 	/**
@@ -151,5 +148,5 @@ public interface ProjectDao<T extends Project> extends SimpleDao<T> {
 	 * @param projectId
 	 * @return
 	 */
-	public List<Project> getProjectCopies(Long projectId);
+	List<Project> getProjectCopies(Long projectId);
 }

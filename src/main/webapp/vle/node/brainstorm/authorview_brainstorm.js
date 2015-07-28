@@ -1,7 +1,7 @@
 /**
  * Sets the BrainstormNode type as an object of this view
  * @constructor
- * @author patrick lawler
+ * @author Patrick Lawler
  */
 View.prototype.BrainstormNode = {};
 View.prototype.BrainstormNode.commonComponents = ['Prompt', 'LinkTo'];

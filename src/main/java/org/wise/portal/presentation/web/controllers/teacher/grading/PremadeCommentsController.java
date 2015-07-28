@@ -56,7 +56,6 @@ import org.wise.portal.service.premadecomment.PremadeCommentService;
  * 
  * @author Geoffrey Kwan
  * @author Patrick Lawler
- * @version $Id:$
  */
 @Controller
 @RequestMapping("/teacher/grading/premadeComments.html")
@@ -71,7 +70,7 @@ public class PremadeCommentsController {
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping(method=RequestMethod.POST)
+	@RequestMapping(method = RequestMethod.POST)
 	private ModelAndView handlePostData(HttpServletRequest request,
 			HttpServletResponse response) {
 
@@ -81,35 +80,35 @@ public class PremadeCommentsController {
 
 			//get the premade comment list id
 			String premadeCommentListId = request.getParameter("premadeCommentListId");
-			if(premadeCommentListId != null && premadeCommentListId.equals("null")) {
+			if (premadeCommentListId != null && premadeCommentListId.equals("null")) {
 				//if the value is 'null' set it to null
 				premadeCommentListId = null;
 			}
 
 			//get the premade comment name
 			String premadeCommentListLabel = request.getParameter("premadeCommentListLabel");
-			if(premadeCommentListLabel != null && premadeCommentListLabel.equals("null")) {
+			if (premadeCommentListLabel != null && premadeCommentListLabel.equals("null")) {
 				//if the value is 'null' set it to null
 				premadeCommentListLabel = null;
 			}
 
 			//get the premade comment id
 			String premadeCommentId = request.getParameter("premadeCommentId");
-			if(premadeCommentId != null && premadeCommentId.equals("null")) {
+			if (premadeCommentId != null && premadeCommentId.equals("null")) {
 				//if the value is 'null' set it to null
 				premadeCommentId = null;
 			}
 
 			//get the premade comment text
 			String premadeComment = request.getParameter("premadeComment");
-			if(premadeComment == null || (premadeComment != null && premadeComment.equals("null"))) {
+			if (premadeComment == null || (premadeComment != null && premadeComment.equals("null"))) {
 				//if the value is null or 'null' set it to empty string
 				premadeComment = "";
 			}
 			
 			//get the premade comment text
 			String premadeCommentLabels = request.getParameter("premadeCommentLabels");
-			if(premadeCommentLabels == null || (premadeCommentLabels != null && premadeCommentLabels.equals("null"))) {
+			if (premadeCommentLabels == null || (premadeCommentLabels != null && premadeCommentLabels.equals("null"))) {
 				//if the value is null or 'null' set it to empty string
 				premadeCommentLabels = "";
 			}
@@ -119,13 +118,13 @@ public class PremadeCommentsController {
 
 			//get whether the object (premade comment or premade comment list) should be global
 			String isGlobalString = request.getParameter("isGlobal");
-			if(isGlobalString != null) {
+			if (isGlobalString != null) {
 				isGlobal = Boolean.parseBoolean(isGlobalString);
 			}
 
 			//get the premade comment list positions
 			String premadeCommentListPositions = request.getParameter("premadeCommentListPositions");
-			if(premadeCommentListPositions == null || (premadeCommentListPositions != null && premadeCommentListPositions.equals("null"))) {
+			if (premadeCommentListPositions == null || (premadeCommentListPositions != null && premadeCommentListPositions.equals("null"))) {
 				//if the value is null or 'null' set it to empty string
 				premadeCommentListPositions = "";
 			}
@@ -134,7 +133,7 @@ public class PremadeCommentsController {
 			String projectIdString = request.getParameter("projectId");
 			Long projectId = null;
 			
-			if(projectIdString != null && !projectIdString.equals("null") && projectIdString != "undefined") {
+			if (projectIdString != null && !projectIdString.equals("null") && projectIdString != "undefined") {
 				try {
 					//get the project id as a long value
 					projectId = new Long(projectIdString);	
@@ -148,7 +147,7 @@ public class PremadeCommentsController {
 			 * the only user that can create or modify global premade comment
 			 * objects is admin
 			 */
-			if(!signedInUserIsAdmin()) {
+			if (!signedInUserIsAdmin()) {
 				/*
 				 * signed in user is not admin so we will not allow them to make
 				 * global premade comments or global premade comment lists
@@ -162,12 +161,12 @@ public class PremadeCommentsController {
 			//PremadeComment premadeCommentReturn = null;
 			String returnValue = "";
 
-			if(premadeCommentListLabel == null) {
-				if(signedInUserIsAdmin()) {
+			if (premadeCommentListLabel == null) {
+				if (signedInUserIsAdmin()) {
 					//if the signed in user is admin, we will name the list global
 					premadeCommentListLabel = "Global Premade Comment List";
 				} else {
-					if(projectId != null) {
+					if (projectId != null) {
 						//make the premade comment list from the project id
 						premadeCommentListLabel = premadeCommentService.makePremadeCommentListNameFromProjectId(projectId);
 					} else {
@@ -176,17 +175,17 @@ public class PremadeCommentsController {
 				}
 			}
 
-			if(premadeCommentAction == null) {
+			if (premadeCommentAction == null) {
 				//error
-			} else if(premadeCommentAction.equals("addComment")) {
+			} else if (premadeCommentAction.equals("addComment")) {
 				//create a new comment and put it into an existing list
 
-				if(premadeCommentListId != null) {
+				if (premadeCommentListId != null) {
 					//retrieve the existing list
 					PremadeCommentList premadeCommentList = premadeCommentService.retrievePremadeCommentListById(new Long(premadeCommentListId));
 
 					//make sure the signed in user is the owner of the list we are modifying
-					if(signedInUser.equals(premadeCommentList.getOwner())) {
+					if (signedInUser.equals(premadeCommentList.getOwner())) {
 						int listSize = premadeCommentList.getPremadeCommentList().size();
 
 						String labels = null;
@@ -220,15 +219,15 @@ public class PremadeCommentsController {
 					//error
 				}
 
-			} else if(premadeCommentAction.equals("editComment")) {
+			} else if (premadeCommentAction.equals("editComment")) {
 				//modify an existing comment
 
-				if(premadeCommentId != null) {
+				if (premadeCommentId != null) {
 					//retrieve the premade comment we are editing
 					PremadeComment premadeCommentToUpdate = premadeCommentService.retrievePremadeCommentById(new Long(premadeCommentId));
 
 					//make sure the signed in user is the owner of the premade comment
-					if(signedInUser.equals(premadeCommentToUpdate.getOwner())) {
+					if (signedInUser.equals(premadeCommentToUpdate.getOwner())) {
 						//update the premade comment
 						PremadeComment updatedPremadeComment = premadeCommentService.updatePremadeCommentMessage(new Long(premadeCommentId), premadeComment);
 
@@ -236,10 +235,10 @@ public class PremadeCommentsController {
 						returnValue = convertPremadeCommentToJSON(updatedPremadeComment).toString();
 					}
 				}
-			} else if(premadeCommentAction.equals("deleteComment")) {
+			} else if (premadeCommentAction.equals("deleteComment")) {
 				//remove a comment from an existing list
 
-				if(premadeCommentId != null && premadeCommentListId != null) {
+				if (premadeCommentId != null && premadeCommentListId != null) {
 					//get the premade comment we are going to delete
 					PremadeComment premadeCommentToDelete = premadeCommentService.retrievePremadeCommentById(new Long(premadeCommentId));
 
@@ -247,7 +246,7 @@ public class PremadeCommentsController {
 					PremadeCommentList premadeCommentListToDeleteFrom = premadeCommentService.retrievePremadeCommentListById(new Long(premadeCommentListId));
 
 					//make sure the signed in user is the owner of both premade comment and premade comment list
-					if(signedInUser.equals(premadeCommentToDelete.getOwner()) && signedInUser.equals(premadeCommentListToDeleteFrom.getOwner())) {
+					if (signedInUser.equals(premadeCommentToDelete.getOwner()) && signedInUser.equals(premadeCommentListToDeleteFrom.getOwner())) {
 						//remove the premade comment from the list
 						premadeCommentListToDeleteFrom = premadeCommentService.removePremadeCommentFromList(new Long(premadeCommentListId), premadeCommentToDelete);
 
@@ -264,7 +263,7 @@ public class PremadeCommentsController {
 						returnValue = convertPremadeCommentToJSON(premadeCommentToDelete).toString();
 					}
 				}
-			} else if(premadeCommentAction.equals("reOrderCommentList")) {
+			} else if (premadeCommentAction.equals("reOrderCommentList")) {
 				//re-order a comment list
 
 				try {
@@ -287,7 +286,7 @@ public class PremadeCommentsController {
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
-			} else if(premadeCommentAction.equals("addCommentList")) {
+			} else if (premadeCommentAction.equals("addCommentList")) {
 				//create a new comment list
 
 				//create the new premade comment list
@@ -296,14 +295,14 @@ public class PremadeCommentsController {
 
 				//get the JSON value of the premade comment list in string form
 				returnValue = convertPremadeCommentListToJSON(premadeCommentList).toString();
-			} else if(premadeCommentAction.equals("editCommentListLabel")) {
+			} else if (premadeCommentAction.equals("editCommentListLabel")) {
 				//modify an existing comment list label
-				if(premadeCommentListId != null && premadeCommentListLabel != null) {
+				if (premadeCommentListId != null && premadeCommentListLabel != null) {
 					//retrieve the premade comment list we are editing
 					PremadeCommentList premadeCommentListToUpdate = premadeCommentService.retrievePremadeCommentListById(new Long(premadeCommentListId));
 					
 					//make sure the signed in user is the owner of the premade comment
-					if(signedInUser.equals(premadeCommentListToUpdate.getOwner())) {
+					if (signedInUser.equals(premadeCommentListToUpdate.getOwner())) {
 						//update the premade comment
 						premadeCommentListToUpdate.setLabel(premadeCommentListLabel);
 						PremadeCommentList updatedPremadeCommentList = premadeCommentService.updatePremadeCommentListLabel(new Long(premadeCommentListId), premadeCommentListLabel);
@@ -313,29 +312,29 @@ public class PremadeCommentsController {
 					}
 				}
 				
-			} else if(premadeCommentAction.equals("editCommentList")) {
+			} else if (premadeCommentAction.equals("editCommentList")) {
 				//modify an existing comment list
-			} else if(premadeCommentAction.equals("deleteCommentList")) {
+			} else if (premadeCommentAction.equals("deleteCommentList")) {
 				//remove a comment list
 				//retrieve the premade comment list we are deleting
 				PremadeCommentList premadeCommentListToDelete = premadeCommentService.retrievePremadeCommentListById(new Long(premadeCommentListId));
 				
 				//make sure the signed in user is the owner of the premade comment
-				if(signedInUser.equals(premadeCommentListToDelete.getOwner())) {
+				if (signedInUser.equals(premadeCommentListToDelete.getOwner())) {
 					premadeCommentService.deletePremadeCommentList(new Long(premadeCommentListId));
 					
 					//get the JSON value of the premade comment list in string form...just return the old deleted premade comment list in this case.
 					returnValue = convertPremadeCommentListToJSON(premadeCommentListToDelete).toString();
 				}
-			} else if(premadeCommentAction.equals("editCommentLabels")) {
+			} else if (premadeCommentAction.equals("editCommentLabels")) {
 				//modify a comment's labels
 
-				if(premadeCommentId != null) {
+				if (premadeCommentId != null) {
 					//retrieve the premade comment we are editing
 					PremadeComment premadeCommentToUpdate = premadeCommentService.retrievePremadeCommentById(new Long(premadeCommentId));
 
 					//make sure the signed in user is the owner of the premade comment
-					if(signedInUser.equals(premadeCommentToUpdate.getOwner())) {
+					if (signedInUser.equals(premadeCommentToUpdate.getOwner())) {
 						//update the premade comment labels
 						PremadeComment updatedPremadeComment = premadeCommentService.updatePremadeCommentLabels(new Long(premadeCommentId), premadeCommentLabels);
 
@@ -382,7 +381,7 @@ public class PremadeCommentsController {
 			String projectIdString = request.getParameter("projectId");
 			Long projectId = null;
 			
-			if(projectIdString != null) {
+			if (projectIdString != null) {
 				/*
 				 * project id was passed in so we will only retrieve premade
 				 * comments lists for this project id
@@ -398,22 +397,22 @@ public class PremadeCommentsController {
 			}
 			
 			//check if the user has any premade comment lists
-			if(premadeCommentLists.size() == 0) {
+			if (premadeCommentLists.size() == 0) {
 				//the user does not have any premade comment lists so we will create one for them
 
 				String premadeCommentListLabel = "";
 				boolean isGlobal = false;
 
-				if(signedInUserIsAdmin()) {
+				if (signedInUserIsAdmin()) {
 					//if the signed in user is admin, we will name the list global
 					premadeCommentListLabel = "Global Premade Comment List";
 				} else {
 					
-					if(projectId == null) {
+					if (projectId == null) {
 						//get the user name of the signed in user
 						String username = getUsernameFromUser(signedInUser);
 
-						if(username != null && !username.equals("")) {
+						if (username != null && !username.equals("")) {
 							//make the premade comment list name
 							premadeCommentListLabel = username + "'s Premade Comment List";
 						}
@@ -424,7 +423,7 @@ public class PremadeCommentsController {
 				}
 
 				//make the list global if the signed in user is admin
-				if(signedInUserIsAdmin()) {
+				if (signedInUserIsAdmin()) {
 					isGlobal = true;
 				}
 
@@ -469,7 +468,7 @@ public class PremadeCommentsController {
 				 * user we do not want to put it into the array again. if it is not owned
 				 * by this user we will put it into the array.
 				 */
-				if(!premadeCommentLists.contains(currentPremadeCommentList)) {
+				if (!premadeCommentLists.contains(currentPremadeCommentList)) {
 					//get the JSON version of the list
 					JSONObject currentPremadeCommentListToJSON = convertPremadeCommentListToJSON(currentPremadeCommentList);
 
@@ -611,11 +610,11 @@ public class PremadeCommentsController {
 	private String getUsernameFromUser(User user) {
 		String username = null;
 
-		if(user != null) {
+		if (user != null) {
 			//get the user details
 			MutableUserDetails ownerUserDetails = user.getUserDetails();
 
-			if(ownerUserDetails != null) {
+			if (ownerUserDetails != null) {
 				//get the user name
 				username = ownerUserDetails.getUsername();				
 			}
@@ -645,7 +644,7 @@ public class PremadeCommentsController {
 			if (authority.getAuthority().equals(UserDetailsService.ADMIN_ROLE)) {
 				
 				//check that the user name is "admin" since other teachers may have admin access
-				if(username != null && username.equals("admin")) {
+				if (username != null && username.equals("admin")) {
 					//user is admin
 					return true;
 				}
@@ -683,7 +682,7 @@ public class PremadeCommentsController {
 			 * to shift list positions that are higher than the one we
 			 * are deleting.
 			 */
-			if(currentListPosition > listPositionDeleted) {
+			if (currentListPosition > listPositionDeleted) {
 				//current premade comment list position is higher than position we are deleting
 
 				try {

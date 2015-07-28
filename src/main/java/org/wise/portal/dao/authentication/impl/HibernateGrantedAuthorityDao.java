@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2014 Encore Research Group, University of Toronto
+ * Copyright (c) 2007-2015 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -20,7 +20,6 @@
  */
 package org.wise.portal.dao.authentication.impl;
 
-
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.stereotype.Repository;
 import org.wise.portal.dao.authentication.GrantedAuthorityDao;
@@ -33,10 +32,6 @@ import org.wise.portal.domain.authentication.impl.PersistentGrantedAuthority;
  * Hibernate.
  * 
  * @author Cynick Young
- * 
- * @version $Id: HibernateGrantedAuthorityDao.java 257 2007-03-30 14:59:02Z
- *          cynick $
- * 
  */
 @Repository
 public class HibernateGrantedAuthorityDao extends

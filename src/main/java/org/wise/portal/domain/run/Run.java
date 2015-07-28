@@ -45,69 +45,69 @@ public interface Run extends Offering {
 	/**
 	 * @return the endtime
 	 */
-	public Date getEndtime();
+	Date getEndtime();
 
     /**
      * @param endtime
      *            the endtime to set
      */
-    public void setEndtime(Date endtime);
+    void setEndtime(Date endtime);
 
     /**
      * @return the starttime
      */
-    public Date getStarttime();
+    Date getStarttime();
 
     /**
      * @param starttime
      *            the starttime to set
      */
-    public void setStarttime(Date starttime);
+    void setStarttime(Date starttime);
 
     /**
      * @return the runcode
      */
-    public String getRuncode();
+    String getRuncode();
 
     /**
      * @param runcode
      *            the runcode to set
      */
-    public void setRuncode(String runcode);
+    void setRuncode(String runcode);
 
 	/**
 	 * @return the periods associated with this run
 	 */
-	public Set<Group> getPeriods();
+	Set<Group> getPeriods();
 
 	/**
 	 * @param periods the periods to set
 	 */
-	public void setPeriods(Set<Group> periods);
+	void setPeriods(Set<Group> periods);
 
 	/**
 	 * @return User who owns this run
 	 */
-	public User getOwner();
+	User getOwner();
 
 	/**
 	 * @param owner User who owns this run
 	 */
-	public void setOwner(User owner);
+	void setOwner(User owner);
 
 	/**
 	 * Gets the project that this run uses
 	 * 
 	 * @return <code>Project</code> that this run uses
 	 */
-	public Project getProject();
+	Project getProject();
 	
 	/**
 	 * Set the project that this run uses
 	 * 
 	 * @param project <code>Project</code> to use for this run
 	 */
-	public void setProject(Project project);
+	void setProject(Project project);
 	
 	/**
 	 * Returns the period with periodName that is associated
@@ -118,14 +118,14 @@ public interface Run extends Offering {
 	 * @throws <code>PeriodNotFoundException</code> if the provided
 	 *           period does not exist in the database for this run
 	 */
-	public Group getPeriodByName(String periodName) throws PeriodNotFoundException;
+	Group getPeriodByName(String periodName) throws PeriodNotFoundException;
 	
 	/**
 	 * Returns whether this run has ended
 	 * 
 	 * @return true iff this run has ended
 	 */
-	public boolean isEnded();
+	boolean isEnded();
 	
 	/**
 	 * Returns whether the given student is already associated
@@ -135,7 +135,7 @@ public interface Run extends Offering {
 	 * @return true iff the given student is associated in this
 	 *     <code>Run</code> in any of the periods.
 	 */
-	public boolean isStudentAssociatedToThisRun(User studentUser);
+	boolean isStudentAssociatedToThisRun(User studentUser);
 	
 	/**
 	 * Returns the Period (<code>Group</code>) that this student is in
@@ -144,7 +144,7 @@ public interface Run extends Offering {
 	 * @param studentUser <code>User</code> to check
 	 * @return the period that the student is in for this run
 	 */
-	public Group getPeriodOfStudent(User studentUser);
+	Group getPeriodOfStudent(User studentUser);
 	
 	
 	/**
@@ -152,218 +152,218 @@ public interface Run extends Offering {
 	 * 
 	 * @return <code>Set<User></code>
 	 */
-	public Set<User> getSharedowners();
+	Set<User> getSharedowners();
 	
 	/**
 	 * Sets the shared owners for this run
 	 * 
 	 * @param sharedOwners <code>Set<User></code>
 	 */
-	public void setSharedowners(Set<User> sharedOwners);
+	void setSharedowners(Set<User> sharedOwners);
 	
 	/**
 	 * Returns name of the run.
 	 * 
 	 * @return <cod>String</code> name of the run
 	 */
-	public String getName();
+	String getName();
 	
 	/**
 	 * Sets name of the run.
 	 * 
 	 * @param <cod>String</code> name of the run to save
 	 */
-	public void setName(String name);
+	void setName(String name);
 	
 	/**
 	 * @return <code>Set<Announcement></code> all announcements for this run.
 	 */
-	public Set<Announcement> getAnnouncements();
+	Set<Announcement> getAnnouncements();
 	
 	/**
 	 * Sets all announcements for this run
 	 * 
 	 * @param <code>Set<Announcement></code> announcements
 	 */
-	public void setAnnouncements(Set<Announcement> announcements);
+	void setAnnouncements(Set<Announcement> announcements);
 
     /**
 	 * @return the isPaused
 	 */
-	public boolean isPaused();
+	boolean isPaused();
 
     /**
 	 * @return the isPaused
 	 */
-	public String getInfo();
+	String getInfo();
 	
 	/**
 	 * @param isPaused the isPaused to set
 	 */
-	public void setInfo(String info);
+	void setInfo(String info);
 
 	/**
 	 * Sets whether or not portfolio is enabled for this run.
 	 * @return
 	 */
-	public void setPortfolioEnabled(boolean isPortfolioEnabled);
+	void setPortfolioEnabled(boolean isPortfolioEnabled);
 
 	/**
 	 * Returns whether or not portfolio is enabled for this run.
 	 * @return
 	 */
-	public boolean isPortfolioEnabled();
+	boolean isPortfolioEnabled();
 	
 	/**
 	 * Sets whether or not student asset uploading is enabled for this run.
 	 * @return
 	 */
-	public void setStudentAssetUploaderEnabled(boolean isStudentAssetUploaderEnabled);
+	void setStudentAssetUploaderEnabled(boolean isStudentAssetUploaderEnabled);
 
 	/**
 	 * Returns whether or not student asset uploading is enabled for this run.
 	 * @return
 	 */
-	public boolean isStudentAssetUploaderEnabled();
+	boolean isStudentAssetUploaderEnabled();
 
 	/**
 	 * Sets whether or not idea manager is enabled for this run.
 	 * @return
 	 */
-	public void setIdeaManagerEnabled(boolean isIdeaManagerEnabled);
+	void setIdeaManagerEnabled(boolean isIdeaManagerEnabled);
 
 	/**
 	 * Returns whether or not idea manager is enabled for this run.
 	 * @return
 	 */
-	public boolean isIdeaManagerEnabled();
+	boolean isIdeaManagerEnabled();
 	
 	/**
 	 * @return <code>Integer</code> maxWorkgroupSize
 	 */
-	public Integer getMaxWorkgroupSize();
+	Integer getMaxWorkgroupSize();
 	
 	/**
 	 * @param <code>Integer</code> maxWorkgroupSize
 	 */
-	public void setMaxWorkgroupSize(Integer maxWorkgroupSize);
+	void setMaxWorkgroupSize(Integer maxWorkgroupSize);
 	
 	/**
 	 * @return <code>Date</code> archive reminder date
 	 */
-	public Date getArchiveReminderTime();
+	Date getArchiveReminderTime();
 
 	/**
 	 * @param <code>Date</code> the archiveReminderTime to set
 	 */
-	public void setArchiveReminderTime(Date archiveReminderTime);
+	void setArchiveReminderTime(Date archiveReminderTime);
 	
 	/**
 	 * @return the extras
 	 */
-	public String getExtras();
+	String getExtras();
 
 	/**
 	 * @param extras the extras to set
 	 */
-	public void setExtras(String extras);
+	void setExtras(String extras);
 	
 	/**
 	 * @return the loggingLevel
 	 */
-	public Integer getLoggingLevel();
+	Integer getLoggingLevel();
 
 	/**
 	 * @param loggingLevel the loggingLevel to set
 	 */
-	public void setLoggingLevel(Integer loggingLevel);
+	void setLoggingLevel(Integer loggingLevel);
 	
 	/**
 	 * @return the postLevel
 	 */
-	public Integer getPostLevel();
+	Integer getPostLevel();
 
 	/**
 	 * @param postLevel the postLevel to set
 	 */
-	public void setPostLevel(Integer postLevel);
+	void setPostLevel(Integer postLevel);
 	
 	/**
 	 * @return Date - that this run was last run
 	 */
-	public Date getLastRun();
+	Date getLastRun();
 
 	/**
 	 * @param Date - that this run was last run
 	 */
-	public void setLastRun(Date lastRun);
+	void setLastRun(Date lastRun);
 
 	/**
 	 * @return Integer - number of times this run was run
 	 */
-	public Integer getTimesRun();
+	Integer getTimesRun();
 
 	/**
 	 * @param Integer - number of times this run was run
 	 */
-	public void setTimesRun(Integer timesRun);
+	void setTimesRun(Integer timesRun);
 	
 	/**
 	 * @return the versionId
 	 */
-	public String getVersionId();
+	String getVersionId();
 
 	/**
 	 * @param versionId the versionId to set
 	 */
-	public void setVersionId(String versionId);
+	void setVersionId(String versionId);
 	
 	/**
 	 * 
 	 * @return
 	 */
-	public boolean isRealTimeEnabled();
+	boolean isRealTimeEnabled();
 	
 	/**
 	 * 
 	 * @param isRealTimeEnabled
 	 */
-	public void setRealTimeEnabled(boolean isRealTimeEnabled);
+	void setRealTimeEnabled(boolean isRealTimeEnabled);
 
 	/**
 	 * sets student attendance for this run
 	 * @param studentAttendanceByRunIdAndPeriod
 	 */
-	public void setStudentAttendance(
+	void setStudentAttendance(
 			List<StudentAttendance> studentAttendance);
 
 	/**
 	 * sets student attendance for this run
 	 * @param studentAttendanceByRunIdAndPeriod
 	 */
-	public List<StudentAttendance> getStudentAttendance();
+	List<StudentAttendance> getStudentAttendance();
 	
 	/**
 	 * Gets private notes for this run
 	 * @return String private notes for this run
 	 */
-	public String getPrivateNotes();
+	String getPrivateNotes();
 
 	/**
 	 * Sets private notes for this run
 	 * @param String private notes for this run
 	 */
-	public void setPrivateNotes(String privateNotes);
+	void setPrivateNotes(String privateNotes);
 	
 	/**
 	 * Gets survey for this run
 	 * @return String survey for this run
 	 */
-	public String getSurvey();
+	String getSurvey();
 	
 	/**
 	 * Sets survey for this run
 	 * @return String survey for this run
 	 */
-	public void setSurvey(String survey);
+	void setSurvey(String survey);
 }

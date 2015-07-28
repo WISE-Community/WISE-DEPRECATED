@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2006-2014 Encore Research Group, University of Toronto
+ * Copyright (c) 2006-2015 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -24,15 +24,11 @@ import java.util.Map;
 
 import org.wise.vle.domain.webservice.BadHeaderException;
 
-
 /**
  * Immutable and thread-safe class to encapsulate data required for a post
  * request (headers, parameters, body, relativeUrl and expected response).
  * 
  * @author Cynick Young
- * 
- * @version $Id$
- * 
  */
 public final class HttpPostRequest extends AbstractHttpRequest {
 

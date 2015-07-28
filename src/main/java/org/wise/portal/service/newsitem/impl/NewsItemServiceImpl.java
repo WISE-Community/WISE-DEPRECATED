@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2007-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -39,8 +39,7 @@ import org.wise.portal.domain.user.User;
 import org.wise.portal.service.newsitem.NewsItemService;
 
 /**
- * @author patrick lawler
- *
+ * @author Patrick Lawler
  */
 @Service
 public class NewsItemServiceImpl implements NewsItemService{
@@ -48,25 +47,25 @@ public class NewsItemServiceImpl implements NewsItemService{
 	@Autowired
 	private NewsItemDao<NewsItem> newsItemDao;
 
-	@Cacheable(value="news")
+	@Cacheable(value = "news")
 	public List<NewsItem> retrieveAllNewsItem(){
 		return newsItemDao.getList();
 	}
 
-	@Cacheable(value="news")
+	@Cacheable(value = "news")
 	public List<NewsItem> retrieveByType(String type){
 		return newsItemDao.getListByType(type);
 	}
 
 	public NewsItem retrieveById(Long id) throws ObjectNotFoundException{
-		try{
+		try {
 			return newsItemDao.getById(id);
 		} catch (ObjectNotFoundException e){
 			throw e;
 		}
 	}
 	
-	@CacheEvict(value="news", allEntries=true)
+	@CacheEvict(value = "news", allEntries = true)
 	@Transactional
 	public NewsItem createNewsItem(Date date, User owner, String title, String news, String type){
 		NewsItem newsItem = new NewsItemImpl();
@@ -80,11 +79,11 @@ public class NewsItemServiceImpl implements NewsItemService{
 		return newsItem;
 	}
 	
-	@CacheEvict(value="news", allEntries=true)
+	@CacheEvict(value = "news", allEntries = true)
 	@Transactional
 	public void updateNewsItem(Long id, Date date, User owner, String title, String news, String type) 
 			throws ObjectNotFoundException {
-		try{
+		try {
 			NewsItem newsItem = newsItemDao.getById(id);
 			newsItem.setDate(date);
 			newsItem.setOwner(owner);
@@ -92,18 +91,18 @@ public class NewsItemServiceImpl implements NewsItemService{
 			newsItem.setNews(news);
 			newsItem.setType(type);
 			newsItemDao.save(newsItem);
-		} catch(ObjectNotFoundException e){
+		} catch(ObjectNotFoundException e) {
 			throw e;
 		}	
 	}
 	
-	@CacheEvict(value="news", allEntries=true)
+	@CacheEvict(value = "news", allEntries = true)
 	@Transactional
-	public void deleteNewsItem(Long newsItemId){
-		try{
+	public void deleteNewsItem(Long newsItemId) {
+		try {
 			NewsItem newsItem = newsItemDao.getById(newsItemId);
 			newsItemDao.delete(newsItem);
-		}catch(ObjectNotFoundException e){
+		} catch(ObjectNotFoundException e) {
 		}
 	}
 }

@@ -2,7 +2,7 @@
  * The project cleaner analyzes the project file for any errors or inconsistencies
  * and recommends solutions to the user.
  * 
- * @author patrick lawler
+ * @author Patrick Lawler
  */
 
 /* Declare cleaner object and initialize problem id counter */

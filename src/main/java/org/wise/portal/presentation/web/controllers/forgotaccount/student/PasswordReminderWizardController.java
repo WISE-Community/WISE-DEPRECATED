@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2007-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -57,9 +57,7 @@ import org.wise.portal.service.user.UserService;
  * be invoked, and steps 1-4 are bypassed.
  * 
  * @author Anthony Perritano
- * @version $Id$
  */
-
 @Controller
 @RequestMapping("/forgotaccount/student/passwordreminder.html")
 @SessionAttributes("passwordReminderParameters")
@@ -102,14 +100,14 @@ public class PasswordReminderWizardController{
 			try {
 				String username = passwordReminderParameters.getUsername();
 
-				if(username == null){
+				if (username == null) {
 					result.rejectValue("username", "presentation.web.controllers.forgotaccount.student.PasswordReminderWizardController.errorNoUsername");
 				} else {
 					username = StringUtils.trimToNull(username);
 					User user = userService.retrieveUserByUsername(username);
 
 					/* check to see if user exists and ensure that user is a student */
-					if(user == null || !(user.getUserDetails() instanceof StudentUserDetails)){
+					if (user == null || !(user.getUserDetails() instanceof StudentUserDetails)) {
 						result.rejectValue("username", "presentation.web.controllers.forgotaccount.student.PasswordReminderWizardController.errorUsernameNotFound");
 					}
 				}
@@ -150,14 +148,14 @@ public class PasswordReminderWizardController{
 
 			submittedAccountAnswer = StringUtils.lowerCase(submittedAccountAnswer);
 			
-			if(accountAnswer == null) {
+			if (accountAnswer == null) {
 				/*
 				 * the account answer is null perhaps because the session has
 				 * timed out so we will redirect them back to the first
 				 * password reminder page where they enter their user name
 				 */
 				return "forgotaccount/student/passwordreminder";
-			} else if(!accountAnswer.equals(submittedAccountAnswer)) {
+			} else if (!accountAnswer.equals(submittedAccountAnswer)) {
 				//they have provided an incorrect account answer
 				result.reject("presentation.web.controllers.forgotaccount.student.PasswordReminderWizardController.errorSubmittedAccountQuestion");
 			}

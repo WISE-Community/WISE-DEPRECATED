@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2014 Encore Research Group, University of Toronto
+ * Copyright (c) 2007-2015 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -20,7 +20,6 @@
  */
 package org.wise.portal.dao.authentication.impl;
 
-
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.security.acls.model.ObjectIdentity;
 import org.springframework.stereotype.Repository;
@@ -35,9 +34,6 @@ import org.wise.portal.domain.authentication.impl.PersistentAclTargetObjectIdent
  * class around in case we want to try again later.
  * 
  * @author Cynick Young
- * 
- * @version $Id: HibernateAclTargetObjectIdentityDao.java 592 2007-07-05
- *          15:54:23Z cynick $
  */
 @Repository
 public class HibernateAclTargetObjectIdentityDao extends

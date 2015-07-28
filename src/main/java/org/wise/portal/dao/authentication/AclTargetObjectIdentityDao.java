@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2014 Encore Research Group, University of Toronto
+ * Copyright (c) 2007-2015 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -20,11 +20,9 @@
  */
 package org.wise.portal.dao.authentication;
 
-
 import org.springframework.security.acls.model.ObjectIdentity;
 import org.wise.portal.dao.SimpleDao;
 import org.wise.portal.domain.authentication.MutableAclTargetObjectIdentity;
-
 
 /**
  * This class is not being used. Tried to implement Hibernate versions of the acl
@@ -32,13 +30,11 @@ import org.wise.portal.domain.authentication.MutableAclTargetObjectIdentity;
  * class around in case we want to try again later.
  * 
  * @author Cynick Young
- * 
- * @version $Id$
  */
 public interface AclTargetObjectIdentityDao<T extends MutableAclTargetObjectIdentity>
         extends SimpleDao<T> {
 
-    public T[] findChildren(ObjectIdentity parentIdentity);
+    T[] findChildren(ObjectIdentity parentIdentity);
 
-    public T retrieveByObjectIdentity(ObjectIdentity objectIdentity);
+    T retrieveByObjectIdentity(ObjectIdentity objectIdentity);
 }

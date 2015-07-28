@@ -1,6 +1,6 @@
 /**
- * @author patrick lawler
- * @author jonathan breitbart
+ * @author Patrick Lawler
+ * @author Jonathan Breitbart
  */
 
 /**

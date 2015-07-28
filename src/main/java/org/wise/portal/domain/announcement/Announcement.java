@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2008-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -29,48 +29,47 @@ import java.util.Date;
  * An announcement consists of a timestamp, title and the announcement
  * body which is in an unspecified format.
  * 
- * @author patrick lawler
- * @version $Id:$
+ * @author Patrick Lawler
  */
 public interface Announcement {
 
 	/**
 	 * @return <code>String</code> the announcement to get
 	 */
-	public String getAnnouncement();
+	String getAnnouncement();
 	
 	/**
 	 * @param <code>String</code> the announcement to set
 	 */
-	public void setAnnouncement(String announcement);
+	void setAnnouncement(String announcement);
 	
 	/**
 	 * @return <code>Date</code> the timestamp of this announcement
 	 */
-	public Date getTimestamp();
+	Date getTimestamp();
 	
 	/**
 	 * @param <code>Date</code> timestamp to set
 	 */
-	public void setTimestamp(Date timestamp);
+	void setTimestamp(Date timestamp);
 	
 	/**
 	 * @return <code>String</code> the title of this announcement
 	 */
-	public String getTitle();
+	String getTitle();
 	
 	/**
 	 * @param <code>String</code> the title to set
 	 */
-	public void setTitle(String title);
+	void setTitle(String title);
 	
 	/**
 	 * @return <code>Long</code> this id
 	 */
-	public Long getId();
+	Long getId();
 	
 	/**
 	 * @param <code>Long</code> the id to set
 	 */
-	public void setId(Long id);	
+	void setId(Long id);
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2006-2014 Encore Research Group, University of Toronto
+ * Copyright (c) 2006-2015 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -31,9 +31,6 @@ import org.wise.vle.domain.webservice.BadHeaderException;
  * request (headers, body, relativeUrl and expected response).
  * 
  * @author Cynick Young
- * 
- * @version $Id$
- * 
  */
 public final class HttpPutRequest extends AbstractHttpRequest {
 

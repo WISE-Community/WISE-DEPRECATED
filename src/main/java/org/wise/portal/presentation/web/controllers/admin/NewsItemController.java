@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2008-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -40,10 +40,9 @@ import org.wise.portal.service.newsitem.NewsItemService;
 /**
  * @author Hiroki Terashima
  * @author Patrick Lawler
- * @version $Id:$
  */
 @Controller
-@RequestMapping(value={
+@RequestMapping(value = {
 		"/admin/news/managenewsitems.html",
 		"/admin/news/addnewsitems.html",
 		"/admin/news/editnewsitem.html"})
@@ -69,7 +68,6 @@ public class NewsItemController {
 	@RequestMapping(method = RequestMethod.GET)
 	protected String handleGET(
 			HttpServletRequest request,
-			HttpServletResponse response,
 			ModelMap modelMap) throws Exception {
 		String action = request.getParameter(ACTION);
 		String newsItemId = request.getParameter(NEWS_ITEM_ID);

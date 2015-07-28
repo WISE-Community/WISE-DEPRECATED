@@ -1,8 +1,8 @@
 /**
  * Functions specific to the selection process in the project layout for the authoring view
  * 
- * @author patrick lawler
- * @author jonathan breitbart
+ * @author Patrick Lawler
+ * @author Jonathan Breitbart
  * 
  */
 

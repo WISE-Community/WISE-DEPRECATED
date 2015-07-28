@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2006-2014 Encore Research Group, University of Toronto
+ * Copyright (c) 2006-2015 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -50,15 +50,11 @@ import org.wise.vle.domain.webservice.http.HttpPostRequest;
 import org.wise.vle.domain.webservice.http.HttpPutRequest;
 import org.wise.vle.domain.webservice.http.HttpRestTransport;
 
-
 /**
  * Thread-safe Http transport implementation which uses the Jakarta Commons
  * HttpClient package. See http://jakarta.apache.org/commons/httpclient/
  * 
  * @author Cynick Young
- * 
- * @version $Id$
- * 
  */
 public class HttpRestTransportImpl implements HttpRestTransport {
 

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2008-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -28,8 +28,7 @@ import org.wise.portal.domain.project.Tag;
 /**
  * A Service for tags
  * 
- * @author patrick lawler
- * @version $Id:$
+ * @author Patrick Lawler
  */
 public interface TagService {
 	
@@ -40,7 +39,7 @@ public interface TagService {
 	 * @param Long - id
 	 * @return Tag - tag
 	 */
-	public Tag getTagById(Long id);
+	Tag getTagById(Long id);
 
 	/**
 	 * Given a <code>String</code> name, returns the <code>Tag</code> tag with
@@ -49,7 +48,7 @@ public interface TagService {
 	 * @param String - name
 	 * @return Tag - tag
 	 */
-	public Tag createOrGetTag(String name);
+	Tag createOrGetTag(String name);
 	
 	/**
 	 * Returns <code>boolean</code> true iff the given <code>Tag</code> tag is
@@ -58,7 +57,7 @@ public interface TagService {
 	 * @param Tag - tag
 	 * @return boolean
 	 */
-	public boolean isFromDatabase(Tag tag);
+	boolean isFromDatabase(Tag tag);
 	
 	/**
 	 * Given a <code>Long</code> tag id of a tag that has just been removed 
@@ -67,5 +66,5 @@ public interface TagService {
 	 * 
 	 * @param Long - tag id
 	 */
-	public void removeIfOrphaned(Long tagId);
+	void removeIfOrphaned(Long tagId);
 }

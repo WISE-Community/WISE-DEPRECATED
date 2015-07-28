@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2007-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -31,39 +31,39 @@ import org.wise.portal.domain.user.User;
  * An Owned object with the added information of a List of
  * PremadeComments
  * 
- * @author patrick lawler
+ * @author Patrick Lawler
  */
 public interface PremadeCommentList extends Comparable {
 
 	/**
 	 * @return a list of PremadeComments
 	 */
-	public Set<PremadeComment> getPremadeCommentList();
+	Set<PremadeComment> getPremadeCommentList();
 	
 	/**
 	 * @param premadeCommentList that sets the List of PremadeComments
 	 */
-	public void setPremadeCommentList(Set<PremadeComment> premadeCommentList);
+	void setPremadeCommentList(Set<PremadeComment> premadeCommentList);
 	
-	public int compareTo(Object premadeCommentList);
+	int compareTo(Object premadeCommentList);
 	
-	public String getLabel();
+	String getLabel();
 	
-	public void setLabel(String label);
+	void setLabel(String label);
 	
-	public User getOwner();
+	User getOwner();
 	
-	public void setOwner(User owner);
+	void setOwner(User owner);
 	
-	public Long getId();
+	Long getId();
 
-	public void setGlobal(boolean global);
+	void setGlobal(boolean global);
 	
-	public boolean isGlobal();
+	boolean isGlobal();
 	
-	public Long getProjectId();
+	Long getProjectId();
 
-	public void setProjectId(Long projectId);
+	void setProjectId(Long projectId);
 	
-	public boolean equals(PremadeCommentList premadeCommentList);
+	boolean equals(PremadeCommentList premadeCommentList);
 }

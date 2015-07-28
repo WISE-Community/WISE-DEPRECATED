@@ -1,7 +1,7 @@
 /**
  * Sets the MultipleChoiceNode type as an object of this view
  * @constructor
- * @author patrick lawler
+ * @author Patrick Lawler
  */
 View.prototype.MultipleChoiceNode = {};
 View.prototype.MultipleChoiceNode.commonComponents = ['Prompt', 'LinkTo'];

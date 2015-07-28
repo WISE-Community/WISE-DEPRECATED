@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2014 Encore Research Group, University of Toronto
+ * Copyright (c) 2007-2015 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -30,8 +30,6 @@ import org.wise.portal.domain.Persistable;
  * 
  * @author Cynick Young
  * 
- * @version $Id: MutableAclTargetObjectIdentity.java 595 2007-07-05 17:55:23Z
- *          cynick $
  * @see org.acegisecurity.acls.objectidentity.ObjectIdentity
  */
 public interface MutableAclTargetObjectIdentity extends ObjectIdentity,
@@ -40,57 +38,57 @@ public interface MutableAclTargetObjectIdentity extends ObjectIdentity,
     /**
      * @return the aclTargetObject
      */
-    public abstract MutableAclTargetObject getAclTargetObject();
+    MutableAclTargetObject getAclTargetObject();
 
     /**
      * @param aclTargetObject
      *                the aclTargetObject to set
      */
-    public abstract void setAclTargetObject(
+    void setAclTargetObject(
             MutableAclTargetObject aclTargetObject);
 
     /**
      * @return the aclTargetObjectId
      */
-    public abstract Long getAclTargetObjectId();
+    Long getAclTargetObjectId();
 
     /**
      * @param aclTargetObjectId
      *                the aclTargetObjectId to set
      */
-    public abstract void setAclTargetObjectId(Long aclTargetObjectId);
+    void setAclTargetObjectId(Long aclTargetObjectId);
 
     /**
      * @return the inheriting
      */
-    public abstract Boolean isInheriting();
+    Boolean isInheriting();
 
     /**
      * @param inheriting
      *                the inheriting to set
      */
-    public abstract void setInheriting(Boolean isInheriting);
+    void setInheriting(Boolean isInheriting);
 
     /**
      * @return the ownerSid
      */
-    public abstract MutableAclSid getOwnerSid();
+    MutableAclSid getOwnerSid();
 
     /**
      * @param ownerSid
      *                the ownerSid to set
      */
-    public abstract void setOwnerSid(MutableAclSid ownerSid);
+    void setOwnerSid(MutableAclSid ownerSid);
 
     /**
      * @return the parent
      */
-    public abstract MutableAclTargetObjectIdentity getParent();
+    MutableAclTargetObjectIdentity getParent();
 
     /**
      * @param parent
      *                the parent to set
      */
-    public abstract void setParent(MutableAclTargetObjectIdentity parent);
+    void setParent(MutableAclTargetObjectIdentity parent);
 
 }

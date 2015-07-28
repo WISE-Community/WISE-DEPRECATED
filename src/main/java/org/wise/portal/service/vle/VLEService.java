@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2008-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -46,226 +46,226 @@ public interface VLEService {
 
 	//UserInfo functions
 	
-	public UserInfo getUserInfoById(Long id);
+	UserInfo getUserInfoById(Long id);
 	
-	public void saveUserInfo(UserInfo userInfo);
+	void saveUserInfo(UserInfo userInfo);
 	
-	public UserInfo getUserInfoByWorkgroupId(Long workgroupId);
+	UserInfo getUserInfoByWorkgroupId(Long workgroupId);
 	
-	public UserInfo getUserInfoOrCreateByWorkgroupId(Long workgroupId);
+	UserInfo getUserInfoOrCreateByWorkgroupId(Long workgroupId);
 	
-	public List<UserInfo> getUserInfoByWorkgroupIds(List<String> workgroupIds);
+	List<UserInfo> getUserInfoByWorkgroupIds(List<String> workgroupIds);
 	
-	public List<UserInfo> getUserInfosByWorkgroupIds(List<Long> workgroupIds);
+	List<UserInfo> getUserInfosByWorkgroupIds(List<Long> workgroupIds);
 	
-	public List<UserInfo> getUserInfosThatHaveWorkedToday(List<UserInfo> userInfos);
+	List<UserInfo> getUserInfosThatHaveWorkedToday(List<UserInfo> userInfos);
 	
 	//Annotation functions
 	
-	public Annotation getAnnotationById(Long id);
+	Annotation getAnnotationById(Long id);
 	
-	public void saveAnnotation(Annotation annotation);
+	void saveAnnotation(Annotation annotation);
 	
-	public List<Annotation> getAnnotationByFromWorkgroupAndWorkByToWorkgroup(UserInfo fromWorkgroup, List<StepWork> workByToWorkgroup, Class<?> clazz);
+	List<Annotation> getAnnotationByFromWorkgroupAndWorkByToWorkgroup(UserInfo fromWorkgroup, List<StepWork> workByToWorkgroup, Class<?> clazz);
 	
-	public List<Annotation> getAnnotationByFromWorkgroupsAndWorkByToWorkgroup(List<UserInfo> fromWorkgroups, List<StepWork> workByToWorkgroup, Class<?> clazz);
+	List<Annotation> getAnnotationByFromWorkgroupsAndWorkByToWorkgroup(List<UserInfo> fromWorkgroups, List<StepWork> workByToWorkgroup, Class<?> clazz);
 	
-	public List<? extends Annotation> getAnnotationByRunId(Long runId, Class<?> clazz);
+	List<? extends Annotation> getAnnotationByRunId(Long runId, Class<?> clazz);
 	
-	public List<? extends Annotation> getAnnotationByRunIdAndType(Long runId, String type, Class<?> clazz);
+	List<? extends Annotation> getAnnotationByRunIdAndType(Long runId, String type, Class<?> clazz);
 	
-	public Annotation getAnnotationByUserInfoAndStepWork(UserInfo userInfo, StepWork stepWork, String type);
+	Annotation getAnnotationByUserInfoAndStepWork(UserInfo userInfo, StepWork stepWork, String type);
 	
-	public Annotation getAnnotationByFromUserInfoToUserInfoStepWorkType(UserInfo fromUserInfo, UserInfo toUserInfo, StepWork stepWork, String type);
+	Annotation getAnnotationByFromUserInfoToUserInfoStepWorkType(UserInfo fromUserInfo, UserInfo toUserInfo, StepWork stepWork, String type);
 	
-	public Annotation getAnnotationByFromUserInfoToUserInfoNodeIdType(UserInfo fromUserInfo, UserInfo toUserInfo, String nodeId, String type);
+	Annotation getAnnotationByFromUserInfoToUserInfoNodeIdType(UserInfo fromUserInfo, UserInfo toUserInfo, String nodeId, String type);
 	
-	public Annotation getAnnotationByFromUserInfoToUserInfoType(UserInfo fromUserInfo, UserInfo toUserInfo, String type);
+	Annotation getAnnotationByFromUserInfoToUserInfoType(UserInfo fromUserInfo, UserInfo toUserInfo, String type);
 	
-	public List<Annotation> getAnnotationByFromWorkgroupsAndStepWork(List<UserInfo> fromWorkgroups, StepWork stepWork, String type);
+	List<Annotation> getAnnotationByFromWorkgroupsAndStepWork(List<UserInfo> fromWorkgroups, StepWork stepWork, String type);
 	
-	public List<Annotation> getAnnotationByStepWork(StepWork stepWork, Class<?> clazz);
+	List<Annotation> getAnnotationByStepWork(StepWork stepWork, Class<?> clazz);
 	
-	public List<Annotation> getAnnotationByFromUserToUserType(List<UserInfo> fromUsers, UserInfo toUser, String annotationType);
+	List<Annotation> getAnnotationByFromUserToUserType(List<UserInfo> fromUsers, UserInfo toUser, String annotationType);
 	
-	public List<Annotation> getAnnotationByToUserType(UserInfo toUser, String annotationType);
+	List<Annotation> getAnnotationByToUserType(UserInfo toUser, String annotationType);
 	
-	public Annotation getAnnotationByStepWorkAndAnnotationType(StepWork stepWork, String annotationType);
+	Annotation getAnnotationByStepWorkAndAnnotationType(StepWork stepWork, String annotationType);
 	
-	public Annotation getLatestAnnotationByStepWork(List<StepWork> stepWorks, List<String> workgroupIds, String type);
+	Annotation getLatestAnnotationByStepWork(List<StepWork> stepWorks, List<String> workgroupIds, String type);
 	
-	public Annotation getLatestAnnotationByStepWork(List<StepWork> stepWorks, String type);
+	Annotation getLatestAnnotationByStepWork(List<StepWork> stepWorks, String type);
 	
-	public Annotation getLatestCRaterScoreByStepWork(List<StepWork> stepWorks);
+	Annotation getLatestCRaterScoreByStepWork(List<StepWork> stepWorks);
 	
-	public Annotation getLatestAnnotationScoreByStepWork(List<StepWork> stepWorks, List<String> workgroupIds);
+	Annotation getLatestAnnotationScoreByStepWork(List<StepWork> stepWorks, List<String> workgroupIds);
 	
-	public Annotation getLatestAnnotationCommentByStepWork(List<StepWork> stepWorks, List<String> workgroupIds);
+	Annotation getLatestAnnotationCommentByStepWork(List<StepWork> stepWorks, List<String> workgroupIds);
 	
-	public Annotation getCRaterAnnotationByStepWork(StepWork stepWork);
+	Annotation getCRaterAnnotationByStepWork(StepWork stepWork);
 	
-	public List<Annotation> getAnnotationByStepWorkList(List<StepWork> stepWorkList);
+	List<Annotation> getAnnotationByStepWorkList(List<StepWork> stepWorkList);
 	
-	public List<Annotation> getAnnotationByFromWorkgroupsToWorkgroupWithoutWork(List<UserInfo> fromUsers, UserInfo toUser, List<String> annotationTypes);
+	List<Annotation> getAnnotationByFromWorkgroupsToWorkgroupWithoutWork(List<UserInfo> fromUsers, UserInfo toUser, List<String> annotationTypes);
 	
-	public List<Annotation> getAnnotationsByRunIdAndNodeId(Long runId, String nodeId);
+	List<Annotation> getAnnotationsByRunIdAndNodeId(Long runId, String nodeId);
 	
-	public List<Annotation> getAnnotationList();
+	List<Annotation> getAnnotationList();
 	
 	//PeerRevieWork functions
 	
-	public PeerReviewWork getPeerReviewWorkById(Long id);
+	PeerReviewWork getPeerReviewWorkById(Long id);
 	
-	public void savePeerReviewWork(PeerReviewWork peerReviewWork);
+	void savePeerReviewWork(PeerReviewWork peerReviewWork);
 	
-	public List<PeerReviewWork> getPeerReviewWorkByRun(Long runId);
+	List<PeerReviewWork> getPeerReviewWorkByRun(Long runId);
 	
-	public List<PeerReviewWork> getPeerReviewWorkByRunPeriodNode(Long runId, Long periodId, Node node);
+	List<PeerReviewWork> getPeerReviewWorkByRunPeriodNode(Long runId, Long periodId, Node node);
 	
-	public List<PeerReviewWork> getUnassignedPeerReviewWorkList(Long runId, Long periodId, Node node);
+	List<PeerReviewWork> getUnassignedPeerReviewWorkList(Long runId, Long periodId, Node node);
 	
-	public PeerReviewWork getPeerReviewWorkByRunPeriodNodeStepWorkReviewer(Long runId, Long periodId, Node node, StepWork stepWork, UserInfo reviewer);
+	PeerReviewWork getPeerReviewWorkByRunPeriodNodeStepWorkReviewer(Long runId, Long periodId, Node node, StepWork stepWork, UserInfo reviewer);
 	
-	public PeerReviewWork setPeerReviewAnnotation(Long runId, Long periodId, Node node, StepWork stepWork, UserInfo reviewer, Annotation annotation);
+	PeerReviewWork setPeerReviewAnnotation(Long runId, Long periodId, Node node, StepWork stepWork, UserInfo reviewer, Annotation annotation);
 	
-	public PeerReviewWork getPeerReviewWorkByRunPeriodNodeReviewerUserInfo(Long runId, Long periodId, Node node, UserInfo reviewerUserInfo);
+	PeerReviewWork getPeerReviewWorkByRunPeriodNodeReviewerUserInfo(Long runId, Long periodId, Node node, UserInfo reviewerUserInfo);
 	
-	public PeerReviewWork getPeerReviewWorkByRunPeriodNodeWorkerUserInfo(Long runId, Long periodId, Node node, UserInfo worker);
+	PeerReviewWork getPeerReviewWorkByRunPeriodNodeWorkerUserInfo(Long runId, Long periodId, Node node, UserInfo worker);
 	
-	public PeerReviewWork getPeerReviewWorkByRunPeriodNodeWorkerUserInfoReviewerUserInfo(Long runId, Long periodId, Node node, UserInfo workerUserInfo, UserInfo reviewerUserInfo);
+	PeerReviewWork getPeerReviewWorkByRunPeriodNodeWorkerUserInfoReviewerUserInfo(Long runId, Long periodId, Node node, UserInfo workerUserInfo, UserInfo reviewerUserInfo);
 	
-	public void setAuthorAsReviewer(PeerReviewWork peerReviewWork);
+	void setAuthorAsReviewer(PeerReviewWork peerReviewWork);
 	
-	public boolean isAuthorSetAsReviewer(PeerReviewWork peerReviewWork);
+	boolean isAuthorSetAsReviewer(PeerReviewWork peerReviewWork);
 	
-	public UserInfo getAuthorUserInfo();
+	UserInfo getAuthorUserInfo();
 	
-	public PeerReviewWork getOrCreateAuthorReviewWork(Long runId, Long periodId, Node node, UserInfo reviewerUserInfo);
+	PeerReviewWork getOrCreateAuthorReviewWork(Long runId, Long periodId, Node node, UserInfo reviewerUserInfo);
 	
-	public PeerReviewWork setUserAsAuthorReviewer(Long runId, Long periodId, Node node, UserInfo userInfo);
+	PeerReviewWork setUserAsAuthorReviewer(Long runId, Long periodId, Node node, UserInfo userInfo);
 	
-	public void matchUserToAuthor(Long runId, Long periodId, Node node, UserInfo userInfo, PeerReviewWork userWork);
+	void matchUserToAuthor(Long runId, Long periodId, Node node, UserInfo userInfo, PeerReviewWork userWork);
 	
-	public boolean isUserReviewingAuthor(Long runId, Long periodId, Node node, UserInfo userInfo);
+	boolean isUserReviewingAuthor(Long runId, Long periodId, Node node, UserInfo userInfo);
 	
 	//PeerReviewGate functions
 	
-	public PeerReviewGate getPeerReviewGateById(Long id);
+	PeerReviewGate getPeerReviewGateById(Long id);
 	
-	public void savePeerReviewGate(PeerReviewGate peerReviewGate);
+	void savePeerReviewGate(PeerReviewGate peerReviewGate);
 	
-	public PeerReviewGate getPeerReviewGateByRunIdPeriodIdNodeId(Long runId, Long periodId, Node node);
+	PeerReviewGate getPeerReviewGateByRunIdPeriodIdNodeId(Long runId, Long periodId, Node node);
 	
-	public PeerReviewGate getOrCreatePeerReviewGateByRunIdPeriodIdNodeId(Long runId, Long periodId, Node node);
+	PeerReviewGate getOrCreatePeerReviewGateByRunIdPeriodIdNodeId(Long runId, Long periodId, Node node);
 	
-	public boolean calculatePeerReviewOpen(Long runId, Long periodId, Node node, int numWorkgroups, int openPercentageTrigger, int openNumberTrigger);
+	boolean calculatePeerReviewOpen(Long runId, Long periodId, Node node, int numWorkgroups, int openPercentageTrigger, int openNumberTrigger);
 	
-	public boolean peerReviewGateOpenPercentageTriggerSatisfied(int numWorkgroupsSubmitted, int numWorkgroups, int openPercentageTrigger);
+	boolean peerReviewGateOpenPercentageTriggerSatisfied(int numWorkgroupsSubmitted, int numWorkgroups, int openPercentageTrigger);
 	
-	public boolean peerReviewGateOpenNumberTriggerSatisfied(int numWorkgroupsSubmitted, int openNumberTrigger);
+	boolean peerReviewGateOpenNumberTriggerSatisfied(int numWorkgroupsSubmitted, int openNumberTrigger);
 	
 	//Node functions
 	
-	public Node getNodeById(Long id);
+	Node getNodeById(Long id);
 	
-	public void saveNode(Node node);
+	void saveNode(Node node);
 	
-	public Node getNodeByNodeIdAndRunId(String nodeId, String runId);
+	Node getNodeByNodeIdAndRunId(String nodeId, String runId);
 	
-	public Node getNodeByNodeIdAndRunId(String nodeId, String runId, boolean createIfNotFound);
+	Node getNodeByNodeIdAndRunId(String nodeId, String runId, boolean createIfNotFound);
 	
-	public List<Node> getNodesByNodeIdsAndRunId(List<String> nodeIds, String runId);
+	List<Node> getNodesByNodeIdsAndRunId(List<String> nodeIds, String runId);
 	
-	public List<Node> getNodesByRunId(String runId);
+	List<Node> getNodesByRunId(String runId);
 	
 	//StepWork functions
 	
-	public StepWork getStepWorkById(Long id);
+	StepWork getStepWorkById(Long id);
 	
-	public void saveStepWork(StepWork stepWork);
+	void saveStepWork(StepWork stepWork);
 	
-	public List<StepWork> getStepWorksByUserInfo(UserInfo userInfo);
+	List<StepWork> getStepWorksByUserInfo(UserInfo userInfo);
 	
-	public StepWork getLatestStepWorkByUserInfo(UserInfo userInfo);
+	StepWork getLatestStepWorkByUserInfo(UserInfo userInfo);
 	
-	public StepWork getLatestStepWorkByUserInfoAndNode(UserInfo userInfo,Node node);
+	StepWork getLatestStepWorkByUserInfoAndNode(UserInfo userInfo,Node node);
 	
-	public List<StepWork> getStepWorksByUserInfoAndNode(UserInfo userInfo,Node node);
+	List<StepWork> getStepWorksByUserInfoAndNode(UserInfo userInfo,Node node);
 	
-	public List<StepWork> getStepWorksByUserInfoAndNodeList(UserInfo userInfo, List<Node> nodeList);
+	List<StepWork> getStepWorksByUserInfoAndNodeList(UserInfo userInfo, List<Node> nodeList);
 	
-	public List<StepWork> getStepWorksByUserInfosAndNode(List<UserInfo> userInfos, Node node);
+	List<StepWork> getStepWorksByUserInfosAndNode(List<UserInfo> userInfos, Node node);
 	
-	public List<StepWork> getStepWorksByUserInfos(List<UserInfo> userInfos);
+	List<StepWork> getStepWorksByUserInfos(List<UserInfo> userInfos);
 	
-	public List<StepWork> getStepWorksByNode(Node node);
+	List<StepWork> getStepWorksByNode(Node node);
 	
-	public List<StepWork> getStepWorksByRunId(Long runId);
+	List<StepWork> getStepWorksByRunId(Long runId);
 	
-	public StepWork getStepWorkByStepWorkId(Long id);
+	StepWork getStepWorkByStepWorkId(Long id);
 	
-	public StepWork getStepWorkByUserIdAndData(UserInfo userInfo,String data);
+	StepWork getStepWorkByUserIdAndData(UserInfo userInfo,String data);
 	
 	//VLEStatistics functions
 	
-	public VLEStatistics getVLEStatisticsById(Long id);
+	VLEStatistics getVLEStatisticsById(Long id);
 	
-	public void saveVLEStatistics(VLEStatistics vleStatistics);
+	void saveVLEStatistics(VLEStatistics vleStatistics);
 	
-	public List<VLEStatistics> getVLEStatistics();
+	List<VLEStatistics> getVLEStatistics();
 
-	public VLEStatistics getLatestVLEStatistics();
+	VLEStatistics getLatestVLEStatistics();
 
 	//StudentStatus functions
 	
-	public StudentStatus getStudentStatusById(Long id);
+	StudentStatus getStudentStatusById(Long id);
 	
-	public void saveStudentStatus(StudentStatus studentStatus);
+	void saveStudentStatus(StudentStatus studentStatus);
 	
-	public StudentStatus getStudentStatusByWorkgroupId(Long workgroupId);
+	StudentStatus getStudentStatusByWorkgroupId(Long workgroupId);
 	
-	public List<StudentStatus> getStudentStatusesByPeriodId(Long periodId);
+	List<StudentStatus> getStudentStatusesByPeriodId(Long periodId);
 	
-	public List<StudentStatus> getStudentStatusesByRunId(Long runId);
+	List<StudentStatus> getStudentStatusesByRunId(Long runId);
 	
 	//RunStatus functions
 	
-	public RunStatus getRunStatusById(Long id);
+	RunStatus getRunStatusById(Long id);
 	
-	public void saveRunStatus(RunStatus runStatus);
+	void saveRunStatus(RunStatus runStatus);
 	
-	public RunStatus getRunStatusByRunId(Long runId);
+	RunStatus getRunStatusByRunId(Long runId);
 	
 	//IdeaBasket functions
 	
-	public IdeaBasket getIdeaBasketById(Long id);
+	IdeaBasket getIdeaBasketById(Long id);
 	
-	public void saveIdeaBasket(IdeaBasket ideaBasket);
+	void saveIdeaBasket(IdeaBasket ideaBasket);
 	
-	public IdeaBasket getIdeaBasketByRunIdWorkgroupId(long runId, long workgroupId);
+	IdeaBasket getIdeaBasketByRunIdWorkgroupId(long runId, long workgroupId);
 	
-	public List<IdeaBasket> getLatestIdeaBasketsForRunId(long runId);
+	List<IdeaBasket> getLatestIdeaBasketsForRunId(long runId);
 	
-	public List<IdeaBasket> getLatestIdeaBasketsForRunIdWorkgroupIds(long runId, List<Long> workgroupIds);
+	List<IdeaBasket> getLatestIdeaBasketsForRunIdWorkgroupIds(long runId, List<Long> workgroupIds);
 	
-	public List<IdeaBasket> getIdeaBasketsForRunId(long runId);
+	List<IdeaBasket> getIdeaBasketsForRunId(long runId);
 	
-	public IdeaBasket getPublicIdeaBasketForRunIdPeriodId(long runId, long periodId);
+	IdeaBasket getPublicIdeaBasketForRunIdPeriodId(long runId, long periodId);
 
 	//Portfolio functions
-	public Portfolio getPortfolioByRunIdWorkgroupId(long runId, long workgroupId);
+	Portfolio getPortfolioByRunIdWorkgroupId(long runId, long workgroupId);
 	
-	public void savePortfolio(Portfolio portfolio);
+	void savePortfolio(Portfolio portfolio);
 
 
 	//CRaterRequest functions
 	
-	public CRaterRequest getCRaterRequestById(Long id);
+	CRaterRequest getCRaterRequestById(Long id);
 	
-	public void saveCRaterRequest(CRaterRequest cRaterRequest);
+	void saveCRaterRequest(CRaterRequest cRaterRequest);
 	
-	public CRaterRequest getCRaterRequestByStepWorkIdNodeStateId(StepWork stepWork, Long nodeStateId);
+	CRaterRequest getCRaterRequestByStepWorkIdNodeStateId(StepWork stepWork, Long nodeStateId);
 	
-	public List<CRaterRequest> getIncompleteCRaterRequests();
+	List<CRaterRequest> getIncompleteCRaterRequests();
 	
 }

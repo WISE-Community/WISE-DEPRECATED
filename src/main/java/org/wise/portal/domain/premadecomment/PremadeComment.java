@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2007-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -28,32 +28,25 @@ import org.wise.portal.domain.user.User;
 /**
  * An Owned object with the added information of 'comment'
  * 
- * @author patrick lawler
+ * @author Patrick Lawler
  */
 public interface PremadeComment {
 
-	public User getOwner();
+	User getOwner();
 	
-	public void setOwner(User owner);
+	void setOwner(User owner);
 	
-	public Long getId();
+	Long getId();
 	
-	/**
-	 * @return the comment
-	 */
-	public String getComment();
+	String getComment();
 
-	/**
-	 * @param comment the comment to set
-	 */
-	public void setComment(String comment);
-	
-    
-    public Long getListPosition();
+	void setComment(String comment);
 
-	public void setListPosition(Long listPosition);
-	
-	public String getLabels();
+    Long getListPosition();
 
-	public void setLabels(String labels);
+	void setListPosition(Long listPosition);
+	
+	String getLabels();
+
+	void setLabels(String labels);
 }

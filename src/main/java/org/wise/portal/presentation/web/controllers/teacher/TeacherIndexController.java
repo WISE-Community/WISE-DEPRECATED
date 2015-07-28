@@ -72,9 +72,8 @@ public class TeacherIndexController {
         }
 	};
 	
-	@RequestMapping(method=RequestMethod.GET)
-	protected String handleGET(
-			ModelMap modelMap) throws Exception {
+	@RequestMapping(method = RequestMethod.GET)
+	protected String handleGET(ModelMap modelMap) throws Exception {
 
 		User user = ControllerUtil.getSignedInUser();
 

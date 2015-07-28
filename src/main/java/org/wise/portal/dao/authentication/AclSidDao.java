@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2014 Encore Research Group, University of Toronto
+ * Copyright (c) 2007-2015 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -20,7 +20,6 @@
  */
 package org.wise.portal.dao.authentication;
 
-
 import org.wise.portal.dao.SimpleDao;
 import org.wise.portal.domain.authentication.MutableAclSid;
 
@@ -30,8 +29,6 @@ import org.wise.portal.domain.authentication.MutableAclSid;
  * class around in case we want to try again later.
  * 
  * @author Cynick Young
- * 
- * @version $Id$
  */
 public interface AclSidDao<T extends MutableAclSid> extends SimpleDao<T> {
 
@@ -42,5 +39,5 @@ public interface AclSidDao<T extends MutableAclSid> extends SimpleDao<T> {
      *                to look for
      * @return the object or <code>null</code> if not found
      */
-    public T retrieveBySidName(String sidName);
+    T retrieveBySidName(String sidName);
 }

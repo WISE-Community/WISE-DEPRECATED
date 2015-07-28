@@ -1,7 +1,7 @@
 /**
  * BrainstormNode
  *
- * @author: patrick lawler
+ * @author: Patrick Lawler
  */
 
 BrainstormNode.prototype = new Node();

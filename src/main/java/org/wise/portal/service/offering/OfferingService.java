@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2014 Encore Research Group, University of Toronto
+ * Copyright (c) 2007-2015 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -31,8 +31,6 @@ import org.wise.portal.domain.workgroup.Workgroup;
 
 /**
  * @author Laurel Williams
- * 
- * @version $Id$
  */
 public interface OfferingService {
 
@@ -42,7 +40,7 @@ public interface OfferingService {
 	 * @return an offerings <code>List</code>.
 	 */
 	// @Secured( { "ROLE_USER", "AFTER_ACL_COLLECTION_READ" })
-	public List<Offering> getOfferingList();
+	List<Offering> getOfferingList();
 
 	// TODO LAW this is wrong but is just to remind me to put appropriate
 	// security check here
@@ -54,7 +52,7 @@ public interface OfferingService {
 	 * @return The offering.
 	 * @throws ObjectNotFoundException if an offering with the given id is not found.
 	 */
-	public Offering getOffering(Long id) throws ObjectNotFoundException;
+	Offering getOffering(Long id) throws ObjectNotFoundException;
 
 	/**
 	 * Creates a new <code>Offering</code> object in the local data store.
@@ -67,7 +65,7 @@ public interface OfferingService {
 	 *             If the curnit specified to create this offering does not
 	 *             exist in the data store.
 	 */
-	public Offering createOffering(OfferingParameters offeringParameters)
+	Offering createOffering(OfferingParameters offeringParameters)
 	    throws ObjectNotFoundException;
 	
 	/**
@@ -79,6 +77,6 @@ public interface OfferingService {
 	 * 
 	 * @throws ObjectNotFoundException if an offering with the given id is not found.
 	 */
-	public Set<Workgroup> getWorkgroupsForOffering(Long offeringId) 
+	Set<Workgroup> getWorkgroupsForOffering(Long offeringId)
 	    throws ObjectNotFoundException;
 }
