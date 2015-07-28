@@ -30,9 +30,9 @@ define(['app'],
                 .ok('YES')
                 .cancel('No');
             $mdDialog.show(confirm).then(function() {
-            SessionService.renewSession();
+                SessionService.renewSession();
             }, function() {
-            SessionService.forceLogOut();
+                SessionService.forceLogOut();
             });
         }));
         
@@ -251,7 +251,8 @@ define(['app'],
             nodeId = ProjectService.getStartNodeId();
         }
         
-        this.projectStyle = ProjectService.getProjectStyle();
+        this.projectStyle = ProjectService.getStyle();
+        this.projectName = ProjectService.getName();
 
         CurrentNodeService.setCurrentNodeByNodeId(nodeId);
         

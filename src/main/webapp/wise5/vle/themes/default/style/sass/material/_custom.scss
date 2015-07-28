@@ -1,0 +1,10 @@
+// Angular Material customizations and additions
+
+md-toolbar {
+  min-height: $baseline-grid * 6.5;
+
+  .md-menu {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+}
