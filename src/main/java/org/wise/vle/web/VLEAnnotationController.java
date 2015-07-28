@@ -92,7 +92,7 @@ public class VLEAnnotationController {
 	 * @throws IOException
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(method=RequestMethod.GET)
+	@RequestMapping(method = RequestMethod.GET)
 	public void doGetJSON(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//get the signed in user
 		User signedInUser = ControllerUtil.getSignedInUser();
@@ -119,7 +119,7 @@ public class VLEAnnotationController {
 		HashMap<Long, Long> classmateWorkgroupIdToPeriodIdMap = new HashMap<Long, Long>();
 		
 		Long periodId = null;
-		if(periodIdStr != null) {
+		if (periodIdStr != null) {
 			try {
 				periodId = new Long(periodIdStr);
 			} catch(NumberFormatException e) {
@@ -128,27 +128,27 @@ public class VLEAnnotationController {
 		}
 		
 		Long longRunId = null;
-		if(runId != null) {
+		if (runId != null) {
 			longRunId = Long.parseLong(runId);
 		}
 		
 		Long stepWorkId = null;
-		if(stepWorkIdStr != null) {
+		if (stepWorkIdStr != null) {
 			stepWorkId = Long.parseLong(stepWorkIdStr);
 		}
 		
 		boolean isStudent = false;
-		if(isStudentStr != null) {
+		if (isStudentStr != null) {
 			isStudent = Boolean.parseBoolean(isStudentStr);
 		}
 		
 		Long nodeStateId = null;
-		if(nodeStateIdStr != null) {
+		if (nodeStateIdStr != null) {
 			nodeStateId = Long.parseLong(nodeStateIdStr);
 		}
 		
 		Long runIdLong = null;
-		if(runId != null) {
+		if (runId != null) {
 			try {
 				runIdLong = new Long(runId);
 			} catch(NumberFormatException e) {
@@ -157,7 +157,7 @@ public class VLEAnnotationController {
 		}
 		
 		Long fromWorkgroupId = null;
-		if(fromWorkgroupIdStr != null) {
+		if (fromWorkgroupIdStr != null) {
 			try {
 				fromWorkgroupId = new Long(fromWorkgroupIdStr);
 			} catch(NumberFormatException e) {
@@ -166,7 +166,7 @@ public class VLEAnnotationController {
 		}
 		
 		Long toWorkgroupId = null;
-		if(toWorkgroupIdStr != null) {
+		if (toWorkgroupIdStr != null) {
 			try {
 				toWorkgroupId = new Long(toWorkgroupIdStr);
 			} catch(NumberFormatException e) {
@@ -182,19 +182,19 @@ public class VLEAnnotationController {
 		 * CRater or flags
 		 */
 		
-		if(SecurityUtils.isAdmin(signedInUser)) {
+		if (SecurityUtils.isAdmin(signedInUser)) {
 			//the user is an admin so we will allow this request
 			allowedAccess = true;
-		} else if(SecurityUtils.isTeacher(signedInUser) && SecurityUtils.isUserOwnerOfRun(signedInUser, runIdLong)) {
+		} else if (SecurityUtils.isTeacher(signedInUser) && SecurityUtils.isUserOwnerOfRun(signedInUser, runIdLong)) {
 			//the teacher is an owner or shared owner of the run so we will allow this request
 			allowedAccess = true;
-		} else if(SecurityUtils.isStudent(signedInUser) && SecurityUtils.isUserInRun(signedInUser, runIdLong)) {
+		} else if (SecurityUtils.isStudent(signedInUser) && SecurityUtils.isUserInRun(signedInUser, runIdLong)) {
 			//the student is in the run
 			
-			if(SecurityUtils.isUserInWorkgroup(signedInUser, fromWorkgroupId) || SecurityUtils.isUserInWorkgroup(signedInUser, toWorkgroupId)) {
+			if (SecurityUtils.isUserInWorkgroup(signedInUser, fromWorkgroupId) || SecurityUtils.isUserInWorkgroup(signedInUser, toWorkgroupId)) {
 				//the student is the from or the to so we will allow this request
 				allowedAccess = true;				
-			} else if("cRater".equals(annotationType)) {
+			} else if ("cRater".equals(annotationType)) {
 				//the user is getting a CRater annotation
 				StepWork stepWork = vleService.getStepWorkById(stepWorkId);
 				
@@ -202,20 +202,20 @@ public class VLEAnnotationController {
 				Long stepWorkWorkgroupId = stepWorkUserInfo.getWorkgroupId();
 				
 				//make sure the user is in the workgroup
-				if(SecurityUtils.isUserInWorkgroup(signedInUser, stepWorkWorkgroupId)) {
+				if (SecurityUtils.isUserInWorkgroup(signedInUser, stepWorkWorkgroupId)) {
 					allowedAccess = true;
 				}
-			} else if("flag".equals(requestedType) || "inappropriateFlag".equals(requestedType)) {
+			} else if ("flag".equals(requestedType) || "inappropriateFlag".equals(requestedType)) {
 				//the user is getting a flag
 				
 				//make sure the user is in the period
-				if(SecurityUtils.isUserInPeriod(signedInUser, runIdLong, periodId)) {
+				if (SecurityUtils.isUserInPeriod(signedInUser, runIdLong, periodId)) {
 					allowedAccess = true;
 				}
 			}
 		}
 		
-		if(!allowedAccess) {
+		if (!allowedAccess) {
 			//user is not allowed to make this request
 			response.sendError(HttpServletResponse.SC_FORBIDDEN);
 			return;
@@ -225,7 +225,7 @@ public class VLEAnnotationController {
 		 * retrieval of periods is only required when students request flagged work
 		 * because we only want students to see flagged work from their own period
 		 */
-		if((requestedType.equals("flag") || requestedType.equals("inappropriateFlag")) && isStudent) {
+		if ((requestedType.equals("flag") || requestedType.equals("inappropriateFlag")) && isStudent) {
 			try {
 				Run run = null;
 				
@@ -260,12 +260,12 @@ public class VLEAnnotationController {
 		Annotation annotation = null;
 		if (requestedType == null || 
 				(requestedType.equals("annotation") && !"cRater".equals(annotationType) && !"run".equals(annotationType)) ) {
-			if(fromWorkgroupIdStr != null && stepWorkId != null) {
+			if (fromWorkgroupIdStr != null && stepWorkId != null) {
 				//user is requesting an annotation they wrote themselves for a specific stepWork
 				UserInfo fromWorkgroup = vleService.getUserInfoByWorkgroupId(new Long(fromWorkgroupIdStr));
 				StepWork stepWork = (StepWork) vleService.getStepWorkById(stepWorkId);
 				annotation = vleService.getAnnotationByUserInfoAndStepWork(fromWorkgroup, stepWork, null);
-			} else if(fromWorkgroupIdsStr != null && toWorkgroupIdStr != null) {
+			} else if (fromWorkgroupIdsStr != null && toWorkgroupIdStr != null) {
 				/*
 				 * user is requesting all annotations to toWorkgroup and from any fromWorkgroup
 				 * in the list of fromWorkgroups
@@ -315,10 +315,10 @@ public class VLEAnnotationController {
 				
 				List<StepWork> workByToWorkgroup = vleService.getStepWorksByUserInfo(toWorkgroup);
 				annotationList = vleService.getAnnotationByFromWorkgroupAndWorkByToWorkgroup(fromWorkgroup, workByToWorkgroup, Annotation.class);
-			} else if(runId != null && nodeId != null) {
+			} else if (runId != null && nodeId != null) {
                 //get all the annotations for the run id
                 annotationList = (List<Annotation>) vleService.getAnnotationsByRunIdAndNodeId(longRunId, nodeId);
-            } else if(runId != null) {
+            } else if (runId != null) {
                 //get all the annotations for the run id
                 annotationList = (List<Annotation>) vleService.getAnnotationByRunId(longRunId, Annotation.class);
             } else {
@@ -333,12 +333,12 @@ public class VLEAnnotationController {
 	    	String mapNodeId = null;
 	    	String type = null;
 	    	
-	    	if(map.containsKey("nodeId")) {
+	    	if (map.containsKey("nodeId")) {
 	    		//get the node id
 	    		mapNodeId = map.get("nodeId")[0];
 	    	}
 	    	
-	    	if(map.containsKey("type")) {
+	    	if (map.containsKey("type")) {
 	    		//get the annotation type
 	    		type = map.get("type")[0];
 	    	}
@@ -347,15 +347,15 @@ public class VLEAnnotationController {
 			 * get the flags based on the parameters that were passed in the request.
 			 * this will return the flag annotations ordered from oldest to newest
 			 */
-	    	if(runId != null && mapNodeId != null) {
+	    	if (runId != null && mapNodeId != null) {
 	    		//get all the annotations for a run id and node id
 	        	Node node = vleService.getNodeByNodeIdAndRunId(mapNodeId, runId, true);
 	        	List<StepWork> stepWorkList = vleService.getStepWorksByNode(node);
 	        	annotationList = vleService.getAnnotationByStepWorkList(stepWorkList);
-	    	} else if(runId != null && type != null) {
+	    	} else if (runId != null && type != null) {
 	    		//get all the annotations for a run id and annotation type
 	    		annotationList = (List<Annotation>) vleService.getAnnotationByRunIdAndType(Long.parseLong(runId), type, Annotation.class);
-	    	} else if(runId != null) {
+	    	} else if (runId != null) {
 	    		//get all the annotations for a run id
 	    		annotationList = (List<Annotation>) vleService.getAnnotationByRunId(Long.parseLong(runId), Annotation.class);
 	    	}
@@ -384,7 +384,7 @@ public class VLEAnnotationController {
 		
 
 		JSONObject annotationsJSONObj = null;
-		if(annotationList != null) {
+		if (annotationList != null) {
 			//a list of annotations will be returned
 			
 			annotationsJSONObj = new JSONObject();  // all annotations
@@ -409,11 +409,11 @@ public class VLEAnnotationController {
 					 * if this is a student making the request we will add the stepWork data
 					 * to each of the flags so they can see the work that was flagged
 					 */
-					if("flag".equals(requestedType) && isStudent) {
+					if ("flag".equals(requestedType) && isStudent) {
 						//a student is requesting the flagged work
 						
 						//check if the annotation is a flag annotation
-						if("flag".equals(tempAnnotationType)) {
+						if ("flag".equals(tempAnnotationType)) {
 							//the annotation is a flag annotation
 							
 							//get the stepWorkId of the work that was flagged
@@ -432,13 +432,13 @@ public class VLEAnnotationController {
 							Long flaggedPeriodId = classmateWorkgroupIdToPeriodIdMap.get(flaggedWorkgroupId);
 							
 							//check that the period of the flagged work is the same period that the signed in user is in
-							if(periodId != null && flaggedPeriodId != null && periodId.equals(flaggedPeriodId)) {
+							if (periodId != null && flaggedPeriodId != null && periodId.equals(flaggedPeriodId)) {
 
 								//get the data
 								JSONObject flagStepWorkData = new JSONObject(flagStepWork.getData());
 								
 								//check if the flag value is set to "flagged" as opposed to "unflagged"
-								if(dataJSONObj.has("value") && dataJSONObj.getString("value").equals("flagged")) {
+								if (dataJSONObj.has("value") && dataJSONObj.getString("value").equals("flagged")) {
 									
 									//add the data to the flag JSON object
 									dataJSONObj.put("data", flagStepWorkData);
@@ -458,7 +458,7 @@ public class VLEAnnotationController {
 										JSONObject nextFlaggedAnnotation = flaggedAnnotationsIterator.next();
 										
 										//check if the annotation fields match
-										if(nextFlaggedAnnotation.has("toWorkgroup") && dataJSONObj.has("toWorkgroup") && nextFlaggedAnnotation.getString("toWorkgroup").equals(dataJSONObj.getString("toWorkgroup")) &&
+										if (nextFlaggedAnnotation.has("toWorkgroup") && dataJSONObj.has("toWorkgroup") && nextFlaggedAnnotation.getString("toWorkgroup").equals(dataJSONObj.getString("toWorkgroup")) &&
 												nextFlaggedAnnotation.has("fromWorkgroup") && dataJSONObj.has("fromWorkgroup") && nextFlaggedAnnotation.getString("fromWorkgroup").equals(dataJSONObj.getString("fromWorkgroup")) &&
 												nextFlaggedAnnotation.has("nodeId") && dataJSONObj.has("nodeId") && nextFlaggedAnnotation.getString("nodeId").equals(dataJSONObj.getString("nodeId")) &&
 												nextFlaggedAnnotation.has("stepWorkId") && dataJSONObj.has("stepWorkId") && nextFlaggedAnnotation.getString("stepWorkId").equals(dataJSONObj.getString("stepWorkId")) &&
@@ -484,7 +484,7 @@ public class VLEAnnotationController {
 			 * objects into the annotationsJSONObj that will be returned as a response to the
 			 * user
 			 */
-			if((requestedType.equals("flag") || requestedType.equals("inappropriateFlag")) && isStudent) {
+			if ((requestedType.equals("flag") || requestedType.equals("inappropriateFlag")) && isStudent) {
 				//get all the stepwork ids that were flagged
 
 				//loop through all the flag annotations
@@ -522,7 +522,7 @@ public class VLEAnnotationController {
 							JSONArray nodeStates = latestStepWorkDataJSONObj.getJSONArray("nodeStates");
 							
 							//check if the node states is empty
-							if(nodeStates.length() > 0) {
+							if (nodeStates.length() > 0) {
 								/*
 								 * node states is not empty so we have found the newest
 								 * step work that contains actual work  
@@ -532,7 +532,7 @@ public class VLEAnnotationController {
 						}
 						
 						//check if we found any step work data
-						if(latestStepWorkDataJSONObj != null) {
+						if (latestStepWorkDataJSONObj != null) {
 							//put the data into the flag annotation object
 							flagAnnotationDataJSONObj.put("data", latestStepWorkDataJSONObj);
 							
@@ -544,7 +544,7 @@ public class VLEAnnotationController {
 					}
 				}
 			}
-		} else if(annotation != null) { 
+		} else if (annotation != null) { 
 			try {
 				//only one annotation will be returned
 				annotationsJSONObj = new JSONObject(annotation.getData());
@@ -557,7 +557,7 @@ public class VLEAnnotationController {
 			}
 		}
 
-		if(annotationsJSONObj != null) {
+		if (annotationsJSONObj != null) {
 			response.getWriter().write(annotationsJSONObj.toString());	
 		} else {
 			// there was an error retrieving the annotation
@@ -612,10 +612,10 @@ public class VLEAnnotationController {
 					//get the response
 					Object object = nodeStateByTimestamp.get("response");
 					
-					if(object instanceof JSONArray) {
+					if (object instanceof JSONArray) {
 						//the response is an array so we will obtain the first element
 						studentResponse = ((JSONArray) object).getString(0);
-					} else if(object instanceof String) {
+					} else if (object instanceof String) {
 						//the response is a string
 						studentResponse = (String) object;
 					}
@@ -624,7 +624,7 @@ public class VLEAnnotationController {
 					String cRaterItemId = stepWork.getCRaterItemId();
 					String cRaterResponseXML = CRaterHttpClient.getCRaterScoringResponse(cRaterScoringUrl, cRaterClientId, cRaterItemId, cRaterResponseId, studentResponse);
 					
-					if(cRaterResponseXML != null) {
+					if (cRaterResponseXML != null) {
 						JSONObject cRaterResponseJSONObj = new JSONObject();
 
 						JSONObject studentNodeStateResponse = stepWork.getNodeStateByTimestamp(nodeStateId);
@@ -644,7 +644,7 @@ public class VLEAnnotationController {
 						// update CRaterRequest table and mark this request as completed.
 						CRaterRequest cRaterRequest = vleService.getCRaterRequestByStepWorkIdNodeStateId(stepWork,nodeStateId);
 						
-						if(cRaterRequest != null) {
+						if (cRaterRequest != null) {
 							Calendar cRaterRequestCompletedTime = Calendar.getInstance();
 							cRaterRequest.setTimeCompleted(new Timestamp(cRaterRequestCompletedTime.getTimeInMillis()));
 							cRaterRequest.setcRaterResponse(cRaterResponseXML);
@@ -667,10 +667,10 @@ public class VLEAnnotationController {
 				//get the response
 				Object object = nodeStateByTimestamp.get("response");
 				
-				if(object instanceof JSONArray) {
+				if (object instanceof JSONArray) {
 					//the response is an array so we will obtain the first element
 					studentResponse = ((JSONArray) object).getString(0);
-				} else if(object instanceof String) {
+				} else if (object instanceof String) {
 					//the response is a string
 					studentResponse = (String) object;
 				}
@@ -679,7 +679,7 @@ public class VLEAnnotationController {
 				String cRaterItemId = stepWork.getCRaterItemId();
 				String cRaterResponseXML = CRaterHttpClient.getCRaterScoringResponse(cRaterScoringUrl, cRaterClientId, cRaterItemId, cRaterResponseId, studentResponse);
 				if (cRaterResponseXML != null) {
-					if(cRaterResponseXML.contains("<error code=")) {
+					if (cRaterResponseXML.contains("<error code=")) {
 						//there was an error so we will not create Annotation or CRaterRequest objects
 					} else {
 						// create a new cRater annotation object based on CRater response
@@ -726,7 +726,7 @@ public class VLEAnnotationController {
 						// update CRaterRequest table and mark this request as completed.
 						CRaterRequest cRaterRequest = vleService.getCRaterRequestByStepWorkIdNodeStateId(stepWork,nodeStateId);
 						
-						if(cRaterRequest != null) {
+						if (cRaterRequest != null) {
 							Calendar cRaterRequestCompletedTime = Calendar.getInstance();
 							cRaterRequest.setTimeCompleted(new Timestamp(cRaterRequestCompletedTime.getTimeInMillis()));
 							cRaterRequest.setcRaterResponse(cRaterResponse);
@@ -739,7 +739,7 @@ public class VLEAnnotationController {
 					// increment fail count
 					CRaterRequest cRaterRequest = vleService.getCRaterRequestByStepWorkIdNodeStateId(stepWork, nodeStateId);
 					
-					if(cRaterRequest != null) {
+					if (cRaterRequest != null) {
 						cRaterRequest.setFailCount(cRaterRequest.getFailCount()+1);
 						vleService.saveCRaterRequest(cRaterRequest);
 					}
@@ -776,7 +776,7 @@ public class VLEAnnotationController {
 		String periodId = request.getParameter("periodId");
 
 		Long runIdLong = null;
-		if(runId != null) {
+		if (runId != null) {
 			try {
 				runIdLong = new Long(runId);
 			} catch(NumberFormatException e) {
@@ -785,7 +785,7 @@ public class VLEAnnotationController {
 		}
 		
 		Long fromWorkgroupId = null;
-		if(fromWorkgroupIdStr != null) {
+		if (fromWorkgroupIdStr != null) {
 			try {
 				fromWorkgroupId = new Long(fromWorkgroupIdStr);
 			} catch(NumberFormatException e) {
@@ -794,7 +794,7 @@ public class VLEAnnotationController {
 		}
 		
 		Long toWorkgroupId = null;
-		if(toWorkgroupIdStr != null) {
+		if (toWorkgroupIdStr != null) {
 			try {
 				toWorkgroupId = new Long(toWorkgroupIdStr);
 			} catch(NumberFormatException e) {
@@ -813,20 +813,20 @@ public class VLEAnnotationController {
 		 * teachers can post an annotation if they own the run
 		 * students can post an annotation if it is from them
 		 */
-		if(SecurityUtils.isTeacher(signedInUser) && SecurityUtils.isUserOwnerOfRun(signedInUser, runIdLong)) {
+		if (SecurityUtils.isTeacher(signedInUser) && SecurityUtils.isUserOwnerOfRun(signedInUser, runIdLong)) {
 			//the teacher is the owner or shared owner of the run so we will allow this request
 			allowedAccess = true;
-		} else if(SecurityUtils.isStudent(signedInUser) && SecurityUtils.isUserInRun(signedInUser, runIdLong)) {
+		} else if (SecurityUtils.isStudent(signedInUser) && SecurityUtils.isUserInRun(signedInUser, runIdLong)) {
 			//the student is in the run
 			
-			if(SecurityUtils.isUserInWorkgroup(signedInUser, fromWorkgroupId) || 
+			if (SecurityUtils.isUserInWorkgroup(signedInUser, fromWorkgroupId) || 
 			        SecurityUtils.isUserInWorkgroup(signedInUser, toWorkgroupId)) {
 				//the student is in the workgroup so we will allow this request 
 				allowedAccess = true;
 			}
 		}
 		
-		if(!allowedAccess) {
+		if (!allowedAccess) {
 			//user is not allowed to make this request
 			response.sendError(HttpServletResponse.SC_FORBIDDEN);
 			return;
@@ -836,7 +836,7 @@ public class VLEAnnotationController {
 		Timestamp postTime = new Timestamp(now.getTimeInMillis());
 		StepWork stepWork = null;
 		
-		if(stepWorkIdLong != null) {
+		if (stepWorkIdLong != null) {
 			stepWork = (StepWork) vleService.getStepWorkById(stepWorkIdLong);
 		}
 		
@@ -883,10 +883,10 @@ public class VLEAnnotationController {
 		
 		Annotation annotation = null;
 		
-		if(stepWork != null) {
+		if (stepWork != null) {
 			//there is student work associated with this annotation
 			annotation = vleService.getAnnotationByFromUserInfoToUserInfoStepWorkType(fromUserInfo, toUserInfo, stepWork, type);
-		} else if(nodeId != null) {
+		} else if (nodeId != null) {
 			//there is a node id but no student work associated with this annotation
 			annotation = vleService.getAnnotationByFromUserInfoToUserInfoNodeIdType(fromUserInfo, toUserInfo, nodeId, type);
 		} else {
@@ -894,7 +894,7 @@ public class VLEAnnotationController {
 			annotation = vleService.getAnnotationByFromUserInfoToUserInfoType(fromUserInfo, toUserInfo, type);
 		}
 		
-		if(annotation == null) {
+		if (annotation == null) {
 			//the annotation was not found so we will create it
 			annotation = new Annotation(type);
 			annotation.setFromUser(fromUserInfo);
@@ -912,7 +912,7 @@ public class VLEAnnotationController {
 		//update the data
 		annotation.setData(annotationEntryJSONObj.toString());
 		
-		if(runId != null) {
+		if (runId != null) {
 			//set the run id
 			annotation.setRunId(Long.parseLong(runId));
 		}
@@ -925,7 +925,7 @@ public class VLEAnnotationController {
 		vleService.saveAnnotation(annotation);
 		
 		//check if this is a peer review annotation
-		if(action != null && action.equals("peerReviewAnnotate")) {
+		if (action != null && action.equals("peerReviewAnnotate")) {
 			//set the annotation into the peerreviewwork table
 			vleService.setPeerReviewAnnotation(new Long(runId), new Long(periodId), stepWork.getNode(), stepWork, fromUserInfo, annotation);
 		}

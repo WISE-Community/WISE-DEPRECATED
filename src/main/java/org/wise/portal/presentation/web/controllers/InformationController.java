@@ -93,15 +93,10 @@ public class InformationController {
 	 * @throws ObjectNotFoundException 
 	 * @throws NumberFormatException 
 	 */
-    @RequestMapping("/userinfo.html")
+    @RequestMapping("/userInfo")
 	private void handleGetUserInfo(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, NumberFormatException, ObjectNotFoundException{
-		// make sure that the user is logged in
-		if (ControllerUtil.getSignedInUser() == null) {
-			response.sendRedirect("/login");
-			return;
-		}
-		
+
 		JSONObject userInfo = getUserInfo(request);
 		
 		if (userInfo == null) {
@@ -635,7 +630,7 @@ public class InformationController {
                 }
             } else {
                 // add non-preview project specific settings
-                String userInfoURL = wiseBaseURL + "/userinfo.html?runId=" + runId;
+                String userInfoURL = wiseBaseURL + "/userInfo?runId=" + runId;
                 config.put("userInfoURL", userInfoURL);
             }
 

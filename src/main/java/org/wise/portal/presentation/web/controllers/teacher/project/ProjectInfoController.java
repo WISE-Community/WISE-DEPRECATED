@@ -58,7 +58,7 @@ public class ProjectInfoController {
 	// path to project thumb image relative to project folder
 	private static final String PROJECT_THUMB_PATH = "/assets/project_thumb.png";
 
-	@RequestMapping("/teacher/projects/projectinfo.html")
+	@RequestMapping("/projectInfo")
 	protected ModelAndView handleRequestInternal(
 			@RequestParam("projectId") String projectIdStr,
 			HttpServletRequest request,
@@ -66,7 +66,7 @@ public class ProjectInfoController {
 		
 		Project project = projectService.getById(projectIdStr);
 
-		if(project != null){
+		if (project != null) {
 				ModelAndView modelAndView = new ModelAndView();
 				modelAndView.addObject("project", project);
 				Integer usage = this.runService.getProjectUsage((Long)project.getId());
@@ -75,16 +75,16 @@ public class ProjectInfoController {
 				//get the command
 				String command = request.getParameter("command");
 				//if command is 'getTimesRun', return the usage count
-				if(command != null && command.equals("getNumberOfRuns")){
+				if (command != null && command.equals("getNumberOfRuns")) {
 					response.getWriter().write(usage.toString());
 					return null;
 				}
 				
 				String curriculumBaseWWW = this.wiseProperties.getProperty("curriculum_base_www");
 				String url = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
-				if(url != null && url != ""){
+				if (url != null && url != "") {
 					int ndx = url.lastIndexOf("/");
-					if(ndx != -1){
+					if (ndx != -1) {
 						/*
 						 * add project thumb url to projectThumbMap. for now this is the same (/assets/project_thumb.png)
 						 * for all projects but this could be overwritten in the future
