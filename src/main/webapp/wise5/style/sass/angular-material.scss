@@ -1,13 +1,9 @@
-@import "typography";
-@import "variables";
+@import "material/config";
 
-// Typography
-// ------------------------------
-h1, h2, h3 {
-  font-family: $heading-font-family;
-  position: relative;
-  top: 0.05em;
-}
+// Default Angular Material styles
+@import "../../vendor/angular-material/angular-material";
+
+@import "material/custom";
 
 // Rules for sizing material icons
 .material-icons.md-18 { font-size: 18px; }
@@ -22,22 +18,3 @@ h1, h2, h3 {
 // Rules for using material icons as white on a dark background
 .material-icons.md-light { color: rgba(255, 255, 255, 1); }
 .material-icons.md-light.md-inactive { color: rgba(255, 255, 255, 0.3); }
-
-// Layout
-// ------------------------------
-.fixed-top {
-  position: fixed;
-  top: 0;
-}
-
-.fixed-bottom {
-  position: fixed;
-  bottom: 0;
-}
-
-
-// Content
-// ------------------------------
-.logo {
-  cursor: auto;
-}

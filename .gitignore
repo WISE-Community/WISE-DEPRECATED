@@ -7,5 +7,4 @@ src/main/resources/wise.properties
 *.bak
 .idea/workspace.xml
 .idea/tasks.xml
-src/main/webapp/wise5/style/.sass-cache
-src/main/webapp/wise5/.sass-cache
+*.sass-cache
