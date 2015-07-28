@@ -1,0 +1,42 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" >
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1">
+<metadata>
+Created by FontForge 20150715 at Sat Jul 25 00:28:50 2015
+ By System Administrator
+</metadata>
+<defs>
+<font id="RobotoDraft-Medium" horiz-adv-x="0" >
+  <font-face 
+    font-family="RobotoDraft Medium"
+    font-weight="500"
+    font-stretch="normal"
+    units-per-em="2048"
+    panose-1="2 0 0 0 0 0 0 0 0 0"
+    ascent="1536"
+    descent="-512"
+    bbox="-484 -20 1380 1495"
+    underline-thickness="100"
+    underline-position="-200"
+    unicode-range="U+1F4D-1F4D"
+  />
+<missing-glyph horiz-adv-x="908" 
+d="M808 0h-708v1456h708v-1456zM754 84v1287l-274 -643zM154 1359v-1263l268 632zM194 54h515l-258 606zM451 796l258 606h-515z" />
+    <glyph glyph-name=".notdef" horiz-adv-x="908" 
+d="M808 0h-708v1456h708v-1456zM754 84v1287l-274 -643zM154 1359v-1263l268 632zM194 54h515l-258 606zM451 796l258 606h-515z" />
+    <glyph glyph-name="glyph1" 
+ />
+    <glyph glyph-name="glyph2" 
+ />
+    <glyph glyph-name="glyph3" horiz-adv-x="510" 
+ />
+    <glyph glyph-name="glyph4" horiz-adv-x="1414" 
+d="M1310 690q0 -214 -74 -375.5t-211.5 -248t-316.5 -86.5q-177 0 -315.5 86.5t-214 246.5t-76.5 369v82q0 213 75.5 376t213 249.5t315.5 86.5t315.5 -85.5t212.5 -246t76 -373.5v-81zM1057 766q0 242 -91.5 371t-259.5 129q-164 0 -256.5 -128.5t-94.5 -363.5v-84
+q0 -240 93.5 -371t259.5 -131q168 0 258.5 128t90.5 374v76z" />
+    <glyph glyph-name="glyph5" horiz-adv-x="812" 
+d="M403 1176l112 319h211v-21l-230 -319h-93v21zM103 1495h177v-95q3 -123 79 -193l-80 -72q-176 90 -176 280v80z" />
+    <glyph glyph-name="uni1F4D" unicode="&#x1f4d;" horiz-adv-x="1484" 
+d="M1380 690q0 -214 -74 -375.5t-211.5 -248t-316.5 -86.5q-177 0 -315.5 86.5t-214 246.5t-76.5 369v82q0 213 75.5 376t213 249.5t315.5 86.5t315.5 -85.5t212.5 -246t76 -373.5v-81zM1127 766q0 242 -91.5 371t-259.5 129q-164 0 -256.5 -128.5t-94.5 -363.5v-84
+q0 -240 93.5 -371t259.5 -131q168 0 258.5 128t90.5 374v76zM-184 1176l112 319h211v-21l-230 -319h-93v21zM-484 1495h177v-95q3 -123 79 -193l-80 -72q-176 90 -176 280v80z" />
+  </font>
+</defs></svg>

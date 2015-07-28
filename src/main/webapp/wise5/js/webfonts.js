@@ -2,11 +2,10 @@
 WebFont.load({
     fontinactive: function (family, fvd) {
         switch(family) {
-            case 'Hind':
-                console.log('Hind inactive');
+            case 'RobotoDraft':
                 WebFont.load({
                     custom: {
-                        families: ['Hind:n4'],
+                        families: ['RobotoDraft:n3,n4,n5,n7,i4'],
                         urls: [ 'wise5/style/fonts/localFonts.css' ]
                     }
                 });
@@ -22,6 +21,6 @@ WebFont.load({
         }
     },
     google: {
-        families: ['Hind:n4', 'Material Icons']
+        families: ['RobotoDraft:n3,n4,n5,n7,i4', 'Material Icons']
     }
 });
