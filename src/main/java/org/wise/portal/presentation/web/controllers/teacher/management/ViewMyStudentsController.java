@@ -89,9 +89,6 @@ public class ViewMyStudentsController {
 			HttpServletRequest servletRequest,
 			HttpServletResponse servletResponse) throws Exception {
 		
-    	ModelAndView modelAndView = new ModelAndView();
-    	ControllerUtil.addUserToModelAndView(modelAndView);
- 
 		User user = ControllerUtil.getSignedInUser();
 
 		Map<Group, List<Workgroup>> workgroupMap = new HashMap<Group, List<Workgroup>>();
@@ -154,6 +151,9 @@ public class ViewMyStudentsController {
 			if (servletRequest.getParameter("tabIndex") != null) {
 				tabIndex = Integer.valueOf(servletRequest.getParameter("tabIndex"));
 			}
+
+			ModelAndView modelAndView = new ModelAndView();
+			modelAndView.addObject("user", user);
 			modelAndView.addObject(CURRENT_RUN_LIST_KEY, current_run_list);
 			modelAndView.addObject(WORKGROUP_MAP_KEY, workgroupMap);
 			modelAndView.addObject(VIEWMYSTUDENTS_KEY, viewmystudentsallperiods);

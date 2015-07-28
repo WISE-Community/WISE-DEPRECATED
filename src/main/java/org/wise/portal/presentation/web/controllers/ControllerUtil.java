@@ -39,8 +39,6 @@ import org.wise.portal.service.user.UserService;
 @Component
 public class ControllerUtil {
 
-	public final static String USER_KEY = "user";
-
 	private static UserService userService;
 
 	@Autowired
@@ -48,11 +46,6 @@ public class ControllerUtil {
 		ControllerUtil.userService = userService;
 	}
 
-	public static void addUserToModelAndView(ModelAndView modelAndView) {
-		User user = getSignedInUser();
-		modelAndView.addObject(USER_KEY, user);
-	}
-	
 	/**
 	 * Returns signed in user. If not signed in, return null
 	 * @return User signed in user. If not logged in, returns null.

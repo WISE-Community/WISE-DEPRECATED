@@ -117,7 +117,7 @@ $(document).ready(function() {
 			newOnly = onlyNew;
 		}
 		var previousLogin = $.cookie("pLT");
-		var path = "viewannouncements.html?runId=" + runIds + "&pLT=" + previousLogin + "&newOnly=" + newOnly;
+		var path = "${contextPath}/student/viewannouncements.html?runId=" + runIds + "&pLT=" + previousLogin + "&newOnly=" + newOnly;
 		var div = $('#announcementsDialog').html('<iframe id="announceIfrm" width="100%" height="100%"></iframe>');
 		div.dialog({
 			modal: true,
