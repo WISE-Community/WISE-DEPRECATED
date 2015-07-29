@@ -339,18 +339,15 @@ define(['app'], function(app) {
          * Called when the student clicks the save button
          */
         this.saveButtonClicked = function() {
-            this.saveTriggeredBy = 'saveButton';
-            
-            this.isSubmit = false;
-            
-            $scope.$emit('componentSaveClicked');
+
+            // tell the parent node that this component wants to save
+            $scope.$emit('componentSaveTriggered', {nodeId: this.nodeId, componentId: this.componentId});
         };
         
         /**
          * Called when the student clicks the submit button
          */
         this.submitButtonClicked = function() {
-            this.saveTriggeredBy = 'submitButton';
             this.isSubmit = true;
             
             // check if we need to lock the component after the student submits
@@ -359,8 +356,9 @@ define(['app'], function(app) {
             }
             
             this.checkAnswer();
-            
-            $scope.$emit('componentSubmitClicked');
+
+            // tell the parent node that this component wants to submit
+            $scope.$emit('componentSubmitTriggered', {nodeId: this.nodeId, componentId: this.componentId});
         };
         
         /**
@@ -568,11 +566,11 @@ define(['app'], function(app) {
                      * check if the student has chosen all the correct
                      * choices
                      */
-                    var isCorrect = this.isCorrect;
-                    
-                    // set the isCorrect value into the student data
-                    studentData.isCorrect = isCorrect;
-                    
+                    if (this.isCorrect != null) {
+                        // set the isCorrect value into the student data
+                        studentData.isCorrect = this.isCorrect;
+                    }
+
                     if (this.isSubmit != null) {
                         studentData.isSubmit = this.isSubmit;
                     }
@@ -580,13 +578,19 @@ define(['app'], function(app) {
                     // set the number of attempts the student has made
                     studentData.numberOfAttempts = this.numberOfAttempts;
                 }
+
+                if (this.isSubmit) {
+                    // the student submitted this work
+                    studentData.isSubmit = this.isSubmit;
+
+                    /*
+                     * reset the isSubmit value so that the next component state
+                     * doesn't maintain the same value
+                     */
+                    this.isSubmit = false;
+                }
                 
                 componentState.studentData = studentData;
-                
-                if(this.saveTriggeredBy != null) {
-                    // set the saveTriggeredBy value
-                    componentState.saveTriggeredBy = this.saveTriggeredBy;
-                }
             }
             
             return componentState;

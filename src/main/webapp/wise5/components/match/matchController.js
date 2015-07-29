@@ -31,6 +31,9 @@ define(['app', 'angular'], function(app, angular) {
         
         // whether this part is showing previous work
         this.isShowPreviousWork = false;
+
+        // whether the student work is for a submit
+        this.isSubmit = false;
         
         // the choices
         this.choices = [];
@@ -265,15 +268,15 @@ define(['app', 'angular'], function(app, angular) {
          * Called when the student clicks the save button
          */
         this.saveButtonClicked = function() {
-            
-            $scope.$emit('componentSaveClicked');
+
+            // tell the parent node that this component wants to save
+            $scope.$emit('componentSaveTriggered', {nodeId: this.nodeId, componentId: this.componentId});
         };
         
         /**
          * Called when the student clicks the submit button
          */
         this.submitButtonClicked = function() {
-            this.saveTriggeredBy = 'submitButton';
             this.isSubmit = true;
             
             // check if we need to lock the component after the student submits
@@ -284,9 +287,9 @@ define(['app', 'angular'], function(app, angular) {
             // check if the student answered correctly
             this.checkAnswer();
             this.numberOfSubmits++;
-            
-            // notify the parent that this child component has clicked submit
-            $scope.$emit('componentSubmitClicked');
+
+            // tell the parent node that this component wants to submit
+            $scope.$emit('componentSubmitTriggered', {nodeId: this.nodeId, componentId: this.componentId});
         };
         
         /**
@@ -499,14 +502,20 @@ define(['app', 'angular'], function(app, angular) {
                     // set whether the student was correct
                     studentData.isCorrect = this.isCorrect;
                 }
+
+                if (this.isSubmit) {
+                    // the student submitted this work
+                    studentData.isSubmit = this.isSubmit;
+
+                    /*
+                     * reset the isSubmit value so that the next component state
+                     * doesn't maintain the same value
+                     */
+                    this.isSubmit = false;
+                }
                 
                 //set the student data into the component state
                 componentState.studentData = studentData;
-                
-                if(this.saveTriggeredBy != null) {
-                    // set the saveTriggeredBy value
-                    componentState.saveTriggeredBy = this.saveTriggeredBy;
-                }
             }
             
             return componentState;

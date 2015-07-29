@@ -113,13 +113,13 @@ define(['app'], function(app) {
             // notify the child components that the save button was clicked
             $rootScope.$broadcast('nodeSaveClicked', {nodeId: this.nodeId});
             
-            var saveTriggeredBy = 'saveButton';
+            var isAutoSave = false;
             
             /*
              * obtain the component states from the children and save them
              * to the server
              */
-            this.createAndSaveComponentStates(saveTriggeredBy);
+            this.createAndSaveComponentStates(isAutoSave);
         };
         
         /**
@@ -130,13 +130,13 @@ define(['app'], function(app) {
             // notify the child components that the submit button was clicked
             $rootScope.$broadcast('nodeSubmitClicked', {nodeId: this.nodeId});
             
-            var saveTriggeredBy = 'submitButton';
+            var isAutoSave = false;
             
             /*
              * obtain the component states from the children and save them
              * to the server
              */
-            this.createAndSaveComponentStates(saveTriggeredBy);
+            this.createAndSaveComponentStates(isAutoSave);
         };
         
         /**
@@ -270,6 +270,41 @@ define(['app'], function(app) {
             
             return component;
         };
+
+        /**
+         * Check if this node contains a given component id
+         * @param componentId the component id
+         * @returns whether this node contains the component
+         */
+        this.nodeContainsComponent = function(componentId) {
+            var result = false;
+
+            if (componentId != null) {
+
+                // get all the components
+                var components = this.getComponents();
+
+                // loop through all the components
+                for (var c = 0; c < components.length; c++) {
+
+                    // get a component
+                    var tempComponent = components[c];
+
+                    if (tempComponent != null) {
+                        var tempComponentId = tempComponent.id;
+
+                        // check if the component id matches the one we want
+                        if (tempComponentId === componentId) {
+                            // the component id matches
+                            result = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            return result;
+        }
         
         /**
          * Get the html template for the component
@@ -351,13 +386,13 @@ define(['app'], function(app) {
                 if (this.isDirty) {
                     // the student work is dirty so we will save
                     
-                    var saveTriggeredBy = 'autoSave';
+                    var isAutoSave = true;
                     
                     /*
                      * obtain the component states from the children and save them
                      * to the server
                      */
-                    this.createAndSaveComponentStates(saveTriggeredBy);
+                    this.createAndSaveComponentStates(isAutoSave);
                 }
             }), this.autoSaveInterval);
         };
@@ -372,12 +407,14 @@ define(['app'], function(app) {
         /**
          * Obtain the component states from the children and save them
          * to the server
-         * @param saveTriggeredBy the reason why the save was triggered
+         * @param isAutoSave whether the component states were auto saved
+         * @param componentId (optional) the component id of the component
+         * that triggered the save
          */
-        this.createAndSaveComponentStates = function(saveTriggeredBy) {
+        this.createAndSaveComponentStates = function(isAutoSave, componentId) {
             
             // obtain the component states from the children
-            var componentStates = this.createComponentStates(saveTriggeredBy);
+            var componentStates = this.createComponentStates(isAutoSave, componentId);
             
             if (componentStates != null) {
                 // save the component states to the server
@@ -386,7 +423,14 @@ define(['app'], function(app) {
             }
         };
 
-        this.createComponentStates = function(saveTriggeredBy) {
+        /**
+         * Create component states
+         * @param isAutoSave whether the component states were auto saved
+         * @param componentId (optional) the component id of the component
+         * that triggered the save
+         * @returns an array of component states
+         */
+        this.createComponentStates = function(isAutoSave, componentId) {
             var componentStates = [];
             
             // get the components for this node
@@ -404,14 +448,12 @@ define(['app'], function(app) {
                     // get a component
                     var component = components[c];
                     
-                    var studentWorkObject = null;
-                    
                     if (component != null) {
                         // get the component id
-                        var componentId = component.id;
+                        var tempComponentId = component.id;
                         
                         // get the scope for the component
-                        var childScope = $scope.componentToScope[componentId];
+                        var childScope = $scope.componentToScope[tempComponentId];
                         
                         var componentState = null;
                         
@@ -430,18 +472,33 @@ define(['app'], function(app) {
                             componentState.nodeId = this.nodeId;
                             
                             // set the component id into the student work object
-                            componentState.componentId = componentId;
+                            componentState.componentId = tempComponentId;
                             
                             // set the component type
                             componentState.componentType = component.componentType;
-                            
-                            // set the save triggered by value
-                            componentState.saveTriggeredBy = saveTriggeredBy;
-                            
-                            if (saveTriggeredBy === 'submitButton') {
-                                componentState.isSubmit = true;
+
+                            if (componentId == null) {
+                                /*
+                                 * the node has triggered the save so all the components will
+                                 * either have isAutoSave set to true or false
+                                 */
+                                componentState.isAutoSave = isAutoSave;
+                            } else {
+                                /*
+                                 * a component has triggered the save so that component will
+                                 * have isAutoSave set to false but all other components will
+                                 * have isAutoSave set to true
+                                 */
+
+                                if (componentId == tempComponentId) {
+                                    // this component triggered the save
+                                    componentState.isAutoSave = false;
+                                } else {
+                                    // this component did not trigger the save
+                                    componentState.isAutoSave = true;
+                                }
                             }
-                            
+
                             // add the student work object to our components array
                             componentStates.push(componentState);
                         }
@@ -470,31 +527,49 @@ define(['app'], function(app) {
         }
         
         /**
-         * Listen for the componentSaveClicked event which occurs when a 
-         * component has had its save button clicked
+         * Listen for the componentSaveTriggered event which occurs when a
+         * component is requesting student data to be saved
          */
-        $scope.$on('componentSaveClicked', angular.bind(this, function(event, args) {
-            var saveTriggeredBy = 'saveButton';
-            
-            /*
-             * obtain the component states from the children and save them
-             * to the server
-             */
-            this.createAndSaveComponentStates(saveTriggeredBy);
+        $scope.$on('componentSaveTriggered', angular.bind(this, function(event, args) {
+            var isAutoSave = false;
+
+            if (args != null) {
+                var nodeId = args.nodeId;
+                var componentId = args.componentId;
+
+                if (nodeId != null && componentId != null) {
+                    if (this.nodeId == nodeId && this.nodeContainsComponent(componentId)) {
+                        /*
+                         * obtain the component states from the children and save them
+                         * to the server
+                         */
+                        this.createAndSaveComponentStates(isAutoSave, componentId);
+                    }
+                }
+            }
         }));
         
         /**
-         * Listen for the componentSubmitClicked event which occurs when a
-         * component has had its submit button clicked
+         * Listen for the componentSubmitTriggered event which occurs when a
+         * component is requesting student data to be submitted
          */
-        $scope.$on('componentSubmitClicked', angular.bind(this, function(event, args) {
-            var saveTriggeredBy = 'submitButton';
-            
-            /*
-             * obtain the component states from the children and save them
-             * to the server
-             */
-            this.createAndSaveComponentStates(saveTriggeredBy);
+        $scope.$on('componentSubmitTriggered', angular.bind(this, function(event, args) {
+            var isAutoSave = false;
+
+            if (args != null) {
+                var nodeId = args.nodeId;
+                var componentId = args.componentId;
+
+                if (nodeId != null && componentId != null) {
+                    if (this.nodeId == nodeId && this.nodeContainsComponent(componentId)) {
+                        /*
+                         * obtain the component states from the children and save them
+                         * to the server
+                         */
+                        this.createAndSaveComponentStates(isAutoSave, componentId);
+                    }
+                }
+            }
         }));
         
         /**
@@ -630,9 +705,9 @@ define(['app'], function(app) {
         };
         
         this.nodeUnloaded = function(nodeId) {
-            var saveTriggeredBy = 'exitNode';
+            var isAutoSave = true;
 
-            this.createAndSaveComponentStates(saveTriggeredBy);
+            this.createAndSaveComponentStates(isAutoSave);
 
             // save nodeExited event
             var componentId = null;
@@ -712,8 +787,6 @@ define(['app'], function(app) {
              * the VLE. This will perform saving before exiting.
              */
             this.logOutListener = $scope.$on('exit', angular.bind(this, function(event, args) {
-                
-                var saveTriggeredBy = 'exit';
                 
                 // stop the auto save interval for this node
                 this.stopAutoSaveInterval();

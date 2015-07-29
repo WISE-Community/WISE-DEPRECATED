@@ -37,7 +37,10 @@ define(['app', 'angular'], function(app, angular) {
         
         // whether this part is showing previous work
         this.isShowPreviousWork = false;
-        
+
+        // whether the student work is for a submit
+        this.isSubmit = false;
+
         // will hold the class responses
         this.classResponses = [];
         
@@ -46,10 +49,7 @@ define(['app', 'angular'], function(app, angular) {
         
         // map from component state id to response
         this.responsesMap = {};
-        
-        // used to hold a string that declares what triggered the save
-        this.saveTriggeredBy = null;
-        
+
         /**
          * Perform setup of the component
          */
@@ -168,16 +168,15 @@ define(['app', 'angular'], function(app, angular) {
          * Called when the student clicks the save button
          */
         this.saveButtonClicked = function() {
-            this.saveTriggeredBy = 'saveButton';
-            
-            $scope.$emit('componentSaveClicked');
+
+            // tell the parent node that this component wants to save
+            $scope.$emit('componentSaveTriggered', {nodeId: this.nodeId, componentId: this.componentId});
         };
         
         /**
          * Called when the student clicks the submit button
          */
         this.submitButtonClicked = function() {
-            this.saveTriggeredBy = 'submitButton';
             this.isSubmit = true;
             
             // check if we need to lock the component after the student submits
@@ -246,16 +245,16 @@ define(['app', 'angular'], function(app, angular) {
                     // if this step is replying, set the component state id replying to
                     studentData.componentStateIdReplyingTo = this.componentStateIdReplyingTo;
                 }
-                
-                if(this.saveTriggeredBy != null) {
-                    // set the saveTriggeredBy value
-                    componentState.saveTriggeredBy = this.saveTriggeredBy;
-                }
-                
+
                 if (this.isSubmit) {
                     // the student submitted this work
                     studentData.isSubmit = this.isSubmit;
-                    componentState.isSubmit = this.isSubmit;
+
+                    /*
+                     * reset the isSubmit value so that the next component state
+                     * doesn't maintain the same value
+                     */
+                    this.isSubmit = false;
                 }
                 
                 componentState.studentData = studentData;
@@ -739,9 +738,9 @@ define(['app', 'angular'], function(app, angular) {
                 
                 $scope.discussionController.isSubmit = true;
             }
-            
-            // tell the parent that the submit button was clicked
-            $scope.$emit('componentSubmitClicked');
+
+            // tell the parent node that this component wants to submit
+            $scope.$emit('componentSubmitTriggered', {nodeId: $scope.discussionController.nodeId, componentId: $scope.discussionController.componentId});
         };
         
         /**

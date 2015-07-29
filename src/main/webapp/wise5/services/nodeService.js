@@ -358,13 +358,19 @@ define(['configService', 'studentDataService'], function(configService, studentD
                     var componentState = componentStates[c];
                     
                     if (componentState != null) {
-                        
-                        var isSubmit = componentState.isSubmit;
-                        
-                        // check if the isSubmit flag is true
-                        if (isSubmit) {
-                            result = true;
-                            break;
+
+                        // get the student data
+                        var studentData = componentState.studentData;
+
+                        if (studentData != null) {
+
+                            var isSubmit = studentData.isSubmit;
+
+                            // check if the isSubmit flag is true
+                            if (isSubmit) {
+                                result = true;
+                                break;
+                            }
                         }
                     }
                 }
