@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2008-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -40,10 +40,9 @@ import org.wise.portal.service.newsitem.NewsItemService;
 /**
  * @author Hiroki Terashima
  * @author Patrick Lawler
- * @version $Id:$
  */
 @Controller
-@RequestMapping(value={
+@RequestMapping(value = {
 		"/admin/news/managenewsitems.html",
 		"/admin/news/addnewsitems.html",
 		"/admin/news/editnewsitem.html"})
@@ -69,13 +68,12 @@ public class NewsItemController {
 	@RequestMapping(method = RequestMethod.GET)
 	protected String handleGET(
 			HttpServletRequest request,
-			HttpServletResponse response,
 			ModelMap modelMap) throws Exception {
 		String action = request.getParameter(ACTION);
 		String newsItemId = request.getParameter(NEWS_ITEM_ID);
 
 		if ("edit".equals(action)) {
-			modelMap.put(NEWS_ITEM, newsItemService.retrieveById(Long.parseLong(newsItemId)));
+			modelMap.put(NEWS_ITEM, newsItemService.retrieveById(Integer.parseInt(newsItemId)));
 			return "admin/news/editnewsitem";
 		} else if ("add".equals(action)) {
 			// do nothing, just return add news item page
@@ -95,11 +93,11 @@ public class NewsItemController {
 		String newsItemId = request.getParameter(NEWS_ITEM_ID);
 
 		if ("remove".equals(action)) {
-			newsItemService.deleteNewsItem(Long.parseLong(newsItemId));
+			newsItemService.deleteNewsItem(Integer.parseInt(newsItemId));
 			response.getWriter().print("success");
 			return null;
 		} else if ("edit".equals(action)) {
-			NewsItem newsItem = newsItemService.retrieveById(Long.parseLong(newsItemId));
+			NewsItem newsItem = newsItemService.retrieveById(Integer.parseInt(newsItemId));
 			String title = request.getParameter(TITLE);
 			String news = request.getParameter(NEWS);
 			String type = request.getParameter(TYPE);

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2014 Regents of the University of California (Regents). Created
+ * Copyright (c) 2008-2015 Regents of the University of California (Regents). Created
  * by TELS, Graduate School of Education, University of California at Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3.
@@ -11,7 +11,7 @@
  *
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  *
@@ -55,13 +55,12 @@ import javax.servlet.http.HttpServletResponse;
  * headers {headerA sheetX 1, headerB sheetX 1, headerC sheetX 1, headerA sheetX 2, headerB sheetX 2, headerC sheetX 3}
  *
  * @author Hiroki Terashima
- * @version $Id:$
  */
 @Controller
 @RequestMapping("/admin/run/mergespreadsheets.html")
 public class MergeSpreadsheetsController {
 
-    @RequestMapping(method=RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST)
     protected ModelAndView onSubmit(
             @RequestParam("uploadFile") MultipartFile uploadFile,
             @RequestParam("mergeColumnTitle") String mergeColumnTitle,

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2008-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -42,8 +42,7 @@ import org.wise.vle.domain.user.UserInfo;
 import org.wise.vle.domain.work.StepWork;
 
 /**
- * @author h
- * @version $Id:$
+ * @author Hiroki Terashima
  */
 @Repository
 public class HibernateUserInfoDao extends AbstractHibernateDao<UserInfo> implements UserInfoDao<UserInfo>{
@@ -82,7 +81,7 @@ public class HibernateUserInfoDao extends AbstractHibernateDao<UserInfo> impleme
 		
 		UserInfo userInfo = null;
 		
-		if(list != null && list.size() > 0) {
+		if (list != null && list.size() > 0) {
 			userInfo = list.get(0);
 		}
 		return userInfo;
@@ -127,7 +126,7 @@ public class HibernateUserInfoDao extends AbstractHibernateDao<UserInfo> impleme
 			//retrieve the UserInfo object for that workgroup id
 			UserInfo currentUserInfo = getUserInfoOrCreateByWorkgroupId(new Long(currentWorkgroupId));
 			
-			if(currentUserInfo != null) {
+			if (currentUserInfo != null) {
 				//add the UserInfo object to our list
 				userInfos.add(currentUserInfo);				
 			}
@@ -159,7 +158,7 @@ public class HibernateUserInfoDao extends AbstractHibernateDao<UserInfo> impleme
 	 * @return a Criterion object with 'or' statements combining all the workgroupIds
 	 */
 	private Criterion createNodeOrCriterion(List<String> workgroupList, int index) {
-		if(index == (workgroupList.size() - 1)) {
+		if (index == (workgroupList.size() - 1)) {
 			/*
 			 * base case if the list has only one element just return a
 			 * restriction with the workgroupId
@@ -214,7 +213,7 @@ public class HibernateUserInfoDao extends AbstractHibernateDao<UserInfo> impleme
             	result = list.get(0);
             	
             	//check if the latest work was done today
-            	if(result.getPostTime().after(today)) {
+            	if (result.getPostTime().after(today)) {
             		//latest work was done today so we will add the user to our array to return it
                 	userInfosThatHaveWorkedToday.add(userInfo);
                 }

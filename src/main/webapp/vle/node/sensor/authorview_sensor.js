@@ -1,7 +1,7 @@
 /**
  * Sets the SensorNode type as an object of this view
  * @constructor
- * @author patrick lawler
+ * @author Patrick Lawler
  */
 View.prototype.SensorNode = {};
 View.prototype.SensorNode.commonComponents = ['StudentResponseBoxSize', 'StarterSentenceAuthoring', 'Prompt', 'LinkTo'];

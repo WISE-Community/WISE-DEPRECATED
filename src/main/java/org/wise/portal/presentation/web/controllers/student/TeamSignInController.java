@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2007-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -76,7 +76,6 @@ import org.wise.portal.service.workgroup.WorkgroupService;
  * they are not already associated.
  *
  * @author Hiroki Terashima
- * @version $Id$
  */
 @Controller
 @SessionAttributes("teamSignInForm")
@@ -165,7 +164,7 @@ public class TeamSignInController {
 		//get the members in the workgroup
 		Set<User> membersInWorkgroup = new HashSet<User>();
 		
-		if(workgroups != null && workgroups.size() > 0) {
+		if (workgroups != null && workgroups.size() > 0) {
 			//get the members in the workgroup
 			membersInWorkgroup = workgroups.get(0).getMembers();
 		}
@@ -227,14 +226,14 @@ public class TeamSignInController {
 				//get a present user id
 				long presentUserId = presentUserIds.getLong(x);
 				
-				if(presentUserId == memberInWorkgroup.getId()) {
+				if (presentUserId == memberInWorkgroup.getId()) {
 					//the user id matches so this memberInWorkgroup is present
 					memberLoggedIn = true;
 					break;
 				}
 			}
 			
-			if(!memberLoggedIn) {
+			if (!memberLoggedIn) {
 				//the memberInWorkgroup is absent
 				absentUserIds.put(memberInWorkgroup.getId());
 			}
@@ -307,7 +306,7 @@ public class TeamSignInController {
 			// do nothing.
 		}
 		
-		if(runId != null) {
+		if (runId != null) {
 			// check to see if the logged-in user is associated with the runId or not before showing the sign in form.
 			try {
 				Run run = runService.retrieveById(runId);
@@ -335,7 +334,7 @@ public class TeamSignInController {
 			 */
 			Workgroup workgroup = studentRunInfo.getWorkgroup();
 			
-			if(workgroup != null) {
+			if (workgroup != null) {
 				//get the members in the workgroup and pre-populate the username fields
 				Set<User> members = workgroup.getMembers();
 
@@ -350,11 +349,11 @@ public class TeamSignInController {
 					String username = member.getUserDetails().getUsername();
 					
 					//check that the username is not the one that is already signed in
-					if(username != null && !username.equals(signedInUsername)) {
-						if(currentNumMembers == 2) {
+					if (username != null && !username.equals(signedInUsername)) {
+						if (currentNumMembers == 2) {
 							//set the username2
 							form.setUsername2(username);
-						} else if(currentNumMembers == 3) {
+						} else if (currentNumMembers == 3) {
 							//set the username3
 							form.setUsername3(username);
 						} else if (currentNumMembers == 4) {
@@ -399,7 +398,7 @@ public class TeamSignInController {
 		String teamSignInFormPath = contextPath+"/student/teamsignin.html";
 
 		String runIdString = request.getParameter("runId");
-		if(runIdString != null) {
+		if (runIdString != null) {
 			teamSignInFormPath += "?runId="+runIdString;
 		}
 

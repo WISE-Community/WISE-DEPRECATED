@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2008-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -32,7 +32,6 @@ import org.wise.portal.domain.workgroup.Workgroup;
 
 /**
  * @author Hiroki Terashima
- * @version $Id$
  */
 public interface OfferingDao<T extends Offering> extends SimpleDao<T> {
 
@@ -42,5 +41,5 @@ public interface OfferingDao<T extends Offering> extends SimpleDao<T> {
 	 * @param offeringId key to the <code>Offering</code> to look up
 	 * @return a Set of Workgroups that belong in the <code>Offering</code>
 	 */
-	public Set<Workgroup> getWorkgroupsForOffering(Long offeringId);
+	Set<Workgroup> getWorkgroupsForOffering(Long offeringId);
 }

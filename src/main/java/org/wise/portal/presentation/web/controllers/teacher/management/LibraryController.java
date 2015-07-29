@@ -23,14 +23,7 @@
  */
 package org.wise.portal.presentation.web.controllers.teacher.management;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -46,12 +39,12 @@ import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.project.ProjectService;
 
 /**
- * Controller for WISE library page
+ * Controller for WISE Project library pages (for anonymous users and teachers)
  * @author Hiroki Terashima
+ * @author Geoffrey Kwan
  * @author Jonathan Lim-Breitbart
  */
 @Controller
-@RequestMapping("/teacher/management/library.html")
 public class LibraryController {
 	
 	// path to project thumb image relative to project folder
@@ -66,9 +59,12 @@ public class LibraryController {
 	@Autowired
 	private Properties wiseProperties;
 
-	@RequestMapping(method = RequestMethod.GET)
-	protected String handleRequestInternal(
-			ModelMap modelMap) throws Exception {
+	/**
+	 * Handles request for teacher's project library, which includes both public projects
+	 *  and projects that the teacher owns, is shared with, and has bookmarked.
+	 */
+	@RequestMapping(value = "/teacher/management/library.html", method = RequestMethod.GET)
+	protected String handleGetTeacherProjectLibrary(ModelMap modelMap) throws Exception {
 
 		User user = ControllerUtil.getSignedInUser();
 		
@@ -101,6 +97,7 @@ public class LibraryController {
 				projectIds.add((Long) ownedProject.getId());				
 			}
 		}
+
 		// if project is in WISE library, remove from owned projects list (avoid duplicates)
 		ownedProjectsList.removeAll(ownedRemove);
 		
@@ -145,8 +142,8 @@ public class LibraryController {
 		allProjects.addAll(sharedProjectsList);
 		allProjects.addAll(libraryProjectsList);
 		for (Project p: allProjects) {
-			if (p.isCurrent()){
-				if(p.isDeleted()){
+			if (p.isCurrent()) {
+				if (p.isDeleted()) {
 					// project has been marked as deleted, so increment archived count
 					totalArchivedProjects++;
 				} else {
@@ -160,7 +157,7 @@ public class LibraryController {
 				projectNameMap.put(projectId, projectName);
 				
 				List<Run> runList = this.runService.getProjectRuns(projectId);
-				if (!runList.isEmpty()){
+				if (!runList.isEmpty()) {
 					// add project and date to the maps of project runs
 					// since a project can now only be run once, just use the first run in the list
 					projectRunDateMap.put(projectId, runList.get(0).getStarttime());
@@ -171,8 +168,8 @@ public class LibraryController {
 				projectNameEscapedMap.put(projectId, projectName.replaceAll("\\'", "\\\\'"));
 
 				String url = (String) p.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
-				//String url=null;
-				if(url != null && url != ""){
+
+				if (url != null && url != "") {
 					/*
 					 * add the project url to the map
 					 * e.g.
@@ -181,7 +178,7 @@ public class LibraryController {
 					urlMap.put(projectId, url);
 					
 					int ndx = url.lastIndexOf("/");
-					if(ndx != -1){
+					if (ndx != -1) {
 						/*
 						 * add project thumb url to projectThumbMap. for now this is the same (/assets/project_thumb.png)
 						 * for all projects but this could be overwritten in the future
@@ -221,5 +218,42 @@ public class LibraryController {
 		modelMap.put("projectRunIdMap", projectRunIdMap);
 		modelMap.put("user", user);
 		return "teacher/management/library";
+	}
+
+	/**
+	 * Handles request for public project library
+	 */
+	@RequestMapping(value = "/projectlibrary", method = RequestMethod.GET)
+	protected String handleGETPublicProjectLibrary(ModelMap modelMap) throws Exception {
+
+		List<Project> projectList = this.projectService.getLibraryProjectList();
+		Map<Long, String> projectThumbMap = new TreeMap<Long, String>();  // maps projectId to url where its thumbnail can be found
+		String curriculumBaseWWW = this.wiseProperties.getProperty("curriculum_base_www");
+
+		List<Project> currentProjectList = new ArrayList<Project>();
+		for (Project p : projectList) {
+			if (p.isCurrent()) {
+				currentProjectList.add(p);
+				String url = (String) p.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
+
+				if (url != null && url != "") {
+
+					int ndx = url.lastIndexOf("/");
+					if (ndx != -1) {
+                            /*
+							 * add project thumb url to projectThumbMap. for now this is the same (/assets/project_thumb.png)
+							 * for all projects but this could be overwritten in the future
+							 * e.g.
+							 * /253/assets/projectThumb.png
+							 */
+						projectThumbMap.put((Long) p.getId(), curriculumBaseWWW + url.substring(0, ndx) + PROJECT_THUMB_PATH);
+					}
+				}
+			}
+		}
+
+		modelMap.put("libraryProjectsList", currentProjectList);
+		modelMap.put("projectThumbMap", projectThumbMap);
+		return "projectlibrary";
 	}
 }

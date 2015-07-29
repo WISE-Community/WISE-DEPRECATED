@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2006-2014 Encore Research Group, University of Toronto
+ * Copyright (c) 2006-2015 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -24,22 +24,22 @@ import org.wise.portal.domain.Persistable;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 
 /**
+ * User Domain Object
  * @author Cynick Young
  * @author Laurel Williams
- * @version $Id$
  */
 public interface User extends Persistable {
 
-    public static final String CURRENT_USER_SESSION_KEY = "CURRENT_USER";
+    String CURRENT_USER_SESSION_KEY = "CURRENT_USER";
 
-    public Long getId();
+    Long getId();
 
     /**
      * Gets the UserDetails object.
      * 
      * @return the userDetails
      */
-    public abstract MutableUserDetails getUserDetails();
+    MutableUserDetails getUserDetails();
 
     /**
      * Sets the UserDetails object
@@ -47,19 +47,19 @@ public interface User extends Persistable {
      * @param userDetails
      *            the userDetails to set
      */
-    public abstract void setUserDetails(MutableUserDetails userDetails);
+    void setUserDetails(MutableUserDetails userDetails);
 
     /**
      * Returns true if this use is an admin, false otherwise.
      * 
      * @return boolean
      */
-    public boolean isAdmin();
+    boolean isAdmin();
     
     /**
      * Returns true if this use is a trusted author, false otherwise
      * 
      * @return boolean
      */
-    public boolean isTrustedAuthor();
+    boolean isTrustedAuthor();
 }

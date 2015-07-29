@@ -35,6 +35,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.wise.portal.domain.run.Run;
+import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.offering.RunService;
 
@@ -56,14 +57,13 @@ public class ViewAnnouncementsController {
 	
 	private static final String PREVIOUS_LOGIN = "previousLoginTime";
 	
-	@RequestMapping(method=RequestMethod.GET)
+	@RequestMapping(method = RequestMethod.GET)
 	protected ModelAndView handleRequestInternal(
 			HttpServletRequest request) throws Exception {
 		String runIdsStr = request.getParameter(RUNID);
 		String [] runIds = runIdsStr.split(",");
 		
 		ModelAndView modelAndView = new ModelAndView();
-    	ControllerUtil.addUserToModelAndView(modelAndView);
 		List<Run> runs = new ArrayList<Run>();
 		for (String runId : runIds) {
 			Run run = runService.retrieveById(new Long(runId));			
@@ -80,7 +80,9 @@ public class ViewAnnouncementsController {
 			// if there was an exception parsing previous last login time, such as user appending pLT=1302049863000\, assume this is the lasttimelogging in
 			previousLoginTime = cal.getTime();
 		}
-		
+
+		User user = ControllerUtil.getSignedInUser();
+		modelAndView.addObject("user", user);
 		modelAndView.addObject(PREVIOUS_LOGIN, previousLoginTime);
 		modelAndView.addObject(RUNS, runs);
 		return modelAndView;

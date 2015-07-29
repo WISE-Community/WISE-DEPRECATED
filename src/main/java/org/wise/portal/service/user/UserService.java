@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2014 Encore Research Group, University of Toronto
+ * Copyright (c) 2007-2015 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -34,8 +34,6 @@ import org.wise.portal.service.authentication.DuplicateUsernameException;
  * 
  * @author Cynick Young
  * @author Laurel Williams
- * 
- * @version $Id$
  */
 public interface UserService {
 
@@ -49,7 +47,7 @@ public interface UserService {
 	 * @throws DuplicateUsernameException
 	 *             If username is not unique.
 	 */
-	public User createUser(MutableUserDetails userDetails)
+	User createUser(MutableUserDetails userDetails)
 			throws DuplicateUsernameException;
 	
 	/**
@@ -59,7 +57,7 @@ public interface UserService {
 	 *            that has valid authentication credentials
 	 * @return <code>User</code> associated with the given user details
 	 */
-	public User retrieveUser(UserDetails userDetails);
+	User retrieveUser(UserDetails userDetails);
 
 	/**
 	 * Retrieve user with the give username
@@ -67,7 +65,7 @@ public interface UserService {
 	 * @param username
 	 * @return <code>User</code> associated with the given username
 	 */
-	public User retrieveUserByUsername(String username);
+	User retrieveUserByUsername(String username);
 
 	/**
 	 * Retrieve users with a similar username as the one provided
@@ -76,7 +74,7 @@ public interface UserService {
 	 * @param username
 	 * @return <code>User</code> associated with the given username
 	 */
-	public List<User> retrieveUsersByUsername(String username);
+	List<User> retrieveUsersByUsername(String username);
 
 	/**
 	 * Retrieve users with the given emailAddress
@@ -84,7 +82,7 @@ public interface UserService {
 	 * @param emailAddress
 	 * @return <code>Users</code> associated with the given emailaddress
 	 */
-	public List<User> retrieveUserByEmailAddress(String emailAddress);
+	List<User> retrieveUserByEmailAddress(String emailAddress);
 
 	/**
 	 * Retrieve a list of users whose accounts have been disabled
@@ -92,7 +90,7 @@ public interface UserService {
 	 * @param emailAddress
 	 * @return <code>Users</code> whose accounts have been disabled
 	 */
-	public List<User> retrieveDisabledUsers();
+	List<User> retrieveDisabledUsers();
 	
 	/**
 	 * Encodes a new password and updates a user in the persistent data store.
@@ -104,7 +102,7 @@ public interface UserService {
 	 *            this user
 	 * @return The user with the newly encoded password.
 	 */
-	public User updateUserPassword(final User user, String newPassword);
+	User updateUserPassword(final User user, String newPassword);
 
 	/**
 	 * Gets all users from persistent data store.
@@ -114,14 +112,14 @@ public interface UserService {
 	 * 
 	 * @return a Set of all users.
 	 */
-	public List<User> retrieveAllUsers();
+	List<User> retrieveAllUsers();
 	
 	/**
 	 * Returns all usernames from persistent data store.
 	 * 
 	 * @return
 	 */
-	public List<String> retrieveAllUsernames();
+	List<String> retrieveAllUsernames();
 	
 	/**
 	 * Retrieves User domain object using unique userId
@@ -133,19 +131,19 @@ public interface UserService {
 	 * @throws ObjectNotFoundException when userId
 	 *      cannot be used to find the existing user
 	 */
-	public User retrieveById(Long userId) throws ObjectNotFoundException;
+	User retrieveById(Long userId) throws ObjectNotFoundException;
 	
 	/**
 	 * Updates the existing <code>MutableUserDetails</code> object
 	 * @param userDetails
 	 */
-	public void updateUser(User user);
+	void updateUser(User user);
 	
 	/**
 	 * Retrieves Users by a given field (eg username, gender), search type (eg =, like)
 	 * search term (user provided) and classVar (eg teacher or studentUserDetails)
 	 */
-	public List<User> retrieveByField(String field, String type, Object term, String classVar);
+	List<User> retrieveByField(String field, String type, Object term, String classVar);
 	
     /**
      * Given an array of fields and an array of values and classVar, retrieves a list
@@ -164,12 +162,12 @@ public interface UserService {
      * @param classVar 'studentUserDetails' or 'teacherUserDetails'
      * @return a list of Users that have matching values for the given fields
      */
-	public List<User> retrieveByFields(String[] fields, String[] values, String classVar);
+	List<User> retrieveByFields(String[] fields, String[] values, String classVar);
 	
 	/**
 	 * Get the User object given the reset password key
 	 * @param resetPasswordKey an alphanumeric string
 	 * @return a User object or null if there is no user with the given reset password key
 	 */
-	public User retrieveByResetPasswordKey(String resetPasswordKey);
+	User retrieveByResetPasswordKey(String resetPasswordKey);
 }

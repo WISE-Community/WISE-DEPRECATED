@@ -16,7 +16,7 @@
 }
 </style>
 <script type="text/javascript">
-function removeAnnouncement(runId, announcementId, announcementTitle) {
+function removeAnnouncement(announcementId, announcementTitle) {
 	var doRemove = confirm("Remove \""+announcementTitle+"\"?");
 	if (doRemove) {
 		$("#removeAnnouncementForm_"+announcementId).submit();
@@ -45,13 +45,13 @@ function removeAnnouncement(runId, announcementId, announcementTitle) {
 							</span> 
 							<span class="aDate">(<fmt:formatDate value="${announcement.timestamp}" type="both" timeStyle="short" dateStyle="medium" />)</span>
 							<div class="aBody">${announcement.announcement}</div>
-							<a href="editannouncement.html?runId=${run.id}&announcementId=${announcement.id}"><spring:message code="teacher.run.announcement.manageannouncement.edit"/></a>
-							<a onclick="removeAnnouncement('${run.id}','${announcement.id}', '${announcement.title}');"><spring:message code="teacher.run.announcement.manageannouncement.delete"/></a>
+							<a href="editannouncement?runId=${run.id}&announcementId=${announcement.id}"><spring:message code="teacher.run.announcement.manageannouncement.edit"/></a>
+							<a onclick="removeAnnouncement('${announcement.id}', '${announcement.title}');"><spring:message code="teacher.run.announcement.manageannouncement.delete"/></a>
 							<div style="display:hidden">
 								<form id="removeAnnouncementForm_${announcement.id}" method="POST" action="manageannouncement.html">
-									<input type="hidden" name="command" value="remove"></input>
-									<input type="hidden" name="runId" value="${run.id}"></input>
-									<input type="hidden" name="announcementId" value="${announcement.id}"></input>
+									<input type="hidden" name="command" value="remove" />
+									<input type="hidden" name="runId" value="${run.id}" />
+									<input type="hidden" name="announcementId" value="${announcement.id}" />
 								</form>
 							</div>
 						</li>
@@ -65,7 +65,8 @@ function removeAnnouncement(runId, announcementId, announcementTitle) {
 	</div>
 	<div class="sectionHead"></div>
 	<div class="dialogSection">
-		<input type="button" value="<spring:message code="teacher.run.announcement.manageannouncement.newAnnouncement"/>" onClick="window.location='createannouncement.html?runId=${run.id}'"/> 
+		<input type="button" value="<spring:message code="teacher.run.announcement.manageannouncement.newAnnouncement"/>"
+			   onClick="window.location='createannouncement.html?runId=${run.id}'"/>
 	</div>
 	<div class="dialogSection">
 		<p class="info"><spring:message code="teacher.run.announcement.manageannouncement.newAnnouncementsWillBeShown"/></p>

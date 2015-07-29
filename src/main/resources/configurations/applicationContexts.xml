@@ -977,20 +977,21 @@
 		<property name="accessDecisionManager" ref="urlAccessDecisionManager" />
 		<property name="securityMetadataSource">
 			<sec:filter-security-metadata-source use-expressions="false">
+				<sec:intercept-url pattern="/admin*" access="ROLE_ADMINISTRATOR,ROLE_RESEARCHER" />
+				<sec:intercept-url pattern="/student/join" access="ROLE_ANONYMOUS,ROLE_USER" />
+				<sec:intercept-url pattern="/student*" access="ROLE_STUDENT,ROLE_TEACHER,ROLE_ADMINISTRATOR,ROLE_RESEARCHER" />
+				<sec:intercept-url pattern="/student.html" access="ROLE_ANONYMOUS,ROLE_USER" />
+				<sec:intercept-url pattern="/teacher/join" access="ROLE_ANONYMOUS,ROLE_USER" />
+				<sec:intercept-url pattern="/teacher*" access="ROLE_TEACHER,ROLE_ADMINISTRATOR,ROLE_RESEARCHER" />
+				<sec:intercept-url pattern="/author/**/*.html" access="ROLE_TEACHER,ROLE_ADMINISTRATOR,ROLE_RESEARCHER" />
 				<sec:intercept-url pattern="/portal/javascript/**" access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/portal/themes/**" access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/index.html" access="ROLE_ANONYMOUS,ROLE_USER" />
+				<sec:intercept-url pattern="/projectInfo" access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/vle/**/*.html" access="ROLE_ANONYMOUS,ROLE_USER" />
-				<sec:intercept-url pattern="/student.html" access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/wise5/**/*.html" access="ROLE_ANONYMOUS,ROLE_USER" />
-				<sec:intercept-url pattern="/student/join" access="ROLE_ANONYMOUS,ROLE_USER" />
-				<sec:intercept-url pattern="/student/**/*.html" access="ROLE_STUDENT,ROLE_TEACHER,ROLE_ADMINISTRATOR,ROLE_RESEARCHER" />
 				<sec:intercept-url pattern="/previewproject*.html" access="ROLE_ANONYMOUS,ROLE_USER" />
-				<sec:intercept-url pattern="/teacher/join" access="ROLE_ANONYMOUS,ROLE_USER" />
-				<sec:intercept-url pattern="/teacher/projects/projectinfo.html" access="ROLE_ANONYMOUS,ROLE_USER" />
-				<sec:intercept-url pattern="/teacher/**/*.html" access="ROLE_TEACHER,ROLE_ADMINISTRATOR,ROLE_RESEARCHER" />
 				<sec:intercept-url pattern="/checkforexistingaccount.html" access="ROLE_ANONYMOUS,ROLE_USER" />
-				<sec:intercept-url pattern="/author/**/*.html" access="ROLE_TEACHER,ROLE_ADMINISTRATOR,ROLE_RESEARCHER" />
 				<sec:intercept-url pattern="/request/info.html" access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/cRater.html" access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/login" access="ROLE_ANONYMOUS,ROLE_USER" />
@@ -998,11 +999,10 @@
 				<sec:intercept-url pattern="/metadata.html" access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/runinfo.html" access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/vleconfig" access="ROLE_ANONYMOUS,ROLE_USER" />
-				<sec:intercept-url pattern="/userinfo.html" access="ROLE_ANONYMOUS,ROLE_USER" />
+				<sec:intercept-url pattern="/userInfo" access="ROLE_USER" />
 				<sec:intercept-url pattern="/pages/**/*.html" access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/contact/*.html" access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/forgotaccount/**/*.html" access="ROLE_ANONYMOUS,ROLE_USER" />
-				<sec:intercept-url pattern="/admin/**/*.html" access="ROLE_ADMINISTRATOR,ROLE_RESEARCHER" />
 				<sec:intercept-url pattern="/login/impersonate" access="ROLE_ADMINISTRATOR,ROLE_RESEARCHER" />
                 <sec:intercept-url pattern="/logout/impersonate" access="ROLE_ANONYMOUS" />  <!-- this ensures that no-one can switch back to original user -->
 				<sec:intercept-url pattern="/authorize.html" access="ROLE_ANONYMOUS,ROLE_USER" />

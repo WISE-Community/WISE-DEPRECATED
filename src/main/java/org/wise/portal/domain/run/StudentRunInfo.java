@@ -23,7 +23,6 @@
  */
 package org.wise.portal.domain.run;
 
-
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.user.User;
@@ -51,8 +50,6 @@ public class StudentRunInfo implements Comparable<StudentRunInfo>{
 	private Workgroup workgroup;
 	
 	private Group group;
-	
-	private String startProjectUrl;
 
 	/**
 	 * @param studentUser the studentUser to set

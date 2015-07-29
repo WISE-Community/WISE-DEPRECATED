@@ -1,7 +1,7 @@
 /**
  * A DuplicateNode acts as a proxy for any node type.
  * 
- * @author patrick lawler
+ * @author Patrick Lawler
  */
 DuplicateNode.prototype = new Node;
 DuplicateNode.prototype.constructor = DuplicateNode;

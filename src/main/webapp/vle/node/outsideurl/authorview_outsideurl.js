@@ -1,7 +1,7 @@
 /**
  * Sets the OutsideUrlNode type as an object of this view
  * @constructor
- * @author patrick lawler
+ * @author Patrick Lawler
  */
 View.prototype.OutsideUrlNode = {};
 

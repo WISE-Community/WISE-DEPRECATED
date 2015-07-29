@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2014 Encore Research Group, University of Toronto
+ * Copyright (c) 2007-2015 Encore Research Group, University of Toronto
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -30,10 +30,7 @@ import org.wise.portal.domain.authentication.impl.PersistentAclEntry;
  * services and became bogged down, so went back to jdbc versions. Keeping this
  * class around in case we want to try again later.
  * 
- * 
  * @author Cynick Young
- *
- * @version $Id$
  */
 @Repository
 public class HibernateAclEntryDao extends AbstractHibernateDao<ImmutableAclEntry> implements
@@ -56,7 +53,5 @@ public class HibernateAclEntryDao extends AbstractHibernateDao<ImmutableAclEntry
     protected String getFindAllQuery() {
         return FIND_ALL_QUERY;
     }
-
-
 
 }

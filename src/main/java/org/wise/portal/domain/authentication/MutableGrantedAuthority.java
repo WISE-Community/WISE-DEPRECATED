@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2006-2014 Encore Research Group, University of Toronto
+ * Copyright (c) 2006-2015 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -30,8 +30,6 @@ import org.wise.portal.domain.Persistable;
  * could be Admin, User, Manager, and Bank Teller roles.
  * 
  * @author Cynick Young
- * 
- * @version $Id$
  * @see org.acegisecurity.GrantedAuthority
  */
 public interface MutableGrantedAuthority extends GrantedAuthority, Persistable {
@@ -41,5 +39,5 @@ public interface MutableGrantedAuthority extends GrantedAuthority, Persistable {
      * 
      * @param authority
      */
-    public void setAuthority(String authority);
+    void setAuthority(String authority);
 }

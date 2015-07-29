@@ -37,7 +37,7 @@ $(document).ready(function() {
 </head>
 <body>
 <span id="portalId" style="display:none">${portal.id}</span>
-<h5 style="color:#0000CC;"><a href="${contextPath}/admin/index.html"><spring:message code="returnToMainAdminPage" /></a></h5>
+<h5 style="color:#0000CC;"><a href="${contextPath}/admin"><spring:message code="returnToMainAdminPage" /></a></h5>
 <br/><br/>
 <br/>
 name: ${portal.portalName}
@@ -78,8 +78,8 @@ Send WISE statistics to WISE4.org (for research purpose only, no personal data w
 <br/><br/>
 Default Run Survey Template (must be a valid JSON object)<br/>
 <textarea id="defaultSurveyTemplate" rows="20" cols="100">${portal.runSurveyTemplate}</textarea><br/>
-<input id="saveSurveyTemplateButton" type="button" value="Save"></input>
+<input id="saveSurveyTemplateButton" type="button" value="Save" />
 <br/><br/>
-<h5 style="color:#0000CC;"><a href="${contextPath}/admin/index.html"><spring:message code="returnToMainAdminPage" /></a></h5>
+<h5 style="color:#0000CC;"><a href="${contextPath}/admin"><spring:message code="returnToMainAdminPage" /></a></h5>
 </body>
 </html>

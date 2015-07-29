@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2008-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -49,15 +49,12 @@ import org.wise.portal.service.offering.RunService;
  * * periodIds
  * 
  * @author Hiroki Terashima
- * @version $Id$
  */
 @Controller
 public class StudentListController {
 
 	@Autowired
 	private RunService runService;
-
-	protected static final String RUNID_PARAM_KEY = "runId";
 
 	protected static final String RUN = "run";
 
@@ -66,13 +63,12 @@ public class StudentListController {
 	@RequestMapping("/teacher/management/studentlist.html")
 	protected ModelAndView handleRequestInternal(
 			@RequestParam("runId") String runId,
-			HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
+			HttpServletRequest request) throws Exception {
 		User user = ControllerUtil.getSignedInUser();
 		
 		Run run = runService.retrieveById(Long.valueOf(runId));
 
-		if(this.runService.hasRunPermission(run, user, BasePermission.READ)){
+		if (this.runService.hasRunPermission(run, user, BasePermission.READ)) {
 			Set<Group> periods = run.getPeriods();
 			Set<Group> requestedPeriods = new TreeSet<Group>();
 			

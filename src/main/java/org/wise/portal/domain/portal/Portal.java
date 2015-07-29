@@ -40,7 +40,7 @@ public interface Portal extends Persistable {
 	 * 
 	 * @return the sendEmailOnException
 	 */
-	public boolean isSendMailOnException();
+	boolean isSendMailOnException();
 	
 	/**
 	 * Set whether email should be sent when an exception is thrown 
@@ -48,108 +48,108 @@ public interface Portal extends Persistable {
 	 * 
 	 * @param sendEmailOnException the sendEmailOnException to set
 	 */
-	public void setSendMailOnException(boolean sendEmailOnException);
+	void setSendMailOnException(boolean sendEmailOnException);
 	
 	/**
 	 * @return the sendmailProperties
 	 */
-	public Properties getSendmailProperties();
+	Properties getSendmailProperties();
 	
 	/**
 	 * @param sendmailProperties the sendmailProperties to set
 	 */
-	public void setSendmailProperties(Properties sendmailProperties);
+	void setSendmailProperties(Properties sendmailProperties);
 	
 	/**
 	 * Returns this portal's name.
 	 * 
 	 * @return
 	 */
-	public String getPortalName();
+	String getPortalName();
 	
 	/**
 	 * Returns this portal's name.
 	 * 
 	 * @return
 	 */
-	public void setPortalName(String portalName);
+	void setPortalName(String portalName);
 	
 	/**
 	 * @return the comments
 	 */
-	public String getComments();
+	String getComments();
 	
 	/**
 	 * @param comments the comments to set
 	 */
-	public void setComments(String comments);
+	void setComments(String comments);
 
 	/**
 	 * @return the settings
 	 */
-	public String getSettings();
+	String getSettings();
 	
 	/**
 	 * @param settings the settings to set
 	 */
-	public void setSettings(String settings);
+	void setSettings(String settings);
 	
 	/**
 	 * can users log into this portal at this time?
 	 * @return
 	 */
-	public boolean isLoginAllowed();
+	boolean isLoginAllowed();
 	
 	/**
 	 * can users log into this portal at this time?
 	 * @param loginAllowed
 	 */
-	public void setLoginAllowed(boolean loginAllowed);
+	void setLoginAllowed(boolean loginAllowed);
 	
 	
 	/**
 	 * Send WISE usage statistics to central hub?
 	 * @return
 	 */
-	public boolean isSendStatisticsToHub();
+	boolean isSendStatisticsToHub();
 	
 	/**
 	 * Send WISE usage statistics to central hub?
 	 * @param loginAllowed
 	 */
-	public void setSendStatisticsToHub(boolean doSendStatistics);
+	void setSendStatisticsToHub(boolean doSendStatistics);
 	
 	/**
 	 * @return the address
 	 */
-	public String getAddress();
+	String getAddress();
 
 	/**
 	 * @param address the address to set
 	 */
-	public void setAddress(String address);
+	void setAddress(String address);
 	
 	/**
 	 * Gets the Googlemap key used by this portal.
 	 * @return
 	 */
-	public String getGoogleMapKey();
+	String getGoogleMapKey();
 
 	/**
 	 * Gets the Googlemap key used by this portal.
 	 * @return
 	 */
-	public void setGoogleMapKey(String googleMapKey);
+	void setGoogleMapKey(String googleMapKey);
 
 	/**
 	 * Get the Run Survey Template string
 	 * @return run survey template string
 	 */
-	public String getRunSurveyTemplate();
+	String getRunSurveyTemplate();
 	
 	/**
 	 * Set the Run Survey Template string
 	 * @param run survey template string
 	 */
-	public void setRunSurveyTemplate(String runSurveyTemplate);
+	void setRunSurveyTemplate(String runSurveyTemplate);
 }

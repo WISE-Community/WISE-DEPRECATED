@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2007-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -33,10 +33,8 @@ import org.wise.portal.domain.group.impl.GroupParameters;
 import org.wise.portal.domain.user.User;
 
 /**
- * @author Hiroki Terashima
- * @version $Id$
- * 
  * Performs actions on groups which should be transactional.
+ * @author Hiroki Terashima
  */
 public interface GroupService {
 
@@ -53,7 +51,7 @@ public interface GroupService {
      * @return The Group that was created
      */
 //  @Secured( { "ROLE_TEACHER", "ROLE_ADMINISTRATOR", "ROLE_RESEARCHER", "ROLE_TA" })
-    public Group createGroup(GroupParameters groupParameters);
+    Group createGroup(GroupParameters groupParameters);
 
     /**
      * Update an existing group with values in groupParameters
@@ -63,7 +61,7 @@ public interface GroupService {
      *           attribute values
      * @throws ObjectNotFoundException when the group to modify does not exist
      */
-    public void updateGroup(GroupParameters groupParameters) throws ObjectNotFoundException;
+    void updateGroup(GroupParameters groupParameters) throws ObjectNotFoundException;
     
     /**
      * Change an existing group name.
@@ -74,7 +72,7 @@ public interface GroupService {
      * @param name
      *            <code>String</code> name of new group
      */
-    public void changeGroupName(Group group, String newName);
+    void changeGroupName(Group group, String newName);
 
     /**
      * Makes a group into a child of another group
@@ -82,7 +80,7 @@ public interface GroupService {
      * @throws CyclicalGroupException
      *             when this action creates a cycle
      */
-    public void moveGroup(Group newParent, Group groupToBeMoved)
+    void moveGroup(Group newParent, Group groupToBeMoved)
             throws CyclicalGroupException;
 
     /**
@@ -95,7 +93,7 @@ public interface GroupService {
      * @param membersToAdd
      *            <code>Set</code> of users to add to the group
      */
-    public void addMembers(Group group, Set<User> membersToAdd);
+    void addMembers(Group group, Set<User> membersToAdd);
     
     /**
      * Adds the specified user to the specified group
@@ -103,7 +101,7 @@ public interface GroupService {
      * @param studentUser
      * @throws ObjectNotFoundException 
      */
-	public void addMember(Long groupId, User user) throws ObjectNotFoundException;
+	void addMember(Long groupId, User user) throws ObjectNotFoundException;
 
     /**
      * Removes the members from an already-existing group. If the member does
@@ -114,7 +112,7 @@ public interface GroupService {
      * @param membersToRemove
      *              <code>Set</code> containing users to remove from the group.
      */
-    public void removeMembers(Group group, Set<User> membersToRemove);
+    void removeMembers(Group group, Set<User> membersToRemove);
 
     /**
      * Gets all the groups available.
@@ -122,7 +120,7 @@ public interface GroupService {
      * @return <code>List</code> of <code>Group</code>
      */
     @Secured( { "ROLE_USER", "AFTER_ACL_COLLECTION_READ" })
-    public List<Group> getGroups();
+    List<Group> getGroups();
     
     /**
      * Retrieves Group domain object using unique groupId
@@ -134,6 +132,6 @@ public interface GroupService {
      * @throws <code>ObjectNotFoundException</code> when groupId
      *     cannot be used to find an existing group
      */
-    public Group retrieveById(Long groupId) throws ObjectNotFoundException;
+    Group retrieveById(Long groupId) throws ObjectNotFoundException;
 
 }

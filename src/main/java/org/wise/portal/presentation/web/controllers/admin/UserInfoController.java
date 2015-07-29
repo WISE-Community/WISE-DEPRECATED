@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2007-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -46,7 +46,6 @@ import org.wise.portal.service.user.UserService;
 /**
  * Controller for displaying user information
  * @author Sally Ahn
- * @version $Id: $
  */
 @Controller
 public class UserInfoController {
@@ -62,16 +61,15 @@ public class UserInfoController {
 
 	protected final static String USER_INFO_MAP = "userInfoMap";
 	
-	@RequestMapping(value={"/studentinfo.html", "/teacherinfo.html"})
+	@RequestMapping(value = {"/studentinfo.html", "/teacherinfo.html"})
 	protected ModelAndView handleRequestInternal(
-			HttpServletRequest servletRequest,
-			HttpServletResponse servletResponse) throws Exception {
+			HttpServletRequest servletRequest) throws Exception {
 		User signedInUser = ControllerUtil.getSignedInUser();
 		String userName = (String) servletRequest.getParameter("userName");
 		User infoUser = this.userService.retrieveUserByUsername(userName);
 		
-		if(signedInUser.getUserDetails().hasGrantedAuthority(UserDetailsService.ADMIN_ROLE) ||
-				this.studentService.isStudentAssociatedWithTeacher(infoUser, signedInUser)){
+		if (signedInUser.getUserDetails().hasGrantedAuthority(UserDetailsService.ADMIN_ROLE) ||
+				this.studentService.isStudentAssociatedWithTeacher(infoUser, signedInUser)) {
 			MutableUserDetails userDetails = (MutableUserDetails) infoUser.getUserDetails();
 			ModelAndView modelAndView = new ModelAndView();
 			
@@ -83,7 +81,7 @@ public class UserInfoController {
 			
 			modelAndView.addObject(USER_INFO_MAP, userInfo);
 			
-			if(infoUser.getUserDetails().hasGrantedAuthority(UserDetailsService.STUDENT_ROLE)) {
+			if (infoUser.getUserDetails().hasGrantedAuthority(UserDetailsService.STUDENT_ROLE)) {
 				//the user we are looking up is a student
 				modelAndView.addObject("isStudent", true);
 				

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2007-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -52,8 +52,6 @@ import org.wise.portal.service.offering.RunService;
  * @author Geoffrey Kwan
  * @author Patrick Lawler
  * @author Anthony Perritano
- * 
- * @version $Id: $
  */
 @Controller
 public class GradeWorkController {
@@ -64,7 +62,8 @@ public class GradeWorkController {
 	@Autowired
 	Properties wiseProperties;
 
-	@RequestMapping(value={"/classroomMonitor.html", "/teacher/grading/gradework.html", "/teacher/classroomMonitor/classroomMonitor.html", "/teacher/classroomManager"})
+	@RequestMapping(value = {"/classroomMonitor.html", "/teacher/grading/gradework.html",
+			"/teacher/classroomMonitor/classroomMonitor.html", "/teacher/classroomManager"})
 	protected ModelAndView handleRequestInternal(
 			@RequestParam("runId") String runId,
 			HttpServletRequest request,
@@ -79,8 +78,8 @@ public class GradeWorkController {
 		String getRevisions = request.getParameter("getRevisions");
 		
 		String action = request.getParameter("action");
-		if(action != null) {
-			if(action.equals("postMaxScore")) {
+		if (action != null) {
+			if (action.equals("postMaxScore")) {
 				return handlePostMaxScore(request, response, run);
 			}
 		} else {
@@ -92,9 +91,9 @@ public class GradeWorkController {
 				User user = ControllerUtil.getSignedInUser();
 				
 				//check that the user has read or write permission on the run
-				if(user.isAdmin() ||
+				if (user.isAdmin() ||
 						this.runService.hasRunPermission(run, user, BasePermission.WRITE) ||
-						this.runService.hasRunPermission(run, user, BasePermission.READ)){
+						this.runService.hasRunPermission(run, user, BasePermission.READ)) {
 	
 					String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
 
@@ -106,10 +105,10 @@ public class GradeWorkController {
 					String getClassroomMonitorConfigUrl = wiseBaseURL + "/vleconfig?runId=" + run.getId().toString() + "&gradingType=" + gradingType + "&mode=grading&getRevisions=" + getRevisions;
 					
 					//set the permission variable so that we can access it in the .jsp
-					if(this.runService.hasRunPermission(run, user, BasePermission.WRITE)) {
+					if (this.runService.hasRunPermission(run, user, BasePermission.WRITE)) {
 						getGradeWorkUrl += "?loadScriptsIndividually&permission=write";
 						getClassroomMonitorUrl += "?loadScriptsIndividually&permission=write";
-					} else if(this.runService.hasRunPermission(run, user, BasePermission.READ)) {
+					} else if (this.runService.hasRunPermission(run, user, BasePermission.READ)) {
 						getGradeWorkUrl += "?loadScriptsIndividually&permission=read";
 						getClassroomMonitorUrl += "?loadScriptsIndividually&permission=read";
 					}
@@ -133,7 +132,7 @@ public class GradeWorkController {
                         if ("monitor".equals(gradingType)) {
                             modelAndView.addObject("vleurl", getClassroomMonitorUrl);
                             modelAndView.addObject("vleConfigUrl", getClassroomMonitorConfigUrl);
-                        } else if("classroomManager".equals(gradingType)) {
+                        } else if ("classroomManager".equals(gradingType)) {
                             String classroomManagerUrl = wiseBaseURL + "/vle5/classroomManager/index.html";
                             String classroomManagerConfigUrl = wiseBaseURL + "/vleconfig?runId=" + run.getId().toString() + "&gradingType=" + gradingType + "&mode=grading&getRevisions=" + getRevisions;
                             modelAndView.addObject("vleurl", classroomManagerUrl);
@@ -149,7 +148,7 @@ public class GradeWorkController {
 				} else {
 					return new ModelAndView(new RedirectView("../../accessdenied.html"));
 				}
-			} else if( runId != null ) {
+			} else if ( runId != null ) {
 				ModelAndView modelAndView = new ModelAndView();
 				modelAndView.addObject("runId", runId);
 				
@@ -182,7 +181,7 @@ public class GradeWorkController {
 			int maxScore = 0;
 			
 			//check if a max score value was provided
-			if(maxScoreValue != null && !maxScoreValue.equals("")) {
+			if (maxScoreValue != null && !maxScoreValue.equals("")) {
 				//parse the new max score value
 				maxScore = Integer.parseInt(maxScoreValue);	
 			}
@@ -202,7 +201,7 @@ public class GradeWorkController {
 			JSONArray maxScores;
 			
 			//check if there are extras
-			if(extras == null || extras.equals("")) {
+			if (extras == null || extras.equals("")) {
 				//there are no extras so we will have to create it
 				jsonExtras = new JSONObject("{'summary':'','contact':'','title':'','comptime':'','graderange':'','subject':'','techreqs':'','maxScores':[],'author':'','totaltime':''}");
 			} else {
@@ -228,7 +227,7 @@ public class GradeWorkController {
 				String maxScoreObjNodeId = (String) maxScoreObj.get("nodeId");
 				
 				//check if the node id matches the one new one we need to save
-				if(nodeId.equals(maxScoreObjNodeId)) {
+				if (nodeId.equals(maxScoreObjNodeId)) {
 					//it matches so we will update the score
 					maxScoreObj.put("maxScoreValue", maxScore);
 					
@@ -243,7 +242,7 @@ public class GradeWorkController {
 			}
 			
 			//check if we were able to find an existing entry to update it
-			if(!maxScoreUpdated) {
+			if (!maxScoreUpdated) {
 				/*
 				 * we did not find an existing entry to update so we will
 				 * create a new entry

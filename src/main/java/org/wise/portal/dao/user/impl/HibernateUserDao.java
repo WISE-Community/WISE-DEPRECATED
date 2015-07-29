@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2006-2014 Encore Research Group, University of Toronto
+ * Copyright (c) 2006-2015 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -33,12 +33,8 @@ import org.wise.portal.dao.user.UserDao;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.user.impl.UserImpl;
 
-
 /**
  * @author Cynick Young
- * 
- * @version $Id$
- * 
  */
 @Repository
 public class HibernateUserDao extends AbstractHibernateDao<User> implements

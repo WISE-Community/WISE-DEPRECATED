@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2014 Encore Research Group, University of Toronto
+ * Copyright (c) 2007-2015 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -33,7 +33,6 @@ import org.wise.portal.domain.Persistable;
  * 
  * @author Cynick Young
  * 
- * @version $Id$
  * @see org.acegisecurity.acls.sid.Sid
  */
 public interface MutableAclSid extends Sid, Persistable {
@@ -47,7 +46,7 @@ public interface MutableAclSid extends Sid, Persistable {
      *         been created using a granted authority, and <code>null</code>
      *         if this instance has not been initialized properly.
      */
-    public abstract Boolean isPrincipal();
+    Boolean isPrincipal();
 
     /**
      * Gets the <code>Sid</code> as a <code>String</code> if this instance
@@ -57,7 +56,7 @@ public interface MutableAclSid extends Sid, Persistable {
      * @throws UnsupportedOperationException
      *                 if this instance of Sid is not a principal
      */
-    public abstract String getPrincipal();
+    String getPrincipal();
 
     /**
      * Sets the <code>Sid</code> using an <code>Authentication</code>
@@ -66,7 +65,7 @@ public interface MutableAclSid extends Sid, Persistable {
      * @param authentication
      *                to set
      */
-    public abstract void setPrincipal(Authentication authentication);
+    void setPrincipal(Authentication authentication);
 
     /**
      * Sets the <code>Sid</code> using a <code>GrantedAuthority</code>.
@@ -74,7 +73,7 @@ public interface MutableAclSid extends Sid, Persistable {
      * @param grantedAuthority
      *                to set
      */
-    public abstract void setGrantedAuthority(GrantedAuthority grantedAuthority);
+    void setGrantedAuthority(GrantedAuthority grantedAuthority);
 
     /**
      * Gets the <code>Sid</code> as a <code>String</code> if this instance
@@ -84,6 +83,6 @@ public interface MutableAclSid extends Sid, Persistable {
      * @throws UnsupportedOperationException
      *                 if this instance of Sid is not a granted authority
      */
-    public abstract String getGrantedAuthority();
+    String getGrantedAuthority();
 
 }

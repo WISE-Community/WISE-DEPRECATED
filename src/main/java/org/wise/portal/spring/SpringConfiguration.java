@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2014 Encore Research Group, University of Toronto
+ * Copyright (c) 2007-2015 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -24,9 +24,6 @@ package org.wise.portal.spring;
  * Provides a single access point for applicationContext configuration files.
  * 
  * @author Cynick Young
- * 
- * @version $Id$
- * 
  */
 public interface SpringConfiguration {
 
@@ -38,7 +35,7 @@ public interface SpringConfiguration {
      *         defines the location of an applicationContext XML configuration
      *         file used by the Spring container
      */
-    public String[] getRootApplicationContextConfigLocations();
+    String[] getRootApplicationContextConfigLocations();
 
     /**
      * Get the list of XML files used to instantiate the beans within the
@@ -48,5 +45,5 @@ public interface SpringConfiguration {
      *         defines the location of an XML configuration file used by the
      *         DispatcherServlet context
      */
-    public String[] getDispatcherServletContextConfigLocations();
+    String[] getDispatcherServletContextConfigLocations();
 }

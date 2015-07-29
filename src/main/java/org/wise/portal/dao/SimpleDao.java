@@ -36,21 +36,21 @@ public interface SimpleDao<T> {
      * 
      * @param object
      */
-    public void save(T object);
+    void save(T object);
 
     /**
      * Deletes the object from a persistent data store.
      * 
      * @param object
      */
-    public void delete(T object);
+    void delete(T object);
 
     /**
      * Gets a list of objects from a persistent data store.
      * 
      * @return <code>List</code> of objects
      */
-    public List<T> getList();
+    List<T> getList();
     
     /**
      * Retrieves a single object from persistent data store based on the primary key.
@@ -59,5 +59,5 @@ public interface SimpleDao<T> {
      * 
      * @return The object.
      */
-    public T getById(Serializable id) throws ObjectNotFoundException;
+    T getById(Serializable id) throws ObjectNotFoundException;
 }

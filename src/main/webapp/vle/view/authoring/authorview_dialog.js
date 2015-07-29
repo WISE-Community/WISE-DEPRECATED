@@ -1,7 +1,7 @@
 /**
  * Functions specific to the creation and initialization of dialogs
  * 
- * @author patrick lawler
+ * @author Patrick Lawler
  */
 
 /**

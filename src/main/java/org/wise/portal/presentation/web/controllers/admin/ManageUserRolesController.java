@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2008-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -22,7 +22,6 @@
  * REGENTS HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.wise.portal.presentation.web.controllers.admin;
-
 
 import java.util.List;
 
@@ -44,7 +43,6 @@ import org.wise.portal.service.user.UserService;
  * Allows administrators to lookup users and grant/revoke roles
  * 
  * @author Hiroki Terashima
- * @version $Id:$
  */
 @Controller
 @RequestMapping("/admin/account/manageuserroles.html")
@@ -59,7 +57,6 @@ public class ManageUserRolesController {
 	@RequestMapping(method = RequestMethod.GET)
 	protected String handleGET(
 			HttpServletRequest request,
-			HttpServletResponse response,
 			ModelMap modelMap) throws Exception {
 		List<MutableGrantedAuthority> allAuthorities = userDetailsService.retrieveAllAuthorities();
 		modelMap.put("allAuthorities", allAuthorities);
@@ -72,7 +69,6 @@ public class ManageUserRolesController {
 	@RequestMapping(method = RequestMethod.POST)
 	protected String handlePOST(
 			HttpServletRequest request,
-			HttpServletResponse response,
 			ModelMap modelMap) throws Exception {
 		List<MutableGrantedAuthority> allAuthorities = userDetailsService.retrieveAllAuthorities();
 		modelMap.put("allAuthorities", allAuthorities);

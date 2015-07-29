@@ -1,7 +1,7 @@
 /*
  * ext-importstudentasset.js
  * launches the student assets dialog
- * @author hirokiterashima
+ * @author Hiroki Terashima
  */
 svgEditor.addExtension("Import Student Asset", function() {
 	

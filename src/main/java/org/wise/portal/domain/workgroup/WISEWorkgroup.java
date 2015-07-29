@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2008-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -31,7 +31,6 @@ import org.wise.portal.domain.group.Group;
  * Period (which is a <code>Group</code>).
  *
  * @author Hiroki Terashima
- * @version $Id$
  */
 public interface WISEWorkgroup extends Workgroup  {
 
@@ -40,47 +39,47 @@ public interface WISEWorkgroup extends Workgroup  {
 	 * 
 	 * @return <code>Group</code> (Period) that this workgroup belongs in
 	 */
-	public Group getPeriod();
+	Group getPeriod();
 	
 	/**
 	 * Sets the periods that this workgroup belongs in
 	 * 
 	 * @param period the <code>Group</code> to set
 	 */
-	public void setPeriod(Group period);
+	void setPeriod(Group period);
 	
 	/**
 	 * Returns the url that generates this workgroup's work as PDF
 	 * 
 	 * @return the url that generates this workgroup's work as PDF
 	 */
-	public String getWorkPDFUrl();
+	String getWorkPDFUrl();
 
 	/**
 	 * Sets the url that generates this workgroup's work as PDF
 	 * 
 	 * @param url that generates this workgroup's work as PDF
 	 */
-	public void setWorkPDFUrl(String url);
+	void setWorkPDFUrl(String url);
 
 	/**
 	 * @return the externalId
 	 */
-	public Long getExternalId();
+	Long getExternalId();
 
 	/**
 	 * @param externalId the externalId to set
 	 */
-	public void setExternalId(Long externalId);
+	void setExternalId(Long externalId);
 	
 	/**
 	 * @return the teacherWorkgroup if this workgroup is teacher's
 	 * workgroup
 	 */
-	public boolean isTeacherWorkgroup();
+	boolean isTeacherWorkgroup();
 
 	/**
 	 * @param teacherWorkgroup the teacherWorkgroup to set
 	 */
-	public void setTeacherWorkgroup(boolean teacherWorkgroup);
+	void setTeacherWorkgroup(boolean teacherWorkgroup);
 }

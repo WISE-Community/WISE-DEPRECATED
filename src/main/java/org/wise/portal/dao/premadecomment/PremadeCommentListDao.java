@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2008-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -32,8 +32,7 @@ import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 
 /**
- * @author patrick lawler
- * @version $Id:$
+ * @author Patrick Lawler
  */
 public interface PremadeCommentListDao<T extends PremadeCommentList> extends SimpleDao<T>{
 
@@ -43,7 +42,7 @@ public interface PremadeCommentListDao<T extends PremadeCommentList> extends Sim
 	 * @param <code>User</code> user
 	 * @return <code>List<PremadeCommentList></code>
 	 */
-	public List<PremadeCommentList> getListByOwner(User user);
+	List<PremadeCommentList> getListByOwner(User user);
 	
 	/**
 	 * Returns a <code>List<PremadeCommentList></code> that is associated with the given <code>Run</code>.
@@ -51,20 +50,20 @@ public interface PremadeCommentListDao<T extends PremadeCommentList> extends Sim
 	 * @param <code>Run</code> run
 	 * @return <code>List<PremadeCommentList></code>
 	 */
-	public List<PremadeCommentList> getListByRun(Run run);
+	List<PremadeCommentList> getListByRun(Run run);
 	
 	/**
 	 * Returns a List of PremadeCommentList that are associated with the given project id
 	 * @param projectId
 	 * @return
 	 */
-	public List<PremadeCommentList> getListByProject(Long projectId);
+	List<PremadeCommentList> getListByProject(Long projectId);
 	
 	/**
 	 * Returns a List of PremadeCommentList that have the global field set to true.
 	 * @return
 	 */
-	public List<PremadeCommentList> getListByGlobal();
+	List<PremadeCommentList> getListByGlobal();
 	
 	/**
 	 * Returns a PremadeCommentList that has the given id
@@ -72,5 +71,5 @@ public interface PremadeCommentListDao<T extends PremadeCommentList> extends Sim
 	 * @return a PremadeCommentList or null if there is no PremadeCommentList
 	 * with the given id
 	 */
-	public PremadeCommentList getListById(Long id);
+	PremadeCommentList getListById(Long id);
 }

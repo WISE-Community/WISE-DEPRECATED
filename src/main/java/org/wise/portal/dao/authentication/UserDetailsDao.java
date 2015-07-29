@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2014 Encore Research Group, University of Toronto
+ * Copyright (c) 2007-2015 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -28,9 +28,6 @@ import org.wise.portal.domain.authentication.MutableUserDetails;
 
 /**
  * @author Cynick Young
- * 
- * @version $Id$
- * 
  */
 public interface UserDetailsDao<T extends MutableUserDetails> extends
         SimpleDao<T> {
@@ -42,7 +39,7 @@ public interface UserDetailsDao<T extends MutableUserDetails> extends
      * @return true if the data store contains a user with the corresponding
      *         username, false otherwise.
      */
-    public boolean hasUsername(String username);
+    boolean hasUsername(String username);
 
     /**
      * Given an input string retrieve a corresponding record from data store.
@@ -51,7 +48,7 @@ public interface UserDetailsDao<T extends MutableUserDetails> extends
      *            A string representing the name of the data in the data store.
      * @return A new instance of a data object.
      */
-    public T retrieveByName(String name);
+    T retrieveByName(String name);
     
     /**
      * Given an input string retrieve a corresponding record from data store.
@@ -60,7 +57,7 @@ public interface UserDetailsDao<T extends MutableUserDetails> extends
      *            A string representing the name of the data in the data store.
      * @return A new instance of a data object.
      */
-    public List<T> retrieveAll(String className);
+    List<T> retrieveAll(String className);
     
     /**
      * Given an input string retrieve a corresponding record from data store.
@@ -72,5 +69,5 @@ public interface UserDetailsDao<T extends MutableUserDetails> extends
      *            
      * @return A new instance of a data object.
      */
-    public List<String> retrieveAll(String className, String field);
+    List<String> retrieveAll(String className, String field);
 }

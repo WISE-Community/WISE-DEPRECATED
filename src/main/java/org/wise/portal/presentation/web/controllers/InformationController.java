@@ -93,15 +93,10 @@ public class InformationController {
 	 * @throws ObjectNotFoundException 
 	 * @throws NumberFormatException 
 	 */
-    @RequestMapping("/userinfo.html")
+    @RequestMapping("/userInfo")
 	private void handleGetUserInfo(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, NumberFormatException, ObjectNotFoundException{
-		// make sure that the user is logged in
-		if (ControllerUtil.getSignedInUser() == null) {
-			response.sendRedirect("/login");
-			return;
-		}
-		
+
 		JSONObject userInfo = getUserInfo(request);
 		
 		if (userInfo == null) {
@@ -493,7 +488,7 @@ public class InformationController {
 			String studentDataURL = wiseBaseURL + "/studentData.html";
 
 			// URL to get/post annotations
-	    	String annotationsURL = wiseBaseURL + "/annotation.html?type=annotation&runId=" + runId;
+	    	String annotationsURL = wiseBaseURL + "/annotation?type=annotation&runId=" + runId;
 
 			//get the url to get peer review work
 			String peerReviewURL = wiseBaseURL + "/peerReview.html?type=peerreview";
@@ -541,10 +536,10 @@ public class InformationController {
 			String runStatusURL = wiseBaseURL + "/runStatus.html";
 
             //get the url to get flags
-            String flagsURL = wiseBaseURL + "/annotation.html?type=flag&runId=" + runId;
+            String flagsURL = wiseBaseURL + "/annotation?type=flag&runId=" + runId;
 
             // URL to get/post inappropriate flags
-            String inappropriateFlagsURL = wiseBaseURL + "/annotation.html?type=inappropriateFlag&runId=" + runId;
+            String inappropriateFlagsURL = wiseBaseURL + "/annotation?type=inappropriateFlag&runId=" + runId;
 
             // put all the config params into the json object
 			try {
@@ -635,7 +630,7 @@ public class InformationController {
                 }
             } else {
                 // add non-preview project specific settings
-                String userInfoURL = wiseBaseURL + "/userinfo.html?runId=" + runId;
+                String userInfoURL = wiseBaseURL + "/userInfo?runId=" + runId;
                 config.put("userInfoURL", userInfoURL);
             }
 

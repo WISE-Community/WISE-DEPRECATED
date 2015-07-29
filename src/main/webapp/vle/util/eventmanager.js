@@ -4,7 +4,7 @@
  * a built in loading manager can be used but that requires jquery
  * scripts be loaded and a predefined div element.
  * 
- * @author patrick lawler
+ * @author Patrick Lawler
  */
 function EventManager(enableAlerts){
 	this.events = [];

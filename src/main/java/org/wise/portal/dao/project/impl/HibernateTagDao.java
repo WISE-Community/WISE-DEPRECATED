@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2008-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -33,8 +33,7 @@ import org.wise.portal.domain.project.Tag;
 import org.wise.portal.domain.project.impl.TagImpl;
 
 /**
- * @author patrick lawler
- * @version $Id:$
+ * @author Patrick Lawler
  */
 @Repository
 public class HibernateTagDao extends AbstractHibernateDao<Tag> implements TagDao<Tag>{
@@ -55,10 +54,10 @@ public class HibernateTagDao extends AbstractHibernateDao<Tag> implements TagDao
 	 * @see org.wise.portal.dao.project.TagDao#getTagByName(java.lang.String)
 	 */
 	@SuppressWarnings("unchecked")
-	public Tag getTagByName(String name){
+	public Tag getTagByName(String name) {
 		List<Tag> tags = (List<Tag>) this.getHibernateTemplate().find("select tag from TagImpl tag where tag.name='" + name + "'");
 		
-		if(tags.size() == 0){
+		if (tags.size() == 0) {
 			return null;
 		} else {
 			return tags.get(0);
@@ -70,14 +69,14 @@ public class HibernateTagDao extends AbstractHibernateDao<Tag> implements TagDao
 	 * @param tagId
 	 */
 	@SuppressWarnings("unchecked")
-	public void removeIfOrphaned(Long tagId){
+	public void removeIfOrphaned(Integer tagId) {
 		List<Tag> projects = (List<Tag>) this.getHibernateTemplate().find("select project from ProjectImpl project inner join project.tags tag where tag.id=" + tagId);
 		
-		if(projects.size() == 0){
+		if (projects.size() == 0) {
 			try{
 				Tag tag = this.getById(tagId);
 				this.delete(tag);
-			} catch (ObjectNotFoundException e){
+			} catch (ObjectNotFoundException e) {
 				e.printStackTrace();
 			}
 		}

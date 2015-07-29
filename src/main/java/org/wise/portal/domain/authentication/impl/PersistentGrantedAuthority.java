@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2014 Encore Research Group, University of Toronto
+ * Copyright (c) 2007-2015 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -36,9 +36,6 @@ import org.wise.portal.domain.authentication.MutableGrantedAuthority;
  * EJB3 compliant object persistence mechanism.
  * 
  * @author Cynick Young
- * 
- * @version $Id$
- * 
  */
 @Entity
 @Table(name = PersistentGrantedAuthority.DATA_STORE_NAME)

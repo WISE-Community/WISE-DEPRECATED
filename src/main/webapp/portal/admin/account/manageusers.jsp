@@ -63,7 +63,7 @@ a:hover {
 <jsp:useBean id="now" class="java.util.Date"/>    
 <fmt:formatDate value="${now}" pattern="yyyy-MM-dd" var="today"/>
 
-<h5 style="color:#0000CC;"><a href="${contextPath}/admin/index.html"><spring:message code="returnToMainAdminPage" /></a></h5>
+<h5 style="color:#0000CC;"><a href="${contextPath}/admin"><spring:message code="returnToMainAdminPage" /></a></h5>
 
 <c:choose>
 <c:when test="${fn:length(loggedInTeacherUsernames) > 0 || fn:length(loggedInStudentUsernames) > 0}">

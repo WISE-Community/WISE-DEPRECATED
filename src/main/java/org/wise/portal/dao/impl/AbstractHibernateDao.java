@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2008-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -35,9 +35,6 @@ import org.wise.portal.dao.SimpleDao;
 
 /**
  * @author Cynick Young
- * 
- * @version $Id$
- * 
  */
 public abstract class AbstractHibernateDao<T> extends HibernateDaoSupport
 		implements SimpleDao<T> {
@@ -86,13 +83,20 @@ public abstract class AbstractHibernateDao<T> extends HibernateDaoSupport
 	public T getById(Serializable id) throws ObjectNotFoundException {
 		T object = null;
 		try {
-			object = (T) this.getHibernateTemplate().get(
-					this.getDataObjectClass(),  Long.valueOf(id.toString()));
+			if (id instanceof Integer) {
+				object = (T) this.getHibernateTemplate().get(
+						this.getDataObjectClass(), Integer.valueOf(id.toString()));
+			} else {
+				object = (T) this.getHibernateTemplate().get(
+						this.getDataObjectClass(), Long.valueOf(id.toString()));
+			}
 		} catch (NumberFormatException e) {
 			return null;
 		}
-		if (object == null)
+		if (object == null) {
+			// TODO: make ObjectNotFoundException accept non-long id's. We'll need this for Integer id's.
 			throw new ObjectNotFoundException((Long) id, this.getDataObjectClass());
+		}
 		return object;
 	}
 

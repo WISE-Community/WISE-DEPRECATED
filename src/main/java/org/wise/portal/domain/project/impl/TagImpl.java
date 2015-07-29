@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2008-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -34,28 +34,21 @@ import javax.persistence.Transient;
 import org.wise.portal.domain.project.Tag;
 
 /**
- * @author patrick lawler
- * @version $Id:$
+ * @author Patrick Lawler
  */
 @Entity
-@Table(name = TagImpl.DATA_STORE_NAME)
-public class TagImpl implements Tag{
-	
-	@Transient
-	public final static String DATA_STORE_NAME = "tags";
-	
-	@Transient
-	public final static String NAME_COLUMN_NAME = "name";
-	
+@Table(name = "tags")
+public class TagImpl implements Tag {
+
 	@Transient
 	private static final long serialVersionUID = 1L;
 
-	@Column(name = TagImpl.NAME_COLUMN_NAME)
+	@Column(name = "name")
 	private String name;
 	
 	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-	private Long id = null;
+	private Integer id = null;
 
 	/**
 	 * @return the name
@@ -74,14 +67,14 @@ public class TagImpl implements Tag{
 	/**
 	 * @return the id
 	 */
-	public Long getId() {
+	public Integer getId() {
 		return id;
 	}
 
 	/**
 	 * @param id the id to set
 	 */
-	public void setId(Long id) {
+	public void setId(Integer id) {
 		this.id = id;
-	}	
+	}
 }

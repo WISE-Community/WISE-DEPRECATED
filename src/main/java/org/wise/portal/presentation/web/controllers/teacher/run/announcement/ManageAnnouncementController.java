@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2008-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -47,11 +47,10 @@ import org.wise.portal.service.offering.RunService;
 /**
  * Controller for handling Classroom announcements
  * 
- * @author patrick lawler
- * @version $Id:$
+ * @author Patrick Lawler
  */
 @Controller
-@RequestMapping("/teacher/run/announcement/*.html")
+@RequestMapping("/teacher/run/announcement/*")
 public class ManageAnnouncementController {
 
 	@Autowired
@@ -73,13 +72,12 @@ public class ManageAnnouncementController {
 
 	protected final static String MANAGEANNOUNCEMENT_VIEW = "teacher/run/announcement/manageannouncement";
 
-	@RequestMapping(method=RequestMethod.GET)
-	protected ModelAndView handleGET(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
+	@RequestMapping(method = RequestMethod.GET)
+	protected ModelAndView handleGET(HttpServletRequest request) throws Exception {
 		User user = ControllerUtil.getSignedInUser();
 		Run run = runService.retrieveById(Long.parseLong(request.getParameter(RUNID)));
 		String announcementIdStr = request.getParameter(ANNOUNCEMENTID);
-		if(this.aclService.hasPermission(run, BasePermission.ADMINISTRATION, user) ||
+		if (this.aclService.hasPermission(run, BasePermission.ADMINISTRATION, user) ||
 				this.aclService.hasPermission(run, BasePermission.WRITE, user)){
 			ModelAndView modelAndView = new ModelAndView();
 			modelAndView.addObject(RUN, run);
@@ -95,9 +93,8 @@ public class ManageAnnouncementController {
 		}
 	}
 
-	@RequestMapping(method=RequestMethod.POST)
-	protected ModelAndView handlePOST(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
+	@RequestMapping(method = RequestMethod.POST)
+	protected ModelAndView handlePOST(HttpServletRequest request) throws Exception {
 		Run run = runService.retrieveById(Long.parseLong(request.getParameter(RUNID)));
 		String announcementIdStr = request.getParameter(ANNOUNCEMENTID);
 
@@ -108,9 +105,6 @@ public class ManageAnnouncementController {
 			runService.removeAnnouncementFromRun(run.getId(), announcement);
 			announcementService.deleteAnnouncement(announcement.getId());
 
-			ModelAndView modelAndView = new ModelAndView(MANAGEANNOUNCEMENT_VIEW);
-			modelAndView.addObject(RUN, run);
-			return modelAndView;
 		} else if ("edit".equals(command)) {
 			Announcement announcement = announcementService.retrieveById(Long.parseLong(announcementIdStr));
 			AnnouncementParameters params = new AnnouncementParameters();
@@ -122,9 +116,6 @@ public class ManageAnnouncementController {
 
 			announcementService.updateAnnouncement(params.getId(), params);
 
-			ModelAndView modelAndView = new ModelAndView(MANAGEANNOUNCEMENT_VIEW);
-			modelAndView.addObject(RUN, run);
-			return modelAndView;
 		} else if ("create".equals(command)) {
 			AnnouncementParameters params = new AnnouncementParameters();
 			params.setRunId(Long.parseLong(request.getParameter(RUNID)));
@@ -135,11 +126,12 @@ public class ManageAnnouncementController {
 			Announcement announcement = announcementService.createAnnouncement(params);
 			runService.addAnnouncementToRun(params.getRunId(), announcement);
 
-			ModelAndView modelAndView = new ModelAndView(MANAGEANNOUNCEMENT_VIEW);
-			modelAndView.addObject(RUN, run);
-			return modelAndView;
-		} else { 
+		} else {
 			return null;
 		}
+
+		ModelAndView modelAndView = new ModelAndView(MANAGEANNOUNCEMENT_VIEW);
+		modelAndView.addObject(RUN, run);
+		return modelAndView;
 	}
 }

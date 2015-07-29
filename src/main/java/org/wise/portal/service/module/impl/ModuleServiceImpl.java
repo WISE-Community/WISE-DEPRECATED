@@ -39,7 +39,7 @@ import org.wise.portal.domain.module.impl.UrlModuleImpl;
 import org.wise.portal.service.module.ModuleService;
 
 /**
- *  Service for the TELS's Module Domain Object
+ *  Service for the WISE Module Domain Object
  *  
  * @author Hiroki Terashima
  */

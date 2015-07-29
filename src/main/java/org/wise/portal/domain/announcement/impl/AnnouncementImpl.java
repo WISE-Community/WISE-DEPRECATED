@@ -39,10 +39,8 @@ import org.wise.portal.domain.announcement.Announcement;
  * Announcement domain object that contains Title (String), Timestamp (Date),
  * and the Announcement (String)
  * 
- * @author patrick lawler
- * @version $Id:$
+ * @author Patrick Lawler
  */
-
 @Entity
 @Table(name = AnnouncementImpl.DATA_STORE_NAME)
 public class AnnouncementImpl implements Announcement, Comparable<Announcement>{

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2014 Encore Research Group, University of Toronto
+ * Copyright (c) 2007-2015 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -31,8 +31,6 @@ import org.wise.portal.domain.module.impl.CurnitParameters;
  * A service for working with Curnits.
  * 
  * @author Laurel Williams
- * 
- * @version $Id$
  */
 public interface CurnitService {
 
@@ -41,21 +39,21 @@ public interface CurnitService {
 	 * 
 	 * @return a <code>List</code> of curnits.
 	 */
-	public List<? extends Curnit> getCurnitList();
+	List<? extends Curnit> getCurnitList();
 
 	/**
 	 * @param <code>curnitParameters</code>
 	 *            The curnit parameters (name and url)
 	 * @return the curnit
 	 */
-	public Curnit createCurnit(CurnitParameters curnitParameters);
+	Curnit createCurnit(CurnitParameters curnitParameters);
 	
 	/**
 	 * Updates the specified curnit
 	 * 
 	 * @param curnit the <code>Curnit</code> to update
 	 */
-	public void updateCurnit(Curnit curnit);
+	void updateCurnit(Curnit curnit);
 	
 	/**
 	 * Gets a curnit with the given curnitId.
@@ -66,7 +64,7 @@ public interface CurnitService {
 	 * @throws ObjectNotFoundException when the specified curnit is
 	 *         not found
 	 */
-	public Curnit getById(Long curnitId) throws ObjectNotFoundException;
+	Curnit getById(Long curnitId) throws ObjectNotFoundException;
 	
 	/**
 	 * Returns the latest <code>Long</code> id of a curnit found in
@@ -74,6 +72,6 @@ public interface CurnitService {
 	 * 
 	 * @return <code>Long</code>
 	 */
-	public Long getLatestId();
+	Long getLatestId();
 
 }

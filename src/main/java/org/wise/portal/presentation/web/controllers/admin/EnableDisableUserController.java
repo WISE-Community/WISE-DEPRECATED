@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2008-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -42,11 +42,10 @@ import org.wise.portal.service.user.UserService;
 /**
  * Controller for retrieving disabled WISE accounts and for enabling and disabling WISE user accounts. 
  * Only accessed by a WISE admin user.
- * @author hirokiterashima
- * @version $Id:$
+ * @author Hiroki Terashima
  */
 @Controller
-@RequestMapping("/admin/account/enabledisableuser.html")
+@RequestMapping("/admin/account/enableDisableUser")
 public class EnableDisableUserController {
 
 	@Autowired
@@ -57,20 +56,15 @@ public class EnableDisableUserController {
 	 * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
 	 */
 	@RequestMapping(method = RequestMethod.GET)	
-	protected String handleGET(
-			HttpServletRequest request, 
-			HttpServletResponse response,
-			ModelMap modelMap) throws Exception {
+	protected String handleGET(ModelMap modelMap) throws Exception {
 		// retrieve a list of already-disabled user accounts.
 		List<User> disabledUsers = userService.retrieveDisabledUsers();
 		modelMap.put("disabledUsers", disabledUsers);
-		return "/admin/account/enabledisableuser";
+		return "/admin/account/enableDisableUser";
 	}
 
 	@RequestMapping(method = RequestMethod.POST)	
-	protected String handlePOST(
-			HttpServletRequest request, 
-			HttpServletResponse response) throws Exception {
+	protected String handlePOST(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		// enable/disable user accounts
 		String doEnable = request.getParameter("doEnable");
 		String username = request.getParameter("username");
@@ -102,8 +96,6 @@ public class EnableDisableUserController {
 		}
 		return null;
 	}
-
-
 
 	/**
 	 * @param userService the userService to set

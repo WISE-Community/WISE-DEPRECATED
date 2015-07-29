@@ -2,7 +2,7 @@
  * The authorDispatcher catches events specific to the project authoring and
  * layout and delegates them to the appropriate functions for this view.
  * 
- * @author patrick lawler
+ * @author Patrick Lawler
  */
 View.prototype.authorDispatcher = function(type,args,obj){
 	if(type=='projectSelected'){

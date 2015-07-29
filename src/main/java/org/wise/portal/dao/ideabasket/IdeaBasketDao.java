@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2008-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -31,17 +31,17 @@ import org.wise.vle.domain.ideabasket.IdeaBasket;
 
 public interface IdeaBasketDao<T extends IdeaBasket> extends SimpleDao<IdeaBasket> {
 
-	public IdeaBasket getIdeaBasketById(Long id);
+	IdeaBasket getIdeaBasketById(Long id);
 	
-	public void saveIdeaBasket(IdeaBasket ideaBasket);
+	void saveIdeaBasket(IdeaBasket ideaBasket);
 	
-	public IdeaBasket getIdeaBasketByRunIdWorkgroupId(long runId, long workgroupId);
+	IdeaBasket getIdeaBasketByRunIdWorkgroupId(long runId, long workgroupId);
 	
-	public List<IdeaBasket> getLatestIdeaBasketsForRunId(long runId);
+	List<IdeaBasket> getLatestIdeaBasketsForRunId(long runId);
 	
-	public List<IdeaBasket> getLatestIdeaBasketsForRunIdWorkgroupIds(long runId, List<Long> workgroupIds);
+	List<IdeaBasket> getLatestIdeaBasketsForRunIdWorkgroupIds(long runId, List<Long> workgroupIds);
 	
-	public List<IdeaBasket> getIdeaBasketsForRunId(long runId);
+	List<IdeaBasket> getIdeaBasketsForRunId(long runId);
 	
-	public IdeaBasket getPublicIdeaBasketForRunIdPeriodId(long runId, long periodId);
+	IdeaBasket getPublicIdeaBasketForRunIdPeriodId(long runId, long periodId);
 }

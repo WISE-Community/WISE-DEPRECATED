@@ -4,7 +4,7 @@
  * open_response or single_choice (not implemented) and
  * can run with a server or serverless
  * @constructor
- * @author: patrick lawler
+ * @author: Patrick Lawler
  */
 function BRAINSTORM(node){
 	this.node = node;

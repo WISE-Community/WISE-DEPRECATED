@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2014 Encore Research Group, University of Toronto
+ * Copyright (c) 2007-2015 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -31,8 +31,6 @@ import org.wise.portal.domain.user.User;
  * the tree contain a list of members.
  * 
  * @author Cynick Young
- * 
- * @version $Id$
  */
 public interface Group extends Persistable, Comparable<Group> {
 
@@ -42,7 +40,7 @@ public interface Group extends Persistable, Comparable<Group> {
      * @param member
      *            single member to add
      */
-    public void addMember(User member);
+    void addMember(User member);
     
     /**
      * Removes a single member from the group.
@@ -50,7 +48,7 @@ public interface Group extends Persistable, Comparable<Group> {
      * @param member
      *            single member to remove
      */
-    public void removeMember(User member);
+    void removeMember(User member);
 
     /**
      * Replace any existing list of members with the new list.
@@ -58,7 +56,7 @@ public interface Group extends Persistable, Comparable<Group> {
      * @param members
      *            new <code>List</code> of members to set
      */
-    public void setMembers(Set<User> members);
+    void setMembers(Set<User> members);
 
     /**
      * Get the list of members of this group.
@@ -66,14 +64,14 @@ public interface Group extends Persistable, Comparable<Group> {
      * @return <code>List</code> of <code>User</code> objects that belong to
      *         this group.
      */
-    public Set<User> getMembers();
+    Set<User> getMembers();
 
     /**
      * Gets the name of this group.
      * 
      * @return the name of the current group
      */
-    public String getName();
+    String getName();
 
     /**
      * Sets the name of this group.
@@ -81,7 +79,7 @@ public interface Group extends Persistable, Comparable<Group> {
      * @param name
      *            the name to set for this group.
      */
-    public void setName(String name);
+    void setName(String name);
 
     /**
      * Gets the parent group for this group. If is the group at the top of the
@@ -89,7 +87,7 @@ public interface Group extends Persistable, Comparable<Group> {
      * 
      * @return the parent
      */
-    public Group getParent();
+    Group getParent();
 
     /**
      * Sets the parent group for this group.
@@ -97,12 +95,12 @@ public interface Group extends Persistable, Comparable<Group> {
      * @param parent
      *            the parent to set
      */
-    public void setParent(Group parent);
+    void setParent(Group parent);
 
     /**
      * Gets the id for this object.
      * 
      * @return the id
      */
-    public Long getId();
+    Long getId();
 }

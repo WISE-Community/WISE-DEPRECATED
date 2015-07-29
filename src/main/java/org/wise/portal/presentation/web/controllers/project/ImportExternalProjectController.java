@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2008-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -36,8 +36,8 @@ import org.wise.portal.service.wiseup.WiseUpService;
 
 /**
  * Imports an external project to the portal.
- * @author hirokiterashima
- * @version $Id$
+ * @author Hiroki Terashima
+ * TODO: do we need this class anymore?
  */
 @Controller
 @RequestMapping("/project/importexternalproject.html")
@@ -51,8 +51,7 @@ public class ImportExternalProjectController {
 	private WiseUpService wiseUpService;
 
 
-	protected ModelAndView handleRequestInternal(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
+	protected ModelAndView handleRequestInternal(HttpServletRequest request) throws Exception {
 
 		String projectCommunicatorId = request.getParameter(PROJECT_COMMUNICATOR_ID_PARAM);
 		String externalId = request.getParameter(EXTERNAL_ID_PARAM);

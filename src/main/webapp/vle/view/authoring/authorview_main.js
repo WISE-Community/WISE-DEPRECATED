@@ -1,7 +1,7 @@
 /**
  * Functions related to the main layout of the project in the authoring view
  * 
- * @author patrick lawler
+ * @author Patrick Lawler
  */
 
 /**
@@ -1754,7 +1754,7 @@ View.prototype.retrieveProjectRunStatus = function(){
 		//get the context path e.g. /wise
 		var contextPath = this.getConfig().getConfigParam('contextPath');
 		
-		this.connectionManager.request('GET', 1, contextPath + '/teacher/projects/projectinfo.html', requestParams, this.retrieveProjectRunStatusSuccess, this, this.retrieveProjectRunStatusFailure);
+		this.connectionManager.request('GET', 1, contextPath + '/projectInfo', requestParams, this.retrieveProjectRunStatusSuccess, this, this.retrieveProjectRunStatusFailure);
 	} else {
 		this.projectHasRun = false;
 	}

@@ -36,7 +36,7 @@
 						<img src="${contextPath}/<spring:theme code="inquiry_learning"/>" alt="<spring:message code="pages.wise-advantage.inquiryLearningAlt" />" />
 						<div class="featureContentHeader"><spring:message code="pages.wise-advantage.1inquiryBasedLearning" /></div>
 						<div class="featureContent">
-							<p><spring:message code="pages.wise-advantage.inquiryLearningParagraphPart1" /> <a href="${contextPath}/pages/features.html"><spring:message code="pages.wise-advantage.activitiesAndScaffoldingTools" /></a><spring:message code="pages.wise-advantage.inquiryLearningParagraphPart2" /> <a href="${contextPath}/previewprojectlist.html"><spring:message code="pages.wise-advantage.inquiryBasedProjects" /></a><spring:message code="pages.wise-advantage.inquiryLearningParagraphPart3" /></p>
+							<p><spring:message code="pages.wise-advantage.inquiryLearningParagraphPart1" /> <a href="${contextPath}/pages/features.html"><spring:message code="pages.wise-advantage.activitiesAndScaffoldingTools" /></a><spring:message code="pages.wise-advantage.inquiryLearningParagraphPart2" /> <a href="${contextPath}/projectlibrary"><spring:message code="pages.wise-advantage.inquiryBasedProjects" /></a><spring:message code="pages.wise-advantage.inquiryLearningParagraphPart3" /></p>
 						</div>
 						<div style="clear:both;"></div>
 					</div>
@@ -44,7 +44,7 @@
 						<img src="${contextPath}/<spring:theme code="library"/>" alt="<spring:message code="pages.wise-advantage.wiseLibraryAlt" />" />
 						<div class="featureContent">
 							<div class="featureContentHeader"><spring:message code="pages.wise-advantage.2growingLibrary" /></div>
-							<p><spring:message code="pages.wise-advantage.growingLibraryParagraphPart1" /> <a href="${contextPath}/previewprojectlist.html"><spring:message code="pages.wise-advantage.wiseProjectLibrary" /></a> <spring:message code="pages.wise-advantage.growingLibraryParagraphPart2" /> <a href="${contextPath}/pages/research-tech.html"><spring:message code="pages.wise-advantage.classroomBasedResearch" /></a><spring:message code="pages.wise-advantage.growingLibraryParagraphPart3" /></p>
+							<p><spring:message code="pages.wise-advantage.growingLibraryParagraphPart1" /> <a href="${contextPath}/projectlibrary"><spring:message code="pages.wise-advantage.wiseProjectLibrary" /></a> <spring:message code="pages.wise-advantage.growingLibraryParagraphPart2" /> <a href="${contextPath}/pages/research-tech.html"><spring:message code="pages.wise-advantage.classroomBasedResearch" /></a><spring:message code="pages.wise-advantage.growingLibraryParagraphPart3" /></p>
 						</div>
 						<div style="clear:both;"></div>
 					</div>
@@ -76,7 +76,7 @@
 						<img src="${contextPath}/<spring:theme code="learning_technologies"/>" alt="<spring:message code="pages.wise-advantage.learningTechnologiesAlt" />" />
 						<div class="featureContent">
 							<div class="featureContentHeader"><spring:message code="pages.wise-advantage.6powerfulLearningTechnologies" /></div>
-							<p><spring:message code="pages.wise-advantage.powerfulLearningTechnologiesParagraphPart1" /> <a href="${contextPath}/pages/features.html"><spring:message code="pages.wise-advantage.innovativeCurriculumIntegratedTechnologies" /></a><spring:message code="pages.wise-advantage.powerfulLearningTechnologiesParagraphPart2" /> <a href="${contextPath}/previewprojectlist.html"><spring:message code="pages.wise-advantage.wiseLibraryProjects" /></a><spring:message code="pages.wise-advantage.powerfulLearningTechnologiesParagraphPart3" /></p>
+							<p><spring:message code="pages.wise-advantage.powerfulLearningTechnologiesParagraphPart1" /> <a href="${contextPath}/pages/features.html"><spring:message code="pages.wise-advantage.innovativeCurriculumIntegratedTechnologies" /></a><spring:message code="pages.wise-advantage.powerfulLearningTechnologiesParagraphPart2" /> <a href="${contextPath}/projectlibrary"><spring:message code="pages.wise-advantage.wiseLibraryProjects" /></a><spring:message code="pages.wise-advantage.powerfulLearningTechnologiesParagraphPart3" /></p>
 						</div>
 						<div style="clear:both;"></div>
 					</div>
@@ -100,7 +100,7 @@
 						<img src="${contextPath}/<spring:theme code="participation"/>" alt="<spring:message code="pages.wise-advantage.participationAlt" />" />
 						<div class="featureContentHeader"><spring:message code="pages.wise-advantage.9increasesParticipationInScience" /></div>
 						<div class="featureContent">
-							<p><spring:message code="pages.wise-advantage.increasesParticipationInScienceParagraphPart1" /> <a href="${contextPath}/previewprojectlist.html"><spring:message code="pages.wise-advantage.wiseProjects" /></a> <spring:message code="pages.wise-advantage.increasesParticipationInScienceParagraphPart2" /> <a href="${contextPath}/pages/features.html"><spring:message code="pages.wise-advantage.toolsAndActivities" /></a><spring:message code="pages.wise-advantage.increasesParticipationInScienceParagraphPart3" /></p>
+							<p><spring:message code="pages.wise-advantage.increasesParticipationInScienceParagraphPart1" /> <a href="${contextPath}/projectlibrary"><spring:message code="pages.wise-advantage.wiseProjects" /></a> <spring:message code="pages.wise-advantage.increasesParticipationInScienceParagraphPart2" /> <a href="${contextPath}/pages/features.html"><spring:message code="pages.wise-advantage.toolsAndActivities" /></a><spring:message code="pages.wise-advantage.increasesParticipationInScienceParagraphPart3" /></p>
 						</div>
 						<div style="clear:both;"></div>
 					</div>
@@ -108,7 +108,7 @@
 						<img src="${contextPath}/<spring:theme code="free_open"/>" alt="<spring:message code="pages.wise-advantage.freeAndOpenSourceAlt" />" />
 						<div class="featureContent">
 							<div class="featureContentHeader"><spring:message code="pages.wise-advantage.10freeAndOpenSource" /></div>
-							<p><spring:message code="pages.wise-advantage.freeAndOpenSourceParagraphPart1" /> <a href="http://nsf.gov"><spring:message code="pages.wise-advantage.nationalScienceFoundation" /></a><spring:message code="pages.wise-advantage.freeAndOpenSourceParagraphPart2" /> <a href="${contextPath}/pages/research-tech.html#technology"><spring:message code="pages.wise-advantage.activeCommunityOfTechnologyDevelopers" /></a><spring:message code="pages.wise-advantage.freeAndOpenSourceParagraphPart3" /> <a href="${contextPath}/previewprojectlist.html"><spring:message code="pages.wise-advantage.wiseProjectLibrary" /></a><spring:message code="pages.wise-advantage.freeAndOpenSourceParagraphPart4" /> <a href="${contextPath}/pages/teacher-tools.html"><spring:message code="pages.wise-advantage.teachingTools" /></a> <spring:message code="pages.wise-advantage.freeAndOpenSourceParagraphPart5" /> <a href="${contextPath}/join"><spring:message code="pages.wise-advantage.signUp" /></a> <spring:message code="pages.wise-advantage.freeAndOpenSourceParagraphPart6" /></p>
+							<p><spring:message code="pages.wise-advantage.freeAndOpenSourceParagraphPart1" /> <a href="http://nsf.gov"><spring:message code="pages.wise-advantage.nationalScienceFoundation" /></a><spring:message code="pages.wise-advantage.freeAndOpenSourceParagraphPart2" /> <a href="${contextPath}/pages/research-tech.html#technology"><spring:message code="pages.wise-advantage.activeCommunityOfTechnologyDevelopers" /></a><spring:message code="pages.wise-advantage.freeAndOpenSourceParagraphPart3" /> <a href="${contextPath}/projectlibrary"><spring:message code="pages.wise-advantage.wiseProjectLibrary" /></a><spring:message code="pages.wise-advantage.freeAndOpenSourceParagraphPart4" /> <a href="${contextPath}/pages/teacher-tools.html"><spring:message code="pages.wise-advantage.teachingTools" /></a> <spring:message code="pages.wise-advantage.freeAndOpenSourceParagraphPart5" /> <a href="${contextPath}/join"><spring:message code="pages.wise-advantage.signUp" /></a> <spring:message code="pages.wise-advantage.freeAndOpenSourceParagraphPart6" /></p>
 						</div>
 						<div style="clear:both;"></div>
 					</div>

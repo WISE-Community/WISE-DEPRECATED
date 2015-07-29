@@ -9,7 +9,7 @@
 <title>WISE Memory Monitor</title>
 </head>
 <body>
-<h5 style="color:#0000CC;"><a href="${contextPath}/admin/index.html"><spring:message code="returnToMainAdminPage" /></a></h5>
+<h5 style="color:#0000CC;"><a href="${contextPath}/admin"><spring:message code="returnToMainAdminPage" /></a></h5>
 
 <h1 style="text-decoration: underline;">JVM Memory Monitor</h1>
 

@@ -1,7 +1,7 @@
 /**
  * The util object for this view
  * 
- * @author patrick lawler
+ * @author Patrick Lawler
  */
 View.prototype.utils = {};
 

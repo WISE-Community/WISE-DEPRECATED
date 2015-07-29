@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2008-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -32,7 +32,7 @@ import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 
 /**
- * @author patrick lawler
+ * @author Patrick Lawler
  *
  */
 public interface PremadeCommentDao<T extends PremadeComment> extends SimpleDao<T>{
@@ -43,7 +43,7 @@ public interface PremadeCommentDao<T extends PremadeComment> extends SimpleDao<T
 	 * @param <code>User</code> owner
 	 * @return <code>List<PremadeComment></code>
 	 */
-	public List<PremadeComment> getPremadeCommentsByUser(User owner);
+	List<PremadeComment> getPremadeCommentsByUser(User owner);
 	
 	/**
 	 * Retrieves a <code>List<PremadeComment> that is owned by the given <code>Run</code>
@@ -51,7 +51,7 @@ public interface PremadeCommentDao<T extends PremadeComment> extends SimpleDao<T
 	 * @param <code>Run</code> run
 	 * @return <code>List<PremadeComment></code>
 	 */
-	public List<PremadeComment> getPremadeCommentsByRun(Run run);
+	List<PremadeComment> getPremadeCommentsByRun(Run run);
 	
 	/**
 	 * Retrieves a PremadeComment with the given id
@@ -59,5 +59,5 @@ public interface PremadeCommentDao<T extends PremadeComment> extends SimpleDao<T
 	 * @return a PremadeComment or null if there is no PremadeComment with the
 	 * given id
 	 */
-	public PremadeComment getPremadeCommentById(Long id);
+	PremadeComment getPremadeCommentById(Long id);
 }

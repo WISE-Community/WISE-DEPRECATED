@@ -2992,7 +2992,7 @@ Node.prototype.getNumberOfCheckWorks = function(stepWorkId, workgroupId) {
 /**
  * Utility functions for Nodes
  * @constructor
- * @author patrick lawler
+ * @author Patrick Lawler
  */
 Node.prototype.utils = function(){
 };

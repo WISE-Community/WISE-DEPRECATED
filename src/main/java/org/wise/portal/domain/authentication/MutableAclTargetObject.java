@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2014 Encore Research Group, University of Toronto
+ * Copyright (c) 2007-2015 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -27,20 +27,18 @@ import org.wise.portal.domain.Persistable;
  * to an access control list (ACL).
  * 
  * @author Cynick Young
- * 
- * @version $Id$
  */
 public interface MutableAclTargetObject extends Persistable {
 
     /**
      * @return the classname
      */
-    public abstract String getClassname();
+    String getClassname();
 
     /**
      * @param classname
      *                the classname to set
      */
-    public abstract void setClassname(String classname);
+    void setClassname(String classname);
 
 }

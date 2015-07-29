@@ -163,7 +163,7 @@
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
     create table newsitem (
-        id bigint not null auto_increment,
+        id integer not null auto_increment,
         date datetime not null,
         news text not null,
         title varchar(255) not null,
@@ -334,7 +334,7 @@
 
     create table projects_related_to_tags (
         project_fk bigint not null,
-        tag_fk bigint not null,
+        tag_fk integer not null,
         primary key (project_fk, tag_fk)
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -432,7 +432,7 @@
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
     create table tags (
-        id bigint not null auto_increment,
+        id integer not null auto_increment,
         name varchar(255),
         primary key (id)
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;

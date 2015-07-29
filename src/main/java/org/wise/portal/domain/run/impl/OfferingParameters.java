@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2014 Encore Research Group, University of Toronto
+ * Copyright (c) 2007-2015 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -22,12 +22,9 @@ package org.wise.portal.domain.run.impl;
 
 /**
  * @author Laurel Williams
- * 
- * @version $Id$
- * 
+ *
  * Parameters that a user would probably need to supply in order to create an
  * offering from the UI.
- * 
  */
 public class OfferingParameters {
 	

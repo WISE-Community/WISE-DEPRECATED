@@ -46,7 +46,7 @@
 						<img src="${contextPath}/<spring:theme code="inquiry_curricula"/>" alt="<spring:message code="pages.wise-in-action.inquiryCurriculaAlt" />" />
 						<div class="featureContent">
 							<div class="featureContentHeader"><spring:message code="pages.wise-in-action.inquiryCurricula" /></div>
-							<p><a href="${contextPath}/previewprojectlist.html"><spring:message code="pages.wise-in-action.wiseUnits" /></a> <spring:message code="pages.wise-in-action.inquiryCurriculaParagraph" /></p>
+							<p><a href="${contextPath}/projectlibrary"><spring:message code="pages.wise-in-action.wiseUnits" /></a> <spring:message code="pages.wise-in-action.inquiryCurriculaParagraph" /></p>
 						</div>
 						<div style="clear:both;"></div>
 					</div>

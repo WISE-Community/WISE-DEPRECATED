@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2008-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -33,7 +33,6 @@ import org.wise.portal.domain.workgroup.Workgroup;
 
 /**
  * @author Hiroki Terashima
- * @version $Id$
  */
 public interface RunDao<T extends Run> extends OfferingDao<Run> {
 
@@ -46,7 +45,7 @@ public interface RunDao<T extends Run> extends OfferingDao<Run> {
 	 * @return A new instance of a data object.
 	 * @throws ObjectNotFoundException if Run is not found.
 	 */
-	public Run retrieveByRunCode(String runcode) throws ObjectNotFoundException;
+	Run retrieveByRunCode(String runcode) throws ObjectNotFoundException;
 	
     /**
      * Given a field, search type, search term
@@ -56,7 +55,7 @@ public interface RunDao<T extends Run> extends OfferingDao<Run> {
      *  @param type comparator, ie like, =, <, >, etc
      *  @param search term what to compare against ie '%john%' (if type is 'like'), 'john'
      */
-    public List<T> retrieveByField(String field, String type, Object term);
+    List<T> retrieveByField(String field, String type, Object term);
     
     /**
      * Retrieves a list of runs from the data store given a <code>User</code>
@@ -65,7 +64,7 @@ public interface RunDao<T extends Run> extends OfferingDao<Run> {
      * @param owner <code>User</code>
      * @return a list of runs that the specified user owns
      */
-    public List<T> getRunListByOwner(User owner);
+    List<T> getRunListByOwner(User owner);
     
     /**
      * Retrieves a list of runs from the data store given a <code>User</code>
@@ -74,7 +73,7 @@ public interface RunDao<T extends Run> extends OfferingDao<Run> {
      * @param owner <code>User</code>
      * @return a list of runs that the specified user owns
      */
-	public List<Run> getRunListBySharedOwner(User owner);
+	List<Run> getRunListBySharedOwner(User owner);
 
     /**
      * Retrieves a <code>List<Run></code> list of runs from the data store given a
@@ -83,7 +82,7 @@ public interface RunDao<T extends Run> extends OfferingDao<Run> {
      * @param <code>User</code> user
      * @return <code>List<Run></code>
      */
-    public List<Run> getRunListByUserInPeriod(User user);
+    List<Run> getRunListByUserInPeriod(User user);
     
     /**
      * Retrieves a <code>List<WISEWorkgroup></code> given a <code>Long</code> runId and
@@ -93,7 +92,7 @@ public interface RunDao<T extends Run> extends OfferingDao<Run> {
      * @param <code>Long</code> periodId
      * @return <code>List<WISEWorkgroup></code>
      */
-    public Set<Workgroup> getWorkgroupsForOfferingAndPeriod(Long offeringId, Long periodId);
+    Set<Workgroup> getWorkgroupsForOfferingAndPeriod(Long offeringId, Long periodId);
     
     /**
      * Retrieves a <code>List</code> of <code>Run</code> that are associated with the
@@ -102,7 +101,7 @@ public interface RunDao<T extends Run> extends OfferingDao<Run> {
      * @param <code>Long</code> id
      * @return <code>List<Run></code>
      */
-    public List<Run> getRunsOfProject(Long id);
+    List<Run> getRunsOfProject(Long id);
     
     /**
      * Returns a <code>List<Run></code> list of runs that were run within the
@@ -111,7 +110,7 @@ public interface RunDao<T extends Run> extends OfferingDao<Run> {
      * @param String - period
      * @return List<Run> - run list
      */
-    public List<Run> getRunsRunWithinPeriod(String period);
+    List<Run> getRunsRunWithinPeriod(String period);
     
     /**
      * Returns a <code>List<Run></code> list of runs ordered descending by how
@@ -119,7 +118,7 @@ public interface RunDao<T extends Run> extends OfferingDao<Run> {
      * 
      * @return List<Run> - list of runs descending by activity
      */
-    public List<Run> getRunsByActivity();
+    List<Run> getRunsByActivity();
 
     /**
      * Retrieves run by id, and fetches all fields if specified.
@@ -127,5 +126,5 @@ public interface RunDao<T extends Run> extends OfferingDao<Run> {
      * @param doEagerFetch true iff fetch all fields eagerly
      * @return
      */
-	public Run getById(Long runId, boolean doEagerFetch);
+	Run getById(Long runId, boolean doEagerFetch);
 }

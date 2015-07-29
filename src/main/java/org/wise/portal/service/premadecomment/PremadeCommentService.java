@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2007-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -38,8 +38,7 @@ import org.wise.portal.domain.user.User;
  * A service for working with <code>PremadeComment</code>
  * and <code>PremadeCommentList</code> objects.
  * 
- * @author patrick lawler
- *
+ * @author Patrick Lawler
  */
 public interface PremadeCommentService {
 
@@ -49,14 +48,14 @@ public interface PremadeCommentService {
 	 * @param params <code>PremadeCommentParameters</code>
 	 * @return PremadeComment
 	 */
-	public PremadeComment createPremadeComment(PremadeCommentParameters params);
+	PremadeComment createPremadeComment(PremadeCommentParameters params);
 	
 	/**
 	 * Removes a PremadeComment from the data store using its id.
 	 * 
 	 * @param commentID <code>Long</code>
 	 */
-	public void deletePremadeComment(Long commentID);
+	void deletePremadeComment(Long commentID);
 	
 	/**
 	 * Updates the comment in a PremadeComment using its id.
@@ -65,7 +64,7 @@ public interface PremadeCommentService {
 	 * @param newComment <code>String</code>
 	 * @return updated PremadeComment
 	 */
-	public PremadeComment updatePremadeCommentMessage(Long premadeCommentID, String newComment)
+	PremadeComment updatePremadeCommentMessage(Long premadeCommentID, String newComment)
 		throws ObjectNotFoundException;
 	
 	/**
@@ -75,7 +74,7 @@ public interface PremadeCommentService {
 	 * @return
 	 * @throws ObjectNotFoundException
 	 */
-	public PremadeComment updatePremadeCommentListPosition (Long premadeCommentId, Long listPosition)
+	PremadeComment updatePremadeCommentListPosition (Long premadeCommentId, Long listPosition)
 		throws ObjectNotFoundException;
 	
 	/**
@@ -85,7 +84,7 @@ public interface PremadeCommentService {
 	 * @return
 	 * @throws ObjectNotFoundException
 	 */
-	public PremadeComment updatePremadeCommentLabels (Long premadeCommentId, String labels)
+	PremadeComment updatePremadeCommentLabels (Long premadeCommentId, String labels)
 		throws ObjectNotFoundException;
 	
 	/**
@@ -93,7 +92,7 @@ public interface PremadeCommentService {
 	 * 
 	 * @return a Set<PremadeComment>
 	 */	
-	public Set<PremadeComment> retrieveAllPremadeComments();
+	Set<PremadeComment> retrieveAllPremadeComments();
 	
 	/**
 	 * Retrieves all PremadeComments associated with a given user.
@@ -101,7 +100,7 @@ public interface PremadeCommentService {
 	 * @param user <code>User</code>
 	 * @return a Set<PremadeComment>
 	 */
-	public Set<PremadeComment> retrieveAllPremadeCommentsByUser(User user);
+	Set<PremadeComment> retrieveAllPremadeCommentsByUser(User user);
 	
 	/**
 	 * Creates a new PremadeCommentList in the data store.
@@ -109,14 +108,14 @@ public interface PremadeCommentService {
 	 * @param params <code>PremadeCommentListParameters</code>
 	 * @return PremadeCommentList
 	 */
-	public PremadeCommentList createPremadeCommentList(PremadeCommentListParameters params);
+	PremadeCommentList createPremadeCommentList(PremadeCommentListParameters params);
 	
 	/**
 	 * Removes a PremadeCommentList from the data store given its ID
 	 * 
 	 * @param commentListID <code>Long</code>
 	 */
-	public void deletePremadeCommentList(Long commentListID) throws ObjectNotFoundException;
+	void deletePremadeCommentList(Long commentListID) throws ObjectNotFoundException;
 	
 	/**
 	 * Updates the label of a PremadeCommentList given its ID
@@ -126,7 +125,7 @@ public interface PremadeCommentService {
 	 * @param newLabel <code>String</code>
 	 * @return PremadeCommentList
 	 */
-	public PremadeCommentList updatePremadeCommentListLabel(Long commentListID, String newLabel)
+	PremadeCommentList updatePremadeCommentListLabel(Long commentListID, String newLabel)
 		throws ObjectNotFoundException;
 	
 	/**
@@ -137,7 +136,7 @@ public interface PremadeCommentService {
 	 * @param premadeComment <code>PremadeComment</code>
 	 * @return PremadeCommentList
 	 */
-	public PremadeCommentList addPremadeCommentToList(Long commentListID, PremadeComment premadeComment)
+	PremadeCommentList addPremadeCommentToList(Long commentListID, PremadeComment premadeComment)
 		throws ObjectNotFoundException;
 	
 	/**
@@ -148,7 +147,7 @@ public interface PremadeCommentService {
 	 * @param PremadeComment <code>PremadeComment</code>
 	 * @return PremadeCommentList
 	 */
-	public PremadeCommentList removePremadeCommentFromList(Long commentID, PremadeComment premadeComment)
+	PremadeCommentList removePremadeCommentFromList(Long commentID, PremadeComment premadeComment)
 		throws ObjectNotFoundException;
 	
 	/**
@@ -156,7 +155,7 @@ public interface PremadeCommentService {
 	 * 
 	 * @return a Set<PremadeCommentList>
 	 */	
-	public Set<PremadeCommentList> retrieveAllPremadeCommentLists();
+	Set<PremadeCommentList> retrieveAllPremadeCommentLists();
 	
 	/**
 	 * Retrieves all PremadeCommentLists associated with a given user.
@@ -164,14 +163,14 @@ public interface PremadeCommentService {
 	 * @param user <code>User</code>
 	 * @return a Set<PremadeCommentList>
 	 */
-	public Set<PremadeCommentList> retrieveAllPremadeCommentListsByUser(User user);
+	Set<PremadeCommentList> retrieveAllPremadeCommentListsByUser(User user);
 	
 	/**
 	 * Retrieves all PremadeCommentLists associated with a given project id
 	 * @param projectId
 	 * @return
 	 */
-	public Set<PremadeCommentList> retrieveAllPremadeCommentListsByProject(Long projectId);
+	Set<PremadeCommentList> retrieveAllPremadeCommentListsByProject(Long projectId);
 	
 	/**
 	 * Retrieves all PremadeCommentLists associated with a given run.
@@ -179,13 +178,13 @@ public interface PremadeCommentService {
 	 * @param run <code>Run</code>
 	 * @return a Set<PremadeCommentList>
 	 */
-	public Set<PremadeCommentList> retrieveAllPremadeCommentListsByRun(Run run);
+	Set<PremadeCommentList> retrieveAllPremadeCommentListsByRun(Run run);
 	
 	/**
 	 * Retrieves all PremadeCommentLists that have the global field set to true
 	 * @return a Set of PremadeCommentLists
 	 */
-	public Set<PremadeCommentList> retrieveAllGlobalPremadeCommentLists();
+	Set<PremadeCommentList> retrieveAllGlobalPremadeCommentLists();
 	
 	/**
 	 * Retrieves a PremadeCommentList with the given id
@@ -193,7 +192,7 @@ public interface PremadeCommentService {
 	 * @return a PremadeCommentList or null if there is no PremadeCommentList with
 	 * the given id
 	 */
-	public PremadeCommentList retrievePremadeCommentListById(Long id);
+	PremadeCommentList retrievePremadeCommentListById(Long id);
 	
 	/**
 	 * Retrieves a PremadeComment with the given id
@@ -201,7 +200,7 @@ public interface PremadeCommentService {
 	 * @return a PremadeCommet or null if there is no PremadeComment with the
 	 * given id
 	 */
-	public PremadeComment retrievePremadeCommentById(Long id);
+	PremadeComment retrievePremadeCommentById(Long id);
 	
 	/**
 	 * Copies all the PremadeCommentLists that are associated with a project id
@@ -209,7 +208,7 @@ public interface PremadeCommentService {
 	 * @param toProjectId the project id to set in all the new PremadeCommentLists
 	 * @param toOwner the owner to set in all the new PremadeCommentLists
 	 */
-	public void copyPremadeCommentsFromProject(Long fromProjectId, Long toProjectId, User toOwner);
+	void copyPremadeCommentsFromProject(Long fromProjectId, Long toProjectId, User toOwner);
 	
 	/**
 	 * Make the name for a premade comment list given the project id
@@ -223,5 +222,5 @@ public interface PremadeCommentService {
 	 * project without a run
 	 * Project Id: 123, Chemical Reactions
 	 */
-	public String makePremadeCommentListNameFromProjectId(Long projectId);
+	String makePremadeCommentListNameFromProjectId(Long projectId);
 }

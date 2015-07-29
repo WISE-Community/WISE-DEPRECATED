@@ -19,16 +19,16 @@
 
 	<script type="text/javascript">
 		function validateForm(type) {
-			if (type=='project') {
-				if ("id" == $("#projectLookupType :selected").val()) {
+			if (type === 'project') {
+				if ("id" === $("#projectLookupType :selected").val()) {
 					// make sure id is numeric
 					if (!$.isNumeric($("#projectLookupValue").val())) {
 						alert("Please enter a numeric Project ID value.");
 						return false;
 					}
 				}
-			} else if (type=='run') {
-				if ("runId" == $("#runLookupType :selected").val()) {
+			} else if (type === 'run') {
+				if ("runId" === $("#runLookupType :selected").val()) {
 					// make sure id is numeric
 					if (!$.isNumeric($("#runLookupValue").val())) {
 						alert("Please enter a numeric Run ID value.");
@@ -89,7 +89,7 @@
 								code='student_cap' /></a>
 						</h5>
 						<h5>
-							<a href="${contextPath}/admin/account/enabledisableuser.html"><spring:message
+							<a href="${contextPath}/admin/account/enableDisableUser"><spring:message
 									code='admin.index.enableDisableUser' /></a>
 						</h5>
 						<c:if test="${isBatchCreateUserAccountsEnabled}">
@@ -137,7 +137,7 @@
 						</div>
 						<div class="sectionContent">
 							<spring:message code='admin.index.manageProjectBy' />
-							<form style="display:inline" id="lookupProjectForm" action="project/manageallprojects.html" method="GET" onsubmit="return validateForm('project')">
+							<form style="display:inline" id="lookupProjectForm" action="${contextPath}/admin/project/manageallprojects.html" method="GET" onsubmit="return validateForm('project')">
 								<select name="projectLookupType" id="projectLookupType">
 									<option value="id"><spring:message code='id' /></option>
 									<option value="title"><spring:message code='title' /></option>

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2008-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -34,22 +34,22 @@ public interface StudentAttendanceService {
 	/**
 	 * Create a new row in the student attendance table
 	 */
-	public void addStudentAttendanceEntry(Long workgroupId, Long runId, Date loginTimestamp, String presentUserIds, String absentUserIds);
+	void addStudentAttendanceEntry(Long workgroupId, Long runId, Date loginTimestamp, String presentUserIds, String absentUserIds);
 	
 	/**
 	 * Get the a list of StudentAttendance object that have the given runId
 	 * @param runId the id of the run we want StudentAttendance objects for
 	 */
-	public List<StudentAttendance> getStudentAttendanceByRunId(Long runId);
+	List<StudentAttendance> getStudentAttendanceByRunId(Long runId);
 
 	/**
 	 * Get the a list of StudentAttendance object that have the given runId
 	 * @param runId the id of the run we want StudentAttendance objects for
 	 * @param lookBackNumDays int how many days to look back 
 	 */
-	public List<StudentAttendance> getStudentAttendanceByRunIdAndPeriod(Long runId, int lookBackNumDays);
+	List<StudentAttendance> getStudentAttendanceByRunIdAndPeriod(Long runId, int lookBackNumDays);
 	
-	public StudentAttendanceDao<StudentAttendance> getStudentAttendanceDao();
+	StudentAttendanceDao<StudentAttendance> getStudentAttendanceDao();
 
-	public void setStudentAttendanceDao(StudentAttendanceDao<StudentAttendance> studentAttendanceDao);
+	void setStudentAttendanceDao(StudentAttendanceDao<StudentAttendance> studentAttendanceDao);
 }

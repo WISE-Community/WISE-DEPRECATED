@@ -195,7 +195,7 @@ public class AuthorProjectController {
 								
 								String result = "";
 								
-								if(SecurityUtils.isAllowedAccess(pathAllowedToAccess, filePath)) {
+								if (SecurityUtils.isAllowedAccess(pathAllowedToAccess, filePath)) {
 									result = FileManager.retrieveFile(filePath);
 								} else {
 									response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
@@ -243,7 +243,7 @@ public class AuthorProjectController {
 								
 								String result = "";
 								
-								if(SecurityUtils.isAllowedAccess(pathAllowedToAccess, projectPath)) {
+								if (SecurityUtils.isAllowedAccess(pathAllowedToAccess, projectPath)) {
 									result = FileManager.createNode(projectPath, nodeClass, title, type, nodeTemplateParams);
 								} else {
 									response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
@@ -294,7 +294,7 @@ public class AuthorProjectController {
 								
 								String result = "";
 
-								if(SecurityUtils.isAllowedAccess(pathAllowedToAccess, projectFolderPath)) {
+								if (SecurityUtils.isAllowedAccess(pathAllowedToAccess, projectFolderPath)) {
 									result = FileManager.removeFile(projectFolderPath, fileName);
 								} else {
 									response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
@@ -353,7 +353,7 @@ public class AuthorProjectController {
 								
 								String result = "";
 								
-								if(SecurityUtils.isAllowedAccess(pathAllowedToAccess, projectFolderPath)){
+								if (SecurityUtils.isAllowedAccess(pathAllowedToAccess, projectFolderPath)) {
 									result = FileManager.createSequenceFromJSON(projectFolderPath, projectFileName, data);
 								} else {
 									response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
@@ -383,7 +383,7 @@ public class AuthorProjectController {
 								
 								String result = "";
 								
-								if(SecurityUtils.isAllowedAccess(pathAllowedToAccess, projectFolderPath)) {
+								if (SecurityUtils.isAllowedAccess(pathAllowedToAccess, projectFolderPath)) {
 									result = FileManager.copyProject(curriculumBaseDir, projectFolderPath);									
 								} else {
 									response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
@@ -409,7 +409,7 @@ public class AuthorProjectController {
 								
 								String result = "";
 								
-								if(SecurityUtils.isAllowedAccess(pathAllowedToAccess, projectFolderPath)) {
+								if (SecurityUtils.isAllowedAccess(pathAllowedToAccess, projectFolderPath)) {
 									result = FileManager.createFile(projectFolderPath, fileName, data);
 								} else {
 									response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
@@ -435,7 +435,7 @@ public class AuthorProjectController {
 								String result = FileManager.reviewUpdateProject(curriculumBaseDir, parentProjectUrl, projectUrl);
 								
 								response.getWriter().write(result);
-							} else if(command.equals("updateProject")) {
+							} else if (command.equals("updateProject")) {
 								//get the curriculum base directory e.g. /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum
 								String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
 								
@@ -456,7 +456,7 @@ public class AuthorProjectController {
 								
 								String result = "";
 								
-								if(SecurityUtils.isAllowedAccess(pathAllowedToAccess, childProjectFolderPath)) {
+								if (SecurityUtils.isAllowedAccess(pathAllowedToAccess, childProjectFolderPath)) {
 									result = FileManager.updateProject(curriculumBaseDir, parentProjectUrl, childProjectUrl);									
 								} else {
 									response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
@@ -474,7 +474,7 @@ public class AuthorProjectController {
 								//get the from project id string
 								String fromProjectIdStr = request.getParameter("fromProjectId");
 
-								if(fromProjectIdStr != null) {
+								if (fromProjectIdStr != null) {
 									try {
 										//get the from project id
 										long fromProjectId = Long.parseLong(fromProjectIdStr);
@@ -500,7 +500,7 @@ public class AuthorProjectController {
 								
 								String result = "";
 								
-								if(SecurityUtils.isAllowedAccess(pathAllowedToAccess, toProjectFolderPath)) {
+								if (SecurityUtils.isAllowedAccess(pathAllowedToAccess, toProjectFolderPath)) {
 									result = FileManager.importSteps(curriculumBaseDir, fromProjectUrl, toProjectUrl, nodeIds);									
 								} else {
 									response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
@@ -550,7 +550,7 @@ public class AuthorProjectController {
 							//get the max disk space size this project can use
 							Long projectMaxTotalAssetsSize = project.getMaxTotalAssetsSize();
 							
-							if(projectMaxTotalAssetsSize == null) {
+							if (projectMaxTotalAssetsSize == null) {
 								//get the default max project size
 								projectMaxTotalAssetsSize = new Long(wiseProperties.getProperty("project_max_total_assets_size", "15728640"));
 							}
@@ -565,8 +565,8 @@ public class AuthorProjectController {
 							
 							//get all the file names and files to be uploaded
 							Iterator<String> iter = multiRequest.getFileNames();
-							while(iter.hasNext()){
-								String filename = (String)iter.next();
+							while (iter.hasNext()) {
+								String filename = (String) iter.next();
 								MultipartFile oneFile = multiRequest.getFile(filename);
 								String contentType = oneFile.getContentType();
 								if (!allowedProjectAssetContentTypesStr.contains(contentType)) {
@@ -583,7 +583,7 @@ public class AuthorProjectController {
 							//tell the asset manager to handle the file upload
 							String result = AssetManager.uploadAsset(fileList, fileMap, projectFolderPath, dirName, pathToCheckSize, projectMaxTotalAssetsSize);
 							response.getWriter().write(result);
-						} else if(command.equals("remove")) {
+						} else if (command.equals("remove")) {
 							//get the project folder path
 							String path = FileManager.getProjectFolderPath(project);
 							
@@ -596,7 +596,7 @@ public class AuthorProjectController {
 							//tell the asset manager to remove the file
 							String result = AssetManager.removeAsset(path, dirName, assetFileName);
 							response.getWriter().write(result);
-						} else if(command.equals("getSize")) {
+						} else if (command.equals("getSize")) {
 							//get the project folder path
 							String path = FileManager.getProjectFolderPath(project);
 							
@@ -648,69 +648,68 @@ public class AuthorProjectController {
 		}
 
 		String command = request.getParameter(COMMAND);
-		if(command != null && command != ""){
-			if(command.equals("launchAuthoring")){
-				return handleLaunchAuthoring(request, response);
-			} else if(command.equals("getTimestamp")) {
+		if (command != null && command != "") {
+			if (command.equals("launchAuthoring")) {
+				return handleLaunchAuthoring(request);
+			} else if (command.equals("getTimestamp")) {
                 //get the current timestamp on the server and write it to the response
                 response.getWriter().write(String.valueOf(new Date().getTime()));
                 return null;
-            } else if(command.equals("createProject")){
+            } else if (command.equals("createProject")) {
 				return handleCreateProject(request, response);
-			} else if(command.equals("projectList")){
+			} else if (command.equals("projectList")) {
 				return handleProjectList(request, response);
 			} else if (command.equals("notifyProjectOpen")) {
 				return handleNotifyProjectOpen(request, response);
-			} else if (command.equals("notifyProjectClose")){
+			} else if (command.equals("notifyProjectClose")) {
 				return handleNotifyProjectClose(request, response);
-			} else if(command.equals("publishMetadata")){
+			} else if (command.equals("publishMetadata")) {
 				return this.handlePublishMetadata(request, response);
-			} else if(command.equals("getUsername")){
+			} else if (command.equals("getUsername")) {
 				return this.handleGetUsername(request, response);
-			} else if(command.equals("getCurriculumBaseUrl")) {
+			} else if (command.equals("getCurriculumBaseUrl")) {
 				return this.handleGetCurriculumBaseUrl(request, response);
-			} else if(command.equals("getConfig")) {
+			} else if (command.equals("getConfig")) {
 				return this.handleGetConfig(request, response);
-			} else if(command.equals("getEditors")){
-				if(this.projectService.canAuthorProject(project, user)){
+			} else if (command.equals("getEditors")) {
+				if (this.projectService.canAuthorProject(project, user)) {
 					return this.handleGetEditors(request, response);
 				} else {
 					return new ModelAndView(new RedirectView("accessdenied.html"));
 				}
-			} else if(command.equals("preview")){
+			} else if (command.equals("preview")) {
 				PreviewProjectParameters previewParams = new PreviewProjectParameters();
 				previewParams.setProject(project);
 				previewParams.setHttpServletRequest(request);
 
 				return (ModelAndView) this.projectService.previewProject(previewParams);
-			} else if(command.equals("createTag") || command.equals("updateTag") || 
-					command.equals("removeTag") || command.equals("retrieveProjectTags")){
+			} else if (command.equals("createTag") || command.equals("updateTag") || 
+					command.equals("removeTag") || command.equals("retrieveProjectTags")) {
 				return this.taggerController.handleRequestInternal(request, response);
-			} else if(command.equals("getMetadata")) {
+			} else if (command.equals("getMetadata")) {
 				request.setAttribute("project", project);
 				return handleGetMetadata(request, response);
-			} else if(command.equals("postMetadata")) {
+			} else if (command.equals("postMetadata")) {
 				request.setAttribute("project", project);
 				return handlePostMetadata(request, response);
-			} else if(command.equals("reviewUpdateProject")) {
+			} else if (command.equals("reviewUpdateProject")) {
 				return handleReviewUpdateProject(request, response);
-			} else if(command.equals("updateProject")) {
+			} else if (command.equals("updateProject")) {
 				return handleUpdateProject(request, response);
-			} else if(command.equals("importSteps")) {
+			} else if (command.equals("importSteps")) {
 				return handleReviewOrUpdateProject(request, response);
 			}
 		}
 
-		return handleLaunchAuthoring(request, response);
+		return handleLaunchAuthoring(request);
 	}
 	
 	/**
 	 * Launch the authoring tool
 	 * @param request
-	 * @param response
 	 * @return the model and view containing the necessary variables
 	 */
-	private ModelAndView handleLaunchAuthoring(HttpServletRequest request, HttpServletResponse response) {
+	private ModelAndView handleLaunchAuthoring(HttpServletRequest request) {
 		User author = ControllerUtil.getSignedInUser();
 		String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
 		
@@ -720,7 +719,7 @@ public class AuthorProjectController {
 		
 		String projectIdStr = request.getParameter(PROJECT_ID_PARAM_NAME);
 		Project project = null;
-		if(projectIdStr != null && !projectIdStr.equals("") && !projectIdStr.equals("none")){
+		if (projectIdStr != null && !projectIdStr.equals("") && !projectIdStr.equals("none")) {
 			try {
 				project = projectService.getById(Long.parseLong(projectIdStr));
 			} catch (NumberFormatException e) {
@@ -736,7 +735,7 @@ public class AuthorProjectController {
 		mav.addObject("portalAuthorUrl", portalAuthorUrl);
 		mav.addObject("vleurl", vleUrl);
 		
-		if(command != null && command != ""){
+		if (command != null && command != "") {
 			mav.addObject("command", command);
 		}
 		
@@ -751,17 +750,17 @@ public class AuthorProjectController {
 		String editPremadeComments = request.getParameter("editPremadeComments");
 		mav.addObject("editPremadeComments", editPremadeComments);
 		
-		if(project != null){
-			if(author.isAdmin() || aclService.hasPermission(project, BasePermission.WRITE, author) ||
-					aclService.hasPermission(project, BasePermission.ADMINISTRATION, author)){
+		if (project != null) {
+			if (author.isAdmin() || aclService.hasPermission(project, BasePermission.WRITE, author) ||
+					aclService.hasPermission(project, BasePermission.ADMINISTRATION, author)) {
 				String title = null;
-				if(project.getMetadata() != null && project.getMetadata().getTitle() != null && !project.getMetadata().getTitle().equals("")){
+				if (project.getMetadata() != null && project.getMetadata().getTitle() != null && !project.getMetadata().getTitle().equals("")) {
 					title = project.getMetadata().getTitle();
 				} else {
 					title = project.getName();
 				}
 				
-				if(title != null) {
+				if (title != null) {
 					/*
 					 * replace " with \" because if we don't escape it, the " may
 					 * short circuit the parent string that we put the title in
@@ -769,7 +768,7 @@ public class AuthorProjectController {
 					title = title.replaceAll("\"", "\\\\\"");					
 				}
 				
-				if(command == null){
+				if (command == null) {
 					mav.addObject("command", "editProject");
 				}
 				
@@ -803,7 +802,7 @@ public class AuthorProjectController {
 	 */
 	private ModelAndView handleCreateProject(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		User user = ControllerUtil.getSignedInUser();
-		if(this.hasAuthorPermissions(user)){
+		if (this.hasAuthorPermissions(user)) {
 			/*
 			 * get the relative path to the project
 			 * e.g.
@@ -862,7 +861,7 @@ public class AuthorProjectController {
 	@SuppressWarnings("unchecked")
 	private ModelAndView handleNotifyProjectOpen(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		User user = ControllerUtil.getSignedInUser();
-		if(this.hasAuthorPermissions(user)){
+		if (this.hasAuthorPermissions(user)) {
 
 			//get the project object
 			String projectId = request.getParameter("projectId");
@@ -897,7 +896,7 @@ public class AuthorProjectController {
 			}
 
 			/* strip off trailing comma */
-			if(otherUsersAlsoEditingProject.contains(",")){
+			if (otherUsersAlsoEditingProject.contains(",")) {
 				otherUsersAlsoEditingProject = otherUsersAlsoEditingProject.substring(0, otherUsersAlsoEditingProject.length() - 1);
 			}
 
@@ -919,17 +918,17 @@ public class AuthorProjectController {
 	@SuppressWarnings("unchecked")
 	private ModelAndView handleNotifyProjectClose(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		User user = ControllerUtil.getSignedInUser();
-		if(this.hasAuthorPermissions(user)){
+		if (this.hasAuthorPermissions(user)) {
 			String projectId = request.getParameter("projectId");
 			HttpSession currentSession = request.getSession();
 
 			Map<String, ArrayList<String>> openedProjectsToSessions = (Map<String, ArrayList<String>>) servletContext.getAttribute("openedProjectsToSessions");
 
-			if(openedProjectsToSessions == null || openedProjectsToSessions.get(projectId) == null){
+			if (openedProjectsToSessions == null || openedProjectsToSessions.get(projectId) == null) {
 				return null;
 			} else {
 				ArrayList<String> sessions = openedProjectsToSessions.get(projectId);
-				if(!sessions.contains(currentSession.getId())){
+				if (!sessions.contains(currentSession.getId())) {
 					return null;
 				} else {
 					sessions.remove(currentSession.getId());
@@ -964,7 +963,7 @@ public class AuthorProjectController {
 		HashMap<String, ArrayList<String>> openedProjectsToSessions = 
 				(HashMap<String, ArrayList<String>>) servletContext.getAttribute("openedProjectsToSessions");
 
-		if(openedProjectsToSessions != null){
+		if (openedProjectsToSessions != null) {
 			// if there are ppl editing projects, see if there are people editing the same project as logged in user.
 			ArrayList<String> sessions = openedProjectsToSessions.get(projectPath);
 			HashMap<String, User> allLoggedInUsers = (HashMap<String, User>) servletContext
@@ -983,7 +982,7 @@ public class AuthorProjectController {
 			}
 
 			/* strip off trailing comma */
-			if(otherUsersAlsoEditingProject.contains(",")){
+			if (otherUsersAlsoEditingProject.contains(",")) {
 				otherUsersAlsoEditingProject = otherUsersAlsoEditingProject.substring(0, otherUsersAlsoEditingProject.length() - 1);
 			}
 
@@ -1008,16 +1007,16 @@ public class AuthorProjectController {
 
 		JSONArray projects = new JSONArray();
 
-		if(projectTag == null) {
+		if (projectTag == null) {
 			//get all the projects the current user can author
 			projects = getAuthorableProjects(request, response);
-		} else if(projectTag.equals("library")) {
+		} else if (projectTag.equals("library")) {
 			//get all the library projects
 			projects = getLibraryProjects(request, response);
-		} else if(projectTag.equals("authorable")) {
+		} else if (projectTag.equals("authorable")) {
 			//get all the projects the current user can author
 			projects = getAuthorableProjects(request, response);
-		} else if(projectTag.equals("authorableAndLibrary")) {
+		} else if (projectTag.equals("authorableAndLibrary")) {
 			//get all the projects the current user can author
 			JSONArray authorableProjects = getAuthorableProjects(request, response);
 
@@ -1065,9 +1064,9 @@ public class AuthorProjectController {
 		JSONArray projectArray = new JSONArray();
 
 		//loop through all the projects
-		for(Project project : allAuthorableProjects){
-			if(project.getProjectType()==ProjectType.LD &&
-					projectService.canAuthorProject(project, signedInUser)){
+		for(Project project : allAuthorableProjects) {
+			if (project.getProjectType()==ProjectType.LD &&
+					projectService.canAuthorProject(project, signedInUser)) {
 				/*
 				 * get the relative project url
 				 * e.g.
@@ -1078,7 +1077,7 @@ public class AuthorProjectController {
 				//get the title of the project
 				String title = project.getName();
 
-				if(rawProjectUrl != null) {
+				if (rawProjectUrl != null) {
 					/*
 					 * get the project file name
 					 * e.g.
@@ -1120,7 +1119,7 @@ public class AuthorProjectController {
 		JSONArray libraryProjectArray = new JSONArray();
 
 		for(Project libraryProject : libraryProjects) {
-			if(libraryProject.getProjectType()==ProjectType.LD) {
+			if (libraryProject.getProjectType()==ProjectType.LD) {
 				/*
 				 * get the relative project url
 				 * e.g.
@@ -1131,7 +1130,7 @@ public class AuthorProjectController {
 				//get the title of the project
 				String title = libraryProject.getName();
 
-				if(rawProjectUrl != null) {
+				if (rawProjectUrl != null) {
 					/*
 					 * get the project file name
 					 * e.g.
@@ -1182,92 +1181,92 @@ public class AuthorProjectController {
 		User user = ControllerUtil.getSignedInUser();
 
 		/* set the fields in the ProjectMetadata where appropriate */
-		if(metadata != null){
+		if (metadata != null) {
 			ProjectMetadata pMeta = project.getMetadata();
 
 			/* if no previous metadata exists for this project, then we want to create one
 			 * and set it in the project */
-			if(pMeta == null){
+			if (pMeta == null) {
 				pMeta = new ProjectMetadataImpl();
 				pMeta.setProjectId(projectId);
 				project.setMetadata(pMeta);
 			}
 
 			Object title = this.getJSONFieldValue(metadata, "title");
-			if(title != null && ((String) title).trim().length() > 0 && !((String) title).equals("null")){
+			if (title != null && ((String) title).trim().length() > 0 && !((String) title).equals("null")) {
 				pMeta.setTitle((String) title);
 				project.setName((String) title);
 			}
 
 			Object author = this.getJSONFieldValue(metadata, "author");
-			if(author != null){
+			if (author != null) {
 				pMeta.setAuthor((String) author);
 			}
 
 			Object subject = this.getJSONFieldValue(metadata, "subject");
-			if(subject != null){
+			if (subject != null) {
 				pMeta.setSubject((String) subject);
 			}
 
 			Object summary = this.getJSONFieldValue(metadata, "summary");
-			if(summary != null){
+			if (summary != null) {
 				pMeta.setSummary((String) summary);
 			}
 
 			Object graderange = this.getJSONFieldValue(metadata, "graderange");
-			if(graderange != null){
+			if (graderange != null) {
 				pMeta.setGradeRange((String) graderange);
 			}
 
 			Object contact = this.getJSONFieldValue(metadata, "contact");
-			if(contact != null){
+			if (contact != null) {
 				pMeta.setContact((String) contact);
 			}
 
 			Object techreqs = this.getJSONFieldValue(metadata, "techreqs");
-			if(techreqs != null){
+			if (techreqs != null) {
 				pMeta.setTechReqs((String) techreqs);
 			}
 
 			Object tools = this.getJSONFieldValue(metadata, "tools");
-			if(tools != null){
+			if (tools != null) {
 				pMeta.setTools((String) tools);
 			}
 
 			Object lessonplan = this.getJSONFieldValue(metadata, "lessonplan");
-			if(lessonplan != null){
+			if (lessonplan != null) {
 				pMeta.setLessonPlan((String) lessonplan);
 			}
 
 			Object standards = this.getJSONFieldValue(metadata, "standards");
-			if(standards != null){
+			if (standards != null) {
 				pMeta.setStandards((String) standards);
 			}
 
 			Object totaltime = this.getJSONFieldValue(metadata, "totaltime");
-			if(totaltime != null && !((String) totaltime).equals("")){
+			if (totaltime != null && !((String) totaltime).equals("")) {
 				pMeta.setTotalTime((String) totaltime);
 			} 
 
 			Object comptime = this.getJSONFieldValue(metadata, "comptime");
-			if(comptime != null && !((String) comptime).equals("")){
+			if (comptime != null && !((String) comptime).equals("")) {
 				pMeta.setCompTime((String) comptime);
 			}
 
 			Object keywords = this.getJSONFieldValue(metadata, "keywords");
-			if(keywords != null){
+			if (keywords != null) {
 				pMeta.setKeywords((String) keywords);
 			}
 
 			Object language = this.getJSONFieldValue(metadata, "language");
-			if(language != null){
+			if (language != null) {
 				pMeta.setLanguage((String) language);
 			}
 
 			/* save the project */
 			try{
 				this.projectService.updateProject(project, user);
-			} catch (NotAuthorizedException e){
+			} catch (NotAuthorizedException e) {
 				e.printStackTrace();
 				response.getWriter().write(e.getMessage());
 			}
@@ -1292,10 +1291,10 @@ public class AuthorProjectController {
 	 * @param fieldName
 	 * @return
 	 */
-	private Object getJSONFieldValue(JSONObject obj, String fieldName){
+	private Object getJSONFieldValue(JSONObject obj, String fieldName) {
 		try{
 			return obj.get(fieldName);
-		} catch(JSONException e){
+		} catch(JSONException e) {
 			e.printStackTrace();
 			return null;
 		}
@@ -1310,8 +1309,8 @@ public class AuthorProjectController {
 	 * @param servlet
 	 * @return boolean
 	 */
-	private boolean isProjectlessRequest(HttpServletRequest request, String servlet){
-		if(servlet.equals("filemanager")){
+	private boolean isProjectlessRequest(HttpServletRequest request, String servlet) {
+		if (servlet.equals("filemanager")) {
 			return filemanagerProjectlessRequests.contains(request.getParameter("command"));
 		}
 
@@ -1325,7 +1324,7 @@ public class AuthorProjectController {
 	 * @param user
 	 * @return boolean
 	 */
-	private boolean hasAuthorPermissions(User user){
+	private boolean hasAuthorPermissions(User user) {
 		return user.getUserDetails().hasGrantedAuthority(UserDetailsService.AUTHOR_ROLE) || 
 				user.getUserDetails().hasGrantedAuthority(UserDetailsService.TEACHER_ROLE);
 	}
@@ -1433,7 +1432,7 @@ public class AuthorProjectController {
 			
 			// if projectId provided, this is a request for preview
 			String projectIdStr = request.getParameter("projectId");
-			if(projectIdStr != null){
+			if (projectIdStr != null) {
 				Project project = projectService.getById(projectIdStr);
 				String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
 				String rawProjectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
@@ -1442,7 +1441,7 @@ public class AuthorProjectController {
 				
 				// get location of last separator in url 
 				int lastIndexOfSlash = projectURL.lastIndexOf("/");
-				if(lastIndexOfSlash==-1){ 
+				if (lastIndexOfSlash==-1) { 
 					lastIndexOfSlash = projectURL.lastIndexOf("\\");
 				}
 				
@@ -1468,7 +1467,7 @@ public class AuthorProjectController {
 		User user = ControllerUtil.getSignedInUser();
 		ProjectMetadata metadata = project.getMetadata();
 
-		if(metadata == null) {
+		if (metadata == null) {
 			metadata = new ProjectMetadataImpl();
 			project.setMetadata(metadata);
 			try {
@@ -1502,7 +1501,7 @@ public class AuthorProjectController {
 		}
 
 		// get and set the name of the project.
-		if(metadataJSON.has("title")) {
+		if (metadataJSON.has("title")) {
 			try {
 				String title = metadataJSON.getString("title");
 				if (title != null && ((String) title).trim().length() > 0 && title != "null") {
@@ -1537,7 +1536,7 @@ public class AuthorProjectController {
 		//get the project
 		Project project = (Project) request.getAttribute("project");
 
-		if(project != null) {
+		if (project != null) {
 			//get the project metadata
 			ProjectMetadata metadata = project.getMetadata();
 
@@ -1590,7 +1589,7 @@ public class AuthorProjectController {
 			User user = ControllerUtil.getSignedInUser();
 
 			//make sure the signed in user has write access
-			if(this.projectService.canAuthorProject(project, user)) {
+			if (this.projectService.canAuthorProject(project, user)) {
 				//get the wise context e.g. /wise
 				CredentialManager.setRequestCredentials(request, user);
 

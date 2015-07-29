@@ -190,7 +190,7 @@
 		} else if($(this).hasClass('projectInfo')){
 			var projectId = $(this).attr('id').replace('projectInfo_','');
 		}
-		var path = "${contextPath}/teacher/projects/projectinfo.html?projectId=" + projectId;
+		var path = "${contextPath}/projectInfo?projectId=" + projectId;
 		var div = $('#projectDetailDialog').html('<iframe id="projectIfrm" width="100%" height="100%"></iframe>');
 		div.dialog({
 			modal: true,
@@ -335,7 +335,7 @@
 		
 		<div id="pageContent">
 
-		<h5 style="color:#0000CC;"><a href="${contextPath}/admin/index.html"><spring:message code="returnToMainAdminPage" /></a></h5>
+		<h5 style="color:#0000CC;"><a href="${contextPath}/admin"><spring:message code="returnToMainAdminPage" /></a></h5>
 
 			<div class="contentPanel">
 				<div class="panelHeader"><spring:message code="teacher.index.gradeAndManageClassroomRuns"/>

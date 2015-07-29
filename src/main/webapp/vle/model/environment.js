@@ -4,7 +4,7 @@
  * A component is a collection of functions, variables, events and styling
  * grouped according to some common purpose.
  * 
- * @author patrick lawler
+ * @author Patrick Lawler
  */
 function createEnvironment(name, em){
 	

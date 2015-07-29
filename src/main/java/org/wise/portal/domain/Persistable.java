@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2014 Encore Research Group, University of Toronto
+ * Copyright (c) 2007-2015 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -24,8 +24,6 @@ import java.io.Serializable;
 
 /**
  * @author Cynick Young
- * 
- * @version $Id$
  */
 public interface Persistable extends Serializable {
 
@@ -34,5 +32,5 @@ public interface Persistable extends Serializable {
      * 
      * @return <code>Serializable</code> ID
      */
-    public abstract Serializable getId();
+    Serializable getId();
 }

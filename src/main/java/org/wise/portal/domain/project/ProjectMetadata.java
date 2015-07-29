@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2008-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -28,205 +28,204 @@ import java.util.Date;
 import org.json.JSONObject;
 
 /**
- * @author patrick lawler
- * @version $Id:$
+ * @author Patrick Lawler
  */
 public interface ProjectMetadata{
 	
 	/**
 	 * Populates this metadata object using values from the specified JSON obj.
 	 */
-	public void populateFromJSON(JSONObject metadataJSON);
+	void populateFromJSON(JSONObject metadataJSON);
 	
 	/**
 	 * @return <code>String</code> the title to get
 	 */
-	public String getTitle();
+	String getTitle();
 	
 	/**
 	 * @param <code>String</code> the title to set
 	 */
-	public void setTitle(String title);
+	void setTitle(String title);
 	
 	/**
 	 * @return <code>String</code> the author to get
 	 */
-	public String getAuthor();
+	String getAuthor();
 	
 	/**
 	 * @param <code>String</code> the author to set
 	 */
-	public void setAuthor(String author);
+	void setAuthor(String author);
 	
 	/**
 	 * @return <code>String</code> the subject to get
 	 */
-	public String getSubject();
+	String getSubject();
 	
 	/**
 	 * @param <code>String</code> the subject to set
 	 */
-	public void setSubject(String subject);
+	void setSubject(String subject);
 	
 	/**
 	 * @return <code>String</code> the summary to get
 	 */
-	public String getSummary();
+	String getSummary();
 	
 	/**
 	 * @param <code>String</code> the summary to set
 	 */
-	public void setSummary(String summary);
+	void setSummary(String summary);
 	
 	/**
 	 * @return <code>Long</code> the id to get
 	 */
-	public Long getId();
+	Long getId();
 	
 	/**
 	 * @param <code>Long</code> the id to set
 	 */
-	public void setId(Long id);
+	void setId(Long id);
 	
 	/**
 	 * @return <code>String</code> the grade range to get
 	 */
-	public String getGradeRange();
+	String getGradeRange();
 	
 	/**
 	 * @param <code>String</code> the grade rang to set
 	 */
-	public void setGradeRange(String range);
+	void setGradeRange(String range);
 	
 	/**
 	 * @return <code>Long</code> the total time to get
 	 */
-	public String getTotalTime();
+	String getTotalTime();
 	
 	/**
 	 * @param <code>Long</code> the total time to set (in mins)
 	 */
-	public void setTotalTime(String mins);
+	void setTotalTime(String mins);
 	
 	/**
 	 * @return <code>Long</code> the comp time to get
 	 */
-	public String getCompTime();
+	String getCompTime();
 	
 	/**
 	 * @param <code>Long</code> the total time to set (in mins)
 	 */
-	public void setCompTime(String mins);
+	void setCompTime(String mins);
 	
 	/**
 	 * @return <code>String</code> the contact to get
 	 */
-	public String getContact();
+	String getContact();
 	
 	/**
 	 * @param <code>String</code> the contact to set
 	 */
-	public void setContact(String contact);
+	void setContact(String contact);
 	
 	/**
 	 * @return <code>String</code> the tech reqs to get
 	 */
-	public String getTechReqs();
+	String getTechReqs();
 	
 	/**
 	 * @param <code>String</code> the tech reqs to set
 	 */
-	public void setTechReqs(String reqs);
+	void setTechReqs(String reqs);
 
 	/**
 	 * @return <code>String</code> the tools to get
 	 */
-	public String getTools();
+	String getTools();
 	
 	/**
 	 * @param <code>String</code> the tools to set
 	 */
-	public void setTools(String tools);
+	void setTools(String tools);
 
 	/**
 	 * @return <code>String</code> the lesson plan
 	 */
-	public String getLessonPlan();
+	String getLessonPlan();
 	
 	/**
 	 * @param <code>String</code> standards
 	 */
-	public void setStandards(String standards);
+	void setStandards(String standards);
 
 	/**
 	 * @return <code>String</code> the lesson plan
 	 */
-	public String getStandards();
+	String getStandards();
 	
 	/**
 	 * @param <code>String</code> lessonPlan
 	 */
-	public void setLessonPlan(String lessonPlan);
+	void setLessonPlan(String lessonPlan);
 
 	/**
 	 * @param <code>String</code> keywords
 	 */
-	public String getKeywords();
+	String getKeywords();
 	
 	/**
 	 * @return <code>String</code> keywords
 	 */
-	public void setKeywords(String keywords);
+	void setKeywords(String keywords);
 	
 	/**
 	 * @param <code>String</code> language
 	 */
-	public String getLanguage();
+	String getLanguage();
 	
 	/**
 	 * @return <code>String</code> language
 	 */
-	public void setLanguage(String language);
+	void setLanguage(String language);
 	
 	/**
 	 * @param projectId the projectId to set
 	 */
-	public void setProjectId(Long projectId);
+	void setProjectId(Long projectId);
 	
 	/**
 	 * @return the versionId
 	 */
-	public String getVersionId();
+	String getVersionId();
 	
 	/**
 	 * @param versionId the versionId to set
 	 */
-	public void setVersionId(String versionId);
+	void setVersionId(String versionId);
 
 	/**
 	 * @return the projectId
 	 */
-	public Long getProjectId();
+	Long getProjectId();
 	
-	public void setLastCleaned(Date lastCleaned);
+	void setLastCleaned(Date lastCleaned);
 
-	public Date getLastCleaned();
+	Date getLastCleaned();
 
-	public void setLastEdited(Date lastEdited);
+	void setLastEdited(Date lastEdited);
 
-	public Date getLastEdited();
+	Date getLastEdited();
 	
-	public void setLastMinified(Date lastMinified);
+	void setLastMinified(Date lastMinified);
 	
-	public Date getLastMinified();
+	Date getLastMinified();
 	
-	public Long getPostLevel();
+	Long getPostLevel();
 
-	public void setPostLevel(Long postLevel);
+	void setPostLevel(Long postLevel);
 	
-	public String getMaxScores();
+	String getMaxScores();
 
-	public void setMaxScores(String maxScores);
+	void setMaxScores(String maxScores);
 	
-	public String toJSONString();
+	String toJSONString();
 }

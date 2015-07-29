@@ -23,13 +23,19 @@ define(['configService'], function(configService) {
             this.parseProject();
         };
 
-        serviceObject.getProjectStyle = function() {
+        serviceObject.getStyle = function() {
             var style = '';
             var project = this.project;
             if (project != null) {
                 style = project.style;
             }
             return style;
+        };
+
+        serviceObject.getName = function() {
+            var name = this.getProjectMetadata().name;
+            name = !!name ? name : 'A WISE Project (No name)'; // TODO: i18n
+            return name;
         };
 
         serviceObject.getProjectMetadata = function() {

@@ -39,10 +39,10 @@ import org.wise.vle.domain.PersistableDomain;
  * @author Eddie Pan
  */
 @Entity
-@Table(name="portfolio")
-@org.hibernate.annotations.Table(appliesTo="portfolio",
+@Table(name = "portfolio")
+@org.hibernate.annotations.Table(appliesTo = "portfolio",
 indexes = {
-		@Index(name="runIdAndWorkgroupIdIndex", columnNames={"runId", "workgroupId"})	
+		@Index(name = "runIdAndWorkgroupIdIndex", columnNames = {"runId", "workgroupId"})
 }
 		)
 public class Portfolio extends PersistableDomain implements Serializable {
@@ -51,40 +51,40 @@ public class Portfolio extends PersistableDomain implements Serializable {
 
 	//the unique id of the Portfolio
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id = null;
 
 	//the id of the run
-	@Column(name="runId")
+	@Column(name = "runId")
 	private Long runId = null;
 
 	//the id of the workgroup
-	@Column(name="workgroupId")
+	@Column(name = "workgroupId")
 	private Long workgroupId = null;
 
-	@Column(name="metadata", columnDefinition = "mediumtext")
+	@Column(name = "metadata", columnDefinition = "mediumtext")
 	private String metadata = null;
 
-	@Column(name="items", length=512000, columnDefinition = "mediumtext")
+	@Column(name = "items", length = 512000, columnDefinition = "mediumtext")
 	private String items = null;
 
-	@Column(name="deletedItems", length=512000, columnDefinition = "mediumtext")
+	@Column(name = "deletedItems", length = 512000, columnDefinition = "mediumtext")
 	private String deletedItems = null;
 
 	//whether this portfolio is a public portfolio
-	@Column(name="isPublic")
+	@Column(name = "isPublic")
 	private Boolean isPublic = false;
 
 	//whether this portfolio is submitted
-	@Column(name="isSubmitted")
+	@Column(name = "isSubmitted")
 	private Boolean isSubmitted = false;
 
 	//portfolio tags
-	@Column(name="tags")
+	@Column(name = "tags")
 	private String tags;
 
 	//the time the portfolio was posted
-	@Column(name="postTime")
+	@Column(name = "postTime")
 	private Timestamp postTime;
 
 	/**
@@ -96,9 +96,6 @@ public class Portfolio extends PersistableDomain implements Serializable {
 
 	/**
 	 * Constructor that does not populate the data field
-	 * @param runId
-	 * @param projectId
-	 * @param workgroupId
 	 */
 	public Portfolio(JSONObject portfolioJSONObject) {
 		try {

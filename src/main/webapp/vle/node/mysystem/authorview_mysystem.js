@@ -1,7 +1,7 @@
 /**
  * Sets the MySystemNode type as an object of this view
  * @constructor
- * @author patrick lawler
+ * @author Patrick Lawler
  */
 View.prototype.MySystemNode = {};
 View.prototype.MySystemNode.commonComponents = ['Prompt', 'LinkTo'];

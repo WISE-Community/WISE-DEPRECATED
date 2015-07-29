@@ -1,7 +1,7 @@
 /**
  * Sets the HtmlNode type as an object of this view
  * @constructor
- * @author patrick lawler
+ * @author Patrick Lawler
  */
 View.prototype.HtmlNode = {};
 View.prototype.HtmlNode.commonComponents = ['Prompt', 'LinkTo'];

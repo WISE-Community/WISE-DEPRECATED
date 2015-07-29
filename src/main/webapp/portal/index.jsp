@@ -88,7 +88,7 @@
 			</div>
 			
 			<div class="showcase">
-				<div id="projectHeader" class="feature"><span class="featureContent"><spring:message code="index.projects" /></span><a class="projectsLink" href="previewprojectlist.html" title="<spring:message code="index.projects" />"><spring:message code="index.browseCurricula" /></a></div>
+				<div id="projectHeader" class="feature"><span class="featureContent"><spring:message code="index.projects" /></span><a class="projectsLink" href="projectlibrary" title="<spring:message code="index.projects" />"><spring:message code="index.browseCurricula" /></a></div>
 				<div id="features">
 					<div id="featureHeader" class="feature"><span class="featureContent"><spring:message code="index.features" /></span></div>
 					<div id="featuresContent">
@@ -314,7 +314,7 @@
 		$('#projectShowcase').on('click','a.projectDetail',function(){
 			var title = $(this).attr('title');
 			var projectId = $(this).attr('id').replace('projectDetail_','');
-			var path = "teacher/projects/projectinfo.html?projectId=" + projectId;
+			var path = "${contextPath}/projectInfo?projectId=" + projectId;
 			var div = $('#projectDetailDialog').html('<iframe id="projectIfrm" width="100%" height="100%"></iframe>');
 			div.dialog({
 				width: '800',

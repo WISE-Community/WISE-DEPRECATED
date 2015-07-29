@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2008-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -30,8 +30,7 @@ import org.wise.portal.domain.impl.AnnouncementParameters;
 /**
  * A service for working with Announcement objects
  * 
- * @author patrick lawler
- * @version $Id:$
+ * @author Patrick Lawler
  */
 public interface AnnouncementService {
 
@@ -41,14 +40,14 @@ public interface AnnouncementService {
 	 * @param <code>AnnouncementParameters</code>
 	 * @return <code>Announcement</code>
 	 */
-	public Announcement createAnnouncement(AnnouncementParameters params);
+	Announcement createAnnouncement(AnnouncementParameters params);
 	
 	/**
 	 * deletes an Announcement from the data store
 	 * 
 	 * @param <code>long</code> id
 	 */
-	public void deleteAnnouncement(long id);
+	void deleteAnnouncement(long id);
 	
 	/**
 	 * updates an Announcement in the data store
@@ -58,7 +57,7 @@ public interface AnnouncementService {
 	 * @return <code>Announcement</code>
 	 * @throws <code>ObjectNotFoundException</code>
 	 */
-	public Announcement updateAnnouncement(long id, AnnouncementParameters params) throws ObjectNotFoundException;
+	Announcement updateAnnouncement(long id, AnnouncementParameters params) throws ObjectNotFoundException;
 	
 	/**
 	 * retrieves the Announcement with the given Id from the data store
@@ -67,5 +66,5 @@ public interface AnnouncementService {
 	 * @return <code>Announcement</code>
 	 * @throws <code>ObjectNotFoundException</code>
 	 */
-	public Announcement retrieveById(long id) throws ObjectNotFoundException;
+	Announcement retrieveById(long id) throws ObjectNotFoundException;
 }

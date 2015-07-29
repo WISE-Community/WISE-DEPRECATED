@@ -1,7 +1,7 @@
 /**
  * Functions specific to the creation, retrieving and updating of metadata
  * 
- * @author patrick lawler
+ * @author Patrick Lawler
  */
 
 /**

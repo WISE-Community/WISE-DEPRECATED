@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2008-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -33,25 +33,25 @@ public interface StudentAttendance extends Persistable  {
 	/**
 	 * Get the JSONObject representation of this StudentAttendanceImpl object
 	 */
-	public JSONObject toJSONObject();
+	JSONObject toJSONObject();
 	
-	public Long getWorkgroupId();
+	Long getWorkgroupId();
 
-	public void setWorkgroupId(Long workgroupId);
+	void setWorkgroupId(Long workgroupId);
 
-	public Long getRunId();
+	Long getRunId();
 
-	public void setRunId(Long runId);
+	void setRunId(Long runId);
 
-	public Date getLoginTimestamp();
+	Date getLoginTimestamp();
 
-	public void setLoginTimestamp(Date loginTimestamp);
+	void setLoginTimestamp(Date loginTimestamp);
 
-	public String getPresentUserIds();
+	String getPresentUserIds();
 
-	public void setPresentUserIds(String presentUserIds);
+	void setPresentUserIds(String presentUserIds);
 
-	public String getAbsentUserIds();
+	String getAbsentUserIds();
 
-	public void setAbsentUserIds(String absentUserIds);
+	void setAbsentUserIds(String absentUserIds);
 }

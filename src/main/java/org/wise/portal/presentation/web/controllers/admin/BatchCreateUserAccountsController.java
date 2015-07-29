@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2008-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -28,7 +28,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Properties;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -45,8 +44,6 @@ import org.wise.portal.domain.authentication.impl.StudentUserDetails;
 import org.wise.portal.domain.project.impl.Projectcode;
 import org.wise.portal.domain.user.BatchCreateUserAccountsUpload;
 import org.wise.portal.domain.user.User;
-import org.wise.portal.service.module.CurnitService;
-import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.student.StudentService;
 import org.wise.portal.service.user.UserService;
 
@@ -56,22 +53,12 @@ import org.wise.portal.service.user.UserService;
  * 
  * Currently only supports student accounts
  * 
- * @author hirokiterashima
- * @version $Id$
+ * @author Hiroki Terashima
  */
 @Controller
 @RequestMapping("/admin/account/batchcreateuseraccounts.html")
 public class BatchCreateUserAccountsController {
 
-	@Autowired
-	private ProjectService projectService;
-
-	@Autowired
-	private CurnitService curnitService;
-
-	@Autowired
-	private Properties wiseProperties;
-	
 	@Autowired
 	private UserService userService;
 	

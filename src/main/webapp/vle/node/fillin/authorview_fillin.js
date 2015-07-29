@@ -1,7 +1,7 @@
 /**
  * Sets the FillinNode type as an object of this view
  * @constructor
- * @author patrick lawler
+ * @author Patrick Lawler
  */
 View.prototype.FillinNode = {};
 View.prototype.FillinNode.commonComponents = [];
