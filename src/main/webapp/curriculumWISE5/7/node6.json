@@ -224,6 +224,7 @@
                     "incorrectPositionFeedback": "Yes, this is an Xbox but it's in the wrong position."
                 }
             ],
+            "showSaveButton": true,
             "showSubmitButton": true
         }
     ],

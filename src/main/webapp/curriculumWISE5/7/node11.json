@@ -4,7 +4,9 @@
         {
             "id": "4j72bdiy3b",
             "componentType": "AudioRecorder",
-            "prompt": "Work on this audio recorder step."
+            "prompt": "Work on this audio recorder step.",
+            "showSaveButton": true,
+            "showSubmitButton": true
         }
     ],
     "lockAfterSubmit": false,

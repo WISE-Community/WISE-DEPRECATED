@@ -6,6 +6,7 @@
             "componentType": "OpenResponse",
             "prompt": "Work on this open response step.",
             "numRows": 5,
+            "showSaveButton": true,
             "showSubmitButton": true
         },
         {
@@ -18,7 +19,9 @@
         {
             "id": "0h4wxy7x7r",
             "componentType": "Draw",
-            "prompt": "Work on this draw step."
+            "prompt": "Work on this draw step.",
+            "showSaveButton": true,
+            "showSubmitButton": true
         },
         {
             "id": "95vyuf6abh2",
@@ -42,13 +45,17 @@
             },
             "series": [
                 {
-                    "data": [[0, 0], [5, 1], [10, 2], [15, 3]]
+                    "data": [[0, 0], [5, 1], [10, 2], [15, 3]],
+                    "canClickToAddData": true
                 },
                 {
-                    "data": [[0, 0], [5, 10], [10, 20], [16, 30]]
+                    "data": [[0, 0], [5, 10], [10, 20], [16, 30]],
+                    "canClickToAddData": true
                 }
             ],
-            "canClickToAddData": true
+            "canClickToAddData": true,
+            "showSaveButton": true,
+            "showSubmitButton": true
         },
         {
             "id": "73h3c0h98s",
@@ -273,6 +280,7 @@
                     "incorrectPositionFeedback": "Yes, this is an Xbox but it's in the wrong position."
                 }
             ],
+            "showSaveButton": true,
             "showSubmitButton": true
         },
         {
@@ -411,7 +419,6 @@
                     }
                 ]
             ],
-            "showSubmitButton": false,
             "showSaveButton": true,
             "showSubmitButton": true
         }
