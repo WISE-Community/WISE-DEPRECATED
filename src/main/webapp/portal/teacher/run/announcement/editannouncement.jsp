@@ -18,7 +18,7 @@
 			<form method="POST" action="manageannouncement.html" id="manageannouncement" autocomplete='off'>
 				<div>
 					<label for="titleField"><spring:message code="teacher.run.announcement.editannouncement.title"/> </label>
-					<input name="title" id="titleField" value="${announcement.title}" size="50"></input>
+					<input name="title" id="titleField" value="${announcement.title}" size="50"/>
 				</div><br/>
 				<div><label for="announcementField"><spring:message code="teacher.run.announcement.editannouncement.message"/> </label></div>
 				<div><textarea name="announcement" rows="7" cols="90" id="announcementField">${announcement.announcement}</textarea></div>

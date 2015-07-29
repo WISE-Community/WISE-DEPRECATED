@@ -20,7 +20,7 @@
 <script type='text/javascript'>
 	function enableAccount(username) {
 		$.ajax({
-			url:"enabledisableuser.html",
+			url:"enableDisableUser",
 			type:"POST",
 			data:{"doEnable":true,"username":username},
 			success:function(data,textStatus,jqHXR) {
@@ -34,7 +34,7 @@
 	function disableAccount() {
 		var username = $("#usernameToDisable").val();
 		$.ajax({
-			url:"enabledisableuser.html",
+			url:"enableDisableUser",
 			type:"POST",
 			data:{"doEnable":false,"username":username},
 			success:function(data,textStatus,jqHXR) {
@@ -66,8 +66,8 @@
 	<div id='msg'><spring:message code="admin.account.enabledisableuser.typeUsername" /></div><br/>
 	
 	<form id='disableAccountForm'>
-		<input type="text" id="usernameToDisable"></input>
-		<input type="button" value="Disable Account" onclick="disableAccount();"></input>
+		<input type="text" id="usernameToDisable"/>
+		<input type="button" value="Disable Account" onclick="disableAccount();"/>
 	</form>
 	<br/><br/>
 	<h3><spring:message code="admin.account.enabledisableuser.disabledAccouts" /></h3>

@@ -574,7 +574,7 @@
 	$('.editAnnouncements').on('click',function(){
 		var title = $(this).attr('title');
 		var runId = $(this).attr('id').replace('editAnnouncements_','');
-		var path = "${contextPath}/teacher/run/announcement/manageannouncement.html?runId=" + runId;
+		var path = "${contextPath}/teacher/run/announcement/manageannouncement?runId=" + runId;
 		var div = $('#editAnnouncementsDialog').html('<iframe id="announceIfrm" width="100%" height="100%"></iframe>');
 		div.dialog({
 			modal: true,

@@ -45,7 +45,7 @@ import org.wise.portal.service.user.UserService;
  * @author Hiroki Terashima
  */
 @Controller
-@RequestMapping("/admin/account/enabledisableuser.html")
+@RequestMapping("/admin/account/enableDisableUser")
 public class EnableDisableUserController {
 
 	@Autowired
@@ -56,20 +56,15 @@ public class EnableDisableUserController {
 	 * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
 	 */
 	@RequestMapping(method = RequestMethod.GET)	
-	protected String handleGET(
-			HttpServletRequest request, 
-			HttpServletResponse response,
-			ModelMap modelMap) throws Exception {
+	protected String handleGET(ModelMap modelMap) throws Exception {
 		// retrieve a list of already-disabled user accounts.
 		List<User> disabledUsers = userService.retrieveDisabledUsers();
 		modelMap.put("disabledUsers", disabledUsers);
-		return "/admin/account/enabledisableuser";
+		return "/admin/account/enableDisableUser";
 	}
 
 	@RequestMapping(method = RequestMethod.POST)	
-	protected String handlePOST(
-			HttpServletRequest request, 
-			HttpServletResponse response) throws Exception {
+	protected String handlePOST(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		// enable/disable user accounts
 		String doEnable = request.getParameter("doEnable");
 		String username = request.getParameter("username");

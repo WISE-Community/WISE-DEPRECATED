@@ -48,26 +48,26 @@ public class NewsItemServiceImpl implements NewsItemService {
 	private NewsItemDao<NewsItem> newsItemDao;
 
 	@Cacheable(value = "news")
-	public List<NewsItem> retrieveAllNewsItem(){
+	public List<NewsItem> retrieveAllNewsItem() {
 		return newsItemDao.getList();
 	}
 
 	@Cacheable(value = "news")
-	public List<NewsItem> retrieveByType(String type){
+	public List<NewsItem> retrieveByType(String type) {
 		return newsItemDao.getListByType(type);
 	}
 
 	public NewsItem retrieveById(Integer id) throws ObjectNotFoundException{
 		try {
 			return newsItemDao.getById(id);
-		} catch (ObjectNotFoundException e){
+		} catch (ObjectNotFoundException e) {
 			throw e;
 		}
 	}
 	
 	@CacheEvict(value = "news", allEntries = true)
 	@Transactional
-	public NewsItem createNewsItem(Date date, User owner, String title, String news, String type){
+	public NewsItem createNewsItem(Date date, User owner, String title, String news, String type) {
 		NewsItem newsItem = new NewsItemImpl();
 		newsItem.setDate(date);
 		newsItem.setOwner(owner);

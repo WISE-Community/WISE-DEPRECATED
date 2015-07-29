@@ -67,7 +67,7 @@ import org.wise.vle.domain.work.StepWork;
  * @author Geoffrey Kwan
  */
 @Controller
-@RequestMapping("/annotation.html")
+@RequestMapping("/annotation")
 public class VLEAnnotationController {
 
 	@Autowired
