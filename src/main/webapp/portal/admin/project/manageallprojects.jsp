@@ -87,7 +87,7 @@ function updateMaxTotalAssetsSize(projectId, newMaxTotalAssetsSize) {
 <div id="pageContent" class="contentPanel">
 <%@page import="org.wise.portal.domain.project.impl.ProjectType" %>
 
-<h5 style="color:#0000CC;"><a href="${contextPath}/admin/index.html"><spring:message code="returnToMainAdminPage" /></a></h5>
+<h5 style="color:#0000CC;"><a href="${contextPath}/admin"><spring:message code="returnToMainAdminPage" /></a></h5>
 
 <c:out value="${message}" />
 <br/>

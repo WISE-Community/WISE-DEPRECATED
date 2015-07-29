@@ -48,12 +48,12 @@ public interface NewsItem {
 	/**
 	 * @return the object id
 	 */
-	Long getId();
+	Integer getId();
 	
 	/**
 	 * @param id - the id to set
 	 */
-	void setId(Long id);
+	void setId(Integer id);
 	
 	/**
 	 * @return the Date of the News Item

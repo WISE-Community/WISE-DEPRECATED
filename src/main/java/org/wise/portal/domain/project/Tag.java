@@ -50,5 +50,5 @@ public interface Tag extends Persistable {
 	/**
 	 * @param Long - the id to set
 	 */
-	void setId(Long id);
+	void setId(Integer id);
 }

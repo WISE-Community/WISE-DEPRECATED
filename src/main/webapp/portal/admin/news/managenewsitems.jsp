@@ -80,7 +80,7 @@ function editNewsItem(newsItemId) {
 <div id="pageContent">
 <div class="contentPanel">
 
-<h5 style="color:#0000CC;"><a href="${contextPath}/admin/index.html"><spring:message code="returnToMainAdminPage" /></a></h5>
+<h5 style="color:#0000CC;"><a href="${contextPath}/admin"><spring:message code="returnToMainAdminPage" /></a></h5>
 
 <div class="sectionHead"><spring:message code="admin.news.newsItems" /></div>
 

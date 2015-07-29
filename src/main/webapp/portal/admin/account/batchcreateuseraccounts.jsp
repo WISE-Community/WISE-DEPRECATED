@@ -32,7 +32,7 @@
 
 <div id="page">
 	<div id="pageContent">
-		<h5 style="color:#0000CC;"><a href="${contextPath}/admin/index.html"><spring:message code="returnToMainAdminPage" /></a></h5>
+		<h5 style="color:#0000CC;"><a href="${contextPath}/admin"><spring:message code="returnToMainAdminPage" /></a></h5>
 		<br/>
 		<c:if test="${msg != null}">
 			<div style="width:500px;font-size:1.2em;font-weight:bold;border:2px dotted black">

@@ -83,13 +83,20 @@ public abstract class AbstractHibernateDao<T> extends HibernateDaoSupport
 	public T getById(Serializable id) throws ObjectNotFoundException {
 		T object = null;
 		try {
-			object = (T) this.getHibernateTemplate().get(
-					this.getDataObjectClass(),  Long.valueOf(id.toString()));
+			if (id instanceof Integer) {
+				object = (T) this.getHibernateTemplate().get(
+						this.getDataObjectClass(), Integer.valueOf(id.toString()));
+			} else {
+				object = (T) this.getHibernateTemplate().get(
+						this.getDataObjectClass(), Long.valueOf(id.toString()));
+			}
 		} catch (NumberFormatException e) {
 			return null;
 		}
-		if (object == null)
+		if (object == null) {
+			// TODO: make ObjectNotFoundException accept non-long id's. We'll need this for Integer id's.
 			throw new ObjectNotFoundException((Long) id, this.getDataObjectClass());
+		}
 		return object;
 	}
 

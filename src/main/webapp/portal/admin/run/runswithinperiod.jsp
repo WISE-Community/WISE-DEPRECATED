@@ -28,7 +28,7 @@ th {
 
 <div id="page">
 <div id="pageContent" class="contentPanel">
-<h5 style="color:#0000CC;"><a href="${contextPath}/admin/index.html"><spring:message code="returnToMainAdminPage" /></a></h5>
+<h5 style="color:#0000CC;"><a href="${contextPath}/admin"><spring:message code="returnToMainAdminPage" /></a></h5>
 
 <h3><spring:message code="run_plural" /> ${period} (${fn:length(runs)} <spring:message code="run_plural" />)</h3>
 <table id="runStatsTable" border="1">

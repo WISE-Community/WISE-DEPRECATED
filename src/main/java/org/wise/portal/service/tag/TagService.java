@@ -36,10 +36,10 @@ public interface TagService {
 	 * Given a <code>Long</code> tag id, returns the tag associated with that
 	 * id, returns null if it does not exist.
 	 * 
-	 * @param Long - id
+	 * @param Integer - id
 	 * @return Tag - tag
 	 */
-	Tag getTagById(Long id);
+	Tag getTagById(Integer id);
 
 	/**
 	 * Given a <code>String</code> name, returns the <code>Tag</code> tag with
@@ -64,7 +64,7 @@ public interface TagService {
 	 * from a project, checks to see if this now makes this tag an orphan 
 	 * and removes it from the database if it is.
 	 * 
-	 * @param Long - tag id
+	 * @param Integer - tag id
 	 */
-	void removeIfOrphaned(Long tagId);
+	void removeIfOrphaned(Integer tagId);
 }

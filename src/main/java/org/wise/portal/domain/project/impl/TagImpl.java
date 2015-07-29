@@ -37,24 +37,18 @@ import org.wise.portal.domain.project.Tag;
  * @author Patrick Lawler
  */
 @Entity
-@Table(name = TagImpl.DATA_STORE_NAME)
-public class TagImpl implements Tag{
-	
-	@Transient
-	public final static String DATA_STORE_NAME = "tags";
-	
-	@Transient
-	public final static String NAME_COLUMN_NAME = "name";
-	
+@Table(name = "tags")
+public class TagImpl implements Tag {
+
 	@Transient
 	private static final long serialVersionUID = 1L;
 
-	@Column(name = TagImpl.NAME_COLUMN_NAME)
+	@Column(name = "name")
 	private String name;
 	
 	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-	private Long id = null;
+	private Integer id = null;
 
 	/**
 	 * @return the name
@@ -73,14 +67,14 @@ public class TagImpl implements Tag{
 	/**
 	 * @return the id
 	 */
-	public Long getId() {
+	public Integer getId() {
 		return id;
 	}
 
 	/**
 	 * @param id the id to set
 	 */
-	public void setId(Long id) {
+	public void setId(Integer id) {
 		this.id = id;
-	}	
+	}
 }

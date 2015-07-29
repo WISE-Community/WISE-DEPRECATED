@@ -42,7 +42,7 @@ import org.wise.portal.service.newsitem.NewsItemService;
  * @author Patrick Lawler
  */
 @Service
-public class NewsItemServiceImpl implements NewsItemService{
+public class NewsItemServiceImpl implements NewsItemService {
 
 	@Autowired
 	private NewsItemDao<NewsItem> newsItemDao;
@@ -57,7 +57,7 @@ public class NewsItemServiceImpl implements NewsItemService{
 		return newsItemDao.getListByType(type);
 	}
 
-	public NewsItem retrieveById(Long id) throws ObjectNotFoundException{
+	public NewsItem retrieveById(Integer id) throws ObjectNotFoundException{
 		try {
 			return newsItemDao.getById(id);
 		} catch (ObjectNotFoundException e){
@@ -81,7 +81,7 @@ public class NewsItemServiceImpl implements NewsItemService{
 	
 	@CacheEvict(value = "news", allEntries = true)
 	@Transactional
-	public void updateNewsItem(Long id, Date date, User owner, String title, String news, String type) 
+	public void updateNewsItem(Integer id, Date date, User owner, String title, String news, String type)
 			throws ObjectNotFoundException {
 		try {
 			NewsItem newsItem = newsItemDao.getById(id);
@@ -98,7 +98,7 @@ public class NewsItemServiceImpl implements NewsItemService{
 	
 	@CacheEvict(value = "news", allEntries = true)
 	@Transactional
-	public void deleteNewsItem(Long newsItemId) {
+	public void deleteNewsItem(Integer newsItemId) {
 		try {
 			NewsItem newsItem = newsItemDao.getById(newsItemId);
 			newsItemDao.delete(newsItem);

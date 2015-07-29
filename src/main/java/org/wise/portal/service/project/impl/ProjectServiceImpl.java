@@ -80,10 +80,6 @@ import org.wise.portal.service.user.UserService;
  */
 public class ProjectServiceImpl implements ProjectService {
 
-	private static final String PREVIEW_PERIOD_NAME = "preview period";
-
-	protected static Set<String> PREVIEW_PERIOD_NAMES;
-
 	@Autowired
 	private Properties wiseProperties;
 
@@ -107,11 +103,6 @@ public class ProjectServiceImpl implements ProjectService {
 	@Autowired
 	private PremadeCommentService premadeCommentService;
 
-	{
-		PREVIEW_PERIOD_NAMES = new HashSet<String>();
-		PREVIEW_PERIOD_NAMES.add(PREVIEW_PERIOD_NAME);
-	}
-
 	/**
 	 * @see org.wise.portal.service.project.ProjectService#addBookmarkerToProject(org.wise.portal.domain.project.Project, net.sf.sail.webapp.domain.User)
 	 */
@@ -133,7 +124,7 @@ public class ProjectServiceImpl implements ProjectService {
 		if (permission.equals(UserDetailsService.PROJECT_WRITE_ROLE)) {
 			this.aclService.removePermission(project, BasePermission.ADMINISTRATION, user);
 			this.aclService.removePermission(project, BasePermission.READ, user);
-			this.aclService.addPermission(project, BasePermission.WRITE, user);	
+			this.aclService.addPermission(project, BasePermission.WRITE, user);
 		} else if (permission.equals(UserDetailsService.PROJECT_READ_ROLE)) {
 			this.aclService.removePermission(project, BasePermission.ADMINISTRATION, user);
 			this.aclService.removePermission(project, BasePermission.WRITE, user);
@@ -318,7 +309,7 @@ public class ProjectServiceImpl implements ProjectService {
 
 	public ModelAndView launchProject(LaunchProjectParameters params)
 			throws Exception {
-		return new ModelAndView(new RedirectView(generateStudentStartProjectUrlString( params.getHttpServletRequest(), 
+		return new ModelAndView(new RedirectView(generateStudentStartProjectUrlString(
 				params.getRun(), params.getWorkgroup())));
 	}
 
@@ -426,13 +417,11 @@ public class ProjectServiceImpl implements ProjectService {
 
 	/**
 	 * Returns url string for actual run
-	 * @param request
 	 * @param run
 	 * @param workgroup
 	 * @return
 	 */
-	public String generateStudentStartProjectUrlString(HttpServletRequest request,
-			Run run, Workgroup workgroup) {
+	public String generateStudentStartProjectUrlString(Run run, Workgroup workgroup) {
 	    Project project = run.getProject();
 	    Integer wiseVersion = project.getWiseVersion();
 	    if (wiseVersion == null || wiseVersion == 4) {
@@ -486,15 +475,15 @@ public class ProjectServiceImpl implements ProjectService {
 	/**
 	 * @see org.wise.portal.service.project.ProjectService#addTagToProject(java.lang.String, org.wise.portal.domain.project.Project)
 	 */
-	@CacheEvict(value="project", allEntries=true)
-	public Long addTagToProject(String tagString, Long projectId) {
+	@CacheEvict(value = "project", allEntries = true)
+	public Integer addTagToProject(String tagString, Long projectId) {
 		
 		Tag tag = this.tagService.createOrGetTag(tagString);
 		
 		Project project = null;
 
 		/* retrieve the project */
-		try{
+		try {
 			project = this.projectDao.getById(projectId);
 		} catch(ObjectNotFoundException e) {
 			e.printStackTrace();
@@ -510,15 +499,15 @@ public class ProjectServiceImpl implements ProjectService {
 		project.getTags().add(tag);
 		this.projectDao.save(project);
 
-		return (Long) tag.getId();
+		return (Integer) tag.getId();
 	}
 
 	/**
 	 * @see org.wise.portal.service.project.ProjectService#removeTagFromProject(java.lang.String, org.wise.portal.domain.project.Project)
 	 */
-	@CacheEvict(value="project", allEntries=true)
+	@CacheEvict(value = "project", allEntries = true)
 	@Transactional
-	public void removeTagFromProject(Long tagId, Long projectId) {
+	public void removeTagFromProject(Integer tagId, Long projectId) {
 		Tag tag = this.tagService.getTagById(tagId);
 		Project project = null;
 
@@ -531,7 +520,7 @@ public class ProjectServiceImpl implements ProjectService {
 		if (tag != null && project != null) {
 			project.getTags().remove(tag);
 			this.projectDao.save(project);
-			this.tagService.removeIfOrphaned((Long)tag.getId());
+			this.tagService.removeIfOrphaned((Integer)tag.getId());
 		}
 	}
 
@@ -539,13 +528,13 @@ public class ProjectServiceImpl implements ProjectService {
 	 * @see org.wise.portal.service.project.ProjectService#updateTag(java.lang.Long, java.lang.Long, java.lang.String)
 	 */
 	@Transactional
-	public Long updateTag(Long tagId, Long projectId, String name) {
+	public Integer updateTag(Integer tagId, Long projectId, String name) {
 		Tag currentTag = this.tagService.getTagById(tagId);
 
 		/* if the current tag's name is equivalent of the given name to change
 		 * to, then we do not need to do anything, so just return the currentTag's id */
 		if (currentTag.getName().toLowerCase().equals(name.toLowerCase())) {
-			return (Long) currentTag.getId();
+			return (Integer) currentTag.getId();
 		}
 
 		/* remove the current tag */
@@ -572,7 +561,7 @@ public class ProjectServiceImpl implements ProjectService {
 	public boolean projectContainsTag(Project project, String name) {
 
 		project.getTags().size();  // force-fetch project tags from db
-		for(Tag t : project.getTags()) {
+		for (Tag t : project.getTags()) {
 			if (t.getName().toLowerCase().equals(name.toLowerCase())) {
 				return true;
 			}
@@ -640,7 +629,7 @@ public class ProjectServiceImpl implements ProjectService {
 		} else {
 			Long parentProjectId = project.getParentProjectId();
 			if (parentProjectId == null || this.projectContainsTag(project, "library")) {
-				return (Long)project.getId();
+				return (Long) project.getId();
 			} else {
 				return this.identifyRootProjectId(this.getById(parentProjectId));
 			}

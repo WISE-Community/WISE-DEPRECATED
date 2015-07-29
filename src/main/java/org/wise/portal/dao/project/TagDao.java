@@ -41,10 +41,10 @@ public interface TagDao<T extends Tag> extends SimpleDao<T> {
 	Tag getTagByName(String name);
 	
 	/**
-	 * Given a <code>Long</code> tagId, removes that tag from the database
+	 * Given a <code>Integer</code> tagId, removes that tag from the database
 	 * if it is not used by any projects.
 	 * 
-	 * @param Long - tag id
+	 * @param Integer - tag id
 	 */
-	void removeIfOrphaned(Long tagId);
+	void removeIfOrphaned(Integer tagId);
 }

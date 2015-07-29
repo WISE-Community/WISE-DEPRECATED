@@ -73,7 +73,7 @@ public class NewsItemController {
 		String newsItemId = request.getParameter(NEWS_ITEM_ID);
 
 		if ("edit".equals(action)) {
-			modelMap.put(NEWS_ITEM, newsItemService.retrieveById(Long.parseLong(newsItemId)));
+			modelMap.put(NEWS_ITEM, newsItemService.retrieveById(Integer.parseInt(newsItemId)));
 			return "admin/news/editnewsitem";
 		} else if ("add".equals(action)) {
 			// do nothing, just return add news item page
@@ -93,11 +93,11 @@ public class NewsItemController {
 		String newsItemId = request.getParameter(NEWS_ITEM_ID);
 
 		if ("remove".equals(action)) {
-			newsItemService.deleteNewsItem(Long.parseLong(newsItemId));
+			newsItemService.deleteNewsItem(Integer.parseInt(newsItemId));
 			response.getWriter().print("success");
 			return null;
 		} else if ("edit".equals(action)) {
-			NewsItem newsItem = newsItemService.retrieveById(Long.parseLong(newsItemId));
+			NewsItem newsItem = newsItemService.retrieveById(Integer.parseInt(newsItemId));
 			String title = request.getParameter(TITLE);
 			String news = request.getParameter(NEWS);
 			String type = request.getParameter(TYPE);

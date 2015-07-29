@@ -31,7 +31,7 @@ function validateForm() {
 <%@ include file="../../headermain.jsp"%>
 <div id="page">
 <div id="pageContent" class="contentPanel">
-<h5 style="color:#0000CC;"><a href="${contextPath}/admin/index.html"><spring:message code="returnToMainAdminPage" /></a></h5>
+<h5 style="color:#0000CC;"><a href="${contextPath}/admin"><spring:message code="returnToMainAdminPage" /></a></h5>
 <br/>
 
 <c:if test="${msg != null}">

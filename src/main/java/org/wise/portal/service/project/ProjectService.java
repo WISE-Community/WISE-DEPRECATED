@@ -267,29 +267,29 @@ public interface ProjectService {
 	 * @param String - project
 	 */
 	@Transactional
-	Long addTagToProject(String tag, Long projectId);
+	Integer addTagToProject(String tag, Long projectId);
 	
 	/**
 	 * Given a <code>Tag</code> and a <code>Project</code>, removes the
 	 * tag from the project.
 	 * 
-	 * @param Tag - tag
+	 * @param tagId - Integer id of tag
 	 * @param Project - project
 	 */
 	@Transactional
-	void removeTagFromProject(Long tagId, Long projectId);
+	void removeTagFromProject(Integer tagId, Long projectId);
 	
 	/**
 	 * Given a <code>Long</code> tag id, a <code>Long</code> project id and
 	 * a <code>String</code> name, updates that project tag to that name, returning
 	 * the resulting <code>Long</code> tag Id.
 	 * 
-	 * @param Long - tagId
+	 * @param tagId - Integer id of tag
 	 * @param Long - projectId
 	 * @param String - name
-	 * @return Long - tag id
+	 * @return Integer - tag id
 	 */
-	Long updateTag(Long tagId, Long projectId, String name);
+	Integer updateTag(Integer tagId, Long projectId, String name);
 	
 	/**
 	 * Given a Project and a <code>String</code> tag

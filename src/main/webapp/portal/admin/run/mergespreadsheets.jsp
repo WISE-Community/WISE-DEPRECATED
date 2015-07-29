@@ -33,7 +33,7 @@
 
 <div id="page">
     <div id="pageContent">
-        <h5 style="color:#0000CC;"><a href="${contextPath}/admin/index.html"><spring:message
+        <h5 style="color:#0000CC;"><a href="${contextPath}/admin"><spring:message
                 code="returnToMainAdminPage"/></a></h5>
         <br/>
 

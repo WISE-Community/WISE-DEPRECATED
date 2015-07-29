@@ -89,7 +89,7 @@ public class NewsItemImpl implements NewsItem, Comparable<NewsItem> {
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id = null;
+    private Integer id = null;
 
 	/**
 	 * @return the news
@@ -108,14 +108,14 @@ public class NewsItemImpl implements NewsItem, Comparable<NewsItem> {
 	/**
 	 * @return the id
 	 */
-	public Long getId() {
+	public Integer getId() {
 		return id;
 	}
 
 	/**
 	 * @param id the id to set
 	 */
-	public void setId(Long id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 

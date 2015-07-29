@@ -45,7 +45,7 @@ public class TagServiceImpl implements TagService {
 	 * @see org.wise.portal.service.tag.TagService#getTagById(java.lang.Long)
 	 */
 	@Transactional(readOnly = true)
-	public Tag getTagById(Long id) {
+	public Tag getTagById(Integer id) {
 		try{
 			return this.tagDao.getById(id);
 		} catch (ObjectNotFoundException e) {
@@ -88,14 +88,7 @@ public class TagServiceImpl implements TagService {
 	 * @see org.wise.portal.service.tag.TagService#removeIfOrphaned(java.lang.Long)
 	 */
 	@Transactional
-	public void removeIfOrphaned(Long tagId) {
+	public void removeIfOrphaned(Integer tagId) {
 		this.tagDao.removeIfOrphaned(tagId);
-	}
-	
-	/**
-	 * @param tagDao the tagDao to set
-	 */
-	public void setTagDao(TagDao<Tag> tagDao) {
-		this.tagDao = tagDao;
 	}
 }

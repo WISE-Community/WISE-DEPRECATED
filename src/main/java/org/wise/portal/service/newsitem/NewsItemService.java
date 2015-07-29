@@ -68,11 +68,11 @@ public interface NewsItemService {
 	/**
 	 * Retrieves a NewsItem given an ID
 	 * 
-	 * @param newsItemId <code>Long</code>
+	 * @param id <code>Integer</code> id of news item to retrieve
 	 * @return NewsItem
 	 * @throws ObjectNotFoundException
 	 */
-	NewsItem retrieveById(Long id) throws ObjectNotFoundException;
+	NewsItem retrieveById(Integer id) throws ObjectNotFoundException;
 	
 	/**
 	 * Updates a NewsItem in the data store.
@@ -85,14 +85,14 @@ public interface NewsItemService {
 	 * @param type news item type
 	 * @throws ObjectNotFoundException 
 	 */
-	void updateNewsItem(Long id, Date date, User owner, String title,
+	void updateNewsItem(Integer id, Date date, User owner, String title,
 			String news, String type) throws ObjectNotFoundException;
 	
 	/**
 	 * Deletes a NewsItem from the data store.
 	 * 
-	 * @param newsItemId <code>Long</code>
+	 * @param newsItemId <code>Integer</code>
 	 */
-	void deleteNewsItem(Long newsItemId);
+	void deleteNewsItem(Integer newsItemId);
 
 }

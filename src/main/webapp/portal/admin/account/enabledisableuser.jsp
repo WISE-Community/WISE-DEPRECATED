@@ -59,7 +59,7 @@
 <div id="pageContent">
 
 	<h5 style="color: #0000CC;">
-		<a href="${contextPath}/admin/index.html"><spring:message code="returnToMainAdminPage" /></a>
+		<a href="${contextPath}/admin"><spring:message code="returnToMainAdminPage" /></a>
 	</h5>
 	<br/>
 	<h3><spring:message code="admin.account.enabledisableuser.disableAccout" /></h3>
