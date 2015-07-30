@@ -40,13 +40,13 @@ public interface VLEService {
 	 *     return an empty list.
 	 */
 	List<ComponentState> getComponentStates(Integer id, Integer runId, Integer periodId, Integer workgroupId,
-												   String nodeId, String componentId, String componentType);
+                                            Boolean isAutoSave, String nodeId, String componentId, String componentType);
 
 	/**
 	 * Saves ComponentState in the data store
 	 */
 	ComponentState saveComponentState(Integer id, Integer runId, Integer periodId, Integer workgroupId,
-									  String nodeId, String componentId, String componentType,
+                                      Boolean isAutoSave, String nodeId, String componentId, String componentType,
 									  String studentData, String clientSaveTime) throws ObjectNotFoundException;
 
 

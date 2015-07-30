@@ -70,6 +70,7 @@ public class StudentDataController {
             @RequestParam(value = "runId", required = false) Integer runId,
             @RequestParam(value = "periodId", required = false) Integer periodId,
             @RequestParam(value = "workgroupId", required = false) Integer workgroupId,
+            @RequestParam(value = "isAutoSave", required = false) Boolean isAutoSave,
             @RequestParam(value = "nodeId", required = false) String nodeId,
             @RequestParam(value = "componentId", required = false) String componentId,
             @RequestParam(value = "componentType", required = false) String componentType,
@@ -80,7 +81,7 @@ public class StudentDataController {
         JSONObject result = new JSONObject();
         if (getComponentStates) {
             List<ComponentState> componentStates = vleService.getComponentStates(id, runId, periodId, workgroupId,
-                    nodeId, componentId, componentType);
+                    isAutoSave, nodeId, componentId, componentType);
 
             JSONArray componentStatesJSONArray = new JSONArray();
 
@@ -162,6 +163,7 @@ public class StudentDataController {
                                     componentStateJSONObject.isNull("runId") ? null : componentStateJSONObject.getInt("runId"),
                                     componentStateJSONObject.isNull("periodId") ? null : componentStateJSONObject.getInt("periodId"),
                                     componentStateJSONObject.isNull("workgroupId") ? null : componentStateJSONObject.getInt("workgroupId"),
+                                    componentStateJSONObject.isNull("isAutoSave") ? null : componentStateJSONObject.getBoolean("isAutoSave"),
                                     componentStateJSONObject.isNull("nodeId") ? null : componentStateJSONObject.getString("nodeId"),
                                     componentStateJSONObject.isNull("componentId") ? null : componentStateJSONObject.getString("componentId"),
                                     componentStateJSONObject.isNull("componentType") ? null : componentStateJSONObject.getString("componentType"),
@@ -172,6 +174,7 @@ public class StudentDataController {
                             componentState.setRun(null);
                             componentState.setPeriod(null);
                             componentState.setWorkgroup(null);
+                            componentState.setIsAutoSave(null);
                             componentState.setNodeId(null);
                             componentState.setComponentId(null);
                             componentState.setComponentType(null);

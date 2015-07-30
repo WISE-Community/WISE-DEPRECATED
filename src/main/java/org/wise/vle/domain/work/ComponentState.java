@@ -64,6 +64,9 @@ public class ComponentState extends PersistableDomain {
 	@JoinColumn(name = "workgroupId", nullable = false)
 	private WISEWorkgroup workgroup;
 
+	@Column(name = "isAutoSave", nullable = false)
+	private Boolean isAutoSave;
+
     @Column(name = "nodeId", nullable = false, length = 30)
     private String nodeId;
 
@@ -116,6 +119,14 @@ public class ComponentState extends PersistableDomain {
 
 	public void setWorkgroup(WISEWorkgroup workgroup) {
 		this.workgroup = workgroup;
+	}
+
+	public Boolean isAutoSave() {
+		return isAutoSave;
+	}
+
+	public void setIsAutoSave(Boolean isAutoSave) {
+		this.isAutoSave = isAutoSave;
 	}
 
 	public String getNodeId() {
@@ -197,7 +208,11 @@ public class ComponentState extends PersistableDomain {
 				Long workgroupId = this.workgroup.getId();
 				componentStateJSONObject.put("workgroupId", workgroupId);
 			}
-            
+
+            if (this.isAutoSave != null) {
+                componentStateJSONObject.put("isAutoSave", Boolean.toString(this.isAutoSave));
+            }
+
             // set the node id
 			if (this.nodeId != null) {
 				componentStateJSONObject.put("nodeId", this.nodeId);
@@ -227,7 +242,7 @@ public class ComponentState extends PersistableDomain {
 			if (this.studentData != null) {
 				componentStateJSONObject.put("studentData", new JSONObject(studentData));
 			}
-            
+
         } catch (JSONException e) {
             e.printStackTrace();
         }

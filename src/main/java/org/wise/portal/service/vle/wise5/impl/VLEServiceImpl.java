@@ -66,7 +66,8 @@ public class VLEServiceImpl implements VLEService {
 
     @Override
     public List<ComponentState> getComponentStates(Integer id, Integer runId, Integer periodId, Integer workgroupId,
-                                                   String nodeId, String componentId, String componentType) {
+                                                   Boolean isAutoSave, String nodeId,
+                                                   String componentId, String componentType) {
         Run run = null;
         if (runId != null) {
             try {
@@ -93,21 +94,21 @@ public class VLEServiceImpl implements VLEService {
             }
         }
 
-        return componentStateDao.getComponentStatesByParams(id, run, period, workgroup, nodeId, componentId, componentType);
+        return componentStateDao.getComponentStatesByParams(id, run, period, workgroup,
+                isAutoSave, nodeId, componentId, componentType);
     }
 
     @Override
     public ComponentState saveComponentState(Integer id, Integer runId, Integer periodId, Integer workgroupId,
-                                             String nodeId, String componentId, String componentType,
+                                             Boolean isAutoSave, String nodeId, String componentId, String componentType,
                                              String studentData, String clientSaveTime) {
         ComponentState componentState;
         if (id != null) {
             // if the id is passed in, the client is requesting an update, so fetch the ComponentState from data store
-            List<ComponentState> componentStates = getComponentStates(id, null, null, null, null, null, null);
-            if (componentStates != null && componentStates.size() > 0) {
-                // TODO: maybe we want a getComponentStateById method here?
-                componentState = componentStates.get(0);
-            } else {
+            try {
+                componentState = (ComponentState) componentStateDao.getById(id);
+            } catch (ObjectNotFoundException e) {
+                e.printStackTrace();
                 return null;
             }
         } else {
@@ -136,6 +137,11 @@ public class VLEServiceImpl implements VLEService {
                 e.printStackTrace();
             }
         }
+
+        if (isAutoSave != null) {
+            componentState.setIsAutoSave(isAutoSave);
+        }
+
         if (nodeId != null) {
             componentState.setNodeId(nodeId);
         }
@@ -145,7 +151,6 @@ public class VLEServiceImpl implements VLEService {
         if (componentType != null) {
             componentState.setComponentType(componentType);
         }
-
         if (clientSaveTime != null) {
             Timestamp clientSaveTimestamp = new Timestamp(new Long(clientSaveTime));
             componentState.setClientSaveTime(clientSaveTimestamp);
