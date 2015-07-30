@@ -418,7 +418,7 @@ public class InformationController {
         String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
 		String studentUploadsBaseWWW = wiseProperties.getProperty("studentuploads_base_www");
 		String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
-    	String cRaterRequestURL = wiseBaseURL + "/cRater.html?type=cRater";  // the url to make CRater requests
+    	String cRaterRequestURL = wiseBaseURL + "/cRater?type=cRater";  // the url to make CRater requests
 
 		String rawProjectUrl = null;
 		JSONObject config = new JSONObject();
@@ -497,7 +497,7 @@ public class InformationController {
 	    	String ideaBasketURL = wiseBaseURL + "/ideaBasket.html?runId=" + runId + "&projectId=" + run.getProject().getId().toString();
 
             //get the url to get/post portfolio data
-            String portfolioURL = wiseBaseURL + "/portfolio.html?runId=" + runId;
+            String portfolioURL = wiseBaseURL + "/portfolio?runId=" + runId;
 
             if (periodId != null) {
 	    		//add the period id if it is available
@@ -527,7 +527,7 @@ public class InformationController {
 			}
 			
 			//get the url for websocket connections
-			String webSocketURL = webSocketBaseURL + "/websocket.html";
+			String webSocketURL = webSocketBaseURL + "/websocket";
 			
 			//get the url for sending and receiving student statuses
 			String studentStatusURL = wiseBaseURL + "/studentStatus.html";

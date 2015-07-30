@@ -46,13 +46,13 @@ import org.wise.vle.domain.portfolio.Portfolio;
  * @author Eddie Pan
  */
 @Controller
-@RequestMapping("/portfolio.html")
+@RequestMapping("/portfolio")
 public class PortfolioController {
 
 	@Autowired
 	private VLEService vleService;
 
-	@RequestMapping(method=RequestMethod.POST)
+	@RequestMapping(method = RequestMethod.POST)
 	public ModelAndView doPost(
 			@RequestParam("action") String action,
 			@RequestParam("runId") String runIdStr,
@@ -68,13 +68,13 @@ public class PortfolioController {
 
 		boolean allowedAccess = isAllowedAcess(signedInUser,runId,workgroupId);
 
-		if(!allowedAccess) {
+		if (!allowedAccess) {
 			//user is not allowed to make this request
 			response.sendError(HttpServletResponse.SC_FORBIDDEN);
 			return null;
 		}
 
-		if(action.equals("savePortfolio") && runId != null && workgroupId != null) {
+		if (action.equals("savePortfolio") && runId != null && workgroupId != null) {
 			try {
 				String portfolioJSONString = request.getParameter("portfolio");
 				JSONObject portfolioJSONObject = new JSONObject(portfolioJSONString);
@@ -83,10 +83,10 @@ public class PortfolioController {
 				// get the last Portfolio that was saved
 				Portfolio lastSavedPortfolio = vleService.getPortfolioByRunIdWorkgroupId(runId, workgroupId);
 				// save iff this is first time saving portfolio, or if this portfolio to save and the last-saved portfolio are not the same
-				if(lastSavedPortfolio == null ||
+				if (lastSavedPortfolio == null ||
 						(lastSavedPortfolio != null && 
 						portfolioToSave.getItems() != null &&
-						!portfolioToSave.getItems().equals(lastSavedPortfolio.getItems()))){
+						!portfolioToSave.getItems().equals(lastSavedPortfolio.getItems()))) {
 						vleService.savePortfolio(portfolioToSave);
 				}
 			} catch (JSONException e) {
@@ -106,7 +106,7 @@ public class PortfolioController {
 
 		String runIdStr = request.getParameter("runId");
 		Long runId = null;
-		if(runIdStr != null) {
+		if (runIdStr != null) {
 			try {
 				runId = new Long(runIdStr);
 			} catch(NumberFormatException e) {
@@ -116,7 +116,7 @@ public class PortfolioController {
 
 		String workgroupIdStr = (String) request.getParameter("workgroupId");
 		Long workgroupId = null;
-		if(workgroupIdStr != null) {
+		if (workgroupIdStr != null) {
 			try {
 				workgroupId = new Long(workgroupIdStr);
 			} catch(NumberFormatException e) {
@@ -127,22 +127,22 @@ public class PortfolioController {
 		boolean allowedAccess = isAllowedAcess(signedInUser,runId,workgroupId);
 
 
-		if(!allowedAccess) {
+		if (!allowedAccess) {
 			//user is not allowed to make this request
 			response.sendError(HttpServletResponse.SC_FORBIDDEN);
 			return null;
 		}
 
-		if(runId != null && workgroupId != null) {
+		if (runId != null && workgroupId != null) {
 			//get the Portfolio
 			Portfolio portfolio = vleService.getPortfolioByRunIdWorkgroupId(runId, workgroupId);
 
-			if(portfolio == null) {
+			if (portfolio == null) {
 				//make the Portfolio if it does not exist
 				portfolio = new Portfolio(runId,workgroupId);
 			}
 
-			if(portfolio != null) {
+			if (portfolio != null) {
 				//get the Portfolio JSONString
 				String portfolioJSONString = portfolio.toJSONString();
 				response.getWriter().print(portfolioJSONString);
@@ -158,13 +158,13 @@ public class PortfolioController {
 	 * students that are in the run and in the workgroup can make a request
 	 */
 	private boolean isAllowedAcess(User signedInUser, Long runId, Long workgroupId) {
-		if(SecurityUtils.isAdmin(signedInUser)) {
+		if (SecurityUtils.isAdmin(signedInUser)) {
 			//the user is an admin so we will allow this request
 			return true;
-		} else if(SecurityUtils.isTeacher(signedInUser) && SecurityUtils.isUserOwnerOfRun(signedInUser, runId)) {
+		} else if (SecurityUtils.isTeacher(signedInUser) && SecurityUtils.isUserOwnerOfRun(signedInUser, runId)) {
 			//the user is a teacher that is an owner or shared owner of the run so we will allow this request
 			return true;
-		} else if(SecurityUtils.isStudent(signedInUser) && SecurityUtils.isUserInRun(signedInUser, runId) && SecurityUtils.isUserInWorkgroup(signedInUser, workgroupId)) {
+		} else if (SecurityUtils.isStudent(signedInUser) && SecurityUtils.isUserInRun(signedInUser, runId) && SecurityUtils.isUserInWorkgroup(signedInUser, workgroupId)) {
 			//the student is in the run and in the workgroup so we will allow this request
 			return true;
 		}

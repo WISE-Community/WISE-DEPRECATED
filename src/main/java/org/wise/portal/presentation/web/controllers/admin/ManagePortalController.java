@@ -38,7 +38,7 @@ import org.wise.portal.service.portal.PortalService;
  * @author Hiroki Terashima
  */
 @Controller
-@RequestMapping("/admin/portal/manageportal.html")
+@RequestMapping("/admin/portal/manage")
 public class ManagePortalController {
 
 	@Autowired
@@ -51,7 +51,7 @@ public class ManagePortalController {
 
 		Portal portal = portalService.getById(portalId);
 		modelMap.put("portal", portal);
-		return "admin/portal/manageportal";
+		return "admin/portal/manage";
 	}
 
 	@RequestMapping(method = RequestMethod.POST)

@@ -152,7 +152,7 @@
 										code='admin.index.manageAllProjects' /></a>
 							</h5>
 							<h5>
-								<a href="${contextPath}/admin/project/importproject.html"><spring:message
+								<a href="${contextPath}/admin/project/import"><spring:message
 										code='admin.index.importProject' /></a>
 							</h5>
 							<h5>
@@ -186,7 +186,7 @@
 						</div>
 						<div class="sectionContent">
 							<h5>
-								<a href="${contextPath}/admin/portal/manageportal.html"><spring:message
+								<a href="${contextPath}/admin/portal/manage"><spring:message
 										code='admin.index.configureWISESettings' /></a>
 							</h5>
 							<h5>

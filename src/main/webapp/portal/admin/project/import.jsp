@@ -83,7 +83,7 @@ unzipped:
 </pre>
 </div>
 <br/><br/>
-<form:form method="post" action="importproject.html" 
+<form:form method="post" action="import"
 	commandName="projectZipFile" id="editproject" enctype="multipart/form-data" autocomplete='off' onsubmit="return validateForm();">
 
 	<div>Project Zip File</div>

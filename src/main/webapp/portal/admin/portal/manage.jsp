@@ -15,7 +15,7 @@ $(document).ready(function() {
 	        $(this).find(":selected").each(function() {
 	    	    	$.ajax(
 	    	    	    	{type:'POST', 
-	    		    	    	url:'manageportal.html', 
+	    		    	    	url:'manage',
 	    		    	    	data:'attr='+attrVal+'&portalId=' + portalId + '&val=' + $(this).val(), 
 	    		    	    	error:function(){alert('Error: please talk to wise administrator, which might be you. If this is the case, please talk to yourself.');}, 
 	    		    	    	success:function(){}
@@ -26,7 +26,7 @@ $(document).ready(function() {
 		var defaultSurveyTemplateStr = $("#defaultSurveyTemplate").val();
 		$.ajax(
     	    	{type:'POST', 
-	    	    	url:'manageportal.html', 
+	    	    	url:'manage',
 	    	    	data:'attr=runSurveyTemplate&portalId=' + portalId + '&val=' + defaultSurveyTemplateStr, 
 	    	    	error:function(){alert('Error: please talk to wise administrator, which might be you. If this is the case, please talk to yourself.');}, 
 	    	    	success:function(){alert('Save Successful!');}

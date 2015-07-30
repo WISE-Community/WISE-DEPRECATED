@@ -41,7 +41,7 @@ public class WISEWebSocketConfigurer implements WebSocketConfigurer {
 	@Override
 	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
 		//register our websocket handler
-		registry.addHandler(webSocketHandler(), "/websocket.html").addInterceptors(new WISEHttpSessionHandshakeInterceptor());
+		registry.addHandler(webSocketHandler(), "/websocket").addInterceptors(new WISEHttpSessionHandshakeInterceptor());
 	}
 	
 	/**
