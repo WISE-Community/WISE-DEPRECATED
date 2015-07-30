@@ -110,7 +110,7 @@ public class WISEAuthenticationSuccessHandler extends
         
         // if user is not admin and login is disallowed, log out user and redirect them to the "we are undergoing maintenance" page
         try {
-			Portal portal = portalService.getById(new Long(1));
+			Portal portal = portalService.getById(new Integer(1));
 			if (!userIsAdmin && !portal.isLoginAllowed()) {
 				 Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		          if (auth != null){    

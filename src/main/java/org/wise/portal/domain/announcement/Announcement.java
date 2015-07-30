@@ -66,10 +66,10 @@ public interface Announcement {
 	/**
 	 * @return <code>Long</code> this id
 	 */
-	Long getId();
+	Integer getId();
 	
 	/**
 	 * @param <code>Long</code> the id to set
 	 */
-	void setId(Long id);
+	void setId(Integer id);
 }

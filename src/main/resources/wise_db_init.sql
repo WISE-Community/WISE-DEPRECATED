@@ -54,7 +54,7 @@
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
     create table announcements (
-        id bigint not null auto_increment,
+        id mediumint not null auto_increment,
         announcement mediumtext not null,
         timestamp datetime not null,
         title varchar(255) not null,
@@ -208,7 +208,7 @@
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
     create table portal (
-        id bigint not null auto_increment,
+        id tinyint not null auto_increment,
         address varchar(255),
         comments varchar(255),
         google_map_key varchar(255),
@@ -222,7 +222,7 @@
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
     create table portal_statistics (
-        id bigint not null auto_increment,
+        id smallint unsigned not null auto_increment,
         timestamp datetime,
         totalNumberProjects bigint,
         totalNumberProjectsRun bigint,
@@ -362,7 +362,7 @@
 
     create table runs_related_to_announcements (
         runs_fk bigint not null,
-        announcements_fk bigint not null,
+        announcements_fk mediumint not null,
         primary key (runs_fk, announcements_fk)
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -398,7 +398,7 @@
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
     create table student_attendance (
-        id bigint not null auto_increment,
+        id int unsigned not null auto_increment,
         absentUserIds varchar(255),
         loginTimestamp datetime,
         presentUserIds varchar(255),

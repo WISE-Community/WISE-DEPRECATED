@@ -31,8 +31,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import org.wise.portal.domain.announcement.Announcement;
@@ -62,54 +64,45 @@ public class ManageAnnouncementController {
 	@Autowired
 	private AnnouncementService announcementService;
 
-	protected final static String ANNOUNCEMENTID = "announcementId";
-
-	protected final static String ANNOUNCEMENT = "announcement";
-
-	protected final static String RUN = "run";
-
-	protected final static String RUNID = "runId";
-
-	protected final static String MANAGEANNOUNCEMENT_VIEW = "teacher/run/announcement/manageannouncement";
-
 	@RequestMapping(method = RequestMethod.GET)
-	protected ModelAndView handleGET(HttpServletRequest request) throws Exception {
+	protected String handleGET(
+            ModelMap modelMap,
+            @RequestParam(value = "runId", required = false) Long runId,
+            @RequestParam(value = "announcementId", required = false) Integer announcementId) throws Exception {
 		User user = ControllerUtil.getSignedInUser();
-		Run run = runService.retrieveById(Long.parseLong(request.getParameter(RUNID)));
-		String announcementIdStr = request.getParameter(ANNOUNCEMENTID);
+		Run run = runService.retrieveById(runId);
 		if (this.aclService.hasPermission(run, BasePermission.ADMINISTRATION, user) ||
 				this.aclService.hasPermission(run, BasePermission.WRITE, user)){
-			ModelAndView modelAndView = new ModelAndView();
-			modelAndView.addObject(RUN, run);
-			if (announcementIdStr != null) {
-				modelAndView.addObject(ANNOUNCEMENT, announcementService.retrieveById(Long.parseLong(announcementIdStr)));
+            modelMap.put("run", run);
+			if (announcementId != null) {
+                modelMap.put("announcement", announcementService.retrieveById(announcementId));
 			}
-			return modelAndView;
+			return null;
 		} else {
-			//get the context path e.g. /wise
-			String contextPath = request.getContextPath();
-
-			return new ModelAndView(new RedirectView(contextPath + "/accessdenied.html"));
+			return "redirect:/accessdenied.html";
 		}
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	protected ModelAndView handlePOST(HttpServletRequest request) throws Exception {
-		Run run = runService.retrieveById(Long.parseLong(request.getParameter(RUNID)));
-		String announcementIdStr = request.getParameter(ANNOUNCEMENTID);
+	protected String handlePOST(
+            ModelMap modelMap,
+            HttpServletRequest request,
+            @RequestParam(value = "command") String command,
+            @RequestParam(value = "runId", required = false) Long runId,
+            @RequestParam(value = "announcementId", required = false) Integer announcementId) throws Exception {
+		Run run = runService.retrieveById(runId);
 
 		// it's a POST, either add/edit/remove announcement
-		String command = request.getParameter("command");
 		if ("remove".equals(command)) {
-			Announcement announcement = announcementService.retrieveById(Long.parseLong(announcementIdStr));
+			Announcement announcement = announcementService.retrieveById(announcementId);
 			runService.removeAnnouncementFromRun(run.getId(), announcement);
 			announcementService.deleteAnnouncement(announcement.getId());
 
 		} else if ("edit".equals(command)) {
-			Announcement announcement = announcementService.retrieveById(Long.parseLong(announcementIdStr));
+			Announcement announcement = announcementService.retrieveById(announcementId);
 			AnnouncementParameters params = new AnnouncementParameters();
 			params.setId(announcement.getId());
-			params.setRunId(Long.parseLong(request.getParameter(RUNID)));
+			params.setRunId(Long.parseLong(request.getParameter("runId")));
 			params.setTimestamp(announcement.getTimestamp());
 			params.setTitle(request.getParameter("title"));
 			params.setAnnouncement(request.getParameter("announcement"));
@@ -118,7 +111,7 @@ public class ManageAnnouncementController {
 
 		} else if ("create".equals(command)) {
 			AnnouncementParameters params = new AnnouncementParameters();
-			params.setRunId(Long.parseLong(request.getParameter(RUNID)));
+			params.setRunId(Long.parseLong(request.getParameter("runId")));
 			params.setTimestamp(Calendar.getInstance().getTime());
 			params.setTitle(request.getParameter("title"));
 			params.setAnnouncement(request.getParameter("announcement"));
@@ -130,8 +123,7 @@ public class ManageAnnouncementController {
 			return null;
 		}
 
-		ModelAndView modelAndView = new ModelAndView(MANAGEANNOUNCEMENT_VIEW);
-		modelAndView.addObject(RUN, run);
-		return modelAndView;
+        modelMap.put("run", run);
+		return "teacher/run/announcement/manageannouncement";
 	}
 }

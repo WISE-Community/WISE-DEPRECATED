@@ -50,7 +50,8 @@ public class StudentAttendanceImpl implements StudentAttendance {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long id = null;
+	@Column(name = "id", columnDefinition = "int unsigned")
+	private Integer id = null;
 	
 	@Column(name = "workgroupId")
 	private Long workgroupId;
@@ -121,11 +122,11 @@ public class StudentAttendanceImpl implements StudentAttendance {
 		return jsonObject;
 	}
 	
-	public Long getId() {
+	public Integer getId() {
 		return this.id;
 	}
 	
-	public void setId(Long id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 

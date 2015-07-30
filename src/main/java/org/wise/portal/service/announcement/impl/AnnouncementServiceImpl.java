@@ -60,7 +60,7 @@ public class AnnouncementServiceImpl implements AnnouncementService{
 	 * @see org.wise.portal.service.announcement.AnnouncementService#deleteAnnouncement(long)
 	 */
 	@Transactional()
-	public void deleteAnnouncement(long id){
+	public void deleteAnnouncement(Integer id){
 		try{
 			Announcement announcement = announcementDao.getById(id);
 			announcementDao.delete(announcement);
@@ -72,7 +72,7 @@ public class AnnouncementServiceImpl implements AnnouncementService{
 	 * @see org.wise.portal.service.announcement.AnnouncementService#updateAnnouncement(long, org.wise.portal.domain.impl.AnnouncementParameters)
 	 */
 	@Transactional()
-	public Announcement updateAnnouncement(long id, AnnouncementParameters params) throws ObjectNotFoundException{
+	public Announcement updateAnnouncement(Integer id, AnnouncementParameters params) throws ObjectNotFoundException{
 		try{
 			Announcement announcement = announcementDao.getById(id);
 			announcement.setTitle(params.getTitle());
@@ -89,7 +89,7 @@ public class AnnouncementServiceImpl implements AnnouncementService{
 	 * @see org.wise.portal.service.announcement.AnnouncementService#retrieveById(long)
 	 */
 	@Transactional()
-	public Announcement retrieveById(long id) throws ObjectNotFoundException{
+	public Announcement retrieveById(Integer id) throws ObjectNotFoundException{
 		try{
 			Announcement announcement = announcementDao.getById(id);
 			return announcement;

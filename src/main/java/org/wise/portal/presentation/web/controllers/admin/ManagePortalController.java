@@ -23,14 +23,12 @@
  */
 package org.wise.portal.presentation.web.controllers.admin;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.wise.portal.domain.portal.Portal;
 import org.wise.portal.service.portal.PortalService;
 
@@ -46,59 +44,44 @@ public class ManagePortalController {
 	@Autowired
 	private PortalService portalService;
 
-	private static final String VIEW_NAME = "admin/portal/manageportal";
+	@RequestMapping(method = RequestMethod.GET)
+	protected String handleGET(
+            ModelMap modelMap,
+            @RequestParam(value = "portalId", defaultValue = "1") Integer portalId) throws Exception {
 
-	private static final String PORTAL_ID_PARAM = "portalId";
-
-	private static final String PORTAL_PARAM = "portal";
-
-	@RequestMapping(method=RequestMethod.GET)
-	protected ModelAndView handleGET(HttpServletRequest request) throws Exception {
-		String portalId = request.getParameter(PORTAL_ID_PARAM);
-		if (portalId == null) {
-			portalId = "1";
-		}
-
-		Portal portal = portalService.getById(Long.valueOf(portalId));
-
-		ModelAndView modelAndView = new ModelAndView(VIEW_NAME);
-		modelAndView.addObject(PORTAL_PARAM, portal);
-		return modelAndView;		
+		Portal portal = portalService.getById(portalId);
+		modelMap.put("portal", portal);
+		return "admin/portal/manageportal";
 	}
 
-	@RequestMapping(method=RequestMethod.POST)
-	protected ModelAndView handlePOST(HttpServletRequest request) throws Exception {
-		String portalId = request.getParameter(PORTAL_ID_PARAM);
-		if (portalId == null) {
-			portalId = "1";
-		}
+	@RequestMapping(method = RequestMethod.POST)
+	protected void handlePOST(
+            ModelMap modelMap,
+            @RequestParam(value = "portalId", defaultValue = "1") Integer portalId,
+            @RequestParam(value = "attr") String attr,
+            @RequestParam(value = "val") String val) throws Exception {
 
-		Portal portal = portalService.getById(Long.valueOf(portalId));
+		Portal portal = portalService.getById(portalId);
 
-		// handle posting changes to project
-		ModelAndView mav = new ModelAndView();
 		try {
-			String attr = request.getParameter("attr");
 			if (attr.equals("isLoginAllowed")) {
-				portal.setLoginAllowed(Boolean.valueOf(request.getParameter("val")));
+				portal.setLoginAllowed(Boolean.valueOf(val));
 				portalService.updatePortal(portal);
-				mav.addObject("msg", "success");
+				modelMap.put("msg", "success");
 			} else if (attr.equals("isSendStatisticsToHub")) {
-				portal.setSendStatisticsToHub(Boolean.valueOf(request.getParameter("val")));
+				portal.setSendStatisticsToHub(Boolean.valueOf(val));
 				portalService.updatePortal(portal);
-				mav.addObject("msg", "success");
+				modelMap.put("msg", "success");
 			} else if (attr.equals("runSurveyTemplate")) {
-				portal.setRunSurveyTemplate(request.getParameter("val"));
+				portal.setRunSurveyTemplate(val);
 				portalService.updatePortal(portal);
-				mav.addObject("msg", "success");
+				modelMap.put("msg", "success");
 			} else {
-				mav.addObject("msg", "error: permission denied");
+				modelMap.put("msg", "error: permission denied");
 			}
-			return mav;
 		} catch (Exception e) {
 			e.printStackTrace();
-			mav.addObject("msg", "error");
-			return mav;
+			modelMap.put("msg", "error");
 		}
 	}
 }
