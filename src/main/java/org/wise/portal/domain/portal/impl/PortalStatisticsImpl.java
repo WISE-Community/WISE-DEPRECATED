@@ -39,18 +39,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 @Entity
-@Table(name = PortalStatisticsImpl.DATA_STORE_NAME)
+@Table(name = "portal_statistics")
 public class PortalStatisticsImpl implements PortalStatistics {
 
 	@Transient
 	private static final long serialVersionUID = 1L;
-	
-	@Transient
-	public static final String DATA_STORE_NAME = "portal_statistics";
-	
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-	public Long id = null;
+	@Column(name = "id", columnDefinition = "smallint unsigned")
+	public Integer id = null;
     
     @Column(name = "timestamp")
     private Date timestamp;
@@ -80,7 +78,7 @@ public class PortalStatisticsImpl implements PortalStatistics {
 		return this.id;
 	}
 	
-	public void setId(Long id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
     

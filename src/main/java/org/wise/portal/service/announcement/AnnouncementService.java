@@ -47,7 +47,7 @@ public interface AnnouncementService {
 	 * 
 	 * @param <code>long</code> id
 	 */
-	void deleteAnnouncement(long id);
+	void deleteAnnouncement(Integer id);
 	
 	/**
 	 * updates an Announcement in the data store
@@ -57,7 +57,7 @@ public interface AnnouncementService {
 	 * @return <code>Announcement</code>
 	 * @throws <code>ObjectNotFoundException</code>
 	 */
-	Announcement updateAnnouncement(long id, AnnouncementParameters params) throws ObjectNotFoundException;
+	Announcement updateAnnouncement(Integer id, AnnouncementParameters params) throws ObjectNotFoundException;
 	
 	/**
 	 * retrieves the Announcement with the given Id from the data store
@@ -66,5 +66,5 @@ public interface AnnouncementService {
 	 * @return <code>Announcement</code>
 	 * @throws <code>ObjectNotFoundException</code>
 	 */
-	Announcement retrieveById(long id) throws ObjectNotFoundException;
+	Announcement retrieveById(Integer id) throws ObjectNotFoundException;
 }

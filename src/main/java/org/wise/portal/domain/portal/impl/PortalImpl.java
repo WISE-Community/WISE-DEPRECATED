@@ -103,7 +103,8 @@ public class PortalImpl implements Portal {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-	public Long id = null;
+	@Column(name = "id", columnDefinition = "tinyint")
+	public Integer id = null;
 
     @Version
     @Column(name = "OPTLOCK")
@@ -151,15 +152,12 @@ public class PortalImpl implements Portal {
 		this.portalName = portalName;
 	}
 
-	 /**
-     * @see net.sf.sail.webapp.domain.Curnit#getId()
-     */
-    public Long getId() {
+    public Integer getId() {
         return this.id;
     }
 
     @SuppressWarnings("unused")
-    private void setId(Long id) {
+    private void setId(Integer id) {
         this.id = id;
     }
     

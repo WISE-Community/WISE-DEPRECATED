@@ -39,7 +39,7 @@ public class AnnouncementParameters implements Serializable{
 	
 	private String announcement;
 	
-	private long id;
+	private Integer id;
 	
 	private long runId;
 
@@ -88,14 +88,14 @@ public class AnnouncementParameters implements Serializable{
 	/**
 	 * @return the id
 	 */
-	public long getId() {
+	public Integer getId() {
 		return id;
 	}
 
 	/**
 	 * @param id the id to set
 	 */
-	public void setId(long id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 

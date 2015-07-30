@@ -42,12 +42,9 @@ import org.wise.portal.domain.announcement.Announcement;
  * @author Patrick Lawler
  */
 @Entity
-@Table(name = AnnouncementImpl.DATA_STORE_NAME)
+@Table(name = "announcements")
 public class AnnouncementImpl implements Announcement, Comparable<Announcement>{
 
-	@Transient
-	public final static String DATA_STORE_NAME = "announcements";
-	
 	@Transient
 	private final static String COLUMN_NAME_TITLE = "title";
 	
@@ -60,18 +57,19 @@ public class AnnouncementImpl implements Announcement, Comparable<Announcement>{
 	@Transient
 	private static final long serialVersionUID = 1L;
 	
-	@Column(name = AnnouncementImpl.COLUMN_NAME_TITLE, nullable=false)
+	@Column(name = AnnouncementImpl.COLUMN_NAME_TITLE, nullable = false)
 	private String title;
 	
-	@Column(name = AnnouncementImpl.COLUMN_NAME_TIMESTAMP, nullable=false)
+	@Column(name = AnnouncementImpl.COLUMN_NAME_TIMESTAMP, nullable = false)
 	private Date timestamp;
 	
-	@Column(name = AnnouncementImpl.COLUMN_NAME_ANNOUNCEMENT, length=5120000, nullable=false, columnDefinition = "mediumtext")
+	@Column(name = AnnouncementImpl.COLUMN_NAME_ANNOUNCEMENT, length = 5120000, nullable = false, columnDefinition = "mediumtext")
 	private String announcement;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long id;
+	@Column(name = "id", columnDefinition = "mediumint")
+	private Integer id;
 
 	/**
 	 * @return the title
@@ -118,14 +116,14 @@ public class AnnouncementImpl implements Announcement, Comparable<Announcement>{
 	/**
 	 * @return the id
 	 */
-	public Long getId() {
+	public Integer getId() {
 		return id;
 	}
 
 	/**
 	 * @param id the id to set
 	 */
-	public void setId(Long id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 	

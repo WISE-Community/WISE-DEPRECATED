@@ -206,7 +206,7 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 		
 		//set default survey template for this run, if any
 		try {
-			Portal portal = portalService.getById(new Long(1));
+			Portal portal = portalService.getById(new Integer(1));
 			String runSurveyTemplate = portal.getRunSurveyTemplate();
 			if (runSurveyTemplate != null) {
 				run.setSurvey(runSurveyTemplate);
