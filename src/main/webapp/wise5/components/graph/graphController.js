@@ -565,6 +565,9 @@ define(['app',
             // get the original series from the component content
             this.setSeries(StudentDataService.makeCopyOfJSONObject(this.componentContent.series));
 
+            // set the active series to null so that the default series will become selected later
+            this.setActiveSeries(null);
+
             /*
              * notify the controller that the student data has changed
              * so that the graph will be redrawn

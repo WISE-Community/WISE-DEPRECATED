@@ -26,6 +26,9 @@
                     "name": "Spongebob",
                     "data": [[0, 0], [5, 1], [10, 2], [15, 3]],
                     "color": "red",
+                    "marker": {
+                        "symbol": "square"
+                    },
                     "regression": true,
                     "regressionSettings": {
                         "type": "linear",
@@ -37,6 +40,9 @@
                     "name": "Patrick",
                     "data": [[0, 0], [5, 10], [10, 15], [16, 45]],
                     "color": "blue",
+                    "marker": {
+                        "symbol": "triangle"
+                    },
                     "regression": true,
                     "regressionSettings": {
                         "type": "exponential",
