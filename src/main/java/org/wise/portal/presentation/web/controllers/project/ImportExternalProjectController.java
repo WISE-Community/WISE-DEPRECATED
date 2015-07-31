@@ -40,7 +40,7 @@ import org.wise.portal.service.wiseup.WiseUpService;
  * TODO: do we need this class anymore?
  */
 @Controller
-@RequestMapping("/project/importexternalproject.html")
+@RequestMapping("/project/importExternalProject")
 public class ImportExternalProjectController {
 
 	private static final String PROJECT_COMMUNICATOR_ID_PARAM = "projectCommunicatorId";

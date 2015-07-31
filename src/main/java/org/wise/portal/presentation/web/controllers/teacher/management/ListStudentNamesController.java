@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Set;
 
 import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -59,10 +58,9 @@ public class ListStudentNamesController {
 	@Autowired
 	private WorkgroupService workgroupService;
 	
-	@RequestMapping("/teacher/management/studentlistexcel.html")
+	@RequestMapping("/teacher/management/studentListExport")
 	protected ModelAndView handleRequestInternal(
 			@RequestParam("runId") String runIdStr,
-			HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		
 		//get the run
@@ -123,7 +121,7 @@ public class ListStudentNamesController {
 		metaDataHeaderRow.createCell(columnCounter++).setCellValue("End Date");
 		
 		//update the maxColumn count if necessary
-		if(columnCounter > maxColumn) {
+		if (columnCounter > maxColumn) {
 			maxColumn = columnCounter;
 		}
 		
@@ -140,7 +138,7 @@ public class ListStudentNamesController {
 		metaDataRow.createCell(columnCounter++).setCellValue(timestampToFormattedString(endTime));
 		
 		//update the maxColumn count if necessary
-		if(columnCounter > maxColumn) {
+		if (columnCounter > maxColumn) {
 			maxColumn = columnCounter;
 		}
 		
@@ -195,7 +193,7 @@ public class ListStudentNamesController {
 				String lastName = "";
 				String fullName = "";
 				
-				if(userDetails != null) {
+				if (userDetails != null) {
 					//get the student username
 					userName = userDetails.getUsername();
 					
@@ -209,7 +207,7 @@ public class ListStudentNamesController {
 				columnCounter = 0;
 				HSSFRow studentDataRow = mainSheet.createRow(rowCounter++);
 				
-				if(periodName != null && !periodName.equals("")) {
+				if (periodName != null && !periodName.equals("")) {
 					try {
 						//try to convert the value to a number and then set the value into the cell
 						studentDataRow.createCell(columnCounter).setCellValue(Long.parseLong(periodName));
@@ -233,7 +231,7 @@ public class ListStudentNamesController {
 				studentDataRow.createCell(columnCounter++).setCellValue(fullName);
 				
 				//update the max column count if necessary
-		        if(columnCounter > maxColumn) {
+		        if (columnCounter > maxColumn) {
 					maxColumn = columnCounter;
 				}
 			}
@@ -251,7 +249,7 @@ public class ListStudentNamesController {
 		//get the response output stream
 		ServletOutputStream outputStream = response.getOutputStream();
 		
-		if(wb != null) {
+		if (wb != null) {
 			//write the excel xls to the output stream
 			wb.write(outputStream);
 		}
@@ -269,7 +267,7 @@ public class ListStudentNamesController {
 	private String timestampToFormattedString(Date date) {
 		String timestampString = "";
 		
-		if(date != null) {
+		if (date != null) {
 			//get the object to format timestamps
 			DateFormat dateTimeInstance = DateFormat.getDateTimeInstance();
 			

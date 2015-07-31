@@ -47,7 +47,7 @@ import org.wise.portal.service.vle.VLEService;
 import org.wise.vle.domain.status.StudentStatus;
 
 @Controller
-@RequestMapping("/studentStatus.html")
+@RequestMapping("/studentStatus")
 public class StudentStatusController {
 
 	@Autowired
@@ -56,11 +56,10 @@ public class StudentStatusController {
 	/**
 	 * Handles GET requests from the teacher when a teacher requests for all the student
 	 * statuses for a given run id
-	 * @param rquest
 	 * @param response
 	 * @throws IOException 
 	 */
-	@RequestMapping(method=RequestMethod.GET)
+	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		//get the signed in user
 		User signedInUser = ControllerUtil.getSignedInUser();
@@ -82,15 +81,15 @@ public class StudentStatusController {
 		 * teachers that are owners of the run can make a request
 		 * students can not make a request
 		 */
-		if(SecurityUtils.isAdmin(signedInUser)) {
+		if (SecurityUtils.isAdmin(signedInUser)) {
 			//the user is an admin so we will allow this request
 			allowedAccess = true;
-		} else if(SecurityUtils.isTeacher(signedInUser) && SecurityUtils.isUserOwnerOfRun(signedInUser, runId)) {
+		} else if (SecurityUtils.isTeacher(signedInUser) && SecurityUtils.isUserOwnerOfRun(signedInUser, runId)) {
 			//the user is a teacher that is an owner or shared owner of the run so we will allow the request
 			allowedAccess = true;
 		}
 		
-		if(!allowedAccess) {
+		if (!allowedAccess) {
 			//the user is not allowed to make this request
 			response.sendError(HttpServletResponse.SC_FORBIDDEN);
 			return null;
@@ -112,7 +111,7 @@ public class StudentStatusController {
 		Iterator<StudentStatus> studentStatusesIterator = studentStatuses.iterator();
 
 		//loop through all the student statuses
-		while(studentStatusesIterator.hasNext()) {
+		while (studentStatusesIterator.hasNext()) {
 			//get a student status
 			StudentStatus studentStatus = studentStatusesIterator.next();
 			
@@ -163,7 +162,7 @@ public class StudentStatusController {
 	 * @param response
 	 * @throws IOException 
 	 */
-	@RequestMapping(method=RequestMethod.POST)
+	@RequestMapping(method = RequestMethod.POST)
 	public ModelAndView doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		//get the signed in user
 		User signedInUser = ControllerUtil.getSignedInUser();
@@ -202,13 +201,13 @@ public class StudentStatusController {
 		 * teachers can not make a request
 		 * students can make a request if they are in the run and in the workgroup
 		 */
-		if(SecurityUtils.isStudent(signedInUser) && SecurityUtils.isUserInRun(signedInUser, runId) &&
+		if (SecurityUtils.isStudent(signedInUser) && SecurityUtils.isUserInRun(signedInUser, runId) &&
 				SecurityUtils.isUserInWorkgroup(signedInUser, workgroupId)) {
 			//the student is in the run and the workgroup so we will allow this request
 			allowedAccess = true;
 		}
 		
-		if(!allowedAccess) {
+		if (!allowedAccess) {
 			//the user is not allowed to make this request
 			response.sendError(HttpServletResponse.SC_FORBIDDEN);
 			return null;
@@ -217,7 +216,7 @@ public class StudentStatusController {
 		//get the student status object for the workgroup id if it already exists
 		StudentStatus studentStatus = vleService.getStudentStatusByWorkgroupId(workgroupId);
 		
-		if(studentStatus == null) {
+		if (studentStatus == null) {
 			//the student status object does not already exist so we will create it
 			studentStatus = new StudentStatus(runId, periodId, workgroupId, status);			
 		} else {

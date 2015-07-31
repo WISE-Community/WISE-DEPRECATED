@@ -798,7 +798,7 @@ View.prototype.exportProject = function(params){
 		//get the context path e.g. /wise
 		var contextPath = this.getConfig().getConfigParam('contextPath');
 		
-		window.open(contextPath + "/project/exportproject.html?projectId=" + this.portalProjectId);
+		window.open(contextPath + "/project/export?projectId=" + this.portalProjectId);
 	} else {
 		this.notificationManager.notify("Please open or create a project that you wish to export.", 3);
 	}

@@ -1007,8 +1007,8 @@
                 <sec:intercept-url pattern="/logout/impersonate" access="ROLE_ANONYMOUS" />  <!-- this ensures that no-one can switch back to original user -->
 				<sec:intercept-url pattern="/authorize.html" access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/errors/*.html" access="ROLE_ANONYMOUS,ROLE_USER" />
-				<sec:intercept-url pattern="/project/exportproject.html" access="ROLE_ANONYMOUS,ROLE_USER" />
-				<sec:intercept-url pattern="/project/importexternalproject.html" access="ROLE_USER" />
+				<sec:intercept-url pattern="/project/export" access="ROLE_ANONYMOUS,ROLE_USER" />
+				<sec:intercept-url pattern="/project/importExternalProject" access="ROLE_USER" />
 				<sec:intercept-url pattern="/curriculum/**/*.html" access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/sso/discourse.html" access="ROLE_TEACHER,ROLE_ADMINISTRATOR,ROLE_RESEARCHER" />
 				<sec:intercept-url pattern="/message/**.html" access="ROLE_TEACHER,ROLE_ADMINISTRATOR,ROLE_RESEARCHER" />

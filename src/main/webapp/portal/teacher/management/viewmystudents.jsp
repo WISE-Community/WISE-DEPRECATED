@@ -423,7 +423,7 @@ var displayNotification = function(message){
 				<div id="fixedGradingHeader" class="gradingHeader">
 					<div>
 						<a href="studentlist.html?runId=${run.id}" target="_blank"><img class="icon" alt="print" src="${contextPath}/<spring:theme code="print"/>" /><span><spring:message code="teacher.management.viewmystudents.print"/></span></a>
-						<a href="studentlistexcel.html?runId=${run.id}"><img class="icon" alt="excel" src="${contextPath}/<spring:theme code="address_book"/>" /><span><spring:message code="teacher.management.viewmystudents.export"/></span></a>
+						<a href="studentListExport?runId=${run.id}"><img class="icon" alt="excel" src="${contextPath}/<spring:theme code="address_book"/>" /><span><spring:message code="teacher.management.viewmystudents.export"/></span></a>
 					</div>
 					<div style="float:right;">
 						<a class="saveButton disabled" id="saveButton" onclick=""><spring:message code="teacher.management.viewmystudents.save"/></a>

@@ -530,10 +530,10 @@ public class InformationController {
 			String webSocketURL = webSocketBaseURL + "/websocket";
 			
 			//get the url for sending and receiving student statuses
-			String studentStatusURL = wiseBaseURL + "/studentStatus.html";
+			String studentStatusURL = wiseBaseURL + "/studentStatus";
 			
 			//get the url for sending and receiving run statuses
-			String runStatusURL = wiseBaseURL + "/runStatus.html";
+			String runStatusURL = wiseBaseURL + "/runStatus";
 
             //get the url to get flags
             String flagsURL = wiseBaseURL + "/annotation?type=flag&runId=" + runId;
@@ -584,7 +584,7 @@ public class InformationController {
                     String getSpecialExportURL = wiseBaseURL + "/getSpecialExport.html?type=specialExport&runId=" + runId;
                     config.put("getSpecialExportURL", getSpecialExportURL);
 
-                    String getStudentListURL = wiseBaseURL + "/teacher/management/studentlistexcel.html?runId=" + runId;
+                    String getStudentListURL = wiseBaseURL + "/teacher/management/studentListExport?runId=" + runId;
 					config.put("getStudentListURL", getStudentListURL);
 				}
 			} catch (JSONException e) {

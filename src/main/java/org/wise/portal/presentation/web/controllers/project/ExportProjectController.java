@@ -43,6 +43,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.wise.portal.domain.module.impl.CurnitGetCurnitUrlVisitor;
 import org.wise.portal.domain.project.Project;
@@ -58,7 +59,7 @@ import org.wise.portal.service.project.ProjectService;
  * @author Hiroki Terashima
  */
 @Controller
-@RequestMapping("/project/exportproject.html")
+@RequestMapping("/project/export")
 public class ExportProjectController {
 
 	@Autowired
@@ -69,21 +70,18 @@ public class ExportProjectController {
 
 	private String projectJSONFilename;
 
-	static final int BUFFER = 2048;
-
-	@RequestMapping(method=RequestMethod.GET)
+	@RequestMapping(method = RequestMethod.GET)
 	protected ModelAndView handleExportProject(
-			HttpServletRequest request,
+			@RequestParam(value = "projectId") String projectId,
 			HttpServletResponse response) throws Exception {
 
 		User signedInUser = ControllerUtil.getSignedInUser();
 
-		String projectId = request.getParameter("projectId");
 		Project project = projectService.getById(projectId);
 
 		// check if user is authorized to export
-		boolean authorized = authorize(signedInUser, project);
-		if (authorized) {
+		boolean isAuthorized = authorize(signedInUser, project);
+		if (isAuthorized) {
 			// user is admin or is owner of project
 		} else if (projectService.projectContainsTag(project, "public")) {
 			// project is marked as being public
@@ -104,7 +102,6 @@ public class ExportProjectController {
 
 		response.setContentType("application/zip");
 		response.addHeader("Content-Disposition", "attachment;filename=\"" + foldername+".zip" + "\"");
-
 
 		//add project metadata to zip
 		ProjectMetadata metadata = project.getMetadata();
