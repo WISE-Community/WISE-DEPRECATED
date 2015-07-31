@@ -234,7 +234,7 @@ public class VLEGetSpecialExport {
 	/**
 	 * Generates and returns an excel xls of exported student data.
 	 */
-	@RequestMapping("/getSpecialExport.html")
+	@RequestMapping("/specialExport")
 	public ModelAndView doGet(
 			HttpServletRequest request, 
 			HttpServletResponse response) throws ServletException, IOException {
@@ -270,7 +270,7 @@ public class VLEGetSpecialExport {
 		
 		Run run = null;
 		try {
-			if(runId != null) {
+			if (runId != null) {
 				//get the run object
 				run = runService.retrieveById(runIdLong);				
 			}
@@ -284,15 +284,15 @@ public class VLEGetSpecialExport {
 		 * admins can make a request
 		 * teachers that are owners of the run can make a request
 		 */
-		if(SecurityUtils.isAdmin(signedInUser)) {
+		if (SecurityUtils.isAdmin(signedInUser)) {
 			//the user is an admin so we will allow this request
 			allowedAccess = true;
-		} else if(SecurityUtils.isTeacher(signedInUser) && SecurityUtils.isUserOwnerOfRun(signedInUser, runIdLong)) {
+		} else if (SecurityUtils.isTeacher(signedInUser) && SecurityUtils.isUserOwnerOfRun(signedInUser, runIdLong)) {
 			//the user is a teacher that is an owner or shared owner of the run so we will allow this request
 			allowedAccess = true;
 		}
 		
-		if(!allowedAccess) {
+		if (!allowedAccess) {
 			//user is not allowed to make this request
 			response.sendError(HttpServletResponse.SC_FORBIDDEN);
 			return null;
@@ -326,7 +326,7 @@ public class VLEGetSpecialExport {
 		 * loop through all the student attendance entries so we can
 		 * create JSONObjects out of them to put in our studentAttendanceJSONArray
 		 */
-		for(int x=0; x<studentAttendanceList.size(); x++) {
+		for (int x=0; x<studentAttendanceList.size(); x++) {
 			//get a StudenAttendance object
 			StudentAttendance studentAttendance = studentAttendanceList.get(x);
 
@@ -349,11 +349,11 @@ public class VLEGetSpecialExport {
 		}
 		
 		try {
-			if(runInfoJSONObject.has("startTime")) {
+			if (runInfoJSONObject.has("startTime")) {
 				//get the start time as a string
 				String startTimeString = runInfoJSONObject.getString("startTime");
 				
-				if(startTimeString != null && !startTimeString.equals("null") && !startTimeString.equals("")) {
+				if (startTimeString != null && !startTimeString.equals("null") && !startTimeString.equals("")) {
 					long startTimeLong = Long.parseLong(startTimeString);
 					
 					Timestamp startTimeTimestamp = new Timestamp(startTimeLong);
@@ -363,11 +363,11 @@ public class VLEGetSpecialExport {
 				}
 			}
 			
-			if(runInfoJSONObject.has("endTime")) {
+			if (runInfoJSONObject.has("endTime")) {
 				//get the end time as a string
 				String endTimeString = runInfoJSONObject.getString("endTime");
 				
-				if(endTimeString != null && !endTimeString.equals("null") && !endTimeString.equals("")) {
+				if (endTimeString != null && !endTimeString.equals("null") && !endTimeString.equals("")) {
 					long endTimeLong = Long.parseLong(endTimeString);
 					
 					Timestamp endTimeTimestamp = new Timestamp(endTimeLong);
@@ -389,14 +389,14 @@ public class VLEGetSpecialExport {
 		JSONArray customStepsArray = new JSONArray();
 		
 		//gather the custom steps if the teacher is requesting a custom export
-		if(exportType.equals("customLatestStudentWork") || exportType.equals("customAllStudentWork")) {
+		if (exportType.equals("customLatestStudentWork") || exportType.equals("customAllStudentWork")) {
 			String customStepsArrayJSONString = request.getParameter("customStepsArray");
 			
 			try {
 				customStepsArray = new JSONArray(customStepsArrayJSONString);
 				
 				//loop through all the node ids
-				for(int x=0; x<customStepsArray.length(); x++) {
+				for (int x=0; x<customStepsArray.length(); x++) {
 					//add the node id to our list of custom steps
 					String nodeId = customStepsArray.getString(x);
 					customSteps.add(nodeId);
@@ -436,7 +436,7 @@ public class VLEGetSpecialExport {
 			JSONArray nodes = project.getJSONArray("nodes");
 			
 			//loop through all the nodes
-			for(int x = 0; x < nodes.length(); x++){
+			for (int x = 0; x < nodes.length(); x++) {
 				//get a node
 				JSONObject node = nodes.getJSONObject(x);
 				
@@ -472,12 +472,12 @@ public class VLEGetSpecialExport {
 			//JSONArray sharedTeacherUserInfosJSONArray = new JSONArray(sharedTeacherUserInfos);
 			
 			//loop through all the shared teacher user infos
-			for(int z=0; z<sharedTeacherUserInfosJSONArray.length(); z++) {
+			for (int z=0; z<sharedTeacherUserInfosJSONArray.length(); z++) {
 				//get a shared teacher
 				JSONObject sharedTeacherJSONObject = (JSONObject) sharedTeacherUserInfosJSONArray.get(z);
 				
-				if(sharedTeacherJSONObject != null) {
-					if(sharedTeacherJSONObject.has("workgroupId")) {
+				if (sharedTeacherJSONObject != null) {
+					if (sharedTeacherJSONObject.has("workgroupId")) {
 						//get the shared teacher workgroup id
 						String sharedTeacherWorkgroupId = sharedTeacherJSONObject.getString("workgroupId");
 						
@@ -489,16 +489,16 @@ public class VLEGetSpecialExport {
 			
 			
 			//loop through all the classmates
-			for(int y=0; y<classmateUserInfosJSONArray.length(); y++) {
+			for (int y=0; y<classmateUserInfosJSONArray.length(); y++) {
 				//get a classmate
 				JSONObject classmate = classmateUserInfosJSONArray.getJSONObject(y);
 				
 				//make sure workgroupId and periodId exist and are not null
-				if(classmate.has("workgroupId") && !classmate.isNull("workgroupId")) {
+				if (classmate.has("workgroupId") && !classmate.isNull("workgroupId")) {
 					//get the workgroup id for the classmate
 					int workgroupId = classmate.getInt("workgroupId");
 					
-					if(classmate.has("periodId") && !classmate.isNull("periodId")) {
+					if (classmate.has("periodId") && !classmate.isNull("periodId")) {
 						//get the period id for the classmate
 						int periodId = classmate.getInt("periodId");
 						
@@ -506,13 +506,13 @@ public class VLEGetSpecialExport {
 						workgroupIdToPeriodId.put(workgroupId, periodId);
 					}
 					
-					if(classmate.has("periodName") && !classmate.isNull("periodName")) {
+					if (classmate.has("periodName") && !classmate.isNull("periodName")) {
 						//get the period name such as 1, 2, 3, or 4, etc.
 						String periodName = classmate.getString("periodName");
 						workgroupIdToPeriodName.put(workgroupId, periodName);
 					}
 					
-					if(classmate.has("userIds") && !classmate.isNull("userIds")) {
+					if (classmate.has("userIds") && !classmate.isNull("userIds")) {
 						/*
 						 * get the student logins, this is a single string with the logins
 						 * separated by ':'
@@ -521,7 +521,7 @@ public class VLEGetSpecialExport {
 						workgroupIdToUserIds.put(workgroupId, userIds);
 					}
 					
-					if(classmate.has("periodId") && !classmate.isNull("periodId") &&
+					if (classmate.has("periodId") && !classmate.isNull("periodId") &&
 							classmate.has("periodName") && !classmate.isNull("periodName") &&
 							classmate.has("userIds") && !classmate.isNull("userIds")) {
 
@@ -529,7 +529,7 @@ public class VLEGetSpecialExport {
 						workgroupIds.add(workgroupId + "");
 					}
 					
-					if(classmate.has("wiseIds") && !classmate.isNull("wiseIds")) {
+					if (classmate.has("wiseIds") && !classmate.isNull("wiseIds")) {
 						//get the wise ids for this workgroup
 						JSONArray wiseIds = classmate.getJSONArray("wiseIds");
 						workgroupIdToWiseIds.put(workgroupId, wiseIds);
@@ -540,7 +540,7 @@ public class VLEGetSpecialExport {
 			e.printStackTrace();
 		}
 	    
-	    if(exportType.equals("specialExport")) {
+	    if (exportType.equals("specialExport")) {
 
 	    	String nodeTitleWithPosition = "Step " + nodeIdToNodeTitlesWithPosition.get(nodeId);
 	    	String fileName = runName + "-" + runId + "-" + nodeTitleWithPosition;
@@ -580,12 +580,12 @@ public class VLEGetSpecialExport {
 			//get the step content
 			JSONObject nodeContent = nodeIdToNodeContent.get(nodeId);
 			
-			if(nodeContent != null) {
+			if (nodeContent != null) {
 				try {
 					//get the node type e.g. SVGDraw or mysystem2
 					nodeType = nodeContent.getString("type");
 					
-					if(nodeType != null) {
+					if (nodeType != null) {
 						//make the node type lower case for easy comparison later
 						nodeType = nodeType.toLowerCase();
 					}
@@ -594,10 +594,10 @@ public class VLEGetSpecialExport {
 				}
 			}
 			
-			if(nodeType == null) {
+			if (nodeType == null) {
 				
-			} else if(nodeType.equals("svgdraw")) {
-				if(wiseBaseDir != null && wiseBaseDir != "") {
+			} else if (nodeType.equals("svgdraw")) {
+				if (wiseBaseDir != null && wiseBaseDir != "") {
 					//get the lz77.js file from the server
 					File sourcelz77File = new File(wiseBaseDir + "/vle/node/draw/svg-edit/lz77.js");
 					
@@ -616,13 +616,13 @@ public class VLEGetSpecialExport {
 					//copy the contents of the viewStudentWork.html file into our new file
 					FileUtils.copyFile(sourceViewStudentWorkFile, newViewStudentWorkFile);
 				}
-			} else if(nodeType.equals("mysystem2")) {
-				if(wiseBaseDir != null && wiseBaseDir != "") { 
+			} else if (nodeType.equals("mysystem2")) {
+				if (wiseBaseDir != null && wiseBaseDir != "") { 
 					MySystemExporter myExporter  = new MySystemExporter(wiseBaseDir,zipFolder);
 					myExporter.copyFiles();
 				}
-			} else if(nodeType.equals("sensor")) {
-				if(wiseBaseDir != null && wiseBaseDir != "") {
+			} else if (nodeType.equals("sensor")) {
+				if (wiseBaseDir != null && wiseBaseDir != "") {
 					//get the paths of all the files we need to copy
 					Vector<String> filesToCopy = new Vector<String>();
 					filesToCopy.add(wiseBaseDir + "/vle/model/content.js");
@@ -637,7 +637,7 @@ public class VLEGetSpecialExport {
 					filesToCopy.add(wiseBaseDir + "/vle/node/sensor/viewStudentWork.html");
 					
 					//loop through all the file paths
-					for(int x=0; x<filesToCopy.size(); x++) {
+					for (int x=0; x<filesToCopy.size(); x++) {
 						//get a file path
 						String filePath = filesToCopy.get(x);
 						
@@ -666,7 +666,7 @@ public class VLEGetSpecialExport {
 			}
 			
 			//loop through the workgroup ids
-			for(int x=0; x<workgroupIds.size(); x++) {
+			for (int x=0; x<workgroupIds.size(); x++) {
 				//get a workgroup id
 				String userId = workgroupIds.get(x);
 				Long userIdLong = Long.parseLong(userId);
@@ -686,7 +686,7 @@ public class VLEGetSpecialExport {
 				JSONArray studentDataArray = new JSONArray();
 				
 				//loop through all the step works
-				for(int y=0; y<stepWorksForNodeId.size(); y++) {
+				for (int y=0; y<stepWorksForNodeId.size(); y++) {
 					//get a stepwork
 					StepWork stepWork = stepWorksForNodeId.get(y);
 					
@@ -779,7 +779,7 @@ public class VLEGetSpecialExport {
 	private String getJavascriptText(String jsVariableName, JSONObject jsonObject) {
 		StringBuffer result = new StringBuffer();
 		
-		if(jsonObject != null) {
+		if (jsonObject != null) {
 			String jsonArrayString = "";
 			try {
 				/*
@@ -792,7 +792,7 @@ public class VLEGetSpecialExport {
 				e.printStackTrace();
 			}
 			
-			if(jsonArrayString != null && !jsonArrayString.equals("")) {
+			if (jsonArrayString != null && !jsonArrayString.equals("")) {
 				//make the object declaration string
 				result.append("var " + jsVariableName + " = ");
 				result.append(jsonArrayString);
@@ -826,7 +826,7 @@ public class VLEGetSpecialExport {
 			//get the step work data
 			String data = stepWork.getData();
 			
-			if(data != null && !data.equals("")) {
+			if (data != null && !data.equals("")) {
 				//get the JSONObject of the data
 				JSONObject jsonData = new JSONObject(data);
 				
@@ -855,7 +855,7 @@ public class VLEGetSpecialExport {
 		Iterator<StepWork> stepWorksIterator = stepWorks.iterator();
 		
 		//loop through all the StepWorks
-		while(stepWorksIterator.hasNext()) {
+		while (stepWorksIterator.hasNext()) {
 			//get a StepWork
 			StepWork stepWork = stepWorksIterator.next();
 			
@@ -863,7 +863,7 @@ public class VLEGetSpecialExport {
 			String stepWorkNodeId = stepWork.getNode().getNodeId();
 			
 			//see if the node id matches the node id we are looking for
-			if(stepWorkNodeId != null && stepWorkNodeId.equals(nodeId)) {
+			if (stepWorkNodeId != null && stepWorkNodeId.equals(nodeId)) {
 				/*
 				 * add the StepWork to our list of StepWorks that have the
 				 * node id we want
@@ -907,7 +907,7 @@ public class VLEGetSpecialExport {
 	private String timestampToFormattedString(Timestamp timestamp) {
 		String timestampString = "";
 		
-		if(timestamp != null) {
+		if (timestamp != null) {
 			//get the object to format timestamps
 			DateFormat dateTimeInstance = DateFormat.getDateTimeInstance();
 			
@@ -926,7 +926,7 @@ public class VLEGetSpecialExport {
 	 */
 	private void parseStudentAttendance(JSONArray studentAttendanceArray) {
 		//loop through all the stuent attendance rows
-		for(int x=0; x<studentAttendanceArray.length(); x++) {
+		for (int x=0; x<studentAttendanceArray.length(); x++) {
 			try {
 				//get a student attendence row
 				JSONObject studentAttendanceEntry = studentAttendanceArray.getJSONObject(x);
@@ -937,7 +937,7 @@ public class VLEGetSpecialExport {
 				//get the JSONArray that holds all the student attendence entries for this workgroup id
 				JSONArray workgroupIdStudentAttendance = workgroupIdToStudentAttendance.get(workgroupId);
 				
-				if(workgroupIdStudentAttendance == null) {
+				if (workgroupIdStudentAttendance == null) {
 					//the JSONArray does not exist so we will create it
 					workgroupIdStudentAttendance = new JSONArray();
 					workgroupIdToStudentAttendance.put(workgroupId, workgroupIdStudentAttendance);
@@ -967,21 +967,21 @@ public class VLEGetSpecialExport {
 			JSONArray nodesJSONArray = project.getJSONArray("nodes");
 			
 			//loop through all the nodes
-			for(int x=0; x<nodesJSONArray.length(); x++) {
+			for (int x=0; x<nodesJSONArray.length(); x++) {
 				//get a node
 				JSONObject node = nodesJSONArray.getJSONObject(x);
 				
-				if(node != null) {
+				if (node != null) {
 					//obtain the id and title
 					String nodeId = node.getString("identifier");
 					String title = node.getString("title");
 					
-					if(nodeId != null && title != null) {
+					if (nodeId != null && title != null) {
 						//put the id and title into the map
 						nodeIdToNodeTitles.put(nodeId, title);
 					}
 					
-					if(nodeId != null) {
+					if (nodeId != null) {
 						nodeIdToNode.put(nodeId, node);
 					}
 				}
@@ -1036,22 +1036,22 @@ public class VLEGetSpecialExport {
 			//try to get the project sequence with the given identifier
 			JSONObject projectSequence = getProjectSequence(sequences, identifier);
 			
-			if(projectSequence == null) {
+			if (projectSequence == null) {
 				//the identifier actually points to a node, this is our base case
 				
 				//whether to include the data for this step in the export
 				boolean exportStep = true;
 				
-				if(customSteps.size() != 0) {
+				if (customSteps.size() != 0) {
 					//the teacher has provided a list of custom steps
 					
-					if(!customSteps.contains(identifier)) {
+					if (!customSteps.contains(identifier)) {
 						//the current node id is not listed in the custom steps so we will not export the data for it
 						exportStep = false;
 					}
 				}
 				
-				if(exportStep) {
+				if (exportStep) {
 					//we will export the data for this step
 					
 					//add the identifier to our list of nodes
@@ -1070,7 +1070,7 @@ public class VLEGetSpecialExport {
 				//the identifier points to a sequence so we need to loop through its refs
 				JSONArray refs = projectSequence.getJSONArray("refs");
 				
-				if(!identifier.equals(startPoint)) {
+				if (!identifier.equals(startPoint)) {
 					/*
 					 * only do this for sequences that are not the startsequence otherwise
 					 * all the positions would start with "1."
@@ -1080,7 +1080,7 @@ public class VLEGetSpecialExport {
 				}
 				
 				//loop through all the refs
-				for(int x=0; x<refs.length(); x++) {
+				for (int x=0; x<refs.length(); x++) {
 					//get the identifier for a ref
 					String refIdentifier = refs.getString(x);
 					
@@ -1101,14 +1101,14 @@ public class VLEGetSpecialExport {
 	 */
 	private JSONObject getProjectSequence(JSONArray sequences, String sequenceId) {
 		//loop through all the sequences
-		for(int x=0; x<sequences.length(); x++) {
+		for (int x=0; x<sequences.length(); x++) {
 			try {
 				//get a sequence
 				JSONObject sequence = sequences.getJSONObject(x);
 				
-				if(sequence != null) {
+				if (sequence != null) {
 					//check if the identifier of the sequence is the one we want
-					if(sequence.getString("identifier").equals(sequenceId)) {
+					if (sequence.getString("identifier").equals(sequenceId)) {
 						//return the sequence since we have found it
 						return sequence;
 					}

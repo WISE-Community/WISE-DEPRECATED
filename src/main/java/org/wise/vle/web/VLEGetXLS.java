@@ -256,8 +256,9 @@ public class VLEGetXLS {
 	/**
 	 * Generates and returns an excel xls of exported student data.
 	 */
-	@RequestMapping("/getExport.html")
-	public ModelAndView doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	@RequestMapping("/export")
+	public ModelAndView doGet(HttpServletRequest request, 
+							  HttpServletResponse response) throws ServletException, IOException {
 		//get the signed in user
 		User signedInUser = ControllerUtil.getSignedInUser();
 		
@@ -289,7 +290,7 @@ public class VLEGetXLS {
 		
 		Run run = null;
 		try {
-			if(runId != null) {
+			if (runId != null) {
 				//get the run object
 				run = runService.retrieveById(runIdLong);				
 			}
@@ -303,15 +304,15 @@ public class VLEGetXLS {
 		 * admins can make a request
 		 * teachers that are owners of the run can make a request
 		 */
-		if(SecurityUtils.isAdmin(signedInUser)) {
+		if (SecurityUtils.isAdmin(signedInUser)) {
 			//the user is an admin so we will allow this request
 			allowedAccess = true;
-		} else if(SecurityUtils.isTeacher(signedInUser) && SecurityUtils.isUserOwnerOfRun(signedInUser, runIdLong)) {
+		} else if (SecurityUtils.isTeacher(signedInUser) && SecurityUtils.isUserOwnerOfRun(signedInUser, runIdLong)) {
 			//the user is a teacher that is an owner or shared owner of the run so we will allow this request
 			allowedAccess = true;
 		}
 		
-		if(!allowedAccess) {
+		if (!allowedAccess) {
 			//user is not allowed to make this request
 			response.sendError(HttpServletResponse.SC_FORBIDDEN);
 			return null;
@@ -321,7 +322,7 @@ public class VLEGetXLS {
 		ProjectMetadata metadata = projectObj.getMetadata();
 		String projectMetaDataJSONString = null;
 		
-		if(metadata != null) {
+		if (metadata != null) {
 			projectMetaDataJSONString = metadata.toJSONString();
 		}
 		
@@ -349,7 +350,7 @@ public class VLEGetXLS {
 		 * loop through all the student attendance entries so we can
 		 * create JSONObjects out of them to put in our studentAttendanceJSONArray
 		 */
-		for(int x=0; x<studentAttendanceList.size(); x++) {
+		for (int x=0; x<studentAttendanceList.size(); x++) {
 			//get a StudenAttendance object
 			StudentAttendance studentAttendance = studentAttendanceList.get(x);
 
@@ -370,11 +371,11 @@ public class VLEGetXLS {
 		}
 		
 		try {
-			if(runInfoJSONObject.has("startTime")) {
+			if (runInfoJSONObject.has("startTime")) {
 				//get the start time as a string
 				String startTimeString = runInfoJSONObject.getString("startTime");
 				
-				if(startTimeString != null && !startTimeString.equals("null") && !startTimeString.equals("")) {
+				if (startTimeString != null && !startTimeString.equals("null") && !startTimeString.equals("")) {
 					long startTimeLong = Long.parseLong(startTimeString);
 					
 					Timestamp startTimeTimestamp = new Timestamp(startTimeLong);
@@ -384,11 +385,11 @@ public class VLEGetXLS {
 				}
 			}
 			
-			if(runInfoJSONObject.has("endTime")) {
+			if (runInfoJSONObject.has("endTime")) {
 				//get the end time as a string
 				String endTimeString = runInfoJSONObject.getString("endTime");
 				
-				if(endTimeString != null && !endTimeString.equals("null") && !endTimeString.equals("")) {
+				if (endTimeString != null && !endTimeString.equals("null") && !endTimeString.equals("")) {
 					long endTimeLong = Long.parseLong(endTimeString);
 					
 					Timestamp endTimeTimestamp = new Timestamp(endTimeLong);
@@ -413,14 +414,14 @@ public class VLEGetXLS {
 		JSONArray customStepsArray = new JSONArray();
 		
 		//gather the custom steps if the teacher is requesting a custom export
-		if(exportType.equals("customLatestStudentWork") || exportType.equals("customAllStudentWork")) {
+		if (exportType.equals("customLatestStudentWork") || exportType.equals("customAllStudentWork")) {
 			String customStepsArrayJSONString = request.getParameter("customStepsArray");
 			
 			try {
 				customStepsArray = new JSONArray(customStepsArrayJSONString);
 				
 				//loop through all the node ids
-				for(int x=0; x<customStepsArray.length(); x++) {
+				for (int x=0; x<customStepsArray.length(); x++) {
 					//add the node id to our list of custom steps
 					String nodeId = customStepsArray.getString(x);
 					customSteps.add(nodeId);
@@ -460,7 +461,7 @@ public class VLEGetXLS {
 			JSONArray nodes = project.getJSONArray("nodes");
 			
 			//loop through all the nodes
-			for(int x = 0; x < nodes.length(); x++){
+			for (int x = 0; x < nodes.length(); x++) {
 				//get a node
 				JSONObject node = nodes.getJSONObject(x);
 				
@@ -468,11 +469,11 @@ public class VLEGetXLS {
 					//get a handle on the node file
 					File nodeFile = new File(projectFile.getParentFile(), node.getString("ref"));
 
-					if(nodeFile.exists()) {
+					if (nodeFile.exists()) {
 						//get the text from the file
 						String fileText = FileManager.getFileText(nodeFile);
 
-						if(fileText != null && !fileText.equals("")) {
+						if (fileText != null && !fileText.equals("")) {
 							//get the content for the node
 							JSONObject nodeContent = new JSONObject(fileText);
 							
@@ -503,12 +504,12 @@ public class VLEGetXLS {
 			//JSONArray sharedTeacherUserInfosJSONArray = new JSONArray(sharedTeacherUserInfos);
 			
 			//loop through all the shared teacher user infos
-			for(int z=0; z<sharedTeacherUserInfosJSONArray.length(); z++) {
+			for (int z=0; z<sharedTeacherUserInfosJSONArray.length(); z++) {
 				//get a shared teacher
 				JSONObject sharedTeacherJSONObject = (JSONObject) sharedTeacherUserInfosJSONArray.get(z);
 				
-				if(sharedTeacherJSONObject != null) {
-					if(sharedTeacherJSONObject.has("workgroupId")) {
+				if (sharedTeacherJSONObject != null) {
+					if (sharedTeacherJSONObject.has("workgroupId")) {
 						//get the shared teacher workgroup id
 						String sharedTeacherWorkgroupId = sharedTeacherJSONObject.getString("workgroupId");
 						
@@ -520,12 +521,12 @@ public class VLEGetXLS {
 			
 			
 			//loop through all the classmates
-			for(int y=0; y<classmateUserInfosJSONArray.length(); y++) {
+			for (int y=0; y<classmateUserInfosJSONArray.length(); y++) {
 				//get a classmate
 				JSONObject classmate = classmateUserInfosJSONArray.getJSONObject(y);
 				
 				//make sure workgroupId and periodId exist and are not null
-				if(classmate.has("workgroupId") && !classmate.isNull("workgroupId")) {
+				if (classmate.has("workgroupId") && !classmate.isNull("workgroupId")) {
 					//get the workgroup id for the classmate
 					Integer workgroupId = null;
 					
@@ -535,7 +536,7 @@ public class VLEGetXLS {
 						workgroupId = null;
 					}
 					
-					if(classmate.has("periodId") && !classmate.isNull("periodId")) {
+					if (classmate.has("periodId") && !classmate.isNull("periodId")) {
 						//get the period id for the classmate
 						int periodId = classmate.getInt("periodId");
 						
@@ -543,13 +544,13 @@ public class VLEGetXLS {
 						workgroupIdToPeriodId.put(workgroupId, periodId);
 					}
 					
-					if(classmate.has("periodName") && !classmate.isNull("periodName")) {
+					if (classmate.has("periodName") && !classmate.isNull("periodName")) {
 						//get the period name such as 1, 2, 3, or 4, etc.
 						String periodName = classmate.getString("periodName");
 						workgroupIdToPeriodName.put(workgroupId, periodName);
 					}
 					
-					if(classmate.has("periodId") && !classmate.isNull("periodId") &&
+					if (classmate.has("periodId") && !classmate.isNull("periodId") &&
 							classmate.has("periodName") && !classmate.isNull("periodName")) {
 						//get the period id for the classmate
 						int periodId = classmate.getInt("periodId");
@@ -558,13 +559,13 @@ public class VLEGetXLS {
 						String periodName = classmate.getString("periodName");
 						
 						//check if we already have a key with this period id
-						if(!periodIdToPeriodName.containsKey(new Integer(periodId))) {
+						if (!periodIdToPeriodName.containsKey(new Integer(periodId))) {
 							//we do not have this period id yet so we will add it
 							periodIdToPeriodName.put(new Integer(periodId), periodName);
 						}
 					}
 					
-					if(classmate.has("userIds") && !classmate.isNull("userIds")) {
+					if (classmate.has("userIds") && !classmate.isNull("userIds")) {
 						/*
 						 * get the student user ids, this is a single string with the user ids
 						 * separated by ':'
@@ -573,7 +574,7 @@ public class VLEGetXLS {
 						workgroupIdToUserIds.put(workgroupId, userIds);
 					}
 					
-					if(classmate.has("periodId") && !classmate.isNull("periodId") &&
+					if (classmate.has("periodId") && !classmate.isNull("periodId") &&
 							classmate.has("periodName") && !classmate.isNull("periodName") &&
 							classmate.has("userIds") && !classmate.isNull("userIds")) {
 
@@ -589,10 +590,10 @@ public class VLEGetXLS {
 		//the variable that will hold the excel document object
 		Workbook wb = null;
 				
-		if(isFileTypeXLS(fileType)) {
+		if (isFileTypeXLS(fileType)) {
 			//we are going to return an xls file
 			response.setContentType("application/vnd.ms-excel");
-		} else if(isFileTypeCSV(fileType)) {
+		} else if (isFileTypeCSV(fileType)) {
 			//we are going to return a csv file
 			response.setContentType("text/csv");
 			
@@ -606,49 +607,49 @@ public class VLEGetXLS {
 		}
 		
 		//generate the export
-	    if(exportType == null) {
+	    if (exportType == null) {
 	    	//error
-	    } else if(exportType.equals("latestStudentWork")) {
+	    } else if (exportType.equals("latestStudentWork")) {
 	    	response.setHeader("Content-Disposition", "attachment; filename=\"" + runName + "-" + runId + "-latest-student-work." + fileType + "\"");
 	    	wb = getLatestStudentWorkXLSExport(nodeIdToNodeTitlesWithPosition, workgroupIds, nodeIdList, runId, nodeIdToNode, nodeIdToNodeContent, workgroupIdToPeriodId, teacherWorkgroupIds);
-	    } else if(exportType.equals("allStudentWork")) {
+	    } else if (exportType.equals("allStudentWork")) {
 	    	response.setHeader("Content-Disposition", "attachment; filename=\"" + runName + "-" + runId + "-all-student-work." + fileType + "\"");
 	    	wb = getAllStudentWorkXLSExport(nodeIdToNodeTitlesWithPosition, workgroupIds, runId, nodeIdToNode, nodeIdToNodeContent, workgroupIdToPeriodId, teacherWorkgroupIds);
-	    } else if(exportType.equals("ideaBaskets")) {
+	    } else if (exportType.equals("ideaBaskets")) {
 	    	response.setHeader("Content-Disposition", "attachment; filename=\"" + runName + "-" + runId + "-idea-baskets." + fileType + "\"");
 	    	wb = getIdeaBasketsExcelExport(nodeIdToNodeTitlesWithPosition, workgroupIds, runId, nodeIdToNode, nodeIdToNodeContent, workgroupIdToPeriodId, teacherWorkgroupIds);
-	    } else if(exportType.equals("explanationBuilderWork")) {
+	    } else if (exportType.equals("explanationBuilderWork")) {
 	    	response.setHeader("Content-Disposition", "attachment; filename=\"" + runName + "-" + runId + "-explanation-builder-work." + fileType + "\"");
 	    	wb = getExplanationBuilderWorkExcelExport(nodeIdToNodeTitlesWithPosition, workgroupIds, runId, nodeIdToNode, nodeIdToNodeContent, workgroupIdToPeriodId, teacherWorkgroupIds);
-	    } else if(exportType.equals("annotatorWork")) {
+	    } else if (exportType.equals("annotatorWork")) {
 	    	response.setHeader("Content-Disposition", "attachment; filename=\"" + runName + "-" + runId + "-annotator-work." + fileType + "\"");
 	    	wb = getAnnotatorWorkExcelExport(nodeIdToNodeTitlesWithPosition, workgroupIds, runId, nodeIdToNode, nodeIdToNodeContent, workgroupIdToPeriodId, teacherWorkgroupIds);
-	    } else if(exportType.equals("customLatestStudentWork")) {
+	    } else if (exportType.equals("customLatestStudentWork")) {
 	    	response.setHeader("Content-Disposition", "attachment; filename=\"" + runName + "-" + runId + "-custom-latest-student-work." + fileType + "\"");
 	    	wb = getLatestStudentWorkXLSExport(nodeIdToNodeTitlesWithPosition, workgroupIds, nodeIdList, runId, nodeIdToNode, nodeIdToNodeContent, workgroupIdToPeriodId, teacherWorkgroupIds);
-	    } else if(exportType.equals("customAllStudentWork")) {
+	    } else if (exportType.equals("customAllStudentWork")) {
 	    	response.setHeader("Content-Disposition", "attachment; filename=\"" + runName + "-" + runId + "-custom-all-student-work." + fileType + "\"");
 	    	wb = getAllStudentWorkXLSExport(nodeIdToNodeTitlesWithPosition, workgroupIds, runId, nodeIdToNode, nodeIdToNodeContent, workgroupIdToPeriodId, teacherWorkgroupIds);
-	    } else if(exportType.equals("flashStudentWork")) {
+	    } else if (exportType.equals("flashStudentWork")) {
 	    	response.setHeader("Content-Disposition", "attachment; filename=\"" + runName + "-" + runId + "-custom-flash-student-work." + fileType + "\"");
 	    	wb = getFlashWorkExcelExport(nodeIdToNodeTitlesWithPosition, workgroupIds, runId, nodeIdToNode, nodeIdToNodeContent, workgroupIdToPeriodId, workgroupIds);
 	    } else {
 	    	//error
 	    }
 
-	    if(isFileTypeXLS(fileType)) {
+	    if (isFileTypeXLS(fileType)) {
 	    	//we need to write the xls file to the response
 	    	
 		    //get the response output stream
 		    ServletOutputStream outputStream = response.getOutputStream();
 
-		    if(wb != null) {
+		    if (wb != null) {
 				//write the excel xls to the output stream
 				wb.write(outputStream);
 			}	    	
 	    }
 	    
-	    if(oversizedResponses > 0) {
+	    if (oversizedResponses > 0) {
 			System.out.println("Oversized Responses: " + oversizedResponses);
 		}
 	    
@@ -692,14 +693,14 @@ public class VLEGetXLS {
 	 */
 	private JSONObject getProjectSequence(JSONArray sequences, String sequenceId) {
 		//loop through all the sequences
-		for(int x=0; x<sequences.length(); x++) {
+		for (int x=0; x<sequences.length(); x++) {
 			try {
 				//get a sequence
 				JSONObject sequence = sequences.getJSONObject(x);
 				
-				if(sequence != null) {
+				if (sequence != null) {
 					//check if the identifier of the sequence is the one we want
-					if(sequence.getString("identifier").equals(sequenceId)) {
+					if (sequence.getString("identifier").equals(sequenceId)) {
 						//return the sequence since we have found it
 						return sequence;
 					}
@@ -733,22 +734,22 @@ public class VLEGetXLS {
 			//try to get the project sequence with the given identifier
 			JSONObject projectSequence = getProjectSequence(sequences, identifier);
 			
-			if(projectSequence == null) {
+			if (projectSequence == null) {
 				//the identifier actually points to a node, this is our base case
 				
 				//whether to include the data for this step in the export
 				boolean exportStep = true;
 				
-				if(customSteps.size() != 0) {
+				if (customSteps.size() != 0) {
 					//the teacher has provided a list of custom steps
 					
-					if(!customSteps.contains(identifier)) {
+					if (!customSteps.contains(identifier)) {
 						//the current node id is not listed in the custom steps so we will not export the data for it
 						exportStep = false;
 					}
 				}
 				
-				if(exportStep) {
+				if (exportStep) {
 					//we will export the data for this step
 					
 					//add the identifier to our list of nodes
@@ -767,7 +768,7 @@ public class VLEGetXLS {
 				//the identifier points to a sequence so we need to loop through its refs
 				JSONArray refs = projectSequence.getJSONArray("refs");
 				
-				if(!identifier.equals(startPoint)) {
+				if (!identifier.equals(startPoint)) {
 					/*
 					 * only do this for sequences that are not the startsequence otherwise
 					 * all the positions would start with "1."
@@ -777,7 +778,7 @@ public class VLEGetXLS {
 				}
 				
 				//loop through all the refs
-				for(int x=0; x<refs.length(); x++) {
+				for (int x=0; x<refs.length(); x++) {
 					//get the identifier for a ref
 					String refIdentifier = refs.getString(x);
 					
@@ -808,21 +809,21 @@ public class VLEGetXLS {
 			JSONArray nodesJSONArray = project.getJSONArray("nodes");
 			
 			//loop through all the nodes
-			for(int x=0; x<nodesJSONArray.length(); x++) {
+			for (int x=0; x<nodesJSONArray.length(); x++) {
 				//get a node
 				JSONObject node = nodesJSONArray.getJSONObject(x);
 				
-				if(node != null) {
+				if (node != null) {
 					//obtain the id and title
 					String nodeId = node.getString("identifier");
 					String title = node.getString("title");
 					
-					if(nodeId != null && title != null) {
+					if (nodeId != null && title != null) {
 						//put the id and title into the map
 						nodeIdToNodeTitles.put(nodeId, title);
 					}
 					
-					if(nodeId != null) {
+					if (nodeId != null) {
 						nodeIdToNode.put(nodeId, node);
 					}
 				}
@@ -847,7 +848,7 @@ public class VLEGetXLS {
 		//try to get the node type from the step work
 		String nodeType = stepWork.getNode().getNodeType();
 		
-		if(nodeType == null) {
+		if (nodeType == null) {
 			/*
 			 * we could not get the node type from the Node object so
 			 * we will get it from the stepwork data
@@ -878,7 +879,7 @@ public class VLEGetXLS {
 	public String getNodeTypeFromStepWorkJSONString(String stepWorkJSONString) {
 		String nodeTypeFromStepWorkJSONObject = "";
 		
-		if(stepWorkJSONString != null) {
+		if (stepWorkJSONString != null) {
 			try {
 				//make the JSON object
 				JSONObject stepWorkJSONObject = new JSONObject(stepWorkJSONString);
@@ -906,9 +907,9 @@ public class VLEGetXLS {
 	public String getNodeTypeFromStepWorkJSONObject(JSONObject stepWorkJSONObject) {
 		String nodeType = "";
 		
-		if(stepWorkJSONObject != null) {
+		if (stepWorkJSONObject != null) {
 			//check if the JSON object has a nodeType field
-			if(stepWorkJSONObject.has("nodeType")) {
+			if (stepWorkJSONObject.has("nodeType")) {
 				try {
 					//get the nodeType
 					nodeType = stepWorkJSONObject.getString("nodeType");
@@ -946,7 +947,7 @@ public class VLEGetXLS {
 			String stepWorkNodeId = stepWork.getNode().getNodeId();
 			
 			//see if the node id matches the node id we are looking for
-			if(stepWorkNodeId != null && stepWorkNodeId.equals(nodeId)) {
+			if (stepWorkNodeId != null && stepWorkNodeId.equals(nodeId)) {
 				/*
 				 * add the StepWork to our list of StepWorks that have the
 				 * node id we want
@@ -988,14 +989,14 @@ public class VLEGetXLS {
 
 		XSSFWorkbook wb = null;
 		
-		if(isFileTypeXLS(fileType)) {
+		if (isFileTypeXLS(fileType)) {
 			//we are generating an xls file so we will create the workbook
 			wb = new XSSFWorkbook();
 		}
 		
 		List<Node> customNodes = null;
 		
-		if(customSteps.size() != 0) {
+		if (customSteps.size() != 0) {
 			//the teacher has provided a list of custom steps to export
 			
 			//get all the Node objects for the custom steps
@@ -1005,7 +1006,7 @@ public class VLEGetXLS {
 		boolean isCSVHeaderRowWritten = false;
 		
 		//loop through all the workgroup ids
-		for(int x=0; x<workgroupIds.size(); x++) {
+		for (int x=0; x<workgroupIds.size(); x++) {
 			//get a workgroup id
 			String workgroupIdString = workgroupIds.get(x);
 			
@@ -1013,7 +1014,7 @@ public class VLEGetXLS {
 			//UserInfo userInfo = UserInfo.getByWorkgroupId(Long.parseLong(workgroupIdString));
 			UserInfo userInfo = vleService.getUserInfoByWorkgroupId(Long.parseLong(workgroupIdString));
 
-			if(userInfo != null) {
+			if (userInfo != null) {
 				//get the workgroup id
 				Long workgroupId = userInfo.getWorkgroupId();
 				int workgroupIdInt = workgroupId.intValue();
@@ -1023,12 +1024,12 @@ public class VLEGetXLS {
 				
 				List<StepWork> stepWorks = new ArrayList<StepWork>();
 				
-				if(customNodes == null) {
+				if (customNodes == null) {
 					//the teacher has not provided a list of custom steps so we will gather work for all the steps
 					//get all the work for that workgroup id
 					stepWorks = vleService.getStepWorksByUserInfo(userInfo);
 				} else {
-					if(customNodes.size() > 0) {
+					if (customNodes.size() > 0) {
 						//the teacher has provided a list of custom steps so we will gather the work for those specific steps
 						stepWorks = vleService.getStepWorksByUserInfoAndNodeList(userInfo, customNodes);						
 					}
@@ -1037,7 +1038,7 @@ public class VLEGetXLS {
 				//create a sheet in the excel for this workgroup id
 				XSSFSheet userIdSheet = null;
 				
-				if(wb != null) {
+				if (wb != null) {
 					//create the sheet since we are generating an xls file
 					userIdSheet = wb.createSheet(workgroupIdString);
 				}
@@ -1132,7 +1133,7 @@ public class VLEGetXLS {
 		    	//header student work column
 		    	headerColumn = setCellValue(headerRow, headerRowVector, headerColumn, "Student Work");
 
-		    	if(!isCSVHeaderRowWritten) {
+		    	if (!isCSVHeaderRowWritten) {
 		    		//we have not written the csv header row yet
 		    		
 			    	//write the csv row if we are generating a csv file
@@ -1152,7 +1153,7 @@ public class VLEGetXLS {
 		    	 * loop through all the work for the current student, this will
 		    	 * already be ordered chronologically
 		    	 */
-		    	for(int y=0; y<stepWorks.size(); y++) {
+		    	for (int y=0; y<stepWorks.size(); y++) {
 					/*
 					 * get a student work row which represents the work they
 					 * performed for a single step visit
@@ -1209,7 +1210,7 @@ public class VLEGetXLS {
 			    	 */
 			    	JSONObject studentAttendanceForWorkgroupIdTimestamp = getStudentAttendanceForWorkgroupIdTimestamp(workgroupId, timestamp);
 			    	
-			    	if(studentAttendanceForWorkgroupIdTimestamp == null) {
+			    	if (studentAttendanceForWorkgroupIdTimestamp == null) {
 			    		/*
 			    		 * we could not find a student attendance entry so this probably
 			    		 * means this step work was created before we started logging 
@@ -1227,16 +1228,16 @@ public class VLEGetXLS {
 						ArrayList<Long> userIdsList = sortUserIdsArray(userIdsArray);
 						
 						//loop through all the user ids in this workgroup
-						for(int z=0; z<userIdsList.size(); z++) {
+						for (int z=0; z<userIdsList.size(); z++) {
 							//get a user id
 							Long wiseId = userIdsList.get(z);
 							
 							//set the appropriate wise id
-							if(z == 0) {
+							if (z == 0) {
 								wiseId1 = wiseId + "";
-							} else if(z == 1) {
+							} else if (z == 1) {
 								wiseId2 = wiseId + "";
-							} else if(z == 2) {
+							} else if (z == 2) {
 								wiseId3 = wiseId + "";
 							}
 						}
@@ -1250,14 +1251,14 @@ public class VLEGetXLS {
 							ArrayList<Long> userIds = new ArrayList<Long>();
 							
 							//loop through all the present user ids
-							for(int a=0; a<presentUserIds.length(); a++) {
+							for (int a=0; a<presentUserIds.length(); a++) {
 								long presentUserId = presentUserIds.getLong(a);
 								studentAttendanceMap.put(presentUserId, "Present");
 								userIds.add(presentUserId);
 							}
 							
 							//loop through all the absent user ids
-							for(int b=0; b<absentUserIds.length(); b++) {
+							for (int b=0; b<absentUserIds.length(); b++) {
 								long absentUserId = absentUserIds.getLong(b);
 								studentAttendanceMap.put(absentUserId, "Absent");
 								userIds.add(absentUserId);
@@ -1267,7 +1268,7 @@ public class VLEGetXLS {
 							Collections.sort(userIds);
 							
 							//loop through all the user ids
-							for(int c=0; c<userIds.size(); c++) {
+							for (int c=0; c<userIds.size(); c++) {
 								//get a user id
 								Long tempUserId = userIds.get(c);
 								
@@ -1276,17 +1277,17 @@ public class VLEGetXLS {
 								
 								String studentAttendanceStatusSuffix = "";
 								
-								if(studentAttendanceStatus != null && studentAttendanceStatus.equals("Absent")) {
+								if (studentAttendanceStatus != null && studentAttendanceStatus.equals("Absent")) {
 									//the student was absent
 									studentAttendanceStatusSuffix = " Absent";
 								}
 								
 								//set the appropriate wise id
-								if(c == 0) {
+								if (c == 0) {
 									wiseId1 = tempUserId + studentAttendanceStatusSuffix;
-								} else if(c == 1) {
+								} else if (c == 1) {
 									wiseId2 = tempUserId + studentAttendanceStatusSuffix;
-								} else if(c == 2) {
+								} else if (c == 2) {
 									wiseId3 = tempUserId + studentAttendanceStatusSuffix;
 								}
 							}
@@ -1300,7 +1301,7 @@ public class VLEGetXLS {
 						JSONObject stepWorkDataJSON = new JSONObject(stepWorkData);
 						
 						//check if there are are node states
-						if(stepWorkDataJSON.has("nodeStates")) {
+						if (stepWorkDataJSON.has("nodeStates")) {
 							
 							//get the node states
 							JSONArray nodeStates = stepWorkDataJSON.getJSONArray("nodeStates");
@@ -1368,7 +1369,7 @@ public class VLEGetXLS {
 			JSONObject nodeJSONObject,
 			JSONArray nodeStates) {
 		
-		if(nodeStates.length() == 0) {
+		if (nodeStates.length() == 0) {
 			//the node states is empty so we will fill out the row but without student work
 			
 	    	//there is no student work
@@ -1379,7 +1380,7 @@ public class VLEGetXLS {
 			JSONObject autoGradedAnnotationForNodeState = null;
 			
 	    	//calculate the time the student spent on the step
-	    	if(endTime != null && startTime != null) {
+	    	if (endTime != null && startTime != null) {
 	    		/*
 	    		 * since this visit doesn't have any node states, the revision time
 	    		 * will be equal to the visit time.
@@ -1395,7 +1396,7 @@ public class VLEGetXLS {
 			
 			Long nodeStateStartTime = null;
 			
-			if(startTime != null) {
+			if (startTime != null) {
 				/*
 				 * get the start time for the first node state which will be the same
 				 * as the start time for the node visit
@@ -1404,7 +1405,7 @@ public class VLEGetXLS {
 			}
 			
 			//loop through all the node states
-			for(int i=0; i<nodeStates.length(); i++) {
+			for (int i=0; i<nodeStates.length(); i++) {
 				try {
 					//get a node state
 					JSONObject nodeState = nodeStates.getJSONObject(i);
@@ -1414,7 +1415,7 @@ public class VLEGetXLS {
 					//get the timestamp from the node state if it exists
 					Long nodeStateEndTime = nodeState.optLong("timestamp");
 					
-					if(nodeStateStartTime != null && nodeStateStartTime != 0 
+					if (nodeStateStartTime != null && nodeStateStartTime != 0 
 							&& nodeStateEndTime != null && nodeStateEndTime != 0) {
 						/*
 						 * we have valid start and end times so we will calculate the time
@@ -1453,26 +1454,26 @@ public class VLEGetXLS {
 		//get the autoGraded annotation for the whole node visit
 		Annotation autoGradedAnnotation = vleService.getAnnotationByStepWorkAndAnnotationType(stepWork, annotationType);
 		
-		if(autoGradedAnnotation != null && nodeStateTimestamp != null) {
+		if (autoGradedAnnotation != null && nodeStateTimestamp != null) {
 			//get the annotation data
 			String autoGradedAnnotationData = autoGradedAnnotation.getData();
 			
-			if(autoGradedAnnotationData != null && !autoGradedAnnotationData.equals("")) {
+			if (autoGradedAnnotationData != null && !autoGradedAnnotationData.equals("")) {
 				try {
 					//get the annotation data as a JSONObject
 					JSONObject autoGradedAnnotationDataJSONObject = new JSONObject(autoGradedAnnotationData);
 					
-					if(autoGradedAnnotationDataJSONObject != null) {
+					if (autoGradedAnnotationDataJSONObject != null) {
 						//get the array of annotations within the annotation data
 						JSONArray annotationsForNodeStates = autoGradedAnnotationDataJSONObject.getJSONArray("value");
 						
-						if(annotationsForNodeStates != null) {
+						if (annotationsForNodeStates != null) {
 							//loop through all the node state annotations
-							for(int x=0; x<annotationsForNodeStates.length(); x++) {
+							for (int x=0; x<annotationsForNodeStates.length(); x++) {
 								//get a node state annotation
 								JSONObject nodeStateAnnotation = annotationsForNodeStates.getJSONObject(x);
 								
-								if(nodeStateAnnotation != null) {
+								if (nodeStateAnnotation != null) {
 									/*
 									 * get the node state id of the annotation which is the timestamp of the node state
 									 * for which is refers to
@@ -1480,7 +1481,7 @@ public class VLEGetXLS {
 									Long nodeStateId = nodeStateAnnotation.optLong("nodeStateId");
 									
 									//check if the node state id matches the one we want
-									if(nodeStateId != null && nodeStateTimestamp.equals(nodeStateId)) {
+									if (nodeStateId != null && nodeStateTimestamp.equals(nodeStateId)) {
 										//the node state id matches so we have found the node state annotation we want
 										autoGradedAnnotationForNodeState = nodeStateAnnotation;
 										break;
@@ -1563,39 +1564,39 @@ public class VLEGetXLS {
 		//increment the step revision count for this step
 		increaseStepRevisionCount(nodeId);
 		
-    	if(rows.size() > 0) {
+    	if (rows.size() > 0) {
     		//there are rows
     		
     		boolean columnNamesOriginallyContainsMaxScore = false;
     		Long maxScoreFromContent = null;
     		
     		//check if there is already a max score column
-    		if(columnNames.contains("Max Score")) {
+    		if (columnNames.contains("Max Score")) {
     			//there is already a max score column
     			columnNamesOriginallyContainsMaxScore = true;
     		}
     		
-    		if(!columnNamesOriginallyContainsMaxScore) {
+    		if (!columnNamesOriginallyContainsMaxScore) {
     			//column names does not have a max score column
     			
     			//try to get the max score from the content if it exists
     			maxScoreFromContent = getMaxScoreFromContent(nodeId);
     			
-    			if(maxScoreFromContent != null) {
+    			if (maxScoreFromContent != null) {
     				//the max score exists in the content so we will add a max score column
         			columnNames.add("Max Score");
         		}
     		}
     		
     		//loop through all the rows
-    		for(int x=0; x<rows.size(); x++) {
+    		for (int x=0; x<rows.size(); x++) {
     			//get a row
     			ArrayList<Object> row = rows.get(x);
 
-    			if(!columnNamesOriginallyContainsMaxScore) {
+    			if (!columnNamesOriginallyContainsMaxScore) {
     				//column names did not originally have a max score column
     				
-    				if(maxScoreFromContent != null) {
+    				if (maxScoreFromContent != null) {
     					//there is a max score in the content so we will display it
             			row.add(maxScoreFromContent);
             		}
@@ -1639,10 +1640,10 @@ public class VLEGetXLS {
 	private ArrayList<Object> getNodeStateWorkForShowAllWork(JSONObject nodeState, String nodeId, String nodeType) {
 		ArrayList<Object> row = new ArrayList<Object>();
 		
-		if(nodeState != null) {
-			if(nodeType == null) {
+		if (nodeState != null) {
+			if (nodeType == null) {
 
-			} else if(nodeType.equals("AssessmentList")) {
+			} else if (nodeType.equals("AssessmentList")) {
 				//this is work for an assessment list
 				
 				try {
@@ -1653,7 +1654,7 @@ public class VLEGetXLS {
 					JSONArray nodeStateAssessments = nodeState.getJSONArray("assessments");
 					
 					//loop through all the student work assessment parts
-					for(int x=0; x<nodeStateAssessments.length(); x++) {
+					for (int x=0; x<nodeStateAssessments.length(); x++) {
 						//get a student work assessment part
 						JSONObject nodeStateAssessmentPart = nodeStateAssessments.getJSONObject(x);
 						
@@ -1668,18 +1669,18 @@ public class VLEGetXLS {
 						//get the assessment part from the step content
 						JSONObject nodeContentAssessmentPart = getStepContentAssessmentByAssessmentId(nodeId, nodeStateAssessmentPartId);
 						
-						if(nodeContentAssessmentPart != null && nodeContentAssessmentPart.optBoolean("isAutoScoreEnabled")) {
+						if (nodeContentAssessmentPart != null && nodeContentAssessmentPart.optBoolean("isAutoScoreEnabled")) {
 							//the assessment part is auto scored
 							isAutoScoreEnabled = true;
 						}
 						
 						boolean responseAdded = false;
 						
-						if(nodeContentAssessmentPart != null) {
+						if (nodeContentAssessmentPart != null) {
 							//get the part type
 							String type = nodeContentAssessmentPart.optString("type");
 							
-							if(type != null && type.equals("checkbox")) {
+							if (type != null && type.equals("checkbox")) {
 								//this part is a checkbox type
 								
 								JSONArray responseJSONArray = null;
@@ -1687,19 +1688,19 @@ public class VLEGetXLS {
 								//get the available choices for the checkboxes
 								JSONArray choices = nodeContentAssessmentPart.optJSONArray("choices");
 								
-								if(nodeStateAssessmentPart != null) {
+								if (nodeStateAssessmentPart != null) {
 									//get the choices the student chose
 									responseJSONArray = nodeStateAssessmentPart.optJSONArray("response");
 								}
 								
-								if(choices != null) {
+								if (choices != null) {
 									
-									for(int y=0; y<choices.length(); y++) {
+									for (int y=0; y<choices.length(); y++) {
 										//loop through all the available choices
 										JSONObject choice = choices.getJSONObject(y);
 										
 										//check if the student checked this choice
-										if(isChoiceInResponse(choice, responseJSONArray)) {
+										if (isChoiceInResponse(choice, responseJSONArray)) {
 											//the student checked this choice
 											
 											//add the choice text
@@ -1716,24 +1717,24 @@ public class VLEGetXLS {
 							} else {
 								//the part is not a checkbox type
 								
-								if(nodeStateAssessmentPart != null) {
+								if (nodeStateAssessmentPart != null) {
 									//check if the response is null
-									if(!nodeStateAssessmentPart.isNull("response")) {
+									if (!nodeStateAssessmentPart.isNull("response")) {
 										//get the response object
 										JSONObject responseObject = nodeStateAssessmentPart.optJSONObject("response");
 										
-										if(responseObject != null) {
+										if (responseObject != null) {
 											//get the response text
 											String responseText = responseObject.optString("text");
 
-											if(responseText != null) {
+											if (responseText != null) {
 												response = responseText;
 											}
 											
 											//try to get the auto score result object
 											JSONObject autoScoreResult = responseObject.optJSONObject("autoScoreResult");
 											
-											if(autoScoreResult != null) {
+											if (autoScoreResult != null) {
 												//get the auto score values
 												isCorrect = autoScoreResult.optBoolean("isCorrect");
 												choiceScore = autoScoreResult.optLong("choiceScore");
@@ -1745,31 +1746,31 @@ public class VLEGetXLS {
 							}
 						}
 						
-						if(!responseAdded) {
+						if (!responseAdded) {
 							//set the response
-							if(response == null) {
+							if (response == null) {
 								row.add("");
 							} else {
 								row.add(response);
 							}
 						}
 						
-						if(isAutoScoreEnabled) {
+						if (isAutoScoreEnabled) {
 							//auto score is enabled for this part so we will set the auto score values
 							
-							if(isCorrect == null) {
+							if (isCorrect == null) {
 								row.add("");
 							} else {
 								row.add(isCorrect);
 							}
 							
-							if(choiceScore == null) {
+							if (choiceScore == null) {
 								row.add("");
 							} else {
 								row.add(choiceScore);
 							}
 							
-							if(maxScore == null) {
+							if (maxScore == null) {
 								row.add("");
 							} else {
 								row.add(maxScore);
@@ -1779,7 +1780,7 @@ public class VLEGetXLS {
 					
 					boolean isLockAfterSubmit = false;
 					
-					if(nodeContent != null && nodeContent.has("isLockAfterSubmit")) {
+					if (nodeContent != null && nodeContent.has("isLockAfterSubmit")) {
 						try {
 							//get whether this step locks after submit
 							isLockAfterSubmit = nodeContent.getBoolean("isLockAfterSubmit");
@@ -1788,7 +1789,7 @@ public class VLEGetXLS {
 						}
 					}
 					
-					if(isLockAfterSubmit) {
+					if (isLockAfterSubmit) {
 						//this step locks after submit
 						
 						//check if the student submitted
@@ -1804,7 +1805,7 @@ public class VLEGetXLS {
 	    		//get the response
 	    		String response = getNodeStateResponse(nodeState, nodeId);
 	    		
-	    		if(response != null) {
+	    		if (response != null) {
 		    		//put the response in the row
 		    		row.add(response);
 	    		}
@@ -1825,24 +1826,24 @@ public class VLEGetXLS {
 	private boolean isChoiceInResponse(JSONObject choice, JSONArray responseJSONArray) {
 		boolean result = false;
 		
-		if(responseJSONArray != null && choice != null) {
+		if (responseJSONArray != null && choice != null) {
 			//get the id and text of the choice
 			String answerId = choice.optString("id");
 			String answerText = choice.optString("text");
 			
 			//loop through all the objects in the student response
-			for(int x=0; x<responseJSONArray.length(); x++) {
+			for (int x=0; x<responseJSONArray.length(); x++) {
 				//get a student response object
 				JSONObject responseJSONObject = responseJSONArray.optJSONObject(x);
 				
-				if(responseJSONObject != null) {
+				if (responseJSONObject != null) {
 					//get the id and text of the student response object
 					String id = responseJSONObject.optString("id");
 					String text = responseJSONObject.optString("text");
 					
-					if(id != null && text != null && answerId != null && answerText != null) {
+					if (id != null && text != null && answerId != null && answerText != null) {
 						//check if the ids and text match
-						if(id.equals(answerId) && text.equals(answerText)) {
+						if (id.equals(answerId) && text.equals(answerText)) {
 							//the ids and text match so the student did choose the choice
 							result = true;
 						}
@@ -1864,15 +1865,15 @@ public class VLEGetXLS {
 	private ArrayList<Object> getDefaultColumnNames(String nodeId, String nodeType, JSONObject nodeState) {
 		ArrayList<Object> columnNames = new ArrayList<Object>();
 		
-		if(nodeType == null) {
+		if (nodeType == null) {
 			
-		} else if(nodeType.equals("AssessmentList")) {
+		} else if (nodeType.equals("AssessmentList")) {
 			//the step is an assessment list step
 			
 			//get the step content
 			JSONObject nodeContent = nodeIdToNodeContent.get(nodeId);
 			
-			if(nodeContent != null) {
+			if (nodeContent != null) {
 				//get the assessment parts from the step content
 				JSONArray nodeContentAssessments = nodeContent.optJSONArray("assessments");
 				
@@ -1880,7 +1881,7 @@ public class VLEGetXLS {
 				int partCounter = 1;
 				
 				//loop through all the assessment parts in the step content
-				for(int x=0; x<nodeContentAssessments.length(); x++) {
+				for (int x=0; x<nodeContentAssessments.length(); x++) {
 					String prompt = null;
 					boolean isAutoScoreEnabled = false;
 					
@@ -1892,7 +1893,7 @@ public class VLEGetXLS {
 					
 					String type = "";
 					
-					if(nodeContentAssessment != null) {
+					if (nodeContentAssessment != null) {
 						//get the prompt for the part
 						prompt = nodeContentAssessment.optString("prompt");
 						
@@ -1903,7 +1904,7 @@ public class VLEGetXLS {
 						isAutoScoreEnabled = nodeContentAssessment.optBoolean("isAutoScoreEnabled");
 					}
 					
-					if(type.equals("checkbox")) {
+					if (type.equals("checkbox")) {
 						/*
 						 * the assessment part is a checkbox type. we will display the choice text
 						 * instead of the part prompt for these checkbox type cells.
@@ -1918,14 +1919,14 @@ public class VLEGetXLS {
 							//get the available checkbox choices
 							JSONArray choices = nodeContentAssessment.optJSONArray("choices");
 							
-							if(choices != null) {
+							if (choices != null) {
 								
 								//loop through all the available checkbox choices
-								for(int y=0; y<choices.length(); y++) {
+								for (int y=0; y<choices.length(); y++) {
 									//get a choice
 									JSONObject choice = choices.getJSONObject(y);
 									
-									if(choice != null) {
+									if (choice != null) {
 										//get the choice text
 										String text = choice.optString("text");
 										
@@ -1942,7 +1943,7 @@ public class VLEGetXLS {
 							e.printStackTrace();
 						}
 					} else {
-						if(prompt == null) {
+						if (prompt == null) {
 							//there is no prompt
 							columnNames.add(partLabel + ": ");
 						} else {
@@ -1951,7 +1952,7 @@ public class VLEGetXLS {
 						}						
 					}
 					
-					if(isAutoScoreEnabled) {
+					if (isAutoScoreEnabled) {
 						//this part is auto scored so we will add these additional columns
 						columnNames.add(partLabel + ": " + "Is Correct");
 						columnNames.add(partLabel + ": " + "Score");
@@ -1964,7 +1965,7 @@ public class VLEGetXLS {
 				
 				boolean isLockAfterSubmit = false;
 				
-				if(nodeContent.has("isLockAfterSubmit")) {
+				if (nodeContent.has("isLockAfterSubmit")) {
 					try {
 						//get whether this step locks after submit
 						isLockAfterSubmit = nodeContent.getBoolean("isLockAfterSubmit");
@@ -1973,7 +1974,7 @@ public class VLEGetXLS {
 					}
 				}
 				
-				if(isLockAfterSubmit) {
+				if (isLockAfterSubmit) {
 					//this step locks after submit
 					columnNames.add("Submit");
 				}
@@ -1994,27 +1995,27 @@ public class VLEGetXLS {
 	private String getAssessmentPromptByAssessmentId(String nodeId, String assessmentId) {
 		String prompt = null;
 		
-		if(nodeId != null && assessmentId != null) {
+		if (nodeId != null && assessmentId != null) {
 			//get the node content
 			JSONObject nodeContent = nodeIdToNodeContent.get(nodeId);
 			
-			if(nodeContent != null) {
+			if (nodeContent != null) {
 				//get the assessments
 				JSONArray assessments = nodeContent.optJSONArray("assessments");
 				
-				if(assessments != null) {
+				if (assessments != null) {
 					
 					//loop through all the assessment parts
-					for(int x=0; x<assessments.length(); x++) {
+					for (int x=0; x<assessments.length(); x++) {
 						//get an assessment
 						JSONObject tempAssessment = assessments.optJSONObject(x);
 						
-						if(tempAssessment != null) {
+						if (tempAssessment != null) {
 							//get the assessment id
 							String tempAssessmentId = tempAssessment.optString("id");
 						
 							//check if this is the assessment id we want
-							if(assessmentId.equals(tempAssessmentId)) {
+							if (assessmentId.equals(tempAssessmentId)) {
 								//this is the assessment id we want so we will get the prompt
 								prompt = tempAssessment.optString("prompt");
 								break;
@@ -2037,27 +2038,27 @@ public class VLEGetXLS {
 	private JSONObject getStepContentAssessmentByAssessmentId(String nodeId, String assessmentId) {
 		JSONObject assessment = null;
 		
-		if(nodeId != null && assessmentId != null) {
+		if (nodeId != null && assessmentId != null) {
 			//get the node content
 			JSONObject nodeContent = nodeIdToNodeContent.get(nodeId);
 			
-			if(nodeContent != null) {
+			if (nodeContent != null) {
 				//get the assessments from the step content
 				JSONArray assessments = nodeContent.optJSONArray("assessments");
 				
-				if(assessments != null) {
+				if (assessments != null) {
 					
 					//loop through all the assessment parts in the step content
-					for(int x=0; x<assessments.length(); x++) {
+					for (int x=0; x<assessments.length(); x++) {
 						//get an assessment part from the step content
 						JSONObject tempAssessment = assessments.optJSONObject(x);
 						
-						if(tempAssessment != null) {
+						if (tempAssessment != null) {
 							//get the assessment id
 							String tempAssessmentId = tempAssessment.optString("id");
 						
 							//check if this is the assessment id we want
-							if(assessmentId.equals(tempAssessmentId)) {
+							if (assessmentId.equals(tempAssessmentId)) {
 								//this is the assessment we want
 								assessment = tempAssessment;
 								break;
@@ -2080,19 +2081,19 @@ public class VLEGetXLS {
 	private JSONObject getStudentWorkAssessmentByAssessmentId(JSONArray studentWorkAssessments, String assessmentId) {
 		JSONObject assessment = null;
 		
-		if(studentWorkAssessments != null && assessmentId != null) {
+		if (studentWorkAssessments != null && assessmentId != null) {
 			//loop through all the assessment parts in the student work
-			for(int x=0; x<studentWorkAssessments.length(); x++) {
+			for (int x=0; x<studentWorkAssessments.length(); x++) {
 				//get a student work assessment part
 				JSONObject studentWorkAssessment = studentWorkAssessments.optJSONObject(x);
 				
-				if(studentWorkAssessment != null) {
+				if (studentWorkAssessment != null) {
 					//get the id of the student work assessment part
 					String studentWorkAssessmentId = studentWorkAssessment.optString("id");
 					
-					if(studentWorkAssessmentId != null) {
+					if (studentWorkAssessmentId != null) {
 						//check if the assessment id matches the one we want
-						if(assessmentId.equals(studentWorkAssessmentId)) {
+						if (assessmentId.equals(studentWorkAssessmentId)) {
 							//the assessment id matches the one we want
 							assessment = studentWorkAssessment;
 							break;
@@ -2211,7 +2212,7 @@ public class VLEGetXLS {
     	 * currently working on that step, or if there was some kind of
     	 * bug/error
     	 */
-    	if(endTime != null) {
+    	if (endTime != null) {
     		//set the end time
     		tempColumn = setCellValue(tempRow, tempRowVector, tempColumn, timestampToFormattedString(endTime));
     	} else {
@@ -2222,7 +2223,7 @@ public class VLEGetXLS {
     	long timeSpentOnStep = 0;
     	
     	//calculate the time the student spent on the step
-    	if(endTime == null || startTime == null) {
+    	if (endTime == null || startTime == null) {
     		//set to -1 if either start or end was null so we can set the cell to N/A later
     		timeSpentOnStep = -1;
     	} else {
@@ -2234,14 +2235,14 @@ public class VLEGetXLS {
     	}
     	
     	//set the time spent on the step visit
-    	if(timeSpentOnStep == -1) {
+    	if (timeSpentOnStep == -1) {
     		tempColumn = setCellValue(tempRow, tempRowVector, tempColumn, "N/A");
     	} else {
     		tempColumn = setCellValue(tempRow, tempRowVector, tempColumn, timeSpentOnStep);
     	}
 
     	//set the time spent on the node state
-    	if(nodeStateTimeSpent == null) {
+    	if (nodeStateTimeSpent == null) {
     		//this node state doesn't have a time spent value
     		tempColumn = setCellValue(tempRow, tempRowVector, tempColumn, "N/A");
     	} else {
@@ -2268,13 +2269,13 @@ public class VLEGetXLS {
 		 */
     	tempColumn = setGetLatestStudentWorkReviewCells(teacherWorkgroupIds, stepWorksForWorkgroupId, runId, periodId, userInfo, nodeJSONObject, nodeContent, tempRow, tempRowVector, tempColumn, "allStudentWork");
     	
-    	if(row != null) {
+    	if (row != null) {
     		//loop through all the elements in the array
-    		for(int x=0; x<row.size(); x++) {
+    		for (int x=0; x<row.size(); x++) {
     			//get an element
         		Object object = row.get(x);
 
-        		if(object != null) {
+        		if (object != null) {
         			//this column has student data
         			
         			//get the column index
@@ -2283,30 +2284,30 @@ public class VLEGetXLS {
         			String comment = null;
         			
         			//check if there are column names
-            		if(columnNames != null) {
+            		if (columnNames != null) {
             			/*
             			 * there are column names so we will make sure there is a column name
             			 * available for this column index
             			 */
-            			if(columnNames.size() > x) {
+            			if (columnNames.size() > x) {
             				//there is a column name for the column index so we will get the column name for the column
             				comment = (String) columnNames.get(x);
             			}
             		}
 
-        			if(object instanceof String) {
+        			if (object instanceof String) {
         				//set the cell string value
                 		tempColumn = setCellValue(tempRow, tempRowVector, tempColumn, (String) object, comment);
-        			} else if(object instanceof Long) {
+        			} else if (object instanceof Long) {
         				//set the cell long value
                 		tempColumn = setCellValue(tempRow, tempRowVector, tempColumn, (Long) object, comment);
-        			} else if(object instanceof Integer) {
+        			} else if (object instanceof Integer) {
         				//set the cell integer value
                 		tempColumn = setCellValue(tempRow, tempRowVector, tempColumn, (Integer) object, comment);
-        			} else if(object instanceof Double) {
+        			} else if (object instanceof Double) {
         				//set the cell integer value
                 		tempColumn = setCellValue(tempRow, tempRowVector, tempColumn, (Double) object, comment);
-        			} else if(object instanceof Float) {
+        			} else if (object instanceof Float) {
         				//set the cell integer value
                 		tempColumn = setCellValue(tempRow, tempRowVector, tempColumn, (Float) object, comment);
         			} else {
@@ -2314,7 +2315,7 @@ public class VLEGetXLS {
         				tempColumn = setCellValue(tempRow, tempRowVector, tempColumn, object.toString(), comment);
         			}
         			
-        			if(comment != null) {
+        			if (comment != null) {
         				/*
         				 * set the column name as a comment for the cell which will display when
         				 * the user mouseovers the cell
@@ -2345,12 +2346,12 @@ public class VLEGetXLS {
 	 * @param comment the comment string
 	 */
 	private void setCellComment(XSSFSheet sheet, Row row, int column, String comment) {
-		if(row != null) {
+		if (row != null) {
 			//get the cell
 			Cell cell = row.getCell(column);
 			
-			if(cell != null) {
-				if(sheet != null) {
+			if (cell != null) {
+				if (sheet != null) {
 					//make the comment
 					XSSFComment cellComment = sheet.createDrawingPatriarch().createCellComment(new XSSFClientAnchor());
 					cellComment.setString(comment);
@@ -2371,18 +2372,18 @@ public class VLEGetXLS {
 		//an array to hold the rows
 		ArrayList<ArrayList<Object>> rows = new ArrayList<ArrayList<Object>>();
 		
-		if(columns != null) {
+		if (columns != null) {
 			
 			//loop through all the columns
-			for(int x=0; x<columns.size(); x++) {
+			for (int x=0; x<columns.size(); x++) {
 				
 				//get a column
 				ArrayList<Object> column = columns.get(x);
 
-				if(column != null) {
+				if (column != null) {
 					
 					//loop through all the data values in the column
-					for(int y=0; y<column.size(); y++) {
+					for (int y=0; y<column.size(); y++) {
 						Object dataValue = null;
 						
 						try {
@@ -2401,7 +2402,7 @@ public class VLEGetXLS {
 							
 						}
 						
-						if(row == null) {
+						if (row == null) {
 							//the row does not exist so we will create it
 							row = new ArrayList<Object>();
 							rows.add(y, row);
@@ -2425,10 +2426,10 @@ public class VLEGetXLS {
 	 * @return the updated row
 	 */
 	private ArrayList<Object> setValueInRow(ArrayList<Object> row, int index, Object value) {
-		if(row != null) {
+		if (row != null) {
 			
 			//check if the array is large enough to insert an element at the given index
-			if(row.size() <= index) {
+			if (row.size() <= index) {
 				/*
 				 * it is not large enough so we will insert empty values into the array
 				 * until it is large enough
@@ -2454,7 +2455,7 @@ public class VLEGetXLS {
 		//an array to hold the rows
 		ArrayList<ArrayList<Object>> rows = new ArrayList<ArrayList<Object>>();
 		
-		if(columnNames != null && columnNames.size() > 0) {
+		if (columnNames != null && columnNames.size() > 0) {
 			//output the column names
 			System.out.println("columnNames");
 			System.out.println(columnNames);
@@ -2463,12 +2464,12 @@ public class VLEGetXLS {
 		//get the column data in row format
 		rows = getRowsFromColumns(columns);
 
-		if(rows != null && rows.size() > 0) {
+		if (rows != null && rows.size() > 0) {
 			//output the student data value rows
 			System.out.println("columnValues");
 			
 			//loop through all the rows
-			for(int rowsCounter=0; rowsCounter<rows.size(); rowsCounter++) {
+			for (int rowsCounter=0; rowsCounter<rows.size(); rowsCounter++) {
 				//get a row
 				ArrayList<Object> row = rows.get(rowsCounter);
 				
@@ -2490,10 +2491,10 @@ public class VLEGetXLS {
 		//get the export column objects
 		JSONArray exportColumns = getExportColumns(nodeId);
 		
-		if(exportColumns != null) {
+		if (exportColumns != null) {
 			
 			//loop through all the export column objects
-			for(int x=0; x<exportColumns.length(); x++) {
+			for (int x=0; x<exportColumns.length(); x++) {
 				try {
 					//get an export column object
 					JSONObject exportColumn = exportColumns.getJSONObject(x);
@@ -2526,7 +2527,7 @@ public class VLEGetXLS {
 		String field2 = null;
 		
 		//get the field of the first export column
-		if(exportColumn1 != null && exportColumn1.has("field")) {
+		if (exportColumn1 != null && exportColumn1.has("field")) {
 			try {
 				field1 = exportColumn1.getString("field");
 			} catch (JSONException e) {
@@ -2535,7 +2536,7 @@ public class VLEGetXLS {
 		}
 		
 		//get the field of the second export column
-		if(exportColumn2 != null && exportColumn2.has("field")) {
+		if (exportColumn2 != null && exportColumn2.has("field")) {
 			try {
 				field2 = exportColumn2.getString("field");
 			} catch (JSONException e) {
@@ -2547,7 +2548,7 @@ public class VLEGetXLS {
 		JSONObject childField2 = null;
 		
 		//get the child field of the first export column
-		if(exportColumn1 != null && exportColumn1.has("childField")) {
+		if (exportColumn1 != null && exportColumn1.has("childField")) {
 			try {
 				childField1 = exportColumn1.getJSONObject("childField");
 			} catch (JSONException e) {
@@ -2556,7 +2557,7 @@ public class VLEGetXLS {
 		}
 		
 		//get the child field of the second export column
-		if(exportColumn2 != null && exportColumn2.has("childField")) {
+		if (exportColumn2 != null && exportColumn2.has("childField")) {
 			try {
 				childField2 = exportColumn2.getJSONObject("childField");
 			} catch (JSONException e) {
@@ -2564,37 +2565,37 @@ public class VLEGetXLS {
 			}
 		}
 		
-		if(depth == 0) {
+		if (depth == 0) {
 			//we are on the first level
 			
-			if(exportColumn1 == null && exportColumn2 == null) {
+			if (exportColumn1 == null && exportColumn2 == null) {
 				//both the export columns are null so they are not referencing the same object
 				result = false;
-			} else if(exportColumn1 != null && exportColumn2 == null) {
+			} else if (exportColumn1 != null && exportColumn2 == null) {
 				//one of the export columns is null but the other is not so they are not referencing the same object
 				result = false;
-			} else if(exportColumn1 == null && exportColumn2 != null) {
+			} else if (exportColumn1 == null && exportColumn2 != null) {
 				//one of the export columns is null but the other is not so they are not referencing the same object
 				result = false;
-			} else if(exportColumn1 != null && exportColumn2 != null) {
+			} else if (exportColumn1 != null && exportColumn2 != null) {
 				//both export columns are not null so we will look at the fields
 				
-				if(field1 == null && field2 == null) {
+				if (field1 == null && field2 == null) {
 					//both fields are null so they are not referencing the same object
 					result = false;
-				} else if(field1 != null && field2 == null) {
+				} else if (field1 != null && field2 == null) {
 					//one of the fields is null but the other is not so they are not referencing the same object
 					result = false;
-				} else if(field1 == null && field2 != null) {
+				} else if (field1 == null && field2 != null) {
 					//one of the fields is null but the other is not so they are not referencing the same object
 					result = false;
-				} else if(field1.equals(field2)) {
+				} else if (field1.equals(field2)) {
 					/*
 					 * the field values are the same so we will iterate to the child field objects
 					 * to see if they are the same as well
 					 */
 					result = isExportColumnReferencingSameObject(childField1, childField2, depth + 1);
-				} else if(!field1.equals(field2)) {
+				} else if (!field1.equals(field2)) {
 					//the field values are not null and not the same so they are not referencing the same object
 					result = false;
 				}
@@ -2602,7 +2603,7 @@ public class VLEGetXLS {
 		} else {
 			//we are on a level deeper than the first level
 			
-			if(exportColumn1 == null && exportColumn2 == null) {
+			if (exportColumn1 == null && exportColumn2 == null) {
 				/*
 				 * both export columns are null and we are on a level deeper than the first
 				 * which means the export columns are referencing the same object
@@ -2626,46 +2627,46 @@ public class VLEGetXLS {
 				 * return true
 				 */
 				result = true;
-			} else if(exportColumn1 != null && exportColumn2 == null) {
+			} else if (exportColumn1 != null && exportColumn2 == null) {
 				//one of the export columns is null but the other is not so they are not referencing the same object
 				result = false;
-			} else if(exportColumn1 == null && exportColumn2 != null) {
+			} else if (exportColumn1 == null && exportColumn2 != null) {
 				//one of the export columns is null but the other is not so they are not referencing the same object
 				result = false;
-			} else if(exportColumn1 != null && exportColumn2 != null) {
+			} else if (exportColumn1 != null && exportColumn2 != null) {
 				//both export columns are not null so we will look at the fields
 				
-				if(field1 == null && field2 == null) {
+				if (field1 == null && field2 == null) {
 					//both field values are null so we will compare the child field objects
 					result = isExportColumnReferencingSameObject(childField1, childField2, depth + 1);
-				} else if(field1 != null && field2 == null) {
+				} else if (field1 != null && field2 == null) {
 					//one of the fields is null but the other is not so they are not referencing the same object
 					result = false;
-				} else if(field1 == null && field2 != null) {
+				} else if (field1 == null && field2 != null) {
 					//one of the fields is null but the other is not so they are not referencing the same object
 					result = false;
-				} else if(field1.equals(field2)) {
+				} else if (field1.equals(field2)) {
 					/*
 					 * the field values are the same so we will iterate to the child field objects
 					 * to see if they are the same as well
 					 */
 					result = isExportColumnReferencingSameObject(childField1, childField2, depth + 1);
-				} else if(!field1.equals(field2)) {
+				} else if (!field1.equals(field2)) {
 					//the fields are not the same
 					
-					if(childField1 == null && childField2 == null) {
+					if (childField1 == null && childField2 == null) {
 						/*
 						 * there are no child fields so we have reached the leaf nodes which means they
 						 * are referencing the same object
 						 */
 						result = true;
-					} else if(childField1 != null && childField2 == null) {
+					} else if (childField1 != null && childField2 == null) {
 						//one of the columns has a child field but the other does not so they are not referencing the same object
 						result = false;
-					} else if(childField1 == null && childField2 != null) {
+					} else if (childField1 == null && childField2 != null) {
 						//one of the columns has a child field but the other does not so they are not referencing the same object
 						result = false;
-					} else if(childField1 != null && childField2 != null) {
+					} else if (childField1 != null && childField2 != null) {
 						//both of the columns have child fields which means they both go deeper and are not referencing the same object
 						result = false;
 					}
@@ -2692,16 +2693,16 @@ public class VLEGetXLS {
 		//holds the number of times a column was expanded and multiplied
 		ArrayList<ArrayList<Integer>> expandAndMultiplyAmountsList = new ArrayList<ArrayList<Integer>>();
 		
-		if(nodeState != null) {
+		if (nodeState != null) {
 			//get the export columns for the step
 			JSONArray exportColumns = getExportColumns(nodeId);
 			
-			if(exportColumns != null) {
+			if (exportColumns != null) {
 				//keep track of the export columns we have visited
 				JSONArray visitedExportColumns = new JSONArray();
 				
 				//loop through all the export columns
-				for(int columnIndex=0; columnIndex<exportColumns.length(); columnIndex++) {
+				for (int columnIndex=0; columnIndex<exportColumns.length(); columnIndex++) {
 					try {
 						//get an export column
 						JSONObject exportColumn = exportColumns.getJSONObject(columnIndex);
@@ -2715,14 +2716,14 @@ public class VLEGetXLS {
 						 * the same object, we need to apply the same expansion and muliplying
 						 * for our new column.
 						 */
-						for(int visitedColumnIndex=0; visitedColumnIndex<visitedExportColumns.length(); visitedColumnIndex++) {
+						for (int visitedColumnIndex=0; visitedColumnIndex<visitedExportColumns.length(); visitedColumnIndex++) {
 							//get a visited export column
 							JSONObject visitedExportColumn = visitedExportColumns.getJSONObject(visitedColumnIndex);
 							
 							//check if our current column references the same object as the visited export column
 							boolean isExportColumnReferencingSameObject = isExportColumnReferencingSameObject(visitedExportColumn, exportColumn, 0);
 							
-							if(isExportColumnReferencingSameObject) {
+							if (isExportColumnReferencingSameObject) {
 								/*
 								 * our current column references the same object so we will get the
 								 * expand and multiply amounts for the visited export column so we
@@ -2736,7 +2737,7 @@ public class VLEGetXLS {
 						//get the student data values for the field
 						ArrayList<Object> newColumn = getColumnValuesForField(exportColumn, stepWorkId, nodeState, nodeId);
 						
-						if(relatedColumnExpandAndMultiplyAmounts == null) {
+						if (relatedColumnExpandAndMultiplyAmounts == null) {
 							//we did not find any previous columns that referenced the same object
 							
 							//get the column size
@@ -2745,14 +2746,14 @@ public class VLEGetXLS {
 							//get the length of the previous columns. all the columns will be the same length
 							int previousColumnLength = getColumnLength(columns);
 							
-							if(previousColumnLength == 0) {
+							if (previousColumnLength == 0) {
 								previousColumnLength = 1;
 							}
 							
-							if(newColumnSize > 1) {
+							if (newColumnSize > 1) {
 								//the column size is greater than 1
 								
-								if(columnIndex == 0) {
+								if (columnIndex == 0) {
 									/*
 									 * we are adding the first column so we will just add the column without
 									 * having to perform any expanding or multiplying 
@@ -2854,11 +2855,11 @@ public class VLEGetXLS {
 							//we found a previous column that referenced the same object
 							
 							//loop through all the expand and mulitply values for the related column
-							for(int expandAndMultiplyIndex=0; expandAndMultiplyIndex<relatedColumnExpandAndMultiplyAmounts.size(); expandAndMultiplyIndex++) {
+							for (int expandAndMultiplyIndex=0; expandAndMultiplyIndex<relatedColumnExpandAndMultiplyAmounts.size(); expandAndMultiplyIndex++) {
 								//get an expand or multiply value
 								int tempTimesMultiplied = relatedColumnExpandAndMultiplyAmounts.get(expandAndMultiplyIndex);
 								
-								if(expandAndMultiplyIndex == 0) {
+								if (expandAndMultiplyIndex == 0) {
 									//the first index value is always the expand value
 									
 									//expand the values in the new column
@@ -2912,7 +2913,7 @@ public class VLEGetXLS {
 	private int getColumnLength(ArrayList<ArrayList<Object>> columns) {
 		int length = 0;
 		
-		if(columns != null && columns.size() > 0) {
+		if (columns != null && columns.size() > 0) {
 			//get the first column
 			ArrayList<Object> column = columns.get(0);
 			
@@ -2931,9 +2932,9 @@ public class VLEGetXLS {
 	 */
 	private ArrayList<ArrayList<Integer>> updateExpandAndMultiplyAmounts(ArrayList<ArrayList<Integer>> timesMultiplied, int times) {
 		
-		if(timesMultiplied != null) {
+		if (timesMultiplied != null) {
 			//loop through all the columns
-			for(int x=0; x<timesMultiplied.size(); x++) {
+			for (int x=0; x<timesMultiplied.size(); x++) {
 				//get a column's expand and multiply values
 				ArrayList<Integer> timesMultipliedArray = timesMultiplied.get(x);
 				
@@ -2957,7 +2958,7 @@ public class VLEGetXLS {
 		ArrayList<ArrayList<Object>> newColumns = new ArrayList<ArrayList<Object>>();
 		
 		//loop through all the columns
-		for(int x=0; x<columns.size(); x++) {
+		for (int x=0; x<columns.size(); x++) {
 			//get a column
 			ArrayList<Object> column = columns.get(x);
 			
@@ -2971,7 +2972,7 @@ public class VLEGetXLS {
 			 * multiply the column by adding all the values into the new column
 			 * multiple times
 			 */
-			for(int y=0; y<times; y++) {
+			for (int y=0; y<times; y++) {
 				newColumn.addAll(column);				
 			}
 		}
@@ -2994,7 +2995,7 @@ public class VLEGetXLS {
 		 * multiply the column by adding all the values into the new column
 		 * multiple times
 		 */
-		for(int y=0; y<times; y++) {
+		for (int y=0; y<times; y++) {
 			newColumn.addAll(column);				
 		}
 		
@@ -3024,12 +3025,12 @@ public class VLEGetXLS {
 		ArrayList<Object> newColumn = new ArrayList<Object>();
 		
 		//loop through all the columns
-		for(int x=0; x<column.size(); x++) {
+		for (int x=0; x<column.size(); x++) {
 			//get an element in the column
 			Object columnValue = column.get(x);
 			
 			//add the element a certain number of times to the new column
-			for(int y=0; y<times; y++) {
+			for (int y=0; y<times; y++) {
 				newColumn.add(columnValue);
 			}
 		}
@@ -3055,7 +3056,7 @@ public class VLEGetXLS {
 		//get the response
 		String response = getNodeStateResponse(nodeState, nodeId);
 		
-		if(response != null) {
+		if (response != null) {
 			//set the response into the cell
 			tempColumn = setCellValue(tempRow, tempRowVector, tempColumn, response);
 		} else {
@@ -3085,7 +3086,7 @@ public class VLEGetXLS {
 		//get the step visit count
 		Integer count = nodeIdToStepVisitCount.get(nodeId);
 		
-		if(count == null) {
+		if (count == null) {
 			//there was no entry for the node id so we will intialize the value
 			count = 0;
 		}
@@ -3108,7 +3109,7 @@ public class VLEGetXLS {
 		//get the step visit count
 		Integer count = nodeIdToStepVisitCount.get(nodeId);
 		
-		if(count == null) {
+		if (count == null) {
 			//there was no entry for the node id
 			count = 0;
 		}
@@ -3132,7 +3133,7 @@ public class VLEGetXLS {
 		//get the step revision count
 		Integer count = nodeIdToStepRevisionCount.get(nodeId);
 		
-		if(count == null) {
+		if (count == null) {
 			//there was no entry for the node id so we will intialize the value
 			count = 0;
 		}
@@ -3155,7 +3156,7 @@ public class VLEGetXLS {
 		//get the step revision count
 		Integer count = nodeIdToStepRevisionCount.get(nodeId);
 		
-		if(count == null) {
+		if (count == null) {
 			//there was no entry for the node id
 			count = 0;
 		}
@@ -3192,13 +3193,13 @@ public class VLEGetXLS {
 
 		XSSFWorkbook wb = null;
 		
-		if(isFileTypeXLS(fileType)) {
+		if (isFileTypeXLS(fileType)) {
 			//create the excel workbook
 			wb = new XSSFWorkbook();
 			
 			//create the sheet that will contain all the data
 			XSSFSheet mainSheet = wb.createSheet("Latest Work For All Students");
-		} else if(isFileTypeCSV(fileType)) {
+		} else if (isFileTypeCSV(fileType)) {
 			wb = null;
 		}
 		
@@ -3243,7 +3244,7 @@ public class VLEGetXLS {
 		XSSFSheet mainSheet = null;
 		int rowCounter = 0;
 		
-		if(workbook != null) {
+		if (workbook != null) {
 			//workbook is not null which means we are generating an xls file
 			
 			//get the sheet
@@ -3254,7 +3255,7 @@ public class VLEGetXLS {
 		}
 
 		//loop through the workgroup ids
-		for(int x=0; x<workgroupIds.size(); x++) {
+		for (int x=0; x<workgroupIds.size(); x++) {
 			//create a row for this workgroup
 			Row rowForWorkgroupId = createRow(mainSheet, x + rowCounter);
 			Vector<String> rowForWorkgroupIdVector = createRowVector();
@@ -3286,7 +3287,7 @@ public class VLEGetXLS {
 			List<StepWork> stepWorksForWorkgroupId = vleService.getStepWorksByUserInfo(userInfo);
 			
 			//loop through all the node ids which are ordered
-			for(int y=0; y<nodeIdList.size(); y++) {
+			for (int y=0; y<nodeIdList.size(); y++) {
 				//get a node id
 				String nodeId = nodeIdList.get(y);
 				
@@ -3314,7 +3315,7 @@ public class VLEGetXLS {
 				//set the step work data into the row in the given column
 				workgroupColumnCounter = setStepWorkResponse(rowForWorkgroupId, rowForWorkgroupIdVector, workgroupColumnCounter, latestStepWorkWithResponse, nodeId);
 
-				if(isAutoGraded(nodeContent)) {
+				if (isAutoGraded(nodeContent)) {
 					//set the auto graded values
 					workgroupColumnCounter = setLatestAutoScoreValues(stepWorksForNodeId, rowForWorkgroupId, rowForWorkgroupIdVector, workgroupColumnCounter);
 				}
@@ -3362,11 +3363,11 @@ public class VLEGetXLS {
 		
 		try {
 			//try to see if the step is a review type of step
-			if(nodeJSONObject == null) {
+			if (nodeJSONObject == null) {
 				//do nothing, this function will assume this step is not a review type
-			} else if(nodeJSONObject.has("peerReview")) {
+			} else if (nodeJSONObject.has("peerReview")) {
 				reviewType = nodeJSONObject.getString("peerReview");
-			} else if(nodeJSONObject.has("teacherReview")) {
+			} else if (nodeJSONObject.has("teacherReview")) {
 				reviewType = nodeJSONObject.getString("teacherReview");
 			}
 		} catch (JSONException e) {
@@ -3375,14 +3376,14 @@ public class VLEGetXLS {
 		
 		boolean addedReviewColumns = false;
 		
-		if(reviewType.equals("annotate")) {
+		if (reviewType.equals("annotate")) {
 			/*
 			 * this is a step where the student reads work from their classmate and
 			 * writes feedback/annotates it
 			 */
 			
 			try {
-				if(nodeJSONObject.has("peerReview")) {
+				if (nodeJSONObject.has("peerReview")) {
 					/*
 					 * this is when the student receives classmate work to view and
 					 * write a peer review
@@ -3395,7 +3396,7 @@ public class VLEGetXLS {
 					//get the PeerReviewWork row that contains the classmate matching
 					PeerReviewWork peerReviewWork = vleService.getPeerReviewWorkByRunPeriodNodeReviewerUserInfo(new Long(runId), new Long(periodId), node, userInfo);
 					
-					if(peerReviewWork != null) {
+					if (peerReviewWork != null) {
 						//get the owner of the work
 						UserInfo userInfoReviewed = peerReviewWork.getUserInfo();
 						
@@ -3408,7 +3409,7 @@ public class VLEGetXLS {
 						//get the actual work from the classmate
 						String reviewedWork = getStepWorkResponse(peerReviewStepWork);
 						
-						if(workgroupIdReviewed == -2) {
+						if (workgroupIdReviewed == -2) {
 							//the student received the canned response
 							workgroupColumnCounter = setCellValue(rowForWorkgroupId, rowForWorkgroupIdVector, workgroupColumnCounter, "Canned Response");
 							
@@ -3427,7 +3428,7 @@ public class VLEGetXLS {
 						
 						addedReviewColumns = true;
 					}
-				} else if(nodeJSONObject.has("teacherReview")) {
+				} else if (nodeJSONObject.has("teacherReview")) {
 					/*
 					 * this is when the student receives the pre-written/canned work
 					 * to view and write a peer review
@@ -3449,19 +3450,19 @@ public class VLEGetXLS {
 			}
 			
 			//check if we incremented the columns
-			if(!addedReviewColumns) {
+			if (!addedReviewColumns) {
 				//the columns need to be incremented even if there was no data
 				workgroupColumnCounter += 2;
 				addEmptyElementsToVector(rowForWorkgroupIdVector, 2);
 			}
-		} else if(reviewType.equals("revise")) {
+		} else if (reviewType.equals("revise")) {
 			/*
 			 * this is a step where the student reads an annotation from their classmate
 			 * and revises their work based on it
 			 */
 			
 			try {
-				if(nodeJSONObject.has("peerReview")) {
+				if (nodeJSONObject.has("peerReview")) {
 					//get the start/original node
 					String associatedStartNodeId = nodeJSONObject.getString("associatedStartNode");
 					Node node = vleService.getNodeByNodeIdAndRunId(associatedStartNodeId, runId);
@@ -3469,18 +3470,18 @@ public class VLEGetXLS {
 					//get the PeerReviewWork entry that contains the classmate matching
 					PeerReviewWork peerReviewWork = vleService.getPeerReviewWorkByRunPeriodNodeWorkerUserInfo(new Long(runId), new Long(periodId), node, userInfo);
 					
-					if(peerReviewWork != null) {
+					if (peerReviewWork != null) {
 						//get the person who reviewed me
 						UserInfo reviewerUserInfo = peerReviewWork.getReviewerUserInfo();
 						
-						if(reviewerUserInfo != null) {
+						if (reviewerUserInfo != null) {
 							//get the workgroup id of the reviewer
 							Long reviewerWorkgroupId = reviewerUserInfo.getWorkgroupId();
 							
 							//get the annotation from the reviewer
 							Annotation annotation = peerReviewWork.getAnnotation();
 							
-							if(annotation != null) {
+							if (annotation != null) {
 								//get the annotation text the reviewer wrote
 								String annotationData = annotation.getData();
 								JSONObject annotationDataJSONObject = new JSONObject(annotationData);
@@ -3494,7 +3495,7 @@ public class VLEGetXLS {
 								
 								addedReviewColumns = true;
 							} else {
-								if(reviewerWorkgroupId == -2) {
+								if (reviewerWorkgroupId == -2) {
 									//the student saw the canned review
 									String authoredReview = nodeContent.getString("authoredReview");
 									
@@ -3509,7 +3510,7 @@ public class VLEGetXLS {
 							}
 						}
 					}
-				} else if(nodeJSONObject.has("teacherReview")) {
+				} else if (nodeJSONObject.has("teacherReview")) {
 					//get the start/original node
 					String associatedStartNodeId = nodeJSONObject.getString("associatedStartNode");
 					
@@ -3528,23 +3529,23 @@ public class VLEGetXLS {
 					Annotation latestAnnotation = null;
 					
 					//loop through all the annotations we found to look for the latest one
-					for(int x=0; x<annotations.size(); x++) {
+					for (int x=0; x<annotations.size(); x++) {
 						//get an annotation
 						Annotation tempAnnotation = annotations.get(x);
 						
-						if(latestAnnotation == null) {
+						if (latestAnnotation == null) {
 							//this is the first annotation we've found so we will set it as the latest
 							latestAnnotation = tempAnnotation;
 						} else {
 							//check if the annotation we are on is later than our current latest
-							if(tempAnnotation.getPostTime().getTime() > latestAnnotation.getPostTime().getTime()) {
+							if (tempAnnotation.getPostTime().getTime() > latestAnnotation.getPostTime().getTime()) {
 								//set the annotation we are on as the latest
 								latestAnnotation = tempAnnotation;
 							}
 						}
 					}
 					
-					if(latestAnnotation != null) {
+					if (latestAnnotation != null) {
 						//get the annotation text the teacher wrote
 						String annotationData = latestAnnotation.getData();
 						JSONObject annotationJSONObject = new JSONObject(annotationData);
@@ -3563,7 +3564,7 @@ public class VLEGetXLS {
 			}
 			
 			//check if we incremented the columns
-			if(!addedReviewColumns) {
+			if (!addedReviewColumns) {
 				//the columns need to be incremented even if there was no data
 				workgroupColumnCounter += 2;
 				addEmptyElementsToVector(rowForWorkgroupIdVector, 2);
@@ -3571,7 +3572,7 @@ public class VLEGetXLS {
 		} else {
 			//this work is not peer reviewed or teacher reviewed
 			
-			if(exportType.equals("allStudentWork")) {
+			if (exportType.equals("allStudentWork")) {
 				/*
 				 * if this is for the all student work excel export, we will always need
 				 * to fill the review cells
@@ -3579,7 +3580,7 @@ public class VLEGetXLS {
 				workgroupColumnCounter = setCellValue(rowForWorkgroupId, rowForWorkgroupIdVector, workgroupColumnCounter, "N/A");
 				workgroupColumnCounter = setCellValue(rowForWorkgroupId, rowForWorkgroupIdVector, workgroupColumnCounter, "N/A");
 				addedReviewColumns = true;	
-			} else if(exportType.equals("latestStudentWork")) {
+			} else if (exportType.equals("latestStudentWork")) {
 				/*
 				 * if this is for the latest student work excel export, we will not
 				 * need to fill the review cells
@@ -3610,7 +3611,7 @@ public class VLEGetXLS {
 			HashMap<String, JSONObject> nodeIdToNodeContent) {
 		XSSFSheet mainSheet = null;
 		
-		if(workbook != null) {
+		if (workbook != null) {
 			//the workbook is not null which means we are generating an xls file
 			mainSheet = workbook.getSheetAt(0);
 		}
@@ -3639,7 +3640,7 @@ public class VLEGetXLS {
 		Vector<String> stepExtraRowVector = createRowVector();
 
 		//create 13 empty columns in each of the rows because the first 13 columns are for the user data columns
-		for(int x=0; x<13; x++) {
+		for (int x=0; x<13; x++) {
 			setCellValue(stepTitleRow, stepTitleRowVector, x, "");
 			setCellValue(stepTypeRow, stepTypeRowVector, x, "");
 			setCellValue(stepPromptRow, stepPromptRowVector, x, "");
@@ -3676,7 +3677,7 @@ public class VLEGetXLS {
 		 * loop through the node ids to set the step titles, step types,
 		 * step prompts, node ids, and step extras
 		 */
-		for(int nodeIndex=0; nodeIndex<nodeIdList.size(); nodeIndex++) {
+		for (int nodeIndex=0; nodeIndex<nodeIdList.size(); nodeIndex++) {
 			//get the node id
 			String nodeId = nodeIdList.get(nodeIndex);
 			
@@ -3742,19 +3743,19 @@ public class VLEGetXLS {
 		//get the content for the node
 		JSONObject nodeContent = nodeIdToNodeContent.get(nodeId);
 		
-		 if(isReviewType(nodeJSONObject)) {
+		 if (isReviewType(nodeJSONObject)) {
 			//the column is for a review type so we may need to allocate multiple columns
 			columnCounter = setGetLatestStudentWorkReviewHeaderCells(
 					stepTitleRow, stepTypeRow, stepPromptRow, nodeIdRow, stepExtraRow, 
 					stepTitleRowVector, stepTypeRowVector, stepPromptRowVector, nodeIdRowVector, stepExtraRowVector,
 					columnCounter, nodeId, nodeTitle, nodeJSONObject, nodeContent);
-		} else if(isAssessmentListType(nodeContent)) {
+		} else if (isAssessmentListType(nodeContent)) {
 			//the step is AssessmentList so we may need to allocate multiple columns 
 			columnCounter = setGetLatestStudentWorkAssessmentListHeaderCells(
 					stepTitleRow, stepTypeRow, stepPromptRow, nodeIdRow, stepExtraRow, 
 					stepTitleRowVector, stepTypeRowVector, stepPromptRowVector, nodeIdRowVector, stepExtraRowVector,
 					columnCounter, nodeId, nodeTitle, nodeContent);
-		} else if(isAutoGraded(nodeContent)) {
+		} else if (isAutoGraded(nodeContent)) {
 			//the step is auto graded
 			columnCounter = setGetLatestStudentWorkAutoGradedHeaderCells(
 					stepTitleRow, stepTypeRow, stepPromptRow, nodeIdRow, stepExtraRow, 
@@ -3770,7 +3771,7 @@ public class VLEGetXLS {
 		
 		String nodeType = "";
 		try {
-			if(nodeContent != null) {
+			if (nodeContent != null) {
 				//get the node type
 				nodeType = nodeContent.getString("type");
 			}
@@ -3827,11 +3828,11 @@ public class VLEGetXLS {
 		
 		try {
 			//check if the node is a review type
-			if(nodeJSONObject == null) {
+			if (nodeJSONObject == null) {
 				//do nothing
-			} else if(nodeJSONObject.has("peerReview")) {
+			} else if (nodeJSONObject.has("peerReview")) {
 				reviewType = nodeJSONObject.getString("peerReview");
-			} else if(nodeJSONObject.has("teacherReview")) {
+			} else if (nodeJSONObject.has("teacherReview")) {
 				reviewType = nodeJSONObject.getString("teacherReview");
 			}
 		} catch (JSONException e) {
@@ -3849,7 +3850,7 @@ public class VLEGetXLS {
 	 * @return whether the node is an assessment list type
 	 */
 	private boolean isAssessmentListType(JSONObject nodeContent) {
-		if(nodeContent == null) {
+		if (nodeContent == null) {
 			return false;
 		}
 		
@@ -3860,9 +3861,9 @@ public class VLEGetXLS {
 			e.printStackTrace();
 		}
 		
-		if(type == null) {
+		if (type == null) {
 			return false;
-		} else if(type.equals("AssessmentList")) {
+		} else if (type.equals("AssessmentList")) {
 			return true;
 		} else {
 			return false;
@@ -3877,9 +3878,9 @@ public class VLEGetXLS {
 	 * @return whether the node is a review type
 	 */
 	private boolean isReviewType(JSONObject nodeJSONObject) {
-		if(nodeJSONObject == null) {
+		if (nodeJSONObject == null) {
 			return false;
-		} else if(nodeJSONObject.has("peerReview") || nodeJSONObject.has("teacherReview")) {
+		} else if (nodeJSONObject.has("peerReview") || nodeJSONObject.has("teacherReview")) {
 			return true;
 		} else {
 			return false;			
@@ -3895,9 +3896,9 @@ public class VLEGetXLS {
 	 */
 	@SuppressWarnings("unused")
 	private boolean isPeerReview(JSONObject nodeJSONObject) {
-		if(nodeJSONObject == null) {
+		if (nodeJSONObject == null) {
 			return false;
-		} else if(nodeJSONObject.has("peerReview")) {
+		} else if (nodeJSONObject.has("peerReview")) {
 			return true;
 		} else {
 			return false;
@@ -3913,9 +3914,9 @@ public class VLEGetXLS {
 	 */
 	@SuppressWarnings("unused")
 	private boolean isTeacherReview(JSONObject nodeJSONObject) {
-		if(nodeJSONObject == null) {
+		if (nodeJSONObject == null) {
 			return false;
-		} else if(nodeJSONObject.has("teacherReview")) {
+		} else if (nodeJSONObject.has("teacherReview")) {
 			return true;
 		} else {
 			return false;
@@ -3930,7 +3931,7 @@ public class VLEGetXLS {
 	 * @return whether the node is an annotate review type
 	 */
 	private boolean isAnnotateReviewType(JSONObject nodeJSONObject) {
-		if(nodeJSONObject == null) {
+		if (nodeJSONObject == null) {
 			return false;
 		} else {
 			String reviewType = getReviewType(nodeJSONObject);
@@ -3947,7 +3948,7 @@ public class VLEGetXLS {
 	 * @return whether the node is a revise review type
 	 */
 	private boolean isReviseReviewType(JSONObject nodeJSONObject) {
-		if(nodeJSONObject == null) {
+		if (nodeJSONObject == null) {
 			return false;
 		} else {
 			String reviewType = getReviewType(nodeJSONObject);
@@ -3964,7 +3965,7 @@ public class VLEGetXLS {
 	 * @return whether the node is an annotate or revise review type
 	 */
 	private boolean isAnnotateOrReviseReviewType(JSONObject nodeJSONObject) {
-		if(nodeJSONObject == null) {
+		if (nodeJSONObject == null) {
 			return false;
 		}
 		
@@ -3972,16 +3973,16 @@ public class VLEGetXLS {
 		
 		try {
 			//check if the node is a review type
-			if(nodeJSONObject.has("peerReview")) {
+			if (nodeJSONObject.has("peerReview")) {
 				reviewType = nodeJSONObject.getString("peerReview");
-			} else if(nodeJSONObject.has("teacherReview")) {
+			} else if (nodeJSONObject.has("teacherReview")) {
 				reviewType = nodeJSONObject.getString("teacherReview");
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 		
-		if(reviewType.equals("annotate") || reviewType.equals("revise")) {
+		if (reviewType.equals("annotate") || reviewType.equals("revise")) {
 			return true;
 		} else {
 			return false;			
@@ -3998,19 +3999,19 @@ public class VLEGetXLS {
 	private boolean isCRaterType(JSONObject nodeJSONObject) {
 		boolean result = false;
 		
-		if(nodeJSONObject == null) {
+		if (nodeJSONObject == null) {
 			result = false;
 		} else {
-			if(nodeJSONObject.has("cRater") && !nodeJSONObject.isNull("cRater")) {
+			if (nodeJSONObject.has("cRater") && !nodeJSONObject.isNull("cRater")) {
 				try {
 					//get the CRater object in the content
 					JSONObject cRaterJSONObject = nodeJSONObject.getJSONObject("cRater");
 					
-					if(cRaterJSONObject.has("cRaterItemId")) {
+					if (cRaterJSONObject.has("cRaterItemId")) {
 						String cRaterItemId = cRaterJSONObject.getString("cRaterItemId");
 						
 						//make sure the cRaterItemId is not null and not an empty string
-						if(cRaterItemId != null && !cRaterItemId.equals("")) {
+						if (cRaterItemId != null && !cRaterItemId.equals("")) {
 							result = true;
 						}
 					}
@@ -4031,7 +4032,7 @@ public class VLEGetXLS {
 	private boolean isAutoGraded(JSONObject nodeJSONObject) {
 		boolean result = false;
 		
-		if(nodeJSONObject == null) {
+		if (nodeJSONObject == null) {
 			result = false;
 		} else {
 			//get the isAutoGraded field if it exists
@@ -4082,12 +4083,12 @@ public class VLEGetXLS {
 		//the default number of columns we need to fill for a node
 		int columns = 1;
 		
-		if(isAnnotateOrReviseReviewType(nodeJSONObject)) {
+		if (isAnnotateOrReviseReviewType(nodeJSONObject)) {
 			columns = 3;
 		}
 
 		//loop through the columns we need to fill for the current node
-		for(int columnCount=0; columnCount<columns; columnCount++) {
+		for (int columnCount=0; columnCount<columns; columnCount++) {
 			/*
 			 * whether to set the cell value, usually this will stay true
 			 * except when the cell value becomes set when we call another
@@ -4109,29 +4110,29 @@ public class VLEGetXLS {
 			//this is used for nodes that have sub parts
 			String stepExtra = "";
 			
-			if(columns == 3) {
-				if(columnCount == 0) {
+			if (columns == 3) {
+				if (columnCount == 0) {
 					//cell 1/3
 					
 					//set the step extra to help researchers identify what this column represents
-					if(isAnnotateReviewType(nodeJSONObject)) {
+					if (isAnnotateReviewType(nodeJSONObject)) {
 						stepExtra = "Workgroup I am writing feedback to";
-					} else if(isReviseReviewType(nodeJSONObject)) {
+					} else if (isReviseReviewType(nodeJSONObject)) {
 						stepExtra = "Workgroup that is writing feedback to me";
 					}
-				} else if(columnCount == 1) {
+				} else if (columnCount == 1) {
 					//cell 2/3
 					
 					//set the step extra to help researchers identify what this column represents
-					if(isAnnotateReviewType(nodeJSONObject)) {
+					if (isAnnotateReviewType(nodeJSONObject)) {
 						stepExtra = "Work from other workgroup";
-					} else if(isReviseReviewType(nodeJSONObject)) {
+					} else if (isReviseReviewType(nodeJSONObject)) {
 						stepExtra = "Feedback from workgroup";
 					}
-				} else if(columnCount == 2) {
+				} else if (columnCount == 2) {
 					//cell 3/3
 					
-					if(isAssessmentListType(nodeContent)) {
+					if (isAssessmentListType(nodeContent)) {
 						/*
 						 * this is an assessment list step so we need to create a column for each assessment part.
 						 * this function sets the cells so we don't have to
@@ -4145,16 +4146,16 @@ public class VLEGetXLS {
 						setCells = false;
 					} else {
 						//set the step extra to help researchers identify what this column represents
-						if(isAnnotateReviewType(nodeJSONObject)) {
+						if (isAnnotateReviewType(nodeJSONObject)) {
 							stepExtra = "Feedback written to other workgroup";
-						} else if(isReviseReviewType(nodeJSONObject)) {
+						} else if (isReviseReviewType(nodeJSONObject)) {
 							stepExtra = "Work that I have revised based on feedback";
 						}
 					}
 				}
 			}
 			
-			if(setCells) {
+			if (setCells) {
 				//set the cells
 				columnCounter = setGetLatestStepWorkHeaderCells(columnCounter, 
 						stepTitleRow, stepTypeRow, stepPromptRow, nodeIdRow, stepExtraRow, 
@@ -4228,34 +4229,34 @@ public class VLEGetXLS {
 		int partCounter = 1;
 		
 		//loop through each part in the assessment
-		for(int x=0; x<assessmentParts.length(); x++) {
+		for (int x=0; x<assessmentParts.length(); x++) {
 			try {
 				stepExtra = "";
 				
 				//get an assessment part
 				JSONObject assessmentPart = assessmentParts.optJSONObject(x);
 				
-				if(assessmentPart != null) {
+				if (assessmentPart != null) {
 					//the label for the assessment part e.g. Part 1
 					String partLabel = "Part " + partCounter;
 					
 					//get the type for the part
 					String type = assessmentPart.optString("type");
 					
-					if(type != null && type.equals("checkbox")) {
+					if (type != null && type.equals("checkbox")) {
 						//this is a checkbox part
 						
 						//get the available choices for the checkbox part
 						JSONArray choices = assessmentPart.optJSONArray("choices");
 						
-						if(choices != null) {
+						if (choices != null) {
 							
 							//loop through all the choices in the checkbox part
-							for(int y=0; y<choices.length(); y++) {
+							for (int y=0; y<choices.length(); y++) {
 								//get a choice object
 								JSONObject choice = choices.optJSONObject(y);
 								
-								if(choice != null) {
+								if (choice != null) {
 									//get the choice text
 									String text = choice.getString("text");
 									
@@ -4297,11 +4298,11 @@ public class VLEGetXLS {
 			partCounter++;
 		}
 		
-		if(nodeContent != null && nodeContent.has("isLockAfterSubmit")) {
+		if (nodeContent != null && nodeContent.has("isLockAfterSubmit")) {
 			try {
 				boolean isLockAfterSubmit = nodeContent.getBoolean("isLockAfterSubmit");
 				
-				if(isLockAfterSubmit) {
+				if (isLockAfterSubmit) {
 					/*
 					 * this step locks after submit so we will create a header column
 					 * for whether the student work "Is Submit"
@@ -4361,7 +4362,7 @@ public class VLEGetXLS {
 		
 		String nodeType = "";
 		try {
-			if(nodeContent != null) {
+			if (nodeContent != null) {
 				//get the node type
 				nodeType = nodeContent.getString("type");
 			}
@@ -4437,7 +4438,7 @@ public class VLEGetXLS {
 		
 		String nodeType = "";
 		try {
-			if(nodeContent != null) {
+			if (nodeContent != null) {
 				//get the node type
 				nodeType = nodeContent.getString("type");
 			}
@@ -4521,7 +4522,7 @@ public class VLEGetXLS {
 		
 		String nodeType = "";
 		try {
-			if(nodeContent != null) {
+			if (nodeContent != null) {
 				//get the node type
 				nodeType = nodeContent.getString("type");
 			}
@@ -4609,7 +4610,7 @@ public class VLEGetXLS {
 		 * loop through all the stepworks for the node id and find
 		 * the latest work
 		 */
-		for(int z=stepWorks.size() - 1; z>=0; z--) {
+		for (int z=stepWorks.size() - 1; z>=0; z--) {
 			//get a step work
 			StepWork tempStepWork = stepWorks.get(z);
 			
@@ -4620,7 +4621,7 @@ public class VLEGetXLS {
 			 * if the step work is not empty, we are done looking
 			 * for the latest work
 			 */
-			if(!stepWorkResponse.equals("")) {
+			if (!stepWorkResponse.equals("")) {
 				stepWork = tempStepWork;
 				break;
 			}
@@ -4640,7 +4641,7 @@ public class VLEGetXLS {
 	private String getLatestStepWorkResponseWithResponse(List<StepWork> stepWorks) {
 		StepWork latestStepWorkWithResponse = getLatestStepWorkWithResponse(stepWorks);
 		
-		if(latestStepWorkWithResponse != null) {
+		if (latestStepWorkWithResponse != null) {
 			return getStepWorkResponse(latestStepWorkWithResponse);
 		} else {
 			return "";
@@ -4658,26 +4659,26 @@ public class VLEGetXLS {
 	private String getPromptFromNodeContent(JSONObject nodeContent) {
 		String prompt = "";
 		try {
-			if(nodeContent != null) {
+			if (nodeContent != null) {
 				String nodeType = nodeContent.getString("type");
 				
-				if(nodeType == null) {
+				if (nodeType == null) {
 					
-				} else if(nodeType.equals("AssessmentList")) {
+				} else if (nodeType.equals("AssessmentList")) {
 					prompt = nodeContent.getString("prompt");
-				} else if(nodeType.equals("DataGraph")) {
+				} else if (nodeType.equals("DataGraph")) {
 					
-				} else if(nodeType.equals("Draw")) {
+				} else if (nodeType.equals("Draw")) {
 					
-				} else if(nodeType.equals("Fillin")) {
+				} else if (nodeType.equals("Fillin")) {
 					
-				} else if(nodeType.equals("Flash")) {
+				} else if (nodeType.equals("Flash")) {
 					
-				} else if(nodeType.equals("Html")) {
+				} else if (nodeType.equals("Html")) {
 					prompt = "N/A";
-				} else if(nodeType.equals("MySystem")) {
+				} else if (nodeType.equals("MySystem")) {
 					
-				} else if(nodeType.equals("Brainstorm") || 
+				} else if (nodeType.equals("Brainstorm") || 
 						nodeType.equals("MatchSequence") || 
 						nodeType.equals("MultipleChoice") || 
 						nodeType.equals("Note") || 
@@ -4685,9 +4686,9 @@ public class VLEGetXLS {
 					JSONObject assessmentItem = (JSONObject) nodeContent.get("assessmentItem");
 					JSONObject interaction = (JSONObject) assessmentItem.get("interaction");
 					prompt = interaction.getString("prompt");
-				} else if(nodeType.equals("OutsideUrl")) {
+				} else if (nodeType.equals("OutsideUrl")) {
 					prompt = "N/A";
-				} else if(nodeType.equals("SVGDraw")) {
+				} else if (nodeType.equals("SVGDraw")) {
 					
 				} else {
 					
@@ -4716,7 +4717,7 @@ public class VLEGetXLS {
 		//obtain the number of answer fields for this step
 		int numberOfAnswerFields = getNumberOfAnswerFields(nodeId);
 		
-		if(stepWork == null) {
+		if (stepWork == null) {
 			/*
 			 * the student did not provide any answers but we still need to shift
 			 * the column counter the appropriate number of cells 
@@ -4725,7 +4726,7 @@ public class VLEGetXLS {
 			//increment the column counter
 			columnCounter += numberOfAnswerFields;
 			addEmptyElementsToVector(rowForWorkgroupIdVector, numberOfAnswerFields);
-		} else if(stepTypeContainsMultipleAnswerFields(stepWork)) {
+		} else if (stepTypeContainsMultipleAnswerFields(stepWork)) {
 			//the step type contains multiple answer fields
 			
 			//get the step work JSON data
@@ -4740,32 +4741,32 @@ public class VLEGetXLS {
 				JSONObject nodeContent = nodeIdToNodeContent.get(nodeId);
 				boolean isLockAfterSubmit = false;
 				
-				if(nodeContent != null && nodeContent.has("isLockAfterSubmit")) {
+				if (nodeContent != null && nodeContent.has("isLockAfterSubmit")) {
 					//get whether this step locks after submit
 					isLockAfterSubmit = nodeContent.getBoolean("isLockAfterSubmit");
 				}
 				
-				if(nodeStatesJSON.length() != 0) {
+				if (nodeStatesJSON.length() != 0) {
 					//get the last state
 					JSONObject lastState = nodeStatesJSON.getJSONObject(nodeStatesJSON.length() - 1);
-					if(lastState != null) {
+					if (lastState != null) {
 						String nodeType = stepWorkDataJSON.getString("nodeType");
-						if(nodeType == null) {
+						if (nodeType == null) {
 							//error, this should never happen
-						} else if(nodeType.equals("AssessmentListNode")) {
+						} else if (nodeType.equals("AssessmentListNode")) {
 							
-							if(nodeContent != null) {
+							if (nodeContent != null) {
 								//get all the assessment parts from the step content
 								JSONArray assessments = nodeContent.optJSONArray("assessments");
 								
-								if(assessments != null) {
+								if (assessments != null) {
 									
 									//loop through all the assessment parts from the step content
-									for(int x=0; x<assessments.length(); x++) {
+									for (int x=0; x<assessments.length(); x++) {
 										//get an assessment part from the step content
 										JSONObject assessmentPart = assessments.optJSONObject(x);
 										
-										if(assessmentPart != null) {
+										if (assessmentPart != null) {
 											//insert the work for this part into the row. this may insert work into multiple columns.
 											columnCounter = insertWorkForAssessmentPart(rowForWorkgroupId, rowForWorkgroupIdVector, assessmentPart, lastState, columnCounter);
 										}
@@ -4773,8 +4774,8 @@ public class VLEGetXLS {
 								}
 							}
 							
-							if(isLockAfterSubmit) {
-								if(lastState.has("isSubmit")) {
+							if (isLockAfterSubmit) {
+								if (lastState.has("isSubmit")) {
 									//this step locks after submit
 									boolean isSubmit = lastState.getBoolean("isSubmit");
 									
@@ -4797,7 +4798,7 @@ public class VLEGetXLS {
 					columnCounter += numberOfAnswerFields;
 					addEmptyElementsToVector(rowForWorkgroupIdVector, numberOfAnswerFields);
 					
-					if(isLockAfterSubmit) {
+					if (isLockAfterSubmit) {
 						/*
 						 * increment the counter by one to take into consideration
 						 * the column for "Is Submit"
@@ -4815,7 +4816,7 @@ public class VLEGetXLS {
 			//get the step work response
 			String stepWorkResponse = getStepWorkResponse(stepWork);
 			
-			if(stepWorkResponse != null) {
+			if (stepWorkResponse != null) {
 				//set the response into the cell and increment the counter
 				columnCounter = setCellValue(rowForWorkgroupId, rowForWorkgroupIdVector, columnCounter, stepWorkResponse);
 				
@@ -4844,18 +4845,18 @@ public class VLEGetXLS {
 		int numberOfColumnsInPart = 0;
 		int initialColumnCounter = columnCounter;
 		
-		if(stepContentAssessmentPart != null) {
+		if (stepContentAssessmentPart != null) {
 			//get the assessment part id
 			partId = stepContentAssessmentPart.optString("id");
 			
 			//get the assessment part type
 			String type = stepContentAssessmentPart.optString("type");
 			
-			if(type != null && type.equals("checkbox")) {
+			if (type != null && type.equals("checkbox")) {
 				//this is a checkbox assessment part type
 				JSONArray choices = stepContentAssessmentPart.optJSONArray("choices");
 				
-				if(choices != null) {
+				if (choices != null) {
 					//get the number of columns this part will use
 					numberOfColumnsInPart = choices.length();
 				}
@@ -4865,25 +4866,25 @@ public class VLEGetXLS {
 			}
 		}
 		
-		if(nodeState != null) {
+		if (nodeState != null) {
 			try {
 				//get all the assessment parts from the student work
 				JSONArray studentAssessments = nodeState.getJSONArray("assessments");
 				
 				//loop through all the assessment parts from the student work
-				for(int x=0; x<studentAssessments.length(); x++) {
+				for (int x=0; x<studentAssessments.length(); x++) {
 					//get an assessment part from the student work
 					JSONObject studentAssessment = studentAssessments.optJSONObject(x);
 					
-					if(studentAssessment != null) {
+					if (studentAssessment != null) {
 						//get the part id and part type from the student work
 						String studentPartId = studentAssessment.optString("id");
 						String studentPartType = studentAssessment.optString("type");
 						
 						//check if the part id matches the part we want to insert work for
-						if(studentPartId != null && studentPartId.equals(partId)) {
+						if (studentPartId != null && studentPartId.equals(partId)) {
 							
-							if(studentPartType != null && studentPartType.equals("checkbox")) {
+							if (studentPartType != null && studentPartType.equals("checkbox")) {
 								//this part is a checkbox type
 								
 								//get all the available choices from the step content
@@ -4893,13 +4894,13 @@ public class VLEGetXLS {
 								JSONArray responseJSONArray = studentAssessment.optJSONArray("response");
 								
 								//loop through all the available checkbox choices
-								for(int y=0; y<choices.length(); y++) {
+								for (int y=0; y<choices.length(); y++) {
 									//get an available checkbox choice
 									JSONObject choice = choices.optJSONObject(y);
 									
 									String choiceText = "";
 									
-									if(isChoiceInResponse(choice, responseJSONArray)) {
+									if (isChoiceInResponse(choice, responseJSONArray)) {
 										//the student checked this choice
 										
 										//get the choice text
@@ -4918,7 +4919,7 @@ public class VLEGetXLS {
 								
 								String responseText = "";
 								
-								if(response != null) {
+								if (response != null) {
 									//get the response text
 									responseText = response.optString("text");
 								}
@@ -4951,7 +4952,7 @@ public class VLEGetXLS {
 		//get the step work data
 		String stepWorkData = stepWork.getData();
 		
-		if(stepWorkData == null) {
+		if (stepWorkData == null) {
 			return false;
 		} else {
 			try {
@@ -4967,7 +4968,7 @@ public class VLEGetXLS {
 				//get the node content
 				JSONObject nodeContent = nodeIdToNodeContent.get(nodeId);
 				
-				if(nodeContent == null) {
+				if (nodeContent == null) {
 					/*
 					 * the node content is null so even if the step work data
 					 * contains multiple parts, we can't allow the step
@@ -4978,9 +4979,9 @@ public class VLEGetXLS {
 					 * header cells.
 					 */
 					return false;
-				} else if(nodeType == null) {
+				} else if (nodeType == null) {
 					return false;
-				} else if(nodeType.equals("AssessmentListNode")) {
+				} else if (nodeType.equals("AssessmentListNode")) {
 					return true;
 				} else {
 					return false;
@@ -5009,13 +5010,13 @@ public class VLEGetXLS {
 		String nodeType = null;
 		
 		try {
-			if(nodeContent != null) {
+			if (nodeContent != null) {
 				//get the node type
 				nodeType = nodeContent.getString("type");
 				
-				if(nodeType == null) {
+				if (nodeType == null) {
 					
-				} else if(nodeType.equals("AssessmentList")) {
+				} else if (nodeType.equals("AssessmentList")) {
 					//the step is a Questionnaire/Assessmentlist
 					
 					//get the assessment parts
@@ -5023,23 +5024,23 @@ public class VLEGetXLS {
 					
 					int partCounter = 0;
 					
-					if(assessmentParts != null) {
+					if (assessmentParts != null) {
 						//loop through all the assessment parts 
-						for(int x=0; x<assessmentParts.length(); x++) {
+						for (int x=0; x<assessmentParts.length(); x++) {
 							//get an assessment part
 							JSONObject assessmentPart = assessmentParts.optJSONObject(x);
 							
-							if(assessmentPart != null) {
+							if (assessmentPart != null) {
 								//get the assessment part type
 								String type = assessmentPart.optString("type");
 								
-								if(type != null && type.equals("checkbox")) {
+								if (type != null && type.equals("checkbox")) {
 									//the assessment part type is checkbox
 									
 									//get all the available choices
 									JSONArray choices = assessmentPart.optJSONArray("choices");
 									
-									if(choices != null) {
+									if (choices != null) {
 										//the number of columns used is equal to the number of choices
 										partCounter += choices.length();										
 									}
@@ -5051,18 +5052,18 @@ public class VLEGetXLS {
 						}
 					}
 					
-					if(partCounter > 0) {
+					if (partCounter > 0) {
 						//set the number of answer fields
 						numAnswerFields = partCounter;
 					}
 					
 					boolean isLockAfterSubmit = false;
 					
-					if(nodeContent.has("isLockAfterSubmit")) {
+					if (nodeContent.has("isLockAfterSubmit")) {
 						isLockAfterSubmit = nodeContent.getBoolean("isLockAfterSubmit");
 					}
 					
-					if(isLockAfterSubmit) {
+					if (isLockAfterSubmit) {
 						/*
 						 * this step locks after submit so there will be a column
 						 * for "Is Submit" so we will need to increment the numAnswerFields
@@ -5094,13 +5095,13 @@ public class VLEGetXLS {
 		Long stepWorkId = null;
 		
 		//get the node type
-		if(stepWork != null) {
+		if (stepWork != null) {
 			node = stepWork.getNode();
 			
 			//get the step work id
 			stepWorkId = stepWork.getId();
 			
-			if(node != null && node.getNodeType() != null) {
+			if (node != null && node.getNodeType() != null) {
 				//get the node type from the node object e.g. "OpenResponseNode"
 				nodeType = node.getNodeType();
 				
@@ -5123,16 +5124,16 @@ public class VLEGetXLS {
 		
 		String excelExportStringTemplate = null;
 		
-		if(node != null) {
+		if (node != null) {
 			//get the node id
 			String nodeId = node.getNodeId();
 			
-			if(nodeId != null) {
+			if (nodeId != null) {
 				//get the content for the step
 				JSONObject nodeContent = nodeIdToNodeContent.get(nodeId);	
 				
-				if(nodeContent != null) {
-					if(nodeContent.has("excelExportStringTemplate") && !nodeContent.isNull("excelExportStringTemplate")) {
+				if (nodeContent != null) {
+					if (nodeContent.has("excelExportStringTemplate") && !nodeContent.isNull("excelExportStringTemplate")) {
 						
 						try {
 							//get the excelExportStringTemplate field from the step content
@@ -5146,7 +5147,7 @@ public class VLEGetXLS {
 		}
 		
 		//check if excelExportStringTemplate is provided in the step content
-		if(excelExportStringTemplate != null) {
+		if (excelExportStringTemplate != null) {
 			//excelExportStringTemplate is provided
 			
     		/*
@@ -5164,64 +5165,64 @@ public class VLEGetXLS {
     		 */
 
 			try {
-				if(stepWork != null) {
+				if (stepWork != null) {
 					//obtain the json string
 	    			String data = stepWork.getData();
 	    			
-	    			if(data != null) {
+	    			if (data != null) {
 	    				//parse the json string into a json object
 	        			JSONObject jsonData = new JSONObject(data);
 	        			
-	        			if(jsonData.has("nodeStates")) {
+	        			if (jsonData.has("nodeStates")) {
 	        				//obtain the node states array json object
 	            			JSONArray jsonNodeStatesArray = jsonData.getJSONArray("nodeStates");
 	            			
 	            			//check if there are any elements in the node states array
-	        				if(jsonNodeStatesArray != null && jsonNodeStatesArray.length() > 0) {
+	        				if (jsonNodeStatesArray != null && jsonNodeStatesArray.length() > 0) {
 	        					
-	        					if("latestStudentWork".equals(exportType) || "customLatestStudentWork".equals(exportType)) {
+	        					if ("latestStudentWork".equals(exportType) || "customLatestStudentWork".equals(exportType)) {
 	        						//only show the data from the last state in the node states array
 	        						
-	        						if(!jsonNodeStatesArray.isNull(jsonNodeStatesArray.length() - 1)) {
+	        						if (!jsonNodeStatesArray.isNull(jsonNodeStatesArray.length() - 1)) {
 	        							//node state is not null
 	        							
 	        							//obtain the last element in the node states
 	                					Object nodeStateObject = jsonNodeStatesArray.get(jsonNodeStatesArray.length() - 1);
 	            						//check if the nodeStateObject is a JSONObject
 	                					
-	            						if(nodeStateObject instanceof JSONObject) {
+	            						if (nodeStateObject instanceof JSONObject) {
 	            							JSONObject lastState = (JSONObject) nodeStateObject;
 	                						
-	            							if(excelExportStringTemplate != null) {
+	            							if (excelExportStringTemplate != null) {
 	            								//generate the excel export string that we will display in the cell
 	            								stepWorkResponse = generateExcelExportString(excelExportStringTemplate, lastState, stepWorkId);
 	            							}
 	            						}
 	        						}
-	        					} else if("allStudentWork".equals(exportType) || "customAllStudentWork".equals(exportType)) {
+	        					} else if ("allStudentWork".equals(exportType) || "customAllStudentWork".equals(exportType)) {
 	        						//show data from all the states in the node state array
 	        						
 	        						//string buffer to accumulate the text we will display in the cell
 	        						StringBuffer stepWorkResponseStrBuf = new StringBuffer();
 	        						
 	        						//loop through all the node states
-	        						for(int x=0; x<jsonNodeStatesArray.length(); x++) {
+	        						for (int x=0; x<jsonNodeStatesArray.length(); x++) {
 	        							
-	        							if(!jsonNodeStatesArray.isNull(x)) {
+	        							if (!jsonNodeStatesArray.isNull(x)) {
 	        								//node state is not null
 	        								
 	            							//get the node state
 	            							Object nodeStateObject = jsonNodeStatesArray.get(x);
 	            							
 	        								//check if the nodeStateObject is a JSONObject
-	        								if(nodeStateObject instanceof JSONObject) {
+	        								if (nodeStateObject instanceof JSONObject) {
 	        									JSONObject lastState = (JSONObject) nodeStateObject;
 
-	        									if(excelExportStringTemplate != null) {
+	        									if (excelExportStringTemplate != null) {
 	        										//generate the excel export string with the student work inserted
 	        										String nodeStateResponse = generateExcelExportString(excelExportStringTemplate, lastState, stepWorkId);
 	        										
-	        										if(stepWorkResponseStrBuf.length() != 0) {
+	        										if (stepWorkResponseStrBuf.length() != 0) {
 	        											//add a new line to separate each node state
 	        											stepWorkResponseStrBuf.append("\n");
 	        										}
@@ -5246,7 +5247,7 @@ public class VLEGetXLS {
 			} catch(JSONException e) {
 				e.printStackTrace();
 			}
-		} else if(nodeType.equals("OpenResponse") || nodeType.equals("Note") ||
+		} else if (nodeType.equals("OpenResponse") || nodeType.equals("Note") ||
 				nodeType.equals("Brainstorm") || nodeType.equals("Fillin") ||
 				nodeType.equals("MultipleChoice") || nodeType.equals("MatchSequence") ||
 				nodeType.equals("AssessmentList") || nodeType.equals("Sensor") ||
@@ -5262,7 +5263,7 @@ public class VLEGetXLS {
 				//obtain the node states array json object
 				JSONArray jsonNodeStatesArray = jsonData.getJSONArray("nodeStates");
 				
-				if(nodeType.equals("MultipleChoice") || nodeType.equals("Fillin") ||
+				if (nodeType.equals("MultipleChoice") || nodeType.equals("Fillin") ||
 						nodeType.equals("MatchSequence") || nodeType.equals("AssessmentList")) {
 					/*
 					 * if the stepwork is for multiple choice or fillin, we will display
@@ -5274,16 +5275,16 @@ public class VLEGetXLS {
 					StringBuffer responses = new StringBuffer();
 					
 					//loop through all the node states
-					for(int z=0; z<jsonNodeStatesArray.length(); z++) {
+					for (int z=0; z<jsonNodeStatesArray.length(); z++) {
 						Object nodeStateObject = jsonNodeStatesArray.get(z);
-						if(nodeStateObject == null || nodeStateObject.toString().equals("null")) {
+						if (nodeStateObject == null || nodeStateObject.toString().equals("null")) {
 							//node state is null so we will skip it
 						} else {
 							//obtain a node state
 							JSONObject nodeState = (JSONObject) nodeStateObject;
 							
-							if(nodeType.equals("MultipleChoice") || nodeType.equals("Fillin")) {
-								if(nodeState.has("response")) {
+							if (nodeType.equals("MultipleChoice") || nodeType.equals("Fillin")) {
+								if (nodeState.has("response")) {
 									//this case handles mc and fillin
 									
 									//obtain the response
@@ -5291,14 +5292,14 @@ public class VLEGetXLS {
 									
 									StringBuffer currentResponse = new StringBuffer();
 									
-									if(jsonResponse instanceof JSONArray) {
+									if (jsonResponse instanceof JSONArray) {
 										//if the object is an array obtain the first element
 										JSONArray lastResponseArray = (JSONArray) jsonResponse;
 										
 										//loop through the response array
-										for(int x=0; x<lastResponseArray.length(); x++) {
+										for (int x=0; x<lastResponseArray.length(); x++) {
 											
-											if(currentResponse.length() != 0) {
+											if (currentResponse.length() != 0) {
 												//separate the responses with a comma
 												currentResponse.append(", ");
 											}
@@ -5306,30 +5307,30 @@ public class VLEGetXLS {
 											//append the response
 											currentResponse.append((String) lastResponseArray.get(x));	
 										}
-									} else if(jsonResponse instanceof String) {
+									} else if (jsonResponse instanceof String) {
 										//if the object is a string just use the string
 										currentResponse.append((String) jsonResponse);
 									}
 									
 									//separate answers with a comma
-									if(responses.length() != 0) {
+									if (responses.length() != 0) {
 										responses.append(", ");
 									}
 									
-									if(nodeType.equals("Fillin")) {
+									if (nodeType.equals("Fillin")) {
 										//for fillin we will obtain the text entry index
 										Object blankNumber = nodeState.get("textEntryInteractionIndex");
 										
-										if(blankNumber instanceof Integer) {
+										if (blankNumber instanceof Integer) {
 											//display the response as Blank{blank number} [submit attempt]: {student response}
 											responses.append("{Blank" + (((Integer) blankNumber) + 1) + "[" + (z+1) + "]: " + currentResponse + "}");
 										}
-									} else if(nodeType.equals("MultipleChoice")) {
+									} else if (nodeType.equals("MultipleChoice")) {
 										//display the response as Answer[{attempt number}]: {student response}
 										responses.append("{Answer[" + (z+1) + "]: " + currentResponse + "}");	
 									}
 								}
-							} else if(nodeType.equals("MatchSequence")) {
+							} else if (nodeType.equals("MatchSequence")) {
 								//get the array of buckets
 								JSONArray buckets = (JSONArray) nodeState.get("buckets");
 
@@ -5337,7 +5338,7 @@ public class VLEGetXLS {
 								responses.append("{");
 								
 								//loop through all the buckets
-								for(int bucketCounter=0; bucketCounter<buckets.length(); bucketCounter++) {
+								for (int bucketCounter=0; bucketCounter<buckets.length(); bucketCounter++) {
 									//get a bucket
 									JSONObject bucket = (JSONObject) buckets.get(bucketCounter);
 									
@@ -5356,7 +5357,7 @@ public class VLEGetXLS {
 									StringBuffer choiceResponses = new StringBuffer();
 									
 									//loop through the choices
-									for(int choiceCounter=0; choiceCounter<choices.length(); choiceCounter++) {
+									for (int choiceCounter=0; choiceCounter<choices.length(); choiceCounter++) {
 										//get a choice
 										JSONObject choice = (JSONObject) choices.get(choiceCounter);
 										
@@ -5367,7 +5368,7 @@ public class VLEGetXLS {
 										 * if this is not the first choice we will need to separate
 										 * the choice with a comma ,
 										 */
-										if(choiceResponses.length() != 0) {
+										if (choiceResponses.length() != 0) {
 											choiceResponses.append(", ");
 										}
 										
@@ -5387,11 +5388,11 @@ public class VLEGetXLS {
 								 * wants to view the response in their browser
 								 */
 								responses.append("}<br><br>");
-							} else if(nodeType.equals("AssessmentList")) {
+							} else if (nodeType.equals("AssessmentList")) {
 								//wrap each node state with braces {}
 								responses.append("{");
 								
-								if(nodeState.has("assessments")) {
+								if (nodeState.has("assessments")) {
 									//get the array of assessment answers
 									JSONArray assessments = nodeState.getJSONArray("assessments");
 									
@@ -5399,38 +5400,38 @@ public class VLEGetXLS {
 									StringBuffer tempResponses = new StringBuffer();
 									
 									//loop through all the assessment responses
-									for(int assessmentCounter=0; assessmentCounter<assessments.length(); assessmentCounter++) {
+									for (int assessmentCounter=0; assessmentCounter<assessments.length(); assessmentCounter++) {
 										//get an assessment
 										JSONObject assessment = assessments.getJSONObject(assessmentCounter);
 										
 										//check if the response is null
-										if(!assessment.isNull("response")) {
+										if (!assessment.isNull("response")) {
 											//get the assessment response which may either be an object or array
 											JSONObject assessmentResponseJSONObject = assessment.optJSONObject("response");
 											JSONArray assessmentResponseJSONArray = assessment.optJSONArray("response");
 											
 											String responseText = "";
 											
-											if(assessmentResponseJSONObject != null) {
+											if (assessmentResponseJSONObject != null) {
 												//the response is an object
 												
 												//get the assessment response text
 												responseText = assessmentResponseJSONObject.getString("text");
-											} else if(assessmentResponseJSONArray != null) {
+											} else if (assessmentResponseJSONArray != null) {
 												//the response is an array
 												
 												//loop through all the elements in the response array
-												for(int assessmentResponsesCounter=0; assessmentResponsesCounter<assessmentResponseJSONArray.length(); assessmentResponsesCounter++) {
+												for (int assessmentResponsesCounter=0; assessmentResponsesCounter<assessmentResponseJSONArray.length(); assessmentResponsesCounter++) {
 													//get an element from the response array
 													JSONObject tempAssessmentResponseJSONObject = assessmentResponseJSONArray.optJSONObject(assessmentResponsesCounter);
 													
-													if(tempAssessmentResponseJSONObject != null) {
+													if (tempAssessmentResponseJSONObject != null) {
 														//get the text for this element
 														String tempResponseText = tempAssessmentResponseJSONObject.optString("text");
 														
-														if(tempResponseText != null) {
+														if (tempResponseText != null) {
 															//separate the response text with ,
-															if(responseText.length() != 0) {
+															if (responseText.length() != 0) {
 																responseText += ", ";
 															}
 															
@@ -5442,7 +5443,7 @@ public class VLEGetXLS {
 											}
 											
 											//separate the assessment response texts with ,
-											if(tempResponses.length() != 0) {
+											if (tempResponses.length() != 0) {
 												tempResponses.append(", ");
 											}
 											
@@ -5464,38 +5465,38 @@ public class VLEGetXLS {
 					stepWorkResponse = responses.toString();
 				} else {
 					//check if there are any elements in the node states array
-					if(jsonNodeStatesArray != null && jsonNodeStatesArray.length() > 0) {
+					if (jsonNodeStatesArray != null && jsonNodeStatesArray.length() > 0) {
 						//obtain the last element in the node states
 						Object nodeStateObject = jsonNodeStatesArray.get(jsonNodeStatesArray.length() - 1);
 						
-						if(nodeStateObject == null || nodeStateObject.toString().equals("null")) {
+						if (nodeStateObject == null || nodeStateObject.toString().equals("null")) {
 							//node state is null so we will skip it
 						} else {
 							JSONObject lastState = (JSONObject) nodeStateObject;
 							
-							if(nodeType.equals("ExplanationBuilderNode")) {
-								if(lastState != null) {
+							if (nodeType.equals("ExplanationBuilderNode")) {
+								if (lastState != null) {
 									//just return the JSON as a string
 									stepWorkResponse = lastState.toString();									
 								}
-							} else if(nodeType.equals("SVGDrawNode")) {
-								if(lastState != null) {
+							} else if (nodeType.equals("SVGDrawNode")) {
+								if (lastState != null) {
 									//just return the JSON as a string
 									stepWorkResponse = (String) lastState.get("data");
 								}
-							} else if(nodeType.equals("AnnotatorNode")) {
-								if(lastState != null) {
+							} else if (nodeType.equals("AnnotatorNode")) {
+								if (lastState != null) {
 									//just return the JSON as a string
 									stepWorkResponse = (String) lastState.get("data");
 								}
-							} else if(nodeType.equals("Netlogo")) {
-								if(lastState != null) {
+							} else if (nodeType.equals("Netlogo")) {
+								if (lastState != null) {
 									
-									if(lastState.has("data")) {
+									if (lastState.has("data")) {
 										try {
 											JSONObject netLogoData = (JSONObject) lastState.getJSONObject("data");
 											
-											if(netLogoData != null) {
+											if (netLogoData != null) {
 												//just return the JSON as a string
 												stepWorkResponse = netLogoData.toString();
 											}											
@@ -5504,17 +5505,17 @@ public class VLEGetXLS {
 										}
 									}
 								}
-							} else if(lastState.has("response")) {
+							} else if (lastState.has("response")) {
 								//obtain the response
 								Object object = lastState.get("response");
 								
 								String lastResponse = "";
 								
-								if(object instanceof JSONArray) {
+								if (object instanceof JSONArray) {
 									//if the object is an array obtain the first element
 									JSONArray lastResponseArray = (JSONArray) lastState.get("response");
 									lastResponse = (String) lastResponseArray.get(0);
-								} else if(object instanceof String) {
+								} else if (object instanceof String) {
 									//if the object is a string just use the string
 									lastResponse = (String) lastState.get("response");
 								}
@@ -5527,7 +5528,7 @@ public class VLEGetXLS {
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
-    	} else if(nodeType.equals("Html")) {
+    	} else if (nodeType.equals("Html")) {
 	    	stepWorkResponse = "N/A";
     	} else {
     		//do nothing
@@ -5544,16 +5545,16 @@ public class VLEGetXLS {
 	private String getNodeStateResponse(JSONObject nodeState, String nodeId) {
 		String response = null;
 		
-		if(nodeState != null) {
-			if(nodeState.has("response")) {
+		if (nodeState != null) {
+			if (nodeState.has("response")) {
 				try {
 					boolean displayResponse = true;
 					
-					if(nodeId != null) {
+					if (nodeId != null) {
 						//get the node
 						JSONObject node = nodeIdToNode.get(nodeId);
 						
-						if(node != null) {
+						if (node != null) {
 							//get the node type
 							String nodeType = node.optString("type");
 							
@@ -5561,13 +5562,13 @@ public class VLEGetXLS {
 							 * check if the node type is Mysystem2Node or Box2dModelNode because
 							 * we do not want to display the response for those step types
 							 */
-							if(nodeType != null && (nodeType.equals("Mysystem2Node") || nodeType.equals("Box2dModelNode"))) {
+							if (nodeType != null && (nodeType.equals("Mysystem2Node") || nodeType.equals("Box2dModelNode"))) {
 								displayResponse = false;
 							}
 						}
 					}
 					
-					if(displayResponse) {
+					if (displayResponse) {
 						//get the response
 						response = nodeState.getString("response");
 					}
@@ -5589,13 +5590,13 @@ public class VLEGetXLS {
 	private JSONArray getExportColumns(String nodeId) {
 		JSONArray exportColumns = null;
 		
-		if(nodeId != null) {
+		if (nodeId != null) {
 			//get the content for the step
 			JSONObject nodeContent = nodeIdToNodeContent.get(nodeId);	
 			
-			if(nodeContent != null) {
+			if (nodeContent != null) {
 				//check if export columns were specified in the content
-				if(nodeContent.has("exportColumns") && !nodeContent.isNull("exportColumns")) {
+				if (nodeContent.has("exportColumns") && !nodeContent.isNull("exportColumns")) {
 					
 					try {
 						//get the export columns
@@ -5623,24 +5624,24 @@ public class VLEGetXLS {
 		//the array to hold the values
 		ArrayList<Object> values = new ArrayList<Object>();
 		
-		if(studentWork != null) {
+		if (studentWork != null) {
 			try {
-				if(fieldObject != null) {
+				if (fieldObject != null) {
 					String field = null;
 					JSONObject childFieldObject = null;
 					
 
 					//get the field
-					if(fieldObject.has("field")) {
+					if (fieldObject.has("field")) {
 						field = fieldObject.getString("field");
 					}
 					
 					//get the child field
-					if(fieldObject.has("childField")) {
+					if (fieldObject.has("childField")) {
 						childFieldObject = fieldObject.getJSONObject("childField");
 					}
 					
-					if(field != null) {
+					if (field != null) {
 					    Object value = null;
 					    
 					    if (studentWork.has(field)) {
@@ -5652,23 +5653,23 @@ public class VLEGetXLS {
 					    }
 					    
 						//check if the student work or the autoGraded annotation has the field we are looking for
-						if(value != null) {
-						    if(value instanceof JSONObject) {
+						if (value != null) {
+						    if (value instanceof JSONObject) {
                                 //the value is a JSONObject
                                 JSONObject jsonObjectValue = (JSONObject) value;
                                 
-                                if(childFieldObject != null) {
+                                if (childFieldObject != null) {
                                     //there is a childField specified so we will recursively go deeper into the student work
                                     values.addAll(getColumnValuesForField(childFieldObject, stepWorkId, jsonObjectValue, nodeId));
                                 } else {
                                     //there is no childField so we have traversed as far as we need to and will get this value 
                                     values.add(jsonObjectValue.toString());
                                 }
-                            } else if(value instanceof JSONArray) {
+                            } else if (value instanceof JSONArray) {
                                 //the value is a JSONArray
                                 JSONArray jsonArrayValue = (JSONArray) value;
                                 
-                                if(childFieldObject != null) {
+                                if (childFieldObject != null) {
                                     //there is a childField specified so we will recursively go deeper into the student work
                                     values.addAll(getValueForField(childFieldObject, stepWorkId, jsonArrayValue, nodeId));
                                 } else {
@@ -5678,22 +5679,22 @@ public class VLEGetXLS {
                                      */
                                     values.add(getArrayValues(jsonArrayValue));
                                 }
-                            } else if(value instanceof String) {
+                            } else if (value instanceof String) {
                                 //the value is a string
                                 values.add(value);
-                            } else if(value instanceof Boolean) {
+                            } else if (value instanceof Boolean) {
                                 //the value is a boolean
                                 values.add(value);
-                            } else if(value instanceof Long) {
+                            } else if (value instanceof Long) {
                                 //the value is a long
                                 values.add(value);
-                            } else if(value instanceof Integer) {
+                            } else if (value instanceof Integer) {
                                 //the value is an integer
                                 values.add(value);
-                            } else if(value instanceof Double) {
+                            } else if (value instanceof Double) {
                                 //the value is a double
                                 values.add(value);
-                            } else if(value instanceof Float) {
+                            } else if (value instanceof Float) {
                                 //the value is a Float
                                 values.add(value);
                             }
@@ -5707,15 +5708,15 @@ public class VLEGetXLS {
 							boolean valueAdded = false;
 							
 							/*
-							if(nodeId != null) {
+							if (nodeId != null) {
 								//get the step content
 								JSONObject nodeContent = nodeIdToNodeContent.get(nodeId);
 								
-								if(nodeContent != null) {
+								if (nodeContent != null) {
 									//get the step type
 									String type = nodeContent.optString("type");
 									
-									if(type != null) {
+									if (type != null) {
 										/*
 										 * we will look for the max score in the content if
 										 * the step type is OpenResponse and the field is cRaterMaxScore
@@ -5724,13 +5725,13 @@ public class VLEGetXLS {
 										 * or
 										 * the step type is SVGDraw and the field is maxAutoScore
 										 *
-										if((type.equals("OpenResponse") && field.equals("cRaterMaxScore")) ||
+										if ((type.equals("OpenResponse") && field.equals("cRaterMaxScore")) ||
 												(type.equals("Challenge") && field.equals("maxScore")) ||
 												(type.equals("SVGDraw") && field.equals("maxAutoScore"))) {
 											//try to get the max score from the content
 											Long maxScoreFromContent = getMaxScoreFromContent(nodeId);
 
-											if(maxScoreFromContent != null) {
+											if (maxScoreFromContent != null) {
 												//we obtained a max score from the content so we will add it to the values
 												values.add(maxScoreFromContent);
 												valueAdded = true;
@@ -5742,7 +5743,7 @@ public class VLEGetXLS {
 							*/
 							
 							//check if we have already added a value
-							if(!valueAdded) {
+							if (!valueAdded) {
 								//we have not added a value so we will add an empty string
 								values.add("");
 							}
@@ -5760,21 +5761,21 @@ public class VLEGetXLS {
 						 * usage of the "value" allows the author to specify a value for the column
 						 * that will be the same for every row for this specific step. 
 						 */
-						if(fieldObject.has("value")) {
+						if (fieldObject.has("value")) {
 							Object value = fieldObject.get("value");
 							
-							if(value != null) {
-								if(value instanceof String) {
+							if (value != null) {
+								if (value instanceof String) {
 									values.add(value);
-								} else if(value instanceof Boolean) {
+								} else if (value instanceof Boolean) {
 									values.add(value);
-								} else if(value instanceof Long) {
+								} else if (value instanceof Long) {
 									values.add(value);
-								} else if(value instanceof Integer) {
+								} else if (value instanceof Integer) {
 									values.add(value);
-								} else if(value instanceof Double) {
+								} else if (value instanceof Double) {
 									values.add(value);
-								} else if(value instanceof Float) {
+								} else if (value instanceof Float) {
 									values.add(value);
 								}
 							} else {
@@ -5926,22 +5927,22 @@ public class VLEGetXLS {
 	private Long getMaxScoreFromContent(String nodeId) {
 		Long maxScore = null;
 		
-		if(nodeId != null) {
+		if (nodeId != null) {
 			//get the step content
 			JSONObject nodeContent = nodeIdToNodeContent.get(nodeId);
 			
-			if(nodeContent != null) {
+			if (nodeContent != null) {
 				//get the step type
 				String type = nodeContent.optString("type");
 				
-				if(type != null) {
-					if(type.equals("Challenge")) {
+				if (type != null) {
+					if (type.equals("Challenge")) {
 						//this is a challenge question step
 						maxScore = getMaxScoreFromChallengeQuestionStep(nodeContent);
-					} else if(type.equals("OpenResponse")) {
+					} else if (type.equals("OpenResponse")) {
 						//this is an open response step
 						maxScore = getMaxScoreFromOpenResponse(nodeContent);
-					} else if(type.equals("SVGDraw")) {
+					} else if (type.equals("SVGDraw")) {
 						//this is a draw step
 						maxScore = getMaxScoreFromDraw(nodeContent);
 					}
@@ -5960,27 +5961,27 @@ public class VLEGetXLS {
 	private Long getMaxScoreFromChallengeQuestionStep(JSONObject nodeContent) {
 		Long maxScore = null;
 		
-		if(nodeContent != null) {
+		if (nodeContent != null) {
 			//get the assessment item
 			JSONObject assessmentItem = nodeContent.optJSONObject("assessmentItem");
 			
-			if(assessmentItem != null) {
+			if (assessmentItem != null) {
 				//get the interaction
 				JSONObject interaction = assessmentItem.optJSONObject("interaction");
 				
-				if(interaction != null) {
+				if (interaction != null) {
 					//get the attempts
 					JSONObject attempts = interaction.optJSONObject("attempts");
 					
-					if(attempts != null) {
+					if (attempts != null) {
 						//get the scores
 						JSONObject scores = attempts.optJSONObject("scores");
 						
-						if(scores != null) {
+						if (scores != null) {
 							//get the score given when the student only uses one try
 							Long firstScore = scores.optLong("1");
 							
-							if(firstScore != null) {
+							if (firstScore != null) {
 								maxScore = firstScore;
 							}
 						}
@@ -6000,15 +6001,15 @@ public class VLEGetXLS {
 	private Long getMaxScoreFromOpenResponse(JSONObject nodeContent) {
 		Long maxScore = null;
 
-		if(nodeContent != null) {
+		if (nodeContent != null) {
 			//get the cRater object
 			JSONObject cRaterObj = nodeContent.optJSONObject("cRater");
 			
-			if(cRaterObj != null) {
+			if (cRaterObj != null) {
 				//get the cRater max score
 				Long cRaterMaxScore = cRaterObj.optLong("cRaterMaxScore");
 				
-				if(cRaterMaxScore != null) {
+				if (cRaterMaxScore != null) {
 					maxScore = cRaterMaxScore;
 				}
 			}
@@ -6025,29 +6026,29 @@ public class VLEGetXLS {
 	private Long getMaxScoreFromDraw(JSONObject nodeContent) {
 		Long maxScore = null;
 		
-		if(nodeContent != null) {
+		if (nodeContent != null) {
 			//get the auto scoring object
 			JSONObject autoScoringObj = nodeContent.optJSONObject("autoScoring");
 			
-			if(autoScoringObj != null) {
+			if (autoScoringObj != null) {
 				//get the array containing the feedback
 				JSONArray autoScoringFeedbackArray = autoScoringObj.optJSONArray("autoScoringFeedback");
 				
-				if(autoScoringFeedbackArray != null) {
+				if (autoScoringFeedbackArray != null) {
 					
 					//loop through all the feedback objects
-					for(int x=0; x<autoScoringFeedbackArray.length(); x++) {
+					for (int x=0; x<autoScoringFeedbackArray.length(); x++) {
 						JSONObject feedbackObj = autoScoringFeedbackArray.optJSONObject(x);
 						
-						if(feedbackObj != null) {
+						if (feedbackObj != null) {
 							//get the score for the feedback
 							Long tempScore = feedbackObj.optLong("score");
 							
-							if(tempScore != null) {
+							if (tempScore != null) {
 								//remember the max score that we encounter
-								if(maxScore == null) {
+								if (maxScore == null) {
 									maxScore = tempScore;
-								} else if(tempScore > maxScore) {
+								} else if (tempScore > maxScore) {
 									maxScore = tempScore;
 								}
 							}
@@ -6094,41 +6095,41 @@ public class VLEGetXLS {
 	private ArrayList<Object> getValueForField(JSONObject fieldObject, Long stepWorkId, JSONArray studentWork, String nodeId) {
 		ArrayList<Object> values = new ArrayList<Object>();
 		
-		if(studentWork != null) {
+		if (studentWork != null) {
 			try {
-				if(fieldObject != null) {
+				if (fieldObject != null) {
 					String field = null;
 					JSONObject childFieldObject = null;
 					
 					//get the field
-					if(fieldObject.has("field")) {
+					if (fieldObject.has("field")) {
 						field = fieldObject.getString("field");
 					}
 					
 					//get the child field
-					if(fieldObject.has("childField")) {
+					if (fieldObject.has("childField")) {
 						childFieldObject = fieldObject.getJSONObject("childField");
 					}
 
-					if(field != null) {
+					if (field != null) {
 						//a field has been provided
 						
 						//loop through all the elements in the array
-						for(int x=0; x<studentWork.length(); x++) {
+						for (int x=0; x<studentWork.length(); x++) {
 							try {
 								//get an element from the array
 								Object arrayElement = studentWork.get(x);
 								Object value = null;
 								
-								if(arrayElement instanceof JSONObject) {
+								if (arrayElement instanceof JSONObject) {
 									JSONObject arrayElementJSONObject = (JSONObject) arrayElement;
 									
-									if(arrayElementJSONObject != null && arrayElementJSONObject.has(field)) {
+									if (arrayElementJSONObject != null && arrayElementJSONObject.has(field)) {
 										//get the field value from the element
 										value = ((JSONObject) arrayElement).get(field);
 									}
 									
-									if(value == null) {
+									if (value == null) {
 	                                    /*
 	                                     * the student work does not have the field we are looking for so we
 	                                     * will try to find it in the annotation
@@ -6138,40 +6139,40 @@ public class VLEGetXLS {
 	                                }
 								}
 								
-								if(value != null) {
+								if (value != null) {
 									//we were able to retrieve the field value
 									
-									if(value instanceof JSONObject) {
+									if (value instanceof JSONObject) {
 										//the value is a JSONObject
 										
-										if(childFieldObject != null) {
+										if (childFieldObject != null) {
 											//there is a child field so we will traverse deeper into the student work
 											values.add(getColumnValuesForField(childFieldObject, stepWorkId, (JSONObject) value, nodeId));							
 										} else {
 											//there is no child field so we will just get the string value of the object
 											values.add(value.toString());
 										}
-									} else if(value instanceof JSONArray) {
-										if(childFieldObject != null) {
+									} else if (value instanceof JSONArray) {
+										if (childFieldObject != null) {
 											//there is a child field so we will traverse deeper into the student work
 											values.add(getValueForField(childFieldObject, stepWorkId, (JSONArray) value, nodeId));							
 										} else {
 											//there is no child field so we will just get the string value of the array
 											values.add(value.toString());
 										}
-									} else if(value instanceof String) {
+									} else if (value instanceof String) {
 										//the value is a string
 										values.add(value);
-									} else if(value instanceof Boolean) {
+									} else if (value instanceof Boolean) {
 										//the value is a boolean
 										values.add(value);
-									} else if(value instanceof Long) {
+									} else if (value instanceof Long) {
 										//the value is a long
 										values.add(value);
-									} else if(value instanceof Integer) {
+									} else if (value instanceof Integer) {
 										//the value is an integer
 										values.add(value);
-									} else if(value instanceof Double) {
+									} else if (value instanceof Double) {
 										//the value is a double
 										values.add(value);
 									}
@@ -6193,7 +6194,7 @@ public class VLEGetXLS {
 						 */
 
 						//loop through all the elements in the array
-						for(int x=0; x<studentWork.length(); x++) {
+						for (int x=0; x<studentWork.length(); x++) {
 							//get an element
 							Object arrayElement = studentWork.get(x);
 							
@@ -6220,14 +6221,14 @@ public class VLEGetXLS {
 		//the array to hold the values
 		ArrayList<Object> values = new ArrayList<Object>();
 		
-		if(studentWork != null) {
+		if (studentWork != null) {
 			//loop through all the elements in the student work
-			for(int x=0; x<studentWork.length(); x++) {
+			for (int x=0; x<studentWork.length(); x++) {
 				try {
 					//get an element
 					Object arrayElement = studentWork.get(x);
 					
-					if(arrayElement instanceof JSONArray) {
+					if (arrayElement instanceof JSONArray) {
 						/*
 						 * the element is an array so we will add all the individual elements
 						 * of the array
@@ -6404,9 +6405,9 @@ public class VLEGetXLS {
 			String fieldNameSoFar = "";
 			
 			//loop through all the fields
-			for(int x=0; x<split.length; x++) {
+			for (int x=0; x<split.length; x++) {
 
-				if(x == split.length - 1) {
+				if (x == split.length - 1) {
 					//this is the last field
 					lastField = true;
 				}
@@ -6431,17 +6432,17 @@ public class VLEGetXLS {
 				//run the pattern matcher on our field name
 				Matcher m = p.matcher(fieldName);
 				
-				if(m.matches()) {
+				if (m.matches()) {
 					//we have found a match
 					
 					//loop through all the groups
-					for(int y=0; y<=m.groupCount(); y++) {
+					for (int y=0; y<=m.groupCount(); y++) {
 						
-						if(y == 1) {
+						if (y == 1) {
 							//get the field name
 							fieldName = m.group(y);
-						} else if(y == 3) {
-							if(m.group(y) != null) {
+						} else if (y == 3) {
+							if (m.group(y) != null) {
 								try {
 									//get the array index
 									arrayIndex = Integer.parseInt(m.group(y));
@@ -6452,7 +6453,7 @@ public class VLEGetXLS {
 						}
 					}
 					
-					if(!fieldNameSoFar.equals("")) {
+					if (!fieldNameSoFar.equals("")) {
 						//prepend the fieldNameSoFar
 						fieldNameSoFar = fieldNameSoFar + "." + fieldName;
 					} else {
@@ -6462,11 +6463,11 @@ public class VLEGetXLS {
 				}
 				
 				//check for a special case where we want the CRater annotation score
-				if(fieldNameSoFar != null && fieldNameSoFar.equals("cRaterAnnotationScore")) {
+				if (fieldNameSoFar != null && fieldNameSoFar.equals("cRaterAnnotationScore")) {
 					//get the CRater score if any
 					long cRaterScore = getCRaterScoreByStepWorkIdAndNodeState(stepWorkId, nodeState);
 					
-					if(cRaterScore == -1) {
+					if (cRaterScore == -1) {
 						//there was no CRater score so we will just display empty string
 						fieldValue = "";
 					} else {
@@ -6477,27 +6478,27 @@ public class VLEGetXLS {
 					return fieldValue;
 				}
 
-				if(currentJSONObject != null) {
+				if (currentJSONObject != null) {
 
 					//check if the JSONObject has the given field
-					if(currentJSONObject.has(fieldNameSoFar)) {
+					if (currentJSONObject.has(fieldNameSoFar)) {
 						//get the value at the field
 						Object fieldObject = currentJSONObject.get(fieldNameSoFar);
 
-						if(fieldObject instanceof JSONObject) {
+						if (fieldObject instanceof JSONObject) {
 							//object is a JSONObject
 							
-							if(lastField) {
+							if (lastField) {
 								//this is the last field
 								fieldValue = ((JSONObject) fieldObject).toString();
 							} else {
 								//this is not the last field
 								currentJSONObject = (JSONObject) fieldObject;
 							}
-						} else if(fieldObject instanceof JSONArray) {
+						} else if (fieldObject instanceof JSONArray) {
 							//object is a JSONArray
 							
-							if(lastField) {
+							if (lastField) {
 								//this is the last field
 								fieldValue = ((JSONArray) fieldObject).toString();
 							} else {
@@ -6509,10 +6510,10 @@ public class VLEGetXLS {
 								 */
 								currentJSONObject = ((JSONArray) fieldObject).getJSONObject(arrayIndex);
 							}
-						} else if(fieldObject instanceof String) {
+						} else if (fieldObject instanceof String) {
 							//object is a String
 							
-							if(lastField) {
+							if (lastField) {
 								//this is the last field
 								fieldValue = (String) fieldObject;
 							} else {
@@ -6522,7 +6523,7 @@ public class VLEGetXLS {
 								//this is not the last field
 								currentJSONObject = new JSONObject(fieldObjectString);
 							}
-						} else if(fieldObject instanceof Integer) {
+						} else if (fieldObject instanceof Integer) {
 							//object is an Integer
 							
 							//get the integer value
@@ -6533,7 +6534,7 @@ public class VLEGetXLS {
 							 * any deeper since we have hit an integer
 							 */
 							currentJSONObject = null;
-						} else if(fieldObject instanceof Boolean) {
+						} else if (fieldObject instanceof Boolean) {
 							//object is a boolean
 							
 							//get the boolean value
@@ -6574,7 +6575,7 @@ public class VLEGetXLS {
 	 */
 	private int createUserDataHeaderRow(int userDataHeaderRowColumnCounter, Row userDataHeaderRow, Vector<String> userDataHeaderRowVector, boolean includeUserDataCells, boolean includeMetaDataCells) {
 
-		if(includeUserDataCells) {
+		if (includeUserDataCells) {
 			//output the user data header cells
 			userDataHeaderRowColumnCounter = setCellValue(userDataHeaderRow, userDataHeaderRowVector, userDataHeaderRowColumnCounter, "Workgroup Id");
 			userDataHeaderRowColumnCounter = setCellValue(userDataHeaderRow, userDataHeaderRowVector, userDataHeaderRowColumnCounter, "Wise Id 1");
@@ -6583,7 +6584,7 @@ public class VLEGetXLS {
 			userDataHeaderRowColumnCounter = setCellValue(userDataHeaderRow, userDataHeaderRowVector, userDataHeaderRowColumnCounter, "Class Period");
 		}
 		
-		if(includeMetaDataCells) {
+		if (includeMetaDataCells) {
 			//output the meta data header cells
 			userDataHeaderRowColumnCounter = setCellValue(userDataHeaderRow, userDataHeaderRowVector, userDataHeaderRowColumnCounter, "Teacher Login");
 			userDataHeaderRowColumnCounter = setCellValue(userDataHeaderRow, userDataHeaderRowVector, userDataHeaderRowColumnCounter, "Project Id");
@@ -6615,7 +6616,7 @@ public class VLEGetXLS {
 	 */
 	private int createUserDataRow(int workgroupColumnCounter, Row userDataRow, Vector<String> userDataRowVector, String workgroupId, boolean includeUserDataCells, boolean includeMetaDataCells, String periodName) {
 		
-		if(includeUserDataCells) {
+		if (includeUserDataCells) {
 			//output the user data cells
 			
 			//set the first column to be the workgroup id
@@ -6624,7 +6625,7 @@ public class VLEGetXLS {
 			//get the student user ids for the given workgroup id
 			String userIds = workgroupIdToUserIds.get(Integer.parseInt(workgroupId));
 			
-			if(userIds != null) {
+			if (userIds != null) {
 				//we found student user ids
 				
 				//the user ids string is delimited by ':'
@@ -6634,7 +6635,7 @@ public class VLEGetXLS {
 				ArrayList<Long> userIdsList = sortUserIdsArray(userIdsArray);
 				
 				//loop through all the user ids in this workgroup
-				for(int z=0; z<userIdsList.size(); z++) {
+				for (int z=0; z<userIdsList.size(); z++) {
 					//get a user id
 					Long userIdLong = userIdsList.get(z);
 					
@@ -6650,12 +6651,12 @@ public class VLEGetXLS {
 				workgroupColumnCounter += numColumnsToAdd;
 				addEmptyElementsToVector(userDataRowVector, numColumnsToAdd);
 				
-				if(periodName == null) {
+				if (periodName == null) {
 					//get the period name such as 1, 2, 3, 4, etc.
 					periodName = workgroupIdToPeriodName.get(Integer.parseInt(workgroupId));
 				}
 				
-				if(periodName != null) {
+				if (periodName != null) {
 					//populate the cell with the period name
 					workgroupColumnCounter = setCellValueConvertStringToLong(userDataRow, userDataRowVector, workgroupColumnCounter, periodName);
 				} else {
@@ -6664,7 +6665,7 @@ public class VLEGetXLS {
 					addEmptyElementsToVector(userDataRowVector, 1);
 				}
 			} else {
-				if(periodName != null) {
+				if (periodName != null) {
 					/*
 					 * we did not find any student logins so we will just increment the column
 					 * counter by 3 since we provide 3 columns for the student logins and then
@@ -6686,7 +6687,7 @@ public class VLEGetXLS {
 			}
 		}
 
-		if(includeMetaDataCells) {
+		if (includeMetaDataCells) {
 			//output the meta data cells
 			
 			String teacherLogin = "";
@@ -6743,7 +6744,7 @@ public class VLEGetXLS {
 		//the excel workbook
 		XSSFWorkbook wb = null;
 		
-		if(isFileTypeXLS(fileType)) {
+		if (isFileTypeXLS(fileType)) {
 			//we are generating an xls file so we will create the workbook
 			wb = new XSSFWorkbook();
 		}
@@ -6751,14 +6752,14 @@ public class VLEGetXLS {
 		boolean isCSVHeaderRowWritten = false;
 		
 		//loop through all the workgroups
-		for(int x=0; x<workgroupIds.size(); x++) {
+		for (int x=0; x<workgroupIds.size(); x++) {
 			String workgroupId = workgroupIds.get(x);
 			UserInfo userInfo = vleService.getUserInfoByWorkgroupId(Long.parseLong(workgroupId));
 
 			//create a sheet for the workgroup
 			XSSFSheet userIdSheet = null;
 			
-			if(wb != null) {
+			if (wb != null) {
 				userIdSheet = wb.createSheet(workgroupId);
 			}
 			
@@ -6795,11 +6796,11 @@ public class VLEGetXLS {
 	    	headerColumnNames.add("Idea Color");
 	    	
 	    	//add all the header column names to the row
-	    	for(int y=0; y<headerColumnNames.size(); y++) {
+	    	for (int y=0; y<headerColumnNames.size(); y++) {
 		    	headerColumn = setCellValue(headerRow, headerRowVector, headerColumn, headerColumnNames.get(y));
 	    	}
 	    	
-			if(!isCSVHeaderRowWritten) {
+			if (!isCSVHeaderRowWritten) {
 	    		//we have not written the csv header row yet
 	    		
 		    	//write the csv row if we are generating a csv file
@@ -6816,14 +6817,14 @@ public class VLEGetXLS {
 	    	List<StepWork> stepWorks = vleService.getStepWorksByUserInfo(userInfo);
 	    	
 	    	//loop through all the work
-	    	for(int z=0; z<stepWorks.size(); z++) {
+	    	for (int z=0; z<stepWorks.size(); z++) {
 	    		StepWork stepWork = stepWorks.get(z);
 	    		
 	    		//get the node and node type
 	    		Node node = stepWork.getNode();
 	    		String nodeType = node.getNodeType();
 	    		
-	    		if(nodeType != null && nodeType.equals("ExplanationBuilderNode")) {
+	    		if (nodeType != null && nodeType.equals("ExplanationBuilderNode")) {
 	    			//the work is for an explanation builder step
 	    			
 	    			//get the student work
@@ -6836,7 +6837,7 @@ public class VLEGetXLS {
 						//get the node states from the student work
 						JSONArray nodeStates = dataJSONObject.getJSONArray("nodeStates");
 						
-						if(nodeStates != null && nodeStates.length() > 0) {
+						if (nodeStates != null && nodeStates.length() > 0) {
 							//get the last node state
 							JSONObject nodeState = nodeStates.getJSONObject(nodeStates.length() - 1);
 							
@@ -6846,9 +6847,9 @@ public class VLEGetXLS {
 							//get all the ideas used in this step
 							JSONArray explanationIdeas = nodeState.getJSONArray("explanationIdeas");
 							
-							if(explanationIdeas != null && explanationIdeas.length() > 0) {
+							if (explanationIdeas != null && explanationIdeas.length() > 0) {
 								//loop through all the ideas used in this step
-								for(int i=0; i<explanationIdeas.length(); i++) {
+								for (int i=0; i<explanationIdeas.length(); i++) {
 									//get one of the ideas that was used
 									JSONObject explanationIdea = explanationIdeas.getJSONObject(i);
 									
@@ -6869,8 +6870,8 @@ public class VLEGetXLS {
 					    			JSONObject nodeContent = nodeIdToNodeContent.get(nodeId);
 					    			String prompt = ""; 
 					    				
-					    			if(nodeContent != null) {
-					    				if(nodeContent.has("prompt")) {
+					    			if (nodeContent != null) {
+					    				if (nodeContent.has("prompt")) {
 					    					//get the prompt
 					    					prompt = nodeContent.getString("prompt");					    					
 					    				}
@@ -6884,7 +6885,7 @@ public class VLEGetXLS {
 							    	long timeSpentOnStep = 0;
 							    	
 							    	//calculate the time the student spent on the step
-							    	if(endTime == null || startTime == null) {
+							    	if (endTime == null || startTime == null) {
 							    		//set to -1 if either start or end was null so we can set the cell to N/A later
 							    		timeSpentOnStep = -1;
 							    	} else {
@@ -6907,7 +6908,7 @@ public class VLEGetXLS {
 									columnCounter = setCellValue(ideaRow, ideaRowVector, columnCounter, nodeId);
 									
 									//set the post time
-									if(postTime != null) {
+									if (postTime != null) {
 										columnCounter = setCellValue(ideaRow, ideaRowVector, columnCounter, timestampToFormattedString(postTime));
 									} else {
 										columnCounter = setCellValue(ideaRow, ideaRowVector, columnCounter, "");
@@ -6917,14 +6918,14 @@ public class VLEGetXLS {
 									columnCounter = setCellValue(ideaRow, ideaRowVector, columnCounter, timestampToFormattedString(startTime));
 									
 									//set the end time
-									if(endTime != null) {
+									if (endTime != null) {
 										columnCounter = setCellValue(ideaRow, ideaRowVector, columnCounter, timestampToFormattedString(endTime));
 									} else {
 										columnCounter = setCellValue(ideaRow, ideaRowVector, columnCounter, "");
 									}
 									
 									//set the time spent on the step
-							    	if(timeSpentOnStep == -1) {
+							    	if (timeSpentOnStep == -1) {
 							    		columnCounter = setCellValue(ideaRow, ideaRowVector, columnCounter, "N/A");
 							    	} else {
 							    		columnCounter = setCellValue(ideaRow, ideaRowVector, columnCounter, timeSpentOnStep);
@@ -6978,20 +6979,20 @@ public class VLEGetXLS {
 		//the excel workbook
 		XSSFWorkbook wb = null;
 		
-		if(isFileTypeXLS(fileType)) {
+		if (isFileTypeXLS(fileType)) {
 			//we are generating an xls file so we will create the workbook
 			wb = new XSSFWorkbook();
 		}
 		
 		//loop through all the workgroups
-		for(int x=0; x<workgroupIds.size(); x++) {
+		for (int x=0; x<workgroupIds.size(); x++) {
 			String workgroupId = workgroupIds.get(x);
 			UserInfo userInfo = vleService.getUserInfoByWorkgroupId(Long.parseLong(workgroupId));
 
 			//create a sheet for the workgroup
 			XSSFSheet userIdSheet = null;
 			
-			if(wb != null) {
+			if (wb != null) {
 				userIdSheet = wb.createSheet(workgroupId);
 			}
 			
@@ -7050,7 +7051,7 @@ public class VLEGetXLS {
 	    	headerColumnNames.add("Max Auto Score");
 	    	
 	    	//add all the header column names to the row
-	    	for(int y=0; y<headerColumnNames.size(); y++) {
+	    	for (int y=0; y<headerColumnNames.size(); y++) {
 		    	headerColumn = setCellValue(headerRow, headerRowVector, headerColumn, headerColumnNames.get(y));
 	    	}
 	    	
@@ -7061,14 +7062,14 @@ public class VLEGetXLS {
 	    	List<StepWork> stepWorks = vleService.getStepWorksByUserInfo(userInfo);
 	    	
 	    	//loop through all the work
-	    	for(int z=0; z<stepWorks.size(); z++) {
+	    	for (int z=0; z<stepWorks.size(); z++) {
 	    		StepWork stepWork = stepWorks.get(z);
 	    		
 	    		//get the node and node type
 	    		Node node = stepWork.getNode();
 	    		String nodeType = node.getNodeType();
 	    		
-	    		if(nodeType != null && nodeType.equals("AnnotatorNode")) {
+	    		if (nodeType != null && nodeType.equals("AnnotatorNode")) {
 	    			//the work is for an annotator step
 	    			
 		    		//get the node id
@@ -7084,20 +7085,20 @@ public class VLEGetXLS {
 						//get the node states from the student work
 						JSONArray nodeStates = dataJSONObject.optJSONArray("nodeStates");
 						
-						if(nodeStates != null && nodeStates.length() > 0) {
+						if (nodeStates != null && nodeStates.length() > 0) {
 							//loop through all the node states
-							for(int n=0; n<nodeStates.length(); n++) {
+							for (int n=0; n<nodeStates.length(); n++) {
 								//get a node state
 								JSONObject nodeState = nodeStates.getJSONObject(n);
 								
 								//get the data from the node state
 								JSONObject nodeStateData = nodeState.optJSONObject("data");
 								
-								if(nodeStateData != null) {
+								if (nodeStateData != null) {
 									//get the step revision count
 									Integer stepRevisionCount = nodeIdToStepRevisionCount.get(nodeId);
 									
-									if(stepRevisionCount == null) {
+									if (stepRevisionCount == null) {
 										//this is the first revision so we will initialize the value
 										stepRevisionCount = 1;
 									}
@@ -7124,13 +7125,13 @@ public class VLEGetXLS {
 									JSONArray scoringCriteriaResults = nodeState.optJSONArray("scoringCriteriaResults");
 									Integer checkScoreAttemptCount = null;
 									
-									if(scoringCriteriaResults != null) {
+									if (scoringCriteriaResults != null) {
 										//the student checked this work
 										
 										//get the check score attempt count for the step
 										checkScoreAttemptCount = nodeIdToCheckScoreAttemptCount.get(nodeId);
 										
-										if(checkScoreAttemptCount == null) {
+										if (checkScoreAttemptCount == null) {
 											//this is the first check score attempt so we will initialize the value
 											checkScoreAttemptCount = 1;
 										}
@@ -7142,7 +7143,7 @@ public class VLEGetXLS {
 										nodeIdToCheckScoreAttemptCount.put(nodeId, checkScoreAttemptCount + 1);
 									}
 									
-									if(labels == null || labels.length() == 0) {
+									if (labels == null || labels.length() == 0) {
 										/*
 										 * there are no labels so we will display a row with the step visit data and
 										 * the student explanation if there is one
@@ -7167,12 +7168,12 @@ public class VLEGetXLS {
 										int labelCount = labels.length();
 										
 										//loop through all the student labels
-										for(int labelCounter=0; labelCounter<labels.length(); labelCounter++) {
+										for (int labelCounter=0; labelCounter<labels.length(); labelCounter++) {
 											
 											//get a student label
 											JSONObject label = labels.optJSONObject(labelCounter);
 											
-											if(label != null) {
+											if (label != null) {
 												//get label values
 												String labelId = label.optString("id");
 												String labelTextColor = label.optString("textColor");
@@ -7184,13 +7185,13 @@ public class VLEGetXLS {
 												Double labelTextLocationY = null;
 												
 												JSONObject location = label.optJSONObject("location");
-												if(location != null) {
+												if (location != null) {
 													labelLocationX = location.optDouble("x");
 													labelLocationY = location.optDouble("y");
 												}
 												
 												JSONObject textLocation = label.optJSONObject("textLocation");
-												if(textLocation != null) {
+												if (textLocation != null) {
 													labelTextLocationX = textLocation.optDouble("x");
 													labelTextLocationY = textLocation.optDouble("y");
 												}
@@ -7217,13 +7218,13 @@ public class VLEGetXLS {
 										    	columnCounter = setCellValue(row, rowVector, columnCounter, Boolean.toString(checkWork));
 										    	
 										    	//check if this student work was auto scored
-										    	if(scoringCriteriaResults != null) {
+										    	if (scoringCriteriaResults != null) {
 													columnCounter = setCellValue(row, rowVector, columnCounter, checkScoreAttemptCount);
 											    	columnCounter = setCellValue(row, rowVector, columnCounter, autoScore);
 											    	columnCounter = setCellValue(row, rowVector, columnCounter, maxAutoScore);
 											    	
 										    		//loop through all the scoring criteria results
-										    		for(int scr=0; scr<scoringCriteriaResults.length(); scr++) {
+										    		for (int scr=0; scr<scoringCriteriaResults.length(); scr++) {
 										    			//get a scoring criteria result
 										    			JSONObject scoringCriteriaResult = scoringCriteriaResults.optJSONObject(scr);
 										    			
@@ -7246,7 +7247,7 @@ public class VLEGetXLS {
 										    		 * remember the max number of scoring criteria results for all steps so we can
 										    		 * display the appropriate number of header cells 
 										    		 */
-										    		if(scoringCriteriaResults.length() > maxScoringCriteriaCount) {
+										    		if (scoringCriteriaResults.length() > maxScoringCriteriaCount) {
 										    			maxScoringCriteriaCount = scoringCriteriaResults.length();
 										    		}
 										    	}
@@ -7266,7 +7267,7 @@ public class VLEGetXLS {
 	    	}
 	    	
 	    	//display the header cells for the scoring criteria
-	    	for(int m=0; m<maxScoringCriteriaCount; m++) {
+	    	for (int m=0; m<maxScoringCriteriaCount; m++) {
 	    		//get the scoring criteria count
 	    		int scoringCriteriaCount = m + 1;
 		    	
@@ -7324,8 +7325,8 @@ public class VLEGetXLS {
 		String prompt = ""; 
 		
 		try {
-			if(nodeContent != null) {
-				if(nodeContent.has("prompt")) {
+			if (nodeContent != null) {
+				if (nodeContent.has("prompt")) {
 					//get the prompt
 					prompt = nodeContent.getString("prompt");
 				}
@@ -7342,7 +7343,7 @@ public class VLEGetXLS {
     	long timeSpentOnStep = 0;
     	
     	//calculate the time the student spent on the step
-    	if(endTime == null || startTime == null) {
+    	if (endTime == null || startTime == null) {
     		//set to -1 if either start or end was null so we can set the cell to N/A later
     		timeSpentOnStep = -1;
     	} else {
@@ -7365,7 +7366,7 @@ public class VLEGetXLS {
 		columnCounter = setCellValue(row, rowVector, columnCounter, nodeId);
 		
 		//set the post time
-		if(postTime != null) {
+		if (postTime != null) {
 			columnCounter = setCellValue(row, rowVector, columnCounter, timestampToFormattedString(postTime));
 		} else {
 			columnCounter = setCellValue(row, rowVector, columnCounter, "");
@@ -7375,14 +7376,14 @@ public class VLEGetXLS {
 		columnCounter = setCellValue(row, rowVector, columnCounter, timestampToFormattedString(startTime));
 		
 		//set the end time
-		if(endTime != null) {
+		if (endTime != null) {
 			columnCounter = setCellValue(row, rowVector, columnCounter, timestampToFormattedString(endTime));
 		} else {
 			columnCounter = setCellValue(row, rowVector, columnCounter, "");
 		}
 		
 		//set the time spent on the step
-    	if(timeSpentOnStep == -1) {
+    	if (timeSpentOnStep == -1) {
     		columnCounter = setCellValue(row, rowVector, columnCounter, "N/A");
     	} else {
     		columnCounter = setCellValue(row, rowVector, columnCounter, timeSpentOnStep);
@@ -7422,7 +7423,7 @@ public class VLEGetXLS {
 		//the excel workbook
 		XSSFWorkbook wb = null;
 		
-		if(isFileTypeXLS(fileType)) {
+		if (isFileTypeXLS(fileType)) {
 			//we are generating an xls file so we will create the workbook
 			wb = new XSSFWorkbook();
 		}
@@ -7436,7 +7437,7 @@ public class VLEGetXLS {
 		//we will export everything onto one sheet
 		XSSFSheet allWorkgroupsSheet = null;
 		
-		if(wb != null) {
+		if (wb != null) {
 			allWorkgroupsSheet = wb.createSheet("All Workgroups");
 		}
 
@@ -7500,13 +7501,13 @@ public class VLEGetXLS {
     	headerColumnNames.add("Deleted True to False");
     	
     	//add all the header column names to the row
-    	for(int y=0; y<headerColumnNames.size(); y++) {
+    	for (int y=0; y<headerColumnNames.size(); y++) {
 	    	headerRow.createCell(headerColumn).setCellValue(headerColumnNames.get(y));
 	    	headerColumn++;	    		
     	}
     	
 		//loop through all the workgroups
-    	for(int x=0; x<workgroupIds.size(); x++) {
+    	for (int x=0; x<workgroupIds.size(); x++) {
     		//get the workgroup id
 			String workgroupId = workgroupIds.get(x);
 
@@ -7529,16 +7530,16 @@ public class VLEGetXLS {
 			String wiseId3 = "";
 			
 			//loop through all the user ids in this workgroup
-			for(int z=0; z<userIdsList.size(); z++) {
+			for (int z=0; z<userIdsList.size(); z++) {
 				//get a user id
 				Long wiseId = userIdsList.get(z);
 				
 				//set the appropriate wise id
-				if(z == 0) {
+				if (z == 0) {
 					wiseId1 = wiseId + "";
-				} else if(z == 1) {
+				} else if (z == 1) {
 					wiseId2 = wiseId + "";
-				} else if(z == 2) {
+				} else if (z == 2) {
 					wiseId3 = wiseId + "";
 				}
 			}
@@ -7566,20 +7567,20 @@ public class VLEGetXLS {
 	    	HashMap<String, JSONObject> nodeIdToPreviousResponse = new HashMap<String, JSONObject>();
 	    	
 	    	//loop through all the work
-	    	for(int z=0; z<stepWorks.size(); z++) {
+	    	for (int z=0; z<stepWorks.size(); z++) {
 	    		StepWork stepWork = stepWorks.get(z);
 	    		
     			//get the start and end time for the student visit
 				Timestamp visitStartTime = stepWork.getStartTime();
 				Timestamp visitEndTime = stepWork.getEndTime();
 				
-				if(!previousTimestamps.contains(visitStartTime)) {
+				if (!previousTimestamps.contains(visitStartTime)) {
 					//get the node and node type
 		    		Node node = stepWork.getNode();
 		    		String nodeType = node.getNodeType();
 		    		String nodeId = node.getNodeId();
 		    		
-		    		if(nodeType != null && nodeType.equals("FlashNode") && nodeId != null) {
+		    		if (nodeType != null && nodeType.equals("FlashNode") && nodeId != null) {
 		    			//the work is for a flash step
 		    			
 		    			//get the step type e.g. "Flash"
@@ -7595,13 +7596,13 @@ public class VLEGetXLS {
 							//get the node states from the student work
 							JSONArray nodeStates = dataJSONObject.getJSONArray("nodeStates");
 							
-							if(nodeStates != null && nodeStates.length() > 0) {
+							if (nodeStates != null && nodeStates.length() > 0) {
 								//get the last node state
 								JSONObject nodeState = nodeStates.getJSONObject(nodeStates.length() - 1);
 								
 								JSONObject response = nodeState.getJSONObject("response");
 								
-								if(response != null) {
+								if (response != null) {
 									//get the array of items
 									JSONArray dataArray = response.getJSONArray("data");
 									
@@ -7611,7 +7612,7 @@ public class VLEGetXLS {
 									//get the current revision number to use
 							    	Long revisionNumber = nodeIdToRevisionNumber.get(nodeId);
 							    	
-							    	if(revisionNumber == null) {
+							    	if (revisionNumber == null) {
 							    		//initialize the value if this is the first revision
 							    		revisionNumber = 1L;
 							    	}
@@ -7620,7 +7621,7 @@ public class VLEGetXLS {
 							    	previousResponse = nodeIdToPreviousResponse.get(nodeId);
 							    	
 									//loop through all the items
-									for(int i=0; i<dataArray.length(); i++) {
+									for (int i=0; i<dataArray.length(); i++) {
 										//get an item
 										JSONObject itemLabel = dataArray.getJSONObject(i);
 										
@@ -7648,8 +7649,8 @@ public class VLEGetXLS {
 						    			JSONObject nodeContent = nodeIdToNodeContent.get(nodeId);
 						    			String prompt = ""; 
 						    				
-						    			if(nodeContent != null) {
-						    				if(nodeContent.has("prompt")) {
+						    			if (nodeContent != null) {
+						    				if (nodeContent.has("prompt")) {
 						    					//get the prompt
 						    					prompt = nodeContent.getString("prompt");					    					
 						    				}
@@ -7658,7 +7659,7 @@ public class VLEGetXLS {
 										long timeSpentOnStep = 0;
 								    	
 								    	//calculate the time the student spent on the step
-								    	if(visitEndTime == null || visitStartTime == null) {
+								    	if (visitEndTime == null || visitStartTime == null) {
 								    		//set to -1 if either start or end was null so we can set the cell to N/A later
 								    		timeSpentOnStep = -1;
 								    	} else {
@@ -7695,14 +7696,14 @@ public class VLEGetXLS {
 										columnCounter = setCellValue(itemRow, itemRowVector, columnCounter, timestampToFormattedString(visitStartTime));
 										
 										//set the visit end time
-										if(visitEndTime != null) {
+										if (visitEndTime != null) {
 											columnCounter = setCellValue(itemRow, itemRowVector, columnCounter, timestampToFormattedString(visitEndTime));
 										} else {
 											columnCounter = setCellValue(itemRow, itemRowVector, columnCounter, "");
 										}
 										
 										//set the time spent on the step
-								    	if(timeSpentOnStep == -1) {
+								    	if (timeSpentOnStep == -1) {
 								    		columnCounter = setCellValue(itemRow, itemRowVector, columnCounter, "N/A");
 								    	} else {
 								    		columnCounter = setCellValue(itemRow, itemRowVector, columnCounter, timeSpentOnStep);
@@ -7736,7 +7737,7 @@ public class VLEGetXLS {
 								    	writeCSV(itemRowVector);
 									}
 									
-									if(dataArray.length() > 0) {
+									if (dataArray.length() > 0) {
 										previousResponse = response;
 										
 										//remember the previous response
@@ -7751,7 +7752,7 @@ public class VLEGetXLS {
 						} catch (JSONException e) {
 							e.printStackTrace();
 						}
-		    		} else if(exportAllWork) {
+		    		} else if (exportAllWork) {
 		    			//we will export all the non flash step student work
 		    			
 		    			//get the student work
@@ -7766,7 +7767,7 @@ public class VLEGetXLS {
 		    			 * cause problems when Excel tries to parse the SVG student
 		    			 * data 
 		    			 */
-		    			if(stepWorkResponse.equals("") && !nodeType.equals("SVGDrawNode")) {
+		    			if (stepWorkResponse.equals("") && !nodeType.equals("SVGDrawNode")) {
 			    			//get the JSONObject representation of the student work
 							try {
 								JSONObject dataJSONObject = new JSONObject(data);
@@ -7774,7 +7775,7 @@ public class VLEGetXLS {
 								//get the node states from the student work
 								JSONArray nodeStates = dataJSONObject.getJSONArray("nodeStates");
 								
-								if(nodeStates != null && nodeStates.length() > 0) {
+								if (nodeStates != null && nodeStates.length() > 0) {
 									//get the last node state
 									JSONObject nodeState = nodeStates.getJSONObject(nodeStates.length() - 1);
 									
@@ -7789,7 +7790,7 @@ public class VLEGetXLS {
 		    			 * there is a bug that saves SVGDraw step data in IdeaBasket steps so we will
 		    			 * not display any student data for IdeaBasket steps 
 		    			 */
-		    			if(nodeType.equals("IdeaBasketNode")) {
+		    			if (nodeType.equals("IdeaBasketNode")) {
 		    				stepWorkResponse = "";
 		    			}
 		    			
@@ -7816,7 +7817,7 @@ public class VLEGetXLS {
 		    			long timeSpentOnStep = 0;
 				    	
 				    	//calculate the time the student spent on the step
-				    	if(visitEndTime == null || visitStartTime == null) {
+				    	if (visitEndTime == null || visitStartTime == null) {
 				    		//set to -1 if either start or end was null so we can set the cell to N/A later
 				    		timeSpentOnStep = -1;
 				    	} else {
@@ -7853,14 +7854,14 @@ public class VLEGetXLS {
 						columnCounter = setCellValue(workRow, workRowVector, columnCounter, timestampToFormattedString(visitStartTime));
 						
 						//set the visit end time
-						if(visitEndTime != null) {
+						if (visitEndTime != null) {
 							columnCounter = setCellValue(workRow, workRowVector, columnCounter, timestampToFormattedString(visitEndTime));
 						} else {
 							columnCounter = setCellValue(workRow, workRowVector, columnCounter, "");
 						}
 						
 						//set the time spent on the step
-				    	if(timeSpentOnStep == -1) {
+				    	if (timeSpentOnStep == -1) {
 				    		columnCounter = setCellValue(workRow, workRowVector, columnCounter, "N/A");
 				    	} else {
 				    		columnCounter = setCellValue(workRow, workRowVector, columnCounter, timeSpentOnStep);
@@ -7898,7 +7899,7 @@ public class VLEGetXLS {
 	private boolean isItemNew(JSONObject itemLabel, int itemIndex, JSONObject previousResponse) {
 		boolean result = false;
 		
-		if(previousResponse == null) {
+		if (previousResponse == null) {
 			//there was no previous student work so this item is new
 			result = true;
 		} else {
@@ -7916,7 +7917,7 @@ public class VLEGetXLS {
 				 * this item we are checking is new because it will be the
 				 * 4th element in the current student work data array
 				 */
-				if(itemIndex >= dataArray.length()) {
+				if (itemIndex >= dataArray.length()) {
 					result = true;
 				}
 			} catch (JSONException e) {
@@ -7939,24 +7940,24 @@ public class VLEGetXLS {
 	private boolean isItemLabelTextRevised(JSONObject itemLabel, int itemIndex, JSONObject previousResponse) {
 		boolean result = false;
 		
-		if(previousResponse != null) {
+		if (previousResponse != null) {
 			try {
 				//get the previous student work data
 				JSONArray dataArray = previousResponse.getJSONArray("data");
 				
 				//check if the current item index is in the data array
-				if(dataArray != null && dataArray.length() > itemIndex) {
+				if (dataArray != null && dataArray.length() > itemIndex) {
 					//get the previous item at the given index
 					JSONObject previousItemLabel = dataArray.getJSONObject(itemIndex);
 
-					if(previousItemLabel != null) {
+					if (previousItemLabel != null) {
 						//get the text from the previous student work item
 						String previousItemLabelText = previousItemLabel.getString("labelText");
 						
 						//get the text from the current student work item
 						String itemLabelText = itemLabel.getString("labelText");
 						
-						if(!itemLabelText.equals(previousItemLabelText)) {
+						if (!itemLabelText.equals(previousItemLabelText)) {
 							//the label text is not the same
 							result = true;
 						}
@@ -7982,17 +7983,17 @@ public class VLEGetXLS {
 	private boolean isItemRepositioned(JSONObject itemLabel, int itemIndex, JSONObject previousResponse) {
 		boolean result = false;
 		
-		if(previousResponse != null) {
+		if (previousResponse != null) {
 			try {
 				//get the previous student work data
 				JSONArray dataArray = previousResponse.getJSONArray("data");
 				
 				//check if the current item index is in the data array
-				if(dataArray != null && dataArray.length() > itemIndex) {
+				if (dataArray != null && dataArray.length() > itemIndex) {
 					//get the previous item at the given index
 					JSONObject previousItemLabel = dataArray.getJSONObject(itemIndex);
 
-					if(previousItemLabel != null) {
+					if (previousItemLabel != null) {
 						//get the x and y pos for the previous student work item
 						long previousXPos = previousItemLabel.getLong("xPos");
 						long previousYPos = previousItemLabel.getLong("yPos");
@@ -8001,7 +8002,7 @@ public class VLEGetXLS {
 						long xPos = itemLabel.getLong("xPos");
 						long yPos = itemLabel.getLong("yPos");
 						
-						if(previousXPos != xPos || previousYPos != yPos) {
+						if (previousXPos != xPos || previousYPos != yPos) {
 							//the position has changed
 							result = true;
 						}
@@ -8027,7 +8028,7 @@ public class VLEGetXLS {
 	private boolean isItemDeletedFalseToTrue(JSONObject itemLabel, int itemIndex, JSONObject previousResponse) {
 		boolean result = false;
 		
-		if(previousResponse == null) {
+		if (previousResponse == null) {
 			//there was no previous student work
 			
 			try {
@@ -8043,18 +8044,18 @@ public class VLEGetXLS {
 				JSONArray dataArray = previousResponse.getJSONArray("data");
 				
 				//check if the current item index is in the data array
-				if(dataArray != null && dataArray.length() > itemIndex) {
+				if (dataArray != null && dataArray.length() > itemIndex) {
 					//get the previous item at the given index
 					JSONObject previousItemLabel = dataArray.getJSONObject(itemIndex);
 
-					if(previousItemLabel != null) {
+					if (previousItemLabel != null) {
 						//get the isDeleted value for the previous student work
 						boolean previousIsDeleted = previousItemLabel.getBoolean("isDeleted");
 						
 						//get the isDeleted value for the current student work
 						boolean isDeleted = itemLabel.getBoolean("isDeleted");
 						
-						if(previousIsDeleted == false && isDeleted == true) {
+						if (previousIsDeleted == false && isDeleted == true) {
 							//isDeleted changed from false to true
 							result = true;
 						}
@@ -8088,24 +8089,24 @@ public class VLEGetXLS {
 	private boolean isItemDeletedTrueToFalse(JSONObject itemLabel, int itemIndex, JSONObject previousResponse) {
 		boolean result = false;
 		
-		if(previousResponse != null) {
+		if (previousResponse != null) {
 			try {
 				//get the previous student data
 				JSONArray dataArray = previousResponse.getJSONArray("data");
 				
 				//check if the current item index is in the data array
-				if(dataArray != null && dataArray.length() > itemIndex) {
+				if (dataArray != null && dataArray.length() > itemIndex) {
 					//get the previous item at the given index
 					JSONObject previousItemLabel = dataArray.getJSONObject(itemIndex);
 
-					if(previousItemLabel != null) {
+					if (previousItemLabel != null) {
 						//get the isDeleted value for the previous student work
 						boolean previousIsDeleted = previousItemLabel.getBoolean("isDeleted");
 						
 						//get the isDeleted value for the current student work
 						boolean isDeleted = itemLabel.getBoolean("isDeleted");
 						
-						if(previousIsDeleted == true && isDeleted == false) {
+						if (previousIsDeleted == true && isDeleted == false) {
 							//isDeleted changed from true to false
 							result = true;
 						}
@@ -8129,19 +8130,19 @@ public class VLEGetXLS {
 	private String getColorNameFromRBGString(String rbgString) {
 		String color = "";
 		
-		if(rbgString == null) {
+		if (rbgString == null) {
 			//do nothing
-		} else if(rbgString.equals("rgb(38, 84, 207)")) {
+		} else if (rbgString.equals("rgb(38, 84, 207)")) {
 			color = "blue";
-		} else if(rbgString.equals("rgb(0, 153, 51)")) {
+		} else if (rbgString.equals("rgb(0, 153, 51)")) {
 			color = "green";
-		} else if(rbgString.equals("rgb(204, 51, 51)")) {
+		} else if (rbgString.equals("rgb(204, 51, 51)")) {
 			color = "red";
-		} else if(rbgString.equals("rgb(204, 102, 0)")) {
+		} else if (rbgString.equals("rgb(204, 102, 0)")) {
 			color = "orange";
-		} else if(rbgString.equals("rgb(153, 102, 255)")) {
+		} else if (rbgString.equals("rgb(153, 102, 255)")) {
 			color = "purple";
-		} else if(rbgString.equals("rgb(153, 51, 51)")) {
+		} else if (rbgString.equals("rgb(153, 51, 51)")) {
 			color = "brown";
 		}
 		
@@ -8158,31 +8159,31 @@ public class VLEGetXLS {
 	private String getColorNameFromColorHex(String hex) {
 		String color = "";
 		
-		if(hex != null) {
+		if (hex != null) {
 			//make all the letters uppercase
 			hex = hex.toUpperCase();
 			
-			if(hex.equals("000000")) {
+			if (hex.equals("000000")) {
 				color = "black";
-			} else if(hex.equals("FFFFFF")) {
+			} else if (hex.equals("FFFFFF")) {
 				color = "white";
-			} else if(hex.equals("0000FF")) {
+			} else if (hex.equals("0000FF")) {
 				color = "blue";
-			} else if(hex.equals("008000")) {
+			} else if (hex.equals("008000")) {
 				color = "green";
-			} else if(hex.equals("800000")) {
+			} else if (hex.equals("800000")) {
 				color = "maroon";
-			} else if(hex.equals("000080")) {
+			} else if (hex.equals("000080")) {
 				color = "navy";
-			} else if(hex.equals("FF8C00")) {
+			} else if (hex.equals("FF8C00")) {
 				color = "orange";
-			} else if(hex.equals("800080")) {
+			} else if (hex.equals("800080")) {
 				color = "purple";
-			} else if(hex.equals("FF0000")) {
+			} else if (hex.equals("FF0000")) {
 				color = "red";
-			} else if(hex.equals("008080")) {
+			} else if (hex.equals("008080")) {
 				color = "teal";
-			} else if(hex.equals("FFFF00")) {
+			} else if (hex.equals("FFFF00")) {
 				color = "yellow";
 			}
 		}
@@ -8205,18 +8206,18 @@ public class VLEGetXLS {
 		int version = 1;
 		
 		try {
-			if(projectMetaData != null) {
-				if(projectMetaData.has("tools")) {
+			if (projectMetaData != null) {
+				if (projectMetaData.has("tools")) {
 					//get the tools
 					JSONObject tools = projectMetaData.getJSONObject("tools");
 					
-					if(tools != null) {
-						if(tools.has("ideaManagerSettings")) {
+					if (tools != null) {
+						if (tools.has("ideaManagerSettings")) {
 							//get the idea manager settings
 							JSONObject ideaManagerSettings = tools.getJSONObject("ideaManagerSettings");
 							
-							if(ideaManagerSettings != null) {
-								if(ideaManagerSettings.has("version")) {
+							if (ideaManagerSettings != null) {
+								if (ideaManagerSettings.has("version")) {
 									//get the version
 									String versionString = ideaManagerSettings.getString("version");
 									version = Integer.parseInt(versionString);
@@ -8310,22 +8311,22 @@ public class VLEGetXLS {
 		//will contain the ideaAttribute ids
 		JSONArray ideaAttributeIds = new JSONArray();
 		
-		if(ideaBasketVersion > 1) {
-			if(projectMetaData != null) {
+		if (ideaBasketVersion > 1) {
+			if (projectMetaData != null) {
 				//check if there is a tools field in the project meta data
-				if(projectMetaData.has("tools")) {
+				if (projectMetaData.has("tools")) {
 					try {
 						//get the tools field
 						JSONObject tools = projectMetaData.getJSONObject("tools");
-						if(tools != null) {
+						if (tools != null) {
 							//check if there is an ideaManagerSettings field
-							if(tools.has("ideaManagerSettings")) {
+							if (tools.has("ideaManagerSettings")) {
 								//get the ideaManagerSettings field
 								ideaManagerSettings = tools.getJSONObject("ideaManagerSettings");
 								
-								if(ideaManagerSettings != null) {
+								if (ideaManagerSettings != null) {
 									//check if there is an ideaAttributes field
-									if(ideaManagerSettings.has("ideaAttributes")) {
+									if (ideaManagerSettings.has("ideaAttributes")) {
 										//get the ideaAttributes
 										ideaAttributes = ideaManagerSettings.getJSONArray("ideaAttributes");
 									}
@@ -8343,7 +8344,7 @@ public class VLEGetXLS {
 		XSSFWorkbook wb = null;
 		XSSFSheet mainSheet = null;
 		
-		if(isFileTypeXLS(fileType)) {
+		if (isFileTypeXLS(fileType)) {
 			//we are generating an xls file so we will create the workbook
 			wb = new XSSFWorkbook();
 			
@@ -8366,22 +8367,22 @@ public class VLEGetXLS {
 		headerFields.add("Idea Workgroup Id");
 		headerFields.add("Idea Text");
 		
-		if(ideaBasketVersion == 1) {
+		if (ideaBasketVersion == 1) {
 			//this run uses the first version of the idea basket which always has flag, tags, and source
 			headerFields.add("Flag");
 			headerFields.add("Tags");
 			headerFields.add("Source");
 		} else {
 			//this run uses the newer version of the idea basket which can have variable and authorable fields
-			if(ideaAttributes != null) {
+			if (ideaAttributes != null) {
 				
 				//loop through all the idea attributes
-				for(int x=0; x<ideaAttributes.length(); x++) {
+				for (int x=0; x<ideaAttributes.length(); x++) {
 					try {
 						//get an idea attribute
 						JSONObject ideaAttribute = ideaAttributes.getJSONObject(x);
 						
-						if(ideaAttribute.has("name")) {
+						if (ideaAttribute.has("name")) {
 							//get the name of the attribute
 							String ideaAttributeName = ideaAttribute.getString("name");
 							
@@ -8434,7 +8435,7 @@ public class VLEGetXLS {
 		columnCounter = createUserDataHeaderRow(headerColumn, headerRow, headerRowVector, true, true);
 
 		//loop through all the header fields to add them to the excel
-		for(int x=0; x<headerFields.size(); x++) {
+		for (int x=0; x<headerFields.size(); x++) {
 	    	//the header column to just keep track of each row (which represents a step visit)
 	    	columnCounter = setCellValue(headerRow, headerRowVector, columnCounter, headerFields.get(x));
 		}
@@ -8474,7 +8475,7 @@ public class VLEGetXLS {
 		DateFormat dateTimeInstance = DateFormat.getDateTimeInstance();
 		
 		//loop through all the basket revisions
-		for(int x=0; x<ideaBasketRevisions.size(); x++) {
+		for (int x=0; x<ideaBasketRevisions.size(); x++) {
 			
 			//get the IdeaBasket java object
 			IdeaBasket ideaBasket = ideaBasketRevisions.get(x);
@@ -8482,7 +8483,7 @@ public class VLEGetXLS {
 			//get the workgroup id
 			long workgroupId = ideaBasket.getWorkgroupId();
 
-			if(workgroupId == previousWorkgroupId) {
+			if (workgroupId == previousWorkgroupId) {
 				/*
 				 * previous basket revision was for the same workgroup so
 				 * we will increment the basket revision counter
@@ -8501,7 +8502,7 @@ public class VLEGetXLS {
 			//get the JSON for the basket revision
 			String data = ideaBasket.getData();
 			
-			if(data != null) {
+			if (data != null) {
 				JSONObject ideaBasketJSON = new JSONObject();
 				try {
 					//create a JSON object from the basket revision
@@ -8509,14 +8510,14 @@ public class VLEGetXLS {
 					
 					JSONArray ideas = ideaBasketJSON.getJSONArray("ideas");
 					//loop through all the active ideas
-					for(int ideasCounter=0; ideasCounter<ideas.length(); ideasCounter++) {
+					for (int ideasCounter=0; ideasCounter<ideas.length(); ideasCounter++) {
 						JSONObject idea = ideas.getJSONObject(ideasCounter);
 						rowCounter = createIdeaBasketRow(mainSheet, dateTimeInstance, nodeIdToNodeTitlesMap, ideaBasket, ideaAttributeIds, rowCounter, workgroupId, basketRevision, ideaBasketVersion, ideaBasketJSON, idea, previousIdeaBasketJSON);
 					}
 					
 					JSONArray deleted = ideaBasketJSON.getJSONArray("deleted");
 					//loop through all the private ideas
-					for(int deletedCounter=0; deletedCounter<deleted.length(); deletedCounter++) {
+					for (int deletedCounter=0; deletedCounter<deleted.length(); deletedCounter++) {
 						JSONObject deletedIdea = deleted.getJSONObject(deletedCounter);
 						rowCounter = createIdeaBasketRow(mainSheet, dateTimeInstance, nodeIdToNodeTitlesMap, ideaBasket, ideaAttributeIds, rowCounter, workgroupId, basketRevision, ideaBasketVersion, ideaBasketJSON, deletedIdea, previousIdeaBasketJSON);
 					}
@@ -8528,7 +8529,7 @@ public class VLEGetXLS {
 					previousWorkgroupId = workgroupId;
 					previousIdeaBasketJSON = ideaBasketJSON;
 					
-					if(ideaBasket.isPublic() != null && ideaBasket.isPublic() && ideas.length() == 0 && deleted.length() == 0) {
+					if (ideaBasket.isPublic() != null && ideaBasket.isPublic() && ideas.length() == 0 && deleted.length() == 0) {
 						/*
 						 * the first public idea basket revision will be empty so we have
 						 * skipped it and now need to decrement the counter to set it back to 1
@@ -8570,13 +8571,13 @@ public class VLEGetXLS {
 		int columnCounter = 0;
 		
 		try {
-			if(idea != null) {
+			if (idea != null) {
 				Integer ideaId = idea.getInt("id");
 				
 				Integer ideaWorkgroupId = null;
 				
 				//get the workgroup id if it is available
-				if(idea.has("workgroupId")) {
+				if (idea.has("workgroupId")) {
 					try {
 						ideaWorkgroupId = idea.getInt("workgroupId");						
 					} catch(JSONException e) {
@@ -8592,7 +8593,7 @@ public class VLEGetXLS {
 				Long periodId = ideaBasket.getPeriodId();
 				
 				//get the period name if the period id is available
-				if(periodId != null) {
+				if (periodId != null) {
 					periodName = periodIdToPeriodName.get(periodId.intValue());
 				}
 				
@@ -8601,7 +8602,7 @@ public class VLEGetXLS {
 				
 				//Is Public
 				Boolean isPublic = ideaBasket.isPublic();
-				if(isPublic == null) {
+				if (isPublic == null) {
 					columnCounter = setCellValue(ideaBasketRow, ideaBasketRowVector, columnCounter, getIntFromBoolean(false));
 				} else {
 					columnCounter = setCellValue(ideaBasketRow, ideaBasketRowVector, columnCounter, getIntFromBoolean(isPublic));
@@ -8612,7 +8613,7 @@ public class VLEGetXLS {
 				
 				//Action
 				String action = ideaBasket.getAction();
-				if(action == null) {
+				if (action == null) {
 					columnCounter++;
 					addEmptyElementsToVector(ideaBasketRowVector, 1);
 				} else {
@@ -8621,7 +8622,7 @@ public class VLEGetXLS {
 
 				//Action Performer
 				Long actionPerformer = ideaBasket.getActionPerformer();
-				if(actionPerformer == null) {
+				if (actionPerformer == null) {
 					columnCounter++;
 					addEmptyElementsToVector(ideaBasketRowVector, 1);
 				} else {
@@ -8630,7 +8631,7 @@ public class VLEGetXLS {
 
 				//Changed Idea Id
 				Long changedIdeaId = ideaBasket.getIdeaId();
-				if(changedIdeaId == null) {
+				if (changedIdeaId == null) {
 					columnCounter++;
 					addEmptyElementsToVector(ideaBasketRowVector, 1);
 				} else {
@@ -8639,7 +8640,7 @@ public class VLEGetXLS {
 
 				//Changed Idea Workgroup Id
 				Long changedIdeaWorkgroupId = ideaBasket.getIdeaWorkgroupId();
-				if(changedIdeaWorkgroupId == null) {
+				if (changedIdeaWorkgroupId == null) {
 					columnCounter++;
 					addEmptyElementsToVector(ideaBasketRowVector, 1);
 				} else {
@@ -8647,7 +8648,7 @@ public class VLEGetXLS {
 				}
 				
 				//Idea Id
-				if(ideaId == null) {
+				if (ideaId == null) {
 					columnCounter++;
 					addEmptyElementsToVector(ideaBasketRowVector, 1);
 				} else {
@@ -8655,7 +8656,7 @@ public class VLEGetXLS {
 				}
 				
 				//Idea Workgroup Id
-				if(ideaWorkgroupId == null) {
+				if (ideaWorkgroupId == null) {
 					columnCounter++;
 					addEmptyElementsToVector(ideaBasketRowVector, 1);
 				} else {
@@ -8665,7 +8666,7 @@ public class VLEGetXLS {
 				//Idea Text
 				columnCounter = setCellValue(ideaBasketRow, ideaBasketRowVector, columnCounter, idea.getString("text"));
 
-				if(ideaBasketVersion == 1) {
+				if (ideaBasketVersion == 1) {
 					//this run uses the first version of the idea basket which always has flag, tags, and source
 					
 					//Flag
@@ -8687,7 +8688,7 @@ public class VLEGetXLS {
 					 * somehow get disordered in the student data (even though this is unlikely to
 					 * happen).
 					 */
-					for(int idIndex=0; idIndex<ideaAttributeIds.length(); idIndex++) {
+					for (int idIndex=0; idIndex<ideaAttributeIds.length(); idIndex++) {
 						//get an attribute id
 						String attributeId = ideaAttributeIds.getString(idIndex);
 						
@@ -8715,7 +8716,7 @@ public class VLEGetXLS {
 				columnCounter = setCellValue(ideaBasketRow, ideaBasketRowVector, columnCounter, getStepsUsedIn(idea, nodeIdToNodeTitlesMap));
 				
 				//Was Copied From Public
-				if(idea.has("wasCopiedFromPublic")) {
+				if (idea.has("wasCopiedFromPublic")) {
 					boolean wasCopiedFromPublic = idea.getBoolean("wasCopiedFromPublic");
 					columnCounter = setCellValue(ideaBasketRow, ideaBasketRowVector, columnCounter, getIntFromBoolean(wasCopiedFromPublic));
 				} else {
@@ -8723,14 +8724,14 @@ public class VLEGetXLS {
 				}
 				
 				//Is Published To Public
-				if(idea.has("isPublishedToPublic")) {
+				if (idea.has("isPublishedToPublic")) {
 					boolean isPublishedToPublic = idea.getBoolean("isPublishedToPublic");
 					columnCounter = setCellValue(ideaBasketRow, ideaBasketRowVector, columnCounter, getIntFromBoolean(isPublishedToPublic));
 				} else {
 					columnCounter = setCellValue(ideaBasketRow, ideaBasketRowVector, columnCounter, getIntFromBoolean(false));
 				}
 				
-				if(idea.has("workgroupIdsThatHaveCopied")) {
+				if (idea.has("workgroupIdsThatHaveCopied")) {
 					JSONArray workgroupIdsThatHaveCopied = idea.getJSONArray("workgroupIdsThatHaveCopied");
 					
 					//Times Copied
@@ -8741,10 +8742,10 @@ public class VLEGetXLS {
 					StringBuffer workgroupIdsThatHaveCopiedStringBuffer = new StringBuffer();
 					
 					//loop through all the workgroup ids that have copied this idea
-					for(int workgroupIdsCopiedCounter=0; workgroupIdsCopiedCounter<workgroupIdsThatHaveCopied.length(); workgroupIdsCopiedCounter++) {
+					for (int workgroupIdsCopiedCounter=0; workgroupIdsCopiedCounter<workgroupIdsThatHaveCopied.length(); workgroupIdsCopiedCounter++) {
 						long workgroupIdThatHasCopied = workgroupIdsThatHaveCopied.getLong(workgroupIdsCopiedCounter);
 						
-						if(workgroupIdsThatHaveCopiedStringBuffer.length() != 0) {
+						if (workgroupIdsThatHaveCopiedStringBuffer.length() != 0) {
 							//separate workgroup ids with a ,
 							workgroupIdsThatHaveCopiedStringBuffer.append(",");
 						}
@@ -8799,7 +8800,7 @@ public class VLEGetXLS {
 				 * ideas can't be copied from the public basket directly to the public basket.
 				 * you can only copy an idea from the public basket to a private basket.
 				 */
-				if(isPublic == null || isPublic == false) {
+				if (isPublic == null || isPublic == false) {
 					isCopiedFromPublicInThisRevision = isCopiedFromPublicInThisRevision(idea, ideaBasketJSON, previousIdeaBasketJSON); 
 				}
 
@@ -8835,7 +8836,7 @@ public class VLEGetXLS {
 				
 				//Copied In This Revision
 				boolean isCopiedInThisRevision = false;
-				if(isCopiedFromPublicInThisRevision) {
+				if (isCopiedFromPublicInThisRevision) {
 					/*
 					 * the idea was copied from the public basket which
 					 * may have entries in the workgroupIdsThatHaveCopied
@@ -8851,7 +8852,7 @@ public class VLEGetXLS {
 				
 				//Uncopied In This Revision
 				boolean isUncopiedInThisRevision = false;
-				if(isIdeaMadePublic) {
+				if (isIdeaMadePublic) {
 					/*
 					 * the idea was made public and when we make an idea public
 					 * we clear out the workgroupIdsThatHaveCopied array which
@@ -8887,22 +8888,22 @@ public class VLEGetXLS {
 		String attributeValue = "";
 		
 		try {
-			if(idea.has("attributes")) {
+			if (idea.has("attributes")) {
 				JSONArray attributes = idea.getJSONArray("attributes");
 				
-				if(attributes != null) {
+				if (attributes != null) {
 					//loop through all the attributes in the student idea
-					for(int a=0; a<attributes.length(); a++) {
+					for (int a=0; a<attributes.length(); a++) {
 						//get an attribute
 						JSONObject attribute = attributes.getJSONObject(a);
 						
 						//get the id of the student attribute
 						String id = attribute.getString("id");
 						
-						if(attributeId != null && id != null && attributeId.equals(id)) {
+						if (attributeId != null && id != null && attributeId.equals(id)) {
 							//the ids match so we have found the attribute we are looking for
 							
-							if(attribute.has("value")) {
+							if (attribute.has("value")) {
 								//get the value that the student entered for the attribute
 								attributeValue = attribute.getString("value");
 							}
@@ -8942,7 +8943,7 @@ public class VLEGetXLS {
 			JSONArray deleted = ideaBasketJSON.getJSONArray("deleted");
 			
 			//loop through the active ideas from newest to oldest
-			for(int x=ideas.length() - 1; x>=0; x--) {
+			for (int x=ideas.length() - 1; x>=0; x--) {
 				JSONObject activeIdea = ideas.getJSONObject(x);
 				
 				Integer activeIdeaWorkgroupId = null;
@@ -8957,7 +8958,7 @@ public class VLEGetXLS {
 				 * check if the idea id matches the one we want. if a workgroup id
 				 * is passed in as a parameter we will make sure that matches too.
 				 */
-				if(activeIdea != null && activeIdea.getInt("id") == ideaId &&
+				if (activeIdea != null && activeIdea.getInt("id") == ideaId &&
 						(workgroupId == null || activeIdeaWorkgroupId == workgroupId.intValue())) {
 					//we have found the idea we want so we will stop searching
 					idea = activeIdea;
@@ -8966,9 +8967,9 @@ public class VLEGetXLS {
 				}
 			}
 			
-			if(!ideaFound) {
+			if (!ideaFound) {
 				//we have not found the idea yet so we will search the trash from newest to oldest
-				for(int y=deleted.length() - 1; y>=0; y--) {
+				for (int y=deleted.length() - 1; y>=0; y--) {
 					JSONObject deletedIdea = deleted.getJSONObject(y);
 					
 					Integer deletedIdeaWorkgroupId = null;
@@ -8983,7 +8984,7 @@ public class VLEGetXLS {
 					 * check if the idea id matches the one we want. if a workgroup id
 					 * is passed in as a parameter we will make sure that matches too.
 					 */
-					if(deletedIdea != null && deletedIdea.getInt("id") == ideaId &&
+					if (deletedIdea != null && deletedIdea.getInt("id") == ideaId &&
 							(workgroupId == null || deletedIdeaWorkgroupId == workgroupId.intValue())) {
 						//we have found the idea we want so we will stop searching
 						idea = deletedIdea;
@@ -9014,12 +9015,12 @@ public class VLEGetXLS {
 			JSONArray ideas = ideaBasketJSON.getJSONArray("ideas");
 			JSONArray deleted = ideaBasketJSON.getJSONArray("deleted");
 			
-			if(ideas != null) {
+			if (ideas != null) {
 				//add the active ideas count
 				numberOfIdeas += ideas.length();	
 			}
 			
-			if(deleted != null) {
+			if (deleted != null) {
 				//add the trash ideas count
 				numberOfIdeas += deleted.length();
 			}
@@ -9044,13 +9045,13 @@ public class VLEGetXLS {
 		boolean ideaFound = false;
 		
 		try {
-			if(ideaBasketJSON != null) {
+			if (ideaBasketJSON != null) {
 				//get the id
 				int ideaId = idea.getInt("id");
 				
 				Integer workgroupId = null;
 				
-				if(idea.has("workgroupId")) {
+				if (idea.has("workgroupId")) {
 					try {
 						//get the workgroup id that owns the idea
 						workgroupId = idea.getInt("workgroupId");						
@@ -9064,7 +9065,7 @@ public class VLEGetXLS {
 				JSONArray deleted = ideaBasketJSON.getJSONArray("deleted");
 				
 				//loop through the active ideas from newest to oldest
-				for(int x=ideas.length() - 1; x>=0; x--) {
+				for (int x=ideas.length() - 1; x>=0; x--) {
 					JSONObject activeIdea = ideas.getJSONObject(x);
 					
 					Integer activeIdeaWorkgroupId = null;
@@ -9079,7 +9080,7 @@ public class VLEGetXLS {
 					 * check if the idea id matches the one we want. if a workgroup id
 					 * is passed in as a parameter we will make sure that matches too.
 					 */
-					if(activeIdea != null && activeIdea.getInt("id") == ideaId &&
+					if (activeIdea != null && activeIdea.getInt("id") == ideaId &&
 							(workgroupId == null || activeIdeaWorkgroupId == workgroupId.intValue())) {
 						//we have found the idea we want so we will stop searching
 						idea = activeIdea;
@@ -9088,9 +9089,9 @@ public class VLEGetXLS {
 					}
 				}
 				
-				if(!ideaFound) {
+				if (!ideaFound) {
 					//we have not found the idea yet so we will search the trash from newest to oldest
-					for(int y=deleted.length() - 1; y>=0; y--) {
+					for (int y=deleted.length() - 1; y>=0; y--) {
 						JSONObject deletedIdea = deleted.getJSONObject(y);
 						
 						Integer deletedIdeaWorkgroupId = null;
@@ -9105,7 +9106,7 @@ public class VLEGetXLS {
 						 * check if the idea id matches the one we want. if a workgroup id
 						 * is passed in as a parameter we will make sure that matches too.
 						 */
-						if(deletedIdea != null && deletedIdea.getInt("id") == ideaId &&
+						if (deletedIdea != null && deletedIdea.getInt("id") == ideaId &&
 								(workgroupId == null || deletedIdeaWorkgroupId == workgroupId)) {
 							//we have found the idea we want so we will stop searching
 							idea = deletedIdea;
@@ -9134,7 +9135,7 @@ public class VLEGetXLS {
 	private boolean isIdeaNew(JSONObject idea, JSONObject previousIdeaBasket) {
 		boolean ideaNew = false;
 		try {
-			if(previousIdeaBasket == null) {
+			if (previousIdeaBasket == null) {
 				//if there was no previous basket revision, the idea is new
 				ideaNew = true;
 			} else {
@@ -9143,7 +9144,7 @@ public class VLEGetXLS {
 				
 				Integer workgroupId = null;
 				
-				if(idea.has("workgroupId")) {
+				if (idea.has("workgroupId")) {
 					try {
 						//get the workgroup id that owns the idea
 						workgroupId = idea.getInt("workgroupId");						
@@ -9155,7 +9156,7 @@ public class VLEGetXLS {
 				//try to get the idea from the previous basket revision
 				JSONObject previousIdeaRevision = getIdeaById(previousIdeaBasket, ideaId, workgroupId);
 				
-				if(previousIdeaRevision == null) {
+				if (previousIdeaRevision == null) {
 					/*
 					 * we did not find the idea in the previous basket revision
 					 * so the idea is new
@@ -9181,13 +9182,13 @@ public class VLEGetXLS {
 	private boolean isIdeaRevised(JSONObject idea, JSONObject previousIdeaBasket, int ideaBasketVersion, JSONArray ideaAttributeIds) {
 		boolean ideaRevised = false;
 		try {
-			if(previousIdeaBasket != null) {
+			if (previousIdeaBasket != null) {
 				//get the id of the idea
 				int ideaId = idea.getInt("id");
 				
 				Integer workgroupId = null;
 				
-				if(idea.has("workgroupId")) {
+				if (idea.has("workgroupId")) {
 					try {
 						//get the workgroup id that owns the idea
 						workgroupId = idea.getInt("workgroupId");
@@ -9199,23 +9200,23 @@ public class VLEGetXLS {
 				//get the idea from the previous basket revision
 				JSONObject previousIdeaRevision = getIdeaById(previousIdeaBasket, ideaId, workgroupId);
 				
-				if(previousIdeaRevision != null) {
+				if (previousIdeaRevision != null) {
 					//get the time last edited timestamps
 					long timeLastEdited = idea.getLong("timeLastEdited");
 					long previousTimeLastEdited = previousIdeaRevision.getLong("timeLastEdited");
 
 					//compare the time last edited timestamps
-					if(timeLastEdited != previousTimeLastEdited) {
+					if (timeLastEdited != previousTimeLastEdited) {
 						ideaRevised = true;
 					}
 					
-					if(ideaBasketVersion == 1) {
+					if (ideaBasketVersion == 1) {
 						//get the text
 						String text = idea.getString("text");
 						String previousText = previousIdeaRevision.getString("text");
 						
 						//compare the text
-						if(text != null && !text.equals(previousText)) {
+						if (text != null && !text.equals(previousText)) {
 							ideaRevised = true;
 						}
 						
@@ -9224,7 +9225,7 @@ public class VLEGetXLS {
 						String previousFlag = previousIdeaRevision.getString("flag");
 						
 						//compare the flags
-						if(flag != null && !flag.equals(previousFlag)) {
+						if (flag != null && !flag.equals(previousFlag)) {
 							ideaRevised = true;
 						}
 						
@@ -9233,7 +9234,7 @@ public class VLEGetXLS {
 						String previousTags = previousIdeaRevision.getString("tags");
 						
 						//compare the tags
-						if(tags != null && !tags.equals(previousTags)) {
+						if (tags != null && !tags.equals(previousTags)) {
 							ideaRevised = true;
 						}
 						
@@ -9242,7 +9243,7 @@ public class VLEGetXLS {
 						String previousSource = previousIdeaRevision.getString("source");
 						
 						//compare the source
-						if(source != null && !source.equals(previousSource)) {
+						if (source != null && !source.equals(previousSource)) {
 							ideaRevised = true;
 						}
 					} else {
@@ -9251,13 +9252,13 @@ public class VLEGetXLS {
 						String previousText = previousIdeaRevision.getString("text");
 						
 						//compare the text
-						if(text != null && !text.equals(previousText)) {
+						if (text != null && !text.equals(previousText)) {
 							ideaRevised = true;
 						}
 						
-						if(ideaAttributeIds != null) {
+						if (ideaAttributeIds != null) {
 							//loop through all the attribute ids
-							for(int x=0; x<ideaAttributeIds.length(); x++) {
+							for (int x=0; x<ideaAttributeIds.length(); x++) {
 								
 								//get an attribute id
 								String attributeId = ideaAttributeIds.getString(x);
@@ -9269,7 +9270,7 @@ public class VLEGetXLS {
 								String previousValue = getAttributeValueByAttributeId(previousIdeaRevision, attributeId);
 								
 								//compare the values
-								if(currentValue != null && !currentValue.equals(previousValue)) {
+								if (currentValue != null && !currentValue.equals(previousValue)) {
 									ideaRevised = true;
 								}
 							}
@@ -9307,7 +9308,7 @@ public class VLEGetXLS {
 		previousPositionInDeleted = getPositionInDeleted(ideaId, previousIdeaBasket);
 		
 		
-		if(previousPositionInIdeas == -1 && previousPositionInDeleted == -1) {
+		if (previousPositionInIdeas == -1 && previousPositionInDeleted == -1) {
 			/*
 			 * idea was not in previous revision of idea basket which means
 			 * it is new in the current revision. in this case we will return
@@ -9317,30 +9318,30 @@ public class VLEGetXLS {
 			//try to find the position of the idea in the ideas array of the current basket revision
 			currentPositionInIdeas = getPositionInIdeas(ideaId, currentIdeaBasket);
 			
-			if(currentPositionInIdeas == -1) {
+			if (currentPositionInIdeas == -1) {
 				//we did not find it in the ideas array so we will look in the deleted array
 				currentPositionInDeleted = getPositionInDeleted(ideaId, currentIdeaBasket);				
 			}
 			
-			if(currentPositionInIdeas != -1 && previousPositionInIdeas != -1) {
+			if (currentPositionInIdeas != -1 && previousPositionInIdeas != -1) {
 				//the idea is in the ideas array of current and previous basket revisions
 				
-				if(currentPositionInIdeas != previousPositionInIdeas) {
+				if (currentPositionInIdeas != previousPositionInIdeas) {
 					ideaPositionChanged = true;
 				}
-			} else if(currentPositionInDeleted != -1 && previousPositionInDeleted != -1) {
+			} else if (currentPositionInDeleted != -1 && previousPositionInDeleted != -1) {
 				//the idea is in the deleted array of current and previous basket revisions
 				
-				if(currentPositionInDeleted != previousPositionInDeleted) {
+				if (currentPositionInDeleted != previousPositionInDeleted) {
 					ideaPositionChanged = true;
 				}
-			} else if(currentPositionInIdeas != -1 && previousPositionInDeleted != -1) {
+			} else if (currentPositionInIdeas != -1 && previousPositionInDeleted != -1) {
 				/*
 				 * the idea is in the ideas array of the current basket revision 
 				 * and in the deleted array of the previous basket revision
 				 */
 				ideaPositionChanged = true;
-			} else if(currentPositionInDeleted != -1 && previousPositionInIdeas != -1) {
+			} else if (currentPositionInDeleted != -1 && previousPositionInIdeas != -1) {
 				/*
 				 * the idea is in the deleted array of the current basket revision
 				 * and in the ideas array of the previous basket revision
@@ -9370,7 +9371,7 @@ public class VLEGetXLS {
 		//determine if the idea is in the trash in the previous revision
 		boolean ideaInPreviousTrash = isIdeaInTrash(previousIdeaBasket, idea);
 		
-		if(!ideaInPreviousTrash && ideaInCurrentTrash) {
+		if (!ideaInPreviousTrash && ideaInCurrentTrash) {
 			//the idea was not previously in the trash but now is in the trash
 			ideaDeleted = true;
 		}
@@ -9396,7 +9397,7 @@ public class VLEGetXLS {
 		//determine if the idea is in the trash in the previous revision
 		boolean ideaInPreviousTrash = isIdeaInTrash(previousIdeaBasket, idea);
 		
-		if(ideaInPreviousTrash && !ideaInCurrentTrash) {
+		if (ideaInPreviousTrash && !ideaInCurrentTrash) {
 			//the idea was previously in the trash but now is not in the trash
 			ideaRestored = true;
 		}
@@ -9416,13 +9417,13 @@ public class VLEGetXLS {
 	private boolean isIdeaMadePublic(JSONObject idea, JSONObject currentIdeaBasket, JSONObject previousIdeaBasket) {
 		boolean isIdeaMadePublic = false;
 		
-		if(idea != null) {
+		if (idea != null) {
 			try {
 				/*
 				 * make sure the idea has an id, workgroup id, and is published to public fields.
 				 * if it does not have all these fields it can't have been published to public.
 				 */
-				if(idea.has("id") && idea.has("workgroupId") && idea.has("isPublishedToPublic")) {
+				if (idea.has("id") && idea.has("workgroupId") && idea.has("isPublishedToPublic")) {
 					Integer ideaId = idea.getInt("id");
 					Integer workgroupId = null;
 					
@@ -9434,22 +9435,22 @@ public class VLEGetXLS {
 					
 					boolean isPublishedToPublic = idea.getBoolean("isPublishedToPublic");
 					
-					if(previousIdeaBasket != null) {
+					if (previousIdeaBasket != null) {
 						//get the idea from the previous basket revision
 						JSONObject previousIdeaRevision = getIdeaById(previousIdeaBasket, ideaId, workgroupId);
 						
-						if(previousIdeaRevision == null) {
+						if (previousIdeaRevision == null) {
 							/*
 							 * the idea was not in the previous basket revision so
 							 * we will just use the isPublishedToPublic value
 							 */
 							isIdeaMadePublic = isPublishedToPublic;
 						} else {
-							if(previousIdeaRevision.has("isPublishedToPublic")) {
+							if (previousIdeaRevision.has("isPublishedToPublic")) {
 								//get the isPublishedToPublic value from the previous idea revision
 								boolean isPreviousPublishedToPublic = previousIdeaRevision.getBoolean("isPublishedToPublic");
 								
-								if(isPublishedToPublic && !isPreviousPublishedToPublic) {
+								if (isPublishedToPublic && !isPreviousPublishedToPublic) {
 									/*
 									 * the value of isPublishedToPublic was false but is
 									 * now true so it was made public in this revision
@@ -9488,13 +9489,13 @@ public class VLEGetXLS {
 	private boolean isIdeaMadePrivate(JSONObject idea, JSONObject currentIdeaBasket, JSONObject previousIdeaBasket) {
 		boolean isIdeaMadePrivate = false;
 		
-		if(idea != null) {
+		if (idea != null) {
 			try {
 				/*
 				 * make sure the idea has an id, workgroup id, and is published to public fields.
 				 * if it does not have all these fields it can't have been published to public.
 				 */
-				if(idea.has("id") && idea.has("workgroupId") && idea.has("isPublishedToPublic")) {
+				if (idea.has("id") && idea.has("workgroupId") && idea.has("isPublishedToPublic")) {
 					Integer ideaId = idea.getInt("id");
 					Integer workgroupId = null;
 					
@@ -9507,19 +9508,19 @@ public class VLEGetXLS {
 					boolean isPublishedToPublic = idea.getBoolean("isPublishedToPublic");
 					boolean isPrivate = !isPublishedToPublic;
 					
-					if(previousIdeaBasket != null) {
+					if (previousIdeaBasket != null) {
 						//get the idea from the previous basket revision
 						JSONObject previousIdeaRevision = getIdeaById(previousIdeaBasket, ideaId, workgroupId);
-						if(previousIdeaRevision == null) {
+						if (previousIdeaRevision == null) {
 							//all ideas are initially private
 							isIdeaMadePrivate = false;
 						} else {
-							if(previousIdeaRevision.has("isPublishedToPublic")) {
+							if (previousIdeaRevision.has("isPublishedToPublic")) {
 								//get the isPublishedToPublic value from the previous idea revision
 								boolean isPreviousPublishedToPublic = previousIdeaRevision.getBoolean("isPublishedToPublic");
 								boolean isPreviousPrivate = !isPreviousPublishedToPublic;
 								
-								if(isPrivate && !isPreviousPrivate) {
+								if (isPrivate && !isPreviousPrivate) {
 									/*
 									 * the idea was previously public but is now private
 									 */
@@ -9564,13 +9565,13 @@ public class VLEGetXLS {
 	private boolean isCopiedFromPublicInThisRevision(JSONObject idea, JSONObject currentIdeaBasket, JSONObject previousIdeaBasket) {
 		boolean isCopiedFromPublicInThisRevision = false;
 		
-		if(idea != null) {
+		if (idea != null) {
 			try {
 				/*
 				 * make sure the idea has an id, workgroup id, and was copied from public fields.
 				 * if it does not have all these fields it can't have been copied from public.
 				 */
-				if(idea.has("id") && idea.has("workgroupId") && idea.has("wasCopiedFromPublic")) {
+				if (idea.has("id") && idea.has("workgroupId") && idea.has("wasCopiedFromPublic")) {
 					Integer ideaId = idea.getInt("id");
 					Integer workgroupId = null;
 					
@@ -9582,22 +9583,22 @@ public class VLEGetXLS {
 					
 					boolean wasCopiedFromPublic = idea.getBoolean("wasCopiedFromPublic");
 					
-					if(previousIdeaBasket != null) {
+					if (previousIdeaBasket != null) {
 						//get the idea from the previous basket revision
 						JSONObject previousIdeaRevision = getIdeaById(previousIdeaBasket, ideaId, workgroupId);
 						
-						if(previousIdeaRevision == null) {
+						if (previousIdeaRevision == null) {
 							/*
 							 * the idea was not in the previous basket revision so
 							 * we will just use the wasCopiedFromPublic value
 							 */
 							isCopiedFromPublicInThisRevision = wasCopiedFromPublic;
 						} else {
-							if(previousIdeaRevision.has("wasCopiedFromPublic")) {
+							if (previousIdeaRevision.has("wasCopiedFromPublic")) {
 								//get the wasCopiedFromPublic value from the previous idea revision
 								boolean isPreviousPublishedToPublic = previousIdeaRevision.getBoolean("wasCopiedFromPublic");
 								
-								if(wasCopiedFromPublic && !isPreviousPublishedToPublic) {
+								if (wasCopiedFromPublic && !isPreviousPublishedToPublic) {
 									/*
 									 * the value of wasCopiedFromPublic was false but is
 									 * now true so it was copied from public in this revision
@@ -9641,13 +9642,13 @@ public class VLEGetXLS {
 	private boolean isCopiedInThisRevision(JSONObject idea, JSONObject currentIdeaBasket, JSONObject previousIdeaBasket) {
 		boolean isCopiedInThisRevision = false;
 		
-		if(idea != null) {
+		if (idea != null) {
 			try {
 				/*
 				 * make sure the idea has an id, workgroup id, and workgroupIdsThatHaveCopied fields.
 				 * if it does not have all these fields it can't have been copied.
 				 */
-				if(idea.has("id") && idea.has("workgroupId") && idea.has("workgroupIdsThatHaveCopied")) {
+				if (idea.has("id") && idea.has("workgroupId") && idea.has("workgroupIdsThatHaveCopied")) {
 					Integer ideaId = idea.getInt("id");
 					Integer workgroupId = null;
 					
@@ -9660,26 +9661,26 @@ public class VLEGetXLS {
 					JSONArray workgroupIdsThatHaveCopied = idea.getJSONArray("workgroupIdsThatHaveCopied");
 					int workgroupIdsThatHaveCopiedCount = workgroupIdsThatHaveCopied.length();
 					
-					if(previousIdeaBasket != null) {
+					if (previousIdeaBasket != null) {
 						//get the idea from the previous basket revision
 						JSONObject previousIdeaRevision = getIdeaById(previousIdeaBasket, ideaId, workgroupId);
 						
-						if(previousIdeaRevision == null) {
+						if (previousIdeaRevision == null) {
 							/*
 							 * the idea was not in the previous basket revision so
 							 * we will just check if the current copied count is greater
 							 * than 0
 							 */
-							if(workgroupIdsThatHaveCopiedCount > 0) {
+							if (workgroupIdsThatHaveCopiedCount > 0) {
 								isCopiedInThisRevision = true;
 							}
 						} else {
-							if(previousIdeaRevision.has("workgroupIdsThatHaveCopied")) {
+							if (previousIdeaRevision.has("workgroupIdsThatHaveCopied")) {
 								//get the workgroupIdsThatHaveCopied value from the previous idea revision
 								JSONArray previousWorkgroupIdsThatHaveCopied = previousIdeaRevision.getJSONArray("workgroupIdsThatHaveCopied");
 								int previousWorkgroupIdsThatHaveCopiedCount = previousWorkgroupIdsThatHaveCopied.length();
 								
-								if(workgroupIdsThatHaveCopiedCount == previousWorkgroupIdsThatHaveCopiedCount + 1) {
+								if (workgroupIdsThatHaveCopiedCount == previousWorkgroupIdsThatHaveCopiedCount + 1) {
 									/*
 									 * the current copied count is one more than the previous copied
 									 * count which means the idea was copied by someone in this
@@ -9693,7 +9694,7 @@ public class VLEGetXLS {
 								 * field so we will just check if the current copied count is
 								 * greater than 0
 								 */
-								if(workgroupIdsThatHaveCopiedCount > 0) {
+								if (workgroupIdsThatHaveCopiedCount > 0) {
 									isCopiedInThisRevision = true;
 								}
 							}
@@ -9704,7 +9705,7 @@ public class VLEGetXLS {
 						 * just check if the current copied count is greater
 						 * than 0
 						 */
-						if(workgroupIdsThatHaveCopiedCount > 0) {
+						if (workgroupIdsThatHaveCopiedCount > 0) {
 							isCopiedInThisRevision = true;
 						}
 					}
@@ -9729,13 +9730,13 @@ public class VLEGetXLS {
 	private boolean isUncopiedInThisRevision(JSONObject idea, JSONObject currentIdeaBasket, JSONObject previousIdeaBasket) {
 		boolean isUncopiedInThisRevision = false;
 		
-		if(idea != null) {
+		if (idea != null) {
 			try {
 				/*
 				 * make sure the idea has an id, workgroup id, and workgroupIdsThatHaveCopied fields.
 				 * if it does not have all these fields it can't have been uncopied.
 				 */
-				if(idea.has("id") && idea.has("workgroupId") && idea.has("workgroupIdsThatHaveCopied")) {
+				if (idea.has("id") && idea.has("workgroupId") && idea.has("workgroupIdsThatHaveCopied")) {
 					Integer ideaId = idea.getInt("id");
 					Integer workgroupId = null;
 					
@@ -9748,16 +9749,16 @@ public class VLEGetXLS {
 					JSONArray workgroupIdsThatHaveCopied = idea.getJSONArray("workgroupIdsThatHaveCopied");
 					int workgroupIdsThatHaveCopiedCount = workgroupIdsThatHaveCopied.length();
 					
-					if(previousIdeaBasket != null) {
+					if (previousIdeaBasket != null) {
 						//get the idea from the previous basket revision
 						JSONObject previousIdeaRevision = getIdeaById(previousIdeaBasket, ideaId, workgroupId);
 						
-						if(previousIdeaRevision != null && previousIdeaRevision.has("workgroupIdsThatHaveCopied")) {
+						if (previousIdeaRevision != null && previousIdeaRevision.has("workgroupIdsThatHaveCopied")) {
 							//get the workgroupIdsThatHaveCopied value from the previous idea revision
 							JSONArray previousWorkgroupIdsThatHaveCopied = previousIdeaRevision.getJSONArray("workgroupIdsThatHaveCopied");
 							int previousWorkgroupIdsThatHaveCopiedCount = previousWorkgroupIdsThatHaveCopied.length();
 							
-							if(workgroupIdsThatHaveCopiedCount == previousWorkgroupIdsThatHaveCopiedCount - 1) {
+							if (workgroupIdsThatHaveCopiedCount == previousWorkgroupIdsThatHaveCopiedCount - 1) {
 								/*
 								 * the current copied count is one less than the previous copied
 								 * count which means the idea was uncopied by someone in this
@@ -9816,19 +9817,19 @@ public class VLEGetXLS {
 		int position = -1;
 		
 		try {
-			if(ideaBasket != null) {
+			if (ideaBasket != null) {
 				JSONArray ideaArray = ideaBasket.getJSONArray(arrayName);
 				
-				if(ideaArray != null) {
+				if (ideaArray != null) {
 					//loop through all the ideas in the array
-					for(int x=0; x<ideaArray.length(); x++) {
+					for (int x=0; x<ideaArray.length(); x++) {
 						//get an idea
 						JSONObject idea = ideaArray.getJSONObject(x);
 						
 						//get the id of the idea
 						int id = idea.getInt("id");
 						
-						if(ideaId == id) {
+						if (ideaId == id) {
 							//the id matches the one we want so we will return nthe position
 							position = x + 1;
 							break;
@@ -9859,16 +9860,16 @@ public class VLEGetXLS {
 		try {
 			JSONArray stepsUsedInJSONArray = idea.getJSONArray("stepsUsedIn");
 			
-			if(stepsUsedInJSONArray != null) {
+			if (stepsUsedInJSONArray != null) {
 				//loop through all the steps used in
-				for(int x=0; x<stepsUsedInJSONArray.length(); x++) {
+				for (int x=0; x<stepsUsedInJSONArray.length(); x++) {
 					//get the node id of the step used in
 					String nodeId = stepsUsedInJSONArray.getString(x);
 					
 					//get the step name from the map
 					String nodeName = nodeIdToNodeTitlesMap.get(nodeId);
 					
-					if(stepsUsedIn.length() != 0) {
+					if (stepsUsedIn.length() != 0) {
 						//separate multiple steps with ,
 						stepsUsedIn.append(",");
 					}
@@ -9897,7 +9898,7 @@ public class VLEGetXLS {
 		try {
 			JSONArray stepsUsedInJSONArray = idea.getJSONArray("stepsUsedIn");
 			
-			if(stepsUsedInJSONArray != null) {
+			if (stepsUsedInJSONArray != null) {
 				//get the length of the array
 				count = stepsUsedInJSONArray.length();
 			}
@@ -9921,12 +9922,12 @@ public class VLEGetXLS {
 		boolean stepsUsedInChanged = false;
 		
 		try {
-			if(previousIdeaBasket != null) {
+			if (previousIdeaBasket != null) {
 				int ideaId = idea.getInt("id");
 				
 				Integer workgroupId = null;
 				
-				if(idea.has("workgroupId")) {
+				if (idea.has("workgroupId")) {
 					try {
 						//get the workgroup id that owns the idea
 						workgroupId = idea.getInt("workgroupId");						
@@ -9938,7 +9939,7 @@ public class VLEGetXLS {
 				//get the idea from the previous revision
 				JSONObject previousIdeaRevision = getIdeaById(previousIdeaBasket, ideaId, workgroupId);
 				
-				if(previousIdeaRevision != null) {
+				if (previousIdeaRevision != null) {
 					//the idea existed in the previous basket revision
 					
 					//get the steps used in for the idea from the  current basket revision
@@ -9947,7 +9948,7 @@ public class VLEGetXLS {
 					//get the steps used in for the idea from the previous basket revision
 					String previousStepsUsedIn = getStepsUsedIn(previousIdeaRevision, nodeIdToNodeTitlesMap);
 					
-					if(currentStepsUsedIn != null && previousStepsUsedIn != null && !currentStepsUsedIn.equals(previousStepsUsedIn)) {
+					if (currentStepsUsedIn != null && previousStepsUsedIn != null && !currentStepsUsedIn.equals(previousStepsUsedIn)) {
 						//the steps used in has changed
 						stepsUsedInChanged = true;
 					}							
@@ -9970,7 +9971,7 @@ public class VLEGetXLS {
 	private int getIntFromBoolean(boolean boolValue) {
 		int intValue = 0;
 		
-		if(boolValue) {
+		if (boolValue) {
 			intValue = 1;
 		}
 		
@@ -10019,7 +10020,7 @@ public class VLEGetXLS {
 		Annotation latestAnnotationScoreByStepWork = vleService.getLatestAnnotationScoreByStepWork(stepWorksForNodeId, teacherWorkgroupIds);
 		String score = "";
 		
-		if(latestAnnotationScoreByStepWork != null) {
+		if (latestAnnotationScoreByStepWork != null) {
 			try {
 				//get the annotation data
 				String data = latestAnnotationScoreByStepWork.getData();
@@ -10051,7 +10052,7 @@ public class VLEGetXLS {
 		Annotation latestAnnotationCommentByStepWork = vleService.getLatestAnnotationCommentByStepWork(stepWorksForNodeId, teacherWorkgroupIds);
 		String comment = ""; 
 		
-		if(latestAnnotationCommentByStepWork != null) {
+		if (latestAnnotationCommentByStepWork != null) {
 			try {
 				//get the annotation data
 				String data = latestAnnotationCommentByStepWork.getData();
@@ -10084,7 +10085,7 @@ public class VLEGetXLS {
 		 */
 		Annotation latestAnnotationScoreByStepWork = vleService.getLatestCRaterScoreByStepWork(stepWorksForNodeId);
 		
-		if(latestAnnotationScoreByStepWork != null) {
+		if (latestAnnotationScoreByStepWork != null) {
 			try {
 				//get the annotation data
 				String data = latestAnnotationScoreByStepWork.getData();
@@ -10110,7 +10111,7 @@ public class VLEGetXLS {
 				 */
 				JSONArray value = annotationData.getJSONArray("value");
 				
-				if(value.length() > 0) {
+				if (value.length() > 0) {
 					//get the last entry in the array
 					JSONObject valueElement = value.getJSONObject(value.length() - 1);
 					
@@ -10157,7 +10158,7 @@ public class VLEGetXLS {
 		//get the latest auto graded annotation associated with any of the StepWork objects
 		Annotation latestAutoScoreAnnotationByStepWork = vleService.getLatestAnnotationByStepWork(stepWorksForNodeId, annotationType);
 
-		if(latestAutoScoreAnnotationByStepWork != null) {
+		if (latestAutoScoreAnnotationByStepWork != null) {
 			try {
 				//get the annotation data
 				String data = latestAutoScoreAnnotationByStepWork.getData();
@@ -10182,7 +10183,7 @@ public class VLEGetXLS {
 				 */
 				JSONArray value = annotationData.getJSONArray("value");
 				
-				if(value.length() > 0) {
+				if (value.length() > 0) {
 					//get the last entry in the array
 					JSONObject valueElement = value.getJSONObject(value.length() - 1);
 					
@@ -10190,17 +10191,17 @@ public class VLEGetXLS {
 					Long maxAutoScore = null;
 					String autoFeedback = null;
 					
-					if(valueElement.has("autoScore")) {
+					if (valueElement.has("autoScore")) {
 						//get the auto score
 						autoScore = valueElement.optLong("autoScore");
 					}
 					
-					if(valueElement.has("maxAutoScore")) {
+					if (valueElement.has("maxAutoScore")) {
 						//get the max auto score
 						maxAutoScore = valueElement.optLong("maxAutoScore");
 					}
 					
-					if(valueElement.has("autoFeedback")) {
+					if (valueElement.has("autoFeedback")) {
 						//get the auto feedback
 						autoFeedback = valueElement.optString("autoFeedback");
 					}
@@ -10244,7 +10245,7 @@ public class VLEGetXLS {
 		 */
 		Annotation latestAnnotationScoreByStepWork = vleService.getLatestAnnotationScoreByStepWork(stepWorksForNodeId, teacherWorkgroupIds);
 		
-		if(latestAnnotationScoreByStepWork != null) {
+		if (latestAnnotationScoreByStepWork != null) {
 			try {
 				//get the annotation data
 				String data = latestAnnotationScoreByStepWork.getData();
@@ -10299,7 +10300,7 @@ public class VLEGetXLS {
 		 */
 		Annotation latestAnnotationScoreByStepWork = vleService.getLatestAnnotationScoreByStepWork(stepWorksForNodeId, teacherWorkgroupIds);
 		
-		if(latestAnnotationScoreByStepWork != null) {
+		if (latestAnnotationScoreByStepWork != null) {
 			try {
 				//get the annotation data
 				String data = latestAnnotationScoreByStepWork.getData();
@@ -10344,7 +10345,7 @@ public class VLEGetXLS {
 		 */
 		Annotation latestAnnotationCommentByStepWork = vleService.getLatestAnnotationCommentByStepWork(stepWorksForNodeId, teacherWorkgroupIds);
 		
-		if(latestAnnotationCommentByStepWork != null) {
+		if (latestAnnotationCommentByStepWork != null) {
 			try {
 				//get the annotation data
 				String data = latestAnnotationCommentByStepWork.getData();
@@ -10393,7 +10394,7 @@ public class VLEGetXLS {
 		 */
 		Annotation latestAnnotationCommentByStepWork = vleService.getLatestAnnotationCommentByStepWork(stepWorksForNodeId, teacherWorkgroupIds);
 		
-		if(latestAnnotationCommentByStepWork != null) {
+		if (latestAnnotationCommentByStepWork != null) {
 			try {
 				//get the annotation data
 				String data = latestAnnotationCommentByStepWork.getData();
@@ -10426,22 +10427,22 @@ public class VLEGetXLS {
 	 */
 	private int setLatestAutoGradedAnnotation(JSONObject autoGradedAnnotationForNodeState, Row rowForWorkgroupId, Vector<String> rowForWorkgroupIdVector, int workgroupColumnCounter) {
 		
-		if(autoGradedAnnotationForNodeState != null) {
+		if (autoGradedAnnotationForNodeState != null) {
 			Long autoScore = null;
 			Long maxAutoScore = null;
 			String autoFeedback = null;
 			
-			if(autoGradedAnnotationForNodeState.has("autoScore")) {
+			if (autoGradedAnnotationForNodeState.has("autoScore")) {
 				//get the auto score
 				autoScore = autoGradedAnnotationForNodeState.optLong("autoScore");
 			}
 			
-			if(autoGradedAnnotationForNodeState.has("maxAutoScore")) {
+			if (autoGradedAnnotationForNodeState.has("maxAutoScore")) {
 				//get the max auto score
 				maxAutoScore = autoGradedAnnotationForNodeState.optLong("maxAutoScore");
 			}
 			
-			if(autoGradedAnnotationForNodeState.has("autoFeedback")) {
+			if (autoGradedAnnotationForNodeState.has("autoFeedback")) {
 				//get the auto feedback
 				autoFeedback = autoGradedAnnotationForNodeState.optString("autoFeedback");
 			}
@@ -10472,8 +10473,8 @@ public class VLEGetXLS {
 	private int setCellValue(Row row, Vector<String> rowVector, int columnCounter, Integer value) {
 		int returnValue;
 		
-		if(value == null) {
-			if(rowVector != null) {
+		if (value == null) {
+			if (rowVector != null) {
 				//set an empty string into the vector
 				rowVector.add("");				
 			}
@@ -10506,8 +10507,8 @@ public class VLEGetXLS {
 	private int setCellValue(Row row, Vector<String> rowVector, int columnCounter, Integer value, String comment) {
 		int returnValue;
 		
-		if(value == null) {
-			if(rowVector != null) {
+		if (value == null) {
+			if (rowVector != null) {
 				//set an empty string into the vector
 				rowVector.add("");				
 			}
@@ -10538,18 +10539,18 @@ public class VLEGetXLS {
 	 * @return the new column index for the next empty cell
 	 */
 	private int setCellValue(Row row, Vector<String> rowVector, int columnCounter, Long value) {
-		if(value == null) {
-			if(rowVector != null) {
+		if (value == null) {
+			if (rowVector != null) {
 				//set an empty string into the vector
 				rowVector.add("");				
 			}
 		} else {
-			if(row != null) {
+			if (row != null) {
 				//set the value into the cell
 				row.createCell(columnCounter).setCellValue(value);
 			}
 			
-			if(rowVector != null) {
+			if (rowVector != null) {
 				rowVector.add(value + "");				
 			}
 		}
@@ -10571,19 +10572,19 @@ public class VLEGetXLS {
 	 * @return the new column index for the next empty cell
 	 */
 	private int setCellValue(Row row, Vector<String> rowVector, int columnCounter, Long value, String comment) {
-		if(value == null) {
-			if(rowVector != null) {
+		if (value == null) {
+			if (rowVector != null) {
 				//set an empty string into the vector
 				rowVector.add("");				
 			}
 		} else {
-			if(row != null) {
+			if (row != null) {
 				//set the value into the cell
 				row.createCell(columnCounter).setCellValue(value);
 			}
 			
-			if(rowVector != null) {
-				if(comment == null) {
+			if (rowVector != null) {
+				if (comment == null) {
 					rowVector.add(value + "");
 				} else {
 					rowVector.add("[" + comment + "]=" + value);					
@@ -10608,18 +10609,18 @@ public class VLEGetXLS {
 	 * @return the new column index for the next empty cell
 	 */
 	private int setCellValue(Row row, Vector<String> rowVector, int columnCounter, Double value) {
-		if(value == null) {
-			if(rowVector != null) {
+		if (value == null) {
+			if (rowVector != null) {
 				//set an empty string into the vector
 				rowVector.add("");				
 			}
 		} else {
-			if(row != null) {
+			if (row != null) {
 				//set the value into the cell
 				row.createCell(columnCounter).setCellValue(value);
 			}
 			
-			if(rowVector != null) {
+			if (rowVector != null) {
 				rowVector.add(value + "");				
 			}
 		}
@@ -10641,19 +10642,19 @@ public class VLEGetXLS {
 	 * @return the new column index for the next empty cell
 	 */
 	private int setCellValue(Row row, Vector<String> rowVector, int columnCounter, Double value, String comment) {
-		if(value == null) {
-			if(rowVector != null) {
+		if (value == null) {
+			if (rowVector != null) {
 				//set an empty string into the vector
 				rowVector.add("");				
 			}
 		} else {
-			if(row != null) {
+			if (row != null) {
 				//set the value into the cell
 				row.createCell(columnCounter).setCellValue(value);
 			}
 			
-			if(rowVector != null) {
-				if(comment == null) {
+			if (rowVector != null) {
+				if (comment == null) {
 					rowVector.add(value + "");					
 				} else {
 					rowVector.add("[" + comment + "]=" + value);
@@ -10678,18 +10679,18 @@ public class VLEGetXLS {
 	 * @return the new column index for the next empty cell
 	 */
 	private int setCellValue(Row row, Vector<String> rowVector, int columnCounter, Float value) {
-		if(value == null) {
-			if(rowVector != null) {
+		if (value == null) {
+			if (rowVector != null) {
 				//set an empty string into the vector
 				rowVector.add("");				
 			}
 		} else {
-			if(row != null) {
+			if (row != null) {
 				//set the value into the cell
 				row.createCell(columnCounter).setCellValue(value);
 			}
 			
-			if(rowVector != null) {
+			if (rowVector != null) {
 				rowVector.add(value + "");				
 			}
 		}
@@ -10711,19 +10712,19 @@ public class VLEGetXLS {
 	 * @return the new column index for the next empty cell
 	 */
 	private int setCellValue(Row row, Vector<String> rowVector, int columnCounter, Float value, String comment) {
-		if(value == null) {
-			if(rowVector != null) {
+		if (value == null) {
+			if (rowVector != null) {
 				//set an empty string into the vector
 				rowVector.add("");				
 			}
 		} else {
-			if(row != null) {
+			if (row != null) {
 				//set the value into the cell
 				row.createCell(columnCounter).setCellValue(value);
 			}
 			
-			if(rowVector != null) {
-				if(comment == null) {
+			if (rowVector != null) {
+				if (comment == null) {
 					rowVector.add(value + "");
 				} else {
 					rowVector.add("[" + comment + "]=" + value);					
@@ -10749,28 +10750,28 @@ public class VLEGetXLS {
 	 * @return the next empty column
 	 */
 	private int setCellValueConvertStringToLong(Row row, Vector<String> rowVector, int columnCounter, String value) {
-		if(value == null) {
+		if (value == null) {
 			value = "";
 		}
 		
 		try {
-			if(rowVector != null) {
+			if (rowVector != null) {
 				rowVector.add(value);
 			}
 			
-			if(row != null) {
+			if (row != null) {
 				//try to convert the value to a number and then set the value into the cell
 				row.createCell(columnCounter).setCellValue(Long.parseLong(value));				
 			}
 		} catch(NumberFormatException e) {
 			//e.printStackTrace();
 			
-			if(rowVector != null) {
+			if (rowVector != null) {
 				rowVector.add(value);				
 			}
 			
 			//check if the value has more characters than the max allowable for an excel cell
-			if(value.length() > 32767) {
+			if (value.length() > 32767) {
 				//response has more characters than the max allowable so we will truncate it
 				value = value.substring(0, 32767);
 				
@@ -10778,7 +10779,7 @@ public class VLEGetXLS {
 				oversizedResponses++;
 			}
 			
-			if(row != null) {
+			if (row != null) {
 				//set the string value into the cell
 				row.createCell(columnCounter).setCellValue(value);				
 			}
@@ -10800,17 +10801,17 @@ public class VLEGetXLS {
 	 * @return the next empty column
 	 */
 	private int setCellValue(Row row, Vector<String> rowVector, int columnCounter, String value) {
-		if(value == null) {
+		if (value == null) {
 			//value is null so we will just use empty string
 			value = "";
 		}
 		
-		if(rowVector != null) {
+		if (rowVector != null) {
 			rowVector.add(value);			
 		}
 		
 		//check if the value has more characters than the max allowable for an excel cell
-		if(value.length() > 32767) {
+		if (value.length() > 32767) {
 			//response has more characters than the max allowable so we will truncate it
 			value = value.substring(0, 32767);
 			
@@ -10818,7 +10819,7 @@ public class VLEGetXLS {
 			oversizedResponses++;
 		}
 		
-		if(row != null) {
+		if (row != null) {
 			//set the value into the cell
 			row.createCell(columnCounter).setCellValue(value);
 		}
@@ -10839,13 +10840,13 @@ public class VLEGetXLS {
 	 * @return the next empty column
 	 */
 	private int setCellValue(Row row, Vector<String> rowVector, int columnCounter, String value, String comment) {
-		if(value == null) {
+		if (value == null) {
 			//value is null so we will just use empty string
 			value = "";
 		}
 		
-		if(rowVector != null) {
-			if(comment == null) {
+		if (rowVector != null) {
+			if (comment == null) {
 				rowVector.add(value);				
 			} else {
 				rowVector.add("[" + comment + "]=" + value);
@@ -10853,7 +10854,7 @@ public class VLEGetXLS {
 		}
 		
 		//check if the value has more characters than the max allowable for an excel cell
-		if(value.length() > 32767) {
+		if (value.length() > 32767) {
 			//response has more characters than the max allowable so we will truncate it
 			value = value.substring(0, 32767);
 			
@@ -10861,7 +10862,7 @@ public class VLEGetXLS {
 			oversizedResponses++;
 		}
 		
-		if(row != null) {
+		if (row != null) {
 			//set the value into the cell
 			row.createCell(columnCounter).setCellValue(value);
 		}
@@ -10884,7 +10885,7 @@ public class VLEGetXLS {
 	private String timestampToFormattedString(Timestamp timestamp) {
 		String timestampString = "";
 		
-		if(timestamp != null) {
+		if (timestamp != null) {
 			//get the object to format timestamps
 			DateFormat dateTimeInstance = DateFormat.getDateTimeInstance();
 			
@@ -10904,7 +10905,7 @@ public class VLEGetXLS {
 	 */
 	private void parseStudentAttendance(JSONArray studentAttendanceArray) {
 		//loop through all the stuent attendance rows
-		for(int x=0; x<studentAttendanceArray.length(); x++) {
+		for (int x=0; x<studentAttendanceArray.length(); x++) {
 			try {
 				//get a student attendence row
 				JSONObject studentAttendanceEntry = studentAttendanceArray.getJSONObject(x);
@@ -10915,7 +10916,7 @@ public class VLEGetXLS {
 				//get the JSONArray that holds all the student attendence entries for this workgroup id
 				JSONArray workgroupIdStudentAttendance = workgroupIdToStudentAttendance.get(workgroupId);
 				
-				if(workgroupIdStudentAttendance == null) {
+				if (workgroupIdStudentAttendance == null) {
 					//the JSONArray does not exist so we will create it
 					workgroupIdStudentAttendance = new JSONArray();
 					workgroupIdToStudentAttendance.put(workgroupId, workgroupIdStudentAttendance);
@@ -10944,7 +10945,7 @@ public class VLEGetXLS {
 		//get the JSONArray that stores all the student attendence objects for this workgroup id
 		JSONArray workgroupIdStudentAttendance = workgroupIdToStudentAttendance.get(workgroupId);
 		
-		if(workgroupIdStudentAttendance != null) {
+		if (workgroupIdStudentAttendance != null) {
 			
 			/*
 			 * loop through all the student attendance objects in the array.
@@ -10953,16 +10954,16 @@ public class VLEGetXLS {
 			 * the function argument timestamp is the student attendance
 			 * object we want.
 			 */
-			for(int x=0; x<workgroupIdStudentAttendance.length(); x++) {
+			for (int x=0; x<workgroupIdStudentAttendance.length(); x++) {
 				try {
 					//get a student attendance object
 					JSONObject tempStudentAttendanceEntry = workgroupIdStudentAttendance.getJSONObject(x);
 					
-					if(tempStudentAttendanceEntry != null) {
+					if (tempStudentAttendanceEntry != null) {
 						//get the login timestamp
 						long loginTimestamp = tempStudentAttendanceEntry.getLong("loginTimestamp");
 						
-						if(loginTimestamp < timestamp) {
+						if (loginTimestamp < timestamp) {
 							/*
 							 * the login timestamp is before the timestamp we are looking for
 							 * so we have found the student attendance object we want
@@ -10992,12 +10993,12 @@ public class VLEGetXLS {
 		ArrayList<Long> userIdsList = new ArrayList<Long>();
 		
 		//loop through all the student user ids
-		for(int x=0; x<userIdsArray.length; x++) {
+		for (int x=0; x<userIdsArray.length; x++) {
 			//get a student user id
 			String userId = userIdsArray[x];
 			
 			try {
-				if(userId != null && !userId.equals("")) {
+				if (userId != null && !userId.equals("")) {
 					//add the long to the list
 					userIdsList.add(Long.parseLong(userId));					
 				}
@@ -11026,7 +11027,7 @@ public class VLEGetXLS {
 		System.setProperty("java.awt.headless", "true");
 		
 		//loop through the specified number of columns
-		for(int x=0; x<numColumns; x++) {
+		for (int x=0; x<numColumns; x++) {
 			//auto size the column
 			sheet.autoSizeColumn(x);
 		}
@@ -11048,7 +11049,7 @@ public class VLEGetXLS {
 		long score = -1;
 		long nodeStateId = -1;
 		
-		if(nodeState != null) {
+		if (nodeState != null) {
 			try {
 				//get the node state id aka timestamp
 				nodeStateId = nodeState.getLong("timestamp");
@@ -11063,13 +11064,13 @@ public class VLEGetXLS {
 		//get the CRater score for the step work id
 		Annotation cRaterAnnotationByStepWork = vleService.getCRaterAnnotationByStepWork(stepWork);
 		
-		if(cRaterAnnotationByStepWork != null) {
+		if (cRaterAnnotationByStepWork != null) {
 			//CRater score exists
 			
 			//get the annotation data
 			String data = cRaterAnnotationByStepWork.getData();
 			
-			if(data != null) {
+			if (data != null) {
 				try {
 					/*
 					 * get the data as a JSONObject
@@ -11104,24 +11105,24 @@ public class VLEGetXLS {
 					 */
 					JSONObject dataJSONObject = new JSONObject(data);
 					
-					if(dataJSONObject.has("value")) {
+					if (dataJSONObject.has("value")) {
 						//get the value
 						JSONArray value = dataJSONObject.getJSONArray("value");
 						
 						//loop through all the objects in the value
-						for(int x=0; x<value.length(); x++) {
+						for (int x=0; x<value.length(); x++) {
 							//get one of the objects in the value array
 							JSONObject nodeStateAnnotation = value.getJSONObject(x);
 							
-							if(nodeStateAnnotation != null) {
-								if(nodeStateAnnotation.has("nodeStateId")) {
+							if (nodeStateAnnotation != null) {
+								if (nodeStateAnnotation.has("nodeStateId")) {
 									//get the node state id aka timestamp
 									long tempNodeStateId = nodeStateAnnotation.getLong("nodeStateId");
 									
-									if(tempNodeStateId == nodeStateId) {
+									if (tempNodeStateId == nodeStateId) {
 										//the ids match so we have found the annotation we want
 										
-										if(nodeStateAnnotation.has("score")) {
+										if (nodeStateAnnotation.has("score")) {
 											//get the score
 											score = nodeStateAnnotation.getLong("score");
 										}
@@ -11149,14 +11150,14 @@ public class VLEGetXLS {
 	 * @param vectorRow the csv row to write
 	 */
 	private void writeCSV(Vector<String> vectorRow) {
-		if(vectorRow != null) {
+		if (vectorRow != null) {
 			//create a String array
 			String[] stringArrayRow = new String[vectorRow.size()];
 			
 			//insert the elements in the vector into the String array
 		    vectorRow.toArray(stringArrayRow);
 		    
-		    if(csvWriter != null) {
+		    if (csvWriter != null) {
 		    	//write the String array to the csvWriter
 		    	csvWriter.writeNext(stringArrayRow);
 		    }
@@ -11170,8 +11171,8 @@ public class VLEGetXLS {
 	 * @param count the number of empty cells to add
 	 */
 	private void addEmptyElementsToVector(Vector<String> vector, int count) {
-		if(vector != null) {
-			for(int x=0; x<count; x++) {
+		if (vector != null) {
+			for (int x=0; x<count; x++) {
 				vector.add("");
 			}			
 		}
@@ -11188,7 +11189,7 @@ public class VLEGetXLS {
 	private Row createRow(XSSFSheet sheet, int rowCounter) {
 		Row newRow = null;
 		
-		if(sheet != null) {
+		if (sheet != null) {
 			newRow = sheet.createRow(rowCounter);
 		}
 		
@@ -11204,7 +11205,7 @@ public class VLEGetXLS {
 	private Vector<String> createRowVector() {
 		Vector<String> rowVector = null;
 		
-		if(isFileTypeCSV(fileType)) {
+		if (isFileTypeCSV(fileType)) {
 			rowVector = new Vector<String>();
 		}
 		
@@ -11221,7 +11222,7 @@ public class VLEGetXLS {
 	private boolean isFileTypeXLS(String fileType) {
 		boolean result = false;
 		
-		if(fileType != null && fileType.equals("xls")) {
+		if (fileType != null && fileType.equals("xls")) {
 			result = true;
 		}
 		
@@ -11238,7 +11239,7 @@ public class VLEGetXLS {
 	private boolean isFileTypeCSV(String fileType) {
 		boolean result = false;
 		
-		if(fileType != null && fileType.equals("csv")) {
+		if (fileType != null && fileType.equals("csv")) {
 			result = true;
 		}
 		
@@ -11253,26 +11254,26 @@ public class VLEGetXLS {
 	private Long getMaxScoreByNodeId(String nodeId) {
 		Long maxScore = null;
 		
-		if(nodeId != null) {
-			if(projectMetaData != null) {
+		if (nodeId != null) {
+			if (projectMetaData != null) {
 				//get the maxScores field from the project meta data
 				String maxScoresStr = projectMetaData.optString("maxScores");
 				
-				if(maxScoresStr != null) {
+				if (maxScoresStr != null) {
 					try {
 						JSONArray maxScoresJSON = new JSONArray(maxScoresStr);
 						
 						//loop through all the max score objects
-						for(int x=0; x<maxScoresJSON.length(); x++) {
+						for (int x=0; x<maxScoresJSON.length(); x++) {
 							JSONObject tempMaxScoreObj = maxScoresJSON.optJSONObject(x);
 							
-							if(tempMaxScoreObj != null) {
+							if (tempMaxScoreObj != null) {
 								//get the node id for the max score object
 								String tempNodeId = tempMaxScoreObj.optString("nodeId");
 								
-								if(tempNodeId != null) {
+								if (tempNodeId != null) {
 									//check if the node id matches the one we are searching for
-									if(nodeId.equals(tempNodeId)) {
+									if (nodeId.equals(tempNodeId)) {
 										//get the max score value for the step
 										maxScore = tempMaxScoreObj.optLong("maxScoreValue");
 										break;
@@ -11298,14 +11299,14 @@ public class VLEGetXLS {
 	private Long getCRaterMaxScore(JSONObject nodeContent) {
 		Long cRaterMaxScore = null;
 		
-		if(nodeContent != null) {
+		if (nodeContent != null) {
 			//get the CRater object from the step content if it exists
 			JSONObject cRaterObj = nodeContent.optJSONObject("cRater");
 			
-			if(cRaterObj != null) {
+			if (cRaterObj != null) {
 				//the CRater object exists in the step content
 				try {
-					if(cRaterObj.has("cRaterMaxScore")) {
+					if (cRaterObj.has("cRaterMaxScore")) {
 						//get the CRater max score
 						cRaterMaxScore = cRaterObj.getLong("cRaterMaxScore");						
 					}

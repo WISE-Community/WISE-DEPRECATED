@@ -1,18 +1,13 @@
-
-
-/**
- * 
- */
 View.prototype.exportButtonClickedEventListener = function(exportType, fileType) {
 	this.setParamsForXLSExport();
 	$('#exportType').val(exportType);
 	$('#fileType').val(fileType);
 	
-	if(exportType == 'customLatestStudentWork') {
+	if (exportType == 'customLatestStudentWork') {
 		//get all the node ids that were chosen for the custom export
 		var customStepsArrayJSONString = this.getCustomStepsArrayJSONString();
 		$('#customStepsArray').val(customStepsArrayJSONString);
-	} else if(exportType == 'customAllStudentWork') {
+	} else if (exportType == 'customAllStudentWork') {
 		//get all the node ids that were chosen for the custom export
 		var customStepsArrayJSONString = this.getCustomStepsArrayJSONString();
 		$('#customStepsArray').val(customStepsArrayJSONString);
@@ -55,7 +50,7 @@ View.prototype.getCustomStepsArrayJSONString = function() {
 	var customStepsJSONString = "";
 	var customStepsArray = this.getCustomStepsArray();
 	
-	if(customStepsArray != null) {
+	if (customStepsArray != null) {
 		customStepsJSONString = JSON.stringify(customStepsArray);
 	}
 	
@@ -73,14 +68,14 @@ View.prototype.getCustomStepsArray = function() {
 	var customSteps = $("input:checkbox[name='customExportStepCheckbox']:checked");
 	
 	//loop through all the steps
-	for(var x=0; x<customSteps.length; x++) {
+	for (var x=0; x<customSteps.length; x++) {
 		var customStep = customSteps[x];
 		
-		if(customStep != null) {
+		if (customStep != null) {
 			//get the node id of the step
 			var nodeId = customStep.value;
 			
-			if(nodeId != null) {
+			if (nodeId != null) {
 				//add the node id to our array
 				customStepsArray.push(nodeId);			
 			}			
@@ -100,7 +95,7 @@ View.prototype.getCustomStepsArray = function() {
 View.prototype.getNodeIdToNodeTitlesMap = function(node) {
 	var displayGradeByStepSelectPageHtml = "";
 	
-	if(node.isLeafNode()) {
+	if (node.isLeafNode()) {
 		//this node is a leaf/step
 		
 		/*
@@ -122,7 +117,7 @@ View.prototype.getNodeIdToNodeTitlesMap = function(node) {
 		this.nodeIdToNodeTitleArray.push(nodeIdToNodeTitle.replace(/,/g, "###44;"));
 	} else {
 		//loop through all its children
-		for(var x=0; x<node.children.length; x++) {
+		for (var x=0; x<node.children.length; x++) {
 			//call this function with each child
 			this.getNodeIdToNodeTitlesMap(node.children[x]);
 		}
@@ -163,7 +158,7 @@ View.prototype.setParamsForXLSExport = function() {
 	/*
 	 * set the url for where to get the xls
 	 */
-	document.getElementById('getStudentXLSExport').action = this.getConfig().getConfigParam('getXLSexportURL');
+	document.getElementById('getStudentXLSExport').action = this.getConfig().getConfigParam('getXLSExportURL');
 };
 
 /**
@@ -687,7 +682,7 @@ View.prototype.getExplanationTRs = function(explanationArray) {
 	var explanationHtml = "";
 	
 	//loop through all the elements in the array
-	for(var x=0; x<explanationArray.length; x++) {
+	for (var x=0; x<explanationArray.length; x++) {
 		//retrieve an object
 		var explanationEntry = explanationArray[x];
 		
@@ -774,6 +769,6 @@ function displayExportData(exportType) {
 
 
 //used to notify scriptloader that this script has finished loading
-if(typeof eventManager != 'undefined'){
+if (typeof eventManager != 'undefined') {
 	eventManager.fire('scriptLoaded', 'vle/view/grading/gradingview_export.js');
 };

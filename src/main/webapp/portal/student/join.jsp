@@ -75,7 +75,7 @@ function findPeriods() {
 	var runcode = document.getElementById("runCode_part1").value;
 	if (runcode != null && runcode != "") {
 		$.ajax({
-			url:"${contextPath}/runinfo.html?runcode=" + runcode,
+			url:"${contextPath}/runInfo?runcode=" + runcode,
 			dataType:"text",		
 			success:successCallback,
 			error:failureCallback
