@@ -192,7 +192,7 @@ View.prototype.redrawFixedHeaders = function(noTimeout) {
     var view = this,
         timeout = noTimeout ? 0 : 500;
 
-    if(!noTimeout){ $('.fixedHeader table.dataTable').hide(); }
+    $('.fixedHeader table.dataTable').hide();
 
     setTimeout( function(){
         for (var i = 0; i < view.fixedHeaders.length; i++) {
@@ -208,7 +208,6 @@ View.prototype.redrawFixedHeaders = function(noTimeout) {
             });
         }
 
-        if(!noTimeout){ $('.fixedHeader table.dataTable').show(); }
     }, timeout);
 };
 
@@ -299,6 +298,9 @@ View.prototype.hideAllDisplays = function() {
      $('#exportStudentWorkDisplay').hide();
      $('#ideaBasketDisplay').hide();
      $('#premadeCommentsDiv').hide();*/
+
+    // hide fixedheaders
+    $('.fixedHeader table.dataTable').hide();
 
     // hide all sections
     $('#pageContent > section').hide();
