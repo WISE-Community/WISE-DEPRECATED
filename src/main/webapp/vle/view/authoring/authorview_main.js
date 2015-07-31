@@ -2491,6 +2491,20 @@ View.prototype.analyzeProjectSuccess = function(text, xml, obj) {
 	
 	//display the dialog
 	$('#analyzeProjectDialog').dialog('open');
+
+	// temporary work-around for translations of certain words in AnalyzeProject result dialog.
+	// Remove the comment block and replace japanese text with your language
+    /*
+	$("#analyzeProjectDialog").html(
+		function(index, html) {
+			return html
+				.replace(/Project Name/g, "プロジェクト名")
+				.replace(/Project Id/g, "プロジェクトID")
+				.replace(/Not Used/g, "使われていないアセット")
+				.replace(/Inactive Step/g, "使われていないステップ")
+				.replace(/All assets used/g, "全てのアセットが使われています");
+	});
+	*/
 };
 
 /**
