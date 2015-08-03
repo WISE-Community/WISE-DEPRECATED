@@ -616,7 +616,7 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
 	/**
 	 * Get the long value of a key from the URI for
 	 * @param uri the uri path
-	 * e.g. /wise/websocket.html?runId=1&periodId=1&workgroupId=2
+	 * e.g. /wise/websocket?runId=1&periodId=1&workgroupId=2
 	 * @param key the key
 	 * e.g. runId
 	 * @return the value associated with the key

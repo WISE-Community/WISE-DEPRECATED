@@ -78,7 +78,7 @@ import org.wise.portal.service.workgroup.WorkgroupService;
  * @author Hiroki Terashima
  */
 @Controller
-@RequestMapping("/assetManager.html")
+@RequestMapping("/assetManager")
 public class AssetManager {
 	
 	private static Properties wiseProperties;
@@ -94,7 +94,7 @@ public class AssetManager {
 	private final static String FAILED = "failed";
 
 	@Autowired
-	public void setWiseProperties(Properties wiseProperties){
+	public void setWiseProperties(Properties wiseProperties) {
 		AssetManager.wiseProperties = wiseProperties;
 	}
 
@@ -447,7 +447,7 @@ public class AssetManager {
 										entryDestination.mkdirs();
 									} else {
 										File parent = entryDestination.getParentFile();										
-										if(!parent.exists() && !parent.mkdirs()){
+										if (!parent.exists() && !parent.mkdirs()) {
 										    throw new IllegalStateException("Couldn't create dir: " + parent);
 										}
 										InputStream in = zipFile.getInputStream(entry);

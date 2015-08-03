@@ -36,6 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
@@ -43,7 +44,7 @@ import org.wise.portal.service.vle.VLEService;
 import org.wise.vle.domain.status.RunStatus;
 
 @Controller
-@RequestMapping("/runStatus.html")
+@RequestMapping("/runStatus")
 public class RunStatusController {
 	
 	@Autowired
@@ -51,16 +52,14 @@ public class RunStatusController {
 	
 	/**
 	 * Handle the GET requests
-	 * @param request
 	 * @param response
 	 */
-	@RequestMapping(method=RequestMethod.GET)
-	public ModelAndView doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	@RequestMapping(method = RequestMethod.GET)
+	public ModelAndView doGet(
+            @RequestParam(value = "runId") String runIdString,
+			HttpServletResponse response) throws IOException {
 		//get the signed in user
 		User signedInUser = ControllerUtil.getSignedInUser();
-		
-		//get the run id
-		String runIdString = request.getParameter("runId");
 		
 		Long runId = null;
 		String statusString = null;
@@ -72,10 +71,10 @@ public class RunStatusController {
 			e.printStackTrace();
 		}
 		
-		if(runId == null) {
+		if (runId == null) {
 			/*
 			 * this request was most likely caused by a session timeout and the user logging
-			 * back in which makes a request to runStatus.html without any parameters.
+			 * back in which makes a request to /runStatus without any parameters.
 			 * in this case we will just redirect the user back to the WISE home page.
 			 */
 			return new ModelAndView("redirect:/");
@@ -87,18 +86,18 @@ public class RunStatusController {
 		 * teachers that are owners of the run can make a request
 		 * students that are in the run can make a request
 		 */
-		if(SecurityUtils.isAdmin(signedInUser)) {
+		if (SecurityUtils.isAdmin(signedInUser)) {
 			//the user is an admin so we will allow this request
 			allowedAccess = true;
-		} else if(SecurityUtils.isTeacher(signedInUser) && SecurityUtils.isUserOwnerOfRun(signedInUser, runId)) {
+		} else if (SecurityUtils.isTeacher(signedInUser) && SecurityUtils.isUserOwnerOfRun(signedInUser, runId)) {
 			//the user is a teacher that is an owner or shared owner of the run so we will allow this request
 			allowedAccess = true;
-		} else if(SecurityUtils.isStudent(signedInUser) && SecurityUtils.isUserInRun(signedInUser, runId)) {
+		} else if (SecurityUtils.isStudent(signedInUser) && SecurityUtils.isUserInRun(signedInUser, runId)) {
 			//the student is in the run so we will allow this request
 			allowedAccess = true;
 		}
 		
-		if(!allowedAccess) {
+		if (!allowedAccess) {
 			//user is not allowed to make this request
 			response.sendError(HttpServletResponse.SC_FORBIDDEN);
 			return null;
@@ -107,7 +106,7 @@ public class RunStatusController {
 		//try to retrieve the run status for the run id
 		RunStatus runStatus = vleService.getRunStatusByRunId(runId);
 		
-		if(runStatus == null) {
+		if (runStatus == null) {
 			//the run status for the run id has not been created yet so we will create it
 			try {
 				//create a JSONObject for the status
@@ -141,20 +140,16 @@ public class RunStatusController {
 	
 	/**
 	 * Handle the POST requests
-	 * @param request
 	 * @param response
 	 */
-	@RequestMapping(method=RequestMethod.POST)
-	public ModelAndView doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	@RequestMapping(method = RequestMethod.POST)
+	public ModelAndView doPost(
+            @RequestParam(value = "runId") String runIdString,
+            @RequestParam(value = "status") String status,
+            HttpServletResponse response) throws IOException {
 		//get the signed in user
 		User signedInUser = ControllerUtil.getSignedInUser();
 
-		//get the run id
-		String runIdString = request.getParameter("runId");
-		
-		//get the status
-		String status = request.getParameter("status");
-		
 		Long runId = null;
 		
 		try {
@@ -170,22 +165,22 @@ public class RunStatusController {
 		 * teachers that are owners of the run can make a request
 		 * students can not make a request
 		 */
-		if(SecurityUtils.isTeacher(signedInUser) && SecurityUtils.isUserOwnerOfRun(signedInUser, runId)) {
+		if (SecurityUtils.isTeacher(signedInUser) && SecurityUtils.isUserOwnerOfRun(signedInUser, runId)) {
 			//the user is a teacher that is an owner or shared owner of the run
 			allowedAccess = true;
 		}
 		
-		if(!allowedAccess) {
+		if (!allowedAccess) {
 			//user is not allowed to make this request
 			response.sendError(HttpServletResponse.SC_FORBIDDEN);
 			return null;
 		}
 		
-		if(runId != null && status != null) {
+		if (runId != null && status != null) {
 			//try to get the run status for the run id
 			RunStatus runStatus = vleService.getRunStatusByRunId(runId);
 			
-			if(runStatus == null) {
+			if (runStatus == null) {
 				//the run status does not exist for the run id so we will create it
 				runStatus = new RunStatus(runId, status);
 			} else {

@@ -52,8 +52,9 @@ public class HibernateComponentStateDao extends AbstractHibernateDao<ComponentSt
     }
 
     @Override
-    public List<ComponentState> getComponentStatesByParams(Integer id, Run run, Group period, WISEWorkgroup workgroup,
-                                                           String nodeId, String componentId, String componentType) {
+    public List<ComponentState> getComponentStatesByParams(
+            Integer id, Run run, Group period, WISEWorkgroup workgroup,
+            Boolean isAutoSave, String nodeId, String componentId, String componentType) {
 
         Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
         Criteria sessionCriteria = session.createCriteria(ComponentState.class);
@@ -70,6 +71,9 @@ public class HibernateComponentStateDao extends AbstractHibernateDao<ComponentSt
         if (workgroup != null) {
             sessionCriteria.add(Restrictions.eq("workgroup", workgroup));
         }
+        if (isAutoSave != null) {
+            sessionCriteria.add(Restrictions.eq("isAutoSave", isAutoSave));
+        }
         if (nodeId != null) {
             sessionCriteria.add(Restrictions.eq("nodeId", nodeId));
         }
@@ -79,6 +83,7 @@ public class HibernateComponentStateDao extends AbstractHibernateDao<ComponentSt
         if (componentType != null) {
             sessionCriteria.add(Restrictions.eq("componentType", componentType));
         }
+
 
         return sessionCriteria.list();
     }

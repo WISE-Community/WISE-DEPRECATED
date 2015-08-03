@@ -51,7 +51,7 @@ public class CRaterController {
 	 * @param response
 	 * @throws IOException 
 	 */
-	@RequestMapping("/cRater.html")
+	@RequestMapping("/cRater")
 	protected ModelAndView handleRequestInternal(
 			HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
@@ -166,7 +166,7 @@ public class CRaterController {
 	/**
 	 * Handle the scoring request to the CRater server
 	 * e.g.
-	 * http://localhost:8080/wise/cRater.html?type=cRater&cRaterRequestType=scoring&itemId=Photo_Sun&responseId=1&studentData=hello
+	 * http://localhost:8080/wise/cRater?type=cRater&cRaterRequestType=scoring&itemId=Photo_Sun&responseId=1&studentData=hello
 	 * 
 	 * @param cRaterUrl the CRater server url for scoring
 	 * @param cRaterClientId the client id e.g. "WISETEST"
@@ -184,7 +184,7 @@ public class CRaterController {
 	/**
 	 * Handle the verify request to the CRater server
 	 * e.g.
-	 * http://localhost:8080/wise/cRater.html?type=cRater&cRaterRequestType=verify&itemId=Photo_Sun
+	 * http://localhost:8080/wise/cRater?type=cRater&cRaterRequestType=verify&itemId=Photo_Sun
 	 * 
 	 * @param cRaterUrl the CRater server url for verifying
 	 * @param cRaterClientId the client id e.g. "WISETEST"

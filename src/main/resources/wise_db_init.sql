@@ -66,6 +66,7 @@
         clientSaveTime datetime not null,
         componentId varchar(30) not null,
         componentType varchar(30) not null,
+        isAutoSave bit not null,
         nodeId varchar(30) not null,
         serverSaveTime datetime not null,
         studentData mediumtext not null,

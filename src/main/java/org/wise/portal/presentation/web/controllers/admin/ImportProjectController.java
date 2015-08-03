@@ -41,7 +41,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.FileCopyUtils;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -67,7 +66,7 @@ import org.wise.portal.service.project.ProjectService;
  * @author Hiroki Terashima
  */
 @Controller
-@RequestMapping("/admin/project/importproject.html")
+@RequestMapping("/admin/project/import")
 public class ImportProjectController {
 
 	@Autowired
@@ -79,9 +78,11 @@ public class ImportProjectController {
 	@Autowired
 	private Properties wiseProperties;
 
-	@RequestMapping(method=RequestMethod.POST)
-	protected ModelAndView onSubmit(@ModelAttribute("projectZipFile")ProjectUpload projectUpload, 
-			BindingResult result) throws Exception {
+	@RequestMapping(method = RequestMethod.POST)
+	protected String onSubmit(
+            @ModelAttribute("projectZipFile") ProjectUpload projectUpload,
+            ModelMap modelMap
+		) throws Exception {
 		// probably should do some kind of virus check. but for now, it's only
 		// accessible to admin.
 
@@ -117,29 +118,28 @@ public class ImportProjectController {
 		String newFileFullDir = curriculumBaseDir + sep + newFilename;
 		File newFileFullDirFile = new File(newFileFullDir);
 		newFileFullDirFile.mkdir();
-		
 
 		// unzip the zip file
 		try {
 			ZipFile zipFile = new ZipFile(newFileFullPath);
 			Enumeration entries = zipFile.entries();
 			
-			int i=0;  // index used later to check for first folder in the zip file
+			int i = 0;  // index used later to check for first folder in the zip file
 
-			while(entries.hasMoreElements()) {				
-				ZipEntry entry = (ZipEntry)entries.nextElement();
+			while (entries.hasMoreElements()) {
+				ZipEntry entry = (ZipEntry) entries.nextElement();
 				
-				if(entry.getName().startsWith("__MACOSX")) {
+				if (entry.getName().startsWith("__MACOSX")) {
 					// if this entry starts with __MACOSX, this zip file was created by a user using mac's "compress" feature.
 					// ignore it.
 					continue;
 				}
 
-				if(entry.isDirectory()) {
+				if (entry.isDirectory()) {
 					// first check to see if the user has changed the zip file name and therefore the zipfile name
 					// is no longer the same as the name of the first folder in the top-level of the zip file.
 					// if this is the case, import will fail, so throw an error.
-					if (i==0) {
+					if (i == 0) {
 						if (!entry.getName().startsWith(filename)) {
 						    throw new Exception("Zip file name \""+entry.getName()+"\" does not match folder name \""+filename+"\". Do not change zip filename");
 						}
@@ -183,8 +183,7 @@ public class ImportProjectController {
 			// there was an error getting project title.
 			name = "Undefined";
 		}
-		
-		
+
 		User signedInUser = ControllerUtil.getSignedInUser();
 
 		CreateUrlModuleParameters cParams = new CreateUrlModuleParameters();
@@ -223,19 +222,16 @@ public class ImportProjectController {
 
 		Project project = projectService.createProject(pParams);
 
-		ModelAndView modelAndView = new ModelAndView("admin/project/importproject");		
-		modelAndView.addObject("msg", "Upload project complete!");
-		modelAndView.addObject("newProject", project);
-		return modelAndView;
+		modelMap.put("msg", "Upload project complete!");
+		modelMap.put("newProject", project);
+		return "admin/project/import";
 	}
 	
 	
-    @RequestMapping(method=RequestMethod.GET) 
-    public ModelAndView initializeForm(ModelMap model) { 
-    	ModelAndView mav = new ModelAndView();
-    	mav.addObject("projectZipFile", new ProjectUpload());
-        return mav; 
-    } 
+    @RequestMapping(method = RequestMethod.GET)
+    public void initializeForm(ModelMap modelMap) {
+    	modelMap.put("projectZipFile", new ProjectUpload());
+    }
 
 	public static final void copyInputStream(InputStream in, OutputStream out)
 	throws IOException
@@ -243,7 +239,7 @@ public class ImportProjectController {
 		byte[] buffer = new byte[1024];
 		int len;
 
-		while((len = in.read(buffer)) >= 0)
+		while ((len = in.read(buffer)) >= 0)
 			out.write(buffer, 0, len);
 
 		in.close();

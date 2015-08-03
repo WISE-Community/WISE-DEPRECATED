@@ -38,5 +38,6 @@ import java.util.List;
 public interface ComponentStateDao<T extends ComponentState> extends SimpleDao<T> {
 
     List<ComponentState> getComponentStatesByParams(Integer id, Run run, Group period, WISEWorkgroup workgroup,
-                                                           String nodeId, String componentId, String componentType);
+                                                    Boolean isAutoSave, String nodeId,
+                                                    String componentId, String componentType);
 }

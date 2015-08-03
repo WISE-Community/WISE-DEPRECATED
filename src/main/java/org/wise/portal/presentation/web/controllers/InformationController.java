@@ -42,6 +42,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.authentication.impl.StudentUserDetails;
@@ -111,6 +112,35 @@ public class InformationController {
 	}
 
     /**
+     * Usable by anonymous and logged-in users for retrieving public run information,
+     * such as run periods given runcode
+     * @param runcode
+     * @param response
+     * @throws Exception
+     */
+	@RequestMapping("/runInfo")
+	protected void handleRequestInternal(
+			@RequestParam("runcode") String runcode,
+			HttpServletResponse response) throws Exception {
+
+		try {
+			Run run = runService.retrieveRunByRuncode(runcode);
+
+			Set<Group> periods = run.getPeriods();
+			StringBuffer periodsStr = new StringBuffer();
+			for (Group period : periods) {
+				periodsStr.append(period.getName());
+				periodsStr.append(",");
+			}
+			response.setContentType("text/plain");
+			response.getWriter().print(periodsStr.toString());
+		} catch (ObjectNotFoundException e) {
+			response.setContentType("text/plain");
+			response.getWriter().print("not found");
+		}
+	}
+
+	/**
      * @param request
      * @return UserInfo as JSON object
      * @throws ObjectNotFoundException
@@ -418,7 +448,7 @@ public class InformationController {
         String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
 		String studentUploadsBaseWWW = wiseProperties.getProperty("studentuploads_base_www");
 		String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
-    	String cRaterRequestURL = wiseBaseURL + "/cRater.html?type=cRater";  // the url to make CRater requests
+    	String cRaterRequestURL = wiseBaseURL + "/cRater?type=cRater";  // the url to make CRater requests
 
 		String rawProjectUrl = null;
 		JSONObject config = new JSONObject();
@@ -494,10 +524,10 @@ public class InformationController {
 			String peerReviewURL = wiseBaseURL + "/peerReview.html?type=peerreview";
 
 	    	//get the url to get/post idea basket data
-	    	String ideaBasketURL = wiseBaseURL + "/ideaBasket.html?runId=" + runId + "&projectId=" + run.getProject().getId().toString();
+	    	String ideaBasketURL = wiseBaseURL + "/ideaBasket?runId=" + runId + "&projectId=" + run.getProject().getId().toString();
 
             //get the url to get/post portfolio data
-            String portfolioURL = wiseBaseURL + "/portfolio.html?runId=" + runId;
+            String portfolioURL = wiseBaseURL + "/portfolio?runId=" + runId;
 
             if (periodId != null) {
 	    		//add the period id if it is available
@@ -511,7 +541,7 @@ public class InformationController {
 	    	}
 
 	    	//get the url to get student assets
-	    	String studentAssetManagerURL = wiseBaseURL + "/assetManager.html?type=studentAssetManager&runId=" + runId;
+	    	String studentAssetManagerURL = wiseBaseURL + "/assetManager?type=studentAssetManager&runId=" + runId;
 
 			//get the websocket base url e.g. ws://wise4.berkeley.edu:8080
 			String webSocketBaseURL = wiseProperties.getProperty("webSocketBaseUrl");
@@ -527,13 +557,13 @@ public class InformationController {
 			}
 			
 			//get the url for websocket connections
-			String webSocketURL = webSocketBaseURL + "/websocket.html";
+			String webSocketURL = webSocketBaseURL + "/websocket";
 			
 			//get the url for sending and receiving student statuses
-			String studentStatusURL = wiseBaseURL + "/studentStatus.html";
+			String studentStatusURL = wiseBaseURL + "/studentStatus";
 			
 			//get the url for sending and receiving run statuses
-			String runStatusURL = wiseBaseURL + "/runStatus.html";
+			String runStatusURL = wiseBaseURL + "/runStatus";
 
             //get the url to get flags
             String flagsURL = wiseBaseURL + "/annotation?type=flag&runId=" + runId;
@@ -577,14 +607,14 @@ public class InformationController {
                     config.put("premadeCommentsURL", premadeCommentsURL);
 
                     // get the url for xls export
-                    String getXLSExportURL = wiseBaseURL + "/getExport.html?type=xlsexport&runId=" + runId;
+                    String getXLSExportURL = wiseBaseURL + "/export?type=xlsexport&runId=" + runId;
                     config.put("getXLSExportURL", getXLSExportURL);
 
                     //get the url for special export
-                    String getSpecialExportURL = wiseBaseURL + "/getSpecialExport.html?type=specialExport&runId=" + runId;
+                    String getSpecialExportURL = wiseBaseURL + "/specialExport?type=specialExport&runId=" + runId;
                     config.put("getSpecialExportURL", getSpecialExportURL);
 
-                    String getStudentListURL = wiseBaseURL + "/teacher/management/studentlistexcel.html?runId=" + runId;
+                    String getStudentListURL = wiseBaseURL + "/teacher/management/studentListExport?runId=" + runId;
 					config.put("getStudentListURL", getStudentListURL);
 				}
 			} catch (JSONException e) {
