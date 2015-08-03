@@ -33,8 +33,8 @@ import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.module.ModuleDao;
 import org.wise.portal.domain.module.Curnit;
 import org.wise.portal.domain.module.Module;
-import org.wise.portal.domain.module.impl.CreateUrlModuleParameters;
 import org.wise.portal.domain.module.impl.CurnitParameters;
+import org.wise.portal.domain.module.impl.ModuleParameters;
 import org.wise.portal.domain.module.impl.UrlModuleImpl;
 import org.wise.portal.service.module.ModuleService;
 
@@ -52,17 +52,17 @@ public class ModuleServiceImpl extends CurnitServiceImpl implements
 	
 	/**
 	 * @throws Exception 
-	 * @see net.sf.sail.webapp.service.curnit.impl.CurnitServiceImpl#createCurnit(net.sf.sail.webapp.domain.impl.CurnitParameters)
+	 * @see org.wise.portal.service.module.impl.CurnitServiceImpl#createCurnit(org.wise.portal.domain.module.impl.CurnitParameters)
 	 */
 	 @Override
 	 @Transactional()	
 	 public Module createCurnit(CurnitParameters curnitParameters) {
 		Module module = null;
 		
-		if (curnitParameters instanceof CreateUrlModuleParameters) {
+		if (curnitParameters instanceof ModuleParameters) {
 			UrlModuleImpl urlModule = new UrlModuleImpl();
-			urlModule.setName(((CreateUrlModuleParameters) curnitParameters).getName());
-			urlModule.setModuleUrl(((CreateUrlModuleParameters) curnitParameters).getUrl());
+			urlModule.setName(curnitParameters.getName());
+			urlModule.setModuleUrl(curnitParameters.getUrl());
 			this.moduleDao.save(urlModule);
 			return urlModule;
 		} else {
@@ -72,7 +72,7 @@ public class ModuleServiceImpl extends CurnitServiceImpl implements
 	}
 
 	 /**
-	  * @see net.sf.sail.webapp.service.curnit.CurnitService#getCurnitList()
+	  * @see org.wise.portal.service.module.CurnitService#getCurnitList()
 	  */
 	 @Override	 
 	 @Transactional(readOnly = true)
@@ -86,7 +86,7 @@ public class ModuleServiceImpl extends CurnitServiceImpl implements
 	 
 	/**
 	 * @throws ObjectNotFoundException 
-	 * @see net.sf.sail.webapp.service.curnit.impl.CurnitServiceImpl#getById(java.lang.Long)
+	 * @see org.wise.portal.service.module.impl.CurnitServiceImpl#getById(java.lang.Long)
 	 */
 	@Override
 	public Module getById(Long moduleId) throws ObjectNotFoundException {
@@ -94,7 +94,7 @@ public class ModuleServiceImpl extends CurnitServiceImpl implements
 	}
 	
 	/**
-	 * @see net.sf.sail.webapp.service.curnit.CurnitService#updateCurnit(net.sf.sail.webapp.domain.Curnit)
+	 * @see org.wise.portal.service.module.CurnitService#updateCurnit(org.wise.portal.domain.module.Curnit)
 	 */
 	@Override
 	@Transactional()

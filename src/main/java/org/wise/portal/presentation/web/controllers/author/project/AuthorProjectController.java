@@ -56,8 +56,8 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.module.Curnit;
-import org.wise.portal.domain.module.impl.CreateUrlModuleParameters;
 import org.wise.portal.domain.module.impl.CurnitGetCurnitUrlVisitor;
+import org.wise.portal.domain.module.impl.ModuleParameters;
 import org.wise.portal.domain.project.FamilyTag;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.ProjectMetadata;
@@ -800,7 +800,7 @@ public class AuthorProjectController {
 	 * @return
 	 * @throws Exception
 	 */
-	private ModelAndView handleCreateProject(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	private ModelAndView handleCreateProject(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		User user = ControllerUtil.getSignedInUser();
 		if (this.hasAuthorPermissions(user)) {
 			/*
@@ -815,9 +815,9 @@ public class AuthorProjectController {
 
 			String parentProjectId = request.getParameter("parentProjectId");
 
-			CreateUrlModuleParameters cParams = new CreateUrlModuleParameters();
-			cParams.setUrl(path);
-			Curnit curnit = curnitService.createCurnit(cParams);
+			ModuleParameters mParams = new ModuleParameters();
+			mParams.setUrl(path);
+			Curnit curnit = curnitService.createCurnit(mParams);
 
 			ProjectParameters pParams = new ProjectParameters();
 
@@ -1024,13 +1024,13 @@ public class AuthorProjectController {
 			JSONArray libraryProjects = getLibraryProjects(request, response);
 
 			//add the authorable projects to the array
-			for(int x=0; x<authorableProjects.length(); x++) {
+			for (int x=0; x<authorableProjects.length(); x++) {
 				JSONObject authorableProject = authorableProjects.getJSONObject(x);
 				projects.put(authorableProject);
 			}
 
 			//add the library projects to the array
-			for(int y=0; y<libraryProjects.length(); y++) {
+			for (int y=0; y<libraryProjects.length(); y++) {
 				JSONObject libraryProject = libraryProjects.getJSONObject(y);
 				projects.put(libraryProject);
 			}
@@ -1064,7 +1064,7 @@ public class AuthorProjectController {
 		JSONArray projectArray = new JSONArray();
 
 		//loop through all the projects
-		for(Project project : allAuthorableProjects) {
+		for (Project project : allAuthorableProjects) {
 			if (project.getProjectType()==ProjectType.LD &&
 					projectService.canAuthorProject(project, signedInUser)) {
 				/*
@@ -1118,7 +1118,7 @@ public class AuthorProjectController {
 		//an array to hold the information for the projects
 		JSONArray libraryProjectArray = new JSONArray();
 
-		for(Project libraryProject : libraryProjects) {
+		for (Project libraryProject : libraryProjects) {
 			if (libraryProject.getProjectType()==ProjectType.LD) {
 				/*
 				 * get the relative project url

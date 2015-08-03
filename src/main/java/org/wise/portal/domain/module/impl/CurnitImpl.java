@@ -63,7 +63,7 @@ public class CurnitImpl implements Curnit {
 	private String name;
 
     /**
-     * @see net.sf.sail.webapp.domain.Curnit#getId()
+     * @see org.wise.portal.domain.module.Curnit#getId()
      */
     public Long getId() {
         return this.id;
@@ -93,7 +93,7 @@ public class CurnitImpl implements Curnit {
     }
 
     /**
-     * @see net.sf.sail.webapp.domain.Curnit#accept(net.sf.sail.webapp.domain.CurnitVisitor)
+     * @see org.wise.portal.domain.module.Curnit#accept(org.wise.portal.domain.module.CurnitVisitor)
      */
 	public Object accept(CurnitVisitor visitor) {
 		return visitor.visit(this);

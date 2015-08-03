@@ -33,9 +33,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Calendar;
 import java.util.Enumeration;
-import java.util.HashSet;
 import java.util.Properties;
-import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -44,7 +42,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.wise.portal.domain.module.Curnit;
-import org.wise.portal.domain.module.impl.CreateUrlModuleParameters;
+import org.wise.portal.domain.module.impl.ModuleParameters;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.ProjectMetadata;
 import org.wise.portal.domain.project.impl.ProjectMetadataImpl;
@@ -188,9 +186,9 @@ public class WiseUpServiceImpl implements WiseUpService {
 		String path = sep +  newFilename + sep + "wise4.project.json";
 		String name = "hiroki's project 4.zip";
 
-		CreateUrlModuleParameters cParams = new CreateUrlModuleParameters();
-		cParams.setUrl(path);
-		Curnit curnit = curnitService.createCurnit(cParams);
+		ModuleParameters mParams = new ModuleParameters();
+		mParams.setUrl(path);
+		Curnit curnit = curnitService.createCurnit(mParams);
 
 		ProjectParameters pParams = new ProjectParameters();
 		pParams.setCurnitId(curnit.getId());
