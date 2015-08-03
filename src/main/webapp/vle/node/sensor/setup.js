@@ -8,7 +8,8 @@ var studentVLEScripts = [
 	'vle/node/sensor/sensorstate.js',
 	'vle/lib/jquery/js/flot/excanvas.js',
 	'vle/lib/jquery/js/flot/jquery.js',
-	'vle/lib/jquery/js/flot/jquery.flot.js'
+    'vle/lib/jquery/js/flot/jquery.flot.js',
+    'vle/node/sensor/sensor-applet-interface.js',
 ];
 
 var authorScripts = [

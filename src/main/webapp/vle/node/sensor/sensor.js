@@ -580,17 +580,9 @@ SENSOR.prototype.startCollecting = function() {
 		this.disablePredictionButtons();
 		this.disablePredictionTextInputAndDeleteButton();
 	}
-	
-	/*
-	 * get the sensor applet from the html, you won't find it in the html
-	 * because we dynamically insert it into the sensorAppletDiv since it
-	 * requires dynamic params such as whether we are using a motion or
-	 * temperature sensor
-	 */
-	var sensorApplet = document.getElementById('sensorApplet');
-	
-	//tell the sensor applet to start collecting data
-	sensorApplet.startCollecting();
+
+    //tell the sensor applet to start collecting data
+    appletGlobal.start();
 };
 
 /**
@@ -606,8 +598,8 @@ SENSOR.prototype.stopCollecting = function() {
 	var sensorApplet = document.getElementById('sensorApplet');
 	
 	//tell the sensor applet to stop collecting data
-	sensorApplet.stopCollecting();
-	
+    appletGlobal.stop();
+
 	//get the current date
 	var currentDate = new Date();
 	
@@ -649,68 +641,66 @@ SENSOR.prototype.clearData = function() {
 
 /**
  * This is called when the sensor sends data to the applet
- * @param type the type of data (not used)
- * @param count some count value from the sensor (not used)
  * @param data the data from the sensor
  */
-SENSOR.prototype.dataReceived = function(type, count, data) {
-	//get the current date
-	var currentDate = new Date();
-	
-	//get the current time in milliseconds
-	var currentTime = currentDate.getTime();
-	
-	if(this.sensorState.sensorDataArray.length == 0) {
-		//this is the first data point so we will set the elapsedTime value to 0
-		this.elapsedTime = 0;
-	} else {
-		//update the amount of time that the sensor has been collecting data
-		this.elapsedTime += currentTime - this.timeCheck;		
-	}
+SENSOR.prototype.dataReceived = function(data) {
+    //get the current date
+    var currentDate = new Date();
 
-	if(this.elapsedTime > this.dataCollectionTimeLimit * 1000) {
-		//we have passed the data collection time limit so we will stop the collection
-		this.stopCollecting();
+    //get the current time in milliseconds
+    var currentTime = currentDate.getTime();
 
-		return;
-	}
-	
-	//update the time check
-	this.timeCheck = currentTime;
-	
-	if(data != null) {
-		if(data.constructor.toString().indexOf('Array') != -1) {
-			/*
-			 * data is an array so we just want the first element
-			 * of the array since there is usually only one element.
-			 * sometimes there are multiple elements but they are very
-			 * close together in value so we aren't really losing
-			 * much data. I'm not sure why data sometimes contains
-			 * more than one element.
-			 */
-			data = data[0];
-		} else {
-			//data is not an array
-		}
-	}
-	
-	/*
-	 * round the x vale to the nearest hundredth. elapsedTime is in milliseconds
-	 * so we need to divide by 1000 to get seconds
-	 */
-	var x = parseFloat((this.elapsedTime / 1000).toFixed(2));
-	
-	//round the y value to the nearest hundredth
-	var y = parseFloat(data.toFixed(2));
-	
-	//save the data point into the sensor state.
-	this.sensorState.dataReceived(x, y);
-	
-	//update the graph
-	this.plotData();
-	
-	//update the flag since the graph has changed
-	this.graphChanged = true;
+    if(this.sensorState.sensorDataArray.length == 0) {
+        //this is the first data point so we will set the elapsedTime value to 0
+        this.elapsedTime = 0;
+    } else {
+        //update the amount of time that the sensor has been collecting data
+        this.elapsedTime += currentTime - this.timeCheck;
+    }
+
+    if(this.elapsedTime > this.dataCollectionTimeLimit * 1000) {
+        //we have passed the data collection time limit so we will stop the collection
+        this.stopCollecting();
+
+        return;
+    }
+
+    //update the time check
+    this.timeCheck = currentTime;
+
+    if(data != null) {
+        if(data.constructor.toString().indexOf('Array') != -1) {
+            /*
+             * data is an array so we just want the first element
+             * of the array since there is usually only one element.
+             * sometimes there are multiple elements but they are very
+             * close together in value so we aren't really losing
+             * much data. I'm not sure why data sometimes contains
+             * more than one element.
+             */
+            data = data[0];
+        } else {
+            //data is not an array
+        }
+    }
+
+    /*
+     * round the x vale to the nearest hundredth. elapsedTime is in milliseconds
+     * so we need to divide by 1000 to get seconds
+     */
+    var x = parseFloat((this.elapsedTime / 1000).toFixed(2));
+
+    //round the y value to the nearest hundredth
+    var y = parseFloat(data.toFixed(2));
+
+    //save the data point into the sensor state.
+    this.sensorState.dataReceived(x, y);
+
+    //update the graph
+    this.plotData();
+
+    //update the flag since the graph has changed
+    this.graphChanged = true;
 };
 
 /**
@@ -2007,82 +1997,71 @@ SENSOR.prototype.insertApplet = function() {
 	
 	var host = "http://" + location.host;
 	
-	/*
-	var appletHtml = '<applet id="sensorApplet" codebase="' + codebase + 'vle/node/sensor" ' + 
-	'code="org.concord.sensor.applet.OTSensorApplet" ' + 
-	'width="1" height="1" ' + 
-	'archive="sensorJars/response-cache-0.1.0-SNAPSHOT.jar,' + 
-	'sensorJars/framework-0.1.0-SNAPSHOT.jar,' + 
-	'sensorJars/swing-0.1.0-SNAPSHOT.jar,' + 
-	'sensorJars/frameworkview-0.1.0-SNAPSHOT.jar,' +
-	'sensorJars/data-0.2.0-SNAPSHOT.jar,' +
-	'sensorJars/jug-1.1.2.jar,' +
-	'sensorJars/sensor-native-0.1.0-SNAPSHOT.jar,' +
-	'sensorJars/apple-support-0.1.0-SNAPSHOT.jar,' +
-	'sensorJars/sensor-0.2.0-SNAPSHOT.jar,' +
-	'sensorJars/jdom-1.0.jar,' +
-	'sensorJars/rxtx-comm-2.1.7-r2.jar,' +
-	'sensorJars/otrunk-0.2.0-SNAPSHOT.jar,' +
-	'sensorJars/sensor-applets-0.1.0-SNAPSHOT.jar ' +
-	'"MAYSCRIPT="true"> ' + 
-	'<param name="resource" value="' + otmlFileName + '"/> ' + 
-	'<param name="name" value="sensor"/> ' +
-	'<param name="listenerPath" value="jsListener"/> ' +
-	'<param name="MAYSCRIPT" value="true"/>Your browser is completely ignoring the applet tag!' +
-	'</applet>';
-	*/
-
-	/*
-	//var appletHtml = '<applet id="sensorApplet" codebase="' + codebase + 'vle/node/sensor" ' + 
-	var appletHtml = '<applet id="sensorApplet" codebase="http://localhost:8080/jnlp/jnlp" ' +
-	'code="org.concord.sensor.applet.OTSensorApplet" ' + 
-	'width="1" height="1" ' + 
-	'archive="org/concord/sensor-native/sensor-native__V0.1.0-20101013.205003-476,' + 
-	'org/concord/otrunk/otrunk__V0.2.0-20101008.002809-256,' + 
-	'org/concord/framework/framework__V0.1.0-20101008.002809-556,' + 
-	'org/concord/frameworkview/frameworkview__V0.1.0-20101008.002809-399,' +
-	'jug/jug/jug__V1.1.2,' +
-	'jdom/jdom/jdom__V1.0,' +
-	'org/concord/sensor/sensor__V0.2.0-20100907.180413-275,' +
-	'org/concord/data/data__V0.2.0-20101008.002809-280,' +
-	'org/concord/sensor/sensor-applets/sensor-applets__V0.1.0-20101018.134018-59.jar" ' +
-	'MAYSCRIPT="true"> ' + 
-	'<param name="resource" value="' + otmlFileName + '"/> ' + 
-	'<param name="name" value="sensor"/> ' +
-	'<param name="listenerPath" value="jsListener"/> ' +
-	'<param name="MAYSCRIPT" value="true"/>Your browser is completely ignoring the applet tag!' +
-	'</applet>';
-	*/
-	
 	//the message to display when applets are disabled
 	var error_applets_are_disabled = this.view.getI18NString('error_applets_are_disabled', 'SensorNode');
 	var here = this.view.getI18NString('here', 'SensorNode');
 	var to_enable_applets = this.view.getI18NString('to_enable_applets', 'SensorNode');
-	
-	//var appletHtml = '<applet id="sensorApplet" codebase="http://localhost:8080/jnlp" ' +
-	var appletHtml = '<applet id="sensorApplet" codebase="' + host + '/jnlp" ' +
-	'code="org.concord.sensor.applet.OTSensorApplet" ' + 
-	'width="1" height="1" ' + 
-	'archive="org/concord/sensor-native/sensor-native.jar,' + 
-	'org/concord/otrunk/otrunk.jar,' + 
-	'org/concord/framework/framework.jar,' + 
-	'org/concord/frameworkview/frameworkview.jar,' +
-	'jug/jug/jug.jar,' +
-	'jdom/jdom/jdom.jar,' +
-	'org/concord/sensor/sensor.jar,' +
-	'org/concord/data/data.jar,' +
-	'org/concord/sensor/sensor-applets/sensor-applets.jar" ' +
-	'MAYSCRIPT="true"> ' + 
-	'<param name="resource" value="' + otmlFileName + '"/> ' + 
-	'<param name="name" value="sensor"/> ' +
-	'<param name="listenerPath" value="jsListener"/> ' +
-	'<param name="permissions" value="all-permissions"/> ' +
-	'<param name="MAYSCRIPT" value="true"/><font color="red" style="font-family:arial">' + error_applets_are_disabled + ' <a href="http://java.com/en/download/help/enable_browser.xml" target="_blank">' + here + '</a> ' + to_enable_applets + '</font>' +
-	'</applet>';
-	
-	
-	//insert the applet into the sensor.html
-	document.getElementById('sensorAppletDiv').innerHTML = appletHtml;
+
+    var sensorType = null;
+
+    // get the sensor type
+    if(this.sensorType == "motion") {
+        sensorType = 'goMotion';
+    } else if(this.sensorType == "temperature") {
+        sensorType = 'goTemp';
+    }
+
+    // get the sensor manufacturer
+    var appletClass = sensorAppletInterface.GoIO;
+
+    // get the sensor definitions
+    var sensorDef = sensorAppletInterface.sensorDefinitions[sensorType];
+
+    // create the applet
+    appletGlobal = new appletClass({
+        sensorDefinitions: [sensorDef],
+        codebase: '/wise/vle/node/sensor/jars',
+        listenerPath: 'appletGlobal'
+    });
+
+    /*
+     * create a reference to this sensor object so we can access it
+     * in callback functions
+     */
+    var thisSensor = this;
+
+    // called when we receive data from the sensor
+    appletGlobal.on('data', function(data){
+        thisSensor.dataReceived(data);
+    });
+
+    // add the applet to the body
+    appletGlobal.append($('body'), function(error){
+        if(error){
+            var errorMessage = '';
+
+            if (error instanceof sensorAppletInterface.JavaLoadError) {
+                errorMessage = "It appears that Java applets cannot run in your browser. If you are able to fix this, reload the page to use the sensor";
+            } else if (error instanceof sensorAppletInterface.AppletInitializationError) {
+                errorMessage = "The sensor applet appears not to be loading. If you are able to fix this, reload the page to use the sensor";
+            } else if (error instanceof sensorAppletInterface.SensorConnectionError) {
+                errorMessage = "Either the device or the sensor is not connected";
+            } else {
+                errorMessage = "There was an unexpected error when connecting to the sensor";
+            }
+
+            if (errorMessage != '') {
+                // surround the message with parens
+                errorMessage = '(' + errorMessage + ')';
+            }
+
+            // notify the student that there was an error connecting to the sensor
+            thisSensor.showGraphMessage('Error<br>' + errorMessage + '', 'red');
+        } else {
+            // notify the student that the sensor successfully connected and is ready
+            thisSensor.sensorReady();
+        }
+    });
 };
 
 /**
