@@ -43,7 +43,7 @@ import org.wise.portal.service.newsitem.NewsItemService;
 import org.wise.portal.service.project.ProjectService;
 
 /**
- * Controller for index pages in TELS
+ * Controller for WISE's main index page
  *
  * @author Hiroki Terashima
  */
@@ -66,7 +66,7 @@ public class IndexController {
 	/** 
 	 * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
 	 */
-	@RequestMapping(method=RequestMethod.GET)
+	@RequestMapping(method = RequestMethod.GET)
 	protected String handleGET(ModelMap modelMap) throws Exception {
 		
 		List<NewsItem> newsItems = newsItemService.retrieveByType("public");
@@ -97,18 +97,18 @@ public class IndexController {
 		for (Project p: libraryProjectsList) {
 			String subject = p.getMetadata().getSubject();
 			if (subject != null) {
-			    if (subject.equals("Earth Science")){
-				esProjects.add(p);
-			    } else if (subject.equals("Life Science")){
-				lsProjects.add(p);
-			    } else if (subject.equals("Physical Science")){
-				psProjects.add(p);
-			    } else if (subject.equals("Biology")){
-				bioProjects.add(p);
-			    } else if (subject.equals("Chemistry")){
-				chemProjects.add(p);
-			    } else if (subject.equals("Physics")){
-				physProjects.add(p);
+			    if (subject.equals("Earth Science")) {
+					esProjects.add(p);
+			    } else if (subject.equals("Life Science")) {
+					lsProjects.add(p);
+			    } else if (subject.equals("Physical Science")) {
+					psProjects.add(p);
+			    } else if (subject.equals("Biology")) {
+					bioProjects.add(p);
+			    } else if (subject.equals("Chemistry")) {
+					chemProjects.add(p);
+			    } else if (subject.equals("Physics")) {
+					physProjects.add(p);
 			    }
 			}
 		}
@@ -120,19 +120,19 @@ public class IndexController {
 		
 		/*for (Project p: libraryProjectsList) {
 			String subject = p.getMetadata().getSubject();
-			if(!subjects.contains(subject)){
+			if(!subjects.contains(subject)) {
 				subjects.add(subject);
 			}
 		}
 		
-		for (int i = 0; i < subjects.size(); i++){
+		for (int i = 0; i < subjects.size(); i++) {
 			libProjects.add(new ArrayList<Project>());
 		}
 		
 		for (Project p: libraryProjectsList) {
 			String subject = p.getMetadata().getSubject();
-			for (String s: subjects){
-				if (subject.equals(s)){
+			for (String s: subjects) {
+				if (subject.equals(s)) {
 					int index = subjects.indexOf(s);
 					libProjects.get(index).add(p);
 				}
@@ -141,14 +141,14 @@ public class IndexController {
 		}*/
 		
 		String curriculumBaseWWW = this.wiseProperties.getProperty("curriculum_base_www");
-		for (Project p: libraryProjectsList) {
-			if (p.isCurrent()){
+		for (Project p : libraryProjectsList) {
+			if (p.isCurrent()) {
 				String url = (String) p.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
 
-				if(url != null && url != ""){
+				if (url != null && url != "") {
 					
 					int ndx = url.lastIndexOf("/");
-					if(ndx != -1){
+					if (ndx != -1) {
 						/*
 						 * add project thumb url to projectThumbMap. for now this is the same (/assets/project_thumb.png)
 						 * for all projects but this could be overwritten in the future

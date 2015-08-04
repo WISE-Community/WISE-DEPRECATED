@@ -45,9 +45,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
 import org.wise.portal.domain.module.Curnit;
-import org.wise.portal.domain.module.impl.CreateUrlModuleParameters;
+import org.wise.portal.domain.module.impl.ModuleParameters;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.ProjectMetadata;
 import org.wise.portal.domain.project.ProjectUpload;
@@ -186,9 +185,9 @@ public class ImportProjectController {
 
 		User signedInUser = ControllerUtil.getSignedInUser();
 
-		CreateUrlModuleParameters cParams = new CreateUrlModuleParameters();
-		cParams.setUrl(path);
-		Curnit curnit = curnitService.createCurnit(cParams);
+		ModuleParameters mParams = new ModuleParameters();
+		mParams.setUrl(path);
+		Curnit curnit = curnitService.createCurnit(mParams);
 		
 		ProjectParameters pParams = new ProjectParameters();
 		pParams.setCurnitId(curnit.getId());
