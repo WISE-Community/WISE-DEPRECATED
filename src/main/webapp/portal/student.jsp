@@ -17,10 +17,11 @@
 		<script src="${contextPath}/wise5/lib/modernizr/modernizr.custom.js"></script>
 
 	</head>
-	<body>
-		<div ng-view>
-			<div ui-view></div>
-		</div>
+	<body layout="row">
+		<div ui-view data-drop="true"
+			 jqyoui-droppable="{onDrop: 'vleController.portfolioDropCallback()'}"
+			 ng-mousemove='vleController.mouseMoved()' layout="column" layout-fill></div>
+
 		<script>
 			var configUrl = '${vleConfigUrl}';
 		</script>

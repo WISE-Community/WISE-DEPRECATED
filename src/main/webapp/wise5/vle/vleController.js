@@ -19,6 +19,7 @@ define(['app'],
         this.currentNode = null;
         this.isPortfolioVisible = false;
         this.theme = ProjectService.getTheme();
+        this.themePath = "wise5/vle/themes/" + this.theme;
 
         $scope.$on('showSessionWarning', angular.bind(this, function() {
             // Appending dialog to document.body
