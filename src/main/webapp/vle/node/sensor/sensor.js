@@ -1212,7 +1212,7 @@ SENSOR.prototype.setupPlotHover = function() {
     	}	
 
     	var xLabel = "";
-    	
+
     	//get the sensor type and x label
     	var seriesType = "";
     	if(event.data.thisSensor.sensorType == "motion") {
@@ -2017,10 +2017,21 @@ SENSOR.prototype.insertApplet = function() {
     // get the sensor definitions
     var sensorDef = sensorAppletInterface.sensorDefinitions[sensorType];
 
+    // get the code base for the jars
+    var codeBase = '/vle/node/sensor/jars';
+
+    // get the context path
+    var contextPath = this.view.getConfig().getConfigParam('contextPath');
+
+    if (contextPath != null) {
+        // prepend the context path
+        codeBase = contextPath + codeBase;
+    }
+
     // create the applet
     appletGlobal = new appletClass({
         sensorDefinitions: [sensorDef],
-        codebase: '/wise/vle/node/sensor/jars',
+        codebase: codeBase,
         listenerPath: 'appletGlobal'
     });
 
