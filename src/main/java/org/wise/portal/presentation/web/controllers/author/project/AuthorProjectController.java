@@ -1387,7 +1387,7 @@ public class AuthorProjectController {
 		String projectMetadataURL = wiseBaseURL + "/metadata.html";
 
 		//get the url to make CRater requests
-		String cRaterRequestURL = wiseBaseURL + "/cRater?type=cRater";
+		String cRaterRequestURL = wiseBaseURL + "/cRater";
 
 		//get the curriculum_base_www variable from the wise.properties file
 		String curriculumBaseUrl = wiseProperties.getProperty("curriculum_base_www");

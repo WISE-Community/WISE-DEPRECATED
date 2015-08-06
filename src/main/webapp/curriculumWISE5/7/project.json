@@ -240,6 +240,15 @@
             "r": 20
         },
         {
+            "id": "node31",
+            "type": "Node",
+            "title": "CRater",
+            "src": "node31.json",
+            "x": 150,
+            "y": 440,
+            "r": 20
+        },
+        {
             "id": "group0",
             "type": "group",
             "title": "My First WISE5 Project",
@@ -282,7 +291,8 @@
                 "node26",
                 "node27",
                 "node28",
-                "node30"
+                "node30",
+                "node31"
             ],
             "x": 50,
             "y": 140,
@@ -414,6 +424,11 @@
             "id": "transition28",
             "from": "node28",
             "to": "node30"
+        },
+        {
+            "id": "transition29",
+            "from": "node30",
+            "to": "node31"
         }
     ],
     "startGroupId": "group0",

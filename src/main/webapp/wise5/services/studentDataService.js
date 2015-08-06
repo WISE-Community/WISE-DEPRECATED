@@ -91,6 +91,8 @@ define(['configService', 'projectService'], function(configService, projectServi
                 params.runId = ConfigService.getRunId();
                 params.getComponentStates = true;
                 params.getEvents = true;
+                params.getAnnotations = true;
+                params.toWorkgroupId = ConfigService.getWorkgroupId();
                 httpParams.params = params;
                 
                 // make the request for the student data
@@ -106,8 +108,8 @@ define(['configService', 'projectService'], function(configService, projectServi
                         // get events
                         this.studentData.events = resultData.events;
 
-                        // uncomment me when actionLog is implemented
-                        //this.studentData.actionLogs = resultData.actionLogs;
+                        // get annotations
+                        this.studentData.annotations = resultData.annotations;
 
                         // load the student planning nodes
                         //this.loadStudentNodes();
@@ -417,6 +419,27 @@ define(['configService', 'projectService'], function(configService, projectServi
             return componentState;
         };
 
+        serviceObject.createAnnotation = function(
+            annotationId, runId, periodId, fromWorkgroupId, toWorkgroupId,
+            nodeId, componentId, componentStateId,
+            annotationType, data, clientSaveTime) {
+
+            var annotation = {};
+            annotation.id = annotationId;
+            annotation.runId = runId;
+            annotation.periodId = periodId;
+            annotation.fromWorkgroupId = fromWorkgroupId;
+            annotation.toWorkgroupId = toWorkgroupId;
+            annotation.nodeId = nodeId;
+            annotation.componentId = componentId;
+            annotation.componentStateId = componentStateId;
+            annotation.type = annotationType;
+            annotation.data = data;
+            annotation.clientSaveTime = clientSaveTime;
+
+            return annotation;
+        };
+
         serviceObject.addComponentState = function(componentState) {
             if (this.studentData != null && this.studentData.componentStates != null) {
                 this.studentData.componentStates.push(componentState);
@@ -427,6 +450,12 @@ define(['configService', 'projectService'], function(configService, projectServi
            if (this.studentData != null && this.studentData.events != null) {
                this.studentData.events.push(event);
            }
+        };
+
+        serviceObject.addAnnotation = function(annotation) {
+            if (this.studentData != null && this.studentData.annotations != null) {
+                this.studentData.annotations.push(annotation);
+            }
         };
 
        /**
@@ -490,7 +519,8 @@ define(['configService', 'projectService'], function(configService, projectServi
             newEvent.data = data;
             events.push(newEvent);
             var componentStates = null;
-            this.saveToServer(componentStates, events);
+            var annotations = null;
+            this.saveToServer(componentStates, events, annotations);
         };
 
         /**
@@ -508,7 +538,7 @@ define(['configService', 'projectService'], function(configService, projectServi
             return event;
         };
 
-        serviceObject.saveToServer = function(componentStates, events) {
+        serviceObject.saveToServer = function(componentStates, events, annotations) {
             
             if (componentStates != null && componentStates.length > 0) {
                 for (var c = 0; c < componentStates.length; c++) {
@@ -526,8 +556,19 @@ define(['configService', 'projectService'], function(configService, projectServi
                     var event = events[e];
 
                     if (event != null) {
-                        event.requestToken = this.generateKey(); // use this to keep track of unsaved componentStates.
+                        event.requestToken = this.generateKey(); // use this to keep track of unsaved events.
                         this.addEvent(event);
+                    }
+                }
+            }
+
+            if (annotations != null && annotations.length > 0) {
+                for (var a = 0; a < annotations.length; a++) {
+                    var annotation = annotations[a];
+
+                    if (annotation != null) {
+                        annotation.requestToken = this.generateKey(); // use this to keep track of unsaved annotations.
+                        this.addAnnotation(annotation);
                     }
                 }
             }
@@ -544,23 +585,26 @@ define(['configService', 'projectService'], function(configService, projectServi
             params.data = {};
             params.data.componentStates = componentStates;
             params.data.events = events;
+            params.data.annotations = annotations;
             httpParams.params = params;
 
             // make the request to post the student data
             return $http(httpParams).then(angular.bind(this, function(result) {
 
-                var saveStudentDataResponse = result.data;
+                var savedStudentDataResponse = result.data;
 
                 // get the local references to the component states that were posted and set their id and serverSaveTime
                 if (result != null &&
                         result.config != null &&
                         result.config.params != null &&
                         result.config.params.data != null) {
+
+                    // handle saved componentStates
                     if (result.config.params.data.componentStates != null &&
-                        saveStudentDataResponse.componentStates != null) {
+                        savedStudentDataResponse.componentStates != null) {
                         var localComponentStates = result.config.params.data.componentStates;
 
-                        var savedComponentStates = saveStudentDataResponse.componentStates;
+                        var savedComponentStates = savedStudentDataResponse.componentStates;
 
                         // set the id and serverSaveTime in the local componentState
                         for (var i = 0; i < savedComponentStates.length; i++) {
@@ -584,11 +628,12 @@ define(['configService', 'projectService'], function(configService, projectServi
                             }
                         }
                     }
+                    // handle saved events
                     if (result.config.params.data.events != null &&
-                        saveStudentDataResponse.events != null) {
+                        savedStudentDataResponse.events != null) {
                         var localEvents = result.config.params.data.events;
 
-                        var savedEvents = saveStudentDataResponse.events;
+                        var savedEvents = savedStudentDataResponse.events;
 
                         // set the id and serverSaveTime in the local event
                         for (var i = 0; i < savedEvents.length; i++) {
@@ -613,10 +658,40 @@ define(['configService', 'projectService'], function(configService, projectServi
                         }
                     }
 
+                    // handle saved annotations
+                    if (result.config.params.data.annotations != null &&
+                        savedStudentDataResponse.annotations != null) {
+                        var localAnnotations = result.config.params.data.annotations;
+
+                        var savedAnnotations = savedStudentDataResponse.annotations;
+
+                        // set the id and serverSaveTime in the local annotation
+                        for (var i = 0; i < savedAnnotations.length; i++) {
+                            var savedAnnotation = savedAnnotations[i];
+
+                            /*
+                             * loop through all the events that were posted
+                             * to find the one with the matching request token
+                             */
+                            for (var l = 0; l < localAnnotations.length; l++) {
+                                var localAnnotation = localAnnotations[l];
+                                if (localAnnotation.requestToken != null &&
+                                    localAnnotation.requestToken === savedAnnotation.requestToken) {
+                                    localAnnotation.id = savedAnnotation.id;
+                                    localAnnotation.serverSaveTime = savedAnnotation.serverSaveTime;
+                                    localAnnotation.requestToken = null; // requestToken is no longer needed.
+
+                                    $rootScope.$broadcast('annotationSavedToServer', {annotation: localAnnotation});
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
                 }
 
 
-                return saveStudentDataResponse;
+                return savedStudentDataResponse;
             }));
         };
         

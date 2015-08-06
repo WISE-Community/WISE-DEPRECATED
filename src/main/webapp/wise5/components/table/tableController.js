@@ -4,7 +4,6 @@ define(['app'], function(app) {
             $scope,
             $state, 
             $stateParams,
-            AnnotationService,
             ConfigService,
             CurrentNodeService,
             NodeService,

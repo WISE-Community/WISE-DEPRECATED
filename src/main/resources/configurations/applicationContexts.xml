@@ -944,6 +944,7 @@
 				<value>org.wise.vle.domain.work.StepWork</value>
 				<value>org.wise.vle.domain.work.Event</value>
 				<value>org.wise.vle.domain.annotation.Annotation</value>
+				<value>org.wise.vle.domain.annotation.wise5.Annotation</value>
 				<value>org.wise.vle.domain.cRater.CRaterRequest</value>
 				<value>org.wise.vle.domain.peerreview.PeerReviewWork</value>
 				<value>org.wise.vle.domain.peerreview.PeerReviewGate</value>
