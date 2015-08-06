@@ -17,7 +17,6 @@ define([
     'angularUIRouter',
     'angularUITree',
     'angularWebSocket',
-    'annotationService',
     'audioRecorderService',
     'configService',
     'currentNodeService',
@@ -60,7 +59,6 @@ define([
              angularUIRouter,
              angularUITree,
              angularWebSocket,
-             annotationService,
              audioRecorderService,
              configService,
              currentNodeService,
@@ -104,7 +102,6 @@ define([
     ]);
 
     // core services
-    app.factory('AnnotationService', annotationService);
     app.factory('ConfigService', configService);
     app.factory('CurrentNodeService', currentNodeService);
     app.factory('CRaterService', cRaterService);
@@ -181,9 +178,6 @@ define([
                         studentData: function (StudentDataService, config, project) {
                             return StudentDataService.retrieveStudentData();
                         },
-                        annotations: function (AnnotationService, config) {
-                            return AnnotationService.retrieveAnnotationsForStudent();
-                        },
                         webSocket: function (StudentWebSocketService, config) {
                             return StudentWebSocketService.initialize();
                         }
@@ -202,6 +196,7 @@ define([
                             templateUrl: 'wise5/node/index.html',
                             resolve: {
                                 audioRecorderController: app.loadController('audioRecorderController'),
+                                cRaterController: app.loadController('cRaterController'),
                                 discussionController: app.loadController('discussionController'),
                                 drawController: app.loadController('drawController'),
                                 graphController: app.loadController('graphController'),

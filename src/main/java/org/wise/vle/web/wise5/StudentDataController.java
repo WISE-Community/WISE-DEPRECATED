@@ -37,17 +37,19 @@ import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.vle.wise5.VLEService;
+import org.wise.vle.domain.annotation.wise5.Annotation;
 import org.wise.vle.domain.work.ComponentState;
 import org.wise.vle.domain.work.Event;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.List;
 
 /**
  * Controller for handling GET and POST requests of WISE5 student data
- * WISE5 student data is stored as ComponentState and Event domain objects
+ * WISE5 student data is stored as ComponentState, Event, and Annotation domain objects
  * @author Hiroki Terashima
  */
 @Controller("wise5StudentDataController")
@@ -76,7 +78,11 @@ public class StudentDataController {
             @RequestParam(value = "componentType", required = false) String componentType,
             @RequestParam(value = "context", required = false) String context,
             @RequestParam(value = "category", required = false) String category,
-            @RequestParam(value = "event", required = false) String event
+            @RequestParam(value = "event", required = false) String event,
+            @RequestParam(value = "fromWorkgroupId", required = false) Integer fromWorkgroupId,
+            @RequestParam(value = "toWorkgroupId", required = false) Integer toWorkgroupId,
+            @RequestParam(value = "componentStateId", required = false) Integer componentStateId,
+            @RequestParam(value = "annotationType", required = false) String annotationType
             ) {
         JSONObject result = new JSONObject();
         if (getComponentStates) {
@@ -104,15 +110,35 @@ public class StudentDataController {
 
             JSONArray eventsJSONArray = new JSONArray();
 
-            // loop through all the component states
+            // loop through all the events
             for (int e = 0; e < events.size(); e++) {
                 Event eventObject = events.get(e);
 
-                // get the JSON representation of the component state and add to componentStatesJSONArray
+                // get the JSON representation of the event and add to eventsJSONArray
                 eventsJSONArray.put(eventObject.toJSON());
             }
             try {
                 result.put("events", eventsJSONArray);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        if (getAnnotations) {
+            List<Annotation> annotations = vleService.getAnnotations(
+                    id, runId, periodId, fromWorkgroupId, toWorkgroupId,
+                    nodeId, componentId, componentStateId, annotationType);
+
+            JSONArray annotationsJSONArray = new JSONArray();
+
+            // loop through all the annotations
+            for (int a = 0; a < annotations.size(); a++) {
+                Annotation annotationObject = annotations.get(a);
+
+                // get the JSON representation of the annotation and add to annotationsJSONArray
+                annotationsJSONArray.put(annotationObject.toJSON());
+            }
+            try {
+                result.put("annotations", annotationsJSONArray);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -122,6 +148,7 @@ public class StudentDataController {
         try {
             PrintWriter writer = response.getWriter();
             writer.write(result.toString());
+            writer.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -151,7 +178,12 @@ public class StudentDataController {
             Run run = runService.retrieveById(new Long(runId));
             if (run.isStudentAssociatedToThisRun(signedInUser)) {
                 try {
+
+                    HashMap<String, ComponentState> savedComponentStates = new HashMap<>(); // maps nodeId_componentId to ComponentState.
+                                                                                            // Used later for handling simultaneous POST of CRater annotation
                     JSONObject dataJSONObject = new JSONObject(data);
+
+                    // handle POST'ed componentStates
                     JSONArray componentStatesJSONArray = dataJSONObject.optJSONArray("componentStates");
                     if (componentStatesJSONArray != null) {
                         JSONArray componentStatesResultJSONArray = new JSONArray();
@@ -170,13 +202,13 @@ public class StudentDataController {
                                     componentStateJSONObject.isNull("studentData") ? null : componentStateJSONObject.getString("studentData"),
                                     componentStateJSONObject.isNull("clientSaveTime") ? null : componentStateJSONObject.getString("clientSaveTime"));
 
+                            savedComponentStates.put(componentState.getNodeId() + "_" + componentState.getComponentId(), componentState);
+
                             // before returning saved ComponentState, strip all fields except id, token, and responseToken to minimize response size
                             componentState.setRun(null);
                             componentState.setPeriod(null);
                             componentState.setWorkgroup(null);
                             componentState.setIsAutoSave(null);
-                            componentState.setNodeId(null);
-                            componentState.setComponentId(null);
                             componentState.setComponentType(null);
                             componentState.setStudentData(null);
                             componentState.setClientSaveTime(null);
@@ -186,6 +218,8 @@ public class StudentDataController {
                         }
                         result.put("componentStates", componentStatesResultJSONArray);
                     }
+
+                    // handle POST'ed events
                     JSONArray eventsJSONArray = dataJSONObject.optJSONArray("events");
                     if (eventsJSONArray != null) {
                         JSONArray eventsResultJSONArray = new JSONArray();
@@ -224,6 +258,68 @@ public class StudentDataController {
                         }
                         result.put("events", eventsResultJSONArray);
                     }
+
+                    // handle POST'ed annotations
+                    JSONArray annotationsJSONArray = dataJSONObject.optJSONArray("annotations");
+                    if (annotationsJSONArray != null) {
+                        JSONArray annotationsResultJSONArray = new JSONArray();
+                        for (int a = 0; a < annotationsJSONArray.length(); a++) {
+                            JSONObject annotationJSONObject = annotationsJSONArray.getJSONObject(a);
+                            String requestToken = annotationJSONObject.getString("requestToken");
+                            Annotation annotation;
+                            // check to see if this Annotation was posted along with a ComponentState (e.g. CRater)
+                            if (annotationJSONObject.isNull("componentStateId") &&
+                                    !annotationJSONObject.isNull("nodeId") &&
+                                    !annotationJSONObject.isNull("componentId") &&
+                                    savedComponentStates.containsKey(
+                                            annotationJSONObject.getString("nodeId") + "_" + annotationJSONObject.getString("componentId"))
+                                    ) {
+                                // this is an annotation for a ComponentState that we just saved.
+                                ComponentState savedComponentState = savedComponentStates.get(annotationJSONObject.getString("nodeId") + "_" + annotationJSONObject.getString("componentId"));
+                                Integer savedComponentStateId = savedComponentState.getId();
+                                annotation = vleService.saveAnnotation(
+                                        annotationJSONObject.isNull("id") ? null : annotationJSONObject.getInt("id"),
+                                        annotationJSONObject.isNull("runId") ? null : annotationJSONObject.getInt("runId"),
+                                        annotationJSONObject.isNull("periodId") ? null : annotationJSONObject.getInt("periodId"),
+                                        annotationJSONObject.isNull("fromWorkgroupId") ? null : annotationJSONObject.getInt("fromWorkgroupId"),
+                                        annotationJSONObject.isNull("toWorkgroupId") ? null : annotationJSONObject.getInt("toWorkgroupId"),
+                                        annotationJSONObject.isNull("nodeId") ? null : annotationJSONObject.getString("nodeId"),
+                                        annotationJSONObject.isNull("componentId") ? null : annotationJSONObject.getString("componentId"),
+                                        savedComponentStateId,
+                                        annotationJSONObject.isNull("type") ? null : annotationJSONObject.getString("type"),
+                                        annotationJSONObject.isNull("data") ? null : annotationJSONObject.getString("data"),
+                                        annotationJSONObject.isNull("clientSaveTime") ? null : annotationJSONObject.getString("clientSaveTime"));
+                            } else {
+                                annotation = vleService.saveAnnotation(
+                                        annotationJSONObject.isNull("id") ? null : annotationJSONObject.getInt("id"),
+                                        annotationJSONObject.isNull("runId") ? null : annotationJSONObject.getInt("runId"),
+                                        annotationJSONObject.isNull("periodId") ? null : annotationJSONObject.getInt("periodId"),
+                                        annotationJSONObject.isNull("fromWorkgroupId") ? null : annotationJSONObject.getInt("fromWorkgroupId"),
+                                        annotationJSONObject.isNull("toWorkgroupId") ? null : annotationJSONObject.getInt("toWorkgroupId"),
+                                        annotationJSONObject.isNull("nodeId") ? null : annotationJSONObject.getString("nodeId"),
+                                        annotationJSONObject.isNull("componentId") ? null : annotationJSONObject.getString("componentId"),
+                                        annotationJSONObject.isNull("componentStateId") ? null : annotationJSONObject.getInt("componentStateId"),
+                                        annotationJSONObject.isNull("type") ? null : annotationJSONObject.getString("type"),
+                                        annotationJSONObject.isNull("data") ? null : annotationJSONObject.getString("data"),
+                                        annotationJSONObject.isNull("clientSaveTime") ? null : annotationJSONObject.getString("clientSaveTime"));
+                            }
+                            // before returning saved ComponentState, strip all fields except id, token, and responseToken to minimize response size
+                            annotation.setRun(null);
+                            annotation.setPeriod(null);
+                            annotation.setFromWorkgroup(null);
+                            annotation.setToWorkgroup(null);
+                            annotation.setNodeId(null);
+                            annotation.setComponentId(null);
+                            annotation.setComponentState(null);
+                            annotation.setType(null);
+                            annotation.setData(null);
+                            annotation.setClientSaveTime(null);
+                            JSONObject savedAnnotationJSONObject = annotation.toJSON();
+                            savedAnnotationJSONObject.put("requestToken", requestToken);
+                            annotationsResultJSONArray.put(savedAnnotationJSONObject);
+                        }
+                        result.put("annotations", annotationsResultJSONArray);
+                    }
                 } catch (Exception e) {
 
                 }
@@ -237,6 +333,7 @@ public class StudentDataController {
         try {
             PrintWriter writer = response.getWriter();
             writer.write(result.toString());
+            writer.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

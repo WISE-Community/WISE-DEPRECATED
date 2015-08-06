@@ -51,12 +51,12 @@ import org.wise.vle.domain.work.StepWork;
  * @author Hiroki Terashima
  */
 @Entity
-@Table(name="annotation")
-@Inheritance(strategy=InheritanceType.JOINED)
+@Table(name = "annotation")
+@Inheritance(strategy = InheritanceType.JOINED)
 public class Annotation extends PersistableDomain {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id = null;
 
 	@ManyToOne(cascade = {CascadeType.PERSIST})
@@ -68,22 +68,22 @@ public class Annotation extends PersistableDomain {
 	@ManyToOne(cascade = {CascadeType.PERSIST})
 	private StepWork stepWork;   // the work that is being annotated
 
-	@Column(name="annotateTime")
+	@Column(name = "annotateTime")
 	private Timestamp annotateTime;  // when the work was actually annotated
 
-	@Column(name="postTime")
+	@Column(name = "postTime")
 	private Timestamp postTime;  // when this annotation was saved
 
-	@Column(name="runId")
+	@Column(name = "runId")
 	private Long runId = null;
 	
-	@Column(name="type")
+	@Column(name = "type")
 	private String type = null;
 	
-	@Column(name="data", length=512000, columnDefinition = "mediumtext")
+	@Column(name = "data", length = 512000, columnDefinition  =  "mediumtext")
 	private String data = null;
 	
-	@Column(name="nodeId")
+	@Column(name = "nodeId")
 	private String nodeId = null;
 
     public Long getId() {

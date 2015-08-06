@@ -66,7 +66,7 @@ public class UrlModuleImpl extends ModuleImpl implements Module {
 	}
 
     /**
-     * @see net.sf.sail.webapp.domain.Curnit#accept(net.sf.sail.webapp.domain.CurnitVisitor)
+     * @see org.wise.portal.domain.module.Curnit#accept(org.wise.portal.domain.module.CurnitVisitor)
      */
 	public Object accept(CurnitVisitor visitor) {
 		return visitor.visit(this);

@@ -62,8 +62,7 @@ public class CRaterController {
 		String cRaterRequestType = request.getParameter("cRaterRequestType");
 		
 		boolean allowedAccess = false;
-		
-		
+
 		/*
 		 * preview mode can make all CRater requests
 		 * teachers can make all CRater requests
@@ -73,18 +72,18 @@ public class CRaterController {
 			allowedAccess = true;
 		} else if (signedInUser == null) {
 			allowedAccess = false;
-		} else if(SecurityUtils.isAdmin(signedInUser)) {
+		} else if (SecurityUtils.isAdmin(signedInUser)) {
 			//the user is an admin so we will allow this request
 			allowedAccess = true;
-		} else if(SecurityUtils.isTeacher(signedInUser)) {
+		} else if (SecurityUtils.isTeacher(signedInUser)) {
 			//the user is a teacher so we will allow this request
 			allowedAccess = true;
-		} else if(SecurityUtils.isStudent(signedInUser) && (cRaterRequestType != null && cRaterRequestType.equals("scoring"))) {
+		} else if (SecurityUtils.isStudent(signedInUser) && (cRaterRequestType != null && cRaterRequestType.equals("scoring"))) {
 			//the user is a student making a scoring request so we will allow this request
 			allowedAccess = true;
 		}
 		
-		if(!allowedAccess) {
+		if (!allowedAccess) {
 			//user is not allowed to make this request
 			response.sendError(HttpServletResponse.SC_FORBIDDEN);
 			return null;
@@ -127,18 +126,18 @@ public class CRaterController {
 		
 		String responseString = null;
 		
-		if("scoring".equals(cRaterRequestType)) {
+		if ("scoring".equals(cRaterRequestType)) {
 			//make the scoring request and retrieve the response string
 			responseString = handleScoringRequest(cRaterScoringUrl, cRaterClientId, itemId, responseId, studentData);
-		} else if("verify".equals(cRaterRequestType)) {
+		} else if ("verify".equals(cRaterRequestType)) {
 			//make the verify request and retrieve the response string
 			responseString = handleVerifyRequest(cRaterVerificationUrl, cRaterClientId, itemId);
 		}
 		
-		if(responseString != null) {
+		if (responseString != null) {
 			try {
 				if ("preview".equals(request.getParameter("wiseRunMode"))) {
-					if(responseString != null) {
+					if (responseString != null) {
 						JSONObject studentNodeStateResponse = null;
 						Long nodeStateId = null;
 						
@@ -166,7 +165,7 @@ public class CRaterController {
 	/**
 	 * Handle the scoring request to the CRater server
 	 * e.g.
-	 * http://localhost:8080/wise/cRater?type=cRater&cRaterRequestType=scoring&itemId=Photo_Sun&responseId=1&studentData=hello
+	 * http://localhost:8080/wise/cRater?cRaterRequestType=scoring&itemId=Photo_Sun&responseId=1&studentData=hello
 	 * 
 	 * @param cRaterUrl the CRater server url for scoring
 	 * @param cRaterClientId the client id e.g. "WISETEST"
@@ -184,7 +183,7 @@ public class CRaterController {
 	/**
 	 * Handle the verify request to the CRater server
 	 * e.g.
-	 * http://localhost:8080/wise/cRater?type=cRater&cRaterRequestType=verify&itemId=Photo_Sun
+	 * http://localhost:8080/wise/cRater?cRaterRequestType=verify&itemId=Photo_Sun
 	 * 
 	 * @param cRaterUrl the CRater server url for verifying
 	 * @param cRaterClientId the client id e.g. "WISETEST"
