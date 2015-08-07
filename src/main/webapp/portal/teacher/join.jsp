@@ -127,7 +127,7 @@ function checkForExistingAccounts(firstName, lastName) {
 
 	//make the request for matching accounts
 	$.ajax({
-		url:'../checkforexistingaccount.html',
+		url:'../checkForExistingAccount',
 		data:data,
 		dataType:'html',
 		success:function(response) {

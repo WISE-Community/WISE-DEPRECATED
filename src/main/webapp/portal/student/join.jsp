@@ -19,11 +19,11 @@
 <script type="text/javascript" src="${contextPath}/<spring:theme code="generalsource"/>"></script>
 
 <script type="text/javascript">
-$(document).ready(function(){
+$(document).ready(function() {
 	
 	//focus cursor into the First Name field on page ready iff there are no errors
 	if ($(".errorMsgNoBg").children().length == 0) {
-		if($('#firstname').length){
+		if ($('#firstname').length) {
 			$('#firstname').focus();
 		}		
 	}
@@ -98,17 +98,17 @@ function checkForExistingAccountsAndCreateAccount() {
 	var lastName = $('#lastname').val();
 
 	//check to make sure first name and last name are latin-based characters
-	 if( /[^a-zA-Z0-9]/.test( firstName ) ) {
+	 if ( /[^a-zA-Z0-9]/.test( firstName ) ) {
 		alert("<spring:message code='error.firstname-illegal-characters'/>");
 		return;
-	 } else if( /[^a-zA-Z0-9]/.test( lastName ) ) {
+	 } else if ( /[^a-zA-Z0-9]/.test( lastName ) ) {
 		alert("<spring:message code='error.lastname-illegal-characters'/>");
 		return;
      }
 	 
-	if(!isCreateAccountParametersValid()) {
+	if (!isCreateAccountParametersValid()) {
 		//create account parameters are not valid
-	} else if(checkForExistingAccounts()) {
+	} else if (checkForExistingAccounts()) {
 		//accounts exist, ask student if these accounts are theirs
 
 		//get the JSON array of existing accounts
@@ -122,7 +122,7 @@ function checkForExistingAccountsAndCreateAccount() {
 		
 		existingAccountsHtml += "<h1 style='color:red;text-align:center'><spring:message code='warning_all_caps'/></h1>";
 		
-		if(existingAccountsArray.length > 1) {
+		if (existingAccountsArray.length > 1) {
 			//message to display if we found multiple accounts
 			existingAccountsHtml += "<p style='color:red'><spring:message code='student.registerstudent.accountsAlreadyExistWarning'/></p>";
 		} else {
@@ -186,11 +186,11 @@ function checkForExistingAccounts() {
 
 	//make the request for matching accounts
 	$.ajax({
-		url:'../checkforexistingaccount.html',
+		url:'../checkForExistingAccount',
 		data:data,
 		dataType:"text",
 		success:function(response) {
-			if(response != null) {
+			if (response != null) {
 				$('#existingAccounts').html(response);
 			}
 		},
@@ -199,7 +199,7 @@ function checkForExistingAccounts() {
 
 	var existingAccounts = false;
 	
-	if($('#existingAccounts').html() != '' && $('#existingAccounts').html() != '[]') {
+	if ($('#existingAccounts').html() != '' && $('#existingAccounts').html() != '[]') {
 		//there are existing accounts that match
 		existingAccounts = true;
 	}
@@ -215,7 +215,7 @@ function checkIfReallyWantToCreateAccount() {
 	//ask the student again 
 	var answer = confirm("<spring:message code='student.registerstudent.confirmNoPreviousAccount' />");
 	
-	if(answer) {
+	if (answer) {
 		//create the account if they answered 'OK'
 		createAccount();
 	}
@@ -236,31 +236,31 @@ function isCreateAccountParametersValid() {
 	var repeatedPassword = document.getElementById("repeatedPassword").value;
 	var accountAnswer = document.getElementById("accountAnswer").value;
 	
-	if(firstname == null || firstname == '') {
+	if (firstname == null || firstname == '') {
 		//first name is blank
 		alert("<spring:message code='student.registerstudent.firstNameCanNotBeBlank' />");
 		result = false;
-	} else if(!/^[a-zA-Z]*$/.test(firstname)) {
+	} else if (!/^[a-zA-Z]*$/.test(firstname)) {
 		//first name contains characters that are not letters
 		alert("<spring:message code='student.registerstudent.firstNameOnlyLetters' />");
 		result = false;
-	} else if(lastname == null || lastname == '') {
+	} else if (lastname == null || lastname == '') {
 		//last name is blank
 		alert("<spring:message code='student.registerstudent.lastNameCanNotBeBlank' />");
 		result = false;
-	} else if(!/^[a-zA-Z]*$/.test(lastname)) {
+	} else if (!/^[a-zA-Z]*$/.test(lastname)) {
 		//last name contains characters that are not letters
 		alert("<spring:message code='student.registerstudent.lastNameOnlyLetters' />");
 		result = false;
-	} else if(password == null || password == '') {
+	} else if (password == null || password == '') {
 		//password is blank
 		alert("<spring:message code='student.registerstudent.passwordCanNotBeBlank' />");
 		result = false;
-	} else if(repeatedPassword == null || repeatedPassword == '') {
+	} else if (repeatedPassword == null || repeatedPassword == '') {
 		//retyped password is blank
 		alert("<spring:message code='student.registerstudent.verifyPasswordCanNotBeBlank' />");
 		result = false;
-	} else if(accountAnswer == null || accountAnswer == '') {
+	} else if (accountAnswer == null || accountAnswer == '') {
 		//answer for security question is blank
 		alert("<spring:message code='student.registerstudent.securityQuestionAnswerCanNotBeBlank' />");
 		result = false;
@@ -268,12 +268,12 @@ function isCreateAccountParametersValid() {
 		//the run code is blank
 		alert("<spring:message code='student.addproject.enterAccessCode'/>");
 	  	result = false;
-	} else if(runCode != null && runCode != "") {
-		if(!isRunCodeValid) {
+	} else if (runCode != null && runCode != "") {
+		if (!isRunCodeValid) {
 			//run code is invalid
 			alert("<spring:message code='student.addproject.invalidAccessCode' />");
 			result = false;
-		} else if((period != null && period == "none") || period == null || period == "") {
+		} else if ((period != null && period == "none") || period == null || period == "") {
 			//the period is blank
 			alert("<spring:message code='student.addproject.selectClassPeriod' />");
 			result = false;
@@ -327,11 +327,11 @@ function checkRunCode() {
 	 * check if the run code has changed since the last time the student
 	 * has entered the run code
 	 */
-	if(runCode != previousRunCode) {
+	if (runCode != previousRunCode) {
 		//run code has changed
 		isRunCodeValid = false;
 		
-		if(runCode.match(runCodePattern)) {
+		if (runCode.match(runCodePattern)) {
 			/*
 			 * run code matches the proper run code format so we will try
 			 * to find the periods

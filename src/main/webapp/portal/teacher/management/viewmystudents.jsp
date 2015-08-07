@@ -66,7 +66,7 @@ $(document).ready(function(){
 	$('.studentInfo').on('click',function(){
 		var title = $(this).attr('title');
 		var username = $(this).attr('id').replace('studentInfo_','');
-		var path = "${contextPath}/studentinfo.html?userName=" + username;
+		var path = "${contextPath}/student/account/info?userName=" + username;
 		var dialog = $('<div id="studentInfoDialog" style="overflow-y:hidden;"></div>');
 		var div = dialog.html('<iframe id="studentInfoIfrm" width="100%" height="100%"></iframe>');
 		div.dialog({

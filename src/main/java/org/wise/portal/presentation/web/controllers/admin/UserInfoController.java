@@ -27,7 +27,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -61,7 +60,7 @@ public class UserInfoController {
 
 	protected final static String USER_INFO_MAP = "userInfoMap";
 	
-	@RequestMapping(value = {"/studentinfo.html", "/teacherinfo.html"})
+	@RequestMapping(value = {"/student/account/info", "/teacher/account/info"})
 	protected ModelAndView handleRequestInternal(
 			HttpServletRequest servletRequest) throws Exception {
 		User signedInUser = ControllerUtil.getSignedInUser();
@@ -91,7 +90,7 @@ public class UserInfoController {
 				//set the run list into the model
 				modelAndView.addObject("runList", runList);
 				
-				modelAndView.setViewName("student/studentinfo");
+				modelAndView.setViewName("student/account/info");
 			} else {
 				//the user we are looking up is a teacher
 				modelAndView.addObject("isStudent", false);
@@ -102,7 +101,7 @@ public class UserInfoController {
 				//set the run list into the model
 				modelAndView.addObject("runList", runListByOwner);
 
-				modelAndView.setViewName("teacher/teacherinfo");
+				modelAndView.setViewName("teacher/account/info");
 			}
 			
 	        return modelAndView;

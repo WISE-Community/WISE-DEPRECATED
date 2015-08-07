@@ -172,6 +172,7 @@
         computer_time bigint,
         description varchar(255),
         grades varchar(255),
+        moduleUrl varchar(255) not null,
         tech_reqs varchar(255),
         topic_keywords varchar(255),
         total_time bigint,
@@ -469,12 +470,6 @@
         schoolname varchar(255) not null,
         signupdate datetime not null,
         state varchar(255),
-        id bigint not null,
-        primary key (id)
-    ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-    create table urlmodules (
-        module_url varchar(255),
         id bigint not null,
         primary key (id)
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -885,11 +880,6 @@
         add constraint FK_731ea05n5p0yt79n2xsi93326 
         foreign key (id) 
         references user_details (id);
-
-    alter table urlmodules 
-        add constraint FK_34snnalp1gy4dinvre80sqk1s 
-        foreign key (id) 
-        references modules (id);
 
     alter table user_details_related_to_roles 
         add constraint FK_msgwl9684bgxnfdqbopnf662w 

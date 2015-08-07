@@ -57,4 +57,9 @@ public interface Module extends Curnit {
 	String getAuthors();
 	
 	void setAuthors(String authors);
+
+	String getModuleUrl();
+
+	void setModuleUrl(String moduleUrl);
+
 }

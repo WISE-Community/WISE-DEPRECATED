@@ -40,7 +40,7 @@
 			success:function(data,textStatus,jqHXR) {
 				if (jqHXR.responseText == "success") {
 					var disabledAccountHtml = "<div id='"+username+"'>"+username+"&nbsp;&nbsp;&nbsp;&nbsp;| "+
-						"<a href='#' onclick=\"javascript:popup640('../../teacherinfo.html?userName="+username+"');\"><spring:message code="info" /></a> | "+
+						"<a href='#' onclick=\"javascript:popup640('../../teacher/account/info?userName="+username+"');\"><spring:message code="info" /></a> | "+
 						"<a href='#' onclick=\"javascript:enableAccount('"+username+"')\"><spring:message code="admin.account.enabledisableuser.reEnableAccout" /></a>"+
 						"</div>";				
 					
@@ -77,7 +77,7 @@
 			value="${disabledUser.userDetails.username}" />
 		<div id='${disabledUsername}'>
 		<c:out value="${disabledUsername}" />&nbsp;&nbsp;&nbsp;&nbsp;| 
-		<a href="#" onclick="javascript:popup640('../../teacherinfo.html?userName=${disabledUsername}');"><spring:message code="info" /></a> | 
+		<a href="#" onclick="javascript:popup640('../../teacher/account/info?userName=${disabledUsername}');"><spring:message code="info" /></a> |
 		<a href="#" onclick="javascript:enableAccount('${disabledUsername}')"><spring:message code="admin.account.enabledisableuser.reEnableAccout" /></a>
 		</div>				
 	</c:forEach>
