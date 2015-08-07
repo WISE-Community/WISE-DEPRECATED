@@ -285,13 +285,11 @@ define(['app'], function(app) {
             return result;
         };
 
-        var nodeSrc = ProjectService.getNodeSrcByNodeId(this.nodeId);
+        // get the node content
+        this.componentContent = ProjectService.getNodeContentByNodeId(this.nodeId);
 
-        NodeService.getNodeContentByNodeSrc(nodeSrc).then(angular.bind(this, function(componentContent) {
-            this.componentContent = componentContent;
-            this.populateStudentData();
-            $scope.$parent.nodeController.nodeLoaded(this.nodeId);
-        }));
+        this.populateStudentData();
+        $scope.$parent.nodeController.nodeLoaded(this.nodeId);
         
         this.populateStudentData = function() {
             var nodeState = StudentDataService.getLatestNodeStateByNodeId(this.nodeId);

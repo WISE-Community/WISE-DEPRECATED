@@ -7,237 +7,2450 @@
     "nodes": [
         {
             "id": "node1",
-            "type": "Node",
+            "type": "node",
             "title": "Open Response",
             "src": "node1.json",
             "x": 50,
             "y": 140,
-            "r": 20
+            "r": 20,
+            "content": {
+                "prompt": "",
+                "components": [
+                    {
+                        "id": "2mb2892l6q",
+                        "componentType": "OpenResponse",
+                        "prompt": "Work on this open response step.",
+                        "numRows": 5,
+                        "showSaveButton": true,
+                        "showSubmitButton": true
+                    }
+                ],
+                "lockAfterSubmit": false,
+                "showSubmitButton": false
+            }
         },
         {
             "id": "node2",
-            "type": "Node",
+            "type": "node",
             "title": "Discussion",
             "src": "node2.json",
             "x": 150,
             "y": 140,
-            "r": 20
+            "r": 20,
+            "content": {
+                "prompt": "",
+                "components": [
+                    {
+                        "id": "2b0of2g8hw",
+                        "componentType": "Discussion",
+                        "prompt": "Work on this discussion step.",
+                        "numRows": 5,
+                        "showSaveButton": true,
+                        "showSubmitButton": true
+                    }
+                ],
+                "lockAfterSubmit": false,
+                "showSubmitButton": false
+            }
         },
         {
             "id": "node3",
-            "type": "Node",
+            "type": "node",
             "title": "Draw",
             "src": "node3.json",
             "x": 250,
             "y": 140,
-            "r": 20
+            "r": 20,
+            "content": {
+                "prompt": "",
+                "components": [
+                    {
+                        "id": "9h4wxy737r",
+                        "componentType": "Draw",
+                        "prompt": "Work on this draw step.",
+                        "showSaveButton": true,
+                        "showSubmitButton": true
+                    }
+                ],
+                "lockAfterSubmit": false,
+                "showSubmitButton": false
+            }
         },
         {
             "id": "node4",
-            "type": "Node",
+            "type": "node",
             "title": "Graph",
             "src": "node4.json",
             "x": 350,
             "y": 140,
-            "r": 20
+            "r": 20,
+            "content": {
+                "prompt": "",
+                "components": [
+                    {
+                        "id": "85vygf6abh2",
+                        "componentType": "Graph",
+                        "prompt": "Work on this graph step.",
+                        "title": "Scatter Plot",
+                        "graphType": "scatter",
+                        "xAxis": {
+                            "title": {
+                                "text": "time (seconds)"
+                            },
+                            "min": 0,
+                            "max": 20
+                        },
+                        "yAxis": {
+                            "title": {
+                                "text": "distance (meters)"
+                            },
+                            "min": 0,
+                            "max": 50
+                        },
+                        "series": [
+                            {
+                                "name": "Spongebob",
+                                "data": [[0, 0], [5, 1], [10, 2], [15, 3]],
+                                "color": "red",
+                                "marker": {
+                                    "symbol": "square"
+                                },
+                                "regression": true,
+                                "regressionSettings": {
+                                    "type": "linear",
+                                    "color": "red"
+                                },
+                                "canClickToAddData": true
+                            },
+                            {
+                                "name": "Patrick",
+                                "data": [[0, 0], [5, 10], [10, 15], [16, 45]],
+                                "color": "blue",
+                                "marker": {
+                                    "symbol": "triangle"
+                                },
+                                "regression": true,
+                                "regressionSettings": {
+                                    "type": "exponential",
+                                    "color": "blue"
+                                },
+                                "canClickToAddData": true
+                            }
+                        ],
+                        "showSaveButton": true,
+                        "showSubmitButton": true
+                    }
+                ],
+                "lockAfterSubmit": false,
+                "showSubmitButton": false
+            }
         },
         {
             "id": "node5",
-            "type": "Node",
+            "type": "node",
             "title": "HTML",
             "src": "node5.json",
             "x": 450,
             "y": 140,
-            "r": 20
+            "r": 20,
+            "content": {
+                "prompt": "",
+                "components": [
+                    {
+                        "id": "3inj20aglh",
+                        "componentType": "HTML",
+                        "html": "<p>This is an HTML step.</p>"
+                    }
+                ],
+                "lockAfterSubmit": false,
+                "showSubmitButton": false
+            }
         },
         {
             "id": "node6",
-            "type": "Node",
+            "type": "node",
             "title": "Match",
             "src": "node6.json",
             "x": 550,
             "y": 140,
-            "r": 20
+            "r": 20,
+            "content": {
+                "prompt": "",
+                "components": [
+                    {
+                        "id": "63h390h98s",
+                        "componentType": "Match",
+                        "prompt": "Work on this match step.",
+                        "choices": [
+                            {
+                                "id": 1,
+                                "value": "<img src='assets/ps1.jpg'/>",
+                                "type": "choice"
+                            },
+                            {
+                                "id": 2,
+                                "value": "<img src='assets/ps2.jpg'/>",
+                                "type": "choice"
+                            },
+                            {
+                                "id": 3,
+                                "value": "<img src='assets/ps3.png'/>",
+                                "type": "choice"
+                            },
+                            {
+                                "id": 4,
+                                "value": "<img src='assets/ps4.jpg'/>",
+                                "type": "choice"
+                            },
+                            {
+                                "id": 5,
+                                "value": "Xbox 1",
+                                "type": "choice"
+                            },
+                            {
+                                "id": 6,
+                                "value": "Xbox 360",
+                                "type": "choice"
+                            },
+                            {
+                                "id": 7,
+                                "value": "Xbone",
+                                "type": "choice"
+                            }
+                        ],
+                        "buckets": [
+                            {
+                                "id": 1,
+                                "value": "Playstation",
+                                "type": "bucket"
+                            },
+                            {
+                                "id": 2,
+                                "value": "Xbox",
+                                "type": "bucket"
+                            }
+                        ],
+                        "feedback": [
+                            {
+                                "bucketId": 0,
+                                "choiceId": 1,
+                                "position": null,
+                                "isCorrect": false,
+                                "feedback": "",
+                                "incorrectPositionFeedback": ""
+                            },
+                            {
+                                "bucketId": 0,
+                                "choiceId": 2,
+                                "position": null,
+                                "isCorrect": false,
+                                "feedback": "",
+                                "incorrectPositionFeedback": ""
+                            },
+                            {
+                                "bucketId": 0,
+                                "choiceId": 3,
+                                "position": null,
+                                "isCorrect": false,
+                                "feedback": "",
+                                "incorrectPositionFeedback": ""
+                            },
+                            {
+                                "bucketId": 0,
+                                "choiceId": 4,
+                                "position": null,
+                                "isCorrect": false,
+                                "feedback": "",
+                                "incorrectPositionFeedback": ""
+                            },
+                            {
+                                "bucketId": 0,
+                                "choiceId": 5,
+                                "position": null,
+                                "isCorrect": false,
+                                "feedback": "",
+                                "incorrectPositionFeedback": ""
+                            },
+                            {
+                                "bucketId": 0,
+                                "choiceId": 6,
+                                "position": null,
+                                "isCorrect": false,
+                                "feedback": "",
+                                "incorrectPositionFeedback": ""
+                            },
+                            {
+                                "bucketId": 0,
+                                "choiceId": 7,
+                                "position": null,
+                                "isCorrect": false,
+                                "feedback": "",
+                                "incorrectPositionFeedback": ""
+                            },
+                            {
+                                "bucketId": 1,
+                                "choiceId": 1,
+                                "position": 1,
+                                "isCorrect": true,
+                                "feedback": "Correct, Playstation 1 was first.",
+                                "incorrectPositionFeedback": "Yes, this is a Playstation but it's in the wrong position."
+                            },
+                            {
+                                "bucketId": 1,
+                                "choiceId": 2,
+                                "position": 2,
+                                "isCorrect": true,
+                                "feedback": "Correct, Playstation 2 was second.",
+                                "incorrectPositionFeedback": "Yes, this is a Playstation but it's in the wrong position."
+                            },
+                            {
+                                "bucketId": 1,
+                                "choiceId": 3,
+                                "position": 3,
+                                "isCorrect": true,
+                                "feedback": "Correct, Playstation 3 was third.",
+                                "incorrectPositionFeedback": "Yes, this is a Playstation but it's in the wrong position."
+                            },
+                            {
+                                "bucketId": 1,
+                                "choiceId": 4,
+                                "position": 4,
+                                "isCorrect": true,
+                                "feedback": "Correct, Playstation 4 was fourth.",
+                                "incorrectPositionFeedback": "Yes, this is a Playstation but it's in the wrong position."
+                            },
+                            {
+                                "bucketId": 1,
+                                "choiceId": 5,
+                                "position": null,
+                                "isCorrect": false,
+                                "feedback": "Incorrect, this is not a Playstation.",
+                                "incorrectPositionFeedback": ""
+                            },
+                            {
+                                "bucketId": 1,
+                                "choiceId": 6,
+                                "position": null,
+                                "isCorrect": false,
+                                "feedback": "Incorrect, this is not a Playstation.",
+                                "incorrectPositionFeedback": ""
+                            },
+                            {
+                                "bucketId": 1,
+                                "choiceId": 7,
+                                "position": null,
+                                "isCorrect": false,
+                                "feedback": "Incorrect, this is not a Playstation.",
+                                "incorrectPositionFeedback": ""
+                            },
+                            {
+                                "bucketId": 2,
+                                "choiceId": 1,
+                                "position": null,
+                                "isCorrect": false,
+                                "feedback": "Incorrect, this is not an Xbox.",
+                                "incorrectPositionFeedback": ""
+                            },
+                            {
+                                "bucketId": 2,
+                                "choiceId": 2,
+                                "position": null,
+                                "isCorrect": false,
+                                "feedback": "Incorrect, this is not an Xbox.",
+                                "incorrectPositionFeedback": ""
+                            },
+                            {
+                                "bucketId": 2,
+                                "choiceId": 3,
+                                "position": null,
+                                "isCorrect": false,
+                                "feedback": "Incorrect, this is not an Xbox.",
+                                "incorrectPositionFeedback": ""
+                            },
+                            {
+                                "bucketId": 2,
+                                "choiceId": 4,
+                                "position": null,
+                                "isCorrect": false,
+                                "feedback": "Incorrect, this is not an Xbox.",
+                                "incorrectPositionFeedback": ""
+                            },
+                            {
+                                "bucketId": 2,
+                                "choiceId": 5,
+                                "position": 1,
+                                "isCorrect": true,
+                                "feedback": "Correct, this is the first Xbox.",
+                                "incorrectPositionFeedback": "Yes, this is an Xbox but it's in the wrong position."
+                            },
+                            {
+                                "bucketId": 2,
+                                "choiceId": 6,
+                                "position": 2,
+                                "isCorrect": true,
+                                "feedback": "Correct, this is the second Xbox.",
+                                "incorrectPositionFeedback": "Yes, this is an Xbox but it's in the wrong position."
+                            },
+                            {
+                                "bucketId": 2,
+                                "choiceId": 7,
+                                "position": 3,
+                                "isCorrect": true,
+                                "feedback": "Correct, this is the third Xbox.",
+                                "incorrectPositionFeedback": "Yes, this is an Xbox but it's in the wrong position."
+                            }
+                        ],
+                        "showSaveButton": true,
+                        "showSubmitButton": true
+                    }
+                ],
+                "lockAfterSubmit": false,
+                "showSubmitButton": false
+            }
         },
         {
             "id": "node7",
-            "type": "Node",
+            "type": "node",
             "title": "Multiple Choice Radio",
             "src": "node7.json",
             "x": 650,
             "y": 140,
-            "r": 20
+            "r": 20,
+            "content": {
+                "prompt": "Work on this multiple choice radio button step.",
+                "components": [
+                    {
+                        "id": "8aff8bas23",
+                        "componentType": "MultipleChoice",
+                        "prompt": "Who lives in a pineapple under the sea?",
+                        "choiceType": "radio",
+                        "correctChoice": "78de39me19",
+                        "choices": [
+                            {
+                                "text": "Patrick",
+                                "id": "4j6v8m3jc9",
+                                "feedback": "Incorrect, Patrick lives under a rock."
+                            },
+                            {
+                                "text": "Spongebob",
+                                "id": "78de39me19",
+                                "feedback": "Correct, Spongebob lives in a pineapple."
+                            },
+                            {
+                                "text": "Squidward",
+                                "id": "n8s6v3k2h6",
+                                "feedback": "Incorrect, Squidward lives in an Easter Island Head."
+                            }
+                        ],
+                        "showSaveButton": true,
+                        "showSubmitButton": true
+                    }
+                ],
+                "lockAfterSubmit": false,
+                "showSubmitButton": false
+            }
         },
         {
             "id": "node8",
-            "type": "Node",
+            "type": "node",
             "title": "Multiple Choice Checkbox",
             "src": "node8.json",
             "x": 750,
             "y": 140,
-            "r": 20
+            "r": 20,
+            "content": {
+                "prompt": "Work on this multiple choice checkbox step.",
+                "components": [
+                    {
+                        "id": "9a21pbab2x",
+                        "componentType": "MultipleChoice",
+                        "prompt": "Who works at the Krusty Krab?",
+                        "choices": [
+                            {
+                                "text": "Patrick",
+                                "id": "4j6v8m3jc9",
+                                "feedback": "Incorrect, Patrick does not have a job."
+                            },
+                            {
+                                "text": "Spongebob",
+                                "id": "78de39me19",
+                                "feedback": "Correct, Spongebob is the fry cook at the Krusty Krab"
+                            },
+                            {
+                                "text": "Squidward",
+                                "id": "n8s6v3k2h6",
+                                "feedback": "Correct, Squidward is the cashier at the Krusty Krab."
+                            }
+                        ],
+                        "correctChoices": [
+                            "78de39me19",
+                            "n8s6v3k2h6"
+                        ],
+                        "choiceType": "checkbox",
+                        "lockAfterSubmit": false,
+                        "showSaveButton": true,
+                        "showSubmitButton": true
+                    }
+                ],
+                "lockAfterSubmit": false,
+                "showSubmitButton": false
+            }
         },
         {
             "id": "node9",
-            "type": "Node",
+            "type": "node",
             "title": "Outside URL",
             "src": "node9.json",
             "x": 850,
             "y": 140,
-            "r": 20
+            "r": 20,
+            "content": {
+                "prompt": "Work on this outside url step.",
+                "components": [
+                    {
+                        "id": "72dav923gy",
+                        "componentType": "OutsideURL",
+                        "url": "http://www.berkeley.edu/"
+                    }
+                ],
+                "lockAfterSubmit": false,
+                "showSubmitButton": false
+            }
         },
         {
             "id": "node10",
-            "type": "Node",
+            "type": "node",
             "title": "Table",
             "src": "node10.json",
             "x": 950,
             "y": 140,
-            "r": 20
+            "r": 20,
+            "content": {
+                "prompt": "",
+                "components": [
+                    {
+                        "id": "0t36r52uvg",
+                        "componentType": "Table",
+                        "prompt": "Work on this table step.",
+                        "tableData": [
+                            [
+                                {
+                                    "text": "",
+                                    "editable": false
+                                },
+                                {
+                                    "text": "time",
+                                    "editable": false,
+                                    "size": 10
+                                },
+                                {
+                                    "text": "distance",
+                                    "editable": false,
+                                    "size": 10
+                                }
+                            ],
+                            [
+                                {
+                                    "text": "House",
+                                    "editable": true
+                                },
+                                {
+                                    "text": "1",
+                                    "editable": true,
+                                    "size": 10
+                                },
+                                {
+                                    "text": "7",
+                                    "editable": true,
+                                    "size": 10
+                                }
+                            ],
+                            [
+                                {
+                                    "text": "Supermarket",
+                                    "editable": true
+                                },
+                                {
+                                    "text": "2",
+                                    "editable": true,
+                                    "size": 10
+                                },
+                                {
+                                    "text": "3",
+                                    "editable": true,
+                                    "size": 10
+                                }
+                            ],
+                            [
+                                {
+                                    "text": "Gas Station",
+                                    "editable": true
+                                },
+                                {
+                                    "text": "3",
+                                    "editable": true,
+                                    "size": 10
+                                },
+                                {
+                                    "text": "9",
+                                    "editable": true,
+                                    "size": 10
+                                }
+                            ]
+                        ],
+                        "showSaveButton": true,
+                        "showSubmitButton": true
+                    }
+                ],
+                "lockAfterSubmit": false,
+                "showSubmitButton": false
+            }
         },
         {
             "id": "node11",
-            "type": "Node",
+            "type": "node",
             "title": "Audio Recorder",
             "src": "node11.json",
             "x": 50,
             "y": 240,
-            "r": 20
+            "r": 20,
+            "content": {
+                "prompt": "",
+                "components": [
+                    {
+                        "id": "4j72bdiy3b",
+                        "componentType": "AudioRecorder",
+                        "prompt": "Work on this audio recorder step.",
+                        "showSaveButton": true,
+                        "showSubmitButton": true
+                    }
+                ],
+                "lockAfterSubmit": false,
+                "showSubmitButton": false
+            }
         },
         {
             "id": "node12",
-            "type": "Node",
+            "type": "node",
             "title": "Photo Booth",
             "src": "node12.json",
             "x": 150,
             "y": 240,
-            "r": 20
+            "r": 20,
+            "content": {
+                "prompt": "",
+                "components": [
+                    {
+                        "id": "42a31a2g6j1m",
+                        "componentType": "PhotoBooth",
+                        "prompt": "Work on this photo booth step.",
+                        "showSaveButton": true,
+                        "showSubmitButton": true
+                    }
+                ],
+                "lockAfterSubmit": false,
+                "showSubmitButton": false
+            }
         },
         {
             "id": "node13",
-            "type": "Node",
+            "type": "node",
             "title": "Planning",
             "src": "node13.json",
             "x": 250,
             "y": 240,
-            "r": 20
+            "r": 20,
+            "content": {
+                "prompt": "",
+                "components": [
+                    {
+                        "id": "9b0e2jadg0",
+                        "componentType": "Planning",
+                        "style": "body { background-color: blue }",
+                        "prompt": "Work on this planning step.",
+                        "planningNodes": [
+                            "node5",
+                            "node6",
+                            "node7",
+                            "node8",
+                            "node9",
+                            "node10"
+                        ],
+                        "groupToPlace": "group1",
+                        "transitionToReplace": "transition3"
+                    }
+                ],
+                "lockAfterSubmit": false,
+                "showSubmitButton": false
+            }
         },
         {
             "id": "node14",
-            "type": "Node",
+            "type": "node",
             "title": "Multi Component Step",
             "src": "node14.json",
             "x": 350,
             "y": 240,
-            "r": 20
+            "r": 20,
+            "content": {
+                "prompt": "Work on this multi part step.",
+                "components": [
+                    {
+                        "id": "3mb2492l6q",
+                        "componentType": "OpenResponse",
+                        "prompt": "Work on this open response step.",
+                        "numRows": 5,
+                        "showSaveButton": true,
+                        "showSubmitButton": true
+                    },
+                    {
+                        "id": "3b0of288h0",
+                        "componentType": "Discussion",
+                        "prompt": "Work on this discussion step.",
+                        "numRows": 5,
+                        "showSubmitButton": true
+                    },
+                    {
+                        "id": "0h4wxy7x7r",
+                        "componentType": "Draw",
+                        "prompt": "Work on this draw step.",
+                        "showSaveButton": true,
+                        "showSubmitButton": true
+                    },
+                    {
+                        "id": "95vyuf6abh2",
+                        "componentType": "Graph",
+                        "prompt": "Work on this graph step.",
+                        "title": "Scatter Plot",
+                        "graphType": "scatter",
+                        "xAxis": {
+                            "title": {
+                                "text": "time (seconds)"
+                            },
+                            "min": 0,
+                            "max": 20
+                        },
+                        "yAxis": {
+                            "title": {
+                                "text": "distance (meters)"
+                            },
+                            "min": 0,
+                            "max": 50
+                        },
+                        "series": [
+                            {
+                                "data": [[0, 0], [5, 1], [10, 2], [15, 3]],
+                                "canClickToAddData": true
+                            },
+                            {
+                                "data": [[0, 0], [5, 10], [10, 20], [16, 30]],
+                                "canClickToAddData": true
+                            }
+                        ],
+                        "canClickToAddData": true,
+                        "showSaveButton": true,
+                        "showSubmitButton": true
+                    },
+                    {
+                        "id": "73h3c0h98s",
+                        "componentType": "Match",
+                        "prompt": "Work on this match step.",
+                        "choices": [
+                            {
+                                "id": 1,
+                                "value": "<img src='assets/ps1.jpg'/>",
+                                "type": "choice"
+                            },
+                            {
+                                "id": 2,
+                                "value": "<img src='assets/ps2.jpg'/>",
+                                "type": "choice"
+                            },
+                            {
+                                "id": 3,
+                                "value": "<img src='assets/ps3.png'/>",
+                                "type": "choice"
+                            },
+                            {
+                                "id": 4,
+                                "value": "<img src='assets/ps4.jpg'/>",
+                                "type": "choice"
+                            },
+                            {
+                                "id": 5,
+                                "value": "Xbox 1",
+                                "type": "choice"
+                            },
+                            {
+                                "id": 6,
+                                "value": "Xbox 360",
+                                "type": "choice"
+                            },
+                            {
+                                "id": 7,
+                                "value": "Xbone",
+                                "type": "choice"
+                            }
+                        ],
+                        "buckets": [
+                            {
+                                "id": 1,
+                                "value": "Playstation",
+                                "type": "bucket"
+                            },
+                            {
+                                "id": 2,
+                                "value": "Xbox",
+                                "type": "bucket"
+                            }
+                        ],
+                        "feedback": [
+                            {
+                                "bucketId": 0,
+                                "choiceId": 1,
+                                "position": null,
+                                "isCorrect": false,
+                                "feedback": "",
+                                "incorrectPositionFeedback": ""
+                            },
+                            {
+                                "bucketId": 0,
+                                "choiceId": 2,
+                                "position": null,
+                                "isCorrect": false,
+                                "feedback": "",
+                                "incorrectPositionFeedback": ""
+                            },
+                            {
+                                "bucketId": 0,
+                                "choiceId": 3,
+                                "position": null,
+                                "isCorrect": false,
+                                "feedback": "",
+                                "incorrectPositionFeedback": ""
+                            },
+                            {
+                                "bucketId": 0,
+                                "choiceId": 4,
+                                "position": null,
+                                "isCorrect": false,
+                                "feedback": "",
+                                "incorrectPositionFeedback": ""
+                            },
+                            {
+                                "bucketId": 0,
+                                "choiceId": 5,
+                                "position": null,
+                                "isCorrect": false,
+                                "feedback": "",
+                                "incorrectPositionFeedback": ""
+                            },
+                            {
+                                "bucketId": 0,
+                                "choiceId": 6,
+                                "position": null,
+                                "isCorrect": false,
+                                "feedback": "",
+                                "incorrectPositionFeedback": ""
+                            },
+                            {
+                                "bucketId": 0,
+                                "choiceId": 7,
+                                "position": null,
+                                "isCorrect": false,
+                                "feedback": "",
+                                "incorrectPositionFeedback": ""
+                            },
+                            {
+                                "bucketId": 1,
+                                "choiceId": 1,
+                                "position": 1,
+                                "isCorrect": true,
+                                "feedback": "Correct, Playstation 1 was first.",
+                                "incorrectPositionFeedback": "Yes, this is a Playstation but it's in the wrong position."
+                            },
+                            {
+                                "bucketId": 1,
+                                "choiceId": 2,
+                                "position": 2,
+                                "isCorrect": true,
+                                "feedback": "Correct, Playstation 2 was second.",
+                                "incorrectPositionFeedback": "Yes, this is a Playstation but it's in the wrong position."
+                            },
+                            {
+                                "bucketId": 1,
+                                "choiceId": 3,
+                                "position": 3,
+                                "isCorrect": true,
+                                "feedback": "Correct, Playstation 3 was third.",
+                                "incorrectPositionFeedback": "Yes, this is a Playstation but it's in the wrong position."
+                            },
+                            {
+                                "bucketId": 1,
+                                "choiceId": 4,
+                                "position": 4,
+                                "isCorrect": true,
+                                "feedback": "Correct, Playstation 4 was fourth.",
+                                "incorrectPositionFeedback": "Yes, this is a Playstation but it's in the wrong position."
+                            },
+                            {
+                                "bucketId": 1,
+                                "choiceId": 5,
+                                "position": null,
+                                "isCorrect": false,
+                                "feedback": "Incorrect, this is not a Playstation.",
+                                "incorrectPositionFeedback": ""
+                            },
+                            {
+                                "bucketId": 1,
+                                "choiceId": 6,
+                                "position": null,
+                                "isCorrect": false,
+                                "feedback": "Incorrect, this is not a Playstation.",
+                                "incorrectPositionFeedback": ""
+                            },
+                            {
+                                "bucketId": 1,
+                                "choiceId": 7,
+                                "position": null,
+                                "isCorrect": false,
+                                "feedback": "Incorrect, this is not a Playstation.",
+                                "incorrectPositionFeedback": ""
+                            },
+                            {
+                                "bucketId": 2,
+                                "choiceId": 1,
+                                "position": null,
+                                "isCorrect": false,
+                                "feedback": "Incorrect, this is not an Xbox.",
+                                "incorrectPositionFeedback": ""
+                            },
+                            {
+                                "bucketId": 2,
+                                "choiceId": 2,
+                                "position": null,
+                                "isCorrect": false,
+                                "feedback": "Incorrect, this is not an Xbox.",
+                                "incorrectPositionFeedback": ""
+                            },
+                            {
+                                "bucketId": 2,
+                                "choiceId": 3,
+                                "position": null,
+                                "isCorrect": false,
+                                "feedback": "Incorrect, this is not an Xbox.",
+                                "incorrectPositionFeedback": ""
+                            },
+                            {
+                                "bucketId": 2,
+                                "choiceId": 4,
+                                "position": null,
+                                "isCorrect": false,
+                                "feedback": "Incorrect, this is not an Xbox.",
+                                "incorrectPositionFeedback": ""
+                            },
+                            {
+                                "bucketId": 2,
+                                "choiceId": 5,
+                                "position": 1,
+                                "isCorrect": true,
+                                "feedback": "Correct, this is the first Xbox.",
+                                "incorrectPositionFeedback": "Yes, this is an Xbox but it's in the wrong position."
+                            },
+                            {
+                                "bucketId": 2,
+                                "choiceId": 6,
+                                "position": 2,
+                                "isCorrect": true,
+                                "feedback": "Correct, this is the second Xbox.",
+                                "incorrectPositionFeedback": "Yes, this is an Xbox but it's in the wrong position."
+                            },
+                            {
+                                "bucketId": 2,
+                                "choiceId": 7,
+                                "position": 3,
+                                "isCorrect": true,
+                                "feedback": "Correct, this is the third Xbox.",
+                                "incorrectPositionFeedback": "Yes, this is an Xbox but it's in the wrong position."
+                            }
+                        ],
+                        "showSaveButton": true,
+                        "showSubmitButton": true
+                    },
+                    {
+                        "id": "m48hhgufo9",
+                        "componentType": "HTML",
+                        "html": "<p>This is an HTML step.</p>"
+                    },
+                    {
+                        "id": "9aff80as23",
+                        "componentType": "MultipleChoice",
+                        "prompt": "Who lives in a pineapple under the sea?",
+                        "choiceType": "radio",
+                        "correctChoice": "78de39me19",
+                        "choices": [
+                                {
+                                "text": "Patrick",
+                                "id": "4j6v8m3jc9",
+                                "feedback": "Incorrect, Patrick lives under a rock."
+                            },
+                            {
+                                "text": "Spongebob",
+                                "id": "78de39me19",
+                                "feedback": "Correct, Spongebob lives in a pineapple."
+                            },
+                            {
+                                "text": "Squidward",
+                                "id": "n8s6v3k2h6",
+                                "feedback": "Incorrect, Squidward lives in an Easter Island Head."
+                            }
+                        ],
+                        "showSaveButton": true,
+                        "showSubmitButton": true
+                    },
+                    {
+                        "id": "l92uy23boi2",
+                        "componentType": "MultipleChoice",
+                        "prompt": "Who works at the Krusty Krab?",
+                        "choices": [
+                            {
+                                "text": "Patrick",
+                                "id": "4j6v8m3jc9",
+                                "feedback": "Incorrect, Patrick does not have a job."
+                            },
+                            {
+                                "text": "Spongebob",
+                                "id": "78de39me19",
+                                "feedback": "Correct, Spongebob is the fry cook at the Krusty Krab"
+                            },
+                            {
+                                "text": "Squidward",
+                                "id": "n8s6v3k2h6",
+                                "feedback": "Correct, Squidward is the cashier at the Krusty Krab."
+                            }
+                        ],
+                        "correctChoices": [
+                            "78de39me19",
+                            "n8s6v3k2h6"
+                        ],
+                        "choiceType": "checkbox",
+                        "lockAfterSubmit": false,
+                        "showSaveButton": true,
+                        "showSubmitButton": true
+                    },
+                    {
+                        "id": "82da3923gy",
+                        "componentType": "OutsideURL",
+                        "url": "http://www.berkeley.edu/"
+                    },
+                    {
+                        "id": "1t36rx2uvg",
+                        "componentType": "Table",
+                        "prompt": "Work on this table step.",
+                        "tableData": [
+                            [
+                                {
+                                    "text": "",
+                                    "editable": false
+                                },
+                                {
+                                    "text": "time",
+                                    "editable": false,
+                                    "size": 10
+                                },
+                                {
+                                    "text": "distance",
+                                    "editable": false,
+                                    "size": 10
+                                }
+                            ],
+                            [
+                                {
+                                    "text": "House",
+                                    "editable": true
+                                },
+                                {
+                                    "text": "1",
+                                    "editable": true,
+                                    "size": 10
+                                },
+                                {
+                                    "text": "7",
+                                    "editable": true,
+                                    "size": 10
+                                }
+                            ],
+                            [
+                                {
+                                    "text": "Supermarket",
+                                    "editable": true
+                                },
+                                {
+                                    "text": "2",
+                                    "editable": true,
+                                    "size": 10
+                                },
+                                {
+                                    "text": "3",
+                                    "editable": true,
+                                    "size": 10
+                                }
+                            ],
+                            [
+                                {
+                                    "text": "Gas Station",
+                                    "editable": true
+                                },
+                                {
+                                    "text": "3",
+                                    "editable": true,
+                                    "size": 10
+                                },
+                                {
+                                    "text": "9",
+                                    "editable": true,
+                                    "size": 10
+                                }
+                            ]
+                        ],
+                        "showSaveButton": true,
+                        "showSubmitButton": true
+                    }
+                ],
+                "lockAfterSubmit": false,
+                "showSubmitButton": false
+            }
         },
         {
             "id": "node15",
-            "type": "Node",
+            "type": "node",
             "title": "Table and Graph Step",
             "src": "node15.json",
             "x": 450,
             "y": 240,
-            "r": 20
+            "r": 20,
+            "content": {
+                "prompt": "Work on this linked table and graph step.",
+                "components": [
+                    {
+                        "id": "2b9db2q0am",
+                        "componentType": "Table",
+                        "prompt": "Fill out the table.",
+                        "tableData": [
+                            [
+                                {
+                                    "text": "",
+                                    "editable": false
+                                },
+                                {
+                                    "text": "time",
+                                    "editable": false,
+                                    "size": 10
+                                },
+                                {
+                                    "text": "distance",
+                                    "editable": false,
+                                    "size": 10
+                                }
+                            ],
+                            [
+                                {
+                                    "text": "House",
+                                    "editable": true
+                                },
+                                {
+                                    "text": "1",
+                                    "editable": true,
+                                    "size": 10
+                                },
+                                {
+                                    "text": "7",
+                                    "editable": true,
+                                    "size": 10
+                                }
+                            ],
+                            [
+                                {
+                                    "text": "Supermarket",
+                                    "editable": true
+                                },
+                                {
+                                    "text": "2",
+                                    "editable": true,
+                                    "size": 10
+                                },
+                                {
+                                    "text": "3",
+                                    "editable": true,
+                                    "size": 10
+                                }
+                            ],
+                            [
+                                {
+                                    "text": "Gas Station",
+                                    "editable": true
+                                },
+                                {
+                                    "text": "3",
+                                    "editable": true,
+                                    "size": 10
+                                },
+                                {
+                                    "text": "9",
+                                    "editable": true,
+                                    "size": 10
+                                }
+                            ],
+                            [
+                                {
+                                    "text": "",
+                                    "editable": true
+                                },
+                                {
+                                    "text": "",
+                                    "editable": true,
+                                    "size": 10
+                                },
+                                {
+                                    "text": "",
+                                    "editable": true,
+                                    "size": 10
+                                }
+                            ],
+                            [
+                                {
+                                    "text": "",
+                                    "editable": true
+                                },
+                                {
+                                    "text": "",
+                                    "editable": true,
+                                    "size": 10
+                                },
+                                {
+                                    "text": "",
+                                    "editable": true,
+                                    "size": 10
+                                }
+                            ],
+                            [
+                                {
+                                    "text": "",
+                                    "editable": true
+                                },
+                                {
+                                    "text": "",
+                                    "editable": true,
+                                    "size": 10
+                                },
+                                {
+                                    "text": "",
+                                    "editable": true,
+                                    "size": 10
+                                }
+                            ]
+                        ],
+                        "showSubmitButton": false,
+                        "showSaveButton": true,
+                        "showSubmitButton": true,
+                        "connectedComponents": [
+                            {
+                                "id": "adb3a92fak",
+                                "skipFirstRow": true,
+                                "xColumn": 1,
+                                "yColumn": 2,
+                                "seriesIndex": 1
+                            }
+                        ]
+                    },
+                    {
+                        "id": "adb3a92fak",
+                        "componentType": "Graph",
+                        "prompt": "Your table data points will automatically show up in the graph. You may also change the points on the graph to automatically change the table.",
+                        "title": "Scatter Plot",
+                        "graphType": "scatter",
+                        "xAxis": {
+                            "title": {
+                                "text": "time (seconds)"
+                            },
+                            "min": 0,
+                            "max": 20
+                        },
+                        "yAxis": {
+                            "title": {
+                                "text": "distance (meters)"
+                            },
+                            "min": 0,
+                            "max": 50
+                        },
+                        "series": [
+                            {
+                                "name": "Static Data",
+                                "data": [[0, 5], [5, 10], [10, 15], [15, 25]],
+                                "color": "red",
+                                "regression": true,
+                                "regressionSettings": {
+                                    "type": "linear",
+                                    "color": "red"
+                                },
+                                "canClickToAddData": false
+                            },
+                            {
+                                "name": "Data From Table",
+                                "data": [],
+                                "color": "blue",
+                                "regression": true,
+                                "regressionSettings": {
+                                    "type": "exponential",
+                                    "color": "blue"
+                                },
+                                "canClickToAddData": true
+                            }
+                        ],
+                        "canClickToAddData": true,
+                        "connectedComponents": [
+                            {
+                                "id": "2b9db2q0am",
+                                "skipFirstRow": true,
+                                "xColumn": 1,
+                                "yColumn": 2,
+                                "seriesIndex": 1
+                            }
+                        ]
+                    }
+                ],
+                "lockAfterSubmit": false,
+                "showSubmitButton": false
+            }
         },
         {
             "id": "node16",
-            "type": "Node",
+            "type": "node",
             "title": "Review Table and Graph Step",
             "src": "node16.json",
             "x": 550,
             "y": 240,
-            "r": 20
+            "r": 20,
+            "content": {
+                "prompt": "Review the work from previous steps and write a reflection on them.",
+                "components": [
+                    {
+                        "id": "3g62ae944v",
+                        "componentType": "OpenResponse",
+                        "showPreviousWorkNodeId": "node1",
+                        "showPreviousWorkComponentId": "2mb2892l6q"
+                    },
+                    {
+                        "id": "vg12a7a04b",
+                        "componentType": "Table",
+                        "showPreviousWorkNodeId": "node15",
+                        "showPreviousWorkComponentId": "2b9db2q0am"
+                    },
+                    {
+                        "id": "69ed41d9v3",
+                        "componentType": "Graph",
+                        "showPreviousWorkNodeId": "node15",
+                        "showPreviousWorkComponentId": "adb3a92fak"
+                    },
+                    {
+                        "id": "5m32b9yl22",
+                        "componentType": "OpenResponse",
+                        "prompt": "Reflect on your previous work.",
+                        "numRows": 5,
+                        "showSaveButton": true,
+                        "showSubmitButton": true
+                    }
+                ],
+                "lockAfterSubmit": false,
+                "showSubmitButton": false
+            }
         },
         {
             "id": "node17",
-            "type": "Node",
+            "type": "node",
             "title": "Import Open Response Work",
             "src": "node17.json",
             "x": 650,
             "y": 240,
-            "r": 20
+            "r": 20,
+            "content": {
+                "prompt": "Review the work from previous steps and write a reflection on them.",
+                "components": [
+                    {
+                        "id": "oi74ybciw7",
+                        "componentType": "OpenResponse",
+                        "prompt": "Revise your work from node 1.",
+                        "numRows": 5,
+                        "showSaveButton": true,
+                        "showSubmitButton": true,
+                        "importWorkNodeId": "node1",
+                        "importWorkComponentId": "2mb2892l6q"
+                    },
+                    {
+                        "id": "8ba87af9y3",
+                        "componentType": "Discussion",
+                        "prompt": "Revise your work from node 2.",
+                        "numRows": 5,
+                        "showSaveButton": true,
+                        "showSubmitButton": true,
+                        "importWorkNodeId": "node2",
+                        "importWorkComponentId": "2b0of2g8hw"
+                    },
+                    {
+                        "id": "g2n213a0ab",
+                        "componentType": "Draw",
+                        "prompt": "Revise your work from node 3.",
+                        "showSaveButton": true,
+                        "showSubmitButton": true,
+                        "importWorkNodeId": "node3",
+                        "importWorkComponentId": "9h4wxy737r"
+                    },
+                    {
+                        "id": "kw8fhn20x7",
+                        "componentType": "Graph",
+                        "prompt": "Revise your work from node 4.",
+                        "title": "Scatter Plot",
+                        "graphType": "scatter",
+                        "xAxis": {
+                            "title": {
+                                "text": "time (seconds)"
+                            },
+                            "min": 0,
+                            "max": 20
+                        },
+                        "yAxis": {
+                            "title": {
+                                "text": "distance (meters)"
+                            },
+                            "min": 0,
+                            "max": 50
+                        },
+                        "series": [],
+                        "canClickToAddData": true,
+                        "showSaveButton": true,
+                        "showSubmitButton": true,
+                        "importWorkNodeId": "node4",
+                        "importWorkComponentId": "85vygf6abh2"
+                    },
+                    {
+                        "id": "ag16fgf8t4",
+                        "componentType": "Match",
+                        "prompt": "Work on this match step.",
+                        "choices": [
+                            {
+                                "id": 1,
+                                "value": "<img src='assets/ps1.jpg'/>",
+                                "type": "choice"
+                            },
+                            {
+                                "id": 2,
+                                "value": "<img src='assets/ps2.jpg'/>",
+                                "type": "choice"
+                            },
+                            {
+                                "id": 3,
+                                "value": "<img src='assets/ps3.png'/>",
+                                "type": "choice"
+                            },
+                            {
+                                "id": 4,
+                                "value": "<img src='assets/ps4.jpg'/>",
+                                "type": "choice"
+                            },
+                            {
+                                "id": 5,
+                                "value": "Xbox 1",
+                                "type": "choice"
+                            },
+                            {
+                                "id": 6,
+                                "value": "Xbox 360",
+                                "type": "choice"
+                            },
+                            {
+                                "id": 7,
+                                "value": "Xbone",
+                                "type": "choice"
+                            }
+                        ],
+                        "buckets": [
+                            {
+                                "id": 1,
+                                "value": "Playstation",
+                                "type": "bucket"
+                            },
+                            {
+                                "id": 2,
+                                "value": "Xbox",
+                                "type": "bucket"
+                            }
+                        ],
+                        "feedback": [
+                            {
+                                "bucketId": 0,
+                                "choiceId": 1,
+                                "position": null,
+                                "isCorrect": false,
+                                "feedback": "",
+                                "incorrectPositionFeedback": ""
+                            },
+                            {
+                                "bucketId": 0,
+                                "choiceId": 2,
+                                "position": null,
+                                "isCorrect": false,
+                                "feedback": "",
+                                "incorrectPositionFeedback": ""
+                            },
+                            {
+                                "bucketId": 0,
+                                "choiceId": 3,
+                                "position": null,
+                                "isCorrect": false,
+                                "feedback": "",
+                                "incorrectPositionFeedback": ""
+                            },
+                            {
+                                "bucketId": 0,
+                                "choiceId": 4,
+                                "position": null,
+                                "isCorrect": false,
+                                "feedback": "",
+                                "incorrectPositionFeedback": ""
+                            },
+                            {
+                                "bucketId": 0,
+                                "choiceId": 5,
+                                "position": null,
+                                "isCorrect": false,
+                                "feedback": "",
+                                "incorrectPositionFeedback": ""
+                            },
+                            {
+                                "bucketId": 0,
+                                "choiceId": 6,
+                                "position": null,
+                                "isCorrect": false,
+                                "feedback": "",
+                                "incorrectPositionFeedback": ""
+                            },
+                            {
+                                "bucketId": 0,
+                                "choiceId": 7,
+                                "position": null,
+                                "isCorrect": false,
+                                "feedback": "",
+                                "incorrectPositionFeedback": ""
+                            },
+                            {
+                                "bucketId": 1,
+                                "choiceId": 1,
+                                "position": 1,
+                                "isCorrect": true,
+                                "feedback": "Correct, Playstation 1 was first.",
+                                "incorrectPositionFeedback": "Yes, this is a Playstation but it's in the wrong position."
+                            },
+                            {
+                                "bucketId": 1,
+                                "choiceId": 2,
+                                "position": 2,
+                                "isCorrect": true,
+                                "feedback": "Correct, Playstation 2 was second.",
+                                "incorrectPositionFeedback": "Yes, this is a Playstation but it's in the wrong position."
+                            },
+                            {
+                                "bucketId": 1,
+                                "choiceId": 3,
+                                "position": 3,
+                                "isCorrect": true,
+                                "feedback": "Correct, Playstation 3 was third.",
+                                "incorrectPositionFeedback": "Yes, this is a Playstation but it's in the wrong position."
+                            },
+                            {
+                                "bucketId": 1,
+                                "choiceId": 4,
+                                "position": 4,
+                                "isCorrect": true,
+                                "feedback": "Correct, Playstation 4 was fourth.",
+                                "incorrectPositionFeedback": "Yes, this is a Playstation but it's in the wrong position."
+                            },
+                            {
+                                "bucketId": 1,
+                                "choiceId": 5,
+                                "position": null,
+                                "isCorrect": false,
+                                "feedback": "Incorrect, this is not a Playstation.",
+                                "incorrectPositionFeedback": ""
+                            },
+                            {
+                                "bucketId": 1,
+                                "choiceId": 6,
+                                "position": null,
+                                "isCorrect": false,
+                                "feedback": "Incorrect, this is not a Playstation.",
+                                "incorrectPositionFeedback": ""
+                            },
+                            {
+                                "bucketId": 1,
+                                "choiceId": 7,
+                                "position": null,
+                                "isCorrect": false,
+                                "feedback": "Incorrect, this is not a Playstation.",
+                                "incorrectPositionFeedback": ""
+                            },
+                            {
+                                "bucketId": 2,
+                                "choiceId": 1,
+                                "position": null,
+                                "isCorrect": false,
+                                "feedback": "Incorrect, this is not an Xbox.",
+                                "incorrectPositionFeedback": ""
+                            },
+                            {
+                                "bucketId": 2,
+                                "choiceId": 2,
+                                "position": null,
+                                "isCorrect": false,
+                                "feedback": "Incorrect, this is not an Xbox.",
+                                "incorrectPositionFeedback": ""
+                            },
+                            {
+                                "bucketId": 2,
+                                "choiceId": 3,
+                                "position": null,
+                                "isCorrect": false,
+                                "feedback": "Incorrect, this is not an Xbox.",
+                                "incorrectPositionFeedback": ""
+                            },
+                            {
+                                "bucketId": 2,
+                                "choiceId": 4,
+                                "position": null,
+                                "isCorrect": false,
+                                "feedback": "Incorrect, this is not an Xbox.",
+                                "incorrectPositionFeedback": ""
+                            },
+                            {
+                                "bucketId": 2,
+                                "choiceId": 5,
+                                "position": 1,
+                                "isCorrect": true,
+                                "feedback": "Correct, this is the first Xbox.",
+                                "incorrectPositionFeedback": "Yes, this is an Xbox but it's in the wrong position."
+                            },
+                            {
+                                "bucketId": 2,
+                                "choiceId": 6,
+                                "position": 2,
+                                "isCorrect": true,
+                                "feedback": "Correct, this is the second Xbox.",
+                                "incorrectPositionFeedback": "Yes, this is an Xbox but it's in the wrong position."
+                            },
+                            {
+                                "bucketId": 2,
+                                "choiceId": 7,
+                                "position": 3,
+                                "isCorrect": true,
+                                "feedback": "Correct, this is the third Xbox.",
+                                "incorrectPositionFeedback": "Yes, this is an Xbox but it's in the wrong position."
+                            }
+                        ],
+                        "showSubmitButton": true,
+                        "importWorkNodeId": "node6",
+                        "importWorkComponentId": "63h390h98s"
+                    },
+                    {
+                        "id": "w758rgjt38",
+                        "componentType": "MultipleChoice",
+                        "prompt": "Who lives in a pineapple under the sea?",
+                        "choiceType": "radio",
+                        "correctChoice": "78de39me19",
+                        "choices": [
+                            {
+                                "text": "Patrick",
+                                "id": "4j6v8m3jc9",
+                                "feedback": "Incorrect, Patrick lives under a rock."
+                            },
+                            {
+                                "text": "Spongebob",
+                                "id": "78de39me19",
+                                "feedback": "Correct, Spongebob lives in a pineapple."
+                            },
+                            {
+                                "text": "Squidward",
+                                "id": "n8s6v3k2h6",
+                                "feedback": "Incorrect, Squidward lives in an Easter Island Head."
+                            }
+                        ],
+                        "showSaveButton": true,
+                        "showSubmitButton": true,
+                        "importWorkNodeId": "node7",
+                        "importWorkComponentId": "8aff8bas23"
+                    },
+                    {
+                        "id": "ie672h39st",
+                        "componentType": "MultipleChoice",
+                        "prompt": "Who works at the Krusty Krab?",
+                        "choices": [
+                            {
+                                "text": "Patrick",
+                                "id": "4j6v8m3jc9",
+                                "feedback": "Incorrect, Patrick does not have a job."
+                            },
+                            {
+                                "text": "Spongebob",
+                                "id": "78de39me19",
+                                "feedback": "Correct, Spongebob is the fry cook at the Krusty Krab"
+                            },
+                            {
+                                "text": "Squidward",
+                                "id": "n8s6v3k2h6",
+                                "feedback": "Correct, Squidward is the cashier at the Krusty Krab."
+                            }
+                        ],
+                        "correctChoices": [
+                            "78de39me19",
+                            "n8s6v3k2h6"
+                        ],
+                        "choiceType": "checkbox",
+                        "lockAfterSubmit": false,
+                        "showSaveButton": true,
+                        "showSubmitButton": true,
+                        "importWorkNodeId": "node8",
+                        "importWorkComponentId": "9a21pbab2x"
+                    },
+                    {
+                        "id": "z54tnrg4g8",
+                        "componentType": "Table",
+                        "prompt": "Work on this table step.",
+                        "tableData": [
+                            [
+                                {
+                                    "text": "",
+                                    "editable": false
+                                },
+                                {
+                                    "text": "time",
+                                    "editable": false,
+                                    "size": 10
+                                },
+                                {
+                                    "text": "distance",
+                                    "editable": false,
+                                    "size": 10
+                                }
+                            ],
+                            [
+                                {
+                                    "text": "House",
+                                    "editable": true
+                                },
+                                {
+                                    "text": "1",
+                                    "editable": true,
+                                    "size": 10
+                                },
+                                {
+                                    "text": "7",
+                                    "editable": true,
+                                    "size": 10
+                                }
+                            ],
+                            [
+                                {
+                                    "text": "Supermarket",
+                                    "editable": true
+                                },
+                                {
+                                    "text": "2",
+                                    "editable": true,
+                                    "size": 10
+                                },
+                                {
+                                    "text": "3",
+                                    "editable": true,
+                                    "size": 10
+                                }
+                            ],
+                            [
+                                {
+                                    "text": "Gas Station",
+                                    "editable": true
+                                },
+                                {
+                                    "text": "3",
+                                    "editable": true,
+                                    "size": 10
+                                },
+                                {
+                                    "text": "9",
+                                    "editable": true,
+                                    "size": 10
+                                }
+                            ]
+                        ],
+                        "showSaveButton": true,
+                        "showSubmitButton": true,
+                        "importWorkNodeId": "node10",
+                        "importWorkComponentId": "0t36r52uvg"
+                    },
+                            {
+                        "id": "m7r48fgw9t",
+                        "componentType": "AudioRecorder",
+                        "prompt": "Work on this audio recorder step.",
+                        "importWorkNodeId": "node11",
+                        "importWorkComponentId": "4j72bdiy3b"
+                    },
+                    {
+                        "id": "gh6982hgr3",
+                        "componentType": "PhotoBooth",
+                        "prompt": "Work on this photo booth step.",
+                        "importWorkNodeId": "node12",
+                        "importWorkComponentId": "42a31a2g6j1m"
+                    }
+                ],
+                "lockAfterSubmit": false,
+                "showSubmitButton": false
+            }
         },
         {
             "id": "node18",
-            "type": "Node",
+            "type": "node",
             "title": "Open Response Submit",
             "src": "node18.json",
             "x": 750,
             "y": 240,
-            "r": 20
+            "r": 20,
+            "content": {
+                "prompt": "",
+                "components": [
+                    {
+                        "id": "df63ga1qga",
+                        "componentType": "OpenResponse",
+                        "prompt": "You can submit this once.",
+                        "numRows": 5,
+                        "showSaveButton": true,
+                        "showSubmitButton": true
+                    },
+                    {
+                        "id": "29a0g2g4zb",
+                        "componentType": "OpenResponse",
+                        "prompt": "You can submit this once.",
+                        "numRows": 5,
+                        "showSaveButton": true,
+                        "showSubmitButton": true
+                    }
+                ],
+                "lockAfterSubmit": true,
+                "showSubmitButton": true
+            }
         },
         {
             "id": "node19",
-            "type": "Node",
+            "type": "node",
             "title": "Open Response Submit",
             "src": "node19.json",
             "x": 850,
             "y": 240,
-            "r": 20
+            "r": 20,
+            "content": {
+                "prompt": "",
+                "components": [
+                    {
+                        "id": "8fy33tho3u",
+                        "componentType": "OpenResponse",
+                        "prompt": "You can submit this once.",
+                        "numRows": 5,
+                        "showSaveButton": true,
+                        "showSubmitButton": true,
+                        "lockAfterSubmit": true
+                    },
+                    {
+                        "id": "3b9bna1avr",
+                        "componentType": "OpenResponse",
+                        "prompt": "You can submit this once.",
+                        "numRows": 5,
+                        "showSaveButton": true,
+                        "showSubmitButton": true,
+                        "lockAfterSubmit": true
+                    }
+                ],
+                "lockAfterSubmit": false,
+                "showSubmitButton": false
+            }
         },
         {
             "id": "node22",
-            "type": "Node",
+            "type": "node",
             "title": "Discussion Submit",
             "src": "node22.json",
             "x": 150,
             "y": 340,
-            "r": 20
+            "r": 20,
+            "content": {
+                "prompt": "",
+                "components": [
+                    {
+                        "id": "bad8f20az3",
+                        "componentType": "Discussion",
+                        "prompt": "Work on this discussion step.",
+                        "numRows": 5,
+                        "showSaveButton": true,
+                        "showSubmitButton": true
+                    }
+                ],
+                "lockAfterSubmit": true,
+                "showSubmitButton": false
+            }
         },
         {
             "id": "node23",
-            "type": "Node",
+            "type": "node",
             "title": "Draw Submit",
             "src": "node23.json",
             "x": 250,
             "y": 340,
-            "r": 20
+            "r": 20,
+            "content": {
+                "prompt": "",
+                "components": [
+                    {
+                        "id": "9h4wxy737r",
+                        "componentType": "Draw",
+                        "prompt": "Work on this draw step.",
+                        "showSaveButton": true,
+                        "showSubmitButton": true
+                    }
+                ],
+                "lockAfterSubmit": true,
+                "showSubmitButton": false
+            }
         },
         {
             "id": "node24",
-            "type": "Node",
+            "type": "node",
             "title": "Graph Submit",
             "src": "node24.json",
             "x": 350,
             "y": 340,
-            "r": 20
+            "r": 20,
+            "content": {
+                "prompt": "",
+                "components": [
+                    {
+                        "id": "y3hdq3h4f8",
+                        "componentType": "Graph",
+                        "prompt": "Work on this graph step.",
+                        "title": "Scatter Plot",
+                        "graphType": "scatter",
+                        "xAxis": {
+                            "title": {
+                                "text": "time (seconds)"
+                            },
+                            "min": 0,
+                            "max": 20
+                        },
+                        "yAxis": {
+                            "title": {
+                                "text": "distance (meters)"
+                            },
+                            "min": 0,
+                            "max": 50
+                        },
+                        "series": [
+                            {
+                                "data": [[0, 0], [5, 1], [10, 2], [15, 3]],
+                                "color": "red",
+                                "regression": true,
+                                "regressionSettings": {
+                                    "type": "linear",
+                                    "color": "red"
+                                }
+                            },
+                            {
+                                "data": [[0, 0], [5, 10], [10, 15], [16, 45]],
+                                "color": "blue",
+                                "regression": true,
+                                "regressionSettings": {
+                                    "type": "exponential",
+                                    "color": "blue"
+                                }
+                            }
+                        ],
+                        "canClickToAddData": true,
+                        "showSaveButton": true,
+                        "showSubmitButton": true
+                    }
+                ],
+                "lockAfterSubmit": true,
+                "showSubmitButton": true
+            }
         },
         {
             "id": "node26",
-            "type": "Node",
+            "type": "node",
             "title": "Match Submit",
             "src": "node26.json",
             "x": 550,
             "y": 340,
-            "r": 20
+            "r": 20,
+            "content": {
+                "prompt": "",
+                "components": [
+                    {
+                        "id": "wx3r90c9js",
+                        "componentType": "Match",
+                        "prompt": "Work on this match step.",
+                        "choices": [
+                            {
+                                "id": 1,
+                                "value": "<img src='assets/ps1.jpg'/>",
+                                "type": "choice"
+                            },
+                            {
+                                "id": 2,
+                                "value": "<img src='assets/ps2.jpg'/>",
+                                "type": "choice"
+                            },
+                            {
+                                "id": 3,
+                                "value": "<img src='assets/ps3.png'/>",
+                                "type": "choice"
+                            },
+                            {
+                                "id": 4,
+                                "value": "<img src='assets/ps4.jpg'/>",
+                                "type": "choice"
+                            },
+                            {
+                                "id": 5,
+                                "value": "Xbox 1",
+                                "type": "choice"
+                            },
+                            {
+                                "id": 6,
+                                "value": "Xbox 360",
+                                "type": "choice"
+                            },
+                            {
+                                "id": 7,
+                                "value": "Xbone",
+                                "type": "choice"
+                            }
+                        ],
+                        "buckets": [
+                            {
+                                "id": 1,
+                                "value": "Playstation",
+                                "type": "bucket"
+                            },
+                            {
+                                "id": 2,
+                                "value": "Xbox",
+                                "type": "bucket"
+                            }
+                        ],
+                        "feedback": [
+                            {
+                                "bucketId": 0,
+                                "choiceId": 1,
+                                "position": null,
+                                "isCorrect": false,
+                                "feedback": "",
+                                "incorrectPositionFeedback": ""
+                            },
+                            {
+                                "bucketId": 0,
+                                "choiceId": 2,
+                                "position": null,
+                                "isCorrect": false,
+                                "feedback": "",
+                                "incorrectPositionFeedback": ""
+                            },
+                            {
+                                "bucketId": 0,
+                                "choiceId": 3,
+                                "position": null,
+                                "isCorrect": false,
+                                "feedback": "",
+                                "incorrectPositionFeedback": ""
+                            },
+                            {
+                                "bucketId": 0,
+                                "choiceId": 4,
+                                "position": null,
+                                "isCorrect": false,
+                                "feedback": "",
+                                "incorrectPositionFeedback": ""
+                            },
+                            {
+                                "bucketId": 0,
+                                "choiceId": 5,
+                                "position": null,
+                                "isCorrect": false,
+                                "feedback": "",
+                                "incorrectPositionFeedback": ""
+                            },
+                            {
+                                "bucketId": 0,
+                                "choiceId": 6,
+                                "position": null,
+                                "isCorrect": false,
+                                "feedback": "",
+                                "incorrectPositionFeedback": ""
+                            },
+                            {
+                                "bucketId": 0,
+                                "choiceId": 7,
+                                "position": null,
+                                "isCorrect": false,
+                                "feedback": "",
+                                "incorrectPositionFeedback": ""
+                            },
+                            {
+                                "bucketId": 1,
+                                "choiceId": 1,
+                                "position": 1,
+                                "isCorrect": true,
+                                "feedback": "Correct, Playstation 1 was first.",
+                                "incorrectPositionFeedback": "Yes, this is a Playstation but it's in the wrong position."
+                            },
+                            {
+                                "bucketId": 1,
+                                "choiceId": 2,
+                                "position": 2,
+                                "isCorrect": true,
+                                "feedback": "Correct, Playstation 2 was second.",
+                                "incorrectPositionFeedback": "Yes, this is a Playstation but it's in the wrong position."
+                            },
+                            {
+                                "bucketId": 1,
+                                "choiceId": 3,
+                                "position": 3,
+                                "isCorrect": true,
+                                "feedback": "Correct, Playstation 3 was third.",
+                                "incorrectPositionFeedback": "Yes, this is a Playstation but it's in the wrong position."
+                            },
+                            {
+                                "bucketId": 1,
+                                "choiceId": 4,
+                                "position": 4,
+                                "isCorrect": true,
+                                "feedback": "Correct, Playstation 4 was fourth.",
+                                "incorrectPositionFeedback": "Yes, this is a Playstation but it's in the wrong position."
+                            },
+                            {
+                                "bucketId": 1,
+                                "choiceId": 5,
+                                "position": null,
+                                "isCorrect": false,
+                                "feedback": "Incorrect, this is not a Playstation.",
+                                "incorrectPositionFeedback": ""
+                            },
+                            {
+                                "bucketId": 1,
+                                "choiceId": 6,
+                                "position": null,
+                                "isCorrect": false,
+                                "feedback": "Incorrect, this is not a Playstation.",
+                                "incorrectPositionFeedback": ""
+                            },
+                            {
+                                "bucketId": 1,
+                                "choiceId": 7,
+                                "position": null,
+                                "isCorrect": false,
+                                "feedback": "Incorrect, this is not a Playstation.",
+                                "incorrectPositionFeedback": ""
+                            },
+                            {
+                                "bucketId": 2,
+                                "choiceId": 1,
+                                "position": null,
+                                "isCorrect": false,
+                                "feedback": "Incorrect, this is not an Xbox.",
+                                "incorrectPositionFeedback": ""
+                            },
+                            {
+                                "bucketId": 2,
+                                "choiceId": 2,
+                                "position": null,
+                                "isCorrect": false,
+                                "feedback": "Incorrect, this is not an Xbox.",
+                                "incorrectPositionFeedback": ""
+                            },
+                            {
+                                "bucketId": 2,
+                                "choiceId": 3,
+                                "position": null,
+                                "isCorrect": false,
+                                "feedback": "Incorrect, this is not an Xbox.",
+                                "incorrectPositionFeedback": ""
+                            },
+                            {
+                                "bucketId": 2,
+                                "choiceId": 4,
+                                "position": null,
+                                "isCorrect": false,
+                                "feedback": "Incorrect, this is not an Xbox.",
+                                "incorrectPositionFeedback": ""
+                            },
+                            {
+                                "bucketId": 2,
+                                "choiceId": 5,
+                                "position": 1,
+                                "isCorrect": true,
+                                "feedback": "Correct, this is the first Xbox.",
+                                "incorrectPositionFeedback": "Yes, this is an Xbox but it's in the wrong position."
+                            },
+                            {
+                                "bucketId": 2,
+                                "choiceId": 6,
+                                "position": 2,
+                                "isCorrect": true,
+                                "feedback": "Correct, this is the second Xbox.",
+                                "incorrectPositionFeedback": "Yes, this is an Xbox but it's in the wrong position."
+                            },
+                            {
+                                "bucketId": 2,
+                                "choiceId": 7,
+                                "position": 3,
+                                "isCorrect": true,
+                                "feedback": "Correct, this is the third Xbox.",
+                                "incorrectPositionFeedback": "Yes, this is an Xbox but it's in the wrong position."
+                            }
+                        ],
+                        "showSubmitButton": true
+                    }
+                ],
+                "lockAfterSubmit": true,
+                "showSubmitButton": true
+            }
         },
         {
             "id": "node27",
-            "type": "Node",
+            "type": "node",
             "title": "Multiple Choice Radio Submit",
             "src": "node27.json",
             "x": 650,
             "y": 340,
-            "r": 20
+            "r": 20,
+            "content": {
+                "prompt": "Work on this multiple choice radio button step.",
+                "components": [
+                    {
+                        "id": "25hf3badu9",
+                        "componentType": "MultipleChoice",
+                        "prompt": "Who lives in a pineapple under the sea?",
+                        "choiceType": "radio",
+                        "correctChoice": "78de39me19",
+                        "choices": [
+                            {
+                                "text": "Patrick",
+                                "id": "4j6v8m3jc9",
+                                "feedback": "Incorrect, Patrick lives under a rock."
+                            },
+                            {
+                                "text": "Spongebob",
+                                "id": "78de39me19",
+                                "feedback": "Correct, Spongebob lives in a pineapple."
+                            },
+                            {
+                                "text": "Squidward",
+                                "id": "n8s6v3k2h6",
+                                "feedback": "Incorrect, Squidward lives in an Easter Island Head."
+                            }
+                        ],
+                        "showSaveButton": true,
+                        "showSubmitButton": true
+                    }
+                ],
+                "lockAfterSubmit": true,
+                "showSubmitButton": true
+            }
         },
         {
             "id": "node28",
-            "type": "Node",
+            "type": "node",
             "title": "Multiple Choice Checkbox Submit",
             "src": "node28.json",
             "x": 750,
             "y": 340,
-            "r": 20
+            "r": 20,
+            "content": {
+                "prompt": "Work on this multiple choice checkbox step.",
+                "components": [
+                    {
+                        "id": "mgw7h34ryw",
+                        "componentType": "MultipleChoice",
+                        "prompt": "Who works at the Krusty Krab?",
+                        "choices": [
+                            {
+                                "text": "Patrick",
+                                "id": "4j6v8m3jc9",
+                                "feedback": "Incorrect, Patrick does not have a job."
+                            },
+                            {
+                                "text": "Spongebob",
+                                "id": "78de39me19",
+                                "feedback": "Correct, Spongebob is the fry cook at the Krusty Krab"
+                            },
+                            {
+                                "text": "Squidward",
+                                "id": "n8s6v3k2h6",
+                                "feedback": "Correct, Squidward is the cashier at the Krusty Krab."
+                            }
+                        ],
+                        "correctChoices": [
+                            "78de39me19",
+                            "n8s6v3k2h6"
+                        ],
+                        "choiceType": "checkbox",
+                        "lockAfterSubmit": false,
+                        "showSaveButton": true,
+                        "showSubmitButton": true
+                    }
+                ],
+                "lockAfterSubmit": true,
+                "showSubmitButton": true
+            }
         },
         {
             "id": "node30",
-            "type": "Node",
+            "type": "node",
             "title": "Table Submit",
             "src": "node30.json",
             "x": 950,
             "y": 340,
-            "r": 20
+            "r": 20,
+            "content": {
+                "prompt": "",
+                "components": [
+                    {
+                        "id": "7t3cg52kv3",
+                        "componentType": "Table",
+                        "prompt": "Work on this table step.",
+                        "tableData": [
+                            [
+                                {
+                                    "text": "",
+                                    "editable": false
+                                },
+                                {
+                                    "text": "time",
+                                    "editable": false,
+                                    "size": 10
+                                },
+                                {
+                                    "text": "distance",
+                                    "editable": false,
+                                    "size": 10
+                                }
+                            ],
+                            [
+                                {
+                                    "text": "House",
+                                    "editable": true
+                                },
+                                {
+                                    "text": "1",
+                                    "editable": true,
+                                    "size": 10
+                                },
+                                {
+                                    "text": "7",
+                                    "editable": true,
+                                    "size": 10
+                                }
+                            ],
+                            [
+                                {
+                                    "text": "Supermarket",
+                                    "editable": true
+                                },
+                                {
+                                    "text": "2",
+                                    "editable": true,
+                                    "size": 10
+                                },
+                                {
+                                    "text": "3",
+                                    "editable": true,
+                                    "size": 10
+                                }
+                            ],
+                            [
+                                {
+                                    "text": "Gas Station",
+                                    "editable": true
+                                },
+                                {
+                                    "text": "3",
+                                    "editable": true,
+                                    "size": 10
+                                },
+                                {
+                                    "text": "9",
+                                    "editable": true,
+                                    "size": 10
+                                }
+                            ]
+                        ],
+                        "showSaveButton": true,
+                        "showSubmitButton": true
+                    }
+                ],
+                "lockAfterSubmit": true,
+                "showSubmitButton": true
+            }
+        },
+        {
+            "id": "node31",
+            "type": "node",
+            "title": "Open Response",
+            "src": "node31.json",
+            "x": 50,
+            "y": 440,
+            "r": 20,
+            "content": {
+                "prompt": "",
+                "components": [
+                    {
+                        "id": "5mw2n92k66",
+                        "componentType": "OpenResponse",
+                        "prompt": "Work on this open response step to unlock the next step.",
+                        "numRows": 5,
+                        "showSaveButton": true,
+                        "showSubmitButton": true
+                    }
+                ],
+                "lockAfterSubmit": false,
+                "showSubmitButton": false
+            }
+        },
+        {
+            "id": "node32",
+            "type": "node",
+            "title": "Open Response",
+            "src": "node32.json",
+            "x": 150,
+            "y": 440,
+            "r": 20,
+            "content": {
+                "prompt": "",
+                "components": [
+                    {
+                        "id": "qmq48b2l6q",
+                        "componentType": "OpenResponse",
+                        "prompt": "You unlocked this step by completing the previous step.",
+                        "numRows": 5,
+                        "showSaveButton": true,
+                        "showSubmitButton": true
+                    }
+                ],
+                "lockAfterSubmit": false,
+                "showSubmitButton": false
+            }
         },
         {
             "id": "group0",
@@ -282,7 +2495,9 @@
                 "node26",
                 "node27",
                 "node28",
-                "node30"
+                "node30",
+                "node31",
+                "node32"
             ],
             "x": 50,
             "y": 140,
@@ -414,11 +2629,36 @@
             "id": "transition28",
             "from": "node28",
             "to": "node30"
+        },
+        {
+            "id": "transition30",
+            "from": "node30",
+            "to": "node31"
+        },
+        {
+            "id": "transition31",
+            "from": "node31",
+            "to": "node32"
         }
     ],
     "startGroupId": "group0",
     "startNodeId": "node1",
-    "constraints": [],
+    "constraints": [
+        {
+            "id": "constraint1",
+            "constraintLogic": "node",
+            "criteria": [
+                {
+                    "functionName": "isCompleted",
+                    "functionParams": {
+                        "nodeId": "node31",
+                        "componentId": "5mw2n92k66"
+                    }
+                }
+            ],
+            "targetId": "node32"
+        }
+    ],
     "navigationMode": "guided",
     "navigationApplications": [
         "wiseMap",

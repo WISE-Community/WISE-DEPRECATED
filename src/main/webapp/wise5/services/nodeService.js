@@ -3,7 +3,7 @@ define(['configService', 'studentDataService'], function(configService, studentD
     var service = ['$http', '$q', 'ConfigService', 'StudentDataService',
                    function($http, $q, ConfigService, StudentDataService) {
         var serviceObject = {};
-        
+
         serviceObject.getNodeContentByNodeSrc = function(nodeSrc) {
             return $q(angular.bind(this, function(resolve, reject) {
                 $http.get(nodeSrc).then(angular.bind(this, function(result) {
@@ -15,7 +15,7 @@ define(['configService', 'studentDataService'], function(configService, studentD
                 }));
             }));
         };
-        
+
         serviceObject.retrieveNode = function() {
             var projectFileUrl = ConfigService.getConfigParam('projectURL');
             
@@ -24,142 +24,6 @@ define(['configService', 'studentDataService'], function(configService, studentD
                 this.project = projectJSON;
                 return projectJSON;
             }));
-        };
-        
-        /**
-         * Replace relative asset paths with absolute paths
-         * e.g.
-         * assets/myimage.jpg
-         * will be replaced with
-         * http://wise.berkeley.edu/curriculum/123456/assets/myimage.jpg
-         * @param content a string or JSON object
-         * @return the same type of object that was passed in as the content
-         * but with relative asset paths replaced with absolute paths
-         */
-        serviceObject.injectAssetPaths = function(content) {
-            
-            if (content != null) {
-                
-                if (typeof content === 'object') {
-                    
-                    var contentString = JSON.stringify(content);
-                    
-                    if (contentString != null) {
-                        
-                        // replace the relative asset paths with the absolute paths
-                        contentString = this.replaceAssetPaths(contentString);
-                        
-                        content = JSON.parse(contentString);
-                    }
-                } else if (typeof content === 'string') {
-                    
-                    // replace the relative asset paths with the absolute paths
-                    content = this.replaceAssetPaths(content);
-                }
-            }
-            
-            return content;
-        };
-        
-        /**
-         * Replace the relative asset paths with absolute paths
-         * @param contentString the content string
-         * @return the content string with relative asset paths replaced
-         * with absolute asset paths
-         */
-        serviceObject.replaceAssetPaths = function(contentString) {
-            
-            if (contentString != null) {
-                
-                // get the content base url e.g. http://wise.berkeley.edu/curriculum/123456
-                var contentBaseUrl = ConfigService.getConfigParam('projectBaseURL');
-                
-                // replace instances of 'assets/myimage.jpg' with 'http://wise.berkeley.edu/curriculum/123456/assets/myimage.jpg'
-                contentString = contentString.replace(new RegExp('\'(\\.)*(/)*assets', 'g'), '\''+contentBaseUrl + 'assets');
-                
-                // replace instances of "assets/myimage.jpg" with "http://wise.berkeley.edu/curriculum/123456/assets/myimage.jpg"
-                contentString = contentString.replace(new RegExp('\"(\\.)*(/)*assets', 'g'), '\"'+contentBaseUrl + 'assets');
-                
-            }
-            
-            return contentString
-        };
-        
-        serviceObject.injectNodeLinks = function(content) {
-            if (content != null) {
-                /*
-                if (text.indexOf("{{studentFirstNames}}") >= 0) {
-                    var workgroupId = this.getUserAndClassInfo().getWorkgroupId();
-                    var studentFirstNamesArray = this.getUserAndClassInfo().getStudentFirstNamesByWorkgroupId(workgroupId);
-                    var studentFirstNames = studentFirstNamesArray.join(' & ');
-                    text = text.replace(/{{studentFirstNames}}/g, studentFirstNames);
-                }
-                */
-                
-                if (typeof content === 'object') {
-                    var contentString = JSON.stringify(content);
-                    //contentString = this.replaceWithLink(contentString);
-                    if (contentString != null && contentString.indexOf("{{link") >= 0) {
-                        contentString = contentString.replace(/{{link\|([^}}]*)\|([^}}]*)}}/g, "<a ng-click=\'nodeController.buttonClicked(\\\"$1\\\")\'>$2</a>");
-                    }
-                    
-                    content = JSON.parse(contentString);
-                } else if (typeof content === 'string') {
-                    //content = this.replaceWithLink(content);
-                    
-                    if (content != null && content.indexOf("{{link") >= 0) {
-                        content = content.replace(/{{link\|([^}}]*)\|([^}}]*)}}/g, "<a ng-click=\'nodeController.buttonClicked(\"$1\")\'>$2</a>");
-                    }
-                }
-            }
-            return content;
-        };
-        
-        serviceObject.injectStudentData = function(content) {
-            if (content != null) {
-                var regex = /{{work\|([^}}]*)}}/g;
-                
-                if (typeof content === 'object') {
-                    var contentString = JSON.stringify(content);
-                    var matchResult = contentString.match(regex);
-                    
-                    var nodeId = RegExp.$1;
-                    
-                    if (nodeId === '1.1') {
-                        nodeId = 'node1';
-                    }
-                    
-                    var studentWork = StudentDataService.getLatestStudentWorkForNodeAsHTML(nodeId);
-                    
-                    if (studentWork != null) {
-                        contentString = contentString.replace(regex, studentWork);
-                    } else {
-                        contentString = contentString.replace(regex, '');
-                    }
-                    
-                    content = JSON.parse(contentString);
-                } else if (typeof content === 'string') {
-                    
-                    if (content != null && content.indexOf("{{work") >= 0) {
-                        var matchResult = content.match(regex);
-                        
-                        var nodeId = RegExp.$1;
-                        
-                        if (nodeId === '1.1') {
-                            nodeId = 'node1';
-                        }
-                        
-                        var studentWork = StudentDataService.getLatestStudentWorkForNodeAsHTML(nodeId);
-                        
-                        if (studentWork != null) {
-                            content = content.replace(regex, studentWork);
-                        } else {
-                            content = content.replace(regex, '');
-                        }
-                    }
-                }
-            }
-            return content;
         };
         
         serviceObject.isWorkSubmitted0 = function(nodeVisits) {
@@ -377,6 +241,41 @@ define(['configService', 'studentDataService'], function(configService, studentD
             }
             
             return result;
+        };
+
+        serviceObject.callFunction = function(functionName, functionParams) {
+            var result = null;
+
+            if (functionName === 'isCompleted') {
+                result = this.isCompleted(functionParams);
+            }
+
+            return result;
+        };
+
+        serviceObject.isCompleted = function(functionParams) {
+
+            if (functionParams != null) {
+                var nodeId = functionParams.nodeId;
+                var componentId = functionParams.componentId;
+
+
+                var componentStates = [];
+
+                if (nodeId != null && componentId != null) {
+                    // check that the component is completed
+                    componentStates = StudentDataService.getComponentStatesByNodeIdAndComponentId(nodeId, componentId);
+
+                    var nodeContent = this.getNodeContentByNodeId(nodeId);
+                    console.log('nodeContent=' + nodeContent);
+                } else if (nodeId != null && componentId == null) {
+                    // check that all the components in the node are completed
+                    componentStates = StudentDataService.getComponentStatesByNodeId(nodeId);
+
+                    var nodeContent = this.getNodeContentByNodeId(nodeId);
+                    console.log('nodeContent=' + nodeContent);
+                }
+            }
         };
         
         return serviceObject;

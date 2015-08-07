@@ -4,7 +4,7 @@ define(['configService', 'studentDataService'], function(configService, studentD
                    function($http, $q, ConfigService, StudentDataService) {
         var serviceObject = {};
         
-        serviceObject.getNodeContentByNodeSrc = function(nodeSrc) {
+        serviceObject.getNodeContentByNodeSrc0 = function(nodeSrc) {
             return $q(angular.bind(this, function(resolve, reject) {
                 $http.get(nodeSrc).then(angular.bind(this, function(result) {
                     var nodeContent = result.data;

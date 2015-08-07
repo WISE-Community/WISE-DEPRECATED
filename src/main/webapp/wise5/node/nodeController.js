@@ -52,30 +52,25 @@ define(['app'], function(app) {
             eventData.nodeId = nodeId;
             StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
 
-            // get the source for the node content
-            var nodeSrc = ProjectService.getNodeSrcByNodeId(this.nodeId);
-            
-            // get the node content for this node
-            NodeService.getNodeContentByNodeSrc(nodeSrc).then(angular.bind(this, function(nodeContent) {
-                this.nodeContent = nodeContent;
-                
-                // populate the student work into this node
-                //this.setStudentWork();
-                
-                // check if we need to lock this node
-                this.calculateDisabled();
-                
-                //this.importWork();
-                
-                // tell the parent controller that this node has loaded
-                //this.nodeLoaded(this.nodeId);
-                
-                // start the auto save interval
-                this.startAutoSaveInterval();
-                
-                // register this controller to listen for the exit event
-                this.registerExitListener();
-            }));
+            // get the node content
+            this.nodeContent = ProjectService.getNodeContentByNodeId(this.nodeId);
+
+            // populate the student work into this node
+            //this.setStudentWork();
+
+            // check if we need to lock this node
+            this.calculateDisabled();
+
+            //this.importWork();
+
+            // tell the parent controller that this node has loaded
+            //this.nodeLoaded(this.nodeId);
+
+            // start the auto save interval
+            this.startAutoSaveInterval();
+
+            // register this controller to listen for the exit event
+            this.registerExitListener();
         };
         
         /**
