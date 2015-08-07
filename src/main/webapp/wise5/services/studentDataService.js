@@ -18,8 +18,8 @@ define(['configService', 'projectService'], function(configService, projectServi
         var serviceObject = {};
         
         serviceObject.studentData = null;
-        serviceObject.stackHistory = null;  // array of node id's
-        serviceObject.visitedNodesHistory = null;
+        serviceObject.stackHistory = [];  // array of node id's
+        serviceObject.visitedNodesHistory = [];
         serviceObject.nodeStatuses = null;
         
         serviceObject.currentNode = null;
