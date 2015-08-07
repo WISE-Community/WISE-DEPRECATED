@@ -114,7 +114,7 @@ define(['app'], function(app) {
              * obtain the component states from the children and save them
              * to the server
              */
-            this.createAndSaveComponentStates(isAutoSave);
+            this.createAndSaveComponentData(isAutoSave);
         };
         
         /**
@@ -131,7 +131,7 @@ define(['app'], function(app) {
              * obtain the component states from the children and save them
              * to the server
              */
-            this.createAndSaveComponentStates(isAutoSave);
+            this.createAndSaveComponentData(isAutoSave);
         };
         
         /**
@@ -387,7 +387,7 @@ define(['app'], function(app) {
                      * obtain the component states from the children and save them
                      * to the server
                      */
-                    this.createAndSaveComponentStates(isAutoSave);
+                    this.createAndSaveComponentData(isAutoSave);
                 }
             }), this.autoSaveInterval);
         };
@@ -400,26 +400,29 @@ define(['app'], function(app) {
         };
         
         /**
-         * Obtain the component states from the children and save them
+         * Obtain the componentStates and annotations from the children and save them
          * to the server
          * @param isAutoSave whether the component states were auto saved
          * @param componentId (optional) the component id of the component
          * that triggered the save
          */
-        this.createAndSaveComponentStates = function(isAutoSave, componentId) {
+        this.createAndSaveComponentData = function(isAutoSave, componentId) {
             
             // obtain the component states from the children
             var componentStates = this.createComponentStates(isAutoSave, componentId);
-            
-            if (componentStates != null) {
+            var componentAnnotations = this.getComponentAnnotations();
+            var componentEvents = null;
+
+            if ((componentStates != null && componentStates.length > 0) ||
+                (componentAnnotations != null && componentAnnotations.length > 0) ||
+                (componentEvents != null && componentEvents.length > 0)) {
                 // save the component states to the server
-                var events = null;
-                StudentDataService.saveToServer(componentStates, events);
+                StudentDataService.saveToServer(componentStates, componentEvents, componentAnnotations);
             }
         };
 
         /**
-         * Create component states
+         * Loop through this node's components and get/create component states
          * @param isAutoSave whether the component states were auto saved
          * @param componentId (optional) the component id of the component
          * that triggered the save
@@ -485,7 +488,7 @@ define(['app'], function(app) {
                                  * have isAutoSave set to true
                                  */
 
-                                if (componentId == tempComponentId) {
+                                if (componentId === tempComponentId) {
                                     // this component triggered the save
                                     componentState.isAutoSave = false;
                                 } else {
@@ -502,6 +505,54 @@ define(['app'], function(app) {
             }
             
             return componentStates;
+        };
+
+        /**
+         * Loop through this node's components and get annotations
+         * @param isAutoSave whether the component states were auto saved
+         * @param componentId (optional) the component id of the component
+         * that triggered the save
+         * @returns an array of component states
+         */
+        this.getComponentAnnotations = function() {
+            var componentAnnotations = [];
+
+            // get the components for this node
+            var components = this.getComponents();
+
+            if (components != null) {
+
+                // loop through all the components
+                for (var c = 0; c < components.length; c++) {
+
+                    // get a component
+                    var component = components[c];
+
+                    if (component != null) {
+                        // get the component id
+                        var tempComponentId = component.id;
+
+                        // get the scope for the component
+                        var childScope = $scope.componentToScope[tempComponentId];
+
+                        var componentState = null;
+
+                        if (childScope.getUnSavedAnnotation != null) {
+                            // get the student work object from the child scope
+                            componentAnnotation = childScope.getUnSavedAnnotation();
+
+                            if (componentAnnotation != null) {
+                                // add the student work object to our components array
+                                componentAnnotations.push(componentAnnotation);
+
+                                childScope.setUnSavedAnnotation(null);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return componentAnnotations;
         };
         
         /**
@@ -538,7 +589,7 @@ define(['app'], function(app) {
                          * obtain the component states from the children and save them
                          * to the server
                          */
-                        this.createAndSaveComponentStates(isAutoSave, componentId);
+                        this.createAndSaveComponentData(isAutoSave, componentId);
                     }
                 }
             }
@@ -561,7 +612,7 @@ define(['app'], function(app) {
                          * obtain the component states from the children and save them
                          * to the server
                          */
-                        this.createAndSaveComponentStates(isAutoSave, componentId);
+                        this.createAndSaveComponentData(isAutoSave, componentId);
                     }
                 }
             }
@@ -702,7 +753,7 @@ define(['app'], function(app) {
         this.nodeUnloaded = function(nodeId) {
             var isAutoSave = true;
 
-            this.createAndSaveComponentStates(isAutoSave);
+            this.createAndSaveComponentData(isAutoSave);
 
             // save nodeExited event
             var componentId = null;

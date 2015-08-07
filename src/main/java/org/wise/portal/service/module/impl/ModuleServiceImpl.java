@@ -34,8 +34,8 @@ import org.wise.portal.dao.module.ModuleDao;
 import org.wise.portal.domain.module.Curnit;
 import org.wise.portal.domain.module.Module;
 import org.wise.portal.domain.module.impl.CurnitParameters;
+import org.wise.portal.domain.module.impl.ModuleImpl;
 import org.wise.portal.domain.module.impl.ModuleParameters;
-import org.wise.portal.domain.module.impl.UrlModuleImpl;
 import org.wise.portal.service.module.ModuleService;
 
 /**
@@ -57,18 +57,17 @@ public class ModuleServiceImpl extends CurnitServiceImpl implements
 	 @Override
 	 @Transactional()	
 	 public Module createCurnit(CurnitParameters curnitParameters) {
-		Module module = null;
-		
+
 		if (curnitParameters instanceof ModuleParameters) {
-			UrlModuleImpl urlModule = new UrlModuleImpl();
-			urlModule.setName(curnitParameters.getName());
-			urlModule.setModuleUrl(curnitParameters.getUrl());
-			this.moduleDao.save(urlModule);
-			return urlModule;
+			ModuleImpl module = new ModuleImpl();
+			module.setName(curnitParameters.getName());
+			module.setModuleUrl(curnitParameters.getUrl());
+			this.moduleDao.save(module);
+			return module;
 		} else {
 			System.err.println("Creating this type of Curnit is not currently supported. Please talk to WISE staff.");
 		}
-    	return module;
+    	return null;
 	}
 
 	 /**

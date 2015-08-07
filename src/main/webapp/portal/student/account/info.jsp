@@ -1,4 +1,4 @@
-<%@ include file="../include.jsp"%>
+<%@ include file="../../include.jsp"%>
 
 <!DOCTYPE html>
 <html dir="${textDirection}">

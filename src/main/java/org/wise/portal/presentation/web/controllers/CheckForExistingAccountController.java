@@ -37,23 +37,23 @@ import org.wise.portal.domain.user.User;
 import org.wise.portal.service.user.UserService;
 
 @Controller
-@RequestMapping("checkforexistingaccount.html")
-public class CheckForExistingAccountController{
+@RequestMapping("checkForExistingAccount")
+public class CheckForExistingAccountController {
 
 	@Autowired
 	protected UserService userService;
 	
-	@RequestMapping(method=RequestMethod.GET)
+	@RequestMapping(method = RequestMethod.GET)
 	protected String handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		//get the account type 'student' or 'teacher'
 		String accountType = request.getParameter("accountType");
 		
-		if(accountType != null) {
+		if (accountType != null) {
 			String[] fields = null;
 			String[] values = null;
 			String classVar = "";
 			
-			if(accountType.equals("student")) {
+			if (accountType.equals("student")) {
 				/*
 				 * we are looking for a student so we will look for a student account with
 				 * a matching first name, last name, birth month, and birth day 
@@ -77,7 +77,7 @@ public class CheckForExistingAccountController{
 				values[3] = birthDay;
 				
 				classVar = "studentUserDetails";
-			} else if(accountType.equals("teacher")) {
+			} else if (accountType.equals("teacher")) {
 				/*
 				 * we are looking for a teacher so we will look for a teacher account with
 				 * a matching first name, last name 
@@ -104,7 +104,7 @@ public class CheckForExistingAccountController{
 			JSONArray existingUserNames = new JSONArray();
 			
 			//loop through all the accounts that match
-			for(int x=0; x<accountsThatMatch.size(); x++) {
+			for (int x = 0; x < accountsThatMatch.size(); x++) {
 				//get an account
 				User user = accountsThatMatch.get(x);
 				

@@ -489,8 +489,6 @@ OPENRESPONSE.prototype.cRaterRequestSuccessCallback = function(responseText, res
 				var hasScore = false;
 				var hasFeedback = false;
 				
-				var cRaterFeedbackStringSoFar = "<span class='nodeAnnotationsCRater'>";
-
 				if(displayCRaterScoreToStudent) {
 					if(score != null && score != "") {
 						//the student has received a score

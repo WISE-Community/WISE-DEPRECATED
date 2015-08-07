@@ -30,89 +30,59 @@ import javax.persistence.InheritanceType;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.wise.portal.domain.module.CurnitVisitor;
 import org.wise.portal.domain.module.Module;
 
 /**
- * WISE "Project" domain object. A WISE Project is a Curnit with more
+ * WISE "Module" domain object. A WISE Module is a Curnit with more
  * information.
  *
  * @author Hiroki Terashima
  * @author Sally Ahn
  */
 @Entity
-@Table(name = ModuleImpl.DATA_STORE_NAME)
-@Inheritance(strategy = InheritanceType.JOINED)
+@Table(name = "modules")
 public class ModuleImpl extends CurnitImpl implements Module {
-
-	@Transient
-	public static final String DATA_STORE_NAME = "modules";
-	
-    @Transient
-    public static final String COLUMN_NAME_DESCRIPTION = "description";
-
-    @Transient
-    public static final String COLUMN_NAME_GRADES = "grades";
-    
-    @Transient
-    public static final String COLUMN_NAME_TOPICKEYWORDS = "topic_keywords";
-
-    @Transient
-    public static final String COLUMN_NAME_COMPUTERTIME = "computer_time";
-    
-    @Transient
-    public static final String COLUMN_NAME_TOTALTIME = "total_time";
-    
-    @Transient
-    public static final String COLUMN_NAME_TECHREQS = "tech_reqs";
-
-    @Transient
-	private static final String COLUMN_NAME_AUTHORS = "authors";
 
 	@Transient
 	private static final long serialVersionUID = 1L;
 
-    @Column(name = ModuleImpl.COLUMN_NAME_DESCRIPTION)
+    @Column(name = "description")
 	private String description;
 
-    @Column(name = ModuleImpl.COLUMN_NAME_GRADES)
+    @Column(name = "grades")
 	private String grades;
     
-    @Column(name = ModuleImpl.COLUMN_NAME_TOPICKEYWORDS)
+    @Column(name = "topic_keywords")
 	private String topicKeywords;
 	
-    @Column(name = ModuleImpl.COLUMN_NAME_TOTALTIME)
+    @Column(name = "total_time")
 	private Long totalTime;
 	
-    @Column(name = ModuleImpl.COLUMN_NAME_COMPUTERTIME)
+    @Column(name = "computer_time")
 	private Long computerTime;
 	
-    @Column(name = ModuleImpl.COLUMN_NAME_TECHREQS)
+    @Column(name = "tech_reqs")
 	private String techReqs;
     
-    @Column(name = ModuleImpl.COLUMN_NAME_AUTHORS)
+    @Column(name = "authors")
     private String authors;
+
+	@Column(name = "moduleUrl", nullable = false)
+	private String moduleUrl;  // url where the module file can be retrieved
 
 	public String getGrades() {
 		return grades;
 	}
 
-	/**
-	 * @param grades
-	 */
 	public void setGrades(String grades) {
 		this.grades = grades;
 	}
 
-	/**
-	 * @see org.wise.portal.domain.Module#getDescription()
-	 */
 	public String getDescription() {
 		return description;
 	}
 
-	/**
-	 * @see org.wise.portal.domain.Module#setDescription(java.lang.String)
-	 */
 	public void setDescription(String description) {
 		this.description = description;
 	}
@@ -149,18 +119,24 @@ public class ModuleImpl extends CurnitImpl implements Module {
 		this.topicKeywords = topicKeywords;
 	}
 
-	/**
-	 * @return the authors
-	 */
 	public String getAuthors() {
 		return authors;
 	}
 
-	/**
-	 * @param authors the authors to set
-	 */
 	public void setAuthors(String authors) {
 		this.authors = authors;
 	}
+
+	public String getModuleUrl() {
+		return moduleUrl;
+	}
+
+	public void setModuleUrl(String moduleUrl) {
+		this.moduleUrl = moduleUrl;
+	}
+
+    public Object accept(CurnitVisitor visitor) {
+        return visitor.visit(this);
+    }
 
 }

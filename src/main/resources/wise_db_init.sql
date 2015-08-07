@@ -53,6 +53,22 @@
         primary key (id)
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+    create table annotations (
+        id integer not null auto_increment,
+        clientSaveTime datetime not null,
+        componentId varchar(30),
+        data text not null,
+        nodeId varchar(30),
+        serverSaveTime datetime not null,
+        type varchar(30) not null,
+        componentStateId integer,
+        fromWorkgroupId bigint,
+        periodId bigint not null,
+        runId bigint not null,
+        toWorkgroupId bigint not null,
+        primary key (id)
+    ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
     create table announcements (
         id mediumint not null auto_increment,
         announcement mediumtext not null,
@@ -156,6 +172,7 @@
         computer_time bigint,
         description varchar(255),
         grades varchar(255),
+        moduleUrl varchar(255) not null,
         tech_reqs varchar(255),
         topic_keywords varchar(255),
         total_time bigint,
@@ -457,12 +474,6 @@
         primary key (id)
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-    create table urlmodules (
-        module_url varchar(255),
-        id bigint not null,
-        primary key (id)
-    ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
     create table user_details (
         id bigint not null auto_increment,
         account_not_expired bit not null,
@@ -534,6 +545,10 @@
 
     alter table acl_sid 
         add constraint UK_meabypi3cnm8604op6qvd517v  unique (sid, principal);
+
+    create index runIdIndex on annotations (runId);
+
+    create index toWorkgroupIdIndex on annotations (toWorkgroupId);
 
     create index runIdIndex on componentStates (runId);
 
@@ -620,6 +635,31 @@
         add constraint FK_rg9ukck99cs044ofyhohguv8 
         foreign key (toUser_id) 
         references userinfo (id);
+
+    alter table annotations 
+        add constraint FK_1d5pxm1esuhp2itfr2xx6cha9 
+        foreign key (componentStateId) 
+        references componentStates (id);
+
+    alter table annotations 
+        add constraint FK_3uwsbpxbqpqynfwt7oym6p59g 
+        foreign key (fromWorkgroupId) 
+        references wiseworkgroups (id);
+
+    alter table annotations 
+        add constraint FK_k3bkb9frmuj637vfehvmnrdqo 
+        foreign key (periodId) 
+        references groups (id);
+
+    alter table annotations 
+        add constraint FK_qoauslcyxtauxtlgeipbsxj1n 
+        foreign key (runId) 
+        references runs (id);
+
+    alter table annotations 
+        add constraint FK_ss22rostrwvgvh4x7n5mmq173 
+        foreign key (toWorkgroupId) 
+        references wiseworkgroups (id);
 
     alter table componentStates 
         add constraint FK_mimnejycw7u1bgltxkf3wbxwh 
@@ -840,11 +880,6 @@
         add constraint FK_731ea05n5p0yt79n2xsi93326 
         foreign key (id) 
         references user_details (id);
-
-    alter table urlmodules 
-        add constraint FK_34snnalp1gy4dinvre80sqk1s 
-        foreign key (id) 
-        references modules (id);
 
     alter table user_details_related_to_roles 
         add constraint FK_msgwl9684bgxnfdqbopnf662w 

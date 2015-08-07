@@ -53,7 +53,7 @@ table, tr, td {
 								<c:set var="username" value="${loggedInTeachers[sessionOpeningThisProject].userDetails.username}"></c:set>
 								<c:out value="${username}" /> | 
 							<a href="../../login/impersonate?username=${username}">Log in as this user</a> |
-							<a href="#" onclick="javascript:popup640('../../teacherinfo.html?userName=${username}');">info</a>
+							<a href="#" onclick="javascript:popup640('../../teacher/account/info?userName=${username}');">info</a>
 							</c:forEach>
 						</td>
 					</tr>

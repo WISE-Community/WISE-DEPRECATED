@@ -5,7 +5,6 @@ define(['app'], function(app) {
             $sce,
             $state, 
             $stateParams,
-            AnnotationService,
             ConfigService,
             CurrentNodeService,
             NodeService,

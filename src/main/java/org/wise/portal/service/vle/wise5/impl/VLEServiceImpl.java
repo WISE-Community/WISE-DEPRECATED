@@ -24,8 +24,10 @@
 package org.wise.portal.service.vle.wise5.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.wise.portal.dao.ObjectNotFoundException;
+import org.wise.portal.dao.annotation.wise5.AnnotationDao;
 import org.wise.portal.dao.work.ComponentStateDao;
 import org.wise.portal.dao.work.EventDao;
 import org.wise.portal.domain.group.Group;
@@ -35,6 +37,7 @@ import org.wise.portal.service.group.GroupService;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.vle.wise5.VLEService;
 import org.wise.portal.service.workgroup.WorkgroupService;
+import org.wise.vle.domain.annotation.wise5.Annotation;
 import org.wise.vle.domain.work.ComponentState;
 import org.wise.vle.domain.work.Event;
 
@@ -54,6 +57,9 @@ public class VLEServiceImpl implements VLEService {
 
     @Autowired
     private EventDao eventDao;
+
+    @Autowired @Qualifier("wise5AnnotationDao")
+    private AnnotationDao annotationDao;
 
     @Autowired
     private RunService runService;
@@ -276,5 +282,135 @@ public class VLEServiceImpl implements VLEService {
 
         eventDao.save(event);
         return event;
+    }
+
+    @Override
+    public List<Annotation> getAnnotations(
+            Integer id, Integer runId, Integer periodId, Integer fromWorkgroupId, Integer toWorkgroupId,
+            String nodeId, String componentId, Integer componentStateId, String type) {
+        Run run = null;
+        if (runId != null) {
+            try {
+                boolean doEagerFetch = false;
+                run = runService.retrieveById(new Long(runId), doEagerFetch);
+            } catch (ObjectNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        Group period = null;
+        if (periodId != null) {
+            try {
+                period = groupService.retrieveById(new Long(periodId));
+            } catch (ObjectNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        WISEWorkgroup fromWorkgroup = null;
+        if (fromWorkgroupId != null) {
+            try {
+                fromWorkgroup = (WISEWorkgroup) workgroupService.retrieveById(new Long(fromWorkgroupId));
+            } catch (ObjectNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        WISEWorkgroup toWorkgroup = null;
+        if (toWorkgroupId != null) {
+            try {
+                toWorkgroup = (WISEWorkgroup) workgroupService.retrieveById(new Long(toWorkgroupId));
+            } catch (ObjectNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        ComponentState componentState = null;
+        if (componentStateId != null) {
+            try {
+                componentState = (ComponentState) componentStateDao.getById(componentStateId);
+            } catch (ObjectNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return annotationDao.getAnnotationsByParams(id, run, period, fromWorkgroup, toWorkgroup,
+                nodeId, componentId, componentState, type);
+    }
+
+    @Override
+    public Annotation saveAnnotation(
+            Integer id, Integer runId, Integer periodId, Integer fromWorkgroupId, Integer toWorkgroupId,
+            String nodeId, String componentId, Integer componentStateId,
+            String type, String data, String clientSaveTime) throws ObjectNotFoundException {
+        Annotation annotation;
+        if (id != null) {
+            // if the id is passed in, the client is requesting an update, so fetch the Event from data store
+            List<Annotation> annotations = getAnnotations(id, null, null, null, null, null, null, null, null);
+            if (annotations != null && annotations.size() > 0) {
+                // TODO: maybe we want a getEventById method here?
+                annotation = annotations.get(0);
+            } else {
+                return null;
+            }
+        } else {
+            // the id was not passed in, so we're creating a new Event from scratch
+            annotation = new Annotation();
+        }
+        if (runId != null) {
+            try {
+                boolean doEagerFetch = false;
+                annotation.setRun(runService.retrieveById(new Long(runId), doEagerFetch));
+            } catch (ObjectNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        if (periodId != null) {
+            try {
+                annotation.setPeriod(groupService.retrieveById(new Long(periodId)));
+            } catch (ObjectNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        if (fromWorkgroupId != null) {
+            try {
+                annotation.setFromWorkgroup((WISEWorkgroup) workgroupService.retrieveById(new Long(fromWorkgroupId)));
+            } catch (ObjectNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        if (toWorkgroupId != null) {
+            try {
+                annotation.setToWorkgroup((WISEWorkgroup) workgroupService.retrieveById(new Long(toWorkgroupId)));
+            } catch (ObjectNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        if (nodeId != null) {
+            annotation.setNodeId(nodeId);
+        }
+        if (componentId != null) {
+            annotation.setComponentId(componentId);
+        }
+        if (componentStateId != null) {
+            try {
+                annotation.setComponentState((ComponentState) componentStateDao.getById(componentStateId));
+            } catch (ObjectNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        if (type != null) {
+            annotation.setType(type);
+        }
+        if (data != null) {
+            annotation.setData(data);
+        }
+        if (clientSaveTime != null) {
+            Timestamp clientSaveTimestamp = new Timestamp(new Long(clientSaveTime));
+            annotation.setClientSaveTime(clientSaveTimestamp);
+        }
+        // set postTime
+        Calendar now = Calendar.getInstance();
+        Timestamp serverSaveTimestamp = new Timestamp(now.getTimeInMillis());
+        annotation.setServerSaveTime(serverSaveTimestamp);
+
+        annotationDao.save(annotation);
+        return annotation;
     }
 }

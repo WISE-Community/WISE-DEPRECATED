@@ -24,6 +24,7 @@
 package org.wise.portal.service.vle.wise5;
 
 import org.wise.portal.dao.ObjectNotFoundException;
+import org.wise.vle.domain.annotation.wise5.Annotation;
 import org.wise.vle.domain.work.ComponentState;
 import org.wise.vle.domain.work.Event;
 
@@ -37,7 +38,7 @@ public interface VLEService {
 
 	/**
 	 * @return List of ComponentState objects with the specified fields. If none matches,
-	 *     return an empty list.
+	 * return an empty list.
 	 */
 	List<ComponentState> getComponentStates(Integer id, Integer runId, Integer periodId, Integer workgroupId,
                                             Boolean isAutoSave, String nodeId, String componentId, String componentType);
@@ -45,25 +46,45 @@ public interface VLEService {
 	/**
 	 * Saves ComponentState in the data store
 	 */
-	ComponentState saveComponentState(Integer id, Integer runId, Integer periodId, Integer workgroupId,
-                                      Boolean isAutoSave, String nodeId, String componentId, String componentType,
-									  String studentData, String clientSaveTime) throws ObjectNotFoundException;
+	ComponentState saveComponentState(
+            Integer id, Integer runId, Integer periodId, Integer workgroupId,
+            Boolean isAutoSave, String nodeId, String componentId, String componentType,
+            String studentData, String clientSaveTime) throws ObjectNotFoundException;
 
 
     /**
      * @return List of Event objects with the specified fields. If none matches,
-     *     return an empty list.
+     * return an empty list.
      */
-    List<Event> getEvents(Integer id, Integer runId, Integer periodId, Integer workgroupId,
-                                            String nodeId, String componentId, String componentType,
-                                            String context, String category, String event);
+    List<Event> getEvents(
+            Integer id, Integer runId, Integer periodId, Integer workgroupId,
+            String nodeId, String componentId, String componentType,
+            String context, String category, String event);
 
     /**
      * Saves Event in the data store
      */
-    Event saveEvent(Integer id, Integer runId, Integer periodId, Integer workgroupId,
-                                        String nodeId, String componentId, String componentType,
-                                        String context, String category, String event, String data,
-                                        String clientSaveTime) throws ObjectNotFoundException;
+    Event saveEvent(
+            Integer id, Integer runId, Integer periodId, Integer workgroupId,
+            String nodeId, String componentId, String componentType,
+            String context, String category, String event, String data,
+            String clientSaveTime) throws ObjectNotFoundException;
+
+    /**
+     * @return List of Annotation objects with the specified fields. If none matches,
+     * return an empty list.
+     */
+    List<Annotation> getAnnotations(
+            Integer id, Integer runId, Integer periodId, Integer fromWorkgroupId, Integer toWorkgroupId,
+            String nodeId, String componentId, Integer componentStateId, String type);
+
+    /**
+     * Saves Annotation in the data store
+     */
+    Annotation saveAnnotation(
+            Integer id, Integer runId, Integer periodId, Integer fromWorkgroupId, Integer toWorkgroupId,
+            String nodeId, String componentId, Integer componentStateId,
+            String type, String data,
+            String clientSaveTime) throws ObjectNotFoundException;
 
 }

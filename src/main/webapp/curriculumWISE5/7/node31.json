@@ -1,0 +1,102 @@
+{
+    "prompt": "",
+    "components": [
+        {
+            "id": "2mb2891lnq",
+            "componentType": "CRater",
+            "prompt": "Green Roof CRater",
+            "numRows": 10,
+            "numColumns": 75,
+            "showSaveButton": true,
+            "showSubmitButton": true,
+            "cRaterItemId": "GREENROOF-II",
+            "displayCRaterScoreToStudent": true,
+            "displayCRaterFeedbackToStudent": true,
+            "checkWorkOnExit": false,
+            "cRaterMaxScore": 5,
+            "cRaterScoringRules": [
+                {
+                    "concepts": "1",
+                    "numMatches": "1",
+                    "rank": "1",
+                    "score": "1",
+                    "feedback": [
+                        {
+                            "feedbackText": "1",
+                            "feedbackId": "hzKtydHjuw"
+                        }
+                    ],
+                    "studentAction": "revise"
+                },
+                {
+                    "concepts": "2",
+                    "numMatches": "1",
+                    "rank": "2",
+                    "score": "2",
+                    "feedback": [
+                        {
+                            "feedbackText": "2",
+                            "feedbackId": "DbUMcKiZyh"
+                        }
+                    ],
+                    "studentAction": "revise"
+                },
+                {
+                    "concepts": "3",
+                    "numMatches": "1",
+                    "rank": "3",
+                    "score": "3",
+                    "feedback": [
+                        {
+                            "feedbackText": "3",
+                            "feedbackId": "8EQ6dZG68X"
+                        }
+                    ],
+                    "studentAction": "revise"
+                },
+                {
+                    "concepts": "4",
+                    "numMatches": "1",
+                    "rank": "4",
+                    "score": "4",
+                    "feedback": [
+                        {
+                            "feedbackText": "4",
+                            "feedbackId": "LKy2udPF4L"
+                        }
+                    ],
+                    "studentAction": "revise"
+                },
+                {
+                    "concepts": "5",
+                    "numMatches": "1",
+                    "rank": "5",
+                    "score": "5",
+                    "feedback": [
+                        {
+                            "feedbackText": "5",
+                            "feedbackId": "Vs0ivrEnTL"
+                        }
+                    ],
+                    "studentAction": "revise"
+                },
+                {
+                    "concepts": "",
+                    "numMatches": "",
+                    "rank": "",
+                    "score": "0",
+                    "feedback": [
+                        {
+                            "feedbackText": "null",
+                            "feedbackId": "ya26HVbT5G"
+                        }
+                    ],
+                    "studentAction": "revise"
+                }
+            ],
+            "cRaterItemType": "HENRY"
+        }
+    ],
+    "lockAfterSubmit": false,
+    "showSubmitButton": false
+}

@@ -4,10 +4,8 @@ define(['app'], function(app) {
             $scope,
             $state, 
             $stateParams,
-            AnnotationService,
             ConfigService,
             CurrentNodeService,
-            CRaterService,
             NodeService,
             OpenResponseService,
             ProjectService,
@@ -265,17 +263,7 @@ define(['app'], function(app) {
          * @return whether to show the save button
          */
         this.showSaveButton = function() {
-            var show = false;
-            
-            if (this.componentContent != null) {
-                
-                // check the showSaveButton field in the component content
-                if (this.componentContent.showSaveButton) {
-                    show = true;
-                }
-            }
-            
-            return show;
+            return this.componentContent != null && this.componentContent.showSaveButton;
         };
         
         /**
@@ -283,17 +271,7 @@ define(['app'], function(app) {
          * @return whether to show the submit button
          */
         this.showSubmitButton = function() {
-            var show = false;
-            
-            if (this.componentContent != null) {
-                
-                // check the showSubmitButton field in the component content
-                if (this.componentContent.showSubmitButton) {
-                    show = true;
-                }
-            }
-            
-            return show;
+            return this.componentContent != null && this.componentContent.showSubmitButton;
         };
         
         /**
@@ -313,192 +291,6 @@ define(['app'], function(app) {
             
             return result;
         };
-        
-        this.makeCRaterRequest = function(nodeState, nodeVisit) {
-            var componentContent = this.componentContent;
-            
-            if (componentContent != null && componentContent.cRater != null) {
-                var cRaterSettings = componentContent.cRater;
-                var cRaterItemType = cRaterSettings.cRaterItemType;
-                var cRaterItemId = cRaterSettings.cRaterItemId;
-                var cRaterRequestType = 'scoring';
-                var cRaterResponseId = new Date().getTime();
-                var studentData = nodeState.studentData;
-                var nodeState = nodeState;
-                var nodeVisit = nodeVisit;
-                CRaterService
-                    .makeCRaterRequest(cRaterItemType, cRaterItemId, cRaterRequestType, cRaterResponseId, studentData, nodeState, nodeVisit)
-                    .then(angular.bind(this, function(response) {
-                        this.handleCRaterResponse(response);
-                    }));
-            }
-        };
-        
-        this.handleCRaterResponse = function(response) {
-            var nodeId = this.nodeId;
-            var nodeState = response.nodeState;
-            var nodeVisit = response.nodeVisit;
-            var nodeVisitId = nodeVisit.id;
-            var runId = ConfigService.getRunId();
-            var cRaterItemId = response.config.params.itemId;
-            var cRaterItemType = response.config.params.cRaterItemType;
-
-            // get the score and concepts the student received
-            var cRaterResponse = response.data;
-            var score = cRaterResponse.score;
-            var concepts = cRaterResponse.concepts;
-
-            // now find the feedback that the student should see
-            var cRaterStepContent = this.componentContent.cRater;
-            var scoringRules = cRaterStepContent.cRaterScoringRules;
-            var maxScore = cRaterStepContent.cRaterMaxScore;
-
-            // get the feedback for the given concepts the student satisfied
-            var feedbackTextObject = CRaterService.getCRaterFeedback(scoringRules, concepts, score, cRaterItemType);
-
-            // get the feedback text and feedback id
-            var feedbackText = feedbackTextObject.feedbackText;
-            var feedbackId = feedbackTextObject.feedbackId;
-
-            //handle multipleAttemptFeedback, if this step has it enabled
-            /*
-            if (cRaterStepContent.enableMultipleAttemptFeedbackRules && 
-                cRaterStepContent.multipleAttemptFeedbackRules != null &&
-                cRaterStepContent.multipleAttemptFeedbackRules.rules != null &&
-                cRaterStepContent.multipleAttemptFeedbackRules.rules.length > 0) {
-                
-                var authoredScoreSequenceRules = cRaterStepContent.multipleAttemptFeedbackRules.rules;
-                var fromWorkgroups = [-1];
-                var type = "autoGraded";
-            
-                // get the last annotation, if exists
-                var latestCRaterAnnotation = view.model.annotations.getLatestAnnotation(runId, nodeId, toWorkgroupId, fromWorkgroups, type);
-                if (latestCRaterAnnotation != null && latestCRaterAnnotation.value.length > 0) {
-                    var lastCRaterAnnotation = latestCRaterAnnotation.value[latestCRaterAnnotation.value.length-1];
-                    if (lastCRaterAnnotation != null && lastCRaterAnnotation.autoScore) {
-                        var lastCRaterScore = lastCRaterAnnotation.autoScore;
-                                                    
-                        // test against authored scoreSequences
-                        for (var ruleIndex = 0; ruleIndex < authoredScoreSequenceRules.length; ruleIndex++) {
-                            var ruleScoreSequenceLastScore = authoredScoreSequenceRules[ruleIndex].scoreSequence[0];
-                            var ruleScoreSequenceCurrentScore = authoredScoreSequenceRules[ruleIndex].scoreSequence[1];
-                            
-                            if (lastCRaterScore.toString().match("["+ruleScoreSequenceLastScore+"]") &&
-                                    score.toString().match("["+ruleScoreSequenceCurrentScore+"]")) {
-                                feedbackText = authoredScoreSequenceRules[ruleIndex].feedback;
-                                feedbackId = authoredScoreSequenceRules[ruleIndex].id;
-                                break;
-                            }
-                        }                       
-                    }
-                }
-            }
-            */
-            
-            // get the node state timestamp which we will use as the node state id
-            var nodeStateId = nodeState.timestamp;            
-            
-            //create the auto graded annotation value
-            var annotationValue = {
-                autoScore: score,
-                maxAutoScore: maxScore,
-                autoFeedback: feedbackText,
-                concepts: concepts,
-                nodeStateId:nodeStateId
-            }
-            
-            var annotationType = 'autoGraded';
-            
-            // add the auto graded annotation value to the auto graded annotation for this step current node visit
-            var fromWorkgroup = -1;
-            var toWorkgroup = ConfigService.getWorkgroupId();;
-            var postTime = null;
-                
-            var annotation = AnnotationService.createAnnotation(annotationType, nodeId, annotationValue, nodeVisitId, runId, fromWorkgroup, toWorkgroup, postTime);
-            AnnotationService.saveAnnotation(annotation);
-            
-            // check if we need to display the auto score or auto feedback to the student
-            var displayCRaterScoreToStudent = cRaterStepContent.displayCRaterScoreToStudent;
-            var displayCRaterFeedbackToStudent = cRaterStepContent.displayCRaterFeedbackToStudent;
-
-            if (displayCRaterScoreToStudent || displayCRaterFeedbackToStudent) {
-                // we will display the score or feedback (or both) to the student
-
-                var hasScore = false;
-                var hasFeedback = false;
-                
-                var cRaterFeedbackStringSoFar = "<span class='nodeAnnotationsCRater'>";
-
-                if (displayCRaterScoreToStudent) {
-                    if (score != null && score != "") {
-                        // the student has received a score
-                        hasScore = true;
-                    }
-                }
-
-                if(displayCRaterFeedbackToStudent) {
-                    if (feedbackText != null && feedbackText != "") {
-                        // the student has received feedback
-                        hasFeedback = true;
-                    }
-                }
-
-                if (hasScore || hasFeedback) {
-                    if (!suppressFeedback) {
-                        // popup the auto graded annotation to the student
-                        eventManager.fire("showNodeAnnotations", [nodeId]);                      
-                    }
-                }
-                
-                // handle rewrite/revise
-                if (score != null) {
-                    //get the student action for the given score
-                    var studentAction = or.getStudentAction(score);
-                    
-                    if (studentAction == null) {
-                        //do nothing
-                    } else if (studentAction == 'rewrite') {
-                        //
-                        // move the current work to the previous work response box
-                        // because we want to display the previous work to the student
-                        // and have them re-write another response after they
-                        // receive the immediate CRater feedback
-                        //
-                        or.showPreviousWorkThatHasAnnotation(studentData);
-                        
-                        //clear the response box so they will need to write a new response
-                        $('#responseBox').val('');
-                    } else if (studentAction == 'revise') {
-                        //
-                        // the student will need to revise their work so we will hide the
-                        // previous response display
-                        //
-                        $('#previousResponseDisplayDiv').hide();
-                    }
-                }
-            }
-            
-            // this student work was graded by CRater
-            nodeState.checkWork = true;
-            
-            // check if we need to disable the check answer button
-            if ((or.content.cRater != null && or.content.cRater.maxCheckAnswers != null && or.isCRaterMaxCheckAnswersUsedUp()) || or.isLocked()) {
-                //student has used up all of their CRater check answer submits so we will disable the check answer button
-                or.setCheckAnswerUnavailable();
-            } else {
-                //the student still has check answer submits available
-                or.setCheckAnswerAvailable();
-            }
-            
-            // process the student work to see if we need to activate any 
-            // teacher notifications
-            // or.processTeacherNotifications(nodeVisit, nodeState, cRaterResponse);
-            
-            // save the student work to the server immediately
-            view.getProject().getNodeById(nodeId).save(nodeState);            
-            
-        };
-        
         
         this.startCallback = function(event, ui, title) {
             console.log('You started dragging');

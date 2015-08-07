@@ -83,7 +83,7 @@ a:hover {
 			<td>${username}</td>
 			<td><a onclick="javascript:popup640('../../teacher/management/changepassword.html?userName=${username}');"><spring:message code="changePassword" /></a></td>
 			<td><a href="${contextPath}/login/impersonate?username=${username}"><spring:message code="admin.account.manageusers.logInAsThisUser" /></a></td>
-			<td><a onclick="javascript:popup640('../../teacherinfo.html?userName=${username}');"><spring:message code="info" /></a></td>
+			<td><a onclick="javascript:popup640('../../teacher/account/info?userName=${username}');"><spring:message code="info" /></a></td>
 			<td><a onclick="javascript:popup640('manageuserroles.html?userName=${username}');"><spring:message code="admin.index.manageUserRoles" /></a></td>
 		</tr>
 	</c:forEach>
@@ -110,7 +110,7 @@ a:hover {
 			<td>${username}</td>
 			<td><a onclick="javascript:popup640('../../teacher/management/changepassword.html?userName=${username}');"><spring:message code="changePassword" /></a></td> 
 			<td><a href="${contextPath}/login/impersonate?username=${username}"><spring:message code="admin.account.manageusers.logInAsThisUser" /></a></td> 
-			<td><a onclick="javascript:popup640('../../studentinfo.html?userName=${username}');"><spring:message code="info" /></a></td>
+			<td><a onclick="javascript:popup640('../../student/account/info?userName=${username}');"><spring:message code="info" /></a></td>
 			<c:if test="${not empty studentUserArray[1]}">
 				<td>
 				${studentUserArray[1]}
@@ -142,7 +142,7 @@ a:hover {
 				onclick="javascript:popup640('../../teacher/management/changepassword.html?userName=${username}');"><spring:message code="changePassword" /></a></td>
 			<td><a href="${contextPath}/login/impersonate?username=${username}"><spring:message code="admin.account.manageusers.logInAsThisUser" /></a></td>
 			<td><a
-				onclick="javascript:popup640('../../teacherinfo.html?userName=${username}');"><spring:message code="info" /></a></td>
+				onclick="javascript:popup640('../../teacher/account/info?userName=${username}');"><spring:message code="info" /></a></td>
 			<td>${user.userDetails.schoolname},${user.userDetails.city},${user.userDetails.state},${user.userDetails.country}</td>
 		</tr>
 	</c:forEach>
@@ -166,7 +166,7 @@ a:hover {
 				onclick="javascript:popup640('../../teacher/management/changepassword.html?userName=${username}');"><spring:message code="changePassword" /></a></td>
 			<td><a href="${contextPath}/login/impersonate?username=${username}"><spring:message code="admin.account.manageusers.logInAsThisUser" /></a></td>
 			<td><a
-				onclick="javascript:popup640('../../studentinfo.html?userName=${username}');"><spring:message code="info" /></a></td>
+				onclick="javascript:popup640('../../student/account/info?userName=${username}');"><spring:message code="info" /></a></td>
 		</tr>
 	</c:forEach>
 </table>
@@ -183,7 +183,7 @@ a:hover {
 			<td>${username}</td>
 			<td><a onclick="javascript:popup640('../../teacher/management/changepassword.html?userName=${username}');"><spring:message code="changePassword" /></a></td>
 			<td><a href="${contextPath}/login/impersonate?username=${username}"><spring:message code="admin.account.manageusers.logInAsThisUser" /></a></td>
-			<td><a onclick="javascript:popup640('../../teacherinfo.html?userName=${username}');"><spring:message code="info" /></a></td>
+			<td><a onclick="javascript:popup640('../../teacher/account/info?userName=${username}');"><spring:message code="info" /></a></td>
 			<td><a onclick="javascript:popup640('manageuserroles.html?userName=${username}');"><spring:message code="admin.index.manageUserRoles" /></a></td>
 		</tr>
 	</c:forEach>
@@ -197,7 +197,7 @@ a:hover {
 			<td>${username}</td>
 			<td><a onclick="javascript:popup640('../../teacher/management/changepassword.html?userName=${username}');"><spring:message code="changePassword" /></a></td>
 			<td><a href="${contextPath}/login/impersonate?username=${username}"><spring:message code="admin.account.manageusers.logInAsThisUser" /></a></td>
-			<td><a onclick="javascript:popup640('../../studentinfo.html?userName=${username}');"><spring:message code="info" /></a></td>
+			<td><a onclick="javascript:popup640('../../student/account/info?userName=${username}');"><spring:message code="info" /></a></td>
 		</tr>
 	</c:forEach>
 </table>

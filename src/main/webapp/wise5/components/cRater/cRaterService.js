@@ -16,10 +16,9 @@ define(['configService'], function(configService) {
          * @param cRaterRequestType [scoring,verify]
          * @param cRaterResponseId ID to keep track of this crater request
          * @param studentData student work
-         * @param nodeState nodeState
-         * @param nodeVisit nodeVisit
          */
-        serviceObject.makeCRaterRequest = function(cRaterItemType, cRaterItemId, cRaterRequestType, cRaterResponseId, studentData, nodeState, nodeVisit) {
+        serviceObject.makeCRaterRequest = function(cRaterItemType, cRaterItemId, cRaterRequestType, cRaterResponseId,
+                                                   studentData) {
             //gather the arguments to make the CRater request
             //var cRaterItemType = this.content.cRater.cRaterItemType;
             //var cRaterItemId = this.content.cRater.cRaterItemId;
@@ -56,11 +55,9 @@ define(['configService'], function(configService) {
                             }; 
             
             // GET the annotation
-            return $http(config).then(angular.bind(this, function(nodeState, nodeVisit, response) {
-                response.nodeState = nodeState;
-                response.nodeVisit = nodeVisit;
+            return $http(config).then(angular.bind(this, function(response) {
                 return response;
-            }, nodeState, nodeVisit));
+            }));
         };
         
         /**
@@ -77,11 +74,11 @@ define(['configService'], function(configService) {
             
             if (scoringRules) {
                 //loop through all the scoring rules
-                for (var i=0; i < scoringRules.length; i++) {
+                for (var i = 0; i < scoringRules.length; i++) {
                     //get a scoring rule
                     var scoringRule = scoringRules[i];
                     
-                    if(cRaterItemType == null || cRaterItemType == 'CRATER') {
+                    if (cRaterItemType === null || cRaterItemType === 'CRATER') {
                         if (this.satisfiesCRaterRulePerfectly(concepts, scoringRule.concepts)) {
                             //the concepts perfectly match this scoring rule
                             
@@ -90,7 +87,8 @@ define(['configService'], function(configService) {
                             
                             //no longer need to check other rules if we have a pefect match
                             break;
-                        } else if (scoringRule.score > maxScoreSoFar && this.satisfiesCRaterRule(concepts, scoringRule.concepts, parseInt(scoringRule.numMatches))) {
+                        } else if (scoringRule.score > maxScoreSoFar &&
+                            this.satisfiesCRaterRule(concepts, scoringRule.concepts, parseInt(scoringRule.numMatches))) {
                             /*
                              * the concepts match this scoring rule but we still need to
                              * look at the other scoring rules to make sure there aren't
@@ -101,11 +99,11 @@ define(['configService'], function(configService) {
                             feedbackSoFar = this.chooseFeedbackRandomly(scoringRule.feedback);
                             maxScoreSoFar = scoringRule.score;
                         }
-                    } else if(cRaterItemType == 'HENRY') {
+                    } else if (cRaterItemType == 'HENRY') {
                         //get the score for this scoring rule
                         var scoringRuleScore = scoringRule.score;
                         
-                        if(score == scoringRuleScore) {
+                        if (score == scoringRuleScore) {
                             //if this scoring rule has more than one feedback, choose one randomly
                             feedbackSoFar = this.chooseFeedbackRandomly(scoringRule.feedback);
                         }
@@ -125,15 +123,15 @@ define(['configService'], function(configService) {
         serviceObject.chooseFeedbackRandomly = function(feedback) {
             var chosenFeedback = "";
             
-            if(feedback == null) {
+            if (feedback == null) {
                 //feedback is null
-            } else if(feedback.constructor.toString().indexOf("String") != -1) {
+            } else if (feedback.constructor.toString().indexOf("String") != -1) {
                 //feedback is a string
                 chosenFeedback = feedback;
-            } else if(feedback.constructor.toString().indexOf("Array") != -1) {
+            } else if (feedback.constructor.toString().indexOf("Array") != -1) {
                 //feedback is an array
                 
-                if(feedback.length > 0) {
+                if (feedback.length > 0) {
                     /*
                      * randomly choose one of the elements in the array
                      * Math.random() returns a value between 0 and 1
@@ -304,37 +302,35 @@ define(['configService'], function(configService) {
                         var hasScore = false;
                         var hasFeedback = false;
                         
-                        var cRaterFeedbackStringSoFar = "<span class='nodeAnnotationsCRater'>";
-
-                        if(displayCRaterScoreToStudent) {
-                            if(score != null && score != "") {
+                        if (displayCRaterScoreToStudent) {
+                            if (score != null && score != "") {
                                 //the student has received a score
                                 hasScore = true;
                             }
                         }
 
-                        if(displayCRaterFeedbackToStudent) {
-                            if(feedbackText != null && feedbackText != "") {
+                        if (displayCRaterFeedbackToStudent) {
+                            if (feedbackText != null && feedbackText != "") {
                                 //the student has received feedback
                                 hasFeedback = true;
                             }
                         }
 
-                        if(hasScore || hasFeedback) {
-                            if(!suppressFeedback) {
+                        if (hasScore || hasFeedback) {
+                            if (!suppressFeedback) {
                                 //popup the auto graded annotation to the student
                                 eventManager.fire("showNodeAnnotations",[nodeId]);                      
                             }
                         }
                         
                         // handle rewrite/revise
-                        if(score != null) {
+                        if (score != null) {
                             //get the student action for the given score
                             var studentAction = or.getStudentAction(score);
                             
-                            if(studentAction == null) {
+                            if (studentAction == null) {
                                 //do nothing
-                            } else if(studentAction == 'rewrite') {
+                            } else if (studentAction == 'rewrite') {
                                 /*
                                  * move the current work to the previous work response box
                                  * because we want to display the previous work to the student
@@ -345,7 +341,7 @@ define(['configService'], function(configService) {
                                 
                                 //clear the response box so they will need to write a new response
                                 $('#responseBox').val('');
-                            } else if(studentAction == 'revise') {
+                            } else if (studentAction == 'revise') {
                                 /*
                                  * the student will need to revise their work so we will hide the
                                  * previous response display
@@ -359,7 +355,7 @@ define(['configService'], function(configService) {
                     orState.checkWork = true;
                     
                     //check if we need to disable the check answer button
-                    if((or.content.cRater != null && or.content.cRater.maxCheckAnswers != null && or.isCRaterMaxCheckAnswersUsedUp()) || or.isLocked()) {
+                    if ((or.content.cRater != null && or.content.cRater.maxCheckAnswers != null && or.isCRaterMaxCheckAnswersUsedUp()) || or.isLocked()) {
                         //student has used up all of their CRater check answer submits so we will disable the check answer button
                         or.setCheckAnswerUnavailable();
                     } else {
@@ -390,26 +386,7 @@ define(['configService'], function(configService) {
              */
             eventManager.fire('unlockScreenEvent');
         };
-        
-        
-        /**
-         * Invokes the CRater while the user is in preview mode
-         * 
-         * with a GET request and returns an Annotation with the CRater score/response.
-         * @param nodeId id of current step
-         * @param cRaterItemType [CRATER,HENRY]
-         * @param cRaterItemId [GREENROOF-II,SPOON,...]
-         * @param cRaterRequestType [scoring,verify]
-         * @param cRaterResponseId ID to keep track of this crater request
-         * @param successCallback
-         * @param failureCallback
-         * @param callbackData the data to be made available in the callback function
-         * @param sync whether the request should be synchronous
-         * @param timeout the timeout for the request in milliseconds
-         */
-        serviceObject.invokeCRaterInPreviewMode = function(cRaterItemType, cRaterItemId, cRaterRequestType, cRaterResponseId, studentData, successCallback, failureCallback, callbackData, sync, timeout) {
-        };
-        
+
         return serviceObject;
     }];
     

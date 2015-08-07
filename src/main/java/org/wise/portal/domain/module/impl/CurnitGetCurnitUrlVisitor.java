@@ -33,7 +33,7 @@ import org.wise.portal.domain.module.Module;
 public class CurnitGetCurnitUrlVisitor implements CurnitVisitor {
 
 	/**
-	 * @see net.sf.sail.webapp.domain.CurnitVisitor#visit(net.sf.sail.webapp.domain.Curnit)
+	 * @see org.wise.portal.domain.module.CurnitVisitor#visit(org.wise.portal.domain.module.Curnit)
 	 */
 	public Object visit(Curnit curnit) {
 		// TODO Auto-generated method stub
@@ -41,15 +41,9 @@ public class CurnitGetCurnitUrlVisitor implements CurnitVisitor {
 	}
 
 	/**
-	 * @see net.sf.sail.webapp.domain.CurnitVisitor#visit(org.wise.portal.domain.Module)
+	 * @see org.wise.portal.domain.module.CurnitVisitor#visit(ModuleImpl)
 	 */
-	public Object visit(Module module) {
-		// TODO Auto-generated method stub
-		return null;
+	public Object visit(ModuleImpl moduleImpl) {
+		return moduleImpl.getModuleUrl();
 	}
-
-	public Object visit(UrlModuleImpl urlModuleImpl) {
-		return urlModuleImpl.getModuleUrl();
-	}
-
 }

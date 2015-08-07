@@ -23,7 +23,7 @@
  */
 package org.wise.portal.domain.module;
 
-import org.wise.portal.domain.module.impl.UrlModuleImpl;
+import org.wise.portal.domain.module.impl.ModuleImpl;
 
 /**
  * Visitor Pattern Interface for Curnit
@@ -33,7 +33,5 @@ public interface CurnitVisitor {
 
 	Object visit(Curnit curnit);
 
-	Object visit(Module module);
-
-	Object visit(UrlModuleImpl urlModuleImpl);
+	Object visit(ModuleImpl moduleImpl);
 }

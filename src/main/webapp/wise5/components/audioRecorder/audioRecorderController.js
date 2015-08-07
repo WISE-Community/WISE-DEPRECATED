@@ -5,7 +5,6 @@ define(['app'], function(app) {
             $state, 
             $stateParams,
             AudioRecorderService,
-            AnnotationService,
             ConfigService,
             CurrentNodeService,
             NodeService,

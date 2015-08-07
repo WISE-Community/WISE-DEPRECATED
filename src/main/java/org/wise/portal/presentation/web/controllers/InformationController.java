@@ -448,7 +448,7 @@ public class InformationController {
         String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
 		String studentUploadsBaseWWW = wiseProperties.getProperty("studentuploads_base_www");
 		String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
-    	String cRaterRequestURL = wiseBaseURL + "/cRater?type=cRater";  // the url to make CRater requests
+    	String cRaterRequestURL = wiseBaseURL + "/cRater";  // the url to make CRater requests
 
 		String rawProjectUrl = null;
 		JSONObject config = new JSONObject();
