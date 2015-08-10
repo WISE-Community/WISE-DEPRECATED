@@ -238,21 +238,19 @@ define(['angular', 'projectService', 'currentNodeService'], function(angular, pr
         };
     })
     
-    .directive('nodestatehtml', function($injector) {
+    .directive('componentstatehtml', function($injector) {
         return {
             restrict: 'E',
             link: function($scope, element, attrs) {
                 
-                var nodestate = attrs.nodestate;
-                var nodeType = attrs.nodetype;
+                var componentState = JSON.parse(attrs.componentstate);
+                var componentType = componentState.componentType;
                 
-                var nodeState = JSON.parse(nodestate);
-                
-                if (nodeType != null) {
-                    var childService = $injector.get(nodeType + 'Service');
+                if (componentType != null) {
+                    var childService = $injector.get(componentType + 'Service');
                     
                     if (childService != null) {
-                        var studentWorkHTML = childService.getStudentWorkAsHTML(nodeState);
+                        var studentWorkHTML = childService.getStudentWorkAsHTML(componentState);
                         
                         if (studentWorkHTML != null) {
                             element[0].innerHTML = studentWorkHTML;

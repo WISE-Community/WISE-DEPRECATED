@@ -49,20 +49,41 @@ define(['configService', 'currentNodeService'], function(configService, currentN
             }
             
             params.runId = ConfigService.getRunId();
-            params.grading = true;
-            params.getRevisions = true;
-            params.usedCachedWork = false;
-            
+            params.getComponentStates = true;
+            params.getEvents = true;
+            params.getAnnotations = true;
+
             httpParams.params = params;
             return $http(httpParams).then(angular.bind(this, function(result) {
-                
-                if (result != null && result.data != null) {
-                    var vleStates = result.data.vleStates;
-                    
-                    if (vleStates != null) {
-                        this.vleStates = vleStates;
-                        this.sortVLEStatesAlphabeticallyByUserName();
+                var resultData = result.data;
+                if (resultData != null) {
+
+                    this.studentData = {};
+
+                    // get student work and populate componentStates array
+                    this.studentData.allComponentStates = resultData.componentStates;
+                    this.studentData.componentStatesByWorkgroupId = {};
+                    this.studentData.componentStatesByNodeId = {};
+                    for (var i = 0; i < resultData.componentStates.length; i++) {
+                        var componentState = resultData.componentStates[i];
+                        var componentStateWorkgroupId = componentState.workgroupId;
+                        if (this.studentData.componentStatesByWorkgroupId[componentStateWorkgroupId] == null) {
+                            this.studentData.componentStatesByWorkgroupId[componentStateWorkgroupId] = new Array();
+                        }
+                        this.studentData.componentStatesByWorkgroupId[componentStateWorkgroupId].push(componentState);
+
+                        var componentStateNodeId = componentState.nodeId;
+                        if (this.studentData.componentStatesByNodeId[componentStateNodeId] == null) {
+                            this.studentData.componentStatesByNodeId[componentStateNodeId] = new Array();
+                        }
+                        this.studentData.componentStatesByNodeId[componentStateNodeId].push(componentState);
                     }
+
+                    // get events
+                    this.studentData.events = resultData.events;
+
+                    // get annotations
+                    this.studentData.annotations = resultData.annotations;
                 }
                 /*
                 var vleStates = result.data.vleStates;
@@ -104,49 +125,33 @@ define(['configService', 'currentNodeService'], function(configService, currentN
             return result;
         };
         
-        serviceObject.getVLEStateByWorkgroupId = function(workgroupId) {
-            var vleState = null;
-            var vleStates = this.vleStates;
-            
-            for (var v = 0; v < vleStates.length; v++) {
-                var tempVLEState = vleStates[v];
-                
-                if (tempVLEState != null) {
-                    var userId = tempVLEState.userId;
-                    
-                    if (workgroupId === userId) {
-                        vleState = tempVLEState;
-                    }
-                }
+        serviceObject.getComponentStatesByWorkgroupId = function(workgroupId) {
+            var componentStatesByWorkgroupId = this.studentData.componentStatesByWorkgroupId[workgroupId];
+            if (componentStatesByWorkgroupId != null) {
+                return componentStatesByWorkgroupId;
+            } else {
+                return [];
             }
-            
-            return vleState;
         };
-        
-        serviceObject.getNodeVisitsByWorkgroupIdAndNodeId = function(workgroupId, nodeId) {
-            var resultNodeVisits = [];
-            
-            var vleState = this.getVLEStateByWorkgroupId(workgroupId);
-            
-            if (vleState != null) {
-                var nodeVisits = vleState.nodeVisits;
-                
-                if (nodeVisits != null) {
-                    for (var v = 0; v < nodeVisits.length; v++) {
-                        var nodeVisit = nodeVisits[v];
-                        
-                        if (nodeVisit != null) {
-                            var tempNodeId = nodeVisit.nodeId;
-                            
-                            if (nodeId === tempNodeId) {
-                                resultNodeVisits.push(nodeVisit);
-                            }
-                        }
-                    }
-                }
+
+        serviceObject.getComponentStatesByNodeId = function(nodeId) {
+            var componentStatesByNodeId = this.studentData.componentStatesByNodeId[nodeId];
+            if (componentStatesByNodeId != null) {
+                return componentStatesByNodeId;
+            } else {
+                return [];
             }
-            
-            return resultNodeVisits;
+        };
+
+        serviceObject.getComponentStatesByWorkgroupIdAndNodeId = function(workgroupId, nodeId) {
+
+            var componentStatesByWorkgroupId = this.getComponentStatesByWorkgroupId(workgroupId);
+            var componentStatesByNodeId = this.getComponentStatesByNodeId(nodeId);
+
+            // find the intersect and return it
+            return componentStatesByWorkgroupId.filter(function(n) {
+                return componentStatesByNodeId.indexOf(n) != -1;
+            });
         };
         
         return serviceObject;

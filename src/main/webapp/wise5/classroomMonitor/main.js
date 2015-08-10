@@ -19,6 +19,7 @@ require.config({
         'app': 'classroomMonitor/app',
         'classroomMonitorController': 'classroomMonitor/classroomMonitorController',
         'configService': 'services/configService',
+        'cRaterService': 'components/cRater/cRaterService',
         'currentNodeService': 'services/currentNodeService',
         'd3': 'lib/d3/d3',
         'directives': 'directives/directives',
@@ -31,7 +32,10 @@ require.config({
             '//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min',
             'vendor/jquery/dist/jquery.min'
         ],
-        'jqueryUI': 'lib/jquery/jquery-ui-1.10.4.interactions.min',
+        'jqueryUI': [ // TODO: switch to pared down custom build
+            '//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min',
+            'vendor/jquery-ui/jquery-ui.min'
+        ],
         'matchService': 'components/match/matchService',
         'multipleChoiceService': 'components/multipleChoice/multipleChoiceService',
         'navigationController': 'classroomMonitor/navigation/navigationController',
