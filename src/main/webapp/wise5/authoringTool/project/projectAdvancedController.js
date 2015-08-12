@@ -1,4 +1,4 @@
-define(['app'], function(app) {
+define(['../../test/app'], function(app) {
     app.$controllerProvider.register('ProjectAdvancedController',
         function($scope, ProjectService) {
             this.project = ProjectService.getProject();

@@ -807,6 +807,20 @@ define(['configService'], function(configService) {
                 return projectJSON;
             }));
         };
+
+
+
+        serviceObject.saveProject = function(projectJSON) {
+
+            // get the url to POST the student data
+            var url = ConfigService.getConfigParam('saveProjectURL');
+
+            // make the request to post the student data
+            return $http.post(url, projectJSON).then(angular.bind(this, function(result) {
+                var savedProjectResponse = result.data;
+            }));
+        };
+
         serviceObject.getTheme = function() {
             var project = this.getProject();
             if (project != null && !!project.theme) { // TODO: check if this is a valid theme (using ConfigService) rather than just falsey

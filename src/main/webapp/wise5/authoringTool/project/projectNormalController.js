@@ -1,4 +1,4 @@
-define(['app'], function(app) {
+define(['../../test/app'], function(app) {
     app.$controllerProvider.register('ProjectNormalController', 
         function($scope, ConfigService, ProjectService) {
             this.mode = 'author';

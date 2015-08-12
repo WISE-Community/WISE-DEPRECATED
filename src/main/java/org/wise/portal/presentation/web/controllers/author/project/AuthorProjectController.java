@@ -134,6 +134,12 @@ public class AuthorProjectController {
 		if (projectIdStr != null && !projectIdStr.equals("") && !projectIdStr.equals("none")) {
 			//project = projectService.getProjectWithoutMetadata(Long.parseLong(projectIdStr));
 			project = projectService.getById(Long.parseLong(projectIdStr));
+
+			Integer wiseVersion = project.getWiseVersion();
+			if (wiseVersion != null && wiseVersion == 5) {
+				ModelAndView wise5AuthoringView = new ModelAndView(new RedirectView("../project/edit/"+projectIdStr));
+				return wise5AuthoringView;
+			}
 		} else {
 			project = null;
 		}

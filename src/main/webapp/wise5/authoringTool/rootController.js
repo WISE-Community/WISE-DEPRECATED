@@ -1,4 +1,4 @@
-define(['app'], function(app) {
+define(['../test/app'], function(app) {
     app.$controllerProvider.register('RootController', 
         function($scope, $state, ConfigService, NodeApplicationService, ProjectService,
                 NodeService, StudentDataService) {

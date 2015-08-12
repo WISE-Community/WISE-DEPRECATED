@@ -20,8 +20,8 @@
         <div ui-view></div>
     </div>
     <script>
-    var configUrl = ${configUrl};
+    var configURL = '${configURL}';
     </script>
-    <script data-main='${contextPath}/wise5/teacher/authoringTool/main' src='${contextPath}/wise5/vendor/requirejs/require.js'></script>
+    <script data-main='${contextPath}/wise5/authoringTool/main' src='${contextPath}/wise5/vendor/requirejs/require.js'></script>
 </body>
 </html>
