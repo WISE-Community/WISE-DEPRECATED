@@ -259,5 +259,6 @@ define(['angular', 'projectService', 'currentNodeService'], function(angular, pr
                 }
             }
         };
-    });
+    })
+
 });

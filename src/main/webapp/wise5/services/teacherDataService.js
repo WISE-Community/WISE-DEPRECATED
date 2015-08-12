@@ -60,7 +60,7 @@ define(['configService', 'currentNodeService'], function(configService, currentN
 
                     this.studentData = {};
 
-                    // get student work and populate componentStates array
+                    // populate allComponentStates, componentStatesByWorkgroupId and componentStatesByNodeId arrays
                     this.studentData.allComponentStates = resultData.componentStates;
                     this.studentData.componentStatesByWorkgroupId = {};
                     this.studentData.componentStatesByNodeId = {};
@@ -79,25 +79,44 @@ define(['configService', 'currentNodeService'], function(configService, currentN
                         this.studentData.componentStatesByNodeId[componentStateNodeId].push(componentState);
                     }
 
-                    // get events
-                    this.studentData.events = resultData.events;
+                    // populate allEvents, eventsByWorkgroupId, and eventsByNodeId arrays
+                    this.studentData.allEvents = resultData.events;
+                    this.studentData.eventsByWorkgroupId = {};
+                    this.studentData.eventsByNodeId = {};
+                    for (var i = 0; i < resultData.events.length; i++) {
+                        var event = resultData.events[i];
+                        var eventWorkgroupId = event.workgroupId;
+                        if (this.studentData.eventsByWorkgroupId[eventWorkgroupId] == null) {
+                            this.studentData.eventsByWorkgroupId[eventWorkgroupId] = new Array();
+                        }
+                        this.studentData.eventsByWorkgroupId[eventWorkgroupId].push(event);
 
-                    // get annotations
-                    this.studentData.annotations = resultData.annotations;
+                        var eventNodeId = event.nodeId;
+                        if (this.studentData.eventsByNodeId[eventNodeId] == null) {
+                            this.studentData.eventsByNodeId[eventNodeId] = new Array();
+                        }
+                        this.studentData.eventsByNodeId[eventNodeId].push(event);
+                    }
+
+                    // populate allAnnotations, annotationsByWorkgroupId, and annotationsByNodeId arrays
+                    this.studentData.allAnnotations = resultData.annotations;
+                    this.studentData.annotationsToWorkgroupId = {};
+                    this.studentData.annotationsByNodeId = {};
+                    for (var i = 0; i < resultData.annotations.length; i++) {
+                        var annotation = resultData.annotations[i];
+                        var annotationWorkgroupId = annotation.toWorkgroupId;
+                        if (this.studentData.annotationsToWorkgroupId[annotationWorkgroupId] == null) {
+                            this.studentData.annotationsToWorkgroupId[annotationWorkgroupId] = new Array();
+                        }
+                        this.studentData.annotationsToWorkgroupId[annotationWorkgroupId].push(annotation);
+
+                        var annotationNodeId = annotation.nodeId;
+                        if (this.studentData.annotationsByNodeId[annotationNodeId] == null) {
+                            this.studentData.annotationsByNodeId[annotationNodeId] = new Array();
+                        }
+                        this.studentData.annotationsByNodeId[annotationNodeId].push(annotation);
+                    }
                 }
-                /*
-                var vleStates = result.data.vleStates;
-                if (vleStates != null) {
-                    this.studentData = vleStates[0];
-                    var nodeVisits = this.getNodeVisits();
-                    var latestNodeVisit = this.getLatestNodeVisit();
-                    
-                    this.loadStudentNodes();
-                    this.populateHistories(nodeVisits);
-                    this.updateNodeStatuses();
-                }
-                return this.studentData;
-                */
             }));
         };
         
@@ -124,7 +143,7 @@ define(['configService', 'currentNodeService'], function(configService, currentN
             
             return result;
         };
-        
+
         serviceObject.getComponentStatesByWorkgroupId = function(workgroupId) {
             var componentStatesByWorkgroupId = this.studentData.componentStatesByWorkgroupId[workgroupId];
             if (componentStatesByWorkgroupId != null) {
@@ -153,7 +172,63 @@ define(['configService', 'currentNodeService'], function(configService, currentN
                 return componentStatesByNodeId.indexOf(n) != -1;
             });
         };
-        
+
+        serviceObject.getEventsByWorkgroupId = function(workgroupId) {
+            var eventsByWorkgroupId = this.studentData.eventsByWorkgroupId[workgroupId];
+            if (eventsByWorkgroupId != null) {
+                return eventsByWorkgroupId;
+            } else {
+                return [];
+            }
+        };
+
+        serviceObject.getEventsByNodeId = function(nodeId) {
+            var eventsByNodeId = this.studentData.eventsByNodeId[nodeId];
+            if (eventsByNodeId != null) {
+                return eventsByNodeId;
+            } else {
+                return [];
+            }
+        };
+
+        serviceObject.getEventsByWorkgroupIdAndNodeId = function(workgroupId, nodeId) {
+            var eventsByWorkgroupId = this.getEventsByWorkgroupId(workgroupId);
+            var eventsByNodeId = this.getEventsByNodeId(nodeId);
+
+            // find the intersect and return it
+            return eventsByWorkgroupId.filter(function(n) {
+                return eventsByNodeId.indexOf(n) != -1;
+            });
+        };
+
+        serviceObject.getAnnotationsToWorkgroupId = function(workgroupId) {
+            var annotationsToWorkgroupId = this.studentData.annotationsToWorkgroupId[workgroupId];
+            if (annotationsToWorkgroupId != null) {
+                return annotationsToWorkgroupId;
+            } else {
+                return [];
+            }
+        };
+
+        serviceObject.getAnnotationsByNodeId = function(nodeId) {
+            var annotationsByNodeId = this.studentData.annotationsByNodeId[nodeId];
+            if (annotationsByNodeId != null) {
+                return annotationsByNodeId;
+            } else {
+                return [];
+            }
+        };
+
+        serviceObject.getAnnotationsToWorkgroupIdAndNodeId = function(workgroupId, nodeId) {
+            var annotationsToWorkgroupId = this.getAnnotationsToWorkgroupId(workgroupId);
+            var annotationsByNodeId = this.getAnnotationsByNodeId(nodeId);
+
+            // find the intersect and return it
+            return annotationsToWorkgroupId.filter(function(n) {
+                return annotationsByNodeId.indexOf(n) != -1;
+            });
+        };
+
         return serviceObject;
     }];
     

@@ -6,10 +6,11 @@ WorkgroupId: {{studentGradingController.workgroupId}}
 <br/>
 <div ng-repeat='nodeId in studentGradingController.nodeIds' ng-show='studentGradingController.showNodeIdForStudent(nodeId)'>
     <div>{{studentGradingController.getNodeTitleByNodeId(nodeId)}}</div>
-    <div ng-repeat='componentState in studentGradingController.getComponentStatesByWorkgroupIdAndNodeId(studentGradingController.workgroupId, nodeId)'>
-        <table border=1>
-            <tr>
-                <td><componentstatehtml componentstate={{componentState}} componenttype={{componentState.componentType}}></componentstatehtml></td>
+    <div>{{studentGradingController.getEventsByWorkgroupIdAndNodeId(studentGradingController.workgroupId, nodeId).length}} events</div>
+    <div>{{studentGradingController.getAnnotationsToWorkgroupIdAndNodeId(studentGradingController.workgroupId, nodeId).length}} annotations</div>
+    <table border="1">
+    <tr ng-repeat='componentState in studentGradingController.getComponentStatesByWorkgroupIdAndNodeId(studentGradingController.workgroupId, nodeId)'>
+                <td><componentstatehtml componentstate={{componentState}}></componentstatehtml></td>
                 <!--
                 <td>
                 Score: <input type='text' size=5 ng-model='studentGradingController.annotationMappings[nodeVisit.id + "-score"].value' ng-change='studentGradingController.scoreChanged(nodeVisit.id)' ng-model-options='{debounce:{"default":1000, "blur":0}}' />
@@ -17,7 +18,35 @@ WorkgroupId: {{studentGradingController.workgroupId}}
                 Comment: <textarea rows=4 cols=50 ng-model='studentGradingController.annotationMappings[nodeVisit.id + "-comment"].value' ng-change='studentGradingController.commentChanged(nodeVisit.id)' ng-model-options='{debounce:{"default":2000, "blur":0}}'></textarea>
                 </td>
                 -->
-            </tr>
-        </table>
-    </div>
+    </tr>
+    </table>
 </div>
+<hr/>
+<h2>All Events for this workgroup</h2>
+<table border="1">
+    <th>id</th><th>clientSaveTime</th><th>node id</th><th>component id</th><th>event</th><th>data</th>
+<tr ng-repeat='event in studentGradingController.getEventsByWorkgroupId(studentGradingController.workgroupId)'>
+    <td>{{event.id}}</td>
+    <td>{{event.clientSaveTime}}</td>
+    <td>{{event.nodeId}}</td>
+    <td>{{event.componentId}}</td>
+    <td>{{event.event}}</td>
+    <td>{{event.data}}</td>
+</tr>
+</table>
+
+<h2>All Annotations for this workgroup</h2>
+<table border="1">
+    <th>id</th><th>clientSaveTime</th><th>from workgroup id</th><th>to workgroup id</th><th>node id</th><th>component id</th><th>component state id</th><th>type</th><th>data</th>
+    <tr ng-repeat='annotation in studentGradingController.getAnnotationsToWorkgroupId(studentGradingController.workgroupId)'>
+        <td>{{annotation.id}}</td>
+        <td>{{annotation.clientSaveTime}}</td>
+        <td>{{annotation.fromWorkgroupId}}</td>
+        <td>{{annotation.toWorkgroupId}}</td>
+        <td>{{annotation.nodeId}}</td>
+        <td>{{annotation.componentId}}</td>
+        <td>{{annotation.componentStateId}}</td>
+        <td>{{annotation.type}}</td>
+        <td>{{annotation.data}}</td>
+    </tr>
+</table>

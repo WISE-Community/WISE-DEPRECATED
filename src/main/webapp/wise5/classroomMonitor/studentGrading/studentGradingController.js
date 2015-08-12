@@ -80,12 +80,24 @@ define(['app'], function(app) {
             return ProjectService.getNodeTitleByNodeId(nodeId);
         };
 
+        this.getEventsByWorkgroupId = function(workgroupId) {
+            return TeacherDataService.getEventsByWorkgroupId(workgroupId);
+        };
+
+        this.getEventsByWorkgroupIdAndNodeId = function(workgroupId, nodeId) {
+            return TeacherDataService.getEventsByWorkgroupIdAndNodeId(workgroupId, nodeId);
+        };
+
+        this.getAnnotationsToWorkgroupId = function(workgroupId) {
+            return TeacherDataService.getAnnotationsToWorkgroupId(workgroupId);
+        };
+
+        this.getAnnotationsToWorkgroupIdAndNodeId = function(workgroupId, nodeId) {
+            return TeacherDataService.getAnnotationsToWorkgroupIdAndNodeId(workgroupId, nodeId);
+        };
+
         this.getComponentStatesByWorkgroupIdAndNodeId = function(workgroupId, nodeId) {
-            var nodeVisits = TeacherDataService.getComponentStatesByWorkgroupIdAndNodeId(workgroupId, nodeId);
-            
-            AnnotationService.populateAnnotationMappings(this.annotationMappings, workgroupId, nodeVisits);
-            
-            return nodeVisits;
+            return TeacherDataService.getComponentStatesByWorkgroupIdAndNodeId(workgroupId, nodeId);
         };
         
         this.scoreChanged = function(stepWorkId) {

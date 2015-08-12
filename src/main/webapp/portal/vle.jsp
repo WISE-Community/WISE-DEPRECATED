@@ -21,7 +21,7 @@ function notifyCleaningComplete(type,args,obj){
 function topiframeOnLoad() {
 	var vleConfigUrl = "${vleConfigUrl}";
 	window.frames["topifrm"].load(vleConfigUrl);
-}
+};
 
 function startAuthorMode() {
 	window.frames['topifrm'].eventManager.subscribe('fatalError', notifyFatal);
