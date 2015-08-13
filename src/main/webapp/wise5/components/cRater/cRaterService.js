@@ -387,6 +387,21 @@ define(['configService'], function(configService) {
             eventManager.fire('unlockScreenEvent');
         };
 
+        serviceObject.getStudentWorkAsHTML = function(componentState) {
+            var studentWorkAsHTML = null;
+
+            if (componentState != null && componentState.studentData != null) {
+                var response = componentState.studentData.response;
+
+                if (response != null) {
+                    studentWorkAsHTML = '<p>' + response + '</p>';
+                }
+            }
+
+            return studentWorkAsHTML;
+        };
+
+
         /**
          * Check if the component was completed
          * @param component the component object

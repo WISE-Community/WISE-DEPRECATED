@@ -1,4 +1,4 @@
-define(['app'], function(app) {
+define(['../../test/app'], function(app) {
     app.$controllerProvider.register('NodeNormalController', 
         function($scope, $stateParams, ProjectService, NodeApplicationService) {
             this.nodeId = $stateParams.nodeId;

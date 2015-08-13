@@ -55,9 +55,9 @@ define(['app'], function(app) {
                         var nodeIdInBranch = branchPath[n];
                         
                         // get the work for this student for the node id
-                        var nodeVisits = TeacherDataService.getNodeVisitsByWorkgroupIdAndNodeId(this.workgroupId, nodeIdInBranch);
+                        var componentStates = TeacherDataService.getComponentStatesByWorkgroupIdAndNodeId(this.workgroupId, nodeIdInBranch);
                         
-                        if (nodeVisits != null && nodeVisits.length > 0) {
+                        if (componentStates != null && componentStates.length > 0) {
                             /*
                              * the student has work for the step so we will say
                              * the branch path has work and that the node id
@@ -79,13 +79,25 @@ define(['app'], function(app) {
         this.getNodeTitleByNodeId = function(nodeId) {
             return ProjectService.getNodeTitleByNodeId(nodeId);
         };
-        
-        this.getNodeVisitsByWorkgroupIdAndNodeId = function(workgroupId, nodeId) {
-            var nodeVisits = TeacherDataService.getNodeVisitsByWorkgroupIdAndNodeId(workgroupId, nodeId);
-            
-            AnnotationService.populateAnnotationMappings(this.annotationMappings, workgroupId, nodeVisits);
-            
-            return nodeVisits;
+
+        this.getEventsByWorkgroupId = function(workgroupId) {
+            return TeacherDataService.getEventsByWorkgroupId(workgroupId);
+        };
+
+        this.getEventsByWorkgroupIdAndNodeId = function(workgroupId, nodeId) {
+            return TeacherDataService.getEventsByWorkgroupIdAndNodeId(workgroupId, nodeId);
+        };
+
+        this.getAnnotationsToWorkgroupId = function(workgroupId) {
+            return TeacherDataService.getAnnotationsToWorkgroupId(workgroupId);
+        };
+
+        this.getAnnotationsToWorkgroupIdAndNodeId = function(workgroupId, nodeId) {
+            return TeacherDataService.getAnnotationsToWorkgroupIdAndNodeId(workgroupId, nodeId);
+        };
+
+        this.getComponentStatesByWorkgroupIdAndNodeId = function(workgroupId, nodeId) {
+            return TeacherDataService.getComponentStatesByWorkgroupIdAndNodeId(workgroupId, nodeId);
         };
         
         this.scoreChanged = function(stepWorkId) {

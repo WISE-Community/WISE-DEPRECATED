@@ -1,10 +1,10 @@
 <link href="${contextPath}/<spring:theme code="teacherrunstylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
 
 <script type="text/javascript">
-	$(document).ready(function(){
+	$(document).ready(function() {
 		
 		// setup grading dialogs
-		$('.grading, .researchTools').on('click',function(){
+		$('.grading, .researchTools').on('click',function() {
 			var settings = $(this).attr('id');
 			var title = $(this).attr('title');
 			var path = "${contextPath}/teacher/grading/gradework.html?" + settings;
@@ -16,7 +16,7 @@
 				title: title,
 				close: function (e, ui) { $(this).html(''); },
 				buttons: {
-					Exit: function(){
+					Exit: function() {
 						$(this).dialog('close');
 					}
 				}
@@ -25,18 +25,18 @@
 		});
 		
 		// setup grading dialogs
-		$('.classroomMonitor').on('click',function(){
+		$('.classroomMonitor').on('click',function() {
 			var settings = $(this).attr('id');
 			var title = $(this).attr('title');
 	        var wiseVersion = $(this).attr('wiseVersion');
-	        var path = "${contextPath}/teacher/classroomMonitor/classroomMonitor.html?" + settings;
+	        var path = "${contextPath}/teacher/classroomMonitor/classroomMonitor?" + settings;
 	        if (wiseVersion != null && wiseVersion == 5) {
-	             path = "${contextPath}/classroomMonitor.html?" + settings;
+	             path = "${contextPath}/classroomMonitor?" + settings;
 	        }
 			window.open(path);
 		});
 		
-		$('.classroomManager').on('click',function(){
+		$('.classroomManager').on('click',function() {
 			var settings = $(this).attr('id');
 			var title = $(this).attr('title');
 			var path = "${contextPath}/teacher/classroomManager.html?" + settings;
@@ -44,7 +44,7 @@
 		});
 		
 		// setup share project run dialog
-		$('.shareRun').on('click',function(){
+		$('.shareRun').on('click',function() {
 			var title = $(this).attr('title');
 			var runId = $(this).attr('id').replace('shareRun_','');
 			var path = "${contextPath}/teacher/run/shareprojectrun.html?runId=" + runId;
@@ -54,18 +54,18 @@
 				width: '650',
 				height: '450',
 				title: title,
-				close: function(){
+				close: function() {
 					$(this).html('');
 				},
 				buttons: {
-					Close: function(){$(this).dialog('close');}
+					Close: function() {$(this).dialog('close');}
 				}
 			});
 			$("#shareDialog > #shareIfrm").attr('src',path);
 		});
 		
 		// setup edit run settings dialog
-		$('.editRun').on('click',function(){
+		$('.editRun').on('click',function() {
 			var title = $(this).attr('title');
 			var runId = $(this).attr('id').replace('editRun_','');
 			var path = "${contextPath}/teacher/run/editrun.html?runId=" + runId;
@@ -75,14 +75,14 @@
 				width: '600',
 				height: '400',
 				title: title,
-				close: function(){
-					if(document.getElementById('editIfrm').contentWindow['runUpdated']){
+				close: function() {
+					if (document.getElementById('editIfrm').contentWindow['runUpdated']) {
 						window.location.reload();
 					}
 					$(this).html('');
 				},
 				buttons: {
-					Close: function(){
+					Close: function() {
 						$(this).dialog('close');
 					}
 				}
@@ -91,7 +91,7 @@
 		});
 		
 		// setup my notes dialog
-		$('.myNotes').on('click',function(){
+		$('.myNotes').on('click',function() {
 			var title = $(this).attr('title');
 			var runId = $(this).attr('id').replace('myNotes_','');
 			var path = "${contextPath}/teacher/run/notes.html?runId=" + runId;
@@ -101,9 +101,9 @@
 				width: '700',
 				height: '450',
 				title: title,
-				close: function(){ $(this).html(''); },
+				close: function() { $(this).html(''); },
 				buttons: {
-					Close: function(){
+					Close: function() {
 						$(this).dialog('close');
 					}
 				}
@@ -112,7 +112,7 @@
 		});
 		
 		// setup edit manage announcements dialog
-		$('.editAnnouncements').on('click',function(){
+		$('.editAnnouncements').on('click',function() {
 			var title = $(this).attr('title');
 			var runId = $(this).attr('id').replace('editAnnouncements_','');
 			var path = "${contextPath}/teacher/run/announcement/manageannouncement?runId=" + runId;
@@ -122,9 +122,9 @@
 				width: '700',
 				height: '600',
 				title: title,
-				close: function(){ $(this).html(''); },
+				close: function() { $(this).html(''); },
 				buttons: {
-					Close: function(){
+					Close: function() {
 						$(this).dialog('close');
 					}
 				}
@@ -133,7 +133,7 @@
 		});
 		
 		// setup manage students dialog
-		$('.manageStudents').on('click',function(){
+		$('.manageStudents').on('click',function() {
 			var title = $(this).attr('title');
 			var params = $(this).attr('id').replace('manageStudents_','');
 			var path = "${contextPath}/teacher/management/viewmystudents.html?" + params;
@@ -145,9 +145,9 @@
 				title: title,
 				beforeClose: function() {
 					// check for unsaved changes and alert user if necessary
-					if(document.getElementById('manageStudentsIfrm').contentWindow['unsavedChanges']){
+					if (document.getElementById('manageStudentsIfrm').contentWindow['unsavedChanges']) {
 						var answer = confirm("<spring:message code="teacher.run.recentactivity.warningUnsavedChangesToStudentTeams"/>\n\n<spring:message code="teacher.run.recentactivity.areYouSureYouWantToExit"/>")
-						if(answer){
+						if (answer) {
 							return true;
 						} else {
 							return false;
@@ -156,15 +156,15 @@
 						return true;
 					}
 				},
-				close: function(){
+				close: function() {
 					// refresh page if required (run title or student periods have been modified)
-					if(document.getElementById('manageStudentsIfrm').contentWindow['refreshRequired']){
+					if (document.getElementById('manageStudentsIfrm').contentWindow['refreshRequired']) {
 						window.location.reload();
 					}
 					$(this).html('');
 				},
 				buttons: {
-					Exit: function(){
+					Exit: function() {
 						$(this).dialog('close');
 					}
 				}
@@ -173,12 +173,12 @@
 		});
 		
 		// setup archive and restore run dialogs
-		$('.archiveRun, .activateRun').on('click',function(){
+		$('.archiveRun, .activateRun').on('click',function() {
 			var title = $(this).attr('title');
-			if($(this).hasClass('archiveRun')){
+			if ($(this).hasClass('archiveRun')) {
 				var params = $(this).attr('id').replace('archiveRun_','');
 				var path = "${contextPath}/teacher/run/manage/archiveRun.html?" + params;
-			} else if($(this).hasClass('activateRun')){
+			} else if ($(this).hasClass('activateRun')) {
 				var params = $(this).attr('id').replace('activateRun_','');
 				var path = "${contextPath}/teacher/run/manage/startRun.html?" + params;
 			}
@@ -188,14 +188,14 @@
 				width: '600',
 				height: '450',
 				title: title,
-				close: function(){
-					if(document.getElementById('archiveIfrm').contentWindow['refreshRequired']){
+				close: function() {
+					if (document.getElementById('archiveIfrm').contentWindow['refreshRequired']) {
 						window.location.reload();
 					}
 					$(this).html('');
 				},
 				buttons: {
-					Close: function(){
+					Close: function() {
 						$(this).dialog('close');
 					}
 				}
@@ -204,11 +204,11 @@
 		});
 		
 		// Set up view project details click action for each project id link
-		$('a.projectDetail, a.projectInfo').on('click',function(){
+		$('a.projectDetail, a.projectInfo').on('click',function() {
 			var title = $(this).attr('title');
-			if($(this).hasClass('projectDetail')){
+			if ($(this).hasClass('projectDetail')) {
 				var projectId = $(this).attr('id').replace('projectDetail_','');
-			} else if($(this).hasClass('projectInfo')){
+			} else if ($(this).hasClass('projectInfo')) {
 				var projectId = $(this).attr('id').replace('projectInfo_','');
 			}
 			var path = "${contextPath}/projectInfo?projectId=" + projectId;
@@ -218,9 +218,9 @@
 				width: '800',
 				height: '400',
 				title: title,
-				close: function(){ $(this).html(''); },
+				close: function() { $(this).html(''); },
 				buttons: {
-					Close: function(){
+					Close: function() {
 						$(this).dialog('close');
 					}
 				}
@@ -240,11 +240,11 @@
 			closeOnEscape: false,
 			beforeclose : function() { return agreed; },
 			buttons: {
-				'<spring:message code="cancel" />': function(){
+				'<spring:message code="cancel" />': function() {
 					agreed = true;
 					$(this).dialog('close');
 				},
-				'<spring:message code="ok" />': function(){
+				'<spring:message code="ok" />': function() {
 					var processingHtml = '<p>' + processing + '</p>' + 
 						'<p><img src="${contextPath}/themes/default/images/rel_interstitial_loading.gif" /></p>';
 					$('#unshareDialog').css('text-align','center');
@@ -256,19 +256,19 @@
 						url:"${contextPath}/teacher/run/unshareprojectrun.html",
 						type:"POST",
 						data:{"runId":runId},
-						success: function(data, text, xml){
+						success: function(data, text, xml) {
 							$('#unshareDialog').html("<p><spring:message code='teacher.run.recentactivity.successfullyRemovedFromSharedTeachers' /></p>");
-							$('button:eq(1)',$('#unshareDialog').parent()).show().click(function(){
+							$('button:eq(1)',$('#unshareDialog').parent()).show().click(function() {
 								agreed = true;
 								$('#unshareDialog').dialog('close');
 								// reload page
 								window.location.reload();
 							});
 						},
-						error: function(data, text, xml){
+						error: function(data, text, xml) {
 							// an error occured, so we will display an error message to the user
 							$('#unshareDialog').html('<p><spring:message code="teacher.run.recentactivity.errorFailedToEditSharedSettings" /></p>');
-							$('button:eq(1)',$('#unshareDialog').parent()).show().click(function(){
+							$('button:eq(1)',$('#unshareDialog').parent()).show().click(function() {
 								agreed = true;
 								$('#unshareDialog').dialog('close');
 							});
@@ -400,7 +400,7 @@
 							        	<spring:message code="teacher.run.recentactivity.project"/>&nbsp;<a href="${contextPath}/previewproject.html?projectId=${run.project.id}" target="_blank"><img class="icon" alt="preview" src="${contextPath}/<spring:theme code="screen"/>" /><span><spring:message code="teacher.run.recentactivity.preview"/></span></a>
 						    			|&nbsp;<a id="projectInfo_${run.project.id}" class="projectInfo" title="<spring:message code="teacher.run.recentactivity.projectDetails"/>"><img class="icon" alt="info" src="${contextPath}/<spring:theme code="id"/>" /><span><spring:message code="teacher.run.recentactivity.info"/></span></a>
 							        	<sec:accesscontrollist domainObject="${run.project}" hasPermission="16">
-							        		|&nbsp;<a onclick="if(confirm('<spring:message code="teacher.run.recentactivity.warningWillBeEditingProjectForRun"/>')){window.top.location='${contextPath}/author/authorproject.html?projectId=${run.project.id}';} return true;"><img class="icon" alt="edit" src="${contextPath}/<spring:theme code="edit"/>" /><span><spring:message code="teacher.run.recentactivity.editContent"/></span></a>
+							        		|&nbsp;<a onclick="if (confirm('<spring:message code="teacher.run.recentactivity.warningWillBeEditingProjectForRun"/>')) {window.top.location='${contextPath}/author/authorproject.html?projectId=${run.project.id}';} return true;"><img class="icon" alt="edit" src="${contextPath}/<spring:theme code="edit"/>" /><span><spring:message code="teacher.run.recentactivity.editContent"/></span></a>
 							        	</sec:accesscontrollist>
 							        </li>
 							    </ul>

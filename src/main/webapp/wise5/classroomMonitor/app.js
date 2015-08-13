@@ -12,6 +12,7 @@ define([
         'angularWebSocket',
         'annotationService',
         'configService',
+        'cRaterService',
         'currentNodeService',
         'discussionService',
         'drawService',
@@ -44,6 +45,7 @@ define([
                 angularWebSocket,
                 annotationService,
                 configService,
+                cRaterService,
                 currentNodeService,
                 discussionService,
                 drawService,
@@ -76,6 +78,7 @@ define([
     // core services
 	app.factory('AnnotationService', annotationService);
     app.factory('ConfigService', configService);
+    app.factory('CRaterService', cRaterService);
     app.factory('CurrentNodeService', currentNodeService);
     app.factory('NodeService', nodeService);
     app.factory('PortfolioService', portfolioService);

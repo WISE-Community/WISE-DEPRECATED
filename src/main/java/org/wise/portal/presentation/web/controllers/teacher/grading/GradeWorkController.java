@@ -62,22 +62,21 @@ public class GradeWorkController {
 	@Autowired
 	Properties wiseProperties;
 
-	@RequestMapping(value = {"/classroomMonitor.html", "/teacher/grading/gradework.html",
-			"/teacher/classroomMonitor/classroomMonitor.html", "/teacher/classroomManager"})
+	@RequestMapping(value = {
+			"/classroomMonitor",
+			"/teacher/grading/gradework.html",
+			"/teacher/classroomMonitor/classroomMonitor",
+			"/teacher/classroomManager"})
 	protected ModelAndView handleRequestInternal(
 			@RequestParam("runId") String runId,
+			@RequestParam(value = "action", required = false) String action,
+			@RequestParam(value = "gradingType", required = false) String gradingType,
+			@RequestParam(value = "getRevisions", required = false) String getRevisions,
 			HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 
 		Run run = runService.retrieveById(new Long(runId));
-		
-		//get the grading type (step or team)
-		String gradingType = request.getParameter("gradingType");
-		
-		//get the boolean whether to get revisions
-		String getRevisions = request.getParameter("getRevisions");
-		
-		String action = request.getParameter("action");
+
 		if (action != null) {
 			if (action.equals("postMaxScore")) {
 				return handlePostMaxScore(request, response, run);
@@ -148,7 +147,7 @@ public class GradeWorkController {
 				} else {
 					return new ModelAndView(new RedirectView("../../accessdenied.html"));
 				}
-			} else if ( runId != null ) {
+			} else if (runId != null) {
 				ModelAndView modelAndView = new ModelAndView();
 				modelAndView.addObject("runId", runId);
 				

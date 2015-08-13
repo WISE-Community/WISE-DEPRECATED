@@ -487,9 +487,9 @@
 		var settings = $(this).attr('id');
 		var title = $(this).attr('title');
 		var wiseVersion = $(this).attr('wiseVersion');
-        var path = "${contextPath}/teacher/classroomMonitor/classroomMonitor.html?" + settings;
+        var path = "${contextPath}/teacher/classroomMonitor/classroomMonitor?" + settings;
 		if (wiseVersion != null && wiseVersion == 5) {
-	         path = "${contextPath}/classroomMonitor.html?" + settings;
+	         path = "${contextPath}/classroomMonitor?" + settings;
 		}
 		window.open(path);
 	});

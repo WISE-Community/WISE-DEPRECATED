@@ -1,5 +1,5 @@
 require.config({
-    baseUrl: 'wise5/',
+    baseUrl: '../../wise5/',
     paths: {
         'angular': [
             '//ajax.googleapis.com/ajax/libs/angularjs/1.3.16/angular.min',
@@ -16,8 +16,8 @@ require.config({
         'angularUIRouter': 'vendor/angular-ui-router/release/angular-ui-router.min',
         'angularWebSocket': 'vendor/angular-websocket/angular-websocket.min',
         'annotationService': 'services/annotationService',
-        'app': 'classroomMonitor/app',
-        'classroomMonitorController': 'classroomMonitor/classroomMonitorController',
+        'app': 'authoringTool/app',
+        'authoringToolController': 'authoringTool/authoringToolController',
         'configService': 'services/configService',
         'cRaterService': 'components/cRater/cRaterService',
         'currentNodeService': 'services/currentNodeService',
@@ -51,6 +51,7 @@ require.config({
         'planningService': 'components/planning/planningService',
         'portfolioController': 'classroomMonitor/portfolio/portfolioController',
         'portfolioService': 'services/portfolioService',
+        'projectController': 'authoringTool/project/projectController',
         'projectService': 'services/projectService',
         'sessionService': 'services/sessionService',
         'studentDataService': 'services/studentDataService',
@@ -71,34 +72,34 @@ require.config({
         'angularAnimate': {
             'exports': 'angularAnimate',
             'deps': [
-                    'angular'
-                    ]
+                'angular'
+            ]
         },
         'angularDragDrop': {
             'exports': 'angularDragDrop',
             'deps': [
-                    'angular',
-                    'jqueryUI'
-                    ]
+                'angular',
+                'jqueryUI'
+            ]
         },
         'angularSortable': {
             'exports': 'angularSortable',
             'deps': [
-                     'angular',
-                     'jqueryUI'
-                     ]
+                'angular',
+                'jqueryUI'
+            ]
         },
         'angularUIRouter': {
             'exports': 'angularUIRouter',
             'deps': [
-                    'angular'
-                    ]
+                'angular'
+            ]
         },
         'angularWebSocket': {
             'exports': 'angularWebSocket',
             'deps': [
-                    'angular'
-                    ]
+                'angular'
+            ]
         },
         'angularAria': {
             'exports': 'angularAria',
@@ -119,8 +120,8 @@ require.config({
         'jqueryUI': {
             'exports': 'jqueryUI',
             'deps': [
-                     'jquery'
-                     ]
+                'jquery'
+            ]
         }
     }
 });

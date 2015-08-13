@@ -54,7 +54,7 @@
 	$('.classroomMonitor').on('click',function(){
 		var settings = $(this).attr('id');
 		var title = $(this).attr('title');
-		var path = "${contextPath}/teacher/classroomMonitor/classroomMonitor.html?" + settings;
+		var path = "${contextPath}/teacher/classroomMonitor/classroomMonitor?" + settings;
 		window.open(path);
 	});
 	

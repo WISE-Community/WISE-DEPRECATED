@@ -736,7 +736,7 @@ var scriptloader = function(){
 		insertSetupPaths:function(setupFiles) {
 			if(document.location.pathname.indexOf('vle.html') != -1 || 
 					document.location.pathname.indexOf('gradework.html') != -1 ||
-					document.location.pathname.indexOf('classroomMonitor.html') != -1) {
+					document.location.pathname.indexOf('classroomMonitor') != -1) {
 				/*
 				 * we are loading the vle or grading tool so we only need to
 				 * load certain step types. we will try to obtain the project.json

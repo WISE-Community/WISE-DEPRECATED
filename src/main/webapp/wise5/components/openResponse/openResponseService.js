@@ -59,18 +59,18 @@ define(['nodeService', 'studentDataService'], function(nodeService, studentDataS
             
             return wordCount;
         };
-        
-        serviceObject.getStudentWorkAsHTML = function(nodeState) {
+
+        serviceObject.getStudentWorkAsHTML = function(componentState) {
             var studentWorkAsHTML = null;
-            
-            if (nodeState != null) {
-                var response = nodeState.studentData;
-                
+
+            if (componentState != null && componentState.studentData != null) {
+                var response = componentState.studentData.response;
+
                 if (response != null) {
                     studentWorkAsHTML = '<p>' + response + '</p>';
                 }
             }
-            
+
             return studentWorkAsHTML;
         };
         

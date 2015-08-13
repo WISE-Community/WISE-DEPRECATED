@@ -31,10 +31,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
+import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.project.FamilyTag;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.impl.PreviewProjectParameters;
@@ -50,7 +52,6 @@ import org.wise.portal.service.project.ProjectService;
  * @author Hiroki Terashima
  */
 @Controller
-@RequestMapping("/previewproject.html")
 public class PreviewProjectController {
 	
 	private static final String PROJECT_ID_PARAM_NAME = "projectId";
@@ -73,8 +74,9 @@ public class PreviewProjectController {
 	@Autowired
 	private RunService runService;
 
-	@RequestMapping(method = RequestMethod.GET)
-	protected ModelAndView handleRequestInternal(HttpServletRequest request,
+	@RequestMapping(value = "/previewproject.html", method = RequestMethod.GET)
+	protected ModelAndView handleRequestInternal(
+			HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 
 		String projectIdStr = request.getParameter(PROJECT_ID_PARAM_NAME);
@@ -111,8 +113,8 @@ public class PreviewProjectController {
 
 		User user = ControllerUtil.getSignedInUser();
 
-		if(project.hasTags(tagNames) || 
-				project.getFamilytag().equals(FamilyTag.TELS) || this.projectService.canReadProject(project, user)){
+		if (project.hasTags(tagNames) || 
+				project.getFamilytag().equals(FamilyTag.TELS) || this.projectService.canReadProject(project, user)) {
 			PreviewProjectParameters params = new PreviewProjectParameters();
 			params.setUser(user);
 			params.setProject(project);

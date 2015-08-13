@@ -49,34 +49,74 @@ define(['configService', 'currentNodeService'], function(configService, currentN
             }
             
             params.runId = ConfigService.getRunId();
-            params.grading = true;
-            params.getRevisions = true;
-            params.usedCachedWork = false;
-            
+            params.getComponentStates = true;
+            params.getEvents = true;
+            params.getAnnotations = true;
+
             httpParams.params = params;
             return $http(httpParams).then(angular.bind(this, function(result) {
-                
-                if (result != null && result.data != null) {
-                    var vleStates = result.data.vleStates;
-                    
-                    if (vleStates != null) {
-                        this.vleStates = vleStates;
-                        this.sortVLEStatesAlphabeticallyByUserName();
+                var resultData = result.data;
+                if (resultData != null) {
+
+                    this.studentData = {};
+
+                    // populate allComponentStates, componentStatesByWorkgroupId and componentStatesByNodeId arrays
+                    this.studentData.allComponentStates = resultData.componentStates;
+                    this.studentData.componentStatesByWorkgroupId = {};
+                    this.studentData.componentStatesByNodeId = {};
+                    for (var i = 0; i < resultData.componentStates.length; i++) {
+                        var componentState = resultData.componentStates[i];
+                        var componentStateWorkgroupId = componentState.workgroupId;
+                        if (this.studentData.componentStatesByWorkgroupId[componentStateWorkgroupId] == null) {
+                            this.studentData.componentStatesByWorkgroupId[componentStateWorkgroupId] = new Array();
+                        }
+                        this.studentData.componentStatesByWorkgroupId[componentStateWorkgroupId].push(componentState);
+
+                        var componentStateNodeId = componentState.nodeId;
+                        if (this.studentData.componentStatesByNodeId[componentStateNodeId] == null) {
+                            this.studentData.componentStatesByNodeId[componentStateNodeId] = new Array();
+                        }
+                        this.studentData.componentStatesByNodeId[componentStateNodeId].push(componentState);
+                    }
+
+                    // populate allEvents, eventsByWorkgroupId, and eventsByNodeId arrays
+                    this.studentData.allEvents = resultData.events;
+                    this.studentData.eventsByWorkgroupId = {};
+                    this.studentData.eventsByNodeId = {};
+                    for (var i = 0; i < resultData.events.length; i++) {
+                        var event = resultData.events[i];
+                        var eventWorkgroupId = event.workgroupId;
+                        if (this.studentData.eventsByWorkgroupId[eventWorkgroupId] == null) {
+                            this.studentData.eventsByWorkgroupId[eventWorkgroupId] = new Array();
+                        }
+                        this.studentData.eventsByWorkgroupId[eventWorkgroupId].push(event);
+
+                        var eventNodeId = event.nodeId;
+                        if (this.studentData.eventsByNodeId[eventNodeId] == null) {
+                            this.studentData.eventsByNodeId[eventNodeId] = new Array();
+                        }
+                        this.studentData.eventsByNodeId[eventNodeId].push(event);
+                    }
+
+                    // populate allAnnotations, annotationsByWorkgroupId, and annotationsByNodeId arrays
+                    this.studentData.allAnnotations = resultData.annotations;
+                    this.studentData.annotationsToWorkgroupId = {};
+                    this.studentData.annotationsByNodeId = {};
+                    for (var i = 0; i < resultData.annotations.length; i++) {
+                        var annotation = resultData.annotations[i];
+                        var annotationWorkgroupId = annotation.toWorkgroupId;
+                        if (this.studentData.annotationsToWorkgroupId[annotationWorkgroupId] == null) {
+                            this.studentData.annotationsToWorkgroupId[annotationWorkgroupId] = new Array();
+                        }
+                        this.studentData.annotationsToWorkgroupId[annotationWorkgroupId].push(annotation);
+
+                        var annotationNodeId = annotation.nodeId;
+                        if (this.studentData.annotationsByNodeId[annotationNodeId] == null) {
+                            this.studentData.annotationsByNodeId[annotationNodeId] = new Array();
+                        }
+                        this.studentData.annotationsByNodeId[annotationNodeId].push(annotation);
                     }
                 }
-                /*
-                var vleStates = result.data.vleStates;
-                if (vleStates != null) {
-                    this.studentData = vleStates[0];
-                    var nodeVisits = this.getNodeVisits();
-                    var latestNodeVisit = this.getLatestNodeVisit();
-                    
-                    this.loadStudentNodes();
-                    this.populateHistories(nodeVisits);
-                    this.updateNodeStatuses();
-                }
-                return this.studentData;
-                */
             }));
         };
         
@@ -103,52 +143,92 @@ define(['configService', 'currentNodeService'], function(configService, currentN
             
             return result;
         };
-        
-        serviceObject.getVLEStateByWorkgroupId = function(workgroupId) {
-            var vleState = null;
-            var vleStates = this.vleStates;
-            
-            for (var v = 0; v < vleStates.length; v++) {
-                var tempVLEState = vleStates[v];
-                
-                if (tempVLEState != null) {
-                    var userId = tempVLEState.userId;
-                    
-                    if (workgroupId === userId) {
-                        vleState = tempVLEState;
-                    }
-                }
+
+        serviceObject.getComponentStatesByWorkgroupId = function(workgroupId) {
+            var componentStatesByWorkgroupId = this.studentData.componentStatesByWorkgroupId[workgroupId];
+            if (componentStatesByWorkgroupId != null) {
+                return componentStatesByWorkgroupId;
+            } else {
+                return [];
             }
-            
-            return vleState;
         };
-        
-        serviceObject.getNodeVisitsByWorkgroupIdAndNodeId = function(workgroupId, nodeId) {
-            var resultNodeVisits = [];
-            
-            var vleState = this.getVLEStateByWorkgroupId(workgroupId);
-            
-            if (vleState != null) {
-                var nodeVisits = vleState.nodeVisits;
-                
-                if (nodeVisits != null) {
-                    for (var v = 0; v < nodeVisits.length; v++) {
-                        var nodeVisit = nodeVisits[v];
-                        
-                        if (nodeVisit != null) {
-                            var tempNodeId = nodeVisit.nodeId;
-                            
-                            if (nodeId === tempNodeId) {
-                                resultNodeVisits.push(nodeVisit);
-                            }
-                        }
-                    }
-                }
+
+        serviceObject.getComponentStatesByNodeId = function(nodeId) {
+            var componentStatesByNodeId = this.studentData.componentStatesByNodeId[nodeId];
+            if (componentStatesByNodeId != null) {
+                return componentStatesByNodeId;
+            } else {
+                return [];
             }
-            
-            return resultNodeVisits;
         };
-        
+
+        serviceObject.getComponentStatesByWorkgroupIdAndNodeId = function(workgroupId, nodeId) {
+
+            var componentStatesByWorkgroupId = this.getComponentStatesByWorkgroupId(workgroupId);
+            var componentStatesByNodeId = this.getComponentStatesByNodeId(nodeId);
+
+            // find the intersect and return it
+            return componentStatesByWorkgroupId.filter(function(n) {
+                return componentStatesByNodeId.indexOf(n) != -1;
+            });
+        };
+
+        serviceObject.getEventsByWorkgroupId = function(workgroupId) {
+            var eventsByWorkgroupId = this.studentData.eventsByWorkgroupId[workgroupId];
+            if (eventsByWorkgroupId != null) {
+                return eventsByWorkgroupId;
+            } else {
+                return [];
+            }
+        };
+
+        serviceObject.getEventsByNodeId = function(nodeId) {
+            var eventsByNodeId = this.studentData.eventsByNodeId[nodeId];
+            if (eventsByNodeId != null) {
+                return eventsByNodeId;
+            } else {
+                return [];
+            }
+        };
+
+        serviceObject.getEventsByWorkgroupIdAndNodeId = function(workgroupId, nodeId) {
+            var eventsByWorkgroupId = this.getEventsByWorkgroupId(workgroupId);
+            var eventsByNodeId = this.getEventsByNodeId(nodeId);
+
+            // find the intersect and return it
+            return eventsByWorkgroupId.filter(function(n) {
+                return eventsByNodeId.indexOf(n) != -1;
+            });
+        };
+
+        serviceObject.getAnnotationsToWorkgroupId = function(workgroupId) {
+            var annotationsToWorkgroupId = this.studentData.annotationsToWorkgroupId[workgroupId];
+            if (annotationsToWorkgroupId != null) {
+                return annotationsToWorkgroupId;
+            } else {
+                return [];
+            }
+        };
+
+        serviceObject.getAnnotationsByNodeId = function(nodeId) {
+            var annotationsByNodeId = this.studentData.annotationsByNodeId[nodeId];
+            if (annotationsByNodeId != null) {
+                return annotationsByNodeId;
+            } else {
+                return [];
+            }
+        };
+
+        serviceObject.getAnnotationsToWorkgroupIdAndNodeId = function(workgroupId, nodeId) {
+            var annotationsToWorkgroupId = this.getAnnotationsToWorkgroupId(workgroupId);
+            var annotationsByNodeId = this.getAnnotationsByNodeId(nodeId);
+
+            // find the intersect and return it
+            return annotationsToWorkgroupId.filter(function(n) {
+                return annotationsByNodeId.indexOf(n) != -1;
+            });
+        };
+
         return serviceObject;
     }];
     
