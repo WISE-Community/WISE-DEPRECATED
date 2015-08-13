@@ -63,7 +63,7 @@ define(['angular', 'projectService', 'currentNodeService'], function(angular, pr
         };
     })
 
-    .directive('group', function(ProjectService, CurrentNodeService) {
+    .directive('group', function(CurrentNodeService, ProjectService, StudentDataService) {
         return {
             restrict: 'E',
             scope: {
@@ -216,8 +216,12 @@ define(['angular', 'projectService', 'currentNodeService'], function(angular, pr
                     .attr('r', function(d) { return d.r; })
                     .on('click', angular.bind(this, function(d) {
                         var nodeId = d.id;
-                        
-                        CurrentNodeService.setCurrentNodeByNodeId(nodeId);
+
+                        if (StudentDataService.canVisitNode(nodeId)) {
+                            CurrentNodeService.setCurrentNodeByNodeId(nodeId);
+                        } else {
+                            alert('You are not allowed to visit this step right now.');
+                        }
                     }));
                     
                     var labels = gnodes.append('text')

@@ -100,6 +100,43 @@ define(['nodeService', 'studentDataService'], function(nodeService, studentDataS
             
             return componentState;
         };
+
+        /**
+        * Check if the component was completed
+        * @param component the component object
+        * @param componentStates the component states for the specific component
+        * @param componentEvents the events for the specific component
+        * @param nodeEvents the events for the parent node of the component
+        * @returns whether the component was completed
+        */
+        serviceObject.isCompleted = function(component, componentStates, componentEvents, nodeEvents) {
+            var result = false;
+
+            if (componentStates != null) {
+
+                // loop through all the component states
+                for (var c = 0; c < componentStates.length; c++) {
+
+                    // the component state
+                    var componentState = componentStates[c];
+
+                    // get the student data from the component state
+                    var studentData = componentState.studentData;
+
+                    if (studentData != null) {
+                        var buckets = studentData.buckets;
+
+                        if (buckets != null) {
+                            // there is a bucket so the component is completed
+                            result = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+           return result;
+        };
         
         return serviceObject;
     }];

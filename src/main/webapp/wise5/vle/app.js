@@ -25,6 +25,7 @@ define([
     'drawService',
     'graphService',
     'highcharts-ng',
+    'htmlService',
     'matchService',
     'multipleChoiceService',
     'nodeService',
@@ -67,6 +68,7 @@ define([
              drawService,
              graphService,
              highchartsng,
+             htmlService,
              matchService,
              multipleChoiceService,
              nodeService,
@@ -119,6 +121,7 @@ define([
     app.factory('DiscussionService', discussionService);
     app.factory('DrawService', drawService);
     app.factory('GraphService', graphService);
+    app.factory('HTMLService', htmlService);
     app.factory('MatchService', matchService);
     app.factory('MultipleChoiceService', multipleChoiceService);
     app.factory('PhotoBoothService', photoBoothService);

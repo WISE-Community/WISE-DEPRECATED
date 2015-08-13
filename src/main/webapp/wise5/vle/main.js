@@ -45,6 +45,7 @@ require.config({
         'highcharts-more': 'vendor/highcharts/highcharts-more',
         'highcharts-ng': 'vendor/highcharts-ng/dist/highcharts-ng-modified',
         'htmlController': 'components/html/htmlController',
+        'htmlService': 'components/html/htmlService',
         'jquery': [
             '//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min',
             'vendor/jquery/dist/jquery.min'

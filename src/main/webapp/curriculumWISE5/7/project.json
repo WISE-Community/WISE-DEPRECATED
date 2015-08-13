@@ -2533,6 +2533,14 @@
                         "numRows": 5,
                         "showSaveButton": true,
                         "showSubmitButton": true
+                    },
+                    {
+                        "id": "83w2x9pk03",
+                        "componentType": "OpenResponse",
+                        "prompt": "Work on this open response step to unlock the next step.",
+                        "numRows": 5,
+                        "showSaveButton": true,
+                        "showSubmitButton": true
                     }
                 ],
                 "lockAfterSubmit": false,
@@ -2768,12 +2776,11 @@
                 {
                     "functionName": "isCompleted",
                     "functionParams": {
-                        "nodeId": "node31",
-                        "componentId": "5mw2n92k66"
+                        "nodeId": "node32"
                     }
                 }
             ],
-            "targetId": "node32"
+            "targetId": "node33"
         }
     ],
     "navigationMode": "guided",
