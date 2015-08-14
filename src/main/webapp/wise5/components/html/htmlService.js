@@ -1,8 +1,8 @@
-define(['nodeService'], function(nodeService) {
+define(['nodeService', 'studentDataService'], function(nodeService, studentDataService) {
     
-    var service = ['$http', 'NodeService', function($http, NodeService) {
+    var service = ['$http', 'NodeService', 'StudentDataService', function($http, NodeService, StudentDataService) {
         var serviceObject = Object.create(NodeService);
-
+        
         /**
          * Check if the component was completed
          * @param component the component object

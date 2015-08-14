@@ -67,6 +67,7 @@ define(['configService', 'projectService'], function(configService, projectServi
                 // initialize dummy student data
                 this.studentData = {};
                 this.studentData.componentStates = [];
+                this.studentData.events = [];
                 this.studentData.userName = 'Preview Student';
                 this.studentData.userId = '0';
                 
@@ -176,7 +177,6 @@ define(['configService', 'projectService'], function(configService, projectServi
         
         serviceObject.updateNodeStatuses = function() {
             //this.nodeStatuses = [];
-            console.log('updateNodeStatuses');
 
             var nodes = ProjectService.getNodes();
             
@@ -189,12 +189,6 @@ define(['configService', 'projectService'], function(configService, projectServi
                     
                     var nodeStatusesByNode = this.updateNodeStatusesByNode(node);
                     nodeStatuses.push(nodeStatusesByNode);
-
-                    /*
-                    nodeStatusesByNodePromise.then(angular.bind(this, function(nodeStatusesByNode) {
-                        this.nodeStatuses.push(nodeStatusesByNode);
-                    }));
-                    */
                 }
 
                 this.nodeStatuses = nodeStatuses;
@@ -205,15 +199,15 @@ define(['configService', 'projectService'], function(configService, projectServi
 
         serviceObject.updateNodeStatusesByNode = function(node) {
             var nodeStatus = null;
-            //var allPromises = [];
-            return null;
+
             if (node != null) {
                 var nodeId = node.id;
-                console.log('nodeId=' + nodeId);
 
                 nodeStatus = {};
                 nodeStatus.nodeId = nodeId;
                 nodeStatus.isVisitable = false;
+                nodeStatus.isCompleted = false;
+
 
                 // get the constraints that affect this node
                 var constraintsForNode = ProjectService.getConstraintsForNode(node);
@@ -239,117 +233,16 @@ define(['configService', 'projectService'], function(configService, projectServi
                             } else {
                                 result = result && tempResult;
                             }
-
-                            /*
-                            var constraintLogic = constraintForNode.constraintLogic;
-
-                            if (constraintLogic == 'guidedNavigation') {
-                                if (this.isNodeVisited(nodeId)) {
-                                    // the node has been visited before so it should be clickable
-                                    nodeStatus.isVisitable = true;
-                                } else {
-                                    /*
-                                     * the node has not been visited before so we will determine
-                                     * if the node is clickable by looking at the transitions
-                                     *
-                                    var currentNode = this.currentNode;
-
-                                    if (currentNode != null) {
-                                        // there is a current node
-                                        var currentNodeId = currentNode.id;
-
-                                        // get the transitions from the current node
-                                        var transitions = ProjectService.getTransitionsByFromNodeId(currentNodeId);
-
-                                        if (transitions != null) {
-
-                                            // get the transitions from the current node to the node status node
-                                            var transitionsToNodeId = ProjectService.getTransitionsByFromAndToNodeId(currentNodeId, nodeId);
-
-                                            if (transitionsToNodeId != null && transitionsToNodeId.length > 0) {
-                                                // there is a transition between the current node and the node status node
-
-                                                // check if the current node has branches
-
-                                                if (transitions.length > 1) {
-                                                    // the current node has branches so the node status node is not clickable
-                                                    nodeStatus.isVisitable |= false;
-                                                } else {
-                                                    // the current node does not have branches so the node status node is clickable
-                                                    nodeStatus.isVisitable = true;
-                                                }
-                                            } else {
-                                                /*
-                                                 * there is no transition between the current node and the node status node
-                                                 * so the node we will set the node to be not clickable
-                                                 *
-                                                nodeStatus.isVisitable |= false;
-                                            }
-                                        }
-                                    } else {
-                                        // there is no current node because the student has just started the project
-                                    }
-
-                                    if (ProjectService.isStartNode(node)) {
-                                        /*
-                                         * the node is the start node of the project or a start node of a group
-                                         * so we will make it clickable
-                                         *
-                                        nodeStatus.isVisitable = true;
-                                    }
-                                }
-                            } else if (constraintLogic === 'transition') {
-                                var criteria = constraintForNode.criteria;
-                                if (criteria != null && criteria.length > 0) {
-                                    var firstCriteria = criteria[0];
-                                    var criteriaNodeId = firstCriteria.nodeId;
-
-                                    var nodeVisits = this.getNodeVisitsByNodeId(criteriaNodeId);
-                                    if (nodeVisits != null && nodeVisits.length > 0) {
-                                        var functionName = firstCriteria.functionName;
-                                        var functionParams = firstCriteria.functionParams;
-                                        functionParams.nodeVisits = nodeVisits;
-
-                                        var result = null;
-
-                                        // get the node type
-                                        var nodeType = node.type;
-
-                                        // get the service for the node type
-                                        var service = $injector.get(nodeType + 'Service');
-
-                                        if (service != null) {
-
-                                            // call the function in the service
-                                            result = service.callFunction(functionName, functionParams);
-                                        }
-
-                                        if (result) {
-                                            nodeStatus.isVisitable = true;
-                                        }
-                                    }
-                                }
-                            } else if (constraintLogic === 'lockAfterSubmit') {
-                                var targetId = constraintForNode.targetId;
-                                var nodeVisits = this.getNodeVisitsByNodeId(targetId);
-
-                                if (nodeId === targetId) {
-                                    var isWorkSubmitted = NodeService.isWorkSubmitted(nodeVisits);
-
-                                    if (isWorkSubmitted) {
-
-                                    }
-                                }
-                            } else if (constraintLogic === 'node') {
-                                var result = evaluateConstraint(constraintForNode);
-                            }
-                            */
                         }
                     }
 
-                    node.isVisitable = result;
+                    nodeStatus.isVisitable = result;
                 }
+
+                nodeStatus.isCompleted = this.isCompleted(nodeId);
             }
+
+            return nodeStatus;
         };
 
         serviceObject.evaluateConstraint = function(constraintForNode) {
@@ -390,13 +283,8 @@ define(['configService', 'projectService'], function(configService, projectServi
                             var tempCriteria = criteria[c];
 
                             if (tempCriteria != null) {
-                                //var tempNodeId = tempCriteria.nodeId;
                                 var functionName = tempCriteria.functionName;
                                 var functionParams = tempCriteria.functionParams;
-
-                                //var tempNode = ProjectService.getNodeById(tempNodeId);
-
-                                //var tempNodeType = tempNode.type;
 
                                 // get the service for the node type
                                 var tempService = $injector.get('NodeService');
@@ -404,8 +292,8 @@ define(['configService', 'projectService'], function(configService, projectServi
                                 if (tempService != null) {
 
                                     // call the function in the service
-                                    //var tempResult = tempService.callFunction(functionName, functionParams);
-                                    var tempResult = false;
+                                    var tempResult = tempService.callFunction(functionName, functionParams);
+
                                     if (firstResult) {
                                         result = tempResult;
                                         firstResult = false;
@@ -677,6 +565,8 @@ define(['configService', 'projectService'], function(configService, projectServi
         serviceObject.addComponentState = function(componentState) {
             if (this.studentData != null && this.studentData.componentStates != null) {
                 this.studentData.componentStates.push(componentState);
+
+                this.updateNodeStatuses();
             }
         };
 
@@ -1076,6 +966,77 @@ define(['configService', 'projectService'], function(configService, projectServi
         };
 
         /**
+         * Get the events for a node id
+         * @param nodeId the node id
+         * @returns the events for the node id
+         */
+        serviceObject.getEventsByNodeId = function(nodeId) {
+            var eventsByNodeId = [];
+
+            if (nodeId != null) {
+
+                if (this.studentData != null && this.studentData.events != null) {
+
+                    // get all the events
+                    var events = this.studentData.events;
+
+                    // loop through all the events
+                    for (var e = 0; e < events.length; e++) {
+                        var event = events[e];
+
+                        if (event != null) {
+                            var eventNodeId = event.nodeId;
+
+                            if (nodeId === eventNodeId) {
+                                // this event is for the node id we are looking for
+                                eventsByNodeId.push(event);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return eventsByNodeId;
+        };
+
+
+        /**
+         * Get the events for a component id
+         * @param nodeId the node id
+         * @param componentId the component id
+         * @returns an array of events for the component id
+         */
+        serviceObject.getEventsByNodeIdAndComponentId = function(nodeId, componentId) {
+            var eventsByNodeId = [];
+
+            if (nodeId != null) {
+
+                if (this.studentData != null && this.studentData.events != null) {
+
+                    // get all the events
+                    var events = this.studentData.events;
+
+                    // loop through all the events
+                    for (var e = 0; e < events.length; e++) {
+                        var event = events[e];
+
+                        if (event != null) {
+                            var eventNodeId = event.nodeId;
+                            var eventComponentId = event.componentId;
+
+                            if (nodeId === eventNodeId && componentId === eventComponentId) {
+                                // this events is for the component id we are looking for
+                                eventsByNodeId.push(event);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return eventsByNodeId;
+        };
+
+        /**
          * Create a copy of a JSON object
          * @param jsonObject the JSON object to get a copy of
          * @return a copy of the JSON object that was passed in
@@ -1093,7 +1054,178 @@ define(['configService', 'projectService'], function(configService, projectServi
             
             return copyOfJSONObject;
         };
-        
+
+        /**
+         * Check if the student can visit the node
+         * @param nodeId the node id
+         * @returns whether the student can visit the node
+         */
+        serviceObject.canVisitNode = function(nodeId) {
+
+            var result = false;
+
+            if (nodeId != null) {
+
+                // get the node status for the node
+                var nodeStatus = this.getNodeStatusByNodeId(nodeId);
+
+                if (nodeStatus != null) {
+                    if (nodeStatus.isVisitable) {
+                        result = true;
+                    }
+                }
+            }
+
+            return result;
+        };
+
+        /**
+         * Get the node status by node id
+         * @param nodeId the node id
+         * @returns the node status object for a node
+         */
+        serviceObject.getNodeStatusByNodeId = function(nodeId) {
+            var nodeStatuses = this.nodeStatuses;
+            var nodeStatus = null;
+
+            if (nodeStatuses != null) {
+
+                // loop through all the node statuses
+                for (var n = 0; n < nodeStatuses.length; n++) {
+
+                    // get a node status
+                    var tempNodeStatus = nodeStatuses[n];
+
+                    if (tempNodeStatus != null) {
+
+                        var tempNodeStatusNodeId = tempNodeStatus.nodeId;
+
+                        if (nodeId === tempNodeStatusNodeId) {
+                            // we have found the node status we want
+                            nodeStatus = tempNodeStatus;
+                        }
+                    }
+                }
+            }
+
+            return nodeStatus;
+        };
+
+        /**
+         * Listen for the currentNodeChanged event
+         */
+        $rootScope.$on('currentNodeChanged', angular.bind(serviceObject, function(event, args) {
+            // update the node statuses when the student moves to a new node
+            this.updateNodeStatuses();
+        }));
+
+        /**
+         * Check if the given node or component is completed
+         * @param nodeId the node id
+         * @param componentId (optional) the component id
+         * @returns whether the node or component is completed
+         */
+        serviceObject.isCompleted = function(nodeId, componentId) {
+
+            var result = false;
+
+            if (nodeId != null && componentId != null) {
+                // check that the component is completed
+
+                // get the component states for the component
+                var componentStates = this.getComponentStatesByNodeIdAndComponentId(nodeId, componentId);
+
+                // get the component events
+                var componentEvents = this.getEventsByNodeIdAndComponentId(nodeId, componentId);
+
+                // get the node events
+                var nodeEvents = this.getEventsByNodeId(nodeId);
+
+                // get the component object
+                var component = ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
+
+                if (component != null) {
+
+                    // get the component type
+                    var componentType = component.componentType;
+
+                    if (componentType != null) {
+
+                        // get the service for the component type
+                        var service = $injector.get(componentType + 'Service');
+
+                        // check if the component is completed
+                        if (service.isCompleted(component, componentStates, componentEvents, nodeEvents)) {
+                            result = true;
+                        }
+                    }
+                }
+            } else if (nodeId != null && componentId == null) {
+                // check that all the components in the node are completed
+
+                // get all the components in the node
+                var components = ProjectService.getComponentsByNodeId(nodeId);
+
+                var tempResult = false;
+                var firstResult = true;
+
+                /*
+                 * All components must be completed in order for the node to be completed
+                 * so we will loop through all the components and check if they are
+                 * completed
+                 */
+                for (var c = 0; c < components.length; c++) {
+                    var component = components[c];
+
+                    if (component != null) {
+                        var componentId = component.id;
+                        var componentType = component.componentType;
+
+                        if (componentType != null) {
+                            try {
+
+                                // get the service name
+                                var serviceName = componentType + 'Service';
+
+                                if ($injector.has(serviceName)) {
+
+                                    // get the service for the component type
+                                    var service = $injector.get(serviceName);
+
+                                    // get the component states for the component
+                                    var componentStates = this.getComponentStatesByNodeIdAndComponentId(nodeId, componentId);
+
+                                    // get the component events
+                                    var componentEvents = this.getEventsByNodeIdAndComponentId(nodeId, componentId);
+
+                                    // get the node events
+                                    var nodeEvents = this.getEventsByNodeId(nodeId);
+
+                                    // check if the component is completed
+                                    var isComponentCompleted = service.isCompleted(component, componentStates, componentEvents, nodeEvents);
+
+                                    if (firstResult) {
+                                        // this is the first component we have looked at
+                                        tempResult = isComponentCompleted;
+                                        firstResult = false;
+                                    } else {
+                                        // this is not the first component we have looked at
+                                        tempResult = tempResult && isComponentCompleted;
+                                    }
+                                }
+                            } catch (e) {
+                                console.log('Error: Could not calculated isCompleted() for a component');
+                            }
+                        }
+                    }
+                }
+
+                result = tempResult;
+            }
+
+            return result;
+        };
+
         return serviceObject;
     }];
     

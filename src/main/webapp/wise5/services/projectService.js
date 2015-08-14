@@ -1955,16 +1955,84 @@ define(['configService'], function(configService) {
             return branchPathsIn;
         }
 
+        /**
+         * Get the component by node id and component id
+         * @param nodeId the node id
+         * @param componentId the component id
+         * @returns the component
+         */
         serviceObject.getComponentByNodeIdAndComponentId = function(nodeId, componentId) {
             var component = null;
 
             if (nodeId != null && componentId != null) {
+
+                // get the node
                 var node = this.getNodeById(nodeId);
 
+                if (node != null) {
 
+                    // get the node content
+                    var content = node.content;
+
+                    if (content != null) {
+
+                        // get all the components in the node
+                        var components = content.components;
+
+                        if (components != null) {
+
+                            // loop through all the components
+                            for (var c = 0; c < components.length; c++) {
+                                var tempComponent = components[c];
+
+                                if (tempComponent != null) {
+                                    var tempComponentId = tempComponent.id;
+
+                                    if (componentId === tempComponentId) {
+                                        // we have found the component we want
+                                        component = tempComponent;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
 
             return component;
+        };
+
+        /**
+         * Get the components in a node
+         * @param nodeId the node id
+         * @returns an array of components
+         */
+        serviceObject.getComponentsByNodeId = function(nodeId) {
+            var components = [];
+
+            if (nodeId != null) {
+
+                // get the node
+                var node = this.getNodeById(nodeId);
+
+                if (node != null) {
+
+                    // get the node content
+                    var content = node.content;
+
+                    if (content != null) {
+                        var tempComponents = content.components;
+
+                        if (tempComponents != null) {
+                            // we have obtained the components
+                            components = tempComponents;
+                        }
+                    }
+                }
+            }
+
+            return components;
         };
 
         serviceObject.getNodeContentByNodeId = function(nodeId) {

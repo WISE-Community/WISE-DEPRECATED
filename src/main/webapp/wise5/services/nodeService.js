@@ -1,7 +1,7 @@
-define(['configService', 'studentDataService'], function(configService, studentDataService) {
+define(['configService', 'projectService', 'studentDataService'], function(configService, projectService, studentDataService) {
     
-    var service = ['$http', '$q', 'ConfigService', 'StudentDataService',
-                   function($http, $q, ConfigService, StudentDataService) {
+    var service = ['$http', '$injector', '$q', 'ConfigService', 'ProjectService', 'StudentDataService',
+                   function($http, $injector, $q, ConfigService, ProjectService, StudentDataService) {
         var serviceObject = {};
 
         serviceObject.getNodeContentByNodeSrc = function(nodeSrc) {
@@ -253,29 +253,24 @@ define(['configService', 'studentDataService'], function(configService, studentD
             return result;
         };
 
+        /**
+         * Check if the node or component is completed
+         * @param functionParams the params that will specify which node or component
+         * to check for completion
+         * @returns whether the specified node or component is completed
+         */
         serviceObject.isCompleted = function(functionParams) {
+
+            var result = false;
 
             if (functionParams != null) {
                 var nodeId = functionParams.nodeId;
                 var componentId = functionParams.componentId;
 
-
-                var componentStates = [];
-
-                if (nodeId != null && componentId != null) {
-                    // check that the component is completed
-                    componentStates = StudentDataService.getComponentStatesByNodeIdAndComponentId(nodeId, componentId);
-
-                    var nodeContent = this.getNodeContentByNodeId(nodeId);
-                    console.log('nodeContent=' + nodeContent);
-                } else if (nodeId != null && componentId == null) {
-                    // check that all the components in the node are completed
-                    componentStates = StudentDataService.getComponentStatesByNodeId(nodeId);
-
-                    var nodeContent = this.getNodeContentByNodeId(nodeId);
-                    console.log('nodeContent=' + nodeContent);
-                }
+                result = StudentDataService.isCompleted(nodeId, componentId);
             }
+
+            return result;
         };
         
         return serviceObject;
