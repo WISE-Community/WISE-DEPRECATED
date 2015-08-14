@@ -67,6 +67,14 @@
           <element id="library" level="project" name="Maven: stax:stax-api:1.0.1" />
           <element id="library" level="project" name="Maven: org.apache.geronimo.specs:geronimo-stax-api_1.0_spec:1.0" />
           <element id="library" level="project" name="Maven: net.sf.opencsv:opencsv:2.3" />
+          <element id="library" level="project" name="Maven: org.eclipse.jgit:org.eclipse.jgit:4.0.1.201506240215-r" />
+          <element id="library" level="project" name="Maven: com.jcraft:jsch:0.1.51" />
+          <element id="library" level="project" name="Maven: com.googlecode.javaewah:JavaEWAH:0.7.9" />
+          <element id="library" level="project" name="Maven: org.apache.httpcomponents:httpclient:4.1.3" />
+          <element id="library" level="project" name="Maven: org.apache.httpcomponents:httpcore:4.1.4" />
+          <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.6.1" />
+          <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.6.0" />
+          <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-core:2.6.1" />
         </element>
       </element>
       <element id="directory" name="META-INF">

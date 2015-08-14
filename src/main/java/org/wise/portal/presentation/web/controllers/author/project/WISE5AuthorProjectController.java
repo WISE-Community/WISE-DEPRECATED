@@ -1,5 +1,9 @@
 package org.wise.portal.presentation.web.controllers.author.project;
 
+import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.revwalk.RevCommit;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +34,7 @@ public class WISE5AuthorProjectController {
     @Autowired
     Properties wiseProperties;
 
-    @RequestMapping("/project/edit/{projectId}")
+    @RequestMapping(value = "/project/edit/{projectId}", method = RequestMethod.GET)
     protected String authorProject(
             @PathVariable Long projectId,
             ModelMap modelMap) {
@@ -53,12 +57,14 @@ public class WISE5AuthorProjectController {
     @RequestMapping(value = "/project/save/{projectId}", method = RequestMethod.POST)
     protected void saveProject(
             @PathVariable Long projectId,
-            @RequestBody String projectJSONString
-            ) {
+            @RequestParam(value = "commitMessage", required = false) String commitMessage,
+            @RequestParam(value = "projectJSONString", required = true) String projectJSONString,
+            HttpServletResponse response
+    ) {
         Project project;
         try {
             project = projectService.getById(projectId);
-            } catch (ObjectNotFoundException e) {
+        } catch (ObjectNotFoundException e) {
             e.printStackTrace();
             return;
         }
@@ -70,21 +76,51 @@ public class WISE5AuthorProjectController {
 
         String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
         String rawProjectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
-        String projectDir = curriculumBaseDir + rawProjectUrl;
-        File projectFile = new File(projectDir);
+        String fullProjectPath = curriculumBaseDir + rawProjectUrl;    // e.g. /path/to/project/project.json
+        String fullProjectDir = fullProjectPath.substring(0, fullProjectPath.lastIndexOf("/"));   // e.g. /path/to/project/
+
+        File projectFile = new File(fullProjectPath);
         try {
-        if (!projectFile.exists()) {
-            projectFile.createNewFile();
-        }
+            if (!projectFile.exists()) {
+                projectFile.createNewFile();
+            }
             Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(projectFile), "UTF-8"));
-            writer.write(projectJSONString);
+            writer.write(projectJSONString.toString());
             writer.close();
+
+            // now commit changes
+            JGitUtils.commitAllChangesToCurriculumHistory(fullProjectDir, commitMessage);
+
+            Iterable<RevCommit> commitHistory = JGitUtils.getCommitHistory(fullProjectDir);
+            JSONArray commitHistoryJSONArray = new JSONArray();
+            try {
+                if (commitHistory != null) {
+                    for (RevCommit commit : commitHistory) {
+                        JSONObject commitHistoryJSONObject = new JSONObject();
+                        ObjectId commitId = commit.getId();
+                            commitHistoryJSONObject.put("commitId", commitId);
+                        String commitName = commit.getName();
+                        commitHistoryJSONObject.put("commitName", commitName);
+                        String commitMsg = commit.getFullMessage();
+                        commitHistoryJSONObject.put("commitMessage", commitMsg);
+                        long commitTime = commit.getCommitTime() * 1000l; // x1000 to make into milliseconds since epoch
+                        commitHistoryJSONObject.put("commitTime", commitTime);
+                        commitHistoryJSONArray.put(commitHistoryJSONObject);
+                    }
+                    response.getWriter().print(commitHistoryJSONArray);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (GitAPIException e) {
             e.printStackTrace();
         }
     }
 
-    @RequestMapping("/authorConfig/{projectId}")
+    @RequestMapping(value = "/authorConfig/{projectId}", method = RequestMethod.GET)
     protected void getAuthorProjectConfig(
             HttpServletResponse response,
             @PathVariable Long projectId) throws IOException {
@@ -113,16 +149,89 @@ public class WISE5AuthorProjectController {
             //String previewProjectURL = wiseBaseURL + "/project/preview/" + projectId;
             String previewProjectURL = wiseBaseURL + "/previewproject.html?projectId=" + projectId;
             String saveProjectURL = wiseBaseURL + "/project/save/" + projectId;
+            String commitProjectURL = wiseBaseURL + "/project/commit/" + projectId;
 
             config.put("projectURL", projectURL);
             config.put("previewProjectURL", previewProjectURL);
             config.put("saveProjectURL", saveProjectURL);
+            config.put("commitProjectURL", commitProjectURL);
         } catch (JSONException e) {
             e.printStackTrace();
         }
         PrintWriter writer = response.getWriter();
         writer.write(config.toString());
         writer.close();
+    }
+
+
+    /**
+     * Handle requests to commit changes to the project
+     * @throws Exception
+     */
+    @RequestMapping(value = "/project/commit/{projectId}", method = RequestMethod.POST)
+    protected void handleCommitRequest(
+            @PathVariable Long projectId,
+            @RequestParam String commitMessage) throws Exception {
+
+        // TODO: check if user has permission to invoke git on the given projectId
+        // User user = ControllerUtil.getSignedInUser();
+
+        if ("wise5TestProjectId".equals(projectId)) {
+            String curriculumDir = "/Users/h/git/WISE/src/main/webapp/curriculumWISE5/1/";
+            JGitUtils.commitAllChangesToCurriculumHistory(curriculumDir, commitMessage);
+        }
+    }
+
+    /**
+     * Handle request to retrieve commit history for the specified projectId.
+     * Optional parameter specifies how many commits to retrieve
+     * @param projectId
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/project/commit/{projectId}", method = RequestMethod.GET)
+    protected void getCommitHistory(
+            @PathVariable Long projectId,
+            @RequestParam(required = false) Integer numCommits,
+            @RequestParam(required = false) String fileName,
+            HttpServletResponse response
+    ) throws Exception {
+        Project project;
+        try {
+            project = projectService.getById(projectId);
+        } catch (ObjectNotFoundException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        User user = ControllerUtil.getSignedInUser();
+        if (!projectService.canAuthorProject(project, user)) {
+            return;
+        }
+
+        String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
+        String rawProjectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
+        String fullProjectPath = curriculumBaseDir + rawProjectUrl;    // e.g. /path/to/project/project.json
+        String fullProjectDir = fullProjectPath.substring(0, fullProjectPath.lastIndexOf("/"));   // e.g. /path/to/project/
+
+        Iterable<RevCommit> commitHistory = JGitUtils.getCommitHistory(fullProjectDir);
+        JSONArray commitHistoryJSONArray = new JSONArray();
+
+        if (commitHistory != null) {
+            for (RevCommit commit : commitHistory) {
+                JSONObject commitHistoryJSONObject = new JSONObject();
+                ObjectId commitId = commit.getId();
+                commitHistoryJSONObject.put("commitId", commitId);
+                String commitName = commit.getName();
+                commitHistoryJSONObject.put("commitName", commitName);
+                String commitMessage = commit.getFullMessage();
+                commitHistoryJSONObject.put("commitMessage", commitMessage);
+                long commitTime = commit.getCommitTime() * 1000l; // x1000 to make into milliseconds since epoch
+                commitHistoryJSONObject.put("commitTime", commitTime);
+                commitHistoryJSONArray.put(commitHistoryJSONObject);
+            }
+        }
+        response.getWriter().print(commitHistoryJSONArray);
     }
 
 }
