@@ -6,6 +6,14 @@
     table td, table th {
         border: 1px solid black;
     }
+
+    .online {
+        background-color: lightgreen;
+    }
+
+    table tr {
+        cursor: pointer;
+    }
 </style>
 
 <div>
@@ -19,8 +27,8 @@
         <th>Time Spent</th>
         <th>Project Completion</th>     
     </tr>
-    <tr ng-repeat="workgroup in studentProgressController.workgroups" ng-click="studentProgressController.studentRowClicked(workgroup)">
-        <td>{{workgroup.userName}}</td>
+    <tr ng-class="{online: studentProgressController.isWorkgroupOnline(workgroup.workgroupId)}" ng-repeat="workgroup in studentProgressController.workgroups" ng-click="studentProgressController.studentRowClicked(workgroup)">
+        <td>{{workgroup.userName}} ({{workgroup.workgroupId}})</td>
         <td>{{studentProgressController.getCurrentNodeForWorkgroupId(workgroup.workgroupId)}}</td>
         <td></td>
         <!--  

@@ -1,11 +1,13 @@
+<style>
+    .nodeTitle {
+        font-weight: bold;
+        margin-top: 10px;
+    }
+</style>
 {{studentGradingController.title}}
-<br/>
-User Name: {{studentGradingController.userName}}
-<br/>
-WorkgroupId: {{studentGradingController.workgroupId}}
-<br/>
+<h3>User Name: {{studentGradingController.userName}} | WorkgroupId: {{studentGradingController.workgroupId}}</h3>
 <div ng-repeat='nodeId in studentGradingController.nodeIds' ng-show='studentGradingController.showNodeIdForStudent(nodeId)'>
-    <div>{{studentGradingController.getNodeTitleByNodeId(nodeId)}}</div>
+    <div class="nodeTitle">{{studentGradingController.getNodeTitleByNodeId(nodeId)}}</div>
     <div>{{studentGradingController.getEventsByWorkgroupIdAndNodeId(studentGradingController.workgroupId, nodeId).length}} events</div>
     <div>{{studentGradingController.getAnnotationsToWorkgroupIdAndNodeId(studentGradingController.workgroupId, nodeId).length}} annotations</div>
     <table border="1">
