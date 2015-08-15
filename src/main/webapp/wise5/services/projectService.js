@@ -816,16 +816,46 @@ define(['configService'], function(configService) {
             }));
         };
 
+        serviceObject.saveProject = function(projectJSON, commitMessage) {
 
+            var httpParams = {};
+            httpParams.method = 'POST';
+            httpParams.url = ConfigService.getConfigParam('saveProjectURL');
+            httpParams.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
 
-        serviceObject.saveProject = function(projectJSON) {
+            var params = {};
+            params.runId = 12;
+            params.commitMessage = commitMessage;
+            params.projectJSONString = projectJSON;
+            httpParams.data = $.param(params);
 
-            // get the url to POST the student data
-            var url = ConfigService.getConfigParam('saveProjectURL');
+            return $http(httpParams).then(angular.bind(this, function(result) {
+                var commitHistory = result.data;
+                return commitHistory;
+            }));
+        };
 
-            // make the request to post the student data
-            return $http.post(url, projectJSON).then(angular.bind(this, function(result) {
-                var savedProjectResponse = result.data;
+        serviceObject.commitChanges = function(commitMessage) {
+            var commitProjectURL = ConfigService.getConfigParam('commitProjectURL');
+
+            return $http({
+                url: commitProjectURL,
+                method: 'POST',
+                params: {commitMessage: commitMessage}
+            }).then(angular.bind(this, function(result) {
+                var commitResult = result.data;
+                return commitResult;
+            }));
+        };
+
+        serviceObject.getCommitHistory = function() {
+            var commitProjectURL = ConfigService.getConfigParam('commitProjectURL');
+
+            return $http({
+                url: commitProjectURL,
+                method: 'GET',
+            }).then(angular.bind(this, function(result) {
+                return result.data;
             }));
         };
 

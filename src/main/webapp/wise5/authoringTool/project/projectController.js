@@ -3,6 +3,7 @@ define(['app'], function(app) {
     .$controllerProvider
     .register('ProjectController', ['$state', '$stateParams', 'ProjectService', 'ConfigService',
                                     function($state, $stateParams, ProjectService, ConfigService) {
+
         this.title = "project controller title";
 
         this.project = ProjectService.getProject();
@@ -16,13 +17,25 @@ define(['app'], function(app) {
 
         this.saveProject = function() {
             var projectJSONString = $("#project").val();
+            var commitMessage = $("#commitMessageInput").val();
             try {
-                var projectJSON = JSON.parse(projectJSONString);
-                ProjectService.saveProject(projectJSON);
+                var projectJSON = projectJSONString;
+                ProjectService.saveProject(projectJSON, commitMessage).then(angular.bind(this, function(commitHistoryArray) {
+                    this.commitHistory = commitHistoryArray;
+                }));
             } catch (error) {
                 alert("JSON stringify failed. Check that JSON is valid");
                 return;
             }
         };
+
+        this.showCommitHistory = function() {
+            ProjectService.getCommitHistory().then(angular.bind(this, function (commitHistoryArray) {
+                this.commitHistory = commitHistoryArray;
+            }));
+        }
+
+        this.showCommitHistory();
+
     }]);
 });

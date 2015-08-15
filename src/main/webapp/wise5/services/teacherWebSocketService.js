@@ -24,9 +24,25 @@ define(['configService'], function(configService) {
             var messageType = data.messageType;
             if (messageType === 'studentStatus') {
                 this.handleStudentStatusReceived(data);
+            } else if (messageType === 'studentsOnlineList') {
+                this.handleStudentsOnlineReceived(data);
             }
         };
-        
+
+        serviceObject.handleStudentsOnlineReceived = function(studentsOnlineMessage) {
+            this.studentsOnlineArray = studentsOnlineMessage.studentsOnlineList;
+
+            $rootScope.$broadcast('studentsOnlineReceived', {studentsOnline: this.studentsOnlineArray});
+        };
+
+        serviceObject.getStudentsOnline = function() {
+            var studentsOnline = [];
+            if (this.studentsOnlineArray != null) {
+                studentsOnline = this.studentsOnlineArray;
+            }
+            return studentsOnline;
+        };
+
         /**
          * This function is called when the teacher receives a websocket message
          * with messageType 'studentStatus'.

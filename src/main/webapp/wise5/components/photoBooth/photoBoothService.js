@@ -73,9 +73,22 @@ define(['nodeService', 'studentDataService'], function(nodeService, studentDataS
 
             return result;
         };
+
+        serviceObject.getStudentWorkAsHTML = function(componentState) {
+            var htmlSoFar = "";
+            var studentData = componentState.studentData;
+            if (studentData != null && studentData.response != null) {
+                var studentPictures = studentData.response;
+                for (var i = 0; i < studentPictures.length; i++) {
+                    var studentPicture = studentPictures[i];
+                    htmlSoFar += "<img src=\"" + studentPicture.url + "\"></img>";
+                }
+            }
+            return htmlSoFar;
+        }
         
         return serviceObject;
     }];
-    
+
     return service;
 });
