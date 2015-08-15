@@ -9,6 +9,7 @@ define(['configService'], function(configService) {
         serviceObject.groupNodes = [];
         serviceObject.idToNode = {};
         serviceObject.idToElement = {};
+        serviceObject.idToTransition = {};
         serviceObject.metadata = {};
         serviceObject.idToContent = {};
 
@@ -238,6 +239,7 @@ define(['configService'], function(configService) {
                         var transitionId = transition.id;
 
                         this.setIdToElement(transitionId, transition);
+                        this.setIdToTransition(transitionId, transition);
 
                         this.addTransition(transition);
                     }
@@ -448,11 +450,17 @@ define(['configService'], function(configService) {
             return element;
         };
 
+        serviceObject.setIdToTransition = function(id, transition) {
+            if (id != null) {
+                this.idToTransition[id] = transition;
+            }
+        };
+
         serviceObject.getTransitionById = function(id) {
             var element = null;
 
             if (id != null) {
-                element = this.idToElement[id];
+                element = this.idToTransition[id];
             }
 
             return element;

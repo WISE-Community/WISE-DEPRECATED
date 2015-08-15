@@ -1,4 +1,4 @@
-define(['configService', 'projectService'], function(configService, projectService) {
+define(['configService', 'projectService'], function(configService, currentNodeService, projectService) {
 
     var service = [
         '$http',
@@ -6,6 +6,7 @@ define(['configService', 'projectService'], function(configService, projectServi
         '$q',
         '$rootScope',
         'ConfigService',
+        'CurrentNodeService',
         'ProjectService',
         function (
             $http,
@@ -13,6 +14,7 @@ define(['configService', 'projectService'], function(configService, projectServi
             $q,
             $rootScope,
             ConfigService,
+            CurrentNodeService,
             ProjectService) {
 
         var serviceObject = {};
@@ -21,40 +23,6 @@ define(['configService', 'projectService'], function(configService, projectServi
         serviceObject.stackHistory = [];  // array of node id's
         serviceObject.visitedNodesHistory = [];
         serviceObject.nodeStatuses = null;
-        
-        serviceObject.currentNode = null;
-
-        serviceObject.getCurrentNode = function() {
-            return this.currentNode;
-        };
-
-        serviceObject.getCurrentNodeId = function() {
-            var currentNodeId = null;
-            var currentNode = this.currentNode;
-
-            if (currentNode != null) {
-                currentNodeId = currentNode.id;
-            }
-
-            return currentNodeId;
-        };
-
-        serviceObject.getCurrentParentNode = function() {
-            var currentNode = this.getCurrentNode();
-            
-            if (currentNode != null) {
-                
-            }
-        };
-
-        serviceObject.updateCurrentNode = function(latestNodeVisit) {
-            if (latestNodeVisit != null) {
-                nodeId = latestNodeVisit.nodeId;
-                
-                var node = ProjectService.getNodeById(nodeId);
-                this.setCurrentNode(node);
-            }
-        };
 
         serviceObject.retrieveStudentData = function() {
             
@@ -117,7 +85,7 @@ define(['configService', 'projectService'], function(configService, projectServi
                         
                         // TODO
                         // populate the student history
-                        this.populateHistories(this.studentData.componentStates);
+                        this.populateHistories(this.studentData.componentStates, this.studentData.events);
                         
                         // TODO
                         // update the node statuses
@@ -225,12 +193,16 @@ define(['configService', 'projectService'], function(configService, projectServi
                         var constraintForNode = constraintsForNode[c];
 
                         if (constraintForNode != null) {
-                            var tempResult = this.evaluateConstraint(constraintForNode);
+
+                            // evaluate the constraint to see if the node can be visited
+                            var tempResult = this.evaluateConstraint(node, constraintForNode);
 
                             if (firstResult) {
+                                // this is the first constraint in this for loop
                                 result = tempResult;
                                 firstResult = false;
                             } else {
+                                // this is not the first constraint in this for loop so we will && the result
                                 result = result && tempResult;
                             }
                         }
@@ -245,62 +217,153 @@ define(['configService', 'projectService'], function(configService, projectServi
             return nodeStatus;
         };
 
-        serviceObject.evaluateConstraint = function(constraintForNode) {
+        /**
+         * Evaluate the constraint
+         * @param node the node
+         * @param constraintForNode the constraint object
+         * @returns whether the node has satisfied the constraint
+         */
+        serviceObject.evaluateConstraint = function(node, constraintForNode) {
             var result = false;
 
             if (constraintForNode != null) {
                 var constraintLogic = constraintForNode.constraintLogic;
 
                 if (constraintLogic === 'node') {
-                    result = this.evaluateNodeConstraint(constraintForNode);
+                    result = this.evaluateNodeConstraint(node, constraintForNode);
                 } else if (constraintLogic === 'transition') {
-
+                    result = this.evaluateNodeConstraint(node, constraintForNode);
                 } else if (constraintLogic === 'component') {
 
                 } else if (constraintLogic === 'group') {
 
+                } else if (constraintLogic === 'guidedNavigation') {
+                    result = this.evaluateGuidedNavigationConstraint(node, constraintForNode);
                 }
             }
 
             return result;
         };
 
-        serviceObject.evaluateNodeConstraint = function(constraintForNode) {
+        /**
+         * Evaluate the guided navigation constraint
+         * @param node the node
+         * @param constraintForNode the constraint object
+         * @returns whether the node can be visited or not
+         */
+        serviceObject.evaluateGuidedNavigationConstraint = function(node, constraintForNode) {
+
+            var result = false;
+
+            if (node != null) {
+                var nodeId = node.id;
+
+                if (this.isNodeVisited(nodeId)) {
+                    // the node has been visited before so it should be clickable
+                    result = true;
+                } else {
+                    /*
+                     * the node has not been visited before so we will determine
+                     * if the node is clickable by looking at the transitions
+                     */
+                    var currentNode = CurrentNodeService.getCurrentNode();
+
+                    if (currentNode != null) {
+                        // there is a current node
+                        var currentNodeId = currentNode.id;
+
+                        // get the transitions from the current node
+                        var transitions = ProjectService.getTransitionsByFromNodeId(currentNodeId);
+
+                        if (transitions != null) {
+
+                            var transitionsToNodeId = [];
+
+                            // get the transitions from the visited nodes to the node status node
+
+                            // loop through all the visited nodes
+                            for (var v = 0; v < this.visitedNodesHistory.length; v++) {
+
+                                // get a visited node id
+                                var visitedNodeId = this.visitedNodesHistory[v];
+
+                                // get all the transitions from the visited node id to the node status node
+                                var transitions = ProjectService.getTransitionsByFromAndToNodeId(visitedNodeId, nodeId);
+
+                                // concat the node ids
+                                transitionsToNodeId = transitionsToNodeId.concat(transitions);
+                            }
+
+                            if (transitionsToNodeId != null && transitionsToNodeId.length > 0) {
+                                // there is a transition between the current node and the node status node
+
+                                /*
+                                 * there are transitions from the current node to the node status node so
+                                 * the node status node is clickable
+                                 */
+                                result = true;
+                            } else {
+                                /*
+                                 * there is no transition between the visited nodes and the node status node
+                                 * so we will set the node to be not clickable
+                                 */
+                                result = false;
+                            }
+                        }
+                    } else {
+                        // there is no current node because the student has just started the project
+                    }
+
+                    if (ProjectService.isStartNode(node)) {
+                        /*
+                         * the node is the start node of the project or a start node of a group
+                         * so we will make it clickable
+                         */
+                        result = true;
+                    }
+                }
+            }
+
+            return result;
+        };
+
+        /**
+         * Evaluate the node constraint
+         * @param node the node
+         * @param constraintForNode the constraint object
+         * @returns whether the node satisifies the constraint
+         */
+        serviceObject.evaluateNodeConstraint = function(node, constraintForNode) {
             var result = false;
 
             if (constraintForNode != null) {
                 var constraintLogic = constraintForNode.constraintLogic;
 
-                if (constraintLogic === 'node') {
-                    var targetId = constraintForNode.targetId;
-                    var criteria = constraintForNode.criteria;
+                var targetId = constraintForNode.targetId;
+                var criteria = constraintForNode.criteria;
 
-                    if (criteria != null && criteria.length > 0) {
+                if (criteria != null && criteria.length > 0) {
 
-                        var firstResult = true;
+                    var firstResult = true;
 
-                        for (var c = 0; c < criteria.length; c++) {
-                            var tempCriteria = criteria[c];
+                    // loop through all the criteria that need to be satisifed
+                    for (var c = 0; c < criteria.length; c++) {
 
-                            if (tempCriteria != null) {
-                                var functionName = tempCriteria.functionName;
-                                var functionParams = tempCriteria.functionParams;
+                        // get a criteria
+                        var tempCriteria = criteria[c];
 
-                                // get the service for the node type
-                                var tempService = $injector.get('NodeService');
-                                //var tempService = null;
-                                if (tempService != null) {
+                        if (tempCriteria != null) {
 
-                                    // call the function in the service
-                                    var tempResult = tempService.callFunction(functionName, functionParams);
+                            // evaluate the criteria
+                            var tempResult = this.evaluateCriteria(tempCriteria);
 
-                                    if (firstResult) {
-                                        result = tempResult;
-                                        firstResult = false;
-                                    } else {
-                                        result = result && tempResult;
-                                    }
-                                }
+                            if (firstResult) {
+                                // this is the first criteria in this for loop
+                                result = tempResult;
+                                firstResult = false;
+                            } else {
+                                // this is not the first criteria in this for loop so we will && the result
+                                result = result && tempResult;
                             }
                         }
                     }
@@ -310,8 +373,114 @@ define(['configService', 'projectService'], function(configService, projectServi
             return result;
         };
 
-        serviceObject.evaluateCriteria = function() {
+        /**
+         * Evaluate the criteria
+         * @param criteria the criteria
+         * @returns whether the criteria is satisfied or not
+         */
+        serviceObject.evaluateCriteria = function(criteria) {
 
+            var result = false;
+
+            if (criteria != null) {
+                var nodeId = criteria.nodeId;
+                var componentId = criteria.componentId;
+                var functionName = criteria.functionName;
+                var functionParams = criteria.functionParams;
+
+                if (nodeId != null && componentId != null) {
+                    // this criteria is on a component
+
+                    // get the component states for the component
+                    var componentStates = this.getComponentStatesByNodeIdAndComponentId(nodeId, componentId);
+
+                    // get the component events
+                    var componentEvents = this.getEventsByNodeIdAndComponentId(nodeId, componentId);
+
+                    // get the node events
+                    var nodeEvents = this.getEventsByNodeId(nodeId);
+
+                    // get the component object
+                    var component = ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
+
+                    var componentType = component.componentType;
+
+                    if (componentType != null) {
+                        var serviceName = componentType + 'Service';
+
+                        if ($injector.has(serviceName)) {
+
+                            // get the service for the node type
+                            var service = $injector.get(serviceName);
+
+                            if (service != null) {
+                                // call the function in the service
+                                result = service.callFunction(component, functionName, functionParams, componentStates, componentEvents, nodeEvents);
+                            }
+                        }
+                    }
+                } else if(nodeId != null && componentId == null) {
+                    // this criteria is on a node
+
+                    var tempResult = false;
+                    var firstResult = true;
+
+                    // get all the components in the node
+                    var components = ProjectService.getComponentsByNodeId(nodeId);
+
+                    if (components != null) {
+
+                        // loop through all the components in the node
+                        for (var c = 0; c < components.length; c++) {
+                            var component = components[c];
+
+                            if (component != null) {
+                                var componentId = component.id;
+
+                                // get the component states for the component
+                                var componentStates = this.getComponentStatesByNodeIdAndComponentId(nodeId, componentId);
+
+                                // get the component events
+                                var componentEvents = this.getEventsByNodeIdAndComponentId(nodeId, componentId);
+
+                                // get the node events
+                                var nodeEvents = this.getEventsByNodeId(nodeId);
+
+                                // get the component object
+                                var component = ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
+
+                                var componentType = component.componentType;
+
+                                if (componentType != null) {
+                                    var serviceName = componentType + 'Service';
+
+                                    if ($injector.has(serviceName)) {
+
+                                        // get the service for the node type
+                                        var service = $injector.get(serviceName);
+
+                                        if (service != null) {
+                                            // call the function in the service
+                                            tempResult = service.callFunction(component, functionName, functionParams, componentStates, componentEvents, nodeEvents);
+
+                                            if (firstResult) {
+                                                // this is the first result in this for loop
+                                                result = tempResult;
+                                                firstResult = false;
+                                            } else {
+                                                // this is not the first result in this for loop so we will && the result
+                                                result = result && tempResult;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return result;
         };
         
         serviceObject.updateNodeStatusesByNode0 = function(node) {
@@ -450,17 +619,46 @@ define(['configService', 'projectService'], function(configService, projectServi
             }));
         };
 
-        serviceObject.populateHistories = function(componentStates) {
-            if (componentStates != null) {
-                this.stackHistory = [];
-                this.visitedNodesHistory = [];
+        /**
+         * Populate the stack history and visited nodes history
+         * @param componentStates the component states
+         * @param events the events
+         */
+        serviceObject.populateHistories = function(componentStates, events) {
+            this.stackHistory = [];
+            this.visitedNodesHistory = [];
 
+            if (componentStates != null) {
+
+                // loop through all the component state
                 for (var i = 0; i < componentStates.length; i++) {
+
+
                     var componentState = componentStates[i];
-                    
-                    var componentStateNodeId = componentState.nodeId;
-                    this.updateStackHistory(componentStateNodeId);
-                    this.updateVisitedNodesHistory(componentStateNodeId);
+
+                    if (componentState != null) {
+                        var componentStateNodeId = componentState.nodeId;
+                        this.updateStackHistory(componentStateNodeId);
+                        this.updateVisitedNodesHistory(componentStateNodeId);
+                    }
+                }
+            }
+
+            if (events != null) {
+
+                // loop through all the events
+                for (var e = 0; e < events.length; e++) {
+                    var event = events[e];
+
+                    if (event != null) {
+
+                        // look for the nodeEntered event
+                        if (event.event === 'nodeEntered') {
+
+                            // the student has visited this node id before
+                            this.updateVisitedNodesHistory(event.nodeId);
+                        }
+                    }
                 }
             }
         };
@@ -1110,14 +1308,6 @@ define(['configService', 'projectService'], function(configService, projectServi
 
             return nodeStatus;
         };
-
-        /**
-         * Listen for the currentNodeChanged event
-         */
-        $rootScope.$on('currentNodeChanged', angular.bind(serviceObject, function(event, args) {
-            // update the node statuses when the student moves to a new node
-            this.updateNodeStatuses();
-        }));
 
         /**
          * Check if the given node or component is completed

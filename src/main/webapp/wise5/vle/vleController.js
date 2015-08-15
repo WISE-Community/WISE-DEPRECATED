@@ -42,8 +42,10 @@ define(['app'],
             var currentNode = args.currentNode;
             var currentNode = CurrentNodeService.getCurrentNode();
             var nodeId = currentNode.id;
+
             StudentDataService.updateStackHistory(nodeId);
             StudentDataService.updateVisitedNodesHistory(nodeId);
+            StudentDataService.updateNodeStatuses();
 
             var layoutClass = null;
             

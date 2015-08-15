@@ -4,6 +4,125 @@ define(['nodeService', 'studentDataService'], function(nodeService, studentDataS
         var serviceObject = Object.create(NodeService);
         
         serviceObject.config = null;
+
+        /**
+         * Determine if the student has fulfilled the function requirements
+         * @param component the component content
+         * @param functionName the function name to call
+         * @param functionParams the parameters for the function
+         * @param componentStates the component states for the component
+         * @param componentEvents the component events for the component
+         * @param nodeEvents the node events for the parent of the component
+         * @returns whether the student has fulfilled the function requirements
+         */
+        serviceObject.callFunction = function(component, functionName, functionParams, componentStates, componentEvents, nodeEvents) {
+            var result = null;
+
+            if (functionName === 'choiceChosen') {
+                result = this.choiceChosen(component, functionName, functionParams, componentStates, componentEvents, nodeEvents);
+            }
+
+            return result;
+        };
+
+        /**
+         * Check if the student chose a specific choice
+         * @param component the component content
+         * @param functionName the function name to call
+         * @param functionParams the parameters for the function
+         * @param componentStates the component states for the component
+         * @param componentEvents the component events for the component
+         * @param nodeEvents the node events for the parent of the component
+         * @returns whether the student chose the specific choice
+         */
+        serviceObject.choiceChosen = function(component, functionName, functionParams, componentStates, componentEvents, nodeEvents) {
+
+            var result = false;
+
+            if (componentStates != null && componentStates.length > 0) {
+                var choiceIds = functionParams.choiceIds;
+
+                if (choiceIds != null) {
+                    // get the latest component state
+                    var componentState = componentStates[componentStates.length - 1];
+
+                    // get the student data
+                    var studentData = componentState.studentData;
+
+                    if (studentData != null) {
+
+                        // get the choice(s) the student chose
+                        var studentChoices = studentData.studentChoices;
+
+                        if (studentChoices != null) {
+
+                            if (studentChoices.length === choiceIds.length) {
+                                /*
+                                 * the number of choices the student chose do match so the student may
+                                 * have matched the choices. we will now need to compare each of the
+                                 * choice ids to make sure the student chose the ones that are required
+                                 */
+
+                                var studentChoiceIds = this.getStudentChoiceIdsFromStudentChoiceObjects(studentChoices);
+
+                                for (var c = 0; c < choiceIds.length; c++) {
+                                    var choiceId = choiceIds[c];
+
+                                    if (studentChoiceIds.indexOf(choiceId) === -1) {
+                                        // the required choice id is not in the student choices
+                                        result = false;
+                                        break;
+                                    } else {
+                                        // the required choice id is in the student choices
+                                        result = true;
+                                    }
+                                }
+
+                            } else {
+                                /*
+                                 * the number of choices the student chose do not match so the student did
+                                 * not match the choices
+                                 */
+
+                                result = false;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return result;
+        };
+
+        /**
+         * Get the student choice ids from the student choice objects
+         * @param studentChoices an array of student choice objects. these objects contain
+         * an id and text fields
+         * @returns an array of choice id strings
+         */
+        serviceObject.getStudentChoiceIdsFromStudentChoiceObjects = function(studentChoices) {
+            var choiceIds = [];
+
+            if (studentChoices != null) {
+
+                // loop through all the student choice objects
+                for (var c = 0; c < studentChoices.length; c++) {
+
+                    // get a student choice object
+                    var studentChoice = studentChoices[c];
+
+                    if (studentChoice != null) {
+
+                        // get the student choice id
+                        var studentChoiceId = studentChoice.id;
+
+                        choiceIds.push(studentChoiceId);
+                    }
+                }
+            }
+
+            return choiceIds;
+        };
         
         serviceObject.getStudentWorkAsHTML = function(nodeState) {
             var studentWorkAsHTML = null;

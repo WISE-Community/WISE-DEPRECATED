@@ -5,14 +5,16 @@ define(['nodeService', 'studentDataService'], function(nodeService, studentDataS
         
         serviceObject.config = null;
         
-        serviceObject.callFunction = function(functionName, functionParams) {
+        serviceObject.callFunction = function(component, functionName, functionParams, componentStates, componentEvents, nodeEvents) {
             var result = null;
             
-            if (functionName === 'wordCountCompare') {
+            if (functionName === 'isCompleted') {
+                result = this.isCompleted(component, componentStates, componentEvents, nodeEvents);
+            } else if (functionName === 'wordCountCompare') {
                 result = this.wordCountCompare(functionParams);
             }
-            
-            return result;
+
+                return result;
         };
         
         serviceObject.wordCountCompare = function(params) {

@@ -2572,6 +2572,116 @@
             }
         },
         {
+            "id": "node34",
+            "type": "node",
+            "title": "Multiple Choice Radio",
+            "x": 350,
+            "y": 440,
+            "r": 20,
+            "content": {
+                "prompt": "Choose your own adventure.",
+                "components": [
+                    {
+                        "id": "ja3n27aq2z",
+                        "componentType": "MultipleChoice",
+                        "prompt": "Choose a path.",
+                        "choiceType": "radio",
+                        "correctChoice": null,
+                        "choices": [
+                            {
+                                "text": "Go through the door",
+                                "id": "aj8v8n33c1",
+                                "feedback": "You have chosen to walk through the door. Now click Next to see what happens."
+                            },
+                            {
+                                "text": "Go down the stairs",
+                                "id": "e8dn33m217",
+                                "feedback": "You have chosen to walk down the stairs. Now click Next to see what happens."
+                            },
+                            {
+                                "text": "Go up the ladder",
+                                "id": "v8h8v33ni6",
+                                "feedback": "You have chosen to climb up the ladder. Now click Next to see what happens."
+                            }
+                        ],
+                        "showSaveButton": true,
+                        "showSubmitButton": true
+                    }
+                ],
+                "lockAfterSubmit": false,
+                "showSubmitButton": false
+            }
+        },
+        {
+            "id": "node35",
+            "type": "node",
+            "title": "Door",
+            "x": 450,
+            "y": 440,
+            "r": 20,
+            "content": {
+                "prompt": "",
+                "components": [
+                    {
+                        "id": "2mb2892l6q",
+                        "componentType": "OpenResponse",
+                        "prompt": "You walked through the door and entered out space.",
+                        "numRows": 5,
+                        "showSaveButton": true,
+                        "showSubmitButton": true
+                    }
+                ],
+                "lockAfterSubmit": false,
+                "showSubmitButton": false
+            }
+        },
+        {
+            "id": "node36",
+            "type": "node",
+            "title": "Stairs",
+            "x": 450,
+            "y": 540,
+            "r": 20,
+            "content": {
+                "prompt": "",
+                "components": [
+                    {
+                        "id": "2mb2892l6q",
+                        "componentType": "OpenResponse",
+                        "prompt": "You walked down the stairs and slipped on a banana peel.",
+                        "numRows": 5,
+                        "showSaveButton": true,
+                        "showSubmitButton": true
+                    }
+                ],
+                "lockAfterSubmit": false,
+                "showSubmitButton": false
+            }
+        },
+        {
+            "id": "node37",
+            "type": "node",
+            "title": "Ladder",
+            "x": 450,
+            "y": 640,
+            "r": 20,
+            "content": {
+                "prompt": "",
+                "components": [
+                    {
+                        "id": "2mb2892l6q",
+                        "componentType": "OpenResponse",
+                        "prompt": "You climbed up the ladder and found cake.",
+                        "numRows": 5,
+                        "showSaveButton": true,
+                        "showSubmitButton": true
+                    }
+                ],
+                "lockAfterSubmit": false,
+                "showSubmitButton": false
+            }
+        },
+        {
             "id": "group0",
             "type": "group",
             "title": "My First WISE5 Project",
@@ -2617,7 +2727,11 @@
                 "node30",
                 "node31",
                 "node32",
-                "node33"
+                "node33",
+                "node34",
+                "node35",
+                "node36",
+                "node37"
             ],
             "x": 50,
             "y": 140,
@@ -2764,23 +2878,91 @@
             "id": "transition32",
             "from": "node32",
             "to": "node33"
+        },
+        {
+            "id": "transition33",
+            "from": "node33",
+            "to": "node34"
+        },
+        {
+            "id": "transition34",
+            "from": "node34",
+            "to": "node35"
+        },
+        {
+            "id": "transition35",
+            "from": "node34",
+            "to": "node36"
+        },
+        {
+            "id": "transition36",
+            "from": "node34",
+            "to": "node37"
         }
     ],
     "startGroupId": "group0",
     "startNodeId": "node1",
     "constraints": [
         {
+            "id": "constraint0",
+            "constraintLogic": "guidedNavigation",
+            "targetId": "group1"
+        },
+        {
             "id": "constraint1",
             "constraintLogic": "node",
             "criteria": [
                 {
-                    "functionName": "isCompleted",
-                    "functionParams": {
-                        "nodeId": "node32"
-                    }
+                    "nodeId": "node32",
+                    "functionName": "isCompleted"
                 }
             ],
             "targetId": "node33"
+        },
+        {
+            "id": "constraint2",
+            "constraintLogic": "transition",
+            "criteria": [
+                {
+                    "nodeId": "node34",
+                    "componentId": "ja3n27aq2z",
+                    "functionName": "choiceChosen",
+                    "functionParams": {
+                        "choiceIds": ["aj8v8n33c1"]
+                    }
+                }
+            ],
+            "targetId": "transition34"
+        },
+        {
+            "id": "constraint3",
+            "constraintLogic": "transition",
+            "criteria": [
+                {
+                    "nodeId": "node34",
+                    "componentId": "ja3n27aq2z",
+                    "functionName": "choiceChosen",
+                    "functionParams": {
+                        "choiceIds": ["e8dn33m217"]
+                    }
+                }
+            ],
+            "targetId": "transition35"
+        },
+        {
+            "id": "constraint4",
+            "constraintLogic": "transition",
+            "criteria": [
+                {
+                    "nodeId": "node34",
+                    "componentId": "ja3n27aq2z",
+                    "functionName": "choiceChosen",
+                    "functionParams": {
+                        "choiceIds": ["v8h8v33ni6"]
+                    }
+                }
+            ],
+            "targetId": "transition36"
         }
     ],
     "navigationMode": "guided",

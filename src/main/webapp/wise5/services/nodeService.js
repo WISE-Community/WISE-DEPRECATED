@@ -243,7 +243,7 @@ define(['configService', 'projectService', 'studentDataService'], function(confi
             return result;
         };
 
-        serviceObject.callFunction = function(functionName, functionParams) {
+        serviceObject.callFunction = function(component, functionName, functionParams, componentStates, componentEvents, nodeEvents) {
             var result = null;
 
             if (functionName === 'isCompleted') {
