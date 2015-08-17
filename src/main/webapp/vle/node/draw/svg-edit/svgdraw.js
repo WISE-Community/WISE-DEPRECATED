@@ -487,6 +487,10 @@ SVGDRAW.prototype.initDisplay = function(data,context) {
 						var snap = data.snapshots[i];
 						context.snapDescriptions[snap.id] = snap.description;
 					}
+				} else if (data && data.description && data.description != "") {
+					descriptionExt.content(data.description);
+				} else if (context.defaultDescription != "") {
+					descriptionExt.content(context.defaultDescription);
 				}
 				
 				// hide description display on playback

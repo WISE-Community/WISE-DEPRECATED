@@ -225,7 +225,7 @@ View.prototype.SVGDrawNode.generateDescriptionOption = function(){
 	var	descriptionHtml = 'Allow students to write descriptions of their drawings?<br/>';
 	descriptionHtml += '<input type="radio" name="descriptionRadio" id="dRadioTrue" value="true" onclick="eventManager.fire(\'svgdrawDescriptionOptionChanged\')"/> Yes<br/>';
 	descriptionHtml += '<input type="radio" name="descriptionRadio" id="dRadioFalse" value="false" CHECKED onclick="eventManager.fire(\'svgdrawDescriptionOptionChanged\')"/> No<br/>';
-	descriptionHtml += 'Default description (optional): <input type="text" size="45" id="defaultDescriptionInput" disabled="disabled" onkeyup="eventManager.fire(\'svgdrawDefaultDescriptionChanged\')" onclick="eventManager.fire(\'svgdrawDescriptionClicked\')"/>';
+	descriptionHtml += 'Default description (optional): <input type="text" size="45" id="defaultDescriptionInput" disabled="disabled" onchange="eventManager.fire(\'svgdrawDefaultDescriptionChanged\')" onclick="eventManager.fire(\'svgdrawDescriptionClicked\')"/>';
 	
 	parent.innerHTML = descriptionHtml;
 	
