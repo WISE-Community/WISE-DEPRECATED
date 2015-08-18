@@ -162,6 +162,7 @@ define(['configService'], function(configService) {
          * Log out the user
          */
         serviceObject.forceLogOut = function() {
+            this.clearTimers();
             $rootScope.$broadcast('logOut');
         };
         
