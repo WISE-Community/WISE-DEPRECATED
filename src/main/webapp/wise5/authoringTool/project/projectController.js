@@ -19,12 +19,15 @@ define(['app'], function(app) {
             var projectJSONString = $("#project").val();
             var commitMessage = $("#commitMessageInput").val();
             try {
-                var projectJSON = projectJSONString;
-                ProjectService.saveProject(projectJSON, commitMessage).then(angular.bind(this, function(commitHistoryArray) {
+                // if projectJSONString is bad json, it will throw an exception and not save.
+                JSON.parse(projectJSONString);
+
+                ProjectService.saveProject(projectJSONString, commitMessage).then(angular.bind(this, function(commitHistoryArray) {
                     this.commitHistory = commitHistoryArray;
+                    $("#commitMessageInput").val("");  // clear field after commit
                 }));
             } catch (error) {
-                alert("JSON stringify failed. Check that JSON is valid");
+                alert("Invalid JSON. Please check syntax. Aborting save.");
                 return;
             }
         };
