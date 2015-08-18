@@ -1,0 +1,11 @@
+<md-card class="nav-item-card" ng-class="itemType" ng-animate-ref="{{ item.id }}">
+    <md-card-content ng-click="nodeClicked()" role="button" md-ink-ripple="">
+        <img alt="Step Icon" src="{{ iconUrl }}" class="avatar avatar__square" /> <!-- TODO: get icon from node -->
+        <h3 class="md-title">{{ item.title }}</h3>
+    </md-card-content>
+    <md-card-footer>
+        <!--<md-button aria-label="Add Bookmark" class="md-icon-button" ng-click="navItemsCtrl.toggleBookmark()" ng-class="{'md-primary': child.isBookmark}">
+            <md-icon> bookmark </md-icon>
+        </md-button>-->
+    </md-card-footer>
+</md-card>

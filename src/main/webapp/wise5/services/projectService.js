@@ -34,9 +34,21 @@ define(['configService'], function(configService) {
             return style;
         };
 
+        // filtering options for navigation displays
+        serviceObject.filters = [
+            {'name': 'all', 'label': 'All'},
+            //{'name': 'todo', 'label': 'Todo'},
+            //{'name': 'completed', 'label': 'Completed'},
+            {'name': 'bookmark', 'label': 'Bookmarks'} // TODO: Add when bookmarks are active
+        ];
+
+        serviceObject.getFilters = function(){
+            return this.filters;
+        }
+
         serviceObject.getName = function() {
-            var name = this.getProjectMetadata().name;
-            name = !!name ? name : 'A WISE Project (No name)'; // TODO: i18n
+            var name = this.getProjectMetadata().title;
+            name = !!name ? name : 'A WISE Project (No name)';
             return name;
         };
 

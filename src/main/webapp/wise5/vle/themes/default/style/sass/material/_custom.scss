@@ -8,3 +8,20 @@ md-toolbar {
     padding-bottom: 0;
   }
 }
+
+.md-toolbar-tools--fit {
+  width: auto;
+
+  .md-button {
+    align-self: flex-start;
+  }
+
+  h1, h2, h3 {
+    padding: 8px 0;
+  }
+}
+
+md-card[md-ink-ripple], md-card-content[md-ink-ripple] {
+  position: relative;
+  cursor: pointer;
+}

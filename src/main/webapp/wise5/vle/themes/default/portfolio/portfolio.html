@@ -1,0 +1,114 @@
+<style>
+    .drop-box {
+        background: #F8F8F8;
+        border: 5px dashed #DDD;
+        width: 90%;
+        height: 100px;
+        text-align: center;
+        padding-top: 50px;
+        margin: 10px;
+        bottom: 0px;
+    }
+
+    .drop-box:hover {
+        cursor: pointer;
+    }
+
+    .dragover {
+        border: 5px dashed blue;
+    }
+
+    .studentAssets {
+        height: auto;
+        width: auto;
+        max-height: 400px;
+        max-width: 450px;
+        border: 5px solid #DDD;
+        overflow:auto;
+        list-style-type: none;
+        padding:0px;
+    }
+
+    .studentAsset {
+        width: auto;
+        height: auto;
+        max-width: 100px;
+        max-height: 100px;
+        padding: 10px;
+        margin: 5px;
+        border: 3px solid #DDD;
+    }
+    .studentAsset:hover {
+        cursor: pointer;
+    }
+
+    .studentAssetParent {
+        word-wrap: break-word;
+        width: auto;
+        max-width: 350px;
+    }
+
+    .studentAssetOverlay {
+        top: 0;
+        left: 0;
+        max-width: 100%;
+    }
+
+    .studentAssetRemoveImage {
+    }
+
+    .studentAssetRemoveImage, .studentAssetOverlay:hover {
+        cursor:pointer;
+    }
+
+    .studentAssetName {
+    }
+</style>
+<div ng-switch on='portfolioCtrl.filter'>
+    <div ng-switch-when='work'>
+        Items:<br/>
+        <ul id="portfolioItems"
+            ui-sortable="sortableOptions"
+            ng-model="portfolioCtrl.portfolio.items"
+            ng-show="portfolioCtrl.portfolio.items.length" ng-cloak>
+            <li ng-repeat="item in portfolioCtrl.portfolio.items track by $index"
+                data-drag='true'
+                data-jqyoui-options="{revert: 'invalid', helper: 'clone'}"
+                jqyoui-draggable="{animate:true, placeholder: 'keep', onStart:'portfolioCtrl.portfolioItemDragStartCallback(item)'}" >
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <span class="portfolio-index"></span>
+                        <span class="portfolio-item">{{item}} <span class="fa fa-search-plus fa-flip-horizontal"></span></span>
+                        <input type='button' value='X' ng-click='portfolioCtrl.deleteItem(item)'></input>
+                    </div>
+                </div>
+            </li>
+        </ul>
+
+        <hr/>
+        Deleted Items:<br/>
+        <div ng-repeat='deletedItem in portfolioCtrl.portfolio.deletedItems'>
+            {{deletedItem}}
+        </div>
+    </div>
+    <div ng-switch-when='files'>
+        You are using {{portfolioCtrl.studentAssets.totalSize | appropriateSizeText }} out of {{portfolioCtrl.studentAssets.totalSizeMax | appropriateSizeText}} ({{portfolioCtrl.studentAssets.usagePercentage | roundToDecimal:0 }}%)
+        <ul class='studentAssets' ng-show="portfolioCtrl.studentAssets.length" >
+            <li ng-repeat="studentAsset in portfolioCtrl.studentAssets" class='studentAssetParent'>
+                <img ng-src='{{studentAsset.iconURL}}'
+                     class='studentAsset'
+                     title='Drag and drop this item to use in your project!'
+                     data-drag='true'
+                     data-jqyoui-options="{revert: 'invalid', helper: 'clone', stack: 'div' }"
+                     jqyoui-draggable="{animate:true, placeholder: 'keep', onStart:'portfolioCtrl.studentAssetDragStartCallback(studentAsset)'}">
+                </img>
+                <img ng-click='portfolioCtrl.deleteStudentAsset(studentAsset)' src='wise5/vle/portfolio/trash.png' class='studentAssetRemoveImage'></img>
+                <span ng-show='{{studentAsset.type === "audio"}}' ng-audio='{{studentAsset.url}}' volume='0.5'><img class='studentAssetOverlay' src='wise5/vle/portfolio/play.png'></img></span>
+                <!-- <span class='studentAssetname'>{{studentAsset.name}}</span> -->
+            </li>
+        </ul>
+        <div ngf-drop ngf-select ngf-change="portfolioCtrl.upload($files)" class="drop-box"
+             drag-over-class="dragover" ngf-multiple="true" allow-dir="false"
+             accept="image/*,application/pdf">Drop images or files here or click to upload!</div>
+    </div>
+</div>

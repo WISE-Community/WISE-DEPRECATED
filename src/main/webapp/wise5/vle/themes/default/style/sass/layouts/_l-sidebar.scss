@@ -1,3 +1,15 @@
 // 1. Config
 
 // 2. Base
+.l-sidebar {
+
+}
+
+.l-sidebar__header {
+  background-color: #ffffff;
+  color: $accent-color-2;
+
+  md-select {
+    color: $body-color;
+  }
+}

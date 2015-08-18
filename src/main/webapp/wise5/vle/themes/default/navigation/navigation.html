@@ -1,0 +1,70 @@
+<style>
+    .currentNode {
+        background-color: yellow;
+    }
+
+    .disabledNode {
+        disabled: true;
+    }
+
+    .node {
+        fill: #ccc;
+        stroke: #fff;
+        stroke-width: 2px;
+    }
+
+    .link {
+        stroke: #777;
+        stroke-width: 2px;
+    }
+</style>
+
+<div class="md-toolbar-tools auto-width">
+    <span class="md-subhead">Project Plan</span>
+    <span flex></span>
+    <md-select ng-if="vleCtrl.navFilters.length > 1" class="md-body-1" placeholder="Filter" ng-model="vleCtrl.navFilter">
+        <md-option ng-repeat="filter in vleCtrl.navFilters" value="{{filter.name}}">{{filter.label}}</md-option>
+    </md-select>
+</div>
+
+<div ng-controller='NavigationController as navCtrl' class="l-nav">
+    <div ng-class="'l-nav__' + navCtrl.layoutState" ng-animate-ref="{{ navCtrl.currentGroup.id }}">
+        <div ng-if="navCtrl.layoutState === 'group'" class="md-toolbar-tools md-toolbar-tools--fit auto-height">
+            <h3 class="md-title nav-title">{{navCtrl.currentGroup.title}}</h3>
+            <span flex></span>
+            <md-button aria-label="Close Activity" class="md-icon-button" ng-click="navCtrl.nodeClicked(navCtrl.parentGroupId)">
+                <md-icon> close </md-icon>
+            </md-button>
+        </div>
+        <md-list ng-if="navCtrl.layoutView === 'list'">
+            <nav-item ng-repeat="item in navCtrl.currentChildren"
+                template-url="vleCtrl.themePath + '/navigation/' + navCtrl.layoutView + 'Item.html'"
+                item="item" node-clicked="navCtrl.nodeClicked(item.id)" ng-animate-ref="{{ item.id }}"></nav-item>
+        </md-list>
+        <div ng-if="navCtrl.layoutView === 'card'" layout="row" layout-wrap>
+            <nav-item ng-repeat="item in navCtrl.currentChildren"
+                template-url="vleCtrl.themePath + '/navigation/' + navCtrl.layoutView + 'Item.html'"
+                item="item" node-clicked="navCtrl.nodeClicked(item.id)"
+                flex-sm="100" flex-md="50" flex-lg="33" flex-gt-lg="33"></nav-item>
+        </div>
+    </div>
+
+    <!--<group id='group' currentgroupid='{{navCtrl.currentGroupId}}'></group>-->
+
+    <!--
+    <group id='group_{{group.id}}' ng-repeat='group in navCtrligationController.groups' ng-show='group.id === navigationController.currentGroupId'>
+
+    </group>
+
+
+    <div id='test'></div>
+     -->
+    <!--
+    <div ng-repeat='group in navigationController.groups' ng-show='group.id === navigationController.currentGroupId'>
+        {{ group.title }}
+
+        <input id='{{childId}}Button' type='button' ng-repeat='childId in group.ids' value='{{childId}}' ng-click='navigationController.nodeClicked(childId)' ng-class='{currentNode: navigationController.currentNode.id === childId, disabledNode: navigationController.isNodeDisabled(childId)}' ng-disabled='navigationController.isNodeDisabled(childId)'></input>
+        <input type='button' value='Go To Parent' ng-click='navigationController.nodeClicked(navigationController.parentGroupId)'></input>
+    </div>
+     -->
+</div>

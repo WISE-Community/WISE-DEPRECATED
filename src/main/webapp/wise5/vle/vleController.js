@@ -13,16 +13,35 @@ define(['app'],
                     SessionService,
                     StudentDataService,
                     StudentWebSocketService,
-                    $mdDialog) {
+                    $mdDialog,
+                    $mdSidenav,
+                    $mdComponentRegistry) {
         this.mode = 'student';
         this.layoutLogic = ConfigService.layoutLogic;
         this.currentNode = null;
-        this.isPortfolioVisible = false;
         this.theme = ProjectService.getTheme();
         this.themePath = "wise5/vle/themes/" + this.theme;
 
+        this.setLayoutState = function() {
+            var layoutState = 'nav'; // default layout state
+            var node = CurrentNodeService.getCurrentNode();
+
+            if(node){
+                var id = node.id;
+                if (ProjectService.isApplicationNode(id)) {
+                    layoutState = 'node';
+                } else if (ProjectService.isGroupNode(id)) {
+                    layoutState = 'nav';
+                }
+            }
+
+            this.layoutState = layoutState;
+        };
+
+        this.setLayoutState();
+
+        // alert user when inactive for a long time
         $scope.$on('showSessionWarning', angular.bind(this, function() {
-            // Appending dialog to document.body
             var confirm = $mdDialog.confirm()
                 .parent(angular.element(document.body))
                 .title('Session Timeout')
@@ -47,17 +66,7 @@ define(['app'],
             StudentDataService.updateVisitedNodesHistory(nodeId);
             StudentDataService.updateNodeStatuses();
 
-            var layoutClass = null;
-            
-            if (ProjectService.isApplicationNode(nodeId)) {
-                layoutClass = ProjectService.getStudentIsOnApplicationNodeClass();
-            } else if (ProjectService.isGroupNode(nodeId)) {
-                layoutClass = ProjectService.getStudentIsOnGroupNodeClass();
-            }
-            
-            if (layoutClass != null) {
-                this.layoutState = layoutClass;
-            }
+            this.setLayoutState();
             
             StudentWebSocketService.sendStudentStatus();
             $state.go('root.vle', {nodeId:nodeId});
@@ -66,12 +75,6 @@ define(['app'],
         $scope.$on('componentStudentDataChanged', angular.bind(this, function() {
             StudentDataService.updateNodeStatuses();
         }));
-        
-        this.layoutStates = ['layout1', 'layout2', 'layout3', 'layout4'];
-        this.layoutState = this.layoutStates[0];
-        
-        this.showProjectDiv = true;
-        this.showNodeDiv = true;
 
         this.updateLayout = function() {
             if (this.project != null) {
@@ -80,43 +83,13 @@ define(['app'],
         };
         
         this.updateLayout();
-        
-        this.showPortfolio = function() {
-            this.isPortfolioVisible = true;
-
-            // save showPortfolio event
-            var nodeId = null;
-            var componentId = null;
-            var componentType = null;
-            var category = "Portfolio";
-            var event = "portfolioOpened";
-            var eventData = {};
-            var currentNode = CurrentNodeService.getCurrentNode();
-            eventData.curentNodeId = currentNode == null ? null : currentNode.id;
-            StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
-        };
-        
-
-        this.hidePortfolio = function() {
-            this.isPortfolioVisible = false;
-
-            // save hidePortfolio event
-            var nodeId = null;
-            var componentId = null;
-            var componentType = null;
-            var category = "Portfolio";
-            var event = "portfolioClosed";
-            var eventData = {};
-            var currentNode = CurrentNodeService.getCurrentNode();
-            eventData.curentNodeId = currentNode == null ? null : currentNode.id;
-            StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
-
-        };
 
         this.showNavigation = function() {
-            this.layoutState = 'layout3';
+            this.layoutState = 'nav';
         };
-        
+        this.navFilters = ProjectService.getFilters();
+        this.navFilter = this.navFilters[0].name;
+
         this.goHome = function() {
             // save goHome event
             var nodeId = null;
@@ -142,6 +115,26 @@ define(['app'],
 
             $rootScope.$broadcast('logOut');
         };
+
+        // capture portfolio open/close events
+        $mdComponentRegistry.when('portfolio').then(function(it){
+            $scope.$watch(function() {
+                return it.isOpen();
+            }, function(isOpen) {
+                var nodeId = null;
+                var componentId = null;
+                var componentType = null;
+                var category = "Portfolio";
+                var eventData = {};
+                var currentNode = CurrentNodeService.getCurrentNode();
+                eventData.curentNodeId = currentNode == null ? null : currentNode.id;
+
+                var event = isOpen ? "portfolioOpened" : "portfolioClosed";
+
+                // save portfolio open/close event
+                StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
+            });
+        });
           
         this.layoutLogicStarMap = function(VLEState) {
             if (VLEState.state === 'initial') {
@@ -258,6 +251,14 @@ define(['app'],
         this.projectName = ProjectService.getName();
 
         CurrentNodeService.setCurrentNodeByNodeId(nodeId);
+
+        this.portfolioFilters = PortfolioService.getFilters();
+        this.portfolioFilter = this.portfolioFilters[0].name;
+        this.portfolioOpen = false;
+
+        this.togglePortfolio = function() {
+            this.portfolioOpen = !this.portfolioOpen;
+        };
         
         /**
          * The user has moved the mouse on the page

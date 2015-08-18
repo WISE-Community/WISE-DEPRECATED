@@ -28,11 +28,13 @@ define([
     'htmlService',
     'matchService',
     'multipleChoiceService',
+    'navigation',
     'nodeService',
     'openResponseService',
     'outsideURLService',
     'photoBoothService',
     'portfolioService',
+    'portfolio',
     'projectService',
     'sessionService',
     'studentAssetService',
@@ -69,6 +71,7 @@ define([
              graphService,
              highchartsng,
              htmlService,
+             navigation,
              matchService,
              multipleChoiceService,
              nodeService,
@@ -76,6 +79,7 @@ define([
              outsideURLService,
              photoBoothService,
              portfolioService,
+             portfolio,
              projectService,
              sessionService,
              studentAssetService,
@@ -89,10 +93,12 @@ define([
     var app = angular.module('app', [
         'directives',
         'filters',
+        'portfolio',
         'highcharts-ng',
         'ui.router',
         'ui.sortable',
         'ui.tree',
+        'navigation',
         'ngAnimate',
         'ngAudio',
         'ngAria',
@@ -164,10 +170,12 @@ define([
                     url: '',
                     abstract: true,
                     templateUrl: 'wise5/vle/vle.html',
+                    templateProvider: function(ProjectService){
+
+                    },
                     controller: 'VLEController as vleController',
                     resolve: {
                         vleController: app.loadController('vleController'),
-                        portfolioController: app.loadController('portfolioController'),
                         config: function (ConfigService) {
                             var configUrl = window.configUrl;
                             return ConfigService.retrieveConfig(configUrl);
@@ -190,10 +198,10 @@ define([
                     url: '/vle/:nodeId',
                     views: {
                         'navigationView': {
-                            templateUrl: 'wise5/vle/navigation/navigation.html',
-                            resolve: {
-                                navigationController: app.loadController('navigationController')
-                            }
+                            templateUrl: 'wise5/vle/navigation/navigation.html'//,
+                            //resolve: {
+                                //navigationController: app.loadController('navigationController')
+                            //}
                         },
                         'nodeView': {
                             templateUrl: 'wise5/node/index.html',
@@ -265,7 +273,9 @@ define([
 
             $mdThemingProvider.theme('default')
                 .primaryPalette('primaryPaletteWise')
-                .accentPalette('accentPaletteWise');
+                .accentPalette('accentPaletteWise',  {
+                    'default': '500' // use shade 200 for default, and keep all other shades the same
+                });
 
         }]);
 

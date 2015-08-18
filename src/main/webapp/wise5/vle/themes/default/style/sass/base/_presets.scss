@@ -1,7 +1,21 @@
 // 1. Config
-$body-bgcolor: $gray-light !default;
+$body-bgcolor: $gray-lighter !default;
 
 // 2. Base
 body {
   background: $body-bgcolor;
 }
+
+// Images
+.avatar {
+  width: $list-item-primary-avatar-width;
+  height: $list-item-primary-avatar-width;
+  border-radius: 50%;
+  box-sizing: content-box;
+}
+
+.avatar__square {
+  border-radius: 0%;
+}
+
+// Animations

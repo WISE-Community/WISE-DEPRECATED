@@ -1,4 +1,5 @@
 <link rel="stylesheet" href="wise5/vendor/jquery-ui/themes/base/jquery-ui.min.css"><!-- TODO: remove when jquery-ui dep is removed -->
+<link rel="stylesheet" href="wise5/lib/angularTextAngular/textAngular.css"><!-- TODO: remove when text-angular dep is removed -->
 <link rel="stylesheet" href="wise5/vle/themes/default/style/css/vle.css">
 
 <style>
@@ -79,113 +80,68 @@
         right: 200px;
         top: 0px;
     }
-
-
-    #portfolioOpenButton {
-        position: absolute;
-        right: 325px;
-        top: 0px;
-    }
-
-    #portfolio {
-        position: absolute;
-        right: 0px;
-        top: 0px;
-        min-width: 500px;
-        min-height: 0px;
-        max-width: 500px;
-        max-height: 1000px;
-        border: 3px solid black;
-        /*overflow: auto; setting this will make draggable items disappear once they're dragged out of portfolio div */
-        /*resize: both;*/
-        background-color: aliceblue;
-    }
-
-    #closePortfolio {
-        position: absolute;
-        right: 0px;
-        top: 0px;
-        font-weight: bold;
-        width: initial;
-    }
 </style>
 
 <style>
-    {{vleController.projectStyle}}
+    {{vleCtrl.projectStyle}}
 </style>
-
-<header>
-    <md-toolbar class="l-header md-whiteframe-z1">
-        <div class="md-toolbar-tools">
-            <img src="wise5/images/WISE-logo-1b8ca8.svg" alt="WISE Logo" class="logo md-button md-icon-button" />
-            <h3>
-                <span>{{vleController.projectName}}</span>
-            </h3>
-            <span flex></span>
-            <md-menu md-position-mode="target-right target">
-                <md-button aria-label="Open exit menu" class="md-icon-button" ng-click="$mdOpenMenu()">
-                    <md-icon md-menu-origin> power_settings_new </md-icon>
+<div layout="row" layout-fill>
+    <div layout="column" flex>
+        <md-toolbar class="md-whiteframe-z1">
+            <div class="md-toolbar-tools">
+                <img src="wise5/images/WISE-logo-1b8ca8.svg" alt="WISE Logo" class="logo md-button md-icon-button" />
+                <h3>
+                    <span>{{vleCtrl.projectName}}</span>
+                </h3>
+                <span flex></span>
+                <md-button aria-label="Toggle Notebook" class="md-icon-button" ng-click="vleCtrl.togglePortfolio()">
+                    <md-icon md-menu-origin> book </md-icon>
                 </md-button>
-                <md-menu-content width="4">
-                    <md-menu-item>
-                        <md-button ng-click="vleController.goHome()">
-                            <md-icon md-menu-align-target> home </md-icon>
-                            <p>Exit to Home</p>
-                        </md-button>
-                    </md-menu-item>
-                    <md-menu-item>
-                        <md-button ng-click="vleController.logOut()">
-                            <md-icon> exit_to_app </md-icon>
-                            <p>Sign Out</p>
-                        </md-button>
-                    </md-menu-item>
-                </md-menu-content>
-            </md-menu>
-        </div>
-    </md-toolbar>
-</header>
+                <md-menu md-position-mode="target-right target"">
+                    <md-button aria-label="Open exit menu" class="md-icon-button" ng-click="$mdOpenMenu()">
+                        <md-icon md-menu-origin> power_settings_new </md-icon>
+                    </md-button>
+                    <md-menu-content width="4">
+                        <md-menu-item>
+                            <md-button ng-click="vleCtrl.goHome()">
+                                <md-icon md-menu-align-target> home </md-icon>
+                                <p>Exit to Home</p>
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-item>
+                            <md-button ng-click="vleCtrl.logOut()">
+                                <md-icon> exit_to_app </md-icon>
+                                <p>Sign Out</p>
+                            </md-button>
+                        </md-menu-item>
+                    </md-menu-content>
+                </md-menu>
+            </div>
+        </md-toolbar>
 
-
-<main role="main" data-drop="true"
-      jqyoui-droppable="{onDrop: 'vleController.portfolioDropCallback()'}"
-      ng-mousemove='vleController.mouseMoved()' class="md-padding l-main">
-    <span ng-if="vleController.currentNode"> CurrentNode:
-        "{{vleController.currentNode.title}}"
-        ({{vleController.currentNode.type}}, {{vleController.currentNode.id}})
-    </span>
-    <span ng-if="vleController.mode"> Current Mode:
-    {{vleController.mode}} </span>
-
-    <select ng-model="vleController.layoutState"
-            ng-options="layoutState for layoutState in vleController.layoutStates"
-            ng-change="vleController.updateLayout()">
-    </select>
-    <hr/>
-    <div id="globalTools">
-        <button ng-repeat="globalTool in vleController.globalTools"
-                ng-click="vleController.globalToolButtonClicked(globalTool)">{{globalTool}}</button>
+        <md-content flex role="main" class="md-padding l-main">
+            <div ui-view="navigationView" ng-show="vleCtrl.layoutState == 'nav'" class="l-constrained"></div>
+            <div ui-view="nodeView" ng-if="vleCtrl.layoutState == 'node'"
+                 data-drop="true"
+                 jqyoui-droppable="{onDrop: 'vleCtrl.portfolioDropCallback()'}"
+                 ng-mousemove='vleCtrl.mouseMoved()'></div>
+        </md-content>
+        <footer class="l-footer md-whiteframe-z2" flex>
+        </footer>
     </div>
-
-    <div id="prev" class={{vleController.layoutState}} ng-click="vleController.goToPrevNode()">Prev</div>
-    <div id="next" class={{vleController.layoutState}} ng-click="vleController.goToNextNode()">Next</div>
-    <div ui-view='navigationView'></div>
-    <div ui-view='nodeView'></div>
-    <br/>
-    <button id='showNavigationButton' ng-click='vleController.showNavigation()'>Show Navigation</button>
-    <div ng-switch on='vleController.isPortfolioVisible'>
-        <div ng-switch-when='true'
-             id='portfolio'
-             data-drag='true'
-             data-jqyoui-options="{}"
-             jqyoui-draggable="{animate:true, placeholder: 'keep', onStart:'vleController.portfolioDragStartCallback()'}">
-            <button id='closePortfolio' ng-click='vleController.hidePortfolio()'>X</button>
-            <div ng-include="'wise5/vle/themes/' + vleController.theme + '/portfolio.html'"></div>
-        </div>
-        <div ng-switch-when='false'>
-            <button id='portfolioOpenButton' ng-click='vleController.showPortfolio()'>Open Portfolio</button>
-        </div>
-    </div>
-</main>
-<footer class="l-footer md-whiteframe-z2" flex>
-    footer
-</footer>
+    <md-sidenav class="md-sidenav-right md-whiteframe-z2" md-component-id="notebook" layout="column" flex
+            md-is-open="vleCtrl.portfolioOpen"> <!--md-is-locked-open="vleCtrl.portfolioOpen && $mdMedia('gt-lg')"-->
+        <md-toolbar class="l-sidebar__header md-whiteframe-z1">
+            <div class="md-toolbar-tools">
+                <h3>Notebook</h3>
+                <span flex></span>
+                <md-select class="md-body-1" placeholder="Filter" ng-model="vleCtrl.portfolioFilter">
+                    <md-option ng-repeat="filter in vleCtrl.portfolioFilters" value="{{filter.name}}">{{filter.label}}</md-option>
+                </md-select>
+            </div>
+        </md-toolbar>
+        <md-content class="md-padding">
+            <portfolio template-url="vleCtrl.themePath + '/portfolio/portfolio.html'" filter="vleCtrl.portfolioFilter"></portfolio>
+        </md-content>
+    </md-sidenav>
+</div>

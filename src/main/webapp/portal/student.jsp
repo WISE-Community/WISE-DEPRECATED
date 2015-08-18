@@ -18,9 +18,7 @@
 
 	</head>
 	<body layout="row">
-		<div ui-view data-drop="true"
-			 jqyoui-droppable="{onDrop: 'vleController.portfolioDropCallback()'}"
-			 ng-mousemove='vleController.mouseMoved()' layout="column" layout-fill></div>
+		<div ui-view  layout="column" layout-fill></div>
 
 		<script>
 			var configUrl = '${vleConfigUrl}';

@@ -1,9 +1,8 @@
 // 1. Config
-$content-width: 960px !default;
 
 // 2. Base
 .l-constrained {
   margin-left: auto;
   margin-right: auto;
-  max-width: $content-width;
+  max-width: $layout-breakpoint-lg;
 }
