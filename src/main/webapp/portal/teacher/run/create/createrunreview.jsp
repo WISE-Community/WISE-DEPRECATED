@@ -33,20 +33,27 @@
     	/**
 		 * copies project and then create run with the new project
 		 * @param pId project id
+		 * @param projectWiseVersion integer version of project [4,5] not null.
 		 * @param type the project type e.g. "LD"
 		 * @param name the project name
 		 * @param fileName the project file name e.g. "wise4.project.json"
 		 * @return true iff project was successfully copied. 
 		 */
-    	function createRun(pID, type, projectName, fileName) {
+    	function createRun(pID, projectWiseVersion, type, projectName, fileName) {
         	// ensure that project doesn't get copied multiple times
         	if (!doneClicked) {
-            	doneClicked=true;
-    			var result = copy(pID, type, projectName, fileName);
-    			if (!result) {
-        			alert('<spring:message code="teacher.run.create.createrunreview.errorCreatingRun" />');
-    			}
-    			return result;
+            	doneClicked = true;
+                if (projectWiseVersion == 5) {
+                    return true;  // if this is WISE5 project, a new project and a run will be created on the server-side
+                } else {
+                    // if this is a WISE4 project, a new project will be created via ajax requests on this page and the new
+                    // run will be created using the new project on the server-side.
+                    var result = copy(pID, type, projectName, fileName);
+                    if (!result) {
+                        alert('<spring:message code="teacher.run.create.createrunreview.errorCreatingRun" />');
+                    }
+                    return result;
+                }
         	}
     	};
     	
@@ -58,10 +65,10 @@
 		 * @param fileName the project file name e.g. "wise4.project.json"
 		 * @return true iff project was successfully copied. 
 		 */
-        function copy(pID, type, projectName, fileName){
+        function copy(pID, type, projectName, fileName) {
             var isSuccess = false;
             var newProjectId = null;
-   			if(type=='LD'){
+   			if (type == 'LD') {
    	   			//calls filemanager to copy project folder contents
    	   			$.ajax({
    	   	   				url: '${contextPath}/author/authorproject.html',
@@ -156,7 +163,7 @@
 							<h5><spring:message code="teacher.run.create.createrunreview.whenYoureReady"/></h5>
 						</div>
 					</div>
-					<form:form method="post" commandName="runParameters" class="center" onSubmit="return createRun('${projectId}','${projectType}','${projectName}','${projectJSONFilename}')">
+					<form:form method="post" commandName="runParameters" class="center" onSubmit="return createRun('${projectId}','${projectWiseVersion}','${projectType}','${projectName}','${projectJSONFilename}')">
 						<input type="submit" name="_cancel" value="<spring:message code="teacher.run.create.createrunreview.cancel" />" />
 						<input type="submit" id="submit_form" name="_finish" value="<spring:message code="teacher.run.create.createrunreview.done" />" />
 						<input type="hidden" id="newProjectId" name="newProjectId" value="" />

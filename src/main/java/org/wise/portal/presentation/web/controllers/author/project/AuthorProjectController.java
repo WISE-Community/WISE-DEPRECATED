@@ -137,7 +137,7 @@ public class AuthorProjectController {
 
 			Integer wiseVersion = project.getWiseVersion();
 			if (wiseVersion != null && wiseVersion == 5) {
-				ModelAndView wise5AuthoringView = new ModelAndView(new RedirectView("../project/edit/"+projectIdStr));
+				ModelAndView wise5AuthoringView = new ModelAndView(new RedirectView("../project/edit/" + projectIdStr));
 				return wise5AuthoringView;
 			}
 		} else {
@@ -826,7 +826,6 @@ public class AuthorProjectController {
 			Curnit curnit = curnitService.createCurnit(mParams);
 
 			ProjectParameters pParams = new ProjectParameters();
-
 			pParams.setCurnitId(curnit.getId());
 			pParams.setOwner(user);
 			pParams.setProjectname(name);

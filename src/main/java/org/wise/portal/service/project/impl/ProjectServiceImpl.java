@@ -170,6 +170,7 @@ public class ProjectServiceImpl implements ProjectService {
 		project.setName(projectParameters.getProjectname());
 		project.setOwner(projectParameters.getOwner());
 		project.setProjectType(projectParameters.getProjectType());
+        project.setWISEVersion(projectParameters.getWiseVersion());
 		ProjectMetadata metadata = projectParameters.getMetadata();
 
 		//get the parent project id if any

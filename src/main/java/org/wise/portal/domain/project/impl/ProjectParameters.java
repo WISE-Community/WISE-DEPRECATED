@@ -51,6 +51,8 @@ public class ProjectParameters implements Serializable {
 	
 	private Long rootProjectId;
 
+	private Integer wiseVersion;
+
 	/**
 	 * @return the curnitId
 	 */
@@ -138,5 +140,13 @@ public class ProjectParameters implements Serializable {
 
 	public Long getRootProjectId() {
 		return rootProjectId;
+	}
+
+	public void setWiseVersion(Integer wiseVersion) {
+		this.wiseVersion = wiseVersion;
+	}
+
+	public Integer getWiseVersion() {
+		return wiseVersion;
 	}
 }

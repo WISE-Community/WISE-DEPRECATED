@@ -56,17 +56,26 @@ import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.impl.DefaultPeriodNames;
+import org.wise.portal.domain.module.Curnit;
 import org.wise.portal.domain.module.impl.CurnitGetCurnitUrlVisitor;
+import org.wise.portal.domain.module.impl.ModuleParameters;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.ProjectMetadata;
+import org.wise.portal.domain.project.impl.ProjectMetadataImpl;
+import org.wise.portal.domain.project.impl.ProjectParameters;
+import org.wise.portal.domain.project.impl.ProjectType;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.run.impl.RunParameters;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
+import org.wise.portal.presentation.web.controllers.CredentialManager;
 import org.wise.portal.service.mail.IMailFacade;
+import org.wise.portal.service.module.CurnitService;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.workgroup.WorkgroupService;
+import org.wise.vle.utils.FileManager;
+import org.wise.vle.web.SecurityUtils;
 
 /**
  * Controller for the wizard to "create a run"
@@ -98,6 +107,9 @@ public class CreateRunController {
 
 	@Autowired
 	private ProjectService projectService = null;
+
+    @Autowired
+    private CurnitService curnitService;
 
 	private static final String COMPLETE_VIEW_NAME = "teacher/run/create/createrunfinish";
 
@@ -299,8 +311,6 @@ public class CreateRunController {
 		if (result.hasErrors()) {
 			return "teacher/run/create/createrunperiods";
 		}
-		
-		
 
 		postLevelTextMap = new HashMap<Long,String>();
 		String defaultPostLevelHighMessage = messageSource.getMessage("presentation.web.controllers.teacher.run.CreateRunController.postLevelHighMessage", 
@@ -327,18 +337,21 @@ public class CreateRunController {
 		return "teacher/run/create/createrunconfigure";
 	}
 
-
 	/**
 	 * Fourth step handler
 	 */
 	@RequestMapping(params = "_page=4")
 	public String processFourthPage(
 			final @ModelAttribute("runParameters") RunParameters runParameters,
-			final BindingResult result,
+            final BindingResult result,
 			final ModelMap modelMap) {
 		
 		Project project = runParameters.getProject();
-		String relativeProjectFilePath = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());  // looks like this: "/109/new.project.json"
+        Integer projectWiseVersion = project.getWiseVersion();
+        if (projectWiseVersion == null) {
+            projectWiseVersion = 4;
+        }
+        String relativeProjectFilePath = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());  // looks like this: "/109/new.project.json"
 		int ndx = relativeProjectFilePath.lastIndexOf("/");
 		String projectJSONFilename = relativeProjectFilePath.substring(ndx + 1, relativeProjectFilePath.length());  // looks like this: "new.project.json"
 
@@ -351,6 +364,7 @@ public class CreateRunController {
 		modelMap.put("projectId", project.getId());
 		modelMap.put("projectType", project.getProjectType());
 		modelMap.put("projectName", projectName);
+        modelMap.put("projectWiseVersion", projectWiseVersion);
 		modelMap.put("projectJSONFilename", projectJSONFilename);
 
 		return "teacher/run/create/createrunreview";
@@ -381,22 +395,75 @@ public class CreateRunController {
 	 * 
 	 * This method is called if there is a submit that validates and contains the "_finish"
 	 * request parameter.
-	 * 
-	 * @see org.springframework.web.servlet.mvc.AbstractWizardFormController#processFinish(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, java.lang.Object, org.springframework.validation.BindException)
 	 */
 	@RequestMapping(params = "_finish")
 	protected ModelAndView processFinish(
 			final @ModelAttribute("runParameters") RunParameters runParameters,
 			final BindingResult result,
 			final HttpServletRequest request,
+            final HttpServletResponse response,
 			final SessionStatus status)
 					throws Exception {
 
-		Run run;
+        Project project = runParameters.getProject();
+        Project newProject;  // copied project that will be used for new run.
+        Integer projectWiseVersion = project.getWiseVersion();
+        if (projectWiseVersion != null && projectWiseVersion == 5) {
+            User user = ControllerUtil.getSignedInUser();
+            CredentialManager.setRequestCredentials(request, user);
+            String pathAllowedToAccess = CredentialManager.getAllowedPathAccess(request);
+
+            /*
+             * get the project folder path
+             * e.g.
+             * /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/667
+             */
+            String projectFolderPath = FileManager.getProjectFolderPath(project);
+
+            /*
+             * get the curriculum base
+             * e.g.
+             * /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum
+             */
+            String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
+
+            if (SecurityUtils.isAllowedAccess(pathAllowedToAccess, projectFolderPath)) {
+                String newProjectDirname = FileManager.copyProject(curriculumBaseDir, projectFolderPath);
+                String newProjectPath = "/" + newProjectDirname + "/project.json";
+                String newProjectName = project.getName();
+                Long parentProjectId = (Long) project.getId();
+                ModuleParameters mParams = new ModuleParameters();
+                mParams.setUrl(newProjectPath);
+                Curnit curnit = curnitService.createCurnit(mParams);
+                ProjectParameters pParams = new ProjectParameters();
+                pParams.setCurnitId(curnit.getId());
+                pParams.setOwner(user);
+                pParams.setProjectname(newProjectName);
+                pParams.setProjectType(ProjectType.LD);
+                pParams.setWiseVersion(5);
+                pParams.setParentProjectId(parentProjectId);
+                // get the project's metadata from the parent
+                ProjectMetadata parentProjectMetadata = project.getMetadata();
+                if (parentProjectMetadata != null) {
+                    // copy into new metadata object
+                    ProjectMetadata newProjectMetadata = new ProjectMetadataImpl(parentProjectMetadata.toJSONString());
+                    pParams.setMetadata(newProjectMetadata);
+                }
+                newProject = projectService.createProject(pParams);
+
+            } else {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+                return new ModelAndView("errors/accessdenied");
+            }
+        } else {
+            // this will be a new run using a WISE4 project. The new project has already been created.
+            // get newProjectId from request and use that to set up the run
+            String newProjectId = request.getParameter("newProjectId");
+            newProject = projectService.getById(new Long(newProjectId));
+        }
+
+        Run run;
 		try {
-			// get newProjectId from request and use that to set up the run
-			String newProjectId = request.getParameter("newProjectId");
-			Project newProject = projectService.getById(new Long(newProjectId));
 			runParameters.setProject(newProject);
 			Locale userLocale = request.getLocale();
 			runParameters.setLocale(userLocale);
