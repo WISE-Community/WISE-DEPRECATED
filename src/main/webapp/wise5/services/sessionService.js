@@ -99,8 +99,18 @@ define(['configService'], function(configService) {
          * Refresh the timers
          */
         serviceObject.renewSession = function() {
-            this.clearTimers();
-            this.startTimers();
+            var renewSessionURL = ConfigService.getConfigParam('renewSessionURL');
+            // make a request to the log out url
+            $http.get(renewSessionURL).then(angular.bind(this, function(result) {
+                var isRenewSessionSuccessful = result.data;
+
+                if (isRenewSessionSuccessful === 'true') {
+                    this.clearTimers();
+                    this.startTimers();
+                } else {
+                    this.forceLogOut();
+                }
+            }));
         };
         
         /**
@@ -187,7 +197,7 @@ define(['configService'], function(configService) {
                 // there are no more listeners so we will exit
                 var mainHomePageURL = ConfigService.getMainHomePageURL();
 
-                if(this.performLogOut) {
+                if (this.performLogOut) {
                     // log out the user and bring them to the home page
                     
                     // get the url that will log out the user
@@ -213,10 +223,10 @@ define(['configService'], function(configService) {
                     // get the user type
                     var userType = ConfigService.getConfigParam('userType');
                     
-                    if (userType == 'student'){
+                    if (userType === 'student') {
                         // send the user to the student home page
                         homePageURL = contextPath + '/student';
-                    } else if (userType == 'teacher') {
+                    } else if (userType === 'teacher') {
                         // send the user to the teacher home page
                         homePageURL = contextPath + '/teacher';
                     } else {

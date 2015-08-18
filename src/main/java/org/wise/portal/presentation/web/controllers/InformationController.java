@@ -650,6 +650,7 @@ public class InformationController {
 			config.put("theme", "WISE");
             config.put("cRaterRequestURL", cRaterRequestURL);
 			config.put("mainHomePageURL", contextPath);
+			config.put("renewSessionURL", wiseBaseURL + "/session/renew");
             config.put("sessionLogOutURL", contextPath + "/logout");
 
             if ("preview".equals(mode)) {

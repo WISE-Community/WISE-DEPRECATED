@@ -6,7 +6,9 @@ define([
     'jquery',
     'jqueryUI',
     'angularAnimate',
+    'angularAria',
     'angularDragDrop',
+    'angularMaterial',
     'angularSortable',
     'angularUIRouter',
     'angularWebSocket',
@@ -39,7 +41,9 @@ define([
     $,
     jqueryUI,
     angularAnimate,
+    angularAria,
     angularDragDrop,
+    angularMaterial,
     angularSortable,
     angularUIRouter,
     angularWebSocket,
@@ -71,7 +75,9 @@ define([
         'ui.router',
         'ui.sortable',
         'ngAnimate',
+        'ngAria',
         'ngDragDrop',
+        'ngMaterial',
         'ngWebSocket'
     ]);
 
@@ -114,8 +120,14 @@ define([
         }];
     };
 
-    app.config(['$urlRouterProvider', '$stateProvider', '$controllerProvider',
-        function($urlRouterProvider, $stateProvider, $controllerProvider) {
+    app.config(['$urlRouterProvider',
+        '$stateProvider',
+        '$controllerProvider',
+        '$mdThemingProvider',
+        function($urlRouterProvider,
+                 $stateProvider,
+                 $controllerProvider,
+                 $mdThemingProvider) {
 
             $urlRouterProvider.otherwise('/project');
 
@@ -138,6 +150,9 @@ define([
                         },
                         project: function(ProjectService, config) {
                             return ProjectService.retrieveProject();
+                        },
+                        sessionTimers: function (SessionService, config) {
+                            return SessionService.initializeSession();
                         }
                     }
                 })
@@ -191,6 +206,57 @@ define([
                     }
                 });
                 */
+
+        // ngMaterial default theme configuration
+        // TODO: make dynamic and support alternate themes; allow projects to specify theme parameters and settings
+        $mdThemingProvider.definePalette('primaryPaletteWise', {
+            '50': 'e1f0f4',
+            '100': 'b8dbe4',
+            '200': '8ec6d4',
+            '300': '5faec2',
+            '400': '3d9db5',
+            '500': '1c8ca8',
+            '600': '197f98',
+            '700': '167188',
+            '800': '136377',
+            '900': '0e4957',
+            'A100': 'abf3ff',
+            'A200': '66e2ff',
+            'A400': '17bee5',
+            'A700': '00A1C6',
+            'contrastDefaultColor': 'light',    // whether, by default, text (contrast)
+                                                // on this palette should be dark or light
+            'contrastDarkColors': ['50', '100', //hues which contrast should be 'dark' by default
+                '200', '300', 'A100'],
+            'contrastLightColors': undefined    // could also specify this if default was 'dark'
+        });
+
+        $mdThemingProvider.definePalette('accentPaletteWise', {
+            '50': 'fde9e6',
+            '100': 'fbcbc4',
+            '200': 'f8aca1',
+            '300': 'f4897b',
+            '400': 'f2705f',
+            '500': 'f05843',
+            '600': 'da503c',
+            '700': 'c34736',
+            '800': 'aa3e2f',
+            '900': '7d2e23',
+            'A100': 'ff897d',
+            'A200': 'ff7061',
+            'A400': 'ff3829',
+            'A700': 'cc1705',
+            'contrastDefaultColor': 'light',    // whether, by default, text (contrast)
+                                                // on this palette should be dark or light
+            'contrastDarkColors': ['50', '100', //hues which contrast should be 'dark' by default
+                '200', '300', 'A100'],
+            'contrastLightColors': undefined    // could also specify this if default was 'dark'
+        });
+
+        $mdThemingProvider.theme('default')
+            .primaryPalette('primaryPaletteWise')
+            .accentPalette('accentPaletteWise');
+
 
         }]);
     return app;

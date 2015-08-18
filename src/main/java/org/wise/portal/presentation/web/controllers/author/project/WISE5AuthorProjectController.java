@@ -54,6 +54,13 @@ public class WISE5AuthorProjectController {
         return "/accessdenied";
     }
 
+    /**
+     * Save project and and commit changes
+     * @param projectId id of project to save
+     * @param commitMessage commit message, can be null
+     * @param projectJSONString a valid-JSON string of the project
+     * @param response
+     */
     @RequestMapping(value = "/project/save/{projectId}", method = RequestMethod.POST)
     protected void saveProject(
             @PathVariable Long projectId,
@@ -142,15 +149,16 @@ public class WISE5AuthorProjectController {
         try {
             String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
             config.put("projectId", projectId);
-            // set the content url
             String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
             String rawProjectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
             String projectURL = curriculumBaseWWW + rawProjectUrl;
-            //String previewProjectURL = wiseBaseURL + "/project/preview/" + projectId;
             String previewProjectURL = wiseBaseURL + "/previewproject.html?projectId=" + projectId;
             String saveProjectURL = wiseBaseURL + "/project/save/" + projectId;
             String commitProjectURL = wiseBaseURL + "/project/commit/" + projectId;
 
+            config.put("mainHomePageURL", wiseBaseURL);
+            config.put("renewSessionURL", wiseBaseURL + "/session/renew");
+            config.put("sessionLogOutURL", wiseBaseURL + "/logout");
             config.put("projectURL", projectURL);
             config.put("previewProjectURL", previewProjectURL);
             config.put("saveProjectURL", saveProjectURL);
@@ -161,25 +169,6 @@ public class WISE5AuthorProjectController {
         PrintWriter writer = response.getWriter();
         writer.write(config.toString());
         writer.close();
-    }
-
-
-    /**
-     * Handle requests to commit changes to the project
-     * @throws Exception
-     */
-    @RequestMapping(value = "/project/commit/{projectId}", method = RequestMethod.POST)
-    protected void handleCommitRequest(
-            @PathVariable Long projectId,
-            @RequestParam String commitMessage) throws Exception {
-
-        // TODO: check if user has permission to invoke git on the given projectId
-        // User user = ControllerUtil.getSignedInUser();
-
-        if ("wise5TestProjectId".equals(projectId)) {
-            String curriculumDir = "/Users/h/git/WISE/src/main/webapp/curriculumWISE5/1/";
-            JGitUtils.commitAllChangesToCurriculumHistory(curriculumDir, commitMessage);
-        }
     }
 
     /**
@@ -233,5 +222,4 @@ public class WISE5AuthorProjectController {
         }
         response.getWriter().print(commitHistoryJSONArray);
     }
-
 }

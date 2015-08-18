@@ -101,6 +101,12 @@ require.config({
                     'angular'
                     ]
         },
+        'angularAria': {
+            'exports': 'angularAria',
+            'deps': [
+                'angular'
+            ]
+        },
         'angularAudio': {
             'exports': 'angularAudio',
             'deps': [
@@ -118,6 +124,13 @@ require.config({
             'deps': [
                     'angular'
                     ]
+        },
+        'angularMaterial': {
+            'exports': 'angularMaterial',
+            'deps': [
+                'angularAnimate',
+                'angularAria'
+            ]
         },
         'angularSortable': {
             'exports': 'angularSortable',
@@ -208,19 +221,6 @@ require.config({
             'deps': [
                      'jquery'
                      ]
-        },
-        'angularAria': {
-            'exports': 'angularAria',
-            'deps': [
-                'angular'
-            ]
-        },
-        'angularMaterial': {
-            'exports': 'angularMaterial',
-            'deps': [
-                'angularAnimate',
-                'angularAria'
-            ]
         },
         'webfont': {
             'exports': 'webfont'

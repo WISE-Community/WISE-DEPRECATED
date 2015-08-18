@@ -20,9 +20,11 @@
  */
 package org.wise.portal.presentation.web.controllers;
 
+import java.io.IOException;
 import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -30,6 +32,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.wise.portal.domain.user.User;
 
 /**
  * Controller that backs the Log-In form, for when user fails to log in.
@@ -38,14 +41,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * @author Geoffrey Kwan
  */
 @Controller
-@RequestMapping("/login")
 public class LoginController {
 
 	@Autowired
 	private Properties wiseProperties;
 	
-	@RequestMapping(method = RequestMethod.GET)
-	public String handleGET(
+	@RequestMapping(value = "/login", method = RequestMethod.GET)
+	public String handleLogIn(
 			HttpServletRequest request,
 			ModelMap modelMap) throws Exception {
 		String failed = request.getParameter("failed");
@@ -100,5 +102,22 @@ public class LoginController {
 		}
 
 		return "login";
-	}	
+	}
+
+    /**
+     * Handles renew session requests. By virtue of making this request,
+     * a logged-in user has already renewed the session.
+     *
+     * @param response
+     * @throws IOException
+     */
+	@RequestMapping(value = "/session/renew", method = RequestMethod.GET)
+	public void handleLogIn(HttpServletResponse response) throws IOException {
+        User loggedInUser = ControllerUtil.getSignedInUser();
+        if (loggedInUser != null) {
+            response.getWriter().print("true");
+        } else {
+            response.getWriter().print("false");
+        }
+    }
 }

@@ -1404,7 +1404,7 @@ define(['configService', 'projectService'], function(configService, currentNodeS
                                     }
                                 }
                             } catch (e) {
-                                console.log('Error: Could not calculated isCompleted() for a component');
+                                console.log('Error: Could not calculate isCompleted() for a component');
                             }
                         }
                     }

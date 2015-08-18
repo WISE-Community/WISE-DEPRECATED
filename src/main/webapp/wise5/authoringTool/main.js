@@ -8,10 +8,7 @@ require.config({
         'angularAnimate': 'vendor/angular-animate/angular-animate.min',
         'angularAria': 'vendor/angular-aria/angular-aria.min',
         'angularDragDrop': 'vendor/angular-dragdrop/src/angular-dragdrop.min',
-        'angularMaterial': [
-            '//ajax.googleapis.com/ajax/libs/angular_material/0.10.0/angular-material.min',
-            'vendor/angular-material/angular-material.min'
-        ],
+        'angularMaterial': 'vendor/angular-material/angular-material.min',
         'angularSortable': 'vendor/angular-ui-sortable/sortable.min',
         'angularUIRouter': 'vendor/angular-ui-router/release/angular-ui-router.min',
         'angularWebSocket': 'vendor/angular-websocket/angular-websocket.min',
@@ -75,11 +72,24 @@ require.config({
                 'angular'
             ]
         },
+        'angularAria': {
+            'exports': 'angularAria',
+            'deps': [
+                'angular'
+            ]
+        },
         'angularDragDrop': {
             'exports': 'angularDragDrop',
             'deps': [
                 'angular',
                 'jqueryUI'
+            ]
+        },
+        'angularMaterial': {
+            'exports': 'angularMaterial',
+            'deps': [
+                'angularAnimate',
+                'angularAria'
             ]
         },
         'angularSortable': {
@@ -99,19 +109,6 @@ require.config({
             'exports': 'angularWebSocket',
             'deps': [
                 'angular'
-            ]
-        },
-        'angularAria': {
-            'exports': 'angularAria',
-            'deps': [
-                'angular'
-            ]
-        },
-        'angularMaterial': {
-            'exports': 'angularMaterial',
-            'deps': [
-                'angularAnimate',
-                'angularAria'
             ]
         },
         'jquery': {
