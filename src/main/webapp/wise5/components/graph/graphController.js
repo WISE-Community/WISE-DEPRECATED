@@ -178,7 +178,7 @@ define(['app',
             // get all the series from the student data
             var series = this.getSeries();
             
-            if (series == null && this.componentContent.series != null) {
+            if ((series == null || series.length === 0) && this.componentContent.series != null) {
                 /*
                  * use the series from the component content if the student does not
                  * have any series data
