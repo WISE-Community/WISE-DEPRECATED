@@ -152,7 +152,7 @@ public class WISE5AuthorProjectController {
             String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
             String rawProjectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
             String projectURL = curriculumBaseWWW + rawProjectUrl;
-            String previewProjectURL = wiseBaseURL + "/previewproject.html?projectId=" + projectId;
+            String previewProjectURL = wiseBaseURL + "/project/" + projectId;
             String saveProjectURL = wiseBaseURL + "/project/save/" + projectId;
             String commitProjectURL = wiseBaseURL + "/project/commit/" + projectId;
 

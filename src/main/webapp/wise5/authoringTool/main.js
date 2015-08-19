@@ -1,5 +1,5 @@
 require.config({
-    baseUrl: '../../wise5/',
+    baseUrl: 'wise5/',
     paths: {
         'angular': [
             '//ajax.googleapis.com/ajax/libs/angularjs/1.3.16/angular.min',

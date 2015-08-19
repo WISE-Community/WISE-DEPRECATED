@@ -7,6 +7,7 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title>WISE Authoring</title>
+    <base href="${contextPath}/" target="_blank">
     <meta name="description" content="WISE Authoring Tool">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 

@@ -430,7 +430,7 @@ public class ProjectServiceImpl implements ProjectService {
 	        return wiseBaseURL + "/student/vle/vle.html?runId=" + run.getId() + "&workgroupId=" + workgroup.getId();
 	    } else if (wiseVersion == 5) {
 	        String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
-	        return wiseBaseURL + "/student.html?runId=" + run.getId() + "&workgroupId=" + workgroup.getId();
+	        return wiseBaseURL + "/student/run/" + run.getId();
 	    }
 	    return null;
 	}

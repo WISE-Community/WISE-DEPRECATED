@@ -137,7 +137,7 @@ define([
                 .state('root', {
                     url: '',
                     abstract: true,
-                    templateUrl: '../../wise5/authoringTool/authoringTool.html',
+                    templateUrl: 'wise5/authoringTool/authoringTool.html',
                     controller: 'AuthoringToolController',
                     controllerAs: 'authoringToolController',
                     resolve: {
@@ -158,7 +158,7 @@ define([
                 })
                 .state('root.project', {
                     url: '/project',
-                    templateUrl: '../../wise5/authoringTool/project/project.html',
+                    templateUrl: 'wise5/authoringTool/project/project.html',
                     controller: 'ProjectController',
                     controllerAs: 'projectController',
                     resolve: {
@@ -256,8 +256,6 @@ define([
         $mdThemingProvider.theme('default')
             .primaryPalette('primaryPaletteWise')
             .accentPalette('accentPaletteWise');
-
-
         }]);
     return app;
 });

@@ -31,6 +31,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.wise.portal.dao.ObjectNotFoundException;
@@ -55,7 +57,7 @@ public class VLEController {
 	@Autowired
 	Properties wiseProperties;
 
-	@RequestMapping(value={"/student.html", "/student/vle/vle.html", "/teacher/vle/vle.html"})
+	@RequestMapping(value = {"/student/vle/vle.html", "/teacher/vle/vle.html"})
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		
@@ -88,7 +90,36 @@ public class VLEController {
 		}
 	}
 
-	/**
+    @RequestMapping(value = "/student/run/{runId}")
+    protected String launchVLEWISE5Run(
+            @PathVariable Long runId,
+            ModelMap modelMap) throws ObjectNotFoundException {
+        String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
+        String vleConfigUrl = wiseBaseURL + "/vleconfig?runId=" + runId;
+        modelMap.put("vleConfigUrl", vleConfigUrl);
+        return "student";
+    }
+
+    /**
+     * Launches the WISE5 project in preview mode
+     *
+     * @return the view to launch the vle in preview mode
+     */
+    @RequestMapping(value = "/project/{projectId}")
+    private String launchVLEWISE5Preview(
+            @PathVariable Long projectId,
+            ModelMap modelMap) {
+
+        // get the vle config url
+        String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
+        String vleConfigUrl = wiseBaseURL + "/vleconfig?projectId=" + projectId + "&mode=preview";
+
+        // set the view to the student vle
+        modelMap.put("vleConfigUrl", vleConfigUrl);
+        return "student";
+    }
+
+    /**
 	 * Retrns the RunExtras JSON string containing information like
 	 * the maxscores that teacher defines
 	 * @param response
@@ -163,20 +194,12 @@ public class VLEController {
 		String rawProjectUrl = (String) run.getProject().getCurnit().accept(new CurnitGetCurnitUrlVisitor());
 		String contentUrl = curriculumBaseWWW + rawProjectUrl;
 
-		Project project = run.getProject();
-		Integer wiseVersion = project.getWiseVersion();
-		if ( wiseVersion == null || wiseVersion == 4) {
-	        ModelAndView modelAndView = new ModelAndView("vle");
-	        modelAndView.addObject("run", run);
-	        modelAndView.addObject("vleurl",vleurl);
-	        modelAndView.addObject("vleConfigUrl", vleConfigUrl);
-	        modelAndView.addObject("contentUrl", contentUrl);
-	        return modelAndView;
-		} else {
-		    ModelAndView modelAndView = new ModelAndView("student");
-		    modelAndView.addObject("vleConfigUrl", vleConfigUrl);
-		    return modelAndView;
-		}
+		ModelAndView modelAndView = new ModelAndView("vle");
+		modelAndView.addObject("run", run);
+		modelAndView.addObject("vleurl", vleurl);
+		modelAndView.addObject("vleConfigUrl", vleConfigUrl);
+		modelAndView.addObject("contentUrl", contentUrl);
+		return modelAndView;
 	}
 	
     /**
