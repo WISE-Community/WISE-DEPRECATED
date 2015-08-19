@@ -1,6 +1,6 @@
 <div ng-controller='NodeController as nodeController'>
-    <input type='button' value='X' ng-click='nodeController.closeNode()'></input>
-    <input type='button' value='+Portfolio' ng-click='nodeController.addNodeVisitItemToPortfolio()'></input>
+    <input type='button' value='X' ng-click='nodeController.closeNode()' />
+    <input type='button' value='+NoteBook' ng-click='nodeController.addNodeVisitItemToNoteBook()' />
     <div compile='nodeController.getPrompt()'></div>
     <div ng-repeat='component in nodeController.getComponents()'
          ng-include='nodeController.getComponentTypeHTML(component.componentType)'

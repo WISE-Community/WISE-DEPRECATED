@@ -305,13 +305,13 @@ define(['app'], function(app) {
             var objectType = $(ui.helper.context).data('objectType');
             var importWorkNodeState = $(ui.helper.context).data('importWorkNodeState');
             var importWorkNodeType = $(ui.helper.context).data('importWorkNodeType');
-            var importPortfolioItem = $(ui.helper.context).data('importPortfolioItem');
-            if (importPortfolioItem != null) {
-                var nodeId = importPortfolioItem.nodeId;
+            var importNoteBookItem = $(ui.helper.context).data('importNoteBookItem');
+            if (importNoteBookItem != null) {
+                var nodeId = importNoteBookItem.nodeId;
                 var node = ProjectService.getNodeById(nodeId);
                 importWorkNodeType = node.type;
 
-                var nodeVisit = importPortfolioItem.nodeVisit;
+                var nodeVisit = importNoteBookItem.nodeVisit;
                 var nodeStates = nodeVisit.nodeStates;
                 if (nodeStates !== null) {
                     if (nodeStates.length > 0) {
@@ -333,28 +333,16 @@ define(['app'], function(app) {
                 }
                 
                 this.setStudentWork(populatedNodeState);
-                this.studentResponseChanged()
+                this.studentDataChanged();
             } else if (objectType === 'StudentAsset') {
                 var studentAsset = $(ui.helper.context).data('objectData');
                 StudentAssetService.copyAssetForReference(studentAsset).then(angular.bind(this, function(copiedAsset) {
                     if (copiedAsset != null) {
                         var nodeState = StudentDataService.createComponentState();
                         var copiedAssetImg = '<img id="' + copiedAsset.url + '" class="studentAssetReference" src="' + copiedAsset.iconURL + '"></img>';
-                        
-                        var latestNodeState = StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
-                        
-                        if (this.isDirty && this.studentResponse != null) {
-                            // if student has edited but not saved yet, append student asset to the unsaved work
-                            nodeState.studentData = this.studentResponse + copiedAssetImg;
-                        } else if (latestNodeState != null && latestNodeState.studentData != null) {
-                            // if student already has saved work, prepend it
-                            nodeState.studentData = latestNodeState.studentData + copiedAssetImg;
-                        } else {
-                            // otherwise, just use the asset image
-                            nodeState.studentData = copiedAssetImg;
-                        }
-                        this.setStudentWork(nodeState);
-                        this.studentResponseChanged();
+                        this.studentResponse += copiedAssetImg;
+
+                        this.studentDataChanged();
                     }
                 }));
             }

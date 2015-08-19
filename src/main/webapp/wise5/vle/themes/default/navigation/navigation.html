@@ -22,8 +22,8 @@
 <div class="md-toolbar-tools auto-width">
     <span class="md-subhead">Project Plan</span>
     <span flex></span>
-    <md-select ng-if="vleCtrl.navFilters.length > 1" class="md-body-1" placeholder="Filter" ng-model="vleCtrl.navFilter">
-        <md-option ng-repeat="filter in vleCtrl.navFilters" value="{{filter.name}}">{{filter.label}}</md-option>
+    <md-select ng-if="vleController.navFilters.length > 1" class="md-body-1" placeholder="Filter" ng-model="vleController.navFilter">
+        <md-option ng-repeat="filter in vleController.navFilters" value="{{filter.name}}">{{filter.label}}</md-option>
     </md-select>
 </div>
 
@@ -38,12 +38,12 @@
         </div>
         <md-list ng-if="navCtrl.layoutView === 'list'">
             <nav-item ng-repeat="item in navCtrl.currentChildren"
-                template-url="vleCtrl.themePath + '/navigation/' + navCtrl.layoutView + 'Item.html'"
+                template-url="vleController.themePath + '/navigation/' + navCtrl.layoutView + 'Item.html'"
                 item="item" node-clicked="navCtrl.nodeClicked(item.id)" ng-animate-ref="{{ item.id }}"></nav-item>
         </md-list>
         <div ng-if="navCtrl.layoutView === 'card'" layout="row" layout-wrap>
             <nav-item ng-repeat="item in navCtrl.currentChildren"
-                template-url="vleCtrl.themePath + '/navigation/' + navCtrl.layoutView + 'Item.html'"
+                template-url="vleController.themePath + '/navigation/' + navCtrl.layoutView + 'Item.html'"
                 item="item" node-clicked="navCtrl.nodeClicked(item.id)"
                 flex-sm="100" flex-md="50" flex-lg="33" flex-gt-lg="33"></nav-item>
         </div>

@@ -60,26 +60,23 @@
     .studentAssetRemoveImage, .studentAssetOverlay:hover {
         cursor:pointer;
     }
-
-    .studentAssetName {
-    }
 </style>
-<div ng-switch on='portfolioCtrl.filter'>
+<div ng-switch on='noteBookController.filter'>
     <div ng-switch-when='work'>
         Items:<br/>
-        <ul id="portfolioItems"
+        <ul id="noteBookItems"
             ui-sortable="sortableOptions"
-            ng-model="portfolioCtrl.portfolio.items"
-            ng-show="portfolioCtrl.portfolio.items.length" ng-cloak>
-            <li ng-repeat="item in portfolioCtrl.portfolio.items track by $index"
+            ng-model="noteBookController.noteBook.items"
+            ng-show="noteBookController.noteBook.items.length" ng-cloak>
+            <li ng-repeat="item in noteBookController.noteBook.items track by $index"
                 data-drag='true'
                 data-jqyoui-options="{revert: 'invalid', helper: 'clone'}"
-                jqyoui-draggable="{animate:true, placeholder: 'keep', onStart:'portfolioCtrl.portfolioItemDragStartCallback(item)'}" >
+                jqyoui-draggable="{animate:true, placeholder: 'keep', onStart:'noteBookController.noteBookItemDragStartCallback(item)'}" >
                 <div class="panel panel-default">
                     <div class="panel-body">
-                        <span class="portfolio-index"></span>
-                        <span class="portfolio-item">{{item}} <span class="fa fa-search-plus fa-flip-horizontal"></span></span>
-                        <input type='button' value='X' ng-click='portfolioCtrl.deleteItem(item)'></input>
+                        <span class="noteBook-index"></span>
+                        <span class="noteBook-item">{{item}} <span class="fa fa-search-plus fa-flip-horizontal"></span></span>
+                        <input type='button' value='X' ng-click='noteBookController.deleteItem(item)' />
                     </div>
                 </div>
             </li>
@@ -87,27 +84,27 @@
 
         <hr/>
         Deleted Items:<br/>
-        <div ng-repeat='deletedItem in portfolioCtrl.portfolio.deletedItems'>
+        <div ng-repeat='deletedItem in noteBookController.noteBook.deletedItems'>
             {{deletedItem}}
         </div>
     </div>
     <div ng-switch-when='files'>
-        You are using {{portfolioCtrl.studentAssets.totalSize | appropriateSizeText }} out of {{portfolioCtrl.studentAssets.totalSizeMax | appropriateSizeText}} ({{portfolioCtrl.studentAssets.usagePercentage | roundToDecimal:0 }}%)
-        <ul class='studentAssets' ng-show="portfolioCtrl.studentAssets.length" >
-            <li ng-repeat="studentAsset in portfolioCtrl.studentAssets" class='studentAssetParent'>
+        You are using {{noteBookController.studentAssets.totalSize | appropriateSizeText }} out of {{noteBookController.studentAssets.totalSizeMax | appropriateSizeText}} ({{noteBookController.studentAssets.usagePercentage | roundToDecimal:0 }}%)
+        <ul class='studentAssets' ng-show="noteBookController.studentAssets.length" >
+            <li ng-repeat="studentAsset in noteBookController.studentAssets" class='studentAssetParent'>
                 <img ng-src='{{studentAsset.iconURL}}'
                      class='studentAsset'
                      title='Drag and drop this item to use in your project!'
                      data-drag='true'
                      data-jqyoui-options="{revert: 'invalid', helper: 'clone', stack: 'div' }"
-                     jqyoui-draggable="{animate:true, placeholder: 'keep', onStart:'portfolioCtrl.studentAssetDragStartCallback(studentAsset)'}">
+                     jqyoui-draggable="{animate:true, placeholder: 'keep', onStart:'noteBookController.studentAssetDragStartCallback(studentAsset)'}">
                 </img>
-                <img ng-click='portfolioCtrl.deleteStudentAsset(studentAsset)' src='wise5/vle/portfolio/trash.png' class='studentAssetRemoveImage'></img>
-                <span ng-show='{{studentAsset.type === "audio"}}' ng-audio='{{studentAsset.url}}' volume='0.5'><img class='studentAssetOverlay' src='wise5/vle/portfolio/play.png'></img></span>
+                <img ng-click='noteBookController.deleteStudentAsset(studentAsset)' src='wise5/vle/noteBook/trash.png' class='studentAssetRemoveImage' />
+                <span ng-show='{{studentAsset.type === "audio"}}' ng-audio='{{studentAsset.url}}' volume='0.5'><img class='studentAssetOverlay' src='wise5/vle/noteBook/play.png' /></span>
                 <!-- <span class='studentAssetname'>{{studentAsset.name}}</span> -->
             </li>
         </ul>
-        <div ngf-drop ngf-select ngf-change="portfolioCtrl.upload($files)" class="drop-box"
+        <div ngf-drop ngf-select ngf-change="noteBookController.upload($files)" class="drop-box"
              drag-over-class="dragover" ngf-multiple="true" allow-dir="false"
              accept="image/*,application/pdf">Drop images or files here or click to upload!</div>
     </div>

@@ -6,7 +6,7 @@ define(['app'],
                     $state,
                     $stateParams, 
                     ConfigService, 
-                    PortfolioService,
+                    NoteBookService,
                     ProjectService, 
                     NodeService, 
                     TeacherDataService) {

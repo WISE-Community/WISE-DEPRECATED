@@ -770,18 +770,18 @@ define(['app'], function(app) {
             CurrentNodeService.setCurrentNode(node);
         };
         
-        this.addNodeVisitItemToPortfolio = function() {
+        this.addNodeVisitItemToNoteBook = function() {
             var currentNode = CurrentNodeService.getCurrentNode();
             if (currentNode != null) {
                 var currentNodeId = currentNode.id;
                 var currentNodeVisit = StudentDataService.getLatestNodeVisitByNodeId(currentNodeId)
                 if (currentNodeVisit != null) {
-                    var portfolioItem = {};
-                    portfolioItem.type = 'nodeVisit';
-                    portfolioItem.nodeId = currentNode.id;
-                    portfolioItem.nodeVisitId = currentNodeVisit.id;
-                    portfolioItem.nodeVisit = currentNodeVisit;
-                    PortfolioService.addItem(portfolioItem);
+                    var noteBookItem = {};
+                    noteBookItem.type = 'nodeVisit';
+                    noteBookItem.nodeId = currentNode.id;
+                    noteBookItem.nodeVisitId = currentNodeVisit.id;
+                    noteBookItem.nodeVisit = currentNodeVisit;
+                    NoteBookService.addItem(noteBookItem);
                 }
             }
         };

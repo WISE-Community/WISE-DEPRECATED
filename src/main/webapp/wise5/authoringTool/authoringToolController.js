@@ -7,7 +7,7 @@ define(['app'], function(app) {
              $state,
              $stateParams,
              ConfigService,
-             PortfolioService,
+             NoteBookService,
              ProjectService,
              NodeService,
              SessionService,
