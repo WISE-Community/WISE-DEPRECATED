@@ -25,7 +25,7 @@ define([
     'openResponseService',
     'outsideURLService',
     'photoBoothService',
-    'noteBookService',
+    'notebookService',
     'projectService',
     'sessionService',
     'studentDataService',
@@ -60,7 +60,7 @@ define([
     openResponseService,
     outsideURLService,
     photoBoothService,
-    noteBookService,
+    notebookService,
     projectService,
     sessionService,
     studentDataService,
@@ -87,7 +87,7 @@ define([
     app.factory('CRaterService', cRaterService);
     app.factory('CurrentNodeService', currentNodeService);
     app.factory('NodeService', nodeService);
-    app.factory('NoteBookService', noteBookService);
+    app.factory('NotebookService', notebookService);
     app.factory('ProjectService', projectService);
     app.factory('SessionService', sessionService);
     app.factory('StudentDataService', studentDataService);

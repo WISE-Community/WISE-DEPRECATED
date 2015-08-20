@@ -1,22 +1,22 @@
-define(['angular', 'configService', 'openResponseService', 'noteBookService',
+define(['angular', 'configService', 'openResponseService', 'notebookService',
         'projectService', 'sessionService', 'studentAssetService', 'studentDataService'],
-    function(angular, configService, openResponseService, noteBookService,
+    function(angular, configService, openResponseService, notebookService,
              projectService, sessionService, studentAssetService, studentDataService) {
 
-    angular.module('noteBook', [])
+    angular.module('notebook', [])
         .directive('notebook', function() {
             return {
                 scope: {
                     filter: '=',
                     templateUrl: '='
                 },
-                template: '<ng-include src="noteBookController.getTemplateUrl()"></ng-include>',
-                controller: 'NoteBookController',
-                controllerAs: 'noteBookController',
+                template: '<ng-include src="notebookController.getTemplateUrl()"></ng-include>',
+                controller: 'NotebookController',
+                controllerAs: 'notebookController',
                 bindToController: true
             };
         })
-        .controller('NoteBookController',
+        .controller('NotebookController',
             function($injector,
                      $rootScope,
                      $scope,
@@ -24,7 +24,7 @@ define(['angular', 'configService', 'openResponseService', 'noteBookService',
                      $stateParams,
                      ConfigService,
                      OpenResponseService,
-                     NoteBookService,
+                     NotebookService,
                      ProjectService,
                      SessionService,
                      StudentAssetService,
@@ -34,7 +34,7 @@ define(['angular', 'configService', 'openResponseService', 'noteBookService',
               return this.templateUrl;
             };
 
-            this.noteBook = null;
+            this.notebook = null;
             this.itemId = null;
             this.item = null;
             this.itemSource = false;
@@ -78,22 +78,22 @@ define(['angular', 'configService', 'openResponseService', 'noteBookService',
                 this.retrieveAssets();
             }));
 
-            $scope.$on('noteBookChanged', angular.bind(this, function(event, args) {
-                this.noteBook = args.noteBook;
+            $scope.$on('notebookChanged', angular.bind(this, function(event, args) {
+                this.notebook = args.notebook;
             }));
 
             this.logOutListener = $scope.$on('logOut', angular.bind(this, function(event, args) {
-                console.log('logOut noteBook');
+                console.log('logOut notebook');
                 this.logOutListener();
                 $rootScope.$broadcast('componentDoneUnloading');
             }));
 
             this.deleteItem = function(item) {
-                NoteBookService.deleteItem(item);
+                NotebookService.deleteItem(item);
             };
 
-            this.noteBookItemDragStartCallback = function(event, ui, item) {
-                $(ui.helper.context).data('importNoteBookItem', item);
+            this.notebookItemDragStartCallback = function(event, ui, item) {
+                $(ui.helper.context).data('importNotebookItem', item);
             };
 
             this.myWorkDragStartCallback = function(event, ui, nodeId, nodeType) {

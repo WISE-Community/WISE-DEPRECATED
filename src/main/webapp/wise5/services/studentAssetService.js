@@ -31,10 +31,10 @@ define(['configService'], function(configService) {
                             asset.iconURL = asset.url;
                         } else if (this.isAudio(asset)) {
                             asset.type = 'audio';
-                            asset.iconURL = 'wise5/vle/noteBook/audio.png';
+                            asset.iconURL = 'wise5/vle/notebook/audio.png';
                         } else {
                             asset.type = 'file';
-                            asset.iconURL = 'wise5/vle/noteBook/file.png';
+                            asset.iconURL = 'wise5/vle/notebook/file.png';
                         }
                         result.push(asset);
                     }
@@ -137,9 +137,9 @@ define(['configService'], function(configService) {
                         if (this.isImage(copiedAsset)) {
                             copiedAsset.iconURL = copiedAsset.url;
                         } else if (this.isAudio(copiedAsset)) {
-                            copiedAsset.iconURL = 'wise5/vle/noteBook/audio.png';
+                            copiedAsset.iconURL = 'wise5/vle/notebook/audio.png';
                         } else {
-                            copiedAsset.iconURL = 'wise5/vle/noteBook/file.png';
+                            copiedAsset.iconURL = 'wise5/vle/notebook/file.png';
                         }
                     }
                 }

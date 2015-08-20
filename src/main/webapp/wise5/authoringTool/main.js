@@ -46,7 +46,7 @@ require.config({
         'photoBoothService': 'components/photoBooth/photoBoothService',
         'planningController': 'components/planning/planningController',
         'planningService': 'components/planning/planningService',
-        'noteBookService': 'services/noteBookService',
+        'notebookService': 'services/notebookService',
         'projectController': 'authoringTool/project/projectController',
         'projectService': 'services/projectService',
         'sessionService': 'services/sessionService',

@@ -7,7 +7,7 @@ define(['app'],
                     $stateParams,
                     ConfigService,
                     CurrentNodeService,
-                    NoteBookService,
+                    NotebookService,
                     ProjectService,
                     NodeService,
                     SessionService,
@@ -116,22 +116,22 @@ define(['app'],
             $rootScope.$broadcast('logOut');
         };
 
-        // capture noteBook open/close events
-        $mdComponentRegistry.when('noteBook').then(function(it){
+        // capture notebook open/close events
+        $mdComponentRegistry.when('notebook').then(function(it){
             $scope.$watch(function() {
                 return it.isOpen();
             }, function(isOpen) {
                 var nodeId = null;
                 var componentId = null;
                 var componentType = null;
-                var category = "NoteBook";
+                var category = "Notebook";
                 var eventData = {};
                 var currentNode = CurrentNodeService.getCurrentNode();
                 eventData.curentNodeId = currentNode == null ? null : currentNode.id;
 
-                var event = isOpen ? "noteBookOpened" : "noteBookClosed";
+                var event = isOpen ? "notebookOpened" : "notebookClosed";
 
-                // save noteBook open/close event
+                // save notebook open/close event
                 StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
             });
         });
@@ -205,14 +205,14 @@ define(['app'],
             }
         };
         
-        this.noteBookDragStartCallback = function(event, ui) {
-            console.log('vleController.noteBookDragStartCallback');
+        this.notebookDragStartCallback = function(event, ui) {
+            console.log('vleController.notebookDragStartCallback');
             //$(ui.helper.context).data('importWorkNodeState', StudentDataService.getLatestNodeStateByNodeId(nodeId));
             //$(ui.helper.context).data('importWorkNodeType', nodeType);
         };
         
-        this.noteBookDropCallback = angular.bind(this, function(event, ui) {
-            console.log('vleController.noteBookDropCallback');
+        this.notebookDropCallback = angular.bind(this, function(event, ui) {
+            console.log('vleController.notebookDropCallback');
             //var importWorkNodeState = $(ui.helper.context).data('importWorkNodeState');
             //var importWorkNodeType = $(ui.helper.context).data('importWorkNodeType');
             //var populatedNodeState = OpenResponseService.populateNodeState(importWorkNodeState, importWorkNodeType);
@@ -252,12 +252,12 @@ define(['app'],
 
         CurrentNodeService.setCurrentNodeByNodeId(nodeId);
 
-        this.noteBookFilters = NoteBookService.getFilters();
-        this.noteBookFilter = this.noteBookFilters[0].name;
-        this.noteBookOpen = false;
+        this.notebookFilters = NotebookService.getFilters();
+        this.notebookFilter = this.notebookFilters[0].name;
+        this.notebookOpen = false;
 
-        this.toggleNoteBook = function() {
-            this.noteBookOpen = !this.noteBookOpen;
+        this.toggleNotebook = function() {
+            this.notebookOpen = !this.notebookOpen;
         };
         
         /**

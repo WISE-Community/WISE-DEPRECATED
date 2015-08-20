@@ -305,13 +305,13 @@ define(['app'], function(app) {
             var objectType = $(ui.helper.context).data('objectType');
             var importWorkNodeState = $(ui.helper.context).data('importWorkNodeState');
             var importWorkNodeType = $(ui.helper.context).data('importWorkNodeType');
-            var importNoteBookItem = $(ui.helper.context).data('importNoteBookItem');
-            if (importNoteBookItem != null) {
-                var nodeId = importNoteBookItem.nodeId;
+            var importNotebookItem = $(ui.helper.context).data('importNotebookItem');
+            if (importNotebookItem != null) {
+                var nodeId = importNotebookItem.nodeId;
                 var node = ProjectService.getNodeById(nodeId);
                 importWorkNodeType = node.type;
 
-                var nodeVisit = importNoteBookItem.nodeVisit;
+                var nodeVisit = importNotebookItem.nodeVisit;
                 var nodeStates = nodeVisit.nodeStates;
                 if (nodeStates !== null) {
                     if (nodeStates.length > 0) {
