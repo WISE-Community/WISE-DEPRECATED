@@ -167,10 +167,6 @@ public class ResetPasswordController {
 		String newPassword = passwordReminderParameters.getNewPassword();
 		String verifyPassword = passwordReminderParameters.getVerifyPassword();
 
-		//make the passwords lower case
-		verifyPassword = StringUtils.lowerCase(verifyPassword);
-		newPassword = StringUtils.lowerCase(newPassword);
-		
 		if (!verifyPassword.equals(newPassword)) {
 			//passwords are not the same
 			bindingResult.reject("error.verify-newpassword");
