@@ -28,11 +28,11 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
-import org.wise.portal.dao.work.ComponentStateDao;
+import org.wise.portal.dao.work.StudentWorkDao;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.workgroup.WISEWorkgroup;
-import org.wise.vle.domain.work.ComponentState;
+import org.wise.vle.domain.work.StudentWork;
 
 import java.util.List;
 
@@ -40,24 +40,24 @@ import java.util.List;
  * @author Hiroki Terashima
  */
 @Repository
-public class HibernateComponentStateDao extends AbstractHibernateDao<ComponentState> implements ComponentStateDao<ComponentState> {
+public class HibernateStudentWorkDao extends AbstractHibernateDao<StudentWork> implements StudentWorkDao<StudentWork> {
     @Override
     protected String getFindAllQuery() {
         return null;
     }
 
     @Override
-    protected Class<? extends ComponentState> getDataObjectClass() {
-        return ComponentState.class;
+    protected Class<? extends StudentWork> getDataObjectClass() {
+        return StudentWork.class;
     }
 
     @Override
-    public List<ComponentState> getComponentStatesByParams(
+    public List<StudentWork> getStudentWorkListByParams(
             Integer id, Run run, Group period, WISEWorkgroup workgroup,
             Boolean isAutoSave, String nodeId, String componentId, String componentType) {
 
         Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        Criteria sessionCriteria = session.createCriteria(ComponentState.class);
+        Criteria sessionCriteria = session.createCriteria(StudentWork.class);
 
         if (id != null) {
             sessionCriteria.add(Restrictions.eq("id", id));

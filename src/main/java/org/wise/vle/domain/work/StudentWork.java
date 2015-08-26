@@ -39,14 +39,14 @@ import org.wise.portal.domain.workgroup.impl.WISEWorkgroupImpl;
 import org.wise.vle.domain.PersistableDomain;
 
 /**
- * Domain object representing work for a component (used in WISE5)
+ * Domain object representing work for a student, which include components and nodes (used in WISE5)
  * @author Hiroki Terashima
  */
 @Entity
-@Table(name = "componentStates",  indexes = {
+@Table(name = "studentWork",  indexes = {
         @Index(columnList = "runId", name = "runIdIndex"),
         @Index(columnList = "workgroupId", name = "workgroupIdIndex")})
-public class ComponentState extends PersistableDomain {
+public class StudentWork extends PersistableDomain {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -70,10 +70,10 @@ public class ComponentState extends PersistableDomain {
     @Column(name = "nodeId", nullable = false, length = 30)
     private String nodeId;
 
-	@Column(name = "componentId", nullable = false, length = 30)
+	@Column(name = "componentId", length = 30)
 	private String componentId;
 
-	@Column(name = "componentType", nullable = false, length = 30)
+	@Column(name = "componentType", length = 30)
 	private String componentType;
 
 	@Column(name = "clientSaveTime", nullable = false)
@@ -87,7 +87,7 @@ public class ComponentState extends PersistableDomain {
 
 	@Override
 	protected Class<?> getObjectClass() {
-		return ComponentState.class;
+		return StudentWork.class;
 	}
 
 	public Integer getId() {
@@ -178,75 +178,75 @@ public class ComponentState extends PersistableDomain {
 	}
 
     /**
-     * Get the JSON representation of the ComponentState
-     * @return a JSONObject with the values from the ComponentState
+     * Get the JSON representation of the StudentWork
+     * @return a JSONObject with the values from the StudentWork
      */
     public JSONObject toJSON() {
-        JSONObject componentStateJSONObject = new JSONObject();
+        JSONObject studentWorkJSONObject = new JSONObject();
         
         try {
             
             // set the id
 			if (this.id != null) {
-				componentStateJSONObject.put("id", this.id);
+				studentWorkJSONObject.put("id", this.id);
 			}
             
             // set the run id
 			if (this.run != null) {
 				Long runId = this.run.getId();
-				componentStateJSONObject.put("runId", runId);
+				studentWorkJSONObject.put("runId", runId);
 			}
             
             // set the period id
 			if (this.period != null) {
 				Long periodId = this.period.getId();
-				componentStateJSONObject.put("periodId", periodId);
+				studentWorkJSONObject.put("periodId", periodId);
 			}
 
             // set the workgroup id
 			if (this.workgroup != null) {
 				Long workgroupId = this.workgroup.getId();
-				componentStateJSONObject.put("workgroupId", workgroupId);
+				studentWorkJSONObject.put("workgroupId", workgroupId);
 			}
 
             if (this.isAutoSave != null) {
-                componentStateJSONObject.put("isAutoSave", Boolean.toString(this.isAutoSave));
+                studentWorkJSONObject.put("isAutoSave", Boolean.toString(this.isAutoSave));
             }
 
             // set the node id
 			if (this.nodeId != null) {
-				componentStateJSONObject.put("nodeId", this.nodeId);
+				studentWorkJSONObject.put("nodeId", this.nodeId);
 			}
             
             // set the component id
 			if (this.componentId != null) {
-				componentStateJSONObject.put("componentId", this.componentId);
+				studentWorkJSONObject.put("componentId", this.componentId);
 			}
 
             // set the component type
 			if (this.componentType != null) {
-				componentStateJSONObject.put("componentType", this.componentType);
+				studentWorkJSONObject.put("componentType", this.componentType);
 			}
 
             // set the clientSaveTime time
 			if (this.clientSaveTime != null) {
-				componentStateJSONObject.put("clientSaveTime", clientSaveTime.getTime());
+				studentWorkJSONObject.put("clientSaveTime", clientSaveTime.getTime());
 			}
 
 			// set the serverSaveTime time
 			if (this.serverSaveTime != null) {
-				componentStateJSONObject.put("serverSaveTime", serverSaveTime.getTime());
+				studentWorkJSONObject.put("serverSaveTime", serverSaveTime.getTime());
 			}
 
             // set the student data
 			if (this.studentData != null) {
-				componentStateJSONObject.put("studentData", new JSONObject(studentData));
+				studentWorkJSONObject.put("studentData", new JSONObject(studentData));
 			}
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
         
-        return componentStateJSONObject;
+        return studentWorkJSONObject;
     }
 }

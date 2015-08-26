@@ -794,12 +794,12 @@ define(['app', 'angular'], function(app, angular) {
         }));
         
         /**
-         * Listen for the 'componentStateSavedToServer' event which is fired when
+         * Listen for the 'studentWorkSavedToServer' event which is fired when
          * we receive the response from saving a component state to the server
          */
-        $scope.$on('componentStateSavedToServer', angular.bind(this, function(event, args) {
+        $scope.$on('studentWorkSavedToServer', angular.bind(this, function(event, args) {
             
-            var componentState = args.componentState;
+            var componentState = args.studentWork;
             
             if (componentState != null) {
                 

@@ -10,7 +10,7 @@ import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.workgroup.WISEWorkgroup;
 import org.wise.vle.domain.annotation.wise5.Annotation;
-import org.wise.vle.domain.work.ComponentState;
+import org.wise.vle.domain.work.StudentWork;
 
 import java.util.List;
 
@@ -33,7 +33,7 @@ public class HibernateAnnotationDao extends AbstractHibernateDao<Annotation> imp
     @Override
     public List<Annotation> getAnnotationsByParams(
             Integer id, Run run, Group period, WISEWorkgroup fromWorkgroup, WISEWorkgroup toWorkgroup,
-            String nodeId, String componentId, ComponentState componentState, String type) {
+            String nodeId, String componentId, StudentWork studentWork, String type) {
 
         Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
         Criteria sessionCriteria = session.createCriteria(Annotation.class);
@@ -59,8 +59,8 @@ public class HibernateAnnotationDao extends AbstractHibernateDao<Annotation> imp
         if (componentId != null) {
             sessionCriteria.add(Restrictions.eq("componentId", componentId));
         }
-        if (componentState != null) {
-            sessionCriteria.add(Restrictions.eq("componentState", componentState));
+        if (studentWork != null) {
+            sessionCriteria.add(Restrictions.eq("studentWork", studentWork));
         }
         if (type != null) {
             sessionCriteria.add(Restrictions.eq("type", type));
