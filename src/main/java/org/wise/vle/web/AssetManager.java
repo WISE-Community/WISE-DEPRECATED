@@ -278,13 +278,13 @@ public class AssetManager {
 				Long workgroupId = workgroup.getId();
 
 				// looks like /studentuploads/[runId]/[workgroupId]/unreferenced
-				String dirName = run.getId()+"/"+workgroupId+"/unreferenced";
+				String dirName = run.getId() + "/" + workgroupId + "/unreferenced";
 
 				String referencedDirName = "";
 				String commandParameter = request.getParameter("command");
 				if (commandParameter != null && "studentAssetCopyForReference".equals(commandParameter)) {
 					// if we're copying student asset for reference, also pass along the referenced dir. looks like /studentuploads/[runId]/[workgroupId]/referenced
-					referencedDirName = run.getId()+"/"+workgroupId+"/referenced";
+					referencedDirName = run.getId() + "/" + workgroupId + "/referenced";
 				}
 
 				// get the file name to copy
@@ -324,7 +324,7 @@ public class AssetManager {
 				Long workgroupId = workgroup.getId();
 
 				// get the directory name for the workgroup for this run
-				String dirName = run.getId()+"/"+workgroupId+"/unreferenced";
+				String dirName = run.getId() + "/" + workgroupId + "/unreferenced";
 
 				// get the student uploads base directory path
 				String path = wiseProperties.getProperty("studentuploads_base_dir");
@@ -417,7 +417,6 @@ public class AssetManager {
 							MultipartFile file = fileMap.get(key);
 							String filename = file.getOriginalFilename();
 							File asset = new File(assetsDir, filename);
-							//MultipartFile file = fileMap.get(filename);
 							byte[] content = file.getBytes();
 
 							if (Long.parseLong(getFolderSize(pathToCheckSize)) + content.length > maxTotalAssetsSize) {
@@ -484,7 +483,7 @@ public class AssetManager {
 	 * @param fileName the file name
 	 * @return String filename of the new copy
 	 */
-	private String copyAssetForReference(String dirName, String referencedDirName, String fileName) {
+	public static String copyAssetForReference(String dirName, String referencedDirName, String fileName) {
 		JSONObject response = new JSONObject();
 
 		String unreferencedAssetsDirName = dirName; 
@@ -517,7 +516,7 @@ public class AssetManager {
 		File referencedAsset = new File(referencedAssetsFullDir, newFilename);
 
 		try {
-			this.copy(unreferencedAsset, referencedAsset);
+			AssetManager.copy(unreferencedAsset, referencedAsset);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -543,14 +542,14 @@ public class AssetManager {
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
-	public void copy(File src, File dest) throws FileNotFoundException, IOException {
+	public static void copy(File src, File dest) throws FileNotFoundException, IOException {
 		if (src.isDirectory()) {
 			if (!dest.exists()) {
 				dest.mkdir();
 			}
 
 			String[] files = src.list();
-			for (int a=0;a<files.length;a++) {
+			for (int a = 0; a < files.length; a++) {
 				copy(new File(src, files[a]), new File(dest, files[a]));
 			}
 		} else {
