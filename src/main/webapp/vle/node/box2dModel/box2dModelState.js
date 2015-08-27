@@ -37,7 +37,7 @@
  * 
  * @constructor
  */
-function Box2dModelState(response) {
+function Box2dModelState(response, tableData, modelData, history) {
 	//the text response the student wrote
 	this.response = "";
 
@@ -45,6 +45,10 @@ function Box2dModelState(response) {
 		//set the response
 		this.response = response;
 	}
+	this.tableData = tableData;
+	this.modelData = modelData;
+	this.history = history;
+
 	this.timestamp = (new Date()).getTime();
 };
 
@@ -65,12 +69,14 @@ function Box2dModelState(response) {
 Box2dModelState.prototype.parseDataJSONObj = function(stateJSONObj) {
 	//obtain the student work from the JSONObject
 	var response = stateJSONObj.response;
-	
+	var tableData = stateJSONObj.tableData;
+	var modelData = stateJSONObj.modelData;
+	var history = stateJSONObj.history;
 	/*
 	 * create a state object with the student work
 	 * TODO: rename Box2dModelState
 	 */
-	var box2dModelState = new Box2dModelState(response);
+	var box2dModelState = new Box2dModelState(response, tableData, modelData, history);
 	
 	//return the state object
 	return box2dModelState;
