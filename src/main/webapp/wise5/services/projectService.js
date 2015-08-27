@@ -815,14 +815,29 @@ define(['configService'], function(configService) {
 
         serviceObject.getTransitionsByFromAndToNodeId = function(fromNodeId, toNodeId) {
             var transitionsResults = [];
-            if (toNodeId != null) {
-                var transitions = this.getTransitions();
 
-                if (transitions != null) {
-                    for (var i = 0; i < transitions.length; i++) {
-                        var transition = transitions[i];
-                        if (transition.from === fromNodeId && transition.to === toNodeId) {
-                            transitionsResults.push(transition);
+            if (fromNodeId != null && toNodeId != null) {
+                var node = this.getNodeById(fromNodeId);
+
+                if (node != null) {
+                    var transitionLogic = node.transitionLogic;
+
+                    if (transitionLogic != null) {
+                        var transitions = transitionLogic.transitions;
+
+                        if (transitions != null) {
+
+                            for (var t = 0; t < transitions.length; t++) {
+                                var transition = transitions[t];
+
+                                if (transition != null) {
+                                    var to = transition.to;
+
+                                    if (toNodeId === to) {
+                                        transitionsResults.push(transition);
+                                    }
+                                }
+                            }
                         }
                     }
                 }

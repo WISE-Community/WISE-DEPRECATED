@@ -272,62 +272,39 @@ define(['configService', 'projectService'], function(configService, currentNodeS
                     // the node has been visited before so it should be clickable
                     result = true;
                 } else {
-                    /*
-                     * the node has not been visited before so we will determine
-                     * if the node is clickable by looking at the transitions
-                     */
-                    var currentNode = CurrentNodeService.getCurrentNode();
 
-                    if (currentNode != null) {
-                        // there is a current node
-                        var currentNodeId = currentNode.id;
+                    // get all the nodes that have been visited
+                    var visitedNodes = this.getVisitedNodesHistory();
 
-                        // get the transition logic from the current node
-                        var transitionLogic = ProjectService.getTransitionLogicByFromNodeId(currentNodeId);
+                    var transitionsToNodeId = [];
 
-                        if (transitionLogic != null) {
+                    // loop through all the ndoes that have been visited
+                    for (var v = 0; v < visitedNodes.length; v++) {
+                        var visitedNodeId = visitedNodes[v];
 
-                            // get all the transitions from the current node
-                            var transitions = transitionLogic.transitions;
+                        // get the transitions from the visited node to the node status node
+                        var transitions = ProjectService.getTransitionsByFromAndToNodeId(visitedNodeId, nodeId);
 
-                            if (transitions != null) {
+                        // TODO: check if the transition can be used by the student
 
-                                var transitionsToNodeId = [];
+                        // concat the node ids
+                        transitionsToNodeId = transitionsToNodeId.concat(transitions);
+                    }
 
-                                // get the transitions from the visited nodes to the node status node
+                    if (transitionsToNodeId != null && transitionsToNodeId.length > 0) {
+                        // there is a transition between the current node and the node status node
 
-                                // loop through all the visited nodes
-                                for (var v = 0; v < this.visitedNodesHistory.length; v++) {
-
-                                    // get a visited node id
-                                    var visitedNodeId = this.visitedNodesHistory[v];
-
-                                    // get all the transitions from the visited node id to the node status node
-                                    var transitions = ProjectService.getTransitionsByFromAndToNodeId(visitedNodeId, nodeId);
-
-                                    // concat the node ids
-                                    transitionsToNodeId = transitionsToNodeId.concat(transitions);
-                                }
-
-                                if (transitionsToNodeId != null && transitionsToNodeId.length > 0) {
-                                    // there is a transition between the current node and the node status node
-
-                                    /*
-                                     * there are transitions from the current node to the node status node so
-                                     * the node status node is clickable
-                                     */
-                                    result = true;
-                                } else {
-                                    /*
-                                     * there is no transition between the visited nodes and the node status node
-                                     * so we will set the node to be not clickable
-                                     */
-                                    result = false;
-                                }
-                            }
-                        }
+                        /*
+                         * there are transitions from the current node to the node status node so
+                         * the node status node is clickable
+                         */
+                        result = true;
                     } else {
-                        // there is no current node because the student has just started the project
+                        /*
+                         * there is no transition between the visited nodes and the node status node
+                         * so we will set the node to be not clickable
+                         */
+                        result = false;
                     }
 
                     if (ProjectService.isStartNode(node)) {
