@@ -23,7 +23,7 @@ define([
         'openResponseService',
         'outsideURLService',
         'photoBoothService',
-        'portfolioService',
+        'notebookService',
         'projectService',
         'sessionService',
         'studentDataService',
@@ -56,7 +56,7 @@ define([
                 openResponseService,
                 outsideURLService,
                 photoBoothService,
-                portfolioService,
+                notebookService,
                 projectService,
                 sessionService,
                 studentDataService,
@@ -81,7 +81,7 @@ define([
     app.factory('CRaterService', cRaterService);
     app.factory('CurrentNodeService', currentNodeService);
     app.factory('NodeService', nodeService);
-    app.factory('PortfolioService', portfolioService);
+    app.factory('NotebookService', notebookService);
     app.factory('ProjectService', projectService);
     app.factory('SessionService', sessionService);
     app.factory('StudentDataService', studentDataService);
@@ -128,7 +128,7 @@ define([
                 templateUrl: 'wise5/classroomMonitor/classroomMonitor.html',
                 resolve: {
                     classroomMonitorController: app.loadController('classroomMonitorController'),
-                    portfolioController: app.loadController('portfolioController'),
+                    notebookController: app.loadController('notebookController'),
                     config: function(ConfigService) {
                         var configUrl = window.configUrl;
                         

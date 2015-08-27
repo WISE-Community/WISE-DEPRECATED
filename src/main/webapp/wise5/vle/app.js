@@ -33,8 +33,8 @@ define([
     'openResponseService',
     'outsideURLService',
     'photoBoothService',
-    'portfolioService',
-    'portfolio',
+    'notebookService',
+    'notebook',
     'projectService',
     'sessionService',
     'studentAssetService',
@@ -71,15 +71,15 @@ define([
              graphService,
              highchartsng,
              htmlService,
-             navigation,
              matchService,
              multipleChoiceService,
+             navigation,
              nodeService,
              openResponseService,
              outsideURLService,
              photoBoothService,
-             portfolioService,
-             portfolio,
+             notebookService,
+             notebook,
              projectService,
              sessionService,
              studentAssetService,
@@ -93,7 +93,7 @@ define([
     var app = angular.module('app', [
         'directives',
         'filters',
-        'portfolio',
+        'notebook',
         'highcharts-ng',
         'ui.router',
         'ui.sortable',
@@ -114,7 +114,7 @@ define([
     app.factory('CurrentNodeService', currentNodeService);
     app.factory('CRaterService', cRaterService);
     app.factory('NodeService', nodeService);
-    app.factory('PortfolioService', portfolioService);
+    app.factory('NotebookService', notebookService);
     app.factory('ProjectService', projectService);
     app.factory('SessionService', sessionService);
     app.factory('StudentAssetService', studentAssetService);

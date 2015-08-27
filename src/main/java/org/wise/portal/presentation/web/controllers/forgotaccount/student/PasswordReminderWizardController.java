@@ -186,12 +186,6 @@ public class PasswordReminderWizardController{
 
 			String verifyPassword = passwordReminderParameters.getVerifyPassword();
 
-			verifyPassword = StringUtils.lowerCase(verifyPassword);
-
-			newPassword = StringUtils.lowerCase(newPassword);
-
-			verifyPassword = StringUtils.lowerCase(verifyPassword);
-
 			if (!verifyPassword.equals(newPassword)) {
 				result.reject("presentation.web.controllers.forgotaccount.student.PasswordReminderWizardController.errorVerifyNewPassword");
 			}

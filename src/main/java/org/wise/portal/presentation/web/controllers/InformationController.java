@@ -593,11 +593,12 @@ public class InformationController {
 				config.put("runStatusURL", runStatusURL);
 				config.put("postLevel", run.getPostLevel());
 
-				// add userInfo if this is a WISE5 run. TODO: MAKE THIS WORK FOR WISE4 RUNS AS WELL
+				// add userInfo if this is a WISE5 run.
 				Integer wiseVersion = project.getWiseVersion();
 				if (wiseVersion != null && wiseVersion == 5) {
 	                config.put("userInfo", getUserInfo(request));
 					config.put("studentDataURL", wiseBaseURL + "/student/data");
+					config.put("studentAssetsURL", wiseBaseURL + "/student/asset/" + runId);
 				}
 				
 				// add the config fields specific to the teacher grading

@@ -5,7 +5,7 @@ define(['configService'], function(configService) {
 
         var serviceObject = {};
 
-        // filtering options for portfolio displays
+        // filtering options for notebook displays
         // TODO: make dynamic based on project settings
         serviceObject.filters = [
             {'name': 'all', 'label': 'All'},
@@ -16,22 +16,22 @@ define(['configService'], function(configService) {
 
         serviceObject.getFilters = function(){
             return this.filters;
-        }
+        };
         
-        serviceObject.portfolio = {};
-        serviceObject.portfolio.items = [];
-        serviceObject.portfolio.deletedItems = [];
+        serviceObject.notebook = {};
+        serviceObject.notebook.items = [];
+        serviceObject.notebook.deletedItems = [];
         
-        serviceObject.addItem = function(portfolioItem) {
-          this.portfolio.items.push(portfolioItem);
+        serviceObject.addItem = function(notebookItem) {
+          this.notebook.items.push(notebookItem);
           
           // the current node is about to change
-          $rootScope.$broadcast('portfolioChanged', {portfolio: this.portfolio});
+          $rootScope.$broadcast('notebookChanged', {notebook: this.notebook});
         };
         
         serviceObject.deleteItem = function(itemToDelete) {
-            var items = this.portfolio.items;
-            var deletedItems = this.portfolio.deletedItems;
+            var items = this.notebook.items;
+            var deletedItems = this.notebook.deletedItems;
             for (var i = 0; i < items.length; i++) {
                 var item = items[i];
                 if (item === itemToDelete) {

@@ -7,9 +7,7 @@ define(['configService'], function(configService) {
         serviceObject.retrieveAssets = function() {
             var config = {};
             config.method = 'GET';
-            config.url = ConfigService.getStudentAssetManagerURL();
-            config.params = {};
-            config.params.command = 'assetList';
+            config.url = ConfigService.getStudentAssetsURL();
             return $http(config).then(angular.bind(this, function(response) {
                 // loop through the assets and make them into JSON object with more details
                 var result = [];
@@ -31,10 +29,10 @@ define(['configService'], function(configService) {
                             asset.iconURL = asset.url;
                         } else if (this.isAudio(asset)) {
                             asset.type = 'audio';
-                            asset.iconURL = 'wise5/vle/portfolio/audio.png';
+                            asset.iconURL = 'wise5/vle/notebook/audio.png';
                         } else {
                             asset.type = 'file';
-                            asset.iconURL = 'wise5/vle/portfolio/file.png';
+                            asset.iconURL = 'wise5/vle/notebook/file.png';
                         }
                         result.push(asset);
                     }
@@ -74,9 +72,9 @@ define(['configService'], function(configService) {
         };
         
         serviceObject.uploadAsset = function(file) {
-            var studentAssetManagerURL = ConfigService.getStudentAssetManagerURL();
+            var studentAssetsURL = ConfigService.getStudentAssetsURL();
             return Upload.upload({
-                url: studentAssetManagerURL,
+                url: studentAssetsURL,
                 fields: {
                     'command': 'uploadAsset'
                 },
@@ -85,10 +83,10 @@ define(['configService'], function(configService) {
         };
         
         serviceObject.uploadAssets = function(files) {
-            var studentAssetManagerURL = ConfigService.getStudentAssetManagerURL();
+            var studentAssetsURL = ConfigService.getStudentAssetsURL();
             var promises = files.map(function(file) {
                 return Upload.upload({
-                    url: studentAssetManagerURL,
+                    url: studentAssetsURL,
                     fields: {
                         'command': 'uploadAsset'
                     },
@@ -106,16 +104,11 @@ define(['configService'], function(configService) {
         // given asset, makes a copy of it so steps can use for reference. Returns newly-copied asset.
         serviceObject.copyAssetForReference = function(studentAsset) {
             var studentAssetFilename = studentAsset.name;
-            var runId = ConfigService.getRunId();
             var config = {};
             config.method = 'POST';
-            config.url = ConfigService.getStudentAssetManagerURL();
+            config.url = ConfigService.getStudentAssetsURL() + '/copy';
             config.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
             var params = {};
-            params.command = 'studentAssetCopyForReference';
-            params.type = 'studentAssetManager';
-            params.runId = runId;
-            params.forward = 'assetmanager';
             params.assetFilename = studentAssetFilename;
             config.data = $.param(params);
             
@@ -137,9 +130,9 @@ define(['configService'], function(configService) {
                         if (this.isImage(copiedAsset)) {
                             copiedAsset.iconURL = copiedAsset.url;
                         } else if (this.isAudio(copiedAsset)) {
-                            copiedAsset.iconURL = 'wise5/vle/portfolio/audio.png';
+                            copiedAsset.iconURL = 'wise5/vle/notebook/audio.png';
                         } else {
-                            copiedAsset.iconURL = 'wise5/vle/portfolio/file.png';
+                            copiedAsset.iconURL = 'wise5/vle/notebook/file.png';
                         }
                     }
                 }
@@ -148,48 +141,18 @@ define(['configService'], function(configService) {
         };
         
         serviceObject.deleteAsset = function(asset) {
-            
-            var runId = ConfigService.getRunId();
             var config = {};
             config.method = 'POST';
-            config.url = ConfigService.getStudentAssetManagerURL();
+            config.url = ConfigService.getStudentAssetsURL() + '/remove';
             config.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
             var params = {};
-            params.command = 'remove';
-            params.type = 'studentAssetManager';
-            params.runId = runId;
-            params.forward = 'assetmanager';
-            params.asset =  asset.name;
+            params.assetFilename = asset.name;
             config.data = $.param(params);
             
             return $http(config).then(function() {
                 return asset; 
             });
         };
-            
-            /*  TODO: REMOVE ME
-            var remove = function(){
-                var parent = document.getElementById('assetSelect');
-                var ndx = parent.selectedIndex;
-                if(ndx!=-1){
-                    var opt = parent.options[parent.selectedIndex];
-                    var name = opt.value;
-
-                    var success = function(text, xml, o) {
-                        if(text.status==401){
-                            xml.notificationManager.notify(this.getI18NString("student_assets_remove_file_warning"),3, 'uploadMessage', 'notificationDiv');
-                        } else {
-                            parent.removeChild(opt);
-                            o.notificationManager.notify(text, 3, 'uploadMessage', 'notificationDiv');
-
-                            o.checkStudentAssetSizeLimit();
-                        }
-                    };
-                    view.connectionManager.request('POST', 1, view.getConfig().getConfigParam("studentAssetManagerURL"), {forward:'assetmanager', command: 'remove', asset: name, cmd: 'studentAssetUpload'}, success, view, success);
-                }
-            };
-            */
-        
         return serviceObject;
     }];
     

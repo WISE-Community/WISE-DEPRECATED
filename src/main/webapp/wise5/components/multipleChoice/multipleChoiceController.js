@@ -329,8 +329,8 @@ define(['app'], function(app) {
             }
             
             return result;
-        }
-        
+        };
+
         /**
          * Called when the student clicks the save button
          */
@@ -537,7 +537,7 @@ define(['app'], function(app) {
              */
             $scope.$emit('componentStudentDataChanged', {componentId: componentId, componentState: componentState});
         };
-        
+
         /**
          * Create a new component state populated with the student data
          * @return the componentState after it has been populated

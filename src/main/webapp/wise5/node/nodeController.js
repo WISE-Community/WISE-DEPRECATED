@@ -412,13 +412,31 @@ define(['app'], function(app) {
             var componentStates = this.createComponentStates(isAutoSave, componentId);
             var componentAnnotations = this.getComponentAnnotations();
             var componentEvents = null;
+            var nodeStates = null;
 
             if ((componentStates != null && componentStates.length > 0) ||
                 (componentAnnotations != null && componentAnnotations.length > 0) ||
                 (componentEvents != null && componentEvents.length > 0)) {
                 // save the component states to the server
-                StudentDataService.saveToServer(componentStates, componentEvents, componentAnnotations);
+                StudentDataService.saveToServer(componentStates, nodeStates, componentEvents, componentAnnotations);
             }
+        };
+
+        /**
+         * Creates a blank new NodeState for this MultipleChoice node
+         */
+        this.testNodeStateSave = function() {
+            // create a new node state
+            var nodeState = NodeService.createNewNodeState();
+            nodeState.runId = ConfigService.getRunId();
+            nodeState.periodId = ConfigService.getPeriodId();
+            nodeState.workgroupId = ConfigService.getWorkgroupId();
+            nodeState.nodeId = this.nodeId;
+            nodeState.isAutoSave = false;
+            nodeState.studentData = {"testData":"student was branched to branch path B on this node"};
+            var nodeStates = [];
+            nodeStates.push(nodeState);
+            StudentDataService.saveNodeStates(nodeStates);
         };
 
         /**
@@ -465,8 +483,6 @@ define(['app'], function(app) {
                             componentState.runId = runId;
                             componentState.periodId = periodId;
                             componentState.workgroupId = workgroupId;
-                            
-                            // set the node id
                             componentState.nodeId = this.nodeId;
                             
                             // set the component id into the student work object
@@ -770,18 +786,18 @@ define(['app'], function(app) {
             CurrentNodeService.setCurrentNode(node);
         };
         
-        this.addNodeVisitItemToPortfolio = function() {
+        this.addNodeVisitItemToNotebook = function() {
             var currentNode = CurrentNodeService.getCurrentNode();
             if (currentNode != null) {
                 var currentNodeId = currentNode.id;
                 var currentNodeVisit = StudentDataService.getLatestNodeVisitByNodeId(currentNodeId)
                 if (currentNodeVisit != null) {
-                    var portfolioItem = {};
-                    portfolioItem.type = 'nodeVisit';
-                    portfolioItem.nodeId = currentNode.id;
-                    portfolioItem.nodeVisitId = currentNodeVisit.id;
-                    portfolioItem.nodeVisit = currentNodeVisit;
-                    PortfolioService.addItem(portfolioItem);
+                    var notebookItem = {};
+                    notebookItem.type = 'nodeVisit';
+                    notebookItem.nodeId = currentNode.id;
+                    notebookItem.nodeVisitId = currentNodeVisit.id;
+                    notebookItem.nodeVisit = currentNodeVisit;
+                    NotebookService.addItem(notebookItem);
                 }
             }
         };

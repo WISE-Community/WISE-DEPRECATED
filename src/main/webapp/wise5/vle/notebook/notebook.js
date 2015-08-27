@@ -1,22 +1,22 @@
-define(['angular', 'configService', 'openResponseService', 'portfolioService',
+define(['angular', 'configService', 'openResponseService', 'notebookService',
         'projectService', 'sessionService', 'studentAssetService', 'studentDataService'],
-    function(angular, configService, openResponseService, portfolioService,
+    function(angular, configService, openResponseService, notebookService,
              projectService, sessionService, studentAssetService, studentDataService) {
 
-    angular.module('portfolio', [])
-        .directive('portfolio', function() {
+    angular.module('notebook', [])
+        .directive('notebook', function() {
             return {
                 scope: {
                     filter: '=',
                     templateUrl: '='
                 },
-                template: '<ng-include src="portfolioCtrl.getTemplateUrl()"></ng-include>',
-                controller: 'PortfolioController',
-                controllerAs: 'portfolioCtrl',
+                template: '<ng-include src="notebookController.getTemplateUrl()"></ng-include>',
+                controller: 'NotebookController',
+                controllerAs: 'notebookController',
                 bindToController: true
             };
         })
-        .controller('PortfolioController',
+        .controller('NotebookController',
             function($injector,
                      $rootScope,
                      $scope,
@@ -24,7 +24,7 @@ define(['angular', 'configService', 'openResponseService', 'portfolioService',
                      $stateParams,
                      ConfigService,
                      OpenResponseService,
-                     PortfolioService,
+                     NotebookService,
                      ProjectService,
                      SessionService,
                      StudentAssetService,
@@ -34,7 +34,7 @@ define(['angular', 'configService', 'openResponseService', 'portfolioService',
               return this.templateUrl;
             };
 
-            this.portfolio = null;
+            this.notebook = null;
             this.itemId = null;
             this.item = null;
             this.itemSource = false;
@@ -78,22 +78,22 @@ define(['angular', 'configService', 'openResponseService', 'portfolioService',
                 this.retrieveAssets();
             }));
 
-            $scope.$on('portfolioChanged', angular.bind(this, function(event, args) {
-                this.portfolio = args.portfolio;
+            $scope.$on('notebookChanged', angular.bind(this, function(event, args) {
+                this.notebook = args.notebook;
             }));
 
             this.logOutListener = $scope.$on('logOut', angular.bind(this, function(event, args) {
-                console.log('logOut portfolio');
+                console.log('logOut notebook');
                 this.logOutListener();
                 $rootScope.$broadcast('componentDoneUnloading');
             }));
 
             this.deleteItem = function(item) {
-                PortfolioService.deleteItem(item);
+                NotebookService.deleteItem(item);
             };
 
-            this.portfolioItemDragStartCallback = function(event, ui, item) {
-                $(ui.helper.context).data('importPortfolioItem', item);
+            this.notebookItemDragStartCallback = function(event, ui, item) {
+                $(ui.helper.context).data('importNotebookItem', item);
             };
 
             this.myWorkDragStartCallback = function(event, ui, nodeId, nodeType) {

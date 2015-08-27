@@ -58,7 +58,7 @@ define(['configService', 'projectService'], function(configService, currentNodeS
                 var params = {};
                 params.workgroupId = ConfigService.getWorkgroupId();
                 params.runId = ConfigService.getRunId();
-                params.getComponentStates = true;
+                params.getStudentWork = true;
                 params.getEvents = true;
                 params.getAnnotations = true;
                 params.toWorkgroupId = ConfigService.getWorkgroupId();
@@ -72,7 +72,17 @@ define(['configService', 'projectService'], function(configService, currentNodeS
                         this.studentData = {};
                         
                         // get student work
-                        this.studentData.componentStates = resultData.componentStates;
+                        this.studentData.componentStates = [];
+                        this.studentData.nodeStates = [];
+                        var studentWorkList = resultData.studentWorkList;
+                        for (var s = 0; s < studentWorkList.length; s++) {
+                            var studentWork = studentWorkList[s];
+                            if (studentWork.componentId != null) {
+                                this.studentData.componentStates.push(studentWork);
+                            } else {
+                                this.studentData.nodeStates.push(studentWork);
+                            }
+                        }
 
                         // get events
                         this.studentData.events = resultData.events;
@@ -86,7 +96,7 @@ define(['configService', 'projectService'], function(configService, currentNodeS
                         // TODO
                         // populate the student history
                         this.populateHistories(this.studentData.componentStates, this.studentData.events);
-                        
+
                         // TODO
                         // update the node statuses
 
@@ -768,6 +778,14 @@ define(['configService', 'projectService'], function(configService, currentNodeS
             }
         };
 
+        serviceObject.addNodeState = function(nodeState) {
+            if (this.studentData != null && this.studentData.nodeState != null) {
+                this.studentData.nodeStates.push(nodeState);
+
+                this.updateNodeStatuses();
+            }
+        };
+
         serviceObject.addEvent = function(event) {
            if (this.studentData != null && this.studentData.events != null) {
                this.studentData.events.push(event);
@@ -841,8 +859,9 @@ define(['configService', 'projectService'], function(configService, currentNodeS
             newEvent.data = data;
             events.push(newEvent);
             var componentStates = null;
+            var nodeStates = null;
             var annotations = null;
-            this.saveToServer(componentStates, events, annotations);
+            this.saveToServer(componentStates, nodeStates, events, annotations);
         };
 
         /**
@@ -860,8 +879,17 @@ define(['configService', 'projectService'], function(configService, currentNodeS
             return event;
         };
 
-        serviceObject.saveToServer = function(componentStates, events, annotations) {
-            
+        serviceObject.saveNodeStates = function(nodeStates) {
+            var componentStates = null;
+            var events = null;
+            var annotations = null;
+            this.saveToServer(componentStates, nodeStates, events, annotations);
+        };
+
+        serviceObject.saveToServer = function(componentStates, nodeStates, events, annotations) {
+
+            // merge componentStates and nodeStates into StudentWork before posting
+            var studentWorkList = [];
             if (componentStates != null && componentStates.length > 0) {
                 for (var c = 0; c < componentStates.length; c++) {
                     var componentState = componentStates[c];
@@ -869,6 +897,19 @@ define(['configService', 'projectService'], function(configService, currentNodeS
                     if (componentState != null) {
                         componentState.requestToken = this.generateKey(); // use this to keep track of unsaved componentStates.
                         this.addComponentState(componentState);
+                        studentWorkList.push(componentState);
+                    }
+                }
+            }
+
+            if (nodeStates != null && nodeStates.length > 0) {
+                for (var n = 0; n < nodeStates.length; n++) {
+                    var nodeState = nodeStates[n];
+
+                    if (nodeState != null) {
+                        nodeState.requestToken = this.generateKey(); // use this to keep track of unsaved componentStates.
+                        this.addNodeState(nodeState);
+                        studentWorkList.push(nodeState);
                     }
                 }
             }
@@ -905,7 +946,7 @@ define(['configService', 'projectService'], function(configService, currentNodeS
             params.runId = ConfigService.getRunId();
             params.workgroupId = ConfigService.getWorkgroupId();
             params.data = {};
-            params.data.componentStates = componentStates;
+            params.data.studentWorkList = studentWorkList;
             params.data.events = events;
             params.data.annotations = annotations;
             httpParams.params = params;
@@ -921,30 +962,30 @@ define(['configService', 'projectService'], function(configService, currentNodeS
                         result.config.params != null &&
                         result.config.params.data != null) {
 
-                    // handle saved componentStates
-                    if (result.config.params.data.componentStates != null &&
-                        savedStudentDataResponse.componentStates != null) {
-                        var localComponentStates = result.config.params.data.componentStates;
+                    // handle saved studentWork
+                    if (result.config.params.data.studentWorkList != null &&
+                        savedStudentDataResponse.studentWorkList != null) {
+                        var localStudentWorkList = result.config.params.data.studentWorkList;
 
-                        var savedComponentStates = savedStudentDataResponse.componentStates;
+                        var savedStudentWorkList = savedStudentDataResponse.studentWorkList;
 
-                        // set the id and serverSaveTime in the local componentState
-                        for (var i = 0; i < savedComponentStates.length; i++) {
-                            var savedComponentState = savedComponentStates[i];
+                        // set the id and serverSaveTime in the local studentWorkList
+                        for (var i = 0; i < savedStudentWorkList.length; i++) {
+                            var savedStudentWork = savedStudentWorkList[i];
 
                             /*
-                             * loop through all the component states that were posted
+                             * loop through all the student work that were posted
                              * to find the one with the matching request token
                              */
-                            for (var l = 0; l < localComponentStates.length; l++) {
-                                var localComponentState = localComponentStates[l];
-                                if (localComponentState.requestToken != null &&
-                                    localComponentState.requestToken === savedComponentState.requestToken) {
-                                    localComponentState.id = savedComponentState.id;
-                                    localComponentState.serverSaveTime = savedComponentState.serverSaveTime;
-                                    localComponentState.requestToken = null; // requestToken is no longer needed.
+                            for (var l = 0; l < localStudentWorkList.length; l++) {
+                                var localStudentWork = localStudentWorkList[l];
+                                if (localStudentWork.requestToken != null &&
+                                    localStudentWork.requestToken === savedStudentWork.requestToken) {
+                                    localStudentWork.id = savedStudentWork.id;
+                                    localStudentWork.serverSaveTime = savedStudentWork.serverSaveTime;
+                                    localStudentWork.requestToken = null; // requestToken is no longer needed.
 
-                                    $rootScope.$broadcast('componentStateSavedToServer', {componentState: localComponentState});
+                                    $rootScope.$broadcast('studentWorkSavedToServer', {studentWork: localStudentWork});
                                     break;
                                 }
                             }
