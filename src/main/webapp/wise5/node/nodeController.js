@@ -853,6 +853,162 @@ define(['app'], function(app) {
                 $rootScope.$broadcast('doneExiting');
             }));
         };
+
+        /**
+         * Choose the transition the student will take
+         * @param transitionLogic an object containing transitions and parameters
+         * for how to choose a transition
+         * @returns a transition object
+         */
+        this.chooseTransition = function(transitionLogic) {
+            var transitionResult = null;
+            if (transitionLogic != null) {
+
+                // get the transitions
+                var transitions = transitionLogic.transitions;
+
+                if (transitions != null) {
+
+                    var availableTransitions = [];
+
+                    // loop through all the transitions
+                    for (var t = 0; t < transitions.length; t++) {
+
+                        // get a transition
+                        var transition = transitions[t];
+
+                        // get the to node id
+                        var toNodeId = transition.to;
+
+                        // get the criteria for which this transition can be used
+                        var criteria = transition.criteria;
+
+                        // set the default result to true in case there is no criteria
+                        var criteriaResult = true;
+
+                        if (criteria != null) {
+
+                            var firstResult = true;
+                            var tempResult = true;
+
+                            // loop through all of the criteria
+                            for (var c = 0; c < criteria.length; c++) {
+
+                                // get a criteria
+                                var tempCriteria = criteria[c];
+
+                                // check if the criteria is satisfied
+                                criteriaResult = StudentDataService.evaluateCriteria(tempCriteria);
+
+                                if (firstResult) {
+                                    // this is the first criteria in this for loop
+                                    criteriaResult = tempResult;
+                                    firstResult = false;
+                                } else {
+                                    // this is not the first criteria in this for loop so we will && the result
+                                    criteriaResult = criteriaResult && tempResult;
+                                }
+                            }
+                        }
+
+                        if (toNodeId != null) {
+
+                            // get the node status for the to node
+                            var toNodeNodeStatus = StudentDataService.getNodeStatusByNodeId(toNodeId);
+
+                            // check if the criteria was satisfied and the to node is visitable
+                            if (criteriaResult && toNodeNodeStatus != null && toNodeNodeStatus.isVisitable) {
+
+                                // the student is allowed to use the transition
+                                availableTransitions.push(transition);
+                            }
+                        }
+                    }
+
+                    // there are available transitions for the student
+                    if (availableTransitions.length > 0) {
+
+                        var howToChooseAmongAvailablePaths = transitionLogic.howToChooseAmongAvailablePaths;
+
+                        if (howToChooseAmongAvailablePaths == null || howToChooseAmongAvailablePaths === 'random') {
+                            // choose a random transition
+
+                            var randomIndex = Math.floor(Math.random() * availableTransitions.length);
+                            transitionResult = availableTransitions[randomIndex];
+                        } else if (howToChooseAmongAvailablePaths === 'firstAvailable') {
+                            // choose the first available transition
+
+                            transitionResult = availableTransitions[0];
+                        } else if (howToChooseAmongAvailablePaths === 'lastAvailable') {
+                            // choose the last available transition
+
+                            transitionResult = availableTransitions[availableTransitions.length - 1];
+                        }
+                    }
+                }
+            }
+            return transitionResult;
+        };
+
+        /**
+         * Go to the next node
+         */
+        this.goToNextNode = function() {
+
+            // get the current node
+            var currentNode = CurrentNodeService.getCurrentNode();
+
+            if (currentNode != null) {
+                var currentNodeId = currentNode.id;
+
+                // get the transition logic from the current node
+                var transitions = ProjectService.getTransitionLogicByFromNodeId(currentNodeId);
+
+                // choose a transition
+                var transition = this.chooseTransition(transitions);
+
+                if (transition != null) {
+                    // move the student to the to node
+                    var toNodeId = transition.to;
+                    CurrentNodeService.setCurrentNodeByNodeId(toNodeId);
+                }
+            }
+        };
+
+        /**
+         * Go to the previous node
+         */
+        this.goToPrevNode = function() {
+
+            // get the current node
+            var currentNode = CurrentNodeService.getCurrentNode();
+
+            if (currentNode != null) {
+
+                var currentNodeId = currentNode.id;
+
+                var transitions = ProjectService.getTransitionsByToNodeId(currentNodeId);
+
+                if (transitions != null && transitions.length === 1) {
+                    var transition = transitions[0];
+
+                    if (transition != null) {
+                        var fromNodeId = transition.from;
+                        CurrentNodeService.setCurrentNodeByNodeId(fromNodeId);
+                    }
+                } else {
+
+                    // get the stack history
+                    var stackHistory = StudentDataService.getStackHistory();
+
+                    if (stackHistory.length > 1) {
+                        // get the previous node in the history
+                        var prevNodeId = StudentDataService.getStackHistoryAtIndex(-2);
+                        CurrentNodeService.setCurrentNodeByNodeId(prevNodeId);
+                    }
+                }
+            }
+        };
         
         // perform setup of this node
         this.setup();

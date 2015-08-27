@@ -118,19 +118,62 @@ function parseWISE4ProjectHelper(project, elementId) {
             }
         } else if (node != null) {
             //console.log(node.identifier);
-            element = getNodeContent(node.identifier);
+            element = createWISE5NodeFromNodeContent(node.identifier);
 
             if (previousNodeIds != '') {
+                var to = element.id;
 
                 for (var p = 0; p < previousNodeIds.length; p++) {
                     var previousNodeId = previousNodeIds[p];
 
+                    // add a transition from the previous node id to the new node
+
+                    var previousWISE5Node = getWISE5NodeById(previousNodeId);
+
+                    addTransition(previousNodeId, to);
+
+                    /*
+                    if (b === 0) {
+                        var branchingFunction = branchNode.branchingFunction;
+                        var maxPathVisitable = branchNode.maxPathVisitable;
+
+                        previousWISE5Node.howToChooseAmongAvailablePaths = branchingFunction;
+                        previousWISE5Node.whenToChoosePath = 'enterFromNode';
+
+                        if (maxPathVisitable > 1) {
+                            previousWISE5Node.canChangePath = true;
+                        } else {
+                            previousWISE5Node.canChangePath = false;
+                        }
+
+                        previousWISE5Node.maxPathsVisitable = maxPathVisitable;
+                    }
+                    */
+
+                    //previousNodeIds = [to];
+
+                    /*
+                    var transition = getOrCreateWISE5Transition(previousNodeId);
+
+                    if (transition != null) {
+
+                        var toObject = {};
+                        toObject.to = to;
+
+                        addToTransition(previousNodeId, toObject);
+                    }
+                    */
+
+                    /*
                     var from = previousNodeId;
                     var to = element.id;
                     var wise5Transition = createWISE5Transition(from, to);
                     addWISE5Transition(wise5Transition);
                     previousNodeIds = [to];
+                    */
                 }
+
+                previousNodeIds = [to];
             } else {
                 previousNodeIds = [element.id];
             }
@@ -207,7 +250,7 @@ function getNode(project, nodeId) {
     return node;
 };
 
-function getNodeContent(identifier) {
+function createWISE5NodeFromNodeContent(identifier) {
 
     var wise5Node = null;
     var nodeFilePath = projectFolderPath + identifier;
@@ -219,14 +262,6 @@ function getNodeContent(identifier) {
         dataType: 'json'
     }).done(function(response) {
         var nodeContent = response;
-        //console.log(response);
-        //console.log(nodeContent);
-
-        //var wise4ProjectString = JSON.stringify(response, null, 3);
-
-        //$('#wise4ProjectFile').html(wise4ProjectString);
-
-        //parseWISE4Project(response);
 
         if (nodeContent != null) {
             //var nodeType = nodeContent.type;
@@ -297,7 +332,7 @@ function convertNode(node, nodeContent) {
 
 function createWISE5Project() {
     wise5Project.nodes = [];
-    wise5Project.transitions = [];
+    //wise5Project.transitions = [];
     wise5Project.constraints = [];
     wise5Project.startGroupId = 'group0';
     wise5Project.startNodeId = 'node1';
@@ -338,17 +373,16 @@ function createWISE5Node() {
     wise5Node.showSaveButton = true;
     wise5Node.showSubmitButton = true;
 
+    var transitionLogic = {};
+    transitionLogic.transitions = [];
+    transitionLogic.howToChooseAmongAvailablePaths = null;
+    transitionLogic.whenToChoosePath = null;
+    transitionLogic.canChangePath = null;
+    transitionLogic.maxPathsVisitable = null;
+
+    wise5Node.transitionLogic = transitionLogic;
+
     return wise5Node;
-};
-
-function createWISE5Transition(fromId, toId) {
-    var wise5Transition = {};
-
-    wise5Transition.id = getNextTransitionId();
-    wise5Transition.from = fromId;
-    wise5Transition.to = toId;
-
-    return wise5Transition;
 };
 
 function convertHTML(node, nodeContent) {
@@ -762,8 +796,120 @@ function addWISE5Node(wise5Node) {
     wise5Project.nodes.push(wise5Node);
 };
 
-function addWISE5Transition(wise5Transition) {
+function addWISE5Transition0(wise5Transition) {
     wise5Project.transitions.push(wise5Transition);
+};
+
+function createWISE5Transition(fromId) {
+    var wise5Transition = {};
+
+    wise5Transition.id = getNextTransitionId();
+    wise5Transition.from = fromId;
+    wise5Transition.to = [];
+
+    return wise5Transition;
+};
+
+function getWISE5TransitionByFromNodeId0(nodeId) {
+    var transition = null;
+
+    if (nodeId != null) {
+
+        var transitions = wise5Project.transitions;
+
+        if (transitions != null) {
+            for (var t = 0; t < transitions.length; t++) {
+                var tempTransition = transitions[t];
+
+                if (tempTransition != null) {
+                    var tempFrom = tempTransition.from;
+
+                    if (nodeId === tempFrom) {
+                        transition = tempTransition;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    return transition;
+};
+
+function getOrCreateWISE5Transition0(nodeId) {
+
+    var transition = getWISE5TransitionByFromNodeId(nodeId);
+
+    if (transition == null) {
+        transition = createWISE5Transition(nodeId);
+        addWISE5Transition(transition);
+    }
+
+    return transition;
+}
+
+function addToTransition0(nodeId, toObject) {
+
+    if (nodeId != null && toObject != null) {
+        var transition = getWISE5TransitionByFromNodeId(nodeId);
+
+        if (transition == null) {
+            transition = createWISE5Transition(nodeId);
+        }
+
+        var toArray = transition.to;
+
+        if (toArray != null) {
+            toArray.push(toObject);
+        }
+    }
+
+};
+
+function addTransition(fromNodeId, toNodeId, criteriaArray) {
+
+
+    var node = getWISE5NodeById(fromNodeId);
+
+    if (node != null) {
+        var transitionLogic = node.transitionLogic;
+
+        if (transitionLogic != null) {
+            var transitions = transitionLogic.transitions;
+
+            if (transitions != null) {
+                var transitionObject = {};
+                transitionObject.to = toNodeId;
+                transitionObject.criteria = criteriaArray;
+
+                transitions.push(transitionObject);
+            }
+        }
+    }
+
+};
+
+function getWISE5NodeById(nodeId) {
+    var node = null;
+
+    if (nodeId != null) {
+        var nodes = wise5Project.nodes;
+
+        for (var n = 0; n < nodes.length; n++) {
+            var tempNode = nodes[n];
+
+            if (tempNode != null) {
+                var tempNodeId = tempNode.id;
+
+                if (nodeId === tempNodeId) {
+                    node = tempNode;
+                    break;
+                }
+            }
+        }
+    }
+
+    return node;
 };
 
 function isBranchingActivity(sequence) {
@@ -821,18 +967,74 @@ function handleBranchActivity(sequence) {
 
                 for (var b = 0; b < branchNodes.length; b++) {
                     var wise5Node = branchNodes[b];
+                    var to = wise5Node.id;
 
                     currentGroup.ids.push(wise5Node.id);
 
                     for (var p = 0; p < tempPreviousNodeIds.length; p++) {
                         var tempPreviousNodeId = tempPreviousNodeIds[p];
 
+                        var previousWISE5Node = getWISE5NodeById(tempPreviousNodeId);
+
+                        addTransition(tempPreviousNodeId, to);
+
+                        if (b === 0) {
+                            var transitionLogic = previousWISE5Node.transitionLogic;
+
+                            var branchingFunction = branchNode.branchingFunction;
+                            var maxPathVisitable = branchNode.maxPathVisitable;
+
+                            transitionLogic.howToChooseAmongAvailablePaths = branchingFunction;
+                            transitionLogic.whenToChoosePath = 'enterNode';
+
+                            if (maxPathVisitable > 1) {
+                                transitionLogic.canChangePath = true;
+                            } else {
+                                transitionLogic.canChangePath = false;
+                            }
+
+                            transitionLogic.maxPathsVisitable = maxPathVisitable;
+                        }
+
+                        tempPreviousNodeIds = [to];
+
+                        /*
+                        var transition = getOrCreateWISE5Transition(tempPreviousNodeId);
+
+                        if (transition != null) {
+                            var to = wise5Node.id;
+                            var toObject = {};
+                            toObject.to = to;
+
+                            if (b === 0) {
+                                var branchingFunction = branchNode.branchingFunction;
+                                var maxPathVisitable = branchNode.maxPathVisitable;
+
+                                transition.howToChooseAmongAvailablePaths = branchingFunction;
+                                transition.whenToChoosePath = 'enterFromNode';
+
+                                if (maxPathVisitable > 1) {
+                                    transition.canChangePath = true;
+                                } else {
+                                    transition.canChangePath = false;
+                                }
+
+                                transition.maxPathsVisitable = maxPathVisitable;
+                            }
+
+                            addToTransition(tempPreviousNodeId, toObject);
+                            tempPreviousNodeIds = [to];
+                        }
+                        */
+
+                        /*
                         var from = tempPreviousNodeId;
                         var to = wise5Node.id;
                         var wise5Transition = createWISE5Transition(from, to);
                         addWISE5Transition(wise5Transition);
 
                         tempPreviousNodeIds = [to];
+                        */
                     }
 
                     if (b === (branchNodes.length - 1)) {
@@ -881,7 +1083,7 @@ function getBranchNodes(sequenceId) {
                 for (var r = 0; r < refs.length; r++) {
                     var ref = refs[r];
 
-                    var wise5Node = getNodeContent(ref);
+                    var wise5Node = createWISE5NodeFromNodeContent(ref);
 
                     branchNodes.push(wise5Node);
                 }

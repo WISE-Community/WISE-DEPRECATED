@@ -272,42 +272,48 @@ define(['configService', 'projectService'], function(configService, currentNodeS
                         // there is a current node
                         var currentNodeId = currentNode.id;
 
-                        // get the transitions from the current node
-                        var transitions = ProjectService.getTransitionsByFromNodeId(currentNodeId);
+                        // get the transition logic from the current node
+                        var transitionLogic = ProjectService.getTransitionLogicByFromNodeId(currentNodeId);
 
-                        if (transitions != null) {
+                        if (transitionLogic != null) {
 
-                            var transitionsToNodeId = [];
+                            // get all the transitions from the current node
+                            var transitions = transitionLogic.transitions;
 
-                            // get the transitions from the visited nodes to the node status node
+                            if (transitions != null) {
 
-                            // loop through all the visited nodes
-                            for (var v = 0; v < this.visitedNodesHistory.length; v++) {
+                                var transitionsToNodeId = [];
 
-                                // get a visited node id
-                                var visitedNodeId = this.visitedNodesHistory[v];
+                                // get the transitions from the visited nodes to the node status node
 
-                                // get all the transitions from the visited node id to the node status node
-                                var transitions = ProjectService.getTransitionsByFromAndToNodeId(visitedNodeId, nodeId);
+                                // loop through all the visited nodes
+                                for (var v = 0; v < this.visitedNodesHistory.length; v++) {
 
-                                // concat the node ids
-                                transitionsToNodeId = transitionsToNodeId.concat(transitions);
-                            }
+                                    // get a visited node id
+                                    var visitedNodeId = this.visitedNodesHistory[v];
 
-                            if (transitionsToNodeId != null && transitionsToNodeId.length > 0) {
-                                // there is a transition between the current node and the node status node
+                                    // get all the transitions from the visited node id to the node status node
+                                    var transitions = ProjectService.getTransitionsByFromAndToNodeId(visitedNodeId, nodeId);
 
-                                /*
-                                 * there are transitions from the current node to the node status node so
-                                 * the node status node is clickable
-                                 */
-                                result = true;
-                            } else {
-                                /*
-                                 * there is no transition between the visited nodes and the node status node
-                                 * so we will set the node to be not clickable
-                                 */
-                                result = false;
+                                    // concat the node ids
+                                    transitionsToNodeId = transitionsToNodeId.concat(transitions);
+                                }
+
+                                if (transitionsToNodeId != null && transitionsToNodeId.length > 0) {
+                                    // there is a transition between the current node and the node status node
+
+                                    /*
+                                     * there are transitions from the current node to the node status node so
+                                     * the node status node is clickable
+                                     */
+                                    result = true;
+                                } else {
+                                    /*
+                                     * there is no transition between the visited nodes and the node status node
+                                     * so we will set the node to be not clickable
+                                     */
+                                    result = false;
+                                }
                             }
                         }
                     } else {

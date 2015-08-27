@@ -755,7 +755,7 @@ define(['configService'], function(configService) {
             return transitionsInGroup;
         };
 
-        serviceObject.getTransitionsByFromNodeId = function(fromNodeId) {
+        serviceObject.getTransitionsByFromNodeId0 = function(fromNodeId) {
             var transitionsResults = [];
             if (fromNodeId != null) {
                 var transitions = this.getTransitions();
@@ -771,6 +771,28 @@ define(['configService'], function(configService) {
             }
 
             return transitionsResults;
+        };
+
+        /**
+         * Get the transition logic for a node
+         * @param fromNodeId the from node id
+         * @returns the transition logic object
+         */
+        serviceObject.getTransitionLogicByFromNodeId = function(fromNodeId) {
+            var transitionLogic = null;
+
+            if (fromNodeId != null) {
+
+                // get the node
+                var node = this.getNodeById(fromNodeId);
+
+                if (node != null) {
+                    // get the transition logic
+                    transitionLogic = node.transitionLogic;
+                }
+            }
+
+            return transitionLogic;
         };
 
         serviceObject.getTransitionsByToNodeId = function(toNodeId) {
@@ -1010,86 +1032,92 @@ define(['configService'], function(configService) {
                 if (this.isApplicationNode(nodeId)) {
                     // the node is an application node
 
-                    // get all the transitions from this node
-                    var transitions = this.getTransitionsByFromNodeId(nodeId);
+                    // get the transition logic from the node id
+                    var transitionLogic = this.getTransitionLogicByFromNodeId(nodeId);
 
-                    if (transitions != null) {
+                    if (transitionLogic != null) {
 
-                        // add the node id to the path so far
-                        pathSoFar.push(nodeId);
+                        // get all the transitions from this node
+                        var transitions = transitionLogic.transitions;
 
-                        if (transitions.length === 0) {
-                            /*
-                             * there are no transitions from the node id so this path
-                             * only contains this node id
-                             */
+                        if (transitions != null) {
 
-                            var path = [];
+                            // add the node id to the path so far
+                            pathSoFar.push(nodeId);
 
-                            // add the node id to the path
-                            path.push(nodeId);
+                            if (transitions.length === 0) {
+                                /*
+                                 * there are no transitions from the node id so this path
+                                 * only contains this node id
+                                 */
 
-                            // add the path to the all paths array
-                            allPaths.push(path);
-                        } else {
-                            // loop through all the transitions from this node id
-                            for (var t = 0; t < transitions.length; t++) {
-                                var transitionResult = [];
+                                var path = [];
 
-                                // get a transition
-                                var transition = transitions[t];
+                                // add the node id to the path
+                                path.push(nodeId);
 
-                                if (transition != null) {
-                                    // get the to node id
-                                    var toNodeId = transition.to;
+                                // add the path to the all paths array
+                                allPaths.push(path);
+                            } else {
+                                // loop through all the transitions from this node id
+                                for (var t = 0; t < transitions.length; t++) {
+                                    var transitionResult = [];
 
-                                    if (pathSoFar.indexOf(toNodeId) == -1) {
-                                        /*
-                                         * recursively get the paths by getting all
-                                         * the paths for the to node
-                                         */
-                                        var allPathsFromToNode = this.getAllPaths(pathSoFar, toNodeId);
+                                    // get a transition
+                                    var transition = transitions[t];
 
-                                        if (allPathsFromToNode != null) {
-                                            // loop through all the paths for the to node
-                                            for (var a = 0; a<allPathsFromToNode.length; a++) {
+                                    if (transition != null) {
+                                        // get the to node id
+                                        var toNodeId = transition.to;
 
-                                                // get a path
-                                                var tempPath = allPathsFromToNode[a];
+                                        if (pathSoFar.indexOf(toNodeId) == -1) {
+                                            /*
+                                             * recursively get the paths by getting all
+                                             * the paths for the to node
+                                             */
+                                            var allPathsFromToNode = this.getAllPaths(pathSoFar, toNodeId);
 
-                                                // prepend the current node id to the path
-                                                tempPath.unshift(nodeId);
+                                            if (allPathsFromToNode != null) {
+                                                // loop through all the paths for the to node
+                                                for (var a = 0; a<allPathsFromToNode.length; a++) {
 
-                                                // add the path to our collection of paths
-                                                allPaths.push(tempPath);
+                                                    // get a path
+                                                    var tempPath = allPathsFromToNode[a];
+
+                                                    // prepend the current node id to the path
+                                                    tempPath.unshift(nodeId);
+
+                                                    // add the path to our collection of paths
+                                                    allPaths.push(tempPath);
+                                                }
                                             }
+                                        } else {
+                                            /*
+                                             * the node is already in the path so far which means
+                                             * the transition is looping back to a previous node.
+                                             * we do not want to take this transition because
+                                             * it will lead to an infinite loop. we will just
+                                             * add the current node id to the path and not take
+                                             * the transition which essentially ends the path.
+                                             */
+                                            var path = [];
+
+                                            // add the node id to the path
+                                            path.push(nodeId);
+
+                                            // add the path to the all paths array
+                                            allPaths.push(path);
                                         }
-                                    } else {
-                                        /*
-                                         * the node is already in the path so far which means
-                                         * the transition is looping back to a previous node.
-                                         * we do not want to take this transition because
-                                         * it will lead to an infinite loop. we will just
-                                         * add the current node id to the path and not take
-                                         * the transition which essentially ends the path.
-                                         */
-                                        var path = [];
-
-                                        // add the node id to the path
-                                        path.push(nodeId);
-
-                                        // add the path to the all paths array
-                                        allPaths.push(path);
                                     }
                                 }
                             }
-                        }
 
-                        /*
-                         * remove the latest node id since we are moving back
-                         * up the path as we traverse the nodes depth first
-                         */
-                        pathSoFar.pop();
+                            /*
+                             * remove the latest node id since we are moving back
+                             * up the path as we traverse the nodes depth first
+                             */
+                            pathSoFar.pop();
+                        }
                     }
                 } else if (this.isGroupNode(nodeId)) {
                     // the node is a group node
