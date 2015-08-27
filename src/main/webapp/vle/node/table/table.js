@@ -2573,7 +2573,7 @@ Table.prototype.processTagMaps = function() {
 					$('#previousWorkDiv').before($('#promptDiv'));
 					//get the work to import
 					var bstate = this.node.getWorkToImport(tagName, functionArgs)[0];
-					if (typeof bstate !== "undefined" && typeof bstate.response !== "undefined" && typeof bstate.response.tableData !== "undefined" &&
+					if (typeof bstate !== "undefined" && typeof bstate.tableData !== "undefined" &&
 							// also compare timestamps use more recent box2d or previous work from latest state
 							(this.states.length == 0 || typeof this.states[this.states.length-1].timestamp === "undefined" || typeof bstate.timestamp === "undefined" ||
 								this.states[this.states.length-1].timestamp < bstate.timestamp
@@ -2583,7 +2583,7 @@ Table.prototype.processTagMaps = function() {
 						// even if we are over-riding a previous state we should keep the most recent written response.
 						if (this.states.length > 0) response = this.states[this.states.length-1].response;
 						
-						var ptableData = bstate.response.tableData;
+						var ptableData = bstate.tableData;
 						// must copy all values in table so that we don't change them when we go back to box2d
 						// can pull from more than one step
 						var reuseTable = tableData.length > 0 ? true : false;

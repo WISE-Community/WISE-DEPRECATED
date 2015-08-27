@@ -110,15 +110,27 @@ define(['configService', 'projectService', 'studentDataService'], function(confi
          * @return a new empty node state
          */
         serviceObject.createNewComponentState = function() {
-            var nodeState = {};
+            var componentState = {};
             
             // set the timestamp
-            nodeState.clientSaveTime = Date.parse(new Date());
+            componentState.clientSaveTime = Date.parse(new Date());
             
-            return nodeState;
+            return componentState;
         };
-        
-        
+
+       /**
+        * Create a new empty node state
+        * @return a new empty node state
+        */
+       serviceObject.createNewNodeState = function() {
+           var nodeState = {};
+
+           // set the timestamp
+           nodeState.clientSaveTime = Date.parse(new Date());
+
+           return nodeState;
+       };
+
         /**
          * Get the node type in camel case
          * @param nodeType the node type e.g. OpenResponse

@@ -27,17 +27,17 @@ import org.wise.portal.dao.SimpleDao;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.workgroup.WISEWorkgroup;
-import org.wise.vle.domain.work.ComponentState;
+import org.wise.vle.domain.work.StudentWork;
 
 import java.util.List;
 
 /**
- * Domain Access Object for ComponentState
+ * Domain Access Object for StudentWork
  * @author Hiroki Terashima
  */
-public interface ComponentStateDao<T extends ComponentState> extends SimpleDao<T> {
+public interface StudentWorkDao<T extends StudentWork> extends SimpleDao<T> {
 
-    List<ComponentState> getComponentStatesByParams(Integer id, Run run, Group period, WISEWorkgroup workgroup,
+    List<StudentWork> getStudentWorkListByParams(Integer id, Run run, Group period, WISEWorkgroup workgroup,
                                                     Boolean isAutoSave, String nodeId,
                                                     String componentId, String componentType);
 }

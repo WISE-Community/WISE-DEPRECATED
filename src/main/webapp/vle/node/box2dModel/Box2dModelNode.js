@@ -299,11 +299,15 @@ Box2dModelNode.prototype.hasGradingView = function() {
  */
 Box2dModelNode.prototype.getStudentWorkHtmlView = function(work) {
 	
-	var html = '<div id="image-holder">';
-	for (var i = 0; i < work.response.images.length; i++){
-		var img = work.response.images[i];
-		html = html + '<img id="'+img.id+'" src="'+img.src+'" width='+img.width+' height='+img.height+'/>';
-		html = html + '<span style="position:relative; top:'+(15)+'px; left:'+(-img.width)+'px">'+img.id+'</span>';
+	var html = '<div id="response-holder">' + work.response + '</div>';
+
+	html = html +'<div id="image-holder">';
+	if (work.modelData != null && work.modelData.images != null && work.modelData.images.length > 0) {
+		for (var i = 0; i < work.modelData.images.length; i++) {
+			var img = work.modelData.images[i];
+			html = html + '<img id="' + img.id + '" src="' + img.src + '" width=' + img.width + ' height=' + img.height + '/>';
+			html = html + '<span style="position:relative; top:' + (15) + 'px; left:' + (-img.width) + 'px">' + img.id + '</span>';
+		}
 	}
 	html = html + '</div>';
 	//console.log(html);

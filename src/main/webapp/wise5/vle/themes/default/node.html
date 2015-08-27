@@ -1,4 +1,5 @@
 <div ng-controller='NodeController as nodeController'>
+    <input type='button' value='Test NodeState Save' ng-click='nodeController.testNodeStateSave()' />
     <input type='button' value='X' ng-click='nodeController.closeNode()' />
     <input type='button' value='+Notebook' ng-click='nodeController.addNodeVisitItemToNotebook()' />
     <div compile='nodeController.getPrompt()'></div>

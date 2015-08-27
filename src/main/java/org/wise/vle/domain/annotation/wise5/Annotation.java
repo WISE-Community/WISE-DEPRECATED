@@ -9,7 +9,7 @@ import org.wise.portal.domain.run.impl.RunImpl;
 import org.wise.portal.domain.workgroup.WISEWorkgroup;
 import org.wise.portal.domain.workgroup.impl.WISEWorkgroupImpl;
 import org.wise.vle.domain.PersistableDomain;
-import org.wise.vle.domain.work.ComponentState;
+import org.wise.vle.domain.work.StudentWork;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -53,9 +53,9 @@ public class Annotation extends PersistableDomain {
     @Column(name = "componentId", length = 30, nullable = true)
     private String componentId;
 
-    @ManyToOne(targetEntity = ComponentState.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
-    @JoinColumn(name = "componentStateId", nullable = true)
-    private ComponentState componentState;
+    @ManyToOne(targetEntity = StudentWork.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
+    @JoinColumn(name = "studentWorkId", nullable = true)
+    private StudentWork studentWork;
 
     @Column(name = "type", length = 30, nullable = false)
     private String type;
@@ -133,12 +133,12 @@ public class Annotation extends PersistableDomain {
         this.componentId = componentId;
     }
 
-    public ComponentState getComponentState() {
-        return componentState;
+    public StudentWork getStudentWork() {
+        return studentWork;
     }
 
-    public void setComponentState(ComponentState componentState) {
-        this.componentState = componentState;
+    public void setStudentWork(StudentWork studentWork) {
+        this.studentWork = studentWork;
     }
 
     public String getType() {
@@ -219,8 +219,8 @@ public class Annotation extends PersistableDomain {
             }
 
             // set the component state id
-            if (this.componentState != null) {
-                eventJSONObject.put("componentStateId", this.componentState.getId());
+            if (this.studentWork != null) {
+                eventJSONObject.put("studentWorkId", this.studentWork.getId());
             }
 
             // set the type

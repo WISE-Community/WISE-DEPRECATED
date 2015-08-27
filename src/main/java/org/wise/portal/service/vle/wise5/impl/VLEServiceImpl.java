@@ -28,7 +28,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.annotation.wise5.AnnotationDao;
-import org.wise.portal.dao.work.ComponentStateDao;
+import org.wise.portal.dao.work.StudentWorkDao;
 import org.wise.portal.dao.work.EventDao;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.run.Run;
@@ -38,8 +38,8 @@ import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.vle.wise5.VLEService;
 import org.wise.portal.service.workgroup.WorkgroupService;
 import org.wise.vle.domain.annotation.wise5.Annotation;
-import org.wise.vle.domain.work.ComponentState;
 import org.wise.vle.domain.work.Event;
+import org.wise.vle.domain.work.StudentWork;
 
 import java.sql.Timestamp;
 import java.util.Calendar;
@@ -53,7 +53,7 @@ import java.util.List;
 public class VLEServiceImpl implements VLEService {
 
     @Autowired
-    private ComponentStateDao componentStateDao;
+    private StudentWorkDao studentWorkDao;
 
     @Autowired
     private EventDao eventDao;
@@ -71,7 +71,7 @@ public class VLEServiceImpl implements VLEService {
     private WorkgroupService workgroupService;
 
     @Override
-    public List<ComponentState> getComponentStates(Integer id, Integer runId, Integer periodId, Integer workgroupId,
+    public List<StudentWork> getStudentWorkList(Integer id, Integer runId, Integer periodId, Integer workgroupId,
                                                    Boolean isAutoSave, String nodeId,
                                                    String componentId, String componentType) {
         Run run = null;
@@ -100,79 +100,79 @@ public class VLEServiceImpl implements VLEService {
             }
         }
 
-        return componentStateDao.getComponentStatesByParams(id, run, period, workgroup,
+        return studentWorkDao.getStudentWorkListByParams(id, run, period, workgroup,
                 isAutoSave, nodeId, componentId, componentType);
     }
 
     @Override
-    public ComponentState saveComponentState(Integer id, Integer runId, Integer periodId, Integer workgroupId,
+    public StudentWork saveStudentWork(Integer id, Integer runId, Integer periodId, Integer workgroupId,
                                              Boolean isAutoSave, String nodeId, String componentId, String componentType,
                                              String studentData, String clientSaveTime) {
-        ComponentState componentState;
+        StudentWork studentWork;
         if (id != null) {
-            // if the id is passed in, the client is requesting an update, so fetch the ComponentState from data store
+            // if the id is passed in, the client is requesting an update, so fetch the StudentWork from data store
             try {
-                componentState = (ComponentState) componentStateDao.getById(id);
+                studentWork = (StudentWork) studentWorkDao.getById(id);
             } catch (ObjectNotFoundException e) {
                 e.printStackTrace();
                 return null;
             }
         } else {
-            // the id was not passed in, so we're creating a new ComponentState from scratch
-            componentState = new ComponentState();
+            // the id was not passed in, so we're creating a new StudentWork from scratch
+            studentWork = new StudentWork();
         }
         if (runId != null) {
             try {
                 boolean doEagerFetch = false;
-                componentState.setRun(runService.retrieveById(new Long(runId), doEagerFetch));
+                studentWork.setRun(runService.retrieveById(new Long(runId), doEagerFetch));
             } catch (ObjectNotFoundException e) {
                 e.printStackTrace();
             }
         }
         if (periodId != null) {
             try {
-                componentState.setPeriod(groupService.retrieveById(new Long(periodId)));
+                studentWork.setPeriod(groupService.retrieveById(new Long(periodId)));
             } catch (ObjectNotFoundException e) {
                 e.printStackTrace();
             }
         }
         if (workgroupId != null) {
             try {
-                componentState.setWorkgroup((WISEWorkgroup) workgroupService.retrieveById(new Long(workgroupId)));
+                studentWork.setWorkgroup((WISEWorkgroup) workgroupService.retrieveById(new Long(workgroupId)));
             } catch (ObjectNotFoundException e) {
                 e.printStackTrace();
             }
         }
 
         if (isAutoSave != null) {
-            componentState.setIsAutoSave(isAutoSave);
+            studentWork.setIsAutoSave(isAutoSave);
         }
 
         if (nodeId != null) {
-            componentState.setNodeId(nodeId);
+            studentWork.setNodeId(nodeId);
         }
         if (componentId != null) {
-            componentState.setComponentId(componentId);
+            studentWork.setComponentId(componentId);
         }
         if (componentType != null) {
-            componentState.setComponentType(componentType);
+            studentWork.setComponentType(componentType);
         }
         if (clientSaveTime != null) {
             Timestamp clientSaveTimestamp = new Timestamp(new Long(clientSaveTime));
-            componentState.setClientSaveTime(clientSaveTimestamp);
+            studentWork.setClientSaveTime(clientSaveTimestamp);
         }
 
         // set postTime
         Calendar now = Calendar.getInstance();
         Timestamp serverSaveTimestamp = new Timestamp(now.getTimeInMillis());
-        componentState.setServerSaveTime(serverSaveTimestamp);
+        studentWork.setServerSaveTime(serverSaveTimestamp);
 
         if (studentData != null) {
-            componentState.setStudentData(studentData);
+            studentWork.setStudentData(studentData);
         }
 
-        componentStateDao.save(componentState);
-        return componentState;
+        studentWorkDao.save(studentWork);
+        return studentWork;
     }
 
     @Override
@@ -287,7 +287,7 @@ public class VLEServiceImpl implements VLEService {
     @Override
     public List<Annotation> getAnnotations(
             Integer id, Integer runId, Integer periodId, Integer fromWorkgroupId, Integer toWorkgroupId,
-            String nodeId, String componentId, Integer componentStateId, String type) {
+            String nodeId, String componentId, Integer studentWorkId, String type) {
         Run run = null;
         if (runId != null) {
             try {
@@ -321,23 +321,23 @@ public class VLEServiceImpl implements VLEService {
                 e.printStackTrace();
             }
         }
-        ComponentState componentState = null;
-        if (componentStateId != null) {
+        StudentWork studentWork = null;
+        if (studentWorkId != null) {
             try {
-                componentState = (ComponentState) componentStateDao.getById(componentStateId);
+                studentWork = (StudentWork) studentWorkDao.getById(studentWorkId);
             } catch (ObjectNotFoundException e) {
                 e.printStackTrace();
             }
         }
 
         return annotationDao.getAnnotationsByParams(id, run, period, fromWorkgroup, toWorkgroup,
-                nodeId, componentId, componentState, type);
+                nodeId, componentId, studentWork, type);
     }
 
     @Override
     public Annotation saveAnnotation(
             Integer id, Integer runId, Integer periodId, Integer fromWorkgroupId, Integer toWorkgroupId,
-            String nodeId, String componentId, Integer componentStateId,
+            String nodeId, String componentId, Integer studentWorkId,
             String type, String data, String clientSaveTime) throws ObjectNotFoundException {
         Annotation annotation;
         if (id != null) {
@@ -388,9 +388,9 @@ public class VLEServiceImpl implements VLEService {
         if (componentId != null) {
             annotation.setComponentId(componentId);
         }
-        if (componentStateId != null) {
+        if (studentWorkId != null) {
             try {
-                annotation.setComponentState((ComponentState) componentStateDao.getById(componentStateId));
+                annotation.setStudentWork((StudentWork) studentWorkDao.getById(studentWorkId));
             } catch (ObjectNotFoundException e) {
                 e.printStackTrace();
             }

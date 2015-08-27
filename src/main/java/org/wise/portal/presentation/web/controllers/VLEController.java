@@ -95,7 +95,7 @@ public class VLEController {
             @PathVariable Long runId,
             ModelMap modelMap) throws ObjectNotFoundException {
         String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
-        String vleConfigUrl = wiseBaseURL + "/vleconfig?runId=" + runId;
+        String vleConfigUrl = wiseBaseURL + "/vleconfig?runId=" + runId + "&mode=run";
         modelMap.put("vleConfigUrl", vleConfigUrl);
         return "student";
     }

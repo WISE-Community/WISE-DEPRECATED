@@ -25,8 +25,8 @@ package org.wise.portal.service.vle.wise5;
 
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.vle.domain.annotation.wise5.Annotation;
-import org.wise.vle.domain.work.ComponentState;
 import org.wise.vle.domain.work.Event;
+import org.wise.vle.domain.work.StudentWork;
 
 import java.util.List;
 
@@ -37,16 +37,16 @@ import java.util.List;
 public interface VLEService {
 
 	/**
-	 * @return List of ComponentState objects with the specified fields. If none matches,
+	 * @return List of StudentWork objects with the specified fields. If none matches,
 	 * return an empty list.
 	 */
-	List<ComponentState> getComponentStates(Integer id, Integer runId, Integer periodId, Integer workgroupId,
+	List<StudentWork> getStudentWorkList(Integer id, Integer runId, Integer periodId, Integer workgroupId,
                                             Boolean isAutoSave, String nodeId, String componentId, String componentType);
 
 	/**
-	 * Saves ComponentState in the data store
+	 * Saves StudentWork in the data store
 	 */
-	ComponentState saveComponentState(
+	StudentWork saveStudentWork(
             Integer id, Integer runId, Integer periodId, Integer workgroupId,
             Boolean isAutoSave, String nodeId, String componentId, String componentType,
             String studentData, String clientSaveTime) throws ObjectNotFoundException;
@@ -76,14 +76,14 @@ public interface VLEService {
      */
     List<Annotation> getAnnotations(
             Integer id, Integer runId, Integer periodId, Integer fromWorkgroupId, Integer toWorkgroupId,
-            String nodeId, String componentId, Integer componentStateId, String type);
+            String nodeId, String componentId, Integer studentWorkId, String type);
 
     /**
      * Saves Annotation in the data store
      */
     Annotation saveAnnotation(
             Integer id, Integer runId, Integer periodId, Integer fromWorkgroupId, Integer toWorkgroupId,
-            String nodeId, String componentId, Integer componentStateId,
+            String nodeId, String componentId, Integer studentWorkId,
             String type, String data,
             String clientSaveTime) throws ObjectNotFoundException;
 

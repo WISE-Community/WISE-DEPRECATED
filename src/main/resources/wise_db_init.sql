@@ -61,7 +61,7 @@
         nodeId varchar(30),
         serverSaveTime datetime not null,
         type varchar(30) not null,
-        componentStateId integer,
+        studentWorkId integer,
         fromWorkgroupId bigint,
         periodId bigint not null,
         runId bigint not null,
@@ -77,11 +77,11 @@
         primary key (id)
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-    create table componentStates (
+    create table studentWork (
         id integer not null auto_increment,
         clientSaveTime datetime not null,
-        componentId varchar(30) not null,
-        componentType varchar(30) not null,
+        componentId varchar(30),
+        componentType varchar(30),
         isAutoSave bit not null,
         nodeId varchar(30) not null,
         serverSaveTime datetime not null,
@@ -550,9 +550,9 @@
 
     create index toWorkgroupIdIndex on annotations (toWorkgroupId);
 
-    create index runIdIndex on componentStates (runId);
+    create index runIdIndex on studentWork (runId);
 
-    create index workgroupIdIndex on componentStates (workgroupId);
+    create index workgroupIdIndex on studentWork (workgroupId);
 
     create index runIdIndex on events (runId);
 
@@ -638,8 +638,8 @@
 
     alter table annotations 
         add constraint FK_1d5pxm1esuhp2itfr2xx6cha9 
-        foreign key (componentStateId) 
-        references componentStates (id);
+        foreign key (studentWorkId)
+        references studentWork (id);
 
     alter table annotations 
         add constraint FK_3uwsbpxbqpqynfwt7oym6p59g 
@@ -661,17 +661,17 @@
         foreign key (toWorkgroupId) 
         references wiseworkgroups (id);
 
-    alter table componentStates 
+    alter table studentWork
         add constraint FK_mimnejycw7u1bgltxkf3wbxwh 
         foreign key (periodId) 
         references groups (id);
 
-    alter table componentStates 
+    alter table studentWork
         add constraint FK_1bx4p6cs0itbhbugx9a1ov8fq 
         foreign key (runId) 
         references runs (id);
 
-    alter table componentStates 
+    alter table studentWork
         add constraint FK_4hqdejeubrrob2lvlgkqgw63k 
         foreign key (workgroupId) 
         references wiseworkgroups (id);

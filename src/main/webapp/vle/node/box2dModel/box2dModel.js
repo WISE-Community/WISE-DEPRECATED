@@ -40,7 +40,7 @@ function Box2dModel(node) {
 	this.view = node.view;
 	this.content = node.getContent().getContentJSON();
 	if(node.studentWork != null) {
-		this.states = node.studentWork; 
+		this.states = node.studentWork;
 	} else {
 		this.states = [];  
 	};
@@ -76,10 +76,10 @@ Box2dModel.prototype.checkPreviousModelsForTags = function(tagName, functionArgs
 				if(nodeId != null) {
 					//get the latest work for the node
 					var latestWork = this.view.getState().getLatestWorkByNodeId(nodeId);
-					//console.log(latestWork, latestWork.response.savedModels, result.previousModels,  result.previousModels.concat(latestWork.response.savedModels))
-					if (typeof latestWork.response !== "undefined"){
-						result.previousModels = result.previousModels.concat(latestWork.response.savedModels);					
-						result.custom_objects_made_count = latestWork.response.custom_objects_made_count;
+					//console.log(latestWork, latestWork.modelData.savedModels, result.previousModels,  result.previousModels.concat(latestWork.modelData.savedModels))
+					if (typeof latestWork.modelData !== "undefined"){
+						result.previousModels = result.previousModels.concat(latestWork.modelData.savedModels);
+						result.custom_objects_made_count = latestWork.modelData.custom_objects_made_count;
 					}
 				}
 			}
@@ -140,11 +140,17 @@ Box2dModel.prototype.checkTableForValue = function(tagName, functionArgs) {
 Box2dModel.prototype.render = function() {
 	//display any prompts to the student
 	$('#promptDiv').html(this.content.prompt);
-	
+	//display the prompt2 which is below the canvas and the student textarea
+	if (this.content.prompt2 != null && this.content.prompt2.length > 0){
+		$('#prompt2Div').html(this.content.prompt2);
+	} else {
+		// no content to add, remove the div.
+		$("#response-holder").remove();
+	}
+
 	var previousModels = [];
 	var custom_objects_made_count = 0;
 	var density = -2;
-	var tableData = null;
 	//process the tag maps if we are not in authoring mode
 	if(typeof this.view.authoringMode === "undefined" || this.view.authoringMode == null || !this.view.authoringMode) {
 		var tagMapResults = this.processTagMaps();
@@ -163,9 +169,10 @@ Box2dModel.prototype.render = function() {
 		 * just provided as an example. you may use whatever variables you
 		 * would like from the state object (look at box2dModelState.js)
 		 */
-		var latestResponse = latestState.response;
-		if (latestResponse != null && latestResponse != '' && typeof latestResponse != "undefined"){
-		 	previousModels = latestResponse.savedModels.concat(previousModels);
+		var tableData = latestState.tableData.slice();
+		var latestModels = latestState.modelData;
+		if (latestModels != null && latestModels != '' && typeof latestModels != "undefined"){
+		 	previousModels = latestModels.savedModels.concat(previousModels);
 		 	// remove any models with a repeat id
 		 	var model_ids = [];
 		 	for (var i = previousModels.length-1; i >= 0; i--){
@@ -179,12 +186,11 @@ Box2dModel.prototype.render = function() {
 		 		}
 		 		if (!match_found) model_ids.push(previousModels[i].id);
 		 	}
-		 	tableData = latestResponse.tableData.slice();
-		 	custom_objects_made_count = Math.max(custom_objects_made_count, latestResponse.custom_objects_made_count);
+		 	custom_objects_made_count = Math.max(custom_objects_made_count, latestModels.custom_objects_made_count);
 		 }
 		
 		//set the previous student work into the text area
-		$('#studentResponseTextArea').val(latestResponse); 
+		$('#studentResponseTextArea').val(latestState.response);
 	}
 
 	// setup the event logger and feedbacker
@@ -293,13 +299,66 @@ Box2dModel.prototype.interpretEvent = function(type, args, obj) {
 	// update model table so that when we check this event the corresponding models will be on the table
 	// was orignally in save, but put it here instead - still only doing for make/delete/test
 	var tableData = GLOBAL_PARAMETERS.tableData;
-	
+
+	// mass_vol_determined will be used for graphs
+	var mass_volume_determined = false;
+	var includeGraph = false;
+	var isGraphEvent = false;
+	var graphType = "";
+	if (typeof this.content.INCLUDE_SINK_FLOAT_GRAPH === "boolean" && this.content.INCLUDE_SINK_FLOAT_GRAPH){
+		includeGraph = true;
+		graphType = "sink_float";
+	} else if (typeof this.content.INCLUDE_MATERIAL_GRAPH === "boolean" && this.content.INCLUDE_MATERIAL_GRAPH){
+		includeGraph = true;
+		graphType = "material";
+	}
+
 	// loop through args looking for "Obj" models (including premades)
 	for (var a = 0; a < args.length; a++){
 		if ( (typeof args[a].id !== "undefined" && args[a].id.substr(0,3) == "Obj") || (typeof args[a].premade_name !== "undefined" && args[a].premade_name != null && args[a].premade_name.length > 0)){
 			var model = {};
 			model.id = args[a].id;
-			model.Materials = typeof args[a].unique_materials !== "undefined" ? args[a].unique_materials.slice().sort().toString() : "";
+			// if there are multiple materials we'll need to get a percentage of each
+			if (typeof args[a].unique_materials !== "undefined" && args[a].unique_materials.length > 0){
+				if (args[a].unique_materials.length == 1){
+					model.Materials = args[a].unique_materials.slice().toString();
+				} else {
+					// multiple materials
+					var percMat = [];
+					for (var m = 0; m < args[a].unique_materials.length; m++){
+						var mat = args[a].unique_materials[m];
+						// if rectPrismArrays availabe search through and add up volumes
+						var vol = 0
+						if (args[a].rectPrismArrays != null && args[a].rectPrismArrays.materials != null && args[a].rectPrismArrays.materials.length > 0){
+							for (var b = 0; b < args[a].rectPrismArrays.materials.length; b++){
+								if (mat == args[a].rectPrismArrays.materials[b]){
+									vol += args[a].rectPrismArrays.widths[b] * args[a].rectPrismArrays.heights[b] * args[a].rectPrismArrays.depths[b];
+								}
+							}
+						} else if (args[a].cylinderArrays != null && args[a].cylinderArrays.materials != null && args[a].cylinderArrays.materials.length > 0){
+							for (var b = 0; b < args[a].cylinderArrays.materials.length; b++){
+								if (mat == args[a].cylinderArrays.materials[b]){
+									vol += Math.pow(args[a].cylinderArrays.diameters[b]/2 ,2) * Math.PI * args[a].rectPrismArrays.heights[b];
+								}
+							}
+						}
+
+						if (vol > 0){
+							vol = vol / args[a].material_volume * 100;
+							percMat.push(vol);
+						}
+					}
+					if (percMat.length == args[a].unique_materials.length){
+						model.Materials = "";
+						for (m = 0; m < args[a].unique_materials.length; m++){
+							if (m > 0) model.Materials += ", ";
+							model.Materials +=  percMat[m].toFixed(0) + "% " + args[a].unique_materials[m];
+						}
+					} else {
+						model.Materials = args[a].unique_materials.slice().sort().toString()
+					}
+				}
+			}
 			model.Total_Volume = args[a].total_volume;
 			model.Widths = typeof args[a].widths !== "undefined" ? args[a].widths.toString().replace(/,/g,", ") : undefined;
 			model.Heights = typeof args[a].heights !== "undefined" ? args[a].heights.toString().replace(/,/g,", ") : undefined;
@@ -334,14 +393,33 @@ Box2dModel.prototype.interpretEvent = function(type, args, obj) {
 			}
 			if (evt.type == "add-to-beaker" || evt.type == "test-in-beaker" || evt.type == "remove-from-beaker"){
 				model["Tested_in_"+args[1].liquid_name] = 1;
+
+
 			} else if (evt.type == "add-to-scale" || evt.type == "test-on-scale" || evt.type == "remove-from-scale"){
 				model["Tested_on_Scale"] = 1;
 			} else if (evt.type == "add-to-balance" || evt.type == "test-on-balance" || evt.type == "remove-from-balance"){
 				model["Tested_on_Balance"] = 1;
 			}
 
+			// determine whether we have all the info we need to plot point
+			if (evt.type == "test-in-beaker"){
+				isGraphEvent = true;
+				if ((typeof args[0].volume_tested === "undefined" || !args[0].volume_tested) && (typeof args[0].mass_tested !== "undefined" && args[0].mass_tested)){
+					mass_volume_determined = true;
+				}
+				args[0].volume_tested = true;
+			}
+			if (evt.type == "test-on-scale" || evt.type == "test-on-balance"){
+				isGraphEvent = true;
+				if ((typeof args[0].mass_tested === "undefined" || !args[0].mass_tested) && (typeof args[0].volume_tested !== "undefined" && args[0].volume_tested)){
+					mass_volume_determined = true;
+				}
+				args[0].mass_tested = true;
+			}
+
 			// create a new model in tableData if id is not found
 			if (evt.type == "make-model" || evt.type == "duplicate-model"){
+				isGraphEvent = true;
 				var id_found = false;
 				for (var i = 0; i < tableData.length; i++){
 					if (tableData[i][0].text == "id"){
@@ -365,6 +443,7 @@ Box2dModel.prototype.interpretEvent = function(type, args, obj) {
 			}
 			// remove a model
 			if (evt.type == "delete-model" || evt.type == "revise-model"){
+				isGraphEvent = true;
 				for (var i = 0; i < tableData.length; i++){
 					if (tableData[i][0].text == "id"){
 						for (var j=1; j < tableData[i].length; j++){
@@ -409,6 +488,289 @@ Box2dModel.prototype.interpretEvent = function(type, args, obj) {
 		}
 	}
 
+	// send results to graph
+	if (includeGraph && isGraphEvent){
+		// get index for total mass
+		var massIndex = -1;
+		for (var i = 0; i < tableData.length; i++){
+			if (tableData[i][0].text === 'Total_Mass'){
+				massIndex = i;
+				break;
+			}
+		}
+		// get index for total volume
+		var volumeIndex = -1;
+		for (var i = 0; i < tableData.length; i++){
+			if (tableData[i][0].text === 'Total_Volume'){
+				volumeIndex = i;
+				break;
+			}
+		}
+		// get index for tested in water
+		var liquid_name = GLOBAL_PARAMETERS.liquids_in_world.length === 1 ? GLOBAL_PARAMETERS.liquids_in_world.length[0] : "Water";
+		// get index for tested on scale
+		var sinkIndex = -1;
+		for (var i = 0; i < tableData.length; i++){
+			if (tableData[i][0].text === 'Sink_in_' + liquid_name){
+				sinkIndex = i;
+				break;
+			}
+		}
+		// get index for tested on scale
+		var beakerIndex = -1;
+		for (var i = 0; i < tableData.length; i++){
+			if (tableData[i][0].text === 'Tested_in_' + liquid_name){
+				beakerIndex = i;
+				break;
+			}
+		}
+		// get index for tested on scale
+		var scaleIndex = -1;
+		for (var i = 0; i < tableData.length; i++){
+			if (tableData[i][0].text === 'Tested_on_Scale'){
+				scaleIndex = i;
+				break;
+			}
+		}
+
+		// get index for material
+		var materialIndex = -1;
+		for (var i = 0; i < tableData.length; i++){
+			if (tableData[i][0].text === 'Materials'){
+				materialIndex = i;
+				break;
+			}
+		}
+
+		// make sure we have appropriate indices
+		if (massIndex >= 0 && volumeIndex >= 0 && sinkIndex >= 0 && beakerIndex >= 0 && scaleIndex >= 0){
+			// update max and min axis values to fit the data
+			var xMin = 0;
+			var xMax = 50;
+			var yMin = 0;
+			var yMax = 50;
+			var seriesSpecs = [];
+
+			if (graphType == "material" && materialIndex >= 0){
+				// find unique materials
+				if (tableData[0].length > 0) {
+					for (var j = 1; j < tableData[0].length; j++){
+						var material_name = tableData[materialIndex][j].text;
+						// is unique?
+						var thismaterialIndex = -1;
+						if (seriesSpecs.length > 0){
+							for (var k = 0; k < seriesSpecs.length; k++){
+								if (seriesSpecs[k].id === material_name){
+									thismaterialIndex = k;
+									break;
+								}
+							}
+						}
+						if (thismaterialIndex == -1){
+							var firstmaterial_name = material_name.replace(/[0-9]+% /g,"");;
+							if (typeof /(.*?),|$/.exec(firstmaterial_name)[1] !== 'undefined'){
+								firstmaterial_name = /(.*?),|$/.exec(firstmaterial_name)[1];
+							}
+							seriesSpecs.push(
+								{
+									id: material_name,
+									name: material_name,
+									color: GLOBAL_PARAMETERS['materials'][firstmaterial_name] != null ? GLOBAL_PARAMETERS['materials'][firstmaterial_name]["fill_colors"][0] : 'rgba(127, 127, 127, .5)',
+									data:[]
+								}
+							);
+							thismaterialIndex = seriesSpecs.length - 1;
+						}
+
+						var point;
+						if (tableData[beakerIndex][j].text === 1 && tableData[scaleIndex][j].text === 1) {
+							// we have the volume and mass
+							point = [tableData[volumeIndex][j].text, tableData[massIndex][j].text];
+						} else if (tableData[beakerIndex][j].text == 1 && tableData[scaleIndex][j].text === 0) {
+							// we have the volume and not the mass
+							point = [tableData[volumeIndex][j].text, 0];
+						} else if (tableData[beakerIndex][j].text == 0 && tableData[scaleIndex][j].text === 1) {
+							// we have the mass and not the volume
+							point = [0, tableData[massIndex][j].text];
+						} else {
+							// you know nothing Jon Vitale
+							point = [0, 0];
+						}
+						seriesSpecs[thismaterialIndex].data.push(point);
+
+						if (point[0] < xMin && point[0] >= 0) {
+							xMin = point[0];
+							yMin = point[0];
+						}
+						if (point[1] < yMin && point[1] >= 0) {
+							xMin = point[1];
+							yMin = point[1];
+						}
+						if (point[0] > xMax) {
+							xMax = point[0];
+							yMax = point[0];
+						}
+						if (point[1] > yMax) {
+							xMax = point[1];
+							yMax = point[1];
+						}
+					}
+				}
+
+			} else {
+				// create arrays for sink, float, and unknown (not yet tested)
+				var sinkPoints = [];
+				var floatPoints = [];
+				var unknownPoints = [];
+
+				if (tableData[0].length > 0) {
+					for (var j = 1; j < tableData[0].length; j++) {
+						var point;
+						if (tableData[beakerIndex][j].text === 1 && tableData[scaleIndex][j].text === 1) {
+							if (tableData[sinkIndex][j].text === "Sink") {
+								point = [tableData[volumeIndex][j].text, tableData[massIndex][j].text];
+								sinkPoints.push(point);
+							} else {
+								point = [tableData[volumeIndex][j].text, tableData[massIndex][j].text];
+								floatPoints.push(point);
+							}
+						} else if (tableData[beakerIndex][j].text == 1 && tableData[scaleIndex][j].text === 0) {
+							// we have the volume and not the mass
+							if (tableData[sinkIndex][j].text === "Sink") {
+								point = [tableData[volumeIndex][j].text, 0];
+								sinkPoints.push(point);
+							} else {
+								point = [tableData[volumeIndex][j].text, 0];
+								floatPoints.push(point);
+							}
+						} else if (tableData[beakerIndex][j].text === 0 && tableData[scaleIndex][j].text === 1) {
+							// we have the mass and not the volume
+							point = [0, tableData[massIndex][j].text];
+							unknownPoints.push(point);
+						} else {
+							// you know nothing Jon Vitale
+							point = [0, 0];
+							unknownPoints.push(point);
+						}
+						if (point[0] < xMin && point[0] >= 0) {
+							xMin = point[0];
+							yMin = point[0];
+						}
+						if (point[1] < yMin && point[1] >= 0) {
+							xMin = point[1];
+							yMin = point[1];
+						}
+						if (point[0] > xMax) {
+							xMax = point[0];
+							yMax = point[0];
+						}
+						if (point[1] > yMax) {
+							xMax = point[1];
+							yMax = point[1];
+						}
+					}
+				}
+
+				seriesSpecs = [
+					{
+						id: 'sink',
+						name: 'Sink',
+						color: 'rgba(255, 0, 0, .5)',
+						data: sinkPoints
+					},
+					{
+						id: 'float',
+						name: 'Float',
+						color: 'rgba(0, 0, 255, .5)',
+						data: floatPoints
+					},
+					{
+						id: 'unknown',
+						name: 'Unknown',
+						color: 'rgba(127, 127, 127, .5)',
+						data: unknownPoints
+					}
+				]
+			}
+
+			// round max values up to nearest 50
+			xMax = Math.ceil(xMax / 50) * 50;
+			yMax = xMax;
+
+			this.chart = {
+				chart: {
+					type: 'scatter',
+					zoomType: 'xy',
+					height: 400,
+					width: 500,
+					marginRight: 100
+				},
+
+				title: {
+					text: "Mass vs. Volume"
+				},
+				subtitle: {
+					text: ''
+				},
+				xAxis: {
+					title: {
+						enabled: true,
+						text: "Volume (ml)"
+					},
+					showLastLabel: true,
+					gridLineWidth: 1,
+					min: xMin,
+					max: xMax
+				},
+				yAxis: {
+					title: {
+						text: "Mass (grams)"
+					},
+					showLastLabel: true,
+					gridLineWidth: 1,
+					min: yMin,
+					max: yMax
+				},
+				legend: {
+					layout: 'vertical',
+					align: 'right',
+					verticalAlign: 'top',
+					floating: true,
+					x: 10,
+					y: 40,
+					backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF',
+					borderWidth: 1
+				},
+				plotOptions: {
+					scatter: {
+						marker: {
+							radius: 5,
+							states: {
+								hover: {
+									enabled: true,
+									lineColor: 'rgb(100,100,100)'
+								}
+							}
+						}, states: {
+							hover: {
+								marker: {
+									enabled: false
+								}
+							}
+						}
+					}
+				},
+				series: seriesSpecs
+			};
+			//render the chart
+			this.renderChart(mass_volume_determined);
+		} else {
+			console.log ("problem with index (mass, vol, liq, scale)", massIndex , volumeIndex , beakerIndex , scaleIndex );
+		}
+
+
+	}
+
 	var isStepCompleted = true;
 	// delete args
 	// run event through feedback manager
@@ -430,6 +792,66 @@ Box2dModel.prototype.interpretEvent = function(type, args, obj) {
 	eventManager.fire('studentWorkUpdated', [this.node.id, this.view.getState().getNodeVisitsByNodeId(this.node.id)]);
 }
 
+
+/**
+ * Render the chart
+ * @param divId the div to render the chart in
+ * @param chartObject the chart object to render
+ */
+Box2dModel.prototype.renderChart = function(popup) {
+	var chartObject = this.chart;
+	var divId;
+	var otherdivId;
+	if (popup){
+		divId = 'chartPopUp';
+		otherdivId = 'chartDiv';
+	} else {
+		divId = 'chartDiv';
+		otherdivId = 'chartPopUp';
+	}
+
+	//check if the div exists
+	if($('#' + divId).length > 0) {
+		//get the highcharts object from the div
+		var highchartsObject = $('#' + divId).highcharts();
+
+		if(highchartsObject != null) {
+			//destroy the existing chart because we will be making a new one
+			highchartsObject.destroy();
+		}
+	}
+	if($('#' + otherdivId).length > 0) {
+		//get the highcharts object from the div
+		var highchartsObject = $('#' + otherdivId).highcharts();
+
+		if(highchartsObject != null) {
+			//destroy the existing chart because we will be making a new one
+			highchartsObject.destroy();
+		}
+	}
+
+	if (popup) {
+		$('#' + divId).dialog({
+			'position': {my: "left bottom", at: "center bottom", of: "#b2canvas"},
+			'autoOpen': true,
+			'closeOnEscape': false,
+			'modal': true,
+			'close': function (event, ui) {
+				box2dModel.renderChart(false);
+			},
+			'width': 550,
+			'height': 470
+		});
+	}
+
+	//set the divId into the chart object so we can access it in other contexts
+	chartObject.chart.renderTo = divId;
+
+	//render the highcharts chart
+	new Highcharts.Chart(chartObject);
+}
+
+
 /**
  * This function retrieves the student work from the html ui, creates a state
  * object to represent the student work, and then saves the student work.
@@ -442,41 +864,42 @@ Box2dModel.prototype.interpretEvent = function(type, args, obj) {
  */
 Box2dModel.prototype.save = function(evt) {
 	//get the answer the student wrote
-	//var response = $('#studentResponseTextArea').val();
 	if (typeof evt === "undefined") evt = {"type":"server"};
 
-	var response = {};
+	var response = $('#studentResponseTextArea').length ? $('#studentResponseTextArea').val(): "";
+	var modelData = {};
+	var history = this.feedbackManager.getHistory(250000);
+	var tableData = GLOBAL_PARAMETERS.tableData;
+
 	//load with objects from library
-	response.images = [];
-	response.savedModels = GLOBAL_PARAMETERS.objects_made.slice();
-	
+	modelData.images = [];
+	modelData.savedModels = GLOBAL_PARAMETERS.objects_made.slice();
+	modelData.custom_objects_made_count = GLOBAL_PARAMETERS.custom_objects_made_count;
+
 	// for each savedModel attach an associated image if model is not deleted
 	
-	for (i = 0; i < response.savedModels.length; i++){
-		if (typeof response.savedModels[i] === "undefined" || !response.savedModels[i].is_deleted){
-			var id = response.savedModels[i].id;
+	for (var i = 0; i < modelData.savedModels.length; i++){
+		if (typeof modelData.savedModels[i] === "undefined" || !modelData.savedModels[i].is_deleted){
+			var id = modelData.savedModels[i].id;
 			// go through all images looking for this id
 			for (var j = 0; j < GLOBAL_PARAMETERS.images.length; j++){
 				var img = GLOBAL_PARAMETERS.images[j];
 				if (img.id == id){
-					response.images.push(img);
+					modelData.images.push(img);
 				}
 			}	
 		}
 	}
-	response.custom_objects_made_count = GLOBAL_PARAMETERS.custom_objects_made_count;
-	response.tableData = GLOBAL_PARAMETERS.tableData;
 
 	// save event history
-	response.history = this.feedbackManager.getHistory(250000);
 	var latestState = this.getLatestState();
 	// only save if history is different from previous - otherwise we're just adding unnecessary data
-	if (((latestState == null || typeof latestState.response.history === "undefined" ) && response.history.length > 0) ||
-		(typeof latestState.response.history !== "undefined" && (latestState.response.history.length != response.history.length 
-			|| (latestState.response.history[latestState.response.history.length-1].index != response.history[response.history.length-1].index)))) 
-		{
+	if (((latestState == null || typeof latestState.history === "undefined" ) && history.length > 0) ||
+		(typeof latestState.history !== "undefined" && (latestState.history.length != history.length || (latestState.history[latestState.history.length-1].index != history[history.length-1].index))) ||
+		(latestState.response == null && response.length > 0) || latestState.response !== response
+	){
 
-		console.log("---------------------- SAVING appx length -----------------------", (JSON.stringify(response.history).length+JSON.stringify(response.images).length+JSON.stringify(response.tableData).length+JSON.stringify(response.savedModels).length)*2);
+		console.log("---------------------- SAVING appx length -----------------------", (JSON.stringify(history).length+JSON.stringify(modelData.images).length+JSON.stringify(tableData).length+JSON.stringify(modelData.savedModels).length)*2 + response.length);
 		//} 
 		//go thro
 		/*
@@ -500,7 +923,7 @@ Box2dModel.prototype.save = function(evt) {
 		 * and in that file you would define QuizState and therefore
 		 * would change the Box2dModelState to QuizState below
 		 */
-		var box2dModelState = new Box2dModelState(response);
+		var box2dModelState = new Box2dModelState(response, tableData, modelData, history);
 		/*
 		 * fire the event to push this state to the global view.states object.
 		 * the student work is saved to the server once they move on to the

@@ -57,8 +57,8 @@ define([], function() {
             return this.getConfigParam('sessionLogOutURL');
         };
 
-        serviceObject.getStudentAssetManagerURL = function() {
-            return this.getConfigParam('studentAssetManagerURL');
+        serviceObject.getStudentAssetsURL = function() {
+            return this.getConfigParam('studentAssetsURL');
         };
 
         serviceObject.getStudentStatusURL = function() {

@@ -103,11 +103,12 @@ var UNDEFINED,
 	Highcharts;
 
 // The Highcharts namespace
-if (win.Highcharts) {
-	error(16, true);
+/*if (win.Highcharts) {
+	//error(16, true);
 } else {
 	Highcharts = win.Highcharts = {};
-}
+}*/
+	Highcharts = win.Highcharts = {};
 /**
  * Extend an object with the members of another
  * @param {Object} a The object to be extended
@@ -848,7 +849,7 @@ pathAnim = {
 	/**
 	 * The default HighchartsAdapter for jQuery
 	 */
-	win.HighchartsAdapter = win.HighchartsAdapter || ($ && {
+	win.HighchartsAdapter =  ($ && {
 		
 		/**
 		 * Initialize the adapter by applying some extensions to jQuery

@@ -35,7 +35,10 @@ var studentVLEScripts = [
 	 */
 	'vle/node/box2dModel/box2dModelState.js',
 	scriptloader.jquerySrc,
-	scriptloader.jqueryUISrc
+	scriptloader.jqueryUISrc,
+	'vle/lib/highcharts/highcharts.src.js',
+	'vle/lib/highcharts/highcharts-regression.js',
+	'vle/lib/highcharts/technical-indicators.src.js'
 ];
 
 var authorScripts = [
@@ -68,7 +71,10 @@ var dependencies = [
 	 * For example if you are creating a quiz node you would change it to
 	 * 'vle/node/quiz/QuizNode.js'
 	 */
-	{child:"vle/node/box2dModel/Box2dModelNode.js", parent:["vle/node/Node.js"]}
+	{child:"vle/node/box2dModel/Box2dModelNode.js", parent:["vle/node/Node.js"]},
+	{child:'vle/lib/highcharts/highcharts.src.js', parent:[scriptloader.jquerySrc]},
+	{child:'vle/lib/highcharts/highcharts-regression.js', parent:['vle/lib/highcharts/highcharts.src.js']},
+	{child:'vle/lib/highcharts/technical-indicators.src.js', parent:['vle/lib/highcharts/highcharts.src.js']}
 ];
 
 /*

@@ -1,9 +1,13 @@
 {
 	"prompt": "",
+	"prompt2": "",
+	"expectedLines": 0,
 	"excelExportStringTemplate":"",
 	"isMustCompleteAllPartsBeforeExit":true,
    	"type": "Box2dModel",
 	"LAB_HEIGHT" : 560,
+	"INCLUDE_SINK_FLOAT_GRAPH": true,
+	"INCLUDE_MATERIALS_GRAPH": false,
 	"INCLUDE_BLOCKCOMP_BUILDER": false,
 	"INCLUDE_CYLINDER_BUILDER":false,
 	"INCLUDE_RECTPRISM_BUILDER":false,
