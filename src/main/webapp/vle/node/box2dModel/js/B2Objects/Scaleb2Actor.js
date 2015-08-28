@@ -336,7 +336,7 @@
 	}
 
 	p.update = function (){
-		if (this.base != null){
+		if (this.base != null && (this.stationaryCount <= 5 || this.tareFlagForUpdate || this.justAddedBody != null || this.toBeRemovedBody != null)){
 			var pan_y;
 			if (this.parent.parent == null){
 				this.x = (this.base.GetPosition().x) * GLOBAL_PARAMETERS.SCALE - this.parent.x;
@@ -360,6 +360,7 @@
 			if (this.prev_rF != rF ){
 				this.skin.redraw(pan_y - this.y, displayVal);
 				this.prev_rF = rF;
+				this.stationaryCount = 0;
 				//this.tareFlagForUpdate = false;
 			} else {
 				if (Math.abs(this.pan.prevPosition.y - this.pan.GetPosition().y) < 0.00001){
@@ -384,6 +385,7 @@
 								'Volume_on_pan':this.volumeOnPan,
 								'Mass_of_pan':this.pan.GetMass(),
 								'Tare_amount':this.tareValue,
+								'Object_count':this.contactedBodies.length-1
 							};
 							eventManager.fire('test-on-scale',[this.justAddedBody.GetUserData()['actor'].skin.savedObject, scaleDetails], box2dModel);
 							this.justAddedBody.bobbing = false;	

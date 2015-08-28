@@ -41,7 +41,10 @@
 		this.savedObject.width_units = width_units;
 		this.savedObject.height_units = height_units;
 		this.savedObject.depth_units = depth_units;
+		this.savedObject.init_liquid_volume = this.init_liquid_volume;
 		this.savedObject.init_liquid_volume_perc = init_liquid_volume_perc;
+		this.savedObject.liquid_volume = this.init_liquid_volume;
+		this.savedObject.liquid_volume_perc = init_liquid_volume_perc;
 		this.savedObject.spilloff_volume_perc = spilloff_volume_perc;
 		this.savedObject.liquid_density = liquid.density;
 		this.savedObject.liquid_name = typeof liquid.name !== "undefined" ? liquid.name : liquid.display_name;
@@ -433,6 +436,10 @@
 			}
 		}
 		this.liquid_volume += volume;
+		// update saved object
+		this.savedObject.liquid_volume = this.liquid_volume;
+		this.savedObject.liquid_volume_perc = this.liquid_volume / this.beaker_volume;
+
 		this.controller.ChangeOffset (-volume/(this.width_units * this.depth_units));
 		return true;
 	}	
@@ -452,6 +459,10 @@
 				}
 				var volume = this.puddles[i].volume;
 				this.liquid_volume -= volume;
+				// update saved object
+				this.savedObject.liquid_volume = this.liquid_volume;
+				this.savedObject.liquid_volume_perc = this.liquid_volume / this.beaker_volume;
+
 				this.controller.ChangeOffset (volume/(this.width_units * this.depth_units));
 				this.puddles.splice(i, 1);
 				this.skin.redraw(-this.controller.offset * GLOBAL_PARAMETERS.SCALE, false);
@@ -630,7 +641,11 @@
 				this.liquid_volume -= spilloff;
 				this.controller.ChangeOffset(spilloff_dheight);
 				var beaker_underneath = this.parent.addLiquidVolumeToWorld(this.x+this.skin.spout_point.x, this.y+this.skin.spout_point.y, spilloff, this);
-				if (!this.draining) eventManager.fire("release-from-beaker", [{'Volume_released':this.initial_liquid_volume - this.liquid_volume,'Volume_collected':(beaker_underneath != null ? beaker_underneath.liquid_volume : 0)}], box2dModel);
+				if (!this.draining){
+					this.savedObject.liquid_volume = this.liquid_volume;
+					this.savedObject.liquid_volume_perc = this.liquid_volume / this.beaker_volume;
+					eventManager.fire("release-from-beaker", [{'Volume_released':this.initial_liquid_volume - this.liquid_volume,'Volume_collected':(beaker_underneath != null ? beaker_underneath.liquid_volume : 0)}], box2dModel);
+				}
 				this.drawRefillButton();
 			}
 			if (-this.controller.offset > this.spilloff_height) this.drawReleaseButton();

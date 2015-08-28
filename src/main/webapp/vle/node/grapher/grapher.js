@@ -3108,7 +3108,7 @@ Grapher.prototype.processTagMaps = function() {
 				var tagName = tagMapObject.tagName;
 				var functionName = tagMapObject.functionName;
 				var functionArgs = tagMapObject.functionArgs;
-				
+
 				if(functionName == "importWork") {
 					//get the work to import
 					workToImport = this.node.getWorkToImport(tagName, functionArgs);
@@ -3117,17 +3117,176 @@ Grapher.prototype.processTagMaps = function() {
 					this.node.showPreviousWork($('#previousWorkDiv'), tagName, functionArgs);
 				} else if(functionName == "checkCompleted") {
 					//we will check that all the steps that are tagged have been completed
-					
+
 					//get the result of the check
 					var result = this.node.checkCompleted(tagName, functionArgs);
 					enableStep = enableStep && result.pass;
-					
+
 					if(message == '') {
 						message += result.message;
 					} else {
 						//message is not an empty string so we will add a new line for formatting
 						message += '<br>' + result.message;
 					}
+				} else if (functionName == "importTable"){
+					//get the work to import
+					var bstate = this.node.getWorkToImport(tagName, functionArgs)[0];
+					if (typeof bstate !== "undefined" && typeof bstate.tableData !== "undefined" &&
+							// also compare timestamps use more recent previous work from latest state
+						(this.states.length == 0 || typeof this.states[this.states.length-1].timestamp === "undefined" || typeof bstate.timestamp === "undefined" ||
+							this.states[this.states.length-1].timestamp < bstate.timestamp
+						)
+					){
+						var tableData = []; //this
+						var ptableData = bstate.tableData; //stored
+
+						// make a copy (do not affect previous table)
+						for (var i = 0; i < ptableData.length; i++){
+							// get the index for this item
+							tableData[i] = [];
+							for (var j = 0; j < ptableData[i].length; j++){
+								var obj = {};
+								for (var key in ptableData[i][j]){
+									obj[key] = ptableData[i][j][key];  //copy values
+								}
+								tableData[i].push(obj);
+							}
+						}
+
+						var showTestedMassValuesOnly = functionArgs[0] == "true" ||  functionArgs[0] == "1" ? true: false;
+						var showTestedLiquidValuesOnly = functionArgs[1] == "true" ||  functionArgs[1] == "1" ? true: false;
+						var arrColumnNamesToImport = functionArgs.length > 2 ? functionArgs[2].split(/ *, */) : [];
+						// if showTestedValuesOnly make any values associated with mass or volume correspond to test on scale or beaker
+						if (showTestedLiquidValuesOnly){
+							var tested_in_any_beaker = [];
+							for (var j = 1; j < tableData[0].length; j++) tested_in_any_beaker[j-1] = false;
+
+							for (var i = tableData.length-1; i >= 0; i--){
+								if (tableData[i][0].text.substr(0,10) == "Tested_in_"){
+									var liquid_name = tableData[i][0].text.substr(10);
+									for (var j = 1; j < tableData[i].length; j++){
+										// if this object was not tested remove values in other columns associated with this liquid
+										if (tableData[i][j].text == 0){
+											for (var k = 0; k < tableData.length; k++){
+												if (tableData[k][0].text.substr(tableData[k][0].text.length - liquid_name.length) == liquid_name && k != i){
+													tableData[k][j].text = "?";
+												}
+											}
+										} else {
+											tested_in_any_beaker[j-1] = true;
+										}
+									}
+								}
+							}
+							// now we know for each row whether object has been tested in any beaker
+							// go through each tested_in_any_beaker and update volume
+							for (var t = 0; t < tested_in_any_beaker.length; t++){
+								j = t + 1;
+								if (tested_in_any_beaker[t] == 0){
+									for (var k = 0; k < tableData.length; k++){
+										if (tableData[k][0].text.substr(tableData[k][0].text.length - 6) == "Volume" || tableData[k][0].text.substr(tableData[k][0].text.length - 7) == "Density"){
+											tableData[k][j].text = "?";
+										}
+									}
+								}
+							}
+						}
+						if (showTestedMassValuesOnly){
+							for (var i = tableData.length-1; i >= 0; i--){
+								if (tableData[i][0].text.substr(0,15) == "Tested_on_Scale"){
+									for (var j = 1; j < tableData[i].length; j++){
+										// if this object was not tested remove values in other columns associated with this liquid
+										if (tableData[i][j].text == 0){
+											for (var k = 0; k < tableData.length; k++){
+												if (tableData[k][0].text.substr(tableData[k][0].text.length - 4) == "Mass" || tableData[k][0].text.substr(tableData[k][0].text.length - 7) == "Density"){
+													tableData[k][j].text = "?";
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+						// remove "tested in variables"
+						for (var i = tableData.length-1; i >= 0; i--){
+							if (tableData[i][0].text.substr(0,6) == "Tested"){
+								tableData.splice(i,1);
+							}
+						}
+						// remove "id" if we are not showing previous work and we are not specifying columns
+						if ($("#previousWorkDiv").children().length == 0 && arrColumnNamesToImport.length == 0){
+							for (var i = tableData.length-1; i >= 0; i--){
+								if (tableData[i][0].text=="id"){
+									tableData.splice(i,1);
+								}
+							}
+						}
+						// use spaces instead of underscores
+						for (var i = tableData.length-1; i >= 0; i--){
+							tableData[i][0].text = tableData[i][0].text.replace(/_/g, " ");
+						}
+						// use only specified column names
+						if (arrColumnNamesToImport.length > 0){
+							var ntableData = [];
+							for (var c = arrColumnNamesToImport.length-1; c >= 0; c--){
+								var colName = arrColumnNamesToImport[c];
+								for (var i = tableData.length-1; i >= 0; i--){
+									if (tableData[i][0].text.match(colName) != null){
+										//console.log(colName,"in?", tableData[i][0].text, "because",tableData[i][0].text.match(colName));
+										ntableData.splice(0, 0, tableData.splice(i,1)[0]);
+									}
+								}
+							}
+							tableData = ntableData;
+						}
+						// replace names if argument given
+						var arrColumnNamesToDisplay = functionArgs.length > 0 && typeof functionArgs[3] === "string" ? functionArgs[3].split(/ *, */) : [];
+						if (arrColumnNamesToDisplay.length > 0){
+							for (var c = 0; c < arrColumnNamesToDisplay.length; c++){
+								var colName = arrColumnNamesToDisplay[c];
+								// is there a corresponding column at this index in the table?
+								// and is the text in the colName valid (i.e. greater than zero length)
+								if (c < tableData.length && colName.length > 0){
+									tableData[c][0].text = colName;
+								}
+							}
+						}
+
+						// round numbers
+						for (var i = tableData.length-1; i >= 0; i--){
+							for (var j = 1; j < tableData[i].length; j++){
+								if (!isNaN(parseFloat(tableData[i][j].text))){
+									// is this an array of numbers?
+									if (typeof tableData[i][j].text.length !== "undefined"){
+										for (var l = 0; l < tableData[i][j].text.length; l++){
+											tableData[i][j].text[l] = Math.round(tableData[i][j].text[l]*100)/100;
+										}
+									} else {
+										tableData[i][j].text = Math.round(tableData[i][j].text*100)/100;
+									}
+								}
+							}
+						}
+						// create html to attach
+						var elem = "<div id='tableDiv'><br/>";
+						if (bstate.node != null && bstate.node.title.length > 0) elem += '<p>Data from step: "' + bstate.node.title + '."</p>';
+						elem += "<table style='background-color:#eef;'><tbody>";
+						for (var ri = 0; ri < tableData[0].length; ri++){
+							elem += "<tr>";
+							for (var ci = 0; ci < tableData.length; ci++){
+								elem += "<td style='border: 1px solid black; padding: 5px;'>";
+								if (ri == 0) elem += "<strong>";
+								elem += tableData[ci][ri].text;
+								if (ri == 0) elem += "</strong>";
+								elem += "</td>";
+							}
+							elem += "</tr>";
+						}
+						elem += "</tbody></table></br></div>";
+
+						$('#promptDiv').after(elem);
+					}
+					delete bstate;
 				} else if (functionName == "mustNotExceedMaxErrorBeforeAdvancing"){
 					this.view.eventManager.fire('addActiveTagMapConstraint', [this.node.id, null, 'mustCompleteBeforeAdvancing', null, null,"Your graph needs some work before advancing."]);
 				} else if (functionName == "mustNotExceedAvgErrorBeforeAdvancing"){
