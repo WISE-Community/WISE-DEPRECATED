@@ -1,6 +1,7 @@
 @charset "UTF-8";
 
 @import "compass";
+@import "compass/reset";
 
 @import "material/config";
 
@@ -10,18 +11,36 @@
 @import "material/custom";
 
 // Rules for sizing material icons
-.material-icons.md-18 { font-size: 18px; }
-.material-icons.md-24 { font-size: 24px; }
-.material-icons.md-36 { font-size: 36px; }
-.material-icons.md-48 { font-size: 48px; }
+md-icon {
+  &.md-18 {
+    font-size: 18px;
+  }
+  &.md-24 {
+    font-size: 24px;
+  }
+  &.md-36 {
+    font-size: 36px;
+  }
+  &.md-48 {
+    font-size: 48px;
+  }
 
-// Rules for using material icons as black on a light background
-.material-icons.md-dark { color: rgba(0, 0, 0, 0.54); }
-.material-icons.md-dark.md-inactive { color: rgba(0, 0, 0, 0.26); }
+  // Rules for using material icons as black on a light background
+  &.md-dark {
+    color: rgba(0, 0, 0, 0.54);
+  }
+  &.md-dark.md-inactive {
+    color: rgba(0, 0, 0, 0.26);
+  }
 
-// Rules for using material icons as white on a dark background
-.material-icons.md-light { color: rgba(255, 255, 255, 1); }
-.material-icons.md-light.md-inactive { color: rgba(255, 255, 255, 0.3); }
+  // Rules for using material icons as white on a dark background
+  &.md-light {
+    color: rgba(255, 255, 255, 1);
+  }
+  &.md-light.md-inactive {
+    color: rgba(255, 255, 255, 0.3);
+  }
+}
 
 /*
  WISE Project Styles
@@ -39,7 +58,7 @@
         "layouts/l-main",
         "layouts/l-nav",
         "layouts/l-node",
-        "layouts/l-notebook",
         "layouts/l-sidebar";
 
 // 3. Modules
+@import "modules/nav";

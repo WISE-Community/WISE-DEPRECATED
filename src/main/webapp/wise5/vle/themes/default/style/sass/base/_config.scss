@@ -1,18 +1,21 @@
 // Colors
-$primary-color: #1C8CA8;
-$accent-color-1: #F05843;
-$accent-color-2: #795C3A;
-$accent-color-3: #CAD266;
-$warn-color: #F44336;
-$success-color: #62C766;
+$primary-color: #1C8CA8 !default;
+$accent-color-1: #F05843 !default;
+$accent-color-2: #795C3A !default;
+$accent-color-3: #CAD266 !default;
+$warn-color: #F44336 !default;
+$success-color: #62C766 !default;
 
-$body-color: rgba(0,0,0,0.87);
-
-$gray-lighter: #eeeeee;
-$gray-light: #dddddd;
-$gray: #cccccc;
-$gray-dark: #333333;
+$gray-lightest: #f7f7f7 !default;
+$gray-lighter: #eeeeee !default;
+$gray-light: #dddddd !default;
+$gray: #cccccc !default;
+$gray-dark: #777777 !default;
+$gray-darker: #333333 !default;
 
 // Typography
-$text-color-dark: rgba(0, 0, 0, 0.87);
-$text-color-light: rgba(255, 255, 255, 0.87);
+$text-color-dark: rgba(0, 0, 0, 0.87) !default;
+$text-color-secondary: rgba(0, 0, 0, 0.54) !default;
+$text-color-light: rgba(255, 255, 255, 0.87) !default;
+
+$body-color: $text-color-dark;

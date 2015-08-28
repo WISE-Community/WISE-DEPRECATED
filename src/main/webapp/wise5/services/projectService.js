@@ -966,6 +966,41 @@ define(['configService'], function(configService) {
             return title;
         };
 
+        serviceObject.getNodeIconByNodeId = function(nodeId) {
+            var node = this.getNodeById(nodeId);
+            var nodeIcon = null;
+
+            if (node != null) {
+                var nodeType = this.getNodeTypeByNode(node);
+
+                // set defaults (TODO: get from configService?)
+                var defaultName = (nodeType === 'group') ? 'explore' : 'school';
+                nodeIcon = {
+                    color: '#757575',
+                    type: 'font',
+                    fontSet: 'material-icons',
+                    fontName: defaultName,
+                    imgSrc: '',
+                    imgAlt: 'node icon'
+                };
+
+                // TODO: check for different statuses
+                var icons = node.icons;
+                if (!!icons && !!icons.default){
+                    var icon = icons.default;
+                    nodeIcon = $.extend(true, nodeIcon, icon);
+                }
+
+                // check for empty image source
+                if(!nodeIcon.imgSrc){
+                    // revert to font icon
+                    nodeIcon.type = 'font';
+                }
+            }
+
+            return nodeIcon;
+        };
+
         serviceObject.getStudentIsOnGroupNodeClass = function() {
             var studentIsOnGroupNodeClass = null;
             var project = this.getProject();
