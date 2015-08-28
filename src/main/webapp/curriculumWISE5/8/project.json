@@ -30,7 +30,15 @@
          "ids": [
             "node1",
             "node2"
-         ]
+         ],
+         "icons": {
+            "default": {
+               "color":"#2196F3",
+               "type":"font",
+               "fontSet":"material-icons",
+               "fontName":"explore"
+            }
+         }
       },
       {
          "id": "node1",
@@ -121,7 +129,14 @@
             "node13",
             "node14",
             "node15"
-         ]
+         ],
+         "icons": {
+            "default": {
+               "color":"#8D6E63",
+               "type":"img",
+               "imgSrc":"https://www.eliwhitney.org/sites/default/files/rubberbandcar400.jpg"
+            }
+         }
       },
       {
          "id": "node3",
