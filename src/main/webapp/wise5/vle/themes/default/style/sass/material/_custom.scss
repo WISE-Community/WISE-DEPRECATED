@@ -11,17 +11,22 @@ md-toolbar {
 
 .md-toolbar-tools--fit {
   width: auto;
+  padding: 0;
 
   .md-button {
     align-self: flex-start;
   }
 
   h1, h2, h3 {
-    padding: 8px 0;
+    padding: $baseline-grid 0;
   }
 }
 
 md-card[md-ink-ripple], md-card-content[md-ink-ripple] {
   position: relative;
   cursor: pointer;
+}
+
+md-card {
+  @include border-radius(4px);
 }

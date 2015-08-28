@@ -1,9 +1,12 @@
-<md-card class="nav-item-card" ng-class="itemType" ng-animate-ref="{{ item.id }}">
-    <md-card-content ng-click="nodeClicked()" role="button" md-ink-ripple="">
-        <img alt="Step Icon" src="{{ iconUrl }}" class="avatar avatar__square" /> <!-- TODO: get icon from node -->
-        <h3 class="md-title">{{ item.title }}</h3>
+<md-card class="nav-item--card" ng-class="itemType" ng-animate-ref="{{ item.id }}">
+    <md-card-content ng-click="nodeClicked()" role="button" md-ink-ripple layout="row">
+        <img ng-if="icon.type === 'img'" ng-class="isGroup ? 'avatar--square' : ''" class="md-36 avatar nav-item__avatar" ng-src="{{icon.imgSrc}}" alt="{{icon.imgAlt}}" />
+        <div ng-if="icon.type === 'font'" ng-class="isGroup ? 'avatar--square' : ''" style="background-color: {{icon.color}};" class="md-36 avatar avatar--icon nav-item__avatar">
+            <md-icon md-font-set="{{icon.fontSet}}" class="md-36 md-light">{{icon.fontName}}</md-icon>
+        </div>
+        <div class="md-title nav-item__title" style="color: {{icon.color}};" flex>{{ item.title }}  <span ng-if="isGroup" class="nav-item__info md-body-1">{{item.ids.length}} items</span></div>
     </md-card-content>
-    <md-card-footer>
+    <md-card-footer class="nav-item__more">
         <!--<md-button aria-label="Add Bookmark" class="md-icon-button" ng-click="navItemsCtrl.toggleBookmark()" ng-class="{'md-primary': child.isBookmark}">
             <md-icon> bookmark </md-icon>
         </md-button>-->

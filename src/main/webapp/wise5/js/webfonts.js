@@ -5,7 +5,7 @@ WebFont.load({
             case 'RobotoDraft':
                 WebFont.load({
                     custom: {
-                        families: ['RobotoDraft:n3,n4,n5,n7,i4'],
+                        families: ['RobotoDraft:300,400,500,700,i4'],
                         urls: [ 'wise5/style/fonts/localFonts.css' ]
                     }
                 });
@@ -21,6 +21,6 @@ WebFont.load({
         }
     },
     google: {
-        families: ['RobotoDraft:n3,n4,n5,n7,i4', 'Material Icons']
+        families: ['RobotoDraft:300,400,500,700,i4', 'Material Icons']
     }
 });

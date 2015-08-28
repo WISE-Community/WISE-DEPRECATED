@@ -25,6 +25,8 @@ define(['angular', /*'annotationService',*/ 'configService', 'currentNodeService
 
                     this.currentGroup = null;
                     this.currentChildren = [];
+                    this.currentParentGroups = [];
+                    this.currentGroupIcon = null;
                     this.groups = ProjectService.getGroups();
                     this.currentNode = CurrentNodeService.getCurrentNode();
                     this.layoutState = null;
@@ -59,7 +61,14 @@ define(['angular', /*'annotationService',*/ 'configService', 'currentNodeService
                     }));
 
                     this.nodeClicked = function(nodeId) {
-                        CurrentNodeService.setCurrentNodeByNodeId(nodeId);
+                        // check if the node is visitable
+                        if (this.isVisitable(nodeId)) {
+                            // the node is visitable
+                            CurrentNodeService.setCurrentNodeByNodeId(nodeId);
+                        } else {
+                            // the node is not visitable
+                            alert('You are not allowed to visit this step right now.');
+                        }
                     };
 
                     this.isVisitable = function(nodeId) {
@@ -119,9 +128,11 @@ define(['angular', /*'annotationService',*/ 'configService', 'currentNodeService
                             }
 
                             this.currentGroup = currentGroup;
+                            this.currentGroupIcon = ProjectService.getNodeIconByNodeId(this.currentGroupId);
                             //this.currentGroupId = this.currentGroup.id;
 
                             var childIds = this.currentGroup.ids;
+                            this.currentChildren = [];
                             if (childIds != null) {
                                 for (var c = 0; c < childIds.length; c++) {
                                     var childId = childIds[c];
@@ -130,11 +141,35 @@ define(['angular', /*'annotationService',*/ 'configService', 'currentNodeService
                                     this.currentChildren.push(node); // TODO: figure out how to order based on transitions?
                                 }
                             }
+
+                            this.currentParentGroups = [];
+                            this.currentParentGroups = this.getCurrentParentGroups(this.currentGroup);
                         }
                     };
 
                     this.filterByName = function(filter){
                         return true; // TODO: create filter
+                    };
+
+                    this.getCurrentParentGroups = function(node){
+                        var parents = [];
+                        if(this.layoutState !== 'root'){
+                            parents.push(node);
+                        }
+
+                        var getParent = function(id){
+                            var parentGroup = ProjectService.getParentGroup(id);
+                            if (parentGroup != null) {
+                                parents.push(parentGroup);
+                                getParent(parentGroup.id)
+                            }
+                        };
+
+                        getParent(node.id);
+
+                        // reverse array order to top->bottom
+                        //parents.pop();
+                        return parents.reverse();
                     };
 
                     this.updateNavigation();
@@ -151,8 +186,8 @@ define(['angular', /*'annotationService',*/ 'configService', 'currentNodeService
                         return $scope.templateUrl;
                     };
 
-                    $scope.itemType = ProjectService.isGroupNode($scope.item.id) ? 'activity' : 'step';
+                    $scope.isGroup = ProjectService.isGroupNode($scope.item.id);
 
-                    $scope.iconUrl = 'wise5/vle/themes/default/images/test-icon.svg'; // TODO: get from node content
+                    $scope.icon = ProjectService.getNodeIconByNodeId($scope.item.id);
             });
         });
