@@ -23,26 +23,17 @@
  */
 package org.wise.vle.web.wise5;
 
-import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
-import org.springframework.web.servlet.ModelAndView;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
-import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.vle.wise5.VLEService;
@@ -50,18 +41,11 @@ import org.wise.portal.service.workgroup.WorkgroupService;
 import org.wise.vle.domain.annotation.wise5.Annotation;
 import org.wise.vle.domain.work.StudentWork;
 import org.wise.vle.domain.work.Event;
-import org.wise.vle.web.AssetManager;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * Controller for handling GET and POST requests of WISE5 student data
@@ -76,12 +60,6 @@ public class StudentDataController {
 
     @Autowired
     private RunService runService;
-
-    @Autowired
-    private Properties wiseProperties;
-
-    @Autowired
-    private WorkgroupService workgroupService;
 
     @RequestMapping(method = RequestMethod.GET, value = "/student/data")
     public void getWISE5StudentData(
@@ -360,241 +338,5 @@ public class StudentDataController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    /**
-     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-     */
-    @RequestMapping(method = RequestMethod.GET, value = "/student/asset/{runId}")
-    protected void getStudentAssets(
-            @PathVariable Long runId,
-            @RequestParam(value = "workgroups", required = false) String workgroups,
-            HttpServletResponse response)
-            throws ServletException, IOException {
-
-        User user = ControllerUtil.getSignedInUser();
-
-        Run run = null;
-        try {
-            run = runService.retrieveById(runId);
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-        } catch (ObjectNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        //get the student uploads base directory path
-        String studentUploadsBaseDir = wiseProperties.getProperty("studentuploads_base_dir");
-
-        if (workgroups != null) {
-            // this is a request from the teacher of the run or admin who wants to see the run's students' assets
-            if (user.isAdmin() || runService.hasRunPermission(run, user, BasePermission.READ)) {  // verify that user is the owner of the run
-                String[] workgroupIds = workgroups.split(":");
-                JSONArray workgroupAssetLists = new JSONArray();
-                for (int i = 0; i < workgroupIds.length; i++) {
-                    String workgroupId = workgroupIds[i];
-                    JSONObject workgroupAsset = new JSONObject();
-                    try {
-                        //get the directory name for the workgroup for this run
-                        String dirName = run.getId() + "/" + workgroupId + "/unreferenced"; // looks like /studentuploads/[runId]/[workgroupId]/unreferenced
-
-                        //get a list of file names in this workgroup's upload directory
-                        JSONArray assetList = AssetManager.getAssetList(studentUploadsBaseDir, dirName);
-                        workgroupAsset.put("workgroupId", workgroupId);
-                        workgroupAsset.put("assets", assetList);
-                        workgroupAssetLists.put(workgroupAsset);
-                    } catch (NumberFormatException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    } catch (JSONException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
-                }
-                response.getWriter().write(workgroupAssetLists.toString());
-            }
-        } else {
-            // this is a request from the student of the run who wants to see their assets
-            List<Workgroup> workgroupListByOfferingAndUser = workgroupService.getWorkgroupListByOfferingAndUser(run, user);
-            Workgroup workgroup = workgroupListByOfferingAndUser.get(0);
-            Long workgroupId = workgroup.getId();
-
-            //get the directory name for the workgroup for this run
-            String dirName = run.getId() + "/" + workgroupId + "/unreferenced"; // looks like /studentuploads/[runId]/[workgroupId]/unreferenced
-
-            //get a list of file names in this workgroup's upload directory
-            JSONArray assetList = AssetManager.getAssetList(studentUploadsBaseDir, dirName);
-            response.getWriter().write(assetList.toString());
-        }
-    }
-
-    /**
-     * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-     */
-    @RequestMapping(method = RequestMethod.POST, value = "/student/asset/{runId}")
-    protected void postStudentAsset(
-            @PathVariable Long runId,
-            HttpServletRequest request,
-            HttpServletResponse response)
-            throws ServletException, IOException {
-
-        // the student is uploading an asset
-        ServletFileUpload uploader = new ServletFileUpload(new DiskFileItemFactory());
-        List<?> fileList = null;
-        try {
-            // get a list of the files that are being uploaded
-            fileList = uploader.parseRequest(request);
-        } catch (FileUploadException e) {
-            e.printStackTrace();
-        }
-
-        User user = ControllerUtil.getSignedInUser();
-
-        // get the run
-        Run run = null;
-        try {
-            run = runService.retrieveById(runId);
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-        } catch (ObjectNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        // get the workgroup id
-        List<Workgroup> workgroupListByOfferingAndUser = workgroupService.getWorkgroupListByOfferingAndUser(run, user);
-        Workgroup workgroup = workgroupListByOfferingAndUser.get(0);
-        Long workgroupId = workgroup.getId();
-
-        // get the directory name for the workgroup for this run
-        String dirName = run.getId() + "/" + workgroupId + "/unreferenced";
-
-        // get the student uploads base directory path
-        String path = wiseProperties.getProperty("studentuploads_base_dir");
-        Long studentMaxTotalAssetsSize = new Long(wiseProperties.getProperty("student_max_total_assets_size", "5242880"));
-        String pathToCheckSize = path + "/" + dirName;
-
-        DefaultMultipartHttpServletRequest multiRequest = (DefaultMultipartHttpServletRequest) request;
-        Map<String, MultipartFile> fileMap = multiRequest.getFileMap();
-
-        // upload the files
-        String result = AssetManager.uploadAsset(fileList, fileMap, path, dirName, pathToCheckSize, studentMaxTotalAssetsSize);
-        response.getWriter().write(result);
-    }
-
-    /**
-     * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-     */
-    @RequestMapping(method = RequestMethod.POST, value = "/student/asset/{runId}/remove")
-    protected void removeStudentAsset(
-            @PathVariable Long runId,
-            @RequestParam(value = "assetFilename", required = true) String assetFilename,
-            HttpServletResponse response)
-            throws ServletException, IOException {
-
-        // the student is removing an asset
-        User user = ControllerUtil.getSignedInUser();
-
-        // get the run
-        Run run = null;
-        try {
-            run = runService.retrieveById(runId);
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-        } catch (ObjectNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        // get the workgroup id
-        List<Workgroup> workgroupListByOfferingAndUser = workgroupService.getWorkgroupListByOfferingAndUser(run, user);
-        Workgroup workgroup = workgroupListByOfferingAndUser.get(0);
-        Long workgroupId = workgroup.getId();
-
-        // get the directory name for the workgroup for this run
-        String dirName = run.getId() + "/" + workgroupId + "/unreferenced"; // looks like /studentuploads/[runId]/[workgroupId]/unreferenced
-
-        // get the student uploads base directory path
-        String path = wiseProperties.getProperty("studentuploads_base_dir");
-
-        // remove the file from the student asset folder
-        String result = AssetManager.removeAsset(path, dirName, assetFilename);
-
-        response.getWriter().write(result);
-    }
-
-    /**
-     * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-     */
-    @RequestMapping(method = RequestMethod.POST, value = "/student/asset/{runId}/copy")
-    protected void copyStudentAsset(
-            @PathVariable Long runId,
-            @RequestParam(value = "assetFilename", required = true) String assetFilename,
-            HttpServletResponse response)
-            throws ServletException, IOException {
-
-        User user = ControllerUtil.getSignedInUser();
-
-        // get the run
-        Run run = null;
-        try {
-            run = runService.retrieveById(runId);
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-        } catch (ObjectNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        // get the workgroup id
-        List<Workgroup> workgroupListByOfferingAndUser = workgroupService.getWorkgroupListByOfferingAndUser(run, user);
-        Workgroup workgroup = workgroupListByOfferingAndUser.get(0);
-        Long workgroupId = workgroup.getId();
-
-        // looks like /studentuploads/[runId]/[workgroupId]/unreferenced
-        String dirName = run.getId() + "/" + workgroupId + "/unreferenced";
-
-        String referencedDirName = "";
-
-        // if we're copying student asset for reference, also pass along the referenced dir. looks like /studentuploads/[runId]/[workgroupId]/referenced
-        referencedDirName = run.getId() + "/" + workgroupId + "/referenced";
-
-        String result = AssetManager.copyAssetForReference(dirName, referencedDirName, assetFilename);
-
-        response.getWriter().write(result);
-    }
-
-
-    /**
-     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-     */
-    @RequestMapping(method = RequestMethod.GET, value = "/student/asset/{runId}/size")
-    protected void getStudentAssetsSize(
-            @PathVariable Long runId,
-            HttpServletResponse response)
-            throws ServletException, IOException {
-
-        User user = ControllerUtil.getSignedInUser();
-
-        Run run = null;
-        try {
-            run = runService.retrieveById(runId);
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-        } catch (ObjectNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        // get the workgroup id
-        List<Workgroup> workgroupListByOfferingAndUser = workgroupService.getWorkgroupListByOfferingAndUser(run, user);
-        Workgroup workgroup = workgroupListByOfferingAndUser.get(0);
-        Long workgroupId = workgroup.getId();
-
-        // get the directory name for the workgroup for this run
-        String dirName = run.getId() + "/" + workgroupId + "/unreferenced"; // looks like /studentuploads/[runId]/[workgroupId]/unreferenced
-
-        // get the student uploads base directory path
-        String path = wiseProperties.getProperty("studentuploads_base_dir");
-
-        // get the disk space usage of the workgroup's upload directory
-        String result = AssetManager.getSize(path, dirName);
-        response.getWriter().write(result);
     }
 }

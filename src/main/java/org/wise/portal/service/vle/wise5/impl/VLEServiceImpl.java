@@ -28,6 +28,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.annotation.wise5.AnnotationDao;
+import org.wise.portal.dao.work.StudentAssetDao;
 import org.wise.portal.dao.work.StudentWorkDao;
 import org.wise.portal.dao.work.EventDao;
 import org.wise.portal.domain.group.Group;
@@ -39,6 +40,7 @@ import org.wise.portal.service.vle.wise5.VLEService;
 import org.wise.portal.service.workgroup.WorkgroupService;
 import org.wise.vle.domain.annotation.wise5.Annotation;
 import org.wise.vle.domain.work.Event;
+import org.wise.vle.domain.work.StudentAsset;
 import org.wise.vle.domain.work.StudentWork;
 
 import java.sql.Timestamp;
@@ -60,6 +62,9 @@ public class VLEServiceImpl implements VLEService {
 
     @Autowired @Qualifier("wise5AnnotationDao")
     private AnnotationDao annotationDao;
+
+    @Autowired
+    private StudentAssetDao studentAssetDao;
 
     @Autowired
     private RunService runService;
@@ -412,5 +417,152 @@ public class VLEServiceImpl implements VLEService {
 
         annotationDao.save(annotation);
         return annotation;
+    }
+
+    @Override
+    public List<StudentAsset> getStudentAssets(
+            Integer id, Integer runId, Integer periodId, Integer workgroupId,
+            String nodeId, String componentId, String componentType,
+            Boolean isReferenced) throws ObjectNotFoundException {
+
+        Run run = null;
+        if (runId != null) {
+            try {
+                boolean doEagerFetch = false;
+                run = runService.retrieveById(new Long(runId), doEagerFetch);
+            } catch (ObjectNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        Group period = null;
+        if (periodId != null) {
+            try {
+                period = groupService.retrieveById(new Long(periodId));
+            } catch (ObjectNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        WISEWorkgroup workgroup = null;
+        if (workgroupId != null) {
+            try {
+                workgroup = (WISEWorkgroup) workgroupService.retrieveById(new Long(workgroupId));
+            } catch (ObjectNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return studentAssetDao.getStudentAssetListByParams(
+                id, run, period, workgroup,
+                nodeId, componentId, componentType,
+                isReferenced);
+    }
+
+    @Override
+    public StudentAsset saveStudentAsset(
+            Integer id, Integer runId, Integer periodId, Integer workgroupId,
+            String nodeId, String componentId, String componentType,
+            Boolean isReferenced, String fileName, String filePath, Long fileSize,
+            String clientSaveTime, String clientDeleteTime) throws ObjectNotFoundException {
+        StudentAsset studentAsset;
+        if (id != null) {
+            // if the id is passed in, the client is requesting an update, so fetch the StudentWork from data store
+            try {
+                studentAsset = (StudentAsset) studentAssetDao.getById(id);
+            } catch (ObjectNotFoundException e) {
+                e.printStackTrace();
+                return null;
+            }
+        } else {
+            // the id was not passed in, so we're creating a new StudentWork from scratch
+            studentAsset = new StudentAsset();
+        }
+        if (runId != null) {
+            try {
+                boolean doEagerFetch = false;
+                studentAsset.setRun(runService.retrieveById(new Long(runId), doEagerFetch));
+            } catch (ObjectNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        if (periodId != null) {
+            try {
+                studentAsset.setPeriod(groupService.retrieveById(new Long(periodId)));
+            } catch (ObjectNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        if (workgroupId != null) {
+            try {
+                studentAsset.setWorkgroup((WISEWorkgroup) workgroupService.retrieveById(new Long(workgroupId)));
+            } catch (ObjectNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        if (nodeId != null) {
+            studentAsset.setNodeId(nodeId);
+        }
+        if (componentId != null) {
+            studentAsset.setComponentId(componentId);
+        }
+        if (componentType != null) {
+            studentAsset.setComponentType(componentType);
+        }
+        if (isReferenced != null) {
+            studentAsset.setIsReferenced(isReferenced);
+        }
+        if (fileName != null) {
+            studentAsset.setFileName(fileName);
+        }
+        if (filePath != null) {
+            studentAsset.setFilePath(filePath);
+        }
+        if (fileSize != null) {
+            studentAsset.setFileSize(fileSize);
+        }
+        if (clientSaveTime != null) {
+            Timestamp clientSaveTimestamp = new Timestamp(new Long(clientSaveTime));
+            studentAsset.setClientSaveTime(clientSaveTimestamp);
+
+            // set serverSaveTime
+            Calendar now = Calendar.getInstance();
+            Timestamp serverSaveTimestamp = new Timestamp(now.getTimeInMillis());
+            studentAsset.setServerSaveTime(serverSaveTimestamp);
+        }
+        if (clientDeleteTime != null) {
+            Timestamp clientDeleteTimestamp = new Timestamp(new Long(clientDeleteTime));
+            studentAsset.setClientDeleteTime(clientDeleteTimestamp);
+
+            // set serverDeleteTime
+            Calendar now = Calendar.getInstance();
+            Timestamp serverDeleteTimestamp = new Timestamp(now.getTimeInMillis());
+            studentAsset.setServerDeleteTime(serverDeleteTimestamp);
+        }
+
+        studentAssetDao.save(studentAsset);
+        return studentAsset;
+    }
+
+    @Override
+    public StudentAsset getStudentAssetById(Integer studentAssetId) throws ObjectNotFoundException {
+        return (StudentAsset) studentAssetDao.getById(studentAssetId);
+    }
+
+    @Override
+    public StudentAsset deleteStudentAsset(Integer studentAssetId, Long clientDeleteTime) {
+        StudentAsset studentAsset = null;
+        if (studentAssetId != null) {
+            // if the id is passed in, the client is requesting an update, so fetch the StudentWork from data store
+            try {
+                studentAsset = (StudentAsset) studentAssetDao.getById(studentAssetId);
+                studentAsset.setClientDeleteTime(new Timestamp(clientDeleteTime));
+                Calendar now = Calendar.getInstance();
+                studentAsset.setServerDeleteTime(new Timestamp(now.getTimeInMillis()));
+                studentAssetDao.save(studentAsset);
+            } catch (ObjectNotFoundException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+        return studentAsset;
     }
 }

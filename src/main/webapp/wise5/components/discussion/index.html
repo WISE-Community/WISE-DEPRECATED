@@ -13,7 +13,9 @@
     ng-model='discussionController.newResponse'
     ng-disabled='discussionController.isDisabled'
     ta-disabled='discussionController.isDisabled'
-    ng-change='discussionController.studentDataChanged()'>
+    ng-change='discussionController.studentDataChanged()'
+     data-drop='true'
+     jqyoui-droppable="{onDrop: 'discussionController.dropCallback(item, $index)'}">
 </div>
 <button ng-click='discussionController.saveButtonClicked()' 
     ng-show='discussionController.showSaveButton()' 
