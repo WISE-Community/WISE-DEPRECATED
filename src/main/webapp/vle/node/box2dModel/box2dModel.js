@@ -782,7 +782,7 @@ Box2dModel.prototype.interpretEvent = function(type, args, obj) {
 					{
 						id: 'float',
 						name: 'Float',
-						color: 'rgba(0, 155, 0, .5)',
+						color: 'rgba(0, 0, 155, .5)',
 						data: floatPoints
 					}
 				]
@@ -815,7 +815,7 @@ Box2dModel.prototype.interpretEvent = function(type, args, obj) {
 								{
 									id: this.liquids_tested[i].liquid_name,
 									name: this.liquids_tested[i].liquid_name,
-									color: GLOBAL_PARAMETERS['liquids'][this.liquids_tested[i].liquid_name] != null ? GLOBAL_PARAMETERS['liquids'][this.liquids_tested[i].liquid_name]["stroke_color"] : 'rgba(127, 127, 127, .5)',
+									color: this.liquids_tested[i].liquid_name == 'Water' ? 'rgba(0, 127, 0, 0.5)' : (GLOBAL_PARAMETERS['liquids'][this.liquids_tested[i].liquid_name] != null ? GLOBAL_PARAMETERS['liquids'][this.liquids_tested[i].liquid_name]["stroke_color"] : 'rgba(127, 127, 127, .5)'),
 									data: []
 								}
 							);
