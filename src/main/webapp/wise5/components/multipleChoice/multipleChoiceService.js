@@ -1,47 +1,90 @@
 define(['nodeService', 'studentDataService'], function(nodeService, studentDataService) {
-
+    
     var service = ['$http', 'NodeService', 'StudentDataService', function($http, NodeService, StudentDataService) {
         var serviceObject = Object.create(NodeService);
-
+        
         serviceObject.config = null;
 
+        /**
+         * Determine if the student has fulfilled the function requirements
+         * @param component the component content
+         * @param functionName the function name to call
+         * @param functionParams the parameters for the function
+         * @param componentStates the component states for the component
+         * @param componentEvents the component events for the component
+         * @param nodeEvents the node events for the parent of the component
+         * @returns whether the student has fulfilled the function requirements
+         */
         serviceObject.callFunction = function(component, functionName, functionParams, componentStates, componentEvents, nodeEvents) {
             var result = null;
 
-            if (functionName === 'isCompleted') {
-                result = this.isCompleted(component, componentStates, componentEvents, nodeEvents);
-            } else if (functionName === 'wordCountCompare') {
-                result = this.wordCountCompare(functionParams);
+            if (functionName === 'choiceChosen') {
+                result = this.choiceChosen(component, functionName, functionParams, componentStates, componentEvents, nodeEvents);
             }
 
             return result;
         };
 
-        serviceObject.wordCountCompare = function(params) {
+        /**
+         * Check if the student chose a specific choice
+         * @param component the component content
+         * @param functionName the function name to call
+         * @param functionParams the parameters for the function
+         * @param componentStates the component states for the component
+         * @param componentEvents the component events for the component
+         * @param nodeEvents the node events for the parent of the component
+         * @returns whether the student chose the specific choice
+         */
+        serviceObject.choiceChosen = function(component, functionName, functionParams, componentStates, componentEvents, nodeEvents) {
+
             var result = false;
 
-            if (params != null) {
-                var operator = params.operator;
-                var count = params.count;
-                var nodeVisits = params.nodeVisits;
+            if (componentStates != null && componentStates.length > 0) {
+                var choiceIds = functionParams.choiceIds;
 
-                var latestNodeState = this.getLatestNodeState(nodeVisits);
+                if (choiceIds != null) {
+                    // get the latest component state
+                    var componentState = componentStates[componentStates.length - 1];
 
-                var wordCount = 0;
+                    // get the student data
+                    var studentData = componentState.studentData;
 
-                if (latestNodeState != null) {
-                    var response = latestNodeState.studentData;
+                    if (studentData != null) {
 
-                    if (response != null) {
-                        wordCount = this.getWordCount(response);
+                        // get the choice(s) the student chose
+                        var studentChoices = studentData.studentChoices;
 
-                        if (operator === '<') {
-                            if (wordCount < count) {
-                                result = true;
-                            }
-                        } else if (operator === '>=') {
-                            if (wordCount >= count) {
-                                result = true;
+                        if (studentChoices != null) {
+
+                            if (studentChoices.length === choiceIds.length) {
+                                /*
+                                 * the number of choices the student chose do match so the student may
+                                 * have matched the choices. we will now need to compare each of the
+                                 * choice ids to make sure the student chose the ones that are required
+                                 */
+
+                                var studentChoiceIds = this.getStudentChoiceIdsFromStudentChoiceObjects(studentChoices);
+
+                                for (var c = 0; c < choiceIds.length; c++) {
+                                    var choiceId = choiceIds[c];
+
+                                    if (studentChoiceIds.indexOf(choiceId) === -1) {
+                                        // the required choice id is not in the student choices
+                                        result = false;
+                                        break;
+                                    } else {
+                                        // the required choice id is in the student choices
+                                        result = true;
+                                    }
+                                }
+
+                            } else {
+                                /*
+                                 * the number of choices the student chose do not match so the student did
+                                 * not match the choices
+                                 */
+
+                                result = false;
                             }
                         }
                     }
@@ -51,31 +94,65 @@ define(['nodeService', 'studentDataService'], function(nodeService, studentDataS
             return result;
         };
 
-        serviceObject.getWordCount = function(response) {
-            var wordCount = 0;
+        /**
+         * Get the student choice ids from the student choice objects
+         * @param studentChoices an array of student choice objects. these objects contain
+         * an id and text fields
+         * @returns an array of choice id strings
+         */
+        serviceObject.getStudentChoiceIdsFromStudentChoiceObjects = function(studentChoices) {
+            var choiceIds = [];
 
-            if (response != null) {
-                var regex = /\s+/gi;
-                wordCount = response.trim().replace(regex, ' ').split(' ').length;
-            }
+            if (studentChoices != null) {
 
-            return wordCount;
-        };
+                // loop through all the student choice objects
+                for (var c = 0; c < studentChoices.length; c++) {
 
-        serviceObject.getStudentWorkAsHTML = function(componentState) {
-            var studentWorkAsHTML = null;
+                    // get a student choice object
+                    var studentChoice = studentChoices[c];
 
-            if (componentState != null && componentState.studentData != null) {
-                var response = componentState.studentData.response;
+                    if (studentChoice != null) {
 
-                if (response != null) {
-                    studentWorkAsHTML = '<p>' + response + '</p>';
+                        // get the student choice id
+                        var studentChoiceId = studentChoice.id;
+
+                        choiceIds.push(studentChoiceId);
+                    }
                 }
             }
 
+            return choiceIds;
+        };
+        
+        serviceObject.getStudentWorkAsHTML = function(nodeState) {
+            var studentWorkAsHTML = null;
+            
+            if (nodeState != null) {
+                var response = nodeState.response;
+                
+                if (response != null) {
+                    studentWorkAsHTML = '';
+                    
+                    for (var x = 0; x < response.length; x++) {
+                        var choice = response[x];
+                        
+                        if (choice != null) {
+                            var text = choice.text;
+                            
+                            if (studentWorkAsHTML != '') {
+                                studentWorkAsHTML += '<br/>';
+                            }
+                            
+                            studentWorkAsHTML += text;
+                        }
+                    }
+                }
+                
+            }
+            
             return studentWorkAsHTML;
         };
-
+        
         /**
          * Populate a component state with the data from another component state
          * @param componentStateFromOtherComponent the component state to obtain the data from
@@ -84,31 +161,29 @@ define(['nodeService', 'studentDataService'], function(nodeService, studentDataS
          */
         serviceObject.populateComponentState = function(componentStateFromOtherComponent) {
             var componentState = null;
-
+            
             if (componentStateFromOtherComponent != null) {
-
+                
                 // create an empty component state
                 componentState = StudentDataService.createComponentState();
-
+                
                 // get the component type of the other component state
                 var otherComponentType = componentStateFromOtherComponent.componentType;
-
-                if (otherComponentType === 'OpenResponse') {
-                    // the other component is an OpenResponse component
-
+                
+                if (otherComponentType === 'MultipleChoice') {
+                    // the other component is an MultipleChoice component
+                    
                     // get the student data from the other component state
                     var studentData = componentStateFromOtherComponent.studentData;
-
+                    
                     // create a copy of the student data
                     var studentDataCopy = StudentDataService.makeCopyOfJSONObject(studentData);
-
+                    
                     // set the student data into the new component state
                     componentState.studentData = studentDataCopy;
-                } else if (otherComponentType === 'Planning') {
-                    componentState.studentData = JSON.stringify(componentStateFromOtherComponent.studentNodes);
                 }
             }
-
+            
             return componentState;
         };
 
@@ -135,10 +210,10 @@ define(['nodeService', 'studentDataService'], function(nodeService, studentDataS
                     var studentData = componentState.studentData;
 
                     if (studentData != null) {
-                        var response = studentData.response;
+                        var studentChoices = studentData.studentChoices;
 
-                        if (response != null) {
-                            // there is a response so the component is completed
+                        if (studentChoices != null) {
+                            // there is a student choice so the component is completed
                             result = true;
                             break;
                         }
@@ -148,8 +223,9 @@ define(['nodeService', 'studentDataService'], function(nodeService, studentDataS
 
             return result;
         };
+        
         return serviceObject;
     }];
-
+    
     return service;
 });
