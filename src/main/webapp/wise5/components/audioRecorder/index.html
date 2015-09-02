@@ -4,7 +4,7 @@
     <div id="prompt">{{audioRecorderController.nodeContent.prompt}}</div>
     
     <button id='toggleRecordingButton' ng-click="audioRecorderController.toggleRecording();">Start Recording</button>
-    <span id='recordingMsg' style='display:none'>Recording...</span>
+    <span id='statusMessage'>{{audioRecorderController.statusMessage}}</span>
     
     <h2>Recordings</h2>
     <ul id="recordingslist">
