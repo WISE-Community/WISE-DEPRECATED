@@ -5,6 +5,7 @@ var wise4Project = null;
 var nodeCounter = 1;
 var groupCounter = 0;
 var transitionCounter = 1;
+var constraintCounter = 0;
 
 var nodeX = 50;
 var nodeY = 140;
@@ -27,6 +28,7 @@ function convert() {
     nodeCounter = 1;
     groupCounter = 0;
     transitionCounter = 1;
+    constraintCounter = 0;
 
     nodeX = 50;
     nodeY = 140;
@@ -372,6 +374,7 @@ function createWISE5Node() {
     wise5Node.r = 20;
     wise5Node.showSaveButton = true;
     wise5Node.showSubmitButton = true;
+    wise5Node.constraints = [];
 
     var transitionLogic = {};
     transitionLogic.transitions = [];
@@ -965,11 +968,17 @@ function handleBranchActivity(sequence) {
 
                 var tempPreviousNodeIds = previousNodeIds;
 
+                var firstNodeIdInBranch = null;
+
                 for (var b = 0; b < branchNodes.length; b++) {
                     var wise5Node = branchNodes[b];
                     var to = wise5Node.id;
 
                     currentGroup.ids.push(wise5Node.id);
+
+                    if (b === 0) {
+                        firstNodeIdInBranch = wise5Node.id;
+                    }
 
                     for (var p = 0; p < tempPreviousNodeIds.length; p++) {
                         var tempPreviousNodeId = tempPreviousNodeIds[p];
@@ -996,46 +1005,18 @@ function handleBranchActivity(sequence) {
                             transitionLogic.maxPathsVisitable = maxPathVisitable;
                         }
 
-                        tempPreviousNodeIds = [to];
+                        for (var x = 0; x < previousNodeIds.length; x++) {
+                            var branchPointNodeId = previousNodeIds[x];
 
-                        /*
-                        var transition = getOrCreateWISE5Transition(tempPreviousNodeId);
+                            var notVisibleBranchConstraint = this.createBranchConstraint('makeThisNodeNotVisible', branchPointNodeId, firstNodeIdInBranch, to);
+                            var notVisitableBranchConstraint = this.createBranchConstraint('makeThisNodeNotVisitable', branchPointNodeId, firstNodeIdInBranch, to);
 
-                        if (transition != null) {
-                            var to = wise5Node.id;
-                            var toObject = {};
-                            toObject.to = to;
-
-                            if (b === 0) {
-                                var branchingFunction = branchNode.branchingFunction;
-                                var maxPathVisitable = branchNode.maxPathVisitable;
-
-                                transition.howToChooseAmongAvailablePaths = branchingFunction;
-                                transition.whenToChoosePath = 'enterFromNode';
-
-                                if (maxPathVisitable > 1) {
-                                    transition.canChangePath = true;
-                                } else {
-                                    transition.canChangePath = false;
-                                }
-
-                                transition.maxPathsVisitable = maxPathVisitable;
-                            }
-
-                            addToTransition(tempPreviousNodeId, toObject);
-                            tempPreviousNodeIds = [to];
+                            this.addWISE5Constraint(to, notVisibleBranchConstraint);
+                            this.addWISE5Constraint(to, notVisitableBranchConstraint);
                         }
-                        */
-
-                        /*
-                        var from = tempPreviousNodeId;
-                        var to = wise5Node.id;
-                        var wise5Transition = createWISE5Transition(from, to);
-                        addWISE5Transition(wise5Transition);
-
-                        tempPreviousNodeIds = [to];
-                        */
                     }
+
+                    tempPreviousNodeIds = [to];
 
                     if (b === (branchNodes.length - 1)) {
                         lastNodeIds.push(wise5Node.id);
@@ -1047,6 +1028,40 @@ function handleBranchActivity(sequence) {
         previousNodeIds = lastNodeIds;
 
         console.log('branchNode=' + branchNode);
+    }
+};
+
+function createBranchConstraint(constraintAction, fromNodeId, toNodeId, targetNodeId) {
+    var branchConstraint = null;
+
+    if (fromNodeId != null && toNodeId != null && targetNodeId != null) {
+        branchConstraint = {};
+        branchConstraint.id = 'constraint' + constraintCounter;
+        branchConstraint.action = constraintAction;
+        branchConstraint.targetId = targetNodeId;
+        branchConstraint.removalCriteria = [];
+
+        constraintCounter++;
+
+        var criteria = {};
+        criteria.functionName = 'branchPathTaken';
+        criteria.fromNodeId = fromNodeId;
+        criteria.toNodeId = toNodeId;
+
+        branchConstraint.removalCriteria.push(criteria);
+    }
+
+    return branchConstraint;
+};
+
+function addWISE5Constraint(nodeId, constraint) {
+
+    //wise5Project.constraints.push(constraint);
+
+    var node = getWISE5NodeById(nodeId);
+
+    if (node != null) {
+        node.constraints.push(constraint);
     }
 };
 

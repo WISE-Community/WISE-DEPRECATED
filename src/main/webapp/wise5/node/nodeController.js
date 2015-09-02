@@ -35,7 +35,6 @@ define(['app'], function(app) {
          * Perform setup of the node
          */
         this.setup = function() {
-
             // get the current node and node id
             var currentNode = CurrentNodeService.getCurrentNode();
             if (currentNode != null) {
@@ -71,6 +70,12 @@ define(['app'], function(app) {
 
             // register this controller to listen for the exit event
             this.registerExitListener();
+
+            if (this.hasTransitionLogic() && this.evaluateTransitionLogicOn('enterNode')) {
+                this.evaluateTransitionLogic();
+            }
+
+            //console.log(ProjectService.getBranches());
         };
         
         /**
@@ -193,43 +198,7 @@ define(['app'], function(app) {
             
             return components;
         };
-        
-        /**
-         * Get the part given the part id
-         * @param partId the part id we want
-         * @return the part object with the given part id
-         */
-        this.getPartByPartId = function(partId) {
-            
-            var part = null;
-            
-            if (partId != null) {
-                
-                // get all the parts
-                var parts = this.getComponents();
-                
-                // loop through all the parts
-                for (var p = 0; p < parts.length; p ++) {
-                    
-                    // get a part
-                    var tempPart = parts[p];
-                    
-                    if (tempPart != null) {
-                        var tempPartId = tempPart.id;
-                        
-                        // check if the part id matches the one we want
-                        if (tempPartId === partId) {
-                            // the part id matches
-                            part = tempPart;
-                            break;
-                        }
-                    }
-                }
-            }
-            
-            return part;
-        };
-        
+
         /**
          * Get the component given the component id
          * @param componentId the component id we want
@@ -929,11 +898,8 @@ define(['app'], function(app) {
 
                         if (toNodeId != null) {
 
-                            // get the node status for the to node
-                            var toNodeNodeStatus = StudentDataService.getNodeStatusByNodeId(toNodeId);
-
                             // check if the criteria was satisfied and the to node is visitable
-                            if (criteriaResult && toNodeNodeStatus != null && toNodeNodeStatus.isVisitable) {
+                            if (criteriaResult) {
 
                                 // the student is allowed to use the transition
                                 availableTransitions.push(transition);
@@ -977,16 +943,31 @@ define(['app'], function(app) {
             if (currentNode != null) {
                 var currentNodeId = currentNode.id;
 
-                // get the transition logic from the current node
-                var transitions = ProjectService.getTransitionLogicByFromNodeId(currentNodeId);
+                var nodeStates = StudentDataService.getBranchPathTakenNodeStates(currentNodeId);
 
-                // choose a transition
-                var transition = this.chooseTransition(transitions);
+                if (nodeStates != null) {
+                    for (var ns = nodeStates.length - 1; ns >= 0; ns--) {
+                        var nodeState = nodeStates[ns];
 
-                if (transition != null) {
-                    // move the student to the to node
-                    var toNodeId = transition.to;
-                    CurrentNodeService.setCurrentNodeByNodeId(toNodeId);
+                        var studentData = nodeState.studentData;
+
+                        if (studentData != null) {
+                            var toNodeId = studentData.toNodeId;
+                            CurrentNodeService.setCurrentNodeByNodeId(toNodeId);
+                        }
+                    }
+                } else {
+                    // get the transition logic from the current node
+                    var transitions = ProjectService.getTransitionLogicByFromNodeId(currentNodeId);
+
+                    // choose a transition
+                    var transition = this.chooseTransition(transitions);
+
+                    if (transition != null) {
+                        // move the student to the to node
+                        var toNodeId = transition.to;
+                        CurrentNodeService.setCurrentNodeByNodeId(toNodeId);
+                    }
                 }
             }
         };
@@ -1024,6 +1005,183 @@ define(['app'], function(app) {
                     }
                 }
             }
+        };
+
+        this.hasTransitionLogic = function() {
+            var result = false;
+
+            var currentNode = CurrentNodeService.getCurrentNode();
+
+            if (currentNode != null) {
+                var transitionLogic = currentNode.transitionLogic;
+
+                if (transitionLogic != null) {
+                    result = true;
+                }
+            }
+
+            return result;
+        };
+
+        this.evaluateTransitionLogic = function() {
+
+            // get the current node
+            var currentNode = CurrentNodeService.getCurrentNode();
+
+            if (currentNode != null) {
+
+                var transitionLogic = currentNode.transitionLogic;
+
+                if (transitionLogic != null) {
+                    //var whenToChoosePath = transitionLogic.whenToChoosePath;
+
+                    //var nodeStates = StudentDataService.getNodeStatesByNodeId(this.nodeId);
+
+                    var transitions = transitionLogic.transitions;
+                    var canChangePath = transitionLogic.canChangePath;
+
+                    var alreadyBranched = false;
+                    var latestBranchNodeState = this.getLatestBranchNodeState();
+
+                    if (latestBranchNodeState != null) {
+                        alreadyBranched = true;
+                    }
+
+                    if (alreadyBranched) {
+                        // student has previously branched
+
+                        if (canChangePath) {
+                            // student can change path
+
+                            // choose a transition
+                            var transition = this.chooseTransition(transitionLogic);
+
+                            if (transition != null) {
+                                var fromNodeId = this.nodeId;
+                                var toNodeId = transition.to;
+
+                                this.createBranchNodeState(fromNodeId, toNodeId);
+                            }
+                        } else {
+                            // student can't change path
+
+                        }
+
+                    } else {
+                        // student has not branched yet
+
+                        // choose a transition
+                        var transition = this.chooseTransition(transitionLogic);
+
+                        if (transition != null) {
+                            var fromNodeId = this.nodeId;
+                            var toNodeId = transition.to;
+
+                            this.createBranchNodeState(fromNodeId, toNodeId);
+                        }
+                    }
+                }
+            }
+        };
+
+        this.getBranchNodeStates = function() {
+            var branchNodeStates = [];
+
+            var nodeStates = StudentDataService.getNodeStatesByNodeId(this.nodeId);
+
+            if (nodeStates != null) {
+                for (var n = 0; n < nodeStates.length; n++) {
+                    var nodeState = nodeStates[n];
+
+                    if (nodeState != null) {
+                        var studentData = nodeState.studentData;
+
+                        if (studentData != null) {
+                            var dataType = studentData.dataType;
+
+                            if (dataType != null && dataType === 'branchPathTaken') {
+                                branchNodeStates.push(nodeState);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return branchNodeStates;
+        };
+
+        this.createBranchNodeState = function(fromNodeId, toNodeId) {
+
+            if (fromNodeId != null && toNodeId != null) {
+
+                // create a new node state
+                var nodeState = NodeService.createNewNodeState();
+                nodeState.runId = ConfigService.getRunId();
+                nodeState.periodId = ConfigService.getPeriodId();
+                nodeState.workgroupId = ConfigService.getWorkgroupId();
+                nodeState.nodeId = this.nodeId;
+                nodeState.isAutoSave = false;
+
+                var studentData = {};
+                studentData.dataType = 'branchPathTaken';
+                studentData.fromNodeId = fromNodeId;
+                studentData.toNodeId = toNodeId;
+
+                nodeState.studentData = studentData;
+                var nodeStates = [];
+                nodeStates.push(nodeState);
+                StudentDataService.saveNodeStates(nodeStates);
+            }
+        };
+
+        /**
+         * Get the latest branch node state for this node
+         */
+        this.getLatestBranchNodeState = function() {
+
+            var latestBranchNodeState = null;
+
+            var nodeStates = StudentDataService.getNodeStatesByNodeId(this.nodeId);
+
+            if (nodeStates != null) {
+                for (var n = nodeStates.length - 1; n >= 0; n--) {
+                    var nodeState = nodeStates[n];
+
+                    if (nodeState != null) {
+                        var studentData = nodeState.studentData;
+
+                        if (studentData != null) {
+                            var dataType = studentData.dataType;
+
+                            if (dataType != null && dataType === 'branchPathTaken') {
+                                latestBranchNodeState = nodeState;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return latestBranchNodeState;
+        };
+
+        this.evaluateTransitionLogicOn = function(event) {
+
+            var result = false;
+
+            // get the current node
+            var currentNode = CurrentNodeService.getCurrentNode();
+
+            if (currentNode != null) {
+                var transitionLogic = currentNode.transitionLogic;
+
+                var whenToChoosePath = transitionLogic.whenToChoosePath;
+
+                if (event === whenToChoosePath) {
+                    result = true;
+                }
+            }
+
+            return result;
         };
         
         // perform setup of this node

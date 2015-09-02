@@ -12,7 +12,7 @@ define(['nodeService'], function(nodeService) {
         
         serviceObject.config = null;
         
-        serviceObject.callFunction = function(functionName, functionParams) {
+        serviceObject.callFunction = function(node, component, functionName, functionParams, componentStates, nodeStates, componentEvents, nodeEvents) {
             var result = null;
             
             if (functionName === 'wordCountCompare') {

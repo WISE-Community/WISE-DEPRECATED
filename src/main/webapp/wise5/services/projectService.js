@@ -12,6 +12,7 @@ define(['configService'], function(configService) {
         serviceObject.idToTransition = {};
         serviceObject.metadata = {};
         serviceObject.idToContent = {};
+        serviceObject.activeConstraints = [];
 
         serviceObject.getProject = function() {
             return this.project;
@@ -216,6 +217,7 @@ define(['configService'], function(configService) {
                         var nodeId = node.id;
                         var nodeType = node.type;
                         var content = node.content;
+                        var constraints = node.constraints;
 
                         this.setIdToNode(nodeId, node);
                         this.setIdToElement(nodeId, node);
@@ -236,6 +238,14 @@ define(['configService'], function(configService) {
 
                         if (groupId != null) {
                             this.addNodeToGroupNode(groupId, nodeId);
+                        }
+
+                        if (constraints != null) {
+                            for (var c = 0; c < constraints.length; c++) {
+                                var constraint = constraints[c];
+
+                                this.activeConstraints.push(constraint);
+                            }
                         }
                     }
                 }
@@ -276,6 +286,7 @@ define(['configService'], function(configService) {
 
                         if (constraint != null) {
                             var constraintId = constraint.id;
+                            constraint.active = true;
 
                             this.setIdToElement(constraintId, constraint);
                         }
@@ -622,12 +633,7 @@ define(['configService'], function(configService) {
         };
 
         serviceObject.getConstraints = function() {
-            var constraints = null;
-            var project = this.getProject();
-
-            if (project != null) {
-                constraints = project.constraints;
-            }
+            var constraints = this.activeConstraints;
 
             return constraints;
         };
@@ -672,17 +678,6 @@ define(['configService'], function(configService) {
                         if (this.isNodeDescendentOfGroup(node, targetNode)) {
                             result = true;
                         }
-                    }
-                }
-
-                var targetTransition = this.getTransitionById(targetId);
-
-                if (targetTransition != null) {
-                    var from = targetTransition.from;
-                    var to = targetTransition.to;
-
-                    if (nodeId === to) {
-                        result = true;
                     }
                 }
             }

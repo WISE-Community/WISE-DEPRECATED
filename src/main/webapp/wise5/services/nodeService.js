@@ -255,11 +255,13 @@ define(['configService', 'projectService', 'studentDataService'], function(confi
             return result;
         };
 
-        serviceObject.callFunction = function(component, functionName, functionParams, componentStates, componentEvents, nodeEvents) {
+        serviceObject.callFunction = function(node, component, functionName, functionParams, componentStates, nodeStates, componentEvents, nodeEvents) {
             var result = null;
 
             if (functionName === 'isCompleted') {
                 result = this.isCompleted(functionParams);
+            } else if (functionName === 'branchPathTaken') {
+                result = this.branchPathTaken(node, component, functionName, functionParams, componentStates, nodeStates, componentEvents, nodeEvents);
             }
 
             return result;
@@ -284,6 +286,49 @@ define(['configService', 'projectService', 'studentDataService'], function(confi
 
             return result;
         };
+
+        serviceObject.branchPathTaken = function(node, component, functionName, functionParams, componentStates, nodeStates, componentEvents, nodeEvents) {
+
+            var result = false;
+
+            var expectedFromNodeId = null;
+            var expectedToNodeId = null;
+
+            if (node != null) {
+                expectedFromNodeId = node.id;
+            }
+
+            if (functionParams != null && functionParams.toNodeId != null) {
+                expectedToNodeId = functionParams.toNodeId;
+            }
+
+            if (nodeStates != null) {
+                for (var n = 0; n < nodeStates.length; n++) {
+                    var nodeState = nodeStates[n];
+
+                    if (nodeState != null) {
+                        var studentData = nodeState.studentData;
+
+                        if (studentData != null) {
+                            var dataType = nodeState.dataType;
+
+                            if (dataType != null && dataType === 'branchPathTaken') {
+
+                                var fromNodeId = studentData.fromNodeId;
+                                var toNodeId = studentData.toNodeId;
+
+                                if (expectedFromNodeId === fromNodeId &&
+                                    expectedToNodeId === toNodeId) {
+                                    result = true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return result;
+        }
         
         return serviceObject;
     }];

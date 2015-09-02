@@ -41,7 +41,7 @@ define(['app'], function(app) {
          * Perform setup of the component
          */
         this.setup = function() {
-            
+
             // get the current node and node id
             var currentNode = CurrentNodeService.getCurrentNode();
             if (currentNode != null) {
