@@ -1,9 +1,11 @@
 // Mixins
 
+
 // Misc
 .auto-height {
   height: auto;
-  min-height: auto;
+  min-height: unset;
+  max-height: none;
 }
 
 .auto-width {

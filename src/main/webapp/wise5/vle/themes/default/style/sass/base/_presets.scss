@@ -1,21 +1,90 @@
 // 1. Config
 $body-bgcolor: $gray-lighter !default;
+$avatar-icon-padding: 6px !default;
+$avatar-icon-padding-lg: 8px !default;
 
 // 2. Base
 body {
   background: $body-bgcolor;
 }
 
+// Links
+a {
+  color: $primary-color;
+  cursor: pointer;
+  border-bottom: 1px solid transparent;
+  @include transition(border-bottom 0.3s);
+
+  &:hover, &:focus {
+    border-bottom: 1px solid;
+  }
+}
+
+.breadcrumb {
+  .ng-enter, .ng-leave {
+    @include transition(300ms cubic-bezier(0.250, 0.250, 0.750, 0.750) opacity);
+  }
+
+  .ng-leave.ng-leave-active, .ng-enter {
+    opacity: 0;
+  }
+
+  .ng-enter.ng-enter-active, .ng-leave {
+    opacity: 1;
+  }
+}
+
 // Images
 .avatar {
-  width: $list-item-primary-avatar-width;
-  height: $list-item-primary-avatar-width;
   border-radius: 50%;
   box-sizing: content-box;
 }
 
-.avatar__square {
-  border-radius: 0%;
+.avatar--square {
+  border-radius: 0;
+}
+
+// Rules for sizing avatars (matches material icons plus avatar-icon padding)
+.avatar {
+  &.md-18 {
+    height: 18px + $avatar-icon-padding*2;
+    width: 18px + $avatar-icon-padding*2;
+  }
+  &.md-24 {
+    height: 24px + $avatar-icon-padding*2;
+    width: 24px + $avatar-icon-padding*2;
+  }
+  &.md-36 {
+    height: 36px + $avatar-icon-padding*2;
+    width: 36px + $avatar-icon-padding*2;
+  }
+  &.md-48 {
+    height: 48px + $avatar-icon-padding*2;
+    width: 48px + $avatar-icon-padding*2;
+  }
+}
+
+// Rules for sizing avatar backgrounds (when using a child md-icon)
+.avatar--icon {
+  padding: $avatar-icon-padding;
+  background-color: $gray-light;
+
+  &.md-18 {
+    height: 18px;
+    width: 18px;
+  }
+  &.md-24 {
+    height: 24px;
+    width: 24px;
+  }
+  &.md-36 {
+    height: 36px;
+    width: 36px;
+  }
+  &.md-48 {
+    height: 48px;
+    width: 48px;
+  }
 }
 
 // Animations

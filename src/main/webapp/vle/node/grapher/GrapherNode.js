@@ -53,7 +53,8 @@ GrapherNode.tagMapFunctions = [
 	{functionName:'importWork', functionArgs:[]},
 	{functionName:'showPreviousWork', functionArgs:[]},
 	{functionName:'mustNotExceedMaxErrorBeforeAdvancing', functionArgs:['maxError']},
-	{functionName:'mustNotExceedAvgErrorBeforeAdvancing', functionArgs:['avgError']}
+	{functionName:'mustNotExceedAvgErrorBeforeAdvancing', functionArgs:['avgError']},
+	{functionName:'importTable', functionArgs:['showTestedMassValuesOnly', 'showTestedLiquidValuesOnly','arrColumnNamesToImport', 'arrColumnNamesToDisplay']}
 ];
 
 /**

@@ -345,8 +345,178 @@ public class AssetManager {
 
 	/**
 	 * Uploads the specified file to the given path.
+	 * @param file the file that is to be uploaded
+	 * @param path the path to the project folder or the student uploads base directory
+	 * @param dirName the folder name to upload to which will be assets or the directory
+	 * for a workgroup for a run
+	 * @param pathToCheckSize the path to check the disk space usage for. if we are uploading
+	 * to a project we will check the whole project folder size. if we are uploading to a
+	 * student folder we will check that student folder
+	 * @param maxTotalAssetsSize the the max disk space usage allowable
+	 * @return true iff saving the asset was successful
+	 */
+	@SuppressWarnings("unchecked")
+	public static Boolean uploadAssetWISE5(
+            MultipartFile file, String path, String dirName, String pathToCheckSize, Long maxTotalAssetsSize) {
+
+		try {
+            File projectDir = new File(path);
+            File assetsDir = new File(projectDir, dirName);
+            if (!assetsDir.exists()) {
+                assetsDir.mkdirs();
+            }
+
+            if (SecurityUtils.isAllowedAccess(path, assetsDir)) {
+                //String successMessage = "";
+
+                String filename = file.getOriginalFilename();
+                File asset = new File(assetsDir, filename);
+                byte[] content = file.getBytes();
+
+                if (Long.parseLong(getFolderSize(pathToCheckSize)) + content.length > maxTotalAssetsSize) {
+                    //successMessage += "Uploading " + filename + " of size " + appropriateSize(content.length) + " would exceed your maximum storage capacity of "  + appropriateSize(maxTotalAssetsSize) + ". Operation aborted.";
+                    return false;
+                } else {
+                    if (!asset.exists()) {
+                        asset.createNewFile();
+                    }
+
+                    FileOutputStream fos = new FileOutputStream(asset);
+                    fos.write(content);
+                    fos.flush();
+                    fos.close();
+                    //successMessage += asset.getName() + " was successfully uploaded! ";
+                }
+
+                if ("application/zip".equals(file.getContentType()) ||
+                        "application/x-zip".equals(file.getContentType()) ||
+                        "application/x-zip-compressed".equals(file.getContentType())) {
+                    // if user uploaded a zip file, unzip it
+                    ZipFile zipFile = new ZipFile(asset);
+                    Enumeration<? extends ZipEntry> entries = zipFile.entries();
+                    while (entries.hasMoreElements()) {
+                        ZipEntry entry = entries.nextElement();
+                        File entryDestination = new File(assetsDir, entry.getName());
+                        if (entry.isDirectory()) {
+                            entryDestination.mkdirs();
+                        } else {
+                            File parent = entryDestination.getParentFile();
+                            if (!parent.exists() && !parent.mkdirs()) {
+                                throw new IllegalStateException("Couldn't create dir: " + parent);
+                            }
+                            InputStream in = zipFile.getInputStream(entry);
+                            OutputStream out = new FileOutputStream(entryDestination);
+                            IOUtils.copy(in, out);
+                            IOUtils.closeQuietly(in);
+                            IOUtils.closeQuietly(out);
+                        }
+                    }
+                    //successMessage += "WISE also extracted files from the zip file! ";
+                } else {
+                }
+
+                return true;
+            } else {
+                return false;
+            }
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	/**
+	 * Copies a student uploaded asset to the referenced directory with a
+	 * timestamp and returns a JSON string that includes the filename of that copied file.
+	 * @param dirName the student workgroup folder for the run
+	 * @param referencedDirName the path to the referenced files
+	 * @param fileName the file name
+	 * @return String filename of the new copy
+	 */
+	public static String copyAssetForReferenceWISE5(String dirName, String referencedDirName, String fileName) {
+
+		String unreferencedAssetsDirName = dirName;
+		String referencedAssetsDirName = referencedDirName;
+
+		//String studentUploadsBaseDirStr = (String) request.getAttribute("studentuploads_base_dir");
+		String studentUploadsBaseDirStr = wiseProperties.getProperty("studentuploads_base_dir");
+
+		/* file upload is coming from the portal so we need to read the bytes
+		 * that the portal set in the attribute
+		 */
+		File studentUploadsBaseDir = new File(studentUploadsBaseDirStr);
+		File unreferencedAssetsFullDir = new File(studentUploadsBaseDir, unreferencedAssetsDirName);
+		if (!unreferencedAssetsFullDir.exists()) {
+			System.err.println("Unreferenced Directory Does Not Exist.");  // the unreferenced directory must exist.
+			return null;
+		}
+
+		// if the referenced directory does not exist, make it.
+		File referencedAssetsFullDir = new File(studentUploadsBaseDir, referencedAssetsDirName);
+		if (!referencedAssetsFullDir.exists()) {
+			referencedAssetsFullDir.mkdirs();
+		}
+
+		// append timestamp to the file to make it unique.
+		Calendar cal = Calendar.getInstance();
+		int lastIndexOfDot = fileName.lastIndexOf(".");
+		String newFilename = fileName.substring(0, lastIndexOfDot) + "-" + cal.getTimeInMillis() +fileName.substring(lastIndexOfDot);  // e.g. sun-20121025102912.png
+		File unreferencedAsset = new File(unreferencedAssetsFullDir, fileName);
+		File referencedAsset = new File(referencedAssetsFullDir, newFilename);
+
+		try {
+			AssetManager.copy(unreferencedAsset, referencedAsset);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return null;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+
+		return newFilename;
+	}
+
+	/**
+	 * Removes an asset from the folder
+	 * @param path the path to the parent folder
+	 * @param dirName the folder name
+	 * @param assetFileName the file name
+	 * @return true iff removal was successful
+	 * @throws IOException
+	 */
+	public static Boolean removeAssetWISE5(String path, String dirName, String assetFileName)
+			throws IOException {
+
+		File projectDir = new File(path);
+		if (path == null || !(projectDir.exists()) || !(projectDir.isDirectory())) {
+			return false;
+		} else {
+			File assetDir = new File(projectDir, dirName);
+			if (!assetDir.exists() || !assetDir.isDirectory()) {
+				return false;
+			} else {
+				if (assetFileName == null) {
+					return false;
+				} else {
+					File assetFile = new File(assetDir, assetFileName);
+					if (assetFile.exists() && assetFile.isFile()) {
+						if (SecurityUtils.isAllowedAccess(path, assetFile.getCanonicalPath())) {
+							return assetFile.delete();
+						} else {
+							return false;
+						}
+					} else {
+						return false;
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Uploads the specified file to the given path.
 	 * @param fileList a list of files that are to be uploaded
-	 * @param fileNames the names of the files that are to be uploaded
 	 * @param fileMap the files that are to be uploaded
 	 * @param path the path to the project folder or the student uploads base directory
 	 * @param dirName the folder name to upload to which will be assets or the directory

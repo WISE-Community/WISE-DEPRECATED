@@ -61,10 +61,10 @@
         nodeId varchar(30),
         serverSaveTime datetime not null,
         type varchar(30) not null,
-        studentWorkId integer,
         fromWorkgroupId bigint,
         periodId bigint not null,
         runId bigint not null,
+        studentWorkId integer,
         toWorkgroupId bigint not null,
         primary key (id)
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -74,21 +74,6 @@
         announcement mediumtext not null,
         timestamp datetime not null,
         title varchar(255) not null,
-        primary key (id)
-    ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-    create table studentWork (
-        id integer not null auto_increment,
-        clientSaveTime datetime not null,
-        componentId varchar(30),
-        componentType varchar(30),
-        isAutoSave bit not null,
-        nodeId varchar(30) not null,
-        serverSaveTime datetime not null,
-        studentData mediumtext not null,
-        periodId bigint not null,
-        runId bigint not null,
-        workgroupId bigint not null,
         primary key (id)
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -415,6 +400,40 @@
         primary key (id)
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+    create table studentAssets (
+        id integer not null auto_increment,
+        clientDeleteTime datetime,
+        clientSaveTime datetime not null,
+        componentId varchar(30),
+        componentType varchar(30),
+        filePath varchar(255) not null,
+        fileSize bigint not null,
+        fileName varchar(255) not null,
+        isReferenced bit not null,
+        nodeId varchar(30),
+        serverDeleteTime datetime,
+        serverSaveTime datetime not null,
+        periodId bigint not null,
+        runId bigint not null,
+        workgroupId bigint not null,
+        primary key (id)
+    ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+    create table studentWork (
+        id integer not null auto_increment,
+        clientSaveTime datetime not null,
+        componentId varchar(30),
+        componentType varchar(30),
+        isAutoSave bit not null,
+        nodeId varchar(30) not null,
+        serverSaveTime datetime not null,
+        studentData mediumtext not null,
+        periodId bigint not null,
+        runId bigint not null,
+        workgroupId bigint not null,
+        primary key (id)
+    ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
     create table student_attendance (
         id int unsigned not null auto_increment,
         absentUserIds varchar(255),
@@ -550,10 +569,6 @@
 
     create index toWorkgroupIdIndex on annotations (toWorkgroupId);
 
-    create index runIdIndex on studentWork (runId);
-
-    create index workgroupIdIndex on studentWork (workgroupId);
-
     create index runIdIndex on events (runId);
 
     create index workgroupIdIndex on events (workgroupId);
@@ -580,6 +595,14 @@
         add constraint UK_kcgmq40wsaa12f22mebooiyfv  unique (groups_fk);
 
     create index runIdIndex on runstatus (runId);
+
+    create index runIdIndex on studentAssets (runId);
+
+    create index workgroupIdIndex on studentAssets (workgroupId);
+
+    create index runIdIndex on studentWork (runId);
+
+    create index workgroupIdIndex on studentWork (workgroupId);
 
     create index runIdIndex on studentstatus (runId);
 
@@ -637,11 +660,6 @@
         references userinfo (id);
 
     alter table annotations 
-        add constraint FK_1d5pxm1esuhp2itfr2xx6cha9 
-        foreign key (studentWorkId)
-        references studentWork (id);
-
-    alter table annotations 
         add constraint FK_3uwsbpxbqpqynfwt7oym6p59g 
         foreign key (fromWorkgroupId) 
         references wiseworkgroups (id);
@@ -657,23 +675,13 @@
         references runs (id);
 
     alter table annotations 
+        add constraint FK_lklpu3fwsovjhx5wqsjlah0ot 
+        foreign key (studentWorkId) 
+        references studentWork (id);
+
+    alter table annotations 
         add constraint FK_ss22rostrwvgvh4x7n5mmq173 
         foreign key (toWorkgroupId) 
-        references wiseworkgroups (id);
-
-    alter table studentWork
-        add constraint FK_mimnejycw7u1bgltxkf3wbxwh 
-        foreign key (periodId) 
-        references groups (id);
-
-    alter table studentWork
-        add constraint FK_1bx4p6cs0itbhbugx9a1ov8fq 
-        foreign key (runId) 
-        references runs (id);
-
-    alter table studentWork
-        add constraint FK_4hqdejeubrrob2lvlgkqgw63k 
-        foreign key (workgroupId) 
         references wiseworkgroups (id);
 
     alter table craterrequest 
@@ -870,6 +878,36 @@
         add constraint FK_opop9oerhku71x4bsy2y08o16 
         foreign key (userInfo_id) 
         references userinfo (id);
+
+    alter table studentAssets 
+        add constraint FK_gkc4jns85mcoslbxsmv4ie439 
+        foreign key (periodId) 
+        references groups (id);
+
+    alter table studentAssets 
+        add constraint FK_rp03jp240sd652ufbuagpk8yr 
+        foreign key (runId) 
+        references runs (id);
+
+    alter table studentAssets 
+        add constraint FK_ek7vyrj5s18xxq7376c4ml182 
+        foreign key (workgroupId) 
+        references wiseworkgroups (id);
+
+    alter table studentWork 
+        add constraint FK_5a5bt8rjamjme0re6qlf7hs1y 
+        foreign key (periodId) 
+        references groups (id);
+
+    alter table studentWork 
+        add constraint FK_hf57jgwp7plk8p935k9engx6v 
+        foreign key (runId) 
+        references runs (id);
+
+    alter table studentWork 
+        add constraint FK_5ojijtumnugj5h36q4g9fi0en 
+        foreign key (workgroupId) 
+        references wiseworkgroups (id);
 
     alter table student_user_details 
         add constraint FK_qgv3p8ouoryypy2eacb5ma8xc 

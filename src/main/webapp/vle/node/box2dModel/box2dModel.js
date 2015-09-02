@@ -151,6 +151,9 @@ Box2dModel.prototype.render = function() {
 	var previousModels = [];
 	var custom_objects_made_count = 0;
 	var density = -2;
+	// store details of liquids that were tested for mass, volume
+	this.liquids_tested = [];
+
 	//process the tag maps if we are not in authoring mode
 	if(typeof this.view.authoringMode === "undefined" || this.view.authoringMode == null || !this.view.authoringMode) {
 		var tagMapResults = this.processTagMaps();
@@ -488,6 +491,34 @@ Box2dModel.prototype.interpretEvent = function(type, args, obj) {
 		}
 	}
 
+	// check to see if this is a beaker being tested on a scale (alone)
+	if (typeof args[0].id !== "undefined" && args[0].id.substr(0,2) == "bk" && evt.type == "test-on-scale" && args[1].Object_count != null && args[1].Object_count == 1
+	){
+		// when student puts empty beaker on the mass is tested
+		if (args[0].liquid_volume != null && args[0].liquid_volume == 0){
+			// set a flag on the saved object itself
+			args[0].mass_tested = true;
+		}
+		// when students put a filled beaker on, its mass
+		if (args[0].liquid_volume != null && args[0].liquid_volume > 0 && args[0].mass_tested){
+			// calculate mass and add it to saved object
+			args[0].liquid_mass = args[0].liquid_volume * args[0].liquid_density;
+			mass_volume_determined = true;
+			// test if this is unique
+			var liquid_unique = true;
+			for (var k = 0; k < this.liquids_tested.length; k++){
+				if (this.liquids_tested[k].liquid_name == args[0].liquid_name && this.liquids_tested[k].mass == args[0].liquid_mass && this.liquids_tested[k].volume == args[0].liquid_volume){
+					liquid_unique = false;
+					break;
+				}
+			}
+			if (liquid_unique){
+				this.liquids_tested.push({"liquid_name":args[0].liquid_name, "mass":args[0].liquid_mass, "volume":args[0].liquid_volume});
+				isGraphEvent = true;
+			}
+		}
+	}
+
 	// send results to graph
 	if (includeGraph && isGraphEvent){
 		// get index for total mass
@@ -551,24 +582,25 @@ Box2dModel.prototype.interpretEvent = function(type, args, obj) {
 			var yMax = 50;
 			var seriesSpecs = [];
 
-			if (graphType == "material" && materialIndex >= 0){
+			if (graphType == "material" && materialIndex >= 0) {
 				// find unique materials
 				if (tableData[0].length > 0) {
-					for (var j = 1; j < tableData[0].length; j++){
+					for (var j = 1; j < tableData[0].length; j++) {
 						var material_name = tableData[materialIndex][j].text;
 						// is unique?
 						var thismaterialIndex = -1;
-						if (seriesSpecs.length > 0){
-							for (var k = 0; k < seriesSpecs.length; k++){
-								if (seriesSpecs[k].id === material_name){
+						if (seriesSpecs.length > 0) {
+							for (var k = 0; k < seriesSpecs.length; k++) {
+								if (seriesSpecs[k].id === material_name) {
 									thismaterialIndex = k;
 									break;
 								}
 							}
 						}
-						if (thismaterialIndex == -1){
-							var firstmaterial_name = material_name.replace(/[0-9]+% /g,"");;
-							if (typeof /(.*?),|$/.exec(firstmaterial_name)[1] !== 'undefined'){
+						if (thismaterialIndex == -1) {
+							var firstmaterial_name = material_name.replace(/[0-9]+% /g, "");
+							;
+							if (typeof /(.*?),|$/.exec(firstmaterial_name)[1] !== 'undefined') {
 								firstmaterial_name = /(.*?),|$/.exec(firstmaterial_name)[1];
 							}
 							seriesSpecs.push(
@@ -576,7 +608,7 @@ Box2dModel.prototype.interpretEvent = function(type, args, obj) {
 									id: material_name,
 									name: material_name,
 									color: GLOBAL_PARAMETERS['materials'][firstmaterial_name] != null ? GLOBAL_PARAMETERS['materials'][firstmaterial_name]["fill_colors"][0] : 'rgba(127, 127, 127, .5)',
-									data:[]
+									data: []
 								}
 							);
 							thismaterialIndex = seriesSpecs.length - 1;
@@ -588,13 +620,13 @@ Box2dModel.prototype.interpretEvent = function(type, args, obj) {
 							point = [tableData[volumeIndex][j].text, tableData[massIndex][j].text];
 						} else if (tableData[beakerIndex][j].text == 1 && tableData[scaleIndex][j].text === 0) {
 							// we have the volume and not the mass
-							point = [tableData[volumeIndex][j].text, 0];
+							point = [tableData[volumeIndex][j].text, -1];
 						} else if (tableData[beakerIndex][j].text == 0 && tableData[scaleIndex][j].text === 1) {
 							// we have the mass and not the volume
-							point = [0, tableData[massIndex][j].text];
+							point = [-1, tableData[massIndex][j].text];
 						} else {
 							// you know nothing Jon Vitale
-							point = [0, 0];
+							point = [-1, -1];
 						}
 						seriesSpecs[thismaterialIndex].data.push(point);
 
@@ -616,12 +648,60 @@ Box2dModel.prototype.interpretEvent = function(type, args, obj) {
 						}
 					}
 				}
+				// were any liquids tested
+				if (this.liquids_tested.length > 0) {
+					for (var i = 0; i < this.liquids_tested.length; i++) {
+						// is unique?
+						var thismaterialIndex = -1;
+						if (seriesSpecs.length > 0) {
+							for (var k = 0; k < seriesSpecs.length; k++) {
+								if (seriesSpecs[k].id === this.liquids_tested[i].liquid_name) {
+									thismaterialIndex = k;
+									break;
+								}
+							}
+						}
+						if (thismaterialIndex == -1) {
+							seriesSpecs.push(
+								{
+									id: this.liquids_tested[i].liquid_name,
+									name: this.liquids_tested[i].liquid_name,
+									color: GLOBAL_PARAMETERS['liquids'][this.liquids_tested[i].liquid_name] != null ? GLOBAL_PARAMETERS['liquids'][this.liquids_tested[i].liquid_name]["stroke_color"] : 'rgba(127, 127, 127, .5)',
+									data: []
+								}
+							);
+							thismaterialIndex = seriesSpecs.length - 1;
+						}
 
+						var point = [this.liquids_tested[i].volume, this.liquids_tested[i].mass];
+						seriesSpecs[thismaterialIndex].data.push(point);
+
+						if (point[0] < xMin && point[0] >= 0) {
+							xMin = point[0];
+							yMin = point[0];
+						}
+						if (point[1] < yMin && point[1] >= 0) {
+							xMin = point[1];
+							yMin = point[1];
+						}
+						if (point[0] > xMax) {
+							xMax = point[0];
+							yMax = point[0];
+						}
+						if (point[1] > yMax) {
+							xMax = point[1];
+							yMax = point[1];
+						}
+
+					}
+				}
 			} else {
 				// create arrays for sink, float, and unknown (not yet tested)
 				var sinkPoints = [];
 				var floatPoints = [];
 				var unknownPoints = [];
+
+				var includeUnknown = false;
 
 				if (tableData[0].length > 0) {
 					for (var j = 1; j < tableData[0].length; j++) {
@@ -637,20 +717,41 @@ Box2dModel.prototype.interpretEvent = function(type, args, obj) {
 						} else if (tableData[beakerIndex][j].text == 1 && tableData[scaleIndex][j].text === 0) {
 							// we have the volume and not the mass
 							if (tableData[sinkIndex][j].text === "Sink") {
-								point = [tableData[volumeIndex][j].text, 0];
+								point = [tableData[volumeIndex][j].text, includeUnknown ? -1 : 0];
 								sinkPoints.push(point);
 							} else {
-								point = [tableData[volumeIndex][j].text, 0];
+								point = [tableData[volumeIndex][j].text, includeUnknown ? -1 : 0];
 								floatPoints.push(point);
 							}
 						} else if (tableData[beakerIndex][j].text === 0 && tableData[scaleIndex][j].text === 1) {
 							// we have the mass and not the volume
-							point = [0, tableData[massIndex][j].text];
-							unknownPoints.push(point);
+							if (!includeUnknown) {
+								// we have the volume and not the mass
+								if (tableData[sinkIndex][j].text === "Sink") {
+									point = [tableData[volumeIndex][j].text, -1];
+									sinkPoints.push(point);
+								} else {
+									point = [tableData[volumeIndex][j].text, -1];
+									floatPoints.push(point);
+								}
+							} else {
+								point = [0, tableData[massIndex][j].text];
+								unknownPoints.push(point);
+							}
 						} else {
-							// you know nothing Jon Vitale
-							point = [0, 0];
-							unknownPoints.push(point);
+							if (!includeUnknown) {
+								// you know nothing Jon Vitale
+								if (tableData[sinkIndex][j].text === "Sink") {
+									point = [-1, -1];
+									sinkPoints.push(point);
+								} else {
+									point = [tableData[volumeIndex][j].text, -1];
+									floatPoints.push(point);
+								}
+							} else {
+								point = [0, 0];
+								unknownPoints.push(point);
+							}
 						}
 						if (point[0] < xMin && point[0] >= 0) {
 							xMin = point[0];
@@ -681,21 +782,82 @@ Box2dModel.prototype.interpretEvent = function(type, args, obj) {
 					{
 						id: 'float',
 						name: 'Float',
-						color: 'rgba(0, 0, 255, .5)',
+						color: 'rgba(0, 0, 155, .5)',
 						data: floatPoints
-					},
-					{
-						id: 'unknown',
-						name: 'Unknown',
-						color: 'rgba(127, 127, 127, .5)',
-						data: unknownPoints
 					}
 				]
+				if (includeUnknown){
+					seriesSpecs.push(
+						{
+							id: 'unknown',
+							name: 'Unknown',
+							color: 'rgba(127, 127, 127, .5)',
+							data: unknownPoints
+						}
+					);
+				}
+
+				// were any liquids tested
+				if (this.liquids_tested.length > 0) {
+					for (var i = 0; i < this.liquids_tested.length; i++) {
+						// is unique?
+						var thismaterialIndex = -1;
+						if (seriesSpecs.length > 0) {
+							for (var k = 0; k < seriesSpecs.length; k++) {
+								if (seriesSpecs[k].id === this.liquids_tested[i].liquid_name) {
+									thismaterialIndex = k;
+									break;
+								}
+							}
+						}
+						if (thismaterialIndex == -1) {
+							seriesSpecs.push(
+								{
+									id: this.liquids_tested[i].liquid_name,
+									name: this.liquids_tested[i].liquid_name,
+									color: this.liquids_tested[i].liquid_name == 'Water' ? 'rgba(0, 127, 0, 0.5)' : (GLOBAL_PARAMETERS['liquids'][this.liquids_tested[i].liquid_name] != null ? GLOBAL_PARAMETERS['liquids'][this.liquids_tested[i].liquid_name]["stroke_color"] : 'rgba(127, 127, 127, .5)'),
+									data: []
+								}
+							);
+							thismaterialIndex = seriesSpecs.length - 1;
+						}
+
+						var point = [this.liquids_tested[i].volume, this.liquids_tested[i].mass];
+						seriesSpecs[thismaterialIndex].data.push(point);
+
+						if (point[0] < xMin && point[0] >= 0) {
+							xMin = point[0];
+							yMin = point[0];
+						}
+						if (point[1] < yMin && point[1] >= 0) {
+							xMin = point[1];
+							yMin = point[1];
+						}
+						if (point[0] > xMax) {
+							xMax = point[0];
+							yMax = point[0];
+						}
+						if (point[1] > yMax) {
+							xMax = point[1];
+							yMax = point[1];
+						}
+
+					}
+				}
 			}
 
 			// round max values up to nearest 50
 			xMax = Math.ceil(xMax / 50) * 50;
 			yMax = xMax;
+			// set a tickInterval based on the xMax
+			var tickInterval = 10;
+			if (xMax > 500){
+				tickInterval  = 100;
+			} else if (xMax > 100){
+				tickInterval = 50;
+			} else if (xMax > 50){
+				tickInterval = 20;
+			}
 
 			this.chart = {
 				chart: {
@@ -720,7 +882,8 @@ Box2dModel.prototype.interpretEvent = function(type, args, obj) {
 					showLastLabel: true,
 					gridLineWidth: 1,
 					min: xMin,
-					max: xMax
+					max: xMax,
+					tickInterval: tickInterval
 				},
 				yAxis: {
 					title: {
@@ -729,7 +892,8 @@ Box2dModel.prototype.interpretEvent = function(type, args, obj) {
 					showLastLabel: true,
 					gridLineWidth: 1,
 					min: yMin,
-					max: yMax
+					max: yMax,
+					tickInterval: tickInterval
 				},
 				legend: {
 					layout: 'vertical',

@@ -52,37 +52,26 @@
         "canChangePath": null,
         "maxPathsVisitable": null
       },
-      "title": "Introduction to Newton Scooters",
-      "content": {
-        "prompt": "<div style=\"background-image: url('/curriculum/13509/assets/background.jpg'); border-radius: 10px 10px 10px 10px; padding: 25px; background-size: cover; font-family: Arial, Helvetica, sans-serif; line-height: 150%;\">\n<div style=\"background-color: rgba(255,255,255,0.85); color: #006; border-radius: 30px 30px 30px 30px; padding: 15px; text-align: center;\">\n<h1>Why Study Newton Scooters?</h1>\n</div>\n<br />\n<div style=\"background-color: rgba(255,255,255,0.85); color: #006; border-radius: 20px 20px 20px 20px; padding: 20px;\">\n<p>In this unit, you will build a cart and try to get it to go as far as possible. We will show you how to make a better car by thinking about energy, where it comes from and where it goes.</p>\n</div>\n</div>",
-        "components": [
-          {
-            "id": "7p628u05pf",
-            "prompt": "Before we get started, describe in detail how you think a self-propelled vehicle, or Newton Scooter, works.",
-            "componentType": "OpenResponse"
-          }
-        ]
-      }
-    },
-    {
-      "id": "node2",
-      "type": "node",
-      "x": 150,
-      "y": 140,
-      "r": 20,
-      "showSaveButton": true,
-      "showSubmitButton": true,
-      "constraints": [],
-      "transitionLogic": {
-        "transitions": [
-          {
-            "to": "node3"
-          }
-        ],
-        "howToChooseAmongAvailablePaths": null,
-        "whenToChoosePath": null,
-        "canChangePath": null,
-        "maxPathsVisitable": null
+      {
+         "id": "group1",
+         "type": "group",
+         "title": "Introduction to Newton Scooters",
+         "x": 250,
+         "y": 250,
+         "r": 20,
+         "startId": "node1",
+         "ids": [
+            "node1",
+            "node2"
+         ],
+         "icons": {
+            "default": {
+               "color":"#2196F3",
+               "type":"font",
+               "fontSet":"material-icons",
+               "fontName":"explore"
+            }
+         }
       },
       "title": "Initial Ideas",
       "content": {
@@ -176,30 +165,50 @@
         "canChangePath": null,
         "maxPathsVisitable": null
       },
-      "title": "What is potential energy?",
-      "content": {
-        "prompt": "<div style=\"margin: auto; background-image: url('/curriculum/13509/assets/background.jpg'); border-radius: 20px 20px 20px 20px; padding: 10px; background-size: cover;\">\n<div style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 1px; text-align: center;\">\n<h2>Potential Energy: Rubber Band Cars</h2>\n</div>\n</div>\n<p>&nbsp;</p>\n<!-- ROW 0 TITLE -->\n<table cellspacing=\"10\" cellpadding=\"10\"><!-- ROW 0 TITLE -->\n<tbody>\n<tr class=\"first even\">\n<td class=\"last first\" style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 25px;\">\n<p>Potential energy is STORED energy. It is energy that is available to do a task.</p>\n<p>One type of Newton Scooter, a rubber band car, can explain the concepts. To give a rubber band car potential energy, we pull (or wind) a rubber band. The rubber band stores energy so that the car will be able to move.</p>\n<p><img style=\"display: block; margin-left: auto; margin-right: auto;\" src=\"assets/marksman.jpg\" alt=\"\" height=\"220\" /></p>\n<p>Think about a bow and arrow. How is the bow like a rubber band in the car?</p>\n</td>\n</tr>\n</tbody>\n</table>",
-        "components": [
-          {
-            "id": "ptwgy14jau",
-            "prompt": "When does the bow have elastic potential energy?",
-            "componentType": "MultipleChoice",
-            "choices": [
-              {
-                "id": "c69vaupqq2",
-                "text": "When it is lying on the ground",
-                "feedback": ""
-              },
-              {
-                "id": "mr9l29c2sh",
-                "text": "When it is pulled back",
-                "feedback": ""
-              },
-              {
-                "id": "9w9f02u98i",
-                "text": "When it is released and has stopped moving",
-                "feedback": ""
-              }
+      {
+         "id": "group2",
+         "type": "group",
+         "title": "How Do Newton Scooters Work?",
+         "x": 350,
+         "y": 350,
+         "r": 20,
+         "startId": "node3",
+         "ids": [
+            "node3",
+            "node4",
+            "node5",
+            "node6",
+            "node7",
+            "node8",
+            "node9",
+            "node10",
+            "node11",
+            "node12",
+            "node13",
+            "node14",
+            "node15"
+         ],
+         "icons": {
+            "default": {
+               "color":"#8D6E63",
+               "type":"img",
+               "imgSrc":"https://www.eliwhitney.org/sites/default/files/rubberbandcar400.jpg"
+            }
+         }
+      },
+      {
+         "id": "node3",
+         "type": "node",
+         "x": 250,
+         "y": 140,
+         "r": 20,
+         "showSaveButton": true,
+         "showSubmitButton": true,
+         "transitionLogic": {
+            "transitions": [
+               {
+                  "to": "node4"
+               }
             ],
             "correctChoice": "mr9l29c2sh"
           }

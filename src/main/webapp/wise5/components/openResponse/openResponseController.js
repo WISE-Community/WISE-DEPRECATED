@@ -338,8 +338,7 @@ define(['app'], function(app) {
                 var studentAsset = $(ui.helper.context).data('objectData');
                 StudentAssetService.copyAssetForReference(studentAsset).then(angular.bind(this, function(copiedAsset) {
                     if (copiedAsset != null) {
-                        var nodeState = StudentDataService.createComponentState();
-                        var copiedAssetImg = '<img id="' + copiedAsset.url + '" class="studentAssetReference" src="' + copiedAsset.iconURL + '"></img>';
+                        var copiedAssetImg = '<img studentAssetId="' + copiedAsset.id + '" id="studentAsset_' + copiedAsset.id + '" class="studentAssetReference" src="' + copiedAsset.iconURL + '"></img>';
                         this.studentResponse += copiedAssetImg;
 
                         this.studentDataChanged();

@@ -488,9 +488,9 @@
 			// if necessary re-randomize
 			if (GLOBAL_PARAMETERS.BUILDER_RANDOMIZE_INITIAL_SLIDER_VALUES){
 				var incPow = (GLOBAL_PARAMETERS.BUILDER_SLIDER_INCREMENTS + "").split(".").length == 2 ? (GLOBAL_PARAMETERS.BUILDER_SLIDER_INCREMENTS + "").split(".")[1].length : 0;
-				var iWidth = Math.round(GLOBAL_PARAMETERS.MAX_WIDTH_UNITS * Math.random() / GLOBAL_PARAMETERS.BUILDER_SLIDER_INCREMENTS) * GLOBAL_PARAMETERS.BUILDER_SLIDER_INCREMENTS;
-				var iHeight = Math.round(GLOBAL_PARAMETERS.MAX_HEIGHT_UNITS * Math.random() / GLOBAL_PARAMETERS.BUILDER_SLIDER_INCREMENTS) * GLOBAL_PARAMETERS.BUILDER_SLIDER_INCREMENTS;
-				var iDepth = Math.round(GLOBAL_PARAMETERS.MAX_DEPTH_UNITS * Math.random() / GLOBAL_PARAMETERS.BUILDER_SLIDER_INCREMENTS) * GLOBAL_PARAMETERS.BUILDER_SLIDER_INCREMENTS;
+				var iWidth = Math.min(GLOBAL_PARAMETERS.MAX_WIDTH_UNITS - 0.1, Math.round(GLOBAL_PARAMETERS.MAX_WIDTH_UNITS * Math.random() / GLOBAL_PARAMETERS.BUILDER_SLIDER_INCREMENTS) * GLOBAL_PARAMETERS.BUILDER_SLIDER_INCREMENTS);
+				var iHeight = Math.min(GLOBAL_PARAMETERS.MAX_HEIGHT_UNITS - 0.1, Math.round(GLOBAL_PARAMETERS.MAX_HEIGHT_UNITS * Math.random() / GLOBAL_PARAMETERS.BUILDER_SLIDER_INCREMENTS) * GLOBAL_PARAMETERS.BUILDER_SLIDER_INCREMENTS);
+				var iDepth = Math.min(GLOBAL_PARAMETERS.MAX_DEPTH_UNITS - 0.1, Math.round(GLOBAL_PARAMETERS.MAX_DEPTH_UNITS * Math.random() / GLOBAL_PARAMETERS.BUILDER_SLIDER_INCREMENTS) * GLOBAL_PARAMETERS.BUILDER_SLIDER_INCREMENTS);
 				this.width_units = GLOBAL_PARAMETERS.MAX_WIDTH_UNITS - iWidth;
 				this.height_units = GLOBAL_PARAMETERS.MAX_HEIGHT_UNITS -iHeight;
 				this.depth_units = GLOBAL_PARAMETERS.MAX_DEPTH_UNITS -iDepth;
@@ -523,8 +523,8 @@
 				o.set_height_units(height_override);
 			} else {
 				o.set_width_units(this.width_units);
-				o.set_depth_units(this.height_units);
-				o.set_height_units(this.depth_units);
+				o.set_depth_units(this.depth_units);
+				o.set_height_units(this.height_units);
 			}
 			o.onPress = this.blockPressHandler.bind(this);
 			this.addChild(o);
