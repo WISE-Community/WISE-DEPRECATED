@@ -1,17 +1,16 @@
-(function (window)
-{
+(function (window) {
     /**
-    *   The feedbackManager stores all events explicitly passed to it from the main js file.
-    *   The feedbackEvents array is defined in the template json and includes a list of
-    *       queries.
-    *   The eventTypes array is used to ensure that the query pattern is valid.
-    *   Each feedbackEvent in the feedbackEvents array should have the following format:
-    *   { 
+     *   The feedbackManager stores all events explicitly passed to it from the main js file.
+     *   The feedbackEvents array is defined in the template json and includes a list of
+     *       queries.
+     *   The eventTypes array is used to ensure that the query pattern is valid.
+     *   Each feedbackEvent in the feedbackEvents array should have the following format:
+     *   {
     *        "query": // [includes the pattern that will be matched and the time window in which it must occur]
     *        {  "pattern":"SEQ(AND(A a, NOT(B b), C c, [a].prop == [c].prop), OR(A a, B b))" //[pattern is a nested call of SEQ, AND< OR, NOT functions with expressions]
     *           "within":10 //[event must have occured completely in the last N seconds]
     *        }
-    *        "feedback":  // [the type, body of feedback and number of times it may be given]
+    *        "feedback":  // [the type, body of feedback and number of times it may be given, Can be left out if only using constraint
     *        {
     *           "type":"text",
     *           "text":"Great job, you made a model and placed it on the balance.",
@@ -23,118 +22,128 @@
     *            "text": "You must add and remove an object."
     *        }
     *    }
-    *
-    *    The main source for the query format comes from:
-    *
-    *    Mo Liu, Elke A. Rundensteiner, Dan Dougherty, Chetan Gupta, Song Wang, Ismail Ari, and Abhay Mehta, NEEL: The Nested Complex Event Language for Real-Time Event Analytics, BIRTE 2010
-    *  
-    *   This complex event processing language uses nested AND, OR, SEQ, NOT functions (each described below)
-    *   Additionally a set of predicates can be defined (except in OR), which check whether events
-    *   that are of the matching eventTypes have specified properties.
-    *   
-    *   For example:
-    *       SEQ(A a, B b, [a].prop1 >= [b].prop1)
-    *       Checks whether two events A and B occured in their respective orders and whether
-    *           prop1 of the 'a' event was greater than the prop1 of the 'b' event.
-    *
-    *       More concretely.  In an experiment where two objects are compared on a balance scale:
-    *       AND (add-balance a1, add-balance a2, [a1].obj_id != [a2].obj_id)
-    *           checks to see whether two objects have been added to the balance, and they do not have the same id.  
-    */
-    var FeedbackManager = function(node, feedbackEvents, eventTypes) {
-         //console.log("patterns", patterns);
-         this.node = node;
-         this.initialFeedbackEvents = feedbackEvents;
-         this.feedbackEvents = feedbackEvents;
-         this.eventTypes = eventTypes;
-         this.initialTimestamp = new Date().getTime();
-         this.history = []; // stores all previous events;
-         this.modelTable = null;
-         this.eventCount = 0;
-         this.DEBUG = false;
-          
-         // for each feedback event attach a parsed object associated with each query
-         var constraintFound = false;
-         for (var i = 0; i < this.feedbackEvents.length; i++){
+     *
+     *    The main source for the query format comes from:
+     *
+     *    Mo Liu, Elke A. Rundensteiner, Dan Dougherty, Chetan Gupta, Song Wang, Ismail Ari, and Abhay Mehta, NEEL: The Nested Complex Event Language for Real-Time Event Analytics, BIRTE 2010
+     *
+     *   This complex event processing language uses nested AND, OR, SEQ, NOT functions (each described below)
+     *   Additionally a set of predicates can be defined (except in OR), which check whether events
+     *   that are of the matching eventTypes have specified properties.
+     *
+     *   For example:
+     *       SEQ(A a, B b, [a].prop1 >= [b].prop1)
+     *       Checks whether two events A and B occured in their respective orders and whether
+     *           prop1 of the 'a' event was greater than the prop1 of the 'b' event.
+     *
+     *       More concretely.  In an experiment where two objects are compared on a balance scale:
+     *       AND (add-balance a1, add-balance a2, [a1].obj_id != [a2].obj_id)
+     *           checks to see whether two objects have been added to the balance, and they do not have the same id.
+     */
+    var FeedbackManager = function (node, feedbackEvents, eventTypes) {
+        //console.log("patterns", patterns);
+        this.node = node;
+        this.initialFeedbackEvents = feedbackEvents;
+        this.feedbackEvents = feedbackEvents;
+        this.eventTypes = eventTypes;
+        this.initialTimestamp = new Date().getTime();
+        this.history = []; // stores all previous events;
+        this.modelTable = null;
+        this.eventCount = 0;
+        this.DEBUG = false;
+
+        // for each feedback event attach a parsed object associated with each query
+        var constraintFound = false;
+        for (var i = 0; i < this.feedbackEvents.length; i++) {
             this.feedbackEvents[i].query.parsedPattern = this.parseFunctionString(this.feedbackEvents[i].query.pattern);
-            if (typeof this.feedbackEvents[i].constraint != "undefined"){
+            if (typeof this.feedbackEvents[i].constraint !== "undefined") {
                 this.feedbackEvents[i].constraint["released"] = false;
-                if (!constraintFound){
+                if (!constraintFound) {
                     constraintFound = true;
                 }
             }
+            if (typeof this.feedbackEvents[i].feedback === "undefined") {
+                this.feedbackEvents[i].feedback = {"repeatMax":0};
+            }
             this.feedbackEvents[i].feedback["repeatCount"] = -1;
             this.feedbackEvents[i].feedback["lastGivenIndex"] = -1;
-         }
-         //console.log(constraintFound, this.feedbackEvents, this.node);
-         this.completed = !constraintFound;
-         if (!constraintFound){
-            this.node.setCompleted();
-         } else {
-            this.node.setNotCompleted();
-         }
-    };
-  
-    var p = FeedbackManager.prototype;    
-   
-   /** Since we don't want to overwhelm the server we make sure that the returnd history is not too large */
-   p.getHistory = function (maxSize){
-      var hstring = this.historyToString(0);
-      var i = 0;
-      while (hstring.length*2 > maxSize){
-        i++;
-        hstring = this.historyToString(i);
-      }
-      return this.history.slice(i);
-   }
-        p.historyToString = function (start){
-            var s = JSON.stringify(this.history.slice(start));
-            //for (var i = start; i < this.history.length; i++){
-            //    s = s + this.history[i];
-           // }
-            return s;
         }
+        //console.log(constraintFound, this.feedbackEvents, this.node);
+        this.completed = !constraintFound;
+        if (!constraintFound) {
+            this.node.setCompleted();
+        } else {
+            this.node.setNotCompleted();
+        }
+    };
+
+    var p = FeedbackManager.prototype;
+
+    /** Since we don't want to overwhelm the server we make sure that the returnd history is not too large */
+    p.getHistory = function (maxSize) {
+        var hstring = this.historyToString(0);
+        var i = 0;
+        while (hstring.length * 2 > maxSize) {
+            i++;
+            hstring = this.historyToString(i);
+        }
+        return this.history.slice(i);
+    }
+    p.historyToString = function (start) {
+        var s = JSON.stringify(this.history.slice(start));
+        //for (var i = start; i < this.history.length; i++){
+        //    s = s + this.history[i];
+        // }
+        return s;
+    }
 
     /**
-    *   A new event is passed to checkEvent to search for any matching feedbackEvents.
-    *   The event should be an object with all of its accessible properties on the top-level.
-    *    i.e., any property that will be checked should be on the top level.
-    *     if properties are nested in objects, a "flattening" function should be applied first
-    */
-    p.checkEvent = function (obj, modelTable){
+     *   A new event is passed to checkEvent to search for any matching feedbackEvents.
+     *   The event should be an object with all of its accessible properties on the top-level.
+     *    i.e., any property that will be checked should be on the top level.
+     *     if properties are nested in objects, a "flattening" function should be applied first
+     */
+    p.checkEvent = function (obj, modelTable) {
         if (typeof modelTable !== "undefined") this.modelTable = modelTable;
-        var evt = this.flattenObject(obj,"",{});
-        if(GLOBAL_PARAMETERS.DEBUG) console.log(evt.type, evt);
+        var evt = this.flattenObject(obj, "", {});
+        if (GLOBAL_PARAMETERS.DEBUG) console.log(evt.type, evt);
         evt.index = this.eventCount;
-        evt.id = evt.type+"_"+this.eventCount;
-        if (typeof evt.time === "undefined"){var d = new Date(); evt.time = d.getTime();}
-        var stored = {'index':evt.index, 'id':evt.id, 'type':evt.type, 'time':evt.time};
-        
+        evt.id = evt.type + "_" + this.eventCount;
+        if (typeof evt.time === "undefined") {
+            var d = new Date();
+            evt.time = d.getTime();
+        }
+        var stored = {'index': evt.index, 'id': evt.id, 'type': evt.type, 'time': evt.time};
+
         // look for models and add ids to the stored object
-        if (typeof obj.models !== "undefined"){
-            for (var i = 0; i < obj.models.length; i++){
-                if (typeof obj.models[i].id !== "undefined"){
-                    stored["models["+i+"].id"] = obj.models[i].id;
+        if (typeof obj.models !== "undefined") {
+            for (var i = 0; i < obj.models.length; i++) {
+                if (typeof obj.models[i].id !== "undefined") {
+                    stored["models[" + i + "].id"] = obj.models[i].id;
                 }
             }
         }
         // look for additional details and add directly to stored history
-        if (typeof obj.details !== "undefined"){
-            for (var key in obj.details){
+        if (typeof obj.details !== "undefined" && typeof obj.details !== "object") {
+            // in this case we want to get the text, but also the text length in a flat form
+            stored["text"] = obj.details;
+            stored["text.length"] = obj.details.length;
+        } else if (typeof obj.details !== "undefined"){
+            for (var key in obj.details) {
                 stored[key] = obj.details[key];
             }
         }
 
         this.history.push(stored);
-       // this.printEventHistory(false);
+        // this.printEventHistory(false);
         this.eventCount++;
 
         var minOrder = 10000;
         var minFound = false;
         // get the minimum order of existing feedbackEvents (which have not been given)
-        for (var i = 0; i < this.feedbackEvents.length; i++){
-            if (this.feedbackEvents[i].feedback.repeatCount == -1 && typeof this.feedbackEvents[i].query.order !== "undefined"){
-                if (this.feedbackEvents[i].query.order < minOrder){
+        for (var i = 0; i < this.feedbackEvents.length; i++) {
+            if (this.feedbackEvents[i].feedback.repeatCount == -1 && typeof this.feedbackEvents[i].query.order !== "undefined") {
+                if (this.feedbackEvents[i].query.order < minOrder) {
                     minOrder = this.feedbackEvents[i].query.order;
                     minFound = true;
                 }
@@ -142,15 +151,15 @@
         }
 
         // iterate through each feedbackEvent
-        for (var i = this.feedbackEvents.length-1; i >= 0; i--){
+        for (var i = this.feedbackEvents.length - 1; i >= 0; i--) {
             // if this event doesn't match a found minimum order then skip
             if (minFound && this.feedbackEvents[i].query.order != minOrder) continue;
             // don't bother checking events prior to window
-            var startingIndex = this.feedbackEvents[i].feedback.lastGivenIndex+1;
-            if (typeof this.feedbackEvents[i].query.within != "undefined"){
+            var startingIndex = this.feedbackEvents[i].feedback.lastGivenIndex + 1;
+            if (typeof this.feedbackEvents[i].query.within != "undefined") {
                 var ts = evt.time;
-                for (var j = this.history.length-1; j >= startingIndex; j--){
-                    if (ts - this.history[j].time > this.feedbackEvents[i].query.within * 1000){
+                for (var j = this.history.length - 1; j >= startingIndex; j--) {
+                    if (ts - this.history[j].time > this.feedbackEvents[i].query.within * 1000) {
                         startingIndex = j + 1;
                         break;
                     }
@@ -159,21 +168,23 @@
             var matchArr = [];
             if (startingIndex >= 0) matchArr = this.matchQuery(startingIndex, this.feedbackEvents[i].query);
             // hit, deliver
-            if (matchArr.length > 0){
+            if (matchArr.length > 0) {
                 var f = this.feedbackEvents[i];
                 this.feedbackEvents[i].feedback.repeatCount++;
                 if (typeof this.feedbackEvents[i].constraint != "undefined") this.feedbackEvents[i].constraint.released = true;
-                this.feedbackEvents[i].feedback.lastGivenIndex = matchArr[matchArr.length-1];
+                this.feedbackEvents[i].feedback.lastGivenIndex = matchArr[matchArr.length - 1];
                 //console.log("matched history array indices:", matchArr);
                 //vle.notificationManager.notify(this.feedbackEvents[i].feedback.text, 3, false, 'messageDiv');
                 this.giveFeedback(this.feedbackEvents[i].feedback)
                 //alert(this.feedbackEvents[i].feedback.text);
-                if (this.feedbackEvents[i].feedback.repeatCount >= this.feedbackEvents[i].feedback.repeatMax){
-                    this.feedbackEvents.splice(i,1);
-                } 
+                if (this.feedbackEvents[i].feedback.repeatCount >= this.feedbackEvents[i].feedback.repeatMax) {
+                    this.feedbackEvents.splice(i, 1);
+                }
                 //this.giveFeedback(this.feedbackEvents[i].feedback);
                 this.completed = !this.isConstrained();
-                if (this.completed){ this.node.setCompleted();}
+                if (this.completed) {
+                    this.node.setCompleted();
+                }
                 return f;
             }
         }

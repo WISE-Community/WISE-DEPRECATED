@@ -305,17 +305,36 @@ Box2dModel.prototype.interpretEvent = function(type, args, obj) {
 
 	// mass_vol_determined will be used for graphs
 	var mass_volume_determined = false;
+	var isResultsEvent = false;
 	var includeGraph = false;
-	var isGraphEvent = false;
-	var graphType = "";
-	if (typeof this.content.INCLUDE_SINK_FLOAT_GRAPH === "boolean" && this.content.INCLUDE_SINK_FLOAT_GRAPH){
-		includeGraph = true;
-		graphType = "sink_float";
-	} else if (typeof this.content.INCLUDE_MATERIAL_GRAPH === "boolean" && this.content.INCLUDE_MATERIAL_GRAPH){
-		includeGraph = true;
-		graphType = "material";
+	var includeTable = false;
+	// get information pertaining to a results graph or chart from content
+	if (typeof this.content.results_chart !== "undefined") {
+		var isSinkFloatNotMaterials = true;
+		var showLiquids = typeof this.content.results_chart.showLiquids === "boolean" ? this.content.results_chart.showLiquids: true;
+		if (typeof this.content.results_chart.isGraphNotTable == "boolean" && this.content.results_chart.isGraphNotTable){
+			includeGraph = true;
+			if (typeof this.content.results_chart.isSinkFloatNotMaterials == "boolean") {
+				isSinkFloatNotMaterials = this.content.results_chart.isSinkFloatNotMaterials;
+			}
+		} else if (typeof this.content.results_chart.isGraphNotTable == "boolean" && !this.content.results_chart.isGraphNotTable) {
+			includeTable = true;
+			var arrColumnNamesToImport = this.content.results_chart.arrColumnNamesToImport != null ? this.content.results_chart.arrColumnNamesToImport : [];
+			var arrColumnNamesToDisplay = this.content.results_chart.arrColumnNamesToDisplay != null ? this.content.results_chart.arrColumnNamesToDisplay : arrColumnNamesToImport;
+			var showTestedMassValuesOnly = typeof this.content.results_chart.showTestedMassValuesOnly === "boolean" ? this.content.results_chart.showTestedMassValuesOnly: true;
+			var showTestedLiquidValuesOnly = typeof this.content.results_chart.showTestedLiquidValuesOnly === "boolean" ? this.content.results_chart.showTestedLiquidValuesOnly : true;
+			// if reported "sink or float" or "materials", and did not give display arrays, use presets
+			if (typeof this.content.results_chart.isSinkFloatNotMaterials == "boolean" && arrColumnNamesToImport.length == 0) {
+				if (this.content.results_chart.isSinkFloatNotMaterials) {
+					arrColumnNamesToImport = ["Materials", "Total_Volume", "Total_Mass"];
+					arrColumnNamesToDisplay = ["Materials", "Volume (ml)",  "Mass (g)"];
+				} else {
+					arrColumnNamesToImport = ["Total_Volume", "Total_Mass", "Sink_in_Water"];
+					arrColumnNamesToDisplay = ["Volume (ml)", "Mass (g)", "Sinks in water?"];
+				}
+			}
+		}
 	}
-
 	// loop through args looking for "Obj" models (including premades)
 	for (var a = 0; a < args.length; a++){
 		if ( (typeof args[a].id !== "undefined" && args[a].id.substr(0,3) == "Obj") || (typeof args[a].premade_name !== "undefined" && args[a].premade_name != null && args[a].premade_name.length > 0)){
@@ -345,7 +364,6 @@ Box2dModel.prototype.interpretEvent = function(type, args, obj) {
 								}
 							}
 						}
-
 						if (vol > 0){
 							vol = vol / args[a].material_volume * 100;
 							percMat.push(vol);
@@ -406,14 +424,14 @@ Box2dModel.prototype.interpretEvent = function(type, args, obj) {
 
 			// determine whether we have all the info we need to plot point
 			if (evt.type == "test-in-beaker"){
-				isGraphEvent = true;
+				isResultsEvent = true;
 				if ((typeof args[0].volume_tested === "undefined" || !args[0].volume_tested) && (typeof args[0].mass_tested !== "undefined" && args[0].mass_tested)){
 					mass_volume_determined = true;
 				}
 				args[0].volume_tested = true;
 			}
 			if (evt.type == "test-on-scale" || evt.type == "test-on-balance"){
-				isGraphEvent = true;
+				isResultsEvent = true;
 				if ((typeof args[0].mass_tested === "undefined" || !args[0].mass_tested) && (typeof args[0].volume_tested !== "undefined" && args[0].volume_tested)){
 					mass_volume_determined = true;
 				}
@@ -422,7 +440,7 @@ Box2dModel.prototype.interpretEvent = function(type, args, obj) {
 
 			// create a new model in tableData if id is not found
 			if (evt.type == "make-model" || evt.type == "duplicate-model"){
-				isGraphEvent = true;
+				isResultsEvent = true;
 				var id_found = false;
 				for (var i = 0; i < tableData.length; i++){
 					if (tableData[i][0].text == "id"){
@@ -446,7 +464,7 @@ Box2dModel.prototype.interpretEvent = function(type, args, obj) {
 			}
 			// remove a model
 			if (evt.type == "delete-model" || evt.type == "revise-model"){
-				isGraphEvent = true;
+				isResultsEvent = true;
 				for (var i = 0; i < tableData.length; i++){
 					if (tableData[i][0].text == "id"){
 						for (var j=1; j < tableData[i].length; j++){
@@ -484,16 +502,19 @@ Box2dModel.prototype.interpretEvent = function(type, args, obj) {
 			}
 			evt.models.push(model);
 		} else {
-			// in cases where the argument is not an "Obj" (object model), just attach all keys to the evt directly
-			for (var key in args[a]){
-				evt.details[key] = args[a][key];
+			// in cases where the argument is not an "Obj" (object model), just attach all keys to the evt directly, or primitive
+			if (typeof args[a] !== "undefined" && typeof args[a] !== "object"){
+				evt.details = args[a];
+			} else if (typeof args[a] !== "undefined") {
+				for (var key in args[a]) {
+					evt.details[key] = args[a][key];
+				}
 			}
 		}
 	}
 
 	// check to see if this is a beaker being tested on a scale (alone)
-	if (typeof args[0].id !== "undefined" && args[0].id.substr(0,2) == "bk" && evt.type == "test-on-scale" && args[1].Object_count != null && args[1].Object_count == 1
-	){
+	if (typeof args[0].id !== "undefined" && args[0].id.substr(0,2) == "bk" && evt.type == "test-on-scale" && args[1].Object_count != null && args[1].Object_count == 1){
 		// when student puts empty beaker on the mass is tested
 		if (args[0].liquid_volume != null && args[0].liquid_volume == 0){
 			// set a flag on the saved object itself
@@ -513,426 +534,540 @@ Box2dModel.prototype.interpretEvent = function(type, args, obj) {
 				}
 			}
 			if (liquid_unique){
-				this.liquids_tested.push({"liquid_name":args[0].liquid_name, "mass":args[0].liquid_mass, "volume":args[0].liquid_volume});
-				isGraphEvent = true;
+				this.liquids_tested.push({"liquid_name":args[0].liquid_name, "display_name":args[0].display_name, "mass":args[0].liquid_mass, "volume":args[0].liquid_volume, "density":args[0].liquid_density});
+				isResultsEvent = true;
 			}
 		}
 	}
 
 	// send results to graph
-	if (includeGraph && isGraphEvent){
-		// get index for total mass
-		var massIndex = -1;
-		for (var i = 0; i < tableData.length; i++){
-			if (tableData[i][0].text === 'Total_Mass'){
-				massIndex = i;
-				break;
-			}
-		}
-		// get index for total volume
-		var volumeIndex = -1;
-		for (var i = 0; i < tableData.length; i++){
-			if (tableData[i][0].text === 'Total_Volume'){
-				volumeIndex = i;
-				break;
-			}
-		}
-		// get index for tested in water
-		var liquid_name = GLOBAL_PARAMETERS.liquids_in_world.length === 1 ? GLOBAL_PARAMETERS.liquids_in_world.length[0] : "Water";
-		// get index for tested on scale
-		var sinkIndex = -1;
-		for (var i = 0; i < tableData.length; i++){
-			if (tableData[i][0].text === 'Sink_in_' + liquid_name){
-				sinkIndex = i;
-				break;
-			}
-		}
-		// get index for tested on scale
-		var beakerIndex = -1;
-		for (var i = 0; i < tableData.length; i++){
-			if (tableData[i][0].text === 'Tested_in_' + liquid_name){
-				beakerIndex = i;
-				break;
-			}
-		}
-		// get index for tested on scale
-		var scaleIndex = -1;
-		for (var i = 0; i < tableData.length; i++){
-			if (tableData[i][0].text === 'Tested_on_Scale'){
-				scaleIndex = i;
-				break;
-			}
-		}
+	if ((includeGraph || includeTable) && isResultsEvent){
 
-		// get index for material
-		var materialIndex = -1;
-		for (var i = 0; i < tableData.length; i++){
-			if (tableData[i][0].text === 'Materials'){
-				materialIndex = i;
-				break;
-			}
-		}
-
-		// make sure we have appropriate indices
-		if (massIndex >= 0 && volumeIndex >= 0 && sinkIndex >= 0 && beakerIndex >= 0 && scaleIndex >= 0){
-			// update max and min axis values to fit the data
-			var xMin = 0;
-			var xMax = 50;
-			var yMin = 0;
-			var yMax = 50;
-			var seriesSpecs = [];
-
-			if (graphType == "material" && materialIndex >= 0) {
-				// find unique materials
-				if (tableData[0].length > 0) {
-					for (var j = 1; j < tableData[0].length; j++) {
-						var material_name = tableData[materialIndex][j].text;
-						// is unique?
-						var thismaterialIndex = -1;
-						if (seriesSpecs.length > 0) {
-							for (var k = 0; k < seriesSpecs.length; k++) {
-								if (seriesSpecs[k].id === material_name) {
-									thismaterialIndex = k;
-									break;
-								}
-							}
-						}
-						if (thismaterialIndex == -1) {
-							var firstmaterial_name = material_name.replace(/[0-9]+% /g, "");
-							;
-							if (typeof /(.*?),|$/.exec(firstmaterial_name)[1] !== 'undefined') {
-								firstmaterial_name = /(.*?),|$/.exec(firstmaterial_name)[1];
-							}
-							seriesSpecs.push(
-								{
-									id: material_name,
-									name: material_name,
-									color: GLOBAL_PARAMETERS['materials'][firstmaterial_name] != null ? GLOBAL_PARAMETERS['materials'][firstmaterial_name]["fill_colors"][0] : 'rgba(127, 127, 127, .5)',
-									data: []
-								}
-							);
-							thismaterialIndex = seriesSpecs.length - 1;
-						}
-
-						var point;
-						if (tableData[beakerIndex][j].text === 1 && tableData[scaleIndex][j].text === 1) {
-							// we have the volume and mass
-							point = [tableData[volumeIndex][j].text, tableData[massIndex][j].text];
-						} else if (tableData[beakerIndex][j].text == 1 && tableData[scaleIndex][j].text === 0) {
-							// we have the volume and not the mass
-							point = [tableData[volumeIndex][j].text, -1];
-						} else if (tableData[beakerIndex][j].text == 0 && tableData[scaleIndex][j].text === 1) {
-							// we have the mass and not the volume
-							point = [-1, tableData[massIndex][j].text];
-						} else {
-							// you know nothing Jon Vitale
-							point = [-1, -1];
-						}
-						seriesSpecs[thismaterialIndex].data.push(point);
-
-						if (point[0] < xMin && point[0] >= 0) {
-							xMin = point[0];
-							yMin = point[0];
-						}
-						if (point[1] < yMin && point[1] >= 0) {
-							xMin = point[1];
-							yMin = point[1];
-						}
-						if (point[0] > xMax) {
-							xMax = point[0];
-							yMax = point[0];
-						}
-						if (point[1] > yMax) {
-							xMax = point[1];
-							yMax = point[1];
-						}
-					}
+		if (includeGraph) {
+			// get index for total mass
+			var massIndex = -1;
+			for (var i = 0; i < tableData.length; i++) {
+				if (tableData[i][0].text === 'Total_Mass') {
+					massIndex = i;
+					break;
 				}
-				// were any liquids tested
-				if (this.liquids_tested.length > 0) {
-					for (var i = 0; i < this.liquids_tested.length; i++) {
-						// is unique?
-						var thismaterialIndex = -1;
-						if (seriesSpecs.length > 0) {
-							for (var k = 0; k < seriesSpecs.length; k++) {
-								if (seriesSpecs[k].id === this.liquids_tested[i].liquid_name) {
-									thismaterialIndex = k;
-									break;
+			}
+			// get index for total volume
+			var volumeIndex = -1;
+			for (var i = 0; i < tableData.length; i++) {
+				if (tableData[i][0].text === 'Total_Volume') {
+					volumeIndex = i;
+					break;
+				}
+			}
+			// get index for tested in water
+			var liquid_name = GLOBAL_PARAMETERS.liquids_in_world.length === 1 ? GLOBAL_PARAMETERS.liquids_in_world.length[0] : "Water";
+			// get index for tested on scale
+			var sinkIndex = -1;
+			for (var i = 0; i < tableData.length; i++) {
+				if (tableData[i][0].text === 'Sink_in_' + liquid_name) {
+					sinkIndex = i;
+					break;
+				}
+			}
+			// get index for tested on scale
+			var beakerIndex = -1;
+			for (var i = 0; i < tableData.length; i++) {
+				if (tableData[i][0].text === 'Tested_in_' + liquid_name) {
+					beakerIndex = i;
+					break;
+				}
+			}
+			// get index for tested on scale
+			var scaleIndex = -1;
+			for (var i = 0; i < tableData.length; i++) {
+				if (tableData[i][0].text === 'Tested_on_Scale') {
+					scaleIndex = i;
+					break;
+				}
+			}
+
+			// get index for material
+			var materialIndex = -1;
+			for (var i = 0; i < tableData.length; i++) {
+				if (tableData[i][0].text === 'Materials') {
+					materialIndex = i;
+					break;
+				}
+			}
+
+			// make sure we have appropriate indices
+			if (massIndex >= 0 && volumeIndex >= 0 && beakerIndex >= 0 && scaleIndex >= 0) {
+				// update max and min axis values to fit the data
+				var xMin = 0;
+				var xMax = 50;
+				var yMin = 0;
+				var yMax = 50;
+				var seriesSpecs = [];
+
+				if (!isSinkFloatNotMaterials && materialIndex >= 0) {
+					// find unique materials
+					if (tableData[0].length > 0) {
+						// graph
+						for (var j = 1; j < tableData[0].length; j++) {
+							var material_name = tableData[materialIndex][j].text;
+							// is unique?
+							var thismaterialIndex = -1;
+							if (seriesSpecs.length > 0) {
+								for (var k = 0; k < seriesSpecs.length; k++) {
+									if (seriesSpecs[k].id === material_name) {
+										thismaterialIndex = k;
+										break;
+									}
 								}
 							}
-						}
-						if (thismaterialIndex == -1) {
-							seriesSpecs.push(
-								{
-									id: this.liquids_tested[i].liquid_name,
-									name: this.liquids_tested[i].liquid_name,
-									color: GLOBAL_PARAMETERS['liquids'][this.liquids_tested[i].liquid_name] != null ? GLOBAL_PARAMETERS['liquids'][this.liquids_tested[i].liquid_name]["stroke_color"] : 'rgba(127, 127, 127, .5)',
-									data: []
+							if (thismaterialIndex == -1) {
+								var firstmaterial_name = material_name.replace(/[0-9]+% /g, "");
+								;
+								if (typeof /(.*?),|$/.exec(firstmaterial_name)[1] !== 'undefined') {
+									firstmaterial_name = /(.*?),|$/.exec(firstmaterial_name)[1];
 								}
-							);
-							thismaterialIndex = seriesSpecs.length - 1;
-						}
+								seriesSpecs.push(
+									{
+										id: material_name,
+										name: material_name,
+										color: GLOBAL_PARAMETERS['materials'][firstmaterial_name] != null ? GLOBAL_PARAMETERS['materials'][firstmaterial_name]["fill_colors"][0] : 'rgba(127, 127, 127, .5)',
+										marker: {
+											enabled : true,
+											lineColor : GLOBAL_PARAMETERS['materials'][firstmaterial_name] != null ? GLOBAL_PARAMETERS['materials'][firstmaterial_name]["stroke_colors"][0] : 'rgba(127, 127, 127, .5)'
+										},
+										data: []
+									}
+								);
+								thismaterialIndex = seriesSpecs.length - 1;
+							}
 
-						var point = [this.liquids_tested[i].volume, this.liquids_tested[i].mass];
-						seriesSpecs[thismaterialIndex].data.push(point);
+							var point;
+							if (tableData[beakerIndex][j].text === 1 && tableData[scaleIndex][j].text === 1) {
+								// we have the volume and mass
+								point = [parseFloat(tableData[volumeIndex][j].text), parseFloat(tableData[massIndex][j].text)];
+							} else if (tableData[beakerIndex][j].text == 1 && tableData[scaleIndex][j].text === 0) {
+								// we have the volume and not the mass
+								point = [parseFloat(tableData[volumeIndex][j].text), -1];
+							} else if (tableData[beakerIndex][j].text == 0 && tableData[scaleIndex][j].text === 1) {
+								// we have the mass and not the volume
+								point = [-1, parseFloat(tableData[massIndex][j].text)];
+							} else {
+								// you know nothing Jon Vitale
+								point = [-1, -1];
+							}
+							seriesSpecs[thismaterialIndex].data.push(point);
 
-						if (point[0] < xMin && point[0] >= 0) {
-							xMin = point[0];
-							yMin = point[0];
-						}
-						if (point[1] < yMin && point[1] >= 0) {
-							xMin = point[1];
-							yMin = point[1];
-						}
-						if (point[0] > xMax) {
-							xMax = point[0];
-							yMax = point[0];
-						}
-						if (point[1] > yMax) {
-							xMax = point[1];
-							yMax = point[1];
+							if (point[0] < xMin && point[0] >= 0) {
+								xMin = point[0];
+								yMin = point[0];
+							}
+							if (point[1] < yMin && point[1] >= 0) {
+								xMin = point[1];
+								yMin = point[1];
+							}
+							if (point[0] > xMax) {
+								xMax = point[0];
+								yMax = point[0];
+							}
+							if (point[1] > yMax) {
+								xMax = point[1];
+								yMax = point[1];
+							}
 						}
 
 					}
-				}
-			} else {
-				// create arrays for sink, float, and unknown (not yet tested)
-				var sinkPoints = [];
-				var floatPoints = [];
-				var unknownPoints = [];
-
-				var includeUnknown = false;
-
-				if (tableData[0].length > 0) {
-					for (var j = 1; j < tableData[0].length; j++) {
-						var point;
-						if (tableData[beakerIndex][j].text === 1 && tableData[scaleIndex][j].text === 1) {
-							if (tableData[sinkIndex][j].text === "Sink") {
-								point = [tableData[volumeIndex][j].text, tableData[massIndex][j].text];
-								sinkPoints.push(point);
-							} else {
-								point = [tableData[volumeIndex][j].text, tableData[massIndex][j].text];
-								floatPoints.push(point);
+					// were any liquids tested
+					if (this.liquids_tested.length > 0) {
+						for (var i = 0; i < this.liquids_tested.length; i++) {
+							// is unique?
+							var thismaterialIndex = -1;
+							if (seriesSpecs.length > 0) {
+								for (var k = 0; k < seriesSpecs.length; k++) {
+									if (seriesSpecs[k].id === this.liquids_tested[i].liquid_name) {
+										thismaterialIndex = k;
+										break;
+									}
+								}
 							}
-						} else if (tableData[beakerIndex][j].text == 1 && tableData[scaleIndex][j].text === 0) {
-							// we have the volume and not the mass
-							if (tableData[sinkIndex][j].text === "Sink") {
-								point = [tableData[volumeIndex][j].text, includeUnknown ? -1 : 0];
-								sinkPoints.push(point);
-							} else {
-								point = [tableData[volumeIndex][j].text, includeUnknown ? -1 : 0];
-								floatPoints.push(point);
+							if (thismaterialIndex == -1) {
+								seriesSpecs.push(
+									{
+										id: this.liquids_tested[i].liquid_name,
+										name: typeof this.liquids_tested[i].display_name === "string" ? this.liquids_tested[i].display_name: this.liquids_tested[i].liquid_name,
+										color: GLOBAL_PARAMETERS['liquids'][this.liquids_tested[i].liquid_name] != null ? GLOBAL_PARAMETERS['liquids'][this.liquids_tested[i].liquid_name]["stroke_color"] : 'rgba(127, 127, 127, .5)',
+										marker: {
+											enabled : true,
+											lineColor : GLOBAL_PARAMETERS['materials'][firstmaterial_name] != null ? GLOBAL_PARAMETERS['materials'][firstmaterial_name]["stroke_colors"][0] : 'rgba(127, 127, 127, .5)'
+										},
+										data: []
+									}
+								);
+								thismaterialIndex = seriesSpecs.length - 1;
 							}
-						} else if (tableData[beakerIndex][j].text === 0 && tableData[scaleIndex][j].text === 1) {
-							// we have the mass and not the volume
-							if (!includeUnknown) {
+
+							var point = [this.liquids_tested[i].volume, this.liquids_tested[i].mass];
+							seriesSpecs[thismaterialIndex].data.push(point);
+
+							if (point[0] < xMin && point[0] >= 0) {
+								xMin = point[0];
+								yMin = point[0];
+							}
+							if (point[1] < yMin && point[1] >= 0) {
+								xMin = point[1];
+								yMin = point[1];
+							}
+							if (point[0] > xMax) {
+								xMax = point[0];
+								yMax = point[0];
+							}
+							if (point[1] > yMax) {
+								xMax = point[1];
+								yMax = point[1];
+							}
+						}
+					}
+				} else if (isSinkFloatNotMaterials && sinkIndex >= 0) {
+					// create arrays for sink, float, liquid
+					var sinkPoints = [];
+					var floatPoints = [];
+					var unknownPoints = [];
+
+					var includeUnknown = false;
+
+					if (tableData[0].length > 0) {
+						for (var j = 1; j < tableData[0].length; j++) {
+							var point;
+							if (tableData[beakerIndex][j].text === 1 && tableData[scaleIndex][j].text === 1) {
+								if (tableData[sinkIndex][j].text === "Sink") {
+									point = [parseFloat(tableData[volumeIndex][j].text), parseFloat(tableData[massIndex][j].text)];
+									sinkPoints.push(point);
+								} else {
+									point = [parseFloat(tableData[volumeIndex][j].text), parseFloat(tableData[massIndex][j].text)];
+									floatPoints.push(point);
+								}
+							} else if (tableData[beakerIndex][j].text == 1 && tableData[scaleIndex][j].text === 0) {
 								// we have the volume and not the mass
 								if (tableData[sinkIndex][j].text === "Sink") {
-									point = [tableData[volumeIndex][j].text, -1];
+									point = [parseFloat(tableData[volumeIndex][j].text), includeUnknown ? -1 : 0];
 									sinkPoints.push(point);
 								} else {
-									point = [tableData[volumeIndex][j].text, -1];
+									point = [parseFloat(tableData[volumeIndex][j].text), includeUnknown ? -1 : 0];
 									floatPoints.push(point);
 								}
-							} else {
-								point = [0, tableData[massIndex][j].text];
-								unknownPoints.push(point);
-							}
-						} else {
-							if (!includeUnknown) {
-								// you know nothing Jon Vitale
-								if (tableData[sinkIndex][j].text === "Sink") {
-									point = [-1, -1];
-									sinkPoints.push(point);
+							} else if (tableData[beakerIndex][j].text === 0 && tableData[scaleIndex][j].text === 1) {
+								// we have the mass and not the volume
+								if (!includeUnknown) {
+									// we have the volume and not the mass
+									if (tableData[sinkIndex][j].text === "Sink") {
+										point = [parseFloat(tableData[volumeIndex][j].text), -1];
+										sinkPoints.push(point);
+									} else {
+										point = [parseFloat(tableData[volumeIndex][j].text), -1];
+										floatPoints.push(point);
+									}
 								} else {
-									point = [tableData[volumeIndex][j].text, -1];
-									floatPoints.push(point);
+									point = [0, parseFloat(tableData[massIndex][j].text)];
+									unknownPoints.push(point);
 								}
 							} else {
-								point = [0, 0];
-								unknownPoints.push(point);
-							}
-						}
-						if (point[0] < xMin && point[0] >= 0) {
-							xMin = point[0];
-							yMin = point[0];
-						}
-						if (point[1] < yMin && point[1] >= 0) {
-							xMin = point[1];
-							yMin = point[1];
-						}
-						if (point[0] > xMax) {
-							xMax = point[0];
-							yMax = point[0];
-						}
-						if (point[1] > yMax) {
-							xMax = point[1];
-							yMax = point[1];
-						}
-					}
-				}
-
-				seriesSpecs = [
-					{
-						id: 'sink',
-						name: 'Sink',
-						color: 'rgba(255, 0, 0, .5)',
-						data: sinkPoints
-					},
-					{
-						id: 'float',
-						name: 'Float',
-						color: 'rgba(0, 0, 155, .5)',
-						data: floatPoints
-					}
-				]
-				if (includeUnknown){
-					seriesSpecs.push(
-						{
-							id: 'unknown',
-							name: 'Unknown',
-							color: 'rgba(127, 127, 127, .5)',
-							data: unknownPoints
-						}
-					);
-				}
-
-				// were any liquids tested
-				if (this.liquids_tested.length > 0) {
-					for (var i = 0; i < this.liquids_tested.length; i++) {
-						// is unique?
-						var thismaterialIndex = -1;
-						if (seriesSpecs.length > 0) {
-							for (var k = 0; k < seriesSpecs.length; k++) {
-								if (seriesSpecs[k].id === this.liquids_tested[i].liquid_name) {
-									thismaterialIndex = k;
-									break;
+								if (!includeUnknown) {
+									// you know nothing Jon Vitale
+									if (tableData[sinkIndex][j].text === "Sink") {
+										point = [-1, -1];
+										sinkPoints.push(point);
+									} else {
+										point = [parseFloat(tableData[volumeIndex][j].text), -1];
+										floatPoints.push(point);
+									}
+								} else {
+									point = [0, 0];
+									unknownPoints.push(point);
 								}
 							}
+							if (point[0] < xMin && point[0] >= 0) {
+								xMin = point[0];
+								yMin = point[0];
+							}
+							if (point[1] < yMin && point[1] >= 0) {
+								xMin = point[1];
+								yMin = point[1];
+							}
+							if (point[0] > xMax) {
+								xMax = point[0];
+								yMax = point[0];
+							}
+							if (point[1] > yMax) {
+								xMax = point[1];
+								yMax = point[1];
+							}
 						}
-						if (thismaterialIndex == -1) {
+
+						seriesSpecs = [
+							{
+								id: 'sink',
+								name: 'Sink',
+								color: 'rgba(255, 0, 0, .5)',
+								data: sinkPoints
+							},
+							{
+								id: 'float',
+								name: 'Float',
+								color: 'rgba(0, 0, 155, .5)',
+								data: floatPoints
+							}
+						]
+						if (includeUnknown) {
 							seriesSpecs.push(
 								{
-									id: this.liquids_tested[i].liquid_name,
-									name: this.liquids_tested[i].liquid_name,
-									color: this.liquids_tested[i].liquid_name == 'Water' ? 'rgba(0, 127, 0, 0.5)' : (GLOBAL_PARAMETERS['liquids'][this.liquids_tested[i].liquid_name] != null ? GLOBAL_PARAMETERS['liquids'][this.liquids_tested[i].liquid_name]["stroke_color"] : 'rgba(127, 127, 127, .5)'),
-									data: []
+									id: 'unknown',
+									name: 'Unknown',
+									color: 'rgba(127, 127, 127, .5)',
+									data: unknownPoints
 								}
 							);
-							thismaterialIndex = seriesSpecs.length - 1;
 						}
+					}
 
-						var point = [this.liquids_tested[i].volume, this.liquids_tested[i].mass];
-						seriesSpecs[thismaterialIndex].data.push(point);
+					// were any liquids tested
+					if (this.liquids_tested.length > 0) {
+						for (var i = 0; i < this.liquids_tested.length; i++) {
+							// is unique?
+							var thismaterialIndex = -1;
+							if (seriesSpecs.length > 0) {
+								for (var k = 0; k < seriesSpecs.length; k++) {
+									if (seriesSpecs[k].id === this.liquids_tested[i].liquid_name) {
+										thismaterialIndex = k;
+										break;
+									}
+								}
+							}
+							if (thismaterialIndex == -1) {
+								seriesSpecs.push(
+									{
+										id: this.liquids_tested[i].liquid_name,
+										name: typeof this.liquids_tested[i].display_name === "string" ? this.liquids_tested[i].display_name: this.liquids_tested[i].liquid_name,
+										color: this.liquids_tested[i].liquid_name == 'Water' ? 'rgba(0, 127, 0, 0.5)' : (GLOBAL_PARAMETERS['liquids'][this.liquids_tested[i].liquid_name] != null ? GLOBAL_PARAMETERS['liquids'][this.liquids_tested[i].liquid_name]["stroke_color"] : 'rgba(127, 127, 127, .5)'),
+										data: []
+									}
+								);
+								thismaterialIndex = seriesSpecs.length - 1;
+							}
 
-						if (point[0] < xMin && point[0] >= 0) {
-							xMin = point[0];
-							yMin = point[0];
-						}
-						if (point[1] < yMin && point[1] >= 0) {
-							xMin = point[1];
-							yMin = point[1];
-						}
-						if (point[0] > xMax) {
-							xMax = point[0];
-							yMax = point[0];
-						}
-						if (point[1] > yMax) {
-							xMax = point[1];
-							yMax = point[1];
-						}
+							var point = [this.liquids_tested[i].volume, this.liquids_tested[i].mass];
+							seriesSpecs[thismaterialIndex].data.push(point);
 
+							if (point[0] < xMin && point[0] >= 0) {
+								xMin = point[0];
+								yMin = point[0];
+							}
+							if (point[1] < yMin && point[1] >= 0) {
+								xMin = point[1];
+								yMin = point[1];
+							}
+							if (point[0] > xMax) {
+								xMax = point[0];
+								yMax = point[0];
+							}
+							if (point[1] > yMax) {
+								xMax = point[1];
+								yMax = point[1];
+							}
+
+						}
+					}
+				}
+
+				// round max values up to nearest 50
+				xMax = Math.ceil(xMax / 50) * 50;
+				yMax = xMax;
+				// set a tickInterval based on the xMax
+				var tickInterval = 10;
+				if (xMax > 500) {
+					tickInterval = 100;
+				} else if (xMax > 100) {
+					tickInterval = 50;
+				} else if (xMax > 50) {
+					tickInterval = 20;
+				}
+
+				this.chart = {
+					chart: {
+						type: 'scatter',
+						zoomType: 'xy',
+						height: 400,
+						width: 500,
+						marginRight: 100
+					},
+
+					title: {
+						text: "Mass vs. Volume"
+					},
+					subtitle: {
+						text: ''
+					},
+					xAxis: {
+						title: {
+							enabled: true,
+							text: "Volume (ml)"
+						},
+						showLastLabel: true,
+						gridLineWidth: 1,
+						min: xMin,
+						max: xMax,
+						tickInterval: tickInterval
+					},
+					yAxis: {
+						title: {
+							text: "Mass (grams)"
+						},
+						showLastLabel: true,
+						gridLineWidth: 1,
+						min: yMin,
+						max: yMax,
+						tickInterval: tickInterval
+					},
+					legend: {
+						layout: 'vertical',
+						align: 'right',
+						verticalAlign: 'top',
+						floating: true,
+						x: 10,
+						y: 40,
+						backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF',
+						borderWidth: 1
+					},
+					tooltip: {
+						pointFormat:"Volume: <b>{point.x:.2f} </b>ml<br/>Mass:   <b>{point.y:.2f} </b>grams<br/>"
+					},
+					plotOptions: {
+						scatter: {
+							marker: {
+								lineWidth:0.5,
+								lineColor:'rgba(100,100,100)',
+								radius: 5,
+								states: {
+									hover: {
+										enabled: true,
+										lineColor: 'rgb(100,100,100)'
+									}
+								}
+							}, states: {
+								hover: {
+									marker: {
+										enabled: false
+									}
+								}
+							}
+						}
+					},
+					series: seriesSpecs
+				};
+				//render the chart
+				this.renderChart(mass_volume_determined);
+
+			} else {
+				console.log("problem with index (mass, vol, liq, scale)", massIndex, volumeIndex, beakerIndex, scaleIndex);
+			}
+		} else if (includeTable && arrColumnNamesToImport.length > 0){
+			// search for indices matching arrColumnNamesToImport
+			this.chart = [];
+			for (var c = 0; c < arrColumnNamesToImport.length; c++){
+				var colName = arrColumnNamesToImport[c];
+				var colDisplay = arrColumnNamesToDisplay.length > c ? arrColumnNamesToDisplay[c] : colName;
+				for (var i = 0; i < tableData.length; i++){
+					if (tableData[i][0].text.match(colName) != null){
+						var column = [colDisplay];
+						for (j = 1; j < tableData[i].length; j++){
+							var val = tableData[i][j].text;
+							if (!isNaN(val)){
+								val = parseFloat(val).toFixed(2);
+							}
+							column.push(val);
+						}
+						this.chart.push(column);
 					}
 				}
 			}
 
-			// round max values up to nearest 50
-			xMax = Math.ceil(xMax / 50) * 50;
-			yMax = xMax;
-			// set a tickInterval based on the xMax
-			var tickInterval = 10;
-			if (xMax > 500){
-				tickInterval  = 100;
-			} else if (xMax > 100){
-				tickInterval = 50;
-			} else if (xMax > 50){
-				tickInterval = 20;
+			if (showTestedLiquidValuesOnly){
+				var tested_in_any_beaker = [];
+				for (var j = 1; j < tableData[0].length; j++) tested_in_any_beaker[j-1] = false;
+
+				for (var i = tableData.length-1; i >= 0; i--){
+					if (tableData[i][0].text.substr(0,10) == "Tested_in_"){
+						var liquid_name = tableData[i][0].text.substr(10);
+						for (var j = 1; j < tableData[i].length; j++){
+							// if this object was not tested remove values in other columns associated with this liquid
+							if (tableData[i][j].text == 0){
+								for (var k = 0; k < this.chart.length; k++){
+									if (this.chart[k][0].substr(this.chart[k][0].length - liquid_name.length) == liquid_name && this.chart[k][0].substr(0,10) != "Tested_in_"){
+										this.chart[k][j] = "?";
+									}
+								}
+							} else {
+								tested_in_any_beaker[j-1] = true;
+							}
+						}
+					}
+				}
+				// now we know for each row whether object has been tested in any beaker
+				// go through each tested_in_any_beaker and update volume
+				for (var t = 0; t < tested_in_any_beaker.length; t++){
+					j = t + 1;
+					if (!tested_in_any_beaker[t]){
+						for (var k = 0; k < this.chart.length; k++){
+							if (this.chart[k][0].match(/volume/i) != null || this.chart[k][0].match(/density/i) != null){
+								this.chart[k][j] = "?";
+							}
+						}
+					}
+				}
 			}
 
-			this.chart = {
-				chart: {
-					type: 'scatter',
-					zoomType: 'xy',
-					height: 400,
-					width: 500,
-					marginRight: 100
-				},
-
-				title: {
-					text: "Mass vs. Volume"
-				},
-				subtitle: {
-					text: ''
-				},
-				xAxis: {
-					title: {
-						enabled: true,
-						text: "Volume (ml)"
-					},
-					showLastLabel: true,
-					gridLineWidth: 1,
-					min: xMin,
-					max: xMax,
-					tickInterval: tickInterval
-				},
-				yAxis: {
-					title: {
-						text: "Mass (grams)"
-					},
-					showLastLabel: true,
-					gridLineWidth: 1,
-					min: yMin,
-					max: yMax,
-					tickInterval: tickInterval
-				},
-				legend: {
-					layout: 'vertical',
-					align: 'right',
-					verticalAlign: 'top',
-					floating: true,
-					x: 10,
-					y: 40,
-					backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF',
-					borderWidth: 1
-				},
-				plotOptions: {
-					scatter: {
-						marker: {
-							radius: 5,
-							states: {
-								hover: {
-									enabled: true,
-									lineColor: 'rgb(100,100,100)'
-								}
-							}
-						}, states: {
-							hover: {
-								marker: {
-									enabled: false
+			if (showTestedMassValuesOnly){
+				for (var i = tableData.length-1; i >= 0; i--){
+					if (tableData[i][0].text.substr(0,15) == "Tested_on_Scale"){
+						for (var j = 1; j < tableData[i].length; j++){
+							// if this object was not tested remove values in other columns associated with this liquid
+							if (tableData[i][j].text == 0){
+								for (var k = 0; k < this.chart.length; k++){
+									if (this.chart[k][0].match(/mass/i) != null || this.chart[k][0].match(/density/i) != null){
+										this.chart[k][j] = "?";
+									}
 								}
 							}
 						}
 					}
-				},
-				series: seriesSpecs
-			};
-			//render the chart
-			this.renderChart(mass_volume_determined);
-		} else {
-			console.log ("problem with index (mass, vol, liq, scale)", massIndex , volumeIndex , beakerIndex , scaleIndex );
+				}
+			}
+
+			if (showLiquids){
+				// find columns matching relevant
+				for (var a = 0; a < this.liquids_tested.length; a++){
+					for (var i = 0; i < this.chart.length; i++){
+						if (this.chart[i][0].match(/mass/i) != null){
+							this.chart[i].push(this.liquids_tested[a].mass.toFixed(2));
+						} else if (this.chart[i][0].match(/volume/i) != null){
+							this.chart[i].push(this.liquids_tested[a].volume.toFixed(2));
+						} else if (this.chart[i][0].match(/material/i) != null){
+							this.chart[i].push(typeof this.liquids_tested[a].display_name === "string" ? this.liquids_tested[a].display_name: this.liquids_tested[a].liquid_name);
+						} else if (this.chart[i][0].match(/sink_in/i) != null){
+							this.chart[i].push(typeof this.liquids_tested[a].display_name === "string" ? this.liquids_tested[a].display_name: this.liquids_tested[a].liquid_name);
+						} else if (this.chart[i][0].match(/density/i) != null){
+							this.chart[i].push(this.liquids_tested[a].density.toFixed(2));
+						}
+					}
+				}
+			}
+
+			// use spaces instead of underscores
+			for (var i = this.chart.length-1; i >= 0; i--){
+				this.chart[i][0] = this.chart[i][0].replace(/_/g, " ");
+			}
+
+			this.renderTable(mass_volume_determined);
 		}
-
-
 	}
 
 	var isStepCompleted = true;
@@ -949,11 +1084,10 @@ Box2dModel.prototype.interpretEvent = function(type, args, obj) {
 		 //if (isStepCompleted){this.view.pushStudentWork(this.node.id, {});}
 	}
 
-	// save on a make, or delete
-	//if (evt.type == "make-model" || evt.type == "delete-model" || evt.type == "revise-model" || evt.type == "duplicate-model"){
-	//	obj.save(evt);
-	//}	
 	eventManager.fire('studentWorkUpdated', [this.node.id, this.view.getState().getNodeVisitsByNodeId(this.node.id)]);
+	if (evt.type == "save-pressed") {
+		obj.save(evt);
+	}
 }
 
 
@@ -1013,6 +1147,68 @@ Box2dModel.prototype.renderChart = function(popup) {
 
 	//render the highcharts chart
 	new Highcharts.Chart(chartObject);
+}
+
+/**
+ * Render the results table
+ * @param divId the div to render the chart in
+ * @param chartObject the chart object to render
+ */
+Box2dModel.prototype.renderTable = function(popup) {
+	var chartObject = this.chart;
+	var divId;
+	var otherdivId;
+	if (popup){
+		divId = 'chartPopUp';
+		otherdivId = 'chartDiv';
+	} else {
+		divId = 'chartDiv';
+		otherdivId = 'chartPopUp';
+	}
+
+	if($('#' + divId).length > 0) {
+		$('#' + divId).empty();
+	}
+	if($('#' + otherdivId).length > 0) {
+		$('#' + otherdivId).empty();
+	}
+
+	var elem = "<div id='resultsTableDiv'><br/>";
+	elem += "<table style='background-color:#eef;'><tbody>";
+	for (var ri = 0; ri < chartObject[0].length; ri++){
+		elem += "<tr>";
+		for (var ci = 0; ci < chartObject.length; ci++){
+			elem += "<td style='border: 1px solid black; padding: 5px;'>";
+			if (ri == 0) elem += "<strong>";
+			if (chartObject[ci][ri] == "Sink"){
+				elem += "<span style='color:#aa4444;'>" + chartObject[ci][ri] + "</span>";
+			} else if  (chartObject[ci][ri] == "Float"){
+				elem += "<span style='color:#4444aa;'>" + chartObject[ci][ri] + "</span>";
+			} else {
+				elem += chartObject[ci][ri].replace(/_/g, " ");
+			}
+
+			if (ri == 0) elem += "</strong>";
+			elem += "</td>";
+		}
+		elem += "</tr>";
+	}
+	elem += "</tbody></table></br></div>";
+
+	$('#' + divId).append(elem);
+
+	if (popup) {
+		$('#' + divId).dialog({
+			'position': {my: "left bottom", at: "center bottom", of: "#b2canvas"},
+			'autoOpen': true,
+			'closeOnEscape': false,
+			'modal': true,
+			'width': 500,
+			'close': function (event, ui) {
+				box2dModel.renderTable(false);
+			}
+		});
+	}
 }
 
 

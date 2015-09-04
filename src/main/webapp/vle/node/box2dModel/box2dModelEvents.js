@@ -54,7 +54,8 @@ var events =
 	'test-on-scale', 
 	'test-on-balance',
 	'release-from-beaker',
-	'gave-feedback'
+	'gave-feedback',
+	'save-pressed'
 ];
 
 

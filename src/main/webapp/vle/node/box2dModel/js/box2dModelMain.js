@@ -40,6 +40,7 @@ function init(wiseData, previousModels, forceDensityValue, tableData, custom_obj
 	GLOBAL_PARAMETERS["DEBUG"] = false;
 	GLOBAL_PARAMETERS["DEBUG_DEEP"] =false;
 	GLOBAL_PARAMETERS["LAB_HEIGHT"] =560;
+	GLOBAL_PARAMETERS["LAB_WIDTH"] =820;
 	GLOBAL_PARAMETERS["INCLUDE_BLOCKCOMP_BUILDER"] =false;
 	GLOBAL_PARAMETERS["INCLUDE_CYLINDER_BUILDER"] = false;
 	GLOBAL_PARAMETERS["INCLUDE_RECTPRISM_BUILDER"] = false;
@@ -108,7 +109,7 @@ function init(wiseData, previousModels, forceDensityValue, tableData, custom_obj
 	GLOBAL_PARAMETERS["feedbackEvents"] = [];
 
 	$(document).ready( function (){
-		GLOBAL_PARAMETERS.STAGE_WIDTH = $("#b2canvas").width();
+		//GLOBAL_PARAMETERS.STAGE_WIDTH = $("#b2canvas").width();
 		//GLOBAL_PARAMETERS.LAB_HEIGHT = $("#b2canvas").height();
 		// load from WISE
 		var obj;
@@ -149,7 +150,8 @@ function init(wiseData, previousModels, forceDensityValue, tableData, custom_obj
 	// can't manually change stage height, only lab height
 		GLOBAL_PARAMETERS.INCLUDE_BUILDER = GLOBAL_PARAMETERS.INCLUDE_BLOCKCOMP_BUILDER || GLOBAL_PARAMETERS.INCLUDE_CYLINDER_BUILDER || GLOBAL_PARAMETERS.INCLUDE_RECTPRISM_BUILDER; 
 		GLOBAL_PARAMETERS.STAGE_HEIGHT = GLOBAL_PARAMETERS.LAB_HEIGHT;
-		
+		GLOBAL_PARAMETERS.STAGE_WIDTH = GLOBAL_PARAMETERS.LAB_WIDTH;
+
 		if (GLOBAL_PARAMETERS.INCLUDE_BUILDER){
 			 GLOBAL_PARAMETERS.BUILDER_HEIGHT = GLOBAL_PARAMETERS.SCALE * 3 * 5;
 		} else {
@@ -331,10 +333,22 @@ function start(previousModels){
 	if (builder != null) stage.addChild(builder);
 
 	// make scale or balance
+	// place it to the right of the last beaker, only if it is near the ground, if in the air maybe we want it to land on top of this
+	var scalePosX = world_width_units * 2/3;
+	if (GLOBAL_PARAMETERS.scale != null && typeof GLOBAL_PARAMETERS.scale.x === "number"){
+		scalePosX = GLOBAL_PARAMETERS.scale.x;
+	} else {
+		for (var i = 0; i < GLOBAL_PARAMETERS.beakers_in_world.length; i++) {
+			if (typeof GLOBAL_PARAMETERS.beakers_in_world[i].x == "number" && typeof GLOBAL_PARAMETERS.beakers_in_world[i].y == "number" && typeof GLOBAL_PARAMETERS.beakers_in_world[i].width_units == "number" && GLOBAL_PARAMETERS.beakers_in_world[i].y < 5 && (GLOBAL_PARAMETERS.beakers_in_world[i].x + GLOBAL_PARAMETERS.beakers_in_world[i].width_units + 1) > scalePosX) {
+				scalePosX = GLOBAL_PARAMETERS.beakers_in_world[i].x + GLOBAL_PARAMETERS.beakers_in_world[i].width_units + 1;
+			}
+		}
+	}
+
 	if (GLOBAL_PARAMETERS.INCLUDE_SCALE) {
-		labWorld.createScaleInWorld(world_width_units * 2/3, 0, 5, "dynamic");
+		labWorld.createScaleInWorld(scalePosX, 0, 5, "dynamic");
 	} else if (GLOBAL_PARAMETERS.INCLUDE_BALANCE) {
-		labWorld.createBalanceInWorld(world_width_units * 2/3, 0, 10, 5, "dynamic");
+		labWorld.createBalanceInWorld(scalePosX, 0, 10, 5, "dynamic");
 	}	
 	// make beakers
 	for (var i = 0; i < GLOBAL_PARAMETERS.beakers_in_world.length; i++){
@@ -349,7 +363,7 @@ function start(previousModels){
 		if (typeof premade.material_name === "undefined" && typeof premade.material !== "undefined") premade.material_name = premade.material;
 		if (typeof premade.liquid_name === "undefined" && typeof premade.liquid !== "undefined") premade.liquid_name = premade.liquid;
 		// add liquid in the beaker to the list of liquids in the world
-		if (GLOBAL_PARAMETERS.liquids_in_world.indexOf(premade.liquid_name) == -1){
+		if (typeof premade.liquid_name === "string" && premade.liquid_name.length > 0 && GLOBAL_PARAMETERS.liquids_in_world.indexOf(premade.liquid_name) == -1){
 			GLOBAL_PARAMETERS.liquids_in_world.push(premade.liquid_name);
 		}
 

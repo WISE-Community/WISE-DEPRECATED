@@ -183,21 +183,22 @@ Grapher.prototype.render = function() {
 		workToImport = tagMapResults.workToImport;
 	}
 
-	if(this.states != null && this.states.length == 0 && workToImport != null && workToImport.length > 0) {
+	// if there is a conflict (previous step has been updated) use timestamp to resolve most recent
+	if(workToImport != null && workToImport.length > 0 && (this.states === null || this.states.length == 0 || (this.states[this.states.length-1].timestamp != null && workToImport[workToImport.length-1].timestamp != null && this.states[this.states.length-1].timestamp < workToImport[workToImport.length-1].timestamp))) {
 		/*
 		 * the student has not done any work for this step and
 		 * there is work to import so we will use the work to import
 		 */
 		this.grapherState = workToImport[workToImport.length - 1];
 	}
-	
+
 	if(this.content.requirePredictionBeforeEnter && this.node.prevWorkNodeIds.length != 0 && this.grapherState.predictionArray.length == 0) {
 		/*
 		 * this step requires a prediction before opening, there is an associated prevWorkNodeId
 		 * and there is no prediction so we will lock the student out of this step until they
 		 * create the prediction in the previously associated step
 		 */
-		
+
 		var prevWorkNodeId = this.node.prevWorkNodeIds[0];
 		var prevWorkNodeTitle = this.view.getProject().getStepNumberAndTitle(prevWorkNodeId);
 		
@@ -663,7 +664,7 @@ Grapher.prototype.save = function() {
 	if(response != previousResponse || this.graphChanged || this.annotationsChanged || this.axisRangeChanged || this.axisLabelChanged) {
 		//set the student response into the state
 		this.grapherState.response = response;
-		
+
 		var newGrapherStateString = JSON.stringify(this.grapherState);
 		var newGrapherStateJSON = JSON.parse(newGrapherStateString);
 		var newGrapherState = GrapherState.prototype.parseDataJSONObj(newGrapherStateJSON);
@@ -2571,7 +2572,7 @@ Grapher.prototype.getPreviousPrediction = function() {
 			//get the node type for the previous work
 			var prevWorkNodeType = this.view.getProject().getNodeById(this.node.prevWorkNodeIds[0]).type;
 			//we can only pre populate the work from a previous node if it is a graph step like this one
-			if(prevWorkNodeType == 'GrapherNode' || prevWorkNodeType == 'CarGraphNode') {
+			if(prevWorkNodeType == 'GrapherNode' || prevWorkNodeType == 'CarGraphNode' || prevWorkNodeType == 'SensorNode') {
 				//get the state from the previous step that this step is linked to
 				var predictionState = this.view.getState().getLatestWorkByNodeId(this.node.prevWorkNodeIds[0]);
 				
@@ -2581,8 +2582,9 @@ Grapher.prototype.getPreviousPrediction = function() {
 				 * associated step before we try to retrieve that prediction and
 				 * set it into our prediction array
 				 * OR if cannot create prediction then always use previous prediction - jonathan vitale
+				 * OR if student has updated previous state, update this state with new work.
 				 */
-				if(predictionState != null && predictionState != "" && (this.grapherState.predictionArray.length == 0 || !this.createPrediction)) {
+				if(predictionState != null && predictionState != "" && (this.grapherState.predictionArray.length == 0 || !this.createPrediction || (this.grapherState.timestamp != null && predictionState.timestamp != null && this.grapherState.timestamp != null < predictionState.timestamp))) {
 
 					//var predictionId = "";
 					
@@ -2590,7 +2592,7 @@ Grapher.prototype.getPreviousPrediction = function() {
 					//var seriesLabels = this.content.seriesLabels;
 					
 					/*
-					 * find the id of the series that is used in this step, we will assume
+					 * find the id of the series that is used in  this step, we will assume
 					 * only one series is used
 					 */
 					//for(var x=0; x<seriesLabels.length; x++) {

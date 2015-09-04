@@ -71,13 +71,16 @@
 	        /*
 	         * This is called when the student clicks on the save button below in the body
 	         */
-	        function save() {
+	        function save(event) {
 		        /*
 		         * calls the save function in box2dModel.js
-				 *
-		         * TODO: rename box2dModel variable
-		         */
-				if (typeof box2dModel !== "undefined") box2dModel.save();
+				 */
+				console.log(eventManager);
+				if (typeof eventManager !== "undefined" && typeof box2dModel !== "undefined" && event == "save-pressed"){
+					eventManager.fire("save-pressed",[$('#studentResponseTextArea').val()], box2dModel);
+				}else if (typeof box2dModel !== "undefined"){
+					box2dModel.save("save-pressed");
+				}
 	        }
 		</script>
 		<script src="libs/easel.js"></script>
@@ -131,7 +134,7 @@
 			<div id='prompt2Div'></div>
 			<div id='responseDiv'><textarea id='studentResponseTextArea' rows='4' cols='80'></textarea></div>
 			<div id='saveButtonDiv' style='float: left'>
-				<input type='button' value='Save' onclick='save()' data-i18n="save" />
+				<input type='button' value='Save' onclick='save("save-pressed")' data-i18n="save" />
 			</div>
 		</div>
 		<div id="canvas-holder">
