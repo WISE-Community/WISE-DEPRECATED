@@ -22,7 +22,7 @@ define(['configService', 'projectService'], function(configService, currentNodeS
         serviceObject.studentData = null;
         serviceObject.stackHistory = [];  // array of node id's
         serviceObject.visitedNodesHistory = [];
-        serviceObject.nodeStatuses = null;
+        serviceObject.nodeStatuses = {};
 
         serviceObject.retrieveStudentData = function() {
             
@@ -136,21 +136,28 @@ define(['configService', 'projectService'], function(configService, currentNodeS
         serviceObject.getNodeStatuses = function() {
             return this.nodeStatuses;
         };
-        
-        serviceObject.getNodeStatusByNodeId = function(nodeId) {
-            var result = null;
-            
-            if (nodeId != null && this.nodeStatuses != null) {
-                for (var n = 0; n < this.nodeStatuses.length; n++) {
-                    var nodeStatus = this.nodeStatuses[n];
-                    if(nodeStatus != null && nodeStatus.nodeId === nodeId) {
-                        result = nodeStatus;
-                        break;
-                    }
+
+        serviceObject.setNodeStatusByNodeId = function(nodeId, nodeStatus) {
+
+            if (nodeId != null && nodeStatus != null) {
+                var nodeStatuses = this.nodeStatuses;
+
+                if (nodeStatuses != null) {
+                    nodeStatuses[nodeId] = nodeStatus;
                 }
             }
-            
-            return result;
+        }
+        
+        serviceObject.getNodeStatusByNodeId = function(nodeId) {
+            var nodeStatus = null;
+
+            var nodeStatuses = this.nodeStatuses;
+
+            if (nodeId != null && nodeStatuses != null) {
+                nodeStatus = nodeStatuses[nodeId];
+            }
+
+            return nodeStatus;
         };
         
         serviceObject.updateNodeStatuses = function() {
@@ -160,31 +167,33 @@ define(['configService', 'projectService'], function(configService, currentNodeS
             
             if (nodes != null) {
 
-                var nodeStatuses = [];
+                //var nodeStatuses = [];
 
                 for (var n = 0; n < nodes.length; n++) {
                     var node = nodes[n];
+
+                    this.updateNodeStatusByNode(node);
                     
-                    var nodeStatusesByNode = this.updateNodeStatusesByNode(node);
-                    nodeStatuses.push(nodeStatusesByNode);
+                    //var nodeStatusesByNode = this.updateNodeStatusByNode(node);
+                    //nodeStatuses.push(nodeStatusesByNode);
+                    //console.log(nodeStatusesByNode);
                 }
 
-                this.nodeStatuses = nodeStatuses;
+                //this.nodeStatuses = nodeStatuses;
             }
             
             $rootScope.$broadcast('nodeStatusesChanged');
         };
 
-        serviceObject.updateNodeStatusesByNode = function(node) {
-            var nodeStatus = null;
+        serviceObject.updateNodeStatusByNode = function(node) {
 
             if (node != null) {
                 var nodeId = node.id;
 
-                nodeStatus = {};
-                nodeStatus.nodeId = nodeId;
-                nodeStatus.isVisitable = false;
-                nodeStatus.isCompleted = false;
+                var tempNodeStatus = {};
+                tempNodeStatus.nodeId = nodeId;
+                tempNodeStatus.isVisitable = true;
+                tempNodeStatus.isCompleted = true;
 
 
                 // get the constraints that affect this node
@@ -192,8 +201,12 @@ define(['configService', 'projectService'], function(configService, currentNodeS
 
                 if (constraintsForNode == null || constraintsForNode.length == 0) {
                     // this node does not have any constraints so it is clickable
-                    nodeStatus.isVisitable = true;
+                    tempNodeStatus.isVisible = true;
+                    tempNodeStatus.isVisitable = true;
                 } else {
+
+                    var isVisibleResults = [];
+                    var isVisitableResults = [];
 
                     var result = false;
                     var firstResult = true;
@@ -207,6 +220,7 @@ define(['configService', 'projectService'], function(configService, currentNodeS
                             // evaluate the constraint to see if the node can be visited
                             var tempResult = this.evaluateConstraint(node, constraintForNode);
 
+                            /*
                             if (firstResult) {
                                 // this is the first constraint in this for loop
                                 result = tempResult;
@@ -215,16 +229,66 @@ define(['configService', 'projectService'], function(configService, currentNodeS
                                 // this is not the first constraint in this for loop so we will && the result
                                 result = result && tempResult;
                             }
+                            */
+
+                            var action = constraintForNode.action;
+
+                            if (action != null) {
+                                if (action === 'makeThisNodeNotVisible') {
+                                    isVisibleResults.push(tempResult);
+                                } else if (action === 'makeThisNodeNotVisitable') {
+                                    isVisitableResults.push(tempResult);
+                                } else if (action === 'makeAllNodesAfterThisNotVisible') {
+                                    isVisibleResults.push(tempResult);
+                                } else if (action === 'makeAllNodesAfterThisNotVisitable') {
+                                    isVisitableResults.push(tempResult);
+                                } else if (action === 'makeAllOtherNodesNotVisible') {
+                                    isVisibleResults.push(tempResult);
+                                } else if (action === 'makeAllOtherNodesNotVisitable') {
+                                    isVisitableResults.push(tempResult);
+                                }
+                            }
                         }
                     }
 
-                    nodeStatus.isVisitable = result;
+                    var isVisible = true;
+                    var isVisitable = true;
+
+                    for (var a = 0; a < isVisibleResults.length; a++) {
+                        var isVisibleResult = isVisibleResults[a];
+
+                        isVisible = isVisible && isVisibleResult;
+                    }
+
+                    for (var b = 0; b < isVisitableResults.length; b++) {
+                        var isVisitableResult = isVisitableResults[b];
+
+                        isVisitable = isVisitable && isVisitableResult;
+                    }
+
+                    tempNodeStatus.isVisible = isVisible;
+                    tempNodeStatus.isVisitable = isVisitable;
                 }
 
-                nodeStatus.isCompleted = this.isCompleted(nodeId);
+                tempNodeStatus.isCompleted = this.isCompleted(nodeId);
+
+                tempNodeStatus.isVisited = this.isNodeVisited(nodeId);
+
+                var nodeStatus = this.getNodeStatusByNodeId(nodeId);
+
+                if (nodeStatus == null) {
+                    this.setNodeStatusByNodeId(nodeId, tempNodeStatus);
+                } else {
+                    nodeStatus.isVisited = tempNodeStatus.isVisited;
+                    nodeStatus.isVisible = tempNodeStatus.isVisible;
+                    nodeStatus.isVisitable = tempNodeStatus.isVisitable;
+                    nodeStatus.isCompleted = tempNodeStatus.isCompleted;
+                }
+
+                //console.log(JSON.stringify(tempNodeStatus));
             }
 
-            return nodeStatus;
+            //return nodeStatus;
         };
 
         /**
@@ -237,18 +301,11 @@ define(['configService', 'projectService'], function(configService, currentNodeS
             var result = false;
 
             if (constraintForNode != null) {
-                var constraintLogic = constraintForNode.constraintLogic;
 
-                if (constraintLogic === 'node') {
+                var removalCriteria = constraintForNode.removalCriteria;
+
+                if (removalCriteria != null) {
                     result = this.evaluateNodeConstraint(node, constraintForNode);
-                } else if (constraintLogic === 'transition') {
-                    result = this.evaluateNodeConstraint(node, constraintForNode);
-                } else if (constraintLogic === 'component') {
-
-                } else if (constraintLogic === 'group') {
-
-                } else if (constraintLogic === 'guidedNavigation') {
-                    result = this.evaluateGuidedNavigationConstraint(node, constraintForNode);
                 }
             }
 
@@ -320,58 +377,56 @@ define(['configService', 'projectService'], function(configService, currentNodeS
             return result;
         };
 
-        /**
-         * Evaluate the node constraint
-         * @param node the node
-         * @param constraintForNode the constraint object
-         * @returns whether the node satisifies the constraint
-         */
-        serviceObject.evaluateNodeConstraint = function(node, constraintForNode) {
-            var result = false;
+            /**
+             * Evaluate the node constraint
+             * @param node the node
+             * @param constraintForNode the constraint object
+             * @returns whether the node satisifies the constraint
+             */
+            serviceObject.evaluateNodeConstraint = function(node, constraintForNode) {
+                var result = false;
 
-            if (constraintForNode != null) {
-                var constraintLogic = constraintForNode.constraintLogic;
+                if (constraintForNode != null) {
+                    var removalCriteria = constraintForNode.removalCriteria;
 
-                var targetId = constraintForNode.targetId;
-                var criteria = constraintForNode.criteria;
+                    if (removalCriteria == null) {
+                        result = true;
+                    } else {
+                        var firstResult = true;
 
-                if (criteria != null && criteria.length > 0) {
+                        // loop through all the criteria that need to be satisifed
+                        for (var c = 0; c < removalCriteria.length; c++) {
 
-                    var firstResult = true;
+                            // get a criteria
+                            var tempCriteria = removalCriteria[c];
 
-                    // loop through all the criteria that need to be satisifed
-                    for (var c = 0; c < criteria.length; c++) {
+                            if (tempCriteria != null) {
 
-                        // get a criteria
-                        var tempCriteria = criteria[c];
+                                // evaluate the criteria
+                                var tempResult = this.evaluateCriteria(tempCriteria);
 
-                        if (tempCriteria != null) {
-
-                            // evaluate the criteria
-                            var tempResult = this.evaluateCriteria(tempCriteria);
-
-                            if (firstResult) {
-                                // this is the first criteria in this for loop
-                                result = tempResult;
-                                firstResult = false;
-                            } else {
-                                // this is not the first criteria in this for loop so we will && the result
-                                result = result && tempResult;
+                                if (firstResult) {
+                                    // this is the first criteria in this for loop
+                                    result = tempResult;
+                                    firstResult = false;
+                                } else {
+                                    // this is not the first criteria in this for loop so we will && the result
+                                    result = result && tempResult;
+                                }
                             }
                         }
                     }
                 }
-            }
 
-            return result;
-        };
+                return result;
+            };
 
         /**
          * Evaluate the criteria
          * @param criteria the criteria
          * @returns whether the criteria is satisfied or not
          */
-        serviceObject.evaluateCriteria = function(criteria) {
+        serviceObject.evaluateCriteria0 = function(criteria) {
 
             var result = false;
 
@@ -393,6 +448,12 @@ define(['configService', 'projectService'], function(configService, currentNodeS
                     // get the node events
                     var nodeEvents = this.getEventsByNodeId(nodeId);
 
+                    // get the node states
+                    var nodeStates = this.getNodeStatesByNodeId(nodeId);
+
+                    // get the node
+                    var node = ProjectService.getNodeById(nodeId);
+
                     // get the component object
                     var component = ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
 
@@ -408,7 +469,7 @@ define(['configService', 'projectService'], function(configService, currentNodeS
 
                             if (service != null) {
                                 // call the function in the service
-                                result = service.callFunction(component, functionName, functionParams, componentStates, componentEvents, nodeEvents);
+                                result = service.callFunction(node, component, functionName, functionParams, componentStates, nodeStates, componentEvents, nodeEvents);
                             }
                         }
                     }
@@ -439,6 +500,12 @@ define(['configService', 'projectService'], function(configService, currentNodeS
                                 // get the node events
                                 var nodeEvents = this.getEventsByNodeId(nodeId);
 
+                                // get the node states
+                                var nodeStates = this.getNodeStatesByNodeId(nodeId);
+
+                                // get the node
+                                var node = ProjectService.getNodeById(nodeId);
+
                                 // get the component object
                                 var component = ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
 
@@ -454,7 +521,7 @@ define(['configService', 'projectService'], function(configService, currentNodeS
 
                                         if (service != null) {
                                             // call the function in the service
-                                            tempResult = service.callFunction(component, functionName, functionParams, componentStates, componentEvents, nodeEvents);
+                                            tempResult = service.callFunction(node, component, functionName, functionParams, componentStates, nodeStates, componentEvents, nodeEvents);
 
                                             if (firstResult) {
                                                 // this is the first result in this for loop
@@ -474,6 +541,112 @@ define(['configService', 'projectService'], function(configService, currentNodeS
             }
 
             return result;
+        };
+
+        /**
+         * Evaluate the criteria
+         * @param criteria the criteria
+         * @returns whether the criteria is satisfied or not
+         */
+        serviceObject.evaluateCriteria = function(criteria) {
+
+            var result = false;
+
+            if (criteria != null) {
+                //var nodeId = criteria.nodeId;
+                //var componentId = criteria.componentId;
+                var functionName = criteria.functionName;
+
+                if (functionName == null) {
+
+                } else if (functionName === 'branchPathTaken') {
+                    result = this.evaluateBranchPathTakenCriteria(criteria);
+                } else if (functionName === 'isVisible') {
+
+                } else if (functionName === 'isVisitable') {
+
+                } else if (functionName === 'isVisited') {
+
+                } else if (functionName === 'isComplete') {
+
+                } else if (functionName === 'isCorrect') {
+
+                } else if (functionName === 'choiceChosen') {
+
+                } else if (functionName === '') {
+
+                }
+            }
+
+            return result;
+        };
+
+        serviceObject.evaluateBranchPathTakenCriteria = function(criteria) {
+            var result = false;
+
+            if (criteria != null) {
+                var expectedFromNodeId = criteria.fromNodeId;
+                var expectedToNodeId = criteria.toNodeId;
+
+                // get the node states
+                var nodeStates = this.getBranchPathTakenNodeStates(expectedFromNodeId);
+
+                if (nodeStates != null) {
+                    for (var n = 0; n < nodeStates.length; n++) {
+                        var nodeState = nodeStates[n];
+
+                        if (nodeState != null) {
+                            var studentData = nodeState.studentData;
+
+                            if (studentData != null) {
+                                var dataType = studentData.dataType;
+
+                                if (dataType != null && dataType === 'branchPathTaken') {
+
+                                    var tempFromNodeId = studentData.fromNodeId;
+                                    var tempToNodeId = studentData.toNodeId;
+
+                                    if (expectedFromNodeId === tempFromNodeId &&
+                                        expectedToNodeId === tempToNodeId) {
+                                        result = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return result;
+        };
+
+        serviceObject.getBranchPathTakenNodeStates = function(fromNodeId) {
+
+            var branchpathTakenNodeStates = [];
+
+            // get the node states
+            var nodeStatesFromNodeId = this.getNodeStatesByNodeId(fromNodeId);
+
+            if (nodeStatesFromNodeId != null) {
+                for (var n = 0; n < nodeStatesFromNodeId.length; n++) {
+                    var nodeState = nodeStatesFromNodeId[n];
+
+                    if (nodeState != null) {
+                        var studentData = nodeState.studentData;
+
+                        if (studentData != null) {
+                            var dataType = studentData.dataType;
+
+                            if (dataType != null && dataType === 'branchPathTaken') {
+
+                                branchpathTakenNodeStates.push(nodeState);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return branchpathTakenNodeStates;
         };
         
         serviceObject.updateNodeStatusesByNode0 = function(node) {
@@ -762,11 +935,34 @@ define(['configService', 'projectService'], function(configService, currentNodeS
         };
 
         serviceObject.addNodeState = function(nodeState) {
-            if (this.studentData != null && this.studentData.nodeState != null) {
+            if (this.studentData != null && this.studentData.nodeStates != null) {
                 this.studentData.nodeStates.push(nodeState);
 
                 this.updateNodeStatuses();
             }
+        };
+
+
+        serviceObject.getNodeStatesByNodeId = function(nodeId) {
+            var nodeStatesByNodeId = [];
+
+            if (this.studentData != null && this.studentData.nodeStates != null) {
+                var nodeStates = this.studentData.nodeStates;
+
+                for (var n = 0; n < nodeStates.length; n++) {
+                    var nodeState = nodeStates[n];
+
+                    if (nodeState != null) {
+                        var tempNodeId = nodeState.nodeId;
+
+                        if (nodeId === tempNodeId) {
+                            nodeStatesByNodeId.push(nodeState);
+                        }
+                    }
+                }
+            }
+
+            return nodeStatesByNodeId;
         };
 
         serviceObject.addEvent = function(event) {
@@ -1310,24 +1506,8 @@ define(['configService', 'projectService'], function(configService, currentNodeS
             var nodeStatuses = this.nodeStatuses;
             var nodeStatus = null;
 
-            if (nodeStatuses != null) {
-
-                // loop through all the node statuses
-                for (var n = 0; n < nodeStatuses.length; n++) {
-
-                    // get a node status
-                    var tempNodeStatus = nodeStatuses[n];
-
-                    if (tempNodeStatus != null) {
-
-                        var tempNodeStatusNodeId = tempNodeStatus.nodeId;
-
-                        if (nodeId === tempNodeStatusNodeId) {
-                            // we have found the node status we want
-                            nodeStatus = tempNodeStatus;
-                        }
-                    }
-                }
+            if (nodeId != null) {
+                nodeStatus = nodeStatuses[nodeId];
             }
 
             return nodeStatus;

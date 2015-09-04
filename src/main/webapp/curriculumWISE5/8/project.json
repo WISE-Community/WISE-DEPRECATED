@@ -30,15 +30,7 @@
          "ids": [
             "node1",
             "node2"
-         ],
-         "icons": {
-            "default": {
-               "color":"#2196F3",
-               "type":"font",
-               "fontSet":"material-icons",
-               "fontName":"explore"
-            }
-         }
+         ]
       },
       {
          "id": "node1",
@@ -48,6 +40,7 @@
          "r": 20,
          "showSaveButton": true,
          "showSubmitButton": true,
+         "constraints": [],
          "transitionLogic": {
             "transitions": [
                {
@@ -64,7 +57,7 @@
             "prompt": "<div style=\"background-image: url('/curriculum/13509/assets/background.jpg'); border-radius: 10px 10px 10px 10px; padding: 25px; background-size: cover; font-family: Arial, Helvetica, sans-serif; line-height: 150%;\">\n<div style=\"background-color: rgba(255,255,255,0.85); color: #006; border-radius: 30px 30px 30px 30px; padding: 15px; text-align: center;\">\n<h1>Why Study Newton Scooters?</h1>\n</div>\n<br />\n<div style=\"background-color: rgba(255,255,255,0.85); color: #006; border-radius: 20px 20px 20px 20px; padding: 20px;\">\n<p>In this unit, you will build a cart and try to get it to go as far as possible. We will show you how to make a better car by thinking about energy, where it comes from and where it goes.</p>\n</div>\n</div>",
             "components": [
                {
-                  "id": "n4ahx0xbgu",
+                  "id": "7p628u05pf",
                   "prompt": "Before we get started, describe in detail how you think a self-propelled vehicle, or Newton Scooter, works.",
                   "componentType": "OpenResponse"
                }
@@ -79,6 +72,7 @@
          "r": 20,
          "showSaveButton": true,
          "showSubmitButton": true,
+         "constraints": [],
          "transitionLogic": {
             "transitions": [
                {
@@ -95,12 +89,12 @@
             "prompt": "<div style=\"margin: auto; background-image: url('/curriculum/13509/assets/background.jpg'); border-radius: 20px 20px 20px 20px; padding: 8px; background-size: cover;\">\n<div style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 8px; text-align: center;\">\n<h2 style=\"text-align: center;\">Your Ideas About How Newton Scooters&nbsp;Work</h2>\n</div>\n</div>\n<p>&nbsp;</p>\n<div style=\"text-align: center;\"><object id=\"flashObj\" width=\"480\" height=\"270\" classid=\"clsid:D27CDB6E-AE6D-11cf-96B8-444553540000\" codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,47,0\"><param name=\"movie\" value=\"http://c.brightcove.com/services/viewer/federated_f9?isVid=1&isUI=1\" /><param name=\"bgcolor\" value=\"#FFFFFF\" /><param name=\"flashVars\" value=\"videoId=1785707989001&linkBaseURL=http%3A%2F%2Fvideos.kidspot.com.au%2Fvideos%2Fmsccfimh%2Fhow-to-make-a-rubber-band-cd-car&playerID=1481257918001&playerKey=AQ~~,AAABWOeErfE~,m-zG2cTdbSFPmdIYTvrDXYGmMQGs9zYu&domain=embed&dynamicStreaming=true\" /><param name=\"base\" value=\"http://admin.brightcove.com\" /><param name=\"seamlesstabbing\" value=\"false\" /><param name=\"allowFullScreen\" value=\"true\" /><param name=\"swLiveConnect\" value=\"true\" /><param name=\"allowScriptAccess\" value=\"always\" /><embed src=\"http://c.brightcove.com/services/viewer/federated_f9?isVid=1&isUI=1\" bgcolor=\"#FFFFFF\" flashVars=\"videoId=1785707989001&linkBaseURL=http%3A%2F%2Fvideos.kidspot.com.au%2Fvideos%2Fmsccfimh%2Fhow-to-make-a-rubber-band-cd-car&playerID=1481257918001&playerKey=AQ~~,AAABWOeErfE~,m-zG2cTdbSFPmdIYTvrDXYGmMQGs9zYu&domain=embed&dynamicStreaming=true\" base=\"http://admin.brightcove.com\" name=\"flashObj\" width=\"480\" height=\"270\" seamlesstabbing=\"false\" type=\"application/x-shockwave-flash\" allowFullScreen=\"true\" allowScriptAccess=\"always\" swLiveConnect=\"true\" pluginspage=\"http://www.macromedia.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash\"></embed></object></div>\n<table cellspacing=\"10\" cellpadding=\"10\">\n<tbody>\n<tr class=\"first even\">\n<td class=\"last first\" style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 25px;\">\n<p>A rubber band car is a type of Newton Scooter!</p>\n<p>With materials right in your own home, you can build a Newton Scooter! &nbsp;For each of the following write down your <strong> best ideas </strong> about what&nbsp;might affect how far a Newton Scooter&nbsp;might travel.</p>\n</td>\n</tr>\n</tbody>\n</table>",
             "components": [
                {
-                  "id": "8xlk82v13p",
+                  "id": "rchrwkbg8n",
                   "prompt": "Where does the energy needed to move the rubber band car come from?",
                   "componentType": "OpenResponse"
                },
                {
-                  "id": "zb6qnilyrq",
+                  "id": "t45k5ir560",
                   "prompt": "How do the materials you use affect how far your car travels?",
                   "componentType": "OpenResponse"
                }
@@ -129,14 +123,7 @@
             "node13",
             "node14",
             "node15"
-         ],
-         "icons": {
-            "default": {
-               "color":"#8D6E63",
-               "type":"img",
-               "imgSrc":"https://www.eliwhitney.org/sites/default/files/rubberbandcar400.jpg"
-            }
-         }
+         ]
       },
       {
          "id": "node3",
@@ -146,6 +133,7 @@
          "r": 20,
          "showSaveButton": true,
          "showSubmitButton": true,
+         "constraints": [],
          "transitionLogic": {
             "transitions": [
                {
@@ -161,7 +149,7 @@
          "content": {
             "components": [
                {
-                  "id": "kdbxuzamxs",
+                  "id": "9n8z5fmkex",
                   "componentType": "HTML",
                   "html": "<html>\n<head>\n\n</head>\n<body >\n<div style=\"margin: auto; background-image: url('/curriculum/13509/assets/background.jpg'); border-radius: 20px 20px 20px 20px; padding: 15px; background-size: cover;\">\n<div style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 1px; text-align: center;\">\n<h2>How Do Newton Scooters&nbsp;Work?</h2>\n</div>\n<br />\n<div style=\"background-color: #000099; border-radius: 20px 20px 20px 20px; padding: 5px; height: 150px;\">\n<table style=\"border-spacing: 30px 10px;\" cellpadding=\"10\">\n<tbody>\n<tr class=\"first even\">\n<td class=\"last first\" style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 15px;\"><img src=\"assets/rubber band car_rubberCD wheels.JPG\" alt=\"\" height=\"100px\" /></td>\n<td class=\"last first\" style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 15px;\"><img src=\"assets/triangle balloon car.JPG\" alt=\"\" height=\"100px\" /></td>\n<td class=\"last first\" style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; border-spacing: 15px 10px; padding: 15px;\"><img src=\"assets/balloon car 2.jpg\" alt=\"\" height=\"100px\" /></td>\n<td class=\"last first\" style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 15px;\"><img src=\"assets/two balloons car.JPG\" alt=\"\" height=\"100px\" /></td>\n<td class=\"last first\" style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 15px;\"><img src=\"assets/flower power.JPG\" alt=\"\" height=\"100px\" /></td>\n</tr>\n</tbody>\n</table>\n</div>\n<br />\n<div style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 10px;\">\n<h3 style=\"color: #000066;\">To help you make good design choices, lets explore some important science concepts for Newton Scooters:</h3>\n<ul>\n<li>Potential Energy</li>\n<li>Kinetic Energy</li>\n<li>Thermal Energy</li>\n</ul>\n</div>\n</div>\n</body>\n</html>"
                }
@@ -176,6 +164,7 @@
          "r": 20,
          "showSaveButton": true,
          "showSubmitButton": true,
+         "constraints": [],
          "transitionLogic": {
             "transitions": [
                {
@@ -192,27 +181,27 @@
             "prompt": "<div style=\"margin: auto; background-image: url('/curriculum/13509/assets/background.jpg'); border-radius: 20px 20px 20px 20px; padding: 10px; background-size: cover;\">\n<div style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 1px; text-align: center;\">\n<h2>Potential Energy: Rubber Band Cars</h2>\n</div>\n</div>\n<p>&nbsp;</p>\n<!-- ROW 0 TITLE -->\n<table cellspacing=\"10\" cellpadding=\"10\"><!-- ROW 0 TITLE -->\n<tbody>\n<tr class=\"first even\">\n<td class=\"last first\" style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 25px;\">\n<p>Potential energy is STORED energy. It is energy that is available to do a task.</p>\n<p>One type of Newton Scooter, a rubber band car, can explain the concepts. To give a rubber band car potential energy, we pull (or wind) a rubber band. The rubber band stores energy so that the car will be able to move.</p>\n<p><img style=\"display: block; margin-left: auto; margin-right: auto;\" src=\"assets/marksman.jpg\" alt=\"\" height=\"220\" /></p>\n<p>Think about a bow and arrow. How is the bow like a rubber band in the car?</p>\n</td>\n</tr>\n</tbody>\n</table>",
             "components": [
                {
-                  "id": "enmnqrbq46",
+                  "id": "ptwgy14jau",
                   "prompt": "When does the bow have elastic potential energy?",
                   "componentType": "MultipleChoice",
                   "choices": [
                      {
-                        "id": "zjyvj6tjdq",
+                        "id": "c69vaupqq2",
                         "text": "When it is lying on the ground",
                         "feedback": ""
                      },
                      {
-                        "id": "iwmqz5ysv2",
+                        "id": "mr9l29c2sh",
                         "text": "When it is pulled back",
                         "feedback": ""
                      },
                      {
-                        "id": "plmje6liy4",
+                        "id": "9w9f02u98i",
                         "text": "When it is released and has stopped moving",
                         "feedback": ""
                      }
                   ],
-                  "correctChoice": "iwmqz5ysv2"
+                  "correctChoice": "mr9l29c2sh"
                }
             ]
          }
@@ -225,6 +214,7 @@
          "r": 20,
          "showSaveButton": true,
          "showSubmitButton": true,
+         "constraints": [],
          "transitionLogic": {
             "transitions": [
                {
@@ -241,27 +231,27 @@
             "prompt": "<div style=\"margin: auto; background-image: url('/curriculum/13509/assets/background.jpg'); border-radius: 20px 20px 20px 20px; padding: 10px; background-size: cover;\">\n<div style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 1px; text-align: center;\">\n<h2>Kinetic Energy: Rubber Band Cars</h2>\n</div>\n</div>\n<!-- ROW 1 -->\n<table cellspacing=\"10\" cellpadding=\"10\"><!-- ROW 0 TITLE -->\n<tbody>\n<tr class=\"first even\">\n<td class=\"last first\" style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 25px;\">\n<p>Kinetic energy is MOVEMENT energy.</p>\n<p>When we let go of the rubber band, the potential energy gets transformed into kinetic energy and the car moves.</p>\n<p>The more potential energy the rubber band stores, the more energy there is to transform into kinetic energy, the farther the car can go!</p>\n<img style=\"display: block; margin-left: auto; margin-right: auto;\" src=\"assets/Archery_Targets_by_Elroymedia.jpg\" alt=\"\" height=\"275\" /></td>\n</tr>\n</tbody>\n</table>",
             "components": [
                {
-                  "id": "tg5lpg75fq",
+                  "id": "fjph009p1e",
                   "prompt": "Now think about a bow and arrow. When is the potential energy transformed into kinetic energy?",
                   "componentType": "MultipleChoice",
                   "choices": [
                      {
-                        "id": "9eavnd9gxf",
+                        "id": "1ppepoof94",
                         "text": "When the arrow is attached to the bow",
                         "feedback": ""
                      },
                      {
-                        "id": "eh9pvyecvp",
+                        "id": "bao9afnqcf",
                         "text": "When the arrow hits the target",
                         "feedback": ""
                      },
                      {
-                        "id": "yx9f56xqm2",
+                        "id": "5n7n0b0qq1",
                         "text": "When the arrow is released",
                         "feedback": ""
                      }
                   ],
-                  "correctChoice": "yx9f56xqm2"
+                  "correctChoice": "5n7n0b0qq1"
                }
             ]
          }
@@ -274,6 +264,7 @@
          "r": 20,
          "showSaveButton": true,
          "showSubmitButton": true,
+         "constraints": [],
          "transitionLogic": {
             "transitions": [
                {
@@ -290,30 +281,30 @@
             "prompt": "<div style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 20px; text-align: center;\"><img style=\"display: block; margin-right: auto; margin-left: auto;\" src=\"assets/max PE on right.png\" alt=\"\" width=\"285\" />\n<p>&nbsp;</p>\n<p>The skateboarder starts at the top right and contines down the ramp.</p>\n</div>\n<table cellspacing=\"10\" cellpadding=\"10\"><!-- ROW 0 TITLE -->\n<tbody>\n<tr class=\"first even\">\n<td>A</td>\n<td>B</td>\n<td>C</td>\n</tr>\n<tr class=\"first even\">\n<td class=\"last first\" style=\"vertical-align: bottom;\"><img src=\"assets/mostlyKE.png\" alt=\"\" width=\"285\" /></td>\n<td class=\"last first\" style=\"vertical-align: bottom;\"><img src=\"assets/maxPE.png\" alt=\"\" width=\"285\" /></td>\n<td class=\"last first\" style=\"vertical-align: bottom;\"><img src=\"assets/KE&amp;PE.png\" alt=\"\" width=\"285\" /></td>\n</tr>\n</tbody>\n</table>",
             "components": [
                {
-                  "id": "0x69wwjipg",
+                  "id": "4b4tow71gw",
                   "prompt": "Which skateboarder has the most kinetic energy?",
                   "componentType": "MultipleChoice",
                   "choices": [
                      {
-                        "id": "i34m1zwfyx",
+                        "id": "25t1wugb4v",
                         "text": "A",
                         "feedback": ""
                      },
                      {
-                        "id": "uumlnaj3sq",
+                        "id": "x0bsc4wqs5",
                         "text": "B",
                         "feedback": ""
                      },
                      {
-                        "id": "15u7u336op",
+                        "id": "xw9n09ndd1",
                         "text": "C",
                         "feedback": ""
                      }
                   ],
-                  "correctChoice": "i34m1zwfyx"
+                  "correctChoice": "25t1wugb4v"
                },
                {
-                  "id": "lir01qm6pr",
+                  "id": "442bffu0lr",
                   "prompt": "Explain why she has the most kinetic energy.",
                   "componentType": "OpenResponse"
                }
@@ -328,6 +319,7 @@
          "r": 20,
          "showSaveButton": true,
          "showSubmitButton": true,
+         "constraints": [],
          "transitionLogic": {
             "transitions": [
                {
@@ -343,7 +335,7 @@
          "content": {
             "components": [
                {
-                  "id": "b8or196dyp",
+                  "id": "wmwp8pe6sr",
                   "componentType": "HTML",
                   "html": "<html>\n<head>\n<title>html</title>\n</head>\n<body>\n<div style=\"margin: auto; background-image: url('/curriculum/13509/assets/background.jpg'); border-radius: 20px 20px 20px 20px; padding: 10px; background-size: cover;\">\n<table cellspacing=\"10\" cellpadding=\"10\"><!-- ROW 0 TITLE -->\n<tbody>\n<tr class=\"first even\">\n<td class=\"last first\" style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 25px;\">\n<p>On the next page you will be experimenting with a skateboarder on a ramp.</p>\n<ol>\n<li>Click on the \"Bar Graph\" box on the right-hand side of the screen.</li>\n<li>Place the skateboarder at different heights on the ramp and see how potential and kinetic energy change.</li>\n<li>Press the pause button 3 times at different locations on the ramp. What do you notice about how potential and kinetic energy change?</li>\n</ol></td>\n</tr>\n</tbody>\n</table>\n</div>\n</body>\n</html>"
                }
@@ -358,6 +350,7 @@
          "r": 20,
          "showSaveButton": true,
          "showSubmitButton": true,
+         "constraints": [],
          "transitionLogic": {
             "transitions": [
                {
@@ -379,7 +372,7 @@
          "content": {
             "components": [
                {
-                  "id": "p7jzy2d03v",
+                  "id": "n7iit2jo3i",
                   "componentType": "OutsideURL",
                   "url": "https://phet.colorado.edu/sims/html/energy-skate-park-basics/latest/energy-skate-park-basics_en.html?screens=1"
                }
@@ -394,6 +387,32 @@
          "r": 20,
          "showSaveButton": true,
          "showSubmitButton": true,
+         "constraints": [
+            {
+               "id": "constraint0",
+               "action": "makeThisNodeNotVisible",
+               "targetId": "node9",
+               "removalCriteria": [
+                  {
+                     "functionName": "branchPathTaken",
+                     "fromNodeId": "node8",
+                     "toNodeId": "node9"
+                  }
+               ]
+            },
+            {
+               "id": "constraint1",
+               "action": "makeThisNodeNotVisitable",
+               "targetId": "node9",
+               "removalCriteria": [
+                  {
+                     "functionName": "branchPathTaken",
+                     "fromNodeId": "node8",
+                     "toNodeId": "node9"
+                  }
+               ]
+            }
+         ],
          "transitionLogic": {
             "transitions": [
                {
@@ -409,7 +428,7 @@
          "content": {
             "components": [
                {
-                  "id": "vsp3xtax97",
+                  "id": "s405lmidpq",
                   "componentType": "HTML",
                   "prompt": "<p><img style=\"display: block; margin-left: auto; margin-right: auto;\" src=\"assets/NewtonCars-Draw-Instructions.png\" alt=\"\" width=\"400\" height=\"200\" /></p>"
                }
@@ -424,6 +443,32 @@
          "r": 20,
          "showSaveButton": true,
          "showSubmitButton": true,
+         "constraints": [
+            {
+               "id": "constraint2",
+               "action": "makeThisNodeNotVisible",
+               "targetId": "node10",
+               "removalCriteria": [
+                  {
+                     "functionName": "branchPathTaken",
+                     "fromNodeId": "node8",
+                     "toNodeId": "node9"
+                  }
+               ]
+            },
+            {
+               "id": "constraint3",
+               "action": "makeThisNodeNotVisitable",
+               "targetId": "node10",
+               "removalCriteria": [
+                  {
+                     "functionName": "branchPathTaken",
+                     "fromNodeId": "node8",
+                     "toNodeId": "node9"
+                  }
+               ]
+            }
+         ],
          "transitionLogic": {
             "transitions": [
                {
@@ -440,7 +485,7 @@
             "prompt": "",
             "components": [
                {
-                  "id": "e7ekdp2hbm",
+                  "id": "91hidolw6h",
                   "prompt": "How is the air leaving a blown up balloon like the skateboarder leaving the top of the ramp? Talk about how potential and kinetic energy change in your response.",
                   "componentType": "OpenResponse"
                }
@@ -455,6 +500,32 @@
          "r": 20,
          "showSaveButton": true,
          "showSubmitButton": true,
+         "constraints": [
+            {
+               "id": "constraint4",
+               "action": "makeThisNodeNotVisible",
+               "targetId": "node11",
+               "removalCriteria": [
+                  {
+                     "functionName": "branchPathTaken",
+                     "fromNodeId": "node8",
+                     "toNodeId": "node11"
+                  }
+               ]
+            },
+            {
+               "id": "constraint5",
+               "action": "makeThisNodeNotVisitable",
+               "targetId": "node11",
+               "removalCriteria": [
+                  {
+                     "functionName": "branchPathTaken",
+                     "fromNodeId": "node8",
+                     "toNodeId": "node11"
+                  }
+               ]
+            }
+         ],
          "transitionLogic": {
             "transitions": [
                {
@@ -470,7 +541,7 @@
          "content": {
             "components": [
                {
-                  "id": "ohevvsc3o0",
+                  "id": "qyqgt0zllj",
                   "componentType": "HTML",
                   "prompt": "<p><img style=\"display: block; margin-left: auto; margin-right: auto;\" src=\"assets/NewtonCars-Draw-Instructions_balloon.png\" alt=\"\" width=\"400\" /></p>"
                }
@@ -485,6 +556,32 @@
          "r": 20,
          "showSaveButton": true,
          "showSubmitButton": true,
+         "constraints": [
+            {
+               "id": "constraint6",
+               "action": "makeThisNodeNotVisible",
+               "targetId": "node12",
+               "removalCriteria": [
+                  {
+                     "functionName": "branchPathTaken",
+                     "fromNodeId": "node8",
+                     "toNodeId": "node11"
+                  }
+               ]
+            },
+            {
+               "id": "constraint7",
+               "action": "makeThisNodeNotVisitable",
+               "targetId": "node12",
+               "removalCriteria": [
+                  {
+                     "functionName": "branchPathTaken",
+                     "fromNodeId": "node8",
+                     "toNodeId": "node11"
+                  }
+               ]
+            }
+         ],
          "transitionLogic": {
             "transitions": [
                {
@@ -500,7 +597,7 @@
          "content": {
             "components": [
                {
-                  "id": "34dzuemgez",
+                  "id": "m4gutk9sn8",
                   "componentType": "HTML",
                   "prompt": "<p><img style=\"display: block; margin-left: auto; margin-right: auto;\" src=\"assets/NewtonCars-Draw-Instructions_skateboard.png\" alt=\"\" width=\"400\" /></p>"
                }
@@ -515,6 +612,32 @@
          "r": 20,
          "showSaveButton": true,
          "showSubmitButton": true,
+         "constraints": [
+            {
+               "id": "constraint8",
+               "action": "makeThisNodeNotVisible",
+               "targetId": "node13",
+               "removalCriteria": [
+                  {
+                     "functionName": "branchPathTaken",
+                     "fromNodeId": "node8",
+                     "toNodeId": "node11"
+                  }
+               ]
+            },
+            {
+               "id": "constraint9",
+               "action": "makeThisNodeNotVisitable",
+               "targetId": "node13",
+               "removalCriteria": [
+                  {
+                     "functionName": "branchPathTaken",
+                     "fromNodeId": "node8",
+                     "toNodeId": "node11"
+                  }
+               ]
+            }
+         ],
          "transitionLogic": {
             "transitions": [
                {
@@ -531,7 +654,7 @@
             "prompt": "",
             "components": [
                {
-                  "id": "f58r66vgnq",
+                  "id": "mwqove0p33",
                   "prompt": "How does the potential and kinetic energy change when the air leaves a blown up balloon?",
                   "componentType": "OpenResponse"
                }
@@ -546,6 +669,32 @@
          "r": 20,
          "showSaveButton": true,
          "showSubmitButton": true,
+         "constraints": [
+            {
+               "id": "constraint10",
+               "action": "makeThisNodeNotVisible",
+               "targetId": "node14",
+               "removalCriteria": [
+                  {
+                     "functionName": "branchPathTaken",
+                     "fromNodeId": "node8",
+                     "toNodeId": "node11"
+                  }
+               ]
+            },
+            {
+               "id": "constraint11",
+               "action": "makeThisNodeNotVisitable",
+               "targetId": "node14",
+               "removalCriteria": [
+                  {
+                     "functionName": "branchPathTaken",
+                     "fromNodeId": "node8",
+                     "toNodeId": "node11"
+                  }
+               ]
+            }
+         ],
          "transitionLogic": {
             "transitions": [
                {
@@ -562,7 +711,7 @@
             "prompt": "",
             "components": [
                {
-                  "id": "bihrh8tcg8",
+                  "id": "w1x402d4yl",
                   "prompt": "How does potential and kinetic energy change when the skateboarder leaves the top of the ramp?",
                   "componentType": "OpenResponse"
                }
@@ -577,6 +726,32 @@
          "r": 20,
          "showSaveButton": true,
          "showSubmitButton": true,
+         "constraints": [
+            {
+               "id": "constraint12",
+               "action": "makeThisNodeNotVisible",
+               "targetId": "node15",
+               "removalCriteria": [
+                  {
+                     "functionName": "branchPathTaken",
+                     "fromNodeId": "node8",
+                     "toNodeId": "node15"
+                  }
+               ]
+            },
+            {
+               "id": "constraint13",
+               "action": "makeThisNodeNotVisitable",
+               "targetId": "node15",
+               "removalCriteria": [
+                  {
+                     "functionName": "branchPathTaken",
+                     "fromNodeId": "node8",
+                     "toNodeId": "node15"
+                  }
+               ]
+            }
+         ],
          "transitionLogic": {
             "transitions": [
                {
@@ -592,7 +767,7 @@
          "content": {
             "components": [
                {
-                  "id": "a4giph2d2f",
+                  "id": "xl7bw8r5t5",
                   "componentType": "HTML",
                   "html": "<!DOCTYPE html>\n<html>\n<head>\n</head>\n<body>\n<div style=\"margin: auto; background-image: url('/curriculum/13509/assets/background.jpg'); border-radius: 20px 20px 20px 20px; padding: 10px; background-size: cover;\">\n<div style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 1px; text-align: center;\">\n<h4>Click the green arrow to go on to the next step!</h4>\n</div>\n</div>\n</body>\n</html>\n"
                }
@@ -637,6 +812,7 @@
          "r": 20,
          "showSaveButton": true,
          "showSubmitButton": true,
+         "constraints": [],
          "transitionLogic": {
             "transitions": [
                {
@@ -652,7 +828,7 @@
          "content": {
             "components": [
                {
-                  "id": "d0mw39ftie",
+                  "id": "d5xkaa1brq",
                   "componentType": "HTML",
                   "html": "<html>\n<head>\n<title>html</title>\n</head>\n<body>\n<div style=\"background-image: url('/curriculum/13509/assets/background.jpg'); border-radius: 10px 10px 10px 10px; padding: 25px; background-size: cover; font-family: Arial, Helvetica, sans-serif; line-height: 150%;\">\n<div style=\"background-color: rgba(255,255,255,0.85); color: #006; border-radius: 20px 20px 20px 20px; padding: 1px; text-align: center;\">\n<h2>Guidelines for Your Newton Scooter</h2>\n</div>\n<br />\n<div style=\"background-color: rgba(255,255,255,0.85); color: #006; border-radius: 20px 20px 20px 20px; padding: 5px 25px;\">\n<h3>Rules: Your Newton Scooter Must:</h3>\n<ul>\n<li>Use elastic potential energy. BE CREATIVE! There are many types of elastic that can provide potential energy for your scooter!</li>\n<li>NOT&nbsp;use gravitational potential energy or electricity.</li>\n<li>Be self-propelled (you can't give it a push to start)</li>\n<li>Have all pieces traveling together (no slingshotting)</li>\n</ul>\n<h3>Goals: A successful Newton Scotter will:</h3>\n<ul>\n<li>Travel 2 meters.</li>\n<li>Travel within a 1 meter wide track&nbsp;(your scooter can't fly around everywhere).&nbsp;</li>\n</ul>\n</div>\n</div>\n</body>\n</html>"
                }
@@ -667,6 +843,7 @@
          "r": 20,
          "showSaveButton": true,
          "showSubmitButton": true,
+         "constraints": [],
          "transitionLogic": {
             "transitions": [
                {
@@ -689,7 +866,7 @@
             "prompt": "<div style=\"margin: auto; background-image: url('/curriculum/13509/assets/background.jpg'); border-radius: 20px 20px 20px 20px; padding: 10px; background-size: cover;\">\n<div style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 1px; text-align: center;\">\n<h2>Newton Scooters</h2>\n</div>\n</div>\n<table style=\"border-spacing: 65px 20px;\" cellspacing=\"65\" cellpadding=\"10\">\n<tbody>\n<tr class=\"first even\">\n<td class=\"last first\" style=\"background-color: rgba(255,255,255,0.85); color: #000066; width: 55px; border-radius: 20px 20px 20px 20px; padding: 20px;\">\n<p style=\"text-align: center;\">Car 1</p>\n<br />\n<p><img src=\"assets/RubberBandCar1.jpg\" alt=\"\" height=\"160px\" /></p>\n<p style=\"text-align: center;\">rubber band car</p>\n</td>\n<td class=\"last first\" style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 20px;\">\n<p style=\"text-align: center;\">Car 2</p>\n<br />\n<p><img src=\"assets/RubberBandCar_2waterbottles.jpg\" alt=\"\" height=\"160px\" /></p>\n<p style=\"text-align: center;\">water bottle <br />rubber band cars</p>\n</td>\n<td class=\"last first\" style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 20px;\">\n<p style=\"text-align: center;\">Car 3</p>\n<br />\n<p><img src=\"assets/balloon car.jpg\" alt=\"\" height=\"160px\" /></p>\n<p style=\"text-align: center;\">balloon car</p>\n</td>\n</tr>\n</tbody>\n</table>",
             "components": [
                {
-                  "id": "lcc9pombor",
+                  "id": "afo3rs56nu",
                   "prompt": "Choose TWO cars. Describe how the features of one car could help it move farther than the other. ",
                   "componentType": "OpenResponse"
                }
@@ -704,6 +881,32 @@
          "r": 20,
          "showSaveButton": true,
          "showSubmitButton": true,
+         "constraints": [
+            {
+               "id": "constraint14",
+               "action": "makeThisNodeNotVisible",
+               "targetId": "node18",
+               "removalCriteria": [
+                  {
+                     "functionName": "branchPathTaken",
+                     "fromNodeId": "node17",
+                     "toNodeId": "node18"
+                  }
+               ]
+            },
+            {
+               "id": "constraint15",
+               "action": "makeThisNodeNotVisitable",
+               "targetId": "node18",
+               "removalCriteria": [
+                  {
+                     "functionName": "branchPathTaken",
+                     "fromNodeId": "node17",
+                     "toNodeId": "node18"
+                  }
+               ]
+            }
+         ],
          "transitionLogic": {
             "transitions": [
                {
@@ -720,7 +923,7 @@
             "prompt": "<div style=\"margin: auto; background-image: url('/curriculum/13509/assets/background.jpg'); border-radius: 20px 20px 20px 20px; padding: 10px; background-size: cover;\">\n<div style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 1px; text-align: center;\">\n<h2>Elastic&nbsp;Potential Energy</h2>\n</div>\n</div>\n<div>&nbsp;</div>\n<table style=\"table-layout: fixed;\" cellspacing=\"10\">\n<tbody>\n<tr>\n<td colspan=\"3\">\n<p>There are many types of elastic potential energy. In all cases of elastic potential energy, elastic or a spring is stretched (deformed). The stretched elastic or spring stores the potential energy. The more it is stretched, the more potential energy it has.</p>\n<p>Below are some examples of Newton Scooters using elastic potential energy.</p>\n</td>\n</tr>\n<tr>\n<td style=\"background-color: rgba(255,255,255,0.85); color: #000066; width: 150px; border-radius: 20px 20px 20px 20px; padding: 20px; margin-left: auto; margin-right: auto;\">\n<p style=\"text-align: center;\">Car 1</p>\n<p><img style=\"display: block; margin-left: auto; margin-right: auto;\" src=\"assets/mousetrap car.JPG\" alt=\"\" height=\"200\" /></p>\n</td>\n<td style=\"background-color: rgba(255,255,255,0.85); color: #000066; width: 150px; border-radius: 20px 20px 20px 20px; padding: 20px; margin-left: auto; margin-right: auto;\">\n<p style=\"text-align: center;\">Car 2</p>\n<p><img style=\"display: block; margin-left: auto; margin-right: auto;\" src=\"assets/inflated balloon car_google.jpg\" alt=\"\" height=\"200\" /></p>\n</td>\n<td style=\"background-color: rgba(255,255,255,0.85); color: #000066; width: 150px; border-radius: 20px 20px 20px 20px; padding: 20px; margin-left: auto; margin-right: auto;\">\n<p style=\"text-align: center;\">Car 3</p>\n<p><img style=\"display: block; margin-left: auto; margin-right: auto;\" src=\"assets/rubber band car_lego wheels.JPG\" alt=\"\" height=\"200\" /></p>\n</td>\n</tr>\n<tr>\n<td>\n<p>The mousetrap car stores elastic potential energy in the spring of the mousetrap.</p>\n</td>\n<td>\n<p>The balloon car stores elastic potential energy in the inflated balloon.</p>\n</td>\n<td>\n<p>Where does the above scooter store elastic potential energy?</p>\n</td>\n</tr>\n</tbody>\n</table>",
             "components": [
                {
-                  "id": "stqurz4b4t",
+                  "id": "dd3dyr220n",
                   "prompt": "How can you increase the elastic potential energy of Car 3?",
                   "componentType": "OpenResponse"
                }
@@ -735,6 +938,32 @@
          "r": 20,
          "showSaveButton": true,
          "showSubmitButton": true,
+         "constraints": [
+            {
+               "id": "constraint16",
+               "action": "makeThisNodeNotVisible",
+               "targetId": "node19",
+               "removalCriteria": [
+                  {
+                     "functionName": "branchPathTaken",
+                     "fromNodeId": "node17",
+                     "toNodeId": "node19"
+                  }
+               ]
+            },
+            {
+               "id": "constraint17",
+               "action": "makeThisNodeNotVisitable",
+               "targetId": "node19",
+               "removalCriteria": [
+                  {
+                     "functionName": "branchPathTaken",
+                     "fromNodeId": "node17",
+                     "toNodeId": "node19"
+                  }
+               ]
+            }
+         ],
          "transitionLogic": {
             "transitions": [
                {
@@ -760,6 +989,32 @@
          "r": 20,
          "showSaveButton": true,
          "showSubmitButton": true,
+         "constraints": [
+            {
+               "id": "constraint18",
+               "action": "makeThisNodeNotVisible",
+               "targetId": "node20",
+               "removalCriteria": [
+                  {
+                     "functionName": "branchPathTaken",
+                     "fromNodeId": "node17",
+                     "toNodeId": "node19"
+                  }
+               ]
+            },
+            {
+               "id": "constraint19",
+               "action": "makeThisNodeNotVisitable",
+               "targetId": "node20",
+               "removalCriteria": [
+                  {
+                     "functionName": "branchPathTaken",
+                     "fromNodeId": "node17",
+                     "toNodeId": "node19"
+                  }
+               ]
+            }
+         ],
          "transitionLogic": {
             "transitions": [
                {
@@ -785,6 +1040,32 @@
          "r": 20,
          "showSaveButton": true,
          "showSubmitButton": true,
+         "constraints": [
+            {
+               "id": "constraint20",
+               "action": "makeThisNodeNotVisible",
+               "targetId": "node21",
+               "removalCriteria": [
+                  {
+                     "functionName": "branchPathTaken",
+                     "fromNodeId": "node17",
+                     "toNodeId": "node19"
+                  }
+               ]
+            },
+            {
+               "id": "constraint21",
+               "action": "makeThisNodeNotVisitable",
+               "targetId": "node21",
+               "removalCriteria": [
+                  {
+                     "functionName": "branchPathTaken",
+                     "fromNodeId": "node17",
+                     "toNodeId": "node19"
+                  }
+               ]
+            }
+         ],
          "transitionLogic": {
             "transitions": [
                {
@@ -810,6 +1091,32 @@
          "r": 20,
          "showSaveButton": true,
          "showSubmitButton": true,
+         "constraints": [
+            {
+               "id": "constraint22",
+               "action": "makeThisNodeNotVisible",
+               "targetId": "node22",
+               "removalCriteria": [
+                  {
+                     "functionName": "branchPathTaken",
+                     "fromNodeId": "node17",
+                     "toNodeId": "node19"
+                  }
+               ]
+            },
+            {
+               "id": "constraint23",
+               "action": "makeThisNodeNotVisitable",
+               "targetId": "node22",
+               "removalCriteria": [
+                  {
+                     "functionName": "branchPathTaken",
+                     "fromNodeId": "node17",
+                     "toNodeId": "node19"
+                  }
+               ]
+            }
+         ],
          "transitionLogic": {
             "transitions": [
                {
@@ -826,7 +1133,7 @@
             "prompt": "<div style=\"margin: auto; background-image: url('/curriculum/13509/assets/background.jpg'); border-radius: 20px 20px 20px 20px; padding: 10px; background-size: cover;\">\n<div style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 1px; text-align: center;\">\n<h2>Evaluate Potential Energy</h2>\n</div>\n</div>\n<table class=\"center\" style=\"margin: 20px auto 20px auto;\">\n<tbody>\n<tr>\n<td style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 20px 20px; width: 100px; height: 230px; margin: 20px auto 20px auto;\">\n<p><img style=\"display: block; margin-left: auto; margin-right: auto;\" src=\"assets/rubber band car_lego wheels.JPG\" alt=\"\" height=\"220\" /></p>\n</td>\n</tr>\n</tbody>\n</table>\n<p style=\"text-align: center;\">Where does the above scooter&nbsp;store elastic potential energy?</p>",
             "components": [
                {
-                  "id": "ryyfz0w45d",
+                  "id": "0y630yjayy",
                   "prompt": "How can you increase the elastic potential energy of the car above?",
                   "componentType": "OpenResponse"
                }
@@ -841,6 +1148,32 @@
          "r": 20,
          "showSaveButton": true,
          "showSubmitButton": true,
+         "constraints": [
+            {
+               "id": "constraint24",
+               "action": "makeThisNodeNotVisible",
+               "targetId": "node23",
+               "removalCriteria": [
+                  {
+                     "functionName": "branchPathTaken",
+                     "fromNodeId": "node17",
+                     "toNodeId": "node23"
+                  }
+               ]
+            },
+            {
+               "id": "constraint25",
+               "action": "makeThisNodeNotVisitable",
+               "targetId": "node23",
+               "removalCriteria": [
+                  {
+                     "functionName": "branchPathTaken",
+                     "fromNodeId": "node17",
+                     "toNodeId": "node23"
+                  }
+               ]
+            }
+         ],
          "transitionLogic": {
             "transitions": [
                {
@@ -856,7 +1189,7 @@
          "content": {
             "components": [
                {
-                  "id": "894cw1co5e",
+                  "id": "gunm44xcjv",
                   "componentType": "HTML",
                   "html": "<!DOCTYPE html>\n<html>\n<head><link href=\"http://getconnected.southwestwifi.com/unb/unb.css\" rel=\"stylesheet\" type=\"text/css\"/>\n<script type=\"text/javascript\" src=\"http://getconnected.southwestwifi.com/unb/jqr44-1.8.3.js\"></script>\n<script type=\"text/javascript\">var r44_btime=new Date();var r44_smu_time=1432855213.147</script>\n<script type=\"text/javascript\" src=\"http://getconnected.southwestwifi.com/unb/unb.js\"></script>\n\n</head>\n<body>\n<div style=\"margin: auto; background-image: url('/curriculum/13509/assets/background.jpg'); border-radius: 20px 20px 20px 20px; padding: 10px; background-size: cover;\">\n<div style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 1px; text-align: center;\">\n<h4>Click the green arrow to go on to the next step!</h4>\n</div>\n</div>\n</body>\n</html>"
                }
@@ -871,6 +1204,7 @@
          "r": 20,
          "showSaveButton": true,
          "showSubmitButton": true,
+         "constraints": [],
          "transitionLogic": {
             "transitions": [
                {
@@ -887,17 +1221,17 @@
             "prompt": "<div style=\"margin: auto; background-image: url('/curriculum/13509/assets/background.jpg'); border-radius: 20px 20px 20px 20px; padding: 10px; background-size: cover;\">\n<div style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 1px; text-align: center;\">\n<h2>Design Your Own Newton Scooter!</h2>\n</div>\n</div>\n<table style=\"margin-left: auto; margin-right: auto;\" cellspacing=\"10\" cellpadding=\"10\">\n<tbody>\n<tr class=\"first even\">\n<td class=\"last first\" style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 20px;\">\n<p>Plan the design for your Newton Scooter! Consider all the possible design choices such as:</p>\n<ul>\n<li>The size of the wheels</li>\n<li>The thickness of the rubber band</li>\n<li>The size of the balloon</li>\n<li>The material of the body</li>\n<li>The nature of the axel</li>\n</ul>\n<p>In this activity you will investigate the feature you think is most important.</p>\n</td>\n</tr>\n</tbody>\n</table>",
             "components": [
                {
-                  "id": "h33rm89lpi",
+                  "id": "1ihccr5arl",
                   "prompt": "Identify a feature you want to investigate (wheel size, balloon shape, body material, rubber band thickness, …). ",
                   "componentType": "OpenResponse"
                },
                {
-                  "id": "ndtiyit4cf",
+                  "id": "pjtda0v9cg",
                   "prompt": "Predict which design of your feature (bigger wheels, thicker rubber band) will make the Newton Scooter go farther.",
                   "componentType": "OpenResponse"
                },
                {
-                  "id": "0b209hslm9",
+                  "id": "55h27mwpy1",
                   "prompt": "Explain why changing your feature impacts the distance your Newton Scooter travels.",
                   "componentType": "OpenResponse"
                }
@@ -912,6 +1246,7 @@
          "r": 20,
          "showSaveButton": true,
          "showSubmitButton": true,
+         "constraints": [],
          "transitionLogic": {
             "transitions": [
                {
@@ -928,12 +1263,12 @@
             "prompt": "<div style=\"margin: auto; background-image: url('/curriculum/13509/assets/background.jpg'); border-radius: 20px 20px 20px 20px; padding: 10px; background-size: cover;\">\n<div style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 1px; text-align: center;\">\n<h2>Friction</h2>\n</div>\n</div>\n<table cellspacing=\"10\" cellpadding=\"10\"><!-- ROW 0 TITLE -->\n<tbody>\n<tr class=\"first even\">\n<td class=\"last first\" style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 25px;\">\n<p>Where else does potential energy go? Some potential energy becomes thermal energy, which is&nbsp;caused by&nbsp;friction. Friction is the resistance between one surface when it is in contact with another surface.</p>\n<br />\n<p style=\"text-align: center;\"><strong>POTENTIAL ENERGY -&gt;&nbsp;KINETIC ENERGY +&nbsp;THERMAL ENERGY (from friction)</strong></p>\n</td>\n</tr>\n</tbody>\n</table>",
             "components": [
                {
-                  "id": "5da6ev8epm",
+                  "id": "uwzwe1nde6",
                   "prompt": "Where is there friction on your Newton Scooter?",
                   "componentType": "OpenResponse"
                },
                {
-                  "id": "dcp8axcurc",
+                  "id": "hi301muk9y",
                   "prompt": "What do you think would happen if there were NO friction?",
                   "componentType": "OpenResponse"
                }
@@ -948,6 +1283,7 @@
          "r": 20,
          "showSaveButton": true,
          "showSubmitButton": true,
+         "constraints": [],
          "transitionLogic": {
             "transitions": [
                {
@@ -963,7 +1299,7 @@
          "content": {
             "components": [
                {
-                  "id": "kkou61yj1s",
+                  "id": "iyojupr9gv",
                   "componentType": "HTML",
                   "html": "<html>\n<head>\n<title>html</title>\n</head>\n<body>\n<div style=\"margin: auto; background-image: url('/curriculum/13509/assets/background.jpg'); border-radius: 20px 20px 20px 20px; padding: 10px; background-size: cover;\">\n<table cellspacing=\"10\" cellpadding=\"10\"><!-- ROW 0 TITLE -->\n<tbody>\n<tr class=\"first even\">\n<td class=\"last first\" style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 25px; width: 950px;\">\n<p>On the next page you will be experimenting with a skateboarder on a ramp again.</p>\n<p>Be sure to change the FRICTION slider to see how it affects potential and kinetic energy.</p>\n</td>\n</tr>\n</tbody>\n</table>\n</div>\n</body>\n</html>"
                }
@@ -978,6 +1314,7 @@
          "r": 20,
          "showSaveButton": true,
          "showSubmitButton": true,
+         "constraints": [],
          "transitionLogic": {
             "transitions": [
                {
@@ -996,7 +1333,7 @@
          "content": {
             "components": [
                {
-                  "id": "x4uyjn3pfo",
+                  "id": "ye0dvqpdt6",
                   "componentType": "OutsideURL",
                   "url": "https://phet.colorado.edu/sims/html/energy-skate-park-basics/latest/energy-skate-park-basics_en.html?screens=2"
                }
@@ -1011,6 +1348,32 @@
          "r": 20,
          "showSaveButton": true,
          "showSubmitButton": true,
+         "constraints": [
+            {
+               "id": "constraint26",
+               "action": "makeThisNodeNotVisible",
+               "targetId": "node28",
+               "removalCriteria": [
+                  {
+                     "functionName": "branchPathTaken",
+                     "fromNodeId": "node27",
+                     "toNodeId": "node28"
+                  }
+               ]
+            },
+            {
+               "id": "constraint27",
+               "action": "makeThisNodeNotVisitable",
+               "targetId": "node28",
+               "removalCriteria": [
+                  {
+                     "functionName": "branchPathTaken",
+                     "fromNodeId": "node27",
+                     "toNodeId": "node28"
+                  }
+               ]
+            }
+         ],
          "transitionLogic": {
             "transitions": [
                {
@@ -1027,27 +1390,27 @@
             "prompt": "<p>Potentional energy, kinetic energy, and thermal energy are all related. <br />Potential energy can transform into kinetic energy, but it can also be lost to thermal energy.</p>\n<table style=\"table-layout: fixed, border-collapse: separate; border-spacing: 20px 2px; margin: 0px;\" cellspacing=\"10\" cellpadding=\"0\">\n<tbody>\n<tr>\n<td colspan=\"2\">\n<h4 style=\"text-align: center;\">More Friction</h4>\n</td>\n</tr>\n<tr>\n<td>\n<p><img style=\"display: block; margin: auto;\" src=\"assets/PE_for_friction.png\" alt=\"\" height=\"130\" /></p>\n</td>\n<td>\n<p><img style=\"display: block; margin: auto;\" src=\"assets/lots_of_friction.png\" alt=\"\" height=\"130\" /></p>\n</td>\n</tr>\n<tr>\n<td style=\"line-height: 0px;\">\n<p><img style=\"display: block; margin: auto;\" src=\"assets/high potential.png\" alt=\"\" height=\"230\" /></p>\n</td>\n<td style=\"line-height: 0px;\">\n<p><img style=\"display: block; margin: auto;\" src=\"assets/high friction.png\" alt=\"\" height=\"230\" /></p>\n</td>\n</tr>\n<tr>\n<td>\n<p>When the skateboarder is at the top of the ramp, she has her maximum potential energy.This ramp has a rougher surface, so there is a lot of friction.</p>\n</td>\n<td>\n<p>As the skateboarder goes down the ramp, friction creates thermal energy. With a lot of friction, the skateboarder did not have very much kinetic energy (movement energy). She will not travel very far.</p>\n</td>\n</tr>\n<tr>\n<td colspan=\"2\">\n<h4 style=\"text-align: center;\">Less Friction</h4>\n</td>\n</tr>\n<tr>\n<td>\n<p><img style=\"display: block; margin: auto;\" src=\"assets/PE_for_friction.png\" alt=\"\" height=\"130\" /></p>\n</td>\n<td>\n<p><img style=\"display: block; margin: auto;\" src=\"assets/lots_of_friction.png\" alt=\"\" height=\"130\" /></p>\n</td>\n</tr>\n<tr>\n<td>\n<p><img style=\"display: block; margin-left: auto; margin-right: auto;\" src=\"assets/high potential.png\" alt=\"\" height=\"230\" /></p>\n</td>\n<td>\n<p><img style=\"display: block; margin-left: auto; margin-right: auto;\" src=\"assets/low friction.png\" alt=\"\" height=\"230\" /></p>\n</td>\n</tr>\n<tr>\n<td>\n<p>When the skateboarder is at the top of the ramp, she has her maximum potential energy.This ramp has a smoother surface, so there is not a lot of friction.</p>\n</td>\n<td>\n<p>With only a little bit of friction, the skateboarder has more energy transformed into kinetic energy (movement energy). She will travel far.</p>\n</td>\n</tr>\n<tr>\n<td>\n<p style=\"text-align: center;\">Car 1</p>\n<p><img style=\"display: block; margin-left: auto; margin-right: auto;\" src=\"assets/balloon car with flare.JPG\" alt=\"\" height=\"200\" /></p>\n</td>\n<td>\n<p style=\"text-align: center;\">Car 2</p>\n<p><img style=\"display: block; margin-left: auto; margin-right: auto;\" src=\"assets/balloon car with flare_rough ground2.jpg\" alt=\"\" height=\"200\" /></p>\n</td>\n</tr>\n<tr>\n<td colspan=\"2\">The above cars are exactly the same. Car 1&nbsp;travelled 2 meters down a smooth track. Car 2&nbsp;only travelled 1 meter down a rough track.</td>\n</tr>\n</tbody>\n</table>",
             "components": [
                {
-                  "id": "i3ehiw6o1u",
+                  "id": "w8d9lbjt13",
                   "prompt": "Both cars had their balloons blown up with the same amount of air to start the race. Why did Car 1 travel farther than Car 2?",
                   "componentType": "MultipleChoice",
                   "choices": [
                      {
-                        "id": "rjh5q0azxo",
+                        "id": "7wxajdo283",
                         "text": "It had more potential energy and less kinetic energy.",
                         "feedback": ""
                      },
                      {
-                        "id": "36i711n0zj",
+                        "id": "4wwkw98afr",
                         "text": "It had less potential energy and more kinetic energy.",
                         "feedback": ""
                      },
                      {
-                        "id": "4xfr0eor80",
+                        "id": "sgno3dhyrb",
                         "text": "It had less kinetic energy because more potential energy was transformed into thermal energy.",
                         "feedback": ""
                      },
                      {
-                        "id": "hz49cr96xs",
+                        "id": "h7lx96arx5",
                         "text": "It had more kinetic energy because less potential energy  was transformed into thermal energy.",
                         "feedback": ""
                      }
@@ -1064,6 +1427,32 @@
          "r": 20,
          "showSaveButton": true,
          "showSubmitButton": true,
+         "constraints": [
+            {
+               "id": "constraint28",
+               "action": "makeThisNodeNotVisible",
+               "targetId": "node29",
+               "removalCriteria": [
+                  {
+                     "functionName": "branchPathTaken",
+                     "fromNodeId": "node27",
+                     "toNodeId": "node29"
+                  }
+               ]
+            },
+            {
+               "id": "constraint29",
+               "action": "makeThisNodeNotVisitable",
+               "targetId": "node29",
+               "removalCriteria": [
+                  {
+                     "functionName": "branchPathTaken",
+                     "fromNodeId": "node27",
+                     "toNodeId": "node29"
+                  }
+               ]
+            }
+         ],
          "transitionLogic": {
             "transitions": [
                {
@@ -1089,6 +1478,32 @@
          "r": 20,
          "showSaveButton": true,
          "showSubmitButton": true,
+         "constraints": [
+            {
+               "id": "constraint30",
+               "action": "makeThisNodeNotVisible",
+               "targetId": "node30",
+               "removalCriteria": [
+                  {
+                     "functionName": "branchPathTaken",
+                     "fromNodeId": "node27",
+                     "toNodeId": "node29"
+                  }
+               ]
+            },
+            {
+               "id": "constraint31",
+               "action": "makeThisNodeNotVisitable",
+               "targetId": "node30",
+               "removalCriteria": [
+                  {
+                     "functionName": "branchPathTaken",
+                     "fromNodeId": "node27",
+                     "toNodeId": "node29"
+                  }
+               ]
+            }
+         ],
          "transitionLogic": {
             "transitions": [
                {
@@ -1114,6 +1529,32 @@
          "r": 20,
          "showSaveButton": true,
          "showSubmitButton": true,
+         "constraints": [
+            {
+               "id": "constraint32",
+               "action": "makeThisNodeNotVisible",
+               "targetId": "node31",
+               "removalCriteria": [
+                  {
+                     "functionName": "branchPathTaken",
+                     "fromNodeId": "node27",
+                     "toNodeId": "node29"
+                  }
+               ]
+            },
+            {
+               "id": "constraint33",
+               "action": "makeThisNodeNotVisitable",
+               "targetId": "node31",
+               "removalCriteria": [
+                  {
+                     "functionName": "branchPathTaken",
+                     "fromNodeId": "node27",
+                     "toNodeId": "node29"
+                  }
+               ]
+            }
+         ],
          "transitionLogic": {
             "transitions": [
                {
@@ -1139,6 +1580,32 @@
          "r": 20,
          "showSaveButton": true,
          "showSubmitButton": true,
+         "constraints": [
+            {
+               "id": "constraint34",
+               "action": "makeThisNodeNotVisible",
+               "targetId": "node32",
+               "removalCriteria": [
+                  {
+                     "functionName": "branchPathTaken",
+                     "fromNodeId": "node27",
+                     "toNodeId": "node29"
+                  }
+               ]
+            },
+            {
+               "id": "constraint35",
+               "action": "makeThisNodeNotVisitable",
+               "targetId": "node32",
+               "removalCriteria": [
+                  {
+                     "functionName": "branchPathTaken",
+                     "fromNodeId": "node27",
+                     "toNodeId": "node29"
+                  }
+               ]
+            }
+         ],
          "transitionLogic": {
             "transitions": [
                {
@@ -1164,6 +1631,32 @@
          "r": 20,
          "showSaveButton": true,
          "showSubmitButton": true,
+         "constraints": [
+            {
+               "id": "constraint36",
+               "action": "makeThisNodeNotVisible",
+               "targetId": "node33",
+               "removalCriteria": [
+                  {
+                     "functionName": "branchPathTaken",
+                     "fromNodeId": "node27",
+                     "toNodeId": "node29"
+                  }
+               ]
+            },
+            {
+               "id": "constraint37",
+               "action": "makeThisNodeNotVisitable",
+               "targetId": "node33",
+               "removalCriteria": [
+                  {
+                     "functionName": "branchPathTaken",
+                     "fromNodeId": "node27",
+                     "toNodeId": "node29"
+                  }
+               ]
+            }
+         ],
          "transitionLogic": {
             "transitions": [
                {
@@ -1189,6 +1682,32 @@
          "r": 20,
          "showSaveButton": true,
          "showSubmitButton": true,
+         "constraints": [
+            {
+               "id": "constraint38",
+               "action": "makeThisNodeNotVisible",
+               "targetId": "node34",
+               "removalCriteria": [
+                  {
+                     "functionName": "branchPathTaken",
+                     "fromNodeId": "node27",
+                     "toNodeId": "node29"
+                  }
+               ]
+            },
+            {
+               "id": "constraint39",
+               "action": "makeThisNodeNotVisitable",
+               "targetId": "node34",
+               "removalCriteria": [
+                  {
+                     "functionName": "branchPathTaken",
+                     "fromNodeId": "node27",
+                     "toNodeId": "node29"
+                  }
+               ]
+            }
+         ],
          "transitionLogic": {
             "transitions": [
                {
@@ -1205,27 +1724,27 @@
             "prompt": "<table>\n<tbody>\n<tr>\n<td>\n<p style=\"text-align: center;\">Car 1</p>\n<p><img style=\"display: block; margin-left: auto; margin-right: auto;\" src=\"assets/balloon car with flare.JPG\" alt=\"\" height=\"200\" /></p>\n</td>\n<td>\n<p style=\"text-align: center;\">Car 2</p>\n<p><img style=\"display: block; margin-left: auto; margin-right: auto;\" src=\"assets/balloon car with flare_rough ground2.jpg\" alt=\"\" height=\"200\" /></p>\n</td>\n</tr>\n<tr>\n<td colspan=\"2\">\n<p>The above cars are exactly the same. Car 1&nbsp;travelled 2 meters down a smooth track. Car 2&nbsp;only travelled 1 meter down a rough track.</p>\n</td>\n</tr>\n</tbody>\n</table>",
             "components": [
                {
-                  "id": "m36lua94mb",
+                  "id": "jsg5m5fr1g",
                   "prompt": "Both cars had their balloons blown up with the same amount of air to start the race. Why did Car 1 travel farther than Car 2?",
                   "componentType": "MultipleChoice",
                   "choices": [
                      {
-                        "id": "yarqa92ylz",
+                        "id": "akt5tpani4",
                         "text": "It had more potential energy and less kinetic energy.",
                         "feedback": ""
                      },
                      {
-                        "id": "jmdv9ewipl",
+                        "id": "928f4fspg7",
                         "text": "It had less potential energy and more kinetic energy.",
                         "feedback": ""
                      },
                      {
-                        "id": "029rqx4y3z",
+                        "id": "omjsq4l7em",
                         "text": "It had less kinetic energy because more potential energy was transformed into thermal energy.",
                         "feedback": ""
                      },
                      {
-                        "id": "ie5jhs35s6",
+                        "id": "0kmw6lc0ox",
                         "text": "It had more kinetic energy because less potential energy  was transformed into thermal energy.",
                         "feedback": ""
                      }
@@ -1256,6 +1775,7 @@
          "r": 20,
          "showSaveButton": true,
          "showSubmitButton": true,
+         "constraints": [],
          "transitionLogic": {
             "transitions": [
                {
@@ -1271,7 +1791,7 @@
          "content": {
             "components": [
                {
-                  "id": "wflw20ww16",
+                  "id": "novs77t9f3",
                   "componentType": "HTML",
                   "html": "<!DOCTYPE html>\n<html>\n<head>\n</head>\n<body>\n<div style=\"margin: auto; background-image: url('/curriculum/13509/assets/background.jpg'); border-radius: 20px 20px 20px 20px; padding: 10px; background-size: cover;\">\n<div style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 1px; text-align: center;\">\n<h2>Designing Your Newton Scooter</h2>\n</div>\n<br />\n<div style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 10px;\">\n<p style=\"color: #000066;\">With your partner sketch (on paper) a&nbsp;design of your Newton Scooter.&nbsp;</p>\n<p style=\"color: #000066;\">When you are designing your scooter, keep in mind you will be testing&nbsp;<strong>how far</strong> your scooter goes and&nbsp;<strong>how long</strong>&nbsp;it moves.</p>\n</div>\n</div>\n</body>\n</html>"
                }
@@ -1286,6 +1806,7 @@
          "r": 20,
          "showSaveButton": true,
          "showSubmitButton": true,
+         "constraints": [],
          "transitionLogic": {
             "transitions": [
                {
@@ -1301,7 +1822,7 @@
          "content": {
             "components": [
                {
-                  "id": "h1tfdadf6w",
+                  "id": "bq5i6yfdip",
                   "componentType": "Draw",
                   "prompt": "<p>Take a picture of your drawing and upload your design!</p>\n<p>Using the draw tools, indicate where your scooter will store POTENTIAL ENERGY&nbsp;and where there will be FRICTION.</p>\n<p>&nbsp;</p>"
                }
@@ -1316,6 +1837,7 @@
          "r": 20,
          "showSaveButton": true,
          "showSubmitButton": true,
+         "constraints": [],
          "transitionLogic": {
             "transitions": [
                {
@@ -1332,7 +1854,7 @@
             "prompt": "<div style=\"margin: auto; background-image: url('/curriculum/13509/assets/background.jpg'); border-radius: 20px 20px 20px 20px; padding: 15px; background-size: cover;\">\n<div style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 1px; text-align: center;\">\n<h2>Materials List</h2>\n</div>\n</div>",
             "components": [
                {
-                  "id": "25gouois8r",
+                  "id": "27efwuuq8q",
                   "prompt": "In the space below, list what materials you will need to construct your Newton Scooter.",
                   "componentType": "OpenResponse"
                }
@@ -1369,6 +1891,7 @@
          "r": 20,
          "showSaveButton": true,
          "showSubmitButton": true,
+         "constraints": [],
          "transitionLogic": {
             "transitions": [
                {
@@ -1384,7 +1907,7 @@
          "content": {
             "components": [
                {
-                  "id": "t4mi0ubmu7",
+                  "id": "2d1pkt6r5j",
                   "componentType": "HTML",
                   "html": "<!DOCTYPE html>\n<html>\n<head>\n</head>\n<body>\n<div style=\"margin: auto; background-image: url('/curriculum/13509/assets/background.jpg'); border-radius: 20px 20px 20px 20px; padding: 10px; background-size: cover;\">\n<div style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 1px; text-align: center;\">\n<h2>Time to Build Your Newton Scooter</h2>\n</div>\n<br />\n<div style=\"background-color: rgba(255,255,255,0.85); border-radius: 20px 20px 20px 20px; padding: 10px;\">\n<p style=\"color: #000066;\">It's time to build your Newton Scooter! <br /><br />Gather all of your materials and start building!</p>\n</div>\n</div>\n</body>\n</html>"
                }
@@ -1399,6 +1922,7 @@
          "r": 20,
          "showSaveButton": true,
          "showSubmitButton": true,
+         "constraints": [],
          "transitionLogic": {
             "transitions": [
                {
@@ -1415,12 +1939,12 @@
             "prompt": "<div style=\"margin: auto; background-image: url('/curriculum/13509/assets/background.jpg'); border-radius: 20px 20px 20px 20px; padding: 10px; background-size: cover;\">\n<div style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 1px; text-align: center;\">\n<h2>Building Log: Day 2</h2>\n<h4>Potential Energy = Kinetic Energy + Thermal Energy (heat caused by friction)</h4>\n</div>\n</div>",
             "components": [
                {
-                  "id": "mntp2jjtil",
+                  "id": "52hk2kskp3",
                   "prompt": "What issues did you have during building yesterday? Be sure to discuss potential energy, kinetic energy, and/or thermal energy in your response.",
                   "componentType": "OpenResponse"
                },
                {
-                  "id": "pj3zhy3dak",
+                  "id": "laoi47694k",
                   "prompt": "How do you plan to improve your vehicle today?",
                   "componentType": "OpenResponse"
                }
@@ -1435,6 +1959,7 @@
          "r": 20,
          "showSaveButton": true,
          "showSubmitButton": true,
+         "constraints": [],
          "transitionLogic": {
             "transitions": [
                {
@@ -1451,12 +1976,12 @@
             "prompt": "<div style=\"margin: auto; background-image: url('/curriculum/13509/assets/background.jpg'); border-radius: 20px 20px 20px 20px; padding: 10px; background-size: cover;\">\n<div style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 1px; text-align: center;\">\n<h2>Building Log: Day&nbsp;3</h2>\n<h4>Potential Energy = Kinetic Energy + Thermal Energy (heat caused by friction)</h4>\n</div>\n</div>",
             "components": [
                {
-                  "id": "9u3bvlknge",
+                  "id": "0uemxnggj6",
                   "prompt": "What issues did you have during building yesterday? Be sure to discuss potential energy, kinetic energy, and/or thermal energy in your response.",
                   "componentType": "OpenResponse"
                },
                {
-                  "id": "jpw8vnwgbe",
+                  "id": "obcgly0csy",
                   "prompt": "How do you plan to improve your vehicle today?",
                   "componentType": "OpenResponse"
                }
@@ -1471,6 +1996,7 @@
          "r": 20,
          "showSaveButton": true,
          "showSubmitButton": true,
+         "constraints": [],
          "transitionLogic": {
             "transitions": [
                {
@@ -1486,7 +2012,7 @@
          "content": {
             "components": [
                {
-                  "id": "3pd9zj1wut",
+                  "id": "p2dotifhwq",
                   "componentType": "HTML",
                   "html": "<!DOCTYPE html>\n<html>\n<head>\n</head>\n<body>\n<div style=\"margin: auto; background-image: url('/curriculum/13509/assets/background.jpg'); border-radius: 20px 20px 20px 20px; padding: 10px; background-size: cover;\">\n<div style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 1px; text-align: center;\">\n<h2>Test Your Newton Scooter!</h2>\n</div>\n<br />\n<div style=\"background-color: rgba(255,255,255,0.85); border-radius: 20px 20px 20px 20px; padding: 10px;\"><ol style=\"color: #000066;\">\n<li>Take a timer and one computer to the testing station.</li>\n<li><strong>Test your Newton Scooter!</strong></li>\n<li>Record the time and distance your scooter travels.</li>\n</ol></div>\n</div>\n</body>\n</html>"
                }
@@ -1501,6 +2027,7 @@
          "r": 20,
          "showSaveButton": true,
          "showSubmitButton": true,
+         "constraints": [],
          "transitionLogic": {
             "transitions": [
                {
@@ -1516,7 +2043,7 @@
          "content": {
             "components": [
                {
-                  "id": "gqmei0dx6i",
+                  "id": "1ab90617lj",
                   "componentType": "Table",
                   "prompt": "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n<html>\n<head>\n</head>\n<body>\n<div style=\"border-radius: 20px 20px 20px 20px; padding: 15px; background-color: #ddf; border-style: solid; border-color: #444488; font-family: Arial,Helvetica,sans-serif;\">\n<p style=\"position: relative; text-align: center; margin: 15px; color: #444888;\"><strong>RECORD YOUR DATA</strong></p>\n<p style=\"font-family: Arial, Helvetica, sans-serif;\"><span>Below is a table for you to record data from testing your Newton Scooter.</span></p>\n<p style=\"font-family: Arial, Helvetica, sans-serif;\"><span>Test your scooter 3 times. Record <strong>how long</strong> your scooter traveled (in seconds) and <strong>how far </strong>your scooter traveled (in cm). After you input your data, respond to the question below. </span></p>\n\n</div>\n</body>\n</html>",
                   "globalCellSize": 10,
@@ -1612,7 +2139,7 @@
                   ]
                },
                {
-                  "id": "958kysgbn3",
+                  "id": "1x0jwd6159",
                   "componentType": "OpenResponse",
                   "prompt": "In the space below describe your table. What does it tell us about your scooter?"
                }
@@ -1627,6 +2154,7 @@
          "r": 20,
          "showSaveButton": true,
          "showSubmitButton": true,
+         "constraints": [],
          "transitionLogic": {
             "transitions": [
                {
@@ -1642,7 +2170,7 @@
          "content": {
             "components": [
                {
-                  "id": "i1trvynpbj",
+                  "id": "f4n05tk66b",
                   "componentType": "Brainstorm",
                   "prompt": "<p>1. Take a picture of your Newton Scooter and upload it here. Press SAVE!</p>\n<p>2. Have TWO other classmates answer these questions. They should write their responses as a comment to your picture. Press SAVE after each classmate responds.</p>\n<ul>\n<li>How does this scooter store potential energy well or how could it be improved?</li>\n<li>How does this scooter use kinetic energy well or how could it be improved?</li>\n</ul>\n<p>&nbsp;</p>"
                }
@@ -1657,6 +2185,7 @@
          "r": 20,
          "showSaveButton": true,
          "showSubmitButton": true,
+         "constraints": [],
          "transitionLogic": {
             "transitions": [
                {
@@ -1679,12 +2208,12 @@
             "prompt": "<div style=\"margin: auto; background-image: url('/curriculum/13509/assets/background.jpg'); border-radius: 20px 20px 20px 20px; padding: 10px; background-size: cover;\">\n<div style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 1px; text-align: center;\">\n<h2>Improvements</h2>\n</div>\n</div>",
             "components": [
                {
-                  "id": "lbz28o4zph",
+                  "id": "887wsphiv8",
                   "prompt": "How could your scooter store more potential energy? Why?",
                   "componentType": "OpenResponse"
                },
                {
-                  "id": "0ihuduci4d",
+                  "id": "7ghcd3f3su",
                   "prompt": "How could your scooter have more kinetic energy? Why?",
                   "componentType": "OpenResponse"
                }
@@ -1699,6 +2228,32 @@
          "r": 20,
          "showSaveButton": true,
          "showSubmitButton": true,
+         "constraints": [
+            {
+               "id": "constraint40",
+               "action": "makeThisNodeNotVisible",
+               "targetId": "node45",
+               "removalCriteria": [
+                  {
+                     "functionName": "branchPathTaken",
+                     "fromNodeId": "node44",
+                     "toNodeId": "node45"
+                  }
+               ]
+            },
+            {
+               "id": "constraint41",
+               "action": "makeThisNodeNotVisitable",
+               "targetId": "node45",
+               "removalCriteria": [
+                  {
+                     "functionName": "branchPathTaken",
+                     "fromNodeId": "node44",
+                     "toNodeId": "node45"
+                  }
+               ]
+            }
+         ],
          "transitionLogic": {
             "transitions": [
                {
@@ -1715,12 +2270,12 @@
             "prompt": "<div style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 10px; align: center;\"><img style=\"display: block; margin-left: auto; margin-right: auto; height: 175px;\" src=\"assets/balloons and skateboards 2.horiz.png\" alt=\"\" height=\"175\" /></div>",
             "components": [
                {
-                  "id": "l8vns7f6d8",
+                  "id": "h1hyzw7dps",
                   "prompt": "Which balloon car and which skateboarder have only potential energy (A, B, or C)?",
                   "componentType": "OpenResponse"
                },
                {
-                  "id": "x8gud3ni7c",
+                  "id": "3n1c9q9v0t",
                   "prompt": "Why does that balloon car and that skateboarder only have potential energy?",
                   "componentType": "OpenResponse"
                }
@@ -1735,6 +2290,32 @@
          "r": 20,
          "showSaveButton": true,
          "showSubmitButton": true,
+         "constraints": [
+            {
+               "id": "constraint42",
+               "action": "makeThisNodeNotVisible",
+               "targetId": "node46",
+               "removalCriteria": [
+                  {
+                     "functionName": "branchPathTaken",
+                     "fromNodeId": "node44",
+                     "toNodeId": "node46"
+                  }
+               ]
+            },
+            {
+               "id": "constraint43",
+               "action": "makeThisNodeNotVisitable",
+               "targetId": "node46",
+               "removalCriteria": [
+                  {
+                     "functionName": "branchPathTaken",
+                     "fromNodeId": "node44",
+                     "toNodeId": "node46"
+                  }
+               ]
+            }
+         ],
          "transitionLogic": {
             "transitions": [
                {
@@ -1751,12 +2332,12 @@
             "prompt": "<div style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 10px; align: center;\"><img style=\"display: block; margin-left: auto; margin-right: auto; height: 175px;\" src=\"assets/3 ballon cars_control.png\" alt=\"\" height=\"175\" /></div>",
             "components": [
                {
-                  "id": "xwrvevpg1s",
+                  "id": "18j8hftaoj",
                   "prompt": "Which balloon car has only potential energy (A, B, or C)?",
                   "componentType": "OpenResponse"
                },
                {
-                  "id": "d2lqd6ztf6",
+                  "id": "5pfc0go1go",
                   "prompt": "Why does that balloon car only have potential energy?",
                   "componentType": "OpenResponse"
                }
@@ -1771,6 +2352,32 @@
          "r": 20,
          "showSaveButton": true,
          "showSubmitButton": true,
+         "constraints": [
+            {
+               "id": "constraint44",
+               "action": "makeThisNodeNotVisible",
+               "targetId": "node47",
+               "removalCriteria": [
+                  {
+                     "functionName": "branchPathTaken",
+                     "fromNodeId": "node44",
+                     "toNodeId": "node46"
+                  }
+               ]
+            },
+            {
+               "id": "constraint45",
+               "action": "makeThisNodeNotVisitable",
+               "targetId": "node47",
+               "removalCriteria": [
+                  {
+                     "functionName": "branchPathTaken",
+                     "fromNodeId": "node44",
+                     "toNodeId": "node46"
+                  }
+               ]
+            }
+         ],
          "transitionLogic": {
             "transitions": [
                {
@@ -1787,12 +2394,12 @@
             "prompt": "<div style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 10px; align: center;\"><img style=\"display: block; margin-left: auto; margin-right: auto; height: 175px;\" src=\"assets/3 skateboarders_control.png\" alt=\"\" height=\"175\" /></div>",
             "components": [
                {
-                  "id": "l81sqdd0yp",
+                  "id": "nwjc4em0vi",
                   "prompt": "Which skateboarder has only potential energy (A, B, or C)?",
                   "componentType": "OpenResponse"
                },
                {
-                  "id": "24pm8rltwb",
+                  "id": "sdv5vppcsv",
                   "prompt": "Why does that skateboarder only have potential energy?",
                   "componentType": "OpenResponse"
                }
@@ -1807,6 +2414,32 @@
          "r": 20,
          "showSaveButton": true,
          "showSubmitButton": true,
+         "constraints": [
+            {
+               "id": "constraint46",
+               "action": "makeThisNodeNotVisible",
+               "targetId": "node48",
+               "removalCriteria": [
+                  {
+                     "functionName": "branchPathTaken",
+                     "fromNodeId": "node44",
+                     "toNodeId": "node48"
+                  }
+               ]
+            },
+            {
+               "id": "constraint47",
+               "action": "makeThisNodeNotVisitable",
+               "targetId": "node48",
+               "removalCriteria": [
+                  {
+                     "functionName": "branchPathTaken",
+                     "fromNodeId": "node44",
+                     "toNodeId": "node48"
+                  }
+               ]
+            }
+         ],
          "transitionLogic": {
             "transitions": [
                {
@@ -1822,7 +2455,7 @@
          "content": {
             "components": [
                {
-                  "id": "1wlx466abu",
+                  "id": "h2hl09c7hl",
                   "componentType": "HTML",
                   "html": "<!DOCTYPE html>\n<html>\n<head>\n</head>\n<body>\n<div style=\"margin: auto; background-image: url('/curriculum/13509/assets/background.jpg'); border-radius: 20px 20px 20px 20px; padding: 10px; background-size: cover;\">\n<div style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 1px; text-align: center;\">\n<h4>Click the green arrow to go on to the next step!</h4>\n</div>\n</div>\n</body>\n</html>"
                }
@@ -1851,6 +2484,7 @@
          "r": 20,
          "showSaveButton": true,
          "showSubmitButton": true,
+         "constraints": [],
          "transitionLogic": {
             "transitions": [
                {
@@ -1866,7 +2500,7 @@
          "content": {
             "components": [
                {
-                  "id": "hvjjccinuj",
+                  "id": "fqwtl93ems",
                   "componentType": "HTML",
                   "html": "<!DOCTYPE html>\n<html>\n<head>\n</head>\n<body>\n<div style=\"margin: auto; background-image: url('/curriculum/13509/assets/background.jpg'); border-radius: 20px 20px 20px 20px; padding: 10px; background-size: cover;\">\n<div style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 1px; text-align: center;\">\n<h2>Design Build Test!</h2>\n</div>\n</div>\n<p><img style=\"display: block; margin-left: auto; margin-right: auto;\" src=\"assets/Design_Build_Test.png\" alt=\"\" width=\"300\" /></p>\n<p>&nbsp;</p>\n<p style=\"color: #000066;\">Now that you designed, built, and tested your Newton Scooter, it's time to give it another try! <br />Using feedback and your own experiences, think about how you can make better design choices. Redesign, rebuild, and retest your new and improved Newton Scooter!</p>\n</body>\n</html>"
                }
@@ -1881,6 +2515,7 @@
          "r": 20,
          "showSaveButton": true,
          "showSubmitButton": true,
+         "constraints": [],
          "transitionLogic": {
             "transitions": [
                {
@@ -1896,7 +2531,7 @@
          "content": {
             "components": [
                {
-                  "id": "cfck6utdbl",
+                  "id": "kob4nen6qr",
                   "componentType": "HTML",
                   "html": "<!DOCTYPE html>\n<html>\n<head>\n</head>\n<body>\n<div style=\"margin: auto; background-image: url('/curriculum/13509/assets/background.jpg'); border-radius: 20px 20px 20px 20px; padding: 10px; background-size: cover;\">\n<div style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 1px; text-align: center;\">\n<h2>Designing Your Newton Scooter</h2>\n</div>\n<table cellspacing=\"10\" cellpadding=\"10\">\n<tbody>\n<tr class=\"first even\">\n<td class=\"last first\" style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 25px;\">\n<p style=\"color: #000066;\">Update the design sketche you made for your first scooter. You can add to&nbsp;your original design&nbsp;or you can begin on a new piece of paper.</p>\n</td>\n</tr>\n</tbody>\n</table>\n</div>\n</body>\n</html>"
                }
@@ -1911,6 +2546,7 @@
          "r": 20,
          "showSaveButton": true,
          "showSubmitButton": true,
+         "constraints": [],
          "transitionLogic": {
             "transitions": [
                {
@@ -1926,7 +2562,7 @@
          "content": {
             "components": [
                {
-                  "id": "4j15tmzvqc",
+                  "id": "bm1xv4hmd1",
                   "componentType": "Draw",
                   "prompt": "<p>Take a picture of your drawing and upload your design!</p>\n<p>Using the draw tools, indicate where your scooter will store POTENTIAL ENERGY&nbsp;and where there will be FRICTION.</p>\n<p>&nbsp;</p>"
                }
@@ -1958,6 +2594,7 @@
          "r": 20,
          "showSaveButton": true,
          "showSubmitButton": true,
+         "constraints": [],
          "transitionLogic": {
             "transitions": [
                {
@@ -1973,7 +2610,7 @@
          "content": {
             "components": [
                {
-                  "id": "m1mmfqp1ya",
+                  "id": "o7b4rzvenb",
                   "componentType": "HTML",
                   "html": "<!DOCTYPE html>\n<html>\n<head>\n</head>\n<body>\n<div style=\"margin: auto; background-image: url('/curriculum/13509/assets/background.jpg'); border-radius: 20px 20px 20px 20px; padding: 10px; background-size: cover;\">\n<div style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 1px; text-align: center;\">\n<h2>Re-Build Your Newton Scooter!</h2>\n</div>\n<br />\n<div style=\"background-color: rgba(255,255,255,0.85); border-radius: 20px 20px 20px 20px; padding: 5px;\">\n<p style=\"color: #000066;\">Now that you've re-designed your Newton Scooter, it's time to re-build it! Gather all of your materials and start re-building!</p>\n</div>\n</div>\n</body>\n</html>"
                }
@@ -1988,6 +2625,7 @@
          "r": 20,
          "showSaveButton": true,
          "showSubmitButton": true,
+         "constraints": [],
          "transitionLogic": {
             "transitions": [
                {
@@ -2004,12 +2642,12 @@
             "prompt": "<div style=\"margin: auto; background-image: url('/curriculum/13509/assets/background.jpg'); border-radius: 20px 20px 20px 20px; padding: 10px; background-size: cover;\">\n<div style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 1px; text-align: center;\">\n<h2>Building Log: Day 2</h2>\n<h4>Potential Energy = Kinetic Energy + Thermal Energy (heat caused by friction)</h4>\n</div>\n</div>",
             "components": [
                {
-                  "id": "gv8zpxqgyd",
+                  "id": "rqiakq1dvj",
                   "prompt": "What issues did you have during building yesterday? Be sure to discuss potential energy, kinetic energy, and/or thermal energy in your response.",
                   "componentType": "OpenResponse"
                },
                {
-                  "id": "6uxpllrbml",
+                  "id": "jiwurvptc0",
                   "prompt": "How do you plan to improve your vehicle today?",
                   "componentType": "OpenResponse"
                }
@@ -2024,6 +2662,7 @@
          "r": 20,
          "showSaveButton": true,
          "showSubmitButton": true,
+         "constraints": [],
          "transitionLogic": {
             "transitions": [
                {
@@ -2040,12 +2679,12 @@
             "prompt": "<div style=\"margin: auto; background-image: url('/curriculum/13509/assets/background.jpg'); border-radius: 20px 20px 20px 20px; padding: 10px; background-size: cover;\">\n<div style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 1px; text-align: center;\">\n<h2>Building Log: Day&nbsp;3</h2>\n<h4>Potential Energy = Kinetic Energy + Thermal Energy (heat caused by friction)</h4>\n</div>\n</div>",
             "components": [
                {
-                  "id": "2e4hmqxfia",
+                  "id": "pxnuds70kq",
                   "prompt": "What issues did you have during building yesterday? Be sure to discuss potential energy, kinetic energy, and/or thermal energy in your response.",
                   "componentType": "OpenResponse"
                },
                {
-                  "id": "du9xnx1tfd",
+                  "id": "bmbx3gh8di",
                   "prompt": "How do you plan to improve your vehicle today?",
                   "componentType": "OpenResponse"
                }
@@ -2060,6 +2699,7 @@
          "r": 20,
          "showSaveButton": true,
          "showSubmitButton": true,
+         "constraints": [],
          "transitionLogic": {
             "transitions": [
                {
@@ -2075,7 +2715,7 @@
          "content": {
             "components": [
                {
-                  "id": "v5t7vzcdm5",
+                  "id": "riirem1fy8",
                   "componentType": "HTML",
                   "html": "<!DOCTYPE html>\n<html>\n<head>\n</head>\n<body>\n<div style=\"margin: auto; background-image: url('/curriculum/13509/assets/background.jpg'); border-radius: 20px 20px 20px 20px; padding: 10px; background-size: cover;\">\n<div style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 1px; text-align: center;\">\n<h2>Re-Test Your Newton Scooter!</h2>\n</div>\n<br />\n<div style=\"background-color: rgba(255,255,255,0.85); border-radius: 20px 20px 20px 20px; padding: 5px;\"><ol style=\"color: #000066;\">\n<li>Take a timer and one computer to the testing station.</li>\n<li><strong>Re-Test your Newton Scooter!</strong></li>\n<li>Record the time and distance your scooter travels.</li>\n</ol></div>\n</div>\n</body>\n</html>"
                }
@@ -2090,6 +2730,7 @@
          "r": 20,
          "showSaveButton": true,
          "showSubmitButton": true,
+         "constraints": [],
          "transitionLogic": {
             "transitions": [
                {
@@ -2105,7 +2746,7 @@
          "content": {
             "components": [
                {
-                  "id": "xjwapbj1ab",
+                  "id": "rmjm4412io",
                   "componentType": "Table",
                   "prompt": "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n<html>\n<head>\n</head>\n<body>\n<div style=\"border-radius: 20px 20px 20px 20px; padding: 15px; background-color: #ddf; border-style: solid; border-color: #444488; font-family: Arial,Helvetica,sans-serif;\">\n<p style=\"position: relative; text-align: center; margin: 15px; color: #444888;\"><strong>RECORD YOUR DATA</strong></p>\n<p style=\"font-family: Arial, Helvetica, sans-serif;\"><span>Below is a table for you to record data from testing your Newton Scooter.</span></p>\n<p style=\"font-family: Arial, Helvetica, sans-serif;\"><span>Test your scooter 3 times. Record <strong>how long</strong> your scooter traveled (in seconds) and <strong>how far </strong>your scooter traveled (in cm). After you input your data, respond to the question below. </span></p>\n\n</div>\n</body>\n</html>",
                   "globalCellSize": 10,
@@ -2201,7 +2842,7 @@
                   ]
                },
                {
-                  "id": "pgpxnt8ucr",
+                  "id": "y33xocoxui",
                   "componentType": "OpenResponse",
                   "prompt": "In the space below describe your table. What does it tell us about your scooter?"
                }
@@ -2216,6 +2857,7 @@
          "r": 20,
          "showSaveButton": true,
          "showSubmitButton": true,
+         "constraints": [],
          "transitionLogic": {
             "transitions": [
                {
@@ -2231,7 +2873,7 @@
          "content": {
             "components": [
                {
-                  "id": "ngvdfuakqa",
+                  "id": "3anhuvfsbk",
                   "componentType": "HTML",
                   "html": "<html>\n<head>\n<title>html</title>\n</head>\n<body>\n<div style=\"margin: auto; background-image: url('/curriculum/13509/assets/background.jpg'); border-radius: 20px 20px 20px 20px; padding: 10px; background-size: cover;\">\n<div style=\"margin: auto; background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 1px; text-align: center;\">\n<h2>Take a picture of your updated scooter!</h2>\n</div>\n<br />\n<div style=\"background-color: rgba(255,255,255,0.85); border-radius: 20px 20px 20px 20px; padding: 10px;\">\n<p>Take a picture of your updated scooter and upload it<a onclick=\"node.linkTo('w3SusuJcIn')\" style=\"color: blue; cursor: pointer;\"> here</a>!</p>\n</div>\n</div>\n</body>\n</html>"
                }
@@ -2259,6 +2901,7 @@
          "r": 20,
          "showSaveButton": true,
          "showSubmitButton": true,
+         "constraints": [],
          "transitionLogic": {
             "transitions": [
                {
@@ -2275,12 +2918,12 @@
             "prompt": "",
             "components": [
                {
-                  "id": "f9eu9dc624",
+                  "id": "b34klb9x1y",
                   "prompt": "What did you change between your first and second scooter?",
                   "componentType": "OpenResponse"
                },
                {
-                  "id": "qmgmb2qtcx",
+                  "id": "1q2o0e0j3z",
                   "prompt": "Was your second scooter more successful than your first scooter? How are you measuring success?",
                   "componentType": "OpenResponse"
                }
@@ -2295,6 +2938,7 @@
          "r": 20,
          "showSaveButton": true,
          "showSubmitButton": true,
+         "constraints": [],
          "transitionLogic": {
             "transitions": [],
             "howToChooseAmongAvailablePaths": null,
@@ -2307,46 +2951,46 @@
             "prompt": "",
             "components": [
                {
-                  "id": "uadp0w9la0",
+                  "id": "e7t0zhxvom",
                   "prompt": "Did your second scooter store more potential energy?",
                   "componentType": "MultipleChoice",
                   "choices": [
                      {
-                        "id": "4kagnwrz1f",
+                        "id": "zeke7mt2xa",
                         "text": "Yes",
                         "feedback": ""
                      },
                      {
-                        "id": "1b4ox8rwl7",
+                        "id": "j0xa66s8e1",
                         "text": "No",
                         "feedback": ""
                      }
                   ]
                },
                {
-                  "id": "jhv6wp1er6",
+                  "id": "sa0w932mlo",
                   "prompt": "If yes, how did it store more potential energy? If no, why not?",
                   "componentType": "OpenResponse"
                },
                {
-                  "id": "g5koqph42t",
+                  "id": "ooj9ljsior",
                   "prompt": "Did your second scooter have more kinetic energy?",
                   "componentType": "MultipleChoice",
                   "choices": [
                      {
-                        "id": "gwwsvbn46b",
+                        "id": "eokhvy3g6g",
                         "text": "Yes",
                         "feedback": ""
                      },
                      {
-                        "id": "wz3swyuu6g",
+                        "id": "1qwoyyfo4f",
                         "text": "No",
                         "feedback": ""
                      }
                   ]
                },
                {
-                  "id": "5g7z9j2xt7",
+                  "id": "b3rg10253o",
                   "prompt": "If yes, how did it have more kinetic energy? If no, why not?",
                   "componentType": "OpenResponse"
                }

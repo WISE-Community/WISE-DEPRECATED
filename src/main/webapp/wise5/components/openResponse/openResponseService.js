@@ -5,7 +5,7 @@ define(['nodeService', 'studentDataService'], function(nodeService, studentDataS
         
         serviceObject.config = null;
         
-        serviceObject.callFunction = function(component, functionName, functionParams, componentStates, componentEvents, nodeEvents) {
+        serviceObject.callFunction = function(node, component, functionName, functionParams, componentStates, nodeStates, componentEvents, nodeEvents) {
             var result = null;
             
             if (functionName === 'isCompleted') {

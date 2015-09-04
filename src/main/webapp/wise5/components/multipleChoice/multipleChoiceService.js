@@ -15,11 +15,11 @@ define(['nodeService', 'studentDataService'], function(nodeService, studentDataS
          * @param nodeEvents the node events for the parent of the component
          * @returns whether the student has fulfilled the function requirements
          */
-        serviceObject.callFunction = function(component, functionName, functionParams, componentStates, componentEvents, nodeEvents) {
+        serviceObject.callFunction = function(node, component, functionName, functionParams, componentStates, nodeStates, componentEvents, nodeEvents) {
             var result = null;
 
             if (functionName === 'choiceChosen') {
-                result = this.choiceChosen(component, functionName, functionParams, componentStates, componentEvents, nodeEvents);
+                result = this.choiceChosen(node, component, functionName, functionParams, componentStates, nodeStates, componentEvents, nodeEvents);
             }
 
             return result;
@@ -35,7 +35,7 @@ define(['nodeService', 'studentDataService'], function(nodeService, studentDataS
          * @param nodeEvents the node events for the parent of the component
          * @returns whether the student chose the specific choice
          */
-        serviceObject.choiceChosen = function(component, functionName, functionParams, componentStates, componentEvents, nodeEvents) {
+        serviceObject.choiceChosen = function(node, component, functionName, functionParams, componentStates, nodeStates, componentEvents, nodeEvents) {
 
             var result = false;
 

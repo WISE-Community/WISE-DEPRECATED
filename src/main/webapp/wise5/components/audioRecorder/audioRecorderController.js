@@ -54,57 +54,45 @@ define(['app'], function(app) {
                 this.recorder && this.recorder.record();
                 this.__log('Recording...');
                 toggleRecordingButton.innerHTML = 'Stop Recording';
-                recordingMsg.style.display = 'initial';
+                this.statusMessage = 'Recording...';
                 this.isRecording = true;
             } else {
                 // stop recording requested
                 this.recorder && this.recorder.stop();
                 this.__log('Stopped recording.');
-                
+                this.statusMessage = 'Saving...';
+
                 // convert audio to mp3 and upload to student assets
                 this.recorder && this.recorder.exportMP3(angular.bind(this, function(blob) {
                     var now = new Date().getTime();
 
                     var mp3Name = encodeURIComponent('audio_recording_' + now + '.mp3');
-                    var mp3file = new File([blob], mp3Name, {
+                    var mp3File = new File([blob], mp3Name, {
                         lastModified: now, // optional - default = now
                         type: 'audio/mp3' // optional - default = ''
                     });
-                    this.uploadAudioAsset(mp3file).then(angular.bind(this, function(mp3file) {
+
+                    // Now upload the audio that was just recorded
+                    StudentAssetService.uploadAsset(mp3File).then(angular.bind(this, function(studentAsset) {
                         // make a request to copy asset for reference and save for current node visit
-                        var mp3filename = mp3file.name;
-                        var studentUploadsBaseURL = ConfigService.getStudentUploadsBaseURL();
-                        var runId = ConfigService.getRunId();
-                        var workgroupId = ConfigService.getWorkgroupId();
-                        var assetBaseURL = studentUploadsBaseURL + '/' + runId + '/' + workgroupId + '/unreferenced/';
-                        var asset = {};
-                        asset.name = mp3filename;
-                        asset.url = assetBaseURL + mp3filename;
-                        asset.type = 'audio';
-                        asset.iconURL = asset.url;
-                        
-                        StudentAssetService.copyAssetForReference(asset).then(angular.bind(this, function(copiedAsset) {
+                        StudentAssetService.copyAssetForReference(studentAsset).then(angular.bind(this, function(copiedAsset) {
                             if (copiedAsset != null) {
                                 if (this.studentResponse == null) {
                                     this.studentResponse = [];
                                 }
                                 this.studentResponse.push(copiedAsset);
                                 this.studentDataChanged();
+                                this.statusMessage = '';
                             }
                         }));
                         $rootScope.$broadcast('studentAssetsUpdated');
-                    }, mp3file));                    
+                    }));
                 }));
                 
                 this.recorder.clear();
                 toggleRecordingButton.innerHTML = 'Start Recording';
-                recordingMsg.style.display = 'none';
                 this.isRecording = false;
             }
-        };
-        
-        this.uploadAudioAsset = function(mp3File) {
-            return StudentAssetService.uploadAsset(mp3File);
         };
         
         /**
