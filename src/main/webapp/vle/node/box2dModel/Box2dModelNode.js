@@ -76,7 +76,8 @@ function Box2dModelNode(nodeType, view) {
 		'test-on-scale', 
 		'test-on-balance',
 		'release-from-beaker',
-		'gave-feedback'
+		'gave-feedback',
+		'save-pressed'
 	];	
 }
 
@@ -205,7 +206,7 @@ Box2dModelNode.prototype.onExit = function() {
 			}
 			if(this.contentPanel.save) {
 				//tell the content panel to save
-				this.contentPanel.save();
+				this.contentPanel.save("exit");
 			}
 		}
 	} catch(e) {

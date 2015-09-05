@@ -43,11 +43,12 @@
 		this.savedObject.depth_units = depth_units;
 		this.savedObject.init_liquid_volume = this.init_liquid_volume;
 		this.savedObject.init_liquid_volume_perc = init_liquid_volume_perc;
+		this.savedObject.spilloff_volume_perc = spilloff_volume_perc;
 		this.savedObject.liquid_volume = this.init_liquid_volume;
 		this.savedObject.liquid_volume_perc = init_liquid_volume_perc;
-		this.savedObject.spilloff_volume_perc = spilloff_volume_perc;
-		this.savedObject.liquid_density = liquid.density;
-		this.savedObject.liquid_name = typeof liquid.name !== "undefined" ? liquid.name : liquid.display_name;
+		this.savedObject.liquid_density = liquid != null ? liquid.density : 0;
+		this.savedObject.liquid_name = liquid != null ? (typeof liquid.name === "string" ? liquid.name : liquid.display_name) : "";
+		this.savedObject.display_name = liquid != null ? (typeof liquid.display_name === "string" ? liquid.display_name : this.savedObject.liquid_name) : "";
 
 		this.skin = new BeakerShape(this, width_units*GLOBAL_PARAMETERS.SCALE, height_units*GLOBAL_PARAMETERS.SCALE, depth_units*GLOBAL_PARAMETERS.SCALE, init_liquid_volume_perc, spilloff_volume_perc, showRuler, this.savedObject);
 		this.addChild(this.skin.backContainer);
@@ -161,7 +162,7 @@
 		// buoyancy controller
 		
 		var controller = this.controller = this.b2world.AddController(new Myb2BuoyancyController());
-		controller.density = this.liquid.density;
+		controller.density = this.liquid != null ? this.liquid.density : 0;
 		var normal = new b2Vec2(); normal.Set(0, -1);
 		controller.normal = normal;
 		controller.SetY(position_y)
@@ -170,7 +171,7 @@
 		// include mass of water
 		var massData = new b2MassData();
 		body.GetMassData(massData);
-		massData.mass += this.liquid.density * this.liquid_volume;
+		massData.mass += controller.density * this.liquid_volume;
 		body.SetMassData(massData);
 		body.volume = this.beaker_volume;
 		body.percentSubmerged = 0;
@@ -347,7 +348,8 @@
 		/* Refills beaker to inital liquid level.  Removes the button */
 		p.refillBeaker = function (evt){
 			var beaker = evt.data.parent;
-			if (!beaker.draining && (beaker.contents_volume + beaker.liquid_volume) < beaker.init_liquid_volume) {
+			//if (!beaker.draining && (beaker.contents_volume + beaker.liquid_volume) < beaker.init_liquid_volume) {
+			if (!beaker.draining) {
 				//eventManager.fire("press-refill-beaker", [beaker.init_liquid_volume - (beaker.contents_volume + beaker.liquid_volume)], box2dModel);
 				// wake up any actors in this
 				for (var i = 0; i < beaker.actors.length; i++){
@@ -416,7 +418,9 @@
 			}
 		}
 		if (typeof beaker !== "undefined"){
-			if (beaker.liquid.display_name == this.liquid.display_name){
+			// make sure that the liquids match or that the beaker underneath has no liquid
+			if (this.liquid == null || beaker.liquid.name == this.liquid.name){
+				this.liquid = beaker.liquid; // make sure the two match now in case of null
 				var beaker_found = false;
 				for (var i = 0; i < this.puddles.length; i++){
 					if (this.puddles[i].beaker == beaker){
@@ -439,6 +443,9 @@
 		// update saved object
 		this.savedObject.liquid_volume = this.liquid_volume;
 		this.savedObject.liquid_volume_perc = this.liquid_volume / this.beaker_volume;
+		this.savedObject.liquid_density = this.liquid != null ? this.liquid.density : 0;
+		this.savedObject.liquid_name = this.liquid != null ? (typeof this.liquid.name === "string" ? this.liquid.name : this.liquid.display_name) : "";
+		this.savedObject.display_name = this.liquid != null ? (typeof this.liquid.display_name === "string" ? this.liquid.display_name : this.savedObject.liquid_name) : "";
 
 		this.controller.ChangeOffset (-volume/(this.width_units * this.depth_units));
 		return true;
@@ -459,6 +466,12 @@
 				}
 				var volume = this.puddles[i].volume;
 				this.liquid_volume -= volume;
+				if (this.liquid_volume == 0){
+					this.liquid = null;
+					this.savedObject.liquid_density = 0;
+					this.savedObject.liquid_name = "";
+					this.savedObject.display_name = "";
+				}
 				// update saved object
 				this.savedObject.liquid_volume = this.liquid_volume;
 				this.savedObject.liquid_volume_perc = this.liquid_volume / this.beaker_volume;
@@ -628,6 +641,7 @@
 			if (this.draining){
 				var spilloff = this.DRAINING_PER_SECOND/createjs.Ticker.getFPS();
 				var spilloff_dheight = spilloff / (this.width_units * this.depth_units);
+				// have we reached the spilloff hole? if so stop draining
 				if (-this.controller.offset + spilloff_dheight <= this.spilloff_height){
 					spilloff_dheight = -this.controller.offset - this.spilloff_height;
 					spilloff = spilloff_dheight * this.width_units * this.depth_units;

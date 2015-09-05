@@ -130,20 +130,11 @@ define(['app'], function(app) {
                 lastModified: now, // optional - default = now
                 type: 'image/png' // optional - default = ''
             });
-            this.uploadPictureAsset(pngFile).then(angular.bind(this, function(pngFile) {
+
+            // Now upload the photo that was just taken
+            StudentAssetService.uploadAsset(pngFile).then(angular.bind(this, function(studentAsset) {
                 // make a request to copy asset for reference and save for current node visit
-                var pngFilename = pngFile.name;
-                var studentUploadsBaseURL = ConfigService.getStudentUploadsBaseURL();
-                var runId = ConfigService.getRunId();
-                var workgroupId = ConfigService.getWorkgroupId();
-                var assetBaseURL = studentUploadsBaseURL + '/' + runId + '/' + workgroupId + '/unreferenced/';
-                var asset = {};
-                asset.name = pngFilename;
-                asset.url = assetBaseURL + pngFilename;
-                asset.type = 'image';
-                asset.iconURL = asset.url;
-                
-                StudentAssetService.copyAssetForReference(asset).then(angular.bind(this, function(copiedAsset) {
+                StudentAssetService.copyAssetForReference(studentAsset).then(angular.bind(this, function(copiedAsset) {
                     if (copiedAsset != null) {
                         if (this.studentResponse == null) {
                             this.studentResponse = [];
@@ -154,7 +145,7 @@ define(['app'], function(app) {
                 }));
 
                 $rootScope.$broadcast('studentAssetsUpdated');
-            }, pngFile));
+            }));
         };
         
         // http://stackoverflow.com/questions/4998908/convert-data-uri-to-file-then-append-to-formdata
@@ -176,12 +167,8 @@ define(['app'], function(app) {
             }
 
             return new Blob([ia], {type:mimeString});
-        }
-        
-        this.uploadPictureAsset = function(pngFile) {
-            return StudentAssetService.uploadAsset(pngFile);
         };
-                
+
         /**
          * Get the prompt to show to the student
          */

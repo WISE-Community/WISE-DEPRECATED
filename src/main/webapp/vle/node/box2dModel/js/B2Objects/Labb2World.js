@@ -212,7 +212,8 @@
 
 	/** Place an interactive beaker in the testing world */
 	p.createBeakerInWorld = function (b, x, y, type){
-		var beaker = new Beakerb2Actor(GLOBAL_PARAMETERS.materials[b.material_name], GLOBAL_PARAMETERS.liquids[b.liquid_name], b.width_units, b.height_units, b.depth_units, b.init_liquid_volume_perc, b.spilloff_volume_perc, b.showRuler);
+		var liquid = typeof b.liquid_name === "string" && b.liquid_name.length > 0 && GLOBAL_PARAMETERS.liquids[b.liquid_name] != null ? GLOBAL_PARAMETERS.liquids[b.liquid_name] : null;
+		var beaker = new Beakerb2Actor(GLOBAL_PARAMETERS.materials[b.material_name], liquid, b.width_units, b.height_units, b.depth_units, b.init_liquid_volume_perc, b.spilloff_volume_perc, b.showRuler);
 		if (y < 0) y = this.height_units;
 		this.addBeaker(beaker, x, this.height_units - this.FLOOR_HEIGHT_UNITS - y);
 		beaker.orig_parent = this;
@@ -643,7 +644,8 @@
 			var testbeaker = this.beakers[b];
 			var bx = x - testbeaker.x;
 			var by = y -testbeaker.y;
-			if (beaker != testbeaker && testbeaker.hitTestUnderPoint(bx, by)){
+			// make sure the beaker is actuallly underneath and does not contain a different liquid than this one
+			if (beaker != testbeaker && testbeaker.hitTestUnderPoint(bx, by) && (testbeaker.liquid == null ||  beaker.liquid.name == testbeaker.liquid.name)){
 				if (beaker_underneath != null){
 					if (testbeaker.y < beaker_underneath.y){
 						beaker_underneath = testbeaker;

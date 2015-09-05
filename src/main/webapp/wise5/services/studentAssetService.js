@@ -38,7 +38,7 @@ define(['configService'], function(configService) {
         
         serviceObject.isImage = function(asset) {
             var isImage = false;
-            var imageFileExtensions = ['png', 'jpg'];
+            var imageFileExtensions = ['png', 'jpg', 'jpeg', 'gif'];
             if (asset != null) {
                 var assetURL = asset.url;
                 if (assetURL != null && assetURL.lastIndexOf('.') != -1) {
@@ -53,7 +53,7 @@ define(['configService'], function(configService) {
         
         serviceObject.isAudio = function(asset) {
             var isAudio = false;
-            var imageFileExtensions = ['wav', 'mp3', 'ogg'];
+            var imageFileExtensions = ['wav', 'mp3', 'ogg', 'm4a', 'm4p', 'raw', 'aiff'];
             if (asset != null) {
                 var assetURL = asset.url;
                 if (assetURL != null && assetURL.lastIndexOf('.') != -1) {
@@ -68,7 +68,9 @@ define(['configService'], function(configService) {
         
         serviceObject.uploadAsset = function(file) {
             var studentAssetsURL = ConfigService.getStudentAssetsURL();
-            return Upload.upload({
+            var deferred = $q.defer();
+
+            Upload.upload({
                 url: studentAssetsURL,
                 fields: {
                     'runId': ConfigService.getRunId(),
@@ -77,7 +79,23 @@ define(['configService'], function(configService) {
                     'clientSaveTime': Date.parse(new Date())
                 },
                 file: file
-            });
+            }).success(angular.bind(this, function (asset, status, headers, config) {
+                var studentUploadsBaseURL = ConfigService.getStudentUploadsBaseURL();
+                asset.url = studentUploadsBaseURL + asset.filePath;
+                if (this.isImage(asset)) {
+                    asset.type = 'image';
+                    asset.iconURL = asset.url;
+                } else if (this.isAudio(asset)) {
+                    asset.type = 'audio';
+                    asset.iconURL = 'wise5/vle/notebook/audio.png';
+                } else {
+                    asset.type = 'file';
+                    asset.iconURL = 'wise5/vle/notebook/file.png';
+                }
+                deferred.resolve(asset);
+            }));
+
+            return deferred.promise;
         };
         
         serviceObject.uploadAssets = function(files) {

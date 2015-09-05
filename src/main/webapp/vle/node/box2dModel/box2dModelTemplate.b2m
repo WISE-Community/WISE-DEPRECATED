@@ -6,8 +6,6 @@
 	"isMustCompleteAllPartsBeforeExit":true,
    	"type": "Box2dModel",
 	"LAB_HEIGHT" : 560,
-	"INCLUDE_SINK_FLOAT_GRAPH": true,
-	"INCLUDE_MATERIALS_GRAPH": false,
 	"INCLUDE_BLOCKCOMP_BUILDER": false,
 	"INCLUDE_CYLINDER_BUILDER":false,
 	"INCLUDE_RECTPRISM_BUILDER":false,
@@ -32,6 +30,15 @@
 	"MAX_DEPTH_UNITS":5,
 	"view_sideAngle_degrees" : 10,
 	"view_topAngle_degrees" : 20,
+	"results_chart": {
+		"isGraphNotTable":true,
+		"isSinkFloatNotMaterials":true,
+		"showLiquids":true,
+		"showTestedMassValuesOnly": true,
+		"showTestedLiquidValuesOnly":true,
+		"arrColumnNamesToImport":[],
+		"arrColumnNamesToDisplay":[]
+    },
 	"materials_available" : [],
 	"liquids_available" : ["Water"],
 	"beaker_materials_available":["Pyrex"],
@@ -51,6 +58,9 @@
 			"type": "dynamic"
 		}
 	],
+	"scale":{
+
+	},
 
 	"feedbackEvents": [],
 	"materials" :
