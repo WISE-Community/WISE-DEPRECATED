@@ -572,7 +572,7 @@ define(['configService', 'projectService'], function(configService, currentNodeS
                 } else if (functionName === 'isCorrect') {
 
                 } else if (functionName === 'choiceChosen') {
-
+                    result = this.evaluateChoiceChosenCriteria(criteria);
                 } else if (functionName === '') {
 
                 }
@@ -647,6 +647,29 @@ define(['configService', 'projectService'], function(configService, currentNodeS
             }
 
             return branchpathTakenNodeStates;
+        };
+
+        /**
+         * Evaluate the choice chosen criteria
+         * @param criteria the criteria to evaluate
+         * @returns a boolena value whether the criteria was satisfied or not
+         */
+        serviceObject.evaluateChoiceChosenCriteria = function(criteria) {
+
+            var result = false;
+
+            var serviceName = 'MultipleChoiceService';
+
+            if ($injector.has(serviceName)) {
+
+                // get the MultipleChoiceService
+                var service = $injector.get(serviceName);
+
+                // check if the criteria was satisfied
+                result = service.choiceChosen(criteria);
+            }
+
+            return result;
         };
         
         serviceObject.updateNodeStatusesByNode0 = function(node) {
