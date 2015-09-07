@@ -15,12 +15,11 @@ define(['app'],
                     StudentWebSocketService,
                     $mdDialog,
                     $mdSidenav,
-                    $mdComponentRegistry) {
+                    $mdComponentRegistry,
+                    $ocLazyLoad) {
         this.mode = 'student';
         this.layoutLogic = ConfigService.layoutLogic;
         this.currentNode = null;
-        this.theme = ProjectService.getTheme();
-        this.themePath = "wise5/vle/themes/" + this.theme;
 
         this.setLayoutState = function() {
             var layoutState = 'nav'; // default layout state
@@ -37,8 +36,6 @@ define(['app'],
 
             this.layoutState = layoutState;
         };
-
-        this.setLayoutState();
 
         // alert user when inactive for a long time
         $scope.$on('showSessionWarning', angular.bind(this, function() {
@@ -81,8 +78,6 @@ define(['app'],
                 ProjectService.getProject();
             }
         };
-        
-        this.updateLayout();
 
         this.showNavigation = function() {
             this.layoutState = 'nav';
@@ -281,6 +276,17 @@ define(['app'],
        $(document.body).on('drop', function(e){
             e.preventDefault();
             return false;
+        });
+
+        this.theme = ProjectService.getTheme();
+        this.themePath = "wise5/vle/themes/" + this.theme;
+        var scope = this;
+        // load theme navigation module + files
+        $ocLazyLoad.load([
+            this.themePath + '/navigation/navigation.js'
+        ]).then(function(){
+            scope.setLayoutState();
+            scope.updateLayout();
         });
     });
 });

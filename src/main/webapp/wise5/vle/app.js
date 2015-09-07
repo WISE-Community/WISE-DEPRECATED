@@ -28,8 +28,8 @@ define([
     'htmlService',
     'matchService',
     'multipleChoiceService',
-    'navigation',
     'nodeService',
+    'ocLazyLoad',
     'openResponseService',
     'outsideURLService',
     'photoBoothService',
@@ -73,8 +73,8 @@ define([
              htmlService,
              matchService,
              multipleChoiceService,
-             navigation,
              nodeService,
+             ocLazyLoad,
              openResponseService,
              outsideURLService,
              photoBoothService,
@@ -98,7 +98,6 @@ define([
         'ui.router',
         'ui.sortable',
         'ui.tree',
-        'navigation',
         'ngAnimate',
         'ngAudio',
         'ngAria',
@@ -106,6 +105,7 @@ define([
         'ngFileUpload',
         'ngMaterial',
         'ngWebSocket',
+        'oc.lazyLoad',
         'textAngular'
     ]);
 
@@ -154,11 +154,13 @@ define([
         '$compileProvider',
         '$controllerProvider',
         '$mdThemingProvider',
+        '$ocLazyLoadProvider',
         function($urlRouterProvider,
                  $stateProvider,
                  $compileProvider,
                  $controllerProvider,
-                 $mdThemingProvider) {
+                 $mdThemingProvider,
+                 $ocLazyLoadProvider) {
 
             $urlRouterProvider.otherwise('/vle/');
 

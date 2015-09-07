@@ -2118,7 +2118,7 @@ a:hover, a:focus { border-bottom: 1px solid; }
 
 .l-main { background-color: #eeeeee; }
 
-.l-nav { background-color: #eeeeee; padding-top: 16px; padding-bottom: 16px; }
+.l-nav { background-color: #eeeeee; padding-top: 16px; padding-bottom: 32px; }
 
 .l-sidebar__header { background-color: #ffffff; color: #795C3A; }
 .l-sidebar__header md-select { color: rgba(0, 0, 0, 0.87); }
