@@ -1,0 +1,28 @@
+<ng-switch on="type">
+    <md-card ng-switch-when="card" class="nav-item--card" ng-class="itemType" ng-animate-ref="{{ item.id }}">
+        <md-card-content ng-click="nodeClicked()" role="button" md-ink-ripple layout="row">
+            <img ng-if="icon.type === 'img'" ng-class="isGroup ? 'avatar--square' : ''" class="md-36 avatar nav-item__avatar" ng-src="{{icon.imgSrc}}" alt="{{icon.imgAlt}}" />
+            <div ng-if="icon.type === 'font'" ng-class="isGroup ? 'avatar--square' : ''" style="background-color: {{icon.color}};" class="md-36 avatar avatar--icon nav-item__avatar">
+                <md-icon md-font-set="{{icon.fontSet}}" class="md-36 md-light">{{icon.fontName}}</md-icon>
+            </div>
+            <div class="md-title nav-item__title" style="color: {{icon.color}};" flex>{{ item.title }}  <span ng-if="isGroup" class="nav-item__info md-body-1">{{nodeStatus.progress.totalItems}} item(s)</span></div>
+        </md-card-content>
+        <md-card-footer class="nav-item__more" layout="row" flex>
+            <md-progress-linear class="nav-item__progress" ng-if="isGroup" md-mode="determinate" value="{{nodeStatus.progress.completionPct}}"></md-progress-linear>
+            <!--<md-button aria-label="Add Bookmark" class="md-icon-button" ng-click="navItemsCtrl.toggleBookmark()" ng-class="{'md-primary': child.isBookmark}">
+                <md-icon> bookmark </md-icon>
+            </md-button>-->
+        </md-card-footer>
+    </md-card>
+
+    <md-list-item ng-switch-when="list" ng-click="nodeClicked()" class="nav-item--list md-2-line md-whiteframe-z1" ng-class="itemType">
+        <img ng-if="icon.type === 'img'" ng-class="isGroup ? 'avatar--square' : ''" class="md-avatar" ng-src="{{icon.imgSrc}}" alt="{{icon.imgAlt}}" />
+        <div ng-if="icon.type === 'font'" ng-class="isGroup ? 'avatar--square' : ''" style="background-color: {{icon.color}};" class="md-36 avatar avatar--icon nav-item__avatar">
+            <md-icon md-font-set="{{icon.fontSet}}" class="md-36 md-light">{{icon.fontName}}</md-icon>
+        </div>
+        <p>{{ item.title }}</p>
+        <!--<md-button aria-label="Add Bookmark" class="md-icon-button" ng-click="toggleBookmark()" ng-class="{'md-primary': child.isBookmark}">
+            <md-icon> bookmark </md-icon>
+        </md-button>-->
+    </md-list-item>
+</ng-switch>

@@ -164,6 +164,7 @@ define(['configService', 'projectService'], function(configService, currentNodeS
             //this.nodeStatuses = [];
 
             var nodes = ProjectService.getNodes();
+            var groups = ProjectService.getGroups();
             
             if (nodes != null) {
 
@@ -171,8 +172,9 @@ define(['configService', 'projectService'], function(configService, currentNodeS
 
                 for (var n = 0; n < nodes.length; n++) {
                     var node = nodes[n];
-
-                    this.updateNodeStatusByNode(node);
+                    if(!ProjectService.isGroupNode(node.id)) {
+                        this.updateNodeStatusByNode(node);
+                    }
                     
                     //var nodeStatusesByNode = this.updateNodeStatusByNode(node);
                     //nodeStatuses.push(nodeStatusesByNode);
@@ -181,7 +183,24 @@ define(['configService', 'projectService'], function(configService, currentNodeS
 
                 //this.nodeStatuses = nodeStatuses;
             }
-            
+
+            if(groups != null) {
+                for (var g = 0; g < groups.length; g++) {
+                    var group = groups[g];
+                    group.depth = ProjectService.getNodeDepth(group.id);
+                }
+
+                // sort by descending depth order (need to calculate completion for lowest level groups first)
+                groups.sort(function(a, b) {
+                    return b.depth - a.depth;
+                });
+
+                for (var i = 0; i < groups.length; i++) {
+                    var group = groups[i];
+                    this.updateNodeStatusByNode(group);
+                }
+            }
+
             $rootScope.$broadcast('nodeStatusesChanged');
         };
 
@@ -271,7 +290,6 @@ define(['configService', 'projectService'], function(configService, currentNodeS
                 }
 
                 tempNodeStatus.isCompleted = this.isCompleted(nodeId);
-
                 tempNodeStatus.isVisited = this.isNodeVisited(nodeId);
 
                 var nodeStatus = this.getNodeStatusByNodeId(nodeId);
@@ -279,11 +297,13 @@ define(['configService', 'projectService'], function(configService, currentNodeS
                 if (nodeStatus == null) {
                     this.setNodeStatusByNodeId(nodeId, tempNodeStatus);
                 } else {
-                    nodeStatus.isVisited = tempNodeStatus.isVisited;
-                    nodeStatus.isVisible = tempNodeStatus.isVisible;
-                    nodeStatus.isVisitable = tempNodeStatus.isVisitable;
-                    nodeStatus.isCompleted = tempNodeStatus.isCompleted;
+                    this.nodeStatuses[nodeId].isVisited = tempNodeStatus.isVisited;
+                    this.nodeStatuses[nodeId].isVisible = tempNodeStatus.isVisible;
+                    this.nodeStatuses[nodeId].isVisitable = tempNodeStatus.isVisitable;
+                    this.nodeStatuses[nodeId].isCompleted = tempNodeStatus.isCompleted;
                 }
+
+                this.nodeStatuses[nodeId].progress = this.getNodeProgressById(nodeId);
 
                 //console.log(JSON.stringify(tempNodeStatus));
             }
@@ -1537,6 +1557,38 @@ define(['configService', 'projectService'], function(configService, currentNodeS
         };
 
         /**
+         * Get completed items, total number of visible items, completion % for a node
+         * @param nodeId the node id
+         * @returns object with number of completed items and number of visible items
+         */
+        serviceObject.getNodeProgressById = function(nodeId) {
+            var completedItems = 0;
+            var totalItems = 0;
+
+            // assuming node is a group for now
+            var nodeIds = ProjectService.getChildNodeIdsById(nodeId);
+            for (var n=0; n<nodeIds.length; n++){
+                var status = this.nodeStatuses[nodeIds[n]];
+                if(!!status.isVisible){
+                    totalItems++;
+                    if(!!status.isCompleted) {
+                        completedItems++;
+                    }
+                }
+            }
+
+            // TODO: implement for steps (using components instead of child nodes)
+
+            var completionPct = totalItems ? (completedItems / totalItems * 100) : 0;
+            var progress = {
+                "completedItems": completedItems,
+                "totalItems": totalItems,
+                "completionPct": completionPct
+            };
+            return progress;
+        };
+
+        /**
          * Check if the given node or component is completed
          * @param nodeId the node id
          * @param componentId (optional) the component id
@@ -1578,66 +1630,86 @@ define(['configService', 'projectService'], function(configService, currentNodeS
                     }
                 }
             } else if (nodeId != null && componentId == null) {
-                // check that all the components in the node are completed
+                // check if node is a group
+                var isGroup = ProjectService.isGroupNode(nodeId);
 
-                // get all the components in the node
-                var components = ProjectService.getComponentsByNodeId(nodeId);
+                if(isGroup){
+                    // node is a group
+                    var tempResult = true;
 
-                var tempResult = false;
-                var firstResult = true;
+                    // check that all the nodes in the group and visible are completed
+                    var nodeIds = ProjectService.getChildNodeIdsById(nodeId);
+                    for (var n=0; n<nodeIds.length; n++) {
+                        var id = nodeIds[n];
+                        if(this.nodeStatuses[id].isVisible && !this.nodeStatuses[id].isCompleted){
+                            tempResult = false;
+                            break;
+                        }
+                    }
 
-                /*
-                 * All components must be completed in order for the node to be completed
-                 * so we will loop through all the components and check if they are
-                 * completed
-                 */
-                for (var c = 0; c < components.length; c++) {
-                    var component = components[c];
+                    result = tempResult;
+                } else {
+                    // check that all the components in the node are completed
 
-                    if (component != null) {
-                        var componentId = component.id;
-                        var componentType = component.componentType;
+                    // get all the components in the node
+                    var components = ProjectService.getComponentsByNodeId(nodeId);
 
-                        if (componentType != null) {
-                            try {
+                    var tempResult = false;
+                    var firstResult = true;
 
-                                // get the service name
-                                var serviceName = componentType + 'Service';
+                    /*
+                     * All components must be completed in order for the node to be completed
+                     * so we will loop through all the components and check if they are
+                     * completed
+                     */
+                    for (var c = 0; c < components.length; c++) {
+                        var component = components[c];
 
-                                if ($injector.has(serviceName)) {
+                        if (component != null) {
+                            var componentId = component.id;
+                            var componentType = component.componentType;
 
-                                    // get the service for the component type
-                                    var service = $injector.get(serviceName);
+                            if (componentType != null) {
+                                try {
 
-                                    // get the component states for the component
-                                    var componentStates = this.getComponentStatesByNodeIdAndComponentId(nodeId, componentId);
+                                    // get the service name
+                                    var serviceName = componentType + 'Service';
 
-                                    // get the component events
-                                    var componentEvents = this.getEventsByNodeIdAndComponentId(nodeId, componentId);
+                                    if ($injector.has(serviceName)) {
 
-                                    // get the node events
-                                    var nodeEvents = this.getEventsByNodeId(nodeId);
+                                        // get the service for the component type
+                                        var service = $injector.get(serviceName);
 
-                                    // check if the component is completed
-                                    var isComponentCompleted = service.isCompleted(component, componentStates, componentEvents, nodeEvents);
+                                        // get the component states for the component
+                                        var componentStates = this.getComponentStatesByNodeIdAndComponentId(nodeId, componentId);
 
-                                    if (firstResult) {
-                                        // this is the first component we have looked at
-                                        tempResult = isComponentCompleted;
-                                        firstResult = false;
-                                    } else {
-                                        // this is not the first component we have looked at
-                                        tempResult = tempResult && isComponentCompleted;
+                                        // get the component events
+                                        var componentEvents = this.getEventsByNodeIdAndComponentId(nodeId, componentId);
+
+                                        // get the node events
+                                        var nodeEvents = this.getEventsByNodeId(nodeId);
+
+                                        // check if the component is completed
+                                        var isComponentCompleted = service.isCompleted(component, componentStates, componentEvents, nodeEvents);
+
+                                        if (firstResult) {
+                                            // this is the first component we have looked at
+                                            tempResult = isComponentCompleted;
+                                            firstResult = false;
+                                        } else {
+                                            // this is not the first component we have looked at
+                                            tempResult = tempResult && isComponentCompleted;
+                                        }
                                     }
+                                } catch (e) {
+                                    console.log('Error: Could not calculate isCompleted() for a component');
                                 }
-                            } catch (e) {
-                                console.log('Error: Could not calculate isCompleted() for a component');
                             }
                         }
                     }
-                }
 
-                result = tempResult;
+                    result = tempResult;
+                }
             }
 
             return result;

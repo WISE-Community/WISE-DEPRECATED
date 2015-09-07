@@ -68,6 +68,17 @@ define(['configService'], function(configService) {
             return nodes;
         };
 
+        serviceObject.getChildNodeIdsById = function(nodeId) {
+            var childIds = [];
+            var node = this.getNodeById(nodeId);
+
+            if (!!node.ids) {
+                childIds = node.ids;
+            }
+
+            return childIds;
+        };
+
         serviceObject.getApplicationNodes = function() {
             return this.applicationNodes;
         };
@@ -522,6 +533,23 @@ define(['configService'], function(configService) {
             return result;
         };
 
+        serviceObject.getNodeDepth = function(nodeId, val) {
+            var result = null;
+
+            if(nodeId != null){
+                var depth = val ? val : 0;
+                var parent = this.getParentGroup(nodeId);
+                if(parent){
+                    depth++;
+                    this.getNodeDepth(parent.id, depth);
+                }
+                result = depth;
+            }
+
+            return result;
+
+        };
+
         serviceObject.getRootNode = function(nodeId) {
             var result = null;
 
@@ -971,7 +999,7 @@ define(['configService'], function(configService) {
                 // set defaults (TODO: get from configService?)
                 var defaultName = (nodeType === 'group') ? 'explore' : 'school';
                 nodeIcon = {
-                    color: '#757575',
+                    color: 'rgba(0,0,0,0.54)',
                     type: 'font',
                     fontSet: 'material-icons',
                     fontName: defaultName,

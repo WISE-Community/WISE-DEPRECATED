@@ -1,6 +1,10 @@
 .nav-head {
   color: $text-color-secondary;
   font-weight: 500;
+
+  md-icon {
+    line-height: 20px;
+  }
 }
 
 .nav-group {
@@ -47,6 +51,17 @@
 .group-info__more {
   padding: 0;
   color: $text-color-secondary;
+
+  md-progress-linear {
+    display: inline-block;
+    width: 64px;
+    vertical-align: middle;
+    padding: 0 12px;
+
+    > .md-container {
+      top: 0;
+    }
+  }
 }
 
 .nav-contents--group {
@@ -82,6 +97,14 @@
   background-color: $gray-lightest;
   border-top: 1px solid $gray-light;
   @include border-bottom-radius(4px);
+
+  md-progress-linear {
+    width: 48px;
+
+    > .md-container {
+      top: 0;
+    }
+  }
 }
 
 .nav-item__title {
