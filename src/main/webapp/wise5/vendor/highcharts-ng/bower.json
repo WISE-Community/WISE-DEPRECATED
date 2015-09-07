@@ -1,7 +1,20 @@
 {
   "name": "highcharts-ng",
-  "version": "0.0.8",
+  "description": "An AngularJS directive for Highcharts, Highstocks or Highmaps",
+  "keywords": [
+    "angularjs",
+    "angular",
+    "charts",
+    "highcharts",
+    "highstocks",
+    "highmaps"
+  ],
+  "version": "0.0.10",
   "main": "dist/highcharts-ng.js",
+  "license": "MIT",
+  "authors": [
+    { "name": "Barry Fitzgerald" }
+  ],
   "dependencies": {},
   "devDependencies": {
     "angular": "latest",
