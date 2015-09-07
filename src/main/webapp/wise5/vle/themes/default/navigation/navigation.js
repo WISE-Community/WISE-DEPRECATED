@@ -25,8 +25,6 @@ define(['angular', /*'annotationService',*/ 'configService', 'currentNodeService
 
                         $scope.isGroup = ProjectService.isGroupNode($scope.item.id);
 
-                        $scope.icon = ProjectService.getNodeIconByNodeId($scope.item.id);
-
                         $scope.nodeStatus = StudentDataService.nodeStatuses[$scope.item.id];
                     }
                 };
@@ -44,7 +42,6 @@ define(['angular', /*'annotationService',*/ 'configService', 'currentNodeService
                     this.currentGroup = null;
                     this.currentChildren = [];
                     this.currentParentGroups = [];
-                    this.currentGroupIcon = null;
                     this.groups = ProjectService.getGroups();
                     this.currentNode = CurrentNodeService.getCurrentNode();
                     this.layoutState = null;
@@ -129,7 +126,6 @@ define(['angular', /*'annotationService',*/ 'configService', 'currentNodeService
 
                             this.currentGroup = currentGroup;
                             this.currentGroupStatus = this.nodeStatuses[this.currentGroupId];
-                            this.currentGroupIcon = ProjectService.getNodeIconByNodeId(this.currentGroupId); // TODO: this needs to be two-way synched or updated on nodeStatus changes
 
                             var childIds = ProjectService.getChildNodeIdsById(this.currentGroupId);
                             this.currentChildren = [];

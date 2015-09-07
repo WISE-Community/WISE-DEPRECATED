@@ -14,13 +14,13 @@
     <div ng-animate-ref="{{ navCtrl.currentGroup.id }}">
         <md-card ng-class="'nav-' + navCtrl.layoutState" >
             <div ng-if="navCtrl.layoutState === 'group'" class="group-info" layout="row">
-                <img ng-if="navCtrl.currentGroupIcon.type === 'img'" class="avatar avatar--square group-info__avatar" ng-src="{{navCtrl.currentGroupIcon.imgSrc}}" alt="{{navCtrl.currentGroupIcon.imgAlt}}" />
-                <div ng-if="navCtrl.currentGroupIcon.type === 'font'" style="background-color: {{navCtrl.currentGroupIcon.color}};" class="avatar avatar--square avatar--icon group-info__avatar">
-                    <md-icon md-font-set="{{navCtrl.currentGroupIcon.fontSet}}" class="md-light">{{navCtrl.currentGroupIcon.fontName}}</md-icon>
+                <img ng-if="navCtrl.currentGroupStatus.icon.type === 'img'" class="avatar avatar--square group-info__avatar" ng-src="{{navCtrl.currentGroupStatus.icon.imgSrc}}" alt="{{navCtrl.currentGroupStatus.icon.imgAlt}}" />
+                <div ng-if="navCtrl.currentGroupStatus.icon.type === 'font'" style="background-color: {{navCtrl.currentGroupStatus.icon.color}};" class="avatar avatar--square avatar--icon group-info__avatar">
+                    <md-icon md-font-set="{{navCtrl.currentGroupStatus.icon.fontSet}}" class="md-light">{{navCtrl.currentGroupStatus.icon.fontName}}</md-icon>
                 </div>
                 <div class="group-info__details" flex>
                     <div class="md-toolbar-tools md-toolbar-tools--fit auto-height">
-                        <h3 class="group-info__title" style="color: {{navCtrl.currentGroupIcon.color}};">{{navCtrl.currentGroup.title}}</h3>
+                        <h3 class="group-info__title" style="color: {{navCtrl.currentGroupStatus.icon.color}};">{{navCtrl.currentGroup.title}}</h3>
                         <span flex></span>
                         <md-button aria-label="Close Activity" class="md-icon-button" ng-click="navCtrl.nodeClicked(navCtrl.parentGroupId)">
                             <md-icon> close </md-icon>

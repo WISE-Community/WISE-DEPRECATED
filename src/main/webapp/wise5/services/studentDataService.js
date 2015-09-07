@@ -304,6 +304,7 @@ define(['configService', 'projectService'], function(configService, currentNodeS
                 }
 
                 this.nodeStatuses[nodeId].progress = this.getNodeProgressById(nodeId);
+                this.nodeStatuses[nodeId].icon = ProjectService.getNodeIconByNodeId(nodeId);
 
                 //console.log(JSON.stringify(tempNodeStatus));
             }
