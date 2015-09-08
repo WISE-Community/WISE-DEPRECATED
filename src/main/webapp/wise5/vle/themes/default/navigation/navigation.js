@@ -63,6 +63,7 @@ define(['angular', /*'annotationService',*/ 'configService', 'currentNodeService
                          $mdDialog) {
 
                     this.currentGroup = null;
+                    this.currentGroup = null;
                     this.currentChildren = [];
                     this.currentParentGroups = [];
                     this.groups = ProjectService.getGroups();
@@ -72,7 +73,7 @@ define(['angular', /*'annotationService',*/ 'configService', 'currentNodeService
                     this.nodeStatuses = StudentDataService.nodeStatuses;
                     this.currentGroupStatus = {};
 
-                    $scope.$on('currentNodeChanged', angular.bind(this, function(event, args) {
+                    /*$scope.$on('currentNodeChanged', angular.bind(this, function(event, args) {
                         var previousNode = args.previousNode;
                         var currentNode = args.currentNode;
                         if (previousNode != null && previousNode.type === 'group') {
@@ -88,7 +89,7 @@ define(['angular', /*'annotationService',*/ 'configService', 'currentNodeService
                             }
                         }
 
-                    }));
+                    }));*/
 
                     $scope.$on('nodeStatusesChanged', angular.bind(this, function() {
 
