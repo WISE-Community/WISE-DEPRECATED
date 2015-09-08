@@ -1,6 +1,6 @@
 <div class="group-info" layout="row">
-    <img ng-if="nodeStatus.icon.type === 'img'" class="avatar avatar--square group-info__avatar" ng-src="{{nodeStatus.icon.imgSrc}}" alt="{{nodeStatus.icon.imgAlt}}" />
-    <div ng-if="nodeStatus.icon.type === 'font'" style="background-color: {{nodeStatus.icon.color}};" class="avatar avatar--square avatar--icon group-info__avatar">
+    <img ng-if="nodeStatus.icon.type === 'img'" ng-animate-ref="{{ item.id }}" class="avatar avatar--square group-info__avatar" ng-src="{{nodeStatus.icon.imgSrc}}" alt="{{nodeStatus.icon.imgAlt}}" />
+    <div ng-if="nodeStatus.icon.type === 'font'" ng-animate-ref="{{ item.id }}" style="background-color: {{nodeStatus.icon.color}};" class="avatar avatar--square avatar--icon group-info__avatar">
         <md-icon md-font-set="{{nodeStatus.icon.fontSet}}" class="md-light">{{nodeStatus.icon.fontName}}</md-icon>
     </div>
     <div class="group-info__details" flex>

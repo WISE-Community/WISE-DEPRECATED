@@ -1,8 +1,8 @@
 <ng-switch on="type">
-    <md-card ng-switch-when="card" class="nav-item--card" ng-class="itemType" ng-animate-ref="{{ item.id }}">
+    <md-card ng-switch-when="card" class="nav-item--card" ng-class="itemType">
         <md-card-content ng-click="nodeClicked()" role="button" md-ink-ripple layout="row">
-            <img ng-if="nodeStatus.icon.type === 'img'" ng-class="isGroup ? 'avatar--square' : ''" class="md-36 avatar nav-item__avatar" ng-src="{{nodeStatus.icon.imgSrc}}" alt="{{nodeStatus.icon.imgAlt}}" />
-            <div ng-if="nodeStatus.icon.type === 'font'" ng-class="isGroup ? 'avatar--square' : ''" style="background-color: {{nodeStatus.icon.color}};" class="md-36 avatar avatar--icon nav-item__avatar">
+            <img ng-if="nodeStatus.icon.type === 'img'" ng-animate-ref="{{ item.id }}" ng-class="isGroup ? 'avatar--square' : ''" class="md-36 avatar nav-item__avatar" ng-src="{{nodeStatus.icon.imgSrc}}" alt="{{nodeStatus.icon.imgAlt}}" />
+            <div ng-if="nodeStatus.icon.type === 'font'" ng-animate-ref="{{ item.id }}" ng-class="isGroup ? 'avatar--square' : ''" style="background-color: {{nodeStatus.icon.color}};" class="md-36 avatar avatar--icon nav-item__avatar">
                 <md-icon md-font-set="{{nodeStatus.icon.fontSet}}" class="md-36 md-light">{{nodeStatus.icon.fontName}}</md-icon>
             </div>
             <div class="md-title nav-item__title" style="color: {{nodeStatus.icon.color}};" flex>{{ item.title }}  <span ng-if="isGroup" class="nav-item__info md-body-1">{{nodeStatus.progress.totalItems}} item(s)</span></div>

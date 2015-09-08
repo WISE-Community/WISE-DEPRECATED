@@ -2116,7 +2116,7 @@ a:hover, a:focus { border-bottom: 1px solid; }
 .avatar--icon.md-36 { height: 36px; width: 36px; }
 .avatar--icon.md-48 { height: 48px; width: 48px; }
 
-.l-constrained { margin-left: auto; margin-right: auto; max-width: 1200px; }
+.l-constrained { margin-left: auto; margin-right: auto; max-width: 1200px; position: relative; }
 
 .l-footer { position: fixed; bottom: 0; width: 100%; z-index: 1; background-color: #ffffff; }
 
@@ -2130,8 +2130,9 @@ a:hover, a:focus { border-bottom: 1px solid; }
 .nav-head { color: rgba(0, 0, 0, 0.54); font-weight: 500; }
 .nav-head md-icon { line-height: 20px; }
 
-.nav-root { -moz-border-radius: 0; -webkit-border-radius: 0; border-radius: 0; background-color: transparent; box-shadow: none; margin: 0; }
-
+/*.nav-group, .nav-root { position: absolute; left: 0; right: 0;
+ &.ng-enter, &.ng-leave { @include transition(0.5s linear opacity); } &.ng-enter { opacity: 0; } &.ng-leave { opacity: 1; } &.ng-enter.ng-enter-active { opacity: 1; } &.ng-leave.ng-leave-active { opacity: 0; }
+}*/
 .group-info { padding: 16px; -moz-border-radius-bottomleft: 0; -webkit-border-bottom-left-radius: 0; border-bottom-left-radius: 0; -moz-border-radius-bottomright: 0; -webkit-border-bottom-right-radius: 0; border-bottom-right-radius: 0; }
 
 .group-info__avatar.avatar { height: 64px; width: 64px; }
