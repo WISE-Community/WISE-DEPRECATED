@@ -97,6 +97,8 @@
   background-color: $gray-lightest;
   border-top: 1px solid $gray-light;
   @include border-bottom-radius(4px);
+  padding: 8px 16px;
+  min-height: 40px;
 
   md-progress-linear {
     width: 48px;
@@ -117,4 +119,8 @@
 .nav-item__info {
   color: $text-color-secondary;
   display: inline-block;
+}
+
+.progress-wrapper {
+  padding: 8px 0;
 }

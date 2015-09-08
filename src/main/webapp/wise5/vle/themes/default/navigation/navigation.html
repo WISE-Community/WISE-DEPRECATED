@@ -13,25 +13,8 @@
 
     <div ng-animate-ref="{{ navCtrl.currentGroup.id }}">
         <md-card ng-class="'nav-' + navCtrl.layoutState" >
-            <div ng-if="navCtrl.layoutState === 'group'" class="group-info" layout="row">
-                <img ng-if="navCtrl.currentGroupStatus.icon.type === 'img'" class="avatar avatar--square group-info__avatar" ng-src="{{navCtrl.currentGroupStatus.icon.imgSrc}}" alt="{{navCtrl.currentGroupStatus.icon.imgAlt}}" />
-                <div ng-if="navCtrl.currentGroupStatus.icon.type === 'font'" style="background-color: {{navCtrl.currentGroupStatus.icon.color}};" class="avatar avatar--square avatar--icon group-info__avatar">
-                    <md-icon md-font-set="{{navCtrl.currentGroupStatus.icon.fontSet}}" class="md-light">{{navCtrl.currentGroupStatus.icon.fontName}}</md-icon>
-                </div>
-                <div class="group-info__details" flex>
-                    <div class="md-toolbar-tools md-toolbar-tools--fit auto-height">
-                        <h3 class="group-info__title" style="color: {{navCtrl.currentGroupStatus.icon.color}};">{{navCtrl.currentGroup.title}}</h3>
-                        <span flex></span>
-                        <md-button aria-label="Close Activity" class="md-icon-button" ng-click="navCtrl.nodeClicked(navCtrl.parentGroupId)">
-                            <md-icon> close </md-icon>
-                        </md-button>
-                    </div>
-                    <div class="group-info__more md-body-3">
-                        <span>{{navCtrl.currentGroupStatus.progress.totalItems}} item(s)</span>
-                        <md-progress-linear class="group-info__progress" md-mode="determinate" value="{{navCtrl.currentGroupStatus.progress.completionPct}}"></md-progress-linear>
-                    </div>
-                </div>
-            </div>
+            <group-info ng-if="navCtrl.layoutState === 'group'" item="navCtrl.currentGroup" close="navCtrl.nodeClicked(navCtrl.parentGroupId)"
+                        template-url="vleController.themePath + '/navigation/groupInfo.html'"></group-info>
             <md-card-content ng-class="'nav-contents nav-contents--' + navCtrl.layoutState  + ' nav-contents--' + navCtrl.layoutView">
                 <md-list ng-if="navCtrl.layoutView === 'list'">
                     <nav-item ng-repeat="item in navCtrl.currentChildren" ng-if="navCtrl.nodeStatuses[item.id].isVisible"

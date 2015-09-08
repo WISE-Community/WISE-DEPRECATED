@@ -7,8 +7,13 @@
             </div>
             <div class="md-title nav-item__title" style="color: {{nodeStatus.icon.color}};" flex>{{ item.title }}  <span ng-if="isGroup" class="nav-item__info md-body-1">{{nodeStatus.progress.totalItems}} item(s)</span></div>
         </md-card-content>
-        <md-card-footer class="nav-item__more" layout="row" flex>
-            <md-progress-linear class="nav-item__progress" ng-if="isGroup" md-mode="determinate" value="{{nodeStatus.progress.completionPct}}"></md-progress-linear>
+        <md-card-footer class="nav-item__more" layout="row" layout-align="center center" flex>
+            <div class="progress-wrapper">
+                <md-tooltip> {{nodeStatus.progress.completionPct}}% completed; {{nodeStatus.progress.totalItems-nodeStatus.progress.completedItems}} todo </md-tooltip>
+                <md-progress-linear class="nav-item__progress" ng-if="isGroup" md-mode="determinate" value="{{nodeStatus.progress.completionPct}}"></md-progress-linear>
+            </div>
+            <span flex></span>
+            <md-icon ng-if="nodeStatus.isCompleted" ng-class="'success'" aria-label="Completed"> check_circle </md-icon>
             <!--<md-button aria-label="Add Bookmark" class="md-icon-button" ng-click="navItemsCtrl.toggleBookmark()" ng-class="{'md-primary': child.isBookmark}">
                 <md-icon> bookmark </md-icon>
             </md-button>-->

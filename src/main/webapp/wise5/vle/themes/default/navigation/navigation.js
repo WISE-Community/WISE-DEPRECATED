@@ -29,6 +29,29 @@ define(['angular', /*'annotationService',*/ 'configService', 'currentNodeService
                     }
                 };
             })
+            .directive('groupInfo', function() {
+                return {
+                    scope: {
+                        templateUrl: '=',
+                        item: '=',
+                        close: '&'
+                    },
+                    template: '<ng-include src="getTemplateUrl()"></ng-include>',
+                    controller: function($scope,
+                                         $state,
+                                         $stateParams,
+                                         ConfigService,
+                                         ProjectService,
+                                         StudentDataService) {
+
+                        $scope.getTemplateUrl = function(){
+                            return $scope.templateUrl;
+                        };
+
+                        $scope.nodeStatus = StudentDataService.nodeStatuses[$scope.item.id];
+                    }
+                };
+            })
             .controller('NavigationController',
                 function($scope,
                          $state,
