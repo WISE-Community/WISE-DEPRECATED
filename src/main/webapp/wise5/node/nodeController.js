@@ -398,23 +398,6 @@ define(['app'], function(app) {
         };
 
         /**
-         * Creates a blank new NodeState for this MultipleChoice node
-         */
-        this.testNodeStateSave = function() {
-            // create a new node state
-            var nodeState = NodeService.createNewNodeState();
-            nodeState.runId = ConfigService.getRunId();
-            nodeState.periodId = ConfigService.getPeriodId();
-            nodeState.workgroupId = ConfigService.getWorkgroupId();
-            nodeState.nodeId = this.nodeId;
-            nodeState.isAutoSave = false;
-            nodeState.studentData = {"testData":"student was branched to branch path B on this node"};
-            var nodeStates = [];
-            nodeStates.push(nodeState);
-            StudentDataService.saveNodeStates(nodeStates);
-        };
-
-        /**
          * Loop through this node's components and get/create component states
          * @param isAutoSave whether the component states were auto saved
          * @param componentId (optional) the component id of the component
