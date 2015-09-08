@@ -163,48 +163,7 @@ define(['app'],
             }
             return transitionResult;
         };
-        
-        this.goToNextNode = function() {
-            var currentNode = CurrentNodeService.getCurrentNode();
-            if (currentNode != null) {
-                var currentNodeId = currentNode.id;
-                var transitions = ProjectService.getTransitionsByFromNodeId(currentNodeId);
-                var transition = this.chooseTransition(transitions);
-                if (transition != null) {
-                    var toNodeId = transition.to;
-                    //var mode = this.mode;
-                    //this.loadNode(toNodeId, mode);
-                    CurrentNodeService.setCurrentNodeByNodeId(toNodeId);
-                }
-            }
-        };
-       
-        this.goToPrevNode = function() {
-            var currentNode = CurrentNodeService.getCurrentNode();
-            if (currentNode != null) {
-                var currentNodeId = currentNode.id;
-                var transitions = ProjectService.getTransitionsByToNodeId(currentNodeId);
-                
-                if (transitions != null && transitions.length === 1) {
-                    var transition = transitions[0];
-                    
-                    if (transition != null) {
-                        var fromNodeId = transition.from;
-                        CurrentNodeService.setCurrentNodeByNodeId(fromNodeId);
-                    }
-                } else {
-                    var stackHistory = StudentDataService.getStackHistory();
-                    var prevNodeId = null;
-                    if (stackHistory.length > 1) {
-                        prevNodeId = StudentDataService.getStackHistoryAtIndex(-2);
-                        //var mode = this.mode;
-                        //this.loadNode(prevNodeId, mode);
-                        CurrentNodeService.setCurrentNodeByNodeId(prevNodeId);
-                    }
-                }
-            }
-        };
-        
+
         this.notebookDragStartCallback = function(event, ui) {
             console.log('vleController.notebookDragStartCallback');
             //$(ui.helper.context).data('importWorkNodeState', StudentDataService.getLatestNodeStateByNodeId(nodeId));

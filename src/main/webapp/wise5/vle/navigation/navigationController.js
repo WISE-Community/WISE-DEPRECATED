@@ -36,7 +36,7 @@ define(['app'], function(app) {
         }));
         
         this.nodeClicked = function(nodeId) {
-            CurrentNodeService.setCurrentNodeByNodeId(nodeId);
+            CurrentNodeService.endCurrentNodeAndSetCurrentNodeByNodeId(nodeId);
         };
         
         this.isNodeDisabled = function(nodeId) {

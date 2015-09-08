@@ -71,6 +71,32 @@ define(['projectService'], function(projectService) {
                 $rootScope.$broadcast('exitNode', {nodeToExit: previousCurrentNode});
             }
         };
+
+        /**
+         * End the current node and set the current node
+         * @param nodeId the node id of the new current node
+         */
+        serviceObject.endCurrentNodeAndSetCurrentNodeByNodeId = function(nodeId) {
+
+            // end the current node
+            this.endCurrentNode();
+
+            // set the current node
+            this.setCurrentNodeByNodeId(nodeId);
+        };
+
+        /**
+         * End the current node and set the current node
+         * @param node the node of the new current node
+         */
+        serviceObject.endCurrentNodeAndSetCurrentNode = function(node) {
+
+            // end the current node
+            this.endCurrentNode();
+
+            // set the current node
+            this.setCurrentNode(node);
+        };
         
         return serviceObject;
     }];

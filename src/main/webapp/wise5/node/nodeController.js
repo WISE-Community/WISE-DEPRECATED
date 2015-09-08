@@ -755,11 +755,6 @@ define(['app'], function(app) {
             eventData.nodeId = nodeId;
             StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
         };
-
-        this.setCurrentNodeByNodeId = function(nodeId) {
-            var node = ProjectService.getNodeById(nodeId);
-            CurrentNodeService.setCurrentNode(node);
-        };
         
         this.addNodeVisitItemToNotebook = function() {
             var currentNode = CurrentNodeService.getCurrentNode();
@@ -790,7 +785,7 @@ define(['app'], function(app) {
                 var parentNode = ProjectService.getParentGroup(currentNodeId);
 
                 // set the current node to the parent node
-                CurrentNodeService.setCurrentNode(parentNode);
+                CurrentNodeService.endCurrentNodeAndSetCurrentNode(parentNode);
             }
         };
         
@@ -1021,7 +1016,7 @@ define(['app'], function(app) {
 
                     if (transition != null) {
                         var fromNodeId = transition.from;
-                        CurrentNodeService.setCurrentNodeByNodeId(fromNodeId);
+                        CurrentNodeService.endCurrentNodeAndSetCurrentNodeByNodeId(fromNodeId);
                     }
                 } else {
 
@@ -1031,7 +1026,7 @@ define(['app'], function(app) {
                     if (stackHistory.length > 1) {
                         // get the previous node in the history
                         var prevNodeId = StudentDataService.getStackHistoryAtIndex(-2);
-                        CurrentNodeService.setCurrentNodeByNodeId(prevNodeId);
+                        CurrentNodeService.endCurrentNodeAndSetCurrentNodeByNodeId(prevNodeId);
                     }
                 }
             }

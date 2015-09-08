@@ -218,7 +218,7 @@ define(['angular', 'projectService', 'currentNodeService'], function(angular, pr
                         var nodeId = d.id;
 
                         if (StudentDataService.canVisitNode(nodeId)) {
-                            CurrentNodeService.setCurrentNodeByNodeId(nodeId);
+                            CurrentNodeService.endCurrentNodeAndSetCurrentNodeByNodeId(nodeId);
                         } else {
                             alert('You are not allowed to visit this step right now.');
                         }

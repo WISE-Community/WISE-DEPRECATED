@@ -64,7 +64,7 @@ define(['angular', /*'annotationService',*/ 'configService', 'currentNodeService
                         // check if the node is visitable
                         if (this.isVisitable(nodeId)) {
                             // the node is visitable
-                            CurrentNodeService.setCurrentNodeByNodeId(nodeId);
+                            CurrentNodeService.endCurrentNodeAndSetCurrentNodeByNodeId(nodeId);
                         } else {
                             // the node is not visitable
                             alert('You are not allowed to visit this step right now.');
