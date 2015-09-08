@@ -43,7 +43,7 @@ require.config({
         'graphService': 'components/graph/graphService',
         'highcharts': 'vendor/highcharts/highcharts',
         'highcharts-more': 'vendor/highcharts/highcharts-more',
-        'highcharts-ng': 'vendor/highcharts-ng/dist/highcharts-ng-modified',
+        'highcharts-ng': 'vendor/highcharts-ng/dist/highcharts-ng.min',
         'htmlController': 'components/html/htmlController',
         'htmlService': 'components/html/htmlService',
         'jquery': [
@@ -58,10 +58,11 @@ require.config({
         'matchService': 'components/match/matchService',
         'multipleChoiceController': 'components/multipleChoice/multipleChoiceController',
         'multipleChoiceService': 'components/multipleChoice/multipleChoiceService',
-        'navigation': 'vle/navigation/navigation',
+        //'navigation': 'vle/navigation/navigation',
         //'navigationController': 'vle/navigation/navigationController',
         'nodeController': 'node/nodeController',
         'nodeService': 'services/nodeService',
+        'ocLazyLoad': 'vendor/oclazyload/dist/ocLazyLoad.require',
         'openResponseController': 'components/openResponse/openResponseController',
         'openResponseService': 'components/openResponse/openResponseService',
         'outsideURLController': 'components/outsideURL/outsideURLController',
@@ -220,6 +221,12 @@ require.config({
             'deps': [
                      'jquery'
                      ]
+        },
+        'ocLazyLoad': {
+            'expports': 'ocLazyLoad',
+            'deps': [
+                    'angular'
+            ]
         },
         'webfont': {
             'exports': 'webfont'

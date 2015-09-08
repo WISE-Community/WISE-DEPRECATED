@@ -1,0 +1,23 @@
+<div class="group-info" layout="row">
+    <img ng-if="nodeStatus.icon.type === 'img'" class="avatar avatar--square group-info__avatar" ng-src="{{nodeStatus.icon.imgSrc}}" alt="{{nodeStatus.icon.imgAlt}}" />
+    <div ng-if="nodeStatus.icon.type === 'font'" style="background-color: {{nodeStatus.icon.color}};" class="avatar avatar--square avatar--icon group-info__avatar">
+        <md-icon md-font-set="{{nodeStatus.icon.fontSet}}" class="md-light">{{nodeStatus.icon.fontName}}</md-icon>
+    </div>
+    <div class="group-info__details" flex>
+        <div class="md-toolbar-tools md-toolbar-tools--fit auto-height">
+            <h3 class="group-info__title" style="color: {{nodeStatus.icon.color}};">{{item.title}}</h3>
+            <span flex></span>
+            <md-button aria-label="Close Activity" class="md-icon-button" ng-click="close()">
+                <md-icon> close </md-icon>
+            </md-button>
+        </div>
+        <div class="group-info__more md-body-3">
+            <span>{{nodeStatus.progress.totalItems}} item(s)</span>
+            <span class="progress-wrapper">
+                <md-tooltip> {{nodeStatus.progress.completionPct}}% completed; {{nodeStatus.progress.totalItems-nodeStatus.progress.completedItems}} todo </md-tooltip>
+                <md-progress-linear class="group-info__progress" md-mode="determinate" value="{{nodeStatus.progress.completionPct}}"></md-progress-linear>
+            </span>
+            <md-icon ng-if="nodeStatus.isCompleted" ng-class="'success'" aria-label="Completed"> check_circle </md-icon>
+        </div>
+    </div>
+</div>

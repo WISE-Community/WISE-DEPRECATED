@@ -1,31 +1,10 @@
-<style>
-    .currentNode {
-        background-color: yellow;
-    }
-
-    .disabledNode {
-        disabled: true;
-    }
-
-    .node {
-        fill: #ccc;
-        stroke: #fff;
-        stroke-width: 2px;
-    }
-
-    .link {
-        stroke: #777;
-        stroke-width: 2px;
-    }
-</style>
-
 <div ng-controller='NavigationController as navCtrl' class="l-constrained">
     <div class="md-toolbar-tools auto-width">
-        <span class="md-subhead nav-head breadcrumb">
-            <a ng-click="navCtrl.nodeClicked(navCtrl.currentParentGroups[0].id)">Project Plan</a>
+        <div class="md-subhead nav-head breadcrumb">
+            <md-icon> home </md-icon> <a ng-click="navCtrl.nodeClicked(navCtrl.currentParentGroups[0].id)">Project Plan</a>
             <a ng-repeat-start="group in navCtrl.currentParentGroups" ng-if="!$first" ng-click="navCtrl.nodeClicked(group.id)">{{group.title}}</a>
             <span ng-if="!$last" ng-repeat-end> > </span>
-        </span>
+        </div>
         <span flex></span>
         <md-select ng-if="vleController.navFilters.length > 1" class="md-body-1" placeholder="Filter" ng-model="vleController.navFilter">
             <md-option ng-repeat="filter in vleController.navFilters" value="{{filter.name}}">{{filter.label}}</md-option>
@@ -34,33 +13,19 @@
 
     <div ng-animate-ref="{{ navCtrl.currentGroup.id }}">
         <md-card ng-class="'nav-' + navCtrl.layoutState" >
-            <div ng-if="navCtrl.layoutState === 'group'" class="group-info" layout="row">
-                <img ng-if="navCtrl.currentGroupIcon.type === 'img'" class="avatar avatar--square group-info__avatar" ng-src="{{navCtrl.currentGroupIcon.imgSrc}}" alt="{{navCtrl.currentGroupIcon.imgAlt}}" />
-                <div ng-if="navCtrl.currentGroupIcon.type === 'font'" style="background-color: {{navCtrl.currentGroupIcon.color}};" class="avatar avatar--square avatar--icon group-info__avatar">
-                    <md-icon md-font-set="{{navCtrl.currentGroupIcon.fontSet}}" class="md-light">{{navCtrl.currentGroupIcon.fontName}}</md-icon>
-                </div>
-                <div class="group-info__details" flex>
-                    <div class="md-toolbar-tools md-toolbar-tools--fit auto-height">
-                        <h3 class="group-info__title" style="color: {{navCtrl.currentGroupIcon.color}};">{{navCtrl.currentGroup.title}}</h3>
-                        <span flex></span>
-                        <md-button aria-label="Close Activity" class="md-icon-button" ng-click="navCtrl.nodeClicked(navCtrl.parentGroupId)">
-                            <md-icon> close </md-icon>
-                        </md-button>
-                    </div>
-                    <div class="group-info__more md-body-3">{{navCtrl.currentGroup.ids.length}} item(s)</div>
-                </div>
-            </div>
+            <group-info ng-if="navCtrl.layoutState === 'group'" item="navCtrl.currentGroup" close="navCtrl.nodeClicked(navCtrl.parentGroupId)"
+                        template-url="vleController.themePath + '/navigation/groupInfo.html'"></group-info>
             <md-card-content ng-class="'nav-contents nav-contents--' + navCtrl.layoutState  + ' nav-contents--' + navCtrl.layoutView">
                 <md-list ng-if="navCtrl.layoutView === 'list'">
-                    <nav-item ng-repeat="item in navCtrl.currentChildren"
-                              template-url="vleController.themePath + '/navigation/' + navCtrl.layoutView + 'Item.html'"
-                              item="item" node-clicked="navCtrl.nodeClicked(item.id)" ng-animate-ref="{{ item.id }}" class="nav-item ng-enter"></nav-item>
+                    <nav-item ng-repeat="item in navCtrl.currentChildren" ng-if="navCtrl.nodeStatuses[item.id].isVisible"
+                              template-url="vleController.themePath + '/navigation/navItem.html'"
+                              item="item" type="navCtrl.layoutView" node-clicked="navCtrl.nodeClicked(item.id)" ng-animate-ref="{{ item.id }}" class="nav-item ng-enter"></nav-item>
                 </md-list>
-                <div ng-if="navCtrl.layoutView === 'card'" layout="row" layout-wrap>
-                    <nav-item ng-repeat="item in navCtrl.currentChildren"
-                              template-url="vleController.themePath + '/navigation/' + navCtrl.layoutView + 'Item.html'"
-                              item="item" node-clicked="navCtrl.nodeClicked(item.id)"
-                              flex-sm="100" flex-md="50" flex-lg="33" flex-gt-lg="33"></nav-item>
+                <div ng-if="navCtrl.layoutView === 'card'" layout="row" layout-wrap layout-align="center center">
+                    <nav-item ng-repeat="item in navCtrl.currentChildren" ng-if="navCtrl.nodeStatuses[item.id].isVisible"
+                              template-url="vleController.themePath + '/navigation/navItem.html'"
+                              item="item" type="navCtrl.layoutView" node-clicked="navCtrl.nodeClicked(item.id)"
+                              flex-sm="100" flex-md="50" flex-lg="33" flex-gt-lg="25"></nav-item>
                 </div>
             </md-card-content>
         </md-card>
