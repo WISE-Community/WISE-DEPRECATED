@@ -1,12 +1,29 @@
 define(['app'], function(app) {
     app
     .$controllerProvider
-    .register('ProjectController', ['$state', '$stateParams', 'ProjectService', 'ConfigService',
-                                    function($state, $stateParams, ProjectService, ConfigService) {
+    .register('ProjectController', ['$scope', '$state', '$stateParams', 'ProjectService', 'ConfigService',
+                                    function($scope, $state, $stateParams, ProjectService, ConfigService) {
 
         this.title = "project controller title";
 
         this.project = ProjectService.getProject();
+
+        // updates projectAsText field, which is the string representation of the project that we'll show in the textarea
+        this.updateProjectAsText = function() {
+            this.projectAsText = JSON.stringify(this.project, null, 4);
+        };
+
+        this.updateProjectAsText();
+
+        $scope.$watch(angular.bind(this, function() {
+            return this.projectAsText;
+        }), angular.bind(this, function () {
+            try {
+                this.project = JSON.parse(this.projectAsText);
+            } catch(exp) {
+                //Exception handler
+            };
+        }));
 
         this.nodeIds = ProjectService.getFlattenedProjectAsNodeIds();
 
@@ -16,7 +33,7 @@ define(['app'], function(app) {
         };
 
         this.saveProject = function() {
-            var projectJSONString = $("#project").val();
+            var projectJSONString = JSON.stringify(this.project, null, 4);
             var commitMessage = $("#commitMessageInput").val();
             try {
                 // if projectJSONString is bad json, it will throw an exception and not save.

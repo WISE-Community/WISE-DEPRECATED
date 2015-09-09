@@ -128,7 +128,6 @@ define([
                 templateUrl: 'wise5/classroomMonitor/classroomMonitor.html',
                 resolve: {
                     classroomMonitorController: app.loadController('classroomMonitorController'),
-                    notebookController: app.loadController('notebookController'),
                     config: function(ConfigService) {
                         var configUrl = window.configUrl;
                         
