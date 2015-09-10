@@ -551,7 +551,7 @@ View.prototype.stepLevelChanged = function(){
  * If this is a duplicate node, launched the previous work of the node
  * it represents.
  */
-View.prototype.launchPrevWork = function(nodeId){
+View.prototype.launchPrevWork = function(nodeId) {
 	$('#previousWorkDialog').show();
 	this.activeNode = this.getProject().getNodeById(nodeId).getNode(); //calling getNode gets the original node even if this is a duplicate
 	

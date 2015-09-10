@@ -333,7 +333,7 @@ public class ProjectServiceImpl implements ProjectService {
 
 				Integer wiseVersion = project.getWiseVersion();
 
-				if (wiseVersion == 5) {
+				if (wiseVersion != null && wiseVersion == 5) {
 					// load WISE5
 					String wise5URL = wiseBaseURL + "/project/" + project.getId();
 					return new ModelAndView(new RedirectView(wise5URL));

@@ -46,7 +46,7 @@ View.prototype.populateToCol = function(){
  * nodes that are already in the list to populate the FROM columns
  * select list with the appropriate option elements.
  */
-View.prototype.populateFromCol = function(){
+View.prototype.populateFromCol = function() {
 	var parent = document.getElementById('selectFrom');
 	var fromNodes = this.removeUnwanted(this.getProject().getLeafNodes());
 	
@@ -63,20 +63,20 @@ View.prototype.populateFromCol = function(){
 	 * will end up with all the fromNodes in the order that
 	 * they appear in the project.
 	 */
-	for(var x=0; x<projectNodeIds.length; x++) {
+	for (var x = 0; x < projectNodeIds.length; x++) {
 		var nodeId = projectNodeIds[x];
 		
 		//loop through all the fromNodes
-		for(var y=0; y<fromNodes.length; y++) {
+		for (var y = 0; y < fromNodes.length; y++) {
 			var node = fromNodes[y];
-			if(node.id == nodeId) {
+			if (node.id == nodeId) {
 				fromNodesOrdered.push(node);
 			}
 		}
 	}
 	
-	if(fromNodesOrdered){
-		for(var w=0;w<fromNodesOrdered.length;w++){
+	if (fromNodesOrdered) {
+		for (var w = 0; w < fromNodesOrdered.length; w++) {
 			//generate the node label e.g. "1.3: Analyze the data"
 			var nodeId = fromNodesOrdered[w].id;
 			var title = fromNodesOrdered[w].title;
