@@ -30,7 +30,7 @@ define(['angular', 'configService', 'openResponseService', 'notebookService',
                      StudentAssetService,
                      StudentDataService) {
 
-            this.getTemplateUrl = function(){
+            this.getTemplateUrl = function() {
               return this.templateUrl;
             };
 
@@ -40,30 +40,22 @@ define(['angular', 'configService', 'openResponseService', 'notebookService',
             this.itemSource = false;
             this.applicationNodes = ProjectService.getApplicationNodes();
 
-            this.retrieveAssets = function() {
+            this.retrieveNotebookItems = function() {
+                // fetch all assets first because a subset of it will be referenced by a notebook item
                 StudentAssetService.retrieveAssets().then(angular.bind(this, function(studentAssets) {
-                    this.studentAssets = studentAssets;
-                    this.calculateTotalUsage();
+                     NotebookService.retrieveNotebookItems().then(angular.bind(this, function(notebook) {
+                        this.notebook = notebook;
+                     }));
                 }));
             };
 
-            this.calculateTotalUsage = function() {
-                // get the total size
-                var totalSizeSoFar = 0;
-                for (var i = 0; i < this.studentAssets.length; i++) {
-                    var studentAsset = this.studentAssets[i];
-                    var studentAssetSize = studentAsset.fileSize;
-                    totalSizeSoFar += studentAssetSize;
+            this.uploadStudentAssetNotebookItems = function(files) {
+                if (files != null) {
+                    for (var f = 0; f < files.length; f++) {
+                        var file = files[f];
+                        NotebookService.uploadStudentAssetNotebookItem(file);
+                    }
                 }
-                this.studentAssets.totalSize = totalSizeSoFar;
-                this.studentAssets.totalSizeMax = ConfigService.getStudentMaxTotalAssetsSize();
-                this.studentAssets.usagePercentage = this.studentAssets.totalSize / this.studentAssets.totalSizeMax * 100;
-            };
-
-            this.upload = function(files) {
-                StudentAssetService.uploadAssets(files).then(angular.bind(this, function() {
-                    this.retrieveAssets();
-                }));
             };
 
             this.deleteStudentAsset = function(studentAsset) {
@@ -74,11 +66,7 @@ define(['angular', 'configService', 'openResponseService', 'notebookService',
                 }));
             };
 
-            $scope.$on('studentAssetsUpdated', angular.bind(this, function() {
-                this.retrieveAssets();
-            }));
-
-            $scope.$on('notebookChanged', angular.bind(this, function(event, args) {
+            $scope.$on('notebookUpdated', angular.bind(this, function(event, args) {
                 this.notebook = args.notebook;
             }));
 
@@ -92,8 +80,9 @@ define(['angular', 'configService', 'openResponseService', 'notebookService',
                 NotebookService.deleteItem(item);
             };
 
-            this.notebookItemDragStartCallback = function(event, ui, item) {
-                $(ui.helper.context).data('importNotebookItem', item);
+            this.notebookItemDragStartCallback = function(event, ui, notebookItem) {
+                $(ui.helper.context).data('objectType', 'NotebookItem');
+                $(ui.helper.context).data('objectData', notebookItem);
             };
 
             this.myWorkDragStartCallback = function(event, ui, nodeId, nodeType) {
@@ -102,10 +91,12 @@ define(['angular', 'configService', 'openResponseService', 'notebookService',
                 $(ui.helper.context).data('importWorkNodeType', nodeType);
             };
 
+                /*
             this.studentAssetDragStartCallback = function(event, ui, studentAsset) {
                 $(ui.helper.context).data('objectType', 'StudentAsset');
                 $(ui.helper.context).data('objectData', studentAsset);
             };
+            */
 
             this.log = function() {
             };
@@ -130,7 +121,7 @@ define(['angular', 'configService', 'openResponseService', 'notebookService',
                 return result;
             };
 
-            // retrieve assets at the beginning
-            this.retrieveAssets();
+            // retrieve assets when notebook is opened
+            this.retrieveNotebookItems();
         });
     });

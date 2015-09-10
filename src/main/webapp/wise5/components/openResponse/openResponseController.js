@@ -303,6 +303,21 @@ define(['app'], function(app) {
             }
             
             var objectType = $(ui.helper.context).data('objectType');
+            if (objectType === 'NotebookItem') {
+                var notebookItem = $(ui.helper.context).data('objectData');
+                if (notebookItem.studentAsset != null) {
+                    // we're importing a StudentAssetNotebookItem
+                    var studentAsset = notebookItem.studentAsset;
+                    StudentAssetService.copyAssetForReference(studentAsset).then(angular.bind(this, function(copiedAsset) {
+                        if (copiedAsset != null) {
+                            var copiedAssetImg = '<img notebookItemId="' + notebookItem.id + '" studentAssetId="' + copiedAsset.id + '" id="studentAsset_' + copiedAsset.id + '" class="studentAssetReference" src="' + copiedAsset.iconURL + '"></img>';
+                            this.studentResponse += copiedAssetImg;
+                            this.studentDataChanged();
+                        }
+                    }));
+                }
+            }
+            /*
             var importWorkNodeState = $(ui.helper.context).data('importWorkNodeState');
             var importWorkNodeType = $(ui.helper.context).data('importWorkNodeType');
             var importNotebookItem = $(ui.helper.context).data('importNotebookItem');
@@ -335,16 +350,16 @@ define(['app'], function(app) {
                 this.setStudentWork(populatedNodeState);
                 this.studentDataChanged();
             } else if (objectType === 'StudentAsset') {
-                var studentAsset = $(ui.helper.context).data('objectData');
-                StudentAssetService.copyAssetForReference(studentAsset).then(angular.bind(this, function(copiedAsset) {
-                    if (copiedAsset != null) {
-                        var copiedAssetImg = '<img studentAssetId="' + copiedAsset.id + '" id="studentAsset_' + copiedAsset.id + '" class="studentAssetReference" src="' + copiedAsset.iconURL + '"></img>';
-                        this.studentResponse += copiedAssetImg;
-
-                        this.studentDataChanged();
-                    }
-                }));
-            }
+             var studentAsset = $(ui.helper.context).data('objectData');
+             StudentAssetService.copyAssetForReference(studentAsset).then(angular.bind(this, function(copiedAsset) {
+             if (copiedAsset != null) {
+             var copiedAssetImg = '<img studentAssetId="' + copiedAsset.id + '" id="studentAsset_' + copiedAsset.id + '" class="studentAssetReference" src="' + copiedAsset.iconURL + '"></img>';
+             this.studentResponse += copiedAssetImg;
+             this.studentDataChanged();
+             }
+             }));
+             }
+             */
         });
         
         /**

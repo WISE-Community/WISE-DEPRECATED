@@ -3,7 +3,19 @@ define(['configService'], function(configService) {
     var service = ['$http', '$q', 'Upload', '$rootScope', 'ConfigService',
                                     function($http, $q, Upload, $rootScope, ConfigService) {
         var serviceObject = {};
-        
+
+        serviceObject.allAssets = [];  // keep track of student's assets
+
+        serviceObject.getAssetById = function(assetId) {
+            for (var a = 0; a < this.allAssets.length; a++) {
+                var asset = this.allAssets[a];
+                if (asset.id === assetId) {
+                    return asset;
+                }
+            }
+            return null;
+        };
+
         serviceObject.retrieveAssets = function() {
             var config = {};
             config.method = 'GET';
@@ -32,6 +44,7 @@ define(['configService'], function(configService) {
                         result.push(asset);
                     }
                 }
+                this.allAssets = result;
                 return result;
             }));
         };
@@ -92,6 +105,8 @@ define(['configService'], function(configService) {
                     asset.type = 'file';
                     asset.iconURL = 'wise5/vle/notebook/file.png';
                 }
+                this.allAssets.push(asset);
+                $rootScope.$broadcast('studentAssetsUpdated');
                 deferred.resolve(asset);
             }));
 
@@ -150,6 +165,7 @@ define(['configService'], function(configService) {
                             copiedAsset.type = 'file';
                             copiedAsset.iconURL = 'wise5/vle/notebook/file.png';
                         }
+                        //$rootScope.$broadcast('studentAssetsUpdated');
                         return copiedAsset;
                     }
                 }
@@ -171,6 +187,9 @@ define(['configService'], function(configService) {
 
             return $http(config).then(angular.bind(this, function(result) {
                 //var deletedAsset = result.data;
+                // also remove from local copy of all assets
+                this.allAssets = this.allAssets.splice(this.allAssets.indexOf(studentAsset), 1);
+                $rootScope.$broadcast('studentAssetsUpdated');
                 return studentAsset;
             }));
         };

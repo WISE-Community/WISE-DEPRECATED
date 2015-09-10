@@ -28,6 +28,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.annotation.wise5.AnnotationDao;
+import org.wise.portal.dao.work.NotebookItemDao;
 import org.wise.portal.dao.work.StudentAssetDao;
 import org.wise.portal.dao.work.StudentWorkDao;
 import org.wise.portal.dao.work.EventDao;
@@ -40,6 +41,7 @@ import org.wise.portal.service.vle.wise5.VLEService;
 import org.wise.portal.service.workgroup.WorkgroupService;
 import org.wise.vle.domain.annotation.wise5.Annotation;
 import org.wise.vle.domain.work.Event;
+import org.wise.vle.domain.work.NotebookItem;
 import org.wise.vle.domain.work.StudentAsset;
 import org.wise.vle.domain.work.StudentWork;
 
@@ -65,6 +67,9 @@ public class VLEServiceImpl implements VLEService {
 
     @Autowired
     private StudentAssetDao studentAssetDao;
+
+    @Autowired
+    private NotebookItemDao notebookItemDao;
 
     @Autowired
     private RunService runService;
@@ -564,5 +569,131 @@ public class VLEServiceImpl implements VLEService {
             }
         }
         return studentAsset;
+    }
+
+    @Override
+    public List<NotebookItem> getNotebookItems(
+            Integer id, Integer runId, Integer periodId, Integer workgroupId,
+            String nodeId, String componentId) {
+
+        Run run = null;
+        if (runId != null) {
+            try {
+                boolean doEagerFetch = false;
+                run = runService.retrieveById(new Long(runId), doEagerFetch);
+            } catch (ObjectNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        Group period = null;
+        if (periodId != null) {
+            try {
+                period = groupService.retrieveById(new Long(periodId));
+            } catch (ObjectNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        WISEWorkgroup workgroup = null;
+        if (workgroupId != null) {
+            try {
+                workgroup = (WISEWorkgroup) workgroupService.retrieveById(new Long(workgroupId));
+            } catch (ObjectNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return notebookItemDao.getNotebookItemListByParams(
+                id, run, period, workgroup,
+                nodeId, componentId);
+    }
+
+    @Override
+    public NotebookItem saveNotebookItem(Integer id, Integer runId, Integer periodId, Integer workgroupId,
+                                         String nodeId, String componentId,
+                                         Integer studentWorkId, Integer studentAssetId,
+                                         String title, String description,
+                                         String clientSaveTime, String clientDeleteTime) {
+        NotebookItem notebookItem;
+        if (id != null) {
+            // if the id is passed in, the client is requesting an update, so fetch the StudentWork from data store
+            try {
+                notebookItem = (NotebookItem) notebookItemDao.getById(id);
+            } catch (ObjectNotFoundException e) {
+                e.printStackTrace();
+                return null;
+            }
+        } else {
+            // the id was not passed in, so we're creating a new StudentWork from scratch
+            notebookItem = new NotebookItem();
+        }
+        if (runId != null) {
+            try {
+                boolean doEagerFetch = false;
+                notebookItem.setRun(runService.retrieveById(new Long(runId), doEagerFetch));
+            } catch (ObjectNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        if (periodId != null) {
+            try {
+                notebookItem.setPeriod(groupService.retrieveById(new Long(periodId)));
+            } catch (ObjectNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        if (workgroupId != null) {
+            try {
+                notebookItem.setWorkgroup((WISEWorkgroup) workgroupService.retrieveById(new Long(workgroupId)));
+            } catch (ObjectNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        if (nodeId != null) {
+            notebookItem.setNodeId(nodeId);
+        }
+        if (componentId != null) {
+            notebookItem.setComponentId(componentId);
+        }
+        if (studentWorkId != null) {
+            try {
+                notebookItem.setStudentWork((StudentWork) studentWorkDao.getById(studentWorkId));
+            } catch (ObjectNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        if (studentAssetId != null) {
+            try {
+                notebookItem.setStudentAsset((StudentAsset) studentAssetDao.getById(studentAssetId));
+            } catch (ObjectNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        if (title != null) {
+            notebookItem.setTitle(title);
+        }
+        if (description != null) {
+            notebookItem.setDescription(description);
+        }
+        if (clientSaveTime != null) {
+            Timestamp clientSaveTimestamp = new Timestamp(new Long(clientSaveTime));
+            notebookItem.setClientSaveTime(clientSaveTimestamp);
+
+            // set serverSaveTime
+            Calendar now = Calendar.getInstance();
+            Timestamp serverSaveTimestamp = new Timestamp(now.getTimeInMillis());
+            notebookItem.setServerSaveTime(serverSaveTimestamp);
+        }
+        if (clientDeleteTime != null) {
+            Timestamp clientDeleteTimestamp = new Timestamp(new Long(clientDeleteTime));
+            notebookItem.setClientDeleteTime(clientDeleteTimestamp);
+
+            // set serverDeleteTime
+            Calendar now = Calendar.getInstance();
+            Timestamp serverDeleteTimestamp = new Timestamp(now.getTimeInMillis());
+            notebookItem.setServerDeleteTime(serverDeleteTimestamp);
+        }
+
+        notebookItemDao.save(notebookItem);
+        return notebookItem;
     }
 }

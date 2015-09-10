@@ -2171,8 +2171,9 @@
             "components": [
                {
                   "id": "f4n05tk66b",
-                  "componentType": "Brainstorm",
-                  "prompt": "<p>1. Take a picture of your Newton Scooter and upload it here. Press SAVE!</p>\n<p>2. Have TWO other classmates answer these questions. They should write their responses as a comment to your picture. Press SAVE after each classmate responds.</p>\n<ul>\n<li>How does this scooter store potential energy well or how could it be improved?</li>\n<li>How does this scooter use kinetic energy well or how could it be improved?</li>\n</ul>\n<p>&nbsp;</p>"
+                  "componentType": "Discussion",
+                  "prompt": "<p>1. Take a picture of your Newton Scooter and upload it here. Press SAVE!</p>\n<p>2. Have TWO other classmates answer these questions. They should write their responses as a comment to your picture. Press SAVE after each classmate responds.</p>\n<ul>\n<li>How does this scooter store potential energy well or how could it be improved?</li>\n<li>How does this scooter use kinetic energy well or how could it be improved?</li>\n</ul>\n<p>&nbsp;</p>",
+                  "showSubmitButton": true
                }
             ]
          }

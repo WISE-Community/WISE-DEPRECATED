@@ -183,6 +183,24 @@
         primary key (id)
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+    create table notebookItems (
+        id integer not null auto_increment,
+        clientDeleteTime datetime,
+        clientSaveTime datetime not null,
+        componentId varchar(30),
+        description text,
+        nodeId varchar(30),
+        serverDeleteTime datetime,
+        serverSaveTime datetime not null,
+        title varchar(255),
+        periodId bigint not null,
+        runId bigint not null,
+        studentAssetId integer,
+        studentWorkId integer,
+        workgroupId bigint not null,
+        primary key (id)
+    ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
     create table offerings (
         id bigint not null auto_increment,
         OPTLOCK integer,
@@ -406,9 +424,9 @@
         clientSaveTime datetime not null,
         componentId varchar(30),
         componentType varchar(30),
+        fileName varchar(255) not null,
         filePath varchar(255) not null,
         fileSize bigint not null,
-        fileName varchar(255) not null,
         isReferenced bit not null,
         nodeId varchar(30),
         serverDeleteTime datetime,
@@ -580,6 +598,10 @@
 
     create index runIdIndex on node (runId);
 
+    create index runIdIndex on notebookItems (runId);
+
+    create index workgroupIdIndex on notebookItems (workgroupId);
+
     create index runIdAndWorkgroupIdIndex on portfolio (runId, workgroupId);
 
     alter table projects 
@@ -728,6 +750,31 @@
         add constraint FK_iekdwpu7jkpuwafy4uvocjg3s 
         foreign key (owner) 
         references users (id);
+
+    alter table notebookItems 
+        add constraint FK_ise5npapdk8l8oboed1cwdpvy 
+        foreign key (periodId) 
+        references groups (id);
+
+    alter table notebookItems 
+        add constraint FK_ovww8da6he3tajdqcv5kjnkyc 
+        foreign key (runId) 
+        references runs (id);
+
+    alter table notebookItems 
+        add constraint FK_qhj21osipe081frv53u06gsf7 
+        foreign key (studentAssetId) 
+        references studentAssets (id);
+
+    alter table notebookItems 
+        add constraint FK_o7cl4ipb1r8i5golyna3hd3iq 
+        foreign key (studentWorkId) 
+        references studentWork (id);
+
+    alter table notebookItems 
+        add constraint FK_1kysecht20yj67y65kh1n1agw 
+        foreign key (workgroupId) 
+        references wiseworkgroups (id);
 
     alter table peerreviewgate 
         add constraint FK_bulp6tbwu3b9o6eagiq95i2r9 

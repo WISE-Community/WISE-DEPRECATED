@@ -682,7 +682,7 @@ function convertBrainstorm(node, nodeContent) {
     var component = {};
 
     component.id = createRandomId();
-    component.componentType = 'Brainstorm';
+    component.componentType = 'Discussion';
 
     var prompt = '';
 
