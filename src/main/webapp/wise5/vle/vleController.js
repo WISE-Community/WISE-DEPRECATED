@@ -1,6 +1,6 @@
 define(['app'], 
         function(app) {
-    app.$controllerProvider.register('VLEController', 
+    app.$controllerProvider.register('VLEController',
             function($scope,
                     $rootScope,
                     $state,
@@ -13,13 +13,11 @@ define(['app'],
                     SessionService,
                     StudentDataService,
                     StudentWebSocketService,
-                    $mdDialog,
-                    $mdSidenav,
-                    $mdComponentRegistry,
                     $ocLazyLoad) {
         this.mode = 'student';
         this.layoutLogic = ConfigService.layoutLogic;
         this.currentNode = null;
+        this.themeLoaded = false;
 
         this.setLayoutState = function() {
             var layoutState = 'nav'; // default layout state
@@ -37,22 +35,6 @@ define(['app'],
             this.layoutState = layoutState;
         };
 
-        // alert user when inactive for a long time
-        $scope.$on('showSessionWarning', angular.bind(this, function() {
-            var confirm = $mdDialog.confirm()
-                .parent(angular.element(document.body))
-                .title('Session Timeout')
-                .content('You have been inactive for a long time. Do you want to stay logged in?')
-                .ariaLabel('Session Timeout')
-                .ok('YES')
-                .cancel('No');
-            $mdDialog.show(confirm).then(function() {
-                SessionService.renewSession();
-            }, function() {
-                SessionService.forceLogOut();
-            });
-        }));
-        
         $scope.$on('currentNodeChanged', angular.bind(this, function(event, args) {
             var previousNode = args.previousNode;
             var currentNode = args.currentNode;
@@ -64,11 +46,11 @@ define(['app'],
             StudentDataService.updateNodeStatuses();
 
             this.setLayoutState();
-            
+
             StudentWebSocketService.sendStudentStatus();
             $state.go('root.vle', {nodeId:nodeId});
         }));
-        
+
         $scope.$on('componentStudentDataChanged', angular.bind(this, function() {
             StudentDataService.updateNodeStatuses();
         }));
@@ -97,7 +79,7 @@ define(['app'],
 
             $rootScope.$broadcast('goHome');
         };
-        
+
         this.logOut = function() {
             // save logOut event
             var nodeId = null;
@@ -111,26 +93,6 @@ define(['app'],
             $rootScope.$broadcast('logOut');
         };
 
-        // capture notebook open/close events
-        $mdComponentRegistry.when('notebook').then(function(it){
-            $scope.$watch(function() {
-                return it.isOpen();
-            }, function(isOpen) {
-                var nodeId = null;
-                var componentId = null;
-                var componentType = null;
-                var category = "Notebook";
-                var eventData = {};
-                var currentNode = CurrentNodeService.getCurrentNode();
-                eventData.curentNodeId = currentNode == null ? null : currentNode.id;
-
-                var event = isOpen ? "notebookOpened" : "notebookClosed";
-
-                // save notebook open/close event
-                StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
-            });
-        });
-          
         this.layoutLogicStarMap = function(VLEState) {
             if (VLEState.state === 'initial') {
                 this.showProjectDiv = true;
@@ -140,7 +102,7 @@ define(['app'],
                 this.showNodeDiv = false;
             }
         };
-        
+
         this.chooseTransition = function(transitions) {
             var transitionResult = null;
             if (transitions != null) {
@@ -164,43 +126,43 @@ define(['app'],
             //$(ui.helper.context).data('importWorkNodeState', StudentDataService.getLatestNodeStateByNodeId(nodeId));
             //$(ui.helper.context).data('importWorkNodeType', nodeType);
         };
-        
+
         this.notebookDropCallback = angular.bind(this, function(event, ui) {
             console.log('vleController.notebookDropCallback');
             //var importWorkNodeState = $(ui.helper.context).data('importWorkNodeState');
             //var importWorkNodeType = $(ui.helper.context).data('importWorkNodeType');
             //var populatedNodeState = OpenResponseService.populateNodeState(importWorkNodeState, importWorkNodeType);
-            
+
             //this.setStudentWork(populatedNodeState);
         });
 
         var nodeId = null;
         var stateParams = null;
         var stateParamNodeId = null;
-        
+
         if ($state != null) {
             stateParams = $state.params;
         }
-        
+
         if (stateParams != null) {
             stateParamNodeId = stateParams.nodeId;
         }
-        
+
         //var stateParamNodeId = $stateParams.nodeId;
         if (stateParamNodeId != null && stateParamNodeId !== '') {
             nodeId = stateParamNodeId;
         } else {
             var latestComponentState = StudentDataService.getLatestComponentState();
-            
+
             if (latestComponentState != null) {
                 nodeId = latestComponentState.nodeId;
             }
         }
-        
+
         if (nodeId == null || nodeId === '') {
             nodeId = ProjectService.getStartNodeId();
         }
-        
+
         this.projectStyle = ProjectService.getStyle();
         this.projectName = ProjectService.getName();
 
@@ -213,7 +175,7 @@ define(['app'],
         this.toggleNotebook = function() {
             this.notebookOpen = !this.notebookOpen;
         };
-        
+
         /**
          * The user has moved the mouse on the page
          */
@@ -224,7 +186,7 @@ define(['app'],
              */
             SessionService.mouseEventOccurred();
         };
-                
+
         // Make sure if we drop something on the page we don't navigate away
         // https://developer.mozilla.org/En/DragDrop/Drag_Operations#drop
         $(document.body).on('dragover', function(e) {
@@ -240,10 +202,11 @@ define(['app'],
         this.theme = ProjectService.getTheme();
         this.themePath = "wise5/vle/themes/" + this.theme;
         var scope = this;
-        // load theme navigation module + files
+        // load theme module + files
         $ocLazyLoad.load([
-            this.themePath + '/navigation/navigation.js'
+            this.themePath + '/theme.js'
         ]).then(function(){
+            scope.themeLoaded = true;
             scope.setLayoutState();
             scope.updateLayout();
         });

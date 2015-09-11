@@ -159,8 +159,7 @@ define([
                  $stateProvider,
                  $compileProvider,
                  $controllerProvider,
-                 $mdThemingProvider,
-                 $ocLazyLoadProvider) {
+                 $mdThemingProvider) {
 
             $urlRouterProvider.otherwise('/vle/');
 
@@ -171,10 +170,15 @@ define([
                 .state('root', {
                     url: '',
                     abstract: true,
-                    templateUrl: 'wise5/vle/vle.html',
-                    templateProvider: function(ProjectService){
-
-                    },
+                    //templateUrl: 'wise5/vle/vle.html',
+                    templateProvider: ['$http', 'ProjectService', function ($http, ProjectService) {
+                        var vlePath = 'wise5/vle/themes/' + ProjectService.getTheme();
+                        return $http.get(vlePath + '/vle.html').then(
+                            function (response) {
+                                return response.data;
+                            }
+                        );
+                    }],
                     controller: 'VLEController as vleController',
                     resolve: {
                         vleController: app.loadController('vleController'),
@@ -200,10 +204,19 @@ define([
                     url: '/vle/:nodeId',
                     views: {
                         'navigationView': {
-                            templateUrl: 'wise5/vle/navigation/navigation.html'//,
-                            //resolve: {
-                                //navigationController: app.loadController('navigationController')
-                            //}
+                            //templateUrl: 'wise5/vle/navigation/navigation.html',
+                            templateProvider: ['$http', 'ProjectService', function ($http, ProjectService) {
+                                var navPath = 'wise5/vle/themes/' + ProjectService.getTheme() + '/navigation/navigation.html';
+                                return $http.get(navPath).then(
+                                    function (response) {
+                                        return response.data;
+                                    }
+                                );
+                            }],
+                            controller: 'NavigationController as navCtrl',
+                            resolve: {
+                                navigationController: app.loadController('navigationController')
+                            }
                         },
                         'nodeView': {
                             templateUrl: 'wise5/node/index.html',

@@ -97,6 +97,14 @@ define(['projectService'], function(projectService) {
             // set the current node
             this.setCurrentNode(node);
         };
+
+        /**
+         * Broadcast a listenable event that a locked node has been clicked (attempted to be opened)
+         * @param nodeId
+         */
+        serviceObject.nodeClickLocked = function(nodeId) {
+            $rootScope.$broadcast('nodeClickLocked', {nodeId: nodeId});
+        };
         
         return serviceObject;
     }];

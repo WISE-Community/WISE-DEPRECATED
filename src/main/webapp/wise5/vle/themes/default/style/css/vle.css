@@ -2118,11 +2118,11 @@ a:hover, a:focus { border-bottom: 1px solid; }
 
 .l-constrained { margin-left: auto; margin-right: auto; max-width: 1200px; position: relative; }
 
-.l-footer { position: fixed; bottom: 0; width: 100%; z-index: 1; background-color: #ffffff; }
+.l-footer { position: fixed; bottom: 0; width: 100%; z-index: 1; background-color: #ffffff; display: flex; height: 42px; }
 
 .l-main { background-color: #eeeeee; }
 
-.l-nav { background-color: #eeeeee; padding-top: 16px; padding-bottom: 32px; }
+.l-nav { background-color: #eeeeee; margin-bottom: 42px; }
 
 .l-sidebar__header { background-color: #ffffff; color: #795C3A; }
 .l-sidebar__header md-select { color: rgba(0, 0, 0, 0.87); }
@@ -2130,9 +2130,12 @@ a:hover, a:focus { border-bottom: 1px solid; }
 .nav-head { color: rgba(0, 0, 0, 0.54); font-weight: 500; }
 .nav-head md-icon { line-height: 20px; }
 
-/*.nav-group, .nav-root { position: absolute; left: 0; right: 0;
- &.ng-enter, &.ng-leave { @include transition(0.5s linear opacity); } &.ng-enter { opacity: 0; } &.ng-leave { opacity: 1; } &.ng-enter.ng-enter-active { opacity: 1; } &.ng-leave.ng-leave-active { opacity: 0; }
-}*/
+.nav-group, .nav-root { position: absolute; left: 0; right: 0; padding-bottom: 32px; }
+.nav-group.ng-enter, .nav-root.ng-enter { opacity: 0; }
+.nav-group.ng-leave, .nav-root.ng-leave { opacity: 1; }
+.nav-group.ng-enter.ng-enter-active, .nav-root.ng-enter.ng-enter-active { opacity: 1; }
+.nav-group.ng-leave.ng-leave-active, .nav-root.ng-leave.ng-leave-active { opacity: 0; }
+
 .group-info { padding: 16px; -moz-border-radius-bottomleft: 0; -webkit-border-bottom-left-radius: 0; border-bottom-left-radius: 0; -moz-border-radius-bottomright: 0; -webkit-border-bottom-right-radius: 0; border-bottom-right-radius: 0; }
 
 .group-info__avatar.avatar { height: 64px; width: 64px; }
@@ -2163,4 +2166,4 @@ a:hover, a:focus { border-bottom: 1px solid; }
 
 .nav-item__info { color: rgba(0, 0, 0, 0.54); display: inline-block; }
 
-.progress-wrapper { padding: 8px 0; }
+.progress-wrapper { padding: 8px 0; cursor: pointer; }

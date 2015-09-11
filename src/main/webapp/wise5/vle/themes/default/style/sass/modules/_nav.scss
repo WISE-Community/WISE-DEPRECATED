@@ -7,13 +7,14 @@
   }
 }
 
-/*.nav-group, .nav-root {
+.nav-group, .nav-root {
   position: absolute;
   left: 0;
   right: 0;
+  padding-bottom: 32px;
 
   &.ng-enter, &.ng-leave {
-    @include transition(0.5s linear opacity);
+    //@include transition(0.5s linear opacity);
   }
   &.ng-enter {
     opacity: 0;
@@ -23,11 +24,12 @@
   }
   &.ng-enter.ng-enter-active {
     opacity: 1;
+    //@include transition-delay(1s);
   }
   &.ng-leave.ng-leave-active {
     opacity: 0;
   }
-}*/
+}
 
 .group-info {
   padding: 16px;
@@ -135,4 +137,5 @@
 
 .progress-wrapper {
   padding: 8px 0;
+  cursor: pointer;
 }

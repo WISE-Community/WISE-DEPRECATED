@@ -18,7 +18,7 @@
 
 	</head>
 	<body layout="row">
-		<div ui-view  layout="column" layout-fill></div>
+		<div ui-view layout="column" layout-fill></div>
 
 		<script>
 			var configUrl = '${vleConfigUrl}';
