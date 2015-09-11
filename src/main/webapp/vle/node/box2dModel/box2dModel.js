@@ -1305,6 +1305,12 @@ Box2dModel.prototype.save = function(evt) {
 		//push the state object into this or object's own copy of states
 		this.states.push(box2dModelState);
 
+        // get the latest node visit
+        var nodeVisit = this.view.getState().getCurrentNodeVisit();
+
+        // process teacher notifications if there are any
+        this.processTeacherNotifications(nodeVisit, box2dModelState);
+
 		// we are not returning clear GLOBAL_PA
 		return box2dModelState;
 	} else {
@@ -1312,7 +1318,45 @@ Box2dModel.prototype.save = function(evt) {
 	}
 };
 
+/**
+ * Process teacher notifications if this step has been authored to
+ * use teacher notifications
+ * @param nodeVisit the current node visit
+ * @param nodeState the current node state
+ */
+Box2dModel.prototype.processTeacherNotifications = function(nodeVisit, nodeState) {
+    if (nodeVisit != null && nodeState != null) {
+        // get the step content
+        var stepContent = this.node.content.getContentJSON()
 
+        // get teacher notifications from the step content
+        var teacherNotifications = stepContent.teacherNotifications;
+
+        if (teacherNotifications != null) {
+
+            /*
+             * loop through all the teacher notifications for this step
+             * and check if we need to activate any of them
+             */
+            for (var t = 0; t < teacherNotifications.length; t++) {
+                // get a teacher notification
+                var teacherNotification = teacherNotifications[t];
+
+                if (teacherNotification != null) {
+                    var teacherNotificationType = teacherNotification.type;
+
+                    if (teacherNotificationType === 'minTotalTimeSpentOnStep') {
+                        this.view.handleMinTotalTimeSpentOnStepTeacherNotification(
+                            this.node.id, teacherNotification, nodeVisit, nodeState);
+                    } else if (teacherNotificationType === 'maxTotalTimeSpentOnStep') {
+                        this.view.handleMaxTotalTimeSpentOnStepTeacherNotification(
+                            this.node.id, teacherNotification, nodeVisit, nodeState);
+                    }
+                }
+            }
+        }
+    }
+};
 
 //used to notify scriptloader that this script has finished loading
 if(typeof eventManager != 'undefined'){
