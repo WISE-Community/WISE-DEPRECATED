@@ -1,3 +1,5 @@
+@import "compass";
+
 // Angular Material customizations and additions
 
 md-toolbar {
@@ -29,4 +31,15 @@ md-card[md-ink-ripple], md-card-content[md-ink-ripple] {
 
 md-card {
   @include border-radius(4px);
+}
+
+md-progress-linear:not([md-mode="indeterminate"]) {
+
+  .md-container.md-ready {
+    transform: none;
+  }
+
+  .md-container {
+    transition: none;
+  }
 }

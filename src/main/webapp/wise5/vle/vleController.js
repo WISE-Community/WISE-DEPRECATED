@@ -15,12 +15,11 @@ define(['app'],
                     StudentWebSocketService,
                     $mdDialog,
                     $mdSidenav,
-                    $mdComponentRegistry) {
+                    $mdComponentRegistry,
+                    $ocLazyLoad) {
         this.mode = 'student';
         this.layoutLogic = ConfigService.layoutLogic;
         this.currentNode = null;
-        this.theme = ProjectService.getTheme();
-        this.themePath = "wise5/vle/themes/" + this.theme;
 
         this.setLayoutState = function() {
             var layoutState = 'nav'; // default layout state
@@ -37,8 +36,6 @@ define(['app'],
 
             this.layoutState = layoutState;
         };
-
-        this.setLayoutState();
 
         // alert user when inactive for a long time
         $scope.$on('showSessionWarning', angular.bind(this, function() {
@@ -81,8 +78,6 @@ define(['app'],
                 ProjectService.getProject();
             }
         };
-        
-        this.updateLayout();
 
         this.showNavigation = function() {
             this.layoutState = 'nav';
@@ -163,48 +158,7 @@ define(['app'],
             }
             return transitionResult;
         };
-        
-        this.goToNextNode = function() {
-            var currentNode = CurrentNodeService.getCurrentNode();
-            if (currentNode != null) {
-                var currentNodeId = currentNode.id;
-                var transitions = ProjectService.getTransitionsByFromNodeId(currentNodeId);
-                var transition = this.chooseTransition(transitions);
-                if (transition != null) {
-                    var toNodeId = transition.to;
-                    //var mode = this.mode;
-                    //this.loadNode(toNodeId, mode);
-                    CurrentNodeService.setCurrentNodeByNodeId(toNodeId);
-                }
-            }
-        };
-       
-        this.goToPrevNode = function() {
-            var currentNode = CurrentNodeService.getCurrentNode();
-            if (currentNode != null) {
-                var currentNodeId = currentNode.id;
-                var transitions = ProjectService.getTransitionsByToNodeId(currentNodeId);
-                
-                if (transitions != null && transitions.length === 1) {
-                    var transition = transitions[0];
-                    
-                    if (transition != null) {
-                        var fromNodeId = transition.from;
-                        CurrentNodeService.setCurrentNodeByNodeId(fromNodeId);
-                    }
-                } else {
-                    var stackHistory = StudentDataService.getStackHistory();
-                    var prevNodeId = null;
-                    if (stackHistory.length > 1) {
-                        prevNodeId = StudentDataService.getStackHistoryAtIndex(-2);
-                        //var mode = this.mode;
-                        //this.loadNode(prevNodeId, mode);
-                        CurrentNodeService.setCurrentNodeByNodeId(prevNodeId);
-                    }
-                }
-            }
-        };
-        
+
         this.notebookDragStartCallback = function(event, ui) {
             console.log('vleController.notebookDragStartCallback');
             //$(ui.helper.context).data('importWorkNodeState', StudentDataService.getLatestNodeStateByNodeId(nodeId));
@@ -281,6 +235,17 @@ define(['app'],
        $(document.body).on('drop', function(e){
             e.preventDefault();
             return false;
+        });
+
+        this.theme = ProjectService.getTheme();
+        this.themePath = "wise5/vle/themes/" + this.theme;
+        var scope = this;
+        // load theme navigation module + files
+        $ocLazyLoad.load([
+            this.themePath + '/navigation/navigation.js'
+        ]).then(function(){
+            scope.setLayoutState();
+            scope.updateLayout();
         });
     });
 });

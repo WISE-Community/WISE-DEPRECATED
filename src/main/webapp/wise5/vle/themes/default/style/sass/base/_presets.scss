@@ -8,6 +8,20 @@ body {
   background: $body-bgcolor;
 }
 
+// Typography
+h1, h2, h3, h4, h5, h6 {
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+}
+
+.success {
+  color: $success-color;
+}
+
+.warn {
+  color: $warn-color;
+}
+
 // Links
 a {
   color: $primary-color;
@@ -34,7 +48,7 @@ a {
   }
 }
 
-// Images
+// Images & Icons
 .avatar {
   border-radius: 50%;
   box-sizing: content-box;

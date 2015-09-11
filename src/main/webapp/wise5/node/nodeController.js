@@ -376,7 +376,7 @@ define(['app'], function(app) {
          * that triggered the save
          */
         this.createAndSaveComponentData = function(isAutoSave, componentId) {
-            
+
             // obtain the component states from the children
             var componentStates = this.createComponentStates(isAutoSave, componentId);
             var componentAnnotations = this.getComponentAnnotations();
@@ -388,24 +388,13 @@ define(['app'], function(app) {
                 (componentEvents != null && componentEvents.length > 0)) {
                 // save the component states to the server
                 StudentDataService.saveToServer(componentStates, nodeStates, componentEvents, componentAnnotations);
-            }
-        };
 
-        /**
-         * Creates a blank new NodeState for this MultipleChoice node
-         */
-        this.testNodeStateSave = function() {
-            // create a new node state
-            var nodeState = NodeService.createNewNodeState();
-            nodeState.runId = ConfigService.getRunId();
-            nodeState.periodId = ConfigService.getPeriodId();
-            nodeState.workgroupId = ConfigService.getWorkgroupId();
-            nodeState.nodeId = this.nodeId;
-            nodeState.isAutoSave = false;
-            nodeState.studentData = {"testData":"student was branched to branch path B on this node"};
-            var nodeStates = [];
-            nodeStates.push(nodeState);
-            StudentDataService.saveNodeStates(nodeStates);
+                // check if this node has transition logic that should be run when the student data changes
+                if (this.hasTransitionLogic() && this.evaluateTransitionLogicOn('studentDataChanged')) {
+                    // this node has transition logic
+                    this.evaluateTransitionLogic();
+                }
+            }
         };
 
         /**
@@ -749,11 +738,6 @@ define(['app'], function(app) {
             eventData.nodeId = nodeId;
             StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
         };
-
-        this.setCurrentNodeByNodeId = function(nodeId) {
-            var node = ProjectService.getNodeById(nodeId);
-            CurrentNodeService.setCurrentNode(node);
-        };
         
         this.addNodeVisitItemToNotebook = function() {
             var currentNode = CurrentNodeService.getCurrentNode();
@@ -774,9 +758,17 @@ define(['app'], function(app) {
         this.closeNode = function() {
             var currentNode = CurrentNodeService.getCurrentNode();
             if (currentNode != null) {
+
+                // end the current node
+                CurrentNodeService.endCurrentNode();
+
                 var currentNodeId = currentNode.id;
+
+                // get the parent node of the current node
                 var parentNode = ProjectService.getParentGroup(currentNodeId);
-                CurrentNodeService.setCurrentNode(parentNode);
+
+                // set the current node to the parent node
+                CurrentNodeService.endCurrentNodeAndSetCurrentNode(parentNode);
             }
         };
         
@@ -786,7 +778,7 @@ define(['app'], function(app) {
          * the node.
          */
         $scope.$on('exitNode', angular.bind(this, function(event, args) {
-            
+
             // get the node that is exiting
             var nodeToExit = args.nodeToExit;
             
@@ -805,6 +797,12 @@ define(['app'], function(app) {
                  * everything it needs to do before exiting
                  */
                 this.nodeUnloaded(this.nodeId);
+
+                // check if this node has transition logic that should be run when the student exits the node
+                if (this.hasTransitionLogic() && this.evaluateTransitionLogicOn('exitNode')) {
+                    // this node has transition logic
+                    this.evaluateTransitionLogic();
+                }
             }
         }));
         
@@ -883,7 +881,7 @@ define(['app'], function(app) {
                                 var tempCriteria = criteria[c];
 
                                 // check if the criteria is satisfied
-                                criteriaResult = StudentDataService.evaluateCriteria(tempCriteria);
+                                tempResult = StudentDataService.evaluateCriteria(tempCriteria);
 
                                 if (firstResult) {
                                     // this is the first criteria in this for loop
@@ -943,17 +941,27 @@ define(['app'], function(app) {
             if (currentNode != null) {
                 var currentNodeId = currentNode.id;
 
-                var nodeStates = StudentDataService.getBranchPathTakenNodeStates(currentNodeId);
+                // end the current node
+                CurrentNodeService.endCurrentNode();
 
-                if (nodeStates != null) {
-                    for (var ns = nodeStates.length - 1; ns >= 0; ns--) {
-                        var nodeState = nodeStates[ns];
+                // get the branch path node states
+                var branchPathNodeStates = StudentDataService.getBranchPathTakenNodeStates(currentNodeId);
+
+                if (branchPathNodeStates != null && branchPathNodeStates.length > 0) {
+
+                    // loop through the branch path node states from newest to oldest
+                    for (var b = branchPathNodeStates.length - 1; b >= 0; b--) {
+                        var nodeState = branchPathNodeStates[b];
 
                         var studentData = nodeState.studentData;
 
                         if (studentData != null) {
+                            // get the to node id for the node state
                             var toNodeId = studentData.toNodeId;
+
+                            // set the current node to be the to node id
                             CurrentNodeService.setCurrentNodeByNodeId(toNodeId);
+                            break;
                         }
                     }
                 } else {
@@ -991,7 +999,7 @@ define(['app'], function(app) {
 
                     if (transition != null) {
                         var fromNodeId = transition.from;
-                        CurrentNodeService.setCurrentNodeByNodeId(fromNodeId);
+                        CurrentNodeService.endCurrentNodeAndSetCurrentNodeByNodeId(fromNodeId);
                     }
                 } else {
 
@@ -1001,7 +1009,7 @@ define(['app'], function(app) {
                     if (stackHistory.length > 1) {
                         // get the previous node in the history
                         var prevNodeId = StudentDataService.getStackHistoryAtIndex(-2);
-                        CurrentNodeService.setCurrentNodeByNodeId(prevNodeId);
+                        CurrentNodeService.endCurrentNodeAndSetCurrentNodeByNodeId(prevNodeId);
                     }
                 }
             }

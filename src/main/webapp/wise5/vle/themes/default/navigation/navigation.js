@@ -8,10 +8,48 @@ define(['angular', /*'annotationService',*/ 'configService', 'currentNodeService
                     scope: {
                         templateUrl: '=',
                         item: '=',
-                        nodeClicked: '&'
+                        nodeClicked: '&',
+                        type: '='
                     },
                     template: '<ng-include src="getTemplateUrl()"></ng-include>',
-                    controller: 'NavigationItemController'
+                    controller: function($scope,
+                                         $state,
+                                         $stateParams,
+                                         ConfigService,
+                                         ProjectService,
+                                         StudentDataService) {
+
+                        $scope.getTemplateUrl = function(){
+                            return $scope.templateUrl;
+                        };
+
+                        $scope.isGroup = ProjectService.isGroupNode($scope.item.id);
+
+                        $scope.nodeStatus = StudentDataService.nodeStatuses[$scope.item.id];
+                    }
+                };
+            })
+            .directive('groupInfo', function() {
+                return {
+                    scope: {
+                        templateUrl: '=',
+                        item: '=',
+                        close: '&'
+                    },
+                    template: '<ng-include src="getTemplateUrl()"></ng-include>',
+                    controller: function($scope,
+                                         $state,
+                                         $stateParams,
+                                         ConfigService,
+                                         ProjectService,
+                                         StudentDataService) {
+
+                        $scope.getTemplateUrl = function(){
+                            return $scope.templateUrl;
+                        };
+
+                        $scope.nodeStatus = StudentDataService.nodeStatuses[$scope.item.id];
+                    }
                 };
             })
             .controller('NavigationController',
@@ -21,18 +59,21 @@ define(['angular', /*'annotationService',*/ 'configService', 'currentNodeService
                          ConfigService,
                          CurrentNodeService,
                          ProjectService,
-                         StudentDataService) {
+                         StudentDataService,
+                         $mdDialog) {
 
+                    this.currentGroup = null;
                     this.currentGroup = null;
                     this.currentChildren = [];
                     this.currentParentGroups = [];
-                    this.currentGroupIcon = null;
                     this.groups = ProjectService.getGroups();
                     this.currentNode = CurrentNodeService.getCurrentNode();
                     this.layoutState = null;
-                    this.layoutView = 'card'; // TODO: set this dynamically from theme settings ('card' or 'list')
+                    this.layoutView = 'card'; // TODO: set this dynamically from theme settings ('card' or 'list'); do we want a list view at all?
+                    this.nodeStatuses = StudentDataService.nodeStatuses;
+                    this.currentGroupStatus = {};
 
-                    $scope.$on('currentNodeChanged', angular.bind(this, function(event, args) {
+                    /*$scope.$on('currentNodeChanged', angular.bind(this, function(event, args) {
                         var previousNode = args.previousNode;
                         var currentNode = args.currentNode;
                         if (previousNode != null && previousNode.type === 'group') {
@@ -46,11 +87,9 @@ define(['angular', /*'annotationService',*/ 'configService', 'currentNodeService
                             if(this.currentGroupId !== nodeId){
                                 this.updateNavigation();
                             }
-
-                            // TODO: also update navigation if currentNode is a step that is in a different group from this.currentGroup
                         }
 
-                    }));
+                    }));*/
 
                     $scope.$on('nodeStatusesChanged', angular.bind(this, function() {
 
@@ -60,43 +99,25 @@ define(['angular', /*'annotationService',*/ 'configService', 'currentNodeService
 
                     }));
 
-                    this.nodeClicked = function(nodeId) {
+                    this.nodeClicked = function(nodeId, ev) {
                         // check if the node is visitable
-                        if (this.isVisitable(nodeId)) {
+                        if (this.nodeStatuses[nodeId].isVisitable) {
                             // the node is visitable
-                            CurrentNodeService.setCurrentNodeByNodeId(nodeId);
+                            CurrentNodeService.endCurrentNodeAndSetCurrentNodeByNodeId(nodeId);
                         } else {
                             // the node is not visitable
-                            alert('You are not allowed to visit this step right now.');
+                            // TODO: customize alert with constraint details, correct node term
+                            $mdDialog.show(
+                                $mdDialog.alert()
+                                    .parent(angular.element(document.body))
+                                    .title('Item Locked')
+                                    .content('Sorry, you cannot view this item.')
+                                    .ariaLabel('Item Locked')
+                                    .clickOutsideToClose(true)
+                                    .ok('OK')
+                                    .targetEvent(ev)
+                            );
                         }
-                    };
-
-                    this.isVisitable = function(nodeId) {
-                        var result = false;
-
-                        var nodeStatus = StudentDataService.getNodeStatusByNodeId(nodeId);
-
-                        if (nodeStatus != null) {
-                            if (nodeStatus.isVisitable != null) {
-                                result = nodeStatus.isVisitable;
-                            }
-                        }
-
-                        return result;
-                    };
-
-                    this.isVisible = function(nodeId) {
-                        var result = false;
-
-                        var nodeStatus = StudentDataService.getNodeStatusByNodeId(nodeId);
-
-                        if (nodeStatus != null) {
-                            if (nodeStatus.isVisible != null) {
-                                result = nodeStatus.isVisible;
-                            }
-                        }
-
-                        return result;
                     };
 
 
@@ -128,17 +149,16 @@ define(['angular', /*'annotationService',*/ 'configService', 'currentNodeService
                             }
 
                             this.currentGroup = currentGroup;
-                            this.currentGroupIcon = ProjectService.getNodeIconByNodeId(this.currentGroupId);
-                            //this.currentGroupId = this.currentGroup.id;
+                            this.currentGroupStatus = this.nodeStatuses[this.currentGroupId];
 
-                            var childIds = this.currentGroup.ids;
+                            var childIds = ProjectService.getChildNodeIdsById(this.currentGroupId);
                             this.currentChildren = [];
                             if (childIds != null) {
                                 for (var c = 0; c < childIds.length; c++) {
                                     var childId = childIds[c];
 
                                     var node = ProjectService.getNodeById(childId);
-                                    this.currentChildren.push(node); // TODO: figure out how to order based on transitions?
+                                    this.currentChildren.push(node);
                                 }
                             }
 
@@ -173,21 +193,5 @@ define(['angular', /*'annotationService',*/ 'configService', 'currentNodeService
                     };
 
                     this.updateNavigation();
-            })
-            .controller('NavigationItemController',
-                function($scope,
-                         $state,
-                         $stateParams,
-                         ConfigService,
-                         ProjectService,
-                         StudentDataService) {
-
-                    $scope.getTemplateUrl = function(){
-                        return $scope.templateUrl;
-                    };
-
-                    $scope.isGroup = ProjectService.isGroupNode($scope.item.id);
-
-                    $scope.icon = ProjectService.getNodeIconByNodeId($scope.item.id);
             });
         });

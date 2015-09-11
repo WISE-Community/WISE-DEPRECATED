@@ -85,7 +85,6 @@ define(['app'], function(app) {
                                 this.statusMessage = '';
                             }
                         }));
-                        $rootScope.$broadcast('studentAssetsUpdated');
                     }));
                 }));
                 

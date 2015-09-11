@@ -27,7 +27,7 @@ define([], function() {
             } else {
                 return null;
             }
-        }; 
+        };
         
         serviceObject.getCRaterRequestURL = function() {
             return this.getConfigParam('cRaterRequestURL');
@@ -68,11 +68,15 @@ define([], function() {
         serviceObject.getStudentMaxTotalAssetsSize = function() {
             return this.getConfigParam('studentMaxTotalAssetsSize');
         };
-        
+
+        serviceObject.getStudentNotebookURL = function() {
+            return this.getConfigParam('studentNotebookURL');
+        };
+
         serviceObject.getStudentUploadsBaseURL = function() {
             return this.getConfigParam('studentUploadsBaseURL');
         };
-        
+
         serviceObject.getWebSocketURL = function() {
             return this.getConfigParam('webSocketURL');
         };

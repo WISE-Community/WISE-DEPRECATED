@@ -5,7 +5,9 @@ AngularJS directive for Highcharts
 
 A simple Angularjs directive for Highcharts.
 
-Current Version (0.0.8)
+Google Group: https://groups.google.com/forum/#!forum/highcharts-ng
+
+Current Version (0.0.10)
 ---------------
 
 **Setup:**
@@ -30,23 +32,49 @@ Add Highcharts to your Angular app config:
 
 ```var myapp = angular.module('myapp', ["highcharts-ng"]);```
 
+If you don't want to add additional scripts, you may use lazyload:
+
+```
+app.config(['highchartsNGProvider', function (highchartsNGProvider) {
+    highchartsNGProvider.lazyLoad();// will load hightcharts (and standalone framework if jquery is not present) from code.hightcharts.com
+    
+    highchartsNGProvider.lazyLoad([highchartsNGProvider.HIGHCHART/HIGHSTOCK, "maps/modules/map.js", "mapdata/custom/world.js"]);// you may add any additional modules and they will be loaded in the same sequence
+    
+    highchartsNGProvider.basePath("/js/"); // change base path for scripts, default is http(s)://code.highcharts.com/
+    
+  }]);
+
+app.controller(["highchartsNG", function(highchartsNG){
+// do anything you like
+// ...
+highchartsNG.ready(function(){
+  // init chart config, see lazyload example
+},this);
+});
+```
+
 Make a chart!
 
 ```<highchart id="chart1" config="chartConfig"></highchart>```
 
+__Warning__: The `chartConfig` object is _slightly different_ than the default highcharts config object. ( _Please see the FAQ below for details_ )
+
 - See http://pablojim.github.io/highcharts-ng/examples/example.html for an extended example. Also Available in the example directory - thanks @crusat
 - Basic example: http://jsfiddle.net/pablojim/Hjdnw/
 - Example with dynamic x-axis: http://jsfiddle.net/pablojim/7cAq3/
+- Basic highstocks example http://jsfiddle.net/pablojim/r88yszk0/
+- Support for Highmaps - see: http://rawgit.com/pablojim/highcharts-ng/master/example/maps/example.html
+- Getting access to the Chart object/Add a print button - http://jsfiddle.net/pablojim/m4pcpv5g/
 
 The `chartConfig` attribute mentioned above resembles an exploded highcharts options object:
 
 ```javascript
+//This is not a highcharts object. It just looks a little like one!
 var chartConfig = {
 
-  //This is not a highcharts object. It just looks a little like one!
   options: {
       //This is the Main Highcharts chart config. Any Highchart options are valid here.
-      //will be ovverriden by values specified below.
+      //will be overriden by values specified below.
       chart: {
           type: 'bar'
       },
@@ -58,8 +86,7 @@ var chartConfig = {
       }
   },
   //The below properties are watched separately for changes.
-  
-  
+
   //Series object (optional) - a list of series using normal highcharts series options.
   series: [{
      data: [10, 15, 12, 8, 7]
@@ -117,7 +144,7 @@ Caveats:
 - Whole Chart/Series is often redrawn where a simple update of data would suffice
 - If you don't assign ids to your series - incremental ids will be added
 - The 2 way binding to xAxis properties should be treated as experimental
-- When using with a highstocks navigator errors can occur
+- Navigator/scrollbar cannot run with liveRedraw enabled at this time
 - Needs tests!
 
 FAQ:
@@ -158,6 +185,28 @@ So anything that has an api to change is declared outside the main options objec
 
 Hope this makes sense! 
 
+
+- The chart does not fit into the parent container? How to fix that?
+ 
+This may happen for example, when you place your chart in a bootstrap col - element. For now, you may apply the following workaround to fit your chart in the container:
+
+```
+        $scope.config = {
+            options: {
+            ...
+            },
+            ...
+            // other configuration here,
+            ...
+            func: function(chart) {
+                $timeout(function() {
+                    chart.reflow();
+                }, 0);
+            }
+        };
+    }
+```
+This forces the chart to reflow after container and chart have finished rendering. Don't forget to include the dependency to $timeout. Full discussion in https://github.com/pablojim/highcharts-ng/issues/300.
  
 
 
@@ -165,10 +214,21 @@ Hope this makes sense!
 Versions
 --------------
 
+Version 0.0.10
+----------------
+- Bug fix for 0.0.9 - problems with deep extend
+
+Version 0.0.9
+----------------
+- Lazy loading - thanks @FDIM
+- Better navigator support - thanks @ASethi77
+- Lots of bug fixes - thanks to all contributors
+
 Version 0.0.8
 ----------------
 - added config.getHighcharts - thanks @ValentinH 
 - Lots of bug fixes - thanks to all contributors
+- Now with support for Highmaps - see: http://rawgit.com/pablojim/highcharts-ng/master/example/maps/example.html
 
 Version 0.0.7
 ----------------

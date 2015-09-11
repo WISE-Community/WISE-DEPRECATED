@@ -30,6 +30,7 @@
     "angular-websocket": "~1.0.13",
     "highcharts-ng": "~0.0.8",
     "highcharts-regression": "*",
-    "angular-material": "~0.10.1"
+    "angular-material": "~0.10.1",
+    "oclazyload": "~1.0.4"
   }
 }

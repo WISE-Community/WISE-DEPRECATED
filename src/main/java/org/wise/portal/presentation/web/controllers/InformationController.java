@@ -599,6 +599,7 @@ public class InformationController {
 	                config.put("userInfo", getUserInfo(request));
 					config.put("studentDataURL", wiseBaseURL + "/student/data");
 					config.put("studentAssetsURL", wiseBaseURL + "/student/asset/" + runId);
+					config.put("studentNotebookURL", wiseBaseURL + "/student/notebook/" + runId);
 				}
 				
 				// add the config fields specific to the teacher grading

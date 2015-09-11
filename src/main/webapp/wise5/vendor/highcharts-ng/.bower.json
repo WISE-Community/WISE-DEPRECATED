@@ -1,7 +1,22 @@
 {
   "name": "highcharts-ng",
-  "version": "0.0.8",
+  "description": "An AngularJS directive for Highcharts, Highstocks or Highmaps",
+  "keywords": [
+    "angularjs",
+    "angular",
+    "charts",
+    "highcharts",
+    "highstocks",
+    "highmaps"
+  ],
+  "version": "0.0.10",
   "main": "dist/highcharts-ng.js",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Barry Fitzgerald"
+    }
+  ],
   "dependencies": {},
   "devDependencies": {
     "angular": "latest",
@@ -9,14 +24,13 @@
     "jquery": "latest"
   },
   "homepage": "https://github.com/pablojim/highcharts-ng",
-  "_release": "0.0.8",
+  "_release": "0.0.10",
   "_resolution": {
     "type": "version",
-    "tag": "0.0.8",
-    "commit": "d0b1382c0f7f761ef7fcfdf9fa88566ac5b042e9"
+    "tag": "0.0.10",
+    "commit": "9db637f2aeb0cfd6a918e863c29ad3054b7c6c47"
   },
   "_source": "git://github.com/pablojim/highcharts-ng.git",
   "_target": "~0.0.8",
-  "_originalSource": "highcharts-ng",
-  "_direct": true
+  "_originalSource": "highcharts-ng"
 }

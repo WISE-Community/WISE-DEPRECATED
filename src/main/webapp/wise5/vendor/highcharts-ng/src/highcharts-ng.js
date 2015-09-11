@@ -6,13 +6,77 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
   /*global angular: false, Highcharts: false */
 
   angular.module('highcharts-ng', [])
-    .factory('highchartsNGUtils', highchartsNGUtils)
-    .directive('highchart', ['highchartsNGUtils', '$timeout', highchart]);
-
-  function highchartsNGUtils() {
-
+    .provider('highchartsNG', highchartsNGProvider)
+    .directive('highchart', ['highchartsNG', '$timeout', highchart]);
+  
+  function highchartsNGProvider(){
+    var modules = [];
+    var basePath = false;
+    var lazyLoad = false;
     return {
-
+      HIGHCHART: 'highcharts.js',
+      HIGHSTOCK: 'stock/highstock.js',
+      basePath: function (p) {
+        basePath = p;
+      },
+      lazyLoad: function (list) {
+        if (list === undefined) {
+          modules = [this.HIGHCHART];
+        } else {
+          modules = list;
+        }
+        lazyLoad = true;
+      },
+      $get: ['$window', '$rootScope', function ($window, $rootScope) {
+        if (!basePath) {
+          basePath = (window.location.protocol === 'https:' ? 'https' : 'http') + '://code.highcharts.com/';
+        }
+        return highchartsNG($window, $rootScope, lazyLoad, basePath, modules);
+      }]
+    };
+  }
+  function highchartsNG($window, $rootScope, lazyload, basePath, modules) {
+    var readyQueue = [];
+    var loading = false;
+    return {
+      lazyLoad:lazyload,
+      ready: function (callback, thisArg) {
+        if (typeof $window.Highcharts !== 'undefined' || !lazyload) {
+          callback();
+        } else {
+          readyQueue.push([callback, thisArg]);
+          if (loading) {
+            return;
+          }
+          loading = true;
+          var self = this;
+          if (typeof jQuery === 'undefined') {
+            modules.unshift('adapters/standalone-framework.js');
+          }
+          var doWork = function () {
+            if (modules.length === 0) {
+              loading = false;
+              $rootScope.$apply(function () {
+                angular.forEach(readyQueue, function (e) {
+                  // invoke callback passing 'thisArg'
+                  e[0].apply(e[1], []);
+                });
+              });
+            } else {
+              var s = modules.shift();
+              self.loadScript(s, doWork);
+            }
+          };
+          doWork();
+        }
+      },
+      loadScript: function (path, callback) {
+        var s = document.createElement('script');
+        s.type = 'text/javascript';
+        s.src = basePath + path;
+        s.onload = callback;
+        document.getElementsByTagName('body')[0].appendChild(s);
+      },
       //IE8 support
       indexOf: function (arr, find, i /*opt*/) {
         if (i === undefined) i = 0;
@@ -47,6 +111,7 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
             destination[i] = deepExtend(destination[i] || {}, source[i]);
           }
         } else if (angular.isObject(source)) {
+          destination = angular.isObject(destination) ? destination : {};
           for (var property in source) {
             destination[property] = deepExtend(destination[property] || {}, source[property]);
           }
@@ -93,7 +158,10 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
         series: [],
         credits: {},
         plotOptions: {},
-        navigator: {enabled: false}
+        navigator: {enabled: false},
+        xAxis: {
+          events: {}
+        }
       };
 
       if (config.options) {
@@ -105,7 +173,7 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
 
       angular.forEach(axisNames, function(axisName) {
         if(angular.isDefined(config[axisName])) {
-          mergedOptions[axisName] = angular.copy(config[axisName]);
+          mergedOptions[axisName] = highchartsNGUtils.deepExtend(mergedOptions[axisName] || {}, config[axisName]);
 
           if(angular.isDefined(config[axisName].currentMin) ||
               angular.isDefined(config[axisName].currentMax)) {
@@ -129,6 +197,16 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
             highchartsNGUtils.prependMethod(mergedOptions.chart.events, 'addSeries', function(e){
               scope.config[axisName].currentMin = this[axisName][0].min || scope.config[axisName].currentMin;
               scope.config[axisName].currentMax = this[axisName][0].max || scope.config[axisName].currentMax;
+            });
+            highchartsNGUtils.prependMethod(mergedOptions[axisName].events, 'setExtremes', function (e) {
+              if (e.trigger && e.trigger !== 'zoom') { // zoom trigger is handled by selection event
+                $timeout(function () {
+                  scope.config[axisName].currentMin = e.min;
+                  scope.config[axisName].currentMax = e.max;
+                  scope.config[axisName].min = e.min; // set min and max to adjust scrollbar/navigator
+                  scope.config[axisName].max = e.max;
+                }, 0);
+              }
             });
           }
         }
@@ -157,7 +235,11 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
     var updateZoom = function (axis, modelAxis) {
       var extremes = axis.getExtremes();
       if(modelAxis.currentMin !== extremes.dataMin || modelAxis.currentMax !== extremes.dataMax) {
-        axis.setExtremes(modelAxis.currentMin, modelAxis.currentMax, false);
+        if (axis.setExtremes) {
+          axis.setExtremes(modelAxis.currentMin, modelAxis.currentMax, false);
+        } else {
+          axis.detachedsetExtremes(modelAxis.currentMin, modelAxis.currentMax, false);
+        }
       }
     };
 
@@ -168,7 +250,10 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
     };
 
     var chartOptionsWithoutEasyOptions = function (options) {
-      return highchartsNGUtils.deepExtend({}, options, {data: null, visible: null});
+      return angular.extend(
+        highchartsNGUtils.deepExtend({}, options),
+        { data: null, visible: null }
+      );
     };
 
     var getChartType = function(scope) {
@@ -177,7 +262,7 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
              (scope.config.useHighStocks ? 'StockChart' : 'Chart');
     };
 
-    return {
+    var res = {
       restrict: 'EAC',
       replace: true,
       template: '<div></div>',
@@ -198,7 +283,7 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
 
           if(series) {
             var setIds = ensureIds(series);
-            if(setIds) {
+            if(setIds && !scope.disableDataWatch) {
               //If we have set some ids this will trigger another digest cycle.
               //In this scenario just return early and let the next cycle take care of changes
               return false;
@@ -368,7 +453,7 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
         scope.$watch('config.size', function (newSize, oldSize) {
           if(newSize === oldSize) return;
           if(newSize) {
-            chart.setSize(newSize.width || undefined, newSize.height || undefined);
+            chart.setSize(newSize.width || chart.chartWidth, newSize.height || chart.chartHeight);
           }
         }, true);
 
@@ -392,5 +477,17 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
 
       }
     };
+    
+    // override link fn if lazy loading is enabled
+    if(highchartsNGUtils.lazyLoad){
+      var oldLink = res.link;
+      res.link = function(){
+        var args = arguments;
+        highchartsNGUtils.ready(function(){
+          oldLink.apply(this, args);
+        }, this);
+      };
+    }
+    return res;
   }
 }());
