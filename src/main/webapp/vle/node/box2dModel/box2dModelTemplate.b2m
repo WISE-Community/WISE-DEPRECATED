@@ -187,6 +187,7 @@
 	         "is_container":false          
 	      },
 	     "Coal":
+
 		{
 		   "display_name":"Coal",
 		   "density":0.9,

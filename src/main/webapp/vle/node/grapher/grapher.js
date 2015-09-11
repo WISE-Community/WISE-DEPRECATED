@@ -242,6 +242,8 @@ Grapher.prototype.render = function() {
 					$("#seriesRadioDiv").append("<input class='seriesRadio' id='radio-"+editableSeries[s]+"' name='dynamic' type='radio' "+checked+" onclick='seriesChanged(\""+editableSeries[s]+"\")'>"+editableSeries[s]+"</input>");
 		
 			}
+			// setup initial series as the first editable one
+			this.currentGraphName = editableSeries[0];
 		}
 		
 		// make sure that this is an editable series, if so put in radio button
@@ -1173,19 +1175,20 @@ Grapher.prototype.setupPlotClick = function() {
     		var isNewPoint = false;
         	// switch the series
         	if (item.series.name !== event.data.thisGrapher.currentGraphName) {
+        		// 9/10/15 JV - I REMOVED THIS CODE BECAUSE IT WAS TOO CONFUSING, STUDENTS MUST NOW MANUALLY SWITCH TO MAKE A NEW POINT
         		// if the point is not on a series that is currently selected switch series
         		// also if this not the current series, update the current series and set radio UNLESS THIS POINT IS ON THE BOUNDARY
             	if (typeof item.series.editable === "undefined" || item.series.editable){
-            		var fivepctXaxis = typeof xmax === "number" && typeof xmin === "number" ? xmin + 0.05 * (xmax - xmin) : 5;
-	    			var fivepctYaxis = typeof ymax === "number" && typeof ymin === "number" ? ymin + 0.05 * (ymax - ymin) : 5;
+            		//var fivepctXaxis = typeof xmax === "number" && typeof xmin === "number" ? xmin + 0.05 * (xmax - xmin) : 5;
+	    			//var fivepctYaxis = typeof ymax === "number" && typeof ymin === "number" ? ymin + 0.05 * (ymax - ymin) : 5;
 	    			// if this point is not on the x-axis or y-axis we switch, else we make a new point
-	    			if ((pos.x > fivepctXaxis && pos.y > fivepctYaxis) || item.series.name.indexOf("prediction") > -1 || event.data.thisGrapher.predictionLocked || !event.data.thisGrapher.createPrediction){
-	    				event.data.thisGrapher.currentGraphName = item.series.name;
-		        		item.series.checked = true;
-		        		if (typeof event.data.thisGrapher.dragPoint !== "undefined" && event.data.thisGrapher.dragPoint !== null && typeof event.data.thisGrapher.dragPoint.series !== "undefined" && event.data.thisGrapher.dragPoint.series !== null) event.data.thisGrapher.dragPoint.series.checked = false;
-		        		// update radio
-						$('#radio-'+event.data.thisGrapher.currentGraphName).prop('checked', true);
-		     		} else {
+	    			//if ((pos.x > fivepctXaxis && pos.y > fivepctYaxis) || item.series.name.indexOf("prediction") > -1 || event.data.thisGrapher.predictionLocked || !event.data.thisGrapher.createPrediction){
+	    			//	event.data.thisGrapher.currentGraphName = item.series.name;
+		        	//	item.series.checked = true;
+		        	//	if (typeof event.data.thisGrapher.dragPoint !== "undefined" && event.data.thisGrapher.dragPoint !== null && typeof event.data.thisGrapher.dragPoint.series !== "undefined" && event.data.thisGrapher.dragPoint.series !== null) event.data.thisGrapher.dragPoint.series.checked = false;
+		        	//	// update radio
+					//	$('#radio-'+event.data.thisGrapher.currentGraphName).prop('checked', true);
+		     		//} else {
 	        			// this point is on the x-axis, we want to be able to make a new point in the same location
 	        			event.data.thisGrapher.predictionReceived(pos.x, pos.y);
 	            		//plot the graph again so the point is displayed
@@ -1193,7 +1196,7 @@ Grapher.prototype.setupPlotClick = function() {
 	                	// graph animator check
 						if (typeof animator !== "undefined" && animator !== null) animator.processEvent("newPoint",[pos.x, pos.y],event.data.thisGrapher);				
 						isNewPoint = true;
-		     		}
+		     		//}
             	}
         	}
         	

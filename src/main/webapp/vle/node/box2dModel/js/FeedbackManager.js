@@ -199,6 +199,7 @@
          if (feedback.type == "text" || feedback.type == "html"){
             $(function() {
                 $("#messageDiv").html(feedback.text).dialog({
+                    position: {my: "left", at: "center", of: "window"},
                     modal:true,
                     show:"scale",
                     hide:"blind"
