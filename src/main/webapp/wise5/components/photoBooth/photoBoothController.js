@@ -143,8 +143,6 @@ define(['app'], function(app) {
                         this.studentDataChanged();
                     }
                 }));
-
-                $rootScope.$broadcast('studentAssetsUpdated');
             }));
         };
         

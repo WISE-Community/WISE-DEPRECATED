@@ -49,7 +49,7 @@ define(['configService', 'currentNodeService'], function(configService, currentN
             }
             
             params.runId = ConfigService.getRunId();
-            params.getComponentStates = true;
+            params.getStudentWork = true;
             params.getEvents = true;
             params.getAnnotations = true;
 
@@ -60,12 +60,25 @@ define(['configService', 'currentNodeService'], function(configService, currentN
 
                     this.studentData = {};
 
+                    // get student work
+                    var componentStates = [];
+                    var nodeStates = [];
+                    var studentWorkList = resultData.studentWorkList;
+                    for (var s = 0; s < studentWorkList.length; s++) {
+                        var studentWork = studentWorkList[s];
+                        if (studentWork.componentId != null) {
+                            componentStates.push(studentWork);
+                        } else {
+                            nodeStates.push(studentWork);
+                        }
+                    }
+
                     // populate allComponentStates, componentStatesByWorkgroupId and componentStatesByNodeId arrays
-                    this.studentData.allComponentStates = resultData.componentStates;
+                    this.studentData.allComponentStates = componentStates;
                     this.studentData.componentStatesByWorkgroupId = {};
                     this.studentData.componentStatesByNodeId = {};
-                    for (var i = 0; i < resultData.componentStates.length; i++) {
-                        var componentState = resultData.componentStates[i];
+                    for (var i = 0; i < componentStates.length; i++) {
+                        var componentState = componentStates[i];
                         var componentStateWorkgroupId = componentState.workgroupId;
                         if (this.studentData.componentStatesByWorkgroupId[componentStateWorkgroupId] == null) {
                             this.studentData.componentStatesByWorkgroupId[componentStateWorkgroupId] = new Array();

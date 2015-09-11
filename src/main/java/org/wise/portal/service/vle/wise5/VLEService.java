@@ -26,6 +26,7 @@ package org.wise.portal.service.vle.wise5;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.vle.domain.annotation.wise5.Annotation;
 import org.wise.vle.domain.work.Event;
+import org.wise.vle.domain.work.NotebookItem;
 import org.wise.vle.domain.work.StudentAsset;
 import org.wise.vle.domain.work.StudentWork;
 
@@ -88,7 +89,7 @@ public interface VLEService {
             String clientSaveTime) throws ObjectNotFoundException;
 
     /**
-     * Gets StudentsAssets from data store
+     * @return StudentsAssets from data store
      */
     List<StudentAsset> getStudentAssets(
             Integer id, Integer runId, Integer periodId, Integer workgroupId,
@@ -109,4 +110,21 @@ public interface VLEService {
     StudentAsset getStudentAssetById(Integer studentAssetId) throws ObjectNotFoundException;
 
     StudentAsset deleteStudentAsset(Integer studentAssetId, Long clientDeleteTime);
+
+    /**
+     * @return NotebookItems from data store that match specified params
+     */
+    List<NotebookItem> getNotebookItems(
+            Integer id, Integer runId, Integer periodId, Integer workgroupId,
+            String nodeId, String componentId);
+
+    /**
+     * Saves NotebookItem in the data store
+     */
+    NotebookItem saveNotebookItem(
+            Integer id, Integer runId, Integer periodId, Integer workgroupId,
+            String nodeId, String componentId,
+            Integer studentWorkId, Integer studentAssetId,
+            String title, String description,
+            String clientSaveTime, String clientDeleteTime);
 }

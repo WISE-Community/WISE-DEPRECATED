@@ -561,7 +561,7 @@ Box2dModel.prototype.interpretEvent = function(type, args, obj) {
 				}
 			}
 			// get index for tested in water
-			var liquid_name = GLOBAL_PARAMETERS.liquids_in_world.length === 1 ? GLOBAL_PARAMETERS.liquids_in_world.length[0] : "Water";
+			var liquid_name = GLOBAL_PARAMETERS.liquids_in_world.length === 1 ? GLOBAL_PARAMETERS.liquids_in_world[0] : "Water";
 			// get index for tested on scale
 			var sinkIndex = -1;
 			for (var i = 0; i < tableData.length; i++) {
@@ -943,8 +943,8 @@ Box2dModel.prototype.interpretEvent = function(type, args, obj) {
 					plotOptions: {
 						scatter: {
 							marker: {
-								lineWidth:0.5,
-								lineColor:'rgba(100,100,100)',
+								lineWidth:1.0,
+								lineColor:'rgb(100, 100, 100)',
 								radius: 5,
 								states: {
 									hover: {
@@ -974,10 +974,10 @@ Box2dModel.prototype.interpretEvent = function(type, args, obj) {
 			this.chart = [];
 			for (var c = 0; c < arrColumnNamesToImport.length; c++){
 				var colName = arrColumnNamesToImport[c];
-				var colDisplay = arrColumnNamesToDisplay.length > c ? arrColumnNamesToDisplay[c] : colName;
+				//var colDisplay = arrColumnNamesToDisplay.length > c ? arrColumnNamesToDisplay[c] : colName;
 				for (var i = 0; i < tableData.length; i++){
 					if (tableData[i][0].text.match(colName) != null){
-						var column = [colDisplay];
+						var column = [colName];
 						for (j = 1; j < tableData[i].length; j++){
 							var val = tableData[i][j].text;
 							if (!isNaN(val)){
@@ -1053,10 +1053,21 @@ Box2dModel.prototype.interpretEvent = function(type, args, obj) {
 						} else if (this.chart[i][0].match(/material/i) != null){
 							this.chart[i].push(typeof this.liquids_tested[a].display_name === "string" ? this.liquids_tested[a].display_name: this.liquids_tested[a].liquid_name);
 						} else if (this.chart[i][0].match(/sink_in/i) != null){
-							this.chart[i].push(typeof this.liquids_tested[a].display_name === "string" ? this.liquids_tested[a].display_name: this.liquids_tested[a].liquid_name);
+							this.chart[i].push("---");
 						} else if (this.chart[i][0].match(/density/i) != null){
 							this.chart[i].push(this.liquids_tested[a].density.toFixed(2));
 						}
+					}
+				}
+			}
+
+			// replace lookup names with display names
+			for (var c = 0; c < arrColumnNamesToImport.length; c++){
+				var colName = arrColumnNamesToImport[c];
+				var colDisplay = arrColumnNamesToDisplay.length > c ? arrColumnNamesToDisplay[c] : colName;
+				for (var i = 0; i < this.chart.length; i++){
+					if (this.chart[i][0] == colName){
+						this.chart[i][0] = colDisplay;
 					}
 				}
 			}

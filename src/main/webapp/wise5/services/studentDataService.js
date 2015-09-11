@@ -1580,7 +1580,7 @@ define(['configService', 'projectService'], function(configService, currentNodeS
 
             // TODO: implement for steps (using components instead of child nodes)
 
-            var completionPct = totalItems ? (completedItems / totalItems * 100) : 0;
+            var completionPct = totalItems ? Math.round(completedItems / totalItems * 100) : 0;
             var progress = {
                 "completedItems": completedItems,
                 "totalItems": totalItems,

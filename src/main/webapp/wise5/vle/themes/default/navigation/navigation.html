@@ -11,24 +11,12 @@
         </md-select>
     </div>
 
-    <div ng-animate-ref="{{ navCtrl.currentGroup.id }}">
-        <md-card ng-class="'nav-' + navCtrl.layoutState" >
-            <group-info ng-if="navCtrl.layoutState === 'group'" item="navCtrl.currentGroup" close="navCtrl.nodeClicked(navCtrl.parentGroupId)"
-                        template-url="vleController.themePath + '/navigation/groupInfo.html'"></group-info>
-            <md-card-content ng-class="'nav-contents nav-contents--' + navCtrl.layoutState  + ' nav-contents--' + navCtrl.layoutView">
-                <md-list ng-if="navCtrl.layoutView === 'list'">
-                    <nav-item ng-repeat="item in navCtrl.currentChildren" ng-if="navCtrl.nodeStatuses[item.id].isVisible"
-                              template-url="vleController.themePath + '/navigation/navItem.html'"
-                              item="item" type="navCtrl.layoutView" node-clicked="navCtrl.nodeClicked(item.id)" ng-animate-ref="{{ item.id }}" class="nav-item ng-enter"></nav-item>
-                </md-list>
-                <div ng-if="navCtrl.layoutView === 'card'" layout="row" layout-wrap layout-align="center center">
-                    <nav-item ng-repeat="item in navCtrl.currentChildren" ng-if="navCtrl.nodeStatuses[item.id].isVisible"
-                              template-url="vleController.themePath + '/navigation/navItem.html'"
-                              item="item" type="navCtrl.layoutView" node-clicked="navCtrl.nodeClicked(item.id)"
-                              flex-sm="100" flex-md="50" flex-lg="33" flex-gt-lg="25"></nav-item>
-                </div>
-            </md-card-content>
-        </md-card>
+    <div class="nav-root" ng-if="navCtrl.layoutState === 'root'" >
+        <ng-include src="vleController.themePath + '/navigation/navRoot.html'"></ng-include>
+    </div>
+
+    <div class="nav-group" ng-if="navCtrl.layoutState === 'group'" >
+        <ng-include src="vleController.themePath + '/navigation/navGroup.html'"></ng-include>
     </div>
 
     <!--<group id='group' currentgroupid='{{navCtrl.currentGroupId}}'></group>-->
