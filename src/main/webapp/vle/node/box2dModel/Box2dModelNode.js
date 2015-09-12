@@ -212,6 +212,33 @@ Box2dModelNode.prototype.onExit = function() {
 	} catch(e) {
 		
 	}
+
+    // get the next position
+    var nextPosition = this.view.nextPosition;
+
+    // get the current position
+    var currentPosition = view.getCurrentPosition();
+
+    // check if the next position comes after the current position
+    if (nextPosition != null &&
+        currentPosition != null &&
+        this.view.getProject().positionAfter(nextPosition, currentPosition)) {
+        // the next position comes after the current position
+
+        // get the latest node visit
+        var nodeVisit = this.view.getState().getCurrentNodeVisit();
+        var nodeState = null;
+
+        if (nodeVisit != null && nodeVisit.nodeStates.length > 0) {
+            // get the latest node state
+            nodeState = nodeVisit.nodeStates[nodeVisit.nodeStates.length - 1];
+        }
+
+        if (nodeVisit != null && nodeState != null) {
+            // process teacher notifications if there are any
+            this.contentPanel.box2dModel.processTeacherNotifications(nodeVisit, nodeState);
+        }
+    }
 };
 
 /**
