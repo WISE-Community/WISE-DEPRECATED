@@ -1566,14 +1566,23 @@ define(['configService', 'projectService'], function(configService, currentNodeS
             var completedItems = 0;
             var totalItems = 0;
 
-            // assuming node is a group for now
-            var nodeIds = ProjectService.getChildNodeIdsById(nodeId);
-            for (var n=0; n<nodeIds.length; n++){
-                var status = this.nodeStatuses[nodeIds[n]];
-                if(!!status.isVisible){
-                    totalItems++;
-                    if(!!status.isCompleted) {
-                        completedItems++;
+            if(ProjectService.isGroupNode(nodeId)){
+                var nodeIds = ProjectService.getChildNodeIdsById(nodeId);
+                for (var n=0; n<nodeIds.length; n++){
+                    var id = nodeIds[n];
+                    var status = this.nodeStatuses[id];
+                    if(ProjectService.isGroupNode(id)){
+                        var completedGroupItems = status.progress.completedItems;
+                        var totalGroupItems = status.progress.totalItems;
+                        completedItems += completedGroupItems;
+                        totalItems += totalGroupItems;
+                    } else {
+                        if (!!status.isVisible) {
+                            totalItems++;
+                            if (!!status.isCompleted) {
+                                completedItems++;
+                            }
+                        }
                     }
                 }
             }
