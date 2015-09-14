@@ -50,19 +50,10 @@ define(['app', 'drawingTool', 'vendor'], function(app) {
             
             this.drawingTool = new DrawingTool("#drawing-tool", {
                 stamps: {
-                    'Molecules': [
-                                  'https://interactions-resources.concord.org/stamps/simple-atom.svg',
-                                  'https://interactions-resources.concord.org/stamps/diatomic.svg',
-                                  'https://interactions-resources.concord.org/stamps/diatomic-red.svg',
-                                  'https://interactions-resources.concord.org/stamps/triatomic.svg',
-                                  'https://interactions-resources.concord.org/stamps/positive-charge-symbol.svg',
-                                  'https://interactions-resources.concord.org/stamps/negative-charge-symbol.svg',
-                                  'https://interactions-resources.concord.org/stamps/positive-atom.svg',
-                                  'https://interactions-resources.concord.org/stamps/negative-atom.svg',
-                                  'https://interactions-resources.concord.org/stamps/slow-particle.svg',
-                                  'https://interactions-resources.concord.org/stamps/medium-particle.svg',
-                                  'https://interactions-resources.concord.org/stamps/fast-particle.svg',
-                                  'https://interactions-resources.concord.org/stamps/low-density-particles.svg'
+                    'fun': [
+                        'https://upload.wikimedia.org/wikipedia/commons/3/31/Ice_Cream_dessert_02.jpg',
+                        'https://popcorntime.io/images/logo-valentines.png',
+
                                   ]
                 },
                 parseSVG: true
@@ -91,7 +82,7 @@ define(['app', 'drawingTool', 'vendor'], function(app) {
                 if (state === null) return;
                 this.drawingTool.load(state);
             }));
-            
+
             // get the component content from the scope
             this.componentContent = $scope.component;
             
@@ -371,7 +362,36 @@ define(['app', 'drawingTool', 'vendor'], function(app) {
             
             return result;
         };
-        
+
+        this.dropCallback = angular.bind(this, function(event, ui, title, $index) {
+            if (this.isDisabled) {
+                // don't import if step is disabled/locked
+                return;
+            }
+
+            var objectType = $(ui.helper.context).data('objectType');
+            if (objectType === 'NotebookItem') {
+                var notebookItem = $(ui.helper.context).data('objectData');
+                if (notebookItem.studentAsset != null) {
+                    // we're importing a StudentAssetNotebookItem
+                    var studentAsset = notebookItem.studentAsset;
+                    StudentAssetService.copyAssetForReference(studentAsset).then(angular.bind(this, function(copiedAsset) {
+                        if (copiedAsset != null) {
+                            fabric.Image.fromURL(copiedAsset.url, angular.bind(this, function(oImg) {
+                                oImg.scaleToWidth(200);  // set max width and have height scale relatively
+                                // TODO: center image or put them at mouse position? Wasn't straight-forward, tried below but had issues...
+                                //oImg.setLeft((this.drawingTool.canvas.width / 2) - (oImg.width / 2));  // center image vertically and horizontally
+                                //oImg.setTop((this.drawingTool.canvas.height / 2) - (oImg.height / 2));
+                                //oImg.center();
+                                oImg.studentAssetId = copiedAsset.id;  // keep track of this asset it
+                                this.drawingTool.canvas.add(oImg);   // add copied asset image to canvas
+                            }));
+                        }
+                    }));
+                }
+            };
+        });
+
         /**
          * Get the prompt to show to the student
          */
