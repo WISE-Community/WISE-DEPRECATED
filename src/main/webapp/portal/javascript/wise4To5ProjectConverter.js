@@ -29,6 +29,9 @@ var branchNodeId = '';
 // holds the current group we are parsing so we can put child nodes into it
 var currentGroup = null;
 
+// variable to turn debugging on or off
+var test = false;
+
 /**
  * Convert the WISE4 project into a WISE5 project
  */
@@ -59,7 +62,7 @@ function convert() {
         wise4Project = response;
 
         // get the string representation of the WISE4 project
-        var wise4ProjectString = JSON.stringify(wise4Project, null, 3);
+        var wise4ProjectString = JSON.stringify(wise4Project, null, 4);
 
         // display the WISE4 project string in the textarea
         $('#wise4ProjectFile').html(wise4ProjectString);
@@ -91,7 +94,7 @@ function parseWISE4Project(wise4Project) {
     }
 
     // get the string representation of the WISE5 project
-    var wise5ProjectString = JSON.stringify(wise5Project, null, 3);
+    var wise5ProjectString = JSON.stringify(wise5Project, null, 4);
 
     // display the WISE5 project string in the textarea
     $('#wise5ProjectFile').html(wise5ProjectString);
@@ -506,6 +509,8 @@ function convertHTML(node, nodeContent) {
                 // set the prompt
                 var content = {};
                 content.prompt = nodeContent.prompt;
+                content.showSaveButton = false;
+                content.showSubmitButton = false;
                 content.components = [];
 
                 var component = {};
@@ -549,11 +554,23 @@ function convertAssessmentList(node, nodeContent) {
 
     var prompt = nodeContent.prompt;
 
-    //console.log(prompt);
+    if (test) {
+        console.log('before');
+        console.log(prompt);
+
+        prompt = fixAssetReferences(prompt);
+
+        console.log('after');
+        console.log(prompt);
+
+        //test = true;
+    }
 
     var content = {};
     // set the prompt
     content.prompt = nodeContent.prompt;
+    content.showSaveButton = true;
+    content.showSubmitButton = false;
     content.components = [];
 
     // get all the assessment parts
@@ -582,6 +599,12 @@ function convertAssessmentList(node, nodeContent) {
                 } else if (assessment.type === 'radio' || assessment.type === 'checkbox') {
                     // create an multiple choice component
                     component.componentType = 'MultipleChoice';
+
+                    if (assessment.type === 'radio') {
+                        component.choiceType = 'radio';
+                    } else if(assessment.type === 'checkbox') {
+                        component.choiceType = 'checkbox';
+                    }
 
                     // get all the choices
                     var choices = assessment.choices;
@@ -645,6 +668,8 @@ function convertOpenResponse(node, nodeContent) {
     //console.log(prompt);
 
     var content = {};
+    content.showSaveButton = true;
+    content.showSubmitButton = false;
     content.components = [];
 
     var component = {};
@@ -680,7 +705,8 @@ function convertTable(node, nodeContent) {
     wise5Node.title = node.title;
 
     var content = {};
-
+    content.showSaveButton = true;
+    content.showSubmitButton = false;
     content.components = [];
 
     var tableComponent = {};
@@ -773,7 +799,8 @@ function convertPhet(node, nodeContent) {
     wise5Node.title = node.title;
 
     var content = {};
-
+    content.showSaveButton = true;
+    content.showSubmitButton = false;
     content.components = [];
 
     var component = {};
@@ -805,6 +832,8 @@ function convertDraw(node, nodeContent) {
     wise5Node.title = node.title;
 
     var content = {};
+    content.showSaveButton = true;
+    content.showSubmitButton = false;
     content.components = [];
 
     var component = {};
@@ -833,6 +862,8 @@ function convertBrainstorm(node, nodeContent) {
     wise5Node.title = node.title;
 
     var content = {};
+    content.showSaveButton = true;
+    content.showSubmitButton = false;
     content.components = [];
 
     var component = {};
@@ -850,6 +881,8 @@ function convertBrainstorm(node, nodeContent) {
     }
 
     component.prompt = prompt;
+    component.showSaveButton = false;
+    component.showSubmitButton = true;
 
     content.components.push(component);
 
@@ -872,6 +905,8 @@ function convertAnnotator(node, nodeContent) {
     wise5Node.title = node.title;
 
     var content = {};
+    content.showSaveButton = true;
+    content.showSubmitButton = false;
     content.components = [];
 
     var component = {};
@@ -1259,6 +1294,8 @@ function getWISE5NodesInBranchPath(sequenceId) {
 function fixAssetReferences(html) {
 
     var fixedHTML = '';
+
+    var regex = /['"]\.jpg['"]]/g;
 
 
 
