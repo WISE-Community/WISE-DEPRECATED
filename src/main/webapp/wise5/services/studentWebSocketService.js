@@ -1,7 +1,7 @@
 define(['configService'], function(configService) {
 
-    var service = ['$http', '$rootScope', '$websocket', 'ConfigService', 'CurrentNodeService', 'StudentDataService',
-                   function($http, $rootScope, $websocket, ConfigService, CurrentNodeService, StudentDataService) {
+    var service = ['$http', '$rootScope', '$websocket', 'ConfigService', 'StudentDataService',
+                   function($http, $rootScope, $websocket, ConfigService, StudentDataService) {
         var serviceObject = {};
         
         serviceObject.dataStream = null;
@@ -46,7 +46,7 @@ define(['configService'], function(configService) {
                 // we are in a run
                 
                 // get the current node id
-                var currentNodeId = CurrentNodeService.getCurrentNodeId();
+                var currentNodeId = StudentDataService.getCurrentNodeId();
                 
                 // get the node statuses
                 var nodeStatuses = StudentDataService.getNodeStatuses();

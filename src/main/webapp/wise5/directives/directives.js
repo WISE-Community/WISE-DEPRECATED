@@ -1,4 +1,4 @@
-define(['angular', 'projectService', 'currentNodeService'], function(angular, projectService, currentNodeService) {
+define(['angular', 'projectService', 'studentDataService'], function(angular, projectService, studentDataService) {
     
     angular.module('directives', [])
     
@@ -63,7 +63,7 @@ define(['angular', 'projectService', 'currentNodeService'], function(angular, pr
         };
     })
 
-    .directive('group', function(CurrentNodeService, ProjectService, StudentDataService) {
+    .directive('group', function(ProjectService, StudentDataService) {
         return {
             restrict: 'E',
             scope: {
@@ -218,7 +218,7 @@ define(['angular', 'projectService', 'currentNodeService'], function(angular, pr
                         var nodeId = d.id;
 
                         if (StudentDataService.canVisitNode(nodeId)) {
-                            CurrentNodeService.endCurrentNodeAndSetCurrentNodeByNodeId(nodeId);
+                            StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(nodeId);
                         } else {
                             alert('You are not allowed to visit this step right now.');
                         }

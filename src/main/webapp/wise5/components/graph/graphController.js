@@ -17,7 +17,6 @@ define(['app',
             $state, 
             $stateParams,
             ConfigService,
-            CurrentNodeService,
             GraphService,
             NodeService,
             ProjectService,
@@ -58,7 +57,7 @@ define(['app',
         this.setup = function() {
             
             // get the current node and node id
-            var currentNode = CurrentNodeService.getCurrentNode();
+            var currentNode = StudentDataService.getCurrentNode();
             if (currentNode != null) {
                 this.nodeId = currentNode.id;
             }

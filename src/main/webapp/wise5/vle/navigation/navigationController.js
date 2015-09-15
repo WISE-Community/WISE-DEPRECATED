@@ -4,7 +4,6 @@ define(['app'], function(app) {
                   $state,
                   $stateParams,
                   ConfigService,
-                  CurrentNodeService,
                   ProjectService,
                   StudentDataService) {
 
@@ -13,25 +12,18 @@ define(['app'], function(app) {
             this.currentChildren = [];
             this.currentParentGroups = [];
             this.groups = ProjectService.getGroups();
-            this.currentNode = CurrentNodeService.getCurrentNode();
+            this.currentNode = StudentDataService.getCurrentNode();
             this.layoutState = null;
             this.nodeStatuses = StudentDataService.nodeStatuses;
             this.currentGroupStatus = {};
 
             this.nodeClicked = function (nodeId, ev) {
-                // check if the node is visitable
-                if (this.nodeStatuses[nodeId].isVisitable) {
-                    // the node is visitable
-                    CurrentNodeService.endCurrentNodeAndSetCurrentNodeByNodeId(nodeId);
-                } else {
-                    // the node is not visitable
-                    CurrentNodeService.nodeClickLocked(nodeId);
-                }
+                StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(nodeId);
             };
 
 
             this.updateNavigation = function () {
-                var currentNode = CurrentNodeService.getCurrentNode();
+                var currentNode = StudentDataService.getCurrentNode();
 
                 if (currentNode != null) {
                     var currentNodeId = currentNode.id;

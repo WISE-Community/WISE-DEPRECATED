@@ -1,7 +1,7 @@
-define(['configService', 'currentNodeService'], function(configService, currentNodeService) {
+define(['configService', 'studentDataService'], function(configService, studentDataService) {
 
-    var service = ['$http', '$q', '$rootScope', 'ConfigService', 'CurrentNodeService',
-                                    function($http, $q, $rootScope, ConfigService, CurrentNodeService) {
+    var service = ['$http', '$q', '$rootScope', 'ConfigService', 'StudentDataService',
+                                    function($http, $q, $rootScope, ConfigService, StudentDataService) {
         var serviceObject = {};
         
         serviceObject.vleStates = null;
@@ -14,7 +14,7 @@ define(['configService', 'currentNodeService'], function(configService, currentN
             var nodeIds = [];
             var workgroupIds = [];
             
-            var currentNodeId = CurrentNodeService.getCurrentNodeId();
+            var currentNodeId = StudentDataService.getCurrentNodeId();
             if (currentNodeId != null) {
                 nodeIds.push(currentNodeId);
             }

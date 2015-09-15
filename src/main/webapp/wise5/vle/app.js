@@ -19,7 +19,6 @@ define([
     'angularWebSocket',
     'audioRecorderService',
     'configService',
-    'currentNodeService',
     'cRaterService',
     'discussionService',
     'drawService',
@@ -64,7 +63,6 @@ define([
              angularWebSocket,
              audioRecorderService,
              configService,
-             currentNodeService,
              cRaterService,
              discussionService,
              drawService,
@@ -111,7 +109,6 @@ define([
 
     // core services
     app.factory('ConfigService', configService);
-    app.factory('CurrentNodeService', currentNodeService);
     app.factory('CRaterService', cRaterService);
     app.factory('NodeService', nodeService);
     app.factory('NotebookService', notebookService);

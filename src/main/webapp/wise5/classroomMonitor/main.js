@@ -20,7 +20,6 @@ require.config({
         'classroomMonitorController': 'classroomMonitor/classroomMonitorController',
         'configService': 'services/configService',
         'cRaterService': 'components/cRater/cRaterService',
-        'currentNodeService': 'services/currentNodeService',
         'd3': 'lib/d3/d3',
         'directives': 'directives/directives',
         'discussionService': 'components/discussion/discussionService',
