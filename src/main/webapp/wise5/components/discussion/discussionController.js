@@ -134,7 +134,7 @@ define(['app', 'angular'], function(app, angular) {
             DiscussionService.getClassmateResponses(runId, periodId, nodeId, componentId).then(angular.bind(this, function(result) {
                 
                 if (result != null) {
-                    var componentStates = result.componentStates;
+                    var componentStates = result.studentWorkList;
                     
                     // set the classmate responses
                     this.setClassResponses(componentStates);
