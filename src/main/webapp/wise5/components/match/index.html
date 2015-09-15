@@ -50,7 +50,7 @@
 </head>
 <body>
 <div ng-controller='MatchController as matchController'>
-<div id="prompt">{{matchController.getPrompt()}}</div>
+<div id='prompt' compile='matchController.getPrompt()'></div>
 <div ui-tree='options'>
     <ol ui-tree-nodes data-type='bucket' ng-model='matchController.buckets'>
         <li ui-tree-node ng-repeat='bucket in matchController.buckets' class='bucket'>

@@ -1,5 +1,5 @@
 <div ng-controller='GraphController as graphController'>
-    <div>{{graphController.getPrompt()}}</div>
+    <div id='prompt' compile='graphController.getPrompt()'></div>
     <button ng-click='graphController.resetGraph()'>Reset Graph</button>
 
     <select ng-model='graphController.activeSeries'
