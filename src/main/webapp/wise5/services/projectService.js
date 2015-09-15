@@ -537,11 +537,10 @@ define(['configService'], function(configService) {
             var result = null;
 
             if(nodeId != null){
-                var depth = val ? val : 0;
+                var depth = (typeof val === "number") ? val : 0;
                 var parent = this.getParentGroup(nodeId);
                 if(parent){
-                    depth++;
-                    this.getNodeDepth(parent.id, depth);
+                    depth = this.getNodeDepth(parent.id, depth+1);
                 }
                 result = depth;
             }
