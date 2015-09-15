@@ -1,6 +1,6 @@
-define(['angular', /*'annotationService',*/ 'configService', 'currentNodeService', 'notebookService',
+define(['angular', /*'annotationService',*/ 'configService', 'notebookService',
         'projectService', 'sessionService', 'studentDataService'],
-    function(angular, /*AnnotationService,*/ ConfigService, CurrentNodeService, NotebookService, ProjectService,
+    function(angular, /*AnnotationService,*/ ConfigService, NotebookService, ProjectService,
              SessionService, StudentDataService) {
 
         angular.module('theme', [])
@@ -73,7 +73,7 @@ define(['angular', /*'annotationService',*/ 'configService', 'currentNodeService
                 $scope,
                 $state,
                 $stateParams,
-                CurrentNodeService,
+                StudentDataService,
                 NotebookService,
                 SessionService,
                 $mdDialog,
@@ -120,7 +120,7 @@ define(['angular', /*'annotationService',*/ 'configService', 'currentNodeService
                     $scope.$watch(function() {
                         return it.isOpen();
                     }, function(isOpen) {
-                        var currentNode = CurrentNodeService.getCurrentNode();
+                        var currentNode = StudentDataService.getCurrentNode();
                         NotebookService.saveNotebookToggleEvent(isOpen, currentNode);
                     });
                 });

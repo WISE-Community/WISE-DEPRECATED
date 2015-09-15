@@ -2,11 +2,11 @@ define(['app'], function(app) {
 
     app
     .$controllerProvider
-    .register('NodeGradingController', ['$state', 'AnnotationService', 'ConfigService', 'CurrentNodeService', 'StudentStatusService', 'TeacherDataService',
-                                            function ($state, AnnotationService, ConfigService, CurrentNodeService, StudentStatusService, TeacherDataService) {
+    .register('NodeGradingController', ['$state', 'AnnotationService', 'ConfigService', 'StudentDataService', 'StudentStatusService', 'TeacherDataService',
+                                            function ($state, AnnotationService, ConfigService, StudentDataService, StudentStatusService, TeacherDataService) {
         this.title = 'Node Grading!!!';
         
-        this.nodeId = CurrentNodeService.getCurrentNodeId();
+        this.nodeId = StudentDataService.getCurrentNodeId();
         
         var vleStates = TeacherDataService.getVLEStates();
         

@@ -27,7 +27,6 @@ require.config({
             'lib/bootstrap/bootstrap.min'
             ],
         'configService': 'services/configService',
-        'currentNodeService': 'services/currentNodeService',
         'cRaterController': 'components/cRater/cRaterController',
         'cRaterService': 'components/cRater/cRaterService',
         'd3': 'lib/d3/d3',

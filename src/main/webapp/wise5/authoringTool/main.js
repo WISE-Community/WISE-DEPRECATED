@@ -17,7 +17,6 @@ require.config({
         'authoringToolController': 'authoringTool/authoringToolController',
         'configService': 'services/configService',
         'cRaterService': 'components/cRater/cRaterService',
-        'currentNodeService': 'services/currentNodeService',
         'd3': 'lib/d3/d3',
         'directives': 'directives/directives',
         'discussionService': 'components/discussion/discussionService',

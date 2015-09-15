@@ -1,6 +1,6 @@
 define([], function() {
 
-    var service = ['$http', 'ConfigService', 'CurrentNodeService', function($http, ConfigService, CurrentNodeService) {
+    var service = ['$http', 'ConfigService', 'StudentDataService', function($http, ConfigService, StudentDataService) {
         var serviceObject = {};
         
         serviceObject.annotations = null;
@@ -18,7 +18,7 @@ define([], function() {
             var workgroupIds = null;
             
             var params = {};
-            var currentNodeId = CurrentNodeService.getCurrentNodeId();
+            var currentNodeId = StudentDataService.getCurrentNodeId();
             if (currentNodeId != null) {
                 nodeId = currentNodeId;
             }
