@@ -101,4 +101,29 @@ a {
   }
 }
 
+// Progress
+.progress-circular--withbg {
+  background-color: $accent-color-3;
+  @include border-radius(50%);
+}
+
+.button--progress-circular {
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+
+.button--progress-circular__label { // Note: assumes md-diameter is set to "30" on accompanying <md-progress-circular>
+  position: absolute;
+  z-index: 1;
+  left: 13px;
+  top: 10px;
+  font-size: 13px;
+  height: 24px;
+  width: 24px;
+  background: #ffffff;
+  @include border-radius(50%);
+  line-height: 24px;
+}
+
 // Animations
