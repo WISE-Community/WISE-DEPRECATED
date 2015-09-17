@@ -27,7 +27,8 @@
         },
             debug = false,
             events = false,
-            moduleCache = [];
+            moduleCache = [],
+            modulePromises = {};
 
         moduleCache.push = function (value) {
             if (this.indexOf(value) === -1) {
@@ -129,18 +130,22 @@
          * @param obj
          */
         var stringify = function stringify(obj) {
-            var cache = [];
-            return JSON.stringify(obj, function (key, value) {
-                if (angular.isObject(value) && value !== null) {
-                    if (cache.indexOf(value) !== -1) {
-                        // Circular reference found, discard key
-                        return;
+            try {
+                return JSON.stringify(obj);
+            } catch (e) {
+                var cache = [];
+                return JSON.stringify(obj, function (key, value) {
+                    if (angular.isObject(value) && value !== null) {
+                        if (cache.indexOf(value) !== -1) {
+                            // Circular reference found, discard key
+                            return;
+                        }
+                        // Store value in our collection
+                        cache.push(value);
                     }
-                    // Store value in our collection
-                    cache.push(value);
-                }
-                return value;
-            });
+                    return value;
+                });
+            }
         };
 
         var hashCode = function hashCode(str) {
@@ -214,16 +219,28 @@
             if (angular.isUndefined(regInvokes[moduleName][type])) {
                 regInvokes[moduleName][type] = {};
             }
-            var onInvoke = function onInvoke(invokeName, signature) {
+            var onInvoke = function onInvoke(invokeName, invoke) {
                 if (!regInvokes[moduleName][type].hasOwnProperty(invokeName)) {
                     regInvokes[moduleName][type][invokeName] = [];
                 }
-                if (regInvokes[moduleName][type][invokeName].indexOf(signature) === -1) {
+                if (checkHashes(invoke, regInvokes[moduleName][type][invokeName])) {
                     newInvoke = true;
-                    regInvokes[moduleName][type][invokeName].push(signature);
+                    regInvokes[moduleName][type][invokeName].push(invoke);
                     broadcast('ocLazyLoad.componentLoaded', [moduleName, type, invokeName]);
                 }
             };
+
+            function checkHashes(potentialNew, invokes) {
+                var isNew = true,
+                    newHash;
+                if (invokes.length) {
+                    newHash = signature(potentialNew);
+                    angular.forEach(invokes, function (invoke) {
+                        isNew = isNew && signature(invoke) !== newHash;
+                    });
+                }
+                return isNew;
+            }
 
             function signature(data) {
                 if (angular.isArray(data)) {
@@ -243,15 +260,15 @@
             }
 
             if (angular.isString(invokeList)) {
-                onInvoke(invokeList, signature(args[2][1]));
+                onInvoke(invokeList, args[2][1]);
             } else if (angular.isObject(invokeList)) {
                 angular.forEach(invokeList, function (invoke, key) {
                     if (angular.isString(invoke)) {
                         // decorators for example
-                        onInvoke(invoke, signature(invokeList[1]));
+                        onInvoke(invoke, invokeList[1]);
                     } else {
                         // components registered as object lists {"componentName": function() {}}
-                        onInvoke(key, signature(invoke));
+                        onInvoke(key, invoke);
                     }
                 });
             } else {
@@ -614,6 +631,7 @@
                         var res = modulesToLoad.slice(); // clean copy
                         var loadNext = function loadNext(moduleName) {
                             moduleCache.push(moduleName);
+                            modulePromises[moduleName] = deferred.promise;
                             self._loadDependencies(moduleName, localParams).then(function success() {
                                 try {
                                     justLoaded = [];
@@ -636,6 +654,8 @@
 
                         // load the first in list
                         loadNext(modulesToLoad.shift());
+                    } else if (localParams && localParams.name && modulePromises[localParams.name]) {
+                        return modulePromises[localParams.name];
                     } else {
                         deferred.resolve();
                     }
