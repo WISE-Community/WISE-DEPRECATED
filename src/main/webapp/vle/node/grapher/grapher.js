@@ -2587,7 +2587,7 @@ Grapher.prototype.getPreviousPrediction = function() {
 				 * OR if cannot create prediction then always use previous prediction - jonathan vitale
 				 * OR if student has updated previous state, update this state with new work.
 				 */
-				if(predictionState != null && predictionState != "" && (this.grapherState.predictionArray.length == 0 || !this.createPrediction || (this.grapherState.timestamp != null && predictionState.timestamp != null && this.grapherState.timestamp != null < predictionState.timestamp))) {
+				if(predictionState != null && predictionState != "" && (this.grapherState.predictionArray.length == 0 || !this.createPrediction || (this.grapherState.timestamp != null && predictionState.timestamp != null && this.grapherState.timestamp < predictionState.timestamp))) {
 
 					//var predictionId = "";
 					
@@ -2613,11 +2613,29 @@ Grapher.prototype.getPreviousPrediction = function() {
 					 */
 					var predictionArray = JSON.parse(JSON.stringify(predictionState.predictionArray));
 					for (var x = 0; x < predictionArray.length; x++){
-						this.grapherState.predictionArray.push(predictionArray[x]);
+						// look to see if this series is already in state's prediction array, if so, replace it
+						var seriesFound = false;
+						for (var y = 0; y < this.grapherState.predictionArray.length; y++){
+							if (this.grapherState.predictionArray[y].id == predictionArray[x].id){
+								this.grapherState.predictionArray[y] = predictionArray[x];
+								seriesFound = true; break;
+							}
+						}
+						if (!seriesFound){
+							this.grapherState.predictionArray.push(predictionArray[x]);
+						}
 					}
 
 					var annotationArray = JSON.parse(JSON.stringify(predictionState.annotationArray));
-					for (var x = 0; x < annotationArray.length; x++){
+					for (x = 0; x < annotationArray.length; x++){
+						// look to see if this series is already in state's annotation array, if so, replace it
+						var seriesFound = false;
+						for (var y = 0; y < this.grapherState.annotationArray.length; y++){
+							if (this.grapherState.annotationArray[y].id == annotationArray[x].id){
+								this.grapherState.annotationArray[y] = annotationArray[x];
+								seriesFound = true; break;
+							}
+						}
 						this.grapherState.annotationArray.push(annotationArray[x]);
 					}
 
