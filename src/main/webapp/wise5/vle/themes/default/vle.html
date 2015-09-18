@@ -65,7 +65,12 @@
                      jqyoui-droppable="{onDrop: 'vleController.notebookDropCallback()'}"
                      ng-mousemove='vleController.mouseMoved()'></div>
             </md-content>
-        <footer class="l-footer md-whiteframe-z2" flex>
+            <footer class="l-footer md-whiteframe-z2">
+                <md-button class="button--progress-circular md-primary" aria-label="Project Progress">
+                    <span class="button--progress-circular__label">{{themeCtrl.rootNodeStatus.progress.completionPct}}</span>
+                    <md-progress-circular class="progress-circular--withbg" md-mode="determinate" value="{{themeCtrl.rootNodeStatus.progress.completionPct}}" md-diameter="30"></md-progress-circular>
+                </md-button>
+                <span flex></span>
             </footer>
         </div>
         <md-sidenav class="md-sidenav-right md-whiteframe-z2" md-component-id="notebook" layout="column" flex

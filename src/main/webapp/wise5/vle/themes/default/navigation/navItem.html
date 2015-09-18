@@ -1,5 +1,5 @@
 <ng-switch on="type">
-    <md-card ng-switch-when="card" class="nav-item--card" ng-class="itemType">
+    <md-card ng-switch-when="card" class="nav-item--card" ng-class="{'nav-item--card--group':isGroup}">
         <md-card-content ng-click="nodeClicked()" role="button" md-ink-ripple layout="row">
             <img ng-if="nodeStatus.icon.type === 'img'" ng-animate-ref="{{ item.id }}" ng-class="isGroup ? 'avatar--square' : ''" class="md-36 avatar nav-item__avatar" ng-src="{{nodeStatus.icon.imgSrc}}" alt="{{nodeStatus.icon.imgAlt}}" />
             <div ng-if="nodeStatus.icon.type === 'font'" ng-animate-ref="{{ item.id }}" ng-class="isGroup ? 'avatar--square' : ''" style="background-color: {{nodeStatus.icon.color}};" class="md-36 avatar avatar--icon nav-item__avatar">

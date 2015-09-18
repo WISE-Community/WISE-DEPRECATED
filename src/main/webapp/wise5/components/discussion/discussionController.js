@@ -5,7 +5,6 @@ define(['app', 'angular'], function(app, angular) {
             $state, 
             $stateParams,
             ConfigService,
-            CurrentNodeService,
             DiscussionService,
             NodeService,
             ProjectService,
@@ -55,7 +54,7 @@ define(['app', 'angular'], function(app, angular) {
         this.setup = function() {
             
             // get the current node and node id
-            var currentNode = CurrentNodeService.getCurrentNode();
+            var currentNode = StudentDataService.getCurrentNode();
             if (currentNode != null) {
                 this.nodeId = currentNode.id;
             }
@@ -135,7 +134,7 @@ define(['app', 'angular'], function(app, angular) {
             DiscussionService.getClassmateResponses(runId, periodId, nodeId, componentId).then(angular.bind(this, function(result) {
                 
                 if (result != null) {
-                    var componentStates = result.componentStates;
+                    var componentStates = result.studentWorkList;
                     
                     // set the classmate responses
                     this.setClassResponses(componentStates);

@@ -1,6 +1,6 @@
-define(['angular', /*'annotationService',*/ 'configService', 'currentNodeService', 'notebookService',
+define(['angular', /*'annotationService',*/ 'configService', 'notebookService',
         'projectService', 'sessionService', 'studentDataService'],
-    function(angular, /*AnnotationService,*/ ConfigService, CurrentNodeService, NotebookService, ProjectService,
+    function(angular, /*AnnotationService,*/ ConfigService, NotebookService, ProjectService,
              SessionService, StudentDataService) {
 
         angular.module('theme', [])
@@ -73,14 +73,24 @@ define(['angular', /*'annotationService',*/ 'configService', 'currentNodeService
                 $scope,
                 $state,
                 $stateParams,
-                CurrentNodeService,
+                ProjectService,
+                StudentDataService,
                 NotebookService,
                 SessionService,
                 $mdDialog,
                 $mdSidenav,
                 $mdComponentRegistry) {
 
-                this.layoutView = 'card'; // TODO: set this dynamically from theme settings ('card' or 'list'); do we want a list view at all?
+                // TODO: set these variables dynamically from theme settings
+                this.layoutView = 'card'; // do we want a list view at all?
+                this.numberProject = true;
+
+                this.nodeStatuses = StudentDataService.nodeStatuses;
+
+                this.startNodeId = ProjectService.getStartNodeId();
+                this.rootNode = ProjectService.getRootNode(this.startNodeId);
+                this.rootNodeStatus = this.nodeStatuses[this.rootNode.id];
+
 
                 // alert user when a locked node has been clicked
                 $scope.$on('nodeClickedLocked', angular.bind(this, function (event, args) {
@@ -120,7 +130,7 @@ define(['angular', /*'annotationService',*/ 'configService', 'currentNodeService
                     $scope.$watch(function() {
                         return it.isOpen();
                     }, function(isOpen) {
-                        var currentNode = CurrentNodeService.getCurrentNode();
+                        var currentNode = StudentDataService.getCurrentNode();
                         NotebookService.saveNotebookToggleEvent(isOpen, currentNode);
                     });
                 });

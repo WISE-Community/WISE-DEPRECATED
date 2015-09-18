@@ -15,7 +15,6 @@ define([
     'annotationService',
     'configService',
     'cRaterService',
-    'currentNodeService',
     'discussionService',
     'drawService',
     'graphService',
@@ -50,7 +49,6 @@ define([
     annotationService,
     configService,
     cRaterService,
-    currentNodeService,
     discussionService,
     drawService,
     graphService,
@@ -85,7 +83,6 @@ define([
     app.factory('AnnotationService', annotationService);
     app.factory('ConfigService', configService);
     app.factory('CRaterService', cRaterService);
-    app.factory('CurrentNodeService', currentNodeService);
     app.factory('NodeService', nodeService);
     app.factory('NotebookService', notebookService);
     app.factory('ProjectService', projectService);

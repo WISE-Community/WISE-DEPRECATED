@@ -29,6 +29,9 @@ var branchNodeId = '';
 // holds the current group we are parsing so we can put child nodes into it
 var currentGroup = null;
 
+// variable to turn debugging on or off
+var test = false;
+
 /**
  * Convert the WISE4 project into a WISE5 project
  */
@@ -59,7 +62,7 @@ function convert() {
         wise4Project = response;
 
         // get the string representation of the WISE4 project
-        var wise4ProjectString = JSON.stringify(wise4Project, null, 3);
+        var wise4ProjectString = JSON.stringify(wise4Project, null, 4);
 
         // display the WISE4 project string in the textarea
         $('#wise4ProjectFile').html(wise4ProjectString);
@@ -91,7 +94,7 @@ function parseWISE4Project(wise4Project) {
     }
 
     // get the string representation of the WISE5 project
-    var wise5ProjectString = JSON.stringify(wise5Project, null, 3);
+    var wise5ProjectString = JSON.stringify(wise5Project, null, 4);
 
     // display the WISE5 project string in the textarea
     $('#wise5ProjectFile').html(wise5ProjectString);
@@ -356,16 +359,13 @@ function convertNode(node, nodeContent) {
 
     if (nodeContent != null) {
         var nodeType = nodeContent.type;
-        console.log(nodeType);
+
         if (nodeType === 'Html') {
             wise5Node = convertHTML(node, nodeContent);
-            console.log('[x]');
         } else if (nodeType === 'AssessmentList') {
             wise5Node = convertAssessmentList(node, nodeContent);
-            console.log('[x]');
         } else if (nodeType === 'OpenResponse') {
             wise5Node = convertOpenResponse(node, nodeContent);
-            console.log('[x]');
         } else if (nodeType === 'Note') {
 
         } else if (nodeType === 'MultipleChoice' || nodeType === 'Challenge') {
@@ -374,17 +374,14 @@ function convertNode(node, nodeContent) {
 
         } else if (nodeType === 'SVGDraw') {
             wise5Node = convertDraw(node, nodeContent);
-            console.log('[x]');
         } else if (nodeType === 'Brainstorm') {
             wise5Node = convertBrainstorm(node, nodeContent);
-            console.log('[x]');
         } else if (nodeType === 'Fillin') {
 
         } else if (nodeType === 'Sensor') {
 
         } else if (nodeType === 'Table') {
             wise5Node = convertTable(node, nodeContent);
-            console.log('[x]');
         } else if (nodeType === 'IdeaBasket') {
 
         } else if (nodeType === 'ExplanationBuilder') {
@@ -399,8 +396,11 @@ function convertNode(node, nodeContent) {
 
         } else if (nodeType === 'PhET') {
             wise5Node = convertPhet(node, nodeContent);
-            console.log('[x]');
         }
+    }
+
+    if (wise5Node != null) {
+        //console.log(nodeType + '[x]');
     }
 
     return wise5Node;
@@ -509,6 +509,8 @@ function convertHTML(node, nodeContent) {
                 // set the prompt
                 var content = {};
                 content.prompt = nodeContent.prompt;
+                content.showSaveButton = false;
+                content.showSubmitButton = false;
                 content.components = [];
 
                 var component = {};
@@ -550,9 +552,25 @@ function convertAssessmentList(node, nodeContent) {
     // set the title
     wise5Node.title = node.title;
 
+    var prompt = nodeContent.prompt;
+
+    if (test) {
+        console.log('before');
+        console.log(prompt);
+
+        prompt = fixAssetReferences(prompt);
+
+        console.log('after');
+        console.log(prompt);
+
+        //test = true;
+    }
+
     var content = {};
     // set the prompt
     content.prompt = nodeContent.prompt;
+    content.showSaveButton = true;
+    content.showSubmitButton = false;
     content.components = [];
 
     // get all the assessment parts
@@ -581,6 +599,12 @@ function convertAssessmentList(node, nodeContent) {
                 } else if (assessment.type === 'radio' || assessment.type === 'checkbox') {
                     // create an multiple choice component
                     component.componentType = 'MultipleChoice';
+
+                    if (assessment.type === 'radio') {
+                        component.choiceType = 'radio';
+                    } else if(assessment.type === 'checkbox') {
+                        component.choiceType = 'checkbox';
+                    }
 
                     // get all the choices
                     var choices = assessment.choices;
@@ -639,7 +663,13 @@ function convertOpenResponse(node, nodeContent) {
     // set the title
     wise5Node.title = node.title;
 
+    var prompt = nodeContent.prompt;
+
+    //console.log(prompt);
+
     var content = {};
+    content.showSaveButton = true;
+    content.showSubmitButton = false;
     content.components = [];
 
     var component = {};
@@ -675,7 +705,8 @@ function convertTable(node, nodeContent) {
     wise5Node.title = node.title;
 
     var content = {};
-
+    content.showSaveButton = true;
+    content.showSubmitButton = false;
     content.components = [];
 
     var tableComponent = {};
@@ -768,7 +799,8 @@ function convertPhet(node, nodeContent) {
     wise5Node.title = node.title;
 
     var content = {};
-
+    content.showSaveButton = true;
+    content.showSubmitButton = false;
     content.components = [];
 
     var component = {};
@@ -797,14 +829,14 @@ function convertPhet(node, nodeContent) {
  */
 function convertDraw(node, nodeContent) {
     var wise5Node = createWISE5Node();
-    //console.log(JSON.stringify(nodeContent, null, 3));
     wise5Node.title = node.title;
-    var content = {};
 
+    var content = {};
+    content.showSaveButton = true;
+    content.showSubmitButton = false;
     content.components = [];
 
     var component = {};
-
     component.id = createRandomId();
     component.componentType = 'Draw';
     component.prompt = nodeContent.prompt;
@@ -813,21 +845,28 @@ function convertDraw(node, nodeContent) {
 
     wise5Node.content = content;
 
+    // add the WISE5 node to the project
     addWISE5Node(wise5Node);
 
     return wise5Node;
 };
 
+/**
+ * Convert a WISE4 brainstorm node into a WISE5 node with a discussion component
+ * @param node the WISE4 node
+ * @param nodeContent the WISE4 node content
+ * @returns a WISE5 node
+ */
 function convertBrainstorm(node, nodeContent) {
     var wise5Node = createWISE5Node();
-    //console.log(JSON.stringify(nodeContent, null, 3));
     wise5Node.title = node.title;
-    var content = {};
 
+    var content = {};
+    content.showSaveButton = true;
+    content.showSubmitButton = false;
     content.components = [];
 
     var component = {};
-
     component.id = createRandomId();
     component.componentType = 'Discussion';
 
@@ -836,44 +875,60 @@ function convertBrainstorm(node, nodeContent) {
     if (nodeContent.assessmentItem != null &&
         nodeContent.assessmentItem.interaction != null &&
         nodeContent.assessmentItem.interaction.prompt != null) {
+
+        // get the prompt
         prompt = nodeContent.assessmentItem.interaction.prompt
     }
 
     component.prompt = prompt;
+    component.showSaveButton = false;
+    component.showSubmitButton = true;
 
     content.components.push(component);
 
     wise5Node.content = content;
 
+    // add the WISE5 node to the project
     addWISE5Node(wise5Node);
 
     return wise5Node;
 };
 
+/**
+ * Convert a WISE4 annotator node into a WISE5 node with an html component
+ * @param node the WISE4 node
+ * @param nodeContent the WISE4 node content
+ * @returns a WISE5 node
+ */
 function convertAnnotator(node, nodeContent) {
     var wise5Node = createWISE5Node();
-    //console.log(JSON.stringify(nodeContent, null, 3));
     wise5Node.title = node.title;
-    var content = {};
 
+    var content = {};
+    content.showSaveButton = true;
+    content.showSubmitButton = false;
     content.components = [];
 
     var component = {};
-
     component.id = createRandomId();
     component.componentType = 'HTML';
-
+    component.html = 'Insert Annotator component here';
     component.prompt = nodeContent.prompt;
 
     content.components.push(component);
 
     wise5Node.content = content;
 
+    // add the WISE5 node to the project
     addWISE5Node(wise5Node);
 
     return wise5Node;
 };
 
+/**
+ * Get the next node id that is available
+ * @returns a node id string
+ */
 function getNextNodeId() {
     var nodeId = 'node' + nodeCounter;
 
@@ -882,6 +937,10 @@ function getNextNodeId() {
     return nodeId;
 };
 
+/**
+ * Get the next group id that is available
+ * @returns a group id string
+ */
 function getNextGroupId() {
     var groupId = 'group' + groupCounter;
 
@@ -890,13 +949,24 @@ function getNextGroupId() {
     return groupId;
 };
 
+/**
+ * Add a WISE5 node to the WISE5 project
+ * @param wise5Node the WISE5 node
+ */
 function addWISE5Node(wise5Node) {
     wise5Project.nodes.push(wise5Node);
 };
 
+/**
+ * Add a transition
+ * @param fromNodeId the from node id
+ * @param toNodeId the to node id
+ * @param criteriaArray (optional) the criteria that needs to be satisifed
+ * in order for the student to be able to traverse this transition
+ */
 function addTransition(fromNodeId, toNodeId, criteriaArray) {
 
-
+    // get the from node
     var node = getWISE5NodeById(fromNodeId);
 
     if (node != null) {
@@ -906,10 +976,16 @@ function addTransition(fromNodeId, toNodeId, criteriaArray) {
             var transitions = transitionLogic.transitions;
 
             if (transitions != null) {
+
+                // create the transition object
                 var transitionObject = {};
                 transitionObject.to = toNodeId;
-                transitionObject.criteria = criteriaArray;
 
+                if (criteriaArray != null) {
+                    transitionObject.criteria = criteriaArray;
+                }
+
+                // add the transition
                 transitions.push(transitionObject);
             }
         }
@@ -917,12 +993,18 @@ function addTransition(fromNodeId, toNodeId, criteriaArray) {
 
 };
 
+/**
+ * Get a WISE5 node by id
+ * @param nodeId the node id
+ * @returns the WISE5 node
+ */
 function getWISE5NodeById(nodeId) {
     var node = null;
 
     if (nodeId != null) {
         var nodes = wise5Project.nodes;
 
+        // loop through all the WISE5 nodes currently in the WISE5 project
         for (var n = 0; n < nodes.length; n++) {
             var tempNode = nodes[n];
 
@@ -930,6 +1012,7 @@ function getWISE5NodeById(nodeId) {
                 var tempNodeId = tempNode.id;
 
                 if (nodeId === tempNodeId) {
+                    // we have found the node id that we want
                     node = tempNode;
                     break;
                 }
@@ -940,110 +1023,160 @@ function getWISE5NodeById(nodeId) {
     return node;
 };
 
+/**
+ * Check if the WISE4 sequence is a branching activity
+ * @param sequence the WISE4 sequence
+ * @returns whether the sequence is a branching activity
+ */
 function isBranchingActivity(sequence) {
-    console.log('isBranchingActivity');
     var result = false;
 
     if (sequence != null) {
         var refs = sequence.refs;
 
+        // regex to that matches strings that end with br
         var regex = /.*br$/;
 
         if (refs != null && refs.length > 0) {
             var firstRef = refs[0];
 
-
+            /*
+             * check if the first node in the branch is a branching node
+             * by checking if the node id ends with br
+             */
             if (firstRef.match(regex)) {
                 result = true;
             }
         }
     }
-    console.log('result=' + result);
+
     return result;
 };
 
+/**
+ * Create a WISE5 branch from the WISE4 branch
+ * @param sequence the WISE4 branch sequence
+ */
 function handleBranchActivity(sequence) {
 
     if (sequence != null) {
+
+        // get all the children of the sequence
         var refs = sequence.refs;
 
         var branchNode = null;
 
         var lastNodeIds = [];
 
+        // loop through all the children
         for (var r = 0; r < refs.length; r++) {
             var ref = refs[r];
 
             if (r === 0) {
+                // the first child should be a branch node
                 branchNode = getBranchNode(ref);
             } else {
-                var branchNodes = getBranchNodes(ref);
 
                 /*
-                if (previousNodeId != '') {
-                    var from = previousNodeId;
-                    var to = element.id;
-                    var wise5Transition = createWISE5Transition(from, to);
-                    addWISE5Transition(wise5Transition);
-                    previousNodeId = to;
-                } else {
-                    previousNodeId = element.id;
-                }
-                */
+                 * all the children that are not the first child should be
+                 * branch sequences
+                 */
 
+                // create the WISE5 nodes in this branch path
+                var branchNodes = getWISE5NodesInBranchPath(ref);
+
+                // remember the previous node ids so that we can create transitions later
                 var tempPreviousNodeIds = previousNodeIds;
 
                 var firstNodeIdInBranch = null;
 
+                // loop through all the nodes in the branch path
                 for (var b = 0; b < branchNodes.length; b++) {
+
+                    // get a WISE5 node
                     var wise5Node = branchNodes[b];
+
                     var to = wise5Node.id;
 
+                    // add the WISE5 node to the current group
                     currentGroup.ids.push(wise5Node.id);
 
                     if (b === 0) {
+                        /*
+                         * this is the first node in the branch path so we will remember it so we can
+                         * create a transition later
+                         */
                         firstNodeIdInBranch = wise5Node.id;
                     }
 
+                    // loop through all the previous node ids
                     for (var p = 0; p < tempPreviousNodeIds.length; p++) {
+
+                        // get a previous node id
                         var tempPreviousNodeId = tempPreviousNodeIds[p];
 
+                        // get the previous node
                         var previousWISE5Node = getWISE5NodeById(tempPreviousNodeId);
 
+                        // create a transition
                         addTransition(tempPreviousNodeId, to);
 
                         if (b === 0) {
+                            // this is the first node in the branch path
+
+                            /*
+                             * get the transition logic from the previous node.
+                             * the previous node is the branch point.
+                             */
                             var transitionLogic = previousWISE5Node.transitionLogic;
 
+                            // get the branching function
                             var branchingFunction = branchNode.branchingFunction;
                             var maxPathVisitable = branchNode.maxPathVisitable;
 
+                            // set how to choose the path
                             transitionLogic.howToChooseAmongAvailablePaths = branchingFunction;
                             transitionLogic.whenToChoosePath = 'enterNode';
 
+                            // set whether the student can change path
                             if (maxPathVisitable > 1) {
                                 transitionLogic.canChangePath = true;
                             } else {
                                 transitionLogic.canChangePath = false;
                             }
 
+                            // set the max visitable paths
                             transitionLogic.maxPathsVisitable = maxPathVisitable;
                         }
 
+                        /*
+                         * loop through all the previous node ids. usually there will only be
+                         * one previous node id and it will be the branch point.
+                         *
+                         * create constraints that make the nodes in the branch path not visible
+                         * and not visitable until the student takes the path.
+                         */
                         for (var x = 0; x < previousNodeIds.length; x++) {
+                            // get the branch point node id
                             var branchPointNodeId = previousNodeIds[x];
 
+                            // create a constraint that makes the node not visible
                             var notVisibleBranchConstraint = this.createBranchConstraint('makeThisNodeNotVisible', branchPointNodeId, firstNodeIdInBranch, to);
+
+                            // create a constraint that makes the node not visitable
                             var notVisitableBranchConstraint = this.createBranchConstraint('makeThisNodeNotVisitable', branchPointNodeId, firstNodeIdInBranch, to);
 
+                            // add the constraints
                             this.addWISE5Constraint(to, notVisibleBranchConstraint);
                             this.addWISE5Constraint(to, notVisitableBranchConstraint);
                         }
                     }
 
+                    // update the previous node ids
                     tempPreviousNodeIds = [to];
 
                     if (b === (branchNodes.length - 1)) {
+                        // remember the last node in the branch path so we can set it into the previousNodeIds later
                         lastNodeIds.push(wise5Node.id);
                     }
                 }
@@ -1051,15 +1184,23 @@ function handleBranchActivity(sequence) {
         }
 
         previousNodeIds = lastNodeIds;
-
-        console.log('branchNode=' + branchNode);
     }
 };
 
+/**
+ * Create a branch path taken constraint
+ * @param constraintAction the constraint action
+ * @param fromNodeId the from node id
+ * @param toNodeId the to node id
+ * @param targetNodeId the node id to constrain
+ * @returns the constraint object
+ */
 function createBranchConstraint(constraintAction, fromNodeId, toNodeId, targetNodeId) {
     var branchConstraint = null;
 
     if (fromNodeId != null && toNodeId != null && targetNodeId != null) {
+
+        // create the constraint action
         branchConstraint = {};
         branchConstraint.id = 'constraint' + constraintCounter;
         branchConstraint.action = constraintAction;
@@ -1068,20 +1209,23 @@ function createBranchConstraint(constraintAction, fromNodeId, toNodeId, targetNo
 
         constraintCounter++;
 
+        // create the critera that needs to be satisfied in order to remove the constraint
         var criteria = {};
         criteria.functionName = 'branchPathTaken';
         criteria.fromNodeId = fromNodeId;
         criteria.toNodeId = toNodeId;
-
         branchConstraint.removalCriteria.push(criteria);
     }
 
     return branchConstraint;
 };
 
+/**
+ * Add the WISE5 constraint
+ * @param nodeId the node id
+ * @param constraint the constraint object
+ */
 function addWISE5Constraint(nodeId, constraint) {
-
-    //wise5Project.constraints.push(constraint);
 
     var node = getWISE5NodeById(nodeId);
 
@@ -1090,6 +1234,11 @@ function addWISE5Constraint(nodeId, constraint) {
     }
 };
 
+/**
+ * Get the WISE4 branch node
+ * @param nodeId the WISE4 node id
+ * @returns the WISE4 branch node content
+ */
 function getBranchNode(nodeId) {
     var nodeFilePath = projectFolderPath + nodeId;
 
@@ -1107,22 +1256,30 @@ function getBranchNode(nodeId) {
     return nodeContent;
 };
 
-function getBranchNodes(sequenceId) {
+/**
+ * Get the WISE5 nodes in the branch path
+ * @param sequenceId the WISE4 sequence id
+ * @returns an array of WISE5 nodes that are in the branch path
+ */
+function getWISE5NodesInBranchPath(sequenceId) {
 
     var branchNodes = [];
 
     if (wise4Project != null && sequenceId != null) {
+
+        // get the WISE4 sequence
         var sequence = getSequence(wise4Project, sequenceId);
 
         if (sequence != null) {
             var refs = sequence.refs;
 
             if (refs != null) {
-                // loop through all the nodes in the sequence
 
+                // loop through all the nodes in the sequence
                 for (var r = 0; r < refs.length; r++) {
                     var ref = refs[r];
 
+                    // create a WISE5 node
                     var wise5Node = createWISE5NodeFromNodeContent(ref);
 
                     branchNodes.push(wise5Node);
@@ -1132,4 +1289,15 @@ function getBranchNodes(sequenceId) {
     }
 
     return branchNodes;
+};
+
+function fixAssetReferences(html) {
+
+    var fixedHTML = '';
+
+    var regex = /['"]\.jpg['"]]/g;
+
+
+
+    return fixedHTML;
 };

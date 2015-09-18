@@ -2117,13 +2117,15 @@ $.valHooks.textarea = {
 View.prototype.replaceWISEVariables = function(text) {
 	if (text != null) {
 		if (text.indexOf("{{studentFirstNames}}") >= 0) {
-			var workgroupId = this.getUserAndClassInfo().getWorkgroupId();
-			var studentFirstNamesArray = this.getUserAndClassInfo().getStudentFirstNamesByWorkgroupId(workgroupId);
-			var studentFirstNames = studentFirstNamesArray.join(' & ');
-			text = text.replace(/{{studentFirstNames}}/g, studentFirstNames);
+			if (this.getUserAndClassInfo && this.getUserAndClassInfo() != null) {
+				var workgroupId = this.getUserAndClassInfo().getWorkgroupId();
+				var studentFirstNamesArray = this.getUserAndClassInfo().getStudentFirstNamesByWorkgroupId(workgroupId);
+				var studentFirstNames = studentFirstNamesArray.join(' & ');
+				text = text.replace(/{{studentFirstNames}}/g, studentFirstNames);
+			}
 		}
 		if (text.indexOf("{{link") >= 0) {
-			text = text.replace(/{{link\|([^}}]*)\|([^}}]*)}}/g, "<a onclick=\"view.goToStep('$1')\">$2</a>")
+			text = text.replace(/{{link\|([^}}]*)\|([^}}]*)}}/g, "<a onclick=\\\"view.goToStep('$1')\\\">$2</a>")
 		}
 	}
 	return text;

@@ -1025,6 +1025,9 @@ View.prototype.goToNodePosition = function(nodePosition) {
 	//get the next node id
 	var nextNode = this.getProject().getNodeByPosition(nodePosition);
 	var nextNodeId = nextNode.id;
+
+    // remember the next position so we can access it globally elsewhere
+    this.nextPosition = nodePosition;
 	
 	//add any tag map constraints for the next node we are about to visit
 	this.addTagMapConstraints(nextNodeId);

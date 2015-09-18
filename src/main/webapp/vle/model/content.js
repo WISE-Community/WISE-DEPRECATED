@@ -120,6 +120,9 @@ function createContent(url, contentBaseUrlParam){
 
 					//contentString = contentString.replace(/^\.\/assets|^\/assets|^assets/gi, contentBaseUrl + 'assets');
 				}
+
+				// replace WISE variables like {{studentFirstNames}} and {{link|1.2|go here}}
+				contentString = view.replaceWISEVariables(contentString);
 				
 				//json
 				try{

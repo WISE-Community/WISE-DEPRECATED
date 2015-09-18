@@ -1305,12 +1305,6 @@ Box2dModel.prototype.save = function(evt) {
 		//push the state object into this or object's own copy of states
 		this.states.push(box2dModelState);
 
-        // get the latest node visit
-        var nodeVisit = this.view.getState().getCurrentNodeVisit();
-
-        // process teacher notifications if there are any
-        this.processTeacherNotifications(nodeVisit, box2dModelState);
-
 		// we are not returning clear GLOBAL_PA
 		return box2dModelState;
 	} else {

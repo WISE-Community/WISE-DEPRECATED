@@ -1,7 +1,7 @@
-define(['configService'], function(configService) {
-    
-    var service = ['$http', '$q', '$rootScope', 'ConfigService', 'StudentAssetService',
-        function($http, $q, $rootScope, ConfigService, StudentAssetService) {
+define(['configService', 'studentDataService'], function(configService, studentDataService) {
+
+    var service = ['$http', '$q', '$rootScope', 'ConfigService', 'StudentAssetService', 'StudentDataService',
+        function($http, $q, $rootScope, ConfigService, StudentAssetService, StudentDataService) {
 
         var serviceObject = {};
 
@@ -143,6 +143,20 @@ define(['configService'], function(configService) {
                 //$rootScope.$broadcast('studentAssetsUpdated');
             }));
         }
+
+        serviceObject.saveNotebookToggleEvent = function(isOpen, currentNode) {
+            var nodeId = null;
+            var componentId = null;
+            var componentType = null;
+            var category = "Notebook";
+            var eventData = {};
+            eventData.curentNodeId = currentNode == null ? null : currentNode.id;
+
+            var event = isOpen ? "notebookOpened" : "notebookClosed";
+
+            // save notebook open/close event
+            StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
+        };
         
         return serviceObject;
     }];

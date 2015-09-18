@@ -9,7 +9,13 @@
     "highstocks",
     "highmaps"
   ],
-  "version": "0.0.10",
+  "ignore": [
+    "test",
+    "src",
+    "example",
+    ".travis.yml"
+  ],
+  "version": "0.0.11",
   "main": "dist/highcharts-ng.js",
   "license": "MIT",
   "authors": [
@@ -24,11 +30,11 @@
     "jquery": "latest"
   },
   "homepage": "https://github.com/pablojim/highcharts-ng",
-  "_release": "0.0.10",
+  "_release": "0.0.11",
   "_resolution": {
     "type": "version",
-    "tag": "0.0.10",
-    "commit": "9db637f2aeb0cfd6a918e863c29ad3054b7c6c47"
+    "tag": "0.0.11",
+    "commit": "9d4b382dc5e4fe96a935b993e9b7622b9630a82d"
   },
   "_source": "git://github.com/pablojim/highcharts-ng.git",
   "_target": "~0.0.8",

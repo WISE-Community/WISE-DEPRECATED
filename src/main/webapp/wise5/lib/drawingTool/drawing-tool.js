@@ -159,6 +159,7 @@ var UndoRedo          = require2('scripts/undo-redo');
 var convertState      = require2('scripts/convert-state');
 var rescale2resize    = require2('scripts/fabric-extensions/rescale-2-resize');
 var multitouchSupport = require2('scripts/fabric-extensions/multi-touch-support');
+var studentAsset      = require2('scripts/fabric-extensions/studentAsset');
 
 var DEF_OPTIONS = {
   width: 800,
@@ -880,6 +881,17 @@ DrawingTool.prototype._initStateHistory = function () {
 
 module.exports = DrawingTool;
 
+});
+
+require2.register("scripts/fabric-extensions/studentAsset", function(exports, require, module) {
+    // Save additional attributes in Serialization
+    fabric.Image.prototype.toObject = (function (toObject) {
+        return function () {
+            return fabric.util.object.extend(toObject.call(this), {
+                studentAssetId: this.studentAssetId
+            });
+        };
+    })(fabric.Image.prototype.toObject);
 });
 
 require2.register("scripts/fabric-extensions/arrow", function(exports, require2, module) {
@@ -3719,6 +3731,7 @@ UndoRedo.prototype._cutOffOldStates = function () {
 module.exports = UndoRedo;
 
 });
+
 
 require2.register("scripts/util", function(exports, require2, module) {
 var $ = jQuery;

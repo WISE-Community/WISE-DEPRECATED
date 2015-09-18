@@ -109,7 +109,7 @@ define(['nodeService'], function(nodeService) {
                     params.periodId = periodId;
                     params.nodeId = nodeId;
                     params.componentId = componentId;
-                    params.getComponentStates = true;
+                    params.getStudentWork = true;
                     httpParams.params = params;
                     
                     $http(httpParams).then(angular.bind(this, function(result) {

@@ -6,7 +6,6 @@ define(['app'],
                     $state,
                     $stateParams,
                     ConfigService,
-                    CurrentNodeService,
                     NotebookService,
                     ProjectService,
                     NodeService,
@@ -21,7 +20,7 @@ define(['app'],
 
         this.setLayoutState = function() {
             var layoutState = 'nav'; // default layout state
-            var node = CurrentNodeService.getCurrentNode();
+            var node = StudentDataService.getCurrentNode();
 
             if(node){
                 var id = node.id;
@@ -38,7 +37,7 @@ define(['app'],
         $scope.$on('currentNodeChanged', angular.bind(this, function(event, args) {
             var previousNode = args.previousNode;
             var currentNode = args.currentNode;
-            var currentNode = CurrentNodeService.getCurrentNode();
+            var currentNode = StudentDataService.getCurrentNode();
             var nodeId = currentNode.id;
 
             StudentDataService.updateStackHistory(nodeId);
@@ -166,7 +165,7 @@ define(['app'],
         this.projectStyle = ProjectService.getStyle();
         this.projectName = ProjectService.getName();
 
-        CurrentNodeService.setCurrentNodeByNodeId(nodeId);
+        StudentDataService.setCurrentNodeByNodeId(nodeId);
 
         this.notebookFilters = NotebookService.getFilters();
         this.notebookFilter = this.notebookFilters[0].name;

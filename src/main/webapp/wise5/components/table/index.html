@@ -1,5 +1,5 @@
 <div ng-controller='TableController as tableController'>
-    <div>{{tableController.getPrompt()}}</div>
+    <div id='prompt' compile='tableController.getPrompt()'></div>
     <button ng-click='tableController.resetTable()'>Reset Table</button>
     <table>
         <tr ng-repeat='row in tableController.getTableDataRows()'>

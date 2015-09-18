@@ -1,4 +1,4 @@
-define(['configService', 'projectService'], function(configService, currentNodeService, projectService) {
+define(['configService', 'projectService'], function(configService, projectService) {
 
     var service = [
         '$http',
@@ -6,7 +6,6 @@ define(['configService', 'projectService'], function(configService, currentNodeS
         '$q',
         '$rootScope',
         'ConfigService',
-        'CurrentNodeService',
         'ProjectService',
         function (
             $http,
@@ -14,11 +13,11 @@ define(['configService', 'projectService'], function(configService, currentNodeS
             $q,
             $rootScope,
             ConfigService,
-            CurrentNodeService,
             ProjectService) {
 
         var serviceObject = {};
-        
+
+        serviceObject.currentNode = null;
         serviceObject.studentData = null;
         serviceObject.stackHistory = [];  // array of node id's
         serviceObject.visitedNodesHistory = [];
@@ -172,7 +171,7 @@ define(['configService', 'projectService'], function(configService, currentNodeS
 
                 for (var n = 0; n < nodes.length; n++) {
                     var node = nodes[n];
-                    if(!ProjectService.isGroupNode(node.id)) {
+                    if (!ProjectService.isGroupNode(node.id)) {
                         this.updateNodeStatusByNode(node);
                     }
                     
@@ -184,7 +183,7 @@ define(['configService', 'projectService'], function(configService, currentNodeS
                 //this.nodeStatuses = nodeStatuses;
             }
 
-            if(groups != null) {
+            if (groups != null) {
                 for (var g = 0; g < groups.length; g++) {
                     var group = groups[g];
                     group.depth = ProjectService.getNodeDepth(group.id);
@@ -494,7 +493,7 @@ define(['configService', 'projectService'], function(configService, currentNodeS
                             }
                         }
                     }
-                } else if(nodeId != null && componentId == null) {
+                } else if (nodeId != null && componentId == null) {
                     // this criteria is on a node
 
                     var tempResult = false;
@@ -1566,14 +1565,23 @@ define(['configService', 'projectService'], function(configService, currentNodeS
             var completedItems = 0;
             var totalItems = 0;
 
-            // assuming node is a group for now
-            var nodeIds = ProjectService.getChildNodeIdsById(nodeId);
-            for (var n=0; n<nodeIds.length; n++){
-                var status = this.nodeStatuses[nodeIds[n]];
-                if(!!status.isVisible){
-                    totalItems++;
-                    if(!!status.isCompleted) {
-                        completedItems++;
+            if (ProjectService.isGroupNode(nodeId)) {
+                var nodeIds = ProjectService.getChildNodeIdsById(nodeId);
+                for (var n=0; n<nodeIds.length; n++) {
+                    var id = nodeIds[n];
+                    var status = this.nodeStatuses[id];
+                    if (ProjectService.isGroupNode(id)) {
+                        var completedGroupItems = status.progress.completedItems;
+                        var totalGroupItems = status.progress.totalItems;
+                        completedItems += completedGroupItems;
+                        totalItems += totalGroupItems;
+                    } else {
+                        if (!!status.isVisible) {
+                            totalItems++;
+                            if (!!status.isCompleted) {
+                                completedItems++;
+                            }
+                        }
                     }
                 }
             }
@@ -1634,7 +1642,7 @@ define(['configService', 'projectService'], function(configService, currentNodeS
                 // check if node is a group
                 var isGroup = ProjectService.isGroupNode(nodeId);
 
-                if(isGroup){
+                if (isGroup) {
                     // node is a group
                     var tempResult = true;
 
@@ -1642,7 +1650,7 @@ define(['configService', 'projectService'], function(configService, currentNodeS
                     var nodeIds = ProjectService.getChildNodeIdsById(nodeId);
                     for (var n=0; n<nodeIds.length; n++) {
                         var id = nodeIds[n];
-                        if(this.nodeStatuses[id].isVisible && !this.nodeStatuses[id].isCompleted){
+                        if (this.nodeStatuses[id].isVisible && !this.nodeStatuses[id].isCompleted) {
                             tempResult = false;
                             break;
                         }
@@ -1714,6 +1722,114 @@ define(['configService', 'projectService'], function(configService, currentNodeS
             }
 
             return result;
+        };
+
+        /**
+         * Get the current node
+         * @returns the current node object
+         */
+        serviceObject.getCurrentNode = function() {
+            return this.currentNode;
+        };
+
+        /**
+         * Get the current node id
+         * @returns the current node id
+         */
+        serviceObject.getCurrentNodeId = function() {
+            var currentNodeId = null;
+
+            if (this.currentNode != null) {
+                currentNodeId = this.currentNode.id;
+            }
+
+            return currentNodeId;
+        };
+
+        /**
+         * Set the current node
+         * @param nodeId the node id
+         */
+        serviceObject.setCurrentNodeByNodeId = function(nodeId) {
+            if (nodeId != null) {
+                var node = ProjectService.getNodeById(nodeId);
+
+                this.setCurrentNode(node);
+            }
+        };
+
+        /**
+         * Set the current node
+         * @param node the node object
+         */
+        serviceObject.setCurrentNode = function(node) {
+            var previousCurrentNode = this.currentNode;
+
+            if (previousCurrentNode !== node) {
+                // the current node is about to change
+
+                // set the current node to the new node
+                this.currentNode = node;
+
+                // broadcast the event that the current node has changed
+                $rootScope.$broadcast('currentNodeChanged', {previousNode: previousCurrentNode, currentNode: this.currentNode});
+            }
+        };
+
+        /**
+         * End the current node
+         */
+        serviceObject.endCurrentNode = function() {
+
+            // get the current node
+            var previousCurrentNode = this.currentNode;
+
+            if (previousCurrentNode != null) {
+
+                // tell the node to exit
+                $rootScope.$broadcast('exitNode', {nodeToExit: previousCurrentNode});
+            }
+        };
+
+        /**
+         * End the current node and set the current node
+         * @param nodeId the node id of the new current node
+         */
+        serviceObject.endCurrentNodeAndSetCurrentNodeByNodeId = function(nodeId) {
+
+            // check if the node is visitable
+            if (this.nodeStatuses[nodeId].isVisitable) {
+                // the node is visitable
+                // end the current node
+                this.endCurrentNode();
+
+                // set the current node
+                this.setCurrentNodeByNodeId(nodeId);
+            } else {
+                // the node is not visitable
+                this.nodeClickLocked(nodeId);
+            }
+        };
+
+        /**
+         * End the current node and set the current node
+         * @param node the node of the new current node
+         */
+        serviceObject.endCurrentNodeAndSetCurrentNode = function(node) {
+
+            // end the current node
+            this.endCurrentNode();
+
+            // set the current node
+            this.setCurrentNode(node);
+        };
+
+        /**
+         * Broadcast a listenable event that a locked node has been clicked (attempted to be opened)
+         * @param nodeId
+         */
+        serviceObject.nodeClickLocked = function(nodeId) {
+            $rootScope.$broadcast('nodeClickLocked', {nodeId: nodeId});
         };
 
         return serviceObject;

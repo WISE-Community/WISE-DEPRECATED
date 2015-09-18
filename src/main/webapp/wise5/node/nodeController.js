@@ -5,7 +5,6 @@ define(['app'], function(app) {
                     $state, 
                     $stateParams, 
                     ConfigService,
-                    CurrentNodeService,
                     NodeService,
                     OpenResponseService,
                     ProjectService,
@@ -36,7 +35,7 @@ define(['app'], function(app) {
          */
         this.setup = function() {
             // get the current node and node id
-            var currentNode = CurrentNodeService.getCurrentNode();
+            var currentNode = StudentDataService.getCurrentNode();
             if (currentNode != null) {
                 this.nodeId = currentNode.id;
             }
@@ -740,7 +739,7 @@ define(['app'], function(app) {
         };
         
         this.addNodeVisitItemToNotebook = function() {
-            var currentNode = CurrentNodeService.getCurrentNode();
+            var currentNode = StudentDataService.getCurrentNode();
             if (currentNode != null) {
                 var currentNodeId = currentNode.id;
                 var currentNodeVisit = StudentDataService.getLatestNodeVisitByNodeId(currentNodeId)
@@ -756,11 +755,11 @@ define(['app'], function(app) {
         };
         
         this.closeNode = function() {
-            var currentNode = CurrentNodeService.getCurrentNode();
+            var currentNode = StudentDataService.getCurrentNode();
             if (currentNode != null) {
 
                 // end the current node
-                CurrentNodeService.endCurrentNode();
+                StudentDataService.endCurrentNode();
 
                 var currentNodeId = currentNode.id;
 
@@ -768,7 +767,7 @@ define(['app'], function(app) {
                 var parentNode = ProjectService.getParentGroup(currentNodeId);
 
                 // set the current node to the parent node
-                CurrentNodeService.endCurrentNodeAndSetCurrentNode(parentNode);
+                StudentDataService.endCurrentNodeAndSetCurrentNode(parentNode);
             }
         };
         
@@ -936,13 +935,13 @@ define(['app'], function(app) {
         this.goToNextNode = function() {
 
             // get the current node
-            var currentNode = CurrentNodeService.getCurrentNode();
+            var currentNode = StudentDataService.getCurrentNode();
 
             if (currentNode != null) {
                 var currentNodeId = currentNode.id;
 
                 // end the current node
-                CurrentNodeService.endCurrentNode();
+                StudentDataService.endCurrentNode();
 
                 // get the branch path node states
                 var branchPathNodeStates = StudentDataService.getBranchPathTakenNodeStates(currentNodeId);
@@ -960,7 +959,7 @@ define(['app'], function(app) {
                             var toNodeId = studentData.toNodeId;
 
                             // set the current node to be the to node id
-                            CurrentNodeService.setCurrentNodeByNodeId(toNodeId);
+                            StudentDataService.setCurrentNodeByNodeId(toNodeId);
                             break;
                         }
                     }
@@ -974,7 +973,7 @@ define(['app'], function(app) {
                     if (transition != null) {
                         // move the student to the to node
                         var toNodeId = transition.to;
-                        CurrentNodeService.setCurrentNodeByNodeId(toNodeId);
+                        StudentDataService.setCurrentNodeByNodeId(toNodeId);
                     }
                 }
             }
@@ -986,7 +985,7 @@ define(['app'], function(app) {
         this.goToPrevNode = function() {
 
             // get the current node
-            var currentNode = CurrentNodeService.getCurrentNode();
+            var currentNode = StudentDataService.getCurrentNode();
 
             if (currentNode != null) {
 
@@ -999,7 +998,7 @@ define(['app'], function(app) {
 
                     if (transition != null) {
                         var fromNodeId = transition.from;
-                        CurrentNodeService.endCurrentNodeAndSetCurrentNodeByNodeId(fromNodeId);
+                        StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(fromNodeId);
                     }
                 } else {
 
@@ -1009,7 +1008,7 @@ define(['app'], function(app) {
                     if (stackHistory.length > 1) {
                         // get the previous node in the history
                         var prevNodeId = StudentDataService.getStackHistoryAtIndex(-2);
-                        CurrentNodeService.endCurrentNodeAndSetCurrentNodeByNodeId(prevNodeId);
+                        StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(prevNodeId);
                     }
                 }
             }
@@ -1018,7 +1017,7 @@ define(['app'], function(app) {
         this.hasTransitionLogic = function() {
             var result = false;
 
-            var currentNode = CurrentNodeService.getCurrentNode();
+            var currentNode = StudentDataService.getCurrentNode();
 
             if (currentNode != null) {
                 var transitionLogic = currentNode.transitionLogic;
@@ -1034,7 +1033,7 @@ define(['app'], function(app) {
         this.evaluateTransitionLogic = function() {
 
             // get the current node
-            var currentNode = CurrentNodeService.getCurrentNode();
+            var currentNode = StudentDataService.getCurrentNode();
 
             if (currentNode != null) {
 
@@ -1177,7 +1176,7 @@ define(['app'], function(app) {
             var result = false;
 
             // get the current node
-            var currentNode = CurrentNodeService.getCurrentNode();
+            var currentNode = StudentDataService.getCurrentNode();
 
             if (currentNode != null) {
                 var transitionLogic = currentNode.transitionLogic;
