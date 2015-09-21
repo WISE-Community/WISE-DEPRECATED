@@ -3,7 +3,7 @@ define(['angular', /*'annotationService',*/ 'configService', 'notebookService',
     function(angular, /*AnnotationService,*/ ConfigService, NotebookService, ProjectService,
              SessionService, StudentDataService) {
 
-        angular.module('theme', [])
+        angular.module('app.theme', [])
             .directive('navItem', function() {
                 return {
                     scope: {
@@ -47,6 +47,23 @@ define(['angular', /*'annotationService',*/ 'configService', 'notebookService',
                         };
 
                         $scope.nodeStatus = StudentDataService.nodeStatuses[$scope.item.id];
+                    }
+                };
+            })
+            .directive('progressCircularWithLabel', function() {
+                return {
+                    scope: {
+                        templateUrl: '=',
+                        value: '='
+                    },
+                    template: '<ng-include src="getTemplateUrl()"></ng-include>',
+                    controller: function($scope,
+                                         $state,
+                                         $stateParams) {
+
+                        $scope.getTemplateUrl = function(){
+                            return $scope.templateUrl;
+                        };
                     }
                 };
             })

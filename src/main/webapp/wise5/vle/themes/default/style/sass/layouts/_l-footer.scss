@@ -9,8 +9,12 @@
   background-color: #ffffff;
   display: flex;
   height: $footer-height;
+  padding: 0 8px;
+  border-top: 1px solid $gray-lighter;
 
-  md-progress-circular {
-    margin-top: -3px;
+  .progress-circular-with-label {
+    margin-top: -4px;
+    margin-left: -6px;
+    margin-right: -6px;
   }
 }
