@@ -1,6 +1,7 @@
 define(['app'], function(app) {
     app.$controllerProvider.register('NavigationController',
-        function ($scope,
+        function ($rootScope,
+                  $scope,
                   $state,
                   $stateParams,
                   ConfigService,
@@ -94,5 +95,16 @@ define(['app'], function(app) {
             };
 
             this.updateNavigation();
+
+            var scope = this;
+            $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
+                console.log(scope.currentNode.id);
+                var toNodeId = toParams.nodeId;
+                var fromNodeId = fromParams.nodeId;
+                if (!!toNodeId && !!fromNodeId && toNodeId !== fromNodeId) {
+                    StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(toNodeId);
+                }
+            });
+
         })
 });
