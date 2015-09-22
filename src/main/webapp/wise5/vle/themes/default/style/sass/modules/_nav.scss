@@ -91,6 +91,13 @@
 .nav-contents--card {
 }
 
+.nav-item--card__content {
+  @media (min-width: $layout-breakpoint-sm) {
+    min-height: 100px;
+  }
+}
+
+
 .nav-contents--list {
   padding: 8px 16px;
 }
@@ -131,13 +138,12 @@
 .nav-item__title {
   padding-left: 16px;
   line-height: 1.2;
-  align-self: center;
+  //align-self: center;
   font-weight: 400;
 }
 
 .nav-item__info {
   color: $text-color-secondary;
-  display: inline-block;
 }
 
 .progress-wrapper {

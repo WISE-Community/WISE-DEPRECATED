@@ -10,9 +10,9 @@
             <span ng-if="!$last" ng-repeat-end> > </span>
         </div>
         <span flex></span>
-        <md-select ng-if="vleController.navFilters.length > 1" class="md-body-1" placeholder="Filter" ng-model="vleController.navFilter">
+        <!--<md-select ng-if="vleController.navFilters.length > 1" class="md-body-1" placeholder="Filter" ng-model="vleController.navFilter">
             <md-option ng-repeat="filter in vleController.navFilters" value="{{filter.name}}">{{filter.label}}</md-option>
-        </md-select>
+        </md-select>-->
     </div>
 
     <div class="nav-root" ng-if="navCtrl.layoutState === 'root'" >

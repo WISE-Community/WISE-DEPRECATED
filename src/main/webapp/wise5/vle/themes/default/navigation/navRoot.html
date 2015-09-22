@@ -1,13 +1,13 @@
 <div ng-class="'nav-contents nav-contents--root nav-contents--' + navCtrl.layoutView">
-    <md-list ng-if="themeCtrl.layoutView === 'list'">
+    <!--<md-list ng-if="themeCtrl.layoutView === 'list'">
         <nav-item ng-repeat="item in navCtrl.currentChildren" ng-if="navCtrl.nodeStatuses[item.id].isVisible"
                   template-url="vleController.themePath + '/navigation/navItem.html'"
                   item="item" type="themeCtrl.layoutView" node-clicked="navCtrl.nodeClicked(item.id)" ng-animate-ref="{{ item.id }}" class="nav-item ng-enter"></nav-item>
-    </md-list>
-    <div ng-if="themeCtrl.layoutView === 'card'" layout="row" layout-wrap layout-align="center start">
+    </md-list>-->
+    <div layout="row" layout-wrap layout-align="start start">
         <nav-item ng-repeat="item in navCtrl.currentChildren" ng-if="navCtrl.nodeStatuses[item.id].isVisible"
                   template-url="vleController.themePath + '/navigation/navItem.html'"
-                  item="item" type="themeCtrl.layoutView" node-clicked="navCtrl.nodeClicked(item.id)"
+                  item="item" type="'card'" node-clicked="navCtrl.nodeClicked(item.id)"
                   flex-sm="100" flex-md="50" flex-lg="33" flex-gt-lg="25"></nav-item>
     </div>
 </div>
