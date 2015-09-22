@@ -561,7 +561,7 @@ Box2dModel.prototype.interpretEvent = function(type, args, obj) {
 				}
 			}
 			// get index for tested in water
-			var liquid_name = GLOBAL_PARAMETERS.liquids_in_world.length === 1 ? GLOBAL_PARAMETERS.liquids_in_world[0] : "Water";
+			var liquid_name = GLOBAL_PARAMETERS.liquids_in_world.length >= 1 ? GLOBAL_PARAMETERS.liquids_in_world[0] : "Water";
 			// get index for tested on scale
 			var sinkIndex = -1;
 			for (var i = 0; i < tableData.length; i++) {
