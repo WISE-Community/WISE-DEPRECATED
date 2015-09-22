@@ -2116,16 +2116,12 @@ a:hover, a:focus { border-bottom: 1px solid; }
 .avatar--icon.md-36 { height: 36px; width: 36px; }
 .avatar--icon.md-48 { height: 48px; width: 48px; }
 
-.progress-circular--withbg { background-color: #CAD266; -moz-border-radius: 50%; -webkit-border-radius: 50%; border-radius: 50%; }
-
-.button--progress-circular { margin: 0; padding: 0; min-width: 0; }
-
-.button--progress-circular__label { position: absolute; z-index: 1; left: 13px; top: 10px; font-size: 13px; height: 24px; width: 24px; background: #ffffff; -moz-border-radius: 50%; -webkit-border-radius: 50%; border-radius: 50%; line-height: 24px; }
+.button--progress { margin: 0; padding-top: 0; padding-bottom: 0; min-width: 0; display: flex; }
 
 .l-constrained { margin-left: auto; margin-right: auto; max-width: 1200px; position: relative; }
 
-.l-footer { position: fixed; bottom: 0; width: 100%; z-index: 1; background-color: #ffffff; display: flex; height: 42px; }
-.l-footer md-progress-circular { margin-top: -3px; }
+.l-footer { position: fixed; bottom: 0; width: 100%; z-index: 1; background-color: #ffffff; display: flex; height: 42px; padding: 0 8px; border-top: 1px solid #eeeeee; }
+.l-footer .progress-circular-with-label { margin-top: -4px; margin-left: -6px; margin-right: -6px; }
 
 .l-main { background-color: #eeeeee; }
 
@@ -2178,3 +2174,9 @@ a:hover, a:focus { border-bottom: 1px solid; }
 .nav-item__info { color: rgba(0, 0, 0, 0.54); display: inline-block; }
 
 .progress-wrapper { padding: 8px 0; cursor: pointer; }
+
+.progress-circular-with-label { position: relative; }
+
+.progress-circular-with-label__label { position: absolute; z-index: 1; left: 12.5px; top: 12.5px; font-size: 13px; height: 24.5px; width: 24.5px; -moz-border-radius: 50%; -webkit-border-radius: 50%; border-radius: 50%; line-height: 25px; background-color: #ffffff; }
+
+.progress-circular-with-label__progress { background-color: #CAD266; -moz-border-radius: 50%; -webkit-border-radius: 50%; border-radius: 50%; }

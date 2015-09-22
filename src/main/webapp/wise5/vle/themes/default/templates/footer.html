@@ -1,0 +1,7 @@
+<md-button class="button--progress md-primary" aria-label="Project Status">
+    <md-icon ng-show="vleController.layoutState == 'node'">place</md-icon>
+    <test-me></test-me>
+    <progress-circular-with-label value="themeCtrl.rootNodeStatus.progress.completionPct"
+        template-url="vleController.themePath + '/templates/progressCircularWithLabel.html'"></progress-circular-with-label>
+</md-button>
+<span flex></span>
