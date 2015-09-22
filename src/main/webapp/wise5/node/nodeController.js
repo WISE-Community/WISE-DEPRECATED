@@ -766,8 +766,10 @@ define(['app'], function(app) {
                 // get the parent node of the current node
                 var parentNode = ProjectService.getParentGroup(currentNodeId);
 
+                var parentNodeId = parentNode.id;
+
                 // set the current node to the parent node
-                StudentDataService.endCurrentNodeAndSetCurrentNode(parentNode);
+                StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(parentNodeId);
             }
         };
         
@@ -940,9 +942,6 @@ define(['app'], function(app) {
             if (currentNode != null) {
                 var currentNodeId = currentNode.id;
 
-                // end the current node
-                StudentDataService.endCurrentNode();
-
                 // get the branch path node states
                 var branchPathNodeStates = StudentDataService.getBranchPathTakenNodeStates(currentNodeId);
 
@@ -958,8 +957,8 @@ define(['app'], function(app) {
                             // get the to node id for the node state
                             var toNodeId = studentData.toNodeId;
 
-                            // set the current node to be the to node id
-                            StudentDataService.setCurrentNodeByNodeId(toNodeId);
+                            // set the current node to be the toNodeId
+                            StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(toNodeId);
                             break;
                         }
                     }
@@ -971,9 +970,9 @@ define(['app'], function(app) {
                     var transition = this.chooseTransition(transitions);
 
                     if (transition != null) {
-                        // move the student to the to node
+                        // move the student to the toNodeId
                         var toNodeId = transition.to;
-                        StudentDataService.setCurrentNodeByNodeId(toNodeId);
+                        StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(toNodeId);
                     }
                 }
             }

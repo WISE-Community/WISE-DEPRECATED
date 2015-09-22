@@ -1812,19 +1812,6 @@ define(['configService', 'projectService'], function(configService, projectServi
         };
 
         /**
-         * End the current node and set the current node
-         * @param node the node of the new current node
-         */
-        serviceObject.endCurrentNodeAndSetCurrentNode = function(node) {
-
-            // end the current node
-            this.endCurrentNode();
-
-            // set the current node
-            this.setCurrentNode(node);
-        };
-
-        /**
          * Broadcast a listenable event that a locked node has been clicked (attempted to be opened)
          * @param nodeId
          */
