@@ -99,7 +99,7 @@ define(['angular', /*'annotationService',*/ 'configService', 'notebookService',
                 $mdComponentRegistry) {
 
                 // TODO: set these variables dynamically from theme settings
-                this.layoutView = 'card'; // do we want a list view at all?
+                this.layoutView = 'list'; // 'list' or 'card'
                 this.numberProject = true;
 
                 this.nodeStatuses = StudentDataService.nodeStatuses;
