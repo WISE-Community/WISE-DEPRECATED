@@ -3,7 +3,9 @@ define(['app'], function(app) {
             function($rootScope,
                     $scope,
                     $state, 
-                    $stateParams, 
+                    $stateParams,
+                    $location,
+                    $anchorScroll,
                     ConfigService,
                     NodeService,
                     OpenResponseService,
@@ -103,7 +105,42 @@ define(['app'], function(app) {
         this.importWork = function() {
             
         };
-        
+
+        /**
+         * handles click to nodeComponentId. Takes user to specified node and
+         * scrolls to component, if componentId is specified.
+         * @param nodeComponentId ex: "nodeId.componentId"
+         */
+        this.nodeComponentClicked = function (nodeComponentId) {
+            var nodeId;
+            var componentId = null;
+            if (nodeComponentId.indexOf(".") != -1) {
+                nodeId = nodeComponentId.substring(0, nodeComponentId.indexOf("."));
+                componentId = nodeComponentId.substring(nodeComponentId.indexOf(".") + 1);
+            } else {
+                nodeId = nodeComponentId;
+            }
+            StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(nodeId);
+
+            if (componentId != null) {
+                /* TODO: this part doesn't quite work....perhaps a better solution is to
+                use the path /nodeId/componentId instead.
+                // we also want to scroll to particular component
+                $scope.$on('currentNodeChanged', angular.bind(this, function(event, args) {
+
+                    var currentNode = args.currentNode;
+                    if (currentNode === nodeId) {
+                        // set the location.hash to the id of the element to scroll to.
+                        $location.hash(componentId);
+
+                        // call $anchorScroll() to scroll there
+                        $anchorScroll();
+                    }
+                }));
+                */
+            }
+        };
+
         /**
          * Called when the student clicks the save button
          */
@@ -757,9 +794,6 @@ define(['app'], function(app) {
         this.closeNode = function() {
             var currentNode = StudentDataService.getCurrentNode();
             if (currentNode != null) {
-
-                // end the current node
-                StudentDataService.endCurrentNode();
 
                 var currentNodeId = currentNode.id;
 

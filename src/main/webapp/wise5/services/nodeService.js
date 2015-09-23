@@ -4,66 +4,6 @@ define(['configService', 'projectService', 'studentDataService'], function(confi
                    function($http, $injector, $q, ConfigService, ProjectService, StudentDataService) {
         var serviceObject = {};
 
-        serviceObject.getNodeContentByNodeSrc = function(nodeSrc) {
-            return $q(angular.bind(this, function(resolve, reject) {
-                $http.get(nodeSrc).then(angular.bind(this, function(result) {
-                    var nodeContent = result.data;
-                    nodeContent = this.injectAssetPaths(nodeContent);
-                    nodeContent = this.injectNodeLinks(nodeContent);
-                    nodeContent = this.injectStudentData(nodeContent);
-                    resolve(nodeContent);
-                }));
-            }));
-        };
-
-        serviceObject.retrieveNode = function() {
-            var projectFileUrl = ConfigService.getConfigParam('projectURL');
-            
-            return $http.get(projectFileUrl).then(angular.bind(this, function(result) {
-                var projectJSON = result.data;
-                this.project = projectJSON;
-                return projectJSON;
-            }));
-        };
-        
-        serviceObject.isWorkSubmitted0 = function(nodeVisits) {
-            var result = false;
-            
-            if (nodeVisits != null) {
-                for (var nv = 0; nv < nodeVisits.length; nv++) {
-                    var nodeVisit = nodeVisits[nv];
-                    
-                    if (nodeVisit != null) {
-                        var nodeStates = nodeVisit.nodeStates;
-                        
-                        if (nodeStates != null) {
-                            for (var ns = 0; ns < nodeStates.length; ns++) {
-                                var nodeState = nodeStates[ns];
-                                
-                                if (nodeState != null) {
-                                    var isSubmit = nodeState.isSubmit;
-                                    
-                                    if (isSubmit != null) {
-                                        result = isSubmit;
-                                        
-                                        if (result) {
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
-                            
-                            if (isSubmit != null) {
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-            
-            return result;
-        };
-        
         serviceObject.getLatestNodeState = function(nodeVisits) {
             var result = null;
             

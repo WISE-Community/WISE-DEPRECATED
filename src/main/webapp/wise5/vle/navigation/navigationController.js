@@ -22,7 +22,6 @@ define(['app'], function(app) {
                 StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(nodeId);
             };
 
-
             this.updateNavigation = function () {
                 var currentNode = StudentDataService.getCurrentNode();
 

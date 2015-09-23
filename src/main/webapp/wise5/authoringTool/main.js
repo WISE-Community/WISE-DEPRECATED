@@ -8,6 +8,7 @@ require.config({
         'angularAnimate': 'vendor/angular-animate/angular-animate.min',
         'angularAria': 'vendor/angular-aria/angular-aria.min',
         'angularDragDrop': 'vendor/angular-dragdrop/src/angular-dragdrop.min',
+        'angularFileUpload': 'vendor/ng-file-upload/ng-file-upload.min',
         'angularMaterial': 'vendor/angular-material/angular-material.min',
         'angularSortable': 'vendor/angular-ui-sortable/sortable.min',
         'angularUIRouter': 'vendor/angular-ui-router/release/angular-ui-router.min',
@@ -49,6 +50,7 @@ require.config({
         'projectController': 'authoringTool/project/projectController',
         'projectService': 'services/projectService',
         'sessionService': 'services/sessionService',
+        'studentAssetService': 'services/studentAssetService',
         'studentDataService': 'services/studentDataService',
         'studentGradingController': 'classroomMonitor/studentGrading/studentGradingController',
         'studentProgressController': 'classroomMonitor/studentProgress/studentProgressController',
@@ -81,6 +83,12 @@ require.config({
             'deps': [
                 'angular',
                 'jqueryUI'
+            ]
+        },
+        'angularFileUpload': {
+            'exports': 'angularFileUpload',
+            'deps': [
+                'angular'
             ]
         },
         'angularMaterial': {

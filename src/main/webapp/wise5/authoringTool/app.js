@@ -8,6 +8,7 @@ define([
     'angularAnimate',
     'angularAria',
     'angularDragDrop',
+    'angularFileUpload',
     'angularMaterial',
     'angularSortable',
     'angularUIRouter',
@@ -27,6 +28,7 @@ define([
     'notebookService',
     'projectService',
     'sessionService',
+    'studentAssetService',
     'studentDataService',
     'studentStatusService',
     'tableService',
@@ -42,6 +44,7 @@ define([
     angularAnimate,
     angularAria,
     angularDragDrop,
+    angularFileUpload,
     angularMaterial,
     angularSortable,
     angularUIRouter,
@@ -61,6 +64,7 @@ define([
     notebookService,
     projectService,
     sessionService,
+    studentAssetService,
     studentDataService,
     studentStatusService,
     tableService,
@@ -75,6 +79,7 @@ define([
         'ngAnimate',
         'ngAria',
         'ngDragDrop',
+        'ngFileUpload',
         'ngMaterial',
         'ngWebSocket'
     ]);
@@ -87,6 +92,7 @@ define([
     app.factory('NotebookService', notebookService);
     app.factory('ProjectService', projectService);
     app.factory('SessionService', sessionService);
+    app.factory('StudentAssetService', studentAssetService);
     app.factory('StudentDataService', studentDataService);
     app.factory('StudentStatusService', studentStatusService);
     app.factory('TeacherDataService', teacherDataService);
