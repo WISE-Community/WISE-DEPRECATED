@@ -265,4 +265,33 @@ define(['angular', 'projectService', 'studentDataService'], function(angular, pr
         };
     })
 
+    .directive('latestcomponentstate', function($injector, StudentDataService) {
+        return {
+            restrict: 'E',
+            link: function($scope, element, attrs) {
+
+                var nodeId = attrs.nodeid;
+                var componentId = attrs.componentid;
+
+                var componentState = StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
+
+                if (componentState != null) {
+                    var componentType = componentState.componentType;
+
+                    if (componentType != null) {
+                        var childService = $injector.get(componentType + 'Service');
+
+                        if (childService != null) {
+                            var studentWorkHTML = childService.getStudentWorkAsHTML(componentState);
+
+                            if (studentWorkHTML != null) {
+                                element[0].innerHTML = studentWorkHTML;
+                            }
+                        }
+                    }
+                }
+            }
+        };
+    })
+
 });

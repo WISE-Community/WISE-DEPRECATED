@@ -322,7 +322,7 @@ define(['configService'], function(configService) {
             if (id != null) {
                 content = this.injectAssetPaths(content);
                 content = this.injectNodeLinks(content);
-                //content = this.injectStudentData(content);
+                content = this.injectStudentData(content);
 
                 this.idToContent[id] = content;
             }
@@ -416,27 +416,34 @@ define(['configService'], function(configService) {
             return content;
         };
 
+        /**
+         * Replaces {{work|nodeId.componentId}} with <latestcomponentstate nodeId="nodeId" componentId="componentId"></latestcomponentstate>.
+         * The actual rendering is done by the latestcomponentstate directive.
+         */
         serviceObject.injectStudentData = function(content) {
             if (content != null) {
                 var regex = /{{work\|([^}}]*)}}/g;
 
                 if (typeof content === 'object') {
                     var contentString = JSON.stringify(content);
+                    if (contentString.indexOf("{{work") == -1) {
+                        return content;
+                    }
                     var matchResult = contentString.match(regex);
 
-                    var nodeId = RegExp.$1;
+                    var nodeComponentId = RegExp.$1;   // ex: "node2.ft9m41diuz"
 
-                    if (nodeId === '1.1') {
-                        nodeId = 'node1';
-                    }
+                    var nodeId;
+                    var componentId = null;
 
-                    var studentWork = StudentDataService.getLatestStudentWorkForNodeAsHTML(nodeId);
-
-                    if (studentWork != null) {
-                        contentString = contentString.replace(regex, studentWork);
+                    if (nodeComponentId.indexOf(".") != -1) {
+                        nodeId = nodeComponentId.substring(0, nodeComponentId.indexOf("."));
+                        componentId = nodeComponentId.substring(nodeComponentId.indexOf(".") + 1);
                     } else {
-                        contentString = contentString.replace(regex, '');
+                        nodeId = nodeComponentId;
                     }
+
+                    contentString = contentString.replace(regex, '<latestcomponentstate nodeId=\\\"' + nodeId + '\\\" componentId=\\\"' + componentId + '\\\"></latestcomponentstate>');
 
                     content = JSON.parse(contentString);
                 } else if (typeof content === 'string') {
@@ -444,19 +451,19 @@ define(['configService'], function(configService) {
                     if (content != null && content.indexOf("{{work") >= 0) {
                         var matchResult = content.match(regex);
 
-                        var nodeId = RegExp.$1;
+                        var nodeComponentId = RegExp.$1;
 
-                        if (nodeId === '1.1') {
-                            nodeId = 'node1';
-                        }
+                        var nodeId;
+                        var componentId = null;
 
-                        var studentWork = StudentDataService.getLatestStudentWorkForNodeAsHTML(nodeId);
-
-                        if (studentWork != null) {
-                            content = content.replace(regex, studentWork);
+                        if (nodeComponentId.indexOf(".") != -1) {
+                            nodeId = nodeComponentId.substring(0, nodeComponentId.indexOf("."));
+                            componentId = nodeComponentId.substring(nodeComponentId.indexOf(".") + 1);
                         } else {
-                            content = content.replace(regex, '');
+                            nodeId = nodeComponentId;
                         }
+
+                        content = content.replace(regex, '<latestcomponentstate nodeId=\\\"' + nodeId + '\\\" componentId=\\\"' + componentId + '\\\"></latestcomponentstate>');
                     }
                 }
             }
