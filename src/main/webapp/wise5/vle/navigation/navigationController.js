@@ -97,13 +97,11 @@ define(['app'], function(app) {
 
             var scope = this;
             $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
-                console.log(scope.currentNode.id);
                 var toNodeId = toParams.nodeId;
                 var fromNodeId = fromParams.nodeId;
                 if (!!toNodeId && !!fromNodeId && toNodeId !== fromNodeId) {
                     StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(toNodeId);
                 }
             });
-
         })
 });

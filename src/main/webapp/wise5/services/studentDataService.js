@@ -1343,6 +1343,46 @@ define(['configService', 'projectService'], function(configService, projectServi
             
             return latestComponentState;
         };
+
+        /**
+         * Get the student work by specified student work id, which can be a ComponentState or NodeState
+         * @param studentWorkId the student work id
+         * @return an StudentWork or null
+         */
+        serviceObject.getStudentWorkByStudentWorkId = function(studentWorkId) {
+            if (studentWorkId != null) {
+                // get the component states
+                var componentStates = this.studentData.componentStates;
+
+                if (componentStates != null) {
+
+                    // loop through all the component states
+                    for (var c = 0; c < componentStates.length; c++) {
+                        var componentState = componentStates[c];
+
+                        if (componentState != null && componentState.id === studentWorkId) {
+                            return componentState;
+                        }
+                    }
+                }
+
+                // get the node states
+                var nodeStates = this.studentData.nodeStates;
+
+                if (nodeStates != null) {
+
+                    // loop through all the node states
+                    for (var n = 0; n < nodeStates.length; n++) {
+                        var nodeState = nodeStates[n];
+                        if (nodeState != null && nodeState.id === studentWorkId) {
+                            return nodeState;
+                        }
+                    }
+                }
+
+            }
+            return null;
+        };
         
         /**
          * Get the component states for the given node id

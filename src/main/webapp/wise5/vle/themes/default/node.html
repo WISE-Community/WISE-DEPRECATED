@@ -1,10 +1,10 @@
 <div ng-controller='NodeController as nodeController'>
     <input type='button' value='X' ng-click='nodeController.closeNode()' />
-    <input type='button' value='+Notebook' ng-click='nodeController.addNodeVisitItemToNotebook()' />
     <div compile='nodeController.getPrompt()'></div>
-    <div id="{{component.id}}" ng-repeat='component in nodeController.getComponents()'
-         ng-include='nodeController.getComponentTypeHTML(component.componentType)'
-         ng-init='componentState = nodeController.getComponentStateByComponent(component)'>
+    <div id="{{component.id}}" ng-repeat='component in nodeController.getComponents()'>
+         <div ng-include='nodeController.getComponentTypeHTML(component.componentType)'
+         ng-init='componentState = nodeController.getComponentStateByComponent(component)'></div>
+        <input type='button' value='+Notebook' ng-click='nodeController.addStudentWorkItemToNotebook(component.id)' />
     </div>
     <button id='saveButton'
             ng-click='nodeController.saveButtonClicked()'

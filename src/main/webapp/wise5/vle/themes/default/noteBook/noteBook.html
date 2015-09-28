@@ -18,10 +18,11 @@
         border: 5px dashed blue;
     }
 
-    .studentAssets {
+    .notebookItems {
         height: auto;
         width: auto;
-        max-height: 400px;
+        min-height: 300px;
+        max-height: 500px;
         max-width: 450px;
         border: 5px solid #DDD;
         overflow:auto;
@@ -29,7 +30,7 @@
         padding:0px;
     }
 
-    .studentAsset {
+    .notebookItem {
         width: auto;
         height: auto;
         max-width: 100px;
@@ -38,6 +39,14 @@
         margin: 5px;
         border: 3px solid #DDD;
     }
+
+    .notebookItem:hover {
+        cursor: pointer;
+    }
+
+    .studentAsset {
+    }
+
     .studentAsset:hover {
         cursor: pointer;
     }
@@ -61,6 +70,41 @@
         cursor:pointer;
     }
 </style>
+<ul class='notebookItems' ng-show="notebookController.notebook.items.length" >
+    <li ng-repeat="notebookItem in notebookController.notebook.items" class='studentAssetParent'>
+        <img ng-show="(notebookController.filter == 'all' || notebookController.filter == 'files') && notebookItem.studentAsset != null"
+             ng-src='{{notebookItem.studentAsset.iconURL}}'
+             class='studentAsset notebookItem'
+             title='Drag and drop this item to use in your project!'
+             data-drag='true'
+             data-jqyoui-options="{revert: 'invalid', helper: 'clone', stack: 'div' }"
+             jqyoui-draggable="{animate:true, placeholder: 'keep', onStart:'notebookController.notebookItemDragStartCallback(notebookItem)'}">
+        </img>
+        <div ng-show="(notebookController.filter == 'all' || notebookController.filter == 'work')
+            && notebookItem.studentWork != null"
+             class='studentWork notebookItem'
+             title='Drag and drop this item to use in your project!'
+             data-drag='true'
+             data-jqyoui-options="{revert: 'invalid', helper: 'clone', stack: 'div' }"
+             jqyoui-draggable="{animate:true, placeholder: 'keep', onStart:'notebookController.notebookItemDragStartCallback(notebookItem)'}">
+            <componentstatehtml componentstate={{notebookItem.studentWork}}></componentstatehtml>
+        </div>
+        <!--
+        <img ng-click='notebookController.deleteNotebookItem(notebookItem)' src='wise5/vle/notebook/trash.png' class='studentAssetRemoveImage' />
+        <span ng-show='{{notebookItem.studentAsset.type === "audio"}}' ng-audio='{{notebookItem.studentAsset.url}}' volume='0.5'><img class='studentAssetOverlay' src='wise5/vle/notebook/play.png' /></span>
+        -->
+        <!-- <span class='studentAssetname'>{{studentAsset.name}}</span> -->
+    </li>
+</ul>
+
+<div>
+    <div ngf-drop ngf-select ngf-change="notebookController.uploadStudentAssetNotebookItems($files)" class="drop-box"
+         drag-over-class="dragover" ngf-multiple="true" allow-dir="false"
+         accept="image/*,application/pdf">Drop image or file here or click to upload!</div>
+    You are using {{notebookController.notebook.totalSize | appropriateSizeText }} out of {{notebookController.notebook.totalSizeMax | appropriateSizeText}} ({{notebookController.notebook.usagePercentage | roundToDecimal:0 }}%)
+</div>
+
+<!--
 <div ng-switch on='notebookController.filter'>
     <div ng-switch-when='work'>
         Items:<br/>
@@ -90,25 +134,9 @@
     </div>
     <div ng-switch-when='files'>
         You are using {{notebookController.notebook.totalSize | appropriateSizeText }} out of {{notebookController.notebook.totalSizeMax | appropriateSizeText}} ({{notebookController.notebook.usagePercentage | roundToDecimal:0 }}%)
-        <ul class='studentAssets' ng-show="notebookController.notebook.items.length" >
-            <li ng-repeat="notebookItem in notebookController.notebook.items" class='studentAssetParent'>
-                <img ng-show="notebookItem.studentAsset != null"
-                     ng-src='{{notebookItem.studentAsset.iconURL}}'
-                     class='studentAsset'
-                     title='Drag and drop this item to use in your project!'
-                     data-drag='true'
-                     data-jqyoui-options="{revert: 'invalid', helper: 'clone', stack: 'div' }"
-                     jqyoui-draggable="{animate:true, placeholder: 'keep', onStart:'notebookController.notebookItemDragStartCallback(notebookItem)'}">
-                </img>
-                <!--
-                <img ng-click='notebookController.deleteNotebookItem(notebookItem)' src='wise5/vle/notebook/trash.png' class='studentAssetRemoveImage' />
-                <span ng-show='{{notebookItem.studentAsset.type === "audio"}}' ng-audio='{{notebookItem.studentAsset.url}}' volume='0.5'><img class='studentAssetOverlay' src='wise5/vle/notebook/play.png' /></span>
-                -->
-                <!-- <span class='studentAssetname'>{{studentAsset.name}}</span> -->
-            </li>
-        </ul>
         <div ngf-drop ngf-select ngf-change="notebookController.uploadStudentAssetNotebookItems($files)" class="drop-box"
              drag-over-class="dragover" ngf-multiple="true" allow-dir="false"
              accept="image/*,application/pdf">Drop image or file here or click to upload!</div>
     </div>
 </div>
+-->

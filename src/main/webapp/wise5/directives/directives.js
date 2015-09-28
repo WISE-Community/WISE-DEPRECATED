@@ -246,18 +246,20 @@ define(['angular', 'projectService', 'studentDataService'], function(angular, pr
         return {
             restrict: 'E',
             link: function($scope, element, attrs) {
-                
-                var componentState = JSON.parse(attrs.componentstate);
-                var componentType = componentState.componentType;
-                
-                if (componentType != null) {
-                    var childService = $injector.get(componentType + 'Service');
-                    
-                    if (childService != null) {
-                        var studentWorkHTML = childService.getStudentWorkAsHTML(componentState);
-                        
-                        if (studentWorkHTML != null) {
-                            element[0].innerHTML = studentWorkHTML;
+
+                if (attrs.componentstate) {
+                    var componentState = JSON.parse(attrs.componentstate);
+                    var componentType = componentState.componentType;
+
+                    if (componentType != null) {
+                        var childService = $injector.get(componentType + 'Service');
+
+                        if (childService != null) {
+                            var studentWorkHTML = childService.getStudentWorkAsHTML(componentState);
+
+                            if (studentWorkHTML != null) {
+                                element[0].innerHTML = studentWorkHTML;
+                            }
                         }
                     }
                 }

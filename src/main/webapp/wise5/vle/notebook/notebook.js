@@ -91,13 +91,6 @@ define(['angular', 'configService', 'openResponseService', 'notebookService',
                 $(ui.helper.context).data('importWorkNodeType', nodeType);
             };
 
-                /*
-            this.studentAssetDragStartCallback = function(event, ui, studentAsset) {
-                $(ui.helper.context).data('objectType', 'StudentAsset');
-                $(ui.helper.context).data('objectData', studentAsset);
-            };
-            */
-
             this.log = function() {
             };
 

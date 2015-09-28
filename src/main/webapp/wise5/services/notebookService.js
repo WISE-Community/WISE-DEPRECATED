@@ -69,9 +69,12 @@ define(['configService', 'studentDataService'], function(configService, studentD
                 var allNotebookItems = response.data;
                 for (var n = 0; n < allNotebookItems.length; n++) {
                     var notebookItem = allNotebookItems[n];
-                    // if this notebook item is a StudentAsset item, add the association here
                     if (notebookItem.studentAssetId != null) {
+                        // if this notebook item is a StudentAsset item, add the association here
                         notebookItem.studentAsset = StudentAssetService.getAssetById(notebookItem.studentAssetId);
+                    } else if (notebookItem.studentWorkId != null) {
+                        // if this notebook item is a StudentWork item, add the association here
+                        notebookItem.studentWork = StudentDataService.getStudentWorkByStudentWorkId(notebookItem.studentWorkId);
                     }
                     if (notebookItem.serverDeleteTime == null) {
                         this.notebook.items.push(notebookItem);
@@ -82,6 +85,31 @@ define(['configService', 'studentDataService'], function(configService, studentD
                 this.calculateTotalUsage();
 
                 return this.notebook;
+            }));
+        };
+
+        serviceObject.addStudentWorkNotebookItem = function(studentWork) {
+            var config = {};
+            config.method = 'POST';
+            config.url = ConfigService.getStudentNotebookURL();
+            config.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
+            var params = {};
+            params.workgroupId = ConfigService.getWorkgroupId();
+            params.periodId = ConfigService.getPeriodId();
+            params.nodeId = studentWork.nodeId;
+            params.componentId = studentWork.componentId;
+            params.studentWorkId = studentWork.id;
+            params.clientSaveTime = Date.parse(new Date());
+
+            config.data = $.param(params);
+
+            return $http(config).then(angular.bind(this, function(result) {
+                var notebookItem = result.data;
+                if (notebookItem != null) {
+                    notebookItem.studentWork = studentWork;
+                    this.notebook.items.push(notebookItem);
+                }
+                return null;
             }));
         };
 
@@ -105,24 +133,6 @@ define(['configService', 'studentDataService'], function(configService, studentD
                     if (notebookItem != null) {
                         notebookItem.studentAsset = StudentAssetService.getAssetById(notebookItem.studentAssetId);
                         this.notebook.items.push(notebookItem);
-
-                        /*
-                        var studentUploadsBaseURL = ConfigService.getStudentUploadsBaseURL();
-                        if (copiedAsset.isReferenced && copiedAsset.fileName != '.DS_Store') {
-                            copiedAsset.url = studentUploadsBaseURL + copiedAsset.filePath;
-                            if (this.isImage(copiedAsset)) {
-                                copiedAsset.type = 'image';
-                                copiedAsset.iconURL = copiedAsset.url;
-                            } else if (this.isAudio(copiedAsset)) {
-                                copiedAsset.type = 'audio';
-                                copiedAsset.iconURL = 'wise5/vle/notebook/audio.png';
-                            } else {
-                                copiedAsset.type = 'file';
-                                copiedAsset.iconURL = 'wise5/vle/notebook/file.png';
-                            }
-                            return copiedAsset;
-                        }
-                        */
                     }
                     return null;
                 }));

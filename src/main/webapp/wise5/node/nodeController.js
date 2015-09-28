@@ -8,6 +8,7 @@ define(['app'], function(app) {
                     $anchorScroll,
                     ConfigService,
                     NodeService,
+                    NotebookService,
                     OpenResponseService,
                     ProjectService,
                     SessionService,
@@ -775,18 +776,13 @@ define(['app'], function(app) {
             StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
         };
         
-        this.addNodeVisitItemToNotebook = function() {
+        this.addStudentWorkItemToNotebook = function(componentId) {
             var currentNode = StudentDataService.getCurrentNode();
             if (currentNode != null) {
                 var currentNodeId = currentNode.id;
-                var currentNodeVisit = StudentDataService.getLatestNodeVisitByNodeId(currentNodeId)
-                if (currentNodeVisit != null) {
-                    var notebookItem = {};
-                    notebookItem.type = 'nodeVisit';
-                    notebookItem.nodeId = currentNode.id;
-                    notebookItem.nodeVisitId = currentNodeVisit.id;
-                    notebookItem.nodeVisit = currentNodeVisit;
-                    NotebookService.addItem(notebookItem);
+                var currentComponentState = StudentDataService.getLatestComponentStateByNodeIdAndComponentId(currentNodeId, componentId);
+                if (currentComponentState != null) {
+                    NotebookService.addStudentWorkNotebookItem(currentComponentState);
                 }
             }
         };
