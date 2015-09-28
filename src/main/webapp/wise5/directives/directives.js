@@ -294,4 +294,28 @@ define(['angular', 'projectService', 'studentDataService'], function(angular, pr
         };
     })
 
+    .directive('studentfirstnames', function($injector, ConfigService) {
+        return {
+            restrict: 'E',
+            link: function($scope, element, attrs) {
+
+                var workgroupId = attrs.workgroupid;
+
+                if (workgroupId == null) {
+                    workgroupId = ConfigService.getWorkgroupId();
+                }
+
+                if (workgroupId != null) {
+                    var studentFirstNames = ConfigService.getStudentFirstNamesByWorkgroupId(workgroupId);
+
+                    if (studentFirstNames != null) {
+                        element[0].innerHTML = studentFirstNames.join(", ");
+                    }
+                } else {
+                    element[0].innerHTML = "student";  // default case
+                }
+            }
+        };
+    })
+
 });

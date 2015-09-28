@@ -231,6 +231,42 @@ define([], function() {
             
             return userInfo;
         };
+
+        /**
+         * Get the student names
+         * @param workgroupId the workgroup id
+         * @return an array containing the student names
+         */
+        serviceObject.getStudentFirstNamesByWorkgroupId = function(workgroupId) {
+            var studentNames = [];
+
+            // get the user names for the workgroup e.g. "Spongebob Squarepants (SpongebobS0101):Patrick Star (PatrickS0101)"
+            var userNames = this.getUserNameByWorkgroupId(workgroupId);
+
+            if (userNames != null) {
+                // split the user names string by ':'
+                var userNamesSplit = userNames.split(':');
+
+                if (userNamesSplit != null) {
+                    // loop through each user name
+                    for (var x = 0; x < userNamesSplit.length; x++) {
+                        // get a user name e.g. "Spongebob Squarepants (spongebobs0101)"
+                        var userName = userNamesSplit[x];
+
+                        // get the index of the first empty space
+                        var indexOfSpace = userName.indexOf(' ');
+
+                        // get the student first name e.g. "Spongebob"
+                        var studentFirstName = userName.substring(0, indexOfSpace);
+
+                        // add the student name to the array
+                        studentNames.push(studentFirstName);
+                    }
+                }
+            }
+
+            return studentNames;
+        };
         
         serviceObject.getUserNameByWorkgroupId = function(workgroupId) {
             var userName = null;

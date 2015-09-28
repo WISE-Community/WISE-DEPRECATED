@@ -320,9 +320,11 @@ define(['configService'], function(configService) {
 
         serviceObject.setIdToContent = function(id, content) {
             if (id != null) {
+                // TODO: put these functions into one function
                 content = this.injectAssetPaths(content);
                 content = this.injectNodeLinks(content);
                 content = this.injectStudentData(content);
+                content = this.injectStudentNames(content);
 
                 this.idToContent[id] = content;
             }
@@ -465,6 +467,28 @@ define(['configService'], function(configService) {
 
                         content = content.replace(regex, '<latestcomponentstate nodeId=\\\"' + nodeId + '\\\" componentId=\\\"' + componentId + '\\\"></latestcomponentstate>');
                     }
+                }
+            }
+            return content;
+        };
+
+        /**
+         * Replaces {{studentFirstNames}} names of students in the project.
+         * The actual rendering is done by the latestcomponentstate directive.
+         */
+        serviceObject.injectStudentNames = function(content) {
+            if (content != null) {
+                var regex = /{{studentFirstNames}}/g;
+
+                if (typeof content === 'object') {
+                    var contentString = JSON.stringify(content);
+                    if (contentString.indexOf("{{studentFirstNames}}") == -1) {
+                        return content;
+                    }
+
+                    contentString = contentString.replace(regex, '<studentfirstnames></studentfirstnames>');
+
+                    content = JSON.parse(contentString);
                 }
             }
             return content;
