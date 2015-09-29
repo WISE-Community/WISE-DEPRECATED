@@ -14,15 +14,34 @@ define(['nodeService', 'studentDataService'], function(nodeService, studentDataS
             
             return result;
         };
-        
-        serviceObject.getStudentWorkAsHTML = function(nodeState) {
+
+        serviceObject.getStudentWorkJPEG = function(componentState) {
+            if (componentState != null) {
+                var studentData = componentState.studentData;
+
+                if (studentData != null && studentData.drawData != null) {
+                    var drawData = JSON.parse(studentData.drawData);
+                    if (drawData != null && drawData.jpeg != null && drawData.jpeg != "") {
+                        return drawData.jpeg;
+                    }
+                }
+            }
+            return null;
+        };
+
+        serviceObject.getStudentWorkAsHTML = function(componentState) {
             var studentWorkAsHTML = null;
-            
-            if (nodeState != null) {
-                var studentData = nodeState.studentData;
+
+            studentWorkAsHTML = '<p>Your drawing</p>';
+
+            if (componentState != null) {
+                var studentData = componentState.studentData;
                 
-                if (studentData != null) {
-                    studentWorkAsHTML = '<p>' + studentData + '</p>';
+                if (studentData != null && studentData.drawData != null) {
+                    var drawData = JSON.parse(studentData.drawData);
+                    if (drawData != null && drawData.jpeg != null && drawData.jpeg != "") {
+                        studentWorkAsHTML = '<img src=\"' + drawData.jpeg + '\"></img>';
+                    }
                 }
             }
             

@@ -1,8 +1,10 @@
 define(['app'], function(app) {
     app.$controllerProvider.register('OpenResponseController', 
-        function($rootScope,
+        function(
+            $injector,
+            $rootScope,
             $scope,
-            $state, 
+            $state,
             $stateParams,
             ConfigService,
             NodeService,
@@ -314,51 +316,26 @@ define(['app'], function(app) {
                             this.studentDataChanged();
                         }
                     }));
-                }
-            }
-            /*
-            var importWorkNodeState = $(ui.helper.context).data('importWorkNodeState');
-            var importWorkNodeType = $(ui.helper.context).data('importWorkNodeType');
-            var importNotebookItem = $(ui.helper.context).data('importNotebookItem');
-            if (importNotebookItem != null) {
-                var nodeId = importNotebookItem.nodeId;
-                var node = ProjectService.getNodeById(nodeId);
-                importWorkNodeType = node.type;
+                } else if (notebookItem.studentWork != null) {
+                    // we're importing a StudentWorkNotebookItem
+                    var studentWork = notebookItem.studentWork;
 
-                var nodeVisit = importNotebookItem.nodeVisit;
-                var nodeStates = nodeVisit.nodeStates;
-                if (nodeStates !== null) {
-                    if (nodeStates.length > 0) {
-                        importWorkNodeState = nodeStates[nodeStates.length - 1];
+                    var componentType = studentWork.componentType;
+
+                    if (componentType != null) {
+                        var childService = $injector.get(componentType + 'Service');
+
+                        if (childService != null) {
+                            var studentWorkHTML = childService.getStudentWorkAsHTML(studentWork);
+
+                            if (studentWorkHTML != null) {
+                                this.studentResponse += studentWorkHTML;
+                                this.studentDataChanged();
+                            }
+                        }
                     }
                 }
-                
             }
-            if (importWorkNodeState != null && importWorkNodeType != null) {
-                var populatedNodeState = OpenResponseService.populateNodeState(importWorkNodeState, importWorkNodeType);
-
-                // if student already has work, prepend it
-                var latestNodeState = StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
-                if (latestNodeState != null) {
-                    var latestResponse = latestNodeState.studentData;
-                    if (latestResponse != null) {
-                        populatedNodeState.studentData = latestResponse + populatedNodeState.studentData;
-                    }
-                }
-                
-                this.setStudentWork(populatedNodeState);
-                this.studentDataChanged();
-            } else if (objectType === 'StudentAsset') {
-             var studentAsset = $(ui.helper.context).data('objectData');
-             StudentAssetService.copyAssetForReference(studentAsset).then(angular.bind(this, function(copiedAsset) {
-             if (copiedAsset != null) {
-             var copiedAssetImg = '<img studentAssetId="' + copiedAsset.id + '" id="studentAsset_' + copiedAsset.id + '" class="studentAssetReference" src="' + copiedAsset.iconURL + '"></img>';
-             this.studentResponse += copiedAssetImg;
-             this.studentDataChanged();
-             }
-             }));
-             }
-             */
         });
         
         /**

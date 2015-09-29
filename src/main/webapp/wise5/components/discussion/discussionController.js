@@ -1,6 +1,8 @@
 define(['app', 'angular'], function(app, angular) {
     app.$controllerProvider.register('DiscussionController', 
-        function($rootScope,
+        function(
+            $injector,
+            $rootScope,
             $scope,
             $state, 
             $stateParams,
@@ -374,6 +376,24 @@ define(['app', 'angular'], function(app, angular) {
                             this.studentDataChanged();
                         }
                     }));
+                } else if (notebookItem.studentWork != null) {
+                    // we're importing a StudentWorkNotebookItem
+                    var studentWork = notebookItem.studentWork;
+
+                    var componentType = studentWork.componentType;
+
+                    if (componentType != null) {
+                        var childService = $injector.get(componentType + 'Service');
+
+                        if (childService != null) {
+                            var studentWorkHTML = childService.getStudentWorkAsHTML(studentWork);
+
+                            if (studentWorkHTML != null) {
+                                this.newResponse += studentWorkHTML;
+                                this.studentDataChanged();
+                            }
+                        }
+                    }
                 }
             }
         });

@@ -1145,6 +1145,8 @@ define(['configService', 'projectService'], function(configService, projectServi
                         this.addEvent(event);
                     }
                 }
+            } else {
+                events = [];
             }
 
             if (annotations != null && annotations.length > 0) {
@@ -1156,22 +1158,24 @@ define(['configService', 'projectService'], function(configService, projectServi
                         this.addAnnotation(annotation);
                     }
                 }
+            } else {
+                annotations = [];
             }
 
             // get the url to POST the student data
             var httpParams = {};
             httpParams.method = 'POST';
             httpParams.url = ConfigService.getConfigParam('studentDataURL');
+            httpParams.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
 
             // set the workgroup id and run id
             var params = {};
             params.runId = ConfigService.getRunId();
             params.workgroupId = ConfigService.getWorkgroupId();
-            params.data = {};
-            params.data.studentWorkList = studentWorkList;
-            params.data.events = events;
-            params.data.annotations = annotations;
-            httpParams.params = params;
+            params.studentWorkList = JSON.stringify(studentWorkList);
+            params.events = JSON.stringify(events);
+            params.annotations = JSON.stringify(annotations);
+            httpParams.data = $.param(params);
 
             // make the request to post the student data
             return $http(httpParams).then(angular.bind(this, function(result) {

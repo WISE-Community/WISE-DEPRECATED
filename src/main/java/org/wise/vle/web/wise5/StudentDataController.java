@@ -155,17 +155,17 @@ public class StudentDataController {
     /**
      * Handles batch POSTing student data (StudentWork, Action, Annotation)
      * @param runId Run that the POSTer (student) is in
-     * @param data JSON string containing batch student data
-     *             ex: { "studentWork":[{"runId":2,"nodeId":"node4",...},{"runId":2,"nodeId":"node5",...}],
-     *                   "actionLogs":[],
-     *                   "annotations": []
-     *                 }
+     * @param studentWorkList JSON string containing student work, ex: [{"runId":2,"nodeId":"node4",...},{"runId":2,"nodeId":"node5",...}]
+     * @param events JSON string containing events
+     * @param annotations JSON string containing annotations
      */
     @RequestMapping(method = RequestMethod.POST, value = "/student/data")
     public void postWISE5StudentData(
             HttpServletResponse response,
             @RequestParam(value = "runId", required = true) Integer runId,
-            @RequestParam(value = "data", required = true) String data
+            @RequestParam(value = "studentWorkList", required = true) String studentWorkList,
+            @RequestParam(value = "events", required = true) String events,
+            @RequestParam(value = "annotations", required = true) String annotations
     ) throws JSONException {
         User signedInUser = ControllerUtil.getSignedInUser();
         JSONObject result = new JSONObject();
@@ -178,10 +178,8 @@ public class StudentDataController {
 
                     HashMap<String, StudentWork> savedStudentWorkList = new HashMap<>(); // maps nodeId_componentId to StudentWork.
                                                                                             // Used later for handling simultaneous POST of CRater annotation
-                    JSONObject dataJSONObject = new JSONObject(data);
-
                     // handle POST'ed studentWork
-                    JSONArray studentWorkJSONArray = dataJSONObject.optJSONArray("studentWorkList");
+                    JSONArray studentWorkJSONArray = new JSONArray(studentWorkList);
                     if (studentWorkJSONArray != null) {
                         JSONArray studentWorkResultJSONArray = new JSONArray();
                         for (int c = 0; c < studentWorkJSONArray.length(); c++) {
@@ -220,7 +218,7 @@ public class StudentDataController {
                     }
 
                     // handle POST'ed events
-                    JSONArray eventsJSONArray = dataJSONObject.optJSONArray("events");
+                    JSONArray eventsJSONArray = new JSONArray(events);
                     if (eventsJSONArray != null) {
                         JSONArray eventsResultJSONArray = new JSONArray();
                         for (int e = 0; e < eventsJSONArray.length(); e++) {
@@ -260,7 +258,7 @@ public class StudentDataController {
                     }
 
                     // handle POST'ed annotations
-                    JSONArray annotationsJSONArray = dataJSONObject.optJSONArray("annotations");
+                    JSONArray annotationsJSONArray = new JSONArray(annotations);
                     if (annotationsJSONArray != null) {
                         JSONArray annotationsResultJSONArray = new JSONArray();
                         for (int a = 0; a < annotationsJSONArray.length(); a++) {
