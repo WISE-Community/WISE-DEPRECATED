@@ -217,6 +217,10 @@ define([
                         },
                         'nodeView': {
                             templateUrl: 'wise5/node/index.html',
+                            controller: 'NodeController as nodeCtrl',
+                            resolve: {
+                                nodeController: app.loadController('nodeController')
+                            },
                             resolve: {
                                 audioRecorderController: app.loadController('audioRecorderController'),
                                 cRaterController: app.loadController('cRaterController'),
@@ -239,7 +243,7 @@ define([
 
             // ngMaterial default theme configuration
             // TODO: make dynamic and support alternate themes; allow projects to specify theme parameters and settings
-            $mdThemingProvider.definePalette('primaryPaletteWise', {
+            $mdThemingProvider.definePalette('primary', {
                 '50': 'e1f0f4',
                 '100': 'b8dbe4',
                 '200': '8ec6d4',
@@ -261,7 +265,7 @@ define([
                 'contrastLightColors': undefined    // could also specify this if default was 'dark'
             });
 
-            $mdThemingProvider.definePalette('accentPaletteWise', {
+            $mdThemingProvider.definePalette('accent', {
                 '50': 'fde9e6',
                 '100': 'fbcbc4',
                 '200': 'f8aca1',
@@ -284,11 +288,23 @@ define([
             });
 
             $mdThemingProvider.theme('default')
-                .primaryPalette('primaryPaletteWise')
-                .accentPalette('accentPaletteWise',  {
+                .primaryPalette('primary')
+                .accentPalette('accent',  {
                     'default': '500' // use shade 200 for default, and keep all other shades the same
                 });
 
+            var lightMap = $mdThemingProvider.extendPalette('grey', {
+                'A100': 'ffffff'
+            });
+            $mdThemingProvider.definePalette('light', lightMap);
+
+            $mdThemingProvider.theme('light')
+                .primaryPalette('light', {
+                    'default': 'A100'
+                })
+                .accentPalette('primary');
+
+            $mdThemingProvider.setDefaultTheme('default');
         }]);
 
     return app;

@@ -576,7 +576,6 @@ define(['configService'], function(configService) {
             }
 
             return result;
-
         };
 
         serviceObject.getRootNode = function(nodeId) {

@@ -8,10 +8,10 @@
 }
 
 .nav-group, .nav-root {
-  position: absolute;
-  left: 0;
-  right: 0;
-  padding-bottom: 32px;
+  //position: absolute;
+  //left: 0;
+  //right: 0;
+  //padding-bottom: 32px;
 
   &.ng-enter, &.ng-leave {
     //@include transition(0.5s linear opacity);
@@ -96,7 +96,6 @@
     min-height: 100px;
   }
 }
-
 
 .nav-contents--list {
   padding: 8px 16px;

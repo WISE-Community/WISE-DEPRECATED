@@ -40,7 +40,6 @@ md-icon {
   &.md-dark.md-inactive {
     color: rgba(0, 0, 0, 0.26);
   }
-
   // Rules for using material icons as white on a dark background
   &.md-light {
     color: rgba(255, 255, 255, 1);
@@ -69,5 +68,9 @@ md-icon {
         "layouts/l-sidebar";
 
 // 3. Modules
-@import "modules/nav",
-        "modules/progress-circular-with-label";
+@import "modules/account-menu",
+        "modules/nav",
+        "modules/node",
+        "modules/progress-circular-with-label",
+        "modules/project-status",
+        "modules/toolbar";

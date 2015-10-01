@@ -2,5 +2,19 @@
 
 // 2. Base
 .l-header {
+  .logo {
+    margin-left: 0 !important;
+    height: 40px;
+    width: 40px;
+  }
 
+  // Handle mobile portrait
+  @media only screen and (min-width: 0) and (max-width: $layout-breakpoint-sm) and
+  (orientation: portrait) {
+    .md-toolbar-tools {
+      h1, h2, h3 {
+        font-size: $body-font-size-base;
+      }
+    }
+  }
 }

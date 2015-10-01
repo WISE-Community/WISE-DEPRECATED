@@ -70,6 +70,7 @@ require.config({
         'planningController': 'components/planning/planningController',
         'planningService': 'components/planning/planningService',
         'notebook': 'vle/notebook/notebook',
+        //'notebookController': 'vle/notebook/notebookController',
         'notebookService': 'services/notebookService',
         'projectService': 'services/projectService',
         'sessionService': 'services/sessionService',

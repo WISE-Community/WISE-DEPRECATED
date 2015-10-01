@@ -6,20 +6,13 @@ $avatar-icon-padding-lg: 8px !default;
 // 2. Base
 body {
   background: $body-bgcolor;
+  overflow: hidden;
 }
 
 // Typography
 h1, h2, h3, h4, h5, h6 {
   margin-bottom: 1rem;
   margin-top: 1rem;
-}
-
-.success {
-  color: $success-color;
-}
-
-.warn {
-  color: $warn-color;
 }
 
 // Links
@@ -101,13 +94,19 @@ a {
   }
 }
 
-// Progress
-.button--progress {
-  margin: 0;
-  padding-top: 0;
-  padding-bottom: 0;
-  min-width: 0;
-  display: flex;
+md-toolbar.md-light-theme:not(.md-menu-toolbar) {
+  md-icon:not(.md-light):not(.md-dark):not(.md-primary):not(.md-accent) {
+    color: rgba(0, 0, 0, 0.56);
+  }
+
+  .md-button:disabled {
+    md-icon {
+      color: rgba(0,0,0,0.26) !important;
+    }
+  }
 }
 
-// Animations
+md-list .md-subheader {
+  color: $accent-color-2;
+  font-weight: 600;
+}

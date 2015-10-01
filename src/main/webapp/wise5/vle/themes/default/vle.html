@@ -3,30 +3,12 @@
 <link rel="stylesheet" href="wise5/vle/themes/default/style/css/vle.css">
 
 <style>
-    #prev {
-        height: 36px;
-        bottom: 0px;
-        position: absolute;
-        left: 0px;
-        z-index: 1;
-    }
-
-    #next {
-        height: 36px;
-        bottom: 0px;
-        position: absolute;
-        right: 0px;
-        z-index: 1;
-    }
-</style>
-
-<style>
     {{vleController.projectStyle}}
 </style>
 <div layout="column" layout-fill>
     <div ng-if="vleController.themeLoaded" ng-controller="ThemeController as themeCtrl" layout="row" layout-fill>
         <div layout="column" flex>
-            <md-toolbar class="md-whiteframe-z1">
+            <md-toolbar class="l-header" ng-class="{'md-whiteframe-z1': vleController.layoutState == 'nav'}">
                 <div class="md-toolbar-tools">
                     <img ng-src="{{vleController.themePath}}/images/WISE-logo-1b8ca8.svg" alt="WISE Logo" class="logo md-button md-icon-button" />
                     <h3>
@@ -35,37 +17,26 @@
                     <span flex></span>
                     <md-button aria-label="Toggle Notebook" class="md-icon-button" ng-click="vleController.toggleNotebook()">
                         <md-icon md-menu-origin> book </md-icon>
+                        <md-tooltip md-direction="left">Notebook</md-tooltip>
                     </md-button>
-                    <md-menu md-position-mode="target-right target">
+                    <md-menu md-position-mode="target-right target" md-offset="8 26">
                         <md-button aria-label="Open exit menu" class="md-icon-button" ng-click="$mdOpenMenu()">
-                            <md-icon md-menu-origin> power_settings_new </md-icon>
+                            <md-icon md-menu-origin> account_circle </md-icon>
                         </md-button>
-                        <md-menu-content width="4">
-                            <md-menu-item>
-                                <md-button ng-click="vleController.goHome()">
-                                    <md-icon md-menu-align-target> home </md-icon>
-                                    <p>Exit to Home</p>
-                                </md-button>
-                            </md-menu-item>
-                            <md-menu-item>
-                                <md-button ng-click="vleController.logOut()">
-                                    <md-icon> exit_to_app </md-icon>
-                                    <p>Sign Out</p>
-                                </md-button>
-                            </md-menu-item>
+                        <md-menu-content width="5" class="account-menu">
+                            <ng-include src="vleController.themePath + '/templates/accountMenu.html'"></ng-include>
                         </md-menu-content>
                     </md-menu>
                 </div>
             </md-toolbar>
-
-            <md-content flex role="main" ng-class="{'l-nav': vleController.layoutState == 'nav', 'l-node': vleController.layoutState == 'node'}" class="md-padding">
+            <md-content flex role="main" ng-class="{'l-nav': vleController.layoutState == 'nav', 'l-node': vleController.layoutState == 'node'}" layout="column">
                 <div ui-view="navigationView" autoscroll="true" ng-if="vleController.layoutState == 'nav'"></div>
                 <div ui-view="nodeView" autoscroll="true" ng-if="vleController.layoutState == 'node'"
                      data-drop="true"
                      jqyoui-droppable="{onDrop: 'vleController.notebookDropCallback()'}"
-                     ng-mousemove='vleController.mouseMoved()'></div>
+                     ng-mousemove='vleController.mouseMoved()'
+                     layout="column"></div>
             </md-content>
-            <footer class="l-footer md-whiteframe-z2" ng-include="vleController.themePath + '/templates/footer.html'"></footer>
         </div>
         <md-sidenav class="md-sidenav-right md-whiteframe-z2" md-component-id="notebook" layout="column" flex
                 md-is-open="vleController.notebookOpen"> <!--md-is-locked-open="vleController.notebookOpen && $mdMedia('gt-lg')"-->

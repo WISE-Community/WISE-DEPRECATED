@@ -1,6 +1,6 @@
-define(['angular', /*'annotationService',*/ 'configService', 'notebookService',
+define(['angular', /*'annotationService',*/ 'configService', 'nodeService', 'notebookService',
         'projectService', 'sessionService', 'studentDataService'],
-    function(angular, /*AnnotationService,*/ ConfigService, NotebookService, ProjectService,
+    function(angular, /*AnnotationService,*/ ConfigService, NodeService, NotebookService, ProjectService,
              SessionService, StudentDataService) {
 
         angular.module('app.theme', [])
@@ -90,17 +90,23 @@ define(['angular', /*'annotationService',*/ 'configService', 'notebookService',
                 $scope,
                 $state,
                 $stateParams,
+                $document,
+                ConfigService,
                 ProjectService,
                 StudentDataService,
+                NodeService,
                 NotebookService,
                 SessionService,
                 $mdDialog,
                 $mdSidenav,
+                $mdToast,
                 $mdComponentRegistry) {
 
                 // TODO: set these variables dynamically from theme settings
                 this.layoutView = 'list'; // 'list' or 'card'
                 this.numberProject = true;
+
+                this.themePath = "wise5/vle/themes/" + ProjectService.getTheme();
 
                 this.nodeStatuses = StudentDataService.nodeStatuses;
 
@@ -108,6 +114,45 @@ define(['angular', /*'annotationService',*/ 'configService', 'notebookService',
                 this.rootNode = ProjectService.getRootNode(this.startNodeId);
                 this.rootNodeStatus = this.nodeStatuses[this.rootNode.id];
 
+                // get current workgroup user name(s), comma-separated
+                this.getUserNames = function(workgroupInfo) {
+                    var userNames = [];
+
+                    if(workgroupInfo != null) {
+                        userNames = workgroupInfo.userName.split(':');
+                    }
+
+                    return userNames;
+                };
+
+                this.workgroupId = ConfigService.getWorkgroupId();
+                this.workgroupInfo = ConfigService.getUserInfoByWorkgroupId(this.workgroupId);
+                this.workgroupUserNames = this.isPreview ? ['Preview User'] : this.getUserNames(this.workgroupInfo);
+
+                // build project status pop-up
+                var statusTemplateUrl = this.themePath + '/templates/projectStatus.html';
+                var scope = this;
+                this.statusDisplay = $mdToast.build({
+                    locals: {
+                        projectStatus: scope.rootNodeStatus,
+                        userNames: scope.workgroupUserNames
+                    },
+                    controller: 'ProjectStatusController',
+                    bindToController: true,
+                    templateUrl: statusTemplateUrl,
+                    hideDelay: 0
+                });
+
+                this.projectStatusOpen = false;
+                this.showProjectStatus = function($event) {
+                    if (this.projectStatusOpen) {
+                        $mdToast.hide(this.statusDisplay);
+                        this.projectStatusOpen = false;
+                    } else {
+                        $mdToast.show(this.statusDisplay);
+                        this.projectStatusOpen = true;
+                    }
+                };
 
                 // alert user when a locked node has been clicked
                 $scope.$on('nodeClickedLocked', angular.bind(this, function (event, args) {
@@ -151,5 +196,19 @@ define(['angular', /*'annotationService',*/ 'configService', 'notebookService',
                         NotebookService.saveNotebookToggleEvent(isOpen, currentNode);
                     });
                 });
+
+                var branches = ProjectService.getBranches();
+                console.log(JSON.stringify(branches, null, 4));
+                console.log('end');
+            })
+            .controller('ProjectStatusController', function(
+                $scope,
+                $state,
+                $stateParams,
+                projectStatus,
+                userNames) {
+
+                $scope.projectStatus = projectStatus;
+                $scope.userNames = userNames;
             });
     });

@@ -1,0 +1,39 @@
+.node-toolbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: $toolbar-height;
+}
+
+.node-content {
+  padding: 16px 0;
+}
+
+.node-icon {
+  color: #ffffff !important;
+}
+
+.node-select {
+  white-space: normal;
+  text-align: left;
+}
+
+.node-title {
+  line-height: 1.2;
+  text-transform: none;
+
+  @media only screen and (min-width: 0) and (max-width: $layout-breakpoint-sm) and
+  (orientation: portrait) {
+    font-size: $body-font-size-base;
+  }
+}
+
+.md-button.md-icon-button.node-nav {
+  &:not(:first-of-type) {
+    margin-left: 0;
+  }
+
+  &:first-of-type {
+    margin-right: 0;
+  }
+}

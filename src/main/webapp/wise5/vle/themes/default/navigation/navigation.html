@@ -1,4 +1,4 @@
-<div class="l-constrained">
+<div class="l-constrained md-padding">
     <div class="md-toolbar-tools auto-width">
         <div class="md-subhead nav-head breadcrumb">
             <md-icon> home </md-icon>
@@ -42,3 +42,13 @@
     </div>
      -->
 </div>
+<footer class="l-footer md-whiteframe-z2 md-body-1">
+    <md-toolbar class="md-toolbar--wise" md-theme="light">
+        <div class="md-toolbar-tools">
+            <md-button md-theme="default" class="button--footer md-primary" aria-label="Toggle Project Status">
+                <progress-circular-with-label value="themeCtrl.rootNodeStatus.progress.completionPct"
+                                              template-url="vleController.themePath + '/templates/progressCircularWithLabel.html'"></progress-circular-with-label>
+            </md-button>
+        </div>
+    </md-toolbar>
+</footer>

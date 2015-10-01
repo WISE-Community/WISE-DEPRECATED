@@ -1,0 +1,14 @@
+.md-toolbar--wise {
+  min-height: $wise-toolbar-height;
+
+  .md-toolbar-tools {
+    height: $wise-toolbar-height;
+    max-height: $wise-toolbar-height;
+  }
+
+  .md-button.md-icon-button {
+    height: $wise-toolbar-height;
+    line-height: $wise-toolbar-height;
+    width: $wise-toolbar-height;
+  }
+}
