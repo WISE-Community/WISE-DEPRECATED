@@ -145,12 +145,12 @@ public class WISEAuthenticationSuccessHandler extends
         }
         request.getSession().setAttribute(SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME, locale);
       
-        /* redirect if specified in the login request */
+        // redirect if specified in the login request
         SavedRequest savedRequest = 
         	    new HttpSessionRequestCache().getRequest(request, response);
         if (savedRequest != null) {
         	String redirectUrl = savedRequest.getRedirectUrl();
-        	if(StringUtils.hasText(redirectUrl)){
+        	if (StringUtils.hasText(redirectUrl) && !redirectUrl.contains("login")) {
         		this.setDefaultTargetUrl(redirectUrl);
         	}
         }

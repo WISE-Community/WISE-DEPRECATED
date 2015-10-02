@@ -119,9 +119,7 @@ public class StudentAccountController {
 			return "student/join";
 		}
 
-		
 		String domain = ControllerUtil.getBaseUrlString(request);
-		String domainWithPort = domain + ":" + request.getLocalPort();
 		String referrer = request.getHeader("referer");
 
 		//get the context path e.g. /wise
@@ -130,11 +128,9 @@ public class StudentAccountController {
 		String registerUrl = contextPath + "/student/join";
 		String updateAccountInfoUrl = contextPath + "/student/updatestudentaccount.html";
 		
-		if(referrer != null && 
-				(referrer.contains(domain + registerUrl) || 
-				 referrer.contains(domainWithPort + registerUrl) ||
-  				 referrer.contains(domain + updateAccountInfoUrl) ||
-				 referrer.contains(domainWithPort + updateAccountInfoUrl))){
+		if (referrer != null &&
+				(referrer.contains(registerUrl) ||
+  				 referrer.contains(updateAccountInfoUrl) )) {
 	
 			if (accountForm.isNewAccount()) {
 				try {

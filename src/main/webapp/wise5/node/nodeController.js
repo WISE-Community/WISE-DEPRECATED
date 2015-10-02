@@ -447,9 +447,9 @@ define(['app'], function(app) {
                     StudentDataService.saveToServer(componentStates, nodeStates, componentEvents, componentAnnotations);
 
                     // check if this node has transition logic that should be run when the student data changes
-                    if (this.hasTransitionLogic() && this.evaluateTransitionLogicOn('studentDataChanged')) {
+                    if (NodeService.hasTransitionLogic() && NodeService.evaluateTransitionLogicOn('studentDataChanged')) {
                         // this node has transition logic
-                        this.evaluateTransitionLogic();
+                        NodeService.evaluateTransitionLogic();
                     }
                 }
             };
