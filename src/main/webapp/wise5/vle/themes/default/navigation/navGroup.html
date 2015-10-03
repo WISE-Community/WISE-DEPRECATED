@@ -6,7 +6,7 @@
         </div>
         <div class="group-info__details" flex>
             <div class="md-toolbar-tools md-toolbar-tools--fit auto-height">
-                <h3 class="group-info__title" style="color: {{navCtrl.currentGroupStatus.icon.color}};" flex>{{navCtrl.currentGroup.title}}</h3>
+                <h3 class="group-info__title" style="color: {{navCtrl.currentGroupStatus.icon.color}};" flex><span ng-if="themeCtrl.numberProject">{{ navCtrl.getNodePositionById(navCtrl.currentGroupId) }}: </span>{{navCtrl.currentGroup.title}}</h3>
                 <md-button aria-label="Close Activity" class="md-icon-button" ng-click="navCtrl.nodeClicked(navCtrl.parentGroupId)">
                     <md-icon> close </md-icon>
                 </md-button>
@@ -24,12 +24,12 @@
     <md-card-content ng-class="'nav-contents nav-contents--group nav-contents--' + themeCtrl.layoutView">
         <md-list ng-if="themeCtrl.layoutView === 'list'">
             <nav-item ng-repeat="item in navCtrl.currentChildren" ng-if="navCtrl.nodeStatuses[item.id].isVisible"
-                      template-url="vleController.themePath + '/navigation/navItem.html'"
+                      template-url="vleController.themePath + '/navigation/navItem.html'" show-position="themeCtrl.numberProject"
                       item="item" type="themeCtrl.layoutView" node-clicked="navCtrl.nodeClicked(item.id)" ng-animate-ref="{{ item.id }}" class="nav-item ng-enter"></nav-item>
         </md-list>
         <div ng-if="themeCtrl.layoutView === 'card'" layout="row" layout-wrap layout-align="start start">
             <nav-item ng-repeat="item in navCtrl.currentChildren" ng-if="navCtrl.nodeStatuses[item.id].isVisible"
-                      template-url="vleController.themePath + '/navigation/navItem.html'"
+                      template-url="vleController.themePath + '/navigation/navItem.html'" show-position="themeCtrl.numberProject"
                       item="item" type="themeCtrl.layoutView" node-clicked="navCtrl.nodeClicked(item.id)"
                       flex-sm="100" flex-md="50" flex-lg="33" flex-gt-lg="25"></nav-item>
         </div>

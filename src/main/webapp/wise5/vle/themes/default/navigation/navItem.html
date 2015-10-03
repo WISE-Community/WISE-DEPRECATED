@@ -6,7 +6,7 @@
                 <md-icon md-font-set="{{nodeStatus.icon.fontSet}}" class="md-36 md-light">{{nodeStatus.icon.fontName}}</md-icon>
             </div>
             <div class="md-title nav-item__title" style="color: {{nodeStatus.icon.color}};" flex>
-                <span>{{ item.title }}</span>
+                <span>{{ nodeTitle }}</span>
                 <div ng-if="isGroup" class="nav-item__info md-body-1">{{nodeStatus.progress.totalItems}} item(s)</div>
             </div>
 
@@ -30,7 +30,7 @@
         <div ng-if="nodeStatus.icon.type === 'font'" ng-class="isGroup ? 'avatar--square' : ''" style="background-color: {{nodeStatus.icon.color}};" class="md-avatar">
             <md-icon md-font-set="{{nodeStatus.icon.fontSet}}" class="md-light">{{nodeStatus.icon.fontName}}</md-icon>
         </div>
-        <p style="color: {{nodeStatus.icon.color}};">{{ item.title }}</p>
+        <p style="color: {{nodeStatus.icon.color}};">{{ nodeTitle }}</p>
         <md-icon ng-if="nodeStatus.isCompleted" ng-class="'success'" aria-label="Completed"> check_circle </md-icon>
         <md-icon ng-if="!nodeStatus.isVisitable" aria-label="Locked"> lock </md-icon>
         <!--<md-button aria-label="Add Bookmark" class="md-icon-button" ng-click="toggleBookmark()" ng-class="{'md-primary': child.isBookmark}">

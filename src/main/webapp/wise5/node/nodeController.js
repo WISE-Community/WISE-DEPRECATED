@@ -39,6 +39,9 @@ define(['app'], function(app) {
             // the id of the previous node in the project sequence
             this.prevNodeId = null;
 
+            // the position of the node in the project sequence
+            this.nodePosition = null;
+
             /*
              * an object that holds the mappings with the key being the component
              * and the value being the scope object from the child controller
@@ -75,6 +78,8 @@ define(['app'], function(app) {
                 this.nextNodeId = NodeService.getNextNodeId();
 
                 this.prevNodeId = NodeService.getPrevNodeId();
+
+                this.nodePosition = ProjectService.getNodePositionById(this.nodeId);
 
                 // populate the student work into this node
                 //this.setStudentWork();

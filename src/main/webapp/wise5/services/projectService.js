@@ -13,6 +13,8 @@ define(['configService'], function(configService) {
         serviceObject.metadata = {};
         serviceObject.idToContent = {};
         serviceObject.activeConstraints = [];
+        serviceObject.rootNode = null;
+        serviceObject.idToPosition = {};
 
         serviceObject.getProject = function() {
             return this.project;
@@ -45,7 +47,7 @@ define(['configService'], function(configService) {
 
         serviceObject.getFilters = function(){
             return this.filters;
-        }
+        };
 
         serviceObject.getName = function() {
             var name = this.getProjectMetadata().title;
@@ -303,6 +305,129 @@ define(['configService'], function(configService) {
                         }
                     }
                 }
+
+                this.rootNode = this.getGroupNodes()[0]; // TODO: should we always assume first group is the root? should we use 'group0' instead or something else?
+
+                var n = nodes.length;
+                var branches = this.getBranches();
+                var branchNodeIds = [];
+
+                // set node positions
+                while (n--) {
+                    var id = nodes[n].id;
+                    if(id === this.rootNode.id) {
+                        this.setIdToPosition(id, '0');
+                    } else if (this.isNodeIdInABranch(branches, id)) {
+                        // node is in a branch, so process later
+                        branchNodeIds.push(id);
+                    } else {
+                        var pos = this.getPositionById(id);
+                        this.setIdToPosition(id, pos);
+                    }
+                }
+
+                // set branch node positions
+                var b = branchNodeIds.length;
+                while (b--) {
+                    var id = branchNodeIds[b];
+                    var pos = this.getBranchNodePositionById(id);
+                    this.setIdToPosition(id, pos);
+                }
+            }
+        };
+
+        /**
+         * Returns the position in the project for the node with the given id. Returns null if no node with id exists.
+         * @param id a node id
+         * @return string position of the given node id in the project
+         */
+        serviceObject.getPositionById = function(id) {
+            for (var i=0;i<this.rootNode.ids.length;i++) {
+                var node = this.getNodeById(this.rootNode.ids[i]);
+                var path = this.getPathToNode(node, i+1, id);
+                if (path!=undefined && path!=null) {
+                    return path;
+                }
+            }
+
+            return null;
+        };
+
+        /**
+         * Returns the position in the project for the branch node with the given id. Returns null if no node with id exists or node is not a branch node.
+         * @param id a node id
+         * @return string position of the given node id in the project
+         */
+        serviceObject.getBranchNodePositionById = function(id) {
+            var branches = this.getBranches();
+            var b = branches.length;
+
+            // TODO: should we localize this? should we support more than 26?
+            var integerToAlpha = function(int) {
+                var alphabet = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
+                if(int > -1 && int < 26){
+                    return alphabet[int];
+                } else {
+                    return int;
+                }
+            };
+
+
+            while (b--) {
+                var branch = branches[b];
+                var branchPaths = branch.branchPaths;
+                for (var p=0; p<branchPaths.length; p++) {
+                    var branchPath = branchPaths[p];
+                    var nodeIndex = branchPath.indexOf(id);
+                    if (nodeIndex > -1) {
+                        var startPoint = branch.branchStartPoint;
+                        var startPointPos = this.idToPosition[startPoint];
+                        var branchPathPos = startPointPos + ' ' + integerToAlpha(p);
+                        return branchPathPos + (nodeIndex+1);
+                    }
+                }
+            }
+
+            return null;
+        };
+
+        /**
+         * Recursively searches for the given node id from the point of the given node down and returns the path number (position)
+         * @param node a node to start searching down
+         * @param path the position of the given node
+         * @param id the node id to search for
+         * @return string path of the given node id in the project
+         */
+        serviceObject.getPathToNode = function(node, path, id) {
+            if (node.id===id) {
+                return path + '';
+            } else if (node.type==='group'){
+                var num = 0;
+                var branches = this.getBranches();
+                for (var i=0;i<node.ids.length;i++) {
+                    var nodeId = node.ids[i];
+                    if (this.isNodeIdInABranch(branches, nodeId)) {
+                        this.getBranchNodePositionById(nodeId);
+                    } else {
+                        ++num;
+                        var pos = this.getPathToNode(this.getNodeById(nodeId), (path) + '.' + (num), id);
+                        if (pos) {
+                            return pos;
+                        }
+                    }
+                }
+            }
+        };
+
+        serviceObject.setIdToPosition = function(id, pos) {
+            if (id != null) {
+                this.idToPosition[id] = pos;
+            }
+        };
+
+        serviceObject.getNodePositionById = function(id) {
+            if (id != null) {
+                return this.idToPosition[id];
             }
         };
 
@@ -1558,7 +1683,7 @@ define(['configService'], function(configService) {
                     var path = paths[p];
 
                     // get the first node id in the path
-                    tempNodeId = path[0];
+                    var tempNodeId = path[0];
 
                     if (nodeId == null) {
                         /*

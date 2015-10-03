@@ -1,6 +1,6 @@
 <div class="account-menu__caret" tabindex="0"></div>
 <md-list class="account-menu__users">
-    <md-subheader>Project Team:</md-subheader>
+    <md-subheader>Project Team</md-subheader>
     <md-list-item ng-repeat="name in themeCtrl.workgroupUserNames">
         <div class="md-avatar">
             <md-icon> account_circle </md-icon>
@@ -9,7 +9,8 @@
     </md-list-item>
 </md-list>
 <md-divider></md-divider>
-<div class="account-menu__actions" layout="row" layout-align="end center">
+<div class="account-menu__actions" layout="row">
     <md-button class="md-primary" ng-click="vleController.goHome()">Exit to Home</md-button>
+    <span flex></span>
     <md-button class="md-primary" ng-click="vleController.logOut()">Sign Out</md-button>
 </div>

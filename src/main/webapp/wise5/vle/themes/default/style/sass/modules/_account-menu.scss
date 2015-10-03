@@ -20,7 +20,8 @@
   }
 
   .md-subheader .md-subheader-inner {
-    padding: 8px 0;
+    padding: 12px 0;
+    //font-size: $subhead-font-size-base;
   }
 }
 
@@ -39,5 +40,5 @@
   }
 }
 .account-menu__actions {
-  background-color: $gray-lightest;;
+  background-color: $gray-lightest;
 }

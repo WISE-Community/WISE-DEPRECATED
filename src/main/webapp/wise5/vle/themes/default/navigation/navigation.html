@@ -1,4 +1,4 @@
-<div class="l-constrained md-padding">
+<div class="l-constrained l-constrained--lg md-padding">
     <div class="md-toolbar-tools auto-width">
         <div class="md-subhead nav-head breadcrumb">
             <md-icon> home </md-icon>
@@ -6,7 +6,7 @@
                 <a ng-switch-when="group" ng-click="navCtrl.nodeClicked(navCtrl.currentParentGroups[0].id)">Project Plan</a>
                 <span ng-switch-when="root">Project Plan</span>
             </ng-switch>
-            <a ng-repeat-start="group in navCtrl.currentParentGroups" ng-if="!$first" ng-click="navCtrl.nodeClicked(group.id)">{{group.title}}</a>
+            <a ng-repeat-start="group in navCtrl.currentParentGroups" ng-if="!$first" ng-click="navCtrl.nodeClicked(group.id)"><span ng-if="themeCtrl.numberProject">{{ themeCtrl.getNodePositionById(group.id) }}: </span>{{group.title}}</a>
             <span ng-if="!$last" ng-repeat-end> > </span>
         </div>
         <span flex></span>

@@ -95,6 +95,10 @@ define(['app'], function(app) {
 
             this.updateNavigation();
 
+            this.getNodePositionById = function(id) {
+                return ProjectService.getNodePositionById(id);
+            };
+
             var scope = this;
             $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
                 var toNodeId = toParams.nodeId;

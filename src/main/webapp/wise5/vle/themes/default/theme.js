@@ -10,6 +10,7 @@ define(['angular', /*'annotationService',*/ 'configService', 'nodeService', 'not
                         templateUrl: '=',
                         item: '=',
                         nodeClicked: '&',
+                        showPosition: '=',
                         type: '='
                     },
                     template: '<ng-include src="getTemplateUrl()"></ng-include>',
@@ -26,6 +27,10 @@ define(['angular', /*'annotationService',*/ 'configService', 'nodeService', 'not
                         $scope.isGroup = ProjectService.isGroupNode($scope.item.id);
 
                         $scope.nodeStatus = StudentDataService.nodeStatuses[$scope.item.id];
+
+                        var nodePosition = ProjectService.getNodePositionById($scope.item.id);
+
+                        $scope.nodeTitle = $scope.showPosition ? (nodePosition + ': ' + $scope.item.title) : $scope.item.title;
                     }
                 };
             })
@@ -34,6 +39,7 @@ define(['angular', /*'annotationService',*/ 'configService', 'nodeService', 'not
                     scope: {
                         templateUrl: '=',
                         item: '=',
+                        showPosition: '=',
                         close: '&'
                     },
                     template: '<ng-include src="getTemplateUrl()"></ng-include>',
@@ -47,6 +53,10 @@ define(['angular', /*'annotationService',*/ 'configService', 'nodeService', 'not
                         };
 
                         $scope.nodeStatus = StudentDataService.nodeStatuses[$scope.item.id];
+
+                        var nodePosition = ProjectService.getNodePositionById($scope.item.id);
+
+                        $scope.nodeTitle = $scope.showPosition ? (nodePosition + ': ' + $scope.item.title) : $scope.item.title;
                     }
                 };
             })
@@ -154,6 +164,10 @@ define(['angular', /*'annotationService',*/ 'configService', 'nodeService', 'not
                     }
                 };
 
+                this.getNodePositionById = function(id) {
+                    return ProjectService.getNodePositionById(id);
+                };
+
                 // alert user when a locked node has been clicked
                 $scope.$on('nodeClickedLocked', angular.bind(this, function (event, args) {
                     var nodeId = args.nodeId;
@@ -196,10 +210,6 @@ define(['angular', /*'annotationService',*/ 'configService', 'nodeService', 'not
                         NotebookService.saveNotebookToggleEvent(isOpen, currentNode);
                     });
                 });
-
-                var branches = ProjectService.getBranches();
-                console.log(JSON.stringify(branches, null, 4));
-                console.log('end');
             })
             .controller('ProjectStatusController', function(
                 $scope,
