@@ -31,7 +31,6 @@ import java.util.Properties;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.hibernate.StaleObjectStateException;
 import org.json.JSONArray;
@@ -114,9 +113,7 @@ public class TeamSignInController {
 	protected synchronized String onSubmit(@ModelAttribute("teamSignInForm") TeamSignInForm teamSignInForm, 
 			BindingResult result, 
 			HttpServletRequest request,
-			HttpServletResponse response,
-			SessionStatus status,
-			ModelMap modelMap)
+			SessionStatus status)
 	throws Exception {
 		
 		teamSignInFormValidator.validate(teamSignInForm, result);
@@ -124,7 +121,7 @@ public class TeamSignInController {
 			return "student/teamsignin";
 		}
 		
-		//the arrays to store the user ids of the students that are present or absent
+		// the arrays to store the user ids of the students that are present or absent
 		JSONArray presentUserIds = new JSONArray();
 		JSONArray absentUserIds = new JSONArray();
 		
@@ -145,14 +142,14 @@ public class TeamSignInController {
 		StudentRunInfo studentRunInfoUser1 = studentService.getStudentRunInfo(user1, run);
 		Projectcode projectcode = new Projectcode(run.getRuncode(), studentRunInfoUser1.getGroup().getName());
 
-		//stores the members that are logged in
+		// stores the members that are logged in
 		Set<User> membersLoggedIn = new HashSet<User>();
 		String workgroupname = "Workgroup for " + user1.getUserDetails().getUsername();
 		
-		//add the user that is already logged in
+		// add the user that is already logged in
 		membersLoggedIn.add(user1);
 		
-		//add user1 to the users that are present
+		// add user1 to the users that are present
 		presentUserIds.put(user1.getId());
 		
 		/*
@@ -161,11 +158,11 @@ public class TeamSignInController {
 		 */
 		List<Workgroup> workgroups = workgroupService.getWorkgroupListByOfferingAndUser(run, user1);
 
-		//get the members in the workgroup
+		// get the members in the workgroup
 		Set<User> membersInWorkgroup = new HashSet<User>();
 		
 		if (workgroups != null && workgroups.size() > 0) {
-			//get the members in the workgroup
+			// get the members in the workgroup
 			membersInWorkgroup = workgroups.get(0).getMembers();
 		}
 		
@@ -179,13 +176,13 @@ public class TeamSignInController {
 					// do nothing. it's okay if the student is already associated with this run.
 				}
 				
-				//add user3 to the members logged in
+				// add user3 to the members logged in
 				membersLoggedIn.add(user);
 				
 				workgroupname += user.getUserDetails().getUsername();
 				workgroups.addAll(workgroupService.getWorkgroupListByOfferingAndUser(run, user));
 				
-				//add user3 to the users that are present
+				// add user3 to the users that are present
 				presentUserIds.put(user.getId());
 			}
 		}
@@ -213,7 +210,7 @@ public class TeamSignInController {
 		while(membersInWorkgroupIter.hasNext()) {
 			boolean memberLoggedIn = false;
 			
-			//get a user that is in the workgroup
+			// get a user that is in the workgroup
 			User memberInWorkgroup = membersInWorkgroupIter.next();
 			
 			/*
@@ -223,31 +220,31 @@ public class TeamSignInController {
 			 * array
 			 */
 			for(int x=0; x<presentUserIds.length(); x++) {
-				//get a present user id
+				// get a present user id
 				long presentUserId = presentUserIds.getLong(x);
 				
 				if (presentUserId == memberInWorkgroup.getId()) {
-					//the user id matches so this memberInWorkgroup is present
+					// the user id matches so this memberInWorkgroup is present
 					memberLoggedIn = true;
 					break;
 				}
 			}
 			
 			if (!memberLoggedIn) {
-				//the memberInWorkgroup is absent
+				// the memberInWorkgroup is absent
 				absentUserIds.put(memberInWorkgroup.getId());
 			}
 		}
 		
-		//get the values to create the student attendance entry
+		// get the values to create the student attendance entry
 		Long workgroupId = workgroup.getId();
 		Long runId = run.getId();
 		Date loginTimestamp = new Date();
 		
-		//create a student attendance entry
+		// create a student attendance entry
 		this.studentAttendanceService.addStudentAttendanceEntry(workgroupId, runId, loginTimestamp, presentUserIds.toString(), absentUserIds.toString());
 		
-		/* update run statistics */
+		// update run statistics
 		int maxLoop = 30;  // to ensure that the following while loop gets run at most this many times.
 		int currentLoopIndex = 0;
 		while(currentLoopIndex < maxLoop) {
@@ -272,9 +269,8 @@ public class TeamSignInController {
 		launchProjectParameters.setHttpServletRequest(request);
 		StartProjectController.notifyServletSession(request, run);
 		ModelAndView modelAndView = (ModelAndView) projectService.launchProject(launchProjectParameters);
-		modelMap.put("closeokay", true);
-		
-		//clear the command object from the session
+
+		// clear the command object from the session
 		status.setComplete(); 
 
 		return "redirect:"+((RedirectView) modelAndView.getView()).getUrl();
@@ -283,11 +279,11 @@ public class TeamSignInController {
     @RequestMapping(method=RequestMethod.GET) 
     public String initializeForm(ModelMap modelMap,HttpServletRequest request) throws Exception { 
 
-    	//get the signed in username
+    	// get the signed in username
 		User user = ControllerUtil.getSignedInUser();
 		String signedInUsername = user.getUserDetails().getUsername();
 		
-		//get the form
+		// get the form
 		TeamSignInForm form = new TeamSignInForm();
 		Long runId = null;
 		
@@ -295,11 +291,11 @@ public class TeamSignInController {
 		int maxWorkgroupSize = Integer.parseInt(maxWorkgroupSizeStr);
 		form.setMaxWorkgroupSize(maxWorkgroupSize);
 		
-		//set the signed in username
+		// set the signed in username
 		form.setUsername1(signedInUsername);
 		
 		try {
-			//get the run id
+			// get the run id
 			String runIdString = request.getParameter("runId");
 			runId = Long.valueOf(runIdString);
 		} catch (NumberFormatException e) {
@@ -319,13 +315,13 @@ public class TeamSignInController {
 				return "student/index";			
 			}	
 			
-			//set the run id
+			// set the run id
 			form.setRunId(runId);
 			
-			//get the run
+			// get the run
 			Run run = (Run) runService.getOffering(runId);
 			
-			//get the members in the workgroup
+			// get the members in the workgroup
 			StudentRunInfo studentRunInfo = studentService.getStudentRunInfo(user, run);
 			
 			/*
@@ -335,47 +331,47 @@ public class TeamSignInController {
 			Workgroup workgroup = studentRunInfo.getWorkgroup();
 			
 			if (workgroup != null) {
-				//get the members in the workgroup and pre-populate the username fields
+				// get the members in the workgroup and pre-populate the username fields
 				Set<User> members = workgroup.getMembers();
 
-				//counter for how many members we have so far
+				// counter for how many members we have so far
 				int currentNumMembers = 2;
 				
-				//loop through all the members
+				// loop through all the members
 				Iterator<User> membersIterator = members.iterator();
 				while(membersIterator.hasNext()) {
-					//get a member and their username
+					// get a member and their username
 					User member = membersIterator.next();
 					String username = member.getUserDetails().getUsername();
 					
-					//check that the username is not the one that is already signed in
+					// check that the username is not the one that is already signed in
 					if (username != null && !username.equals(signedInUsername)) {
 						if (currentNumMembers == 2) {
-							//set the username2
+							// set the username2
 							form.setUsername2(username);
 						} else if (currentNumMembers == 3) {
-							//set the username3
+							// set the username3
 							form.setUsername3(username);
 						} else if (currentNumMembers == 4) {
-							//set the username4
+							// set the username4
 							form.setUsername4(username);
 						} else if (currentNumMembers == 5) {
-							//set the username5
+							// set the username5
 							form.setUsername5(username);
 						} else if (currentNumMembers == 6) {
-							//set the username6
+							// set the username6
 							form.setUsername6(username);
 						} else if (currentNumMembers == 7) {
-							//set the username7
+							// set the username7
 							form.setUsername7(username);
 						} else if (currentNumMembers == 8) {
-							//set the username8
+							// set the username8
 							form.setUsername8(username);
 						} else if (currentNumMembers == 9) {
-							//set the username9
+							// set the username9
 							form.setUsername9(username);
 						} else if (currentNumMembers == 10) {
-							//set the username10
+							// set the username10
 							form.setUsername10(username);
 						}
 						currentNumMembers++;
@@ -393,7 +389,7 @@ public class TeamSignInController {
 	@ExceptionHandler(HttpSessionRequiredException.class)
 	public ModelAndView handleSessionExpired(HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView();
-		//get the context path e.g. /wise
+		// get the context path e.g. /wise
 		String contextPath = request.getContextPath();
 		String teamSignInFormPath = contextPath+"/student/teamsignin.html";
 
@@ -404,5 +400,5 @@ public class TeamSignInController {
 
 		mav.setView(new RedirectView(teamSignInFormPath));
 		return mav;
-        }
+	}
 }

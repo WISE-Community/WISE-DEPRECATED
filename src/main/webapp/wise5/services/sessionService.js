@@ -203,12 +203,8 @@ define(['configService'], function(configService) {
                     // get the url that will log out the user
                     var sessionLogOutURL = ConfigService.getSessionLogOutURL();
                     
-                    // make a request to the log out url
-                    $http.get(sessionLogOutURL).then(function() {
-                        
-                        // bring the user back to the home page
-                        window.location.href = mainHomePageURL;
-                    });
+                    // take user to log out url
+                    window.location.href = sessionLogOutURL;
                 } else {
                     /*
                      * bring the user to the student or teacher home page but 

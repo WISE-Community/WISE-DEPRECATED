@@ -20,7 +20,7 @@ define(['configService'], function(configService) {
 
         serviceObject.setProject = function(project) {
             this.project = project;
-            if(project.metadata){
+            if (project.metadata) {
                 this.metadata = project.metadata;
             }
             this.parseProject();

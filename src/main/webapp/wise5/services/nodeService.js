@@ -496,7 +496,7 @@ define(['configService', 'projectService', 'studentDataService'], function(confi
                     if (transitionLogic != null) {
                         //var whenToChoosePath = transitionLogic.whenToChoosePath;
 
-                        //var nodeStates = StudentDataService.getNodeStatesByNodeId(this.nodeId);
+                        //var nodeStates = StudentDataService.getNodeStatesByNodeId(currentNode.id);
 
                         var transitions = transitionLogic.transitions;
                         var canChangePath = transitionLogic.canChangePath;
@@ -518,7 +518,7 @@ define(['configService', 'projectService', 'studentDataService'], function(confi
                                 var transition = this.chooseTransition(transitionLogic);
 
                                 if (transition != null) {
-                                    var fromNodeId = this.nodeId;
+                                    var fromNodeId = currentNode.id;
                                     var toNodeId = transition.to;
 
                                     this.createBranchNodeState(fromNodeId, toNodeId);
@@ -535,7 +535,7 @@ define(['configService', 'projectService', 'studentDataService'], function(confi
                             var transition = this.chooseTransition(transitionLogic);
 
                             if (transition != null) {
-                                var fromNodeId = this.nodeId;
+                                var fromNodeId = currentNode.id;
                                 var toNodeId = transition.to;
 
                                 this.createBranchNodeState(fromNodeId, toNodeId);
@@ -548,7 +548,7 @@ define(['configService', 'projectService', 'studentDataService'], function(confi
             serviceObject.getBranchNodeStates = function() {
                 var branchNodeStates = [];
 
-                var nodeStates = StudentDataService.getNodeStatesByNodeId(this.nodeId);
+                var nodeStates = StudentDataService.getNodeStatesByNodeId(currentNode.id);
 
                 if (nodeStates != null) {
                     for (var n = 0; n < nodeStates.length; n++) {
@@ -580,7 +580,7 @@ define(['configService', 'projectService', 'studentDataService'], function(confi
                     nodeState.runId = ConfigService.getRunId();
                     nodeState.periodId = ConfigService.getPeriodId();
                     nodeState.workgroupId = ConfigService.getWorkgroupId();
-                    nodeState.nodeId = this.nodeId;
+                    nodeState.nodeId = fromNodeId;
                     nodeState.isAutoSave = false;
 
                     var studentData = {};

@@ -54,6 +54,12 @@ define(['app'],
             StudentDataService.updateNodeStatuses();
         }));
 
+        $scope.$on('nodeClickLocked', angular.bind(this, function(event, args) {
+            var lockedNodeId = args.nodeId;
+            // TODO JB styling...alert for now. Will need to output reason the node is locked.
+            alert("Node " + lockedNodeId + " is locked right now. Make sure you've completed previous steps.");
+        }));
+
         this.updateLayout = function() {
             if (this.project != null) {
                 ProjectService.getProject();

@@ -325,7 +325,7 @@ define(['app'], function(app) {
                 }
 
                 return result;
-            }
+            };
 
             /**
              * Get the html template for the component
