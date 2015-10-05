@@ -52,3 +52,7 @@ md-list-item .md-list-item-inner {
 md-list-item .md-list-item-inner>.md-avatar:first-child, md-list-item>.md-avatar:first-child {
   display: flex;
 }
+
+md-input-container label, md-input-container .md-placeholder {
+  color: rgba(0,0,0,0.54);
+}

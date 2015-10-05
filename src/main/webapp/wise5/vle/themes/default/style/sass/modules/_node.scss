@@ -6,7 +6,7 @@
 }
 
 .node-content {
-  padding: 16px 0;
+
 }
 
 .node-icon {
@@ -26,6 +26,59 @@
   @media only screen and (min-width: 0) and (max-width: $layout-breakpoint-sm) and
   (orientation: portrait) {
     font-size: $body-font-size-base;
+  }
+}
+
+.node-input-container {
+  padding: 16px 0;
+
+  textarea.node-input {
+    padding: 8px;
+    background-color: $gray-lightest;
+    border-top: 1px solid $gray-lighter;
+    border-left: 1px solid $gray-lighter;
+    border-right: 1px solid $gray-lighter;
+
+    &:focus {
+      background-color: #ffffff;
+      border-top: 1px solid $gray-light;
+      border-left: 1px solid $gray-light;
+      border-right: 1px solid $gray-light;
+    }
+
+    &.node-input__notebook-add {
+      padding-right: 48px;
+    }
+  }
+
+  .notebook-add__node-input {
+    position: absolute;
+    right: -8px;
+  }
+}
+
+.node-input-label {
+  padding-bottom: 12px;
+  line-height: 1.2;
+}
+
+.component-content {
+  margin: 12px 0 8px;
+
+  @media only screen and (min-width: $layout-breakpoint-md) {
+    margin: 24px 0 16px;
+  }
+}
+
+.component-actions {
+  .md-button {
+    margin-top: 0;
+    margin-bottom: 0;
+    text-transform: none;
+
+    &:last-of-type {
+      margin-right: 0;
+    }
   }
 }
 

@@ -7,12 +7,6 @@
     <!--link data-require="bootstrap@*" data-semver="3.3.2" rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" /-->
     <link rel='stylesheet' href='wise5/lib/angularTextAngular/textAngular.css'>
 <style>
-#prompt {
-  font-weight: bold;
-}
-#saveButton {
-  display: block;
-}
 .ta-editor {
     min-height: 300px;
     height: auto;
@@ -38,26 +32,31 @@
 <style>
 {{openResponseController.nodeContent.style}}
 </style>
-<div id='prompt' compile='openResponseController.getPrompt()'></div>
-<!--  for styling textAngular (wysiwyg), see here: https://github.com/fraywing/textAngular/wiki/Getting-Started -->
-<div text-angular id='responseTextarea'
-    rows='{{openResponseController.getNumRows() || 20}}'
-    cols='{{openResponseController.getNumColumns() || 100}}'
-    ng-model='openResponseController.studentResponse'
-    ng-disabled='openResponseController.isDisabled'
-    ta-disabled='openResponseController.isDisabled'
-    ng-change='openResponseController.studentDataChanged()'
-    data-drop="true" 
-    jqyoui-droppable="{onDrop: 'openResponseController.dropCallback(item, $index)'}">
-    </div>
-<button id='saveButton' 
-    ng-click='openResponseController.saveButtonClicked()' 
-    ng-disabled='openResponseController.isDisabled' 
-    ng-show='openResponseController.showSaveButton()'>Save</button>
-<button id='submitButton' 
-    ng-click='openResponseController.submitButtonClicked()' 
-    ng-disabled='openResponseController.isDisabled' 
-    ng-show='openResponseController.showSubmitButton()'>Submit</button>
+
+<md-input-container class="node-input-container" flex>
+    <label class="node-input-label md-no-float" compile="openResponseController.getPrompt()"></label>
+    <textarea columns="1" class="node-input node-input__notebook-add"
+              rows='{{openResponseController.getNumRows() || 3}}'
+              ng-model='openResponseController.studentResponse'
+              ng-disabled='openResponseController.isDisabled'
+              ta-disabled='openResponseController.isDisabled'
+              ng-change='openResponseController.studentDataChanged()'
+              data-drop="true"
+              jqyoui-droppable="{onDrop: 'openResponseController.dropCallback(item, $index)'}"></textarea>
+    <md-button class="notebook-add notebook-add__node-input md-icon-button" ng-click='nodeCtrl.addStudentWorkItemToNotebook(component.id)'
+            ng-disabled="!openResponseController.getStudentResponse()">
+        <md-icon> book </md-icon>
+        <md-tooltip md-direction="top">Add to Notebook</md-tooltip>
+    </md-button>
+</md-input-container>
+<md-button id='saveButton' class="raised md-primary"
+           ng-click='openResponseController.saveButtonClicked()'
+           ng-disabled='openResponseController.isDisabled'
+           ng-show='openResponseController.showSaveButton()'>Save</md-button>
+<md-button id='submitButton' class="raised md-primary"
+        ng-click='openResponseController.submitButtonClicked()'
+        ng-disabled='openResponseController.isDisabled'
+        ng-show='openResponseController.showSubmitButton()'>Submit</md-button>
 </div>
 </body>
 </html>
