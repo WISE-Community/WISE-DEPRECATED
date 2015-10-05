@@ -449,13 +449,14 @@ define(['app'], function(app) {
                     (componentAnnotations != null && componentAnnotations.length > 0) ||
                     (componentEvents != null && componentEvents.length > 0)) {
                     // save the component states to the server
-                    StudentDataService.saveToServer(componentStates, nodeStates, componentEvents, componentAnnotations);
-
-                    // check if this node has transition logic that should be run when the student data changes
-                    if (NodeService.hasTransitionLogic() && NodeService.evaluateTransitionLogicOn('studentDataChanged')) {
-                        // this node has transition logic
-                        NodeService.evaluateTransitionLogic();
-                    }
+                    return StudentDataService.saveToServer(componentStates, nodeStates, componentEvents, componentAnnotations).then(angular.bind(this, function(savedStudentDataResponse) {
+                        // check if this node has transition logic that should be run when the student data changes
+                        if (NodeService.hasTransitionLogic() && NodeService.evaluateTransitionLogicOn('studentDataChanged')) {
+                            // this node has transition logic
+                            NodeService.evaluateTransitionLogic();
+                        }
+                        return savedStudentDataResponse;
+                    }));
                 }
             };
 
@@ -801,13 +802,31 @@ define(['app'], function(app) {
                 StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
             };
 
+            // saves current work and adds to notebook as needed
             this.addStudentWorkItemToNotebook = function(componentId) {
                 var currentNode = StudentDataService.getCurrentNode();
                 if (currentNode != null) {
                     var currentNodeId = currentNode.id;
-                    var currentComponentState = StudentDataService.getLatestComponentStateByNodeIdAndComponentId(currentNodeId, componentId);
-                    if (currentComponentState != null) {
-                        NotebookService.addStudentWorkNotebookItem(currentComponentState);
+
+                    // get the scope for the component
+                    var childScope = $scope.componentToScope[componentId];
+
+                    if (childScope != null && childScope.isDirty) {
+                        // we need to save this component first before adding to notebook
+                        var isAutoSave = false;
+
+                        this.createAndSaveComponentData(isAutoSave, componentId).then(angular.bind(this, function(saveResult) {
+                            var currentComponentState = StudentDataService.getLatestComponentStateByNodeIdAndComponentId(currentNodeId, componentId);
+                            if (currentComponentState != null) {
+                                NotebookService.addStudentWorkNotebookItem(currentComponentState);
+                            }
+                        }));
+                    } else {
+                        // no new data to save. Get the latest componentstate and add to notebook
+                        var currentComponentState = StudentDataService.getLatestComponentStateByNodeIdAndComponentId(currentNodeId, componentId);
+                        if (currentComponentState != null) {
+                            NotebookService.addStudentWorkNotebookItem(currentComponentState);
+                        }
                     }
                 }
             };

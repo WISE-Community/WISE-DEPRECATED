@@ -442,7 +442,14 @@ define(['app'], function(app) {
             
             return componentId;
         };
-        
+
+        /**
+         * Returns true iff there is student work that hasn't been saved yet
+         */
+        $scope.isDirty = function() {
+            return $scope.openResponseController.isDirty;
+        };
+
         /**
          * Get the component state from this component. The parent node will 
          * call this function to obtain the component state when it needs to
