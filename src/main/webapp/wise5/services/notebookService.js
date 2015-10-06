@@ -10,8 +10,8 @@ define(['configService', 'studentDataService'], function(configService, studentD
         serviceObject.filters = [
             {'name': 'all', 'label': 'All'},
             {'name': 'work', 'label': 'Work'},
-            {'name': 'files', 'label': 'Files'},
-            {'name': 'ideas', 'label': 'Ideas'} // TODO: Add when Idea Manager is active
+            {'name': 'files', 'label': 'Files'}
+            //{'name': 'ideas', 'label': 'Ideas'} // TODO: Add when Idea Manager is active
         ];
 
         serviceObject.getFilters = function(){
@@ -101,8 +101,7 @@ define(['configService', 'studentDataService'], function(configService, studentD
         serviceObject.addStudentWorkNotebookItem = function(studentWork) {
             // don't allow duplicate student work notebook items
             if (this.hasStudentWorkNotebookItem(studentWork)) {
-                // alert for now TODO JB style me
-                alert('This item is already saved in your notebook.');
+                $rootScope.$broadcast('notebookAddDuplicateAttempt');
                 return;
             }
 

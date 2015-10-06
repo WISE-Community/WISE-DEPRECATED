@@ -201,6 +201,20 @@ define(['angular', /*'annotationService',*/ 'configService', 'nodeService', 'not
                     });
                 }));
 
+                // alert user when attempt to add component state to notebook that already exists in notebook
+                $scope.$on('notebookAddDuplicateAttempt', angular.bind(this, function (event, args) {
+                    $mdDialog.show(
+                        $mdDialog.alert()
+                            .parent(angular.element(document.body))
+                            .title('Item already exists in Notebook')
+                            .content('You can add another version of the item by making changes and then adding it again.')
+                            .ariaLabel('Notebook Duplicate')
+                            .clickOutsideToClose(true)
+                            .ok('OK')
+                            .targetEvent(event)
+                    );
+                }));
+
                 // capture notebook open/close events
                 $mdComponentRegistry.when('notebook').then(function(it){
                     $scope.$watch(function() {
