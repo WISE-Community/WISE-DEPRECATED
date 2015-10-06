@@ -16,6 +16,7 @@ require.config({
         'angularTextAngular': 'lib/angularTextAngular/textAngular.min', // TODO: switch to using bower once loading errors are fixed
         'angularTextAngularRangy': 'lib/angularTextAngular/textAngular-rangy.min', // TODO: switch to using bower once loading errors are fixed
         'angularTextAngularSanitize': 'lib/angularTextAngular/textAngular-sanitize.min', // TODO: switch to using bower once loading errors are fixed
+        'angularToArrayFilter': 'vendor/angular-toArrayFilter/toArrayFilter',
         'angularUIRouter': 'vendor/angular-ui-router/release/angular-ui-router.min',
         'angularUITree': 'vendor/angular-ui-tree/dist/angular-ui-tree.min',
         'angularWebSocket': 'vendor/angular-websocket/angular-websocket.min',
@@ -157,6 +158,12 @@ require.config({
                     'angular',
                     'angularTextAngularRangy'
                     ]
+        },
+        'angularToArrayFilter': {
+            'exports': 'angularToArrayFilter',
+            'deps': [
+                'angular'
+            ]
         },
         'angularUIRouter': {
             'exports': 'angularUIRouter',
