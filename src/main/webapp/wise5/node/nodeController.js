@@ -455,6 +455,10 @@ define(['app'], function(app) {
                             // this node has transition logic
                             NodeService.evaluateTransitionLogic();
                         }
+
+                        // TODO: handle error response from server if POST fails
+                        this.isDirty = false;
+
                         return savedStudentDataResponse;
                     }));
                 }
