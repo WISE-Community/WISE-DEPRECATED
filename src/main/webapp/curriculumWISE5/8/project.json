@@ -45,7 +45,7 @@
             },
             "title": "Introduction to Newton Scooters",
             "content": {
-                "prompt": "<div style=\"background-image: url('./assets/background.jpg'); border-radius: 10px 10px 10px 10px; padding: 25px; background-size: cover; font-family: Arial, Helvetica, sans-serif; line-height: 150%;\">\n<div style=\"background-color: rgba(255,255,255,0.85); color: #006; border-radius: 30px 30px 30px 30px; padding: 15px; text-align: center;\">\n<h1><span style=\"color:red\"><b>{{studentFirstNames}}!</b></span>Why Study Newton Scooters?</h1>\n</div>\n<br />\n<div style=\"background-color: rgba(255,255,255,0.85); color: #006; border-radius: 20px 20px 20px 20px; padding: 20px;\">\n<p>In this unit, you will build a cart and try to get it to go as far as possible. We will show you how to make a better car by thinking about energy, where it comes from and where it goes.</p>\n</div>\n</div>",
+                "prompt": "<div style=\"background-image: url('./assets/background.jpg'); border-radius: 10px 10px 10px 10px; padding: 25px; background-size: cover; font-family: Arial, Helvetica, sans-serif; line-height: 150%;\">\n<div style=\"background-color: rgba(255,255,255,0.85); color: #006; border-radius: 30px 30px 30px 30px; padding: 15px; text-align: center;\">\n<h1><span style=\"color:red\"></span>Why Study Newton Scooters?</h1>\n</div>\n<br />\n<div style=\"background-color: rgba(255,255,255,0.85); color: #006; border-radius: 20px 20px 20px 20px; padding: 20px;\">\n<p>{{studentFirstNames}}, in this unit, you will build a cart and try to get it to go as far as possible. We will show you how to make a better car by thinking about energy, where it comes from and where it goes.</p>\n</div>\n</div>",
                 "showSaveButton": true,
                 "showSubmitButton": false,
                 "components": [
@@ -76,7 +76,7 @@
             },
             "title": "Initial Ideas",
             "content": {
-                "prompt": "<div style=\"margin: auto; background-image: url('./assets/background.jpg'); border-radius: 20px 20px 20px 20px; padding: 8px; background-size: cover;\">\n<div style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 8px; text-align: center;\">\n<h2 style=\"text-align: center;\">Your Ideas About How Newton Scooters&nbsp;Work</h2>\n</div>\n</div>\n<p>&nbsp;</p>\n<div style=\"text-align: center;\"><object id=\"flashObj\" width=\"480\" height=\"270\" classid=\"clsid:D27CDB6E-AE6D-11cf-96B8-444553540000\" codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,47,0\"><param name=\"movie\" value=\"http://c.brightcove.com/services/viewer/federated_f9?isVid=1&isUI=1\" /><param name=\"bgcolor\" value=\"#FFFFFF\" /><param name=\"flashVars\" value=\"videoId=1785707989001&linkBaseURL=http%3A%2F%2Fvideos.kidspot.com.au%2Fvideos%2Fmsccfimh%2Fhow-to-make-a-rubber-band-cd-car&playerID=1481257918001&playerKey=AQ~~,AAABWOeErfE~,m-zG2cTdbSFPmdIYTvrDXYGmMQGs9zYu&domain=embed&dynamicStreaming=true\" /><param name=\"base\" value=\"http://admin.brightcove.com\" /><param name=\"seamlesstabbing\" value=\"false\" /><param name=\"allowFullScreen\" value=\"true\" /><param name=\"swLiveConnect\" value=\"true\" /><param name=\"allowScriptAccess\" value=\"always\" /><embed src=\"http://c.brightcove.com/services/viewer/federated_f9?isVid=1&isUI=1\" bgcolor=\"#FFFFFF\" flashVars=\"videoId=1785707989001&linkBaseURL=http%3A%2F%2Fvideos.kidspot.com.au%2Fvideos%2Fmsccfimh%2Fhow-to-make-a-rubber-band-cd-car&playerID=1481257918001&playerKey=AQ~~,AAABWOeErfE~,m-zG2cTdbSFPmdIYTvrDXYGmMQGs9zYu&domain=embed&dynamicStreaming=true\" base=\"http://admin.brightcove.com\" name=\"flashObj\" width=\"480\" height=\"270\" seamlesstabbing=\"false\" type=\"application/x-shockwave-flash\" allowFullScreen=\"true\" allowScriptAccess=\"always\" swLiveConnect=\"true\" pluginspage=\"http://www.macromedia.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash\"></embed></object></div>\n<table cellspacing=\"10\" cellpadding=\"10\">\n<tbody>\n<tr class=\"first even\">\n<td class=\"last first\" style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 25px;\">\n<p>A rubber band car is a type of Newton Scooter!</p>\n<p>With materials right in your own home, you can build a Newton Scooter! &nbsp;For each of the following write down your <strong> best ideas </strong> about what&nbsp;might affect how far a Newton Scooter&nbsp;might travel.</p>\n</td>\n</tr>\n</tbody>\n</table>",
+                "prompt": "<div style=\"margin: auto; background-image: url('./assets/background.jpg'); border-radius: 20px 20px 20px 20px; padding: 8px; background-size: cover;\">\n<div style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 8px; text-align: center;\">\n<h2 style=\"text-align: center;\">Your Ideas About How Newton Scooters&nbsp;Work</h2>\n</div>\n</div>\n<p>&nbsp;</p>\n<div style=\"text-align: center;\"><object id=\"flashObj\" width=\"480\" height=\"270\" classid=\"clsid:D27CDB6E-AE6D-11cf-96B8-444553540000\" codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,47,0\"><param name=\"movie\" value=\"http://c.brightcove.com/services/viewer/federated_f9?isVid=1&isUI=1\" /><param name=\"bgcolor\" value=\"#FFFFFF\" /><param name=\"flashVars\" value=\"videoId=1785707989001&linkBaseURL=http%3A%2F%2Fvideos.kidspot.com.au%2Fvideos%2Fmsccfimh%2Fhow-to-make-a-rubber-band-cd-car&playerID=1481257918001&playerKey=AQ~~,AAABWOeErfE~,m-zG2cTdbSFPmdIYTvrDXYGmMQGs9zYu&domain=embed&dynamicStreaming=true\" /><param name=\"base\" value=\"http://admin.brightcove.com\" /><param name=\"seamlesstabbing\" value=\"false\" /><param name=\"allowFullScreen\" value=\"true\" /><param name=\"swLiveConnect\" value=\"true\" /><param name=\"allowScriptAccess\" value=\"always\" /><embed src=\"http://c.brightcove.com/services/viewer/federated_f9?isVid=1&isUI=1\" bgcolor=\"#FFFFFF\" flashVars=\"videoId=1785707989001&linkBaseURL=http%3A%2F%2Fvideos.kidspot.com.au%2Fvideos%2Fmsccfimh%2Fhow-to-make-a-rubber-band-cd-car&playerID=1481257918001&playerKey=AQ~~,AAABWOeErfE~,m-zG2cTdbSFPmdIYTvrDXYGmMQGs9zYu&domain=embed&dynamicStreaming=true\" base=\"http://admin.brightcove.com\" name=\"flashObj\" width=\"480\" height=\"270\" seamlesstabbing=\"false\" type=\"application/x-shockwave-flash\" allowFullScreen=\"true\" allowScriptAccess=\"always\" swLiveConnect=\"true\" pluginspage=\"http://www.macromedia.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash\"></embed></object></div>\n<table cellspacing=\"10\" cellpadding=\"10\">\n<tbody>\n<tr class=\"first even\">\n<td class=\"last first\" style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 25px;\">\n<p>A rubber band car is a type of Newton Scooter!</p>\n<p> With materials right in your own home, you can build a Newton Scooter! &nbsp;For each of the following write down your <strong> best ideas </strong> about what&nbsp;might affect how far a Newton Scooter&nbsp;might travel.</p>\n</td>\n</tr>\n</tbody>\n</table>",
                 "showSaveButton": true,
                 "showSubmitButton": false,
                 "components": [
@@ -139,7 +139,7 @@
                     {
                         "id": "uw7ww2hkga",
                         "componentType": "HTML",
-                        "html": "<html>\n<head>\n\n</head>\n<body >\n<div style=\"margin: auto; background-image: url('./assets/background.jpg'); border-radius: 20px 20px 20px 20px; padding: 15px; background-size: cover;\">\n<div style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 1px; text-align: center;\">\n<h2>How Do Newton Scooters&nbsp;Work?</h2>\n</div>\n<br />\n<div style=\"background-color: #000099; border-radius: 20px 20px 20px 20px; padding: 5px; height: 150px;\">\n<table style=\"border-spacing: 30px 10px;\" cellpadding=\"10\">\n<tbody>\n<tr class=\"first even\">\n<td class=\"last first\" style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 15px;\"><img src=\"assets/rubber band car_rubberCD wheels.JPG\" alt=\"\" height=\"100px\" /></td>\n<td class=\"last first\" style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 15px;\"><img src=\"assets/triangle balloon car.JPG\" alt=\"\" height=\"100px\" /></td>\n<td class=\"last first\" style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; border-spacing: 15px 10px; padding: 15px;\"><img src=\"assets/balloon car 2.jpg\" alt=\"\" height=\"100px\" /></td>\n<td class=\"last first\" style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 15px;\"><img src=\"assets/two balloons car.JPG\" alt=\"\" height=\"100px\" /></td>\n<td class=\"last first\" style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 15px;\"><img src=\"assets/flower power.JPG\" alt=\"\" height=\"100px\" /></td>\n</tr>\n</tbody>\n</table>\n</div>\n<br />\n<div style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 10px;\">\n<h3 style=\"color: #000066;\">To help you make good design choices, lets explore some important science concepts for Newton Scooters:</h3>\n<ul>\n<li>Potential Energy</li>\n<li>Kinetic Energy</li>\n<li>Thermal Energy</li>\n</ul>\n</div>\n</div>\nhere's your work from node2.ug8hpficki: <span style=\"color: blue\">{{work|node2.ug8hpficki}}</span></body>\n</html>"
+                        "html": "<html>\n<head>\n\n</head>\n<body >\n<div style=\"margin: auto; background-image: url('./assets/background.jpg'); border-radius: 20px 20px 20px 20px; padding: 15px; background-size: cover;\">\n<div style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 1px; text-align: center;\">\n<h2>How Do Newton Scooters&nbsp;Work?</h2>\n</div>\n<br />\n<div style=\"background-color: #000099; border-radius: 20px 20px 20px 20px; padding: 5px; height: 150px;\">\n<table style=\"border-spacing: 30px 10px;\" cellpadding=\"10\">\n<tbody>\n<tr class=\"first even\">\n<td class=\"last first\" style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 15px;\"><img src=\"assets/rubber band car_rubberCD wheels.JPG\" alt=\"\" height=\"100px\" /></td>\n<td class=\"last first\" style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 15px;\"><img src=\"assets/triangle balloon car.JPG\" alt=\"\" height=\"100px\" /></td>\n<td class=\"last first\" style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; border-spacing: 15px 10px; padding: 15px;\"><img src=\"assets/balloon car 2.jpg\" alt=\"\" height=\"100px\" /></td>\n<td class=\"last first\" style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 15px;\"><img src=\"assets/two balloons car.JPG\" alt=\"\" height=\"100px\" /></td>\n<td class=\"last first\" style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 15px;\"><img src=\"assets/flower power.JPG\" alt=\"\" height=\"100px\" /></td>\n</tr>\n</tbody>\n</table>\n</div>\n<br />\n<div style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 10px;\">\n<h3 style=\"color: #000066;\">To help you make good design choices, lets explore some important science concepts for Newton Scooters:</h3>\n<ul>\n<li>Potential Energy</li>\n<li>Kinetic Energy</li>\n<li>Thermal Energy</li>\n</ul>\n</div>\n</div>\n</body>\n</html>"
                     }
                 ]
             }
@@ -219,7 +219,7 @@
                 "components": [
                     {
                         "id": "lf77wfxy9x",
-                        "prompt": "Now think about a bow and arrow. here's your work from node2.ft9m41diuz <span style=\"color: red; border: solid 1px;\">{{work|node2.ft9m41diuz}} </span> When is the potential energy transformed into kinetic energy?",
+                        "prompt": "Now think about a bow and arrow. When is the potential energy transformed into kinetic energy?",
                         "componentType": "MultipleChoice",
                         "choiceType": "radio",
                         "choices": [
@@ -382,6 +382,18 @@
                             "toNodeId": "node9"
                         }
                     ]
+                },
+                {
+                    "id": "constraint1",
+                    "action": "makeThisNodeNotVisitable",
+                    "targetId": "node9",
+                    "removalCriteria": [
+                        {
+                            "functionName": "branchPathTaken",
+                            "fromNodeId": "node8",
+                            "toNodeId": "node9"
+                        }
+                    ]
                 }
             ],
             "transitionLogic": {
@@ -418,6 +430,18 @@
                 {
                     "id": "constraint2",
                     "action": "makeThisNodeNotVisible",
+                    "targetId": "node10",
+                    "removalCriteria": [
+                        {
+                            "functionName": "branchPathTaken",
+                            "fromNodeId": "node8",
+                            "toNodeId": "node9"
+                        }
+                    ]
+                },
+                {
+                    "id": "constraint3",
+                    "action": "makeThisNodeNotVisitable",
                     "targetId": "node10",
                     "removalCriteria": [
                         {
@@ -470,6 +494,18 @@
                             "toNodeId": "node11"
                         }
                     ]
+                },
+                {
+                    "id": "constraint5",
+                    "action": "makeThisNodeNotVisitable",
+                    "targetId": "node11",
+                    "removalCriteria": [
+                        {
+                            "functionName": "branchPathTaken",
+                            "fromNodeId": "node8",
+                            "toNodeId": "node11"
+                        }
+                    ]
                 }
             ],
             "transitionLogic": {
@@ -506,6 +542,18 @@
                 {
                     "id": "constraint6",
                     "action": "makeThisNodeNotVisible",
+                    "targetId": "node12",
+                    "removalCriteria": [
+                        {
+                            "functionName": "branchPathTaken",
+                            "fromNodeId": "node8",
+                            "toNodeId": "node11"
+                        }
+                    ]
+                },
+                {
+                    "id": "constraint7",
+                    "action": "makeThisNodeNotVisitable",
                     "targetId": "node12",
                     "removalCriteria": [
                         {
@@ -558,6 +606,18 @@
                             "toNodeId": "node11"
                         }
                     ]
+                },
+                {
+                    "id": "constraint9",
+                    "action": "makeThisNodeNotVisitable",
+                    "targetId": "node13",
+                    "removalCriteria": [
+                        {
+                            "functionName": "branchPathTaken",
+                            "fromNodeId": "node8",
+                            "toNodeId": "node11"
+                        }
+                    ]
                 }
             ],
             "transitionLogic": {
@@ -602,6 +662,18 @@
                             "toNodeId": "node11"
                         }
                     ]
+                },
+                {
+                    "id": "constraint11",
+                    "action": "makeThisNodeNotVisitable",
+                    "targetId": "node14",
+                    "removalCriteria": [
+                        {
+                            "functionName": "branchPathTaken",
+                            "fromNodeId": "node8",
+                            "toNodeId": "node11"
+                        }
+                    ]
                 }
             ],
             "transitionLogic": {
@@ -638,6 +710,18 @@
                 {
                     "id": "constraint12",
                     "action": "makeThisNodeNotVisible",
+                    "targetId": "node15",
+                    "removalCriteria": [
+                        {
+                            "functionName": "branchPathTaken",
+                            "fromNodeId": "node8",
+                            "toNodeId": "node15"
+                        }
+                    ]
+                },
+                {
+                    "id": "constraint13",
+                    "action": "makeThisNodeNotVisitable",
                     "targetId": "node15",
                     "removalCriteria": [
                         {
@@ -783,6 +867,18 @@
                             "toNodeId": "node18"
                         }
                     ]
+                },
+                {
+                    "id": "constraint15",
+                    "action": "makeThisNodeNotVisitable",
+                    "targetId": "node18",
+                    "removalCriteria": [
+                        {
+                            "functionName": "branchPathTaken",
+                            "fromNodeId": "node17",
+                            "toNodeId": "node18"
+                        }
+                    ]
                 }
             ],
             "transitionLogic": {
@@ -819,6 +915,18 @@
                 {
                     "id": "constraint16",
                     "action": "makeThisNodeNotVisible",
+                    "targetId": "node19",
+                    "removalCriteria": [
+                        {
+                            "functionName": "branchPathTaken",
+                            "fromNodeId": "node17",
+                            "toNodeId": "node19"
+                        }
+                    ]
+                },
+                {
+                    "id": "constraint17",
+                    "action": "makeThisNodeNotVisitable",
                     "targetId": "node19",
                     "removalCriteria": [
                         {
@@ -865,6 +973,18 @@
                             "toNodeId": "node19"
                         }
                     ]
+                },
+                {
+                    "id": "constraint19",
+                    "action": "makeThisNodeNotVisitable",
+                    "targetId": "node20",
+                    "removalCriteria": [
+                        {
+                            "functionName": "branchPathTaken",
+                            "fromNodeId": "node17",
+                            "toNodeId": "node19"
+                        }
+                    ]
                 }
             ],
             "transitionLogic": {
@@ -895,6 +1015,18 @@
                 {
                     "id": "constraint20",
                     "action": "makeThisNodeNotVisible",
+                    "targetId": "node21",
+                    "removalCriteria": [
+                        {
+                            "functionName": "branchPathTaken",
+                            "fromNodeId": "node17",
+                            "toNodeId": "node19"
+                        }
+                    ]
+                },
+                {
+                    "id": "constraint21",
+                    "action": "makeThisNodeNotVisitable",
                     "targetId": "node21",
                     "removalCriteria": [
                         {
@@ -941,6 +1073,18 @@
                             "toNodeId": "node19"
                         }
                     ]
+                },
+                {
+                    "id": "constraint23",
+                    "action": "makeThisNodeNotVisitable",
+                    "targetId": "node22",
+                    "removalCriteria": [
+                        {
+                            "functionName": "branchPathTaken",
+                            "fromNodeId": "node17",
+                            "toNodeId": "node19"
+                        }
+                    ]
                 }
             ],
             "transitionLogic": {
@@ -977,6 +1121,18 @@
                 {
                     "id": "constraint24",
                     "action": "makeThisNodeNotVisible",
+                    "targetId": "node23",
+                    "removalCriteria": [
+                        {
+                            "functionName": "branchPathTaken",
+                            "fromNodeId": "node17",
+                            "toNodeId": "node23"
+                        }
+                    ]
+                },
+                {
+                    "id": "constraint25",
+                    "action": "makeThisNodeNotVisitable",
                     "targetId": "node23",
                     "removalCriteria": [
                         {
@@ -1036,7 +1192,7 @@
                 "components": [
                     {
                         "id": "lwqrb5qnse",
-                        "prompt": "Identify a feature you want to investigate (wheel size, balloon shape, body material, rubber band thickness, …). ",
+                        "prompt": "Identify a feature you want to investigate (wheel size, balloon shape, body material, rubber band thickness, â€¦). ",
                         "componentType": "OpenResponse"
                     },
                     {
@@ -1158,6 +1314,18 @@
             "showSubmitButton": true,
             "constraints": [
                 {
+                    "id": "constraint26",
+                    "action": "makeThisNodeNotVisible",
+                    "targetId": "node28",
+                    "removalCriteria": [
+                        {
+                            "functionName": "branchPathTaken",
+                            "fromNodeId": "node27",
+                            "toNodeId": "node28"
+                        }
+                    ]
+                },
+                {
                     "id": "constraint27",
                     "action": "makeThisNodeNotVisitable",
                     "targetId": "node28",
@@ -1235,6 +1403,18 @@
                             "toNodeId": "node29"
                         }
                     ]
+                },
+                {
+                    "id": "constraint29",
+                    "action": "makeThisNodeNotVisitable",
+                    "targetId": "node29",
+                    "removalCriteria": [
+                        {
+                            "functionName": "branchPathTaken",
+                            "fromNodeId": "node27",
+                            "toNodeId": "node29"
+                        }
+                    ]
                 }
             ],
             "transitionLogic": {
@@ -1265,6 +1445,18 @@
                 {
                     "id": "constraint30",
                     "action": "makeThisNodeNotVisible",
+                    "targetId": "node30",
+                    "removalCriteria": [
+                        {
+                            "functionName": "branchPathTaken",
+                            "fromNodeId": "node27",
+                            "toNodeId": "node29"
+                        }
+                    ]
+                },
+                {
+                    "id": "constraint31",
+                    "action": "makeThisNodeNotVisitable",
                     "targetId": "node30",
                     "removalCriteria": [
                         {
@@ -1311,6 +1503,18 @@
                             "toNodeId": "node29"
                         }
                     ]
+                },
+                {
+                    "id": "constraint33",
+                    "action": "makeThisNodeNotVisitable",
+                    "targetId": "node31",
+                    "removalCriteria": [
+                        {
+                            "functionName": "branchPathTaken",
+                            "fromNodeId": "node27",
+                            "toNodeId": "node29"
+                        }
+                    ]
                 }
             ],
             "transitionLogic": {
@@ -1341,6 +1545,18 @@
                 {
                     "id": "constraint34",
                     "action": "makeThisNodeNotVisible",
+                    "targetId": "node32",
+                    "removalCriteria": [
+                        {
+                            "functionName": "branchPathTaken",
+                            "fromNodeId": "node27",
+                            "toNodeId": "node29"
+                        }
+                    ]
+                },
+                {
+                    "id": "constraint35",
+                    "action": "makeThisNodeNotVisitable",
                     "targetId": "node32",
                     "removalCriteria": [
                         {
@@ -1387,6 +1603,18 @@
                             "toNodeId": "node29"
                         }
                     ]
+                },
+                {
+                    "id": "constraint37",
+                    "action": "makeThisNodeNotVisitable",
+                    "targetId": "node33",
+                    "removalCriteria": [
+                        {
+                            "functionName": "branchPathTaken",
+                            "fromNodeId": "node27",
+                            "toNodeId": "node29"
+                        }
+                    ]
                 }
             ],
             "transitionLogic": {
@@ -1417,6 +1645,18 @@
                 {
                     "id": "constraint38",
                     "action": "makeThisNodeNotVisible",
+                    "targetId": "node34",
+                    "removalCriteria": [
+                        {
+                            "functionName": "branchPathTaken",
+                            "fromNodeId": "node27",
+                            "toNodeId": "node29"
+                        }
+                    ]
+                },
+                {
+                    "id": "constraint39",
+                    "action": "makeThisNodeNotVisitable",
                     "targetId": "node34",
                     "removalCriteria": [
                         {
@@ -1945,6 +2185,18 @@
                             "toNodeId": "node45"
                         }
                     ]
+                },
+                {
+                    "id": "constraint41",
+                    "action": "makeThisNodeNotVisitable",
+                    "targetId": "node45",
+                    "removalCriteria": [
+                        {
+                            "functionName": "branchPathTaken",
+                            "fromNodeId": "node44",
+                            "toNodeId": "node45"
+                        }
+                    ]
                 }
             ],
             "transitionLogic": {
@@ -1986,6 +2238,18 @@
                 {
                     "id": "constraint42",
                     "action": "makeThisNodeNotVisible",
+                    "targetId": "node46",
+                    "removalCriteria": [
+                        {
+                            "functionName": "branchPathTaken",
+                            "fromNodeId": "node44",
+                            "toNodeId": "node46"
+                        }
+                    ]
+                },
+                {
+                    "id": "constraint43",
+                    "action": "makeThisNodeNotVisitable",
                     "targetId": "node46",
                     "removalCriteria": [
                         {
@@ -2043,6 +2307,18 @@
                             "toNodeId": "node46"
                         }
                     ]
+                },
+                {
+                    "id": "constraint45",
+                    "action": "makeThisNodeNotVisitable",
+                    "targetId": "node47",
+                    "removalCriteria": [
+                        {
+                            "functionName": "branchPathTaken",
+                            "fromNodeId": "node44",
+                            "toNodeId": "node46"
+                        }
+                    ]
                 }
             ],
             "transitionLogic": {
@@ -2084,6 +2360,18 @@
                 {
                     "id": "constraint46",
                     "action": "makeThisNodeNotVisible",
+                    "targetId": "node48",
+                    "removalCriteria": [
+                        {
+                            "functionName": "branchPathTaken",
+                            "fromNodeId": "node44",
+                            "toNodeId": "node48"
+                        }
+                    ]
+                },
+                {
+                    "id": "constraint47",
+                    "action": "makeThisNodeNotVisitable",
                     "targetId": "node48",
                     "removalCriteria": [
                         {
@@ -2516,7 +2804,7 @@
                     {
                         "id": "n7b87a0mqg",
                         "componentType": "HTML",
-                        "html": "<html>\n<head>\n<title>html</title>\n</head>\n<body>\n<div style=\"margin: auto; background-image: url('./assets/background.jpg'); border-radius: 20px 20px 20px 20px; padding: 10px; background-size: cover;\">\n<div style=\"margin: auto; background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 1px; text-align: center;\">\n<h2>Take a picture of your updated scooter!</h2>\n</div>\n<br />\n<div style=\"background-color: rgba(255,255,255,0.85); border-radius: 20px 20px 20px 20px; padding: 10px;\">\n<p>Take a picture of your updated scooter and upload it<a onclick=\"node.linkTo('w3SusuJcIn')\" style=\"color: blue; cursor: pointer;\"> here</a>!</p>\n</div>\n</div>\n</body>\n</html>"
+                        "html": "<html>\n<head>\n<title>html</title>\n</head>\n<body>\n<div style=\"margin: auto; background-image: url('./assets/background.jpg'); border-radius: 20px 20px 20px 20px; padding: 10px; background-size: cover;\">\n<div style=\"margin: auto; background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 1px; text-align: center;\">\n<h2>Take a picture of your updated scooter!</h2>\n</div>\n<br />\n<div style=\"background-color: rgba(255,255,255,0.85); border-radius: 20px 20px 20px 20px; padding: 10px;\">\n<p>Take a picture of your updated scooter and upload it {{link|node43|here}}!</p>\n</div>\n</div>\n</body>\n</html>"
                     }
                 ]
             }
