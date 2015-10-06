@@ -151,7 +151,13 @@ define(['app'], function(app) {
                 var childScope = $scope.componentToScope[componentId];
 
                 // TODO: generalize for other controllers
-                var componentController = childScope.openResponseController;
+                var componentController = null;
+
+                if (childScope.openResponseController) {
+                    componentController = childScope.openResponseController;
+                } else if (childScope.drawController) {
+                    componentController = childScope.drawController;
+                }
 
                 // TODO: make this customizeable per theme
                 var parentEl = angular.element(document.body);
