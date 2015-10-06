@@ -10,6 +10,8 @@ define(['app'], function(app) {
 
             this.currentGroup = null;
             this.currentGroupId = null;
+            this.nextItemId = null;
+            this.previousItemId = null;
             this.currentChildren = [];
             this.currentParentGroups = [];
             this.groups = ProjectService.getGroups();
@@ -61,6 +63,13 @@ define(['app'], function(app) {
                             var node = ProjectService.getNodeById(childId);
                             this.currentChildren.push(node);
                         }
+                    }
+
+                    var parentGroup = ProjectService.getParentGroup(this.currentGroupId);
+                    if (parentGroup != null) {
+                        var currentIndex = parentGroup.ids.indexOf(this.currentGroupId);
+                        this.previousItemId = parentGroup.ids[currentIndex - 1];
+                        this.nextItemId = parentGroup.ids[currentIndex + 1];
                     }
 
                     this.currentParentGroups = [];
