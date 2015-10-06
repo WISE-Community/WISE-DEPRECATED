@@ -24,7 +24,15 @@
             "ids": [
                 "node1",
                 "node2"
-            ]
+            ],
+            "icons": {
+                "default": {
+                    "color": "#2196F3",
+                    "type": "font",
+                    "fontSet": "material-icons",
+                    "fontName": "info"
+                }
+            }
         },
         {
             "id": "node1",
@@ -112,7 +120,15 @@
                 "node13",
                 "node14",
                 "node15"
-            ]
+            ],
+            "icons": {
+                "default": {
+                    "color": "#2196F3",
+                    "type": "font",
+                    "fontSet": "material-icons",
+                    "fontName": "pageview"
+                }
+            }
         },
         {
             "id": "node3",
@@ -781,7 +797,15 @@
                 "node32",
                 "node33",
                 "node34"
-            ]
+            ],
+            "icons": {
+                "default": {
+                    "color": "#9C27B0",
+                    "type": "font",
+                    "fontSet": "material-icons",
+                    "fontName": "extension"
+                }
+            }
         },
         {
             "id": "node16",
@@ -1724,7 +1748,15 @@
                 "node35",
                 "node36",
                 "node37"
-            ]
+            ],
+            "icons": {
+                "default": {
+                    "color": "#9C27B0",
+                    "type": "font",
+                    "fontSet": "material-icons",
+                    "fontName": "developer_board"
+                }
+            }
         },
         {
             "id": "node35",
@@ -1834,7 +1866,15 @@
                 "node46",
                 "node47",
                 "node48"
-            ]
+            ],
+            "icons": {
+                "default": {
+                    "color": "#4CAF50",
+                    "type": "font",
+                    "fontSet": "material-icons",
+                    "fontName": "domain"
+                }
+            }
         },
         {
             "id": "node38",
@@ -2415,7 +2455,15 @@
                 "node49",
                 "node50",
                 "node51"
-            ]
+            ],
+            "icons": {
+                "default": {
+                    "color": "#9C27B0",
+                    "type": "font",
+                    "fontSet": "material-icons",
+                    "fontName": "autorenew"
+                }
+            }
         },
         {
             "id": "node49",
@@ -2519,7 +2567,15 @@
                 "node55",
                 "node56",
                 "node57"
-            ]
+            ],
+            "icons": {
+                "default": {
+                    "color": "#4CAF50",
+                    "type": "font",
+                    "fontSet": "material-icons",
+                    "fontName": "autorenew"
+                }
+            }
         },
         {
             "id": "node52",
@@ -2817,7 +2873,15 @@
             "ids": [
                 "node58",
                 "node59"
-            ]
+            ],
+            "icons": {
+                "default": {
+                    "color": "#FF9800",
+                    "type": "font",
+                    "fontSet": "material-icons",
+                    "fontName": "message"
+                }
+            }
         },
         {
             "id": "node58",
@@ -2926,7 +2990,7 @@
     ],
     "constraints": [],
     "startGroupId": "group0",
-    "startNodeId": "node1",
+    "startNodeId": "group0",
     "navigationMode": "guided",
     "navigationApplications": [
         "wiseMap",
@@ -2939,6 +3003,5 @@
     },
     "metadata": {
         "title": "Self-Propelled Vehicles-Riverview"
-    },
-    "style": "h1 {font-size: 2em; color: #006; font-weight: bold;}\nh2 {font-size: 1.5em; font-weight: bold;}"
+    }
 }
