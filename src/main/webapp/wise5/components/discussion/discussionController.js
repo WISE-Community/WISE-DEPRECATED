@@ -644,7 +644,7 @@ define(['app', 'angular'], function(app, angular) {
                             this.classResponses.push(componentState);
                             
                             // get the component state id
-                            var componentStateId = componentState.timestamp;
+                            var componentStateId = componentState.id;
                             
                             // add the response to our map
                             this.responsesMap[componentStateId] = componentState;
@@ -849,8 +849,8 @@ define(['app', 'angular'], function(app, angular) {
                 var componentId = componentState.componentId;
                 
                 // check that the component state is for this component
-                if (this.nodeId === nodeId && this.componentId == componentId) {
-                    
+                if (this.nodeId === nodeId && this.componentId === componentId) {
+
                     // add the component state to our collection of class responses
                     this.addClassResponse(componentState);
                 }

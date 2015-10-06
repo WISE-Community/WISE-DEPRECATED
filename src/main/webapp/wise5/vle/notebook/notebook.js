@@ -59,11 +59,14 @@ define(['angular', 'configService', 'openResponseService', 'notebookService',
             };
 
             this.deleteStudentAsset = function(studentAsset) {
+                alert('delete student asset from note book not implemented yet');
+                /*
                 StudentAssetService.deleteAsset(studentAsset).then(angular.bind(this, function(deletedStudentAsset) {
                     // remove studentAsset
                     this.studentAssets.splice(this.studentAssets.indexOf(deletedStudentAsset), 1);
                     this.calculateTotalUsage();
                 }));
+                */
             };
 
             $scope.$on('notebookUpdated', angular.bind(this, function(event, args) {

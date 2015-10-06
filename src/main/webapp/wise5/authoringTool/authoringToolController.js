@@ -31,7 +31,11 @@ define(['app'], function(app) {
         }));
 
         this.exit = function() {
-            window.location = "/wise/teacher";
+            //get the context path e.g. /wise
+            var contextPath = ConfigService.getConfigParam('contextPath');
+            // send the user to the teacher home page
+            homePageURL = contextPath + '/teacher';
+            window.location = homePageURL;
         }
     });
 });

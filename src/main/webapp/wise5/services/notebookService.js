@@ -150,7 +150,8 @@ define(['configService', 'studentDataService'], function(configService, studentD
                         notebookItem.studentAsset = StudentAssetService.getAssetById(notebookItem.studentAssetId);
                         this.notebook.items.push(notebookItem);
                     }
-                    return null;
+                    this.calculateTotalUsage();
+                    return notebookItem;
                 }));
 
                 // make a request to copy asset for reference and save for current node visit

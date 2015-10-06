@@ -17,6 +17,7 @@ import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.project.ProjectService;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.Properties;
@@ -129,6 +130,7 @@ public class WISE5AuthorProjectController {
 
     @RequestMapping(value = "/authorConfig/{projectId}", method = RequestMethod.GET)
     protected void getAuthorProjectConfig(
+            HttpServletRequest request,
             HttpServletResponse response,
             @PathVariable Long projectId) throws IOException {
         //create a JSONObject to contain the config params
@@ -147,6 +149,7 @@ public class WISE5AuthorProjectController {
         }
 
         try {
+            String contextPath = request.getContextPath(); //get the context path e.g. /wise
             String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
             config.put("projectId", projectId);
             String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
@@ -156,6 +159,7 @@ public class WISE5AuthorProjectController {
             String saveProjectURL = wiseBaseURL + "/project/save/" + projectId;
             String commitProjectURL = wiseBaseURL + "/project/commit/" + projectId;
 
+            config.put("contextPath", contextPath);
             config.put("mainHomePageURL", wiseBaseURL);
             config.put("renewSessionURL", wiseBaseURL + "/session/renew");
             config.put("sessionLogOutURL", wiseBaseURL + "/logout");
