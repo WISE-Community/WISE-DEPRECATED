@@ -88,7 +88,24 @@ define(['configService', 'studentDataService'], function(configService, studentD
             }));
         };
 
+        serviceObject.hasStudentWorkNotebookItem = function(studentWork) {
+            for (var i = 0; i < this.notebook.items.length; i++) {
+                var notebookItem = this.notebook.items[i];
+                if (notebookItem.studentWorkId === studentWork.id) {
+                    return true;
+                }
+            }
+            return false;
+        };
+
         serviceObject.addStudentWorkNotebookItem = function(studentWork) {
+            // don't allow duplicate student work notebook items
+            if (this.hasStudentWorkNotebookItem(studentWork)) {
+                // alert for now TODO JB style me
+                alert('This item is already saved in your notebook.');
+                return;
+            }
+
             var config = {};
             config.method = 'POST';
             config.url = ConfigService.getStudentNotebookURL();

@@ -811,7 +811,7 @@ define(['app'], function(app) {
                     // get the scope for the component
                     var childScope = $scope.componentToScope[componentId];
 
-                    if (childScope != null && childScope.isDirty) {
+                    if (childScope != null && childScope.isDirty()) {
                         // we need to save this component first before adding to notebook
                         var isAutoSave = false;
 

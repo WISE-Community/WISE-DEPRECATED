@@ -1180,20 +1180,17 @@ define(['configService', 'projectService'], function(configService, projectServi
             // make the request to post the student data
             return $http(httpParams).then(angular.bind(this, function(result) {
 
-                var savedStudentDataResponse = result.data;
-
                 // get the local references to the component states that were posted and set their id and serverSaveTime
                 if (result != null &&
-                        result.config != null &&
-                        result.config.params != null &&
-                        result.config.params.data != null) {
+                        result.data != null) {
+
+                    var savedStudentDataResponse = result.data;
 
                     // handle saved studentWork
-                    if (result.config.params.data.studentWorkList != null &&
-                        savedStudentDataResponse.studentWorkList != null) {
-                        var localStudentWorkList = result.config.params.data.studentWorkList;
-
+                    if (savedStudentDataResponse.studentWorkList != null) {
                         var savedStudentWorkList = savedStudentDataResponse.studentWorkList;
+
+                        var localStudentWorkList = this.studentData.componentStates.concat(this.studentData.nodeStates);
 
                         // set the id and serverSaveTime in the local studentWorkList
                         for (var i = 0; i < savedStudentWorkList.length; i++) {
@@ -1203,7 +1200,7 @@ define(['configService', 'projectService'], function(configService, projectServi
                              * loop through all the student work that were posted
                              * to find the one with the matching request token
                              */
-                            for (var l = 0; l < localStudentWorkList.length; l++) {
+                            for (var l = localStudentWorkList.length - 1; l >= 0; l--) {
                                 var localStudentWork = localStudentWorkList[l];
                                 if (localStudentWork.requestToken != null &&
                                     localStudentWork.requestToken === savedStudentWork.requestToken) {
@@ -1218,11 +1215,10 @@ define(['configService', 'projectService'], function(configService, projectServi
                         }
                     }
                     // handle saved events
-                    if (result.config.params.data.events != null &&
-                        savedStudentDataResponse.events != null) {
-                        var localEvents = result.config.params.data.events;
-
+                    if (savedStudentDataResponse.events != null) {
                         var savedEvents = savedStudentDataResponse.events;
+
+                        var localEvents = this.studentData.events;
 
                         // set the id and serverSaveTime in the local event
                         for (var i = 0; i < savedEvents.length; i++) {
@@ -1232,7 +1228,7 @@ define(['configService', 'projectService'], function(configService, projectServi
                              * loop through all the events that were posted
                              * to find the one with the matching request token
                              */
-                            for (var l = 0; l < localEvents.length; l++) {
+                            for (var l = localEvents.length - 1; l >= 0; l--) {
                                 var localEvent = localEvents[l];
                                 if (localEvent.requestToken != null &&
                                     localEvent.requestToken === savedEvent.requestToken) {
@@ -1248,11 +1244,10 @@ define(['configService', 'projectService'], function(configService, projectServi
                     }
 
                     // handle saved annotations
-                    if (result.config.params.data.annotations != null &&
-                        savedStudentDataResponse.annotations != null) {
-                        var localAnnotations = result.config.params.data.annotations;
-
+                    if (savedStudentDataResponse.annotations != null) {
                         var savedAnnotations = savedStudentDataResponse.annotations;
+
+                        var localAnnotations = this.studentData.annotations;
 
                         // set the id and serverSaveTime in the local annotation
                         for (var i = 0; i < savedAnnotations.length; i++) {
@@ -1262,7 +1257,7 @@ define(['configService', 'projectService'], function(configService, projectServi
                              * loop through all the events that were posted
                              * to find the one with the matching request token
                              */
-                            for (var l = 0; l < localAnnotations.length; l++) {
+                            for (var l = localAnnotations.length - 1; l >= 0; l--) {
                                 var localAnnotation = localAnnotations[l];
                                 if (localAnnotation.requestToken != null &&
                                     localAnnotation.requestToken === savedAnnotation.requestToken) {
