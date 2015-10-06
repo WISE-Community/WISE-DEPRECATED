@@ -153,21 +153,6 @@ define(['configService', 'studentDataService'], function(configService, studentD
                     this.calculateTotalUsage();
                     return notebookItem;
                 }));
-
-                // make a request to copy asset for reference and save for current node visit
-
-                /*
-                 StudentAssetService.copyAssetForReference(studentAsset).then(angular.bind(this, function(copiedAsset) {
-                 if (copiedAsset != null) {
-                 if (this.studentResponse == null) {
-                 this.studentResponse = [];
-                 }
-                 this.studentResponse.push(copiedAsset);
-                 this.studentDataChanged();
-                 }
-                 }));
-                 */
-                //$rootScope.$broadcast('studentAssetsUpdated');
             }));
         }
 

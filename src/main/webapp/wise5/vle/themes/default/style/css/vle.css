@@ -2239,6 +2239,11 @@ md-list .md-subheader { color: #795C3A; font-weight: 600; }
 .node-input-container .notebook-add__node-input { position: absolute; right: -8px; }
 .node-input-container .notebook-add__node-input[disabled] md-icon { color: rgba(0, 0, 0, 0.26) !important; }
 
+.node-input-container textarea.node-input.node-input__revision { padding-right: 48px; }
+.node-input-container .revision__node-input { position: absolute; right: -8px; bottom: 16px; }
+.node-input-container .revision__node-input[disabled] md-icon { color: rgba(0, 0, 0, 0.26) !important; }
+
+
 .node-input-label, md-input-container:not(.md-input-invalid).md-input-has-value label.node-input-label { padding-bottom: 4px; line-height: 1.2; color: rgba(0, 0, 0, 0.87); font-weight: bold; }
 
 .component-content { margin: 8px 0; }

@@ -47,6 +47,11 @@
                     <md-icon> book </md-icon>
                     <md-tooltip md-direction="top">Add to Notebook</md-tooltip>
                 </md-button>
+                <md-button class="revision revision__node-input md-icon-button" ng-click='nodeCtrl.showRevisions($event, component.id)'
+                           ng-disabled="nodeCtrl.getRevisions(component.id).length == 0">
+                    <md-icon> history </md-icon>
+                    <md-tooltip md-direction="top">{{nodeCtrl.getRevisions(component.id).length}} Revisions</md-tooltip>
+                </md-button>
             </md-input-container>
             <div class="component-content--actions" layout="row">
                 <md-button class="md-raised md-primary"

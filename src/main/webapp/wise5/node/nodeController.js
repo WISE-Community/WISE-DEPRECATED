@@ -6,6 +6,7 @@ define(['app'], function(app) {
                  $stateParams,
                  $location,
                  $anchorScroll,
+                 $mdDialog,
                  ConfigService,
                  NodeService,
                  NotebookService,
@@ -131,6 +132,68 @@ define(['app'], function(app) {
             this.importWork = function() {
 
             };
+
+            /**
+             * Returns all the revisions made by this user for the specified component
+             */
+            this.getRevisions = function(componentId) {
+                var revisions = [];
+                // get the component states for this component
+                var componentStates = StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, componentId);
+                return componentStates;
+            };
+
+            // TODO: generalize to NodeController
+            this.showRevisions = function($event, componentId) {
+                var revisions = this.getRevisions(componentId);
+
+                // get the scope for the component
+                var childScope = $scope.componentToScope[componentId];
+
+                // TODO: generalize for other controllers
+                var componentController = childScope.openResponseController;
+
+                // TODO: make this customizeable per theme
+                var parentEl = angular.element(document.body);
+                $mdDialog.show({
+                    parent: parentEl,
+                    targetEvent: $event,
+                    template:
+                    '<md-dialog aria-label="List dialog">' +
+                    '  <h3 flex style="font-size:1.1em; font-weight:bold">Your work for this item</h3>' +
+                    '  <md-dialog-content>'+
+                    '    <md-list>'+
+                    '      <md-list-item ng-repeat="item in items">'+
+                    '       <p><componentstatehtml componentstate="{{item}}"></componentstatehtml>{{item.clientSaveTime | date : "medium"}}' +
+                    '       <md-button ng-click="revertWork(item)" class="md-primary">Revert</md-button></p>'+
+                    '      </md-list-item>'+
+                    '    </md-list>'+
+                    '  </md-dialog-content>' +
+                    '  <div class="md-actions">' +
+                    '    <md-button ng-click="closeDialog()" class="md-primary">' +
+                    '      Close' +
+                    '    </md-button>' +
+                    '  </div>' +
+                    '</md-dialog>',
+                    locals: {
+                        items: revisions,
+                        componentController: componentController
+                    },
+                    controller: DialogController
+                });
+                function DialogController($scope, $mdDialog, items, componentController) {
+                    $scope.items = items;
+                    $scope.componentController = componentController;
+                    $scope.closeDialog = function() {
+                        $mdDialog.hide();
+                    }
+                    $scope.revertWork = function(componentState) {
+                        $scope.componentController.setStudentWork(componentState);
+                        $mdDialog.hide();
+                    }
+                }
+            };
+
 
             /**
              * handles click to nodeComponentId. Takes user to specified node and
