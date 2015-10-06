@@ -139,6 +139,27 @@ define(['angular', /*'annotationService',*/ 'configService', 'nodeService', 'not
                 this.workgroupInfo = ConfigService.getUserInfoByWorkgroupId(this.workgroupId);
                 this.workgroupUserNames = this.isPreview ? ['Preview User'] : this.getUserNames(this.workgroupInfo);
 
+                // service utility functions
+                this.getNodeById = function(nodeId) {
+                    return ProjectService.getNodeById(nodeId);
+                };
+
+                this.getNodeTitleByNodeId = function(nodeId) {
+                    return ProjectService.getNodeTitleByNodeId(nodeId);
+                };
+
+                this.getNodePositionId = function(nodeId) {
+                    return ProjectService.getNodePositionId(nodeId);
+                };
+
+                this.isGroupNode = function(nodeId) {
+                    return ProjectService.isGroupNode(nodeId);
+                };
+
+                this.nodeClicked = function(nodeId) {
+                    StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(nodeId);
+                };
+
                 // build project status pop-up
                 var statusTemplateUrl = this.themePath + '/templates/projectStatus.html';
                 var scope = this;
@@ -164,6 +185,9 @@ define(['angular', /*'annotationService',*/ 'configService', 'nodeService', 'not
                     }
                 };
 
+                this.idToOrder = ProjectService.idToOrder; // TODO: should we be referencing directly?
+
+                // TODO: do we need this or should we just reference idsToPosition directly?  what is best practice?
                 this.getNodePositionById = function(id) {
                     return ProjectService.getNodePositionById(id);
                 };

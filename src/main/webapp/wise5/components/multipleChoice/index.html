@@ -28,9 +28,9 @@
                 </div>
             </md-input-container>
 
-            <div ng-show="multipleChoiceController.numberOfAttempts != null">Number of Attempts: {{multipleChoiceController.numberOfAttempts}}</div>
-            <div ng-show="multipleChoiceController.isCorrect != null && multipleChoiceController.isCorrect">Correct!</div>
-            <div ng-show="multipleChoiceController.isCorrect != null && !multipleChoiceController.isCorrect">Incorrect</div>
+            <div ng-if="multipleChoiceController.getCorrectChoice()" ng-show="multipleChoiceController.numberOfAttempts != null">Number of Attempts: {{multipleChoiceController.numberOfAttempts}}</div>
+            <div ng-if="multipleChoiceController.isCorrect != null && multipleChoiceController.isCorrect">Correct!</div>
+            <div ng-if="multipleChoiceController.isCorrect != null && !multipleChoiceController.isCorrect">Incorrect</div>
 
             <div class="component-content--actions" layout="row">
                 <md-button class="md-raised md-primary"

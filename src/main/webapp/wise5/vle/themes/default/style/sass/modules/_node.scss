@@ -6,7 +6,8 @@
 }
 
 .node-content {
-
+  padding-left: 16px;
+  padding-right: 16px;
 }
 
 .node-icon {
@@ -14,8 +15,16 @@
 }
 
 .node-select {
-  white-space: normal;
-  text-align: left;
+  margin-left: 8px;
+}
+
+.node-select--group {
+  color: rgba(0,0,0,0.54);
+  background-color: $gray-lighter;
+}
+
+.node-select--node {
+  padding-left: 24px;
 }
 
 .node-title {

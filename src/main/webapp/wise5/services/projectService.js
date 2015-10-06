@@ -15,6 +15,8 @@ define(['configService'], function(configService) {
         serviceObject.activeConstraints = [];
         serviceObject.rootNode = null;
         serviceObject.idToPosition = {};
+        serviceObject.idToOrder = {};
+        serviceObject.nodeCount = 0;
 
         serviceObject.getProject = function() {
             return this.project;
@@ -308,6 +310,10 @@ define(['configService'], function(configService) {
 
                 this.rootNode = this.getGroupNodes()[0]; // TODO: should we always assume first group is the root? should we use 'group0' instead or something else?
 
+                // set project order
+                this.setNodeOrder(this.rootNode, this.nodeCount);
+                this.nodeCount = 0;
+
                 var n = nodes.length;
                 var branches = this.getBranches();
                 var branchNodeIds = [];
@@ -332,6 +338,18 @@ define(['configService'], function(configService) {
                     var id = branchNodeIds[b];
                     var pos = this.getBranchNodePositionById(id);
                     this.setIdToPosition(id, pos);
+                }
+            }
+        };
+
+        serviceObject.setNodeOrder = function(node) {
+            this.idToOrder[node.id] = {'order': this.nodeCount};
+            this.nodeCount++;
+            if (this.isGroupNode(node.id)){
+                var childIds = node.ids;
+                for(var i=0; i<childIds.length; i++){
+                    var child = this.getNodeById(childIds[i]);
+                    this.setNodeOrder(child);
                 }
             }
         };
@@ -364,7 +382,7 @@ define(['configService'], function(configService) {
 
             // TODO: should we localize this? should we support more than 26?
             var integerToAlpha = function(int) {
-                var alphabet = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
+                var alphabet = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
                 if(int > -1 && int < 26){
                     return alphabet[int];
                 } else {

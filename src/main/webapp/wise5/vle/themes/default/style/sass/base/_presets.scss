@@ -111,3 +111,8 @@ md-list .md-subheader {
   color: $accent-color-2;
   font-weight: 600;
 }
+
+// Drawing tool custom
+.dt-container .dt-tools {
+  z-index: 1;
+}

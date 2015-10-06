@@ -25,7 +25,7 @@
         </md-card-footer>
     </md-card>
 
-    <md-list-item ng-switch-when="list" ng-click="nodeClicked()" class="nav-item--list md-2-line md-whiteframe-z1" ng-class="{'nav-item--list--group':isGroup}">
+    <md-list-item ng-switch-when="list" ng-click="nodeClicked()" class="nav-item--list md-whiteframe-z1" ng-class="{'nav-item--list--group':isGroup}">
         <img ng-if="nodeStatus.icon.type === 'img'" ng-class="isGroup ? 'avatar--square' : ''" class="md-avatar" ng-src="{{nodeStatus.icon.imgSrc}}" alt="{{nodeStatus.icon.imgAlt}}" />
         <div ng-if="nodeStatus.icon.type === 'font'" ng-class="isGroup ? 'avatar--square' : ''" style="background-color: {{nodeStatus.icon.color}};" class="md-avatar">
             <md-icon md-font-set="{{nodeStatus.icon.fontSet}}" class="md-light">{{nodeStatus.icon.fontName}}</md-icon>
