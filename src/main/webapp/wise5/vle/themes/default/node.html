@@ -4,7 +4,7 @@
         <div ng-if="nodeCtrl.nodeStatus.icon.type === 'font'" ng-animate-ref="{{ nodeCtrl.nodeId }}" style="background-color: {{nodeCtrl.nodeStatus.icon.color}};" class="md-18 avatar avatar--icon node-avatar">
             <md-icon md-font-set="{{nodeCtrl.nodeStatus.icon.fontSet}}" class="md-18 md-light node-icon" md-theme="default">{{nodeCtrl.nodeStatus.icon.fontName}}</md-icon>
         </div>
-        <md-button class="node-select"><div class="node-title md-subhead"><span style="color: {{nodeCtrl.nodeStatus.icon.color}};"><span ng-if="themeCtrl.numberProject">{{ nodeCtrl.nodePosition }}: </span>{{ nodeCtrl.nodeTitle }}</span> <md-icon> keyboard_arrow_down </md-icon></div></md-button>
+        <md-button class="node-select"><div class="node-title md-subhead" style="color: {{nodeCtrl.nodeStatus.icon.color}};"><span ng-if="themeCtrl.numberProject">{{ nodeCtrl.nodePosition }}: </span>{{ nodeCtrl.nodeTitle }} <md-icon style="color: {{nodeCtrl.nodeStatus.icon.color}};"> keyboard_arrow_down </md-icon></div></md-button>
         <span flex></span>
         <span></span>
         <!--<md-button aria-label="Notifications" class="md-icon-button">
@@ -15,20 +15,22 @@
         </md-button>
     </div>
 </md-toolbar>
-<md-content class="l-constrained node-content md-padding">
+<md-content class="l-constrained node-content md-padding" layout="column">
     <div class="component-content" compile='nodeCtrl.getPrompt()'></div>
     <div id="{{component.id}}" class="component-content" ng-repeat='component in nodeCtrl.getComponents()'>
         <div ng-include='nodeCtrl.getComponentTypeHTML(component.componentType)'
              ng-init='componentState = nodeCtrl.getComponentStateByComponent(component)'></div>
     </div>
-    <md-button id='saveButton' class="md-raised md-primary"
-            ng-click='nodeCtrl.saveButtonClicked()'
-            ng-disabled='nodeCtrl.isDisabled || !nodeCtrl.isDirty'
-            ng-if='nodeCtrl.showSaveButton()'>Save</md-button>
-    <md-button id='submitButton' class="md-raised md-primary"
-            ng-click='nodeCtrl.submitButtonClicked()'
-            ng-disabled='nodeCtrl.isDisabled || !nodeCtrl.isDirty'
-            ng-if='nodeCtrl.showSubmitButton()'>Submit</md-button>
+    <div class="node-content--actions" layout="row">
+        <md-button class="md-raised md-primary"
+                ng-click='nodeCtrl.saveButtonClicked()'
+                ng-disabled='nodeCtrl.isDisabled || !nodeCtrl.isDirty'
+                ng-if='nodeCtrl.showSaveButton()'>Save</md-button>
+        <md-button class="md-raised md-primary"
+                ng-click='nodeCtrl.submitButtonClicked()'
+                ng-disabled='nodeCtrl.isDisabled || !nodeCtrl.isDirty'
+                ng-if='nodeCtrl.showSubmitButton()'>Submit</md-button>
+    </div>
 </md-content>
 <footer class="l-footer md-whiteframe-z2 md-body-1">
     <md-toolbar class="md-toolbar--wise" md-theme="light">

@@ -35,15 +35,13 @@
   textarea.node-input {
     padding: 8px;
     background-color: $gray-lightest;
-    border-top: 1px solid $gray-lighter;
-    border-left: 1px solid $gray-lighter;
-    border-right: 1px solid $gray-lighter;
+    border: 1px solid $gray;
 
     &:focus {
       background-color: #ffffff;
-      border-top: 1px solid $gray-light;
-      border-left: 1px solid $gray-light;
-      border-right: 1px solid $gray-light;
+      //border-top: 1px solid $gray;
+      //border-left: 1px solid $gray;
+      //border-right: 1px solid $gray;
     }
 
     &.node-input__notebook-add {
@@ -54,31 +52,31 @@
   .notebook-add__node-input {
     position: absolute;
     right: -8px;
+
+    &[disabled] md-icon {
+      color: rgba(0,0,0,0.26) !important;
+    }
   }
 }
 
-.node-input-label {
-  padding-bottom: 12px;
+.node-input-label, md-input-container:not(.md-input-invalid).md-input-has-value label.node-input-label {
+  padding-bottom: 4px;
   line-height: 1.2;
+  color: rgba(0,0,0,0.87);
+  font-weight: bold;
 }
 
 .component-content {
-  margin: 12px 0 8px;
+  margin: 8px 0;
 
   @media only screen and (min-width: $layout-breakpoint-md) {
-    margin: 24px 0 16px;
+    margin: 16px 0;
   }
 }
 
-.component-actions {
-  .md-button {
-    margin-top: 0;
-    margin-bottom: 0;
-    text-transform: none;
-
-    &:last-of-type {
-      margin-right: 0;
-    }
+.node-content--actions, .component-content--actions {
+  .md-button:first-of-type {
+    margin-left: 0;
   }
 }
 

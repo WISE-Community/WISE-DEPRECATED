@@ -1956,7 +1956,7 @@ md-toolbar.md-light-theme:not(.md-menu-toolbar) .md-button:disabled md-icon { co
 
 md-list .md-subheader { color: #795C3A; font-weight: 600; }
 
-.l-constrained { margin-left: auto; margin-right: auto; max-width: 960px; width: 94%; position: relative; }
+.l-constrained { margin-left: auto; margin-right: auto; max-width: 960px; width: 100%; position: relative; }
 
 .l-constrained--lg { max-width: 1200px; }
 
@@ -2044,18 +2044,18 @@ md-list .md-subheader { color: #795C3A; font-weight: 600; }
 @media only screen and (min-width: 0) and (max-width: 600px) and (orientation: portrait) { .node-title { font-size: 14px; } }
 
 .node-input-container { padding: 16px 0; }
-.node-input-container textarea.node-input { padding: 8px; background-color: #f7f7f7; border-top: 1px solid #eeeeee; border-left: 1px solid #eeeeee; border-right: 1px solid #eeeeee; }
-.node-input-container textarea.node-input:focus { background-color: #ffffff; border-top: 1px solid #dddddd; border-left: 1px solid #dddddd; border-right: 1px solid #dddddd; }
+.node-input-container textarea.node-input { padding: 8px; background-color: #f7f7f7; border: 1px solid #cccccc; }
+.node-input-container textarea.node-input:focus { background-color: #ffffff; }
 .node-input-container textarea.node-input.node-input__notebook-add { padding-right: 48px; }
 .node-input-container .notebook-add__node-input { position: absolute; right: -8px; }
+.node-input-container .notebook-add__node-input[disabled] md-icon { color: rgba(0, 0, 0, 0.26) !important; }
 
-.node-input-label { padding-bottom: 12px; line-height: 1.2; }
+.node-input-label, md-input-container:not(.md-input-invalid).md-input-has-value label.node-input-label { padding-bottom: 4px; line-height: 1.2; color: rgba(0, 0, 0, 0.87); font-weight: bold; }
 
-.component-content { margin: 12px 0 8px; }
-@media only screen and (min-width: 960px) { .component-content { margin: 24px 0 16px; } }
+.component-content { margin: 8px 0; }
+@media only screen and (min-width: 960px) { .component-content { margin: 16px 0; } }
 
-.component-actions .md-button { margin-top: 0; margin-bottom: 0; text-transform: none; }
-.component-actions .md-button:last-of-type { margin-right: 0; }
+.node-content--actions .md-button:first-of-type, .component-content--actions .md-button:first-of-type { margin-left: 0; }
 
 .md-button.md-icon-button.node-nav:not(:first-of-type) { margin-left: 0; }
 .md-button.md-icon-button.node-nav:first-of-type { margin-right: 0; }

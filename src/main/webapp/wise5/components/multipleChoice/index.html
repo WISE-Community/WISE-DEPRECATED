@@ -1,48 +1,47 @@
+<html>
+    <head></head>
+    <body>
+        <div ng-controller="MultipleChoiceController as multipleChoiceController">
+            <md-input-container class="node-input-container" ng-switch on="multipleChoiceController.getChoiceType()">
+                <label class="node-input-label md-no-float" ng-if="multipleChoiceController.getPrompt()" compile="multipleChoiceController.getPrompt()"></label>
+                <md-radio-group ng-switch-when="radio" ng-model="multipleChoiceController.studentChoices"
+                                ng-change="multipleChoiceController.studentDataChanged()">
+                    <div ng-repeat="choice in multipleChoiceController.getChoices()">
+                        <md-radio-button class="md-primary"
+                                         ng-value="choice.id"
+                                         ng-disabled="multipleChoiceController.isDisabled">
+                            {{ choice.text }}
+                            <div ng-message ng-show="choice.showFeedback">{{choice.feedbackToShow}}</div>
+                        </md-radio-button>
+                    </div>
+                </md-radio-group>
+                <div ng-switch-when="checkbox">
+                    <div ng-repeat="choice in multipleChoiceController.getChoices()">
+                        <md-checkbox class="md-primary"
+                                     ng-checked="multipleChoiceController.isChecked(choice.id)"
+                                     ng-click="multipleChoiceController.toggleSelection(choice.id)"
+                                     ng-disabled="multipleChoiceController.isDisabled">
+                            {{ choice.text }}
+                            <div ng-message ng-show="choice.showFeedback">{{choice.feedbackToShow}}</div>
+                        </md-checkbox>
+                    </div>
+                </div>
+            </md-input-container>
 
-<head>
-<style>
-.feedbackToShow {
-    margin-left: 20px;
-}
-</style>
-</head>
-<body>
-<div ng-controller='MultipleChoiceController as multipleChoiceController'>
-<div id='prompt' compile='multipleChoiceController.getPrompt()'></div>
+            <div ng-show="multipleChoiceController.numberOfAttempts != null">Number of Attempts: {{multipleChoiceController.numberOfAttempts}}</div>
+            <div ng-show="multipleChoiceController.isCorrect != null && multipleChoiceController.isCorrect">Correct!</div>
+            <div ng-show="multipleChoiceController.isCorrect != null && !multipleChoiceController.isCorrect">Incorrect</div>
 
-<div ng-repeat='choice in multipleChoiceController.getChoices()'>
-    <label>
-        <div ng-switch on='multipleChoiceController.getChoiceType()'>
-            <div ng-switch-when='radio'>
-                <input type='radio' 
-                    name='choice' 
-                    value='{{choice.id}}' 
-                    ng-model='multipleChoiceController.studentChoices' 
-                    ng-change='multipleChoiceController.studentDataChanged()' 
-                    ng-disabled='multipleChoiceController.isDisabled'></input>
-                <span>{{choice.text}}</span><span ng-show='choice.showFeedback' class='feedbackToShow'>{{choice.feedbackToShow}}</span>
-            </div>
-            <div ng-switch-when='checkbox'>
-                <input type='checkbox' 
-                    name='choice' 
-                    ng-checked='multipleChoiceController.isChecked(choice.id)' 
-                    ng-click='multipleChoiceController.toggleSelection(choice.id)' 
-                    ng-disabled='multipleChoiceController.isDisabled'></input>
-                <span>{{choice.text}}</span><span ng-show='choice.showFeedback' class='feedbackToShow'>{{choice.feedbackToShow}}</span>
+            <div class="component-content--actions" layout="row">
+                <md-button class="md-raised md-primary"
+                           ng-click='multipleChoiceController.saveButtonClicked()'
+                           ng-disabled='multipleChoiceController.isDisabled'
+                           ng-show='multipleChoiceController.showSaveButton()'>Save</md-button>
+                <md-button class="md-raised md-primary"
+                           ng-click='multipleChoiceController.submitButtonClicked()'
+                           ng-disabled='multipleChoiceController.isDisabled'
+                           ng-show='multipleChoiceController.showSubmitButton()'>Submit</md-button>
             </div>
         </div>
-    </label>
-</div>
-
-<div ng-show='multipleChoiceController.numberOfAttempts != null'>Number of Attempts: {{multipleChoiceController.numberOfAttempts}}</div>
-<div ng-show='multipleChoiceController.isCorrect != null && multipleChoiceController.isCorrect'>Correct!</div>
-<div ng-show='multipleChoiceController.isCorrect != null && !multipleChoiceController.isCorrect'>Incorrect</div>
-<button ng-click='multipleChoiceController.saveButtonClicked()' 
-    ng-show='multipleChoiceController.showSaveButton()' 
-    ng-disabled='multipleChoiceController.isDisabled'>Save</button>
-    
-<button ng-click='multipleChoiceController.submitButtonClicked()' 
-    ng-show='multipleChoiceController.showSubmitButton()' 
-    ng-disabled='multipleChoiceController.isDisabled'>Submit</button>
-</div>
-</body>
+    </body>
+</html>
