@@ -193,7 +193,7 @@ define(['angular', /*'annotationService',*/ 'configService', 'nodeService', 'not
                 };
 
                 // alert user when a locked node has been clicked
-                $scope.$on('nodeClickedLocked', angular.bind(this, function (event, args) {
+                $scope.$on('nodeClickLocked', angular.bind(this, function (event, args) {
                     var nodeId = args.nodeId;
 
                     // TODO: customize alert with constraint details, correct node term
@@ -201,7 +201,7 @@ define(['angular', /*'annotationService',*/ 'configService', 'nodeService', 'not
                         $mdDialog.alert()
                             .parent(angular.element(document.body))
                             .title('Item Locked')
-                            .content('Sorry, you cannot view this item.')
+                            .content('Sorry, you cannot view this item yet.')
                             .ariaLabel('Item Locked')
                             .clickOutsideToClose(true)
                             .ok('OK')

@@ -55,9 +55,10 @@ define(['app'],
         }));
 
         $scope.$on('nodeClickLocked', angular.bind(this, function(event, args) {
-            var lockedNodeId = args.nodeId;
+            // should be overriden by theme; TODO: how do we make this the default if theme doesn't override?
+            //var lockedNodeId = args.nodeId;
             // TODO JB styling...alert for now. Will need to output reason the node is locked.
-            alert("Node " + lockedNodeId + " is locked right now. Make sure you've completed previous steps.");
+            //alert("Node " + lockedNodeId + " is locked right now. Make sure you've completed previous steps.");
         }));
 
         this.updateLayout = function() {
