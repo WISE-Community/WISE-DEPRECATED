@@ -16,6 +16,8 @@
 
 .node-select {
   margin-left: 8px;
+  margin-right: 8px;
+  min-width: 0;
 }
 
 .node-select--group {
@@ -31,9 +33,11 @@
   line-height: 1.2;
   text-transform: none;
   margin-top: 3px;
+}
 
-  @media only screen and (min-width: 0) and (max-width: $layout-breakpoint-sm) and
-  (orientation: portrait) {
+@media only screen and (min-width: 0) and (max-width: $layout-breakpoint-sm) and
+(orientation: portrait) {
+  .node-title, .node-select {
     font-size: $body-font-size-base;
   }
 }

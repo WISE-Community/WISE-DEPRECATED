@@ -95,9 +95,25 @@ a {
   }
 }
 
+// hacks for now
 md-toolbar.md-light-theme:not(.md-menu-toolbar) {
-  md-icon:not(.md-light):not(.md-dark):not(.md-primary):not(.md-accent) {
+  md-icon:not(.md-light):not(.md-dark):not(.md-primary):not(.md-accent):not(.success):not(.warn) {
     color: rgba(0, 0, 0, 0.56);
+  }
+
+  md-icon.md-default-theme {
+    &.md-primary {
+      color: $primary-color;
+    }
+    &.md-accent {
+      color: $accent-color-1;
+    }
+    &.success {
+      color: $success-color;
+    }
+    &.warn {
+      color: $warn-color;
+    }
   }
 
   .md-button:disabled {

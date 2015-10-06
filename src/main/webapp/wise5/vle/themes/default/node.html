@@ -16,10 +16,10 @@
             </div>
         </md-select>
         <span flex></span>
-        <span></span>
         <!--<md-button aria-label="Notifications" class="md-icon-button">
             <md-icon md-theme="default"> message </md-icon>
         </md-button> TODO: Add notifications and score when operational-->
+        <md-icon ng-if="nodeCtrl.nodeStatus.isCompleted" md-theme="default" ng-class="'success'" aria-label="Completed"> check_circle </md-icon>
         <md-button aria-label="Close Step" class="md-icon-button" ng-click="nodeCtrl.closeNode()">
             <md-icon md-theme="default"> close </md-icon>
         </md-button>
