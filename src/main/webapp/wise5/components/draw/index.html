@@ -7,6 +7,7 @@
          jqyoui-droppable="{onDrop: 'drawController.dropCallback(item, $index)'}">
         <h1>HTML5 Drawing Tool</h1>
         <div id="drawing-tool"></div>
+        <!--
         <h2>API examples:</h2>
         <div>
           <button id="set-background">Set background</button>
@@ -20,6 +21,7 @@
           <button id="save">Save</button>
           <button id="load" disabled>Load</button>
         </div>
+        -->
     </div>
 <button id='saveButton' 
     ng-click='drawController.saveButtonClicked()' 
@@ -29,4 +31,10 @@
     ng-click='drawController.submitButtonClicked()' 
     ng-disabled='drawController.isDisabled' 
     ng-show='drawController.showSubmitButton()'>Submit</button>
+    <md-button class="revision revision__node-input md-icon-button" ng-click='nodeCtrl.showRevisions($event, component.id)'
+               ng-disabled="nodeCtrl.getRevisions(component.id).length == 0">
+        <md-icon> history </md-icon>
+        <md-tooltip md-direction="top">{{nodeCtrl.getRevisions(component.id).length}} Revisions</md-tooltip>
+    </md-button>
+
 </div>
