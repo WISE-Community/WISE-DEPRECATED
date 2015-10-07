@@ -2233,18 +2233,17 @@ md-list .md-subheader { color: #795C3A; font-weight: 600; }
 
 @media only screen and (min-width: 0) and (max-width: 600px) and (orientation: portrait) { .node-title, .node-select { font-size: 14px; } }
 .node-input-container { padding: 16px 0; }
-.node-input-container textarea.node-input { padding: 8px; background-color: #f7f7f7; border: 1px solid #cccccc; }
-.node-input-container textarea.node-input:focus { background-color: #ffffff; }
-.node-input-container textarea.node-input.node-input__notebook-add { padding-right: 48px; }
-.node-input-container .notebook-add__node-input { position: absolute; right: -8px; }
-.node-input-container .notebook-add__node-input[disabled] md-icon { color: rgba(0, 0, 0, 0.26) !important; }
+.node-input-container textarea.node-input--textarea { padding: 8px; background-color: #f7f7f7; border: 1px solid #cccccc; }
+.node-input-container textarea.node-input--textarea:focus { background-color: #ffffff; }
 
-.node-input-container textarea.node-input.node-input__revision { padding-right: 48px; }
-.node-input-container .revision__node-input { position: absolute; right: -8px; bottom: 16px; }
-.node-input-container .revision__node-input[disabled] md-icon { color: rgba(0, 0, 0, 0.26) !important; }
+.node-input--textarea--hasaction { padding-right: 48px; }
 
+.node-input--textarea__action { position: absolute; right: -8px; }
+.node-input--textarea__action[disabled] md-icon { color: rgba(0, 0, 0, 0.26) !important; }
 
-.node-input-label, md-input-container:not(.md-input-invalid).md-input-has-value label.node-input-label { padding-bottom: 4px; line-height: 1.2; color: rgba(0, 0, 0, 0.87); font-weight: bold; }
+.node-input--textarea__action--revision { bottom: 16px; }
+
+.node-input-label, md-input-container:not(.md-input-invalid):not(.md-input-focused).md-input-has-value label.node-input-label { padding-bottom: 4px; line-height: 1.2; font-weight: bold; color: rgba(0, 0, 0, 0.87); }
 
 .component-content { margin: 8px 0; }
 @media only screen and (min-width: 960px) { .component-content { margin: 16px 0; } }

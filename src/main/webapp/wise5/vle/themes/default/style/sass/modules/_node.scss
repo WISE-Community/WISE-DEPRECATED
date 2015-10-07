@@ -45,38 +45,42 @@
 .node-input-container {
   padding: 16px 0;
 
-  textarea.node-input {
+  textarea.node-input--textarea {
     padding: 8px;
     background-color: $gray-lightest;
     border: 1px solid $gray;
 
     &:focus {
       background-color: #ffffff;
-      //border-top: 1px solid $gray;
-      //border-left: 1px solid $gray;
-      //border-right: 1px solid $gray;
-    }
-
-    &.node-input__notebook-add {
-      padding-right: 48px;
-    }
-  }
-
-  .notebook-add__node-input {
-    position: absolute;
-    right: -8px;
-
-    &[disabled] md-icon {
-      color: rgba(0,0,0,0.26) !important;
     }
   }
 }
 
-.node-input-label, md-input-container:not(.md-input-invalid).md-input-has-value label.node-input-label {
+.node-input--textarea--hasaction {
+  padding-right: 48px;
+}
+
+.node-input--textarea__action {
+  position: absolute;
+  right: -8px;
+
+  &[disabled] md-icon {
+    color: rgba(0,0,0,0.26) !important;
+  }
+}
+
+.node-input--textarea__action--notebook {
+}
+
+.node-input--textarea__action--revision {
+  bottom: 16px;
+}
+
+.node-input-label, md-input-container:not(.md-input-invalid):not(.md-input-focused).md-input-has-value label.node-input-label {
   padding-bottom: 4px;
   line-height: 1.2;
-  color: rgba(0,0,0,0.87);
   font-weight: bold;
+  color: rgba(0,0,0,0.87);
 }
 
 .component-content {

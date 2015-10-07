@@ -34,7 +34,7 @@
 
             <md-input-container class="node-input-container" flex>
                 <label class="node-input-label md-no-float" compile="openResponseController.getPrompt()" ng-if="openResponseController.getPrompt()"></label>
-                <textarea columns="1" class="node-input node-input__notebook-add"
+                <textarea columns="1" class="node-input--textarea node-input--textarea--hasaction"
                           rows='{{openResponseController.getNumRows() || 3}}'
                           ng-model='openResponseController.studentResponse'
                           ng-disabled='openResponseController.isDisabled'
@@ -42,12 +42,12 @@
                           ng-change='openResponseController.studentDataChanged()'
                           data-drop="true"
                           jqyoui-droppable="{onDrop: 'openResponseController.dropCallback(item, $index)'}"></textarea>
-                <md-button class="notebook-add notebook-add__node-input md-icon-button" ng-click='nodeCtrl.addStudentWorkItemToNotebook(component.id)'
+                <md-button class="node-input--textarea__action md-icon-button" ng-click='nodeCtrl.addStudentWorkItemToNotebook(component.id)'
                         ng-disabled="!openResponseController.getStudentResponse()">
                     <md-icon> book </md-icon>
                     <md-tooltip md-direction="top">Add to Notebook</md-tooltip>
                 </md-button>
-                <md-button class="revision revision__node-input md-icon-button" ng-click='nodeCtrl.showRevisions($event, component.id)'
+                <md-button class="node-input--textarea__action node-input--textarea__action--revision md-icon-button" ng-click='nodeCtrl.showRevisions($event, component.id)'
                            ng-disabled="nodeCtrl.getRevisions(component.id).length == 0">
                     <md-icon> history </md-icon>
                     <md-tooltip md-direction="top">{{nodeCtrl.getRevisions(component.id).length}} Revisions</md-tooltip>
