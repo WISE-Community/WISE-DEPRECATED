@@ -123,25 +123,20 @@ define(['nodeService', 'studentDataService'], function(nodeService, studentDataS
         serviceObject.isCompleted = function(component, componentStates, componentEvents, nodeEvents) {
             var result = false;
 
-            if (componentStates != null) {
+            if (componentStates != null  && componentStates.length) {
 
-                // loop through all the component states
-                for (var c = 0; c < componentStates.length; c++) {
+                // get the last component state
+                var l = componentStates.length-1;
+                var componentState = componentStates[l];
 
-                    // the component state
-                    var componentState = componentStates[c];
+                var studentData = componentState.studentData;
 
-                    // get the student data from the component state
-                    var studentData = componentState.studentData;
+                if (studentData != null) {
+                    var response = studentData.response;
 
-                    if (studentData != null) {
-                        var response = studentData.response;
-
-                        if (response != null) {
-                            // there is a response so the component is completed
-                            result = true;
-                            break;
-                        }
+                    if (!!response) {
+                        // there is a response so the component is completed
+                        result = true;
                     }
                 }
             }
