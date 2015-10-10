@@ -267,7 +267,7 @@ define(['angular', 'projectService', 'studentDataService'], function(angular, pr
         };
     })
 
-    .directive('latestcomponentstate', function($injector, StudentDataService) {
+    .directive('studentwork', function($injector, StudentDataService) {
         return {
             restrict: 'E',
             link: function($scope, element, attrs) {
@@ -296,7 +296,7 @@ define(['angular', 'projectService', 'studentDataService'], function(angular, pr
         };
     })
 
-    .directive('studentfirstnames', function($injector, ConfigService) {
+    .directive('wiseuserinfo', function($injector, ConfigService) {
         return {
             restrict: 'E',
             link: function($scope, element, attrs) {
@@ -317,6 +317,27 @@ define(['angular', 'projectService', 'studentDataService'], function(angular, pr
                     element[0].innerHTML = "student";  // default case
                 }
             }
+        };
+    })
+
+    .directive('wiselink', function(StudentDataService) {
+        return {
+            restrict: 'E',
+            replace: true,
+            link: function(scope, element, attrs) {
+
+                var nodeId = attrs.nodeid;
+                //var componentId = attrs.componentid; TODO: allow linking to component within a node
+                var linkText = attrs.linktext;
+
+                if (nodeId !== null) {
+                    element[0].innerHTML = '<a>' + linkText + '</a>';
+                }
+                element.bind('click', function() {
+                    StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(nodeId);
+                });
+            }
+
         };
     })
 

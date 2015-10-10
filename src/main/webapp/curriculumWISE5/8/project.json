@@ -53,7 +53,7 @@
             },
             "title": "Introduction to Newton Scooters",
             "content": {
-                "prompt": "<div style=\"background-image: url('./assets/background.jpg'); border-radius: 10px 10px 10px 10px; padding: 25px; background-size: cover; font-family: Arial, Helvetica, sans-serif; line-height: 150%;\">\n<div style=\"background-color: rgba(255,255,255,0.85); color: #006; border-radius: 30px 30px 30px 30px; padding: 15px; text-align: center;\">\n<h1><span style=\"color:red\"></span>Why Study Newton Scooters?</h1>\n</div>\n<br />\n<div style=\"background-color: rgba(255,255,255,0.85); color: #006; border-radius: 20px 20px 20px 20px; padding: 20px;\">\n<p>{{studentFirstNames}}, in this unit, you will build a cart and try to get it to go as far as possible. We will show you how to make a better car by thinking about energy, where it comes from and where it goes.</p>\n</div>\n</div>",
+                "prompt": "<div style=\"background-image: url('./assets/background.jpg'); border-radius: 10px 10px 10px 10px; padding: 25px; background-size: cover; font-family: Arial, Helvetica, sans-serif; line-height: 150%;\">\n<div style=\"background-color: rgba(255,255,255,0.85); color: #006; border-radius: 30px 30px 30px 30px; padding: 15px; text-align: center;\">\n<h1><span style=\"color:red\"></span>Why Study Newton Scooters?</h1>\n</div>\n<br />\n<div style=\"background-color: rgba(255,255,255,0.85); color: #006; border-radius: 20px 20px 20px 20px; padding: 20px;\">\n<p><wiseuserinfo show=\"firstname\"></wiseuserinfo>, in this unit, you will build a cart and try to get it to go as far as possible. We will show you how to make a better car by thinking about energy, where it comes from and where it goes.</p>\n</div>\n</div>",
                 "showSaveButton": true,
                 "showSubmitButton": false,
                 "components": [
@@ -2860,7 +2860,7 @@
                     {
                         "id": "n7b87a0mqg",
                         "componentType": "HTML",
-                        "html": "<html>\n<head>\n<title>html</title>\n</head>\n<body>\n<div style=\"margin: auto; background-image: url('./assets/background.jpg'); border-radius: 20px 20px 20px 20px; padding: 10px; background-size: cover;\">\n<div style=\"margin: auto; background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 1px; text-align: center;\">\n<h2>Take a picture of your updated scooter!</h2>\n</div>\n<br />\n<div style=\"background-color: rgba(255,255,255,0.85); border-radius: 20px 20px 20px 20px; padding: 10px;\">\n<p>Take a picture of your updated scooter and upload it {{link|node43|here}}!</p>\n</div>\n</div>\n</body>\n</html>"
+                        "html": "<html>\n<head>\n<title>html</title>\n</head>\n<body>\n<div style=\"margin: auto; background-image: url('./assets/background.jpg'); border-radius: 20px 20px 20px 20px; padding: 10px; background-size: cover;\">\n<div style=\"margin: auto; background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 1px; text-align: center;\">\n<h2>Take a picture of your updated scooter!</h2>\n</div>\n<br />\n<div style=\"background-color: rgba(255,255,255,0.85); border-radius: 20px 20px 20px 20px; padding: 10px;\">\n<p>Take a picture of your updated scooter and upload it <wiselink nodeid=\"node43\" linktext=\"here\"></wiselink>!</p>\n</div>\n</div>\n</body>\n</html>"
                     }
                 ]
             }

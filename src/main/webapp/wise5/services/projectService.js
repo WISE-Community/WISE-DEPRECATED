@@ -463,11 +463,7 @@ define(['configService'], function(configService) {
 
         serviceObject.setIdToContent = function(id, content) {
             if (id != null) {
-                // TODO: put these functions into one function
                 content = this.injectAssetPaths(content);
-                content = this.injectNodeLinks(content);
-                content = this.injectStudentData(content);
-                content = this.injectStudentNames(content);
 
                 this.idToContent[id] = content;
             }
@@ -532,111 +528,6 @@ define(['configService'], function(configService) {
             return contentString
         };
 
-        serviceObject.injectNodeLinks = function(content) {
-            if (content != null) {
-                /*
-                 if (text.indexOf("{{studentFirstNames}}") >= 0) {
-                 var workgroupId = this.getUserAndClassInfo().getWorkgroupId();
-                 var studentFirstNamesArray = this.getUserAndClassInfo().getStudentFirstNamesByWorkgroupId(workgroupId);
-                 var studentFirstNames = studentFirstNamesArray.join(' & ');
-                 text = text.replace(/{{studentFirstNames}}/g, studentFirstNames);
-                 }
-                 */
-
-                if (typeof content === 'object') {
-
-                    var contentString = JSON.stringify(content);
-                    if (contentString != null && contentString.indexOf("{{link") >= 0) {
-                        contentString = contentString.replace(/{{link\|([^}}]*)\|([^}}]*)}}/g, '<a ng-click=nodeCtrl.nodeComponentClicked(\'$1\')>$2</a>');
-                    }
-
-                    content = JSON.parse(contentString);
-                } else if (typeof content === 'string') {
-
-                    if (content != null && content.indexOf("{{link") >= 0) {
-                        content = content.replace(/{{link\|([^}}]*)\|([^}}]*)}}/g, '<a ng-click=nodeCtrl.nodeComponentClicked(\'$1\')>$2</a>');
-                    }
-                }
-            }
-            return content;
-        };
-
-        /**
-         * Replaces {{work|nodeId.componentId}} with <latestcomponentstate nodeId="nodeId" componentId="componentId"></latestcomponentstate>.
-         * The actual rendering is done by the latestcomponentstate directive.
-         */
-        serviceObject.injectStudentData = function(content) {
-            if (content != null) {
-                var regex = /{{work\|([^}}]*)}}/g;
-
-                if (typeof content === 'object') {
-                    var contentString = JSON.stringify(content);
-                    if (contentString.indexOf("{{work") == -1) {
-                        return content;
-                    }
-                    var matchResult = contentString.match(regex);
-
-                    var nodeComponentId = RegExp.$1;   // ex: "node2.ft9m41diuz"
-
-                    var nodeId;
-                    var componentId = null;
-
-                    if (nodeComponentId.indexOf(".") != -1) {
-                        nodeId = nodeComponentId.substring(0, nodeComponentId.indexOf("."));
-                        componentId = nodeComponentId.substring(nodeComponentId.indexOf(".") + 1);
-                    } else {
-                        nodeId = nodeComponentId;
-                    }
-
-                    contentString = contentString.replace(regex, '<latestcomponentstate nodeId=\\\"' + nodeId + '\\\" componentId=\\\"' + componentId + '\\\"></latestcomponentstate>');
-
-                    content = JSON.parse(contentString);
-                } else if (typeof content === 'string') {
-
-                    if (content != null && content.indexOf("{{work") >= 0) {
-                        var matchResult = content.match(regex);
-
-                        var nodeComponentId = RegExp.$1;
-
-                        var nodeId;
-                        var componentId = null;
-
-                        if (nodeComponentId.indexOf(".") != -1) {
-                            nodeId = nodeComponentId.substring(0, nodeComponentId.indexOf("."));
-                            componentId = nodeComponentId.substring(nodeComponentId.indexOf(".") + 1);
-                        } else {
-                            nodeId = nodeComponentId;
-                        }
-
-                        content = content.replace(regex, '<latestcomponentstate nodeId=\\\"' + nodeId + '\\\" componentId=\\\"' + componentId + '\\\"></latestcomponentstate>');
-                    }
-                }
-            }
-            return content;
-        };
-
-        /**
-         * Replaces {{studentFirstNames}} names of students in the project.
-         * The actual rendering is done by the latestcomponentstate directive.
-         */
-        serviceObject.injectStudentNames = function(content) {
-            if (content != null) {
-                var regex = /{{studentFirstNames}}/g;
-
-                if (typeof content === 'object') {
-                    var contentString = JSON.stringify(content);
-                    if (contentString.indexOf("{{studentFirstNames}}") == -1) {
-                        return content;
-                    }
-
-                    contentString = contentString.replace(regex, '<studentfirstnames></studentfirstnames>');
-
-                    content = JSON.parse(contentString);
-                }
-            }
-            return content;
-        };
-
         serviceObject.getElementById = function(id) {
             var element = null;
 
@@ -645,7 +536,7 @@ define(['configService'], function(configService) {
             }
 
             return element;
-        }
+        };
 
         serviceObject.getNodeById = function(id) {
             var element = null;
