@@ -31,7 +31,7 @@
     "ng-file-upload": "~5.0.9",
     "oclazyload": "~1.0.4",
     "requirejs": "~2.1.19",
-    "textAngular": "~1.4.2",
+    "tinymce-dist": "latest",
     "webfontloader": "~1.6.4"
   }
 }

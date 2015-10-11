@@ -16,6 +16,7 @@ define([
     'angularTextAngular',
     'angularToArrayFilter',
     'angularUIRouter',
+    'angularUITinymce',
     'angularUITree',
     'angularWebSocket',
     'audioRecorderService',
@@ -42,6 +43,7 @@ define([
     'studentStatusService',
     'studentWebSocketService',
     'tableService',
+    'tinymce',
     'webfont',
     'webfonts'
 ], function (angular,
@@ -61,6 +63,7 @@ define([
              angularTextAngular,
              angularToArrayFilter,
              angularUIRouter,
+             angularUITinymce,
              angularUITree,
              angularWebSocket,
              audioRecorderService,
@@ -87,6 +90,7 @@ define([
              studentStatusService,
              studentWebSocketService,
              tableService,
+             tinymce,
              webfont,
              webfonts) {
 
@@ -97,6 +101,7 @@ define([
         'highcharts-ng',
         'ui.router',
         'ui.sortable',
+        'ui.tinymce',
         'ui.tree',
         'angular-toArrayFilter',
         'ngAnimate',

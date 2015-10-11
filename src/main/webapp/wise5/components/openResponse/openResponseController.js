@@ -37,6 +37,9 @@ define(['app'], function(app) {
 
         // whether the student work is for a submit
         this.isSubmit = false;
+
+        // whether rich text editing is enabled
+        this.isRichTextEnabled = false;
         
         /**
          * Perform setup of the component
@@ -86,6 +89,9 @@ define(['app'], function(app) {
                     $scope.$parent.registerComponentController($scope, this.componentContent);
                 } else {
                     // this is a regular component
+
+                    // set whether rich text is enabled
+                    this.isRichTextEnabled = this.componentContent.isRichTextEnabled;
 
                     // get the component state from the scope
                     var componentState = $scope.componentState;
@@ -512,8 +518,33 @@ define(['app'], function(app) {
                 
             }));
         };
-        
+
+        //var scope = this;
+        this.tinymceOptions = {
+            //onChange: function(e) {
+                //scope.studentDataChanged();
+            //},
+            menubar: false,
+            plugins: 'link image media imagetools autoresize',
+            toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | bullist numlist | superscript subscript | link image media',
+            autoresize_bottom_margin: "0",
+            autoresize_min_height: "100",
+            image_advtab: true,
+            setup: function (ed) {
+                ed.on("focus", function (e) {
+                    $(e.target.editorContainer).addClass('node-input--focused').parent().addClass('node-input-wrapper--focused');
+                    $('label[for="' + e.target.id + '"]').addClass('node-input-label--focused');
+                });
+
+                ed.on("blur", function (e) {
+                    $(e.target.editorContainer).removeClass('node-input--focused').parent().removeClass('node-input-wrapper--focused');
+                    $('label[for="' + e.target.id + '"]').removeClass('node-input-label--focused');
+                });
+            }
+        };
+
         // perform setup of this component
         this.setup();
+
     });
 });

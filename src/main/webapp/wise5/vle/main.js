@@ -18,6 +18,7 @@ require.config({
         'angularTextAngularSanitize': 'lib/angularTextAngular/textAngular-sanitize.min', // TODO: switch to using bower once loading errors are fixed
         'angularToArrayFilter': 'vendor/angular-toArrayFilter/toArrayFilter',
         'angularUIRouter': 'vendor/angular-ui-router/release/angular-ui-router.min',
+        'angularUITinymce': 'lib/angular-ui-tinymce/src/tinymce', // TODO: switch to using bower once the developers register the latest versions
         'angularUITree': 'vendor/angular-ui-tree/dist/angular-ui-tree.min',
         'angularWebSocket': 'vendor/angular-websocket/angular-websocket.min',
         'app': 'vle/app',
@@ -81,6 +82,7 @@ require.config({
         'studentWebSocketService': 'services/studentWebSocketService',
         'tableController': 'components/table/tableController',
         'tableService': 'components/table/tableService',
+        'tinymce': 'vendor/tinymce-dist/tinymce.min',
         'vleController': 'vle/vleController',
         'webfont': [
             '//ajax.googleapis.com/ajax/libs/webfont/1.5.18/webfont',
@@ -171,6 +173,13 @@ require.config({
                     'angular'
                     ]
         },
+        'angularUITinymce': {
+            'exports': 'angularUITinymce',
+            'deps': [
+                'tinymce',
+                'angular'
+            ]
+        },
         'angularUITree': {
             'exports': 'angularUITree',
             'deps': [
@@ -233,6 +242,9 @@ require.config({
             'deps': [
                     'angular'
             ]
+        },
+        'tinymce': {
+            'exports': 'tinymce',
         },
         'webfont': {
             'exports': 'webfont'

@@ -1,3 +1,9 @@
+// Variables
+$node-input-action-width: 48px;
+$node-input-action-vertical-offset: 0;
+$node-input-action-vertical-offset-richtext: -7px;
+
+// Base
 .node-toolbar {
   position: fixed;
   left: 0;
@@ -45,19 +51,38 @@
 .node-input-container {
   padding: 16px 0;
 
-  textarea.node-input--textarea {
-    padding: 8px;
-    background-color: $gray-lightest;
-    border: 1px solid $gray;
-
-    &:focus {
-      background-color: #ffffff;
-    }
+  .mce-toolbar-grp {
+    padding-right: $node-input-action-width;
   }
 }
 
-.node-input--textarea--hasaction {
-  padding-right: 48px;
+.node-input-wrapper {
+  position: relative;
+}
+
+.node-input-wrapper--focused {
+  .node-input--textarea__action md-icon {
+    color: $primary-color;
+  }
+}
+
+.node-input--textarea, .node-input-container textarea.node-input--textarea {
+  padding: 8px;
+  background-color: $gray-lightest;
+  border: 1px solid $gray;
+  width: 100%;
+
+  &.node-input--textarea--hasaction {
+    padding-right: $node-input-action-width;
+  }
+
+  &:focus {
+    background-color: #ffffff;
+  }
+}
+
+.node-input--textarea--disabled {
+  cursor:not-allowed;
 }
 
 .node-input--textarea__action {
@@ -70,10 +95,20 @@
 }
 
 .node-input--textarea__action--notebook {
+  top: $node-input-action-vertical-offset;
+
+  .node-input-wrapper--richtext & {
+    top: $node-input-action-vertical-offset-richtext
+  }
 }
 
 .node-input--textarea__action--revision {
-  bottom: 16px;
+  bottom: $node-input-action-vertical-offset;
+
+  .node-input-wrapper--richtext & {
+    bottom: ($node-input-action-vertical-offset-richtext + 2px);
+  }
+
 }
 
 .node-input-label, md-input-container:not(.md-input-invalid):not(.md-input-focused).md-input-has-value label.node-input-label {
@@ -81,6 +116,14 @@
   line-height: 1.2;
   font-weight: bold;
   color: rgba(0,0,0,0.87);
+
+  &.node-input-label--focused {
+    color: $primary-color;
+  }
+}
+
+.node-input--focused {
+  border-color: $primary-color;
 }
 
 .component-content {
