@@ -143,7 +143,6 @@ define(['app'], function(app) {
                 return componentStates;
             };
 
-            // TODO: generalize to NodeController
             this.showRevisions = function($event, componentId) {
                 var revisions = this.getRevisions(componentId);
 
@@ -159,7 +158,7 @@ define(['app'], function(app) {
                     componentController = childScope.drawController;
                 }
 
-                // TODO: make this customizeable per theme
+                // TODO: make this customizeable per theme and maybe make into directive
                 var parentEl = angular.element(document.body);
                 $mdDialog.show({
                     parent: parentEl,
@@ -170,7 +169,11 @@ define(['app'], function(app) {
                     '  <md-dialog-content>'+
                     '    <md-list>'+
                     '      <md-list-item ng-repeat="item in items">'+
-                    '       <p><componentstatehtml componentstate="{{item}}"></componentstatehtml>{{item.clientSaveTime | date : "medium"}}' +
+                    '       <p><componentstatehtml componentstate="{{item}}"></componentstatehtml>' +
+                    '       <span ng-if="item.isAutoSave">Auto-saved on</span>' +
+                    '       <span ng-if="!item.isAutoSave && item.studentData.isSubmit">Submitted on</span> ' +
+                    '       <span ng-if="!item.isAutoSave && !item.studentData.isSubmit">Saved on</span> ' +
+                    '       {{item.clientSaveTime | date : "medium"}}' +
                     '       <md-button ng-click="revertWork(item)" class="md-primary">Revert</md-button></p>'+
                     '      </md-list-item>'+
                     '    </md-list>'+

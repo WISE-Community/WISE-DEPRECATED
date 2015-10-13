@@ -91,10 +91,10 @@ public class StudentDataController {
 
             // loop through all the component states
             for (int c = 0; c < studentWorkList.size(); c++) {
-                StudentWork studentWor = studentWorkList.get(c);
+                StudentWork studentWork = studentWorkList.get(c);
 
                 // get the JSON representation of the component state and add to studentWorkJSONArray
-                studentWorkJSONArray.put(studentWor.toJSON());
+                studentWorkJSONArray.put(studentWork.toJSON());
             }
             try {
                 result.put("studentWorkList", studentWorkJSONArray);

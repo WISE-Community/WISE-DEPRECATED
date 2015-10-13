@@ -210,7 +210,7 @@ public class StudentWork extends PersistableDomain {
 			}
 
             if (this.isAutoSave != null) {
-                studentWorkJSONObject.put("isAutoSave", Boolean.toString(this.isAutoSave));
+                studentWorkJSONObject.put("isAutoSave", this.isAutoSave);
             }
 
             // set the node id
