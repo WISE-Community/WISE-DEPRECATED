@@ -183,7 +183,7 @@ define(['app'], function (app) {
 
                 if (this.isSubmit) {
                     // the student submitted this work
-                    studentData.isSubmit = this.isSubmit;
+                    componentState.isSubmit = this.isSubmit;
 
                     /*
                      * reset the isSubmit value so that the next component state

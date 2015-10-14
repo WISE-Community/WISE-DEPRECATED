@@ -43,14 +43,14 @@ public interface VLEService {
 	 * return an empty list.
 	 */
 	List<StudentWork> getStudentWorkList(Integer id, Integer runId, Integer periodId, Integer workgroupId,
-                                            Boolean isAutoSave, String nodeId, String componentId, String componentType);
+                                            Boolean isAutoSave, Boolean isSubmit, String nodeId, String componentId, String componentType);
 
 	/**
 	 * Saves StudentWork in the data store
 	 */
 	StudentWork saveStudentWork(
             Integer id, Integer runId, Integer periodId, Integer workgroupId,
-            Boolean isAutoSave, String nodeId, String componentId, String componentType,
+            Boolean isAutoSave, Boolean isSubmit, String nodeId, String componentId, String componentType,
             String studentData, String clientSaveTime) throws ObjectNotFoundException;
 
     /**

@@ -172,8 +172,8 @@ define(['app'], function(app) {
                     '      <md-list-item ng-repeat="item in items">'+
                     '       <p><componentstatehtml componentstate="{{item}}"></componentstatehtml>' +
                     '       <span ng-if="item.isAutoSave">Auto-saved on</span>' +
-                    '       <span ng-if="!item.isAutoSave && item.studentData.isSubmit">Submitted on</span> ' +
-                    '       <span ng-if="!item.isAutoSave && !item.studentData.isSubmit">Saved on</span> ' +
+                    '       <span ng-if="!item.isAutoSave && !item.isSubmit">Saved on</span> ' +
+                    '       <span ng-if="!item.isAutoSave && item.isSubmit">Submitted on</span> ' +
                     '       {{item.clientSaveTime | date : "medium"}}' +
                     '       <md-button ng-if="allowRevert" ng-click="revertWork(item)" class="md-primary">Revert</md-button></p>'+
                     '      </md-list-item>'+

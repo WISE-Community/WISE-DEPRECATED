@@ -244,7 +244,7 @@ define(['app', 'angular'], function(app, angular) {
 
                 if (this.isSubmit) {
                     // the student submitted this work
-                    studentData.isSubmit = this.isSubmit;
+                    componentState.isSubmit = this.isSubmit;
 
                     /*
                      * reset the isSubmit value so that the next component state
@@ -528,7 +528,7 @@ define(['app', 'angular'], function(app, angular) {
                         
                         if (studentData != null) {
                             
-                            if (studentData.isSubmit) {
+                            if (componentState.isSubmit) {
                                 
                                 /*
                                  * add the user name to the component state so we can
@@ -617,7 +617,7 @@ define(['app', 'angular'], function(app, angular) {
                 if (studentData != null) {
                     
                     // check if the student data was a submit
-                    var isSubmit = studentData.isSubmit;
+                    var isSubmit = componentState.isSubmit;
                     
                     if (isSubmit) {
                         // this component state is a submit so we will add it

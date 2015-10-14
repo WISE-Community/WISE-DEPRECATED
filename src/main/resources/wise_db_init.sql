@@ -443,6 +443,7 @@
         componentId varchar(30),
         componentType varchar(30),
         isAutoSave bit not null,
+        isSubmit bit not null,
         nodeId varchar(30) not null,
         serverSaveTime datetime not null,
         studentData mediumtext not null,

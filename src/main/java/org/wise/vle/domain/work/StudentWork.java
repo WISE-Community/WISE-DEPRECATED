@@ -67,7 +67,10 @@ public class StudentWork extends PersistableDomain {
 	@Column(name = "isAutoSave", nullable = false)
 	private Boolean isAutoSave;
 
-    @Column(name = "nodeId", nullable = false, length = 30)
+	@Column(name = "isSubmit", nullable = false)
+	private Boolean isSubmit;
+
+	@Column(name = "nodeId", nullable = false, length = 30)
     private String nodeId;
 
 	@Column(name = "componentId", length = 30)
@@ -127,6 +130,14 @@ public class StudentWork extends PersistableDomain {
 
 	public void setIsAutoSave(Boolean isAutoSave) {
 		this.isAutoSave = isAutoSave;
+	}
+
+	public Boolean isSubmit() {
+		return isSubmit;
+	}
+
+	public void setIsSubmit(Boolean isSubmit) {
+		this.isSubmit = isSubmit;
 	}
 
 	public String getNodeId() {
@@ -213,7 +224,11 @@ public class StudentWork extends PersistableDomain {
                 studentWorkJSONObject.put("isAutoSave", this.isAutoSave);
             }
 
-            // set the node id
+			if (this.isSubmit != null) {
+				studentWorkJSONObject.put("isSubmit", this.isSubmit);
+			}
+
+			// set the node id
 			if (this.nodeId != null) {
 				studentWorkJSONObject.put("nodeId", this.nodeId);
 			}

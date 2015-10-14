@@ -71,6 +71,7 @@ public class StudentDataController {
             @RequestParam(value = "periodId", required = false) Integer periodId,
             @RequestParam(value = "workgroupId", required = false) Integer workgroupId,
             @RequestParam(value = "isAutoSave", required = false) Boolean isAutoSave,
+            @RequestParam(value = "isSubmit", required = false) Boolean isSubmit,
             @RequestParam(value = "nodeId", required = false) String nodeId,
             @RequestParam(value = "componentId", required = false) String componentId,
             @RequestParam(value = "componentType", required = false) String componentType,
@@ -85,7 +86,7 @@ public class StudentDataController {
         JSONObject result = new JSONObject();
         if (getStudentWork) {
             List<StudentWork> studentWorkList = vleService.getStudentWorkList(id, runId, periodId, workgroupId,
-                    isAutoSave, nodeId, componentId, componentType);
+                    isAutoSave, isSubmit, nodeId, componentId, componentType);
 
             JSONArray studentWorkJSONArray = new JSONArray();
 
@@ -191,6 +192,7 @@ public class StudentDataController {
                                     studentWorkJSONObject.isNull("periodId") ? null : studentWorkJSONObject.getInt("periodId"),
                                     studentWorkJSONObject.isNull("workgroupId") ? null : studentWorkJSONObject.getInt("workgroupId"),
                                     studentWorkJSONObject.isNull("isAutoSave") ? null : studentWorkJSONObject.getBoolean("isAutoSave"),
+                                    studentWorkJSONObject.isNull("isSubmit") ? null : studentWorkJSONObject.getBoolean("isSubmit"),
                                     studentWorkJSONObject.isNull("nodeId") ? null : studentWorkJSONObject.getString("nodeId"),
                                     studentWorkJSONObject.isNull("componentId") ? null : studentWorkJSONObject.getString("componentId"),
                                     studentWorkJSONObject.isNull("componentType") ? null : studentWorkJSONObject.getString("componentType"),
@@ -207,6 +209,7 @@ public class StudentDataController {
                             studentWork.setPeriod(null);
                             studentWork.setWorkgroup(null);
                             studentWork.setIsAutoSave(null);
+                            studentWork.setIsSubmit(null);
                             studentWork.setComponentType(null);
                             studentWork.setStudentData(null);
                             studentWork.setClientSaveTime(null);

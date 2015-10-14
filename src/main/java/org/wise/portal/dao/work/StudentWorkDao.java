@@ -38,6 +38,6 @@ import java.util.List;
 public interface StudentWorkDao<T extends StudentWork> extends SimpleDao<T> {
 
     List<StudentWork> getStudentWorkListByParams(Integer id, Run run, Group period, WISEWorkgroup workgroup,
-                                                    Boolean isAutoSave, String nodeId,
-                                                    String componentId, String componentType);
+                                                    Boolean isAutoSave, Boolean isSubmit,
+                                                    String nodeId, String componentId, String componentType);
 }

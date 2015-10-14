@@ -175,18 +175,9 @@ define(['configService', 'projectService', 'studentDataService'], function(confi
 
                         if (componentState != null) {
 
-                            // get the student data
-                            var studentData = componentState.studentData;
-
-                            if (studentData != null) {
-
-                                var isSubmit = studentData.isSubmit;
-
-                                // check if the isSubmit flag is true
-                                if (isSubmit) {
-                                    result = true;
-                                    break;
-                                }
+                            if (componentState.isSubmit) {
+                                result = true;
+                                break;
                             }
                         }
                     }
@@ -582,6 +573,7 @@ define(['configService', 'projectService', 'studentDataService'], function(confi
                     nodeState.workgroupId = ConfigService.getWorkgroupId();
                     nodeState.nodeId = fromNodeId;
                     nodeState.isAutoSave = false;
+                    nodeState.isSubmit = false;
 
                     var studentData = {};
                     studentData.dataType = 'branchPathTaken';

@@ -82,8 +82,8 @@ public class VLEServiceImpl implements VLEService {
 
     @Override
     public List<StudentWork> getStudentWorkList(Integer id, Integer runId, Integer periodId, Integer workgroupId,
-                                                   Boolean isAutoSave, String nodeId,
-                                                   String componentId, String componentType) {
+                                                   Boolean isAutoSave, Boolean isSubmit,
+                                                   String nodeId, String componentId, String componentType) {
         Run run = null;
         if (runId != null) {
             try {
@@ -111,12 +111,13 @@ public class VLEServiceImpl implements VLEService {
         }
 
         return studentWorkDao.getStudentWorkListByParams(id, run, period, workgroup,
-                isAutoSave, nodeId, componentId, componentType);
+                isAutoSave, isSubmit, nodeId, componentId, componentType);
     }
 
     @Override
     public StudentWork saveStudentWork(Integer id, Integer runId, Integer periodId, Integer workgroupId,
-                                             Boolean isAutoSave, String nodeId, String componentId, String componentType,
+                                             Boolean isAutoSave, Boolean isSubmit,
+                                             String nodeId, String componentId, String componentType,
                                              String studentData, String clientSaveTime) {
         StudentWork studentWork;
         if (id != null) {
@@ -156,6 +157,14 @@ public class VLEServiceImpl implements VLEService {
 
         if (isAutoSave != null) {
             studentWork.setIsAutoSave(isAutoSave);
+        } else {
+            studentWork.setIsAutoSave(false);
+        }
+
+        if (isSubmit != null) {
+            studentWork.setIsSubmit(isSubmit);
+        } else {
+            studentWork.setIsSubmit(false);
         }
 
         if (nodeId != null) {

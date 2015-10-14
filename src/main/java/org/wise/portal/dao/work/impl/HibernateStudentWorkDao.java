@@ -54,7 +54,8 @@ public class HibernateStudentWorkDao extends AbstractHibernateDao<StudentWork> i
     @Override
     public List<StudentWork> getStudentWorkListByParams(
             Integer id, Run run, Group period, WISEWorkgroup workgroup,
-            Boolean isAutoSave, String nodeId, String componentId, String componentType) {
+            Boolean isAutoSave, Boolean isSubmit,
+            String nodeId, String componentId, String componentType) {
 
         Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
         Criteria sessionCriteria = session.createCriteria(StudentWork.class);
@@ -74,6 +75,9 @@ public class HibernateStudentWorkDao extends AbstractHibernateDao<StudentWork> i
         if (isAutoSave != null) {
             sessionCriteria.add(Restrictions.eq("isAutoSave", isAutoSave));
         }
+        if (isSubmit != null) {
+            sessionCriteria.add(Restrictions.eq("isSubmit", isSubmit));
+        }
         if (nodeId != null) {
             sessionCriteria.add(Restrictions.eq("nodeId", nodeId));
         }
@@ -83,7 +87,6 @@ public class HibernateStudentWorkDao extends AbstractHibernateDao<StudentWork> i
         if (componentType != null) {
             sessionCriteria.add(Restrictions.eq("componentType", componentType));
         }
-
 
         return sessionCriteria.list();
     }

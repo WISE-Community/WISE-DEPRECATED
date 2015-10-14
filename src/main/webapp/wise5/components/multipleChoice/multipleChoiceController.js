@@ -146,7 +146,7 @@ define(['app'], function(app) {
                         this.isCorrect = studentData.isCorrect;
                     }
                     
-                    if (studentData.isSubmit) {
+                    if (componentState.isSubmit) {
                         // the previous work was a submit so we will show the feedback
                         this.showFeedbackForChoiceIds(choiceIds);
                     }
@@ -567,7 +567,7 @@ define(['app'], function(app) {
                     }
 
                     if (this.isSubmit != null) {
-                        studentData.isSubmit = this.isSubmit;
+                        componentState.isSubmit = this.isSubmit;
                     }
                     
                     // set the number of attempts the student has made
@@ -576,7 +576,7 @@ define(['app'], function(app) {
 
                 if (this.isSubmit) {
                     // the student submitted this work
-                    studentData.isSubmit = this.isSubmit;
+                    componentState.isSubmit = this.isSubmit;
 
                     /*
                      * reset the isSubmit value so that the next component state
