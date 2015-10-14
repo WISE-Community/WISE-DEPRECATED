@@ -1,12 +1,12 @@
 {
   "name": "webfontloader",
   "homepage": "https://github.com/typekit/webfontloader",
-  "version": "1.6.8",
-  "_release": "1.6.8",
+  "version": "1.6.10",
+  "_release": "1.6.10",
   "_resolution": {
     "type": "version",
-    "tag": "v1.6.8",
-    "commit": "ae81c4a4d451347444c20e035926313798c9c122"
+    "tag": "v1.6.10",
+    "commit": "7ee9b9e4694e4595f036ad538dec68f9f465090e"
   },
   "_source": "git://github.com/typekit/webfontloader.git",
   "_target": "~1.6.4",
