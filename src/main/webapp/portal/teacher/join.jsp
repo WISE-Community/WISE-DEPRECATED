@@ -366,5 +366,6 @@ $(document).ready(function() {
 		</div>
 	</div>
 </div>
+<%@ include file="../analytics.jsp" %>
 </body>
 </html>

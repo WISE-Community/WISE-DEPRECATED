@@ -455,7 +455,7 @@ $(document).ready(function() {
 		<div style="clear: both;"></div>
 	</div>   <!-- End of page -->
 	
-	<%@ include file="../footer.jsp"%>
+	<%@ include file="../footer.jsp" %>
 </div>
 
 <div id="announcementsDialog" class="dialog" style="display:none; overflow:hidden;"></div>
