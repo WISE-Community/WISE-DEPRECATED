@@ -143,8 +143,9 @@ define(['app'], function(app) {
                 return componentStates;
             };
 
-            this.showRevisions = function($event, componentId) {
+            this.showRevisions = function($event, componentId, disabled) {
                 var revisions = this.getRevisions(componentId);
+                var allowRevert = disabled ? false : true;
 
                 // get the scope for the component
                 var childScope = $scope.componentToScope[componentId];
@@ -174,7 +175,7 @@ define(['app'], function(app) {
                     '       <span ng-if="!item.isAutoSave && item.studentData.isSubmit">Submitted on</span> ' +
                     '       <span ng-if="!item.isAutoSave && !item.studentData.isSubmit">Saved on</span> ' +
                     '       {{item.clientSaveTime | date : "medium"}}' +
-                    '       <md-button ng-click="revertWork(item)" class="md-primary">Revert</md-button></p>'+
+                    '       <md-button ng-if="allowRevert" ng-click="revertWork(item)" class="md-primary">Revert</md-button></p>'+
                     '      </md-list-item>'+
                     '    </md-list>'+
                     '  </md-dialog-content>' +
