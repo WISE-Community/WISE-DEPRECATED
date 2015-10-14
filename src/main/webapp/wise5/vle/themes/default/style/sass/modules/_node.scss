@@ -48,6 +48,9 @@ $node-input-action-vertical-offset-richtext: -7px;
   }
 }
 
+
+// Inputs
+// TODO: generalize these for WISE (not just nodes, regardless of theme?)
 .node-input-container {
   padding: 16px 0;
 
@@ -70,7 +73,6 @@ $node-input-action-vertical-offset-richtext: -7px;
   padding: 8px;
   background-color: $gray-lightest;
   border: 1px solid $gray;
-  width: 100%;
 
   &.node-input--textarea--hasaction {
     padding-right: $node-input-action-width;
@@ -81,16 +83,21 @@ $node-input-action-vertical-offset-richtext: -7px;
   }
 }
 
-.node-input--textarea--disabled {
-  cursor:not-allowed;
+.node-input-container textarea.node-input--textarea {
+  width: 100%;
 }
+
+.node-input--textarea--disabled {
+  color: $text-color-secondary;
+}
+
 
 .node-input--textarea__action {
   position: absolute;
   right: -8px;
 
   &[disabled] md-icon {
-    color: rgba(0,0,0,0.26) !important;
+    color: $text-color-light !important;
   }
 }
 
@@ -115,7 +122,7 @@ $node-input-action-vertical-offset-richtext: -7px;
   padding-bottom: 4px;
   line-height: 1.2;
   font-weight: bold;
-  color: rgba(0,0,0,0.87);
+  color: $text-color-dark;
 
   &.node-input-label--focused {
     color: $primary-color;

@@ -2239,14 +2239,16 @@ md-list .md-subheader { color: #795C3A; font-weight: 600; }
 
 .node-input-wrapper--focused .node-input--textarea__action md-icon { color: #1C8CA8; }
 
-.node-input--textarea, .node-input-container textarea.node-input--textarea { padding: 8px; background-color: #f7f7f7; border: 1px solid #cccccc; width: 100%; }
+.node-input--textarea, .node-input-container textarea.node-input--textarea { padding: 8px; background-color: #f7f7f7; border: 1px solid #cccccc; }
 .node-input--textarea.node-input--textarea--hasaction, .node-input-container textarea.node-input--textarea.node-input--textarea--hasaction { padding-right: 48px; }
 .node-input--textarea:focus, .node-input-container textarea.node-input--textarea:focus { background-color: #ffffff; }
 
-.node-input--textarea--disabled { cursor: not-allowed; }
+.node-input-container textarea.node-input--textarea { width: 100%; }
+
+.node-input--textarea--disabled { color: rgba(0, 0, 0, 0.54); }
 
 .node-input--textarea__action { position: absolute; right: -8px; }
-.node-input--textarea__action[disabled] md-icon { color: rgba(0, 0, 0, 0.26) !important; }
+.node-input--textarea__action[disabled] md-icon { color: rgba(255, 255, 255, 0.26) !important; }
 
 .node-input--textarea__action--notebook { top: 0; }
 .node-input-wrapper--richtext .node-input--textarea__action--notebook { top: -7px; }

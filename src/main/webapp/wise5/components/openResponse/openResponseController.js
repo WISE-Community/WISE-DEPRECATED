@@ -520,16 +520,21 @@ define(['app'], function(app) {
         };
 
         //var scope = this;
+        var themePath = "/wise/wise5/vle/themes/" + ProjectService.getTheme();
+
+        // TODO: make toolbar items and plugins customizable by authors
+        // Rich text editor options
         this.tinymceOptions = {
             //onChange: function(e) {
                 //scope.studentDataChanged();
             //},
             menubar: false,
-            plugins: 'link image media imagetools autoresize',
-            toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | bullist numlist | superscript subscript | link image media',
+            plugins: 'link image media autoresize', //imagetools
+            toolbar: 'undo redo | bold italic | superscript subscript | bullist numlist | alignleft aligncenter alignright | link image media',
             autoresize_bottom_margin: "0",
             autoresize_min_height: "100",
             image_advtab: true,
+            content_css: themePath + "/style/css/tinymce.css",
             setup: function (ed) {
                 ed.on("focus", function (e) {
                     $(e.target.editorContainer).addClass('node-input--focused').parent().addClass('node-input-wrapper--focused');

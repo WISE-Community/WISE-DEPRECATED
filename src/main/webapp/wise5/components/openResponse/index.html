@@ -1,20 +1,6 @@
 <html>
     <head>
-        <!--<link rel="stylesheet" href="wise5/lib/bootstrap/bootstrap.min.css">-->
-        <!--<link rel="stylesheet" href="wise5/lib/bootstrap/bootstrap-theme.min.css">-->
-        <link data-require="font-awesome@*" data-semver="4.3.0" rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" />
-        <!--link data-require="bootstrap@*" data-semver="3.3.2" rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" /-->
-        <link rel='stylesheet' href='wise5/lib/angularTextAngular/textAngular.css'>
     <style>
-    .ta-editor {
-        min-height: 300px;
-        height: auto;
-        overflow: auto;
-        font-family: inherit;
-        font-size: 100%;
-        margin:20px 0;
-    }
-
     .studentAssetReference {
         width: auto;
         height: auto;
@@ -33,15 +19,17 @@
             </style>
 
             <md-input-container class="node-input-container" flex>
-                <label class="node-input-label md-no-float" compile="openResponseController.getPrompt()" ng-if="openResponseController.getPrompt()"></label>
+                <label class="node-input-label md-no-float" ng-disabled="openResponseController.isDisabled"
+                       compile="openResponseController.getPrompt()" ng-if="openResponseController.getPrompt()"></label>
                 <div class="node-input-wrapper"  ng-class="{'node-input-wrapper--richtext': openResponseController.isRichTextEnabled}">
                     <textarea ng-if="openResponseController.isRichTextEnabled && !openResponseController.isDisabled"
                               ui-tinymce="openResponseController.tinymceOptions"
                               ng-model="openResponseController.studentResponse"
                               ng-change="openResponseController.studentDataChanged()"></textarea>
                     <div ng-if="openResponseController.isRichTextEnabled && openResponseController.isDisabled"
-                         class="node-input--textarea node-input--textarea--disabled"
-                         ng-model="openResponseController.studentResponse"></div>
+                         class="node-input--textarea node-input--textarea--disabled">
+                        <componentstatehtml componentstate="{{componentState}}"></componentstatehtml>
+                    </div>
                     <textarea ng-if="!openResponseController.isRichTextEnabled"
                               class="node-input--textarea node-input--textarea--hasaction"
                               rows="{{openResponseController.getNumRows() || 3}}"
@@ -54,24 +42,24 @@
                         <md-icon> book </md-icon>
                         <md-tooltip md-direction="top">Add to Notebook</md-tooltip>
                     </md-button>
-                    <md-button ng-if="!openResponseController.isDisabled"
-                               class="node-input--textarea__action node-input--textarea__action--revision md-icon-button"
-                               ng-click='nodeCtrl.showRevisions($event, component.id)'
+                    <md-button class="node-input--textarea__action node-input--textarea__action--revision md-icon-button"
+                               ng-click='nodeCtrl.showRevisions($event, component.id, openResponseController.isDisabled)'
                                ng-disabled="nodeCtrl.getRevisions(component.id).length == 0">
                         <md-icon> history </md-icon>
                         <md-tooltip md-direction="top">{{nodeCtrl.getRevisions(component.id).length}} Revisions</md-tooltip>
                     </md-button>
                 </div>
             </md-input-container>
+
             <div class="component-content--actions" layout="row">
                 <md-button class="md-raised md-primary"
-                           ng-click='openResponseController.saveButtonClicked()'
-                           ng-disabled='openResponseController.isDisabled'
-                           ng-show='openResponseController.showSaveButton()'>Save</md-button>
+                           ng-click="openResponseController.saveButtonClicked()"
+                           ng-disabled="openResponseController.isDisabled"
+                           ng-show="openResponseController.showSaveButton()">Save</md-button>
                 <md-button class="md-raised md-primary"
-                        ng-click='openResponseController.submitButtonClicked()'
-                        ng-disabled='openResponseController.isDisabled'
-                        ng-show='openResponseController.showSubmitButton()'>Submit</md-button>
+                        ng-click="openResponseController.submitButtonClicked()"
+                        ng-disabled="openResponseController.isDisabled"
+                        ng-show="openResponseController.showSubmitButton()">Submit</md-button>
             </div>
         </div>
     </body>
