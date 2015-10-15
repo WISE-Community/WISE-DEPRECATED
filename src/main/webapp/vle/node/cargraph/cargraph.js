@@ -196,6 +196,13 @@ CARGRAPH.prototype.render = function() {
 	//set the prompt into the step
 	$('#promptDiv').html(this.content.prompt);
 
+	if (this.content.prompt2 != null && this.content.prompt2.length > 0){
+		$('#prompt2Div').html(this.content.prompt2);
+	} else {
+		// no content to add, remove the div.
+		$("#responseDiv").remove();
+	}
+
 	//set the graph title
 	$('#graphTitle').html(this.content.graphTitle);
 
@@ -219,11 +226,12 @@ CARGRAPH.prototype.render = function() {
 	 * the response textarea with it
 	 */
 	var response = this.getResponseFromState();
-	$("#responseTextArea").val(response);
+	$("#studentResponseTextArea").val(response);
 
 	//set the size of the text area
-	$("#responseTextArea").attr('rows', this.content.expectedLines);
-	$("#responseTextArea").attr('cols', 80);
+	if (typeof this.content.expectedLines !== "undefined")
+		$("#studentResponseTextArea").attr('rows', this.content.expectedLines);
+	//$("#studentResponseTextArea").attr('cols', 80);
 	
 	if(this.predictionLocked) {
 		//disable the prediction buttons
@@ -988,7 +996,7 @@ CARGRAPH.prototype.saveCurrentObservation = function(isStart) {
  */
 CARGRAPH.prototype.save = function(fromHtml) {
 	//get the response the student typed
-	var response = ""
+	var response = document.getElementById('studentResponseTextArea') != null ? document.getElementById('studentResponseTextArea').value : "";
 	
 	//get the previous student work
 	var latestState = this.getLatestState();
@@ -1044,10 +1052,10 @@ CARGRAPH.prototype.save = function(fromHtml) {
  */
 CARGRAPH.prototype.getResponseFromTextArea = function() {
 	//get the textarea
-	var responseTextArea = document.getElementById('responseTextArea');
+	var studentResponseTextArea = document.getElementById('studentResponseTextArea');
 	
 	//get the text in the textarea
-	return responseTextArea.value;
+	return studentResponseTextArea.value;
 };
 
 /**
@@ -1974,9 +1982,9 @@ CARGRAPH.prototype.displayStarterSentenceButton = function() {
 					 * append the starter sentence just in case so that we don't
 					 * risk overwriting the text that is already in there
 					 */
-					var response = $("#responseTextArea").val();
+					var response = $("#studentResponseTextArea").val();
 					response += starterSentence;
-					$("#responseTextArea").val(response);
+					$("#studentResponseTextArea").val(response);
 				}
 			}
 			
@@ -1993,9 +2001,9 @@ CARGRAPH.prototype.showStarterSentence = function() {
 		var starterSentence = this.content.starterSentence.sentence;
 		
 		//append the starter sentence to the text in the textarea
-		var response = $("#responseTextArea").val();
+		var response = $("#studentResponseTextArea").val();
 		response += starterSentence;
-		$("#responseTextArea").val(response);
+		$("#studentResponseTextArea").val(response);
 	}
 };
 
@@ -2981,7 +2989,7 @@ CARGRAPH.prototype.hideAllInputFields = function() {
 	$('#xMinInput').hide();
 	$('#xMaxInput').hide();
 	$('#showStarterSentenceButton').hide();
-	$('#responseTextArea').hide();
+	$('#studentResponseTextArea').hide();
 	$('#saveButton').hide();
 };
 
