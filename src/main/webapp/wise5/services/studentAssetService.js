@@ -29,7 +29,7 @@ define(['configService'], function(configService) {
                 var studentUploadsBaseURL = ConfigService.getStudentUploadsBaseURL();
                 for (var a = 0; a < assets.length; a++) {
                     var asset = assets[a];
-                    if (!asset.isReferenced && asset.serverDeleteTime == null && asset.fileName != '.DS_Store') {
+                    if (!asset.isReferenced && asset.serverDeleteTime === null && asset.fileName !== '.DS_Store') {
                         asset.url = studentUploadsBaseURL + asset.filePath;
                         if (this.isImage(asset)) {
                             asset.type = 'image';
@@ -129,7 +129,7 @@ define(['configService'], function(configService) {
                     var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
                     //console.log('progress: ' + progressPercentage + '% ' + evt.config.file.name);
                 }).success(function (data, status, headers, config) {
-                    //console.log('file ' + config.file.name + 'uploaded. Response: ' + JSON.stringify(data));
+                    console.log('file ' + config.file.name + 'uploaded. Response: ' + JSON.stringify(data));
                 });
             });
             return $q.all(promises);
