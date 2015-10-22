@@ -1,4 +1,5 @@
 #!/bin/bash
+export PATH=/usr/local/bin:$PATH
 files=$(git diff --cached --name-only | grep '\.js\?$')
 
 # Prevent ESLint help message if no files matched

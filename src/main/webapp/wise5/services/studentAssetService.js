@@ -153,7 +153,7 @@ define(['configService'], function(configService) {
                 var copiedAsset = result.data;
                 if (copiedAsset != null) {
                     var studentUploadsBaseURL = ConfigService.getStudentUploadsBaseURL();
-                    if (copiedAsset.isReferenced && copiedAsset.fileName != '.DS_Store') {
+                    if (copiedAsset.isReferenced && copiedAsset.fileName !== '.DS_Store') {
                         copiedAsset.url = studentUploadsBaseURL + copiedAsset.filePath;
                         if (this.isImage(copiedAsset)) {
                             copiedAsset.type = 'image';
