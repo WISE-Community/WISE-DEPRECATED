@@ -281,6 +281,20 @@ define([], function() {
             
             return userName;
         };
+
+        serviceObject.getUserNamesByWorkgroupId = function(workgroupId) {
+            var userNames = [];
+
+            if(workgroupId != null) {
+                var userInfo = this.getUserInfoByWorkgroupId(workgroupId);
+
+                if (userInfo != null) {
+                    userNames = userInfo.userName.split(':');
+                }
+            }
+
+            return userNames;
+        };
         
         serviceObject.isPreview = function() {
             var result = false;

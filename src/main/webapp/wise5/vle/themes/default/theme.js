@@ -124,20 +124,8 @@ define(['angular', /*'annotationService',*/ 'configService', 'nodeService', 'not
                 this.rootNode = ProjectService.getRootNode(this.startNodeId);
                 this.rootNodeStatus = this.nodeStatuses[this.rootNode.id];
 
-                // get current workgroup user name(s), comma-separated
-                this.getUserNames = function(workgroupInfo) {
-                    var userNames = [];
-
-                    if(workgroupInfo != null) {
-                        userNames = workgroupInfo.userName.split(':');
-                    }
-
-                    return userNames;
-                };
-
                 this.workgroupId = ConfigService.getWorkgroupId();
-                this.workgroupInfo = ConfigService.getUserInfoByWorkgroupId(this.workgroupId);
-                this.workgroupUserNames = this.isPreview ? ['Preview User'] : this.getUserNames(this.workgroupInfo);
+                this.workgroupUserNames = this.isPreview ? ['Preview User'] : ConfigService.getUserNamesByWorkgroupId(this.workgroupId);
 
                 // service utility functions
                 this.getNodeById = function(nodeId) {
