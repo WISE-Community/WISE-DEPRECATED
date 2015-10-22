@@ -1,5 +1,5 @@
 #!/bin/bash
-file=$(git diff --cached --name-only | grep '\.js\?$')
+files=$(git diff --cached --name-only | grep '\.js\?$')
 
 # Prevent ESLint help message if no files matched
 if [[ $files = "" ]] ; then
