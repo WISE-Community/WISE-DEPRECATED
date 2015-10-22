@@ -54,7 +54,7 @@ define(['configService'], function(configService) {
             var imageFileExtensions = ['png', 'jpg', 'jpeg', 'gif'];
             if (asset != null) {
                 var assetURL = asset.url;
-                if (assetURL != null && assetURL.lastIndexOf('.') != -1) {
+                if (assetURL != null && assetURL.lastIndexOf('.') !== -1) {
                     var assetExtension = assetURL.substring(assetURL.lastIndexOf('.') + 1);
                     if (imageFileExtensions.indexOf(assetExtension.toLowerCase()) != -1) {
                         isImage = true;
@@ -129,7 +129,7 @@ define(['configService'], function(configService) {
                     var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
                     //console.log('progress: ' + progressPercentage + '% ' + evt.config.file.name);
                 }).success(function (data, status, headers, config) {
-                    console.log('file ' + config.file.name + 'uploaded. Response: ' + JSON.stringify(data));
+			//console.log('file ' + config.file.name + 'uploaded. Response: ' + JSON.stringify(data));
                 });
             });
             return $q.all(promises);
