@@ -18,7 +18,7 @@ function ANNOTATOR(node) {
 		this.states = node.studentWork; 
 	} else {
 		this.states = [];  
-	};
+	}
 	
 	this.initTries = 0;
 	this.svgCanvas = null;
@@ -100,6 +100,9 @@ ANNOTATOR.prototype.loadModules = function(jsonfilename, context) {
 	
 	if(data.labels_default && data.labels_default.length > 0){
 		context.labelsDefault = data.labels_default;
+	}
+	if (data.labelDefaultFontSize) {
+		context.labelDefaultFontSize = data.labelDefaultFontSize;
 	}
 	if(data.labels_max){
 		var max = parseInt(data.labels_max,10);
@@ -425,12 +428,18 @@ ANNOTATOR.prototype.initDisplay = function(data,context) {
 				// load existing snapshots
 			    context.labelContent = data;
 				//labelsExt.content(data);
+				if (context.labelDefaultFontSize) {
+					context.labelContent.labelDefaultFontSize = context.labelDefaultFontSize;
+				}
 			} else if(context.labelsDefault && context.labelsDefault.length){
 				//var content = {
 			    context.labelContent.labels = context.labelsDefault;
 			    context.labelContent.total = context.labelsDefault.length;
 				// load default labels
 				//labelsExt.content(content);
+				if (context.labelDefaultFontSize) {
+					context.labelContent.labelDefaultFontSize = context.labelDefaultFontSize;
+				}
 			}
 			context.toggleInstructions();
 			
@@ -574,7 +583,6 @@ ANNOTATOR.prototype.initDisplay = function(data,context) {
 		if(data.hasOwnProperty('importedBg') && view.utils.isNonWSString(data.importedBg) && context.enableImport){
 		    context.importedBg = context.bg = data.importedBg;
 		}
-		
 		context.setBg(context.bg, false, function(){
 		    //setTimeout(function(){
 	            //svgCanvas.undoMgr.resetUndoStack(); // reset undo stack to prevent users from deleting stored starting image

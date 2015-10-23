@@ -502,6 +502,10 @@ svgEditor.addExtension('labels', function() {'use strict';
 			currentEl.push(anchor);
 			
 			// create text element for label content
+			var labelFontSize = 18;
+			if (content.labelDefaultFontSize) {
+				labelFontSize = content.labelDefaultFontSize;
+			}
 			var text = addElem({
 				"element": "text",
 				//"curStyles": true,
@@ -514,7 +518,7 @@ svgEditor.addExtension('labels', function() {'use strict';
 					//"fill": '#' + fillColor,
 					"fill": '#' + textColor, // WISE
 					//"font-size": canv.getFontSize(),
-					"font-size": '18', // WISE
+					"font-size": labelFontSize, // WISE
 					"font-family": canv.getFontFamily(),
 					"text-anchor": "left",
 					"xml:space": "preserve"
