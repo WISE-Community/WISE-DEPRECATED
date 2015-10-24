@@ -428,19 +428,20 @@ ANNOTATOR.prototype.initDisplay = function(data,context) {
 				// load existing snapshots
 			    context.labelContent = data;
 				//labelsExt.content(data);
-				if (context.labelDefaultFontSize) {
-					context.labelContent.labelDefaultFontSize = context.labelDefaultFontSize;
-				}
 			} else if(context.labelsDefault && context.labelsDefault.length){
 				//var content = {
 			    context.labelContent.labels = context.labelsDefault;
 			    context.labelContent.total = context.labelsDefault.length;
 				// load default labels
 				//labelsExt.content(content);
-				if (context.labelDefaultFontSize) {
-					context.labelContent.labelDefaultFontSize = context.labelDefaultFontSize;
-				}
 			}
+			if (context.labelDefaultFontSize) {
+				if (!context.labelContent) {
+					context.labelContent = {};
+				}
+				context.labelContent.labelDefaultFontSize = context.labelDefaultFontSize;
+			}
+
 			context.toggleInstructions();
 			
 			// bind new label and cancel buttons click events
