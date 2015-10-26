@@ -346,19 +346,17 @@ define(['configService', 'projectService', 'studentDataService'], function(confi
                     var transitions = ProjectService.getTransitionsByToNodeId(currentNodeId);
 
                     if (transitions != null && transitions.length === 1) {
+                        // TODO: remove this if case, as transition.from has been deprecated
                         var transition = transitions[0];
 
                         if (transition != null) {
                             prevNodeId = transition.from;
                         }
                     } else {
-                        // TODO: use project structure, not stack history
-                        // get the stack history
-                        var stackHistory = StudentDataService.getStackHistory();
-
-                        if (stackHistory.length > 1) {
-                            // get the previous node in the history
-                            prevNodeId = StudentDataService.getStackHistoryAtIndex(-2);
+                        var currentNodePos = ProjectService.getOrderById(currentNode.id);
+                        var previousPos = currentNodePos-1;
+                        if(previousPos > 0) {
+                            prevNodeId = ProjectService.getIdByOrder(previousPos);
                         }
                     }
                 }
@@ -499,6 +497,8 @@ define(['configService', 'projectService', 'studentDataService'], function(confi
                             alreadyBranched = true;
                         }
 
+                        var transition, fromeNodeId, toNodeId;
+
                         if (alreadyBranched) {
                             // student has previously branched
 
@@ -506,11 +506,11 @@ define(['configService', 'projectService', 'studentDataService'], function(confi
                                 // student can change path
 
                                 // choose a transition
-                                var transition = this.chooseTransition(transitionLogic);
+                                transition = this.chooseTransition(transitionLogic);
 
                                 if (transition != null) {
-                                    var fromNodeId = currentNode.id;
-                                    var toNodeId = transition.to;
+                                    fromNodeId = currentNode.id;
+                                    toNodeId = transition.to;
 
                                     this.createBranchNodeState(fromNodeId, toNodeId);
                                 }
@@ -523,11 +523,11 @@ define(['configService', 'projectService', 'studentDataService'], function(confi
                             // student has not branched yet
 
                             // choose a transition
-                            var transition = this.chooseTransition(transitionLogic);
+                            transition = this.chooseTransition(transitionLogic);
 
                             if (transition != null) {
-                                var fromNodeId = currentNode.id;
-                                var toNodeId = transition.to;
+                                fromNodeId = currentNode.id;
+                                toNodeId = transition.to;
 
                                 this.createBranchNodeState(fromNodeId, toNodeId);
                             }

@@ -53,7 +53,7 @@ define(['configService'], function(configService) {
 
         serviceObject.getName = function() {
             var name = this.getProjectMetadata().title;
-            name = !!name ? name : 'A WISE Project (No name)';
+            name = name ? name : 'A WISE Project (No name)';
             return name;
         };
 
@@ -76,7 +76,7 @@ define(['configService'], function(configService) {
             var childIds = [];
             var node = this.getNodeById(nodeId);
 
-            if (!!node.ids) {
+            if (node.ids) {
                 childIds = node.ids;
             }
 
@@ -319,15 +319,17 @@ define(['configService'], function(configService) {
                 var branchNodeIds = [];
 
                 // set node positions
+                var id, pos;
+
                 while (n--) {
-                    var id = nodes[n].id;
+                    id = nodes[n].id;
                     if(id === this.rootNode.id) {
                         this.setIdToPosition(id, '0');
                     } else if (this.isNodeIdInABranch(branches, id)) {
                         // node is in a branch, so process later
                         branchNodeIds.push(id);
                     } else {
-                        var pos = this.getPositionById(id);
+                        pos = this.getPositionById(id);
                         this.setIdToPosition(id, pos);
                     }
                 }
@@ -335,8 +337,8 @@ define(['configService'], function(configService) {
                 // set branch node positions
                 var b = branchNodeIds.length;
                 while (b--) {
-                    var id = branchNodeIds[b];
-                    var pos = this.getBranchNodePositionById(id);
+                    id = branchNodeIds[b];
+                    pos = this.getBranchNodePositionById(id);
                     this.setIdToPosition(id, pos);
                 }
             }
@@ -369,6 +371,40 @@ define(['configService'], function(configService) {
             }
 
             return null;
+        };
+
+        /**
+         * Returns the order of the given node id in the project. Returns null if no node with id exists.
+         * @param id String node id
+         * @return Number order of the given node id in the project
+         */
+        serviceObject.getOrderById = function(id) {
+            if(this.idToOrder[id]) {
+                return this.idToOrder[id].order;
+            }
+
+            return null;
+        };
+        /**
+         * Returns the id of the node with the given order in the project. Returns null if no order with node exists.
+         * @param order Number
+         * @return Number node id of the given order in the project
+         */
+        serviceObject.getIdByOrder = function(order) {
+            var nodeId = null;
+
+            for (var id in this.idToOrder) {
+               if (this.idToOrder[id].order === order) {
+                   if (this.isGroupNode(id) && order > 1) {
+                       nodeId = this.getIdByOrder(order-1);
+                   } else {
+                       nodeId = id;
+                   }
+                   break;
+               }
+            }
+
+            return nodeId;
         };
 
         /**
@@ -987,7 +1023,7 @@ define(['configService'], function(configService) {
 
             return $http({
                 url: commitProjectURL,
-                method: 'GET',
+                method: 'GET'
             }).then(angular.bind(this, function(result) {
                 return result.data;
             }));
@@ -1175,6 +1211,8 @@ define(['configService'], function(configService) {
                         // get all the transitions from this node
                         var transitions = transitionLogic.transitions;
 
+                        var path = [];
+
                         if (transitions != null) {
 
                             // add the node id to the path so far
@@ -1185,8 +1223,6 @@ define(['configService'], function(configService) {
                                  * there are no transitions from the node id so this path
                                  * only contains this node id
                                  */
-
-                                var path = [];
 
                                 // add the node id to the path
                                 path.push(nodeId);
@@ -1235,8 +1271,6 @@ define(['configService'], function(configService) {
                                              * add the current node id to the path and not take
                                              * the transition which essentially ends the path.
                                              */
-                                            var path = [];
-
                                             // add the node id to the path
                                             path.push(nodeId);
 
