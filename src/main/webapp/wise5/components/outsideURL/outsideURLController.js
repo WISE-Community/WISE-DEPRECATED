@@ -24,6 +24,12 @@ define(['app'], function(app) {
         
         // the url to the web page to display
         this.url = null;
+
+        // the max width of the iframe
+        this.maxWidth = null;
+
+        // the max height of the iframe
+        this.maxHeight = null;
         
         /**
          * Perform setup of the component
@@ -67,9 +73,6 @@ define(['app'], function(app) {
 
                     // disable the component since we are just showing previous work
                     this.isDisabled = true;
-
-                    // register this component with the parent node
-                    $scope.$parent.registerComponentController($scope, this.componentContent);
                 } else {
                     // this is a regular component
                     
@@ -77,10 +80,16 @@ define(['app'], function(app) {
                         // set the url
                         this.setURL(this.componentContent.url);
                     }
-
-                    // register this component with the parent node
-                    $scope.$parent.registerComponentController($scope, this.componentContent);
                 }
+
+                // get the max width
+                this.maxWidth = this.componentContent.maxWidth ? this.componentContent.maxWidth : "none";
+
+                // get the max height
+                this.maxHeight = this.componentContent.maxHeight ? this.componentContent.maxHeight : "none";
+
+                // register this component with the parent node
+                $scope.$parent.registerComponentController($scope, this.componentContent);
             }
         };
         

@@ -1,9 +1,4 @@
-<style>
-iframe {
-    width: 99%;
-    height: 99%;
-}
-</style>
-<div ng-controller='OutsideURLController as outsideURLController'>
-    <iframe ng-src='{{outsideURLController.url}}'></iframe>
+<div ng-controller='OutsideURLController as outsideURLController' style="text-align: center;">
+    <iframe ng-src='{{outsideURLController.url}}'
+            style="height: 100%; width:100%; max-width: {{outsideURLController.maxWidth}}; max-height: {{outsideURLController.maxHeight}};"></iframe>
 </div>
