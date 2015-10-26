@@ -70,7 +70,7 @@ function convert() {
         // parse the WISE4 project to create the WISE5 project
         parseWISE4Project(wise4Project);
     });
-};
+}
 
 /**
  * Parse the WISE4 project to create the WISE5 project
@@ -101,7 +101,7 @@ function parseWISE4Project(wise4Project) {
 
     // generate the project.json file that will be downloaded onto the user's computer
     generateProjectJSONFile('project.json', wise5ProjectString);
-};
+}
 
 /**
  * Generate the project.json file and download it onto the user's computer
@@ -114,7 +114,7 @@ function generateProjectJSONFile(fileName, stringContent) {
     a.href = URL.createObjectURL(file);
     a.download = fileName;
     a.click();
-};
+}
 
 /**
  * The helper function for parsing the WISE4 project
@@ -185,45 +185,51 @@ function parseWISE4ProjectHelper(project, elementId) {
             // create the WISE5 node
             element = createWISE5NodeFromNodeContent(node.identifier);
 
-            // get the element id
-            var elementId = element.id;
-
-            if (previousNodeIds.length > 0) {
-
-                /*
-                 * loop through all the immediate previous node ids
-                 *
-                 * example 1
-                 * (node1)--(node2)--(node3)
-                 * if the current element is node3, the previousNodeIds would be [node2]
-                 *
-                 * example 2
-                 * (node1)--(node2)--(node3)--(node5)
-                 *                 \         /
-                 *                  \       /
-                 *                   (node4)
-                 * if the current element is node5, the previousNodeIds would be [node3, node4]
-                 */
-                for (var p = 0; p < previousNodeIds.length; p++) {
-                    var previousNodeId = previousNodeIds[p];
-
-                    // add a transition from the previous node id to the new node
-                    addTransition(previousNodeId, elementId);
-                }
-
-                // set the previous node id
-                previousNodeIds = [elementId];
+            if (element == null) {
+                // could not create WISE5 node. possible reasons: converter for step type not implemented yet
+                // console.log("could not convert: " + node.identifier);
             } else {
-                // there are no previous node ids
 
-                // set the previous node id
-                previousNodeIds = [elementId];
+                // get the element id
+                var elementId = element.id;
+
+                if (previousNodeIds.length > 0) {
+
+                    /*
+                     * loop through all the immediate previous node ids
+                     *
+                     * example 1
+                     * (node1)--(node2)--(node3)
+                     * if the current element is node3, the previousNodeIds would be [node2]
+                     *
+                     * example 2
+                     * (node1)--(node2)--(node3)--(node5)
+                     *                 \         /
+                     *                  \       /
+                     *                   (node4)
+                     * if the current element is node5, the previousNodeIds would be [node3, node4]
+                     */
+                    for (var p = 0; p < previousNodeIds.length; p++) {
+                        var previousNodeId = previousNodeIds[p];
+
+                        // add a transition from the previous node id to the new node
+                        addTransition(previousNodeId, elementId);
+                    }
+
+                    // set the previous node id
+                    previousNodeIds = [elementId];
+                } else {
+                    // there are no previous node ids
+
+                    // set the previous node id
+                    previousNodeIds = [elementId];
+                }
             }
         }
     }
 
     return element;
-};
+}
 
 /**
  * Create a random id with 10 characters
@@ -248,7 +254,7 @@ function createRandomId() {
     }
 
     return result;
-};
+}
 
 /**
  * Get the sequence from the project
@@ -279,7 +285,7 @@ function getSequence(project, sequenceId) {
     }
 
     return sequence;
-};
+}
 
 /**
  * Get the node from the project
@@ -310,7 +316,7 @@ function getNode(project, nodeId) {
     }
 
     return node;
-};
+}
 
 /**
  * Create a WISE5 node from the WISE4 node content
@@ -345,7 +351,7 @@ function createWISE5NodeFromNodeContent(identifier) {
     });
 
     return wise5Node;
-};
+}
 
 /**
  * Convert a WISE4 node into a WISE5 node
@@ -396,6 +402,8 @@ function convertNode(node, nodeContent) {
 
         } else if (nodeType === 'PhET') {
             wise5Node = convertPhet(node, nodeContent);
+        } else if (nodeType === 'Grapher') {
+            wise5Node = convertGrapher(node, nodeContent);
         }
     }
 
@@ -404,7 +412,7 @@ function convertNode(node, nodeContent) {
     }
 
     return wise5Node;
-};
+}
 
 /**
  * Create and initialize the WISE5 project object
@@ -430,7 +438,7 @@ function createWISE5Project() {
     var metadata = {};
     metadata.title = '';
     wise5Project.metadata = metadata;
-};
+}
 
 /**
  * Create and initialize a WISE5 group object
@@ -446,7 +454,7 @@ function createWISE5Group(sequence) {
     wise5Group.ids = [];
 
     return wise5Group;
-};
+}
 
 /**
  * Create and initialize a WISE5 node object
@@ -471,7 +479,7 @@ function createWISE5Node() {
     wise5Node.transitionLogic = transitionLogic;
 
     return wise5Node;
-};
+}
 
 /**
  * Convert a WISE4 html node into a WISE5 node with an html component
@@ -535,7 +543,7 @@ function convertHTML(node, nodeContent) {
     }
 
     return wise5Node;
-};
+}
 
 /**
  * Convert a WISE4 assessment list node into a WISE5 node with
@@ -647,7 +655,7 @@ function convertAssessmentList(node, nodeContent) {
     addWISE5Node(wise5Node);
 
     return wise5Node;
-};
+}
 
 /**
  * Convert a WISE4 open response node into a WISE5 node with an open response component
@@ -688,7 +696,7 @@ function convertOpenResponse(node, nodeContent) {
     addWISE5Node(wise5Node);
 
     return wise5Node;
-};
+}
 
 /**
  * Convert a WISE4 table node into a WISE5 node with a table component
@@ -744,7 +752,7 @@ function convertTable(node, nodeContent) {
     addWISE5Node(wise5Node);
 
     return wise5Node;
-};
+}
 
 /**
  * Convert the WISE4 table data into WISE5 table data
@@ -785,7 +793,7 @@ function convertTableData(tableData) {
     }
 
     return newTableData;
-};
+}
 
 /**
  * Convert the WISE4 Phet node into a WISE5 node with an outside url component
@@ -819,7 +827,7 @@ function convertPhet(node, nodeContent) {
     addWISE5Node(wise5Node);
 
     return wise5Node;
-};
+}
 
 /**
  * Convert a WISE4 draw node into a WISE5 node with a draw component
@@ -849,7 +857,7 @@ function convertDraw(node, nodeContent) {
     addWISE5Node(wise5Node);
 
     return wise5Node;
-};
+}
 
 /**
  * Convert a WISE4 brainstorm node into a WISE5 node with a discussion component
@@ -892,7 +900,7 @@ function convertBrainstorm(node, nodeContent) {
     addWISE5Node(wise5Node);
 
     return wise5Node;
-};
+}
 
 /**
  * Convert a WISE4 annotator node into a WISE5 node with an html component
@@ -923,7 +931,67 @@ function convertAnnotator(node, nodeContent) {
     addWISE5Node(wise5Node);
 
     return wise5Node;
-};
+}
+
+/**
+ * Convert a WISE4 brainstorm node into a WISE5 node with a discussion component
+ * @param node the WISE4 node
+ * @param nodeContent the WISE4 node content
+ * @returns a WISE5 node
+ */
+function convertGrapher(node, nodeContent) {
+    var wise5Node = createWISE5Node();
+    wise5Node.title = node.title;
+
+    var content = {};
+    content.showSaveButton = true;
+    content.showSubmitButton = false;
+    content.components = [];
+
+    var component = {};
+    component.id = createRandomId();
+    component.componentType = 'Graph';
+
+    component.prompt = nodeContent.prompt;
+    component.showSaveButton = false;
+    component.showSubmitButton = true;
+    component.title = nodeContent.graphTitle;
+    component.xAxis = {};
+    component.xAxis.title = {};
+    component.xAxis.title.text = nodeContent.graphParams.xLabel;
+    component.xAxis.min = nodeContent.graphParams.xmin;
+    component.xAxis.max = nodeContent.graphParams.xmax;
+    component.yAxis = {};
+    component.yAxis.title = {};
+    component.yAxis.title.text = nodeContent.graphParams.yLabel;
+    component.yAxis.min = nodeContent.graphParams.ymin;
+    component.yAxis.max = nodeContent.graphParams.ymax;
+
+    component.series = [
+        {
+            "name": "Spongebob",
+            "data": [
+            ],
+            "color": "blue",
+            "marker": {
+                "symbol": "square"
+            },
+            "regression": false,
+            "regressionSettings": {
+            },
+            "canClickToAddData": true
+        }
+    ];
+
+    content.components.push(component);
+
+    wise5Node.content = content;
+
+    // add the WISE5 node to the project
+    addWISE5Node(wise5Node);
+
+    return wise5Node;
+}
 
 /**
  * Get the next node id that is available
@@ -935,7 +1003,7 @@ function getNextNodeId() {
     nodeCounter++;
 
     return nodeId;
-};
+}
 
 /**
  * Get the next group id that is available
@@ -947,7 +1015,7 @@ function getNextGroupId() {
     groupCounter++;
 
     return groupId;
-};
+}
 
 /**
  * Add a WISE5 node to the WISE5 project
@@ -955,7 +1023,7 @@ function getNextGroupId() {
  */
 function addWISE5Node(wise5Node) {
     wise5Project.nodes.push(wise5Node);
-};
+}
 
 /**
  * Add a transition
@@ -991,7 +1059,7 @@ function addTransition(fromNodeId, toNodeId, criteriaArray) {
         }
     }
 
-};
+}
 
 /**
  * Get a WISE5 node by id
@@ -1021,7 +1089,7 @@ function getWISE5NodeById(nodeId) {
     }
 
     return node;
-};
+}
 
 /**
  * Check if the WISE4 sequence is a branching activity
@@ -1051,7 +1119,7 @@ function isBranchingActivity(sequence) {
     }
 
     return result;
-};
+}
 
 /**
  * Create a WISE5 branch from the WISE4 branch
@@ -1185,7 +1253,7 @@ function handleBranchActivity(sequence) {
 
         previousNodeIds = lastNodeIds;
     }
-};
+}
 
 /**
  * Create a branch path taken constraint
@@ -1218,7 +1286,7 @@ function createBranchConstraint(constraintAction, fromNodeId, toNodeId, targetNo
     }
 
     return branchConstraint;
-};
+}
 
 /**
  * Add the WISE5 constraint
@@ -1232,7 +1300,7 @@ function addWISE5Constraint(nodeId, constraint) {
     if (node != null) {
         node.constraints.push(constraint);
     }
-};
+}
 
 /**
  * Get the WISE4 branch node
@@ -1254,7 +1322,7 @@ function getBranchNode(nodeId) {
     });
 
     return nodeContent;
-};
+}
 
 /**
  * Get the WISE5 nodes in the branch path
@@ -1289,7 +1357,7 @@ function getWISE5NodesInBranchPath(sequenceId) {
     }
 
     return branchNodes;
-};
+}
 
 function fixAssetReferences(html) {
 
@@ -1297,7 +1365,5 @@ function fixAssetReferences(html) {
 
     var regex = /['"]\.jpg['"]]/g;
 
-
-
     return fixedHTML;
-};
+}
