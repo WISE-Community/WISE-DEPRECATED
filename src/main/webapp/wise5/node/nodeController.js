@@ -17,7 +17,7 @@ define(['app'], function(app) {
                  StudentDataService) {
 
             // the auto save interval in milliseconds
-            this.autoSaveInterval = 30000;
+            this.autoSaveInterval = 60000;
 
             // the node id of the current node
             this.nodeId = null;
@@ -26,10 +26,10 @@ define(['app'], function(app) {
             this.nodeContent = null;
 
             // field that will hold the node status
-            this.nodeStatus = null
+            this.nodeStatus = null;
 
             // field that will hold the node title
-            this.nodeTitle = null
+            this.nodeTitle = null;
 
             // whether the student work is dirty and needs saving
             this.isDirty = false;
@@ -288,8 +288,8 @@ define(['app'], function(app) {
                 }
 
                 if (components != null && this.nodeContent.lockAfterSubmit) {
-                    for (var c = 0; c < components.length; c++) {
-                        var component = components[c];
+                    for (c = 0; c < components.length; c++) {
+                        component = components[c];
 
                         component.lockAfterSubmit = true;
                     }
