@@ -1,32 +1,33 @@
 <style>
     #commitDiv {
-        padding: 20px 0px;
+        padding: 10px 0px;
     }
     #editMessageLabel {
         display:block;
     }
     #commitMessageInput {
-        display:block;
         line-height: 30px;
-        width: 100%;
+        width: 75%;
     }
     #saveButton {
-        display:block;
-        padding: 6px 12px;
+        padding: 8px 12px;
         font-weight:bold;
         margin: 10px 0px;
     }
+    #projectStylesDiv {
+        display:none;
+    }
 </style>
 <button ng-click='projectController.previewProject()'>Preview Project</button>
-<br/>
-Project Styles:<br/>
-<textarea cols="50" rows="10" ng-model="projectController.project.style" ng-change="projectController.updateProjectAsText()" />
 <div id="commitDiv">
 <label id="editMessageLabel">Edit Message:</label>
 <input id="commitMessageInput" type="text" size="50" placeholder="Write a small message here explaining this change. (Optional)" />
 <button id="saveButton" ng-click='projectController.saveProject()'>Save Project</button>
 </div>
-<textarea id="project" rows="20" cols="150" ng-model="projectController.projectAsText"></textarea>
+<textarea id="project" rows="40" cols="150" ng-model="projectController.projectAsText"></textarea>
+<div id="projectStylesDiv">Project Styles:
+    <textarea cols="50" rows="10" ng-model="projectController.project.style" ng-change="projectController.updateProjectAsText()" />
+</div>
 <div id="commitHistory">
     <div ng-repeat="commit in projectController.commitHistory">
         <span class="commitTime">{{commit.commitTime | date:'medium' }}</span>
