@@ -25,6 +25,9 @@ define(['app'], function(app) {
         
         // holds the text that the student has typed
         this.studentResponse = '';
+
+        // holds student attachments like assets
+        this.studentAttachments = [];
         
         // whether the step should be disabled
         this.isDisabled = false;
@@ -40,8 +43,11 @@ define(['app'], function(app) {
 
         // whether rich text editing is enabled
         this.isRichTextEnabled = false;
-        
-        /**
+
+        // whether students can attach files to their work
+        this.isStudentAttachmentEnabled = false;
+
+            /**
          * Perform setup of the component
          */
         this.setup = function() {
@@ -62,6 +68,8 @@ define(['app'], function(app) {
                 
                 // get the show previous work node id if it is provided
                 var showPreviousWorkNodeId = this.componentContent.showPreviousWorkNodeId;
+
+                var componentState = null;
                 
                 if (showPreviousWorkNodeId != null) {
                     // this component is showing previous work
@@ -77,7 +85,7 @@ define(['app'], function(app) {
                     this.componentContent = NodeService.getComponentContentById(showPreviousWorkNodeContent, showPreviousWorkComponentId);
 
                     // get the component state for the show previous work
-                    var componentState = StudentDataService.getLatestComponentStateByNodeIdAndComponentId(showPreviousWorkNodeId, showPreviousWorkComponentId);
+                    componentState = StudentDataService.getLatestComponentStateByNodeIdAndComponentId(showPreviousWorkNodeId, showPreviousWorkComponentId);
 
                     // populate the student work into this component
                     this.setStudentWork(componentState);
@@ -93,8 +101,11 @@ define(['app'], function(app) {
                     // set whether rich text is enabled
                     this.isRichTextEnabled = this.componentContent.isRichTextEnabled;
 
+                    // set whether studentAttachment is enabled
+                    this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
+
                     // get the component state from the scope
-                    var componentState = $scope.componentState;
+                    componentState = $scope.componentState;
                     
                     if (componentState == null) {
                         /*
@@ -141,6 +152,12 @@ define(['app'], function(app) {
                     if (response != null) {
                         // populate the text the student previously typed
                         this.studentResponse = response;
+                    }
+
+                    var attachments = studentData.attachments;
+
+                    if (attachments != null) {
+                        this.studentAttachments = attachments;
                     }
                 }
             }
@@ -217,6 +234,7 @@ define(['app'], function(app) {
             // set the response into the component state
             var studentData = {};
             studentData.response = response;
+            studentData.attachments = this.studentAttachments;
 
             if (this.isSubmit) {
                 // the student submitted this work
@@ -298,12 +316,48 @@ define(['app'], function(app) {
             
             return result;
         };
+
+        this.attachNotebookItemToComponent = angular.bind(this, function(notebookItem) {
+            if (notebookItem.studentAsset != null) {
+                // we're importing a StudentAssetNotebookItem
+                var studentAsset = notebookItem.studentAsset;
+                StudentAssetService.copyAssetForReference(studentAsset).then(angular.bind(this, function(copiedAsset) {
+                    if (copiedAsset != null) {
+                        var attachment = {
+                            notebookItemId: notebookItem.id,
+                            studentAssetId: copiedAsset.id,
+                            iconURL: copiedAsset.iconURL
+                        };
+
+                        this.studentAttachments.push(attachment);
+                        this.studentDataChanged();
+                    }
+                }));
+            } else if (notebookItem.studentWork != null) {
+                // we're importing a StudentWorkNotebookItem
+                var studentWork = notebookItem.studentWork;
+
+                var componentType = studentWork.componentType;
+
+                if (componentType != null) {
+                    var childService = $injector.get(componentType + 'Service');
+
+                    if (childService != null) {
+                        var studentWorkHTML = childService.getStudentWorkAsHTML(studentWork);
+
+                        if (studentWorkHTML != null) {
+                            this.studentResponse += studentWorkHTML;
+                            this.studentDataChanged();
+                        }
+                    }
+                }
+            }
+        });
         
-        this.startCallback = function(event, ui, title) {
-            console.log('You started dragging');
+        this.startCallback_NO_LONGER_USED = function(event, ui, title) {
         };
         
-        this.dropCallback = angular.bind(this, function(event, ui, title, $index) {
+        this.dropCallback_NO_LONGER_USED = angular.bind(this, function(event, ui, title, $index) {
             if (this.isDisabled) {
                 // don't import if step is disabled/locked
                 return;

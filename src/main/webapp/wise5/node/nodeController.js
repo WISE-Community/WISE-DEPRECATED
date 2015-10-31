@@ -49,6 +49,13 @@ define(['app'], function(app) {
              */
             $scope.componentToScope = {};
 
+            this.notebookFilters = [
+                {'name': 'files', 'label': 'Files'}
+            ];
+
+            this.notebookFilter = this.notebookFilters[0].name;
+            this.notebookOpen = false;
+
             /**
              * Perform setup of the node
              */
@@ -143,9 +150,9 @@ define(['app'], function(app) {
                 return componentStates;
             };
 
-            this.showRevisions = function($event, componentId, disabled) {
+            this.showRevisions = function($event, componentId, isComponentDisabled) {
                 var revisions = this.getRevisions(componentId);
-                var allowRevert = disabled ? false : true;
+                var allowRevert = !isComponentDisabled;
 
                 // get the scope for the component
                 var childScope = $scope.componentToScope[componentId];
@@ -199,6 +206,64 @@ define(['app'], function(app) {
                     }
                     $scope.revertWork = function(componentState) {
                         $scope.componentController.setStudentWork(componentState);
+                        $mdDialog.hide();
+                    }
+                }
+            };
+
+            this.showNotebook = function($event, componentId) {
+                //&&&&
+                var revisions = this.getRevisions(componentId);
+
+                // get the scope for the component
+                var childScope = $scope.componentToScope[componentId];
+
+                // TODO: generalize for other controllers
+                var componentController = null;
+
+                if (childScope.openResponseController) {
+                    componentController = childScope.openResponseController;
+                } else if (childScope.drawController) {
+                    componentController = childScope.drawController;
+                }
+
+                // TODO: make this customizeable per theme and maybe make into directive
+                var parentEl = angular.element(document.body);
+                $mdDialog.show({
+                    parent: parentEl,
+                    targetEvent: $event,
+                    template:
+                    '<md-dialog aria-label="List dialog">' +
+                    '<md-toolbar class="l-sidebar__header md-whiteframe-z1">' +
+                    '    <div class="md-toolbar-tools">' +
+                    '        <h3>Notebook</h3>' +
+                    '        <span flex></span>' +
+                    '        <md-select class="md-body-1" placeholder="Filter" ng-model="nodeController.notebookFilter">' +
+                    '           <md-option ng-repeat="filter in nodeController.notebookFilters" value="{{filter.name}}">{{filter.label}}</md-option>' +
+                    '        </md-select>' +
+                    '    </div>' +
+                    '</md-toolbar>' +
+                    '<md-content class="md-padding">' +
+                    '    <notebook template-url="vleController.themePath + \'/notebook/notebook.html\'" filter="nodeController.notebookFilter" component-controller="componentController"></notebook>' +
+                    '</md-content>' +
+                    '  <div class="md-actions">' +
+                    '    <md-button ng-click="closeDialog()" class="md-primary">' +
+                    '      Close' +
+                    '    </md-button>' +
+                    '  </div>' +
+                    '</md-dialog>',
+                    locals: {
+                        vleController: $scope.vleController,
+                        nodeController: $scope.nodeCtrl,
+                        componentController: componentController
+                    },
+                    controller: DialogController
+                });
+                function DialogController($scope, $mdDialog, vleController, nodeController, componentController) {
+                    $scope.vleController = vleController;
+                    $scope.nodeController = nodeController;
+                    $scope.componentController = componentController;
+                    $scope.closeDialog = function() {
                         $mdDialog.hide();
                     }
                 }

@@ -8,7 +8,8 @@ define(['angular', 'configService', 'openResponseService', 'notebookService',
             return {
                 scope: {
                     filter: '=',
-                    templateUrl: '='
+                    templateUrl: '=',
+                    componentController: '='
                 },
                 template: '<ng-include src="notebookController.getTemplateUrl()"></ng-include>',
                 controller: 'NotebookController',
@@ -74,13 +75,23 @@ define(['angular', 'configService', 'openResponseService', 'notebookService',
             }));
 
             this.logOutListener = $scope.$on('logOut', angular.bind(this, function(event, args) {
-                console.log('logOut notebook');
                 this.logOutListener();
                 $rootScope.$broadcast('componentDoneUnloading');
             }));
 
             this.deleteItem = function(item) {
                 NotebookService.deleteItem(item);
+            };
+
+            this.notebookItemSelected = function($event, notebookItem) {
+                this.selectedNotebookItem = notebookItem;
+            };
+
+            this.attachNotebookItemToComponent = function($event, notebookItem) {
+                this.componentController.attachNotebookItemToComponent(notebookItem);
+                this.selectedNotebookItem = null;  // reset selected notebook item
+                // TODO: add some kind of unobtrusive confirmation to let student know that the notebook item has been added to current component
+                $event.stopPropagation();  // prevents parent notebook list item from getting the onclick event so this item won't be re-selected.
             };
 
             this.notebookItemDragStartCallback = function(event, ui, notebookItem) {

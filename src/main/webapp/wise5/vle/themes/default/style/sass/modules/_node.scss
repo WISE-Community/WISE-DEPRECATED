@@ -115,7 +115,6 @@ $node-input-action-vertical-offset-richtext: -7px;
   .node-input-wrapper--richtext & {
     bottom: ($node-input-action-vertical-offset-richtext + 2px);
   }
-
 }
 
 .node-input-label, md-input-container:not(.md-input-invalid):not(.md-input-focused).md-input-has-value label.node-input-label {

@@ -1,7 +1,7 @@
 <html>
     <head>
     <style>
-    .studentAssetReference {
+    .studentAttachment {
         width: auto;
         height: auto;
         max-width: 200px;
@@ -48,6 +48,12 @@
                         <md-icon> history </md-icon>
                         <md-tooltip md-direction="top">{{nodeCtrl.getRevisions(component.id).length}} Revisions</md-tooltip>
                     </md-button>
+                </div>
+                <div id="studentAttachments" ng-show="openResponseController.isStudentAttachmentEnabled">
+                    <img ng-repeat="studentAttachment in openResponseController.studentAttachments" src="{{studentAttachment.iconURL}}" class="studentAttachment" />
+                    <button ng-click='nodeCtrl.showNotebook($event, component.id, openResponseController.isDisabled)'>
+                        Add attachment...
+                    </button>
                 </div>
             </md-input-container>
 

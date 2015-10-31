@@ -29,7 +29,7 @@ define(['configService'], function(configService) {
                 var studentUploadsBaseURL = ConfigService.getStudentUploadsBaseURL();
                 for (var a = 0; a < assets.length; a++) {
                     var asset = assets[a];
-                    if (!asset.isReferenced && asset.serverDeleteTime === null && asset.fileName !== '.DS_Store') {
+                    if (!asset.isReferenced && asset.serverDeleteTime == null && asset.fileName !== '.DS_Store') {
                         asset.url = studentUploadsBaseURL + asset.filePath;
                         if (this.isImage(asset)) {
                             asset.type = 'image';

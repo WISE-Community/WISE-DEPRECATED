@@ -305,7 +305,7 @@ define(['configService', 'projectService'], function(configService, projectServi
                 this.nodeStatuses[nodeId].progress = this.getNodeProgressById(nodeId);
                 this.nodeStatuses[nodeId].icon = ProjectService.getNodeIconByNodeId(nodeId);
 
-                //console.log(JSON.stringify(tempNodeStatus));
+                //console.log(angular.toJson(tempNodeStatus));
             }
 
             //return nodeStatus;
@@ -1172,9 +1172,9 @@ define(['configService', 'projectService'], function(configService, projectServi
             var params = {};
             params.runId = ConfigService.getRunId();
             params.workgroupId = ConfigService.getWorkgroupId();
-            params.studentWorkList = JSON.stringify(studentWorkList);
-            params.events = JSON.stringify(events);
-            params.annotations = JSON.stringify(annotations);
+            params.studentWorkList = angular.toJson(studentWorkList);
+            params.events = angular.toJson(events);
+            params.annotations = angular.toJson(annotations);
             httpParams.data = $.param(params);
 
             // make the request to post the student data
@@ -1546,10 +1546,10 @@ define(['configService', 'projectService'], function(configService, projectServi
             
             if (jsonObject != null) {
                 // create a JSON string from the JSON object
-                var jsonObjectString = JSON.stringify(jsonObject);
+                var jsonObjectString = angular.toJson(jsonObject);
                 
                 // create a JSON object from the JSON string
-                copyOfJSONObject = JSON.parse(jsonObjectString);
+                copyOfJSONObject = angular.toJson(jsonObjectString);
             }
             
             return copyOfJSONObject;
