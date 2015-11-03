@@ -1,7 +1,7 @@
 <html>
     <head>
         <style>
-            .studentAssetReference {
+            .attachment {
                 width: auto;
                 height: auto;
                 max-width: 200px;
@@ -42,6 +42,12 @@
                                           ng-init="focus = false"
                                           ng-focus="focus = true"
                                           ng-blur="focus = false"></textarea>
+                                <div id="attachments" ng-show="!discussionController.isDisabled && discussionController.isStudentAttachmentEnabled">
+                                    <img ng-repeat="attachment in discussionController.newAttachments" src="{{attachment.iconURL}}" class="attachment" />
+                                    <button ng-click='nodeCtrl.showNotebook($event, component.id, discussionController.isDisabled)'>
+                                        Add attachment...
+                                    </button>
+                                </div>
                             </md-input-container>
                             <div class="discussion-new__actions">
                                 <md-button class="md-raised md-primary"
@@ -50,9 +56,8 @@
                                            ng-if="discussionController.showSaveButton()">Save Draft</md-button>
                                 <md-button class="md-raised md-primary"
                                            ng-click="discussionController.submitButtonClicked()"
-                                           ng-disabled="discussionController.isDisabled || !discussionController.newResponse"
+                                           ng-disabled="discussionController.isDisabled || (!discussionController.newResponse && discussionController.newAttachments.length == 0) "
                                            ng-if="discussionController.showSubmitButton()">Post</md-button>
-
                             </div>
                         </md-card>
 

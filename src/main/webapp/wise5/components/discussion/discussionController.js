@@ -30,6 +30,9 @@ define(['app', 'angular'], function(app, angular) {
             // holds the text for a new response (not a reply)
             this.newResponse = '';
 
+            // holds student attachments like assets
+            this.newAttachments = [];
+
             // whether the step should be disabled
             this.isDisabled = false;
 
@@ -56,6 +59,9 @@ define(['app', 'angular'], function(app, angular) {
 
             // whether rich text is enabled
             this.isRichTextEnabled = false;
+
+            // whether students can attach files to their work
+            this.isStudentAttachmentEnabled = false;
 
             /**
              * Perform setup of the component
@@ -124,6 +130,9 @@ define(['app', 'angular'], function(app, angular) {
                     }
 
                     scope.isRichTextEnabled = scope.componentContent.isRichTextEnabled;
+
+                    // set whether studentAttachment is enabled
+                    scope.isStudentAttachmentEnabled = scope.componentContent.isStudentAttachmentEnabled;
 
                     // register this component with the parent node
                     $scope.$parent.registerComponentController($scope, scope.componentContent);
@@ -217,13 +226,6 @@ define(['app', 'angular'], function(app, angular) {
             };
 
             /**
-             * Get the student response
-             */
-            this.getStudentResponse = function() {
-                return this.studentResponse;
-            };
-
-            /**
              * Create a new component state populated with the student data
              * @return the componentState after it has been populated
              */
@@ -236,9 +238,9 @@ define(['app', 'angular'], function(app, angular) {
                     var studentData = {};
 
                     // set the response into the component state
-                    var studentResponse = this.getStudentResponse();
+                    studentData.response = this.studentResponse;
 
-                    studentData.studentResponse = studentResponse;
+                    studentData.attachments = this.newAttachments;
 
                     if (this.componentStateIdReplyingTo != null) {
                         // if this step is replying, set the component state id replying to
@@ -269,6 +271,12 @@ define(['app', 'angular'], function(app, angular) {
 
                 // clear the student response
                 this.studentResponse = '';
+
+                // clear the new response input
+                this.newResponse = '';
+
+                // clear new attachments input
+                this.newAttachments = [];
 
                 // clear the component state id replying to
                 this.componentStateIdReplyingTo = null;
@@ -360,7 +368,44 @@ define(['app', 'angular'], function(app, angular) {
                 return result;
             };
 
-            this.dropCallback = angular.bind(this, function(event, ui, title, $index) {
+            this.attachNotebookItemToComponent = angular.bind(this, function(notebookItem) {
+                if (notebookItem.studentAsset != null) {
+                    // we're importing a StudentAssetNotebookItem
+                    var studentAsset = notebookItem.studentAsset;
+                    StudentAssetService.copyAssetForReference(studentAsset).then(angular.bind(this, function(copiedAsset) {
+                        if (copiedAsset != null) {
+                            var attachment = {
+                                notebookItemId: notebookItem.id,
+                                studentAssetId: copiedAsset.id,
+                                iconURL: copiedAsset.iconURL
+                            };
+
+                            this.newAttachments.push(attachment);
+                            this.studentDataChanged();
+                        }
+                    }));
+                } else if (notebookItem.studentWork != null) {
+                    // we're importing a StudentWorkNotebookItem
+                    var studentWork = notebookItem.studentWork;
+
+                    var componentType = studentWork.componentType;
+
+                    if (componentType != null) {
+                        var childService = $injector.get(componentType + 'Service');
+
+                        if (childService != null) {
+                            var studentWorkHTML = childService.getStudentWorkAsHTML(studentWork);
+
+                            if (studentWorkHTML != null) {
+                                this.studentResponse += studentWorkHTML;
+                                this.studentDataChanged();
+                            }
+                        }
+                    }
+                }
+            });
+
+            this.dropCallback_NOLONGER_USED = angular.bind(this, function(event, ui, title, $index) {
                 if (this.isDisabled) {
                     // don't import if step is disabled/locked
                     return;
@@ -425,19 +470,6 @@ define(['app', 'angular'], function(app, angular) {
                 }
 
                 return numRows;
-            };
-
-            /**
-             * Get the text the student typed
-             */
-            this.getResponse = function() {
-                var response = null;
-
-                if (this.studentResponse != null) {
-                    response = this.studentResponse;
-                }
-
-                return response;
             };
 
             /**
@@ -751,9 +783,6 @@ define(['app', 'angular'], function(app, angular) {
                      * when the student data is saved
                      */
                     $scope.discussionController.studentResponse = $scope.discussionController.newResponse;
-
-                    // clear the new response input
-                    $scope.discussionController.newResponse = '';
 
                     $scope.discussionController.isSubmit = true;
                 }

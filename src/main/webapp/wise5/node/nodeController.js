@@ -171,8 +171,6 @@ define(['app'], function(app) {
             };
 
             this.showNotebook = function($event, componentId) {
-                //&&&&
-                var revisions = this.getRevisions(componentId);
 
                 // get the scope for the component
                 var childScope = $scope.componentToScope[componentId];
@@ -184,6 +182,8 @@ define(['app'], function(app) {
                     componentController = childScope.openResponseController;
                 } else if (childScope.drawController) {
                     componentController = childScope.drawController;
+                } else if (childScope.discussionController) {
+                    componentController = childScope.discussionController;
                 }
 
                 // TODO: make this customizeable per theme and maybe make into directive

@@ -95,14 +95,14 @@ define(['angular', 'configService', 'openResponseService', 'notebookService',
             };
 
             this.notebookItemDragStartCallback = function(event, ui, notebookItem) {
-                $(ui.helper.context).data('objectType', 'NotebookItem');
-                $(ui.helper.context).data('objectData', notebookItem);
+                //$(ui.helper.context).data('objectType', 'NotebookItem');
+                //$(ui.helper.context).data('objectData', notebookItem);
             };
 
             this.myWorkDragStartCallback = function(event, ui, nodeId, nodeType) {
-                $(ui.helper.context).data('importType', 'NodeState');
-                $(ui.helper.context).data('importWorkNodeState', StudentDataService.getLatestNodeStateByNodeId(nodeId));
-                $(ui.helper.context).data('importWorkNodeType', nodeType);
+                //$(ui.helper.context).data('importType', 'NodeState');
+                //$(ui.helper.context).data('importWorkNodeState', StudentDataService.getLatestNodeStateByNodeId(nodeId));
+                //$(ui.helper.context).data('importWorkNodeType', nodeType);
             };
 
             this.log = function() {
