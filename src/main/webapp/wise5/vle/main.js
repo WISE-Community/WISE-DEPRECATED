@@ -12,13 +12,14 @@ require.config({
         'angularDragDrop': 'vendor/angular-dragdrop/src/angular-dragdrop.min',
         'angularFileUpload': 'vendor/ng-file-upload/ng-file-upload.min',
         'angularMaterial': 'vendor/angular-material/angular-material.min',
+        'angularMoment': 'vendor/angular-moment/angular-moment.min',
         'angularSortable': 'vendor/angular-ui-sortable/sortable.min',
         'angularTextAngular': 'lib/angularTextAngular/textAngular.min', // TODO: switch to using bower once loading errors are fixed
         'angularTextAngularRangy': 'lib/angularTextAngular/textAngular-rangy.min', // TODO: switch to using bower once loading errors are fixed
         'angularTextAngularSanitize': 'lib/angularTextAngular/textAngular-sanitize.min', // TODO: switch to using bower once loading errors are fixed
         'angularToArrayFilter': 'vendor/angular-toArrayFilter/toArrayFilter',
         'angularUIRouter': 'vendor/angular-ui-router/release/angular-ui-router.min',
-        'angularUITinymce': 'lib/angular-ui-tinymce/src/tinymce', // TODO: switch to using bower once the developers register the latest versions
+        'angularUITinymce': 'vendor/angular-ui-tinymce/src/tinymce',
         'angularUITree': 'vendor/angular-ui-tree/dist/angular-ui-tree.min',
         'angularWebSocket': 'vendor/angular-websocket/angular-websocket.min',
         'app': 'vle/app',
@@ -57,6 +58,7 @@ require.config({
             ],
         'matchController': 'components/match/matchController',
         'matchService': 'components/match/matchService',
+        'moment': 'vendor/moment/min/moment.min',
         'multipleChoiceController': 'components/multipleChoice/multipleChoiceController',
         'multipleChoiceService': 'components/multipleChoice/multipleChoiceService',
         'navigationController': 'vle/navigation/navigationController',
@@ -132,6 +134,13 @@ require.config({
             'deps': [
                 'angularAnimate',
                 'angularAria'
+            ]
+        },
+        'angularMoment': {
+            'exports': 'angularMoment',
+            'deps': [
+                'angular',
+                'moment'
             ]
         },
         'angularSortable': {
@@ -237,6 +246,9 @@ require.config({
                      'jquery'
                      ]
         },
+        'moment': {
+            'exports': 'moment'
+        },
         'ocLazyLoad': {
             'expports': 'ocLazyLoad',
             'deps': [
@@ -244,7 +256,7 @@ require.config({
             ]
         },
         'tinymce': {
-            'exports': 'tinymce',
+            'exports': 'tinymce'
         },
         'webfont': {
             'exports': 'webfont'

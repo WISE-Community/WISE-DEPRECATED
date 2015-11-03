@@ -2,7 +2,7 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.11.4
+ * v1.0.0-rc2-master-c99541f
  */
 (function( window, angular, undefined ){
 "use strict";
@@ -127,7 +127,7 @@ function MdChipRemove ($timeout) {
     // Child elements aren't available until after a $timeout tick as they are hidden by an
     // `ng-if`. see http://goo.gl/zIWfuw
     $timeout(function() {
-      element.attr({ tabindex: -1, ariaHidden: true });
+      element.attr({ tabindex: -1, 'aria-hidden': true });
       element.find('button').attr('tabindex', '-1');
     });
   }
@@ -356,13 +356,27 @@ MdChipsCtrl.prototype.getAdjacentChipIndex = function(index) {
  * call out to the md-on-append method, if provided
  * @param newChip
  */
-MdChipsCtrl.prototype.appendChip = function(newChip) {
-  if (this.useOnAppend && this.onAppend) {
-    newChip = this.onAppend({'$chip': newChip});
-  }
-  if (this.items.indexOf(newChip) + 1) return;
-  this.items.push(newChip);
-};
+ MdChipsCtrl.prototype.appendChip = function(newChip) {
+
+   // If useOnAppend and onAppend function is provided call it.
+   if (this.useOnAppend && this.onAppend) {
+     newChip = this.onAppend({'$chip': newChip});
+   }
+
+   // If items contains identical object to newChip do not append
+   if(angular.isObject(newChip)){
+     var identical = this.items.some(function(item){
+       return angular.equals(newChip, item);
+     });
+     if(identical) return;
+   }
+
+   // If items contains newChip do not append
+   if (this.items.indexOf(newChip) + 1) return;
+
+   //add newChip to items
+   this.items.push(newChip);
+ };
 
 /**
  * Sets whether to use the md-on-append expression. This expression is
@@ -586,7 +600,7 @@ MdChipsCtrl.prototype.hasFocus = function () {
    *
    * @description
    * `<md-chips>` is an input component for building lists of strings or objects. The list items are
-   * displayed as 'chips'. This component can make use of an `<input>` element or an
+   * displayed as 'chips'. This component can make use of an `<input>` element or an 
    * `<md-autocomplete>` element.
    *
    * ### Custom templates
@@ -692,6 +706,7 @@ MdChipsCtrl.prototype.hasFocus = function () {
 
   var CHIP_INPUT_TEMPLATE = '\
         <input\
+            class="md-input"\
             tabindex="0"\
             placeholder="{{$mdChipsCtrl.getPlaceholder()}}"\
             aria-label="{{$mdChipsCtrl.getPlaceholder()}}"\
@@ -809,7 +824,6 @@ MdChipsCtrl.prototype.hasFocus = function () {
        * Configures controller and transcludes.
        */
       return function postLink(scope, element, attrs, controllers) {
-
         $mdUtil.initOptionalProperties(scope, attr);
 
         $mdTheming(element);
@@ -819,7 +833,7 @@ MdChipsCtrl.prototype.hasFocus = function () {
         mdChipsCtrl.chipInputTemplate    = chipInputTemplate;
 
         element
-            .attr({ ariaHidden: true, tabindex: -1 })
+            .attr({ 'aria-hidden': true, tabindex: -1 })
             .on('focus', function () { mdChipsCtrl.onFocus(); });
 
         if (attr.ngModel) {
@@ -857,6 +871,13 @@ MdChipsCtrl.prototype.hasFocus = function () {
               }
             });
           }
+
+          // At the next tick, if we find an input, make sure it has the md-input class
+          $mdUtil.nextTick(function() {
+            var input = element.find('input');
+
+            input && input.toggleClass('md-input', true);
+          });
         }
 
         // Compile with the parent's scope and prepend any static chips to the wrapper.
