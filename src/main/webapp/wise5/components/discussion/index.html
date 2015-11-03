@@ -1,50 +1,76 @@
+<html>
+    <head>
+        <style>
+            .studentAssetReference {
+                width: auto;
+                height: auto;
+                max-width: 200px;
+                max-height: 200px;
+                padding: 10px;
+                margin: 5px;
+                border: 3px solid #DDD;
+            }
+        </style>
+    </head>
+    <body>
+        <div ng-controller="DiscussionController as discussionController">
+            <div class="md-padding" compile="discussionController.getPrompt()" ng-if="discussionController.getPrompt()"></div>
+            <div class="md-padding discussion-content">
+                <div layout="row">
+                    <div class="discussion-posts" flex>
+                        <md-card class="discussion-new discussion-post {{focus}}"
+                                 ng-class="{'discussion-new--focused': focus || discussionController.newResponse}">
+                            <md-input-container class="input--placeholder-only discussion-new__input-container input-container"
+                                                md-no-float>
+                                <textarea ng-if="discussionController.isRichTextEnabled && !discussionController.isDisabled"
+                                          ui-tinymce="discussionController.tinymceOptions"
+                                          ng-model="discussionController.newResponse"
+                                          ng-change="discussionController.studentDataChanged()"
+                                          ng-init="focus = false"
+                                          ng-focus="focus = true"
+                                          ng-blur="focus = false"></textarea>
+                                <div ng-if="discussionController.isDisabled"
+                                     class="input--textarea input--textarea--disabled"
+                                     ng-model="discussionController.newResponse"></div>
+                                <textarea ng-if="!discussionController.isRichTextEnabled && !discussionController.isDisabled"
+                                          class="input--textarea"
+                                          placeholder="Share with class..."
+                                          rows="{{discussionController.getNumRows() || 3}}"
+                                          ng-model="discussionController.newResponse"
+                                          ng-disabled="discussionController.isDisabled"
+                                          ng-change="discussionController.studentDataChanged()"
+                                          ng-init="focus = false"
+                                          ng-focus="focus = true"
+                                          ng-blur="focus = false"></textarea>
+                            </md-input-container>
+                            <div class="discussion-new__actions">
+                                <md-button class="md-raised md-primary"
+                                           ng-click="discussionController.saveButtonClicked()"
+                                           ng-disabled="discussionController.isDisabled || !discussionController.newResponse"
+                                           ng-if="discussionController.showSaveButton()">Save Draft</md-button>
+                                <md-button class="md-raised md-primary"
+                                           ng-click="discussionController.submitButtonClicked()"
+                                           ng-disabled="discussionController.isDisabled || !discussionController.newResponse"
+                                           ng-if="discussionController.showSubmitButton()">Post</md-button>
 
-<head>
-    <link data-require="font-awesome@*" data-semver="4.3.0" rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" />
-    <!--link data-require="bootstrap@*" data-semver="3.3.2" rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" /-->
-    <link rel='stylesheet' href='wise5/lib/angularTextAngular/textAngular.css'>
-    <style>
-        .ta-editor {
-            min-height: 300px;
-            height: auto;
-            overflow: auto;
-            font-family: inherit;
-            font-size: 100%;
-            margin:20px 0;
-        }
+                            </div>
+                        </md-card>
 
-        .studentAssetReference {
-            width: auto;
-            height: auto;
-            max-width: 200px;
-            max-height: 200px;
-            padding: 10px;
-            margin: 5px;
-            border: 3px solid #DDD;
-        }
-    </style>
-</head>
-<body>
-<div ng-controller='DiscussionController as discussionController'>
-<div id='prompt' compile='discussionController.getPrompt()'></div>
-<div text-angular id='responseTextarea'
-    rows='{{discussionController.getNumRows() || 10}}'
-    cols='{{discussionController.getNumColumns() || 100}}'
-    ng-model='discussionController.newResponse'
-    ng-disabled='discussionController.isDisabled'
-    ta-disabled='discussionController.isDisabled'
-    ng-change='discussionController.studentDataChanged()'
-     data-drop='true'
-     jqyoui-droppable="{onDrop: 'discussionController.dropCallback(item, $index)'}">
-</div>
-<button ng-click='discussionController.saveButtonClicked()' 
-    ng-show='discussionController.showSaveButton()' 
-    ng-disabled='discussionController.isDisabled'>Save</button>
-<button ng-click='discussionController.submitButtonClicked()' 
-    ng-show='discussionController.showSubmitButton()' 
-    ng-disabled='discussionController.isDisabled'>Submit</button>
-<div ng-repeat='componentState in discussionController.getLevel1Responses()'>
-    <class-response response='componentState' replybuttonclicked='replybuttonclicked(r)' submitbuttonclicked='submitbuttonclicked(r)' studentdatachanged='studentdatachanged()'></class-response>
-</div>
-</div>
-</body>
+                        <class-response ng-repeat="componentState in discussionController.topLevelResponses.slice().reverse()"
+                                        ng-if="lgScreen ? $odd : true"
+                                        response="componentState" submitbuttonclicked="submitbuttonclicked(r)"
+                                        studentdatachanged="studentdatachanged()"
+                                        class="post"></class-response>
+                    </div>
+                    <div class="discussion-posts" ng-if="lgScreen && discussionController.topLevelResponses.length" flex>
+                        <class-response ng-repeat="componentState in discussionController.topLevelResponses.slice().reverse()"
+                                        ng-if="$even"
+                                        response="componentState" submitbuttonclicked="submitbuttonclicked(r)"
+                                        studentdatachanged="studentdatachanged()"
+                                        class="post"></class-response>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

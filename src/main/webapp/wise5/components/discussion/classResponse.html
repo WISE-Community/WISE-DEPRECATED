@@ -1,0 +1,40 @@
+<md-card class="discussion-post">
+    <div class="md-padding">
+        <div layout="row">
+            <div class="md-avatar discussion-post__avatar"><md-icon class="md-48 md-primary"> account_circle </md-icon></div>
+            <div flex>
+                <div class="discussion-post__user">{{ response.userNames }}</div>
+                <div class="md-caption discussion-post__date" title="{{ response.clientSaveTime | amDateFormat:'ddd, MMM D, YYYY, h:mm a' }}">{{ response.clientSaveTime | amCalendar }}</div>
+            </div>
+        </div>
+        <div class="md-content discussion-post__content md-body-1" ng-bind-html="response.studentData.studentResponse"></div>
+    </div>
+    <md-divider></md-divider>
+    <div class="discussion-comments">
+        <div ng-if="response.replies.length">
+            <md-subheader class="md-no-sticky discussion-comments__header">Comments ({{ response.replies.length }})</md-subheader>
+            <md-list class="discussion-comments__list">
+                <md-list-item class="md-3-line md-long-text discussion-reply" ng-repeat='reply in response.replies'>
+                    <div class="md-avatar discussion-post__avatar--reply discussion-post__avatar"><md-icon class="md-36 md-primary"> account_circle </md-icon></div>
+                    <div class="md-list-item-text discusstion-reply__details">
+                        <h3 class="discussion-post__user discussion-post__user--reply">{{ reply.userNames }}</h3>
+                        <div class="md-caption discussion-post__date" title="{{ reply.clientSaveTime | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}">{{ reply.clientSaveTime | amCalendar }}</div>
+                        <div class="discusstion-reply__content" ng-bind-html="reply.studentData.studentResponse"></div>
+                    </div>
+                </md-list-item>
+            </md-list>
+        </div>
+        <div class="discussion-new-reply">
+            <md-input-container class="input-container discussion-new-reply__input-container md-block" md-no-float flex>
+                <textarea class="input--textarea discussion-reply__input"
+                          ng-model='response.replyText'
+                          placeholder="Add comment..."
+                          aria-label="Add comment"></textarea>
+            </md-input-container>
+            <div ng-show="response.replyText" class="discussion-new__actions discussion-new-reply__actions">
+                <md-button class="md-primary md-raised"
+                           ng-click="submitButtonClicked(response)">Post</md-button>
+            </div>
+        </div>
+    </div>
+</md-card>
