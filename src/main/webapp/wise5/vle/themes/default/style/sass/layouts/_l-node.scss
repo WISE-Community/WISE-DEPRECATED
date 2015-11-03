@@ -4,4 +4,14 @@
 .l-node {
   margin-top: $wise-toolbar-height;
   margin-bottom: $wise-toolbar-height;
+  background-color: $body-bgcolor !important;
+  padding: 0;
+
+  @media only screen and (min-width: $layout-breakpoint-sm) {
+    padding: 0 16px;
+  }
+
+  @media only screen and (min-width: $layout-breakpoint-md) {
+    padding: 0 32px;
+  }
 }

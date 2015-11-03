@@ -31,7 +31,7 @@
         <div ng-include='nodeCtrl.getComponentTypeHTML(component.componentType)'
              ng-init='componentState = nodeCtrl.getComponentStateByComponent(component)'></div>
     </div>
-    <div class="node-content--actions" layout="row">
+    <div ng-if='nodeCtrl.showSaveButton() || nodeCtrl.showSubmitButton()' class="node-content__actions" layout="row">
         <md-button class="md-raised md-primary"
                 ng-click='nodeCtrl.saveButtonClicked()'
                 ng-disabled='nodeCtrl.isDisabled || !nodeCtrl.isDirty'

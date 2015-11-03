@@ -95,25 +95,9 @@ a {
   }
 }
 
-// hacks for now
 md-toolbar.md-light-theme:not(.md-menu-toolbar) {
-  md-icon:not(.md-light):not(.md-dark):not(.md-primary):not(.md-accent):not(.success):not(.warn) {
+  md-icon {
     color: rgba(0, 0, 0, 0.56);
-  }
-
-  md-icon.md-default-theme {
-    &.md-primary {
-      color: $primary-color;
-    }
-    &.md-accent {
-      color: $accent-color-1;
-    }
-    &.success {
-      color: $success-color;
-    }
-    &.warn {
-      color: $warn-color;
-    }
   }
 
   .md-button:disabled {
@@ -123,12 +107,32 @@ md-toolbar.md-light-theme:not(.md-menu-toolbar) {
   }
 }
 
-md-list .md-subheader {
+// hacks for now
+md-icon {
+  &.md-primary {
+    color: $primary-color !important;
+  }
+  &.md-accent {
+    color: $accent-color-1 !important;
+  }
+  &.success {
+    color: $success-color !important;
+  }
+  &.warn {
+    color: $warn-color !important;
+  }
+}
+
+.md-subheader, md-list .md-subheader {
   color: $accent-color-2;
-  font-weight: 600;
 }
 
 // Drawing tool custom
 .dt-container .dt-tools {
   z-index: 1;
+}
+
+// Theme overrides
+md-input-container.md-wise-theme label {
+  color: $text-color-dark;
 }

@@ -12,10 +12,26 @@
   width: auto;
 }
 
+.primary {
+  color: $primary-color;
+}
+
 .success {
   color: $success-color;
 }
 
 .warn {
   color: $warn-color;
+}
+
+.accent-color-1 {
+  color: $accent-color-1;
+}
+
+.accent-color-2 {
+  color: $accent-color-2;
+}
+
+.accent-color-3 {
+  color: $accent-color-3;
 }

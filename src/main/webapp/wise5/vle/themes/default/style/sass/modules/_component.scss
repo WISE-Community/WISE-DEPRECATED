@@ -1,0 +1,13 @@
+.component-content {
+  margin: 16px;
+}
+
+.component-content__actions {
+  .md-button:first-of-type {
+    margin-left: 0;
+  }
+
+  .md-button:last-of-type {
+    margin-right: 0;
+  }
+}

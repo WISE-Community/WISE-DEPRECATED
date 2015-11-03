@@ -31,7 +31,7 @@
     ng-click='drawController.submitButtonClicked()' 
     ng-disabled='drawController.isDisabled' 
     ng-show='drawController.showSubmitButton()'>Submit</button>
-    <md-button class="revision revision__node-input md-icon-button" ng-click='nodeCtrl.showRevisions($event, component.id)'
+    <md-button class="revision md-icon-button" ng-click='nodeCtrl.showRevisions($event, component.id)'
                ng-disabled="nodeCtrl.getRevisions(component.id).length == 0">
         <md-icon> history </md-icon>
         <md-tooltip md-direction="top">{{nodeCtrl.getRevisions(component.id).length}} Revisions</md-tooltip>

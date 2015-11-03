@@ -2,8 +2,8 @@
     <head></head>
     <body>
         <div ng-controller="MultipleChoiceController as multipleChoiceController">
-            <md-input-container class="node-input-container" ng-switch on="multipleChoiceController.getChoiceType()">
-                <label class="node-input-label md-no-float" ng-if="multipleChoiceController.getPrompt()" compile="multipleChoiceController.getPrompt()"></label>
+            <md-input-container class="input-container md-block" ng-switch on="multipleChoiceController.getChoiceType()">
+                <label class="input-label md-no-float" ng-if="multipleChoiceController.getPrompt()" compile="multipleChoiceController.getPrompt()"></label>
                 <md-radio-group ng-switch-when="radio" ng-model="multipleChoiceController.studentChoices"
                                 ng-change="multipleChoiceController.studentDataChanged()">
                     <div ng-repeat="choice in multipleChoiceController.getChoices()">
@@ -28,11 +28,11 @@
                 </div>
             </md-input-container>
 
-            <div ng-if="multipleChoiceController.getCorrectChoice()" ng-show="multipleChoiceController.numberOfAttempts != null">Number of Attempts: {{multipleChoiceController.numberOfAttempts}}</div>
-            <div ng-if="multipleChoiceController.isCorrect != null && multipleChoiceController.isCorrect">Correct!</div>
-            <div ng-if="multipleChoiceController.isCorrect != null && !multipleChoiceController.isCorrect">Incorrect</div>
+            <div class="md-caption" ng-if="multipleChoiceController.hasCorrectChoices()" ng-show="multipleChoiceController.numberOfAttempts != null">Number of Attempts: {{multipleChoiceController.numberOfAttempts}}</div>
+            <div ng-if="multipleChoiceController.isCorrect">Correct!</div>
+            <div ng-if="multipleChoiceController.isCorrect">Incorrect</div>
 
-            <div class="component-content--actions" layout="row">
+            <div class="component-content__actions" layout="row">
                 <md-button class="md-raised md-primary"
                            ng-click='multipleChoiceController.saveButtonClicked()'
                            ng-disabled='multipleChoiceController.isDisabled'

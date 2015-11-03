@@ -4,11 +4,11 @@
 .l-constrained {
   margin-left: auto;
   margin-right: auto;
-  max-width: $layout-breakpoint-md;
+  max-width: $layout-breakpoint-lg;
   width: 100%;
   position: relative;
 }
 
-.l-constrained--lg {
-  max-width: $layout-breakpoint-lg;
+.l-constrained-md {
+  max-width: $layout-breakpoint-md;
 }
