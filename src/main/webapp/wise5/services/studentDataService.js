@@ -1549,7 +1549,7 @@ define(['configService', 'projectService'], function(configService, projectServi
                 var jsonObjectString = angular.toJson(jsonObject);
                 
                 // create a JSON object from the JSON string
-                copyOfJSONObject = angular.toJson(jsonObjectString);
+                copyOfJSONObject = angular.fromJson(jsonObjectString);
             }
             
             return copyOfJSONObject;
