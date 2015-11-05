@@ -43,7 +43,10 @@
                                           ng-focus="focus = true"
                                           ng-blur="focus = false"></textarea>
                                 <div id="attachments" ng-show="!discussionController.isDisabled && discussionController.isStudentAttachmentEnabled">
-                                    <img ng-repeat="attachment in discussionController.newAttachments" src="{{attachment.iconURL}}" class="attachment" />
+                                    <span ng-repeat="attachment in discussionController.newAttachments">
+                                        <img src="{{attachment.iconURL}}" class="attachment" />
+                                        <button ng-click='discussionController.removeAttachment(attachment)'>X</button>
+                                    </span>
                                     <button ng-click='nodeCtrl.showNotebook($event, component.id, discussionController.isDisabled)'>
                                         Add attachment...
                                     </button>

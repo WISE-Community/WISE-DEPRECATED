@@ -1,7 +1,7 @@
 <html>
     <head>
     <style>
-    .studentAttachment {
+    .attachment {
         width: auto;
         height: auto;
         max-width: 200px;
@@ -49,8 +49,11 @@
                         <md-tooltip md-direction="top">{{nodeCtrl.getRevisions(component.id).length}} Revisions</md-tooltip>
                     </md-button>
                 </div>
-                <div id="studentAttachments" ng-show="openResponseController.isStudentAttachmentEnabled">
-                    <img ng-repeat="studentAttachment in openResponseController.studentAttachments" src="{{studentAttachment.iconURL}}" class="studentAttachment" />
+                <div id="attachments" ng-show="openResponseController.isStudentAttachmentEnabled">
+                    <span ng-repeat="attachment in openResponseController.attachments">
+                        <img src="{{attachment.iconURL}}" class="attachment" />
+                        <button ng-click='openResponseController.removeAttachment(attachment)'>X</button>
+                    </span>
                     <button ng-click='nodeCtrl.showNotebook($event, component.id, openResponseController.isDisabled)'>
                         Add attachment...
                     </button>

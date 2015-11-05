@@ -368,6 +368,13 @@ define(['app', 'angular'], function(app, angular) {
                 return result;
             };
 
+            this.removeAttachment = function(attachment) {
+                if (this.newAttachments.indexOf(attachment) != -1) {
+                    this.newAttachments.splice(this.newAttachments.indexOf(attachment), 1);
+                    this.studentDataChanged();
+                }
+            };
+
             this.attachNotebookItemToComponent = angular.bind(this, function(notebookItem) {
                 if (notebookItem.studentAsset != null) {
                     // we're importing a StudentAssetNotebookItem
