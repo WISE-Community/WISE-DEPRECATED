@@ -22,33 +22,4 @@
     <div class="nav-group" ng-if="navCtrl.layoutState === 'group'" >
         <ng-include src="vleController.themePath + '/navigation/navGroup.html'"></ng-include>
     </div>
-
-    <!--<group id='group' currentgroupid='{{navCtrl.currentGroupId}}'></group>-->
-
-    <!--
-    <group id='group_{{group.id}}' ng-repeat='group in navCtrligationController.groups' ng-show='group.id === navigationController.currentGroupId'>
-
-    </group>
-
-
-    <div id='test'></div>
-     -->
-    <!--
-    <div ng-repeat='group in navigationController.groups' ng-show='group.id === navigationController.currentGroupId'>
-        {{ group.title }}
-
-        <input id='{{childId}}Button' type='button' ng-repeat='childId in group.ids' value='{{childId}}' ng-click='navigationController.nodeClicked(childId)' ng-class='{currentNode: navigationController.currentNode.id === childId, disabledNode: navigationController.isNodeDisabled(childId)}' ng-disabled='navigationController.isNodeDisabled(childId)'></input>
-        <input type='button' value='Go To Parent' ng-click='navigationController.nodeClicked(navigationController.parentGroupId)'></input>
-    </div>
-     -->
 </div>
-<footer class="l-footer md-whiteframe-z2 md-body-1">
-    <md-toolbar class="md-toolbar--wise" md-theme="light">
-        <div class="md-toolbar-tools">
-            <md-button md-theme="default" class="button--footer md-primary" aria-label="Toggle Project Status">
-                <progress-circular-with-label value="themeCtrl.rootNodeStatus.progress.completionPct"
-                                              template-url="vleController.themePath + '/templates/progressCircularWithLabel.html'"></progress-circular-with-label>
-            </md-button>
-        </div>
-    </md-toolbar>
-</footer>
