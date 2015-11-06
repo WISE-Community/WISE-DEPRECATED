@@ -2,7 +2,12 @@
     <div id='prompt' compile='drawController.getPrompt()'></div>
     <meta charset="utf-8">
     <link rel="stylesheet" type="text/css" href="wise5/lib/drawingTool/drawing-tool.css">
-    <div class="container"
+    <div id="studentAttachments">
+        <button ng-click='nodeCtrl.showNotebook($event, component.id, drawController.isDisabled)'>
+            Use my file...
+        </button>
+    </div>
+        <div class="container"
          data-drop="true"
          jqyoui-droppable="{onDrop: 'drawController.dropCallback(item, $index)'}">
         <h1>HTML5 Drawing Tool</h1>
@@ -31,10 +36,9 @@
     ng-click='drawController.submitButtonClicked()' 
     ng-disabled='drawController.isDisabled' 
     ng-show='drawController.showSubmitButton()'>Submit</button>
-    <md-button class="revision revision__node-input md-icon-button" ng-click='nodeCtrl.showRevisions($event, component.id)'
+    <md-button class="revision md-icon-button" ng-click='nodeCtrl.showRevisions($event, component.id)'
                ng-disabled="nodeCtrl.getRevisions(component.id).length == 0">
         <md-icon> history </md-icon>
         <md-tooltip md-direction="top">{{nodeCtrl.getRevisions(component.id).length}} Revisions</md-tooltip>
     </md-button>
-
 </div>

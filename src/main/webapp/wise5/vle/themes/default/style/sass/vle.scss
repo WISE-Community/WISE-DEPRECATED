@@ -68,9 +68,12 @@ md-icon {
         "layouts/l-sidebar";
 
 // 3. Modules
-@import "modules/account-menu",
+@import "modules/component",
+        "modules/inputs",
         "modules/nav",
         "modules/node",
+        "modules/toolbar",
         "modules/progress-circular-with-label",
         "modules/project-status",
-        "modules/toolbar";
+        "modules/discussion",
+        "modules/account-menu";

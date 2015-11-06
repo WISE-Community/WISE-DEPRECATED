@@ -27,7 +27,7 @@ define(['app'], function(app) {
         this.studentResponse = '';
 
         // holds student attachments like assets
-        this.studentAttachments = [];
+        this.attachments = [];
         
         // whether the step should be disabled
         this.isDisabled = false;
@@ -157,7 +157,7 @@ define(['app'], function(app) {
                     var attachments = studentData.attachments;
 
                     if (attachments != null) {
-                        this.studentAttachments = attachments;
+                        this.attachments = attachments;
                     }
                 }
             }
@@ -234,7 +234,7 @@ define(['app'], function(app) {
             // set the response into the component state
             var studentData = {};
             studentData.response = response;
-            studentData.attachments = this.studentAttachments;
+            studentData.attachments = this.attachments;
 
             if (this.isSubmit) {
                 // the student submitted this work
@@ -317,6 +317,13 @@ define(['app'], function(app) {
             return result;
         };
 
+        this.removeAttachment = function(attachment) {
+            if (this.attachments.indexOf(attachment) != -1) {
+                this.attachments.splice(this.attachments.indexOf(attachment), 1);
+                this.studentDataChanged();
+            }
+        };
+
         this.attachNotebookItemToComponent = angular.bind(this, function(notebookItem) {
             if (notebookItem.studentAsset != null) {
                 // we're importing a StudentAssetNotebookItem
@@ -329,7 +336,7 @@ define(['app'], function(app) {
                             iconURL: copiedAsset.iconURL
                         };
 
-                        this.studentAttachments.push(attachment);
+                        this.attachments.push(attachment);
                         this.studentDataChanged();
                     }
                 }));
@@ -591,13 +598,13 @@ define(['app'], function(app) {
             content_css: themePath + "/style/css/tinymce.css",
             setup: function (ed) {
                 ed.on("focus", function (e) {
-                    $(e.target.editorContainer).addClass('node-input--focused').parent().addClass('node-input-wrapper--focused');
-                    $('label[for="' + e.target.id + '"]').addClass('node-input-label--focused');
+                    $(e.target.editorContainer).addClass('input--focused').parent().addClass('input-wrapper--focused');
+                    $('label[for="' + e.target.id + '"]').addClass('input-label--focused');
                 });
 
                 ed.on("blur", function (e) {
-                    $(e.target.editorContainer).removeClass('node-input--focused').parent().removeClass('node-input-wrapper--focused');
-                    $('label[for="' + e.target.id + '"]').removeClass('node-input-label--focused');
+                    $(e.target.editorContainer).removeClass('input--focused').parent().removeClass('input-wrapper--focused');
+                    $('label[for="' + e.target.id + '"]').removeClass('input-label--focused');
                 });
             }
         };

@@ -1,6 +1,33 @@
 @import "compass";
 
 // Angular Material customizations and additions
+$body-font-size-base:      rem(1.500);
+$caption-font-size-base:   rem(1.300);
+
+h1 {
+  font-size: $display-3-font-size-base;
+}
+
+h2 {
+  font-size: $display-2-font-size-base;
+}
+
+h3 {
+  font-size: $display-1-font-size-base;
+}
+
+h4 {
+  font-size: $headline-font-size-base;
+}
+
+h5 {
+  font-size: $title-font-size-base;
+}
+
+h6 {
+  font-size: $subhead-font-size-base;
+}
+
 
 md-toolbar {
   min-height: $baseline-grid * 6.5;
@@ -24,14 +51,13 @@ md-toolbar {
   }
 }
 
-
 md-card[md-ink-ripple], md-card-content[md-ink-ripple] {
   position: relative;
   cursor: pointer;
 }
 
 md-card {
-  @include border-radius(4px);
+  @include border-radius($card-border-radius);
 }
 
 md-progress-linear:not([md-mode="indeterminate"]) {
@@ -53,6 +79,14 @@ md-list-item .md-list-item-inner>.md-avatar:first-child, md-list-item>.md-avatar
   display: flex;
 }
 
-md-input-container label, md-input-container .md-placeholder {
-  color: rgba(0,0,0,0.54);
+md-input-container:not(.md-input-invalid):not(.md-input-focused).md-input-has-value label {
+  color: rgba(0,0,0,0.87) !important;
+}
+
+.md-button {
+  @media (max-width: $layout-breakpoint-sm - 1) {
+    min-width: 60px;
+    min-height: 28px;
+    line-height: 28px;
+  }
 }

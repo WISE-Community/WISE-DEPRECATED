@@ -1,0 +1,28 @@
+<md-dialog aria-label="List dialog">
+    <md-toolbar md-theme="light">
+        <div class="md-toolbar-tools">
+            <h2>Previous work for this item</h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="close()">
+                <md-icon aria-label="Close dialog"> close </md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <md-dialog-content class="md-dialog-content">
+        <md-list>
+            <md-list-item ng-repeat="item in items">
+                <div><componentstatehtml componentstate="{{item}}"></componentstatehtml></div>
+                <p>
+                    <span ng-if="item.isAutoSave">Auto-saved </span>
+                    <span ng-if="!item.isAutoSave && !item.isSubmit">Saved </span>
+                    <span ng-if="!item.isAutoSave && item.isSubmit">Submitted </span>
+                    {{item.clientSaveTime | amTimeAgo}}
+                    <md-button ng-if="allowRevert" ng-click="revertWork(item)" class="md-primary">Revert</md-button>
+                </p>
+            </md-list-item>
+        </md-list>
+    </md-dialog-content>
+    <div class="md-actions" layout="row">
+        <md-button ng-click="close()" class="md-primary">Close</md-button>
+    </div>
+</md-dialog>

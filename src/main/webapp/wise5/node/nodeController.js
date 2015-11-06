@@ -166,54 +166,11 @@ define(['app'], function(app) {
                     componentController = childScope.drawController;
                 }
 
-                // TODO: make this customizeable per theme and maybe make into directive
-                var parentEl = angular.element(document.body);
-                $mdDialog.show({
-                    parent: parentEl,
-                    targetEvent: $event,
-                    template:
-                    '<md-dialog aria-label="List dialog">' +
-                    '  <h3 flex style="font-size:1.1em; font-weight:bold">Your work for this item</h3>' +
-                    '  <md-dialog-content>'+
-                    '    <md-list>'+
-                    '      <md-list-item ng-repeat="item in items">'+
-                    '       <p><componentstatehtml componentstate="{{item}}"></componentstatehtml>' +
-                    '       <span ng-if="item.isAutoSave">Auto-saved on</span>' +
-                    '       <span ng-if="!item.isAutoSave && !item.isSubmit">Saved on</span> ' +
-                    '       <span ng-if="!item.isAutoSave && item.isSubmit">Submitted on</span> ' +
-                    '       {{item.clientSaveTime | date : "medium"}}' +
-                    '       <md-button ng-if="allowRevert" ng-click="revertWork(item)" class="md-primary">Revert</md-button></p>'+
-                    '      </md-list-item>'+
-                    '    </md-list>'+
-                    '  </md-dialog-content>' +
-                    '  <div class="md-actions">' +
-                    '    <md-button ng-click="closeDialog()" class="md-primary">' +
-                    '      Close' +
-                    '    </md-button>' +
-                    '  </div>' +
-                    '</md-dialog>',
-                    locals: {
-                        items: revisions,
-                        componentController: componentController
-                    },
-                    controller: DialogController
-                });
-                function DialogController($scope, $mdDialog, items, componentController) {
-                    $scope.items = items;
-                    $scope.componentController = componentController;
-                    $scope.closeDialog = function() {
-                        $mdDialog.hide();
-                    }
-                    $scope.revertWork = function(componentState) {
-                        $scope.componentController.setStudentWork(componentState);
-                        $mdDialog.hide();
-                    }
-                }
+                // broadcast showRevisions event
+                $rootScope.$broadcast('showRevisions', {revisions: revisions, componentController: componentController, allowRevert: allowRevert, $event: $event});
             };
 
             this.showNotebook = function($event, componentId) {
-                //&&&&
-                var revisions = this.getRevisions(componentId);
 
                 // get the scope for the component
                 var childScope = $scope.componentToScope[componentId];
@@ -225,6 +182,8 @@ define(['app'], function(app) {
                     componentController = childScope.openResponseController;
                 } else if (childScope.drawController) {
                     componentController = childScope.drawController;
+                } else if (childScope.discussionController) {
+                    componentController = childScope.discussionController;
                 }
 
                 // TODO: make this customizeable per theme and maybe make into directive

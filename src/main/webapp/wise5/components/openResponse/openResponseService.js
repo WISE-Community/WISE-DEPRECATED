@@ -71,6 +71,15 @@ define(['nodeService', 'studentDataService'], function(nodeService, studentDataS
                 if (response != null) {
                     studentWorkAsHTML = '<p>' + response + '</p>';
                 }
+
+                var attachments = componentState.studentData.attachments;
+
+                if (attachments != null) {
+                    for (var a = 0; a < attachments.length; a++) {
+                        var attachment = attachments[a];
+                        studentWorkAsHTML += "<img src='" + attachment.iconURL + "' class='attachment' />";
+                    }
+                }
             }
 
             return studentWorkAsHTML;
@@ -123,10 +132,10 @@ define(['nodeService', 'studentDataService'], function(nodeService, studentDataS
         serviceObject.isCompleted = function(component, componentStates, componentEvents, nodeEvents) {
             var result = false;
 
-            if (componentStates != null  && componentStates.length) {
+            if (componentStates != null && componentStates.length) {
 
                 // get the last component state
-                var l = componentStates.length-1;
+                var l = componentStates.length - 1;
                 var componentState = componentStates[l];
 
                 var studentData = componentState.studentData;
@@ -134,7 +143,7 @@ define(['nodeService', 'studentDataService'], function(nodeService, studentDataS
                 if (studentData != null) {
                     var response = studentData.response;
 
-                    if (!!response) {
+                    if (response) {
                         // there is a response so the component is completed
                         result = true;
                     }

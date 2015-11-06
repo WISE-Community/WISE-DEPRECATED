@@ -1,0 +1,95 @@
+// Variables
+$input-action-width: 48px;
+$input-action-vertical-offset: 0;
+$input-action-vertical-offset-richtext: -7px;
+
+// Base
+.input-container {
+  padding-top: 8px;
+}
+
+.input-container--open-response {
+  margin-bottom: 0;
+
+  &.md-has-icon {
+    padding-left: 0;
+  }
+}
+
+.input-wrapper {
+  position: relative;
+}
+
+.input-wrapper--focused {
+  .input--textarea__action md-icon {
+    color: $primary-color;
+  }
+}
+
+.input--textarea, .input-container textarea.input--textarea {
+  padding: 8px;
+  background-color: $gray-lightest;
+  border: 1px solid $gray;
+
+  &.input--textarea--hasaction {
+    padding-right: $input-action-width;
+
+    .mce-toolbar-grp {
+      padding-right: $input-action-width;
+    }
+
+  }
+
+  &:focus {
+    background-color: #ffffff;
+  }
+}
+
+.input-container textarea.input--textarea {
+  width: 100%;
+}
+
+.input--textarea--disabled {
+  color: $text-color-secondary;
+}
+
+
+.input--textarea__action {
+  position: absolute;
+  right: -8px;
+
+  &[disabled] md-icon {
+    color: $text-color-disabled !important;
+  }
+}
+
+.input--textarea__action--notebook {
+  top: $input-action-vertical-offset;
+
+  .input-wrapper--richtext & {
+    top: $input-action-vertical-offset-richtext
+  }
+}
+
+.input--textarea__action--revision {
+  bottom: $input-action-vertical-offset;
+
+  .input-wrapper--richtext & {
+    bottom: ($input-action-vertical-offset-richtext + 2px);
+  }
+
+}
+
+.input-label, md-input-container:not(.md-input-invalid):not(.md-input-focused).md-input-has-value label.input-label {
+  line-height: 1.2;
+  font-weight: 500;
+  color: $text-color-dark;
+
+  &.input-label--focused {
+    color: $primary-color;
+  }
+}
+
+.input--focused {
+  //border-color: $primary-color;
+}

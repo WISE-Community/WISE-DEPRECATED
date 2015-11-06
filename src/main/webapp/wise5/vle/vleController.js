@@ -128,13 +128,13 @@ define(['app'],
         };
 
         this.notebookDragStartCallback = function(event, ui) {
-            console.log('vleController.notebookDragStartCallback');
+            //console.log('vleController.notebookDragStartCallback');
             //$(ui.helper.context).data('importWorkNodeState', StudentDataService.getLatestNodeStateByNodeId(nodeId));
             //$(ui.helper.context).data('importWorkNodeType', nodeType);
         };
 
         this.notebookDropCallback = angular.bind(this, function(event, ui) {
-            console.log('vleController.notebookDropCallback');
+            //console.log('vleController.notebookDropCallback');
             //var importWorkNodeState = $(ui.helper.context).data('importWorkNodeState');
             //var importWorkNodeType = $(ui.helper.context).data('importWorkNodeType');
             //var populatedNodeState = OpenResponseService.populateNodeState(importWorkNodeState, importWorkNodeType);

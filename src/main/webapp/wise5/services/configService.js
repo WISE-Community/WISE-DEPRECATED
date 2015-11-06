@@ -282,7 +282,7 @@ define([], function() {
             return userName;
         };
 
-        serviceObject.getUserNamesByWorkgroupId = function(workgroupId) {
+        serviceObject.getUserNamesByWorkgroupId = function(workgroupId, noUserIds) {
             var userNames = [];
 
             if(workgroupId != null) {
@@ -290,6 +290,12 @@ define([], function() {
 
                 if (userInfo != null) {
                     userNames = userInfo.userName.split(':');
+
+                    if(noUserIds) {
+                        for (var i = 0; i < userNames.length; i++) {
+                            userNames[i] = userNames[i].replace(/ \(.*\)$/g, '');
+                        }
+                    }
                 }
             }
 

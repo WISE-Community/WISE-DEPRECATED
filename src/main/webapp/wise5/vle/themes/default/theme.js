@@ -227,6 +227,40 @@ define(['angular', /*'annotationService',*/ 'configService', 'nodeService', 'not
                     );
                 }));
 
+                // show list of revisions in a dialog when user clicks the show revisions link for a component
+                $scope.$on('showRevisions', angular.bind(this, function (event, args) {
+                    var revisions = args.revisions;
+                    var componentController = args.componentController;
+                    var allowRevert = args.allowRevert;
+                    var $event = args.$event;
+                    var revisionsTemplateUrl = this.themePath + '/templates/componentRevisions.html';
+
+                    $mdDialog.show({
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        templateUrl: revisionsTemplateUrl,
+                        locals: {
+                            items: revisions,
+                            componentController: componentController,
+                            allowRevert: allowRevert
+                        },
+                        controller: RevisionsController
+                    });
+                    function RevisionsController($scope, $mdDialog, items, componentController, allowRevert) {
+                        $scope.items = items;
+                        $scope.componentController = componentController;
+                        $scope.allowRevert = allowRevert;
+                        $scope.close = function() {
+                            $mdDialog.hide();
+                        };
+                        $scope.revertWork = function(componentState) {
+                            $scope.componentController.setStudentWork(componentState);
+                            $mdDialog.hide();
+                        };
+                    }
+
+                }));
+
                 // capture notebook open/close events
                 $mdComponentRegistry.when('notebook').then(function(it){
                     $scope.$watch(function() {

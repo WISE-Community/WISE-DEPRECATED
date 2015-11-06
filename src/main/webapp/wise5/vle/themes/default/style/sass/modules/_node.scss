@@ -1,7 +1,7 @@
 // Variables
-$node-input-action-width: 48px;
-$node-input-action-vertical-offset: 0;
-$node-input-action-vertical-offset-richtext: -7px;
+$input-action-width: 48px;
+$input-action-vertical-offset: 0;
+$input-action-vertical-offset-richtext: -7px;
 
 // Base
 .node-toolbar {
@@ -12,8 +12,17 @@ $node-input-action-vertical-offset-richtext: -7px;
 }
 
 .node-content {
-  padding-left: 16px;
-  padding-right: 16px;
+  margin: 0;
+  padding: 0;
+
+  @media only screen and (min-width: $layout-breakpoint-sm) {
+    margin: 16px auto;
+    border: 1px solid $gray;
+  }
+
+  @media only screen and (min-width: $layout-breakpoint-md) {
+    margin: 32px auto;
+  }
 }
 
 .node-icon {
@@ -48,107 +57,20 @@ $node-input-action-vertical-offset-richtext: -7px;
   }
 }
 
+.node-content__actions {
+  padding: 0 16px 16px 16px;
 
-// Inputs
-// TODO: generalize these for WISE (not just nodes, regardless of theme?)
-.node-input-container {
-  padding: 16px 0;
-
-  .mce-toolbar-grp {
-    padding-right: $node-input-action-width;
-  }
-}
-
-.node-input-wrapper {
-  position: relative;
-}
-
-.node-input-wrapper--focused {
-  .node-input--textarea__action md-icon {
-    color: $primary-color;
-  }
-}
-
-.node-input--textarea, .node-input-container textarea.node-input--textarea {
-  padding: 8px;
-  background-color: $gray-lightest;
-  border: 1px solid $gray;
-
-  &.node-input--textarea--hasaction {
-    padding-right: $node-input-action-width;
-  }
-
-  &:focus {
-    background-color: #ffffff;
-  }
-}
-
-.node-input-container textarea.node-input--textarea {
-  width: 100%;
-}
-
-.node-input--textarea--disabled {
-  color: $text-color-secondary;
-}
-
-
-.node-input--textarea__action {
-  position: absolute;
-  right: -8px;
-
-  &[disabled] md-icon {
-    color: $text-color-light !important;
-  }
-}
-
-.node-input--textarea__action--notebook {
-  top: $node-input-action-vertical-offset;
-
-  .node-input-wrapper--richtext & {
-    top: $node-input-action-vertical-offset-richtext
-  }
-}
-
-.node-input--textarea__action--revision {
-  bottom: $node-input-action-vertical-offset;
-
-  .node-input-wrapper--richtext & {
-    bottom: ($node-input-action-vertical-offset-richtext + 2px);
-  }
-}
-
-.node-input-label, md-input-container:not(.md-input-invalid):not(.md-input-focused).md-input-has-value label.node-input-label {
-  padding-bottom: 4px;
-  line-height: 1.2;
-  font-weight: bold;
-  color: $text-color-dark;
-
-  &.node-input-label--focused {
-    color: $primary-color;
-  }
-}
-
-.node-input--focused {
-  border-color: $primary-color;
-}
-
-.component-content {
-  margin: 8px 0;
-
-  @media only screen and (min-width: $layout-breakpoint-md) {
-    margin: 16px 0;
-  }
-}
-
-.node-content--actions, .component-content--actions {
   .md-button:first-of-type {
     margin-left: 0;
+  }
+
+  .md-button:last-of-type {
+    margin-right: 0;
   }
 }
 
 .md-button.md-icon-button.node-nav {
   &:not(:first-of-type) {
-    margin-left: 0;
   }
 
   &:first-of-type {

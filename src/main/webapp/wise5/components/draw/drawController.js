@@ -37,7 +37,7 @@ define(['app', 'drawingTool', 'vendor'], function(app) {
         
         // will hold the drawing tool object
         this.drawingTool = null;
-        
+
         /**
          * Perform setup of the component
          */
@@ -53,8 +53,7 @@ define(['app', 'drawingTool', 'vendor'], function(app) {
                 stamps: {
                     'fun': [
                         'https://upload.wikimedia.org/wikipedia/commons/3/31/Ice_Cream_dessert_02.jpg',
-                        'https://popcorntime.io/images/logo-valentines.png',
-
+                        'https://popcorntime.io/images/logo-valentines.png'
                                   ]
                 },
                 parseSVG: true
@@ -94,10 +93,12 @@ define(['app', 'drawingTool', 'vendor'], function(app) {
 
                 // get the component type
                 this.componentType = this.componentContent.componentType;
-                
+
                 // get the show previous work node id if it is provided
                 var showPreviousWorkNodeId = this.componentContent.showPreviousWorkNodeId;
-                
+
+                var componentState = null;
+
                 if (showPreviousWorkNodeId != null) {
                     // this component is showing previous work
                     this.isShowPreviousWork = true;
@@ -112,7 +113,7 @@ define(['app', 'drawingTool', 'vendor'], function(app) {
                     this.componentContent = NodeService.getComponentContentById(showPreviousWorkNodeContent, showPreviousWorkComponentId);
 
                     // get the component state for the show previous work
-                    var componentState = StudentDataService.getLatestComponentStateByNodeIdAndComponentId(showPreviousWorkNodeId, showPreviousWorkComponentId);
+                    componentState = StudentDataService.getLatestComponentStateByNodeIdAndComponentId(showPreviousWorkNodeId, showPreviousWorkComponentId);
 
                     // populate the student work into this component
                     this.setStudentWork(componentState);
@@ -126,7 +127,7 @@ define(['app', 'drawingTool', 'vendor'], function(app) {
                     // this is a regular component
 
                     // get the component state from the scope
-                    var componentState = $scope.componentState;
+                    componentState = $scope.componentState;
                     
                     if (componentState == null) {
                         /*
@@ -364,7 +365,45 @@ define(['app', 'drawingTool', 'vendor'], function(app) {
             return result;
         };
 
-        this.dropCallback = angular.bind(this, function(event, ui, title, $index) {
+        this.attachNotebookItemToComponent = angular.bind(this, function(notebookItem) {
+            if (notebookItem.studentAsset != null) {
+                // we're importing a StudentAssetNotebookItem
+                var studentAsset = notebookItem.studentAsset;
+                StudentAssetService.copyAssetForReference(studentAsset).then(angular.bind(this, function(copiedAsset) {
+                    if (copiedAsset != null) {
+                        fabric.Image.fromURL(copiedAsset.url, angular.bind(this, function(oImg) {
+                            oImg.scaleToWidth(200);  // set max width and have height scale relatively
+                            // TODO: center image or put them at mouse position? Wasn't straight-forward, tried below but had issues...
+                            //oImg.setLeft((this.drawingTool.canvas.width / 2) - (oImg.width / 2));  // center image vertically and horizontally
+                            //oImg.setTop((this.drawingTool.canvas.height / 2) - (oImg.height / 2));
+                            //oImg.center();
+                            oImg.studentAssetId = copiedAsset.id;  // keep track of this asset id
+                            this.drawingTool.canvas.add(oImg);   // add copied asset image to canvas
+                        }));
+                    }
+                }));
+            } else if (notebookItem.studentWork != null) {
+                // we're importing a StudentWorkNotebookItem
+                var studentWork = notebookItem.studentWork;
+
+                var componentType = studentWork.componentType;
+
+                if (componentType != null) {
+                    var childService = $injector.get(componentType + 'Service');
+
+                    if (childService != null) {
+                        var studentWorkHTML = childService.getStudentWorkAsHTML(studentWork);
+
+                        if (studentWorkHTML != null) {
+                            this.studentResponse += studentWorkHTML;
+                            this.studentDataChanged();
+                        }
+                    }
+                }
+            }
+        });
+
+        this.dropCallback_NO_LONGER_USED = angular.bind(this, function(event, ui, title, $index) {
             if (this.isDisabled) {
                 // don't import if step is disabled/locked
                 return;
@@ -454,7 +493,7 @@ define(['app', 'drawingTool', 'vendor'], function(app) {
                         }
                     }
                 }
-            };
+            }
         });
 
         /**

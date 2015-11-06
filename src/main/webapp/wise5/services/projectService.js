@@ -2264,6 +2264,6 @@ define(['configService'], function(configService) {
 
         return serviceObject;
     }];
-    
+
     return service;
 });

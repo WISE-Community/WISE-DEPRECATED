@@ -12,6 +12,7 @@ define([
     'angularAudio',
     'angularDragDrop',
     'angularFileUpload',
+    'angularMoment',
     'angularSortable',
     'angularTextAngular',
     'angularToArrayFilter',
@@ -28,6 +29,7 @@ define([
     'highcharts-ng',
     'htmlService',
     'matchService',
+    'moment',
     'multipleChoiceService',
     'nodeService',
     'ocLazyLoad',
@@ -59,6 +61,7 @@ define([
              angularAudio,
              angularDragDrop,
              angularFileUpload,
+             angularMoment,
              angularSortable,
              angularTextAngular,
              angularToArrayFilter,
@@ -75,6 +78,7 @@ define([
              highchartsng,
              htmlService,
              matchService,
+             moment,
              multipleChoiceService,
              nodeService,
              ocLazyLoad,
@@ -103,6 +107,7 @@ define([
         'ui.sortable',
         'ui.tinymce',
         'ui.tree',
+        'angularMoment',
         'angular-toArrayFilter',
         'ngAnimate',
         'ngAudio',
@@ -227,9 +232,6 @@ define([
                             templateUrl: 'wise5/node/index.html',
                             controller: 'NodeController as nodeCtrl',
                             resolve: {
-                                nodeController: app.loadController('nodeController')
-                            },
-                            resolve: {
                                 audioRecorderController: app.loadController('audioRecorderController'),
                                 cRaterController: app.loadController('cRaterController'),
                                 discussionController: app.loadController('discussionController'),
@@ -288,17 +290,16 @@ define([
                 'A200': 'ff7061',
                 'A400': 'ff3829',
                 'A700': 'cc1705',
-                'contrastDefaultColor': 'light',    // whether, by default, text (contrast)
-                                                    // on this palette should be dark or light
-                'contrastDarkColors': ['50', '100', //hues which contrast should be 'dark' by default
+                'contrastDefaultColor': 'light',
+                'contrastDarkColors': ['50', '100',
                     '200', '300', 'A100'],
-                'contrastLightColors': undefined    // could also specify this if default was 'dark'
+                'contrastLightColors': undefined
             });
 
             $mdThemingProvider.theme('default')
                 .primaryPalette('primary')
                 .accentPalette('accent',  {
-                    'default': '500' // use shade 200 for default, and keep all other shades the same
+                    'default': '500'
                 });
 
             var lightMap = $mdThemingProvider.extendPalette('grey', {
@@ -313,6 +314,18 @@ define([
                 .accentPalette('primary');
 
             $mdThemingProvider.setDefaultTheme('default');
+
+            // moment.js default overrides
+            moment.locale('en', {
+                calendar : {
+                    lastDay : '[Yesterday at] LT',
+                    sameDay : '[Today at] LT',
+                    nextDay : '[Tomorrow at] LT',
+                    lastWeek : '[last] dddd [at] LT',
+                    nextWeek : 'dddd [at] LT',
+                    sameElse : 'MMM D,   YYYY'
+                }
+            });
         }]);
 
     return app;
