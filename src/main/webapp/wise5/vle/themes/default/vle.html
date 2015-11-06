@@ -5,7 +5,7 @@
 <style>
     {{vleController.projectStyle}}
 </style>
-<div layout="column" layout-fill>
+<div layout="column" disable-delete-keypress layout-fill>
     <div ng-if="vleController.themeLoaded" ng-controller="ThemeController as themeCtrl" layout="row" layout-fill>
         <div layout="column" flex>
             <md-toolbar class="l-header" ng-class="{'md-whiteframe-z1': vleController.layoutState == 'nav'}">

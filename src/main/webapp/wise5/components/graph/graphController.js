@@ -1,11 +1,13 @@
 define(['app', 
-        'bootstrap', 
+        'bootstrap',
+        'draggablePoints',
         'highcharts', 
         'highcharts-more',
         'highcharts-ng', 
         'jquery'],
         function(app, 
-                bootstrap, 
+                bootstrap,
+                draggablePoints,
                 highcharts, 
                 highchartsMore, 
                 highchartsng, 
@@ -187,7 +189,7 @@ define(['app',
             }
 
             // add the event that will remove a point when clicked
-            this.addClickToRemovePointEvent(series);
+            //this.addClickToRemovePointEvent(series);
 
             // loop through all the series and
             for (var s = 0; s < series.length; s++) {
@@ -214,7 +216,8 @@ define(['app',
              * generate an array of regression series for the series that
              * requrie a regression line
              */
-            var regressionSeries = GraphService.generateRegressionSeries(series);
+            //var regressionSeries = GraphService.generateRegressionSeries(series);
+            var regressionSeries = [];
             this.regressionSeries = regressionSeries;
 
             /*
@@ -223,7 +226,13 @@ define(['app',
              */
             var allSeries = [];
             allSeries = allSeries.concat(series);
+
+            //regressionSeries[0].id = 'series-2';
+            //regressionSeries[1].id = 'series-3';
+            //this.setSeriesIds(regressionSeries);
             allSeries = allSeries.concat(regressionSeries);
+
+            //this.setSeriesIds(allSeries);
 
             if (this.activeSeries == null && series.length > 0) {
                 // the active series has not been set so we will set the active series to the first series
@@ -232,12 +241,45 @@ define(['app',
 
             this.chartConfig = {
                 options: {
+                    tooltip: {
+                        formatter:function(){
+                            /*
+                             * When the user mouseovers a point, display a tooltip that looks like
+                             *
+                             * x: 10
+                             * y: 15
+                             *
+                             */
+                            var x = thisGraphController.roundToNearestTenth(this.x);
+                            var y = thisGraphController.roundToNearestTenth(this.y);
+
+                            return 'x: ' + x + '<br/>y: ' + y;
+                        }
+                    },
                     chart: {
                         type: graphType,
-                        zoomType: 'xy',
                         events: {
                             click: function(e) {
-                                
+                                // get the current time
+                                var currentTime = new Date().getTime();
+
+                                // check if a drop event recently occurred
+                                if (thisGraphController.lastDropTime != null) {
+
+                                    // check if the last drop event was not within the last 100 milliseconds
+                                    if ((currentTime - thisGraphController.lastDropTime) < 100) {
+
+                                        /*
+                                         * the last drope event was within the last 100 milliseconds so we
+                                         * will not register this click. we need to do this because when
+                                         * students drag points, a click event is fired when they release
+                                         * the mouse button. we don't want that click event to create a new
+                                         * point so we need to ignore it.
+                                         */
+                                        return;
+                                    };
+                                }
+
                                 /*
                                  * check if the student can click to add data
                                  * on the graph
@@ -250,16 +292,15 @@ define(['app',
                                     // check if the student is allowed to add points to the active series
                                     if (series != null && thisGraphController.canClickToAddData(series)) {
 
-                                        // get the x and y positions that were clicked
-                                        var x = e.xAxis[0].value;
-                                        var y = e.yAxis[0].value;
-
-                                        // round the values to the nearest hundredth
-                                        x = Math.round(x * 100) / 100;
-                                        y = Math.round(y * 100) / 100;
+                                        /*
+                                         * get the x and y positions that were clicked and round
+                                         * them to the nearest tenth
+                                         */
+                                        var x = thisGraphController.roundToNearestTenth(e.xAxis[0].value);
+                                        var y = thisGraphController.roundToNearestTenth(e.yAxis[0].value);
 
                                         // remove any point with the given x value
-                                        thisGraphController.removePointFromSeries(series, x);
+                                        //thisGraphController.removePointFromSeries(series, x);
 
                                         // add the point to the series
                                         thisGraphController.addPointToSeries(series, x, y);
@@ -269,6 +310,68 @@ define(['app',
                                          * so that the graph will be redrawn
                                          */
                                         thisGraphController.studentDataChanged();
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    plotOptions: {
+                        series: {
+                            allowPointSelect: true,
+                            point: {
+                                events: {
+                                    drag: function (e) {
+                                        /*
+                                         * the student has started dragging a point so we will
+                                         * set a flag to note that the student is dragging a point
+                                         */
+                                        thisGraphController.dragging = true;
+                                    },
+                                    drop: function (e) {
+                                        // the student has stopped dragging the point and dropped the point
+
+                                        if (thisGraphController.dragging) {
+
+                                            // set the dragging flag off
+                                            thisGraphController.dragging = false;
+
+                                            // remember this drop time
+                                            thisGraphController.lastDropTime = new Date().getTime();
+
+                                            // get the current target
+                                            var currentTarget = e.currentTarget;
+
+                                            if (currentTarget != null) {
+
+                                                /*
+                                                 * get the x and y positions where the point was dropped and round
+                                                 * them to the nearest tenth
+                                                 */
+                                                var x = thisGraphController.roundToNearestTenth(currentTarget.x);
+                                                var y = thisGraphController.roundToNearestTenth(currentTarget.y);
+
+                                                // get the index of the point
+                                                var index = currentTarget.index;
+
+                                                // get the active series
+                                                var series = thisGraphController.activeSeries;
+
+                                                // check if the student is allowed to add points to the active series
+                                                if (series != null && thisGraphController.canClickToAddData(series)) {
+
+                                                    // get the series data
+                                                    var data = series.data;
+
+                                                    if (data != null) {
+                                                        // update the point
+                                                        data[index] = [x, y];
+
+                                                        // tell the controller the student data has changed
+                                                        thisGraphController.studentDataChanged();
+                                                    }
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -644,6 +747,9 @@ define(['app',
             
             // create a component state populated with the student data
             var componentState = this.createComponentState();
+
+            //force redraw
+            $scope.$apply();
             
             /*
              * the student work in this component has changed so we will tell
@@ -1062,7 +1168,140 @@ define(['app',
             
             return data;
         };
-        
+
+        /**
+         * Set the series id for each series
+         * @param allSeries an array of series
+         */
+        this.setSeriesIds = function(allSeries) {
+            var usedSeriesIds = [];
+
+            if (allSeries != null) {
+
+                // loop through all the series
+                for (var x = 0; x < allSeries.length; x++) {
+                    var series = allSeries[x];
+
+                    // get the series id if it is set
+                    var seriesId = series.id;
+
+                    if (seriesId == null) {
+                        // the series doesn't have a series id so we will give it one
+                        var nextSeriesId = this.getNextSeriesId(usedSeriesIds);
+                        series.id = nextSeriesId;
+                        usedSeriesIds.push(nextSeriesId);
+                    }
+                }
+            }
+        };
+
+        /**
+         * Get the next available series id
+         * @param usedSeriesIds an array of used series ids
+         * @returns the next available series id
+         */
+        this.getNextSeriesId = function(usedSeriesIds) {
+            var nextSeriesId = null;
+            var currentSeriesNumber = 0;
+            var foundNextSeriesId = false;
+
+            while (!foundNextSeriesId) {
+
+                // get a temp series id
+                var tempSeriesId = 'series-' + currentSeriesNumber;
+
+                // check if the temp series id is used
+                if (usedSeriesIds.indexOf(tempSeriesId) == -1) {
+                    // temp series id has not been used
+
+                    nextSeriesId = tempSeriesId;
+
+                    foundNextSeriesId = true;
+                } else {
+                    /*
+                     * the temp series id has been used so we will increment the
+                     * counter to try another series id the next iteration
+                     */
+                    currentSeriesNumber++;
+                }
+            }
+
+            return nextSeriesId;
+        };
+
+        /**
+         * Round a number to the nearest tenth
+         */
+        this.roundToNearestTenth = function(x) {
+
+            // make sure x is a number
+            x = parseFloat(x);
+
+            // round the number to the nearest tenth
+            x = Math.round(x * 10) / 10;
+
+            return x;
+        }
+
+        /**
+         * Handle the delete key press
+         */
+        $scope.handleDeleteKeyPressed = function() {
+            $scope.graphController.handleDeleteKeyPressed();
+        };
+
+        /**
+         * Handle the delete key press
+         */
+        this.handleDeleteKeyPressed = function() {
+
+            // get the active series
+            var series = this.activeSeries;
+
+            // get the chart
+            var chart = $('#chart1').highcharts();
+
+            // get the selected points
+            var selectedPoints = chart.getSelectedPoints();
+
+            if (selectedPoints != null) {
+
+                // an array to hold the indexes of the selected points
+                var indexes = [];
+
+                // loop through all the selected points
+                for (var x = 0; x < selectedPoints.length; x++) {
+
+                    // get a selected point
+                    var selectedPoint = selectedPoints[x];
+
+                    // get the index of the selected point
+                    var index = selectedPoint.index;
+
+                    // add the index to our array
+                    indexes.push(index);
+                }
+
+                // order the array from largest to smallest
+                indexes.sort().reverse();
+
+                // get the series data
+                var data = series.data;
+
+                // loop through all the indexes and remove them from the series data
+                for (var i = 0; i < indexes.length; i++) {
+
+                    var index = indexes[i];
+
+                    if (data != null) {
+                        data.splice(index, 1);
+                    }
+                }
+
+                this.studentDataChanged();
+            }
+        };
+
         /**
          * Get the component id
          * @return the component id

@@ -341,4 +341,78 @@ define(['angular', 'projectService', 'studentDataService'], function(angular, pr
         };
     })
 
+    .directive('disableDeleteKeypress', [
+        '$document',
+        '$rootScope',
+        function($document, $rootScope) {
+            return {
+                restrict: 'A',
+                link: function() {
+                    $document.bind('keydown', function(e) {
+
+                        // check for the delete key press
+                        if (e.keyCode === 8) {
+                            // the delete key was pressed
+
+                            // get the name of the node e.g. body, input, div, etc.
+                            var nodeName = e.target.nodeName;
+
+                            // get the type if applicable e.g. text, password, file, etc.
+                            var targetType = e.target.type;
+
+                            if (nodeName != null) {
+                                nodeName = nodeName.toLowerCase();
+                            }
+
+                            if (targetType != null) {
+                                targetType = targetType.toLowerCase();
+                            }
+
+                            if ((nodeName === 'input' && targetType === 'text') ||
+                                (nodeName === 'input' && targetType === 'password') ||
+                                (nodeName === 'input' && targetType === 'file') ||
+                                (nodeName === 'input' && targetType === 'search') ||
+                                (nodeName === 'input' && targetType === 'email') ||
+                                (nodeName === 'input' && targetType === 'number') ||
+                                (nodeName === 'input' && targetType === 'date') ||
+                                nodeName === 'textarea') {
+                                /*
+                                 * the user is typing in a valid input element so we will
+                                 * allow the delete key press
+                                 */
+                            } else {
+                                /*
+                                 * the user is not typing in an input element so we will
+                                 * not allow the delete key press
+                                 */
+                                e.preventDefault();
+                            }
+                        }
+                    })
+                }
+            }
+        }
+    ])
+
+    .directive('listenForDeleteKeypress', [
+        '$document',
+        '$rootScope',
+        function($document, $rootScope) {
+            return {
+                restrict: 'A',
+                link: function($scope) {
+                    $document.bind('keydown', function(e) {
+
+                        // check for the delete key press
+                        if (e.keyCode === 8) {
+                            // the delete key was pressed
+
+                            // handle the delete key press in the scope
+                            $scope.handleDeleteKeyPressed();
+                        }
+                    })
+                }
+            }
+        }
+    ])
 });

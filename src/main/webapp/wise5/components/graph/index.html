@@ -1,4 +1,4 @@
-<div ng-controller='GraphController as graphController'>
+<div ng-controller='GraphController as graphController' listen-for-delete-keypress>
     <div id='prompt' compile='graphController.getPrompt()'></div>
     <button ng-click='graphController.resetGraph()'>Reset Graph</button>
 

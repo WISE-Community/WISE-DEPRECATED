@@ -37,6 +37,7 @@ require.config({
         'directives': 'directives/directives',
         'discussionController': 'components/discussion/discussionController',
         'discussionService': 'components/discussion/discussionService',
+        'draggablePoints': 'vendor/draggable-points/draggable-points',
         'drawController': 'components/draw/drawController',
         'drawService': 'components/draw/drawService',
         'filters': 'filters/filters',
@@ -197,6 +198,13 @@ require.config({
             'deps': [
                     'jquery'
                     ]
+        },
+        'draggablePoints': {
+            'exports': 'draggablePoints',
+            'deps': [
+                'angular',
+                'highcharts'
+            ]
         },
         'drawingTool': {
             'exports': 'drawingTool',

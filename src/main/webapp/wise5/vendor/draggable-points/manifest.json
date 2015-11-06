@@ -1,0 +1,37 @@
+{
+    "name": "Draggable Points",
+    "version": "1.2.0",
+    "title": "Highcharts Draggable Points",
+    "demo": [
+        "http://jsfiddle.net/highcharts/AyUbx/",
+        "http://jsfiddle.net/highcharts/sk3m3o7d/"
+    ],
+    "author": {
+        "name": "Torstein Hønsi",
+        "url": "https://github.com/highslide-software"
+    },
+    "licenses": [
+        {
+            "type": "MIT",
+            "url": "https://github.com/highslide-software/draggable-points/blob/master/LICENSE"
+        }
+    ],
+    "description": "This plugin allows the user to drag the points in the chart, making them able to edit data directly in the chart.",
+    "keywords": [
+     "draggable"
+    ],
+    "maintainers": [
+        {
+          "name": "Sebastian Bochan",
+          "email": "sebastian2@blacklabel.pl",
+          "url": "http://www.blacklabel.pl"
+        },{
+          "name": "Paweł Fus",
+          "email": "pawel@blacklabel.pl",
+          "url": "http://www.blacklabel.pl"
+        }
+    ],
+    "dependencies": {
+        "Highcharts": ">=3.0.0"
+    }
+}
