@@ -689,7 +689,7 @@
                                 },
                                 "regression": false,
                                 "regressionSettings": {},
-                                "canClickToAddData": true
+                                "canEdit": true
                             }
                         ]
                     }
@@ -776,7 +776,7 @@
                                 },
                                 "regression": false,
                                 "regressionSettings": {},
-                                "canClickToAddData": true
+                                "canEdit": true
                             }
                         ]
                     }
@@ -863,7 +863,7 @@
                                 },
                                 "regression": false,
                                 "regressionSettings": {},
-                                "canClickToAddData": true
+                                "canEdit": true
                             }
                         ]
                     }
@@ -1225,7 +1225,7 @@
                                 },
                                 "regression": false,
                                 "regressionSettings": {},
-                                "canClickToAddData": true
+                                "canEdit": true
                             }
                         ]
                     }

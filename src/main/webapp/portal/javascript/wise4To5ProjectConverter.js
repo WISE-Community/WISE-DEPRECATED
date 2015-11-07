@@ -969,7 +969,7 @@ function convertGrapher(node, nodeContent) {
 
     component.series = [
         {
-            "name": "Spongebob",
+            "name": "Data",
             "data": [
             ],
             "color": "blue",
@@ -979,7 +979,7 @@ function convertGrapher(node, nodeContent) {
             "regression": false,
             "regressionSettings": {
             },
-            "canClickToAddData": true
+            "canEdit": true
         }
     ];
 

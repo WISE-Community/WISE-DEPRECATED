@@ -196,19 +196,29 @@ define(['app',
                 var tempSeries = series[s];
 
                 // check if the series should have a regression line generated for it
-                if (tempSeries != null && tempSeries.regression) {
-                    if (tempSeries.regressionSettings == null) {
-                        // initialize the regression settings object if necessary
-                        tempSeries.regressionSettings = {};
+                if (tempSeries != null) {
+
+                    if (tempSeries.regression) {
+                        if (tempSeries.regressionSettings == null) {
+                            // initialize the regression settings object if necessary
+                            tempSeries.regressionSettings = {};
+                        }
+
+                        // get the regression settings object
+                        var regressionSettings = tempSeries.regressionSettings;
+
+                        // add these regression settings
+                        regressionSettings.xMin = xAxis.min;
+                        regressionSettings.xMax = xAxis.max;
+                        regressionSettings.numberOfPoints = 100;
                     }
 
-                    // get the regression settings object
-                    var regressionSettings = tempSeries.regressionSettings;
-
-                    // add these regression settings
-                    regressionSettings.xMin = xAxis.min;
-                    regressionSettings.xMax = xAxis.max;
-                    regressionSettings.numberOfPoints = 100;
+                    if (tempSeries.canEdit) {
+                        // set the fields to allow points to be draggable
+                        tempSeries.draggableX = true;
+                        tempSeries.draggableY = true;
+                        tempSeries.cursor = 'move';
+                    }
                 }
             }
 
@@ -289,8 +299,8 @@ define(['app',
                                     // get the active series
                                     var series = thisGraphController.activeSeries;
 
-                                    // check if the student is allowed to add points to the active series
-                                    if (series != null && thisGraphController.canClickToAddData(series)) {
+                                    // check if the student is allowed to edit the active series
+                                    if (series != null && thisGraphController.canEdit(series)) {
 
                                         /*
                                          * get the x and y positions that were clicked and round
@@ -321,43 +331,51 @@ define(['app',
                             point: {
                                 events: {
                                     drag: function (e) {
-                                        /*
-                                         * the student has started dragging a point so we will
-                                         * set a flag to note that the student is dragging a point
-                                         */
-                                        thisGraphController.dragging = true;
+                                        // the student has started dragging a point
+
+                                        // get the active series
+                                        var series = thisGraphController.activeSeries;
+
+                                        // check if the student is allowed to edit the active series
+                                        if (series != null && thisGraphController.canEdit(series)) {
+                                            // set a flag to note that the student is dragging a point
+                                            thisGraphController.dragging = true;
+                                        }
                                     },
                                     drop: function (e) {
                                         // the student has stopped dragging the point and dropped the point
 
-                                        if (thisGraphController.dragging) {
+                                        // get the active series
+                                        var series = thisGraphController.activeSeries;
 
-                                            // set the dragging flag off
-                                            thisGraphController.dragging = false;
+                                        // check if the student is allowed to edit the active series
+                                        if (series != null && thisGraphController.canEdit(series)) {
 
-                                            // remember this drop time
-                                            thisGraphController.lastDropTime = new Date().getTime();
+                                            if (thisGraphController.dragging) {
 
-                                            // get the current target
-                                            var currentTarget = e.currentTarget;
+                                                // set the dragging flag off
+                                                thisGraphController.dragging = false;
 
-                                            if (currentTarget != null) {
+                                                // remember this drop time
+                                                thisGraphController.lastDropTime = new Date().getTime();
 
-                                                /*
-                                                 * get the x and y positions where the point was dropped and round
-                                                 * them to the nearest tenth
-                                                 */
-                                                var x = thisGraphController.roundToNearestTenth(currentTarget.x);
-                                                var y = thisGraphController.roundToNearestTenth(currentTarget.y);
+                                                // get the current target
+                                                var currentTarget = e.currentTarget;
 
-                                                // get the index of the point
-                                                var index = currentTarget.index;
+                                                if (currentTarget != null) {
 
-                                                // get the active series
-                                                var series = thisGraphController.activeSeries;
+                                                    /*
+                                                     * get the x and y positions where the point was dropped and round
+                                                     * them to the nearest tenth
+                                                     */
+                                                    var x = thisGraphController.roundToNearestTenth(currentTarget.x);
+                                                    var y = thisGraphController.roundToNearestTenth(currentTarget.y);
 
-                                                // check if the student is allowed to add points to the active series
-                                                if (series != null && thisGraphController.canClickToAddData(series)) {
+                                                    // get the index of the point
+                                                    var index = currentTarget.index;
+
+                                                    // get the active series
+                                                    var series = thisGraphController.activeSeries;
 
                                                     // get the series data
                                                     var data = series.data;
@@ -395,7 +413,7 @@ define(['app',
          * @param x the x value
          * @param y the y value
          */
-        this.addPointToSeries = function(series, x, y) {
+        this.addPointToSeries0 = function(series, x, y) {
             if (series != null && x != null && y != null) {
 
                 // get the data points from the series
@@ -435,6 +453,25 @@ define(['app',
                     if (!pointAdded) {
                         data.push([x, y]);
                     }
+                }
+            }
+        };
+
+        /**
+         * Add a point to a series. The point will be inserted at the end of
+         * the series.
+         * @param series the series
+         * @param x the x value
+         * @param y the y value
+         */
+        this.addPointToSeries = function(series, x, y) {
+            if (series != null && x != null && y != null) {
+
+                // get the data points from the series
+                var data = series.data;
+
+                if (data != null) {
+                    data.push([x, y]);
                 }
             }
         };
@@ -497,7 +534,7 @@ define(['app',
 
                         var tempSeries = series[s];
 
-                        if (this.canClickToAddData(tempSeries)) {
+                        if (this.canEdit(tempSeries)) {
                             /*
                              * create a point click event to remove a point when
                              * it is clicked
@@ -563,15 +600,14 @@ define(['app',
         };
         
         /**
-         * Check whether the student is allowed to click on given series to
-         * add a data point
+         * Check whether the student is allowed to edit a given series
          * @param series the series to check
-         * @return whether the series can be clicked to add data
+         * @return whether the series can edit the series
          */
-        this.canClickToAddData = function(series) {
+        this.canEdit = function(series) {
             var result = false;
 
-            if (series != null && series.canClickToAddData) {
+            if (series != null && series.canEdit) {
                 result = true;
             }
 
@@ -1258,47 +1294,51 @@ define(['app',
             // get the active series
             var series = this.activeSeries;
 
-            // get the chart
-            var chart = $('#chart1').highcharts();
+            // check if the student is allowed to edit the the active series
+            if (series != null && this.canEdit(series)) {
 
-            // get the selected points
-            var selectedPoints = chart.getSelectedPoints();
+                // get the chart
+                var chart = $('#chart1').highcharts();
 
-            if (selectedPoints != null) {
+                // get the selected points
+                var selectedPoints = chart.getSelectedPoints();
 
-                // an array to hold the indexes of the selected points
-                var indexes = [];
+                if (selectedPoints != null) {
 
-                // loop through all the selected points
-                for (var x = 0; x < selectedPoints.length; x++) {
+                    // an array to hold the indexes of the selected points
+                    var indexes = [];
 
-                    // get a selected point
-                    var selectedPoint = selectedPoints[x];
+                    // loop through all the selected points
+                    for (var x = 0; x < selectedPoints.length; x++) {
 
-                    // get the index of the selected point
-                    var index = selectedPoint.index;
+                        // get a selected point
+                        var selectedPoint = selectedPoints[x];
 
-                    // add the index to our array
-                    indexes.push(index);
-                }
+                        // get the index of the selected point
+                        var index = selectedPoint.index;
 
-                // order the array from largest to smallest
-                indexes.sort().reverse();
-
-                // get the series data
-                var data = series.data;
-
-                // loop through all the indexes and remove them from the series data
-                for (var i = 0; i < indexes.length; i++) {
-
-                    var index = indexes[i];
-
-                    if (data != null) {
-                        data.splice(index, 1);
+                        // add the index to our array
+                        indexes.push(index);
                     }
-                }
 
-                this.studentDataChanged();
+                    // order the array from largest to smallest
+                    indexes.sort().reverse();
+
+                    // get the series data
+                    var data = series.data;
+
+                    // loop through all the indexes and remove them from the series data
+                    for (var i = 0; i < indexes.length; i++) {
+
+                        var index = indexes[i];
+
+                        if (data != null) {
+                            data.splice(index, 1);
+                        }
+                    }
+
+                    this.studentDataChanged();
+                }
             }
         };
 
