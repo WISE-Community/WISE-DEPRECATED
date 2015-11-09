@@ -32,6 +32,9 @@ var currentGroup = null;
 // variable to turn debugging on or off
 var test = false;
 
+// a mapping of WISE4 node ids to WISE5 node ids
+var wise4IdsToWise5Ids = {};
+
 /**
  * Convert the WISE4 project into a WISE5 project
  */
@@ -193,6 +196,9 @@ function parseWISE4ProjectHelper(project, elementId) {
                 // get the element id
                 var elementId = element.id;
 
+                // add a mapping from the WISE4 id to WISE5 id
+                wise4IdsToWise5Ids[node.identifier] = element.id;
+
                 if (previousNodeIds.length > 0) {
 
                     /*
@@ -334,16 +340,19 @@ function createWISE5NodeFromNodeContent(identifier) {
         method: 'GET',
         url: nodeFilePath,
         async: false,
-        dataType: 'json'
+        dataType: 'text'
     }).done(function(response) {
 
-        // get the WISE4 node content
-        var nodeContent = response;
-
-        if (nodeContent != null) {
+        if (response != null) {
 
             // get the WISE4 node
             var node = getNode(wise4Project, identifier);
+
+            // replace linkTos with wiselinks
+            var responseUpdated = replaceLinkToWithWISELink(node, response);
+
+            // create the node content object
+            var nodeContent = JSON.parse(responseUpdated);
 
             // create the WISE5 node
             wise5Node = convertNode(node, nodeContent);
@@ -1366,4 +1375,109 @@ function fixAssetReferences(html) {
     var regex = /['"]\.jpg['"]]/g;
 
     return fixedHTML;
+}
+
+/**
+ * Replace WISE4 linkTo occurrences with WISE5 wiselinks
+ * @param node the WISE4 node object
+ * @param text the text that may contain linkTo occurrences
+ * @returns the text with linkTo occurrences replaced with wiselinks
+ */
+function replaceLinkToWithWISELink(node, text) {
+
+    if (text != null && text.indexOf('linkTo') != -1) {
+        // the text contains a linkTo
+
+        // pattern that matches the <a></a> that contains the linkTo
+        var anchorPattern = /(<a.*?linkTo.*?<\/a>)/g;
+
+        // find the matches in the text
+        var anchorResult = text.match(anchorPattern);
+
+        if (anchorResult != null) {
+
+            // pattern to capture the linkTo key and link text
+            var linkToPattern = /node.linkTo\(['"](.*?)['"]\).*?>(.*?)<\/a>/;
+
+            // loop through all the linkTo occurrences
+            for (var r = 0; r < anchorResult.length; r++) {
+
+                // get an occurrence of linkTo
+                var tempResult = anchorResult[r];
+
+                // find the linkTo key and link text
+                var linkToResult = tempResult.match(linkToPattern);
+
+                if (linkToResult != null) {
+                    // get the linkTo key
+                    var linkToKey = linkToResult[1];
+
+                    // get the link text
+                    var linkText = linkToResult[2];
+
+                    // get the WISE4 node id
+                    var wise4NodeId = this.getWISE4NodeIdByLinkToKey(node, linkToKey);
+
+                    // get the WISE5 node id
+                    var wise5NodeId = this.getWISE5NodeIdByWISE4NodeId(wise4NodeId);
+
+                    // create the WISE5 wiselink
+                    var wise5Link = "<wiselink nodeid='" + wise5NodeId + "' linkText='" + linkText + "'/>";
+
+                    // replace the WISE4 linkTo with the WISE5 wiselink
+                    text = text.replace(tempResult, wise5Link);
+                }
+            }
+        }
+    }
+
+    return text;
+}
+
+/**
+ * Get a WISE4 node id given the link to key
+ * @param node the WISE4 node object
+ * @param linkToKey the link to key
+ * @returns the WISE4 node id
+ */
+function getWISE4NodeIdByLinkToKey(node, linkToKey) {
+    var nodeId = null;
+
+    if (node != null && linkToKey != null) {
+
+        // get the links from the node
+        var links = node.links;
+
+        if (links != null) {
+
+            // loop through all the links
+            for (var l = 0; l < links.length; l++) {
+                var link = links[l];
+
+                if (link != null) {
+                    if (linkToKey === link.key) {
+                        // the key matches the one we are looking for
+                        nodeId = link.nodeIdentifier;
+                    }
+                }
+            }
+        }
+    }
+
+    return nodeId;
+}
+
+/**
+ * Get a WISE5 node id given the WISE4 node id
+ * @param wise4NodeId the WISE4 node id
+ * @returns the WISE5 node id
+ */
+function getWISE5NodeIdByWISE4NodeId(wise4NodeId) {
+    var wise5NodeId = null;
+
+    if (wise4NodeId != null) {
+        wise5NodeId = wise4IdsToWise5Ids[wise4NodeId];
+    }
+
+    return wise5NodeId;
 }
