@@ -93,21 +93,27 @@ define(['configService'], function(configService) {
                 },
                 file: file
             }).success(angular.bind(this, function (asset, status, headers, config) {
-                var studentUploadsBaseURL = ConfigService.getStudentUploadsBaseURL();
-                asset.url = studentUploadsBaseURL + asset.filePath;
-                if (this.isImage(asset)) {
-                    asset.type = 'image';
-                    asset.iconURL = asset.url;
-                } else if (this.isAudio(asset)) {
-                    asset.type = 'audio';
-                    asset.iconURL = 'wise5/vle/notebook/audio.png';
+                if (asset === "error") {
+                    alert("There was an error uploading.");
                 } else {
-                    asset.type = 'file';
-                    asset.iconURL = 'wise5/vle/notebook/file.png';
+                    var studentUploadsBaseURL = ConfigService.getStudentUploadsBaseURL();
+                    asset.url = studentUploadsBaseURL + asset.filePath;
+                    if (this.isImage(asset)) {
+                        asset.type = 'image';
+                        asset.iconURL = asset.url;
+                    } else if (this.isAudio(asset)) {
+                        asset.type = 'audio';
+                        asset.iconURL = 'wise5/vle/notebook/audio.png';
+                    } else {
+                        asset.type = 'file';
+                        asset.iconURL = 'wise5/vle/notebook/file.png';
+                    }
+                    this.allAssets.push(asset);
+                    $rootScope.$broadcast('studentAssetsUpdated');
+                    deferred.resolve(asset);
                 }
-                this.allAssets.push(asset);
-                $rootScope.$broadcast('studentAssetsUpdated');
-                deferred.resolve(asset);
+            })).error(angular.bind(this, function(asset, status, headers, config) {
+                alert("There was an error uploading. You might have reached your file upload limit or the file you tried to upload was too large. Please ask your teacher for help.");
             }));
 
             return deferred.promise;

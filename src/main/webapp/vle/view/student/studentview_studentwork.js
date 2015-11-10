@@ -838,7 +838,7 @@ View.prototype.checkStudentAssetSizeLimit = function(){
 		} else {				
 			var studentUsage = o.utils.appropriateSizeText(text);
 			var maxUsageLimit = o.utils.appropriateSizeText(o.MAX_ASSET_SIZE);
-			$('#sizeDiv').html(o.getI18NStringWithParams("student_assets_student_usage_message",[studentUsage,maxUsageLimit]));
+			//$('#sizeDiv').html(o.getI18NStringWithParams("student_assets_student_usage_message",[studentUsage,maxUsageLimit]));
 		} 
 	};
 	this.connectionManager.request('GET', 1,  this.getConfig().getConfigParam("studentAssetManagerURL"), {forward:'assetmanager', command: 'getSize', type: 'studentAssetManager'}, callback, this);

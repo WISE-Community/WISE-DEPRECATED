@@ -110,42 +110,7 @@
     <div ngf-drop ngf-select ngf-change="notebookController.uploadStudentAssetNotebookItems($files)" class="drop-box"
          drag-over-class="dragover" ngf-multiple="true" allow-dir="false"
          accept="image/*,application/pdf">Drop image or file here or click to upload!</div>
+    <!-- TODO: ask researchers if we should display usage information to students. we'll hide it for now.
     You are using {{notebookController.notebook.totalSize | appropriateSizeText }} out of {{notebookController.notebook.totalSizeMax | appropriateSizeText}} ({{notebookController.notebook.usagePercentage | roundToDecimal:0 }}%)
+    -->
 </div>
-
-<!--
-<div ng-switch on='notebookController.filter'>
-    <div ng-switch-when='work'>
-        Items:<br/>
-        <ul id="notebookItems"
-            ui-sortable="sortableOptions"
-            ng-model="notebookController.notebook.items"
-            ng-show="notebookController.notebook.items.length" ng-cloak>
-            <li ng-repeat="item in notebookController.notebook.items track by $index"
-                data-drag='true'
-                data-jqyoui-options="{revert: 'invalid', helper: 'clone'}"
-                jqyoui-draggable="{animate:true, placeholder: 'keep', onStart:'notebookController.notebookItemDragStartCallback(item)'}" >
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        <span class="notebook-index"></span>
-                        <span class="notebook-item">{{item}} <span class="fa fa-search-plus fa-flip-horizontal"></span></span>
-                        <input type='button' value='X' ng-click='notebookController.deleteItem(item)' />
-                    </div>
-                </div>
-            </li>
-        </ul>
-
-        <hr/>
-        Deleted Items:<br/>
-        <div ng-repeat='deletedItem in notebookController.notebook.deletedItems'>
-            {{deletedItem}}
-        </div>
-    </div>
-    <div ng-switch-when='files'>
-        You are using {{notebookController.notebook.totalSize | appropriateSizeText }} out of {{notebookController.notebook.totalSizeMax | appropriateSizeText}} ({{notebookController.notebook.usagePercentage | roundToDecimal:0 }}%)
-        <div ngf-drop ngf-select ngf-change="notebookController.uploadStudentAssetNotebookItems($files)" class="drop-box"
-             drag-over-class="dragover" ngf-multiple="true" allow-dir="false"
-             accept="image/*,application/pdf">Drop image or file here or click to upload!</div>
-    </div>
-</div>
--->

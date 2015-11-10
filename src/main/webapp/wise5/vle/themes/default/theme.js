@@ -255,6 +255,7 @@ define(['angular', /*'annotationService',*/ 'configService', 'nodeService', 'not
                         };
                         $scope.revertWork = function(componentState) {
                             $scope.componentController.setStudentWork(componentState);
+                            $scope.componentController.studentDataChanged();
                             $mdDialog.hide();
                         };
                     }

@@ -183,9 +183,10 @@ define(['configService', 'projectService'], function(configService, projectServi
                 //this.nodeStatuses = nodeStatuses;
             }
 
+            var group;
             if (groups != null) {
                 for (var g = 0; g < groups.length; g++) {
-                    var group = groups[g];
+                    group = groups[g];
                     group.depth = ProjectService.getNodeDepth(group.id);
                 }
 
@@ -195,7 +196,7 @@ define(['configService', 'projectService'], function(configService, projectServi
                 });
 
                 for (var i = 0; i < groups.length; i++) {
-                    var group = groups[i];
+                    group = groups[i];
                     this.updateNodeStatusByNode(group);
                 }
             }
@@ -397,163 +398,41 @@ define(['configService', 'projectService'], function(configService, projectServi
             return result;
         };
 
-            /**
-             * Evaluate the node constraint
-             * @param node the node
-             * @param constraintForNode the constraint object
-             * @returns whether the node satisifies the constraint
-             */
-            serviceObject.evaluateNodeConstraint = function(node, constraintForNode) {
-                var result = false;
-
-                if (constraintForNode != null) {
-                    var removalCriteria = constraintForNode.removalCriteria;
-
-                    if (removalCriteria == null) {
-                        result = true;
-                    } else {
-                        var firstResult = true;
-
-                        // loop through all the criteria that need to be satisifed
-                        for (var c = 0; c < removalCriteria.length; c++) {
-
-                            // get a criteria
-                            var tempCriteria = removalCriteria[c];
-
-                            if (tempCriteria != null) {
-
-                                // evaluate the criteria
-                                var tempResult = this.evaluateCriteria(tempCriteria);
-
-                                if (firstResult) {
-                                    // this is the first criteria in this for loop
-                                    result = tempResult;
-                                    firstResult = false;
-                                } else {
-                                    // this is not the first criteria in this for loop so we will && the result
-                                    result = result && tempResult;
-                                }
-                            }
-                        }
-                    }
-                }
-
-                return result;
-            };
-
         /**
-         * Evaluate the criteria
-         * @param criteria the criteria
-         * @returns whether the criteria is satisfied or not
+         * Evaluate the node constraint
+         * @param node the node
+         * @param constraintForNode the constraint object
+         * @returns whether the node satisifies the constraint
          */
-        serviceObject.evaluateCriteria0 = function(criteria) {
-
+        serviceObject.evaluateNodeConstraint = function(node, constraintForNode) {
             var result = false;
 
-            if (criteria != null) {
-                var nodeId = criteria.nodeId;
-                var componentId = criteria.componentId;
-                var functionName = criteria.functionName;
-                var functionParams = criteria.functionParams;
+            if (constraintForNode != null) {
+                var removalCriteria = constraintForNode.removalCriteria;
 
-                if (nodeId != null && componentId != null) {
-                    // this criteria is on a component
-
-                    // get the component states for the component
-                    var componentStates = this.getComponentStatesByNodeIdAndComponentId(nodeId, componentId);
-
-                    // get the component events
-                    var componentEvents = this.getEventsByNodeIdAndComponentId(nodeId, componentId);
-
-                    // get the node events
-                    var nodeEvents = this.getEventsByNodeId(nodeId);
-
-                    // get the node states
-                    var nodeStates = this.getNodeStatesByNodeId(nodeId);
-
-                    // get the node
-                    var node = ProjectService.getNodeById(nodeId);
-
-                    // get the component object
-                    var component = ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
-
-                    var componentType = component.componentType;
-
-                    if (componentType != null) {
-                        var serviceName = componentType + 'Service';
-
-                        if ($injector.has(serviceName)) {
-
-                            // get the service for the node type
-                            var service = $injector.get(serviceName);
-
-                            if (service != null) {
-                                // call the function in the service
-                                result = service.callFunction(node, component, functionName, functionParams, componentStates, nodeStates, componentEvents, nodeEvents);
-                            }
-                        }
-                    }
-                } else if (nodeId != null && componentId == null) {
-                    // this criteria is on a node
-
-                    var tempResult = false;
+                if (removalCriteria == null) {
+                    result = true;
+                } else {
                     var firstResult = true;
 
-                    // get all the components in the node
-                    var components = ProjectService.getComponentsByNodeId(nodeId);
+                    // loop through all the criteria that need to be satisifed
+                    for (var c = 0; c < removalCriteria.length; c++) {
 
-                    if (components != null) {
+                        // get a criteria
+                        var tempCriteria = removalCriteria[c];
 
-                        // loop through all the components in the node
-                        for (var c = 0; c < components.length; c++) {
-                            var component = components[c];
+                        if (tempCriteria != null) {
 
-                            if (component != null) {
-                                var componentId = component.id;
+                            // evaluate the criteria
+                            var tempResult = this.evaluateCriteria(tempCriteria);
 
-                                // get the component states for the component
-                                var componentStates = this.getComponentStatesByNodeIdAndComponentId(nodeId, componentId);
-
-                                // get the component events
-                                var componentEvents = this.getEventsByNodeIdAndComponentId(nodeId, componentId);
-
-                                // get the node events
-                                var nodeEvents = this.getEventsByNodeId(nodeId);
-
-                                // get the node states
-                                var nodeStates = this.getNodeStatesByNodeId(nodeId);
-
-                                // get the node
-                                var node = ProjectService.getNodeById(nodeId);
-
-                                // get the component object
-                                var component = ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
-
-                                var componentType = component.componentType;
-
-                                if (componentType != null) {
-                                    var serviceName = componentType + 'Service';
-
-                                    if ($injector.has(serviceName)) {
-
-                                        // get the service for the node type
-                                        var service = $injector.get(serviceName);
-
-                                        if (service != null) {
-                                            // call the function in the service
-                                            tempResult = service.callFunction(node, component, functionName, functionParams, componentStates, nodeStates, componentEvents, nodeEvents);
-
-                                            if (firstResult) {
-                                                // this is the first result in this for loop
-                                                result = tempResult;
-                                                firstResult = false;
-                                            } else {
-                                                // this is not the first result in this for loop so we will && the result
-                                                result = result && tempResult;
-                                            }
-                                        }
-                                    }
-                                }
+                            if (firstResult) {
+                                // this is the first criteria in this for loop
+                                result = tempResult;
+                                firstResult = false;
+                            } else {
+                                // this is not the first criteria in this for loop so we will && the result
+                                result = result && tempResult;
                             }
                         }
                     }
@@ -562,6 +441,7 @@ define(['configService', 'projectService'], function(configService, projectServi
 
             return result;
         };
+
 
         /**
          * Evaluate the criteria
@@ -1038,7 +918,7 @@ define(['configService', 'projectService'], function(configService, projectServi
             var key = '';
             for (var a = 0; a < length; a++) {
                 key += this.CHARS[Math.floor(Math.random() * (this.CHARS.length - 1))];
-            };
+            }
 
             /* return the generated key */
             return key;
@@ -1046,7 +926,7 @@ define(['configService', 'projectService'], function(configService, projectServi
 
         serviceObject.saveComponentEvent = function(component, category, event, data) {
             if (component == null || category == null || event == null) {
-                console.error("StudentDataService.saveComponentEvent: component, category, event args must not be null");
+                alert("StudentDataService.saveComponentEvent: component, category, event args must not be null");
                 return;
             }
             var context = "Component";
@@ -1054,7 +934,7 @@ define(['configService', 'projectService'], function(configService, projectServi
             var componentId = component.componentId;
             var componentType = component.componentType;
             if (nodeId == null || componentId == null || componentType == null) {
-                console.error("StudentDataService.saveComponentEvent: nodeId, componentId, componentType must not be null");
+                alert("StudentDataService.saveComponentEvent: nodeId, componentId, componentType must not be null");
                 return;
             }
             this.saveEvent(context, nodeId, componentId, componentType, category, event, data);
@@ -1062,7 +942,7 @@ define(['configService', 'projectService'], function(configService, projectServi
 
         serviceObject.saveVLEEvent = function(nodeId, componentId, componentType, category, event, data) {
            if (category == null || event == null) {
-               console.error("StudentDataService.saveVLEEvent: category and event args must not be null");
+               alert("StudentDataService.saveVLEEvent: category and event args must not be null");
                return;
            }
            var context = "VLE";
