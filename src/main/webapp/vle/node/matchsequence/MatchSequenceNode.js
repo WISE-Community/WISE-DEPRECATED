@@ -149,6 +149,11 @@ MatchSequenceNode.prototype.renderGradingView = function(displayStudentWorkDiv, 
 		text += this.view.getI18NStringWithParams("autograded_score",[state.store + "/" + maxScore],"MatchSequenceNode");
 	}
 
+    if (state.isCorrect != null) {
+        text += "<br>";
+        text += "Is Correct: " + state.isCorrect;
+    }
+
 	displayStudentWorkDiv.append(text);
 };
 
