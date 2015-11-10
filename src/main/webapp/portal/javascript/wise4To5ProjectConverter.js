@@ -569,8 +569,6 @@ function convertAssessmentList(node, nodeContent) {
     // set the title
     wise5Node.title = node.title;
 
-    var prompt = nodeContent.prompt;
-
     if (test) {
         console.log('before');
         console.log(prompt);
@@ -584,11 +582,21 @@ function convertAssessmentList(node, nodeContent) {
     }
 
     var content = {};
-    // set the prompt
-    content.prompt = nodeContent.prompt;
     content.showSaveButton = true;
     content.showSubmitButton = false;
     content.components = [];
+
+    var prompt = nodeContent.prompt;
+
+    if (prompt != null && prompt !== '') {
+        // create an html component for the prompt
+        var htmlPromptComponent = {};
+        htmlPromptComponent.id = createRandomId();
+        htmlPromptComponent.componentType = 'HTML';
+        htmlPromptComponent.html = prompt;
+
+        content.components.push(htmlPromptComponent);
+    }
 
     // get all the assessment parts
     var assessments = nodeContent.assessments;
