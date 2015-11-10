@@ -2120,6 +2120,8 @@ md-input-container:not(.md-input-invalid):not(.md-input-focused).md-input-has-va
 
 @media (max-width: 599px) { .md-button { min-width: 60px; min-height: 28px; line-height: 28px; } }
 
+md-select-menu md-option[selected] { font-weight: 600; }
+
 md-icon.md-18 { font-size: 18px; width: 18px; height: 18px; }
 md-icon.md-24 { font-size: 24px; width: 24px; height: 24px; }
 md-icon.md-36 { font-size: 36px; width: 36px; height: 36px; }
@@ -2302,6 +2304,8 @@ md-input-container.md-wise-theme label { color: rgba(0, 0, 0, 0.87); }
 .node-select--group { color: rgba(0, 0, 0, 0.54); background-color: #eeeeee; }
 
 .node-select--node { padding-left: 24px; }
+
+.node-select__icon { margin-left: 4px; margin-top: -1px; }
 
 .node-title { line-height: 1.2; text-transform: none; margin-top: 3px; }
 

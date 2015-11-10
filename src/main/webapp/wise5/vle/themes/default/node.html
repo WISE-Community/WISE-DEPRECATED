@@ -11,7 +11,7 @@
                 <md-option value="{{ item.$key }}"
                            ng-click="themeCtrl.nodeClicked(item.$key)"
                            ng-class="{'node-select--group': themeCtrl.isGroupNode(item.$key), 'node-select--node': !themeCtrl.isGroupNode(item.$key)}">
-                    <span ng-if="themeCtrl.numberProject">{{ themeCtrl.getNodePositionById(item.$key) }}:</span> {{ themeCtrl.getNodeTitleByNodeId(item.$key) }}
+                    <span ng-if="themeCtrl.numberProject">{{ themeCtrl.getNodePositionById(item.$key) }}:</span> {{ themeCtrl.getNodeTitleByNodeId(item.$key) }}<md-icon ng-if="themeCtrl.nodeStatuses[item.$key].isCompleted" ng-class="'success'" class="node-select__icon" aria-label="Completed">&#xE86C;</md-icon>
                 </md-option>
             </div>
         </md-select>
