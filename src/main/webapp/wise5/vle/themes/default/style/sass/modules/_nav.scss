@@ -92,8 +92,14 @@
 }
 
 .nav-item--card__content {
-  @media (min-width: $layout-breakpoint-sm) {
-    min-height: 100px;
+  //@media (min-width: $layout-breakpoint-sm) {
+    //min-height: 100px;
+  //}
+  @include border-top-radius($card-border-radius);
+
+  &:focus {
+    @include box-shadow(0px 1px 1px -1px $primary-color inset);
+    outline: none;
   }
 }
 
@@ -102,6 +108,16 @@
 }
 
 .nav-item {
+  &.expanded {
+    @include flex(1 1 100% !important);
+    max-width: ($layout-breakpoint-md - 100) !important;
+    max-height: none !important;
+    margin: 0 auto;
+
+    @media only screen and (min-width: $layout-breakpoint-sm) {
+      margin: 8px auto;
+    }
+  }
 }
 
 .nav-item--list {
@@ -143,6 +159,7 @@
 
 .nav-item__info {
   color: $text-color-secondary;
+  padding: 0 8px;
 }
 
 .progress-wrapper {

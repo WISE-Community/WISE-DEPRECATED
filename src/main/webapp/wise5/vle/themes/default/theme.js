@@ -8,58 +8,77 @@ define(['angular', /*'annotationService',*/ 'configService', 'nodeService', 'not
                 return {
                     scope: {
                         templateUrl: '=',
-                        item: '=',
-                        nodeClicked: '&',
+                        nodeId: '=',
                         showPosition: '=',
                         type: '='
                     },
-                    template: '<ng-include src="getTemplateUrl()"></ng-include>',
-                    controller: function($scope,
-                                         $state,
-                                         $stateParams,
-                                         ProjectService,
-                                         StudentDataService) {
-
-                        $scope.getTemplateUrl = function(){
-                            return $scope.templateUrl;
-                        };
-
-                        $scope.isGroup = ProjectService.isGroupNode($scope.item.id);
-
-                        $scope.nodeStatus = StudentDataService.nodeStatuses[$scope.item.id];
-
-                        var nodePosition = ProjectService.getNodePositionById($scope.item.id);
-
-                        $scope.nodeTitle = $scope.showPosition ? (nodePosition + ': ' + $scope.item.title) : $scope.item.title;
-                    }
+                    template: '<ng-include src="navitemCtrl.getTemplateUrl()"></ng-include>',
+                    controller: 'NavItemController',
+                    controllerAs: 'navitemCtrl',
+                    bindToController: true
                 };
             })
-            .directive('groupInfo', function() {
-                return {
-                    scope: {
-                        templateUrl: '=',
-                        item: '=',
-                        showPosition: '=',
-                        close: '&'
-                    },
-                    template: '<ng-include src="getTemplateUrl()"></ng-include>',
-                    controller: function($scope,
-                                         $state,
-                                         $stateParams,
-                                         StudentDataService) {
+            .controller('NavItemController',
+                function($scope,
+                         $state,
+                         $stateParams,
+                         $element,
+                         ProjectService,
+                         StudentDataService) {
 
-                        $scope.getTemplateUrl = function(){
-                            return $scope.templateUrl;
-                        };
+                    this.getTemplateUrl = function(){
+                        return this.templateUrl;
+                    };
 
-                        $scope.nodeStatus = StudentDataService.nodeStatuses[$scope.item.id];
+                    this.$element = $element;
+                    this.expanded = false;
 
-                        var nodePosition = ProjectService.getNodePositionById($scope.item.id);
+                    this.item = ProjectService.idToNode[this.nodeId];
+                    this.isGroup = ProjectService.isGroupNode(this.nodeId);
+                    this.nodeStatuses = StudentDataService.nodeStatuses;
+                    this.nodeStatus = this.nodeStatuses[this.nodeId];
 
-                        $scope.nodeTitle = $scope.showPosition ? (nodePosition + ': ' + $scope.item.title) : $scope.item.title;
-                    }
-                };
-            })
+                    this.nodeTitle = this.showPosition ? (ProjectService.idToPosition[this.nodeId] + ': ' + this.item.title) : this.item.title;
+                    this.currentNode = StudentDataService.currentNode;
+                    this.isCurrentNode = (this.currentNode.id === this.nodeId);
+
+                    var scope = this;
+                    $scope.$watch(
+                        function () { return StudentDataService.currentNode; },
+                        function (newNode) {
+                            scope.currentNode = newNode;
+                            scope.isCurrentNode = (scope.currentNode.id === scope.nodeId);
+                            if (ProjectService.isApplicationNode(newNode.id)) {
+                                setExpanded();
+                            }
+                        }
+                    );
+
+                    $scope.$watch(
+                        function () { return scope.expanded; },
+                        function (value) {
+                            $scope.$parent.itemExpanded = value;
+                        }
+                    );
+
+                    var setExpanded = function () {
+                        scope.expanded = (scope.isCurrentNode || (scope.isGroup && ProjectService.isNodeDescendentOfGroup(scope.currentNode, scope.item)));
+                    };
+
+                    this.itemClicked = function() {
+                        if (this.isGroup) {
+                            if (!this.isCurrentNode && !this.expanded) {
+                                StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(this.nodeId);
+                            }
+                            this.expanded = !this.expanded;
+                        } else {
+                            StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(this.nodeId);
+                        }
+                    };
+
+                    setExpanded();
+                }
+            )
             .directive('progressCircularWithLabel', function() {
                 return {
                     scope: {
@@ -120,8 +139,7 @@ define(['angular', /*'annotationService',*/ 'configService', 'nodeService', 'not
 
                 this.nodeStatuses = StudentDataService.nodeStatuses;
 
-                this.startNodeId = ProjectService.getStartNodeId();
-                this.rootNode = ProjectService.getRootNode(this.startNodeId);
+                this.rootNode = ProjectService.rootNode;
                 this.rootNodeStatus = this.nodeStatuses[this.rootNode.id];
 
                 this.workgroupId = ConfigService.getWorkgroupId();
@@ -136,8 +154,8 @@ define(['angular', /*'annotationService',*/ 'configService', 'nodeService', 'not
                     return ProjectService.getNodeTitleByNodeId(nodeId);
                 };
 
-                this.getNodePositionId = function(nodeId) {
-                    return ProjectService.getNodePositionId(nodeId);
+                this.getNodePositionById = function(nodeId) {
+                    return ProjectService.getNodePositionById(nodeId);
                 };
 
                 this.isGroupNode = function(nodeId) {
@@ -173,12 +191,7 @@ define(['angular', /*'annotationService',*/ 'configService', 'nodeService', 'not
                     }
                 };
 
-                this.idToOrder = ProjectService.idToOrder; // TODO: should we be referencing directly?
-
-                // TODO: do we need this or should we just reference idsToPosition directly?  what is best practice?
-                this.getNodePositionById = function(id) {
-                    return ProjectService.getNodePositionById(id);
-                };
+                this.idToOrder = ProjectService.idToOrder;
 
                 // alert user when a locked node has been clicked
                 $scope.$on('nodeClickLocked', angular.bind(this, function (event, args) {

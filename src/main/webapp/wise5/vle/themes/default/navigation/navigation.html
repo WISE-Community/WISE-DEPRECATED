@@ -1,13 +1,7 @@
-<div class="l-constrained md-padding" layout="column">
+<div class="l-constrained md-padding" layout="column" ng-controller="NavigationController as navCtrl">
     <div class="md-toolbar-tools auto-width">
-        <div class="md-subhead nav-head breadcrumb">
-            <md-icon> home </md-icon>
-            <ng-switch on="navCtrl.layoutState">
-                <a ng-switch-when="group" ng-click="navCtrl.nodeClicked(navCtrl.currentParentGroups[0].id)">Project Plan</a>
-                <span ng-switch-when="root">Project Plan</span>
-            </ng-switch>
-            <a ng-repeat-start="group in navCtrl.currentParentGroups" ng-if="!$first" ng-click="navCtrl.nodeClicked(group.id)"><span ng-if="themeCtrl.numberProject">{{ themeCtrl.getNodePositionById(group.id) }}: </span>{{group.title}}</a>
-            <span ng-if="!$last" ng-repeat-end> > </span>
+        <div class="md-subhead nav-head">
+            <md-icon> home </md-icon> Project Plan
         </div>
         <span flex></span>
         <!--<md-select ng-if="vleController.navFilters.length > 1" class="md-body-1" placeholder="Filter" ng-model="vleController.navFilter">
@@ -15,11 +9,12 @@
         </md-select>-->
     </div>
 
-    <div class="nav-root" ng-if="navCtrl.layoutState === 'root'" >
-        <ng-include src="vleController.themePath + '/navigation/navRoot.html'"></ng-include>
-    </div>
-
-    <div class="nav-group" ng-if="navCtrl.layoutState === 'group'" >
-        <ng-include src="vleController.themePath + '/navigation/navGroup.html'"></ng-include>
+    <div ng-class="'nav-contents nav-contents--root'">
+        <div layout="row" layout-wrap layout-align="start start">
+            <nav-item ng-repeat="id in navCtrl.rootNode.ids" ng-class="{'expanded': itemExpanded}" class="nav-item"
+                      template-url="vleController.themePath + '/navigation/navItem.html'" show-position="themeCtrl.numberProject"
+                      node-id="id" type="'card'"
+                      flex-sm="100" flex-md="50" flex-lg="33" flex-gt-lg="33"></nav-item>
+        </div>
     </div>
 </div>

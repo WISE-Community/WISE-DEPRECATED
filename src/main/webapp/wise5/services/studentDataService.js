@@ -1495,9 +1495,9 @@ define(['configService', 'projectService'], function(configService, projectServi
                         completedItems += completedGroupItems;
                         totalItems += totalGroupItems;
                     } else {
-                        if (!!status.isVisible) {
+                        if (status.isVisible) {
                             totalItems++;
-                            if (!!status.isCompleted) {
+                            if (status.isCompleted) {
                                 completedItems++;
                             }
                         }

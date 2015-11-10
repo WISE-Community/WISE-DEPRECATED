@@ -10,7 +10,9 @@
         <div layout="column" flex>
             <md-toolbar class="l-header" ng-class="{'md-whiteframe-z1': vleController.layoutState == 'nav'}">
                 <div class="md-toolbar-tools">
-                    <img ng-src="{{vleController.themePath}}/images/WISE-logo-1b8ca8.svg" alt="WISE Logo" class="logo md-button md-icon-button" />
+                    <a ng-click="vleController.layoutState = 'nav'" class="md-button logo-link">
+                        <img ng-src="{{vleController.themePath}}/images/WISE-logo-1b8ca8.svg" alt="WISE Logo" class="logo" />
+                    </a>
                     <h3>
                         <span>{{vleController.projectName}}</span>
                     </h3>
@@ -30,7 +32,7 @@
                 </div>
             </md-toolbar>
             <md-content flex role="main" ng-class="{'l-nav': vleController.layoutState == 'nav', 'l-node': vleController.layoutState == 'node'}" layout="column">
-                <div ui-view="navigationView" autoscroll="true" ng-if="vleController.layoutState == 'nav'"></div>
+                <div ng-include="vleController.themePath + '/navigation/navigation.html'" autoscroll="true" ng-show="vleController.layoutState == 'nav'"></div>
                 <div ng-cloak ui-view="nodeView" autoscroll="true" ng-if="vleController.layoutState == 'node'"
                      data-drop="true"
                      jqyoui-droppable="{onDrop: 'vleController.notebookDropCallback()'}"

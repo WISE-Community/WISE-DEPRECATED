@@ -37,7 +37,7 @@ define(['app'],
         $scope.$on('currentNodeChanged', angular.bind(this, function(event, args) {
             var previousNode = args.previousNode;
             var currentNode = args.currentNode;
-            var currentNode = StudentDataService.getCurrentNode();
+            currentNode = StudentDataService.getCurrentNode();
             var nodeId = currentNode.id;
 
             StudentDataService.updateStackHistory(nodeId);
@@ -52,13 +52,6 @@ define(['app'],
 
         $scope.$on('componentStudentDataChanged', angular.bind(this, function() {
             StudentDataService.updateNodeStatuses();
-        }));
-
-        $scope.$on('nodeClickLocked', angular.bind(this, function(event, args) {
-            // should be overriden by theme; TODO: how do we make this the default if theme doesn't override?
-            //var lockedNodeId = args.nodeId;
-            // TODO JB styling...alert for now. Will need to output reason the node is locked.
-            //alert("Node " + lockedNodeId + " is locked right now. Make sure you've completed previous steps.");
         }));
 
         this.updateLayout = function() {

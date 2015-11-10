@@ -308,7 +308,8 @@ define(['configService'], function(configService) {
                     }
                 }
 
-                this.rootNode = this.getGroupNodes()[0]; // TODO: should we always assume first group is the root? should we use 'group0' instead or something else?
+                // set root node
+                this.rootNode = this.getRootNode(nodes[0].id);
 
                 // set project order
                 this.setNodeOrder(this.rootNode, this.nodeCount);
