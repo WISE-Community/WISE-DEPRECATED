@@ -13,6 +13,7 @@ define(['app'], function(app) {
                 return true; // TODO: create filter
             };
 
+            /*
             $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
                 var toNodeId = toParams.nodeId;
                 var fromNodeId = fromParams.nodeId;
@@ -20,5 +21,6 @@ define(['app'], function(app) {
                     StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(toNodeId);
                 }
             });
+            */
         })
 });
