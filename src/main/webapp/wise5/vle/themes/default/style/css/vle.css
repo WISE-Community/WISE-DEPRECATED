@@ -2133,6 +2133,9 @@ md-icon.md-dark { color: rgba(0, 0, 0, 0.54); }
 md-icon.md-dark.md-inactive { color: rgba(0, 0, 0, 0.26); }
 md-icon.md-light { color: white; }
 md-icon.md-light.md-inactive { color: rgba(255, 255, 255, 0.3); }
+md-icon.material-icons.check_circle:before { content: '\e86c'; }
+md-icon.material-icons.info:before { content: '\e88e'; }
+md-icon.material-icons.error:before { content: '\e000'; }
 
 /* WISE Project Styles */
 .auto-height { height: auto; min-height: unset; max-height: none; }

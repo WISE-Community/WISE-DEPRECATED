@@ -5,13 +5,13 @@
             <md-icon md-font-set="{{nodeCtrl.nodeStatus.icon.fontSet}}" class="md-18 md-light node-icon" md-theme="default">{{nodeCtrl.nodeStatus.icon.fontName}}</md-icon>
         </div>
 
-        <md-select class="node-select md-subhead" md-theme="wise" ng-model="nodeCtrl.nodeId" style="color: {{nodeCtrl.nodeStatus.icon.color}};" aria-label="Go to other project item">
+        <md-select md-theme="default" class="node-select md-subhead" ng-model="nodeCtrl.nodeId" style="color: {{nodeCtrl.nodeStatus.icon.color}};" aria-label="Go to other project item">
             <div ng-repeat="item in themeCtrl.idToOrder | toArray | orderBy : 'order'"
                  ng-if="themeCtrl.nodeStatuses[item.$key].isVisible && item.order!==0">
                 <md-option value="{{ item.$key }}"
                            ng-click="themeCtrl.nodeClicked(item.$key)"
                            ng-class="{'node-select--group': themeCtrl.isGroupNode(item.$key), 'node-select--node': !themeCtrl.isGroupNode(item.$key)}">
-                    <span ng-if="themeCtrl.numberProject">{{ themeCtrl.getNodePositionById(item.$key) }}:</span> {{ themeCtrl.getNodeTitleByNodeId(item.$key) }}<md-icon ng-if="themeCtrl.nodeStatuses[item.$key].isCompleted" ng-class="'success'" class="node-select__icon" aria-label="Completed">&#xE86C;</md-icon>
+                    <span ng-if="themeCtrl.numberProject">{{ themeCtrl.getNodePositionById(item.$key) }}:</span> {{ themeCtrl.getNodeTitleByNodeId(item.$key) }}<md-icon ng-if="themeCtrl.nodeStatuses[item.$key].isCompleted" ng-class="'success'" class="node-select__icon" aria-label="Completed" md-font-icon="check_circle"></md-icon>
                 </md-option>
             </div>
         </md-select>
