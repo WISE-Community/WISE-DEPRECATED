@@ -79,9 +79,26 @@ md-list-item .md-list-item-inner>.md-avatar:first-child, md-list-item>.md-avatar
   display: flex;
 }
 
-md-input-container:not(.md-input-invalid):not(.md-input-focused).md-input-has-value label {
-  color: rgba(0,0,0,0.87) !important;
+md-input-container {
+  &.md-no-float {
+    margin-top: 0;
+    padding-top: 0;
+
+    .md-input {
+      margin-top: 8px;
+    }
+
+    label {
+      position: relative;
+      padding-left: 0;
+    }
+  }
+
+  &:not(.md-input-invalid):not(.md-input-focused).md-input-has-value label {
+    color: rgba(0, 0, 0, 0.87) !important;
+  }
 }
+
 
 .md-button {
   @media (max-width: $layout-breakpoint-sm - 1) {

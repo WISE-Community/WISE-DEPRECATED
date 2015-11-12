@@ -2116,6 +2116,9 @@ md-list-item .md-list-item-inner { line-height: 1.25em; }
 
 md-list-item .md-list-item-inner > .md-avatar:first-child, md-list-item > .md-avatar:first-child { display: flex; }
 
+md-input-container.md-no-float { margin-top: 0; padding-top: 0; }
+md-input-container.md-no-float .md-input { margin-top: 8px; }
+md-input-container.md-no-float label { position: relative; padding-left: 0; }
 md-input-container:not(.md-input-invalid):not(.md-input-focused).md-input-has-value label { color: rgba(0, 0, 0, 0.87) !important; }
 
 @media (max-width: 599px) { .md-button { min-width: 60px; min-height: 28px; line-height: 28px; } }
