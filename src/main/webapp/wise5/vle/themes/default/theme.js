@@ -279,9 +279,11 @@ define(['angular', /*'annotationService',*/ 'configService', 'nodeService', 'not
                 $mdComponentRegistry.when('notebook').then(function(it){
                     $scope.$watch(function() {
                         return it.isOpen();
-                    }, function(isOpen) {
-                        var currentNode = StudentDataService.getCurrentNode();
-                        NotebookService.saveNotebookToggleEvent(isOpen, currentNode);
+                    }, function(isOpenNewValue, isOpenOldValue) {
+                        if (isOpenNewValue != isOpenOldValue) {
+                            var currentNode = StudentDataService.getCurrentNode();
+                            NotebookService.saveNotebookToggleEvent(isOpenNewValue, currentNode);
+                        }
                     });
                 });
             })
