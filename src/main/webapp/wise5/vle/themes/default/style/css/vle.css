@@ -2205,7 +2205,7 @@ md-input-container.md-wise-theme label { color: rgba(0, 0, 0, 0.87); }
 
 .l-main { background-color: #eeeeee; }
 
-.l-nav { background-color: #eeeeee !important; }
+.l-nav { background-color: #eeeeee !important; padding-bottom: 16px; }
 
 .l-node { margin-top: 42px; background-color: #eeeeee !important; padding: 0; }
 @media only screen and (min-width: 600px) { .l-node { padding: 0 16px; } }
@@ -2252,11 +2252,6 @@ md-input-container.md-wise-theme label { color: rgba(0, 0, 0, 0.87); }
 .nav-head { color: rgba(0, 0, 0, 0.54); font-weight: 500; }
 .nav-head md-icon { line-height: 20px; }
 
-.nav-group.ng-enter, .nav-root.ng-enter { opacity: 0; }
-.nav-group.ng-leave, .nav-root.ng-leave { opacity: 1; }
-.nav-group.ng-enter.ng-enter-active, .nav-root.ng-enter.ng-enter-active { opacity: 1; }
-.nav-group.ng-leave.ng-leave-active, .nav-root.ng-leave.ng-leave-active { opacity: 0; }
-
 .group-info { padding: 16px; -moz-border-radius-bottomleft: 0; -webkit-border-bottom-left-radius: 0; border-bottom-left-radius: 0; -moz-border-radius-bottomright: 0; -webkit-border-bottom-right-radius: 0; border-bottom-right-radius: 0; }
 
 .group-info__avatar.avatar { height: 64px; width: 64px; }
@@ -2271,21 +2266,23 @@ md-input-container.md-wise-theme label { color: rgba(0, 0, 0, 0.87); }
 .group-info__more md-progress-linear { display: inline-block; width: 64px; vertical-align: middle; padding: 0 12px; }
 .group-info__more md-progress-linear > .md-container { top: 0; }
 
-.nav-contents--group { background-color: #dddddd; padding: 8px; margin: 0 16px 16px; }
+.nav-contents--group { background-color: #dddddd; padding: 8px; }
 
 .nav-contents--root { padding: 0; }
+
+.nav-contents__list { padding: 0; }
+@media (min-width: 600px) { .nav-contents__list { padding: 8px; } }
 
 .nav-item--card__content { -moz-border-radius-topleft: 4px; -webkit-border-top-left-radius: 4px; border-top-left-radius: 4px; -moz-border-radius-topright: 4px; -webkit-border-top-right-radius: 4px; border-top-right-radius: 4px; }
 .nav-item--card__content:focus { -moz-box-shadow: 0px 1px 1px -1px #1C8CA8 inset; -webkit-box-shadow: 0px 1px 1px -1px #1C8CA8 inset; box-shadow: 0px 1px 1px -1px #1C8CA8 inset; outline: none; }
 
-.nav-contents--list { padding: 8px 16px; }
-
-.nav-item.expanded { -webkit-flex: 1 1 100% !important; flex: 1 1 100% !important; max-width: 860px !important; max-height: none !important; margin: 0 auto; }
-@media only screen and (min-width: 600px) { .nav-item.expanded { margin: 8px auto; } }
+.nav-item { -moz-transition: margin 250ms linear; -o-transition: margin 250ms linear; -webkit-transition: margin 250ms linear; transition: margin 250ms linear; }
+.nav-item.expanded { -webkit-flex-basis: 100%; flex-basis: 100%; max-width: 860px !important; max-height: none !important; margin: 8px auto; }
+.nav-item.expanded:first-of-type { margin-top: 0; }
 
 .nav-item--list { background-color: #ffffff; border-bottom: 1px solid #eeeeee; }
 
-.nav-item--card--group { -moz-box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.14), 0px 2px 2px 0px rgba(0, 0, 0, 0.098), 0px 1px 5px 0px rgba(0, 0, 0, 0.084), 3px 3px 0px 1px #d5d5d5, 6px 6px 0px 1px #aaaaaa; -webkit-box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.14), 0px 2px 2px 0px rgba(0, 0, 0, 0.098), 0px 1px 5px 0px rgba(0, 0, 0, 0.084), 3px 3px 0px 1px #d5d5d5, 6px 6px 0px 1px #aaaaaa; box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.14), 0px 2px 2px 0px rgba(0, 0, 0, 0.098), 0px 1px 5px 0px rgba(0, 0, 0, 0.084), 3px 3px 0px 1px #d5d5d5, 6px 6px 0px 1px #aaaaaa; }
+.nav-item--card--group:not(.expanded) { -moz-box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.14), 0px 2px 2px 0px rgba(0, 0, 0, 0.098), 0px 1px 5px 0px rgba(0, 0, 0, 0.084), 3px 3px 0px 1px #d5d5d5, 6px 6px 0px 1px #aaaaaa; -webkit-box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.14), 0px 2px 2px 0px rgba(0, 0, 0, 0.098), 0px 1px 5px 0px rgba(0, 0, 0, 0.084), 3px 3px 0px 1px #d5d5d5, 6px 6px 0px 1px #aaaaaa; box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.14), 0px 2px 2px 0px rgba(0, 0, 0, 0.098), 0px 1px 5px 0px rgba(0, 0, 0, 0.084), 3px 3px 0px 1px #d5d5d5, 6px 6px 0px 1px #aaaaaa; }
 
 .nav-item__more { border-top: 1px solid #dddddd; -moz-border-radius-bottomleft: 4px; -webkit-border-bottom-left-radius: 4px; border-bottom-left-radius: 4px; -moz-border-radius-bottomright: 4px; -webkit-border-bottom-right-radius: 4px; border-bottom-right-radius: 4px; padding: 8px 16px; min-height: 40px; }
 .nav-item__more md-progress-linear { width: 48px; }

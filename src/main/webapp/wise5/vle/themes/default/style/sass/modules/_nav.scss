@@ -7,29 +7,8 @@
   }
 }
 
-.nav-group, .nav-root {
-  //position: absolute;
-  //left: 0;
-  //right: 0;
-  //padding-bottom: 32px;
-
-  &.ng-enter, &.ng-leave {
-    //@include transition(0.5s linear opacity);
-  }
-  &.ng-enter {
-    opacity: 0;
-  }
-  &.ng-leave {
-    opacity: 1;
-  }
-  &.ng-enter.ng-enter-active {
-    opacity: 1;
-    //@include transition-delay(1s);
-  }
-  &.ng-leave.ng-leave-active {
-    opacity: 0;
-  }
-}
+//.nav-group, .nav-root {
+//}
 
 .group-info {
   padding: 16px;
@@ -81,20 +60,21 @@
 .nav-contents--group {
   background-color: $gray-light;
   padding: 8px;
-  margin: 0 16px 16px;
 }
 
 .nav-contents--root {
   padding: 0;
 }
 
-.nav-contents--card {
+.nav-contents__list {
+  padding: 0;
+
+  @media (min-width: $layout-breakpoint-sm) {
+    padding: 8px;
+  }
 }
 
 .nav-item--card__content {
-  //@media (min-width: $layout-breakpoint-sm) {
-    //min-height: 100px;
-  //}
   @include border-top-radius($card-border-radius);
 
   &:focus {
@@ -103,20 +83,22 @@
   }
 }
 
-.nav-contents--list {
-  padding: 8px 16px;
-}
-
 .nav-item {
+  @include transition(margin 250ms linear);
+
   &.expanded {
-    @include flex(1 1 100% !important);
+    @include flex-basis(100%);
     max-width: ($layout-breakpoint-md - 100) !important;
     max-height: none !important;
-    margin: 0 auto;
+    margin: 8px auto;
 
-    @media only screen and (min-width: $layout-breakpoint-sm) {
-      margin: 8px auto;
+    &:first-of-type {
+      margin-top: 0;
     }
+
+    //@media only screen and (min-width: $layout-breakpoint-sm) {
+      //margin: 8px auto;
+    //}
   }
 }
 
@@ -130,8 +112,10 @@
 }
 
 .nav-item--card--group {
-  @include box-shadow(0px 3px 1px -2px rgba(0, 0, 0, 0.14), 0px 2px 2px 0px rgba(0, 0, 0, 0.098),
-          0px 1px 5px 0px rgba(0, 0, 0, 0.084), 3px 3px 0px 1px #d5d5d5, 6px 6px 0px 1px #aaaaaa);
+  &:not(.expanded) {
+    @include box-shadow(0px 3px 1px -2px rgba(0, 0, 0, 0.14), 0px 2px 2px 0px rgba(0, 0, 0, 0.098),
+            0px 1px 5px 0px rgba(0, 0, 0, 0.084), 3px 3px 0px 1px #d5d5d5, 6px 6px 0px 1px #aaaaaa);
+  }
 }
 
 .nav-item__more {
