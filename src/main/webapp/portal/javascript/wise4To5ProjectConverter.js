@@ -621,6 +621,16 @@ function convertAssessmentList(node, nodeContent) {
                 if (assessment.type === 'text') {
                     // create an open response component
                     component.componentType = 'OpenResponse';
+
+                    if (assessment.starter != null) {
+                        if (assessment.starter.display == 2 &&
+                            assessment.starter.text != null &&
+                            assessment.starter.text != '') {
+
+                            // this component has a starter sentence
+                            component.starterSentence = assessment.starter.text;
+                        }
+                    }
                 } else if (assessment.type === 'radio' || assessment.type === 'checkbox') {
                     // create an multiple choice component
                     component.componentType = 'MultipleChoice';
@@ -704,6 +714,16 @@ function convertOpenResponse(node, nodeContent) {
 
     component.componentType = 'OpenResponse';
     component.prompt = nodeContent.prompt;
+
+    if (nodeContent.starterSentence != null) {
+        if (nodeContent.starterSentence.display == 2 &&
+            nodeContent.starterSentence.sentence != null &&
+            nodeContent.starterSentence.sentence != '') {
+
+            // this component has a starter sentence
+            component.starterSentence = nodeContent.starterSentence.sentence;
+        }
+    }
 
     content.components.push(component);
 

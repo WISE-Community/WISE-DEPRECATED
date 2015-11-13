@@ -120,6 +120,12 @@ define(['app'], function(app) {
                         if (importWorkNodeId != null && importWorkComponentId != null) {
                             // import the work from the other component
                             this.importWork();
+                        } else if (this.componentContent.starterSentence != null) {
+                            /*
+                             * the student has not done any work and there is a starter sentence
+                             * so we will populate the textarea with the starter sentence
+                             */
+                            this.studentResponse = this.componentContent.starterSentence;
                         }
                     } else {
                         // populate the student work into this component
