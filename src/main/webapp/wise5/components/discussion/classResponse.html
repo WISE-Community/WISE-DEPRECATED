@@ -7,7 +7,7 @@
                 <div class="md-caption discussion-post__date" title="{{ response.clientSaveTime | amDateFormat:'ddd, MMM D, YYYY, h:mm a' }}">{{ response.clientSaveTime | amCalendar }}</div>
             </div>
         </div>
-        <div class="md-content discussion-post__content md-body-1" ng-bind-html="response.studentData.studentResponse"></div>
+        <div class="md-content discussion-post__content md-body-1" ng-bind-html="response.studentData.response"></div>
         <img ng-repeat="attachment in response.studentData.attachments" src="{{attachment.iconURL}}" class="attachment" />
         </div>
     </div>
@@ -21,7 +21,7 @@
                     <div class="md-list-item-text discusstion-reply__details">
                         <h3 class="discussion-post__user discussion-post__user--reply">{{ reply.userNames }}</h3>
                         <div class="md-caption discussion-post__date" title="{{ reply.clientSaveTime | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}">{{ reply.clientSaveTime | amCalendar }}</div>
-                        <div class="discusstion-reply__content" ng-bind-html="reply.studentData.studentResponse"></div>
+                        <div class="discusstion-reply__content" ng-bind-html="reply.studentData.response"></div>
                     </div>
                 </md-list-item>
             </md-list>
