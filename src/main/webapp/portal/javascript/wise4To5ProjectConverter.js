@@ -743,7 +743,7 @@ function convertTable(node, nodeContent) {
     tableComponent.globalCellSize = nodeContent.globalCellSize;
 
     // convert the WISE4 table to a WISE5 table
-    var newTableData = convertTableData(nodeContent.tableData);
+    var newTableData = convertTableData(nodeContent.numColumns, nodeContent.numRows, nodeContent.tableData);
     tableComponent.tableData = newTableData;
 
     content.components.push(tableComponent);
@@ -773,25 +773,28 @@ function convertTable(node, nodeContent) {
 
 /**
  * Convert the WISE4 table data into WISE5 table data
+ * @param numColumns the number of columns in the table
+ * @param numRows the number of rows in the table
  * @param tableData the WISE4 table data from a table step
  * @returns the table data for a WISE5 table component
  */
-function convertTableData(tableData) {
+function convertTableData(numColumns, numRows, tableData) {
     var newTableData = [];
 
     if (tableData != null) {
 
-        // loop through all the rows
-        for (var y = 0; y < tableData.length; y ++) {
-            var row = tableData[y];
+        // loop through the rows
+        for (var y = 0; y < numRows; y++) {
 
             var newRow = [];
 
-            if (row != null) {
+            // loop through the columns
+            for (var x = 0; x < numColumns; x++) {
 
-                // loop through all the cells in the row
-                for (var x = 0; x < row.length; x++) {
-                    var cell = row[x];
+                if (tableData[x] != null && tableData[x][y] != null) {
+
+                    // get a cell
+                    var cell = tableData[x][y];
 
                     if (cell != null) {
                         var newCell = {};
