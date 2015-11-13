@@ -10,7 +10,7 @@
         <div layout="column" flex>
             <md-toolbar class="l-header" ng-class="{'md-whiteframe-z1': vleController.layoutState == 'nav'}">
                 <div class="md-toolbar-tools">
-                    <a ng-click="vleController.layoutState = 'nav'" class="md-button logo-link">
+                    <a ng-click="vleController.loadRoot()" class="md-button logo-link">
                         <img ng-src="{{vleController.themePath}}/images/WISE-logo-1b8ca8.svg" alt="WISE Logo" class="logo" />
                     </a>
                     <h3>

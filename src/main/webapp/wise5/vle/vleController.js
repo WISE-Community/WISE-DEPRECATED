@@ -117,6 +117,10 @@ define(['app'],
             $rootScope.$broadcast('logOut');
         };
 
+        this.loadRoot = function() {
+            StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(ProjectService.rootNode.id);
+        };
+
         this.layoutLogicStarMap = function(VLEState) {
             if (VLEState.state === 'initial') {
                 this.showProjectDiv = true;
