@@ -889,6 +889,31 @@ function convertDraw(node, nodeContent) {
     component.componentType = 'Draw';
     component.prompt = nodeContent.prompt;
 
+    if (nodeContent.stamps != null) {
+
+        var wise5Stamps = {};
+        wise5Stamps.Stamps = [];
+
+        // get the WISE4 stamps
+        var wise4Stamps = nodeContent.stamps;
+
+        // loop through all the WISE4 stamps
+        for (var x = 0; x < wise4Stamps.length; x++) {
+            var tempStamp = wise4Stamps[x];
+
+            if (tempStamp != null) {
+                var tempStampUri = tempStamp.uri;
+
+                if (tempStampUri != null) {
+                    // add the stamp to WISE5
+                    wise5Stamps.Stamps.push(tempStampUri);
+                }
+            }
+        }
+
+        component.stamps = wise5Stamps;
+    }
+
     content.components.push(component);
 
     wise5Node.content = content;
