@@ -22,7 +22,7 @@ define(['app'],
             var layoutState = 'nav'; // default layout state
             var node = StudentDataService.getCurrentNode();
 
-            if(node){
+            if(node) {
                 var id = node.id;
                 if (ProjectService.isApplicationNode(id)) {
                     layoutState = 'node';
@@ -36,29 +36,47 @@ define(['app'],
 
         $scope.$on('currentNodeChanged', angular.bind(this, function(event, args) {
             var previousNode = args.previousNode;
-            var currentNode = args.currentNode;
+            //var currentNode = args.currentNode;
             var currentNode = StudentDataService.getCurrentNode();
-            var nodeId = currentNode.id;
+            var currentNodeId = currentNode.id;
 
-            StudentDataService.updateStackHistory(nodeId);
-            StudentDataService.updateVisitedNodesHistory(nodeId);
+            StudentDataService.updateStackHistory(currentNodeId);
+            StudentDataService.updateVisitedNodesHistory(currentNodeId);
             StudentDataService.updateNodeStatuses();
 
             this.setLayoutState();
 
             StudentWebSocketService.sendStudentStatus();
-            $state.go('root.vle', {nodeId:nodeId});
+            $state.go('root.vle', {nodeId:currentNodeId});
+
+            var componentId, componentType, category, eventName, eventData, eventNodeId;
+            if (previousNode != null && ProjectService.isGroupNode(previousNode.id)) {
+                // going from group to node or group to group
+                componentId = null;
+                componentType = null;
+                category = "Navigation";
+                eventName = "nodeExited";
+                eventData = {};
+                eventData.nodeId = previousNode.id;
+                eventNodeId = previousNode.id;
+                StudentDataService.saveVLEEvent(eventNodeId, componentId, componentType, category, eventName, eventData);
+            }
+
+            if (ProjectService.isGroupNode(currentNodeId)) {
+                // save nodeEntered event if this is a group
+                componentId = null;
+                componentType = null;
+                category = "Navigation";
+                eventName = "nodeEntered";
+                eventData = {};
+                eventData.nodeId = currentNode.id;
+                eventNodeId = currentNode.id;
+                StudentDataService.saveVLEEvent(eventNodeId, componentId, componentType, category, eventName, eventData);
+            }
         }));
 
         $scope.$on('componentStudentDataChanged', angular.bind(this, function() {
             StudentDataService.updateNodeStatuses();
-        }));
-
-        $scope.$on('nodeClickLocked', angular.bind(this, function(event, args) {
-            // should be overriden by theme; TODO: how do we make this the default if theme doesn't override?
-            //var lockedNodeId = args.nodeId;
-            // TODO JB styling...alert for now. Will need to output reason the node is locked.
-            //alert("Node " + lockedNodeId + " is locked right now. Make sure you've completed previous steps.");
         }));
 
         this.updateLayout = function() {

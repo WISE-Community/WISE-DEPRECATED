@@ -15,7 +15,7 @@
 	<div id="page">
 		<div id="pageContent" style="min-height:400px;">
 			<div id="headerSmall">
-				<a id="name" href="${contextPath}" title="<spring:message code="wiseHomepage"/>"></a>
+				<a id="name" href="${contextPath}/" title="<spring:message code="wiseHomepage"/>"></a>
 			</div>
 			<div class="infoContent">
 				<div class="panelHeader"><spring:message code="signup.header"/></div>
@@ -27,7 +27,7 @@
 					<div class="instructions"><spring:message code="signup.studentDescription" /></div>
 					<div class="instructions"><spring:message code="signup.teacherDescription" /></div>
 				</div>
-				<a href="${contextPath}" title="<spring:message code="wiseHomepage"/>"><spring:message code="returnHome"/></a>
+				<a href="${contextPath}/" title="<spring:message code="wiseHomepage"/>"><spring:message code="returnHome"/></a>
 			</div>
 		</div>
 	</div>

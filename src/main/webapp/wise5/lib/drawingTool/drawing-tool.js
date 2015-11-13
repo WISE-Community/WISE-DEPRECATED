@@ -311,8 +311,8 @@ DrawingTool.prototype.save = function () {
       width: this.canvas.getWidth(),
       height: this.canvas.getHeight()
     },
-    canvas: this.canvas.toJSON(ADDITIONAL_PROPS_TO_SERIALIZE),
-    jpeg: this.canvas.toDataURL({format: "jpeg", quality: 0.5})
+    canvas: this.canvas.toJSON(ADDITIONAL_PROPS_TO_SERIALIZE)
+    //jpeg: this.canvas.toDataURL({format: "jpeg", quality: 0.5})
   });
   if (selectionCleared) {
     this.select(selection);

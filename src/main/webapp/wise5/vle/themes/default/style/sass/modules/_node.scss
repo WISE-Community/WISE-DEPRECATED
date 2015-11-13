@@ -44,6 +44,11 @@ $input-action-vertical-offset-richtext: -7px;
   padding-left: 24px;
 }
 
+.node-select__icon {
+  margin-left: 4px;
+  margin-top: -1px; // hack for now; ng-material needs to fix alignment issue
+}
+
 .node-title {
   line-height: 1.2;
   text-transform: none;

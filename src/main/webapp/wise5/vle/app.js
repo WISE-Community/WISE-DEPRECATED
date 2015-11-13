@@ -192,6 +192,7 @@ define([
                     controller: 'VLEController as vleController',
                     resolve: {
                         vleController: app.loadController('vleController'),
+                        navigationController: app.loadController('navigationController'),
                         config: function (ConfigService) {
                             var configUrl = window.configUrl;
                             return ConfigService.retrieveConfig(configUrl);
@@ -213,21 +214,6 @@ define([
                 .state('root.vle', {
                     url: '/vle/:nodeId',
                     views: {
-                        'navigationView': {
-                            //templateUrl: 'wise5/vle/navigation/navigation.html',
-                            templateProvider: ['$http', 'ProjectService', function ($http, ProjectService) {
-                                var navPath = 'wise5/vle/themes/' + ProjectService.getTheme() + '/navigation/navigation.html';
-                                return $http.get(navPath).then(
-                                    function (response) {
-                                        return response.data;
-                                    }
-                                );
-                            }],
-                            controller: 'NavigationController as navCtrl',
-                            resolve: {
-                                navigationController: app.loadController('navigationController')
-                            }
-                        },
                         'nodeView': {
                             templateUrl: 'wise5/node/index.html',
                             controller: 'NodeController as nodeCtrl',
@@ -323,7 +309,7 @@ define([
                     nextDay : '[Tomorrow at] LT',
                     lastWeek : '[last] dddd [at] LT',
                     nextWeek : 'dddd [at] LT',
-                    sameElse : 'MMM D,   YYYY'
+                    sameElse : 'MMM D, YYYY [at] LT'
                 }
             });
         }]);

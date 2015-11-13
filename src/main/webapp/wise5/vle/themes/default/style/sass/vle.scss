@@ -47,6 +47,20 @@ md-icon {
   &.md-light.md-inactive {
     color: rgba(255, 255, 255, 0.3);
   }
+
+  &.material-icons {
+    &.check_circle:before {
+      content: '\e86c';
+    }
+
+    &.info:before {
+      content: '\e88e';
+    }
+
+    &.error:before {
+      content: '\e000';
+    }
+  }
 }
 
 /*
@@ -73,7 +87,6 @@ md-icon {
         "modules/nav",
         "modules/node",
         "modules/toolbar",
-        "modules/progress-circular-with-label",
         "modules/project-status",
         "modules/discussion",
         "modules/account-menu";

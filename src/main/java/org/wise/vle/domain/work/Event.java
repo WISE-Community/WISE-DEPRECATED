@@ -268,7 +268,11 @@ public class Event extends PersistableDomain {
 
 			// set the data
 			if (this.data != null) {
-				eventJSONObject.put("data", this.data);
+				try {
+					eventJSONObject.put("data", new JSONObject(this.data));
+				} catch (Exception e) {
+					eventJSONObject.put("data", this.data);
+				}
 			}
 
 			// set the clientSaveTime time

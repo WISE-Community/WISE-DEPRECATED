@@ -985,7 +985,9 @@ define(['app'], function(app) {
                 }));
             };
 
-            // perform setup of this node
-            this.setup();
+            // perform setup of this node only if the current node is not a group.
+            if (StudentDataService.getCurrentNode() != null && !ProjectService.isGroupNode(StudentDataService.getCurrentNode().id)) {
+                this.setup();
+            }
         });
 });

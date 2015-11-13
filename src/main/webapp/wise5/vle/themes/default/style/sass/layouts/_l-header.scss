@@ -8,6 +8,14 @@
     width: 40px;
   }
 
+  .logo-link {
+    min-width: auto;
+
+    &:hover, &:focus {
+      border: 0 none;
+    }
+  }
+
   // Handle mobile portrait
   @media only screen and (min-width: 0) and (max-width: $layout-breakpoint-sm) and
   (orientation: portrait) {

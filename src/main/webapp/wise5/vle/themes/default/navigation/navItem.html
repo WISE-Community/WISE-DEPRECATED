@@ -1,40 +1,47 @@
-<ng-switch on="type">
-    <md-card ng-switch-when="card" class="nav-item--card" ng-class="{'nav-item--card--group':isGroup}">
-        <md-card-content class="nav-item--card__content" ng-click="nodeClicked()" role="button" md-ink-ripple layout="row">
-            <img ng-if="nodeStatus.icon.type === 'img'" ng-animate-ref="{{ item.id }}" ng-class="isGroup ? 'avatar--square' : ''" class="md-36 avatar nav-item__avatar" ng-src="{{nodeStatus.icon.imgSrc}}" alt="{{nodeStatus.icon.imgAlt}}" />
-            <div ng-if="nodeStatus.icon.type === 'font'" ng-animate-ref="{{ item.id }}" ng-class="isGroup ? 'avatar--square' : ''" style="background-color: {{nodeStatus.icon.color}};" class="md-36 avatar avatar--icon nav-item__avatar">
-                <md-icon md-font-set="{{nodeStatus.icon.fontSet}}" class="md-36 md-light">{{nodeStatus.icon.fontName}}</md-icon>
-            </div>
-            <div class="md-title nav-item__title" style="color: {{nodeStatus.icon.color}};" flex>
-                <span>{{ nodeTitle }}</span>
-                <div ng-if="isGroup" class="nav-item__info md-body-1">{{nodeStatus.progress.totalItems}} item(s)</div>
-            </div>
+<div ng-if="navitemCtrl.nodeStatus.isVisible">
+    <ng-switch on="navitemCtrl.type">
+        <md-card ng-switch-when="card" class="nav-item--card" ng-class="{'nav-item--card--group':navitemCtrl.isGroup, 'expanded':navitemCtrl.expanded}" is-currentnode="{{isCurrentNode}}">
+            <md-card-content class="nav-item--card__content" ng-click="navitemCtrl.itemClicked()" role="button" md-ink-ripple layout="row">
+                <img ng-if="navitemCtrl.nodeStatus.icon.type === 'img'" ng-animate-ref="{{ id }}" ng-class="navitemCtrl.isGroup ? 'avatar--square' : ''" class="md-36 avatar nav-item__avatar" ng-src="{{navitemCtrl.nodeStatus.icon.imgSrc}}" alt="{{navitemCtrl.nodeStatus.icon.imgAlt}}" />
+                <div ng-if="navitemCtrl.nodeStatus.icon.type === 'font'" ng-animate-ref="{{ id }}" ng-class="navitemCtrl.isGroup ? 'avatar--square' : ''" style="background-color: {{navitemCtrl.nodeStatus.icon.color}};" class="md-36 avatar avatar--icon nav-item__avatar">
+                    <md-icon md-font-set="{{navitemCtrl.nodeStatus.icon.fontSet}}" class="md-36 md-light">{{navitemCtrl.nodeStatus.icon.fontName}}</md-icon>
+                </div>
+                <div class="md-title nav-item__title" style="color: {{navitemCtrl.nodeStatus.icon.color}};" flex>
+                    <span>{{ navitemCtrl.nodeTitle }}</span>
+                </div>
+            </md-card-content>
+            <md-card-content ng-if="navitemCtrl.isGroup" ng-show="navitemCtrl.expanded" class="nav-contents nav-contents--group">
+                <md-list class="nav-contents__list">
+                    <nav-item ng-repeat="childId in navitemCtrl.item.ids" ng-class="{'expanded': itemExpanded}" class="nav-item"
+                              template-url="navitemCtrl.templateUrl" show-position="navitemCtrl.showPosition"
+                              node-id="childId" type="'list'" ng-animate-ref="{{ childId }}" class="nav-item ng-enter"></nav-item>
+                </md-list>
+            </md-card-content>
+            <md-card-footer class="nav-item__more" layout="row" layout-align="center center" flex>
+                <div class="progress-wrapper">
+                    <md-progress-linear class="nav-item__progress" ng-if="navitemCtrl.isGroup" md-mode="determinate" value="{{navitemCtrl.nodeStatus.progress.completionPct}}"></md-progress-linear>
+                    <md-tooltip>{{navitemCtrl.nodeStatus.progress.completionPct}}% completed</md-tooltip>
+                </div>
+                <span ng-if="navitemCtrl.isGroup" class="nav-item__info md-body-1">{{navitemCtrl.nodeStatus.progress.completedItems}}/{{navitemCtrl.nodeStatus.progress.totalItems}} items</span>
+                <span flex></span>
+                <md-icon ng-if="navitemCtrl.nodeStatus.isCompleted" ng-class="'success'" aria-label="Completed"> check_circle </md-icon>
+                <md-icon ng-if="!navitemCtrl.nodeStatus.isVisitable" aria-label="Locked"> lock </md-icon>
+                <!--<md-button aria-label="Add Bookmark" class="md-icon-button" ng-click="navItemsCtrl.toggleBookmark()" ng-class="{'md-primary': child.isBookmark}">
+                    <md-icon> bookmark </md-icon>
+                </md-button>-->
+            </md-card-footer>
+        </md-card>
 
-        </md-card-content>
-        <md-card-footer class="nav-item__more" layout="row" layout-align="center center" flex>
-            <div class="progress-wrapper">
-                <md-tooltip> {{nodeStatus.progress.completionPct}}% completed; {{nodeStatus.progress.totalItems-nodeStatus.progress.completedItems}} remaining </md-tooltip>
-                <md-progress-linear class="nav-item__progress" ng-if="isGroup" md-mode="determinate" value="{{nodeStatus.progress.completionPct}}"></md-progress-linear>
+        <md-list-item ng-switch-when="list" ng-click="navitemCtrl.itemClicked()" class="nav-item--list md-whiteframe-z1" ng-class="{'nav-item--list--group':navitemCtrl.isGroup}">
+            <img ng-if="navitemCtrl.nodeStatus.icon.type === 'img'" ng-class="navitemCtrl.isGroup ? 'avatar--square' : ''" class="md-avatar" ng-src="{{navitemCtrl.nodeStatus.icon.imgSrc}}" alt="{{navitemCtrl.nodeStatus.icon.imgAlt}}" />
+            <div ng-if="navitemCtrl.nodeStatus.icon.type === 'font'" ng-class="navitemCtrl.isGroup ? 'avatar--square' : ''" style="background-color: {{navitemCtrl.nodeStatus.icon.color}};" class="md-avatar">
+                <md-icon md-font-set="{{navitemCtrl.nodeStatus.icon.fontSet}}" class="md-light">{{navitemCtrl.nodeStatus.icon.fontName}}</md-icon>
             </div>
-            <span flex></span>
-            <md-icon ng-if="nodeStatus.isCompleted" ng-class="'success'" aria-label="Completed"> check_circle </md-icon>
-            <md-icon ng-if="!nodeStatus.isVisitable" aria-label="Locked"> lock </md-icon>
-            <!--<md-button aria-label="Add Bookmark" class="md-icon-button" ng-click="navItemsCtrl.toggleBookmark()" ng-class="{'md-primary': child.isBookmark}">
+            <p style="color: {{navitemCtrl.nodeStatus.icon.color}};">{{ navitemCtrl.nodeTitle }} <md-icon ng-if="navitemCtrl.nodeStatus.isCompleted" ng-class="'success'" aria-label="Completed"> check_circle </md-icon></p>
+            <md-icon ng-if="!navitemCtrl.nodeStatus.isVisitable" aria-label="Locked"> lock </md-icon>
+            <!--<md-button aria-label="Add Bookmark" class="md-icon-button" ng-click="toggleBookmark()" ng-class="{'md-primary': child.isBookmark}">
                 <md-icon> bookmark </md-icon>
             </md-button>-->
-        </md-card-footer>
-    </md-card>
-
-    <md-list-item ng-switch-when="list" ng-click="nodeClicked()" class="nav-item--list md-whiteframe-z1" ng-class="{'nav-item--list--group':isGroup}">
-        <img ng-if="nodeStatus.icon.type === 'img'" ng-class="isGroup ? 'avatar--square' : ''" class="md-avatar" ng-src="{{nodeStatus.icon.imgSrc}}" alt="{{nodeStatus.icon.imgAlt}}" />
-        <div ng-if="nodeStatus.icon.type === 'font'" ng-class="isGroup ? 'avatar--square' : ''" style="background-color: {{nodeStatus.icon.color}};" class="md-avatar">
-            <md-icon md-font-set="{{nodeStatus.icon.fontSet}}" class="md-light">{{nodeStatus.icon.fontName}}</md-icon>
-        </div>
-        <p style="color: {{nodeStatus.icon.color}};">{{ nodeTitle }}</p>
-        <md-icon ng-if="nodeStatus.isCompleted" ng-class="'success'" aria-label="Completed"> check_circle </md-icon>
-        <md-icon ng-if="!nodeStatus.isVisitable" aria-label="Locked"> lock </md-icon>
-        <!--<md-button aria-label="Add Bookmark" class="md-icon-button" ng-click="toggleBookmark()" ng-class="{'md-primary': child.isBookmark}">
-            <md-icon> bookmark </md-icon>
-        </md-button>-->
-    </md-list-item>
-</ng-switch>
+        </md-list-item>
+    </ng-switch>
+</div>

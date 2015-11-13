@@ -173,7 +173,8 @@ public class StudentAssetController {
 
         // get the student uploads base directory path
         String path = wiseProperties.getProperty("studentuploads_base_dir");
-        Long studentMaxTotalAssetsSize = new Long(wiseProperties.getProperty("student_max_total_assets_size", "5242880"));
+        Long studentMaxAssetSize = new Long(wiseProperties.getProperty("student_max_asset_size", "5242880"));
+        Long studentMaxTotalAssetsSize = new Long(wiseProperties.getProperty("student_max_total_assets_size", "10485760"));
         String pathToCheckSize = path + "/" + dirName;
 
         DefaultMultipartHttpServletRequest multiRequest = (DefaultMultipartHttpServletRequest) request;
@@ -184,6 +185,10 @@ public class StudentAssetController {
             while (iter.hasNext()) {
                 String key = iter.next();
                 MultipartFile file = fileMap.get(key);
+                if (file.getSize() > studentMaxAssetSize) {
+                    response.sendError(500, "error handling uploaded asset: filesize exceeds max allowed");
+                    return;
+                }
                 String clientDeleteTime = null;
 
                 // upload the files
@@ -214,10 +219,12 @@ public class StudentAssetController {
                         response.getWriter().write(studentAsset.toJSON().toString());
                     } catch (ObjectNotFoundException e) {
                         e.printStackTrace();
-                        response.getWriter().write("error");
+                        response.sendError(500, "error handling uploaded asset");
+                        return;
                     }
                 } else {
-                    response.getWriter().write("error");
+                    response.sendError(500, "error: total asset size exceeds max allowed");
+                    return;
                 }
             }
         }

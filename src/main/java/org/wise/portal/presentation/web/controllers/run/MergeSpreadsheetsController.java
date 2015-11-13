@@ -67,6 +67,7 @@ public class MergeSpreadsheetsController {
             HttpServletResponse response
     ) throws Exception {
 
+        // TODO: this line is saving uploadFile to home directory. Can we do without saving to home directory?
         File file = multipartToFile(uploadFile);
         String mergedResultFileName = "merged_" + file.getName();
         FileInputStream fis = new FileInputStream(file);

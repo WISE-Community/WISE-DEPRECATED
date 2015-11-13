@@ -1,11 +1,13 @@
-define(['configService'], function(configService) {
+define(['configService'], function(configService, studentDataService) {
 
     var service = ['$http',
                    '$rootScope',
-                   'ConfigService', 
+                   'ConfigService',
+                   'StudentDataService',
                    function($http,
                            $rootScope,
-                           ConfigService) {
+                           ConfigService,
+                           StudentDataService) {
         var serviceObject = {};
         
         /*
@@ -39,7 +41,7 @@ define(['configService'], function(configService) {
         serviceObject.performLogOut = false;
         
         /**
-         * Start the timers
+         * Start the timers, save session initialized event
          */
         serviceObject.initializeSession = function() {
             //this.sessionTimeoutInterval = ConfigService.getConfigParam('sessionTimeoutInterval');
@@ -56,6 +58,15 @@ define(['configService'], function(configService) {
             
             // start the check mouse event timer
             this.startCheckMouseEventTimer();
+
+            // save session started event
+            var nodeId = null;
+            var componentId = null;
+            var componentType = null;
+            var category = "Navigation";
+            var event = "sessionStarted";
+            var eventData = {};
+            StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
         };
         
         /**
@@ -197,6 +208,15 @@ define(['configService'], function(configService) {
                 // there are no more listeners so we will exit
                 var mainHomePageURL = ConfigService.getMainHomePageURL();
 
+                // save sessionEnded event
+                var nodeId = null;
+                var componentId = null;
+                var componentType = null;
+                var category = "Navigation";
+                var event = "sessionEnded";
+                var eventData = {};
+                StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
+
                 if (this.performLogOut) {
                     // log out the user and bring them to the home page
                     
@@ -247,7 +267,8 @@ define(['configService'], function(configService) {
         $rootScope.$on('doneExiting', angular.bind(serviceObject, function() {
             
             // check if all components are done unloading so we can exit
-            this.attemptExit();
+            // no longer needed.
+            //this.attemptExit();
         }));
         
         /**
