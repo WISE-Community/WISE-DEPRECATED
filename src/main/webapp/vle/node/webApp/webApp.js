@@ -40,11 +40,11 @@ function WebApp(node) {
 	this.view = node.view;
 	this.content = node.getContent().getContentJSON();
 	
-	if(node.studentWork != null) {
+	if (node.studentWork != null) {
 		this.states = node.studentWork; 
 	} else {
 		this.states = [];  
-	};
+	}
 	
 	this.api = {
 		thisWebApp:this,
