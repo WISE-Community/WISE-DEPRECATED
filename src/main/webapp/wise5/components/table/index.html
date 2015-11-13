@@ -5,9 +5,9 @@
         <tr ng-repeat='row in tableController.getTableDataRows()'>
             <td ng-repeat='cell in row'>
                 <input type='text' 
-                    ng-model='cell.text' 
+                    ng-model='cell.text'
                     ng-change='tableController.studentDataChanged()'
-                    size='cell.size' 
+                    size={{cell.size}}
                     ng-disabled='!cell.editable || tableController.isDisabled'></input>
             </td>
         </tr>
