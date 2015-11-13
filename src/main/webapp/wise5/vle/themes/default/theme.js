@@ -40,15 +40,16 @@ define(['angular', /*'annotationService',*/ 'configService', 'nodeService', 'not
 
                     this.nodeTitle = this.showPosition ? (ProjectService.idToPosition[this.nodeId] + ': ' + this.item.title) : this.item.title;
                     this.currentNode = StudentDataService.currentNode;
-                    this.isCurrentNode = (this.currentNode.id === this.nodeId);
+                    var isCurrentNode = (this.currentNode.id === this.nodeId);
 
                     var scope = this;
                     $scope.$watch(
                         function () { return StudentDataService.currentNode; },
                         function (newNode) {
                             scope.currentNode = newNode;
-                            scope.isCurrentNode = (scope.currentNode.id === scope.nodeId);
-                            if (ProjectService.isApplicationNode(newNode.id)) {
+                            var previouseNode = StudentDataService.previousNode;
+                            isCurrentNode = (scope.currentNode.id === scope.nodeId);
+                            if (isCurrentNode || ProjectService.isApplicationNode(newNode.id) || newNode.id === ProjectService.rootNode.id) {
                                 setExpanded();
                             }
                         }
@@ -62,12 +63,15 @@ define(['angular', /*'annotationService',*/ 'configService', 'nodeService', 'not
                     );
 
                     var setExpanded = function () {
-                        scope.expanded = (scope.isCurrentNode || (scope.isGroup && ProjectService.isNodeDescendentOfGroup(scope.currentNode, scope.item)));
+                        scope.expanded = (isCurrentNode || (scope.isGroup && ProjectService.isNodeDescendentOfGroup(scope.currentNode, scope.item)));
+                        $('body').animate({
+                            scrollTop: $($element).offset().top
+                        }, 500);
                     };
 
                     this.itemClicked = function() {
                         if (this.isGroup) {
-                            if (!this.isCurrentNode && !this.expanded) {
+                            if (!isCurrentNode && !this.expanded) {
                                 StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(this.nodeId);
                             }
                             this.expanded = !this.expanded;
