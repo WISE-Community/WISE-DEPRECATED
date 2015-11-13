@@ -2885,8 +2885,13 @@ function generateStamps(uiDefinition, stampsDefition) {
     label: 'M',
     palette: 'main',
     activatesTool: 'stamp',
-    onLongPress: function () {
+    onClick: function() {
       this.ui.togglePalette('stampCategories');
+      // also show the stamps
+      Object.keys(stampsDefition).forEach(function (category) {
+        var categoryPaletteName = category + 'StampsPalette';
+        this.ui.togglePalette(categoryPaletteName);
+      }, this);
     }
   });
 
@@ -3269,8 +3274,6 @@ var ui = {
       },
       onClick: function () {
         this.ui.getPaletteActiveButton('lines').click();
-      },
-      onLongPress: function () {
         this.ui.togglePalette('lines');
       }
     },
@@ -3285,8 +3288,6 @@ var ui = {
       },
       onClick: function () {
         this.ui.getPaletteActiveButton('shapes').click();
-      },
-      onLongPress: function () {
         this.ui.togglePalette('shapes');
       }
     },
@@ -3305,7 +3306,7 @@ var ui = {
       classes: 'dt-expand dt-keep-text-edit-mode',
       activatesTool: 'text',
       palette: 'main',
-      onLongPress: function () {
+      onClick: function() {
         this.ui.togglePalette('fontSizes');
       }
     },

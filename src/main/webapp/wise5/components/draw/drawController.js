@@ -1,10 +1,10 @@
 define(['app', 'drawingTool', 'vendor'], function(app) {
-    app.$controllerProvider.register('DrawController', 
+    app.$controllerProvider.register('DrawController',
         function(
             $injector,
             $rootScope,
             $scope,
-            $state, 
+            $state,
             $stateParams,
             ConfigService,
             DrawService,
@@ -13,49 +13,47 @@ define(['app', 'drawingTool', 'vendor'], function(app) {
             SessionService,
             StudentAssetService,
             StudentDataService) {
-        
+
         // the node id of the current node
         this.nodeId = null;
-        
+
         // the component id
         this.componentId = null;
-        
+
         // field that will hold the component content
         this.componentContent = null;
-        
+
         // whether the step should be disabled
         this.isDisabled = false;
-        
+
         // whether the student work is dirty and needs saving
         this.isDirty = false;
-        
+
         // whether this part is showing previous work
         this.isShowPreviousWork = false;
 
         // whether the student work is for a submit
         this.isSubmit = false;
-        
+
         // will hold the drawing tool object
         this.drawingTool = null;
+
+        // get the component content from the scope
+        this.componentContent = $scope.component;
 
         /**
          * Perform setup of the component
          */
         this.setup = function() {
-            
+
             // get the current node and node id
             var currentNode = StudentDataService.getCurrentNode();
             if (currentNode != null) {
                 this.nodeId = currentNode.id;
             }
-            
+
             this.drawingTool = new DrawingTool("#drawing-tool", {
-                stamps: {
-                    'fun': [
-                        'https://upload.wikimedia.org/wikipedia/commons/3/31/Ice_Cream_dessert_02.jpg',
-                        'https://popcorntime.io/images/logo-valentines.png'
-                                  ]
-                },
+                stamps: this.componentContent.stamps || {},
                 parseSVG: true
             });
             var state = null;
@@ -83,11 +81,8 @@ define(['app', 'drawingTool', 'vendor'], function(app) {
                 this.drawingTool.load(state);
             }));
 
-            // get the component content from the scope
-            this.componentContent = $scope.component;
-            
             if (this.componentContent != null) {
-                
+
                 // get the component id
                 this.componentId = this.componentContent.id;
 
@@ -128,17 +123,17 @@ define(['app', 'drawingTool', 'vendor'], function(app) {
 
                     // get the component state from the scope
                     componentState = $scope.componentState;
-                    
+
                     if (componentState == null) {
                         /*
                          * only import work if the student does not already have
                          * work for this component
                          */
-                        
+
                         // check if we need to import work
                         var importWorkNodeId = this.componentContent.importWorkNodeId;
                         var importWorkComponentId = this.componentContent.importWorkComponentId;
-                        
+
                         if (importWorkNodeId != null && importWorkComponentId != null) {
                             // import the work from the other component
                             this.importWork();
@@ -147,13 +142,13 @@ define(['app', 'drawingTool', 'vendor'], function(app) {
                         // populate the student work into this component
                         this.setStudentWork(componentState);
                     }
-                    
+
                     // check if we need to lock this component
                     this.calculateDisabled();
-                    
+
                     // register this component with the parent node
                     $scope.$parent.registerComponentController($scope, this.componentContent);
-                    
+
                     // listen for the drawing changed event
                     this.drawingTool.on('drawing:changed', angular.bind(this, this.studentDataChanged));
 
@@ -169,23 +164,23 @@ define(['app', 'drawingTool', 'vendor'], function(app) {
                 }
             }
         };
-        
+
         /**
          * Populate the student work into the component
          * @param componentState the component state to populate into the component
          */
         this.setStudentWork = function(componentState) {
-            
+
             if (componentState != null) {
-                
+
                 // get the student data from the component state
                 var studentData = componentState.studentData;
-                
+
                 if (studentData != null) {
-                    
+
                     // get the draw data
                     var drawData = studentData.drawData;
-                    
+
                     if (drawData != null) {
                         // set the draw data into the drawing tool
                         this.drawingTool.load(drawData);
@@ -193,7 +188,7 @@ define(['app', 'drawingTool', 'vendor'], function(app) {
                 }
             }
         };
-        
+
         /**
          * Called when the student clicks the save button
          */
@@ -202,13 +197,13 @@ define(['app', 'drawingTool', 'vendor'], function(app) {
             // tell the parent node that this component wants to save
             $scope.$emit('componentSaveTriggered', {nodeId: this.nodeId, componentId: this.componentId});
         };
-        
+
         /**
          * Called when the student clicks the submit button
          */
         this.submitButtonClicked = function() {
             this.isSubmit = true;
-            
+
             // check if we need to lock the component after the student submits
             if (this.isLockAfterSubmit()) {
                 this.isDisabled = true;
@@ -217,47 +212,47 @@ define(['app', 'drawingTool', 'vendor'], function(app) {
             // tell the parent node that this component wants to submit
             $scope.$emit('componentSubmitTriggered', {nodeId: this.nodeId, componentId: this.componentId});
         };
-        
+
         /**
          * Called when the student changes their work
          */
         this.studentDataChanged = function() {
             /*
-             * set the dirty flag so we will know we need to save the 
+             * set the dirty flag so we will know we need to save the
              * student work later
              */
             this.isDirty = true;
-            
+
             // get this part id
             var componentId = this.getComponentId();
-            
+
             // create a component state populated with the student data
             var componentState = this.createComponentState();
-            
+
             /*
              * the student work in this component has changed so we will tell
-             * the parent node that the student data will need to be saved. 
-             * this will also notify connected parts that this component's student 
+             * the parent node that the student data will need to be saved.
+             * this will also notify connected parts that this component's student
              * data has changed.
              */
             $scope.$emit('componentStudentDataChanged', {componentId: componentId, componentState: componentState});
         };
-        
+
         /**
          * Create a new component state populated with the student data
          * @return the componentState after it has been populated
          */
         this.createComponentState = function() {
-            
+
             // create a new component state
             var componentState = NodeService.createNewComponentState();
-            
+
             if (componentState != null) {
                 var studentData = {};
-                
+
                 // get the draw JSON string
                 var studentDataJSONString = this.getDrawData();
-                
+
                 // set the draw JSON string into the draw data
                 studentData.drawData = studentDataJSONString;
 
@@ -271,38 +266,38 @@ define(['app', 'drawingTool', 'vendor'], function(app) {
                      */
                     this.isSubmit = false;
                 }
-                
+
                 // set the student data into the component state
                 componentState.studentData = studentData;
             }
-            
+
             return componentState;
         };
-        
+
         /**
          * Check if we need to lock the component
          */
         this.calculateDisabled = function() {
-            
+
             var nodeId = this.nodeId;
-            
+
             // get the component content
             var componentContent = this.componentContent;
-            
+
             if (componentContent != null) {
-                
+
                 // check if the parent has set this component to disabled
                 if (componentContent.isDisabled) {
                     this.isDisabled = true;
                 } else if (componentContent.lockAfterSubmit) {
                     // we need to lock the step after the student has submitted
-                    
+
                     // get the component states for this component
                     var componentStates = StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
-                    
+
                     // check if any of the component states were submitted
                     var isSubmitted = NodeService.isWorkSubmitted(componentStates);
-                    
+
                     if (isSubmitted) {
                         // the student has submitted work for this component
                         this.isDisabled = true;
@@ -310,58 +305,58 @@ define(['app', 'drawingTool', 'vendor'], function(app) {
                 }
             }
         };
-        
+
         /**
          * Check whether we need to show the save button
          * @return whether to show the save button
          */
         this.showSaveButton = function() {
             var show = false;
-            
+
             if (this.componentContent != null) {
-                
+
                 // check the showSaveButton field in the component content
                 if (this.componentContent.showSaveButton) {
                     show = true;
                 }
             }
-            
+
             return show;
         };
-        
+
         /**
          * Check whether we need to show the submit button
          * @return whether to show the submit button
          */
         this.showSubmitButton = function() {
             var show = false;
-            
+
             if (this.componentContent != null) {
-                
+
                 // check the showSubmitButton field in the component content
                 if (this.componentContent.showSubmitButton) {
                     show = true;
                 }
             }
-            
+
             return show;
         };
-        
+
         /**
          * Check whether we need to lock the component after the student
          * submits an answer.
          */
         this.isLockAfterSubmit = function() {
             var result = false;
-            
+
             if (this.componentContent != null) {
-                
+
                 // check the lockAfterSubmit field in the component content
                 if (this.componentContent.lockAfterSubmit) {
                     result = true;
                 }
             }
-            
+
             return result;
         };
 
@@ -501,61 +496,61 @@ define(['app', 'drawingTool', 'vendor'], function(app) {
          */
         this.getPrompt = function() {
             var prompt = null;
-            
+
             if (this.componentContent != null) {
                 prompt = this.componentContent.prompt;
             }
-            
+
             return prompt;
         };
-        
+
         /**
          * Get the draw data
          * @return the draw data from the drawing tool as a JSON string
          */
         this.getDrawData = function() {
             var drawData = null;
-            
+
             drawData = this.drawingTool.save();
-            
+
             return drawData;
         };
-        
+
         /**
          * Import work from another component
          */
         this.importWork = function() {
-            
+
             // get the component content
             var componentContent = this.componentContent;
-            
+
             if (componentContent != null) {
-                
+
                 var importWorkNodeId = componentContent.importWorkNodeId;
                 var importWorkComponentId = componentContent.importWorkComponentId;
-                
+
                 if (importWorkNodeId != null && importWorkComponentId != null) {
-                    
+
                     // get the latest component state for this component
                     var componentState = StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
-                    
+
                     /*
                      * we will only import work into this component if the student
                      * has not done any work for this component
                      */
                     if(componentState == null) {
                         // the student has not done any work for this component
-                        
+
                         // get the latest component state from the component we are importing from
                         var importWorkComponentState = StudentDataService.getLatestComponentStateByNodeIdAndComponentId(importWorkNodeId, importWorkComponentId);
-                        
+
                         if (importWorkComponentState != null) {
                             /*
-                             * populate a new component state with the work from the 
+                             * populate a new component state with the work from the
                              * imported component state
                              */
                             var populatedComponentState = DrawService.populateComponentState(importWorkComponentState);
-                            
+
                             // populate the component state into this component
                             this.setStudentWork(populatedComponentState);
                         }
@@ -563,81 +558,81 @@ define(['app', 'drawingTool', 'vendor'], function(app) {
                 }
             }
         };
-        
+
         /**
          * Get the component id
          * @return the component id
          */
         this.getComponentId = function() {
             var componentId = this.componentContent.id;
-            
+
             return componentId;
         };
-        
+
         /**
-         * Get the component state from this component. The parent node will 
+         * Get the component state from this component. The parent node will
          * call this function to obtain the component state when it needs to
          * save student data.
          * @return a component state containing the student data
          */
         $scope.getComponentState = function() {
-            
+
             var componentState = null;
-            
+
             if ($scope.drawController.isDirty) {
                 // create a component state populated with the student data
                 componentState = $scope.drawController.createComponentState();
-                
+
                 // set isDirty to false since this student work is about to be saved
                 $scope.drawController.isDirty = false;
             }
-            
+
             return componentState;
         };
-        
+
         /**
          * The parent node submit button was clicked
          */
         $scope.$on('nodeSubmitClicked', angular.bind(this, function(event, args) {
-            
+
             // get the node id of the node
             var nodeId = args.nodeId;
-            
+
             // make sure the node id matches our parent node
             if (this.nodeId === nodeId) {
-                
+
                 if (this.isLockAfterSubmit()) {
                     // disable the component if it was authored to lock after submit
                     this.isDisabled = true;
                 }
             }
         }));
-        
+
         /**
          * Listen for the 'exitNode' event which is fired when the student
          * exits the parent node. This will perform any necessary cleanup
          * when the student exits the parent node.
          */
         $scope.$on('exitNode', angular.bind(this, function(event, args) {
-            
+
         }));
-        
+
         /**
          * Register the the listener that will listen for the exit event
          * so that we can perform saving before exiting.
          */
         this.registerExitListener = function() {
-            
+
             /*
              * Listen for the 'exit' event which is fired when the student exits
              * the VLE. This will perform saving before the VLE exits.
              */
             this.exitListener = $scope.$on('exit', angular.bind(this, function(event, args) {
-                
+
                 $rootScope.$broadcast('doneExiting');
             }));
         };
-        
+
         // perform setup of this component
         this.setup();
     });
