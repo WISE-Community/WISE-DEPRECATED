@@ -41,6 +41,8 @@ require.config({
         'draggablePoints': 'vendor/draggable-points/draggable-points',
         'drawController': 'components/draw/drawController',
         'drawService': 'components/draw/drawService',
+        'embeddedController': 'components/embedded/embeddedController',
+        'embeddedService': 'components/embedded/embeddedService',
         'filters': 'filters/filters',
         'graphController': 'components/graph/graphController',
         'graphService': 'components/graph/graphService',

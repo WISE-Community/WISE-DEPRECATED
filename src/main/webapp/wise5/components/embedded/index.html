@@ -1,0 +1,7 @@
+<div ng-controller='EmbeddedController as embeddedController' style="text-align: center;">
+    <script>
+        var embeddedController = embeddedController;
+    </script>
+    <iframe ng-src='{{embeddedController.url}}'
+            style="height: 100%; width:100%; max-width: {{embeddedController.maxWidth}}; max-height: {{embeddedController.maxHeight}};"></iframe>
+</div>

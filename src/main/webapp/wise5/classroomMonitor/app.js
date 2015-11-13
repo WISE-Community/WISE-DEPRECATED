@@ -47,6 +47,7 @@ define([
                 cRaterService,
                 discussionService,
                 drawService,
+                embeddedService,
                 graphService,
                 matchService,
                 multipleChoiceService,
@@ -89,6 +90,7 @@ define([
     // node services
     app.factory('DiscussionService', discussionService);
     app.factory('DrawService', drawService);
+    app.factory('EmbeddedService', embeddedService);
     app.factory('GraphService', graphService);
     app.factory('MatchService', matchService);
     app.factory('MultipleChoiceService', multipleChoiceService);

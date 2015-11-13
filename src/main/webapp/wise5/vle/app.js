@@ -25,6 +25,7 @@ define([
     'cRaterService',
     'discussionService',
     'drawService',
+    'embeddedService',
     'graphService',
     'highcharts-ng',
     'htmlService',
@@ -74,6 +75,7 @@ define([
              cRaterService,
              discussionService,
              drawService,
+             embeddedService,
              graphService,
              highchartsng,
              htmlService,
@@ -136,6 +138,7 @@ define([
     app.factory('AudioRecorderService', audioRecorderService);
     app.factory('DiscussionService', discussionService);
     app.factory('DrawService', drawService);
+    app.factory('EmbeddedService', embeddedService);
     app.factory('GraphService', graphService);
     app.factory('HTMLService', htmlService);
     app.factory('MatchService', matchService);
@@ -222,6 +225,7 @@ define([
                                 cRaterController: app.loadController('cRaterController'),
                                 discussionController: app.loadController('discussionController'),
                                 drawController: app.loadController('drawController'),
+                                embeddedController: app.loadController('embeddedController'),
                                 graphController: app.loadController('graphController'),
                                 htmlController: app.loadController('htmlController'),
                                 matchController: app.loadController('matchController'),
