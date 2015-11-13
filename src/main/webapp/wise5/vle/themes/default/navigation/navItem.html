@@ -1,6 +1,6 @@
 <div ng-if="navitemCtrl.nodeStatus.isVisible">
     <ng-switch on="navitemCtrl.type">
-        <md-card ng-switch-when="card" class="nav-item--card" ng-class="{'nav-item--card--group':navitemCtrl.isGroup, 'expanded':navitemCtrl.expanded}" is-currentnode="{{isCurrentNode}}">
+        <md-card ng-switch-when="card" class="nav-item--card" ng-class="{'nav-item--card--group':navitemCtrl.isGroup, 'expanded md-whiteframe-z3':navitemCtrl.expanded}"">
             <md-card-content class="nav-item--card__content" ng-click="navitemCtrl.itemClicked()" role="button" md-ink-ripple layout="row">
                 <img ng-if="navitemCtrl.nodeStatus.icon.type === 'img'" ng-animate-ref="{{ id }}" ng-class="navitemCtrl.isGroup ? 'avatar--square' : ''" class="md-36 avatar nav-item__avatar" ng-src="{{navitemCtrl.nodeStatus.icon.imgSrc}}" alt="{{navitemCtrl.nodeStatus.icon.imgAlt}}" />
                 <div ng-if="navitemCtrl.nodeStatus.icon.type === 'font'" ng-animate-ref="{{ id }}" ng-class="navitemCtrl.isGroup ? 'avatar--square' : ''" style="background-color: {{navitemCtrl.nodeStatus.icon.color}};" class="md-36 avatar avatar--icon nav-item__avatar">
@@ -9,6 +9,7 @@
                 <div class="md-title nav-item__title" style="color: {{navitemCtrl.nodeStatus.icon.color}};" flex>
                     <span>{{ navitemCtrl.nodeTitle }}</span>
                 </div>
+                <md-icon class="nav-item__collapse" ng-show="navitemCtrl.isGroup && navitemCtrl.expanded" aria-label="collapse">remove</md-icon>
             </md-card-content>
             <md-card-content ng-if="navitemCtrl.isGroup" ng-show="navitemCtrl.expanded" class="nav-contents nav-contents--group">
                 <md-list class="nav-contents__list">

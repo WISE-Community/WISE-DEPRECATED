@@ -18,10 +18,10 @@
             {{openResponseController.nodeContent.style}}
             </style>
 
-            <md-input-container class="input-container md-block input-container--open-response">
+            <md-input-container class="input-container md-block input-container--open-response md-no-float">
                 <label class="input-label md-no-float" ng-disabled="openResponseController.isDisabled"
                        compile="openResponseController.getPrompt()" ng-if="openResponseController.getPrompt()"></label>
-                <div class="input-wrapper"  ng-class="{'input-wrapper--richtext': openResponseController.isRichTextEnabled}">
+                <div class="input-wrapper" ng-class="{'input-wrapper--richtext': openResponseController.isRichTextEnabled}">
                     <textarea ng-if="openResponseController.isRichTextEnabled && !openResponseController.isDisabled"
                               ui-tinymce="openResponseController.tinymceOptions"
                               ng-model="openResponseController.studentResponse"
@@ -40,13 +40,13 @@
                                ng-click='nodeCtrl.addStudentWorkItemToNotebook(component.id)'
                                ng-disabled="!openResponseController.getStudentResponse()">
                         <md-icon> book </md-icon>
-                        <md-tooltip md-direction="top">Add to Notebook</md-tooltip>
+                        <md-tooltip md-direction="left">Add to Notebook</md-tooltip>
                     </md-button>
                     <md-button class="input--textarea__action input--textarea__action--revision md-icon-button"
                                ng-click='nodeCtrl.showRevisions($event, component.id, openResponseController.isDisabled)'
                                ng-disabled="nodeCtrl.getRevisions(component.id).length == 0">
                         <md-icon> history </md-icon>
-                        <md-tooltip md-direction="top">{{nodeCtrl.getRevisions(component.id).length}} Revisions</md-tooltip>
+                        <md-tooltip md-direction="left">{{nodeCtrl.getRevisions(component.id).length}} Revisions</md-tooltip>
                     </md-button>
                 </div>
                 <div id="attachments" ng-show="openResponseController.isStudentAttachmentEnabled">

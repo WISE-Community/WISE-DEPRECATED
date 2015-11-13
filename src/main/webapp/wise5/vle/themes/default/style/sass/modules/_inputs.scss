@@ -33,6 +33,7 @@ $input-action-vertical-offset-richtext: -7px;
 
   &.input--textarea--hasaction {
     padding-right: $input-action-width;
+    min-height: 96px;
 
     .mce-toolbar-grp {
       padding-right: $input-action-width;

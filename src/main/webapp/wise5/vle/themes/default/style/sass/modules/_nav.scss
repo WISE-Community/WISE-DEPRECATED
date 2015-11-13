@@ -10,9 +10,10 @@
 //.nav-group, .nav-root {
 //}
 
-.group-info {
+/*.group-info {
   padding: 16px;
-  @include border-bottom-radius(0);
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
 }
 
 .group-info__avatar {
@@ -55,7 +56,7 @@
       top: 0;
     }
   }
-}
+}*/
 
 .nav-contents--group {
   background-color: $gray-light;
@@ -75,29 +76,38 @@
 }
 
 .nav-item--card__content {
-  @include border-top-radius($card-border-radius);
+  border-top-right-radius: $card-border-radius;
+  border-top-left-radius: $card-border-radius;
 
   &:focus {
-    @include box-shadow(0px 1px 1px -1px $primary-color inset);
     outline: none;
+
+    .nav-item__title > span {
+      border-bottom: 1px dashed $gray;
+    }
   }
 }
 
 .nav-item {
-  @include transition(margin 250ms linear);
+}
+
+.nav-item--root {
+  transition: margin 250ms, box-shadow 500ms;
 
   &.expanded {
-    @include flex-basis(100%);
-    max-width: ($layout-breakpoint-md - 100) !important;
+    flex-basis: 100%;
+    //max-width: ($layout-breakpoint-md - 100) !important;
+    max-width: 100%;
     max-height: none !important;
     margin: 8px auto;
+    padding-left: 4px;
 
     &:first-of-type {
       margin-top: 0;
     }
 
     //@media only screen and (min-width: $layout-breakpoint-sm) {
-      //margin: 8px auto;
+    //margin: 8px auto;
     //}
   }
 }
@@ -113,15 +123,20 @@
 
 .nav-item--card--group {
   &:not(.expanded) {
-    @include box-shadow(0px 3px 1px -2px rgba(0, 0, 0, 0.14), 0px 2px 2px 0px rgba(0, 0, 0, 0.098),
-            0px 1px 5px 0px rgba(0, 0, 0, 0.084), 3px 3px 0px 1px #d5d5d5, 6px 6px 0px 1px #aaaaaa);
+    box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.14), 0px 2px 2px 0px rgba(0, 0, 0, 0.098),
+            0px 1px 5px 0px rgba(0, 0, 0, 0.084), 3px 3px 0px 1px #d5d5d5, 6px 6px 0px 1px #aaaaaa;
   }
+}
+
+.nav-item__collapse {
+  margin: 0;
 }
 
 .nav-item__more {
   //background-color: $gray-lightest;
   border-top: 1px solid $gray-light;
-  @include border-bottom-radius(4px);
+  border-bottom-right-radius: $card-border-radius;
+  border-bottom-left-radius: $card-border-radius;
   padding: 8px 16px;
   min-height: 40px;
 
