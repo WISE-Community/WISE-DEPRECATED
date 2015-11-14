@@ -41,6 +41,9 @@ define(['app', 'drawingTool', 'vendor'], function(app) {
         // get the component content from the scope
         this.componentContent = $scope.component;
 
+        // whether students can attach files to their work
+        this.isStudentAttachmentEnabled = false;
+
         /**
          * Perform setup of the component
          */
@@ -123,6 +126,9 @@ define(['app', 'drawingTool', 'vendor'], function(app) {
 
                     // get the component state from the scope
                     componentState = $scope.componentState;
+
+                    // set whether studentAttachment is enabled
+                    this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
 
                     if (componentState == null) {
                         /*
