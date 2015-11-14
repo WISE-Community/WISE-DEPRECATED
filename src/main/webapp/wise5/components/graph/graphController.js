@@ -85,8 +85,14 @@ define(['app',
                     // get the node content for the other node
                     var showPreviousWorkNodeContent = ProjectService.getNodeContentByNodeId(showPreviousWorkNodeId);
 
+                    var showPreviousWorkPrompt = this.componentContent.showPreviousWorkPrompt;
+
                     // get the component content for the component we are showing previous work for
                     this.componentContent = NodeService.getComponentContentById(showPreviousWorkNodeContent, showPreviousWorkComponentId);
+
+                    if (!showPreviousWorkPrompt) {
+                        this.componentContent = '';
+                    }
 
                     // get the component state for the show previous work
                     var componentState = StudentDataService.getLatestComponentStateByNodeIdAndComponentId(showPreviousWorkNodeId, showPreviousWorkComponentId);
