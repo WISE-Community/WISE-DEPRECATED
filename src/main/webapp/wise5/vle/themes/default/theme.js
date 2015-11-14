@@ -59,14 +59,21 @@ define(['angular', /*'annotationService',*/ 'configService', 'nodeService', 'not
                         function () { return scope.expanded; },
                         function (value) {
                             $scope.$parent.itemExpanded = value;
+
+                            if (value) {
+                                setTimeout(function() {
+                                    // smooth scroll to expanded group's page location
+                                    var location = scope.$element[0].offsetTop - 16;
+                                    $('#content').animate({
+                                        scrollTop: location
+                                    }, 250);
+                                }, 250);
+                            }
                         }
                     );
 
                     var setExpanded = function () {
                         scope.expanded = (isCurrentNode || (scope.isGroup && ProjectService.isNodeDescendentOfGroup(scope.currentNode, scope.item)));
-                        $('body').animate({
-                            scrollTop: $($element).offset().top
-                        }, 500);
                     };
 
                     this.itemClicked = function() {

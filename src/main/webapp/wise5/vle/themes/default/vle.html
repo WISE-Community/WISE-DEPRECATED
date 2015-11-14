@@ -31,7 +31,7 @@
                     </md-menu>
                 </div>
             </md-toolbar>
-            <md-content flex role="main" ng-class="{'l-nav': vleController.layoutState == 'nav', 'l-node': vleController.layoutState == 'node'}" layout="column">
+            <md-content id="content" flex role="main" ng-class="{'l-nav': vleController.layoutState == 'nav', 'l-node': vleController.layoutState == 'node'}" layout="column">
                 <div ng-include="vleController.themePath + '/navigation/navigation.html'" autoscroll="true" ng-show="vleController.layoutState == 'nav'"></div>
                 <div ng-cloak ui-view="nodeView" autoscroll="true" ng-show="vleController.layoutState == 'node'"
                      data-drop="true"
