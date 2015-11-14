@@ -47,7 +47,6 @@ define(['angular', /*'annotationService',*/ 'configService', 'nodeService', 'not
                         function () { return StudentDataService.currentNode; },
                         function (newNode) {
                             scope.currentNode = newNode;
-                            var previouseNode = StudentDataService.previousNode;
                             isCurrentNode = (scope.currentNode.id === scope.nodeId);
                             if (isCurrentNode || ProjectService.isApplicationNode(newNode.id) || newNode.id === ProjectService.rootNode.id) {
                                 setExpanded();
@@ -59,21 +58,27 @@ define(['angular', /*'annotationService',*/ 'configService', 'nodeService', 'not
                         function () { return scope.expanded; },
                         function (value) {
                             $scope.$parent.itemExpanded = value;
-
                             if (value) {
-                                setTimeout(function() {
-                                    // smooth scroll to expanded group's page location
-                                    var location = scope.$element[0].offsetTop - 16;
-                                    $('#content').animate({
-                                        scrollTop: location
-                                    }, 250);
-                                }, 250);
+                                zoomToElement();
                             }
                         }
                     );
 
                     var setExpanded = function () {
                         scope.expanded = (isCurrentNode || (scope.isGroup && ProjectService.isNodeDescendentOfGroup(scope.currentNode, scope.item)));
+                        if (scope.expanded) {
+                            zoomToElement();
+                        }
+                    };
+
+                    var zoomToElement = function () {
+                        setTimeout(function () {
+                            // smooth scroll to expanded group's page location
+                            var location = $element[0].offsetTop - 16;
+                            $('#content').animate({
+                                scrollTop: location
+                            }, 250);
+                        }, 250);
                     };
 
                     this.itemClicked = function() {
