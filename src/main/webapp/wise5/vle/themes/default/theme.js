@@ -41,6 +41,7 @@ define(['angular', /*'annotationService',*/ 'configService', 'nodeService', 'not
                     this.nodeTitle = this.showPosition ? (ProjectService.idToPosition[this.nodeId] + ': ' + this.item.title) : this.item.title;
                     this.currentNode = StudentDataService.currentNode;
                     var isCurrentNode = (this.currentNode.id === this.nodeId);
+                    var setNewNode = false;
 
                     var scope = this;
                     $scope.$watch(
@@ -66,7 +67,7 @@ define(['angular', /*'annotationService',*/ 'configService', 'nodeService', 'not
 
                     var setExpanded = function () {
                         scope.expanded = (isCurrentNode || (scope.isGroup && ProjectService.isNodeDescendentOfGroup(scope.currentNode, scope.item)));
-                        if (scope.expanded) {
+                        if (scope.expanded && isCurrentNode) {
                             zoomToElement();
                         }
                     };
@@ -77,14 +78,19 @@ define(['angular', /*'annotationService',*/ 'configService', 'nodeService', 'not
                             var location = $element[0].offsetTop - 16;
                             $('#content').animate({
                                 scrollTop: location
-                            }, 250);
+                            }, 250, 'linear', function () {
+                                if (setNewNode) {
+                                    setNewNode = false;
+                                    StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(scope.nodeId);
+                                }
+                            });
                         }, 250);
                     };
 
                     this.itemClicked = function() {
                         if (this.isGroup) {
-                            if (!isCurrentNode && !this.expanded) {
-                                StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(this.nodeId);
+                            if (!this.expanded) {
+                                setNewNode = true;
                             }
                             this.expanded = !this.expanded;
                         } else {
