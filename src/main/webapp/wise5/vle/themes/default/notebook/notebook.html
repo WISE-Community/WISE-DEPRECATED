@@ -81,7 +81,7 @@
         <img ng-show="(notebookController.filter == 'all' || notebookController.filter == 'files') && notebookItem.studentAsset != null"
              ng-src='{{notebookItem.studentAsset.iconURL}}'
              class='studentAsset notebookItem'
-             title='Drag and drop this item to use in your project!'
+             title='Use this item in your project.'
              data-drag='true'
              data-jqyoui-options="{revert: 'invalid', helper: 'clone', stack: 'div' }"
              jqyoui-draggable="{animate:true, placeholder: 'keep', onStart:'notebookController.notebookItemDragStartCallback(notebookItem)'}">
@@ -89,7 +89,7 @@
         <div ng-show="(notebookController.filter == 'all' || notebookController.filter == 'work')
             && notebookItem.studentWork != null"
              class='studentWork notebookItem'
-             title='Drag and drop this item to use in your project!'
+             title='Use this item in your project.'
              data-drag='true'
              data-jqyoui-options="{revert: 'invalid', helper: 'clone', stack: 'div' }"
              jqyoui-draggable="{animate:true, placeholder: 'keep', onStart:'notebookController.notebookItemDragStartCallback(notebookItem)'}">

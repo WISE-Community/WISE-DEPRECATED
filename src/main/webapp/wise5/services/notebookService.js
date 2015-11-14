@@ -65,6 +65,7 @@ define(['configService', 'studentDataService'], function(configService, studentD
             config.params.workgroupId = ConfigService.getWorkgroupId();
             return $http(config).then(angular.bind(this, function(response) {
                 // loop through the assets and make them into JSON object with more details
+                this.notebook.items = [];  // clear local notebook items array
                 var result = [];
                 var allNotebookItems = response.data;
                 for (var n = 0; n < allNotebookItems.length; n++) {
