@@ -14,9 +14,6 @@ require.config({
         'angularMaterial': 'vendor/angular-material/angular-material.min',
         'angularMoment': 'vendor/angular-moment/angular-moment.min',
         'angularSortable': 'vendor/angular-ui-sortable/sortable.min',
-        'angularTextAngular': 'lib/angularTextAngular/textAngular.min', // TODO: switch to using bower once loading errors are fixed
-        'angularTextAngularRangy': 'lib/angularTextAngular/textAngular-rangy.min', // TODO: switch to using bower once loading errors are fixed
-        'angularTextAngularSanitize': 'lib/angularTextAngular/textAngular-sanitize.min', // TODO: switch to using bower once loading errors are fixed
         'angularToArrayFilter': 'vendor/angular-toArrayFilter/toArrayFilter',
         'angularUIRouter': 'vendor/angular-ui-router/release/angular-ui-router.min',
         'angularUITinymce': 'vendor/angular-ui-tinymce/src/tinymce',
@@ -151,27 +148,6 @@ require.config({
             'deps': [
                      'angular'
                      ]
-        },
-        'angularTextAngular': {
-            'exports': 'angularTextAngular',
-            'deps': [
-                     'angular',
-                     'bootstrap',
-                     'angularTextAngularSanitize'
-                     ]
-        },
-        'angularTextAngularRangy': {
-            'exports': 'angularTextAngularRangy',
-            'deps': [
-                    'angular'
-                    ]
-        },
-        'angularTextAngularSanitize': {
-            'exports': 'angularTextAngularSanitize',
-            'deps': [
-                    'angular',
-                    'angularTextAngularRangy'
-                    ]
         },
         'angularToArrayFilter': {
             'exports': 'angularToArrayFilter',

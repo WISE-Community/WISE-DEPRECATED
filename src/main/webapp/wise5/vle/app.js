@@ -14,7 +14,6 @@ define([
     'angularFileUpload',
     'angularMoment',
     'angularSortable',
-    'angularTextAngular',
     'angularToArrayFilter',
     'angularUIRouter',
     'angularUITinymce',
@@ -64,7 +63,6 @@ define([
              angularFileUpload,
              angularMoment,
              angularSortable,
-             angularTextAngular,
              angularToArrayFilter,
              angularUIRouter,
              angularUITinymce,
@@ -119,7 +117,6 @@ define([
         'ngMaterial',
         'ngWebSocket',
         'oc.lazyLoad',
-        'textAngular'
     ]);
 
     // core services
