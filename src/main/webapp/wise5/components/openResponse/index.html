@@ -1,17 +1,5 @@
 <html>
-    <head>
-    <style>
-    .attachment {
-        width: auto;
-        height: auto;
-        max-width: 200px;
-        max-height: 200px;
-        padding: 10px;
-        margin: 5px;
-        border: 3px solid #DDD;
-    }
-    </style>
-    </head>
+    <head></head>
     <body>
         <div class='openResponse' ng-controller='OpenResponseController as openResponseController'>
             <style>
@@ -49,16 +37,20 @@
                         <md-tooltip md-direction="left">{{nodeCtrl.getRevisions(component.id).length}} Revisions</md-tooltip>
                     </md-button>
                 </div>
-                <div id="attachments" ng-show="openResponseController.isStudentAttachmentEnabled">
-                    <span ng-repeat="attachment in openResponseController.attachments">
-                        <img src="{{attachment.iconURL}}" class="attachment" />
-                        <button ng-click='openResponseController.removeAttachment(attachment)'>X</button>
-                    </span>
-                    <button ng-click='nodeCtrl.showNotebook($event, component.id, openResponseController.isDisabled)'>
-                        Add attachment...
-                    </button>
-                </div>
             </md-input-container>
+            <div class="component-content__actions" ng-show="openResponseController.attachments.length" layout="row" layout-wrap="true">
+                <div class="component__add-attachment">
+                    <md-button class="md-accent"
+                               ng-click='nodeCtrl.showNotebook($event, component.id, openResponseController.isDisabled)'
+                               ng-if="openResponseController.isStudentAttachmentEnabled">
+                        <md-icon>image</md-icon> <span>Add File</span>
+                    </md-button>
+                </div>
+                <div class="component__attachment" ng-repeat="attachment in openResponseController.attachments">
+                    <img src="{{attachment.iconURL}}" class="component__attachment__content" />
+                    <md-button class="component__attachment__delete" ng-click='openResponseController.removeAttachment(attachment)' title="Remove file"><md-icon>cancel</md-icon></md-button>
+                </div>
+            </div>
 
             <div class="component-content__actions" layout="row">
                 <md-button class="md-raised md-primary"

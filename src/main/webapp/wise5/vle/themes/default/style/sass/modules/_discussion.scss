@@ -98,22 +98,13 @@ md-input-container.discussion-new__input-container {
 }
 
 .discussion-new__attachment {
-  position: relative;
+  padding: 0;
+  margin: 0 0 8px;
 }
 
 .discussion-new__attachment__content {
   margin-top: 0;
   margin-bottom: 16px;
-}
-
-.discussion-new__attachment__delete {
-  position: absolute;
-  top: 0;
-  right: 0;
-  min-width: 0;
-  background-color: rgba(255, 255, 255, 0.9);
-  border-radius: 0;
-  padding: 12px;
 }
 
 .discussion-comments {
