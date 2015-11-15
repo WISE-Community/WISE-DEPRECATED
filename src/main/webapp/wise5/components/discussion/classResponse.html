@@ -27,21 +27,23 @@
                     <div class="md-list-item-text discusstion-reply__details">
                         <h3 class="discussion-post__user discussion-post__user--reply">{{ reply.userNames }}</h3>
                         <div class="md-caption discussion-post__date" title="{{ reply.clientSaveTime | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}">{{ reply.clientSaveTime | amCalendar }}</div>
-                        <div class="discusstion-reply__content" ng-bind-html="reply.studentData.response"></div>
+                        <div class="discusstion-reply__content md-body-1" ng-bind-html="reply.studentData.response"></div>
                     </div>
                 </md-list-item>
             </md-list>
         </div>
-        <div class="discussion-new-reply">
+        <div class="discussion-new-reply" flex layout="row">
             <md-input-container class="input-container discussion-new-reply__input-container md-block" md-no-float flex>
                 <textarea class="input--textarea discussion-reply__input"
                           ng-model='response.replyText'
+                          ng-model-options='{ debounce: 250 }'
                           placeholder="Add comment..."
                           aria-label="Add comment"></textarea>
             </md-input-container>
-            <div ng-show="response.replyText" class="discussion-new__actions discussion-new-reply__actions">
-                <md-button class="md-primary md-raised"
-                           ng-click="submitButtonClicked(response)">Post</md-button>
+            <div class="discussion-new__actions discussion-new-reply__actions">
+                <a class="md-button md-primary md-raised discussion-new-reply__submit"
+                           ng-disabled="!response.replyText"
+                           ng-click="submitButtonClicked(response)">Post</a>
             </div>
         </div>
     </div>

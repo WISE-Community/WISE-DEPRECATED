@@ -2165,7 +2165,7 @@ body { background: #eeeeee; overflow: hidden; }
 h1, h2, h3, h4, h5, h6 { margin-bottom: 1rem; margin-top: 1rem; }
 
 a { color: #1C8CA8; cursor: pointer; text-decoration: none; border-bottom: 1px solid transparent; transition: 300ms border-bottom; }
-a:hover, a:focus { border-bottom: 1px solid; }
+a:not(.md-button):hover, a:not(.md-button):focus { border-bottom: 1px solid; }
 
 /*.breadcrumb { .ng-enter, .ng-leave { transition: 300ms cubic-bezier(0.250, 0.250, 0.750, 0.750 opacity; }
  .ng-leave.ng-leave-active, .ng-enter { opacity: 0; }
@@ -2385,7 +2385,7 @@ md-toast.project-status { min-width: 350px; max-height: none; padding: 8px; back
 
 .discussion-post__date { color: #777777; }
 
-.discussion-post__content { margin-top: 16px; }
+.discussion-post__content { margin-top: 16px; white-space: pre; }
 
 .discussion-post__attachment { max-width: 100%; height: auto; margin-top: 16px; }
 
@@ -2421,14 +2421,14 @@ md-input-container.discussion-new__input-container > textarea.md-input { min-hei
 
 .discussion-post__user--reply, md-list-item.md-3-line .md-list-item-text h3.discussion-post__user--reply { font-size: 14px; }
 
-.discusstion-reply__content { margin-top: 8px; font-size: 14px; }
+.discusstion-reply__content { margin-top: 8px; font-size: 14px; white-space: pre; }
 .discusstion-reply__content p { font-weight: 400 !important; color: rgba(0, 0, 0, 0.87) !important; }
 
 .discussion-new-reply { padding: 16px; }
 
 .discussion-new-reply__input-container { padding: 0; margin: 0; }
 
-.discussion-new-reply__actions { margin-top: 16px; }
+.discussion-new-reply__actions { margin-left: 8px; }
 
 .account-menu { border-radius: 4px; padding: 0; font-size: 15px; }
 

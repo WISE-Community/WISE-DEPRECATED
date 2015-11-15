@@ -23,8 +23,10 @@ a {
   border-bottom: 1px solid transparent;
   transition: 300ms border-bottom;
 
-  &:hover, &:focus {
-    border-bottom: 1px solid;
+  &:not(.md-button) {
+    &:hover, &:focus {
+      border-bottom: 1px solid;
+    }
   }
 }
 
