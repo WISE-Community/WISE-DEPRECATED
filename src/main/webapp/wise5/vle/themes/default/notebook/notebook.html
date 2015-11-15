@@ -81,18 +81,11 @@
         <img ng-show="(notebookController.filter == 'all' || notebookController.filter == 'files') && notebookItem.studentAsset != null"
              ng-src='{{notebookItem.studentAsset.iconURL}}'
              class='studentAsset notebookItem'
-             title='Use this item in your project.'
-             data-drag='true'
-             data-jqyoui-options="{revert: 'invalid', helper: 'clone', stack: 'div' }"
-             jqyoui-draggable="{animate:true, placeholder: 'keep', onStart:'notebookController.notebookItemDragStartCallback(notebookItem)'}">
+             title='{{notebookItem.studentAsset.iconURL}}'>
         </img>
         <div ng-show="(notebookController.filter == 'all' || notebookController.filter == 'work')
             && notebookItem.studentWork != null"
-             class='studentWork notebookItem'
-             title='Use this item in your project.'
-             data-drag='true'
-             data-jqyoui-options="{revert: 'invalid', helper: 'clone', stack: 'div' }"
-             jqyoui-draggable="{animate:true, placeholder: 'keep', onStart:'notebookController.notebookItemDragStartCallback(notebookItem)'}">
+             class='studentWork notebookItem'>
             <componentstatehtml componentstate={{notebookItem.studentWork}}></componentstatehtml>
         </div>
         <div ng-show="notebookController.componentController != null && notebookController.selectedNotebookItem === notebookItem">
