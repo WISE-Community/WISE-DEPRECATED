@@ -294,7 +294,36 @@ define(['angular', /*'annotationService',*/ 'configService', 'nodeService', 'not
                             $mdDialog.hide();
                         };
                     }
+                }));
 
+                $scope.$on('showNotebook', angular.bind(this, function (event, args) {
+                    var revisions = args.revisions;
+                    var notebookFilters = args.notebookFilters;
+                    var componentController = args.componentController;
+                    var $event = args.$event;
+                    var notebookDialogTemplateUrl = this.themePath + '/templates/notebookDialog.html';
+                    var notebookTemplateUrl = this.themePath + '/notebook/notebook.html';
+
+                    $mdDialog.show({
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        templateUrl: notebookDialogTemplateUrl,
+                        locals: {
+                            notebookFilters: notebookFilters,
+                            notebookTemplateUrl: notebookTemplateUrl,
+                            componentController: componentController
+                        },
+                        controller: NotebookDialogController
+                    });
+                    function NotebookDialogController($scope, $mdDialog, componentController) {
+                        $scope.notebookFilters = notebookFilters;
+                        $scope.notebookFilter = notebookFilters[0].name;
+                        $scope.notebookTemplateUrl = notebookTemplateUrl;
+                        $scope.componentController = componentController;
+                        $scope.closeDialog = function () {
+                            $mdDialog.hide();
+                        }
+                    }
                 }));
 
                 // capture notebook open/close events

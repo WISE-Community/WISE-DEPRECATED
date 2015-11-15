@@ -1,0 +1,17 @@
+<md-dialog aria-label="Notebook">
+    <md-toolbar class="l-sidebar__header md-whiteframe-z1">
+        <div class="md-toolbar-tools">
+            <h3>Notebook</h3>
+            <span flex></span>
+            <md-select class="md-body-1" md-theme="default" placeholder="Filter" ng-model="notebookFilter">
+                <md-option ng-repeat="filter in notebookFilters" value="{{filter.name}}">{{filter.label}}</md-option>
+            </md-select>
+        </div>
+    </md-toolbar>
+    <md-content class="md-padding">
+        <notebook template-url="notebookTemplateUrl" filter="notebookFilter" component-controller="componentController"></notebook>
+    </md-content>
+    <div class="md-actions">
+        <md-button ng-click="closeDialog()" class="md-primary">Close</md-button>
+    </div>
+</md-dialog>
