@@ -21,16 +21,16 @@ a {
   cursor: pointer;
   text-decoration: none;
   border-bottom: 1px solid transparent;
-  @include transition(border-bottom 0.3s);
+  transition: 300ms border-bottom;
 
   &:hover, &:focus {
     border-bottom: 1px solid;
   }
 }
 
-.breadcrumb {
+/*.breadcrumb {
   .ng-enter, .ng-leave {
-    @include transition(300ms cubic-bezier(0.250, 0.250, 0.750, 0.750) opacity);
+    transition: 300ms cubic-bezier(0.250, 0.250, 0.750, 0.750 opacity;
   }
 
   .ng-leave.ng-leave-active, .ng-enter {
@@ -40,7 +40,7 @@ a {
   .ng-enter.ng-enter-active, .ng-leave {
     opacity: 1;
   }
-}
+}*/
 
 // Images & Icons
 .avatar {
@@ -49,7 +49,7 @@ a {
 }
 
 .avatar--square {
-  border-radius: 0;
+  border-radius: $card-border-radius;
 }
 
 // Rules for sizing avatars (matches material icons plus avatar-icon padding)
@@ -123,7 +123,8 @@ md-icon {
   }
 }
 
-.md-subheader, md-list .md-subheader {
+.md-subheader, md-list .md-subheader, .md-subheader a, md-list .md-subheader a,
+.md-subheader md-icon, md-list .md-subheader md-icon {
   color: $accent-color-2;
 }
 
@@ -135,4 +136,42 @@ md-icon {
 // Theme overrides
 md-input-container.md-wise-theme label {
   color: $text-color-dark;
+}
+
+// Animations
+.animate-show {
+  max-height: 9999px;
+  opacity: 1;
+}
+
+.animate-show.ng-hide-add, .animate-show.ng-hide-remove {
+  transition: all 250ms;
+}
+
+.animate-show.ng-hide {
+  max-height: 0;
+  min-height: 0;
+  opacity: 0;
+  padding: 0;
+}
+
+.animate-repeat {
+}
+
+.animate-repeat.ng-move,
+.animate-repeat.ng-enter,
+.animate-repeat.ng-leave {
+  transition:opacity 250ms;
+}
+
+.animate-repeat.ng-leave.ng-leave-active,
+.animate-repeat.ng-move,
+.animate-repeat.ng-enter {
+  opacity:0;
+}
+
+.animate-repeat.ng-leave,
+.animate-repeat.ng-move.ng-move-active,
+.animate-repeat.ng-enter.ng-enter-active {
+  opacity:1;
 }

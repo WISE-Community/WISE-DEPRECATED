@@ -8,15 +8,21 @@
             </div>
         </div>
         <div class="md-content discussion-post__content md-body-1" ng-bind-html="response.studentData.response"></div>
-        <img ng-repeat="attachment in response.studentData.attachments" src="{{attachment.iconURL}}" class="attachment" />
+        <img ng-repeat="attachment in response.studentData.attachments" src="{{attachment.iconURL}}" class="discussion-post__attachment" />
         </div>
     </div>
     <md-divider></md-divider>
     <div class="discussion-comments">
         <div ng-if="response.replies.length">
-            <md-subheader class="md-no-sticky discussion-comments__header">Comments ({{ response.replies.length }})</md-subheader>
+            <md-subheader class="md-no-sticky discussion-comments__header">
+                <a ng-if="response.replies.length > 1" ng-click="toggleExpanded()">Comments ({{ response.replies.length }})<md-icon ng-if="!expanded">expand_more</md-icon><md-icon ng-if="expanded">expand_less</md-icon></a>
+                <span ng-if="response.replies.length < 2">Comments ({{ response.replies.length }})</span>
+            </md-subheader>
             <md-list class="discussion-comments__list">
-                <md-list-item class="md-3-line md-long-text discussion-reply" ng-repeat='reply in response.replies'>
+                <md-list-item class="md-3-line md-long-text discussion-reply"
+                              ng-class="{'animate-show': !$last}"
+                              ng-repeat="reply in response.replies"
+                              ng-show="$last || expanded">
                     <div class="md-avatar discussion-post__avatar--reply discussion-post__avatar"><md-icon class="md-36 md-primary"> account_circle </md-icon></div>
                     <div class="md-list-item-text discusstion-reply__details">
                         <h3 class="discussion-post__user discussion-post__user--reply">{{ reply.userNames }}</h3>

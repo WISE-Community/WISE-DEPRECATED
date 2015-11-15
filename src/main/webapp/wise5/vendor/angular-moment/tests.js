@@ -37,7 +37,6 @@ describe('module angularMoment', function () {
 		// Restore original configuration after each test
 		angular.copy(originalTimeAgoConfig, amTimeAgoConfig);
 		angular.copy(originalAngularMomentConfig, angularMomentConfig);
-		jasmine.clock().uninstall();
 	});
 
 
@@ -117,7 +116,6 @@ describe('module angularMoment', function () {
 
 		it('should schedule the update timer to one hour ahead for date in the far future (#73)', function () {
 			$rootScope.testDate = new Date(new Date().getTime() + 86400000);
-			jasmine.clock().install();
 			spyOn($window, 'setTimeout');
 			var element = angular.element('<div am-time-ago="testDate"></div>');
 			element = $compile(element)($rootScope);
@@ -253,6 +251,18 @@ describe('module angularMoment', function () {
 				$rootScope.$digest();
 				var testDateWithCustomFormatting = moment($rootScope.testDate).format(amTimeAgoConfig.titleFormat);
 				expect(element.attr('title')).toBe(testDateWithCustomFormatting);
+			});
+
+			it('should update the title attribute of the element if the binding model changed', function () {
+				amTimeAgoConfig.titleFormat = 'MMMM Do YYYY, h:mm:ss a';
+				$rootScope.testDate = Date.UTC(2015, 11, 10, 18, 44, 12);
+				var element = angular.element('<span am-time-ago="testDate"></span>');
+				element = $compile(element)($rootScope);
+				$rootScope.$digest();
+				$rootScope.testDate = Date.UTC(2015, 11, 10, 19, 43, 34);
+				$rootScope.$digest();
+				var testDate = moment($rootScope.testDate).format(amTimeAgoConfig.titleFormat);
+				expect(element.attr('title')).toBe(testDate);
 			});
 
 			describe('full date support', function () {

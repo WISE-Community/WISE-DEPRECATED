@@ -2,7 +2,7 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v1.0.0-rc2-master-c99541f
+ * v1.0.0-rc3-master-c7c5358
  */
 html, body {
   height: 100%;
@@ -5602,6 +5602,8 @@ button.md-button::-moz-focus-inner {
       line-height: 40px;
       width: 40px;
       height: 40px; }
+    .md-button.md-fab.ng-hide, .md-button.md-fab.ng-leave {
+      transition: none; }
   .md-button:not([disabled]).md-raised.md-focused, .md-button:not([disabled]).md-fab.md-focused {
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26); }
   .md-button:not([disabled]).md-raised:active, .md-button:not([disabled]).md-fab:active {
@@ -5679,9 +5681,9 @@ md-card {
   md-card md-card-content {
     display: block;
     padding: 16px; }
-  md-card .md-actions {
+  md-card .md-actions, md-card md-card-actions {
     margin: 0; }
-    md-card .md-actions .md-button {
+    md-card .md-actions .md-button, md-card md-card-actions .md-button {
       margin-bottom: 8px;
       margin-top: 8px;
       margin-right: 4px;
@@ -6318,7 +6320,7 @@ md-dialog {
         padding-top: 0; }
     md-dialog md-dialog-content .md-dialog-content-body {
       width: 100%; }
-  md-dialog .md-actions {
+  md-dialog .md-actions, md-dialog md-dialog-actions {
     display: -webkit-flex;
     display: -ms-flexbox;
     display: flex;
@@ -6337,12 +6339,12 @@ md-dialog {
     padding-left: 16px;
     min-height: 52px;
     overflow: hidden; }
-    md-dialog .md-actions .md-button {
+    md-dialog .md-actions .md-button, md-dialog md-dialog-actions .md-button {
       margin-bottom: 8px;
       margin-left: 8px;
       margin-right: 0;
       margin-top: 8px; }
-  md-dialog.md-content-overflow .md-actions {
+  md-dialog.md-content-overflow .md-actions, md-dialog.md-content-overflow md-dialog-actions {
     border-top-width: 1px;
     border-top-style: solid; }
 
@@ -6749,6 +6751,7 @@ md-input-container {
     padding-right: 2px;
     border-width: 0 0 1px 0;
     line-height: 26px;
+    height: 30px;
     -ms-flex-preferred-size: 26px;
     border-radius: 0;
     border-style: solid;
@@ -6772,7 +6775,8 @@ md-input-container {
     -webkit-order: 4;
         -ms-flex-order: 4;
             order: 4;
-    min-height: 24px; }
+    min-height: 24px;
+    overflow: hidden; }
     md-input-container ng-messages .md-char-counter, md-input-container data-ng-messages .md-char-counter, md-input-container x-ng-messages .md-char-counter, md-input-container [ng-messages] .md-char-counter, md-input-container [data-ng-messages] .md-char-counter, md-input-container [x-ng-messages] .md-char-counter {
       position: absolute;
       top: 0;
@@ -6788,16 +6792,18 @@ md-input-container {
     md-input-container ng-message.ng-enter, md-input-container data-ng-message.ng-enter, md-input-container x-ng-message.ng-enter, md-input-container [ng-message].ng-enter, md-input-container [data-ng-message].ng-enter, md-input-container [x-ng-message].ng-enter, md-input-container [ng-message-exp].ng-enter, md-input-container [data-ng-message-exp].ng-enter, md-input-container [x-ng-message-exp].ng-enter, md-input-container .md-char-counter.ng-enter {
       transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
       transition-delay: 0.2s;
-      transition-duration: 0.2s; }
+      transition-duration: 0.2s;
+      opacity: 0;
+      margin-top: -19px; }
+      md-input-container ng-message.ng-enter.ng-enter-active, md-input-container data-ng-message.ng-enter.ng-enter-active, md-input-container x-ng-message.ng-enter.ng-enter-active, md-input-container [ng-message].ng-enter.ng-enter-active, md-input-container [data-ng-message].ng-enter.ng-enter-active, md-input-container [x-ng-message].ng-enter.ng-enter-active, md-input-container [ng-message-exp].ng-enter.ng-enter-active, md-input-container [data-ng-message-exp].ng-enter.ng-enter-active, md-input-container [x-ng-message-exp].ng-enter.ng-enter-active, md-input-container .md-char-counter.ng-enter.ng-enter-active {
+        opacity: 1;
+        margin-top: 0; }
     md-input-container ng-message.ng-leave, md-input-container data-ng-message.ng-leave, md-input-container x-ng-message.ng-leave, md-input-container [ng-message].ng-leave, md-input-container [data-ng-message].ng-leave, md-input-container [x-ng-message].ng-leave, md-input-container [ng-message-exp].ng-leave, md-input-container [data-ng-message-exp].ng-leave, md-input-container [x-ng-message-exp].ng-leave, md-input-container .md-char-counter.ng-leave {
       transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
       transition-duration: 0.26667s; }
-    md-input-container ng-message.ng-enter, md-input-container ng-message.ng-leave.ng-leave-active, md-input-container data-ng-message.ng-enter, md-input-container data-ng-message.ng-leave.ng-leave-active, md-input-container x-ng-message.ng-enter, md-input-container x-ng-message.ng-leave.ng-leave-active, md-input-container [ng-message].ng-enter, md-input-container [ng-message].ng-leave.ng-leave-active, md-input-container [data-ng-message].ng-enter, md-input-container [data-ng-message].ng-leave.ng-leave-active, md-input-container [x-ng-message].ng-enter, md-input-container [x-ng-message].ng-leave.ng-leave-active, md-input-container [ng-message-exp].ng-enter, md-input-container [ng-message-exp].ng-leave.ng-leave-active, md-input-container [data-ng-message-exp].ng-enter, md-input-container [data-ng-message-exp].ng-leave.ng-leave-active, md-input-container [x-ng-message-exp].ng-enter, md-input-container [x-ng-message-exp].ng-leave.ng-leave-active, md-input-container .md-char-counter.ng-enter, md-input-container .md-char-counter.ng-leave.ng-leave-active {
-      margin-top: -19px;
-      opacity: 0; }
-    md-input-container ng-message.ng-leave, md-input-container ng-message.ng-enter.ng-enter-active, md-input-container data-ng-message.ng-leave, md-input-container data-ng-message.ng-enter.ng-enter-active, md-input-container x-ng-message.ng-leave, md-input-container x-ng-message.ng-enter.ng-enter-active, md-input-container [ng-message].ng-leave, md-input-container [ng-message].ng-enter.ng-enter-active, md-input-container [data-ng-message].ng-leave, md-input-container [data-ng-message].ng-enter.ng-enter-active, md-input-container [x-ng-message].ng-leave, md-input-container [x-ng-message].ng-enter.ng-enter-active, md-input-container [ng-message-exp].ng-leave, md-input-container [ng-message-exp].ng-enter.ng-enter-active, md-input-container [data-ng-message-exp].ng-leave, md-input-container [data-ng-message-exp].ng-enter.ng-enter-active, md-input-container [x-ng-message-exp].ng-leave, md-input-container [x-ng-message-exp].ng-enter.ng-enter-active, md-input-container .md-char-counter.ng-leave, md-input-container .md-char-counter.ng-enter.ng-enter-active {
-      margin-top: 0;
-      opacity: 1; }
+      md-input-container ng-message.ng-leave.ng-leave-active, md-input-container data-ng-message.ng-leave.ng-leave-active, md-input-container x-ng-message.ng-leave.ng-leave-active, md-input-container [ng-message].ng-leave.ng-leave-active, md-input-container [data-ng-message].ng-leave.ng-leave-active, md-input-container [x-ng-message].ng-leave.ng-leave-active, md-input-container [ng-message-exp].ng-leave.ng-leave-active, md-input-container [data-ng-message-exp].ng-leave.ng-leave-active, md-input-container [x-ng-message-exp].ng-leave.ng-leave-active, md-input-container .md-char-counter.ng-leave.ng-leave-active {
+        margin-top: -19px;
+        opacity: 0; }
   md-input-container.md-input-focused label:not(.md-no-float), md-input-container.md-input-has-placeholder label:not(.md-no-float), md-input-container.md-input-has-value label:not(.md-no-float) {
     -webkit-transform: translate3d(0, 6px, 0) scale(0.75);
             transform: translate3d(0, 6px, 0) scale(0.75); }
@@ -6926,9 +6932,12 @@ md-list-item, md-list-item .md-list-item-inner {
   md-list-item > .md-avatar-icon, md-list-item .md-list-item-inner > .md-avatar-icon {
     padding: 8px; }
   md-list-item md-checkbox.md-secondary, md-list-item md-switch.md-secondary, md-list-item .md-list-item-inner md-checkbox.md-secondary, md-list-item .md-list-item-inner md-switch.md-secondary {
-    margin-right: 0;
     margin-top: 0;
     margin-bottom: 0; }
+  md-list-item md-checkbox.md-secondary, md-list-item .md-list-item-inner md-checkbox.md-secondary {
+    margin-right: 0; }
+  md-list-item md-switch.md-secondary, md-list-item .md-list-item-inner md-switch.md-secondary {
+    margin-right: -6px; }
   md-list-item button.md-button.md-secondary-container, md-list-item .md-list-item-inner button.md-button.md-secondary-container {
     background-color: transparent;
     -webkit-align-self: center;
@@ -6939,6 +6948,8 @@ md-list-item, md-list-item .md-list-item-inner {
     min-width: 0px; }
     md-list-item button.md-button.md-secondary-container .md-ripple, md-list-item button.md-button.md-secondary-container .md-ripple-container, md-list-item .md-list-item-inner button.md-button.md-secondary-container .md-ripple, md-list-item .md-list-item-inner button.md-button.md-secondary-container .md-ripple-container {
       border-radius: 50%; }
+    md-list-item button.md-button.md-secondary-container.md-icon-button, md-list-item .md-list-item-inner button.md-button.md-secondary-container.md-icon-button {
+      margin-right: -12px; }
   md-list-item .md-secondary-container, md-list-item .md-secondary, md-list-item .md-list-item-inner .md-secondary-container, md-list-item .md-list-item-inner .md-secondary {
     margin-left: 16px;
     position: absolute;
@@ -7095,6 +7106,7 @@ md-menu-item {
     font-size: 15px;
     text-transform: none;
     font-weight: 400;
+    text-align: left;
     text-align: start;
     height: 100%;
     padding-left: 16px;
@@ -7103,9 +7115,9 @@ md-menu-item {
     -webkit-align-items: baseline;
         -ms-flex-align: baseline;
             align-items: baseline;
-    -webkit-align-content: left;
-        -ms-flex-line-pack: left;
-            align-content: left;
+    -webkit-align-content: flex-start;
+        -ms-flex-line-pack: start;
+            align-content: flex-start;
     width: 100%; }
     md-menu-item > .md-button md-icon {
       margin: auto 16px auto 0; }
@@ -7123,7 +7135,8 @@ md-menu-item {
 
 md-toolbar .md-menu {
   height: auto;
-  margin: auto; }
+  margin: auto;
+  padding: 0; }
 
 @media (max-width: 599px) {
   md-menu-content {
@@ -7211,14 +7224,15 @@ md-menu-content.md-menu-bar-menu.md-dense {
       margin: 0 8px; }
   md-menu-content.md-menu-bar-menu.md-dense md-menu-divider {
     margin: 8px 0; }
+  md-menu-content.md-menu-bar-menu.md-dense md-menu-item > .md-button, md-menu-content.md-menu-bar-menu.md-dense .md-menu > .md-button {
+    text-align: left;
+    text-align: start; }
   md-menu-content.md-menu-bar-menu.md-dense .md-menu {
     padding: 0; }
     md-menu-content.md-menu-bar-menu.md-dense .md-menu > .md-button {
       position: relative;
       margin: 0;
       width: 100%;
-      text-align: left;
-      text-align: start;
       text-transform: none;
       font-weight: normal;
       border-radius: 0px;
@@ -8411,11 +8425,10 @@ md-slider {
   font-weight: 500;
   line-height: 1em;
   margin: 0 0 0 0;
-  margin-right: 16px;
   position: relative; }
   .md-subheader .md-subheader-inner {
     display: block;
-    padding: 16px 0px 16px 16px; }
+    padding: 16px; }
   .md-subheader .md-subheader-content {
     display: block;
     z-index: 1;
@@ -8712,8 +8725,6 @@ md-tab-content {
   left: 0;
   right: 0;
   bottom: 0;
-  -webkit-transform: translateX(0);
-          transform: translateX(0);
   transition: -webkit-transform 0.5s cubic-bezier(0.35, 0, 0.25, 1);
   transition: transform 0.5s cubic-bezier(0.35, 0, 0.25, 1);
   overflow: auto; }

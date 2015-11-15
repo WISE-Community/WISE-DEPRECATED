@@ -3,7 +3,7 @@ require.config({
     waitSeconds: 0,
     paths: {
         'angular': [
-            '//ajax.googleapis.com/ajax/libs/angularjs/1.3.16/angular.min',
+            '//ajax.googleapis.com/ajax/libs/angularjs/1.3.20/angular.min',
             'vendor/angular/angular.min'
             ],
         'angularAnimate': 'vendor/angular-animate/angular-animate.min',

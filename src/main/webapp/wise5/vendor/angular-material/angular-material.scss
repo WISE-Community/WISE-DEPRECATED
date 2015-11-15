@@ -629,7 +629,7 @@ input {
   @if $name == null { $name : '';          }
   @if $name != ''   { $name : '-#{$name}'; }
 
-  .layout#{$name}, .layout#{$name}-column, .layout#{$name}-row, {
+  .layout#{$name}, .layout#{$name}-column, .layout#{$name}-row {
     box-sizing: border-box;
     display: -webkit-box;
     display: -webkit-flex;
@@ -711,7 +711,7 @@ input {
   .#{$name}-center,           //stretch
   .#{$name}-center-center,
   .#{$name}-center-start,
-  .#{$name}-center-end,
+  .#{$name}-center-end
   {
     justify-content: center;
   }
@@ -720,7 +720,7 @@ input {
   .#{$name}-end, //stretch
   .#{$name}-end-center,
   .#{$name}-end-start,
-  .#{$name}-end-end,
+  .#{$name}-end-end
   {
     justify-content: flex-end;
   }
@@ -729,7 +729,7 @@ input {
   .#{$name}-space-around, //stretch
   .#{$name}-space-around-center,
   .#{$name}-space-around-start,
-  .#{$name}-space-around-end,
+  .#{$name}-space-around-end
   {
     justify-content: space-around;
   }
@@ -738,7 +738,7 @@ input {
   .#{$name}-space-between, //stretch
   .#{$name}-space-between-center,
   .#{$name}-space-between-start,
-  .#{$name}-space-between-end,
+  .#{$name}-space-between-end
   {
     justify-content: space-between;
   }
@@ -754,7 +754,7 @@ input {
   .#{$name}-start-start,
   .#{$name}-end-start,
   .#{$name}-space-between-start,
-  .#{$name}-space-around-start,
+  .#{$name}-space-around-start
   {
     align-items: flex-start;
   }
@@ -764,7 +764,7 @@ input {
   .#{$name}-start-center,
   .#{$name}-end-center,
   .#{$name}-space-between-center,
-  .#{$name}-space-around-center,
+  .#{$name}-space-around-center
   {
     align-items: center;
     max-width: 100%;
@@ -775,7 +775,7 @@ input {
   .#{$name}-start-center > *,
   .#{$name}-end-center > *,
   .#{$name}-space-between-center > *,
-  .#{$name}-space-around-center > *,
+  .#{$name}-space-around-center > *
   {
     max-width: 100%;
     box-sizing: border-box;
@@ -786,7 +786,7 @@ input {
   .#{$name}-start-end,
   .#{$name}-end-end,
   .#{$name}-space-between-end,
-  .#{$name}-space-around-end,
+  .#{$name}-space-around-end
   {
     align-items: flex-end;
   }
@@ -812,7 +812,7 @@ input {
 
   .layout-padding        > .flex,
   .layout-padding        > .flex-gt-sm,
-  .layout-padding        > .flex-md,
+  .layout-padding        > .flex-md
   {
     padding: $layout-gutter-width / 2;
   }
@@ -1592,6 +1592,9 @@ button.md-button::-moz-focus-inner {
       height: $button-fab-mini-height;
     }
 
+    &.ng-hide, &.ng-leave {
+      transition: none;
+    }
   }
 
   &:not([disabled]) {
@@ -1702,7 +1705,7 @@ md-card {
     padding: $card-padding;
   }
 
-  .md-actions {
+  .md-actions, md-card-actions {
     margin: 0;
 
     .md-button {
@@ -2537,7 +2540,7 @@ md-dialog {
     }
   }
 
-  .md-actions {
+  .md-actions, md-dialog-actions {
     display: flex;
     order: 2;
     box-sizing: border-box;
@@ -2556,9 +2559,11 @@ md-dialog {
       margin-top: $baseline-grid;
     }
   }
-  &.md-content-overflow .md-actions {
-    border-top-width: 1px;
-    border-top-style: solid;
+  &.md-content-overflow {
+    .md-actions, md-dialog-actions {
+      border-top-width: 1px;
+      border-top-style: solid;
+    }
   }
 
 }
@@ -3124,6 +3129,7 @@ md-input-container {
     padding-right: 2px;
     border-width: 0 0 $input-border-width-default 0;
     line-height: $input-line-height;
+    height: $input-line-height + ($input-padding-top * 2);
     -ms-flex-preferred-size: $input-line-height; //IE fix
     border-radius: 0;
     border-style: solid; // Firefox fix
@@ -3156,6 +3162,7 @@ md-input-container {
     position: relative;
     order: 4;
     min-height: $input-error-height;
+    overflow: hidden;
 
     .md-char-counter {
       position: absolute;
@@ -3192,24 +3199,20 @@ md-input-container {
 
       // Since we're delaying the transition, we speed up the duration a little bit to compensate
       transition-duration: $swift-ease-in-duration / 1.5;
+      opacity: 0;
+      margin-top: -$input-error-line-height - $error-padding-top;
+      &.ng-enter-active {
+        opacity: 1;
+        margin-top: 0;
+      }
     }
     &.ng-leave {
       transition: $swift-ease-out;
-
-      // Speed up the duration (see enter comment above)
       transition-duration: $swift-ease-out-duration / 1.5;
-    }
-    &.ng-enter,
-    &.ng-leave.ng-leave-active {
-      // Move the error upwards off the screen and fade it out
-      margin-top: -$input-error-line-height - $error-padding-top;
-      opacity: 0;
-    }
-    &.ng-leave,
-    &.ng-enter.ng-enter-active {
-      // Move the error down into position and fade it in
-      margin-top: 0;
-      opacity: 1;
+      &.ng-leave-active {
+        margin-top: -$input-error-line-height - $error-padding-top;
+        opacity: 0;
+      }
     }
   }
 
@@ -3429,9 +3432,16 @@ md-list-item, md-list-item .md-list-item-inner {
 
   md-checkbox.md-secondary,
   md-switch.md-secondary {
-    margin-right: 0;
     margin-top: 0;
     margin-bottom: 0;
+  }
+
+  md-checkbox.md-secondary {
+    margin-right: 0;
+  }
+
+  md-switch.md-secondary {
+    margin-right: -6px;
   }
 
   button.md-button.md-secondary-container {
@@ -3443,6 +3453,11 @@ md-list-item, md-list-item .md-list-item-inner {
     .md-ripple,
     .md-ripple-container {
       border-radius: 50%;
+    }
+
+    &.md-icon-button {
+      // Make icon buttons align with checkboxes and other controls
+      margin-right: -12px;
     }
   }
 
@@ -3638,13 +3653,14 @@ md-menu-item {
     font-size: (2*$baseline-grid) - 1;
     text-transform: none;
     font-weight: 400;
+    text-align: left;
     text-align: start;
     height: 100%;
     padding-left: 2*$baseline-grid;
     padding-right: 2*$baseline-grid;
     display: inline-block;
     align-items: baseline;
-    align-content: left;
+    align-content: flex-start;
     width:100%;
     md-icon {
       margin: auto 2*$baseline-grid auto 0;
@@ -3671,6 +3687,7 @@ md-toolbar {
   .md-menu {
     height: auto;
     margin: auto;
+    padding: 0;
   }
 }
 
@@ -3761,14 +3778,17 @@ md-menu-content.md-menu-bar-menu.md-dense {
     margin: $baseline-grid 0;
   }
 
+  md-menu-item > .md-button, .md-menu > .md-button {
+    text-align: left;
+    text-align: start;
+  }
+
   .md-menu {
     padding: 0;
     > .md-button {
       position: relative;
       margin: 0;
       width: 100%;
-      text-align: left;
-      text-align: start;
       text-transform: none;
       font-weight: normal;
       border-radius: 0px;
@@ -3969,7 +3989,7 @@ md-progress-linear {
     width:100%;
     height: $progress-linear-bar-height;
 
-    transform: translate(0, 0) scale(1, 1);;
+    transform: translate(0, 0) scale(1, 1);
 
     .md-bar {
       position: absolute;
@@ -4938,10 +4958,9 @@ md-slider {
 
 $subheader-line-height: 1em !default;
 $subheader-font-size: rem(1.4) !default;
-$subheader-padding: ($baseline-grid * 2) 0px ($baseline-grid * 2) ($baseline-grid * 2) !default;
+$subheader-padding: ($baseline-grid * 2) !default;
 $subheader-font-weight: 500 !default;
 $subheader-margin: 0 0 0 0 !default;
-$subheader-margin-right: 16px !default;
 $subheader-sticky-shadow: 0px 2px 4px 0 rgba(0,0,0,0.16) !default;
 
 @keyframes subheaderStickyHoverIn {
@@ -4991,7 +5010,6 @@ $subheader-sticky-shadow: 0px 2px 4px 0 rgba(0,0,0,0.16) !default;
   font-weight: $subheader-font-weight;
   line-height: $subheader-line-height;
   margin: $subheader-margin;
-  margin-right: $subheader-margin-right;
   position: relative;
 
   .md-subheader-inner {
@@ -5345,7 +5363,6 @@ md-tab-content {
   left: 0;
   right: 0;
   bottom: 0;
-  transform: translateX(0);
   transition: transform $swift-ease-in-out-duration $swift-ease-in-out-timing-function;
   overflow: auto;
   &.md-no-scroll {
