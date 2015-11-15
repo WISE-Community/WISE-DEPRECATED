@@ -14,6 +14,7 @@ define([
     'angularFileUpload',
     'angularMoment',
     'angularSortable',
+    'angularSanitize',
     'angularToArrayFilter',
     'angularUIRouter',
     'angularUITinymce',
@@ -63,6 +64,7 @@ define([
              angularFileUpload,
              angularMoment,
              angularSortable,
+             angularSanitize,
              angularToArrayFilter,
              angularUIRouter,
              angularUITinymce,
@@ -115,6 +117,7 @@ define([
         'ngDragDrop',
         'ngFileUpload',
         'ngMaterial',
+        'ngSanitize',
         'ngWebSocket',
         'oc.lazyLoad',
     ]);

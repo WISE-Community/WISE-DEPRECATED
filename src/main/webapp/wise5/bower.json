@@ -34,6 +34,7 @@
     "oclazyload": "~1.0.4",
     "requirejs": "~2.1.19",
     "tinymce-dist": "latest",
-    "webfontloader": "~1.6.4"
+    "webfontloader": "~1.6.4",
+    "angular-sanitize": "~1.4.7"
   }
 }

@@ -13,6 +13,7 @@ require.config({
         'angularFileUpload': 'vendor/ng-file-upload/ng-file-upload.min',
         'angularMaterial': 'vendor/angular-material/angular-material.min',
         'angularMoment': 'vendor/angular-moment/angular-moment.min',
+        'angularSanitize': 'vendor/angular-sanitize/angular-sanitize.min',
         'angularSortable': 'vendor/angular-ui-sortable/sortable.min',
         'angularToArrayFilter': 'vendor/angular-toArrayFilter/toArrayFilter',
         'angularUIRouter': 'vendor/angular-ui-router/release/angular-ui-router.min',
@@ -141,6 +142,12 @@ require.config({
             'deps': [
                 'angular',
                 'moment'
+            ]
+        },
+        'angularSanitize': {
+            'exports': 'angularSanitize',
+            'deps': [
+                'angular'
             ]
         },
         'angularSortable': {
