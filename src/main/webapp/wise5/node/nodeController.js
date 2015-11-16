@@ -557,50 +557,52 @@ define(['app'], function(app) {
                             // get the scope for the component
                             var childScope = $scope.componentToScope[tempComponentId];
 
-                            var componentState = null;
+                            if (childScope != null) {
+                                var componentState = null;
 
-                            if (childScope.getComponentState != null) {
-                                // get the student work object from the child scope
-                                componentState = childScope.getComponentState();
-                            }
-
-                            if (componentState != null) {
-
-                                componentState.runId = runId;
-                                componentState.periodId = periodId;
-                                componentState.workgroupId = workgroupId;
-                                componentState.nodeId = this.nodeId;
-
-                                // set the component id into the student work object
-                                componentState.componentId = tempComponentId;
-
-                                // set the component type
-                                componentState.componentType = component.componentType;
-
-                                if (componentId == null) {
-                                    /*
-                                     * the node has triggered the save so all the components will
-                                     * either have isAutoSave set to true or false
-                                     */
-                                    componentState.isAutoSave = isAutoSave;
-                                } else {
-                                    /*
-                                     * a component has triggered the save so that component will
-                                     * have isAutoSave set to false but all other components will
-                                     * have isAutoSave set to true
-                                     */
-
-                                    if (componentId === tempComponentId) {
-                                        // this component triggered the save
-                                        componentState.isAutoSave = false;
-                                    } else {
-                                        // this component did not trigger the save
-                                        componentState.isAutoSave = true;
-                                    }
+                                if (childScope.getComponentState != null) {
+                                    // get the student work object from the child scope
+                                    componentState = childScope.getComponentState();
                                 }
 
-                                // add the student work object to our components array
-                                componentStates.push(componentState);
+                                if (componentState != null) {
+
+                                    componentState.runId = runId;
+                                    componentState.periodId = periodId;
+                                    componentState.workgroupId = workgroupId;
+                                    componentState.nodeId = this.nodeId;
+
+                                    // set the component id into the student work object
+                                    componentState.componentId = tempComponentId;
+
+                                    // set the component type
+                                    componentState.componentType = component.componentType;
+
+                                    if (componentId == null) {
+                                        /*
+                                         * the node has triggered the save so all the components will
+                                         * either have isAutoSave set to true or false
+                                         */
+                                        componentState.isAutoSave = isAutoSave;
+                                    } else {
+                                        /*
+                                         * a component has triggered the save so that component will
+                                         * have isAutoSave set to false but all other components will
+                                         * have isAutoSave set to true
+                                         */
+
+                                        if (componentId === tempComponentId) {
+                                            // this component triggered the save
+                                            componentState.isAutoSave = false;
+                                        } else {
+                                            // this component did not trigger the save
+                                            componentState.isAutoSave = true;
+                                        }
+                                    }
+
+                                    // add the student work object to our components array
+                                    componentStates.push(componentState);
+                                }
                             }
                         }
                     }
@@ -637,17 +639,20 @@ define(['app'], function(app) {
                             // get the scope for the component
                             var childScope = $scope.componentToScope[tempComponentId];
 
-                            var componentState = null;
+                            if (childScope != null) {
 
-                            if (childScope.getUnSavedAnnotation != null) {
-                                // get the student work object from the child scope
-                                componentAnnotation = childScope.getUnSavedAnnotation();
+                                var componentState = null;
 
-                                if (componentAnnotation != null) {
-                                    // add the student work object to our components array
-                                    componentAnnotations.push(componentAnnotation);
+                                if (childScope.getUnSavedAnnotation != null) {
+                                    // get the student work object from the child scope
+                                    componentAnnotation = childScope.getUnSavedAnnotation();
 
-                                    childScope.setUnSavedAnnotation(null);
+                                    if (componentAnnotation != null) {
+                                        // add the student work object to our components array
+                                        componentAnnotations.push(componentAnnotation);
+
+                                        childScope.setUnSavedAnnotation(null);
+                                    }
                                 }
                             }
                         }
