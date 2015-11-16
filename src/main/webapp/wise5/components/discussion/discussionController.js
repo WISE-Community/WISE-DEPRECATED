@@ -67,52 +67,48 @@ define(['app', 'angular'], function(app, angular) {
              * Perform setup of the component
              */
             this.setup = function() {
-                var scope = this;
 
                 // get the current node and node id
                 var currentNode = StudentDataService.getCurrentNode();
                 if (currentNode != null) {
-                    scope.nodeId = currentNode.id;
+                    this.nodeId = currentNode.id;
                 }
 
                 // get the component content from the scope
-                scope.componentContent = $scope.component;
+                this.componentContent = $scope.component;
 
-                if (scope.componentContent != null) {
+                if (this.componentContent != null) {
 
                     // get the component id
-                    scope.componentId = scope.componentContent.id;
+                    this.componentId = this.componentContent.id;
 
 
                     // get the show previous work node id if it is provided
-                    var showPreviousWorkNodeId = scope.componentContent.showPreviousWorkNodeId;
+                    var showPreviousWorkNodeId = this.componentContent.showPreviousWorkNodeId;
 
                     if (showPreviousWorkNodeId != null) {
                         // this component is showing previous work
-                        scope.isShowPreviousWork = true;
+                        this.isShowPreviousWork = true;
 
                         // get the show previous work component id if it is provided
-                        var showPreviousWorkComponentId = scope.componentContent.showPreviousWorkComponentId;
+                        var showPreviousWorkComponentId = this.componentContent.showPreviousWorkComponentId;
 
                         // get the node content for the other node
                         var showPreviousWorkNodeContent = ProjectService.getNodeContentByNodeId(showPreviousWorkNodeId);
 
                         // get the node content for the component we are showing previous work for
-                        scope.componentContent = NodeService.getComponentContentById(showPreviousWorkNodeContent, showPreviousWorkComponentId);
+                        this.componentContent = NodeService.getComponentContentById(showPreviousWorkNodeContent, showPreviousWorkComponentId);
 
                         // get the component state for the show previous work
                         var componentState = StudentDataService.getLatestComponentStateByNodeIdAndComponentId(showPreviousWorkNodeId, showPreviousWorkComponentId);
 
                         // populate the student work into this component
-                        scope.setStudentWork(componentState);
+                        this.setStudentWork(componentState);
 
                         // disable the component since we are just showing previous work
-                        scope.isDisabled = true;
+                        this.isDisabled = true;
                     } else {
                         // this is a regular component
-
-                        // get the component state from the scope
-                        //var componentState = $scope.componentState;
 
                         // populate the student work into this component
                         //this.setStudentWork(componentState);
@@ -122,20 +118,39 @@ define(['app', 'angular'], function(app, angular) {
                         } else {
                             // we are in regular student run mode
 
-                            scope.getClassmateResponses();
+                            if (this.isClassmateResponsesGated()) {
+                                /*
+                                 * classmate responses are gated so we will not show them if the student
+                                 * has not submitted a response
+                                 */
+
+                                // get the component state from the scope
+                                var componentState = $scope.componentState;
+
+                                if (componentState != null) {
+                                    /*
+                                     * the student has already submitted a response so we will
+                                     * display the classmate responses
+                                     */
+                                    this.getClassmateResponses();
+                                }
+                            } else {
+                                // classmate responses are not gated so we will show them
+                                this.getClassmateResponses();
+                            }
                         }
 
                         // check if we need to lock this component
-                        scope.calculateDisabled();
+                        this.calculateDisabled();
                     }
 
-                    scope.isRichTextEnabled = scope.componentContent.isRichTextEnabled;
+                    this.isRichTextEnabled = this.componentContent.isRichTextEnabled;
 
                     // set whether studentAttachment is enabled
-                    scope.isStudentAttachmentEnabled = scope.componentContent.isStudentAttachmentEnabled;
+                    this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
 
                     // register this component with the parent node
-                    $scope.$parent.registerComponentController($scope, scope.componentContent);
+                    $scope.$parent.registerComponentController($scope, this.componentContent);
                 }
             };
 
@@ -190,6 +205,15 @@ define(['app', 'angular'], function(app, angular) {
                 // check if we need to lock the component after the student submits
                 if (this.isLockAfterSubmit()) {
                     this.isDisabled = true;
+                }
+
+                // check if the classmate responses are gated
+                if (this.isClassmateResponsesGated()) {
+                    /*
+                     * the classmate responses are gated so we will now show them since
+                     * the student has just submitted a response
+                     */
+                    this.getClassmateResponses();
                 }
 
                 // handle the submit button click
@@ -353,6 +377,7 @@ define(['app', 'angular'], function(app, angular) {
             /**
              * Check whether we need to lock the component after the student
              * submits an answer.
+             * @return whether to lock the component after the student submits
              */
             this.isLockAfterSubmit = function() {
                 var result = false;
@@ -361,6 +386,24 @@ define(['app', 'angular'], function(app, angular) {
 
                     // check the lockAfterSubmit field in the component content
                     if (this.componentContent.lockAfterSubmit) {
+                        result = true;
+                    }
+                }
+
+                return result;
+            };
+
+            /**
+             * Check whether we need to gate the classmate responses
+             * @return whether to gate the classmate responses
+             */
+            this.isClassmateResponsesGated = function() {
+                var result = false;
+
+                if (this.componentContent != null) {
+
+                    // check the gateClassmateResponses field in the component content
+                    if (this.componentContent.gateClassmateResponses) {
                         result = true;
                     }
                 }
@@ -537,6 +580,8 @@ define(['app', 'angular'], function(app, angular) {
              * @param componentStates the class component states
              */
             this.setClassResponses = function(componentStates) {
+
+                this.classResponses = [];
 
                 if (componentStates != null) {
 
