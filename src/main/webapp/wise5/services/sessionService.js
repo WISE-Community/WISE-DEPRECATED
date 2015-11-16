@@ -44,7 +44,10 @@ define(['configService'], function(configService, studentDataService) {
          * Start the timers, save session initialized event
          */
         serviceObject.initializeSession = function() {
-            //this.sessionTimeoutInterval = ConfigService.getConfigParam('sessionTimeoutInterval');
+            if (ConfigService.isPreview()) {
+                // no session management for previewers
+                return;
+            }
             var minutes = 20;
             var seconds = minutes * 60;
             var milliseconds = seconds * 1000;
@@ -52,10 +55,10 @@ define(['configService'], function(configService, studentDataService) {
             
             // set the check mouse interval to one minute
             this.checkMouseEventInterval = this.convertMinutesToMilliseconds(1);
-            
+
             // start the warning and auto log out timers
             this.startTimers();
-            
+
             // start the check mouse event timer
             this.startCheckMouseEventTimer();
 

@@ -29,7 +29,7 @@
 					<div><spring:message code="forgotaccount.selectaccounttype.or"/></div>
 					<div><a href="teacher/index.html" class="wisebutton" style="margin-top:.25em;"><spring:message code="forgotaccount.selectaccounttype.teacherAccount"/></a></div>
 				</div>
-				<a href="${contextPath}" title="<spring:message code="wiseHome" />"><spring:message code="returnHome"/></a>
+				<a href="${contextPath}/" title="<spring:message code="wiseHome" />"><spring:message code="returnHome"/></a>
 			</div>
 		</div>
 	</div>

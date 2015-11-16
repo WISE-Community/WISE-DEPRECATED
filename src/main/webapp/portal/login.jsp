@@ -81,7 +81,7 @@ function validateLoginForm() {
 				        <ul id="signInLinkPosition"> <!-- TODO: make these open in top window -->
 				       		<li><a href="forgotaccount/selectaccounttype.html" class="forgotlink"><spring:message code="login.forgot"/></a>  </li>
 				       		<li><a href="join" class="joinlink"><spring:message code="login.createAccount"/></a></li>
-				       		<li><a href="${contextPath}" class="joinlink"><spring:message code="returnHome"/></a></li>
+				       		<li><a href="${contextPath}/" class="joinlink"><spring:message code="returnHome"/></a></li>
 				        </ul>
 			 		</div>
 				</div>
