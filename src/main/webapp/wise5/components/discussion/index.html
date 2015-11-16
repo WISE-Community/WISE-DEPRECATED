@@ -1,16 +1,5 @@
 <html>
     <head>
-        <style>
-            .attachment {
-                width: auto;
-                height: auto;
-                max-width: 200px;
-                max-height: 200px;
-                padding: 10px;
-                margin: 5px;
-                border: 3px solid #DDD;
-            }
-        </style>
     </head>
     <body>
         <div ng-controller="DiscussionController as discussionController">
@@ -18,17 +7,18 @@
             <div class="md-padding discussion-content">
                 <div layout="row">
                     <div class="discussion-posts" flex>
-                        <md-card class="discussion-new discussion-post {{focus}}"
-                                 ng-class="{'discussion-new--focused': focus || discussionController.newResponse}">
+                        <md-card class="discussion-new discussion-post {{discussionController.focus}}"
+                                 ng-class="{'discussion-new--focused': discussionController.focus || discussionController.newResponse || discussionController.newAttachments.length}">
                             <md-input-container class="input--placeholder-only discussion-new__input-container input-container"
                                                 md-no-float>
                                 <textarea ng-if="discussionController.isRichTextEnabled && !discussionController.isDisabled"
                                           ui-tinymce="discussionController.tinymceOptions"
                                           ng-model="discussionController.newResponse"
+                                          ng-model-options='{ debounce: 250 }'
                                           ng-change="discussionController.studentDataChanged()"
-                                          ng-init="focus = false"
-                                          ng-focus="focus = true"
-                                          ng-blur="focus = false"></textarea>
+                                          ng-init="discussionController.focus = false"
+                                          ng-focus="discussionController.focus = true"
+                                          ng-blur="discussionController.focus = false"></textarea>
                                 <div ng-if="discussionController.isDisabled"
                                      class="input--textarea input--textarea--disabled"
                                      ng-model="discussionController.newResponse"></div>
@@ -37,21 +27,19 @@
                                           placeholder="Share with class..."
                                           rows="{{discussionController.getNumRows() || 3}}"
                                           ng-model="discussionController.newResponse"
+                                          ng-model-options='{ debounce: 250 }'
                                           ng-disabled="discussionController.isDisabled"
                                           ng-change="discussionController.studentDataChanged()"
-                                          ng-init="focus = false"
-                                          ng-focus="focus = true"
-                                          ng-blur="focus = false"></textarea>
-                                <div id="attachments" ng-show="!discussionController.isDisabled && discussionController.isStudentAttachmentEnabled">
-                                    <span ng-repeat="attachment in discussionController.newAttachments">
-                                        <img src="{{attachment.iconURL}}" class="attachment" />
-                                        <button ng-click='discussionController.removeAttachment(attachment)'>X</button>
-                                    </span>
-                                    <button ng-click='nodeCtrl.showNotebook($event, component.id, discussionController.isDisabled)'>
-                                        Add attachment...
-                                    </button>
-                                </div>
+                                          ng-init="discussionController.focus = false"
+                                          ng-focus="discussionController.focus = true"
+                                          ng-blur="discussionController.focus = false"></textarea>
                             </md-input-container>
+                            <div class="discussion-new__actions" ng-if="!discussionController.isDisabled && discussionController.isStudentAttachmentEnabled && discussionController.newAttachments.length">
+                                <div class="component__attachment discussion-new__attachment" ng-repeat="attachment in discussionController.newAttachments">
+                                    <img src="{{attachment.iconURL}}" alt="{{attachment.iconURL}}" class="discussion-post__attachment discussion-new__attachment__content" />
+                                    <md-button class="component__attachment__delete" ng-click='discussionController.removeAttachment(attachment)' title="Remove file"><md-icon>cancel</md-icon></md-button>
+                                </div>
+                            </div>
                             <div class="discussion-new__actions">
                                 <md-button class="md-raised md-primary"
                                            ng-click="discussionController.saveButtonClicked()"
@@ -61,6 +49,11 @@
                                            ng-click="discussionController.submitButtonClicked()"
                                            ng-disabled="discussionController.isDisabled || (!discussionController.newResponse && discussionController.newAttachments.length == 0) "
                                            ng-if="discussionController.showSubmitButton()">Post</md-button>
+                                <md-button class="md-accent"
+                                           ng-click='nodeCtrl.showNotebook($event, component.id, discussionController.isDisabled)'
+                                           ng-if="discussionController.isStudentAttachmentEnabled">
+                                    <md-icon>image</md-icon> <span>Add File </span>
+                                </md-button>
                             </div>
                         </md-card>
 
@@ -68,14 +61,15 @@
                                         ng-if="lgScreen ? $odd : true"
                                         response="componentState" submitbuttonclicked="submitbuttonclicked(r)"
                                         studentdatachanged="studentdatachanged()"
-                                        class="post"></class-response>
+                                        class="post animate-repeat"></class-response>
                     </div>
                     <div class="discussion-posts" ng-if="lgScreen && discussionController.topLevelResponses.length" flex>
                         <class-response ng-repeat="componentState in discussionController.topLevelResponses.slice().reverse()"
                                         ng-if="$even"
                                         response="componentState" submitbuttonclicked="submitbuttonclicked(r)"
                                         studentdatachanged="studentdatachanged()"
-                                        class="post"></class-response>
+                                        class="animate-repeat"
+                                        style="display: block;"></class-response>
                     </div>
                 </div>
             </div>

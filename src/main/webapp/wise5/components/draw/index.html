@@ -2,10 +2,11 @@
     <div id='prompt' compile='drawController.getPrompt()'></div>
     <meta charset="utf-8">
     <link rel="stylesheet" type="text/css" href="wise5/lib/drawingTool/drawing-tool.css">
-    <div id="studentAttachments" ng-show="drawController.isStudentAttachmentEnabled">
-        <button ng-click='nodeCtrl.showNotebook($event, component.id, drawController.isDisabled)'>
-            Use my file...
-        </button>
+    <div class="component-content__actions" layout="row">
+        <md-button class="md-accent" ng-show="drawController.isStudentAttachmentEnabled"
+                   ng-click="nodeCtrl.showNotebook($event, component.id, drawController.isDisabled)">
+            <md-icon>image</md-icon> Insert file
+        </md-button>
     </div>
         <div class="container"
          data-drop="true"
@@ -27,17 +28,19 @@
         </div>
         -->
     </div>
-<button id='saveButton' 
-    ng-click='drawController.saveButtonClicked()' 
-    ng-disabled='drawController.isDisabled' 
-    ng-show='drawController.showSaveButton()'>Save</button>
-<button id='submitButton' 
-    ng-click='drawController.submitButtonClicked()' 
-    ng-disabled='drawController.isDisabled' 
-    ng-show='drawController.showSubmitButton()'>Submit</button>
     <md-button class="revision md-icon-button" ng-click='nodeCtrl.showRevisions($event, component.id)'
-               ng-disabled="nodeCtrl.getRevisions(component.id).length == 0">
+               ng-if="nodeCtrl.getRevisions(component.id).length > 1">
         <md-icon> history </md-icon>
-        <md-tooltip md-direction="top">{{nodeCtrl.getRevisions(component.id).length}} Revisions</md-tooltip>
+        <md-tooltip md-direction="top">{{nodeCtrl.getRevisions(component.id).length}} Versions</md-tooltip>
     </md-button>
+    <div class="component-content__actions" layout="row">
+        <md-button class="md-raised md-primary"
+                   ng-click='drawController.saveButtonClicked()'
+                   ng-disabled='drawController.isDisabled'
+                   ng-show='drawController.showSaveButton()'>Save</md-button>
+        <button class="md-raised md-primary"
+                ng-click='drawController.submitButtonClicked()'
+                ng-disabled='drawController.isDisabled'
+                ng-show='drawController.showSubmitButton()'>Submit</button>
+    </div>
 </div>

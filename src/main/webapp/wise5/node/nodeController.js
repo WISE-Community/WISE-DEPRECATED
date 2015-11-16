@@ -48,12 +48,6 @@ define(['app'], function(app) {
              * and the value being the scope object from the child controller
              */
             $scope.componentToScope = {};
-
-            this.notebookFilters = [
-                {'name': 'files', 'label': 'Files'}
-            ];
-
-            this.notebookFilter = this.notebookFilters[0].name;
             this.notebookOpen = false;
 
             /**
@@ -186,46 +180,10 @@ define(['app'], function(app) {
                     componentController = childScope.discussionController;
                 }
 
-                // TODO: make this customizeable per theme and maybe make into directive
-                var parentEl = angular.element(document.body);
-                $mdDialog.show({
-                    parent: parentEl,
-                    targetEvent: $event,
-                    template:
-                    '<md-dialog aria-label="List dialog">' +
-                    '<md-toolbar class="l-sidebar__header md-whiteframe-z1">' +
-                    '    <div class="md-toolbar-tools">' +
-                    '        <h3>Notebook</h3>' +
-                    '        <span flex></span>' +
-                    '        <md-select class="md-body-1" placeholder="Filter" ng-model="nodeController.notebookFilter">' +
-                    '           <md-option ng-repeat="filter in nodeController.notebookFilters" value="{{filter.name}}">{{filter.label}}</md-option>' +
-                    '        </md-select>' +
-                    '    </div>' +
-                    '</md-toolbar>' +
-                    '<md-content class="md-padding">' +
-                    '    <notebook template-url="vleController.themePath + \'/notebook/notebook.html\'" filter="nodeController.notebookFilter" component-controller="componentController"></notebook>' +
-                    '</md-content>' +
-                    '  <div class="md-actions">' +
-                    '    <md-button ng-click="closeDialog()" class="md-primary">' +
-                    '      Close' +
-                    '    </md-button>' +
-                    '  </div>' +
-                    '</md-dialog>',
-                    locals: {
-                        vleController: $scope.vleController,
-                        nodeController: $scope.nodeCtrl,
-                        componentController: componentController
-                    },
-                    controller: DialogController
-                });
-                function DialogController($scope, $mdDialog, vleController, nodeController, componentController) {
-                    $scope.vleController = vleController;
-                    $scope.nodeController = nodeController;
-                    $scope.componentController = componentController;
-                    $scope.closeDialog = function() {
-                        $mdDialog.hide();
-                    }
-                }
+                // TODO: support filtering by notebook item type/filetype
+                var notebookFilters = [{'name': 'files', 'label': 'Files'}];
+
+                $rootScope.$broadcast('showNotebook', {componentController: componentController, notebookFilters: notebookFilters, $event: $event});
             };
 
             /**
@@ -991,7 +949,7 @@ define(['app'], function(app) {
             };
 
             // perform setup of this node only if the current node is not a group.
-            if (StudentDataService.getCurrentNode() != null && !ProjectService.isGroupNode(StudentDataService.getCurrentNode().id)) {
+            if (StudentDataService.getCurrentNode() && ProjectService.isApplicationNode(StudentDataService.getCurrentNodeId())) {
                 this.setup();
             }
         });

@@ -1,9 +1,20 @@
 /**
- * @license AngularJS v1.3.10
- * (c) 2010-2014 Google, Inc. http://angularjs.org
+ * @license AngularJS v1.4.7
+ * (c) 2010-2015 Google, Inc. http://angularjs.org
  * License: MIT
  */
 (function(window, angular, undefined) {'use strict';
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ *     Any commits to this file should be reviewed with security in mind.  *
+ *   Changes to this file can potentially create security vulnerabilities. *
+ *          An approval from 2 Core members with history of modifying      *
+ *                         this file is required.                          *
+ *                                                                         *
+ *  Does the change somehow allow for arbitrary javascript to be executed? *
+ *    Or allows for someone to change the prototype of built-in objects?   *
+ *     Or gives undesired access to variables likes document or window?    *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 var $sanitizeMinErr = angular.$$minErr('$sanitize');
 
@@ -140,9 +151,6 @@ var $sanitizeMinErr = angular.$$minErr('$sanitize');
 function $SanitizeProvider() {
   this.$get = ['$$sanitizeUri', function($$sanitizeUri) {
     return function(html) {
-      if (typeof arguments[1] != 'undefined') {
-        arguments[1].version = 'taSanitize';
-      }
       var buf = [];
       htmlParser(html, htmlSanitizeWriter(buf, function(uri, isImage) {
         return !/^unsafe/.test($$sanitizeUri(uri, isImage));
@@ -168,13 +176,11 @@ var START_TAG_REGEXP =
   BEGIN_TAG_REGEXP = /^</,
   BEGING_END_TAGE_REGEXP = /^<\//,
   COMMENT_REGEXP = /<!--(.*?)-->/g,
-  SINGLE_COMMENT_REGEXP = /(^<!--.*?-->)/,
   DOCTYPE_REGEXP = /<!DOCTYPE([^>]*?)>/i,
   CDATA_REGEXP = /<!\[CDATA\[(.*?)]]>/g,
   SURROGATE_PAIR_REGEXP = /[\uD800-\uDBFF][\uDC00-\uDFFF]/g,
   // Match everything outside of normal chars and " (quote character)
-  NON_ALPHANUMERIC_REGEXP = /([^\#-~| |!])/g,
-  WHITE_SPACE_REGEXP = /^(\s+)/;
+  NON_ALPHANUMERIC_REGEXP = /([^\#-~| |!])/g;
 
 
 // Good source of info about elements and attributes
@@ -183,7 +189,7 @@ var START_TAG_REGEXP =
 
 // Safe Void Elements - HTML5
 // http://dev.w3.org/html5/spec/Overview.html#void-elements
-var voidElements = makeMap("area,br,col,hr,img,wbr,input");
+var voidElements = makeMap("area,br,col,hr,img,wbr");
 
 // Elements that you can, intentionally, leave open (and which close themselves)
 // http://dev.w3.org/html5/spec/Overview.html#optional-tags
@@ -205,10 +211,11 @@ var inlineElements = angular.extend({}, optionalEndTagInlineElements, makeMap("a
 
 // SVG Elements
 // https://wiki.whatwg.org/wiki/Sanitization_rules#svg_Elements
-var svgElements = makeMap("animate,animateColor,animateMotion,animateTransform,circle,defs," +
-        "desc,ellipse,font-face,font-face-name,font-face-src,g,glyph,hkern,image,linearGradient," +
-        "line,marker,metadata,missing-glyph,mpath,path,polygon,polyline,radialGradient,rect,set," +
-        "stop,svg,switch,text,title,tspan,use");
+// Note: the elements animate,animateColor,animateMotion,animateTransform,set are intentionally omitted.
+// They can potentially allow for arbitrary javascript to be executed. See #11290
+var svgElements = makeMap("circle,defs,desc,ellipse,font-face,font-face-name,font-face-src,g,glyph," +
+        "hkern,image,linearGradient,line,marker,metadata,missing-glyph,mpath,path,polygon,polyline," +
+        "radialGradient,rect,stop,svg,switch,text,title,tspan,use");
 
 // Special Elements (can contain anything)
 var specialElements = makeMap("script,style");
@@ -223,39 +230,40 @@ var validElements = angular.extend({},
 //Attributes that have href and hence need to be sanitized
 var uriAttrs = makeMap("background,cite,href,longdesc,src,usemap,xlink:href");
 
-var htmlAttrs = makeMap('abbr,align,alt,axis,bgcolor,border,cellpadding,cellspacing,class,clear,'+
-    'color,cols,colspan,compact,coords,dir,face,headers,height,hreflang,hspace,'+
-    'id,ismap,lang,language,nohref,nowrap,rel,rev,rows,rowspan,rules,'+
-    'scope,scrolling,shape,size,span,start,summary,target,title,type,'+
+var htmlAttrs = makeMap('abbr,align,alt,axis,bgcolor,border,cellpadding,cellspacing,class,clear,' +
+    'color,cols,colspan,compact,coords,dir,face,headers,height,hreflang,hspace,' +
+    'ismap,lang,language,nohref,nowrap,rel,rev,rows,rowspan,rules,' +
+    'scope,scrolling,shape,size,span,start,summary,tabindex,target,title,type,' +
     'valign,value,vspace,width');
 
 // SVG attributes (without "id" and "name" attributes)
 // https://wiki.whatwg.org/wiki/Sanitization_rules#svg_Attributes
 var svgAttrs = makeMap('accent-height,accumulate,additive,alphabetic,arabic-form,ascent,' +
-    'attributeName,attributeType,baseProfile,bbox,begin,by,calcMode,cap-height,class,color,' +
-    'color-rendering,content,cx,cy,d,dx,dy,descent,display,dur,end,fill,fill-rule,font-family,' +
-    'font-size,font-stretch,font-style,font-variant,font-weight,from,fx,fy,g1,g2,glyph-name,' +
-    'gradientUnits,hanging,height,horiz-adv-x,horiz-origin-x,ideographic,k,keyPoints,' +
-    'keySplines,keyTimes,lang,marker-end,marker-mid,marker-start,markerHeight,markerUnits,' +
-    'markerWidth,mathematical,max,min,offset,opacity,orient,origin,overline-position,' +
-    'overline-thickness,panose-1,path,pathLength,points,preserveAspectRatio,r,refX,refY,' +
-    'repeatCount,repeatDur,requiredExtensions,requiredFeatures,restart,rotate,rx,ry,slope,stemh,' +
-    'stemv,stop-color,stop-opacity,strikethrough-position,strikethrough-thickness,stroke,' +
-    'stroke-dasharray,stroke-dashoffset,stroke-linecap,stroke-linejoin,stroke-miterlimit,' +
-    'stroke-opacity,stroke-width,systemLanguage,target,text-anchor,to,transform,type,u1,u2,' +
-    'underline-position,underline-thickness,unicode,unicode-range,units-per-em,values,version,' +
-    'viewBox,visibility,width,widths,x,x-height,x1,x2,xlink:actuate,xlink:arcrole,xlink:role,' +
-    'xlink:show,xlink:title,xlink:type,xml:base,xml:lang,xml:space,xmlns,xmlns:xlink,y,y1,y2,' +
-    'zoomAndPan');
+    'baseProfile,bbox,begin,by,calcMode,cap-height,class,color,color-rendering,content,' +
+    'cx,cy,d,dx,dy,descent,display,dur,end,fill,fill-rule,font-family,font-size,font-stretch,' +
+    'font-style,font-variant,font-weight,from,fx,fy,g1,g2,glyph-name,gradientUnits,hanging,' +
+    'height,horiz-adv-x,horiz-origin-x,ideographic,k,keyPoints,keySplines,keyTimes,lang,' +
+    'marker-end,marker-mid,marker-start,markerHeight,markerUnits,markerWidth,mathematical,' +
+    'max,min,offset,opacity,orient,origin,overline-position,overline-thickness,panose-1,' +
+    'path,pathLength,points,preserveAspectRatio,r,refX,refY,repeatCount,repeatDur,' +
+    'requiredExtensions,requiredFeatures,restart,rotate,rx,ry,slope,stemh,stemv,stop-color,' +
+    'stop-opacity,strikethrough-position,strikethrough-thickness,stroke,stroke-dasharray,' +
+    'stroke-dashoffset,stroke-linecap,stroke-linejoin,stroke-miterlimit,stroke-opacity,' +
+    'stroke-width,systemLanguage,target,text-anchor,to,transform,type,u1,u2,underline-position,' +
+    'underline-thickness,unicode,unicode-range,units-per-em,values,version,viewBox,visibility,' +
+    'width,widths,x,x-height,x1,x2,xlink:actuate,xlink:arcrole,xlink:role,xlink:show,xlink:title,' +
+    'xlink:type,xml:base,xml:lang,xml:space,xmlns,xmlns:xlink,y,y1,y2,zoomAndPan', true);
 
 var validAttrs = angular.extend({},
                                 uriAttrs,
                                 svgAttrs,
                                 htmlAttrs);
 
-function makeMap(str) {
+function makeMap(str, lowercaseKeys) {
   var obj = {}, items = str.split(','), i;
-  for (i = 0; i < items.length; i++) obj[items[i]] = true;
+  for (i = 0; i < items.length; i++) {
+    obj[lowercaseKeys ? angular.lowercase(items[i]) : items[i]] = true;
+  }
   return obj;
 }
 
@@ -281,32 +289,23 @@ function htmlParser(html, handler) {
     }
   }
   var index, chars, match, stack = [], last = html, text;
-  stack.last = function() { return stack[ stack.length - 1 ]; };
+  stack.last = function() { return stack[stack.length - 1]; };
 
   while (html) {
     text = '';
     chars = true;
 
     // Make sure we're not in a script or style element
-    if (!stack.last() || !specialElements[ stack.last() ]) {
+    if (!stack.last() || !specialElements[stack.last()]) {
 
-      // White space
-      if (WHITE_SPACE_REGEXP.test(html)) {
-        match = html.match(WHITE_SPACE_REGEXP);
+      // Comment
+      if (html.indexOf("<!--") === 0) {
+        // comments containing -- are not allowed unless they terminate the comment
+        index = html.indexOf("--", 4);
 
-        if (match) {
-          var mat = match[0];
-          if (handler.whitespace) handler.whitespace(match[0]);
-          html = html.replace(match[0], '');
-          chars = false;
-        }
-      //Comment
-      } else if (SINGLE_COMMENT_REGEXP.test(html)) {
-        match = html.match(SINGLE_COMMENT_REGEXP);
-
-        if (match) {
-          if (handler.comment) handler.comment(match[1]);
-          html = html.replace(match[0], '');
+        if (index >= 0 && html.lastIndexOf("-->", index) === index) {
+          if (handler.comment) handler.comment(html.substring(4, index));
+          html = html.substring(index + 3);
           chars = false;
         }
       // DOCTYPE
@@ -355,7 +354,8 @@ function htmlParser(html, handler) {
       }
 
     } else {
-      html = html.replace(new RegExp("([^]*)<\\s*\\/\\s*" + stack.last() + "[^>]*>", 'i'),
+      // IE versions 9 and 10 do not understand the regex '[^]', so using a workaround with [\W\w].
+      html = html.replace(new RegExp("([\\W\\w]*)<\\s*\\/\\s*" + stack.last() + "[^>]*>", 'i'),
         function(all, text) {
           text = text.replace(COMMENT_REGEXP, "$1").replace(CDATA_REGEXP, "$1");
 
@@ -379,20 +379,21 @@ function htmlParser(html, handler) {
 
   function parseStartTag(tag, tagName, rest, unary) {
     tagName = angular.lowercase(tagName);
-    if (blockElements[ tagName ]) {
-      while (stack.last() && inlineElements[ stack.last() ]) {
+    if (blockElements[tagName]) {
+      while (stack.last() && inlineElements[stack.last()]) {
         parseEndTag("", stack.last());
       }
     }
 
-    if (optionalEndTagElements[ tagName ] && stack.last() == tagName) {
+    if (optionalEndTagElements[tagName] && stack.last() == tagName) {
       parseEndTag("", tagName);
     }
 
-    unary = voidElements[ tagName ] || !!unary;
+    unary = voidElements[tagName] || !!unary;
 
-    if (!unary)
+    if (!unary) {
       stack.push(tagName);
+    }
 
     var attrs = {};
 
@@ -411,16 +412,17 @@ function htmlParser(html, handler) {
   function parseEndTag(tag, tagName) {
     var pos = 0, i;
     tagName = angular.lowercase(tagName);
-    if (tagName)
+    if (tagName) {
       // Find the closest opened tag of the same type
-      for (pos = stack.length - 1; pos >= 0; pos--)
-        if (stack[ pos ] == tagName)
-          break;
+      for (pos = stack.length - 1; pos >= 0; pos--) {
+        if (stack[pos] == tagName) break;
+      }
+    }
 
     if (pos >= 0) {
       // Close all the open elements, up the stack
       for (i = stack.length - 1; i >= pos; i--)
-        if (handler.end) handler.end(stack[ i ]);
+        if (handler.end) handler.end(stack[i]);
 
       // Remove the open elements from the stack
       stack.length = pos;
@@ -429,7 +431,6 @@ function htmlParser(html, handler) {
 }
 
 var hiddenPre=document.createElement("pre");
-var spaceRe = /^(\s*)([\s\S]*?)(\s*)$/;
 /**
  * decodes all entities into regular string
  * @param value
@@ -438,22 +439,10 @@ var spaceRe = /^(\s*)([\s\S]*?)(\s*)$/;
 function decodeEntities(value) {
   if (!value) { return ''; }
 
-  // Note: IE8 does not preserve spaces at the start/end of innerHTML
-  // so we must capture them and reattach them afterward
-  var parts = spaceRe.exec(value);
-  var spaceBefore = parts[1];
-  var spaceAfter = parts[3];
-  var content = parts[2];
-  if (content) {
-    hiddenPre.innerHTML=content.replace(/</g,"&lt;");
-    // innerText depends on styling as it doesn't display hidden elements.
-    // Therefore, it's better to use textContent not to cause unnecessary
-    // reflows. However, IE<9 don't support textContent so the innerText
-    // fallback is necessary.
-    content = 'textContent' in hiddenPre ?
-      hiddenPre.textContent : hiddenPre.innerText;
-  }
-  return spaceBefore + content + spaceAfter;
+  hiddenPre.innerHTML = value.replace(/</g,"&lt;");
+  // innerText depends on styling as it doesn't display hidden elements.
+  // Therefore, it's better to use textContent not to cause unnecessary reflows.
+  return hiddenPre.textContent;
 }
 
 /**
@@ -472,93 +461,10 @@ function encodeEntities(value) {
       return '&#' + (((hi - 0xD800) * 0x400) + (low - 0xDC00) + 0x10000) + ';';
     }).
     replace(NON_ALPHANUMERIC_REGEXP, function(value) {
-      // unsafe chars are: \u0000-\u001f \u007f-\u009f \u00ad \u0600-\u0604 \u070f \u17b4 \u17b5 \u200c-\u200f \u2028-\u202f \u2060-\u206f \ufeff \ufff0-\uffff from jslint.com/lint.html
-      // decimal values are: 0-31, 127-159, 173, 1536-1540, 1807, 6068, 6069, 8204-8207, 8232-8239, 8288-8303, 65279, 65520-65535
-      var c = value.charCodeAt(0);
-      // if unsafe character encode
-      if(c <= 159 ||
-        c == 173 ||
-        (c >= 1536 && c <= 1540) ||
-        c == 1807 ||
-        c == 6068 ||
-        c == 6069 ||
-        (c >= 8204 && c <= 8207) ||
-        (c >= 8232 && c <= 8239) ||
-        (c >= 8288 && c <= 8303) ||
-        c == 65279 ||
-        (c >= 65520 && c <= 65535)) return '&#' + c + ';';
-      return value; // avoids multilingual issues
+      return '&#' + value.charCodeAt(0) + ';';
     }).
     replace(/</g, '&lt;').
     replace(/>/g, '&gt;');
-}
-
-var trim = (function() {
-  // native trim is way faster: http://jsperf.com/angular-trim-test
-  // but IE doesn't have it... :-(
-  // TODO: we should move this into IE/ES5 polyfill
-  if (!String.prototype.trim) {
-    return function(value) {
-      return angular.isString(value) ? value.replace(/^\s\s*/, '').replace(/\s\s*$/, '') : value;
-    };
-  }
-  return function(value) {
-    return angular.isString(value) ? value.trim() : value;
-  };
-})();
-
-// Custom logic for accepting certain style options only - textAngular
-// Currently allows only the color, background-color, text-align, float, width and height attributes
-// all other attributes should be easily done through classes.
-function validStyles(styleAttr){
-	var result = '';
-	var styleArray = styleAttr.split(';');
-	angular.forEach(styleArray, function(value){
-		var v = value.split(':');
-		if(v.length == 2){
-			var key = trim(angular.lowercase(v[0]));
-			var value = trim(angular.lowercase(v[1]));
-			if(
-				(key === 'color' || key === 'background-color') && (
-					value.match(/^rgb\([0-9%,\. ]*\)$/i)
-					|| value.match(/^rgba\([0-9%,\. ]*\)$/i)
-					|| value.match(/^hsl\([0-9%,\. ]*\)$/i)
-					|| value.match(/^hsla\([0-9%,\. ]*\)$/i)
-					|| value.match(/^#[0-9a-f]{3,6}$/i)
-					|| value.match(/^[a-z]*$/i)
-				)
-			||
-				key === 'text-align' && (
-					value === 'left'
-					|| value === 'right'
-					|| value === 'center'
-					|| value === 'justify'
-				)
-			||
-				key === 'float' && (
-					value === 'left'
-					|| value === 'right'
-					|| value === 'none'
-				)
-			||
-				(key === 'width' || key === 'height') && (
-					value.match(/[0-9\.]*(px|em|rem|%)/)
-				)
-			|| // Reference #520
-				(key === 'direction' && value.match(/^ltr|rtl|initial|inherit$/))
-			) result += key + ': ' + value + ';';
-		}
-	});
-	return result;
-}
-
-// this function is used to manually allow specific attributes on specific tags with certain prerequisites
-function validCustomTag(tag, attrs, lkey, value){
-	// catch the div placeholder for the iframe replacement
-    if (tag === 'img' && attrs['ta-insert-video']){
-        if(lkey === 'ta-insert-video' || lkey === 'allowfullscreen' || lkey === 'frameborder' || (lkey === 'contenteditable' && value === 'false')) return true;
-    }
-    return false;
 }
 
 /**
@@ -585,8 +491,8 @@ function htmlSanitizeWriter(buf, uriValidator) {
         out(tag);
         angular.forEach(attrs, function(value, key) {
           var lkey=angular.lowercase(key);
-          var isImage=(tag === 'img' && lkey === 'src') || (lkey === 'background');
-          if ((lkey === 'style' && (value = validStyles(value)) !== '') || validCustomTag(tag, attrs, lkey, value) || validAttrs[lkey] === true &&
+          var isImage = (tag === 'img' && lkey === 'src') || (lkey === 'background');
+          if (validAttrs[lkey] === true &&
             (uriAttrs[lkey] !== true || uriValidator(value, isImage))) {
             out(' ');
             out(key);
@@ -597,12 +503,6 @@ function htmlSanitizeWriter(buf, uriValidator) {
         });
         out(unary ? '/>' : '>');
       }
-    },
-    comment: function (com) {
-      out(com);
-    },
-    whitespace: function (ws) {
-      out(encodeEntities(ws));
     },
     end: function(tag) {
         tag = angular.lowercase(tag);
@@ -731,8 +631,8 @@ angular.module('ngSanitize', []).provider('$sanitize', $SanitizeProvider);
  */
 angular.module('ngSanitize').filter('linky', ['$sanitize', function($sanitize) {
   var LINKY_URL_REGEXP =
-        /((ftp|https?):\/\/|(www\.)|(mailto:)?[A-Za-z0-9._%+-]+@)\S*[^\s.;,(){}<>"”’]/,
-      MAILTO_REGEXP = /^mailto:/;
+        /((ftp|https?):\/\/|(www\.)|(mailto:)?[A-Za-z0-9._%+-]+@)\S*[^\s.;,(){}<>"\u201d\u2019]/i,
+      MAILTO_REGEXP = /^mailto:/i;
 
   return function(text, target) {
     if (!text) return text;

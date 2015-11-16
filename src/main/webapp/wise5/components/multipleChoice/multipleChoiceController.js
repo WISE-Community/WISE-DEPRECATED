@@ -61,6 +61,8 @@ define(['app'], function(app) {
                 
                 // get the show previous work node id if it is provided
                 var showPreviousWorkNodeId = this.componentContent.showPreviousWorkNodeId;
+
+                var componentState = null;
                 
                 if (showPreviousWorkNodeId != null) {
                     // this component is showing previous work
@@ -76,7 +78,7 @@ define(['app'], function(app) {
                     this.componentContent = NodeService.getComponentContentById(showPreviousWorkNodeContent, showPreviousWorkComponentId);
 
                     // get the component state for the show previous work
-                    var componentState = StudentDataService.getLatestComponentStateByNodeIdAndComponentId(showPreviousWorkNodeId, showPreviousWorkComponentId);
+                    componentState = StudentDataService.getLatestComponentStateByNodeIdAndComponentId(showPreviousWorkNodeId, showPreviousWorkComponentId);
 
                     // populate the student work into this component
                     this.setStudentWork(componentState);
@@ -90,7 +92,7 @@ define(['app'], function(app) {
                     // this is a regular component
 
                     // get the component state from the scope
-                    var componentState = $scope.componentState;
+                    componentState = $scope.componentState;
                     
                     if (componentState == null) {
                         /*
@@ -240,9 +242,27 @@ define(['app'], function(app) {
             
             return choiceIds;
         };
-        
+
         /**
-         * The student has clicked on one of the check box choices
+         * The student clicked on one of the radio button choices
+         * @param choiceId the choice id of the radio button the student clicked
+         */
+        this.radioChoiceSelected = function(choiceId) {
+            // notify this node that the student choice has changed
+            this.studentDataChanged();
+
+            if (choiceId != null) {
+                // log this event
+                var category = "StudentInteraction";
+                var event = "choiceSelected";
+                var data = {};
+                data.selectedChoiceId = choiceId;
+                StudentDataService.saveComponentEvent(this, category, event, data);
+            }
+        };
+
+        /**
+         * The student clicked on one of the check box choices
          * @param choiceId the choice id of the checkbox the student clicked
          */
         this.toggleSelection = function(choiceId) {
@@ -635,18 +655,20 @@ define(['app'], function(app) {
              * array of choice ids.
              */
             var studentChoices = this.studentChoices;
-            
+            var choiceObject = null;
+            var studentChoiceObject = null;
+
             if (studentChoices != null) {
                 
                 if (this.isRadio()) {
                     // this is a radio button component
                     
                     // get the choice object
-                    var choiceObject = this.getChoiceById(studentChoices);
+                    choiceObject = this.getChoiceById(studentChoices);
                     
                     if (choiceObject != null) {
                         // create a student choice object and set the id and text
-                        var studentChoiceObject = {};
+                        studentChoiceObject = {};
                         studentChoiceObject.id = choiceObject.id;
                         studentChoiceObject.text = choiceObject.text;
                         
@@ -663,11 +685,11 @@ define(['app'], function(app) {
                         var studentChoiceId = studentChoices[x];
                         
                         // get the choice object
-                        var choiceObject = this.getChoiceById(studentChoiceId);
+                        choiceObject = this.getChoiceById(studentChoiceId);
                         
                         if (choiceObject != null) {
                             // create a student choice object and set the id and text
-                            var studentChoiceObject = {};
+                            studentChoiceObject = {};
                             studentChoiceObject.id = choiceObject.id;
                             studentChoiceObject.text = choiceObject.text;
                             

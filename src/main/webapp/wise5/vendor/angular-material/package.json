@@ -1,6 +1,6 @@
 {
   "name": "angular-material",
-  "version": "1.0.0-rc2-master-c99541f",
+  "version": "1.0.0-rc3-master-c7c5358",
   "main": "index",
   "format": "cjs",
   "registry": "github",
@@ -11,9 +11,9 @@
   },
   "jspm": {
     "dependencies": {
-      "angular": "npm:angular@^1.4.7",
-      "angular-animate": "npm:angular-animate@^1.4.7",
-      "angular-aria": "npm:angular-aria@^1.4.7",
+      "angular": "github:angular/bower-angular@^1.4.7",
+      "angular-animate": "github:angular/bower-angular-animate@^1.4.7",
+      "angular-aria": "github:angular/bower-angular-aria@^1.4.7",
       "css": "systemjs/plugin-css@^0.1.9"
     },
     "shim": {

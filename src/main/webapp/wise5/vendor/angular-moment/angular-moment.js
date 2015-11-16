@@ -1,4 +1,4 @@
-/* angular-moment.js / v1.0.0-beta.2 / (c) 2013, 2014, 2015 Uri Shaked / MIT Licence */
+/* angular-moment.js / v1.0.0-beta.3 / (c) 2013, 2014, 2015 Uri Shaked / MIT Licence */
 
 'format amd';
 /* global define */
@@ -10,7 +10,23 @@
 		return angular.isUndefined(val) || val === null;
 	}
 
+	function requireMoment() {
+		try {
+			return require('moment'); // Using nw.js or browserify?
+		} catch (e) {
+			throw new Error('Please install moment via npm. Please reference to: https://github.com/urish/angular-moment'); // Add wiki/troubleshooting section?
+		}
+	}
+
 	function angularMoment(angular, moment) {
+
+		if(typeof moment === 'undefined') {
+			if(typeof require === 'function') {
+				moment = requireMoment();
+			}else{
+				throw new Error('Moment cannot be found by angular-moment! Please reference to: https://github.com/urish/angular-moment'); // Add wiki/troubleshooting section?
+			}
+		}
 
 		/**
 		 * @ngdoc overview
@@ -185,6 +201,7 @@
 					var modelName = attr.amTimeAgo;
 					var currentFrom;
 					var isTimeElement = ('TIME' === element[0].nodeName.toUpperCase());
+					var setTitleTime = !element.attr('title');
 
 					function getNow() {
 						var now;
@@ -218,7 +235,7 @@
 							element.text(momentInstance.from(getNow(), withoutSuffix));
 						}
 
-						if (titleFormat && !element.attr('title')) {
+						if (titleFormat && setTitleTime) {
 							element.attr('title', momentInstance.local().format(titleFormat));
 						}
 

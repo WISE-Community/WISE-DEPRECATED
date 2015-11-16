@@ -41,13 +41,13 @@ define(['angular', /*'annotationService',*/ 'configService', 'nodeService', 'not
                     this.nodeTitle = this.showPosition ? (ProjectService.idToPosition[this.nodeId] + ': ' + this.item.title) : this.item.title;
                     this.currentNode = StudentDataService.currentNode;
                     var isCurrentNode = (this.currentNode.id === this.nodeId);
+                    var setNewNode = false;
 
                     var scope = this;
                     $scope.$watch(
                         function () { return StudentDataService.currentNode; },
                         function (newNode) {
                             scope.currentNode = newNode;
-                            var previouseNode = StudentDataService.previousNode;
                             isCurrentNode = (scope.currentNode.id === scope.nodeId);
                             if (isCurrentNode || ProjectService.isApplicationNode(newNode.id) || newNode.id === ProjectService.rootNode.id) {
                                 setExpanded();
@@ -59,20 +59,38 @@ define(['angular', /*'annotationService',*/ 'configService', 'nodeService', 'not
                         function () { return scope.expanded; },
                         function (value) {
                             $scope.$parent.itemExpanded = value;
+                            if (value) {
+                                zoomToElement();
+                            }
                         }
                     );
 
                     var setExpanded = function () {
                         scope.expanded = (isCurrentNode || (scope.isGroup && ProjectService.isNodeDescendentOfGroup(scope.currentNode, scope.item)));
-                        $('body').animate({
-                            scrollTop: $($element).offset().top
-                        }, 500);
+                        if (scope.expanded && isCurrentNode) {
+                            zoomToElement();
+                        }
+                    };
+
+                    var zoomToElement = function () {
+                        setTimeout(function () {
+                            // smooth scroll to expanded group's page location
+                            var location = $element[0].offsetTop - 16;
+                            $('#content').animate({
+                                scrollTop: location
+                            }, 250, 'linear', function () {
+                                if (setNewNode) {
+                                    setNewNode = false;
+                                    StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(scope.nodeId);
+                                }
+                            });
+                        }, 250);
                     };
 
                     this.itemClicked = function() {
                         if (this.isGroup) {
-                            if (!isCurrentNode && !this.expanded) {
-                                StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(this.nodeId);
+                            if (!this.expanded) {
+                                setNewNode = true;
                             }
                             this.expanded = !this.expanded;
                         } else {
@@ -257,7 +275,7 @@ define(['angular', /*'annotationService',*/ 'configService', 'nodeService', 'not
                         targetEvent: $event,
                         templateUrl: revisionsTemplateUrl,
                         locals: {
-                            items: revisions,
+                            items: revisions.reverse(),
                             componentController: componentController,
                             allowRevert: allowRevert
                         },
@@ -276,7 +294,36 @@ define(['angular', /*'annotationService',*/ 'configService', 'nodeService', 'not
                             $mdDialog.hide();
                         };
                     }
+                }));
 
+                $scope.$on('showNotebook', angular.bind(this, function (event, args) {
+                    var revisions = args.revisions;
+                    var notebookFilters = args.notebookFilters;
+                    var componentController = args.componentController;
+                    var $event = args.$event;
+                    var notebookDialogTemplateUrl = this.themePath + '/templates/notebookDialog.html';
+                    var notebookTemplateUrl = this.themePath + '/notebook/notebook.html';
+
+                    $mdDialog.show({
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        templateUrl: notebookDialogTemplateUrl,
+                        locals: {
+                            notebookFilters: notebookFilters,
+                            notebookTemplateUrl: notebookTemplateUrl,
+                            componentController: componentController
+                        },
+                        controller: NotebookDialogController
+                    });
+                    function NotebookDialogController($scope, $mdDialog, componentController) {
+                        $scope.notebookFilters = notebookFilters;
+                        $scope.notebookFilter = notebookFilters[0].name;
+                        $scope.notebookTemplateUrl = notebookTemplateUrl;
+                        $scope.componentController = componentController;
+                        $scope.closeDialog = function () {
+                            $mdDialog.hide();
+                        }
+                    }
                 }));
 
                 // capture notebook open/close events

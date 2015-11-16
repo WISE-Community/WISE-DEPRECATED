@@ -7,15 +7,20 @@
 }
 
 .discussion-posts {
-  padding: 16px 0;
+  padding: 16px 16px 8px;
 
-  @media only screen and (min-width: $layout-breakpoint-md) {
-    padding: 8px;
+  @media only screen and (min-width: $layout-breakpoint-sm) {
+    padding: 16px 16px 0;
   }
 }
 
 .discussion-post {
-  margin: 0 0 16px;
+  margin: 0 auto 16px;
+  max-width: $layout-breakpoint-sm;
+
+  @media only screen and (min-width: $layout-breakpoint-sm) {
+    margin-bottom: 32px;
+  }
 }
 
 .discussion-post__avatar, md-list-item.md-3-line > .md-avatar.discussion-post__avatar {
@@ -42,6 +47,13 @@
 
 .discussion-post__content {
   margin-top: 16px;
+  white-space: pre;
+}
+
+.discussion-post__attachment {
+  max-width: 100%;
+  height: auto;
+  margin-top: 16px;
 }
 
 .discussion-new {
@@ -50,20 +62,25 @@
   margin-left: auto;
   margin-right: auto;
   padding: 16px;
-  @include border-radius(0);
-  @include transform(scale(0.95));
+  border-radius: 0;
+  transition: all 250ms;
+  transform: scale(0.95);
 
   @media only screen and (min-width: $layout-breakpoint-sm) {
-    @include transform(scale(0.9));
+    transform: scale(0.9);
   }
 }
 
 .discussion-new--focused {
-  @include transform(scale(1));
+  transform: scale(1);
 }
 
-.discussion-new__input-container {
+md-input-container.discussion-new__input-container {
   margin-top: 0;
+
+  > textarea.md-input {
+    min-height: 100px;
+  }
 }
 
 .discussion-new__actions {
@@ -80,10 +97,20 @@
   }
 }
 
+.discussion-new__attachment {
+  padding: 0;
+  margin: 0 0 8px;
+}
+
+.discussion-new__attachment__content {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
 .discussion-comments {
   background-color: $gray-lightest;
   padding: 0;
-  @include border-radius(0 0 $card-border-radius $card-border-radius);
+  border-radius: 0 0 $card-border-radius $card-border-radius;
 }
 
 .discussion-comments__header {
@@ -93,8 +120,7 @@
 
 .discussion-comments__list {
   padding: 0;
-  border-bottom: 1px solid $gray-light;
-  max-height: 400px;
+  max-height: 300px;
   overflow-y: auto;
 }
 
@@ -120,6 +146,7 @@
 .discusstion-reply__content {
   margin-top: 8px;
   font-size: $body-font-size-base - 1;
+  white-space: pre;
 
   p {
     font-weight: 400 !important;
@@ -128,15 +155,14 @@
 }
 
 .discussion-new-reply {
-  padding: 0 16px 16px;
+  padding: 16px;
 }
 
 .discussion-new-reply__input-container {
   padding: 0;
-  margin-bottom: 0;
+  margin: 0;
 }
 
 .discussion-new-reply__actions {
-  margin-top: 16px;
+  margin-left: 8px;
 }
-

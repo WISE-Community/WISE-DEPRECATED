@@ -1,5 +1,7 @@
+// TODO: Update to use BEM properly
+
 .component-content {
-  margin: 16px;
+  padding: 16px;
 }
 
 .component-content__actions {
@@ -10,4 +12,64 @@
   .md-button:last-of-type {
     margin-right: 0;
   }
+}
+
+.component__attachment {
+  position: relative;
+  margin: 0 8px;
+  padding-bottom: 8px;
+
+  @media only screen and (min-width: $layout-breakpoint-sm) {
+    padding-top: 8px;
+  }
+}
+
+.component__add-attachment {
+  @media only screen and (max-width: ($layout-breakpoint-sm - 1)) {
+    width: 100%;
+  }
+}
+
+.component__attachment__content {
+  max-height: 100px;
+  width: auto;
+}
+
+.component__attachment__delete {
+  position: absolute;
+  top: 0;
+  right: 0;
+  min-width: 0;
+  background-color: rgba(255, 255, 255, 0.75) !important;
+  border-radius: 0;
+  padding: 4px;
+  margin: 0;
+
+  @media only screen and (min-width: $layout-breakpoint-sm) {
+    margin-top: 8px;
+  }
+
+  > md-icon {
+    margin-top: 0;
+  }
+}
+
+.component-revision {
+  margin: 8px 0;
+  padding: 8px;
+
+  &:nth-child(odd) {
+    background-color: $gray-lightest;
+  }
+}
+
+.component-revision__content {
+  margin-bottom: 4px;
+  padding: 8px 0 12px 0;
+  border-bottom: 1px solid $gray-light;
+}
+
+.component-revision__actions {
+  color: $gray-dark;
+  padding-top: 4px;
 }

@@ -175,8 +175,6 @@ public class StudentDataController {
         try {
             Run run = runService.retrieveById(new Long(runId));
             if (run.isStudentAssociatedToThisRun(signedInUser)) {
-                try {
-
                     HashMap<String, StudentWork> savedStudentWorkList = new HashMap<>(); // maps nodeId_componentId to StudentWork.
                                                                                             // Used later for handling simultaneous POST of CRater annotation
                     // handle POST'ed studentWork
@@ -184,38 +182,36 @@ public class StudentDataController {
                     if (studentWorkJSONArray != null) {
                         JSONArray studentWorkResultJSONArray = new JSONArray();
                         for (int c = 0; c < studentWorkJSONArray.length(); c++) {
-                            JSONObject studentWorkJSONObject = studentWorkJSONArray.getJSONObject(c);
-                            String requestToken = studentWorkJSONObject.getString("requestToken");
-                            StudentWork studentWork = vleService.saveStudentWork(
-                                    studentWorkJSONObject.isNull("id") ? null : studentWorkJSONObject.getInt("id"),
-                                    studentWorkJSONObject.isNull("runId") ? null : studentWorkJSONObject.getInt("runId"),
-                                    studentWorkJSONObject.isNull("periodId") ? null : studentWorkJSONObject.getInt("periodId"),
-                                    studentWorkJSONObject.isNull("workgroupId") ? null : studentWorkJSONObject.getInt("workgroupId"),
-                                    studentWorkJSONObject.isNull("isAutoSave") ? null : studentWorkJSONObject.getBoolean("isAutoSave"),
-                                    studentWorkJSONObject.isNull("isSubmit") ? null : studentWorkJSONObject.getBoolean("isSubmit"),
-                                    studentWorkJSONObject.isNull("nodeId") ? null : studentWorkJSONObject.getString("nodeId"),
-                                    studentWorkJSONObject.isNull("componentId") ? null : studentWorkJSONObject.getString("componentId"),
-                                    studentWorkJSONObject.isNull("componentType") ? null : studentWorkJSONObject.getString("componentType"),
-                                    studentWorkJSONObject.isNull("studentData") ? null : studentWorkJSONObject.getString("studentData"),
-                                    studentWorkJSONObject.isNull("clientSaveTime") ? null : studentWorkJSONObject.getString("clientSaveTime"));
+                            try {
+                                JSONObject studentWorkJSONObject = studentWorkJSONArray.getJSONObject(c);
+                                String requestToken = studentWorkJSONObject.getString("requestToken");
+                                StudentWork studentWork = vleService.saveStudentWork(
+                                        studentWorkJSONObject.isNull("id") ? null : studentWorkJSONObject.getInt("id"),
+                                        studentWorkJSONObject.isNull("runId") ? null : studentWorkJSONObject.getInt("runId"),
+                                        studentWorkJSONObject.isNull("periodId") ? null : studentWorkJSONObject.getInt("periodId"),
+                                        studentWorkJSONObject.isNull("workgroupId") ? null : studentWorkJSONObject.getInt("workgroupId"),
+                                        studentWorkJSONObject.isNull("isAutoSave") ? null : studentWorkJSONObject.getBoolean("isAutoSave"),
+                                        studentWorkJSONObject.isNull("isSubmit") ? null : studentWorkJSONObject.getBoolean("isSubmit"),
+                                        studentWorkJSONObject.isNull("nodeId") ? null : studentWorkJSONObject.getString("nodeId"),
+                                        studentWorkJSONObject.isNull("componentId") ? null : studentWorkJSONObject.getString("componentId"),
+                                        studentWorkJSONObject.isNull("componentType") ? null : studentWorkJSONObject.getString("componentType"),
+                                        studentWorkJSONObject.isNull("studentData") ? null : studentWorkJSONObject.getString("studentData"),
+                                        studentWorkJSONObject.isNull("clientSaveTime") ? null : studentWorkJSONObject.getString("clientSaveTime"));
 
-                            if (studentWork.getNodeId() != null && studentWork.getComponentId() != null) {
-                                // the student work was a component state, so save it for later when we might need it to add annotations
-                                savedStudentWorkList.put(studentWork.getNodeId() + "_" + studentWork.getComponentId(), studentWork);
+                                if (studentWork.getNodeId() != null && studentWork.getComponentId() != null) {
+                                    // the student work was a component state, so save it for later when we might need it to add annotations
+                                    savedStudentWorkList.put(studentWork.getNodeId() + "_" + studentWork.getComponentId(), studentWork);
+                                }
+
+                                // before returning saved StudentWork, strip all fields except id, responseToken, and serverSaveTime to minimize response size
+                                JSONObject savedStudentWorkJSONObject = new JSONObject();
+                                savedStudentWorkJSONObject.put("id", studentWork.getId());
+                                savedStudentWorkJSONObject.put("requestToken", requestToken);
+                                savedStudentWorkJSONObject.put("serverSaveTime", studentWork.getServerSaveTime().getTime());
+                                studentWorkResultJSONArray.put(savedStudentWorkJSONObject);
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
-
-                            // before returning saved StudentWork, strip all fields except id, token, and responseToken to minimize response size
-                            studentWork.setRun(null);
-                            studentWork.setPeriod(null);
-                            studentWork.setWorkgroup(null);
-                            studentWork.setIsAutoSave(null);
-                            studentWork.setIsSubmit(null);
-                            studentWork.setComponentType(null);
-                            studentWork.setStudentData(null);
-                            studentWork.setClientSaveTime(null);
-                            JSONObject savedStudentWorkJSONObject = studentWork.toJSON();
-                            savedStudentWorkJSONObject.put("requestToken", requestToken);
-                            studentWorkResultJSONArray.put(savedStudentWorkJSONObject);
                         }
                         result.put("studentWorkList", studentWorkResultJSONArray);
                     }
@@ -225,37 +221,33 @@ public class StudentDataController {
                     if (eventsJSONArray != null) {
                         JSONArray eventsResultJSONArray = new JSONArray();
                         for (int e = 0; e < eventsJSONArray.length(); e++) {
-                            JSONObject eventJSONObject = eventsJSONArray.getJSONObject(e);
-                            String requestToken = eventJSONObject.getString("requestToken");
-                            Event event = vleService.saveEvent(
-                                    eventJSONObject.isNull("id") ? null : eventJSONObject.getInt("id"),
-                                    eventJSONObject.isNull("runId") ? null : eventJSONObject.getInt("runId"),
-                                    eventJSONObject.isNull("periodId") ? null : eventJSONObject.getInt("periodId"),
-                                    eventJSONObject.isNull("workgroupId") ? null : eventJSONObject.getInt("workgroupId"),
-                                    eventJSONObject.isNull("nodeId") ? null : eventJSONObject.getString("nodeId"),
-                                    eventJSONObject.isNull("componentId") ? null : eventJSONObject.getString("componentId"),
-                                    eventJSONObject.isNull("componentType") ? null : eventJSONObject.getString("componentType"),
-                                    eventJSONObject.isNull("context") ? null : eventJSONObject.getString("context"),
-                                    eventJSONObject.isNull("category") ? null : eventJSONObject.getString("category"),
-                                    eventJSONObject.isNull("event") ? null : eventJSONObject.getString("event"),
-                                    eventJSONObject.isNull("data") ? null : eventJSONObject.getString("data"),
-                                    eventJSONObject.isNull("clientSaveTime") ? null : eventJSONObject.getString("clientSaveTime"));
+                            try {
+                                JSONObject eventJSONObject = eventsJSONArray.getJSONObject(e);
+                                String requestToken = eventJSONObject.getString("requestToken");
+                                Event event = vleService.saveEvent(
+                                        eventJSONObject.isNull("id") ? null : eventJSONObject.getInt("id"),
+                                        eventJSONObject.isNull("runId") ? null : eventJSONObject.getInt("runId"),
+                                        eventJSONObject.isNull("periodId") ? null : eventJSONObject.getInt("periodId"),
+                                        eventJSONObject.isNull("workgroupId") ? null : eventJSONObject.getInt("workgroupId"),
+                                        eventJSONObject.isNull("nodeId") ? null : eventJSONObject.getString("nodeId"),
+                                        eventJSONObject.isNull("componentId") ? null : eventJSONObject.getString("componentId"),
+                                        eventJSONObject.isNull("componentType") ? null : eventJSONObject.getString("componentType"),
+                                        eventJSONObject.isNull("context") ? null : eventJSONObject.getString("context"),
+                                        eventJSONObject.isNull("category") ? null : eventJSONObject.getString("category"),
+                                        eventJSONObject.isNull("event") ? null : eventJSONObject.getString("event"),
+                                        eventJSONObject.isNull("data") ? null : eventJSONObject.getString("data"),
+                                        eventJSONObject.isNull("clientSaveTime") ? null : eventJSONObject.getString("clientSaveTime"));
 
-                            // before returning saved StudentWork, strip all fields except id, token, and responseToken to minimize response size
-                            event.setRun(null);
-                            event.setPeriod(null);
-                            event.setWorkgroup(null);
-                            event.setNodeId(null);
-                            event.setComponentId(null);
-                            event.setComponentType(null);
-                            event.setContext(null);
-                            event.setCategory(null);
-                            event.setEvent(null);
-                            event.setData(null);
-                            event.setClientSaveTime(null);
-                            JSONObject savedEventJSONObject = event.toJSON();
-                            savedEventJSONObject.put("requestToken", requestToken);
-                            eventsResultJSONArray.put(savedEventJSONObject);
+                                // before returning saved Event, strip all fields except id, responseToken, and serverSaveTime to minimize response size
+                                JSONObject savedEventJSONObject = new JSONObject();
+                                savedEventJSONObject.put("id", event.getId());
+                                savedEventJSONObject.put("requestToken", requestToken);
+                                savedEventJSONObject.put("serverSaveTime", event.getServerSaveTime().getTime());
+                                eventsResultJSONArray.put(savedEventJSONObject);
+
+                            } catch (Exception exception) {
+                                exception.printStackTrace();
+                            }
                         }
                         result.put("events", eventsResultJSONArray);
                     }
@@ -265,65 +257,60 @@ public class StudentDataController {
                     if (annotationsJSONArray != null) {
                         JSONArray annotationsResultJSONArray = new JSONArray();
                         for (int a = 0; a < annotationsJSONArray.length(); a++) {
-                            JSONObject annotationJSONObject = annotationsJSONArray.getJSONObject(a);
-                            String requestToken = annotationJSONObject.getString("requestToken");
-                            Annotation annotation;
-                            // check to see if this Annotation was posted along with a StudentWork (e.g. CRater)
-                            if (annotationJSONObject.isNull("studentWorkId") &&
-                                    !annotationJSONObject.isNull("nodeId") &&
-                                    !annotationJSONObject.isNull("componentId") &&
-                                    savedStudentWorkList.containsKey(
-                                            annotationJSONObject.getString("nodeId") + "_" + annotationJSONObject.getString("componentId"))
-                                    ) {
-                                // this is an annotation for a StudentWork that we just saved.
-                                StudentWork savedStudentWork = savedStudentWorkList.get(annotationJSONObject.getString("nodeId") + "_" + annotationJSONObject.getString("componentId"));
-                                Integer savedStudentWorkId = savedStudentWork.getId();
-                                annotation = vleService.saveAnnotation(
-                                        annotationJSONObject.isNull("id") ? null : annotationJSONObject.getInt("id"),
-                                        annotationJSONObject.isNull("runId") ? null : annotationJSONObject.getInt("runId"),
-                                        annotationJSONObject.isNull("periodId") ? null : annotationJSONObject.getInt("periodId"),
-                                        annotationJSONObject.isNull("fromWorkgroupId") ? null : annotationJSONObject.getInt("fromWorkgroupId"),
-                                        annotationJSONObject.isNull("toWorkgroupId") ? null : annotationJSONObject.getInt("toWorkgroupId"),
-                                        annotationJSONObject.isNull("nodeId") ? null : annotationJSONObject.getString("nodeId"),
-                                        annotationJSONObject.isNull("componentId") ? null : annotationJSONObject.getString("componentId"),
-                                        savedStudentWorkId,
-                                        annotationJSONObject.isNull("type") ? null : annotationJSONObject.getString("type"),
-                                        annotationJSONObject.isNull("data") ? null : annotationJSONObject.getString("data"),
-                                        annotationJSONObject.isNull("clientSaveTime") ? null : annotationJSONObject.getString("clientSaveTime"));
-                            } else {
-                                annotation = vleService.saveAnnotation(
-                                        annotationJSONObject.isNull("id") ? null : annotationJSONObject.getInt("id"),
-                                        annotationJSONObject.isNull("runId") ? null : annotationJSONObject.getInt("runId"),
-                                        annotationJSONObject.isNull("periodId") ? null : annotationJSONObject.getInt("periodId"),
-                                        annotationJSONObject.isNull("fromWorkgroupId") ? null : annotationJSONObject.getInt("fromWorkgroupId"),
-                                        annotationJSONObject.isNull("toWorkgroupId") ? null : annotationJSONObject.getInt("toWorkgroupId"),
-                                        annotationJSONObject.isNull("nodeId") ? null : annotationJSONObject.getString("nodeId"),
-                                        annotationJSONObject.isNull("componentId") ? null : annotationJSONObject.getString("componentId"),
-                                        annotationJSONObject.isNull("studentWorkId") ? null : annotationJSONObject.getInt("studentWorkId"),
-                                        annotationJSONObject.isNull("type") ? null : annotationJSONObject.getString("type"),
-                                        annotationJSONObject.isNull("data") ? null : annotationJSONObject.getString("data"),
-                                        annotationJSONObject.isNull("clientSaveTime") ? null : annotationJSONObject.getString("clientSaveTime"));
+                            try {
+                                JSONObject annotationJSONObject = annotationsJSONArray.getJSONObject(a);
+                                String requestToken = annotationJSONObject.getString("requestToken");
+                                Annotation annotation;
+                                // check to see if this Annotation was posted along with a StudentWork (e.g. CRater)
+                                if (annotationJSONObject.isNull("studentWorkId") &&
+                                        !annotationJSONObject.isNull("nodeId") &&
+                                        !annotationJSONObject.isNull("componentId") &&
+                                        savedStudentWorkList.containsKey(
+                                                annotationJSONObject.getString("nodeId") + "_" + annotationJSONObject.getString("componentId"))
+                                        ) {
+                                    // this is an annotation for a StudentWork that we just saved.
+                                    StudentWork savedStudentWork = savedStudentWorkList.get(annotationJSONObject.getString("nodeId") + "_" + annotationJSONObject.getString("componentId"));
+                                    Integer savedStudentWorkId = savedStudentWork.getId();
+                                    annotation = vleService.saveAnnotation(
+                                            annotationJSONObject.isNull("id") ? null : annotationJSONObject.getInt("id"),
+                                            annotationJSONObject.isNull("runId") ? null : annotationJSONObject.getInt("runId"),
+                                            annotationJSONObject.isNull("periodId") ? null : annotationJSONObject.getInt("periodId"),
+                                            annotationJSONObject.isNull("fromWorkgroupId") ? null : annotationJSONObject.getInt("fromWorkgroupId"),
+                                            annotationJSONObject.isNull("toWorkgroupId") ? null : annotationJSONObject.getInt("toWorkgroupId"),
+                                            annotationJSONObject.isNull("nodeId") ? null : annotationJSONObject.getString("nodeId"),
+                                            annotationJSONObject.isNull("componentId") ? null : annotationJSONObject.getString("componentId"),
+                                            savedStudentWorkId,
+                                            annotationJSONObject.isNull("type") ? null : annotationJSONObject.getString("type"),
+                                            annotationJSONObject.isNull("data") ? null : annotationJSONObject.getString("data"),
+                                            annotationJSONObject.isNull("clientSaveTime") ? null : annotationJSONObject.getString("clientSaveTime"));
+                                } else {
+                                    annotation = vleService.saveAnnotation(
+                                            annotationJSONObject.isNull("id") ? null : annotationJSONObject.getInt("id"),
+                                            annotationJSONObject.isNull("runId") ? null : annotationJSONObject.getInt("runId"),
+                                            annotationJSONObject.isNull("periodId") ? null : annotationJSONObject.getInt("periodId"),
+                                            annotationJSONObject.isNull("fromWorkgroupId") ? null : annotationJSONObject.getInt("fromWorkgroupId"),
+                                            annotationJSONObject.isNull("toWorkgroupId") ? null : annotationJSONObject.getInt("toWorkgroupId"),
+                                            annotationJSONObject.isNull("nodeId") ? null : annotationJSONObject.getString("nodeId"),
+                                            annotationJSONObject.isNull("componentId") ? null : annotationJSONObject.getString("componentId"),
+                                            annotationJSONObject.isNull("studentWorkId") ? null : annotationJSONObject.getInt("studentWorkId"),
+                                            annotationJSONObject.isNull("type") ? null : annotationJSONObject.getString("type"),
+                                            annotationJSONObject.isNull("data") ? null : annotationJSONObject.getString("data"),
+                                            annotationJSONObject.isNull("clientSaveTime") ? null : annotationJSONObject.getString("clientSaveTime"));
+                                }
+
+                                // before returning saved Annotation, strip all fields except id, responseToken, and serverSaveTime to minimize response size
+                                JSONObject savedAnnotationJSONObject = new JSONObject();
+                                savedAnnotationJSONObject.put("id", annotation.getId());
+                                savedAnnotationJSONObject.put("requestToken", requestToken);
+                                savedAnnotationJSONObject.put("serverSaveTime", annotation.getServerSaveTime().getTime());
+                                annotationsResultJSONArray.put(savedAnnotationJSONObject);
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
-                            // before returning saved StudentWork, strip all fields except id, token, and responseToken to minimize response size
-                            annotation.setRun(null);
-                            annotation.setPeriod(null);
-                            annotation.setFromWorkgroup(null);
-                            annotation.setToWorkgroup(null);
-                            annotation.setNodeId(null);
-                            annotation.setComponentId(null);
-                            annotation.setStudentWork(null);
-                            annotation.setType(null);
-                            annotation.setData(null);
-                            annotation.setClientSaveTime(null);
-                            JSONObject savedAnnotationJSONObject = annotation.toJSON();
-                            savedAnnotationJSONObject.put("requestToken", requestToken);
-                            annotationsResultJSONArray.put(savedAnnotationJSONObject);
                         }
                         result.put("annotations", annotationsResultJSONArray);
                     }
-                } catch (Exception e) {
-
-                }
             }
         } catch (ObjectNotFoundException e) {
             e.printStackTrace();

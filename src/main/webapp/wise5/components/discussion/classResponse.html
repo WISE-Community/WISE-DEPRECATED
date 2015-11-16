@@ -8,34 +8,42 @@
             </div>
         </div>
         <div class="md-content discussion-post__content md-body-1" ng-bind-html="response.studentData.response"></div>
-        <img ng-repeat="attachment in response.studentData.attachments" src="{{attachment.iconURL}}" class="attachment" />
+        <img ng-repeat="attachment in response.studentData.attachments" src="{{attachment.iconURL}}" alt="{{attachment.iconURL}}" class="discussion-post__attachment" />
         </div>
     </div>
     <md-divider></md-divider>
     <div class="discussion-comments">
         <div ng-if="response.replies.length">
-            <md-subheader class="md-no-sticky discussion-comments__header">Comments ({{ response.replies.length }})</md-subheader>
+            <md-subheader class="md-no-sticky discussion-comments__header">
+                <a ng-if="response.replies.length > 1" ng-click="toggleExpanded()">Comments ({{ response.replies.length }})<md-icon ng-if="!expanded">expand_more</md-icon><md-icon ng-if="expanded">expand_less</md-icon></a>
+                <span ng-if="response.replies.length < 2">Comments ({{ response.replies.length }})</span>
+            </md-subheader>
             <md-list class="discussion-comments__list">
-                <md-list-item class="md-3-line md-long-text discussion-reply" ng-repeat='reply in response.replies'>
+                <md-list-item class="md-3-line md-long-text discussion-reply"
+                              ng-class="{'animate-show': !$last}"
+                              ng-repeat="reply in response.replies"
+                              ng-show="$last || expanded">
                     <div class="md-avatar discussion-post__avatar--reply discussion-post__avatar"><md-icon class="md-36 md-primary"> account_circle </md-icon></div>
                     <div class="md-list-item-text discusstion-reply__details">
                         <h3 class="discussion-post__user discussion-post__user--reply">{{ reply.userNames }}</h3>
                         <div class="md-caption discussion-post__date" title="{{ reply.clientSaveTime | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}">{{ reply.clientSaveTime | amCalendar }}</div>
-                        <div class="discusstion-reply__content" ng-bind-html="reply.studentData.response"></div>
+                        <div class="discusstion-reply__content md-body-1" ng-bind-html="reply.studentData.response"></div>
                     </div>
                 </md-list-item>
             </md-list>
         </div>
-        <div class="discussion-new-reply">
+        <div class="discussion-new-reply" flex layout="row">
             <md-input-container class="input-container discussion-new-reply__input-container md-block" md-no-float flex>
                 <textarea class="input--textarea discussion-reply__input"
                           ng-model='response.replyText'
+                          ng-model-options='{ debounce: 250 }'
                           placeholder="Add comment..."
                           aria-label="Add comment"></textarea>
             </md-input-container>
-            <div ng-show="response.replyText" class="discussion-new__actions discussion-new-reply__actions">
-                <md-button class="md-primary md-raised"
-                           ng-click="submitButtonClicked(response)">Post</md-button>
+            <div class="discussion-new__actions discussion-new-reply__actions">
+                <a class="md-button md-primary md-raised discussion-new-reply__submit"
+                           ng-disabled="!response.replyText"
+                           ng-click="submitButtonClicked(response)">Post</a>
             </div>
         </div>
     </div>

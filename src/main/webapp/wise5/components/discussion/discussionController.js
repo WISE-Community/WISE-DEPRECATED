@@ -949,6 +949,12 @@ define(['app', 'angular'], function(app, angular) {
                 $scope.submitButtonClicked = function(response) {
                     $scope.submitbuttonclicked({r: response});
                 };
+
+                $scope.expanded = false;
+
+                $scope.toggleExpanded = function () {
+                    $scope.expanded = !$scope.expanded;
+                }
             }
         };
     });

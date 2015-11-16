@@ -3,7 +3,7 @@ require.config({
     waitSeconds: 0,
     paths: {
         'angular': [
-            '//ajax.googleapis.com/ajax/libs/angularjs/1.3.16/angular.min',
+            '//ajax.googleapis.com/ajax/libs/angularjs/1.3.20/angular.min',
             'vendor/angular/angular.min'
             ],
         'angularAnimate': 'vendor/angular-animate/angular-animate.min',
@@ -13,10 +13,8 @@ require.config({
         'angularFileUpload': 'vendor/ng-file-upload/ng-file-upload.min',
         'angularMaterial': 'vendor/angular-material/angular-material.min',
         'angularMoment': 'vendor/angular-moment/angular-moment.min',
+        'angularSanitize': 'vendor/angular-sanitize/angular-sanitize.min',
         'angularSortable': 'vendor/angular-ui-sortable/sortable.min',
-        'angularTextAngular': 'lib/angularTextAngular/textAngular.min', // TODO: switch to using bower once loading errors are fixed
-        'angularTextAngularRangy': 'lib/angularTextAngular/textAngular-rangy.min', // TODO: switch to using bower once loading errors are fixed
-        'angularTextAngularSanitize': 'lib/angularTextAngular/textAngular-sanitize.min', // TODO: switch to using bower once loading errors are fixed
         'angularToArrayFilter': 'vendor/angular-toArrayFilter/toArrayFilter',
         'angularUIRouter': 'vendor/angular-ui-router/release/angular-ui-router.min',
         'angularUITinymce': 'vendor/angular-ui-tinymce/src/tinymce',
@@ -146,32 +144,17 @@ require.config({
                 'moment'
             ]
         },
+        'angularSanitize': {
+            'exports': 'angularSanitize',
+            'deps': [
+                'angular'
+            ]
+        },
         'angularSortable': {
             'exports': 'angularSortable',
             'deps': [
                      'angular'
                      ]
-        },
-        'angularTextAngular': {
-            'exports': 'angularTextAngular',
-            'deps': [
-                     'angular',
-                     'bootstrap',
-                     'angularTextAngularSanitize'
-                     ]
-        },
-        'angularTextAngularRangy': {
-            'exports': 'angularTextAngularRangy',
-            'deps': [
-                    'angular'
-                    ]
-        },
-        'angularTextAngularSanitize': {
-            'exports': 'angularTextAngularSanitize',
-            'deps': [
-                    'angular',
-                    'angularTextAngularRangy'
-                    ]
         },
         'angularToArrayFilter': {
             'exports': 'angularToArrayFilter',
