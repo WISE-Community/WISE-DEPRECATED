@@ -1019,7 +1019,7 @@ function convertGrapher(node, nodeContent) {
 
     component.prompt = nodeContent.prompt;
     component.showSaveButton = false;
-    component.showSubmitButton = true;
+    component.showSubmitButton = false;
     component.title = nodeContent.graphTitle;
     component.xAxis = {};
     component.xAxis.title = {};
