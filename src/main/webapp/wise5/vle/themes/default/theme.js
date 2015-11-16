@@ -275,7 +275,7 @@ define(['angular', /*'annotationService',*/ 'configService', 'nodeService', 'not
                         targetEvent: $event,
                         templateUrl: revisionsTemplateUrl,
                         locals: {
-                            items: revisions,
+                            items: revisions.reverse(),
                             componentController: componentController,
                             allowRevert: allowRevert
                         },

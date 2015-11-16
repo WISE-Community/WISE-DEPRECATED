@@ -11,17 +11,24 @@ $input-action-vertical-offset-richtext: -7px;
   top: $toolbar-height;
 }
 
-.node-content {
+.node-container {
   margin: 0;
-  padding: 0;
+  width: 100%;
 
   @media only screen and (min-width: $layout-breakpoint-sm) {
     margin: 16px auto;
-    border: 1px solid $gray;
   }
 
   @media only screen and (min-width: $layout-breakpoint-md) {
     margin: 32px auto;
+  }
+}
+
+.node-content {
+  padding: 0;
+
+  @media only screen and (min-width: $layout-breakpoint-sm) {
+    border: 1px solid $gray;
   }
 }
 

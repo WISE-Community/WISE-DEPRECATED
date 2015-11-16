@@ -2131,6 +2131,8 @@ md-input-container:not(.md-input-invalid):not(.md-input-focused).md-input-has-va
 
 md-select-menu md-option[selected] { font-weight: 600; }
 
+md-dialog { max-width: 90%; }
+
 md-icon.md-18 { font-size: 18px; width: 18px; height: 18px; }
 md-icon.md-24 { font-size: 24px; width: 24px; height: 24px; }
 md-icon.md-36 { font-size: 36px; width: 36px; height: 36px; }
@@ -2254,6 +2256,13 @@ md-input-container.md-wise-theme label { color: rgba(0, 0, 0, 0.87); }
 @media only screen and (min-width: 600px) { .component__attachment__delete { margin-top: 8px; } }
 .component__attachment__delete > md-icon { margin-top: 0; }
 
+.component-revision { margin: 8px 0; padding: 8px; }
+.component-revision:nth-child(odd) { background-color: #f7f7f7; }
+
+.component-revision__content { margin-bottom: 4px; padding: 8px 0 12px 0; border-bottom: 1px solid #dddddd; }
+
+.component-revision__actions { color: #777777; padding-top: 4px; }
+
 .input-container { padding-top: 8px; }
 
 .input-container--open-response { margin-bottom: 0; }
@@ -2367,12 +2376,6 @@ md-input-container.md-wise-theme label { color: rgba(0, 0, 0, 0.87); }
 .md-toolbar--wise { min-height: 42px; }
 .md-toolbar--wise .md-toolbar-tools { height: 42px; max-height: 42px; }
 .md-toolbar--wise .md-button.md-icon-button { height: 42px; line-height: 42px; width: 42px; }
-
-.progress-circular-with-label { position: relative; height: 30px; width: 30px; }
-
-.progress-circular-with-label__label { position: absolute; z-index: 1; left: 3px; top: 38px; font-size: 13px; height: 24px; width: 24px; -moz-border-radius: 50%; -webkit-border-radius: 50%; border-radius: 50%; line-height: 25px; background-color: #ffffff; }
-
-.progress-circular-with-label__progress { background-color: #CAD266 !important; -moz-border-radius: 50%; -webkit-border-radius: 50%; border-radius: 50%; margin-left: -35px; margin-top: -50px; }
 
 md-toast.project-status { min-width: 350px; max-height: none; padding: 8px; background-color: #ffffff; display: block; color: rgba(0, 0, 0, 0.87); }
 @media (min-width: 600px) { md-toast.project-status { bottom: 48px; } }

@@ -32,17 +32,16 @@
                     </md-button>
                     <md-button class="input--textarea__action input--textarea__action--revision md-icon-button"
                                ng-click='nodeCtrl.showRevisions($event, component.id, openResponseController.isDisabled)'
-                               ng-disabled="nodeCtrl.getRevisions(component.id).length == 0">
+                               ng-if="nodeCtrl.getRevisions(component.id).length > 1">
                         <md-icon> history </md-icon>
-                        <md-tooltip md-direction="left">{{nodeCtrl.getRevisions(component.id).length}} Revisions</md-tooltip>
+                        <md-tooltip md-direction="left">{{nodeCtrl.getRevisions(component.id).length}} Versions</md-tooltip>
                     </md-button>
                 </div>
             </md-input-container>
-            <div class="component-content__actions" ng-show="openResponseController.attachments.length" layout="row" layout-wrap="true">
+            <div class="component-content__actions" ng-show="openResponseController.attachments.length && openResponseController.isStudentAttachmentEnabled" layout="row" layout-wrap="true">
                 <div class="component__add-attachment">
                     <md-button class="md-accent"
-                               ng-click='nodeCtrl.showNotebook($event, component.id, openResponseController.isDisabled)'
-                               ng-if="openResponseController.isStudentAttachmentEnabled">
+                               ng-click="nodeCtrl.showNotebook($event, component.id, openResponseController.isDisabled)">
                         <md-icon>image</md-icon> <span>Add File</span>
                     </md-button>
                 </div>

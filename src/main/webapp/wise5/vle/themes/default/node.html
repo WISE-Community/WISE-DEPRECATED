@@ -33,20 +33,22 @@
         </md-button>
     </div>
 </md-toolbar>
-<md-content class="l-constrained node-content md-padding" layout="column">
-    <div class="component-content" ng-if='nodeCtrl.getPrompt()' compile='nodeCtrl.getPrompt()'></div>
-    <div id="{{component.id}}" class="component-content" ng-repeat='component in nodeCtrl.getComponents()'>
-        <div ng-include='nodeCtrl.getComponentTypeHTML(component.componentType)'
-             ng-init='componentState = nodeCtrl.getComponentStateByComponent(component)'></div>
-    </div>
-    <div ng-if='nodeCtrl.showSaveButton() || nodeCtrl.showSubmitButton()' class="node-content__actions" layout="row">
-        <md-button class="md-raised md-primary"
-                ng-click='nodeCtrl.saveButtonClicked()'
-                ng-disabled='nodeCtrl.isDisabled || !nodeCtrl.isDirty'
-                ng-if='nodeCtrl.showSaveButton()'>Save</md-button>
-        <md-button class="md-raised md-primary"
-                ng-click='nodeCtrl.submitButtonClicked()'
-                ng-disabled='nodeCtrl.isDisabled || !nodeCtrl.isDirty'
-                ng-if='nodeCtrl.showSubmitButton()'>Submit</md-button>
-    </div>
-</md-content>
+<div class="node-container">
+    <md-content class="l-constrained node-content md-padding">
+        <div class="component-content" ng-if='nodeCtrl.getPrompt()' compile='nodeCtrl.getPrompt()'></div>
+        <div id="{{component.id}}" class="component-content" ng-repeat='component in nodeCtrl.getComponents()'>
+            <div ng-include='nodeCtrl.getComponentTypeHTML(component.componentType)'
+                 ng-init='componentState = nodeCtrl.getComponentStateByComponent(component)'></div>
+        </div>
+        <div ng-if='nodeCtrl.showSaveButton() || nodeCtrl.showSubmitButton()' class="node-content__actions" layout="row">
+            <md-button class="md-raised md-primary"
+                    ng-click='nodeCtrl.saveButtonClicked()'
+                    ng-disabled='nodeCtrl.isDisabled || !nodeCtrl.isDirty'
+                    ng-if='nodeCtrl.showSaveButton()'>Save</md-button>
+            <md-button class="md-raised md-primary"
+                    ng-click='nodeCtrl.submitButtonClicked()'
+                    ng-disabled='nodeCtrl.isDisabled || !nodeCtrl.isDirty'
+                    ng-if='nodeCtrl.showSubmitButton()'>Submit</md-button>
+        </div>
+    </md-content>
+</div>

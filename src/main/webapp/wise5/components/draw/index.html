@@ -29,9 +29,9 @@
         -->
     </div>
     <md-button class="revision md-icon-button" ng-click='nodeCtrl.showRevisions($event, component.id)'
-               ng-disabled="nodeCtrl.getRevisions(component.id).length == 0">
+               ng-if="nodeCtrl.getRevisions(component.id).length > 1">
         <md-icon> history </md-icon>
-        <md-tooltip md-direction="top">{{nodeCtrl.getRevisions(component.id).length}} Revisions</md-tooltip>
+        <md-tooltip md-direction="top">{{nodeCtrl.getRevisions(component.id).length}} Versions</md-tooltip>
     </md-button>
     <div class="component-content__actions" layout="row">
         <md-button class="md-raised md-primary"

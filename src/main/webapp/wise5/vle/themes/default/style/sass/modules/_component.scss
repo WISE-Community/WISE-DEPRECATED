@@ -53,3 +53,23 @@
     margin-top: 0;
   }
 }
+
+.component-revision {
+  margin: 8px 0;
+  padding: 8px;
+
+  &:nth-child(odd) {
+    background-color: $gray-lightest;
+  }
+}
+
+.component-revision__content {
+  margin-bottom: 4px;
+  padding: 8px 0 12px 0;
+  border-bottom: 1px solid $gray-light;
+}
+
+.component-revision__actions {
+  color: $gray-dark;
+  padding-top: 4px;
+}

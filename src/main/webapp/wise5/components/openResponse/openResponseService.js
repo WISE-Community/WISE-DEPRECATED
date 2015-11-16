@@ -74,11 +74,16 @@ define(['nodeService', 'studentDataService'], function(nodeService, studentDataS
 
                 var attachments = componentState.studentData.attachments;
 
-                if (attachments != null) {
+                // TODO: make into directive and use in component displays as well
+                if (attachments && attachments.length) {
+                    studentWorkAsHTML += '<div class="component-content__actions" layout="row" layout-wrap="true">';
                     for (var a = 0; a < attachments.length; a++) {
                         var attachment = attachments[a];
-                        studentWorkAsHTML += "<img src='" + attachment.iconURL + "' class='attachment' />";
+                        studentWorkAsHTML += '<div class="component__attachment">' +
+                            '<img src="' + attachment.iconURL + '" alt="' + attachment.iconURL + '" class="component__attachment__content" />' +
+                            '</div>';
                     }
+                    studentWorkAsHTML += '</div>';
                 }
             }
 
