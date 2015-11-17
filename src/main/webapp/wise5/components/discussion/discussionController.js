@@ -63,6 +63,9 @@ define(['app', 'angular'], function(app, angular) {
             // whether students can attach files to their work
             this.isStudentAttachmentEnabled = false;
 
+            // whether we have retrieved the classmate responses
+            this.retrievedClassmateResponses = false;
+
             /**
              * Perform setup of the component
              */
@@ -205,15 +208,6 @@ define(['app', 'angular'], function(app, angular) {
                 // check if we need to lock the component after the student submits
                 if (this.isLockAfterSubmit()) {
                     this.isDisabled = true;
-                }
-
-                // check if the classmate responses are gated
-                if (this.isClassmateResponsesGated()) {
-                    /*
-                     * the classmate responses are gated so we will now show them since
-                     * the student has just submitted a response
-                     */
-                    this.getClassmateResponses();
                 }
 
                 // handle the submit button click
@@ -620,6 +614,8 @@ define(['app', 'angular'], function(app, angular) {
 
                 // process the class responses
                 this.processResponses(this.classResponses);
+
+                this.retrievedClassmateResponses = true;
             };
 
             /**
@@ -908,14 +904,30 @@ define(['app', 'angular'], function(app, angular) {
 
                 if (componentState != null) {
 
-                    var nodeId = componentState.nodeId;
-                    var componentId = componentState.componentId;
+                    // check if the classmate responses are gated
+                    if (this.isClassmateResponsesGated() && !this.retrievedClassmateResponses) {
+                        /*
+                         * the classmate responses are gated and we haven't retrieved
+                         * them yet so we will obtain them now and show them since the student
+                         * has just submitted a response. getting the classmate responses will
+                         * also get the post the student just saved to the server.
+                         */
+                        this.getClassmateResponses();
+                    } else {
+                        /*
+                         * the classmate responses are not gated or have already been retrieved
+                         * which means they are already being displayed. we just need to add the
+                         * new response in this case.
+                         */
+                        var nodeId = componentState.nodeId;
+                        var componentId = componentState.componentId;
 
-                    // check that the component state is for this component
-                    if (this.nodeId === nodeId && this.componentId === componentId) {
+                        // check that the component state is for this component
+                        if (this.nodeId === nodeId && this.componentId === componentId) {
 
-                        // add the component state to our collection of class responses
-                        this.addClassResponse(componentState);
+                            // add the component state to our collection of class responses
+                            this.addClassResponse(componentState);
+                        }
                     }
                 }
 
