@@ -24,12 +24,14 @@
                               ng-model="openResponseController.studentResponse"
                               ng-disabled="openResponseController.isDisabled"
                               ng-change="openResponseController.studentDataChanged()"></textarea>
+                    <!-- TODO: uncomment me when adding student work to notebook is styled and ready for use in a run
                     <md-button class="input--textarea__action input--textarea__action--notebook md-icon-button"
                                ng-click='nodeCtrl.addStudentWorkItemToNotebook(component.id)'
                                ng-disabled="!openResponseController.getStudentResponse()">
                         <md-icon> book </md-icon>
                         <md-tooltip md-direction="left">Add to Notebook</md-tooltip>
                     </md-button>
+                    -->
                     <md-button class="input--textarea__action input--textarea__action--revision md-icon-button"
                                ng-click='nodeCtrl.showRevisions($event, component.id, openResponseController.isDisabled)'
                                ng-if="nodeCtrl.getRevisions(component.id).length > 1">
