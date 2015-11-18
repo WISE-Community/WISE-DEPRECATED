@@ -161,7 +161,7 @@ public class TeacherAccountController {
 	 * @param accountForm the model object that contains values for the page to use when rendering the view
 	 * @param bindingResult the object used for validation in which errors will be stored
 	 * @param request the http request object
-	 * @param model the object that contains values to be displayed on the page
+	 * @param modelMap the object that contains values to be displayed on the page
 	 * @return the path of the view to display
 	 */
 	@RequestMapping(value={"/teacher/join", "/teacher/management/updatemyaccountinfo.html"}, method=RequestMethod.POST)
@@ -171,8 +171,6 @@ public class TeacherAccountController {
 			HttpServletRequest request, 
 			ModelMap modelMap) {
 
-		String domain = ControllerUtil.getBaseUrlString(request);
-		String domainWithPort = domain + ":" + request.getLocalPort();
 		String referrer = request.getHeader("referer");
 
 		//get the context path e.g. /wise
@@ -181,12 +179,11 @@ public class TeacherAccountController {
 		String registerUrl = contextPath + "/teacher/join";
 		String updateAccountInfoUrl = contextPath + "/teacher/management/updatemyaccountinfo.html";
 
-		if(referrer.contains(domain + registerUrl) || 
-				referrer.contains(domainWithPort + registerUrl) ||
-				referrer.contains(domain + updateAccountInfoUrl) ||
-				referrer.contains(domainWithPort + updateAccountInfoUrl)){
-			TeacherUserDetails userDetails = (TeacherUserDetails) accountForm.getUserDetails();
+		if (referrer != null &&
+				(referrer.contains(registerUrl) ||
+				referrer.contains(updateAccountInfoUrl))) {
 
+			TeacherUserDetails userDetails = (TeacherUserDetails) accountForm.getUserDetails();
 
 			//there were no errors
 			if (accountForm.isNewAccount()) {

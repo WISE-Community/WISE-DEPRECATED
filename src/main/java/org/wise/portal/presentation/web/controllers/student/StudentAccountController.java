@@ -119,7 +119,6 @@ public class StudentAccountController {
 			return "student/join";
 		}
 
-		String domain = ControllerUtil.getBaseUrlString(request);
 		String referrer = request.getHeader("referer");
 
 		//get the context path e.g. /wise
