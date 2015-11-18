@@ -956,6 +956,7 @@ function convertBrainstorm(node, nodeContent) {
     component.prompt = prompt;
     component.showSaveButton = false;
     component.showSubmitButton = true;
+    component.gateClassmateResponses = false;
 
     content.components.push(component);
 
