@@ -1,11 +1,17 @@
 <div ng-controller='GraphController as graphController' listen-for-delete-keypress>
     <div id='prompt' compile='graphController.getPrompt()'></div>
+    <div class="component-content__actions" layout="row">
+        <md-button class="md-accent" ng-show="graphController.isStudentAttachmentEnabled"
+                   ng-click="nodeCtrl.showNotebook($event, component.id, graphController.isDisabled)">
+            <md-icon>image</md-icon> Import Data
+        </md-button>
+    </div>
     <button ng-click='graphController.resetGraph()'>Reset Graph</button>
 
     <select ng-model='graphController.activeSeries'
             ng-options='series.name for series in graphController.series'
             ng-change='graphController.activeSeriesChanged()'
-            ng-show='graphController.series.length > 1'>
+            ng-show='graphController.series.length > 0'>
     </select>
 
     <highchart id="chart1" config="graphController.chartConfig" class="span10"></highchart>

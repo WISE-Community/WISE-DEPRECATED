@@ -9,9 +9,9 @@ define(['configService', 'studentDataService'], function(configService, studentD
         // TODO: make dynamic based on project settings
         serviceObject.filters = [
             {'name': 'all', 'label': 'All'},
-            {'name': 'work', 'label': 'Work'},
+            //{'name': 'work', 'label': 'Work'}, TODO: uncomment me when adding student work to notebook is styled and ready for use in a run
             {'name': 'files', 'label': 'Files'}
-            //{'name': 'ideas', 'label': 'Ideas'} // TODO: Add when Idea Manager is active
+            //{'name': 'ideas', 'label': 'Ideas'} TODO: Add when Idea Manager is active
         ];
 
         serviceObject.getFilters = function(){

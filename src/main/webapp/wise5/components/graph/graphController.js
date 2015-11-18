@@ -44,15 +44,24 @@ define(['app',
         // holds all the series
         this.series = [];
 
+        // which color the series will be in
+        this.seriesColors = ['blue', 'red', 'green', 'orange', 'purple', 'black'];
+
+        // series marker options
+        this.seriesMarkers = ['circle', 'square', 'diamond', 'triangle', 'triangle-down', 'circle'];
+
         // whether this part is showing previous work
         this.isShowPreviousWork = false;
 
         // whether the student work is for a submit
         this.isSubmit = false;
 
+        // whether students can attach files to their work
+        this.isStudentAttachmentEnabled = false;
+
         // will hold the active series
         this.activeSeries = null;
-        
+
         /**
          * Perform setup of the component
          */
@@ -74,6 +83,8 @@ define(['app',
                 
                 // get the show previous work node id if it is provided
                 var showPreviousWorkNodeId = this.componentContent.showPreviousWorkNodeId;
+
+                var componentState = null;
                 
                 if (showPreviousWorkNodeId != null) {
                     // this component is showing previous work
@@ -95,7 +106,7 @@ define(['app',
                     }
 
                     // get the component state for the show previous work
-                    var componentState = StudentDataService.getLatestComponentStateByNodeIdAndComponentId(showPreviousWorkNodeId, showPreviousWorkComponentId);
+                    componentState = StudentDataService.getLatestComponentStateByNodeIdAndComponentId(showPreviousWorkNodeId, showPreviousWorkComponentId);
 
                     // populate the student work into this component
                     this.setStudentWork(componentState);
@@ -112,8 +123,11 @@ define(['app',
                     // this is a regular component
 
                     // get the component state from the scope
-                    var componentState = $scope.componentState;
-                    
+                    componentState = $scope.componentState;
+
+                    // set whether studentAttachment is enabled
+                    this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
+
                     if (componentState == null) {
                         /*
                          * only import work if the student does not already have
@@ -166,6 +180,7 @@ define(['app',
                  * x axis from the component content
                  */
                 xAxis = this.componentContent.xAxis;
+                this.xAxis = xAxis;
             }
             
             if (this.yAxis == null && this.componentContent.yAxis != null) {
@@ -174,6 +189,7 @@ define(['app',
                  * y axis from the component content
                  */
                 yAxis = this.componentContent.yAxis;
+                this.yAxis = yAxis;
             }
             
             /*
@@ -293,7 +309,7 @@ define(['app',
                                          * point so we need to ignore it.
                                          */
                                         return;
-                                    };
+                                    }
                                 }
 
                                 /*
@@ -379,9 +395,6 @@ define(['app',
 
                                                     // get the index of the point
                                                     var index = currentTarget.index;
-
-                                                    // get the active series
-                                                    var series = thisGraphController.activeSeries;
 
                                                     // get the series data
                                                     var data = series.data;
@@ -817,6 +830,12 @@ define(['app',
                 // insert the series data
                 studentData.series = StudentDataService.makeCopyOfJSONObject(this.getSeries());
 
+                // remove high-charts assigned id's from each series before saving
+                for (var s = 0; s < studentData.series.length; s++) {
+                    var series = studentData.series[s];
+                    series.id = null;
+                }
+
                 // insert the x axis data
                 studentData.xAxis = this.getXAxis();
                 
@@ -1044,6 +1063,71 @@ define(['app',
         };
 
         /**
+         * handle importing notebook item data (we only support csv for now)
+         */
+        this.attachNotebookItemToComponent = angular.bind(this, function(notebookItem) {
+            if (notebookItem.studentAsset != null) {
+                // we're importing a StudentAssetNotebookItem
+                var studentAsset = notebookItem.studentAsset;
+                StudentAssetService.copyAssetForReference(studentAsset).then(angular.bind(this, function(copiedAsset) {
+                    if (copiedAsset != null) {
+                        var attachment = {
+                            notebookItemId: notebookItem.id,
+                            studentAssetId: copiedAsset.id,
+                            iconURL: copiedAsset.iconURL
+                        };
+
+                        StudentAssetService.getAssetContent(copiedAsset).then(angular.bind(this, function(assetContent) {
+                            var rowData = StudentDataService.CSVToArray(assetContent);
+                            var params = {};
+                            params.skipFirstRow = true;  // first row contains header, so ignore it
+                            params.xColumn = 0;          // assume (for now) x-axis data is in first column
+                            params.yColumn = 1;          // assume (for now) y-axis data is in second column
+
+                            var seriesData = this.convertRowDataToSeriesData(rowData, params);
+
+                            // get the index of the series that we will put the data into
+                            var seriesIndex = this.series.length;  // we're always appending a new series
+
+                            if (seriesIndex != null) {
+
+                                // get the series
+                                var series = this.series[seriesIndex];
+
+                                if (series == null) {
+                                    // the series is null so we will create a series
+                                    series = {};
+                                    series.name = copiedAsset.fileName;
+                                    series.color = this.seriesColors[seriesIndex];
+                                    series.marker = {
+                                        "symbol": this.seriesMarkers[seriesIndex]
+                                    };
+                                    series.regression = false;
+                                    series.regressionSettings = {};
+                                    series.canEdit = false;
+                                    this.series[seriesIndex] = series;
+                                }
+
+                                // set the data into the series
+                                series.data = seriesData;
+                            }
+
+                            // render the graph
+                            this.setupGraph();
+
+                            // the graph has changed
+                            this.isDirty = true;
+                        }));
+                        this.studentDataChanged();
+                    }
+                }));
+            } else if (notebookItem.studentWork != null) {
+                // TODO implement me
+            }
+        });
+
+
+        /**
          * A connected component has changed its student data so we will
          * perform any necessary changes to this component
          * @param connectedComponent the connected component
@@ -1061,31 +1145,43 @@ define(['app',
                 if (componentType === 'Table') {
                     
                     // convert the table data to series data
-                    var data = $scope.graphController.convertTableDataToSeriesData(componentState, connectedComponentParams);
+                    if (componentState != null) {
 
-                    // get the index of the series that we will put the data into
-                    var seriesIndex = connectedComponentParams.seriesIndex;
+                        // get the student data
+                        var studentData = componentState.studentData;
 
-                    if (seriesIndex != null) {
+                        if (studentData != null && studentData.tableData != null) {
 
-                        // get the series
-                        var series = $scope.graphController.series[seriesIndex];
+                            // get the rows in the table
+                            var rows = studentData.tableData;
 
-                        if(series == null) {
-                            // the series is null so we will create a series
-                            series = {};
-                            $scope.graphController.series[seriesIndex] = series;
+                            var data = $scope.graphController.convertRowDataToSeriesData(rows, connectedComponentParams);
+
+                            // get the index of the series that we will put the data into
+                            var seriesIndex = connectedComponentParams.seriesIndex;
+
+                            if (seriesIndex != null) {
+
+                                // get the series
+                                var series = $scope.graphController.series[seriesIndex];
+
+                                if (series == null) {
+                                    // the series is null so we will create a series
+                                    series = {};
+                                    $scope.graphController.series[seriesIndex] = series;
+                                }
+
+                                // set the data into the series
+                                series.data = data;
+                            }
+
+                            // render the graph
+                            $scope.graphController.setupGraph();
+
+                            // the graph has changed
+                            $scope.graphController.isDirty = true;
                         }
-
-                        // set the data into the series
-                        series.data = data;
                     }
-
-                    // render the graph
-                    $scope.graphController.setupGraph();
-                    
-                    // the graph has changed
-                    $scope.graphController.isDirty = true;
                 }
             }
         }
@@ -1096,7 +1192,7 @@ define(['app',
          * @param params (optional) the params to specify what columns
          * and rows to use from the table data
          */
-        this.convertTableDataToSeriesData = function(componentState, params) {
+        this.convertRowDataToSeriesData = function(rows, params) {
             var data = [];
             
             /*
@@ -1125,89 +1221,88 @@ define(['app',
                     yColumn = params.yColumn;
                 }
             }
-            
-            if (componentState != null) {
-                
-                // get the student data
-                var studentData = componentState.studentData;
-                
-                if (studentData != null && studentData.tableData != null) {
-                    
-                    // get the rows in the table
-                    var rows = studentData.tableData;
-                    
-                    // loop through all the rows
-                    for (var r = 0; r < rows.length; r++) {
-                        
-                        if (skipFirstRow && r === 0) {
-                            // skip the first row
-                            continue;
-                        }
-                        
-                        // get the row
-                        var row = rows[r];
-                        
-                        // get the x cell and y cell from the row
-                        var xCell = row[xColumn];
-                        var yCell = row[yColumn];
-                        
-                        if (xCell != null && yCell != null) {
-                            
+
+            // loop through all the rows
+            for (var r = 0; r < rows.length; r++) {
+
+                if (skipFirstRow && r === 0) {
+                    // skip the first row
+                    continue;
+                }
+
+                // get the row
+                var row = rows[r];
+
+                // get the x cell and y cell from the row
+                var xCell = row[xColumn];
+                var yCell = row[yColumn];
+
+                if (xCell != null && yCell != null) {
+
+                    /*
+                     * the point array where the 0 index will contain the
+                     * x value and the 1 index will contain the y value
+                     */
+                    var point = [];
+
+                    // get the x text and y text
+                    var xText = null;
+                    if (typeof(xCell) === 'object' && xCell.text) {
+                        xText = xCell.text;
+                    } else {
+                        xText = xCell;
+                    }
+
+                    var yText = null;
+                    if (typeof(yCell) === 'object' && yCell.text) {
+                        yText = yCell.text;
+                    } else {
+                        yText = yCell;
+                    }
+
+                    if (xText != null &&
+                        xText !== '' &&
+                        yText != null &&
+                        yText !== '') {
+
+                        // try to convert the text values into numbers
+                        var xNumber = Number(xText);
+                        var yNumber = Number(yText);
+
+                        if (!isNaN(xNumber)) {
                             /*
-                             * the point array where the 0 index will contain the
-                             * x value and the 1 index will contain the y value
+                             * we were able to convert the value into a
+                             * number so we will add that
                              */
-                            var point = [];
-                            
-                            // get the x text and y text
-                            var xText = xCell.text;
-                            var yText = yCell.text;
-                            
-                            if (xText != null &&
-                                    xText !== '' &&
-                                    yText != null &&
-                                    yText !== '') {
-                                
-                                // try to convert the text values into numbers
-                                var xNumber = Number(xText);
-                                var yNumber = Number(yText);
-                                
-                                if (!isNaN(xNumber)) {
-                                    /*
-                                     * we were able to convert the value into a
-                                     * number so we will add that
-                                     */
-                                    point.push(xNumber);
-                                } else {
-                                    /*
-                                     * we were unable to convert the value into a
-                                     * number so we will add the text
-                                     */
-                                    point.push(xText);
-                                }
-                                
-                                if (!isNaN(yNumber)) {
-                                    /*
-                                     * we were able to convert the value into a
-                                     * number so we will add that
-                                     */
-                                    point.push(yNumber);
-                                } else {
-                                    /*
-                                     * we were unable to convert the value into a
-                                     * number so we will add the text
-                                     */
-                                    point.push(yText);
-                                }
-                                
-                                // add the point to our data
-                                data.push(point);
-                            }
+                            point.push(xNumber);
+                        } else {
+                            /*
+                             * we were unable to convert the value into a
+                             * number so we will add the text
+                             */
+                            point.push(xText);
                         }
+
+                        if (!isNaN(yNumber)) {
+                            /*
+                             * we were able to convert the value into a
+                             * number so we will add that
+                             */
+                            point.push(yNumber);
+                        } else {
+                            /*
+                             * we were unable to convert the value into a
+                             * number so we will add the text
+                             */
+                            point.push(yText);
+                        }
+
+                        // add the point to our data
+                        data.push(point);
                     }
                 }
             }
-            
+
             return data;
         };
 
@@ -1309,6 +1404,8 @@ define(['app',
                 // get the selected points
                 var selectedPoints = chart.getSelectedPoints();
 
+                var index = null;
+
                 if (selectedPoints != null) {
 
                     // an array to hold the indexes of the selected points
@@ -1321,7 +1418,7 @@ define(['app',
                         var selectedPoint = selectedPoints[x];
 
                         // get the index of the selected point
-                        var index = selectedPoint.index;
+                        index = selectedPoint.index;
 
                         // add the index to our array
                         indexes.push(index);
@@ -1336,7 +1433,7 @@ define(['app',
                     // loop through all the indexes and remove them from the series data
                     for (var i = 0; i < indexes.length; i++) {
 
-                        var index = indexes[i];
+                        index = indexes[i];
 
                         if (data != null) {
                             data.splice(index, 1);
