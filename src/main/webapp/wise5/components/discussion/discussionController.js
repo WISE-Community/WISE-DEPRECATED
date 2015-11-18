@@ -13,6 +13,7 @@ define(['app', 'angular'], function(app, angular) {
             SessionService,
             StudentAssetService,
             StudentDataService,
+            StudentWebSocketService,
             $mdMedia) {
 
             // the node id of the current node
@@ -929,9 +930,45 @@ define(['app', 'angular'], function(app, angular) {
                             this.addClassResponse(componentState);
                         }
                     }
+
+                    // send the student post to web sockets so all the classmates receive it in real time
+                    StudentWebSocketService.sendStudentToClassmatesInPeriodMessage(componentState);
                 }
 
                 this.isSubmit = null;
+            }));
+
+            /**
+             * We have recived a web socket message
+             */
+            $rootScope.$on('webSocketMessageRecieved', angular.bind(this, function(event, args) {
+                if (args != null) {
+                    var data = args.data;
+
+                    var componentState = data.data;
+
+                    if (componentState != null) {
+
+                        // check that the web socket message is for this step
+                        if (componentState.nodeId === this.nodeId) {
+
+                            // get the sender of the message
+                            var componentStateWorkgroupId = componentState.workgroupId;
+
+                            // get the workgroup id of the signed in student
+                            var workgroupId = ConfigService.getWorkgroupId();
+
+                            /*
+                             * check if the signed in student sent the message. if the
+                             * signed in student sent the message we can ignore it.
+                             */
+                            if (workgroupId !== componentStateWorkgroupId) {
+                                // display the classmate post
+                                this.addClassResponse(componentState);
+                            }
+                        }
+                    }
+                }
             }));
 
             /**

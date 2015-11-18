@@ -28,11 +28,34 @@ define(['configService'], function(configService) {
                 
                 // start the websocket connection
                 this.dataStream = $websocket(webSocketURL);
-                
-                this.dataStream.onMessage(function(message) {
-                   console.log('message received: ' + message.data); 
-                });
+
+                // this is the function that handles messages we receive from web sockets
+                this.dataStream.onMessage(angular.bind(this, function(message) {
+
+                    if (message != null && message.data != null) {
+
+                        var data = message.data;
+
+                        try {
+                            data = angular.fromJson(data);
+
+                            this.handleWebSocketMessageReceived(data);
+                        } catch(e) {
+
+                        }
+                    }
+                }));
             }
+        };
+
+        /**
+         * Handle the message we have received
+         * @param data the data from the message
+         */
+        serviceObject.handleWebSocketMessageReceived = function(data) {
+
+            // broadcast the data to all listeners
+            $rootScope.$broadcast('webSocketMessageRecieved', {data: data});
         };
         
         /**
@@ -64,6 +87,31 @@ define(['configService'], function(configService) {
                 messageJSON.previousComponentState = latestComponentState;
                 messageJSON.nodeStatuses = nodeStatuses;
                 
+                // send the websocket message
+                this.dataStream.send(messageJSON);
+            }
+        };
+
+        /**
+         * Send a message to classmates in the period
+         * @param data the data to send to the classmates
+         */
+        serviceObject.sendStudentToClassmatesInPeriodMessage = function(data) {
+            var mode = ConfigService.getConfigParam('mode');
+
+            if (mode !== 'preview') {
+                // we are in a run
+
+                // get the current node id
+                var currentNodeId = StudentDataService.getCurrentNodeId();
+
+                // make the websocket message
+                var messageJSON = {};
+                messageJSON.messageType = 'studentData';
+                messageJSON.messageParticipants = 'studentToClassmatesInPeriod';
+                messageJSON.currentNodeId = currentNodeId;
+                messageJSON.data = data;
+
                 // send the websocket message
                 this.dataStream.send(messageJSON);
             }
