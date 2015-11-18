@@ -373,7 +373,7 @@ define(['app', 'drawingTool', 'vendor'], function(app) {
                 StudentAssetService.copyAssetForReference(studentAsset).then(angular.bind(this, function(copiedAsset) {
                     if (copiedAsset != null) {
                         fabric.Image.fromURL(copiedAsset.url, angular.bind(this, function(oImg) {
-                            oImg.scaleToWidth(200);  // set max width and have height scale relatively
+                            oImg.scaleToWidth(200);  // set max width and have height scale proportionally
                             // TODO: center image or put them at mouse position? Wasn't straight-forward, tried below but had issues...
                             //oImg.setLeft((this.drawingTool.canvas.width / 2) - (oImg.width / 2));  // center image vertically and horizontally
                             //oImg.setTop((this.drawingTool.canvas.height / 2) - (oImg.height / 2));
@@ -398,99 +398,6 @@ define(['app', 'drawingTool', 'vendor'], function(app) {
                         if (studentWorkHTML != null) {
                             this.studentResponse += studentWorkHTML;
                             this.studentDataChanged();
-                        }
-                    }
-                }
-            }
-        });
-
-        this.dropCallback_NO_LONGER_USED = angular.bind(this, function(event, ui, title, $index) {
-            if (this.isDisabled) {
-                // don't import if step is disabled/locked
-                return;
-            }
-
-            var objectType = $(ui.helper.context).data('objectType');
-            if (objectType === 'NotebookItem') {
-                var notebookItem = $(ui.helper.context).data('objectData');
-                if (notebookItem.studentAsset != null) {
-                    // we're importing a StudentAssetNotebookItem
-                    var studentAsset = notebookItem.studentAsset;
-                    StudentAssetService.copyAssetForReference(studentAsset).then(angular.bind(this, function(copiedAsset) {
-                        if (copiedAsset != null) {
-                            fabric.Image.fromURL(copiedAsset.url, angular.bind(this, function(oImg) {
-                                oImg.scaleToWidth(200);  // set max width and have height scale relatively
-                                // TODO: center image or put them at mouse position? Wasn't straight-forward, tried below but had issues...
-                                //oImg.setLeft((this.drawingTool.canvas.width / 2) - (oImg.width / 2));  // center image vertically and horizontally
-                                //oImg.setTop((this.drawingTool.canvas.height / 2) - (oImg.height / 2));
-                                //oImg.center();
-                                oImg.studentAssetId = copiedAsset.id;  // keep track of this asset id
-                                this.drawingTool.canvas.add(oImg);   // add copied asset image to canvas
-                            }));
-                        }
-                    }));
-                } else if (notebookItem.studentWork != null) {
-                    // we're importing a StudentWorkNotebookItem
-                    var studentWork = notebookItem.studentWork;
-
-                    var componentType = studentWork.componentType;
-
-                    if (componentType != null) {
-                        var childService = $injector.get(componentType + 'Service');
-
-                        if (childService != null) {
-                            if (componentType === 'Draw') {
-                                var studentWorkJPEG = childService.getStudentWorkJPEG(studentWork);
-                                fabric.Image.fromURL(studentWorkJPEG, angular.bind(this, function(oImg) {
-                                    oImg.scaleToWidth(200);  // set max width and have height scale relatively
-                                    // TODO: center image or put them at mouse position? Wasn't straight-forward, tried below but had issues...
-                                    //oImg.setLeft((this.drawingTool.canvas.width / 2) - (oImg.width / 2));  // center image vertically and horizontally
-                                    //oImg.setTop((this.drawingTool.canvas.height / 2) - (oImg.height / 2));
-                                    //oImg.center();
-                                    oImg.studentWorkId = studentWork.id;  // keep track of this asset id
-                                    this.drawingTool.canvas.add(oImg);   // add copied asset image to canvas
-                                    this.studentDataChanged();
-                                }));
-                            } else {
-                                return;
-                                // the rest (non-draw step import) doesn't work quite yet. TODO
-                                /*
-                                var studentWorkHTML = childService.getStudentWorkAsHTML(studentWork);
-
-                                if (studentWorkHTML != null) {
-                                    // references:
-                                    // 1. https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Drawing_DOM_objects_into_a_canvas
-                                    // 2. http://stackoverflow.com/questions/27652694/inserting-html-into-canvas-without-creating-cors-restriction
-                                    var data = '<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">' +
-                                        '<foreignObject width="100%" height="100%">' +
-                                        '<div xmlns="http://www.w3.org/1999/xhtml">' +
-                                        studentWorkHTML +
-                                        '</div>' +
-                                        '</foreignObject>' +
-                                        '</svg>';
-
-                                    var DOMURL = window.URL || window.webkitURL || window;
-
-                                    var img = new Image();
-                                    img.crossOrigin = "Anonymous";  // avoids CORS
-                                    var svg = new Blob([data], {type: 'image/svg+xml;charset=utf-8'});
-                                    //var url = DOMURL.createObjectURL(svg);
-                                    var url = 'data:image/svg+xml;base64,' + btoa(data);
-
-                                    fabric.Image.fromURL(url, angular.bind(this, function(oImg) {
-                                        //oImg.scaleToWidth(200);  // set max width and have height scale relatively
-                                        // TODO: center image or put them at mouse position? Wasn't straight-forward, tried below but had issues...
-                                        //oImg.setLeft((this.drawingTool.canvas.width / 2) - (oImg.width / 2));  // center image vertically and horizontally
-                                        //oImg.setTop((this.drawingTool.canvas.height / 2) - (oImg.height / 2));
-                                        //oImg.center();
-                                        oImg.studentWorkId = studentWork.id;  // keep track of this asset id
-                                        this.drawingTool.canvas.add(oImg);   // add copied asset image to canvas
-                                    }), { crossOrigin: '' });
-
-                                    this.studentDataChanged();
-                                }
-                                */
-                            }
                         }
                     }
                 }

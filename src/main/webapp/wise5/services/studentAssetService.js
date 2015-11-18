@@ -48,6 +48,18 @@ define(['configService'], function(configService) {
                 return result;
             }));
         };
+
+        serviceObject.getAssetContent = function(asset) {
+            var assetContentURL = asset.url;
+
+            // retrieve the csv file and parse it
+            var config = {};
+            config.method = 'GET';
+            config.url = assetContentURL;
+            return $http(config).then(angular.bind(this, function(response) {
+                return response.data;
+            }));
+        };
         
         serviceObject.isImage = function(asset) {
             var isImage = false;

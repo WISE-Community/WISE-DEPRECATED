@@ -35,7 +35,10 @@ define(['app'], function(app) {
 
         // whether the student work is for a submit
         this.isSubmit = false;
-        
+
+        // whether students can attach files to their work
+        this.isStudentAttachmentEnabled = false;
+
         /**
          * Perform setup of the component
          */
@@ -57,6 +60,8 @@ define(['app'], function(app) {
                 
                 // get the show previous work node id if it is provided
                 var showPreviousWorkNodeId = this.componentContent.showPreviousWorkNodeId;
+
+                var componentState = null;
                 
                 if (showPreviousWorkNodeId != null) {
                     // this component is showing previous work
@@ -72,7 +77,7 @@ define(['app'], function(app) {
                     this.componentContent = NodeService.getComponentContentById(showPreviousWorkNodeContent, showPreviousWorkComponentId);
 
                     // get the component state for the show previous work
-                    var componentState = StudentDataService.getLatestComponentStateByNodeIdAndComponentId(showPreviousWorkNodeId, showPreviousWorkComponentId);
+                    componentState = StudentDataService.getLatestComponentStateByNodeIdAndComponentId(showPreviousWorkNodeId, showPreviousWorkComponentId);
 
                     // populate the student work into this component
                     this.setStudentWork(componentState);
@@ -89,15 +94,15 @@ define(['app'], function(app) {
                     // this is a regular component
 
                     // get the component state from the scope
-                    var componentState = $scope.componentState;
-                    
+                    componentState = $scope.componentState;
+
+                    // set whether studentAttachment is enabled
+                    this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
+
                     if (componentState == null) {
-                        /*
-                         * only import work if the student does not already have
-                         * work for this component
-                         */
-                        
-                        // check if we need to import work
+                        // check if we need to import work.
+                        // only import work if the student does not already have
+                        // work for this component
                         var importWorkNodeId = this.componentContent.importWorkNodeId;
                         var importWorkComponentId = this.componentContent.importWorkComponentId;
                         
@@ -415,6 +420,17 @@ define(['app'], function(app) {
                 }
             }
         };
+
+        /**
+         * handle importing notebook item data (we only support csv for now)
+         */
+        this.attachNotebookItemToComponent = angular.bind(this, function(notebookItem) {
+            if (notebookItem.studentAsset != null) {
+                // TODO implement me
+            } else if (notebookItem.studentWork != null) {
+                // TODO implement me
+            }
+        });
         
         /**
          * A connected component has changed its student data so we will

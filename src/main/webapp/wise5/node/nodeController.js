@@ -178,6 +178,10 @@ define(['app'], function(app) {
                     componentController = childScope.drawController;
                 } else if (childScope.discussionController) {
                     componentController = childScope.discussionController;
+                } else if (childScope.tableController) {
+                    componentController = childScope.tableController;
+                } else if (childScope.graphController) {
+                    componentController = childScope.graphController;
                 }
 
                 // TODO: support filtering by notebook item type/filetype
