@@ -62,6 +62,18 @@ define(['app',
         // will hold the active series
         this.activeSeries = null;
 
+        // whether the prompt is shown or not
+        this.isPromptVisible = true;
+
+        // whether the save button is shown or not
+        this.isSaveButtonVisible = false;
+
+        // whether the submit button is shown or not
+        this.isSubmitButtonVisible = false;
+
+        // whether the reset graph button is shown or not
+        this.isResetGraphButtonVisible = true;
+
         /**
          * Perform setup of the component
          */
@@ -80,7 +92,27 @@ define(['app',
                 
                 // get the component id
                 this.componentId = this.componentContent.id;
-                
+
+                // check if we should show the prompt
+                if (this.componentContent.showPrompt != null) {
+                    this.isPromptVisible = this.componentContent.showPrompt;
+                }
+
+                // check if we should show the save button
+                if (this.componentContent.showSaveButton != null) {
+                    this.isSaveButtonVisible = this.componentContent.showSaveButton;
+                }
+
+                // check if we should show the submit button
+                if (this.componentContent.showSubmitButton != null) {
+                    this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+                }
+
+                // check if we should show the reset graph button
+                if (this.componentContent.showResetGraphButton != null) {
+                    this.isResetGraphButtonVisible = this.componentContent.showResetGraphButton;
+                }
+
                 // get the show previous work node id if it is provided
                 var showPreviousWorkNodeId = this.componentContent.showPreviousWorkNodeId;
 
@@ -96,14 +128,22 @@ define(['app',
                     // get the node content for the other node
                     var showPreviousWorkNodeContent = ProjectService.getNodeContentByNodeId(showPreviousWorkNodeId);
 
-                    var showPreviousWorkPrompt = this.componentContent.showPreviousWorkPrompt;
+                    //var showPreviousWorkPrompt = this.componentContent.showPreviousWorkPrompt;
 
                     // get the component content for the component we are showing previous work for
                     this.componentContent = NodeService.getComponentContentById(showPreviousWorkNodeContent, showPreviousWorkComponentId);
 
+                    /*
                     if (!showPreviousWorkPrompt) {
                         this.componentContent = '';
                     }
+                    */
+
+                    // hide the prompt, save, submit, and reset graph buttons when showing previous work
+                    this.isPromptVisible = false;
+                    this.isSaveButtonVisible = false;
+                    this.isSubmitButtonVisible = false;
+                    this.isResetGraphButtonVisible = false;
 
                     // get the component state for the show previous work
                     componentState = StudentDataService.getLatestComponentStateByNodeIdAndComponentId(showPreviousWorkNodeId, showPreviousWorkComponentId);
@@ -898,22 +938,32 @@ define(['app',
                 }
             }
         };
-        
+
+        /**
+         * Check whether we need to show the prompt
+         * @return whether to show the prompt
+         */
+        this.showPrompt = function() {
+            var show = false;
+
+            if (this.isPromptVisible) {
+                show = true;
+            }
+
+            return show;
+        };
+
         /**
          * Check whether we need to show the save button
          * @return whether to show the save button
          */
         this.showSaveButton = function() {
             var show = false;
-            
-            if (this.componentContent != null) {
-                
-                // check the showSaveButton field in the component content
-                if (this.componentContent.showSaveButton) {
-                    show = true;
-                }
+
+            if (this.isSaveButtonVisible) {
+                show = true;
             }
-            
+
             return show;
         };
         
@@ -923,18 +973,29 @@ define(['app',
          */
         this.showSubmitButton = function() {
             var show = false;
-            
-            if (this.componentContent != null) {
-                
-                // check the showSubmitButton field in the component content
-                if (this.componentContent.showSubmitButton) {
-                    show = true;
-                }
+
+            if (this.isSubmitButtonVisible) {
+                show = true;
             }
-            
+
             return show;
         };
-        
+
+
+        /**
+         * Check whether we need to show the reset graph button
+         * @return whether to show the reset graph button
+         */
+        this.showResetGraphButton = function() {
+            var show = false;
+
+            if (this.isResetGraphButtonVisible) {
+                show = true;
+            }
+
+            return show;
+        };
+
         /**
          * Check whether we need to lock the component after the student
          * submits an answer.
