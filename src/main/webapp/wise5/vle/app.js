@@ -119,7 +119,7 @@ define([
         'ngMaterial',
         'ngSanitize',
         'ngWebSocket',
-        'oc.lazyLoad',
+        'oc.lazyLoad'
     ]);
 
     // core services
@@ -203,11 +203,11 @@ define([
                         project: function (ProjectService, config) {
                             return ProjectService.retrieveProject();
                         },
-                        sessionTimers: function (SessionService, config) {
-                            return SessionService.initializeSession();
-                        },
                         studentData: function (StudentDataService, config, project) {
                             return StudentDataService.retrieveStudentData();
+                        },
+                        sessionTimers: function (SessionService, config, project, studentData) {
+                            return SessionService.initializeSession();
                         },
                         webSocket: function (StudentWebSocketService, config) {
                             return StudentWebSocketService.initialize();
