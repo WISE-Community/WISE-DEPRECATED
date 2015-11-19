@@ -47,7 +47,7 @@
 
 .discussion-post__content {
   margin-top: 16px;
-  white-space: pre;
+  white-space: pre-wrap;
 }
 
 .discussion-post__attachment {
@@ -146,7 +146,7 @@ md-input-container.discussion-new__input-container {
 .discusstion-reply__content {
   margin-top: 8px;
   font-size: $body-font-size-base - 1;
-  white-space: pre;
+  white-space: pre-wrap;
 
   p {
     font-weight: 400 !important;
