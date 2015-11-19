@@ -2402,7 +2402,7 @@ md-toast.project-status { min-width: 350px; max-height: none; padding: 8px; back
 
 .discussion-post__date { color: #777777; }
 
-.discussion-post__content { margin-top: 16px; white-space: pre; }
+.discussion-post__content { margin-top: 16px; white-space: pre-wrap; }
 
 .discussion-post__attachment { max-width: 100%; height: auto; margin-top: 16px; }
 
@@ -2436,7 +2436,7 @@ md-input-container.discussion-new__input-container > textarea.md-input { min-hei
 
 .discussion-post__user--reply, md-list-item.md-3-line .md-list-item-text h3.discussion-post__user--reply { font-size: 14px; }
 
-.discusstion-reply__content { margin-top: 8px; font-size: 14px; white-space: pre; }
+.discusstion-reply__content { margin-top: 8px; font-size: 14px; white-space: pre-wrap; }
 .discusstion-reply__content p { font-weight: 400 !important; color: rgba(0, 0, 0, 0.87) !important; }
 
 .discussion-new-reply { padding: 16px; }
