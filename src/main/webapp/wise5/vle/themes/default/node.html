@@ -35,7 +35,6 @@
 </md-toolbar>
 <div class="node-container">
     <md-content class="l-constrained node-content md-padding">
-        <div class="component-content" ng-if='nodeCtrl.getPrompt()' compile='nodeCtrl.getPrompt()'></div>
         <div id="{{component.id}}" class="component-content" ng-repeat='component in nodeCtrl.getComponents()'>
             <div ng-include='nodeCtrl.getComponentTypeHTML(component.componentType)'
                  ng-init='componentState = nodeCtrl.getComponentStateByComponent(component)'></div>
