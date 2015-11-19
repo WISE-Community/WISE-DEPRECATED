@@ -963,8 +963,11 @@ define(['app', 'angular'], function(app, angular) {
                              * signed in student sent the message we can ignore it.
                              */
                             if (workgroupId !== componentStateWorkgroupId) {
-                                // display the classmate post
-                                this.addClassResponse(componentState);
+
+                                if (this.retrievedClassmateResponses) {
+                                    // display the classmate post
+                                    this.addClassResponse(componentState);
+                                }
                             }
                         }
                     }
