@@ -7,7 +7,6 @@ define(['angular', /*'annotationService',*/ 'configService', 'nodeService', 'not
             .directive('navItem', function() {
                 return {
                     scope: {
-                        templateUrl: '=',
                         nodeId: '=',
                         showPosition: '=',
                         type: '='
@@ -27,7 +26,7 @@ define(['angular', /*'annotationService',*/ 'configService', 'nodeService', 'not
                          StudentDataService) {
 
                     this.getTemplateUrl = function(){
-                        return this.templateUrl;
+                        return ProjectService.getThemePath() + '/navigation/navItem.html';
                     };
 
                     this.$element = $element;
@@ -75,10 +74,10 @@ define(['angular', /*'annotationService',*/ 'configService', 'nodeService', 'not
                     var zoomToElement = function () {
                         setTimeout(function () {
                             // smooth scroll to expanded group's page location
-                            var location = $element[0].offsetTop - 16;
+                            var location = $element[0].offsetTop - 32;
                             $('#content').animate({
                                 scrollTop: location
-                            }, 250, 'linear', function () {
+                            }, 350, 'linear', function () {
                                 if (setNewNode) {
                                     setNewNode = false;
                                     StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(scope.nodeId);
@@ -101,23 +100,73 @@ define(['angular', /*'annotationService',*/ 'configService', 'nodeService', 'not
                     setExpanded();
                 }
             )
-            .directive('progressCircularWithLabel', function() {
+            .directive('stepTools', function() {
                 return {
                     scope: {
-                        templateUrl: '=',
-                        value: '='
+                        nodeId: '=',
+                        showPosition: '='
                     },
-                    template: '<ng-include src="getTemplateUrl()"></ng-include>',
-                    controller: function($scope,
-                                         $state,
-                                         $stateParams) {
-
-                        $scope.getTemplateUrl = function(){
-                            return $scope.templateUrl;
-                        };
-                    }
+                    template: '<ng-include src="stepToolsCtrl.getTemplateUrl()"></ng-include>',
+                    controller: 'StepToolsCtrl',
+                    controllerAs: 'stepToolsCtrl',
+                    bindToController: true
                 };
             })
+            .controller('StepToolsCtrl',
+                function($scope,
+                                         $state,
+                         $stateParams,
+                         $element,
+                         NodeService,
+                         ProjectService,
+                         StudentDataService) {
+
+                    this.getTemplateUrl = function(){
+                        return ProjectService.getThemePath() + '/node/stepTools.html';
+                    };
+
+                    this.nodeStatuses = StudentDataService.nodeStatuses;
+                    this.nodeStatus = this.nodeStatuses[this.nodeId];
+
+                    this.prevId = NodeService.getPrevNodeId();
+                    this.nextId = NodeService.getNextNodeId();
+
+                    // service objects and utility functions
+                    this.idToOrder = ProjectService.idToOrder;
+
+                    this.getNodeTitleByNodeId = function(nodeId) {
+                        return ProjectService.getNodeTitleByNodeId(nodeId);
+                    };
+
+                    this.getNodePositionById = function(nodeId) {
+                        return ProjectService.getNodePositionById(nodeId);
+                    };
+
+                    this.isGroupNode = function(nodeId) {
+                        return ProjectService.isGroupNode(nodeId);
+                    };
+
+                    this.nodeClicked = function(nodeId) {
+                        StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(nodeId);
+                    };
+
+                    this.goToPrevNode = function() {
+                        NodeService.goToPrevNode();
+                    };
+
+                    this.goToNextNode = function() {
+                        NodeService.goToNextNode();
+                    };
+
+                    this.nodeClicked = function(nodeId) {
+                        StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(nodeId);
+                    };
+
+                    this.closeNode = function() {
+                        NodeService.closeNode();
+                    }
+                }
+            )
             /*.directive('notebook', function() {
                 return {
                     scope: {
@@ -157,7 +206,7 @@ define(['angular', /*'annotationService',*/ 'configService', 'nodeService', 'not
                 this.layoutView = 'list'; // 'list' or 'card'
                 this.numberProject = true;
 
-                this.themePath = "wise5/vle/themes/" + ProjectService.getTheme();
+                this.themePath = ProjectService.getThemePath();
 
                 this.nodeStatuses = StudentDataService.nodeStatuses;
 
@@ -166,27 +215,6 @@ define(['angular', /*'annotationService',*/ 'configService', 'nodeService', 'not
 
                 this.workgroupId = ConfigService.getWorkgroupId();
                 this.workgroupUserNames = this.isPreview ? ['Preview User'] : ConfigService.getUserNamesByWorkgroupId(this.workgroupId);
-
-                // service utility functions
-                this.getNodeById = function(nodeId) {
-                    return ProjectService.getNodeById(nodeId);
-                };
-
-                this.getNodeTitleByNodeId = function(nodeId) {
-                    return ProjectService.getNodeTitleByNodeId(nodeId);
-                };
-
-                this.getNodePositionById = function(nodeId) {
-                    return ProjectService.getNodePositionById(nodeId);
-                };
-
-                this.isGroupNode = function(nodeId) {
-                    return ProjectService.isGroupNode(nodeId);
-                };
-
-                this.nodeClicked = function(nodeId) {
-                    StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(nodeId);
-                };
 
                 // build project status pop-up
                 var statusTemplateUrl = this.themePath + '/templates/projectStatus.html';
@@ -212,8 +240,6 @@ define(['angular', /*'annotationService',*/ 'configService', 'nodeService', 'not
                         this.projectStatusOpen = true;
                     }
                 };
-
-                this.idToOrder = ProjectService.idToOrder;
 
                 // alert user when a locked node has been clicked
                 $scope.$on('nodeClickLocked', angular.bind(this, function (event, args) {
@@ -268,7 +294,7 @@ define(['angular', /*'annotationService',*/ 'configService', 'nodeService', 'not
                     var componentController = args.componentController;
                     var allowRevert = args.allowRevert;
                     var $event = args.$event;
-                    var revisionsTemplateUrl = this.themePath + '/templates/componentRevisions.html';
+                    var revisionsTemplateUrl = scope.themePath + '/templates/componentRevisions.html';
 
                     $mdDialog.show({
                         parent: angular.element(document.body),
@@ -297,12 +323,11 @@ define(['angular', /*'annotationService',*/ 'configService', 'nodeService', 'not
                 }));
 
                 $scope.$on('showNotebook', angular.bind(this, function (event, args) {
-                    var revisions = args.revisions;
                     var notebookFilters = args.notebookFilters;
                     var componentController = args.componentController;
                     var $event = args.$event;
-                    var notebookDialogTemplateUrl = this.themePath + '/templates/notebookDialog.html';
-                    var notebookTemplateUrl = this.themePath + '/notebook/notebook.html';
+                    var notebookDialogTemplateUrl = scope.themePath + '/templates/notebookDialog.html';
+                    var notebookTemplateUrl = scope.themePath + '/notebook/notebook.html';
 
                     $mdDialog.show({
                         parent: angular.element(document.body),
@@ -331,7 +356,7 @@ define(['angular', /*'annotationService',*/ 'configService', 'nodeService', 'not
                     $scope.$watch(function() {
                         return it.isOpen();
                     }, function(isOpenNewValue, isOpenOldValue) {
-                        if (isOpenNewValue != isOpenOldValue) {
+                        if (isOpenNewValue !== isOpenOldValue) {
                             var currentNode = StudentDataService.getCurrentNode();
                             NotebookService.saveNotebookToggleEvent(isOpenNewValue, currentNode);
                         }

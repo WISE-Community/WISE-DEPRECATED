@@ -185,7 +185,7 @@ define([
                     abstract: true,
                     //templateUrl: 'wise5/vle/vle.html',
                     templateProvider: ['$http', 'ProjectService', function ($http, ProjectService) {
-                        var vlePath = 'wise5/vle/themes/' + ProjectService.getTheme();
+                        var vlePath = ProjectService.getThemePath();
                         return $http.get(vlePath + '/vle.html').then(
                             function (response) {
                                 return response.data;

@@ -2,8 +2,8 @@
     <ng-switch on="navitemCtrl.type">
         <md-card ng-switch-when="card" class="nav-item--card" ng-class="{'nav-item--card--group':navitemCtrl.isGroup, 'expanded md-whiteframe-z3':navitemCtrl.expanded}"">
             <md-card-content class="nav-item--card__content" ng-click="navitemCtrl.itemClicked()" role="button" md-ink-ripple layout="row">
-                <img ng-if="navitemCtrl.nodeStatus.icon.type === 'img'" ng-animate-ref="{{ id }}" ng-class="navitemCtrl.isGroup ? 'avatar--square' : ''" class="md-36 avatar nav-item__avatar" ng-src="{{navitemCtrl.nodeStatus.icon.imgSrc}}" alt="{{navitemCtrl.nodeStatus.icon.imgAlt}}" />
-                <div ng-if="navitemCtrl.nodeStatus.icon.type === 'font'" ng-animate-ref="{{ id }}" ng-class="navitemCtrl.isGroup ? 'avatar--square' : ''" style="background-color: {{navitemCtrl.nodeStatus.icon.color}};" class="md-36 avatar avatar--icon nav-item__avatar">
+                <img ng-if="navitemCtrl.nodeStatus.icon.type === 'img'" ng-animate-ref="{{ navitemCtrl.nodeId }}" ng-class="navitemCtrl.isGroup ? 'avatar--square' : ''" class="md-36 avatar nav-item__avatar" ng-src="{{navitemCtrl.nodeStatus.icon.imgSrc}}" alt="{{navitemCtrl.nodeStatus.icon.imgAlt}}" />
+                <div ng-if="navitemCtrl.nodeStatus.icon.type === 'font'" ng-animate-ref="{{ navitemCtrl.nodeId }}" ng-class="navitemCtrl.isGroup ? 'avatar--square' : ''" style="background-color: {{navitemCtrl.nodeStatus.icon.color}};" class="md-36 avatar avatar--icon nav-item__avatar">
                     <md-icon md-font-set="{{navitemCtrl.nodeStatus.icon.fontSet}}" class="md-36 md-light">{{navitemCtrl.nodeStatus.icon.fontName}}</md-icon>
                 </div>
                 <div class="md-title nav-item__title" style="color: {{navitemCtrl.nodeStatus.icon.color}};" flex>
@@ -14,7 +14,7 @@
             <md-card-content ng-if="navitemCtrl.isGroup" ng-show="navitemCtrl.expanded" class="nav-contents nav-contents--group">
                 <md-list class="nav-contents__list">
                     <nav-item ng-repeat="childId in navitemCtrl.item.ids" ng-class="{'expanded': itemExpanded}" class="nav-item"
-                              template-url="navitemCtrl.templateUrl" show-position="navitemCtrl.showPosition"
+                              show-position="navitemCtrl.showPosition"
                               node-id="childId" type="'list'" ng-animate-ref="{{ childId }}" class="nav-item ng-enter"></nav-item>
                 </md-list>
             </md-card-content>

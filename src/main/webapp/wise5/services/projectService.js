@@ -1030,12 +1030,12 @@ define(['configService'], function(configService) {
             }));
         };
 
-        serviceObject.getTheme = function() {
+        serviceObject.getThemePath = function() {
             var project = this.getProject();
-            if (project != null && !!project.theme) { // TODO: check if this is a valid theme (using ConfigService) rather than just falsey
-                return project.theme;
+            if (project && project.theme) { // TODO: check if this is a valid theme (using ConfigService) rather than just truthy
+                return 'wise5/vle/themes/' + project.theme;
             } else {
-                return "default"; // TODO: get default theme name from ConfigService
+                return "wise5/vle/themes/default"; // TODO: get default theme name from ConfigService
             }
         };
 

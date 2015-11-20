@@ -34,15 +34,6 @@ define(['app'], function(app) {
             // whether the student work is dirty and needs saving
             this.isDirty = false;
 
-            // the id of the next node in the project sequence
-            this.nextNodeId = null;
-
-            // the id of the previous node in the project sequence
-            this.prevNodeId = null;
-
-            // the position of the node in the project sequence
-            this.nodePosition = null;
-
             /*
              * an object that holds the mappings with the key being the component
              * and the value being the scope object from the child controller
@@ -76,12 +67,6 @@ define(['app'], function(app) {
                 this.nodeTitle = ProjectService.getNodeTitleByNodeId(this.nodeId);
 
                 this.nodeStatus = StudentDataService.nodeStatuses[this.nodeId];
-
-                this.nextNodeId = NodeService.getNextNodeId();
-
-                this.prevNodeId = NodeService.getPrevNodeId();
-
-                this.nodePosition = ProjectService.getNodePositionById(this.nodeId);
 
                 // populate the student work into this node
                 //this.setStudentWork();
@@ -828,7 +813,7 @@ define(['app'], function(app) {
                 }
             };
 
-            this.closeNode = function() {
+            /*this.closeNode = function() {
                 var currentNode = StudentDataService.getCurrentNode();
                 if (currentNode != null) {
 
@@ -850,7 +835,7 @@ define(['app'], function(app) {
 
             this.goToPrevNode = function() {
                 NodeService.goToPrevNode();
-            };
+            };*/
 
             /**
              * Listen for the 'exitNode' event which is fired when the student

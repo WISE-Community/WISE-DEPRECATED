@@ -587,7 +587,7 @@ define(['app'], function(app) {
         };
 
         //var scope = this;
-        var themePath = "/wise/wise5/vle/themes/" + ProjectService.getTheme();
+        var themePath = "/wise/" + ProjectService.getThemePath();
 
         // TODO: make toolbar items and plugins customizable by authors
         // Rich text editor options

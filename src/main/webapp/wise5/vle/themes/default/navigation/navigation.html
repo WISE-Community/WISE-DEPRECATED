@@ -12,7 +12,7 @@
     <div ng-class="'nav-contents nav-contents--root'">
         <div layout="row" layout-wrap layout-align="center start">
             <nav-item ng-repeat="id in navCtrl.rootNode.ids" ng-class="{'expanded': itemExpanded}" class="nav-item nav-item--root"
-                      template-url="vleController.themePath + '/navigation/navItem.html'" show-position="themeCtrl.numberProject"
+                      show-position="themeCtrl.numberProject"
                       node-id="id" type="'card'"
                       flex-sm="100" flex-md="50" flex-lg="50" flex-gt-lg="50"></nav-item>
         </div>

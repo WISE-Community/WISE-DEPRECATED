@@ -388,6 +388,25 @@ define(['configService', 'projectService', 'studentDataService'], function(confi
             };
 
             /**
+             * Close the current node (and open the current node's parent group)
+             */
+            serviceObject.closeNode = function() {
+                var currentNode = StudentDataService.getCurrentNode();
+                if (currentNode) {
+
+                    var currentNodeId = currentNode.id;
+
+                    // get the parent node of the current node
+                    var parentNode = ProjectService.getParentGroup(currentNodeId);
+
+                    var parentNodeId = parentNode.id;
+
+                    // set the current node to the parent node
+                    StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(parentNodeId);
+                }
+            };
+
+            /**
              * Choose the transition the student will take
              * @param transitionLogic an object containing transitions and parameters
              * for how to choose a transition

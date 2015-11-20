@@ -227,8 +227,7 @@ define(['app'],
             return false;
         });
 
-        this.theme = ProjectService.getTheme();
-        this.themePath = "wise5/vle/themes/" + this.theme;
+        this.themePath = ProjectService.getThemePath();
         var scope = this;
         // load theme module + files
         $ocLazyLoad.load([
