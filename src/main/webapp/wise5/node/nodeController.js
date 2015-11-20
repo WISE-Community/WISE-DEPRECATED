@@ -348,23 +348,7 @@ define(['app'], function(app) {
              * @return the path to the html template for the component
              */
             this.getComponentTypeHTML = function(componentType) {
-
-                if (componentType == null) {
-                    // error
-                } else if (NodeService.isStringUpperCase(componentType)) {
-                    /*
-                     * the component type is all uppercase so we will convert it to all
-                     * lowercase
-                     */
-                    componentType = componentType.toLowerCase();
-                } else {
-                    // get the component type in camel case
-                    componentType = NodeService.toCamelCase(componentType);
-                }
-
-                var componentTypeHTML = 'wise5/components/' + componentType + '/index.html';
-
-                return componentTypeHTML;
+                return NodeService.getComponentTypeHTML(componentType);
             };
 
             /**
@@ -781,22 +765,16 @@ define(['app'], function(app) {
 
             /**
              * Get the student data for a specific part
-             * @param the node content for the part
-             * @return the student data for the given part
+             * @param the componentId
+             * @return the student data for the given component
              */
-            this.getComponentStateByComponent = function(component) {
-
+            this.getComponentStateByComponentId = function(componentId) {
                 var componentState = null;
 
-                if (component != null) {
-                    // get the component id
-                    var componentId = component.id;
+                if (componentId != null) {
 
-                    if (componentId != null) {
-
-                        // get the latest component state for the component
-                        componentState = StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, componentId);
-                    }
+                    // get the latest component state for the component
+                    componentState = StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, componentId);
                 }
 
                 return componentState;

@@ -30,9 +30,7 @@ define(['nodeService', 'studentDataService'], function(nodeService, studentDataS
         };
 
         serviceObject.getStudentWorkAsHTML = function(componentState) {
-            var studentWorkAsHTML = null;
-
-            studentWorkAsHTML = '<p>Your drawing</p>';
+            var studentWorkAsHTML = '<p>Your drawing</p>';
 
             if (componentState != null) {
                 var studentData = componentState.studentData;

@@ -44,45 +44,26 @@ define(['app', 'drawingTool', 'vendor'], function(app) {
         // whether students can attach files to their work
         this.isStudentAttachmentEnabled = false;
 
+        // ["normal", "showStudentWorkOnly"]
+        // whether this component is to be rendered normally or as part of show student work.
+        // If showStudentWorkOnly, usually this means that this component is not editable and nothing will be saved
+        this.mode = "normal";
+
         /**
          * Perform setup of the component
          */
         this.setup = function() {
+
+            // set mode if it's passed in through the scope.
+            if ($scope.mode) {
+                this.mode = $scope.mode;
+            }
 
             // get the current node and node id
             var currentNode = StudentDataService.getCurrentNode();
             if (currentNode != null) {
                 this.nodeId = currentNode.id;
             }
-
-            this.drawingTool = new DrawingTool("#drawing-tool", {
-                stamps: this.componentContent.stamps || {},
-                parseSVG: true
-            });
-            var state = null;
-            $("#set-background").on("click", angular.bind(this, function () {
-                this.drawingTool.setBackgroundImage($("#background-src").val());
-            }));
-            $("#resize-background").on("click", angular.bind(this, function () {
-                this.drawingTool.resizeBackgroundToCanvas();
-            }));
-            $("#resize-canvas").on("click", angular.bind(this, function () {
-                this.drawingTool.resizeCanvasToBackground();
-            }));
-            $("#shrink-background").on("click", angular.bind(this, function () {
-                this.drawingTool.shrinkBackgroundToCanvas();
-            }));
-            $("#clear").on("click", angular.bind(this, function () {
-                this.drawingTool.clear(true);
-            }));
-            $("#save").on("click", angular.bind(this, function () {
-                state = drawingTool.save();
-                $("#load").removeAttr("disabled");
-            }));
-            $("#load").on("click", angular.bind(this, function () {
-                if (state === null) return;
-                this.drawingTool.load(state);
-            }));
 
             if (this.componentContent != null) {
 
@@ -91,6 +72,39 @@ define(['app', 'drawingTool', 'vendor'], function(app) {
 
                 // get the component type
                 this.componentType = this.componentContent.componentType;
+
+                // initialize the drawing tool
+                //var drawingToolElementId = "drawing-tool-node25";
+                this.drawingToolId = "drawhere";
+                this.drawingTool = new DrawingTool("#" + this.drawingToolId, {
+                    stamps: this.componentContent.stamps || {},
+                    parseSVG: true
+                });
+                var state = null;
+                $("#set-background").on("click", angular.bind(this, function () {
+                    this.drawingTool.setBackgroundImage($("#background-src").val());
+                }));
+                $("#resize-background").on("click", angular.bind(this, function () {
+                    this.drawingTool.resizeBackgroundToCanvas();
+                }));
+                $("#resize-canvas").on("click", angular.bind(this, function () {
+                    this.drawingTool.resizeCanvasToBackground();
+                }));
+                $("#shrink-background").on("click", angular.bind(this, function () {
+                    this.drawingTool.shrinkBackgroundToCanvas();
+                }));
+                $("#clear").on("click", angular.bind(this, function () {
+                    this.drawingTool.clear(true);
+                }));
+                $("#save").on("click", angular.bind(this, function () {
+                    state = drawingTool.save();
+                    $("#load").removeAttr("disabled");
+                }));
+                $("#load").on("click", angular.bind(this, function () {
+                    if (state === null) return;
+                    this.drawingTool.load(state);
+                }));
+
 
                 // get the show previous work node id if it is provided
                 var showPreviousWorkNodeId = this.componentContent.showPreviousWorkNodeId;
@@ -153,7 +167,9 @@ define(['app', 'drawingTool', 'vendor'], function(app) {
                     this.calculateDisabled();
 
                     // register this component with the parent node
-                    $scope.$parent.registerComponentController($scope, this.componentContent);
+                    if ($scope.$parent && $scope.$parent.registerComponentController) {
+                        $scope.$parent.registerComponentController($scope, this.componentContent);
+                    }
 
                     // listen for the drawing changed event
                     this.drawingTool.on('drawing:changed', angular.bind(this, this.studentDataChanged));
@@ -167,7 +183,12 @@ define(['app', 'drawingTool', 'vendor'], function(app) {
                         data.selectedToolName = toolName;
                         StudentDataService.saveComponentEvent(this, category, event, data);
                     }.bind(this));
-                }
+
+                    if (this.mode === 'showStudentWorkOnly') {
+                        // we're in show student work mode, so hide the toolbar and make the drawing non-editable
+                        $(".dt-tools").hide();
+                    }
+                 }
             }
         };
 
@@ -309,6 +330,11 @@ define(['app', 'drawingTool', 'vendor'], function(app) {
                         this.isDisabled = true;
                     }
                 }
+            }
+
+            if (this.mode === 'showStudentWorkOnly') {
+                // distable saving if we're in showStudentWorkOnly mode
+                this.isDisabled = true;
             }
         };
 

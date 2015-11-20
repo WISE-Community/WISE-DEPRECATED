@@ -124,6 +124,29 @@ define(['configService', 'projectService', 'studentDataService'], function(confi
             };
 
             /**
+             * Get the html template for the component
+             * @param componentType the component type
+             * @return the path to the html template for the component
+             */
+            serviceObject.getComponentTypeHTML = function(componentType) {
+
+                if (componentType == null) {
+                    // error
+                } else if (this.isStringUpperCase(componentType)) {
+                    /*
+                     * the component type is all uppercase so we will convert it to all
+                     * lowercase
+                     */
+                    componentType = componentType.toLowerCase();
+                } else {
+                    // get the component type in camel case
+                    componentType = this.toCamelCase(componentType);
+                }
+
+                return 'wise5/components/' + componentType + '/index.html';
+            };
+
+            /**
              * Get the component content
              * @param componentContent the component content
              * @param componentId the component id

@@ -17,7 +17,7 @@ define(['angular', 'projectService', 'studentDataService'], function(angular, pr
                 var rounder = 1;
                 if (decimal) {
                     rounder = Math.pow(10, decimal);
-                };
+                }
 
                 return Math.round(num*rounder) / rounder;
             };
@@ -28,7 +28,7 @@ define(['angular', 'projectService', 'studentDataService'], function(angular, pr
                 return roundToDecimal((bytes/1024), 1) + ' kb';
             } else {
                 return bytes + ' b';
-            };
+            }
         };        
     })
     
@@ -43,7 +43,7 @@ define(['angular', 'projectService', 'studentDataService'], function(angular, pr
             var rounder = 1;
             if (decimal) {
                 rounder = Math.pow(10, decimal);
-            };
+            }
 
             return Math.round(num*rounder) / rounder;
         };
@@ -267,13 +267,17 @@ define(['angular', 'projectService', 'studentDataService'], function(angular, pr
         };
     })
 
-    .directive('studentwork', function($injector, StudentDataService) {
+    .directive('studentwork', function($injector, $compile, StudentDataService, ProjectService) {
         return {
             restrict: 'E',
             link: function($scope, element, attrs) {
 
                 var nodeId = attrs.nodeid;
                 var componentId = attrs.componentid;
+                $scope.mode = "normal";
+                if (attrs.mode) {
+                    $scope.mode = attrs.mode;
+                }
 
                 var componentState = StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
 
@@ -284,10 +288,17 @@ define(['angular', 'projectService', 'studentDataService'], function(angular, pr
                         var childService = $injector.get(componentType + 'Service');
 
                         if (childService != null) {
-                            var studentWorkHTML = childService.getStudentWorkAsHTML(componentState);
+                            //var studentWorkHTML = childService.getStudentWorkAsHTML(componentState);
+                            $scope.component = ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
+                            $scope.componentState = componentState;
+                            var studentWorkHTML = "<div id=\"{{component.id}}\" class=\"component-content\" >" +
+                                               "<div ng-include='nodeCtrl.getComponentTypeHTML(component.componentType)' " +
+                                               "ng-init='componentState = {{componentState}}; mode = {{mode}}'></div>" +
+                                               "</div>";
 
                             if (studentWorkHTML != null) {
-                                element[0].innerHTML = studentWorkHTML;
+                                element.html(studentWorkHTML);
+                                $compile(element.contents())($scope);
                             }
                         }
                     }

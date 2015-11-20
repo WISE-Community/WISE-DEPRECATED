@@ -8,6 +8,7 @@ require.config({
         'angularAnimate': 'vendor/angular-animate/angular-animate.min',
         'angularAria': 'vendor/angular-aria/angular-aria.min',
         'angularDragDrop': 'vendor/angular-dragdrop/src/angular-dragdrop.min',
+        'angularFileUpload': 'vendor/ng-file-upload/ng-file-upload.min',
         'angularMaterial': [
             '//ajax.googleapis.com/ajax/libs/angular_material/0.10.0/angular-material.min',
             'vendor/angular-material/angular-material.min'
@@ -21,9 +22,13 @@ require.config({
         'configService': 'services/configService',
         'cRaterService': 'components/cRater/cRaterService',
         'd3': 'lib/d3/d3',
+        'drawingTool': 'lib/drawingTool/drawing-tool',
+        'vendor': 'lib/drawingTool/vendor',
         'directives': 'directives/directives',
         'discussionService': 'components/discussion/discussionService',
         'drawService': 'components/draw/drawService',
+        'drawController': 'components/draw/drawController',
+        'embeddedService': 'components/embedded/embeddedService',
         'filters': 'filters/filters',
         'graphService': 'components/graph/graphService',
         'htmlController': 'components/html/htmlController',
@@ -51,6 +56,7 @@ require.config({
         'notebookService': 'services/notebookService',
         'projectService': 'services/projectService',
         'sessionService': 'services/sessionService',
+        'studentAssetService': 'services/studentAssetService',
         'studentDataService': 'services/studentDataService',
         'studentGradingController': 'classroomMonitor/studentGrading/studentGradingController',
         'studentProgressController': 'classroomMonitor/studentProgress/studentProgressController',
@@ -78,6 +84,12 @@ require.config({
                     'angular',
                     'jqueryUI'
                     ]
+        },
+        'angularFileUpload': {
+            'exports': 'angularFileUpload',
+            'deps': [
+                'angular'
+            ]
         },
         'angularSortable': {
             'exports': 'angularSortable',
@@ -110,6 +122,15 @@ require.config({
                 'angularAnimate',
                 'angularAria'
             ]
+        },
+        'drawingTool': {
+            'exports': 'drawingTool',
+            'deps': [
+                'vendor'
+            ]
+        },
+        'vendor': {
+            'exports': 'vendor'
         },
         'jquery': {
             'exports': 'jquery'

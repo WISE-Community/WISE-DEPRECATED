@@ -1,19 +1,9 @@
 <div>{{nodeGradingController.title}}</div>
 
 <div ng-repeat='workgroupId in nodeGradingController.workgroupIds'>
-    <div>{{nodeGradingController.getUserNameByWorkgroupId(workgroupId)}}</div>
-    <div ng-repeat='nodeVisit in nodeGradingController.getNodeVisitsByWorkgroupIdAndNodeId(workgroupId, nodeGradingController.nodeId)'>
-        <div ng-repeat='nodeState in nodeVisit.nodeStates'>
-            <table border=1>
-                <tr>
-                    <td><nodestatehtml nodestate={{nodeState}} nodetype={{nodeVisit.nodeType}}></nodestatehtml></td>
-                    <td>
-                    Score: <input type='text' size=5 ng-model='nodeGradingController.annotationMappings[nodeVisit.id + "-score"].value' ng-change='nodeGradingController.scoreChanged(nodeVisit.id)' ng-model-options='{debounce:{"default":1000, "blur":0}}'></input>
-                    <br>
-                    Comment: <textarea rows=4 cols=50 ng-model='nodeGradingController.annotationMappings[nodeVisit.id + "-comment"].value' ng-change='nodeGradingController.commentChanged(nodeVisit.id)' ng-model-options='{debounce:{"default":2000, "blur":0}}'></textarea>
-                    </td>
-                </tr>
-            </table>
-        </div>
+    <div>workgroup: {{workgroupId}}: {{nodeGradingController.getUserNameByWorkgroupId(workgroupId)}}</div>
+    <div id="{{component.id}}" class="component-content" ng-repeat='component in nodeGradingController.getComponents()'>
+        <div ng-include='nodeGradingController.getComponentTypeHTML(component.componentType)'
+             ng-init='componentState = nodeGradingController.getComponentStateByWorkgroupIdAndComponentId(workgroupId, component.id); mode = nodeGradingController.mode'></div>
     </div>
 </div>

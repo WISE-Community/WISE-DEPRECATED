@@ -7,6 +7,7 @@ define([
         'jqueryUI',
         'angularAnimate',
         'angularDragDrop',
+        'angularFileUpload',
         'angularSortable',
         'angularUIRouter',
         'angularWebSocket',
@@ -15,6 +16,7 @@ define([
         'cRaterService',
         'discussionService',
         'drawService',
+        'embeddedService',
         'graphService',
         'matchService',
         'multipleChoiceService',
@@ -25,6 +27,7 @@ define([
         'notebookService',
         'projectService',
         'sessionService',
+        'studentAssetService',
         'studentDataService',
         'studentStatusService',
         'tableService',
@@ -39,6 +42,7 @@ define([
                 jqueryUI,
                 angularAnimate,
                 angularDragDrop,
+                angularFileUpload,
                 angularSortable,
                 angularUIRouter,
                 angularWebSocket,
@@ -58,6 +62,7 @@ define([
                 notebookService,
                 projectService,
                 sessionService,
+                studentAssetService,
                 studentDataService,
                 studentStatusService,
                 tableService,
@@ -71,6 +76,7 @@ define([
 	                                 'ui.sortable',
 	                                 'ngAnimate',
 	                                 'ngDragDrop',
+                                     'ngFileUpload',
 	                                 'ngWebSocket'
 	                                 ]);
 	
@@ -78,10 +84,12 @@ define([
 	app.factory('AnnotationService', annotationService);
     app.factory('ConfigService', configService);
     app.factory('CRaterService', cRaterService);
+    app.factory('EmbeddedService', embeddedService);
     app.factory('NodeService', nodeService);
     app.factory('NotebookService', notebookService);
     app.factory('ProjectService', projectService);
     app.factory('SessionService', sessionService);
+    app.factory('StudentAssetService', studentAssetService);
     app.factory('StudentDataService', studentDataService);
     app.factory('StudentStatusService', studentStatusService);
     app.factory('TeacherDataService', teacherDataService);
@@ -90,7 +98,6 @@ define([
     // node services
     app.factory('DiscussionService', discussionService);
     app.factory('DrawService', drawService);
-    app.factory('EmbeddedService', embeddedService);
     app.factory('GraphService', graphService);
     app.factory('MatchService', matchService);
     app.factory('MultipleChoiceService', multipleChoiceService);
@@ -162,7 +169,7 @@ define([
                 }
             })
             .state('root.nodeGrading', {
-                url: '/nodeGrading',
+                url: '/nodeGrading/:nodeId',
                 templateUrl: 'wise5/classroomMonitor/nodeGrading/nodeGrading.html',
                 controller: 'NodeGradingController',
                 controllerAs: 'nodeGradingController',
@@ -173,7 +180,8 @@ define([
                     annotations: function(AnnotationService, config) {
                         return AnnotationService.retrieveAnnotationsByNodeId();
                     },
-                    loadController: app.loadController('nodeGradingController')
+                    nodeGradingController: app.loadController('nodeGradingController'),
+                    drawController: app.loadController('drawController'),
                 }
             })
             .state('root.studentGrading', {

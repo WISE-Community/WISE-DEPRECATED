@@ -8,10 +8,11 @@
             <md-icon>image</md-icon> Insert file
         </md-button>
     </div>
+    {{drawController.nodeId}}
         <div class="container"
          data-drop="true"
          jqyoui-droppable="{onDrop: 'drawController.dropCallback(item, $index)'}">
-        <div id="drawing-tool"></div>
+        <div id="{{drawController.drawingToolId}}"></div>
         <!--
         <h2>API examples:</h2>
         <div>

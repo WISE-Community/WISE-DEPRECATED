@@ -175,6 +175,34 @@ define(['configService', 'studentDataService'], function(configService, studentD
             }
         };
 
+        serviceObject.getLatestComponentStateByWorkgroupIdNodeIdAndComponentId = function(workgroupId, nodeId, componentId) {
+            var latestComponentState = null;
+
+            var componentStates = this.getComponentStatesByWorkgroupIdAndNodeId(workgroupId, nodeId);
+
+            if (componentStates != null) {
+
+                // loop through all the component states from newest to oldest
+                for (var c = componentStates.length - 1; c >= 0; c--) {
+                    var componentState = componentStates[c];
+
+                    if (componentState != null) {
+                        var componentStateNodeId = componentState.nodeId;
+                        var componentStateComponentId = componentState.componentId;
+
+                        // compare the node id and component id
+                        if (nodeId == componentStateNodeId &&
+                            componentId == componentStateComponentId) {
+                            latestComponentState = componentState;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            return latestComponentState;
+        };
+
         serviceObject.getComponentStatesByWorkgroupIdAndNodeId = function(workgroupId, nodeId) {
 
             var componentStatesByWorkgroupId = this.getComponentStatesByWorkgroupId(workgroupId);
