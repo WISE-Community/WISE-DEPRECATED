@@ -1035,12 +1035,12 @@ define(['app', 'angular'], function(app, angular) {
             restrict: 'E',
             scope: {
                 response: '=',
-                //replybuttonclicked: '&',
                 submitbuttonclicked: '&',
                 studentdatachanged: '&'
             },
             templateUrl: 'wise5/components/discussion/classResponse.html',
-            controller: function($scope, $state, $stateParams) {
+            controller: function($scope, $element) {
+                $scope.element = $element[0];
 
                 // handle the submit button click
                 $scope.submitButtonClicked = function(response) {
@@ -1049,8 +1049,28 @@ define(['app', 'angular'], function(app, angular) {
 
                 $scope.expanded = false;
 
-                $scope.toggleExpanded = function () {
-                    $scope.expanded = !$scope.expanded;
+                $scope.$watch(
+                    function () { return $scope.response.replies.length; },
+                    function (oldValue, newValue) {
+                        if (newValue !== oldValue) {
+                            $scope.toggleExpanded(true);
+                        }
+                    }
+                );
+
+                $scope.toggleExpanded = function (open) {
+                    if (open) {
+                        $scope.expanded = true;
+                    } else {
+                        $scope.expanded = !$scope.expanded;
+                    }
+
+                    if ($scope.expanded) {
+                        var $clist = $($scope.element).find('.discussion-comments__list');
+                       setTimeout(function () {
+                           $clist.animate({scrollTop: $clist.height()}, 250);
+                       }, 250);
+                    }
                 }
             }
         };

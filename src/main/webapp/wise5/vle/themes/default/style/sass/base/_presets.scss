@@ -26,6 +26,7 @@ a {
   &:not(.md-button) {
     &:hover, &:focus {
       border-bottom: 1px solid;
+      outline: none;
     }
   }
 }

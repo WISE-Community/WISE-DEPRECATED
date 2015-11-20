@@ -311,9 +311,24 @@ define([
                     lastDay : '[Yesterday at] LT',
                     sameDay : '[Today at] LT',
                     nextDay : '[Tomorrow at] LT',
-                    lastWeek : '[last] dddd [at] LT',
+                    lastWeek : '[Last] dddd [at] LT',
                     nextWeek : 'dddd [at] LT',
                     sameElse : 'MMM D, YYYY [at] LT'
+                },
+                relativeTime : {
+                    future: "in %s",
+                    past:   "%s",
+                    s:  "just now",
+                    m:  "1 min ago",
+                    mm: "%d mins ago",
+                    h:  "1 hr ago",
+                    hh: "%d hrs ago",
+                    d:  "1 day ago",
+                    dd: "%d days ago",
+                    M:  "1 month ago",
+                    MM: "%d months ago",
+                    y:  "1 yr ago",
+                    yy: "%d yrs ago"
                 }
             });
         }]);

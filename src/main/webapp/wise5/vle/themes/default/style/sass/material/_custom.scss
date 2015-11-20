@@ -100,11 +100,11 @@ md-input-container {
 }
 
 .md-button {
-  @media (max-width: $layout-breakpoint-sm - 1) {
+  /*@media (max-width: $layout-breakpoint-sm - 1) {
     min-width: 60px;
     min-height: 28px;
     line-height: 28px;
-  }
+  }*/
 
   > md-icon {
     margin-top: -2px;
@@ -117,4 +117,8 @@ md-select-menu md-option[selected] {
 
 md-dialog {
   max-width: 90%;
+}
+
+md-radio-button {
+  outline: none;
 }

@@ -7,7 +7,7 @@
 }
 
 .discussion-posts {
-  padding: 16px 16px 8px;
+  padding: 16px 8px 8px;
 
   @media only screen and (min-width: $layout-breakpoint-sm) {
     padding: 16px 16px 0;
@@ -23,6 +23,10 @@
   }
 }
 
+.discussion-post__contents {
+  padding: 16px;
+}
+
 .discussion-post__avatar, md-list-item.md-3-line > .md-avatar.discussion-post__avatar {
   margin-right: 8px;
 }
@@ -33,7 +37,7 @@
 
 
 .discussion-post__user, md-list-item.md-3-line .md-list-item-text h3.discussion-post__user {
-  padding: 5px 0;
+  padding: 4px 0;
   font-weight: 600;
   //color: $accent-color-2;
   line-height: 1.3;
@@ -43,6 +47,10 @@
 
 .discussion-post__date {
   color: $gray-dark;
+}
+
+.discussion-post__date--reply {
+  margin-left: 8px;
 }
 
 .discussion-post__content {
@@ -61,14 +69,9 @@
   max-width: 570px;
   margin-left: auto;
   margin-right: auto;
-  padding: 16px;
-  border-radius: 0;
+  padding: 8px;
   transition: all 250ms;
   transform: scale(0.95);
-
-  @media only screen and (min-width: $layout-breakpoint-sm) {
-    transform: scale(0.9);
-  }
 }
 
 .discussion-new--focused {
@@ -76,17 +79,23 @@
 }
 
 md-input-container.discussion-new__input-container {
-  margin-top: 0;
+  margin: 0;
+  padding: 0;
 
   > textarea.md-input {
-    min-height: 100px;
+    min-height: 68px;
   }
 }
 
-.discussion-new__actions {
-  .md-button {
-    margin: 0;
+.discussion-new__input--textarea, .input-container textarea.discussion-new__input--textarea {
+  padding: 8px;
+  border: 0 none;
+}
 
+.discussion-new__actions {
+  padding: 0 8px;
+
+  .md-button {
     &:first-of-type {
       margin-left: 0;
     }
@@ -108,43 +117,55 @@ md-input-container.discussion-new__input-container {
 }
 
 .discussion-comments {
-  background-color: $gray-lightest;
   padding: 0;
-  border-radius: 0 0 $card-border-radius $card-border-radius;
+}
+
+.discussion-comments__contents {
+  background-color: $gray-lightest;
 }
 
 .discussion-comments__header {
   background-color: transparent;
   padding: 0;
+
+  .md-subheader-inner {
+    padding-bottom: 8px;
+  }
 }
 
 .discussion-comments__list {
   padding: 0;
-  max-height: 300px;
+  max-height: 9999px;
   overflow-y: auto;
+
+  @media only screen and (min-width: $layout-breakpoint-sm) {
+    max-height: 400px;
+  }
 }
 
 .input--textarea.discussion-reply__input, .input-container textarea.input--textarea.discussion-reply__input {
   background-color: #ffffff;
   padding: 4px;
   font-size: $body-font-size-base - 1;
+  border: 0 none;
 }
 
 .discussion-reply, md-list-item.md-3-line.md-long-text.discussion-reply {
-  margin: 0 12px;
+  margin: 0 12px 8px;
   padding: 0;
+  min-height: 56px;
 }
 
 .discusstion-reply__details, md-list-item.md-3-line .md-list-item-text.discusstion-reply__details {
-  margin: 4px 0;
+  margin: 8px 0;
 }
 
 .discussion-post__user--reply, md-list-item.md-3-line .md-list-item-text h3.discussion-post__user--reply {
   font-size: $body-font-size-base - 1;
+  padding: 0;
 }
 
 .discusstion-reply__content {
-  margin-top: 8px;
   font-size: $body-font-size-base - 1;
   white-space: pre-wrap;
 
@@ -155,7 +176,7 @@ md-input-container.discussion-new__input-container {
 }
 
 .discussion-new-reply {
-  padding: 16px;
+  padding: 8px;
 }
 
 .discussion-new-reply__input-container {
@@ -165,4 +186,9 @@ md-input-container.discussion-new__input-container {
 
 .discussion-new-reply__actions {
   margin-left: 8px;
+
+  .md-button {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
 }

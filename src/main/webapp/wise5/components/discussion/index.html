@@ -7,27 +7,26 @@
             <div class="md-padding discussion-content">
                 <div layout="row">
                     <div class="discussion-posts" flex>
-                        <md-card class="discussion-new discussion-post {{discussionController.focus}}"
-                                 ng-class="{'discussion-new--focused': discussionController.focus || discussionController.newResponse || discussionController.newAttachments.length}">
+                        <md-card class="discussion-new discussion-post"
+                                 ng-class="{'discussion-new--focused md-whiteframe-z3': discussionController.focus || discussionController.newResponse || discussionController.newAttachments.length}">
                             <md-input-container class="input--placeholder-only discussion-new__input-container input-container"
                                                 md-no-float>
                                 <textarea ng-if="discussionController.isRichTextEnabled && !discussionController.isDisabled"
                                           ui-tinymce="discussionController.tinymceOptions"
                                           ng-model="discussionController.newResponse"
-                                          ng-model-options='{ debounce: 250 }'
+                                          ng-model-options='{ debounce: 100 }'
                                           ng-change="discussionController.studentDataChanged()"
                                           ng-init="discussionController.focus = false"
                                           ng-focus="discussionController.focus = true"
                                           ng-blur="discussionController.focus = false"></textarea>
                                 <div ng-if="discussionController.isDisabled"
-                                     class="input--textarea input--textarea--disabled"
+                                     class="discussion-new__input--textarea input--textarea--disabled"
                                      ng-model="discussionController.newResponse"></div>
                                 <textarea ng-if="!discussionController.isRichTextEnabled && !discussionController.isDisabled"
-                                          class="input--textarea"
+                                          class="discussion-new__input--textarea"
                                           placeholder="Share with class..."
-                                          rows="{{discussionController.getNumRows() || 3}}"
                                           ng-model="discussionController.newResponse"
-                                          ng-model-options='{ debounce: 250 }'
+                                          ng-model-options='{ debounce: 100 }'
                                           ng-disabled="discussionController.isDisabled"
                                           ng-change="discussionController.studentDataChanged()"
                                           ng-init="discussionController.focus = false"
@@ -40,7 +39,13 @@
                                     <md-button class="component__attachment__delete" ng-click='discussionController.removeAttachment(attachment)' title="Remove file"><md-icon>cancel</md-icon></md-button>
                                 </div>
                             </div>
-                            <div class="discussion-new__actions">
+                            <div class="discussion-new__actions" layout="row" layout-align="end center">
+                                <md-button class="md-accent md-icon-button"
+                                           ng-click='nodeCtrl.showNotebook($event, component.id, discussionController.isDisabled)'
+                                           ng-if="discussionController.isStudentAttachmentEnabled"
+                                           title="Add picture">
+                                    <md-icon>image</md-icon>
+                                </md-button>
                                 <md-button class="md-raised md-primary"
                                            ng-click="discussionController.saveButtonClicked()"
                                            ng-disabled="discussionController.isDisabled || !discussionController.newResponse"
@@ -49,11 +54,6 @@
                                            ng-click="discussionController.submitButtonClicked()"
                                            ng-disabled="discussionController.isDisabled || (!discussionController.newResponse && discussionController.newAttachments.length == 0) "
                                            ng-if="discussionController.showSubmitButton()">Post</md-button>
-                                <md-button class="md-accent"
-                                           ng-click='nodeCtrl.showNotebook($event, component.id, discussionController.isDisabled)'
-                                           ng-if="discussionController.isStudentAttachmentEnabled">
-                                    <md-icon>image</md-icon> <span>Add File </span>
-                                </md-button>
                             </div>
                         </md-card>
 

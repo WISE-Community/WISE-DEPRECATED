@@ -164,7 +164,7 @@ define(['angular', /*'annotationService',*/ 'configService', 'nodeService', 'not
 
                     this.closeNode = function() {
                         NodeService.closeNode();
-                    }
+                    };
                 }
             )
             /*.directive('notebook', function() {
@@ -373,4 +373,5 @@ define(['angular', /*'annotationService',*/ 'configService', 'nodeService', 'not
                 $scope.projectStatus = projectStatus;
                 $scope.userNames = userNames;
             });
-    });
+    }
+);
