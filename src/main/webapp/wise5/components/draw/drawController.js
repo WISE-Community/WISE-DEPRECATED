@@ -6,6 +6,7 @@ define(['app', 'drawingTool', 'vendor'], function(app) {
             $scope,
             $state,
             $stateParams,
+            $timeout,
             ConfigService,
             DrawService,
             NodeService,
@@ -73,122 +74,135 @@ define(['app', 'drawingTool', 'vendor'], function(app) {
                 // get the component type
                 this.componentType = this.componentContent.componentType;
 
-                // initialize the drawing tool
-                //var drawingToolElementId = "drawing-tool-node25";
-                this.drawingToolId = "drawhere";
-                this.drawingTool = new DrawingTool("#" + this.drawingToolId, {
-                    stamps: this.componentContent.stamps || {},
-                    parseSVG: true
-                });
-                var state = null;
-                $("#set-background").on("click", angular.bind(this, function () {
-                    this.drawingTool.setBackgroundImage($("#background-src").val());
-                }));
-                $("#resize-background").on("click", angular.bind(this, function () {
-                    this.drawingTool.resizeBackgroundToCanvas();
-                }));
-                $("#resize-canvas").on("click", angular.bind(this, function () {
-                    this.drawingTool.resizeCanvasToBackground();
-                }));
-                $("#shrink-background").on("click", angular.bind(this, function () {
-                    this.drawingTool.shrinkBackgroundToCanvas();
-                }));
-                $("#clear").on("click", angular.bind(this, function () {
-                    this.drawingTool.clear(true);
-                }));
-                $("#save").on("click", angular.bind(this, function () {
-                    state = drawingTool.save();
-                    $("#load").removeAttr("disabled");
-                }));
-                $("#load").on("click", angular.bind(this, function () {
-                    if (state === null) return;
-                    this.drawingTool.load(state);
-                }));
-
-
-                // get the show previous work node id if it is provided
-                var showPreviousWorkNodeId = this.componentContent.showPreviousWorkNodeId;
-
-                var componentState = null;
-
-                if (showPreviousWorkNodeId != null) {
-                    // this component is showing previous work
-                    this.isShowPreviousWork = true;
-
-                    // get the show previous work component id if it is provided
-                    var showPreviousWorkComponentId = this.componentContent.showPreviousWorkComponentId;
-
-                    // get the node content for the other node
-                    var showPreviousWorkNodeContent = ProjectService.getNodeContentByNodeId(showPreviousWorkNodeId);
-
-                    // get the node content for the component we are showing previous work for
-                    this.componentContent = NodeService.getComponentContentById(showPreviousWorkNodeContent, showPreviousWorkComponentId);
-
-                    // get the component state for the show previous work
-                    componentState = StudentDataService.getLatestComponentStateByNodeIdAndComponentId(showPreviousWorkNodeId, showPreviousWorkComponentId);
-
-                    // populate the student work into this component
-                    this.setStudentWork(componentState);
-
-                    // disable the component since we are just showing previous work
-                    this.isDisabled = true;
-
-                    // register this component with the parent node
-                    $scope.$parent.registerComponentController($scope, this.componentContent);
-                } else {
-                    // this is a regular component
-
+                if (this.mode === "normal") {
+                    this.drawingToolId = "drawingtool_" + this.nodeId + "_" + this.componentId;
+                } else if (this.mode === "showStudentWorkOnly") {
                     // get the component state from the scope
-                    componentState = $scope.componentState;
+                    var componentState = $scope.componentState;
+                    if (componentState != null) {
+                        this.drawingToolId = "drawingtool_" + componentState.id;
+                    }
+                }
 
-                    // set whether studentAttachment is enabled
-                    this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
+                $timeout(angular.bind(this, function () {
+                    // running this in side a timeout ensures that the code only runs after the markup is rendered.
+                    // maybe there's a better way to do this, like with an event?
 
-                    if (componentState == null) {
-                        /*
-                         * only import work if the student does not already have
-                         * work for this component
-                         */
+                    // initialize the drawing tool
+                    this.drawingTool = new DrawingTool("#" + this.drawingToolId, {
+                        stamps: this.componentContent.stamps || {},
+                        parseSVG: true
+                    });
+                    var state = null;
+                    $("#set-background").on("click", angular.bind(this, function () {
+                        this.drawingTool.setBackgroundImage($("#background-src").val());
+                    }));
+                    $("#resize-background").on("click", angular.bind(this, function () {
+                        this.drawingTool.resizeBackgroundToCanvas();
+                    }));
+                    $("#resize-canvas").on("click", angular.bind(this, function () {
+                        this.drawingTool.resizeCanvasToBackground();
+                    }));
+                    $("#shrink-background").on("click", angular.bind(this, function () {
+                        this.drawingTool.shrinkBackgroundToCanvas();
+                    }));
+                    $("#clear").on("click", angular.bind(this, function () {
+                        this.drawingTool.clear(true);
+                    }));
+                    $("#save").on("click", angular.bind(this, function () {
+                        state = drawingTool.save();
+                        $("#load").removeAttr("disabled");
+                    }));
+                    $("#load").on("click", angular.bind(this, function () {
+                        if (state === null) return;
+                        this.drawingTool.load(state);
+                    }));
 
-                        // check if we need to import work
-                        var importWorkNodeId = this.componentContent.importWorkNodeId;
-                        var importWorkComponentId = this.componentContent.importWorkComponentId;
+                    // get the show previous work node id if it is provided
+                    var showPreviousWorkNodeId = this.componentContent.showPreviousWorkNodeId;
 
-                        if (importWorkNodeId != null && importWorkComponentId != null) {
-                            // import the work from the other component
-                            this.importWork();
-                        }
-                    } else {
+                    var componentState = null;
+
+                    if (showPreviousWorkNodeId != null) {
+                        // this component is showing previous work
+                        this.isShowPreviousWork = true;
+
+                        // get the show previous work component id if it is provided
+                        var showPreviousWorkComponentId = this.componentContent.showPreviousWorkComponentId;
+
+                        // get the node content for the other node
+                        var showPreviousWorkNodeContent = ProjectService.getNodeContentByNodeId(showPreviousWorkNodeId);
+
+                        // get the node content for the component we are showing previous work for
+                        this.componentContent = NodeService.getComponentContentById(showPreviousWorkNodeContent, showPreviousWorkComponentId);
+
+                        // get the component state for the show previous work
+                        componentState = StudentDataService.getLatestComponentStateByNodeIdAndComponentId(showPreviousWorkNodeId, showPreviousWorkComponentId);
+
                         // populate the student work into this component
                         this.setStudentWork(componentState);
-                    }
 
-                    // check if we need to lock this component
-                    this.calculateDisabled();
+                        // disable the component since we are just showing previous work
+                        this.isDisabled = true;
 
-                    // register this component with the parent node
-                    if ($scope.$parent && $scope.$parent.registerComponentController) {
+                        // register this component with the parent node
                         $scope.$parent.registerComponentController($scope, this.componentContent);
+                    } else {
+                        // this is a regular component
+
+                        // get the component state from the scope
+                        componentState = $scope.componentState;
+
+                        // set whether studentAttachment is enabled
+                        this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
+
+                        if (componentState == null) {
+                            /*
+                             * only import work if the student does not already have
+                             * work for this component
+                             */
+
+                            // check if we need to import work
+                            var importWorkNodeId = this.componentContent.importWorkNodeId;
+                            var importWorkComponentId = this.componentContent.importWorkComponentId;
+
+                            if (importWorkNodeId != null && importWorkComponentId != null) {
+                                // import the work from the other component
+                                this.importWork();
+                            }
+                        } else {
+                            // populate the student work into this component
+                            this.setStudentWork(componentState);
+                        }
+
+                        // check if we need to lock this component
+                        this.calculateDisabled();
+
+                        // register this component with the parent node
+                        if ($scope.$parent && $scope.$parent.registerComponentController) {
+                            $scope.$parent.registerComponentController($scope, this.componentContent);
+                        }
+
+                        // listen for the drawing changed event
+                        this.drawingTool.on('drawing:changed', angular.bind(this, this.studentDataChanged));
+
+                        // listen for selected tool changed event
+                        this.drawingTool.on('tool:changed', function (toolName) {
+                            // log this event
+                            var category = "Tool";
+                            var event = "toolSelected";
+                            var data = {};
+                            data.selectedToolName = toolName;
+                            StudentDataService.saveComponentEvent(this, category, event, data);
+                        }.bind(this));
+
+                        if (this.mode === 'showStudentWorkOnly') {
+                            // we're in show student work mode, so hide the toolbar and make the drawing non-editable
+                            $(".dt-tools").hide();
+                        }
                     }
 
-                    // listen for the drawing changed event
-                    this.drawingTool.on('drawing:changed', angular.bind(this, this.studentDataChanged));
-
-                    // listen for selected tool changed event
-                    this.drawingTool.on('tool:changed', function (toolName) {
-                        // log this event
-                        var category = "Tool";
-                        var event = "toolSelected";
-                        var data = {};
-                        data.selectedToolName = toolName;
-                        StudentDataService.saveComponentEvent(this, category, event, data);
-                    }.bind(this));
-
-                    if (this.mode === 'showStudentWorkOnly') {
-                        // we're in show student work mode, so hide the toolbar and make the drawing non-editable
-                        $(".dt-tools").hide();
-                    }
-                 }
+                }));
             }
         };
 
