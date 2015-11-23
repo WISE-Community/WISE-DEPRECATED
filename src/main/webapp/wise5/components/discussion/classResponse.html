@@ -1,7 +1,7 @@
 <md-card class="discussion-post">
     <div class="discussion-post__contents">
         <div layout="row">
-            <div class="md-avatar discussion-post__avatar"><md-icon class="md-48 md-primary"> account_circle </md-icon></div>
+            <div class="md-avatar discussion-post__avatar"><md-icon class="md-48" style="color: {{getAvatarColorForWorkgroupId(response.workgroupId)}};"> account_circle </md-icon></div>
             <div flex>
                 <div class="discussion-post__user">{{ response.userNames }}</div>
                 <div class="md-body-1 discussion-post__date" title="{{ response.clientSaveTime | amDateFormat:'ddd, MMM D, YYYY, h:mm a' }}">{{ response.clientSaveTime | amCalendar }}</div>
@@ -23,7 +23,7 @@
                               ng-class="{'animate-show': !$last}"
                               ng-repeat="reply in response.replies"
                               ng-show="$last || expanded">
-                    <div class="md-avatar discussion-post__avatar--reply discussion-post__avatar"><md-icon class="md-36 md-primary"> account_circle </md-icon></div>
+                    <div class="md-avatar discussion-post__avatar--reply discussion-post__avatar"><md-icon class="md-36" style="color: {{getAvatarColorForWorkgroupId(reply.workgroupId)}}"> account_circle </md-icon></div>
                     <div class="md-list-item-text discusstion-reply__details">
                         <h3 class="discussion-post__user discussion-post__user--reply" flex>{{ reply.userNames }} <span class="md-body-1 discussion-post__date discussion-post__date--reply" am-time-ago="reply.clientSaveTime" title="{{ reply.clientSaveTime | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}"></span></h3>
                         <div class="discusstion-reply__content md-body-1" ng-bind-html="reply.studentData.response"></div>

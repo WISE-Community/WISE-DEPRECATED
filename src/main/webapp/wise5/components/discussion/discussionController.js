@@ -994,7 +994,7 @@ define(['app', 'angular'], function(app, angular) {
             var scope = this;
             var themePath = "/wise/" + ProjectService.getThemePath();
 
-            // TODO: make toolbar items and plugins customizable by authors
+            // TODO: make toolbar items and plugins customizable by authors?
             // Rich text editor options
             this.tinymceOptions = {
                 //onChange: function(e) {
@@ -1039,8 +1039,12 @@ define(['app', 'angular'], function(app, angular) {
                 studentdatachanged: '&'
             },
             templateUrl: 'wise5/components/discussion/classResponse.html',
-            controller: function($scope, $element) {
+            controller: function($scope, $element, StudentStatusService) {
                 $scope.element = $element[0];
+
+                $scope.getAvatarColorForWorkgroupId = function (workgroupId) {
+                    return StudentStatusService.getAvatarColorForWorkgroupId(workgroupId);
+                }
 
                 // handle the submit button click
                 $scope.submitButtonClicked = function(response) {
