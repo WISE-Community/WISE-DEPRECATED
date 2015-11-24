@@ -38,8 +38,7 @@ define(['app'], function(app) {
         // whether we have data to save
         this.isDirty = false;
 
-        // listen for message events from embedded iframe application
-        $window.addEventListener('message', angular.bind(this, function(messageEvent) {
+        this.messageEventListener = angular.bind(this, function(messageEvent) {
             // handle messages received from iframe
             var messageEventData = messageEvent.data;
             if (messageEventData.messageType === "event") {
@@ -77,13 +76,16 @@ define(['app'], function(app) {
                 $scope.$emit('componentSaveTriggered', {nodeId: this.nodeId, componentId: this.componentId});
 
             }
-        }));
+        });
 
         /**
          * Perform setup of the component
          */
         this.setup = function() {
-            
+
+            // listen for message events from embedded iframe application
+            $window.addEventListener('message', this.messageEventListener);
+
             // get the current node and node id
             var currentNode = StudentDataService.getCurrentNode();
             if (currentNode != null) {
@@ -189,7 +191,18 @@ define(['app'], function(app) {
                 
             }));
         };
-        
+
+
+        /**
+         * Listen for the 'exitNode' event which is fired when the student
+         * exits the parent node. This will perform any necessary cleanup
+         * when the student exits the parent node.
+         */
+        $scope.$on('exitNode', angular.bind(this, function(event, args) {
+            // unregister messageEventListener
+            $window.removeEventListener('message', this.messageEventListener);
+        }));
+
         // perform setup of this component
         this.setup();
     })
