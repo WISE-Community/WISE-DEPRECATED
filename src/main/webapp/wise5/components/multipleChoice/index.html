@@ -9,7 +9,7 @@
                     <div ng-repeat="choice in multipleChoiceController.getChoices()">
                         <md-radio-button class="md-primary"
                                          ng-value="choice.id"
-                                         ng-click="multipleChoiceController.radioChoiceSelected(choice.id)"
+                                         ng-click="multipleChoiceController.isDisabled || multipleChoiceController.radioChoiceSelected(choice.id)"
                                          ng-disabled="multipleChoiceController.isDisabled">
                             {{ choice.text }}
                             <div ng-message ng-show="choice.showFeedback">{{choice.feedbackToShow}}</div>
@@ -20,7 +20,7 @@
                     <div ng-repeat="choice in multipleChoiceController.getChoices()">
                         <md-checkbox class="md-primary"
                                      ng-checked="multipleChoiceController.isChecked(choice.id)"
-                                     ng-click="multipleChoiceController.toggleSelection(choice.id)"
+                                     ng-click="multipleChoiceController.isDisabled || multipleChoiceController.toggleSelection(choice.id)"
                                      ng-disabled="multipleChoiceController.isDisabled">
                             {{ choice.text }}
                             <div ng-message ng-show="choice.showFeedback">{{choice.feedbackToShow}}</div>

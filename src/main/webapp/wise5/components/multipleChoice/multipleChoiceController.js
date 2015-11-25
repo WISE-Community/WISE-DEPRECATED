@@ -19,7 +19,10 @@ define(['app'], function(app) {
         
         // field that will hold the component content
         this.componentContent = null;
-        
+
+        // whether the component should be disabled
+        this.isDisabled = false;
+
         // whether the student work is dirty and needs saving
         this.isDirty = false;
         
@@ -37,7 +40,19 @@ define(['app'], function(app) {
         
         // whether the latest work was submitted or not
         this.isSubmit = null;
-        
+
+        // the mode to load the component in e.g. 'student', 'grading', 'onlyShowWork'
+        this.mode = null;
+
+        // whether the prompt is shown or not
+        this.isPromptVisible = true;
+
+        // whether the save button is shown or not
+        this.isSaveButtonVisible = false;
+
+        // whether the submit button is shown or not
+        this.isSubmitButtonVisible = false;
+
         /**
          * Perform setup of the component
          */
@@ -50,11 +65,29 @@ define(['app'], function(app) {
             
             // get the component content from the scope
             this.componentContent = $scope.component;
+
+            this.mode = $scope.mode;
             
             if (this.componentContent != null) {
                 
                 // get the component id
                 this.componentId = this.componentContent.id;
+
+                if (this.mode === 'student') {
+                    this.isPromptVisible = true;
+                    this.isSaveButtonVisible = this.componentContent.showSaveButton;
+                    this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+                } else if (this.mode === 'grading') {
+                    this.isPromptVisible = true;
+                    this.isSaveButtonVisible = false;
+                    this.isSubmitButtonVisible = false;
+                    this.isDisabled = true;
+                } else if (this.mode === 'onlyShowWork') {
+                    this.isPromptVisible = false;
+                    this.isSaveButtonVisible = false;
+                    this.isSubmitButtonVisible = false;
+                    this.isDisabled = true;
+                }
 
                 // get the component type
                 this.componentType = this.componentContent.componentType;
@@ -64,7 +97,7 @@ define(['app'], function(app) {
 
                 var componentState = null;
                 
-                if (showPreviousWorkNodeId != null) {
+                if (false) {
                     // this component is showing previous work
                     this.isShowPreviousWork = true;
 
@@ -821,7 +854,21 @@ define(['app'], function(app) {
             
             return choices;
         };
-        
+
+        /**
+         * Check whether we need to show the prompt
+         * @return whether to show the prompt
+         */
+        this.showPrompt = function() {
+            var show = false;
+
+            if (this.isPromptVisible) {
+                show = true;
+            }
+
+            return show;
+        };
+
         /**
          * Check whether we need to show the save button
          * @return whether to show the save button

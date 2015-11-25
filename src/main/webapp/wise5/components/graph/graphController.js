@@ -37,7 +37,7 @@ define(['app',
         // field that will hold the component content
         this.componentContent = null;
         
-        // whether the step should be disabled
+        // whether the component should be disabled
         this.isDisabled = false;
         
         // whether the student work is dirty and needs saving
@@ -63,6 +63,9 @@ define(['app',
 
         // will hold the active series
         this.activeSeries = null;
+
+        // the mode to load the component in e.g. 'student', 'grading', 'onlyShowWork'
+        this.mode = null;
 
         // whether the prompt is shown or not
         this.isPromptVisible = true;
@@ -287,7 +290,11 @@ define(['app',
                         regressionSettings.numberOfPoints = 100;
                     }
 
-                    if (tempSeries.canEdit) {
+                    if (this.isDisabled) {
+                        // disable dragging
+                        tempSeries.draggableX = false;
+                        tempSeries.draggableY = false;
+                    } else if (tempSeries.canEdit) {
                         // set the fields to allow points to be draggable
                         tempSeries.draggableX = true;
                         tempSeries.draggableY = true;
