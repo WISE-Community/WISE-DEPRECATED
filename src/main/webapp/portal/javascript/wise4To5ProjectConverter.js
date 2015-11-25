@@ -1025,13 +1025,26 @@ function convertGrapher(node, nodeContent) {
     component.xAxis = {};
     component.xAxis.title = {};
     component.xAxis.title.text = nodeContent.graphParams.xLabel;
-    component.xAxis.min = nodeContent.graphParams.xmin;
-    component.xAxis.max = nodeContent.graphParams.xmax;
+
+    if (nodeContent.graphParams.xmin != null) {
+        component.xAxis.min = parseFloat(nodeContent.graphParams.xmin);
+    }
+
+    if (nodeContent.graphParams.xmax != null) {
+        component.xAxis.max = parseFloat(nodeContent.graphParams.xmax);
+    }
+
     component.yAxis = {};
     component.yAxis.title = {};
     component.yAxis.title.text = nodeContent.graphParams.yLabel;
-    component.yAxis.min = nodeContent.graphParams.ymin;
-    component.yAxis.max = nodeContent.graphParams.ymax;
+
+    if (nodeContent.graphParams.ymin != null) {
+        component.yAxis.min = parseFloat(nodeContent.graphParams.ymin);
+    }
+
+    if (nodeContent.graphParams.ymax != null) {
+        component.yAxis.max = parseFloat(nodeContent.graphParams.ymax);
+    }
 
     component.series = [
         {

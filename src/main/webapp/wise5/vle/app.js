@@ -101,16 +101,11 @@ define([
              webfonts) {
 
     var app = angular.module('app', [
-        'directives',
-        'filters',
-        'notebook',
-        'highcharts-ng',
-        'ui.router',
-        'ui.sortable',
-        'ui.tinymce',
-        'ui.tree',
         'angularMoment',
         'angular-toArrayFilter',
+        'directives',
+        'filters',
+        'highcharts-ng',
         'ngAnimate',
         'ngAudio',
         'ngAria',
@@ -119,7 +114,12 @@ define([
         'ngMaterial',
         'ngSanitize',
         'ngWebSocket',
-        'oc.lazyLoad'
+        'notebook',
+        'oc.lazyLoad',
+        'ui.router',
+        'ui.sortable',
+        'ui.tinymce',
+        'ui.tree'
     ]);
 
     // core services
@@ -172,7 +172,8 @@ define([
                  $stateProvider,
                  $compileProvider,
                  $controllerProvider,
-                 $mdThemingProvider) {
+                 $mdThemingProvider,
+                 $ocLazyLoadProvider) {
 
             $urlRouterProvider.otherwise('/vle/');
 
@@ -219,7 +220,7 @@ define([
                     views: {
                         'nodeView': {
                             templateUrl: 'wise5/node/index.html',
-                            controller: 'NodeController as nodeCtrl',
+                            controller: 'NodeController as nodeController',
                             resolve: {
                                 audioRecorderController: app.loadController('audioRecorderController'),
                                 cRaterController: app.loadController('cRaterController'),

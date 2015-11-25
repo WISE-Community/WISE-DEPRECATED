@@ -39,6 +39,18 @@ define(['app'], function(app) {
         // whether students can attach files to their work
         this.isStudentAttachmentEnabled = false;
 
+        // whether the prompt is shown or not
+        this.isPromptVisible = true;
+
+        // whether the save button is shown or not
+        this.isSaveButtonVisible = false;
+
+        // whether the submit button is shown or not
+        this.isSubmitButtonVisible = false;
+
+        // whether the reset table button is shown or not
+        this.isResetTableButtonVisible = true;
+
         /**
          * Perform setup of the component
          */
@@ -52,11 +64,32 @@ define(['app'], function(app) {
             
             // get the component content from the scope
             this.componentContent = $scope.component;
+
+            this.mode = $scope.mode;
             
             if (this.componentContent != null) {
                 
                 // get the component id
                 this.componentId = this.componentContent.id;
+
+                if (this.mode === 'student') {
+                    this.isPromptVisible = true;
+                    this.isSaveButtonVisible = this.componentContent.showSaveButton;
+                    this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+                    this.isResetTableButtonVisible = true;
+                } else if (this.mode === 'grading') {
+                    this.isPromptVisible = true;
+                    this.isSaveButtonVisible = false;
+                    this.isSubmitButtonVisible = false;
+                    this.isResetTableButtonVisible = false;
+                    this.isDisabled = true;
+                } else if (this.mode === 'onlyShowWork') {
+                    this.isPromptVisible = false;
+                    this.isSaveButtonVisible = false;
+                    this.isSubmitButtonVisible = false;
+                    this.isResetTableButtonVisible = false;
+                    this.isDisabled = true;
+                }
                 
                 // get the show previous work node id if it is provided
                 var showPreviousWorkNodeId = this.componentContent.showPreviousWorkNodeId;
@@ -120,9 +153,11 @@ define(['app'], function(app) {
                     
                     // check if we need to lock this component
                     this.calculateDisabled();
-                    
-                    // register this component with the parent node
-                    $scope.$parent.registerComponentController($scope, this.componentContent);
+
+                    if ($scope.$parent.registerComponentController != null) {
+                        // register this component with the parent node
+                        $scope.$parent.registerComponentController($scope, this.componentContent);
+                    }
                 }
             }
         };
@@ -310,23 +345,21 @@ define(['app'], function(app) {
                 }
             }
         };
-        
+
+        /**
+         * Check whether we need to show the prompt
+         * @return whether to show the prompt
+         */
+        this.showPrompt = function() {
+            return this.isPromptVisible;
+        };
+
         /**
          * Check whether we need to show the save button
          * @return whether to show the save button
          */
         this.showSaveButton = function() {
-            var show = false;
-            
-            if (this.componentContent != null) {
-                
-                // check the showSaveButton field in the component content
-                if (this.componentContent.showSaveButton) {
-                    show = true;
-                }
-            }
-            
-            return show;
+            return this.isSaveButtonVisible;
         };
         
         /**
@@ -334,17 +367,16 @@ define(['app'], function(app) {
          * @return whether to show the submit button
          */
         this.showSubmitButton = function() {
-            var show = false;
-            
-            if (this.componentContent != null) {
-                
-                // check the showSubmitButton field in the component content
-                if (this.componentContent.showSubmitButton) {
-                    show = true;
-                }
-            }
-            
-            return show;
+            return this.isSubmitButtonVisible;
+        };
+
+
+        /**
+         * Check whether we need to show the reset table button
+         * @return whether to show the reset table button
+         */
+        this.showResetTableButton = function() {
+            return this.isResetTableButtonVisible;
         };
         
         /**

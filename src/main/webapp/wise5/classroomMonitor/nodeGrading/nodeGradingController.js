@@ -2,32 +2,52 @@ define(['app'], function(app) {
 
     app
     .$controllerProvider
-    .register('NodeGradingController', ['$state', '$stateParams', 'AnnotationService', 'ConfigService', 'NodeService', 'ProjectService', 'StudentDataService', 'StudentStatusService', 'TeacherDataService',
-                                            function ($state, $stateParams, AnnotationService, ConfigService, NodeService, ProjectService, StudentDataService, StudentStatusService, TeacherDataService) {
-        // the node id of the current node
+    .register('NodeGradingController', [
+            '$state',
+            '$stateParams',
+            'AnnotationService',
+            'ConfigService',
+            'NodeService',
+            'ProjectService',
+            'StudentDataService',
+            'StudentStatusService',
+            'TeacherDataService',
+
+            function ($state,
+                      $stateParams,
+                      AnnotationService,
+                      ConfigService,
+                      NodeService,
+                      ProjectService,
+                      StudentDataService,
+                      StudentStatusService,
+                      TeacherDataService) {
+        this.title = 'Node Grading!!!';
+
         this.nodeId = $stateParams.nodeId;
-
-        this.title = 'Node Grading: ' + this.nodeId;
-
+        
         // field that will hold the node content
         this.nodeContent = ProjectService.getNodeContentByNodeId(this.nodeId);
 
         // render components in show student work only mode
         this.mode = "showStudentWorkOnly";
 
-        var vleStates = TeacherDataService.getVLEStates();
+        //var vleStates = TeacherDataService.getVLEStates();
+        var vleStates = null;
         
         this.workgroupIds = ConfigService.getClassmateWorkgroupIds();
         
         this.annotationMappings = {};
+
+        this.componentStateHistory = [];
 
         /**
          * Get the html template for the component
          * @param componentType the component type
          * @return the path to the html template for the component
          */
-        this.getComponentTypeHTML = function(componentType) {
-            return NodeService.getComponentTypeHTML(componentType);
+        this.getComponentTemplatePath = function(componentType) {
+            return NodeService.getComponentTemplatePath(componentType);
         };
 
         /**
@@ -60,17 +80,39 @@ define(['app'], function(app) {
             return components;
         };
 
+        this.getComponentById = function(componentId) {
+            var component = null;
+
+            if (componentId != null) {
+                var components = this.getComponents();
+
+                if (components != null) {
+                    for (var c = 0; c < components.length; c++) {
+                        var tempComponent = components[c];
+
+                        if (tempComponent != null) {
+                            if (componentId === tempComponent.id) {
+                                component = tempComponent;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return component;
+        };
+
         /**
          * Get the student data for a specific part
          * @param the componentId
          * @param the workgroupId id of Workgroup who created the component state
          * @return the student data for the given component
          */
-        this.getComponentStateByWorkgroupIdAndComponentId = function(workgroupId,  componentId) {
+        this.getLatestComponentStateByWorkgroupIdAndComponentId = function(workgroupId,  componentId) {
             var componentState = null;
 
-            if (componentId != null) {
-
+            if (workgroupId != null && componentId != null) {
                 // get the latest component state for the component
                 componentState = TeacherDataService.getLatestComponentStateByWorkgroupIdNodeIdAndComponentId(workgroupId, this.nodeId, componentId);
             }
@@ -78,12 +120,30 @@ define(['app'], function(app) {
             return componentState;
         };
 
-        this.getNodeVisitsByWorkgroupIdAndNodeId = function(workgroupId, nodeId) {
-            var nodeVisits = TeacherDataService.getNodeVisitsByWorkgroupIdAndNodeId(workgroupId, nodeId);
+        /**
+         * Get the student data for a specific part
+         * @param the componentId
+         * @param the workgroupId id of Workgroup who created the component state
+         * @return the student data for the given component
+         */
+        this.getLatestComponentStateByWorkgroupIdAndNodeIdAndComponentId = function(workgroupId, nodeId, componentId) {
+            var componentState = null;
+
+            if (workgroupId != null && nodeId != null && componentId != null) {
+
+                // get the latest component state for the component
+                componentState = TeacherDataService.getLatestComponentStateByWorkgroupIdNodeIdAndComponentId(workgroupId, nodeId, componentId);
+            }
+
+            return componentState;
+        };
+
+        this.getComponentStatesByWorkgroupIdAndNodeId = function(workgroupId, nodeId) {
+            var componentStates = TeacherDataService.getComponentStatesByWorkgroupIdAndNodeId(workgroupId, nodeId);
             
-            AnnotationService.populateAnnotationMappings(this.annotationMappings, workgroupId, nodeVisits);
+            //AnnotationService.populateAnnotationMappings(this.annotationMappings, workgroupId, componentStates);
             
-            return nodeVisits;
+            return componentStates;
         };
         
         this.getUserNameByWorkgroupId = function(workgroupId) {
@@ -111,6 +171,10 @@ define(['app'], function(app) {
             var annotation = this.annotationMappings[stepWorkId + '-comment'];
             AnnotationService.saveAnnotation(annotation);
         }
+
+        this.setupComponentStateHistory = function() {
+            this.getComponentStatesByWorkgroupIdAndNodeId()
+        };
     }]);
     
 });

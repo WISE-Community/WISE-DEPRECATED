@@ -332,8 +332,8 @@ define(['app'], function(app) {
              * @param componentType the component type
              * @return the path to the html template for the component
              */
-            this.getComponentTypeHTML = function(componentType) {
-                return NodeService.getComponentTypeHTML(componentType);
+            this.getComponentTemplatePath = function(componentType) {
+                return NodeService.getComponentTemplatePath(componentType);
             };
 
             /**
@@ -760,6 +760,24 @@ define(['app'], function(app) {
 
                     // get the latest component state for the component
                     componentState = StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, componentId);
+                }
+
+                return componentState;
+            };
+
+            /**
+             * Get the student data for a specific part
+             * @param the nodeId
+             * @param the componentId
+             * @return the student data for the given component
+             */
+            this.getComponentStateByNodeIdAndComponentId = function(nodeId, componentId) {
+                var componentState = null;
+
+                if (nodeId != null && componentId != null) {
+
+                    // get the latest component state for the component
+                    componentState = StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
                 }
 
                 return componentState;

@@ -10,7 +10,7 @@ define(['configService', 'studentDataService'], function(configService, studentD
             return this.vleStates;
         };
         
-        serviceObject.retrieveStudentDataByNodeId = function() {
+        serviceObject.retrieveStudentDataByNodeId = function(nodeId) {
             var nodeIds = [];
             var workgroupIds = [];
             

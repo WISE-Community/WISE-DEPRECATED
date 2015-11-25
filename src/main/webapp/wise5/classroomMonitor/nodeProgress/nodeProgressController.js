@@ -2,10 +2,36 @@ define(['app'], function(app) {
 
     app
     .$controllerProvider
-    .register('NodeProgressController', ['$scope', '$state', 'ConfigService', 'ProjectService', 'StudentStatusService',
-                                            function ($scope, $state, ConfigService, ProjectService, StudentStatusService) {
+    .register('NodeProgressController', [
+            '$scope',
+            '$state',
+            'ConfigService',
+            'ProjectService',
+            'StudentStatusService',
+            function ($scope,
+                      $state,
+                      ConfigService,
+                      ProjectService,
+                      StudentStatusService) {
         this.title = 'Node Progress!!!';
         this.currentGroup = null;
+
+        this.items = null;
+
+        this.getNodeTitleByNodeId = function(nodeId) {
+            return ProjectService.getNodeTitleByNodeId(nodeId);
+        };
+
+        this.isGroupNode = function(nodeId) {
+            return ProjectService.isGroupNode(nodeId);
+        };
+
+        this.getNodePositionById = function(nodeId) {
+            return ProjectService.getNodePositionById(nodeId);
+        };
+
+        //this.nodeIds = ProjectService.getFlattenedProjectAsNodeIds();
+        this.items = ProjectService.idToOrder;
         
         $scope.$on('currentNodeChanged', angular.bind(this, function(event, args) {
             var previousNode = args.previousNode;
@@ -58,13 +84,12 @@ define(['app'], function(app) {
         //console.log(JSON.stringify(branches, null, 4));
         
         //console.log('end');
-        /*
-        this.nodeClicked = function(node) {
-            var nodeId = node.nodeId;
-    
-            $state.go('nodeGrading', {nodeId:nodeId});
+
+        this.nodeClicked = function(nodeId) {
+
+            $state.go('root.nodeGrading', {nodeId:nodeId});
         };
-        */
+
     }]);
     
 });

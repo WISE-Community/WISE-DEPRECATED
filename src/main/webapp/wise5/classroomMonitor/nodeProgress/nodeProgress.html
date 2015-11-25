@@ -9,8 +9,21 @@
     stroke: #777;
     stroke-width: 2px;
 }
+.node-select--group {
+    font-weight: bold
+}
+
+.node-select--node {
+    margin-left: 10px
+}
 </style>
-<div>{{nodeProgressController.currentGroupId}}</div>
-<group id='group' currentgroupid='{{nodeProgressController.currentGroupId}}'>
+
+<div>{{nodeProgressController.title}}</div>
+<div ng-repeat='item in nodeProgressController.items | toArray | orderBy : "order"'
+     ng-if='item.order!==0'
+     ng-class='{"node-select--group": nodeProgressController.isGroupNode(item.$key), "node-select--node": !nodeProgressController.isGroupNode(item.$key)}'
+     ng-click='nodeProgressController.nodeClicked(item.$key)'>
+    <p>{{nodeProgressController.getNodePositionById(item.$key)}} {{nodeProgressController.getNodeTitleByNodeId(item.$key)}}</p>
+</div>
     
 </group>

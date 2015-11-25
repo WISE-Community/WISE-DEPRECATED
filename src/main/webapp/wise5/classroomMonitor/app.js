@@ -1,87 +1,129 @@
 define([
-        'angular',
-        'd3',
-        'directives',
-        'filters',
-        'jquery',
-        'jqueryUI',
-        'angularAnimate',
-        'angularDragDrop',
-        'angularFileUpload',
-        'angularSortable',
-        'angularUIRouter',
-        'angularWebSocket',
-        'annotationService',
-        'configService',
-        'cRaterService',
-        'discussionService',
-        'drawService',
-        'embeddedService',
-        'graphService',
-        'matchService',
-        'multipleChoiceService',
-        'nodeService',
-        'openResponseService',
-        'outsideURLService',
-        'photoBoothService',
-        'notebookService',
-        'projectService',
-        'sessionService',
-        'studentAssetService',
-        'studentDataService',
-        'studentStatusService',
-        'tableService',
-        'teacherDataService',
-        'teacherWebSocketService'
-        ], function(
-                angular,
-                d3,
-                directives,
-                filters,
-                $, 
-                jqueryUI,
-                angularAnimate,
-                angularDragDrop,
-                angularFileUpload,
-                angularSortable,
-                angularUIRouter,
-                angularWebSocket,
-                annotationService,
-                configService,
-                cRaterService,
-                discussionService,
-                drawService,
-                embeddedService,
-                graphService,
-                matchService,
-                multipleChoiceService,
-                nodeService,
-                openResponseService,
-                outsideURLService,
-                photoBoothService,
-                notebookService,
-                projectService,
-                sessionService,
-                studentAssetService,
-                studentDataService,
-                studentStatusService,
-                tableService,
-                teacherDataService,
-                teacherWebSocketService) {
+    'angular',
+    'bootstrap',
+    'd3',
+    'directives',
+    'filters',
+    'jquery',
+    'jqueryUI',
+    'angularAnimate',
+    'angularAria',
+    'angularMaterial',
+    'angularAudio',
+    'angularDragDrop',
+    'angularFileUpload',
+    'angularMoment',
+    'angularSortable',
+    'angularSanitize',
+    'angularToArrayFilter',
+    'angularUIRouter',
+    'angularUITinymce',
+    'angularUITree',
+    'angularWebSocket',
+    'annotationService',
+    'audioRecorderService',
+    'configService',
+    'cRaterService',
+    'discussionService',
+    'drawService',
+    'embeddedService',
+    'graphService',
+    'highcharts-ng',
+    'htmlService',
+    'matchService',
+    'moment',
+    'multipleChoiceService',
+    'nodeService',
+    'ocLazyLoad',
+    'openResponseService',
+    'outsideURLService',
+    'photoBoothService',
+    'notebookService',
+    'notebook',
+    'projectService',
+    'sessionService',
+    'studentAssetService',
+    'studentDataService',
+    'studentStatusService',
+    'studentWebSocketService',
+    'tableService',
+    'teacherDataService',
+    'teacherWebSocketService',
+    'tinymce',
+    'webfont',
+    'webfonts'
+], function (angular,
+             bootstrap,
+             d3,
+             directives,
+             filters,
+             $,
+             jqueryUI,
+             angularAnimate,
+             angularAria,
+             angularMaterial,
+             angularAudio,
+             angularDragDrop,
+             angularFileUpload,
+             angularMoment,
+             angularSortable,
+             angularSanitize,
+             angularToArrayFilter,
+             angularUIRouter,
+             angularUITinymce,
+             angularUITree,
+             angularWebSocket,
+             annotationService,
+             audioRecorderService,
+             configService,
+             cRaterService,
+             discussionService,
+             drawService,
+             embeddedService,
+             graphService,
+             highchartsng,
+             htmlService,
+             matchService,
+             moment,
+             multipleChoiceService,
+             nodeService,
+             ocLazyLoad,
+             openResponseService,
+             outsideURLService,
+             photoBoothService,
+             notebookService,
+             notebook,
+             projectService,
+             sessionService,
+             studentAssetService,
+             studentDataService,
+             studentStatusService,
+             studentWebSocketService,
+             tableService,
+             teacherDataService,
+             teacherWebSocketService,
+             tinymce,
+             webfont,
+             webfonts) {
 
-	var app = angular.module('app', [
-	                                 'directives',
-	                                 'filters',
-	                                 'ui.router',
-	                                 'ui.sortable',
-	                                 'ngAnimate',
-	                                 'ngDragDrop',
+
+    var app = angular.module('app', [
+                                     'angular-toArrayFilter',
+                                     'angularMoment',
+                                     'directives',
+                                     'filters',
+                                     'highcharts-ng',
+                                     'ngAnimate',
+                                     'ngDragDrop',
                                      'ngFileUpload',
-	                                 'ngWebSocket'
-	                                 ]);
-	
+                                     'ngMaterial',
+                                     'ngWebSocket',
+                                     'ui.router',
+                                     'ui.sortable'
+                                     ]);
+
     // core services
-	app.factory('AnnotationService', annotationService);
+    app.factory('AnnotationService', annotationService);
     app.factory('ConfigService', configService);
     app.factory('CRaterService', cRaterService);
     app.factory('EmbeddedService', embeddedService);
@@ -92,6 +134,7 @@ define([
     app.factory('StudentAssetService', studentAssetService);
     app.factory('StudentDataService', studentDataService);
     app.factory('StudentStatusService', studentStatusService);
+    app.factory('StudentWebSocketService', studentWebSocketService);
     app.factory('TeacherDataService', teacherDataService);
     app.factory('TeacherWebSocketService', teacherWebSocketService);
     
@@ -105,30 +148,40 @@ define([
     app.factory('OutsideURLService', outsideURLService);
     app.factory('PhotoBoothService', photoBoothService);
     app.factory('TableService', tableService);
-		
-	app.init = function() {
-		angular.bootstrap(document, ['app']);
-	};
-	
-	app.loadController = function(controllerName) {
-		return ['$q', function($q) {
-			var deferred = $q.defer();
-			require([controllerName], function() {
-				deferred.resolve();
-			});
-			return deferred.promise;
-		}];
-	};
-	
-	app.config(['$urlRouterProvider', '$stateProvider', '$controllerProvider', 
-	            function($urlRouterProvider, $stateProvider, $controllerProvider) {
-		
-		$urlRouterProvider.otherwise('/studentProgress');
-		
-		app.$controllerProvider = $controllerProvider;
-		
-		$stateProvider
-    		.state('root', {
+
+    app.init = function() {
+        angular.bootstrap(document, ['app']);
+    };
+
+    app.loadController = function(controllerName) {
+        return ['$q', function($q) {
+            var deferred = $q.defer();
+            require([controllerName], function() {
+                deferred.resolve();
+            });
+            return deferred.promise;
+        }];
+    };
+
+    app.config([
+        '$compileProvider',
+        '$controllerProvider',
+        '$mdThemingProvider',
+        '$stateProvider',
+        '$urlRouterProvider',
+                function($compileProvider,
+                         $controllerProvider,
+                         $mdThemingProvider,
+                         $stateProvider,
+                         $urlRouterProvider) {
+
+        $urlRouterProvider.otherwise('/studentProgress');
+
+        app.$compileProvider = $compileProvider;
+        app.$controllerProvider = $controllerProvider;
+
+        $stateProvider
+            .state('root', {
                 url: '',
                 abstract: true,
                 templateUrl: 'wise5/classroomMonitor/classroomMonitor.html',
@@ -136,7 +189,7 @@ define([
                     classroomMonitorController: app.loadController('classroomMonitorController'),
                     config: function(ConfigService) {
                         var configUrl = window.configUrl;
-                        
+
                         return ConfigService.retrieveConfig(configUrl);
                     },
                     project: function(ProjectService, config) {
@@ -180,8 +233,16 @@ define([
                     annotations: function(AnnotationService, config) {
                         return AnnotationService.retrieveAnnotationsByNodeId();
                     },
-                    nodeGradingController: app.loadController('nodeGradingController'),
+                    loadController: app.loadController('nodeGradingController'),
+                    embeddedController: app.loadController('embeddedController'),
+                    graphController: app.loadController('graphController'),
+                    discussionController: app.loadController('discussionController'),
                     drawController: app.loadController('drawController'),
+                    htmlChoiceController: app.loadController('htmlController'),
+                    multipleChoiceController: app.loadController('multipleChoiceController'),
+                    nodeController: app.loadController('nodeController'),
+                    openResponseController: app.loadController('openResponseController'),
+                    tableController: app.loadController('tableController')
                 }
             })
             .state('root.studentGrading', {
@@ -200,6 +261,6 @@ define([
                 }
             });
             
-	}]);
-	return app;
+    }]);
+    return app;
 });

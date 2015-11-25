@@ -4,14 +4,16 @@ define(['app',
         'highcharts', 
         'highcharts-more',
         'highcharts-ng', 
-        'jquery'],
+        'jquery',
+        'studentAssetService'],
         function(app, 
                 bootstrap,
                 draggablePoints,
                 highcharts, 
                 highchartsMore, 
                 highchartsng, 
-                $) {
+                $,
+                studentAssetService) {
     
     app.$controllerProvider.register('GraphController', 
         function($rootScope,
@@ -87,30 +89,31 @@ define(['app',
             
             // get the component content from the scope
             this.componentContent = $scope.component;
-            
+
+            this.mode = $scope.mode;
+
             if (this.componentContent != null) {
                 
                 // get the component id
                 this.componentId = this.componentContent.id;
 
-                // check if we should show the prompt
-                if (this.componentContent.showPrompt != null) {
-                    this.isPromptVisible = this.componentContent.showPrompt;
-                }
-
-                // check if we should show the save button
-                if (this.componentContent.showSaveButton != null) {
+                if (this.mode === 'student') {
+                    this.isPromptVisible = true;
                     this.isSaveButtonVisible = this.componentContent.showSaveButton;
-                }
-
-                // check if we should show the submit button
-                if (this.componentContent.showSubmitButton != null) {
                     this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-                }
-
-                // check if we should show the reset graph button
-                if (this.componentContent.showResetGraphButton != null) {
-                    this.isResetGraphButtonVisible = this.componentContent.showResetGraphButton;
+                    this.isResetGraphButtonVisible = true;
+                } else if (this.mode === 'grading') {
+                    this.isPromptVisible = true;
+                    this.isSaveButtonVisible = false;
+                    this.isSubmitButtonVisible = false;
+                    this.isResetGraphButtonVisible = false;
+                    this.isDisabled = true;
+                } else if (this.mode === 'onlyShowWork') {
+                    this.isPromptVisible = false;
+                    this.isSaveButtonVisible = false;
+                    this.isSubmitButtonVisible = false;
+                    this.isResetGraphButtonVisible = false;
+                    this.isDisabled = true;
                 }
 
                 // get the show previous work node id if it is provided
@@ -118,7 +121,7 @@ define(['app',
 
                 var componentState = null;
                 
-                if (showPreviousWorkNodeId != null) {
+                if (false) {
                     // this component is showing previous work
                     this.isShowPreviousWork = true;
 
@@ -148,6 +151,11 @@ define(['app',
                     // get the component state for the show previous work
                     componentState = StudentDataService.getLatestComponentStateByNodeIdAndComponentId(showPreviousWorkNodeId, showPreviousWorkComponentId);
 
+                    if (componentState == null) {
+                        // the component state will be passed into the scope when we are in the grading tool
+                        componentState = $scope.componentState;
+                    }
+
                     // populate the student work into this component
                     this.setStudentWork(componentState);
 
@@ -157,8 +165,10 @@ define(['app',
                     // disable the component since we are just showing previous work
                     this.isDisabled = true;
 
-                    // register this component with the parent node
-                    $scope.$parent.registerComponentController($scope, this.componentContent);
+                    if ($scope.$parent.registerComponentController != null) {
+                        // register this component with the parent node
+                        $scope.$parent.registerComponentController($scope, this.componentContent);
+                    }
                 } else {
                     // this is a regular component
 
@@ -189,12 +199,14 @@ define(['app',
                     
                     // check if we need to lock this component
                     this.calculateDisabled();
-                    
+
                     // setup the graph
                     this.setupGraph();
-                    
-                    // register this component with the parent node
-                    $scope.$parent.registerComponentController($scope, this.componentContent);
+
+                    if ($scope.$parent.registerComponentController != null) {
+                        // register this component with the parent node
+                        $scope.$parent.registerComponentController($scope, this.componentContent);
+                    }
                 }
             }
         };
@@ -756,6 +768,14 @@ define(['app',
         this.resetGraph = function() {
             // get the original series from the component content
             this.setSeries(StudentDataService.makeCopyOfJSONObject(this.componentContent.series));
+
+            if (this.componentContent.xAxis != null) {
+                this.setXAxis(this.componentContent.xAxis);
+            }
+
+            if (this.componentContent.yAxis != null) {
+                this.setYAxis(this.componentContent.yAxis);
+            }
 
             // set the active series to null so that the default series will become selected later
             this.setActiveSeries(null);

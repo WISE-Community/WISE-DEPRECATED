@@ -255,10 +255,10 @@ define(['angular', 'projectService', 'studentDataService'], function(angular, pr
                         var childService = $injector.get(componentType + 'Service');
 
                         if (childService != null) {
-                            var studentWorkHTML = childService.getStudentWorkAsHTML(componentState);
+                            var studentWorkHTML = childService.getStudentWorkAsHTML(componentState, $scope);
 
                             if (studentWorkHTML != null) {
-                                element[0].innerHTML = studentWorkHTML;
+                                element[0].innerHTML = "<div ng-bind-html='" + studentWorkHTML + "'></div>";
                             }
                         }
                     }
@@ -267,41 +267,37 @@ define(['angular', 'projectService', 'studentDataService'], function(angular, pr
         };
     })
 
-    .directive('studentwork', function($injector, $compile, StudentDataService, ProjectService) {
+    .directive('component', function($injector, $compile, NodeService, ProjectService, StudentDataService) {
         return {
             restrict: 'E',
             link: function($scope, element, attrs) {
 
                 var nodeId = attrs.nodeid;
                 var componentId = attrs.componentid;
+                var componentState = attrs.componentstate;
                 $scope.mode = "normal";
                 if (attrs.mode) {
                     $scope.mode = attrs.mode;
                 }
 
-                var componentState = StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
+                if (componentState == null || componentState === '') {
+                    componentState = StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
+                } else {
+                    componentState = angular.fromJson(componentState);
+                }
 
-                if (componentState != null) {
-                    var componentType = componentState.componentType;
+                var component = ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
 
-                    if (componentType != null) {
-                        var childService = $injector.get(componentType + 'Service');
+                $scope.component = component;
+                $scope.componentState = componentState;
+                $scope.componentTemplatePath = NodeService.getComponentTemplatePath(component.componentType);
 
-                        if (childService != null) {
-                            //var studentWorkHTML = childService.getStudentWorkAsHTML(componentState);
-                            $scope.component = ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
-                            $scope.componentState = componentState;
-                            var studentWorkHTML = "<div id=\"{{component.id}}\" class=\"component-content\" >" +
-                                               "<div ng-include='nodeCtrl.getComponentTypeHTML(component.componentType)' " +
-                                               "ng-init='componentState = {{componentState}}; mode = {{mode}}'></div>" +
-                                               "</div>";
+                var studentWorkHTML = "<div id=\"{{component.id}}\" class=\"component-content\" >" +
+                    "<div ng-include='componentTemplatePath' ></div></div>";
 
-                            if (studentWorkHTML != null) {
-                                element.html(studentWorkHTML);
-                                $compile(element.contents())($scope);
-                            }
-                        }
-                    }
+                if (studentWorkHTML != null) {
+                    element.html(studentWorkHTML);
+                    $compile(element.contents())($scope);
                 }
             }
         };

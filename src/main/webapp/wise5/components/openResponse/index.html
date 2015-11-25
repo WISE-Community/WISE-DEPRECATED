@@ -8,7 +8,7 @@
 
             <md-input-container class="input-container md-block input-container--open-response md-no-float">
                 <label class="input-label md-no-float" ng-disabled="openResponseController.isDisabled"
-                       compile="openResponseController.getPrompt()" ng-if="openResponseController.getPrompt()"></label>
+                       compile="openResponseController.getPrompt()" ng-if="openResponseController.showPrompt()"></label>
                 <div class="input-wrapper" ng-class="{'input-wrapper--richtext': openResponseController.isRichTextEnabled}">
                     <textarea ng-if="openResponseController.isRichTextEnabled && !openResponseController.isDisabled"
                               ui-tinymce="openResponseController.tinymceOptions"
@@ -26,24 +26,24 @@
                               ng-change="openResponseController.studentDataChanged()"></textarea>
                     <!-- TODO: uncomment me when adding student work to notebook is styled and ready for use in a run
                     <md-button class="input--textarea__action input--textarea__action--notebook md-icon-button"
-                               ng-click='nodeCtrl.addStudentWorkItemToNotebook(component.id)'
+                               ng-click='nodeController.addStudentWorkItemToNotebook(component.id)'
                                ng-disabled="!openResponseController.getStudentResponse()">
                         <md-icon> book </md-icon>
                         <md-tooltip md-direction="left">Add to Notebook</md-tooltip>
                     </md-button>
                     -->
                     <md-button class="input--textarea__action input--textarea__action--revision md-icon-button"
-                               ng-click='nodeCtrl.showRevisions($event, component.id, openResponseController.isDisabled)'
-                               ng-if="nodeCtrl.getRevisions(component.id).length > 1">
+                               ng-click='nodeController.showRevisions($event, component.id, openResponseController.isDisabled)'
+                               ng-if="nodeController.getRevisions(component.id).length > 1">
                         <md-icon> history </md-icon>
-                        <md-tooltip md-direction="left">{{nodeCtrl.getRevisions(component.id).length}} Versions</md-tooltip>
+                        <md-tooltip md-direction="left">{{nodeController.getRevisions(component.id).length}} Versions</md-tooltip>
                     </md-button>
                 </div>
             </md-input-container>
             <div class="component-content__actions" ng-show="openResponseController.attachments.length && openResponseController.isStudentAttachmentEnabled" layout="row" layout-wrap="true">
                 <div class="component__add-attachment">
                     <md-button class="md-accent"
-                               ng-click="nodeCtrl.showNotebook($event, component.id, openResponseController.isDisabled)">
+                               ng-click="nodeController.showNotebook($event, component.id, openResponseController.isDisabled)">
                         <md-icon>image</md-icon> <span>Add File</span>
                     </md-button>
                 </div>

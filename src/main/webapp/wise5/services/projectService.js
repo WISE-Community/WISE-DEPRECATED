@@ -234,12 +234,12 @@ define(['configService'], function(configService) {
                         var content = node.content;
                         var constraints = node.constraints;
 
+                        if (content != null) {
+                            node.content = this.injectAssetPaths(content);
+                        }
+
                         this.setIdToNode(nodeId, node);
                         this.setIdToElement(nodeId, node);
-
-                        if (content != null) {
-                            this.setIdToContent(nodeId, content);
-                        }
 
                         this.addNode(node);
 
@@ -495,14 +495,6 @@ define(['configService'], function(configService) {
         serviceObject.setIdToElement = function(id, element) {
             if (id != null) {
                 this.idToElement[id] = element;
-            }
-        };
-
-        serviceObject.setIdToContent = function(id, content) {
-            if (id != null) {
-                content = this.injectAssetPaths(content);
-
-                this.idToContent[id] = content;
             }
         };
 
@@ -2257,7 +2249,11 @@ define(['configService'], function(configService) {
             var nodeContent = null;
 
             if (nodeId != null) {
-                nodeContent = this.idToContent[nodeId];
+                var node = this.getNodeById(nodeId);
+
+                if (node != null) {
+                    nodeContent = node.content;
+                }
             }
 
             return nodeContent;

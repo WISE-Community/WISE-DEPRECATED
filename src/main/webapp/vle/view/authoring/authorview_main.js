@@ -2622,7 +2622,7 @@ View.prototype.gotoDashboard = function() {
 	/*
 	 * since the authoring tool is inside an iframe, we need to set the parent's location
 	 */
-	window.parent.location=this.config.getConfigParam("wiseBaseURL")+"/teacher/index.html";
+	window.parent.location=this.config.getConfigParam("wiseBaseURL")+"/teacher";
 };
 
 //used to notify scriptloader that this script has finished loading

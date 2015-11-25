@@ -136,7 +136,7 @@ define(['app', 'angular'], function(app, angular) {
                                      * the student has already submitted a response so we will
                                      * display the classmate responses
                                      */
-                                    this.getClassmateResponses();
+                                    //this.getClassmateResponses();
                                 }
                             } else {
                                 // classmate responses are not gated so we will show them
@@ -153,8 +153,10 @@ define(['app', 'angular'], function(app, angular) {
                     // set whether studentAttachment is enabled
                     this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
 
-                    // register this component with the parent node
-                    $scope.$parent.registerComponentController($scope, this.componentContent);
+                    if ($scope.$parent.registerComponentController != null) {
+                        // register this component with the parent node
+                        $scope.$parent.registerComponentController($scope, this.componentContent);
+                    }
                 }
             };
 

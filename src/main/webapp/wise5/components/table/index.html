@@ -2,11 +2,11 @@
     <div id='prompt' compile='tableController.getPrompt()'></div>
     <div class="component-content__actions" layout="row">
         <md-button class="md-accent" ng-show="tableController.isStudentAttachmentEnabled"
-                   ng-click="nodeCtrl.showNotebook($event, component.id, tableController.isDisabled)">
+                   ng-click="nodeController.showNotebook($event, component.id, tableController.isDisabled)">
             <md-icon>image</md-icon> Import Data
         </md-button>
     </div>
-    <button ng-click='tableController.resetTable()'>Reset Table</button>
+    <button ng-click='tableController.resetTable()' ng-show='tableController.showResetTableButton()'>Reset Table</button>
     <table>
         <tr ng-repeat='row in tableController.getTableDataRows()'>
             <td ng-repeat='cell in row'>

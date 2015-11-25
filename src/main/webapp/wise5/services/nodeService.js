@@ -128,7 +128,7 @@ define(['configService', 'projectService', 'studentDataService'], function(confi
              * @param componentType the component type
              * @return the path to the html template for the component
              */
-            serviceObject.getComponentTypeHTML = function(componentType) {
+            serviceObject.getComponentTemplatePath = function(componentType) {
 
                 if (componentType == null) {
                     // error

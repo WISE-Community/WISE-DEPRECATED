@@ -115,9 +115,11 @@ define(['app'], function(app) {
                     
                     // check if we need to lock this component
                     this.calculateDisabled();
-                    
-                    // register this component with the parent node
-                    $scope.$parent.registerComponentController($scope, this.componentContent);
+
+                    if ($scope.$parent.registerComponentController != null) {
+                        // register this component with the parent node
+                        $scope.$parent.registerComponentController($scope, this.componentContent);
+                    }
                 }
             }
         };

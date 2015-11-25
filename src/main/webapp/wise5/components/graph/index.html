@@ -2,7 +2,7 @@
     <div id='prompt' compile='graphController.getPrompt()' ng-show='graphController.showPrompt()'></div>
     <div class="component-content__actions" layout="row">
         <md-button class="md-accent" ng-show="graphController.isStudentAttachmentEnabled"
-                   ng-click="nodeCtrl.showNotebook($event, component.id, graphController.isDisabled)">
+                   ng-click="nodeController.showNotebook($event, component.id, graphController.isDisabled)">
             <md-icon>image</md-icon> Import Data
         </md-button>
     </div>

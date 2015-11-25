@@ -1,20 +1,20 @@
-<step-tools node-id="nodeCtrl.nodeId" show-position="themeCtrl.numberProject"
-              prev-id="nodeCtrl.prevNodeid" next-id="nodeCtrl.nextNodeId"></step-tools>
+<step-tools node-id="nodeController.nodeId" show-position="themeCtrl.numberProject"
+              prev-id="nodeController.prevNodeid" next-id="nodeController.nextNodeId"></step-tools>
 <div class="node-container">
     <md-content class="l-constrained node-content md-padding">
-        <div id="{{component.id}}" class="component-content" ng-repeat='component in nodeCtrl.getComponents()'>
-            <div ng-include='nodeCtrl.getComponentTypeHTML(component.componentType)'
-                 ng-init='componentState = nodeCtrl.getComponentStateByComponentId(component.id)'></div>
+        <div id="{{component.id}}" class="component-content" ng-repeat='component in nodeController.getComponents()'>
+            <component ng-if='component.showPreviousWorkNodeId != null && component.showPreviousWorkComponentId != null' nodeid='{{component.showPreviousWorkNodeId}}' componentid='{{component.showPreviousWorkComponentId}}' componentstate='{{nodeController.getComponentStateByNodeIdAndComponentId(component.showPreviousWorkNodeId, component.showPreviousWorkComponentId)}}' mode='onlyShowWork'></component>
+            <component ng-if='component.showPreviousWorkNodeId == null || component.showPreviousWorkComponentId == null' nodeid='{{nodeController.nodeId}}' componentid='{{component.id}}' componentstate='{{nodeController.getComponentStateByComponentId(component.id)}}' mode='student'></component>
         </div>
-        <div ng-if='nodeCtrl.showSaveButton() || nodeCtrl.showSubmitButton()' class="node-content__actions" layout="row">
+        <div ng-if='nodeController.showSaveButton() || nodeController.showSubmitButton()' class="node-content__actions" layout="row">
             <md-button class="md-raised md-primary"
-                    ng-click='nodeCtrl.saveButtonClicked()'
-                    ng-disabled='nodeCtrl.isDisabled || !nodeCtrl.isDirty'
-                    ng-if='nodeCtrl.showSaveButton()'>Save</md-button>
+                    ng-click='nodeController.saveButtonClicked()'
+                    ng-disabled='nodeController.isDisabled || !nodeController.isDirty'
+                    ng-if='nodeController.showSaveButton()'>Save</md-button>
             <md-button class="md-raised md-primary"
-                    ng-click='nodeCtrl.submitButtonClicked()'
-                    ng-disabled='nodeCtrl.isDisabled || !nodeCtrl.isDirty'
-                    ng-if='nodeCtrl.showSubmitButton()'>Submit</md-button>
+                    ng-click='nodeController.submitButtonClicked()'
+                    ng-disabled='nodeController.isDisabled || !nodeController.isDirty'
+                    ng-if='nodeController.showSubmitButton()'>Submit</md-button>
         </div>
     </md-content>
 </div>

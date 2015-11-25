@@ -140,8 +140,10 @@ define(['app'], function(app) {
                 // get the max height
                 this.maxHeight = this.componentContent.maxHeight ? this.componentContent.maxHeight : "none";
 
-                // register this component with the parent node
-                $scope.$parent.registerComponentController($scope, this.componentContent);
+                if ($scope.$parent.registerComponentController != null) {
+                    // register this component with the parent node
+                    $scope.$parent.registerComponentController($scope, this.componentContent);
+                }
             }
         };
         
