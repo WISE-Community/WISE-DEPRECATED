@@ -275,9 +275,19 @@ define(['angular', 'projectService', 'studentDataService'], function(angular, pr
                 var nodeId = attrs.nodeid;
                 var componentId = attrs.componentid;
                 var componentState = attrs.componentstate;
+                var workgroupId = null;
+
                 $scope.mode = "normal";
                 if (attrs.mode) {
                     $scope.mode = attrs.mode;
+                }
+
+                if (attrs.workgroupid != null) {
+                    try {
+                        workgroupId = parseInt(attrs.workgroupid);
+                    } catch(e) {
+
+                    }
                 }
 
                 if (componentState == null || componentState === '') {
@@ -291,6 +301,8 @@ define(['angular', 'projectService', 'studentDataService'], function(angular, pr
                 $scope.component = component;
                 $scope.componentState = componentState;
                 $scope.componentTemplatePath = NodeService.getComponentTemplatePath(component.componentType);
+                $scope.nodeId = nodeId;
+                $scope.workgroupId = workgroupId;
 
                 var studentWorkHTML = "<div id=\"{{component.id}}\" class=\"component-content\" >" +
                     "<div ng-include='componentTemplatePath' ></div></div>";

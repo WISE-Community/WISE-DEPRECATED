@@ -46,6 +46,7 @@ define([
     'studentStatusService',
     'studentWebSocketService',
     'tableService',
+    'teacherDataService',
     'tinymce',
     'webfont',
     'webfonts'
@@ -96,6 +97,7 @@ define([
              studentStatusService,
              studentWebSocketService,
              tableService,
+             teacherDataService,
              tinymce,
              webfont,
              webfonts) {
@@ -133,6 +135,7 @@ define([
     app.factory('StudentDataService', studentDataService);
     app.factory('StudentStatusService', studentStatusService);
     app.factory('StudentWebSocketService', studentWebSocketService);
+    app.factory('TeacherDataService', teacherDataService);
 
     // node services
     app.factory('AudioRecorderService', audioRecorderService);

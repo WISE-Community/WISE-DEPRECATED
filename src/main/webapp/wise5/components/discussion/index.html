@@ -8,6 +8,7 @@
                 <div layout="row">
                     <div class="discussion-posts" flex>
                         <md-card class="discussion-new discussion-post"
+                                 ng-show="!discussionController.isDisabled"
                                  ng-class="{'discussion-new--focused md-whiteframe-z3': discussionController.focus || discussionController.newResponse || discussionController.newAttachments.length}">
                             <md-input-container class="input--placeholder-only discussion-new__input-container input-container"
                                                 md-no-float>

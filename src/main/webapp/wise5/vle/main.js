@@ -85,6 +85,7 @@ require.config({
         'studentWebSocketService': 'services/studentWebSocketService',
         'tableController': 'components/table/tableController',
         'tableService': 'components/table/tableService',
+        'teacherDataService': 'services/teacherDataService',
         'tinymce': 'vendor/tinymce-dist/tinymce.min',
         'vleController': 'vle/vleController',
         'webfont': [

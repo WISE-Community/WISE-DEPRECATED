@@ -4,10 +4,12 @@ define(['nodeService'], function(nodeService) {
                    '$q',
                    'ConfigService',
                    'NodeService',
+                   'TeacherDataService',
                    function($http,
                            $q,
                            ConfigService,
-                           NodeService) {
+                           NodeService,
+                           TeacherDataService) {
         var serviceObject = Object.create(NodeService);
         
         serviceObject.config = null;
@@ -160,7 +162,111 @@ define(['nodeService'], function(nodeService) {
             return result;
         };
 
+        /**
+         * Get all the posts associated with a workgroup id. This will
+         * get all the posts and replies that the workgroup posted
+         * or replied to as well as all the other replies classmates made.
+         * @param componentId the component id
+         * @param workgroupId the workgroup id
+         * @returns an array containing all the component states for
+         * top level posts and replies that are associated with the
+         * workgroup
+         */
+        serviceObject.getPostsAssociatedWithWorkgroupId = function(componentId, workgroupId) {
+            var allPosts = [];
 
+            var topLevelComponentIdsFound = [];
+
+            // get all the component states for the workgroup id
+            var componentStates = TeacherDataService.getComponentStatesByWorkgroupIdAndComponentId(workgroupId, componentId);
+
+            if (componentStates != null) {
+
+                // loop through all the component states
+                for (var c = 0; c < componentStates.length; c++) {
+
+                    var componentState = componentStates[c];
+
+                    if (componentState != null) {
+                        var studentData = componentState.studentData;
+
+                        if (studentData != null) {
+                            if (studentData.componentStateIdReplyingTo == null) {
+
+                                // check if we have already added the top level post
+                                if (topLevelComponentIdsFound.indexOf(componentState.id) == -1) {
+                                    // we haven't found the top level post yet so
+
+                                    /*
+                                     * the component state is a top level post so we will
+                                     * get the post and all the replies to the post
+                                     */
+                                    allPosts = allPosts.concat(this.getPostAndAllReplies(componentId, componentState.id));
+
+                                    topLevelComponentIdsFound.push(componentState.id);
+                                }
+                            } else {
+
+                                // check if we have already added the top level post
+                                if (topLevelComponentIdsFound.indexOf(studentData.componentStateIdReplyingTo) == -1) {
+                                    // we haven't found the top level post yet so
+
+                                    /*
+                                     * the component state is a reply so we will get the
+                                     * top level post and all the replies to it
+                                     */
+                                    allPosts = allPosts.concat(this.getPostAndAllReplies(componentId, studentData.componentStateIdReplyingTo));
+
+                                    topLevelComponentIdsFound.push(studentData.componentStateIdReplyingTo);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return allPosts;
+        }
+
+        /**
+         * Get the top level post and all the replies to it
+         * @param componentId the component id
+         * @param componentStateId the component state id
+         * @returns an array containing the top level post and all the replies
+         */
+        serviceObject.getPostAndAllReplies = function(componentId, componentStateId) {
+            var postAndAllReplies = [];
+
+            // get all the component states for the node
+            var componentStatesForNodeId = TeacherDataService.getComponentStatesByComponentId(componentId);
+
+            for (var c = 0; c < componentStatesForNodeId.length; c++) {
+                var tempComponentState = componentStatesForNodeId[c];
+
+                if (tempComponentState != null) {
+                    if (componentStateId === tempComponentState.id) {
+                        // we have found the top level post
+                        postAndAllReplies.push(tempComponentState);
+                    } else {
+                        // check if the component state is a reply to the post we are looking for
+                        var studentData = tempComponentState.studentData;
+
+                        if (studentData != null) {
+                            var componentStateIdReplyingTo = studentData.componentStateIdReplyingTo;
+
+                            if (componentStateIdReplyingTo != null) {
+                                if (componentStateId === componentStateIdReplyingTo) {
+                                    // this is a reply to the post we are looking for
+                                    postAndAllReplies.push(tempComponentState);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return postAndAllReplies;
+        };
         
         return serviceObject;
     }];

@@ -77,8 +77,11 @@ define(['configService', 'studentDataService'], function(configService, studentD
                     this.studentData.allComponentStates = componentStates;
                     this.studentData.componentStatesByWorkgroupId = {};
                     this.studentData.componentStatesByNodeId = {};
+                    this.studentData.componentStatesByComponentId = {};
+
                     for (var i = 0; i < componentStates.length; i++) {
                         var componentState = componentStates[i];
+
                         var componentStateWorkgroupId = componentState.workgroupId;
                         if (this.studentData.componentStatesByWorkgroupId[componentStateWorkgroupId] == null) {
                             this.studentData.componentStatesByWorkgroupId[componentStateWorkgroupId] = new Array();
@@ -90,6 +93,12 @@ define(['configService', 'studentDataService'], function(configService, studentD
                             this.studentData.componentStatesByNodeId[componentStateNodeId] = new Array();
                         }
                         this.studentData.componentStatesByNodeId[componentStateNodeId].push(componentState);
+
+                        var componentId = componentState.componentId;
+                        if (this.studentData.componentStatesByComponentId[componentId] == null) {
+                            this.studentData.componentStatesByComponentId[componentId] = new Array();
+                        }
+                        this.studentData.componentStatesByComponentId[componentId].push(componentState);
                     }
 
                     // populate allEvents, eventsByWorkgroupId, and eventsByNodeId arrays
@@ -175,6 +184,23 @@ define(['configService', 'studentDataService'], function(configService, studentD
             }
         };
 
+        /**
+         * Get the component stats for a component id
+         * @param componentId the component id
+         * @returns an array containing component states for a component id
+         */
+        serviceObject.getComponentStatesByComponentId = function(componentId) {
+            var componentStates = [];
+
+            var componentStatesByComponentId = this.studentData.componentStatesByComponentId[componentId];
+
+            if (componentStatesByComponentId != null) {
+                componentStates = componentStatesByComponentId;
+            }
+
+            return componentStates;
+        };
+
         serviceObject.getLatestComponentStateByWorkgroupIdNodeIdAndComponentId = function(workgroupId, nodeId, componentId) {
             var latestComponentState = null;
 
@@ -213,6 +239,22 @@ define(['configService', 'studentDataService'], function(configService, studentD
                 return componentStatesByNodeId.indexOf(n) != -1;
             });
         };
+
+        /**
+         * Get component states for a workgroup id and component id
+         * @param workgroupId the workgroup id
+         * @param componentId the component id
+         * @returns an array of component states
+         */
+        serviceObject.getComponentStatesByWorkgroupIdAndComponentId = function(workgroupId, componentId) {
+            var componentStatesByWorkgroupId = this.getComponentStatesByWorkgroupId(workgroupId);
+            var componentStatesByComponentId = this.getComponentStatesByComponentId(componentId);
+
+            // find the intersect and return it
+            return componentStatesByWorkgroupId.filter(function(n) {
+                return componentStatesByComponentId.indexOf(n) != -1;
+            });
+        }
 
         serviceObject.getEventsByWorkgroupId = function(workgroupId) {
             var eventsByWorkgroupId = this.studentData.eventsByWorkgroupId[workgroupId];

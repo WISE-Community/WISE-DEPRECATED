@@ -67,6 +67,11 @@ define(['app', 'angular'], function(app, angular) {
             // whether we have retrieved the classmate responses
             this.retrievedClassmateResponses = false;
 
+            // the mode to load the component in e.g. 'student', 'grading', 'onlyShowWork'
+            this.mode = null;
+
+            this.workgroupId = null;
+
             /**
              * Perform setup of the component
              */
@@ -86,11 +91,20 @@ define(['app', 'angular'], function(app, angular) {
                     // get the component id
                     this.componentId = this.componentContent.id;
 
+                    this.mode = $scope.mode;
+
+                    if ($scope.workgroupId != null) {
+                        this.workgroupId = $scope.workgroupId;
+                    }
+
+                    if ($scope.nodeId != null) {
+                        this.nodeId = $scope.nodeId;
+                    }
 
                     // get the show previous work node id if it is provided
                     var showPreviousWorkNodeId = this.componentContent.showPreviousWorkNodeId;
 
-                    if (showPreviousWorkNodeId != null) {
+                    if (false) {
                         // this component is showing previous work
                         this.isShowPreviousWork = true;
 
@@ -114,38 +128,52 @@ define(['app', 'angular'], function(app, angular) {
                     } else {
                         // this is a regular component
 
-                        // populate the student work into this component
-                        //this.setStudentWork(componentState);
-
-                        if (ConfigService.isPreview()) {
-                            // we are in preview mode
-                        } else {
-                            // we are in regular student run mode
-
-                            if (this.isClassmateResponsesGated()) {
-                                /*
-                                 * classmate responses are gated so we will not show them if the student
-                                 * has not submitted a response
-                                 */
-
-                                // get the component state from the scope
-                                var componentState = $scope.componentState;
-
-                                if (componentState != null) {
-                                    /*
-                                     * the student has already submitted a response so we will
-                                     * display the classmate responses
-                                     */
-                                    //this.getClassmateResponses();
-                                }
+                        if (this.mode === 'student') {
+                            if (ConfigService.isPreview()) {
+                                // we are in preview mode
                             } else {
-                                // classmate responses are not gated so we will show them
-                                this.getClassmateResponses();
-                            }
-                        }
+                                // we are in regular student run mode
 
-                        // check if we need to lock this component
-                        this.calculateDisabled();
+                                if (this.isClassmateResponsesGated()) {
+                                    /*
+                                     * classmate responses are gated so we will not show them if the student
+                                     * has not submitted a response
+                                     */
+
+                                    // get the component state from the scope
+                                    var componentState = $scope.componentState;
+
+                                    if (componentState != null) {
+                                        /*
+                                         * the student has already submitted a response so we will
+                                         * display the classmate responses
+                                         */
+                                        this.getClassmateResponses();
+                                    }
+                                } else {
+                                    // classmate responses are not gated so we will show them
+                                    this.getClassmateResponses();
+                                }
+                            }
+
+                            // check if we need to lock this component
+                            this.calculateDisabled();
+                        } else if (this.mode === 'grading') {
+
+                            /*
+                             * get all the posts that this workgroup id is part of. if the student
+                             * posted a top level response we will get the top level response and
+                             * all the replies. if the student replied to a top level response we
+                             * will get the top level response and all the replies.
+                             */
+                            var componentStates = DiscussionService.getPostsAssociatedWithWorkgroupId(this.componentId, this.workgroupId);
+
+                            this.setClassResponses(componentStates);
+
+                            this.isDisabled = true;
+                        } else if (this.mode === 'onlyShowWork') {
+                            this.isDisabled = true;
+                        }
                     }
 
                     this.isRichTextEnabled = this.componentContent.isRichTextEnabled;

@@ -117,6 +117,7 @@ define([
                                      'ngDragDrop',
                                      'ngFileUpload',
                                      'ngMaterial',
+                                     'ngSanitize',
                                      'ngWebSocket',
                                      'ui.router',
                                      'ui.sortable'

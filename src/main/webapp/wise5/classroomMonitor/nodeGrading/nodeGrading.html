@@ -3,7 +3,7 @@
 <div ng-repeat='workgroupId in nodeGradingController.workgroupIds'>
     <div>{{nodeGradingController.getUserNameByWorkgroupId(workgroupId)}}</div>
     <div id="{{component.id}}" class="component-content" ng-repeat='component in nodeGradingController.getComponents()'>
-        <component ng-if='component.showPreviousWorkNodeId != null && component.showPreviousWorkComponentId != null' nodeid='{{component.showPreviousWorkNodeId}}' componentid='{{component.showPreviousWorkComponentId}}' componentstate='{{nodeGradingController.getLatestComponentStateByWorkgroupIdAndNodeIdAndComponentId(workgroupId, component.showPreviousWorkNodeId, component.showPreviousWorkComponentId)}}' mode='grading'></component>
-        <component ng-if='component.showPreviousWorkNodeId == null || component.showPreviousWorkComponentId == null' nodeid='{{nodeGradingController.nodeId}}' componentid='{{component.id}}' componentstate='{{nodeGradingController.getLatestComponentStateByWorkgroupIdAndComponentId(workgroupId, component.id)}}' mode='grading'></component>
+        <component ng-if='component.showPreviousWorkNodeId != null && component.showPreviousWorkComponentId != null' nodeid='{{component.showPreviousWorkNodeId}}' componentid='{{component.showPreviousWorkComponentId}}' componentstate='{{nodeGradingController.getLatestComponentStateByWorkgroupIdAndNodeIdAndComponentId(workgroupId, component.showPreviousWorkNodeId, component.showPreviousWorkComponentId)}}' workgroupid='{{workgroupId}}' mode='grading'></component>
+        <component ng-if='component.showPreviousWorkNodeId == null || component.showPreviousWorkComponentId == null' nodeid='{{nodeGradingController.nodeId}}' componentid='{{component.id}}' componentstate='{{nodeGradingController.getLatestComponentStateByWorkgroupIdAndComponentId(workgroupId, component.id)}}' workgroupid='{{workgroupId}}' mode='grading'></component>
     </div>
 </div>
