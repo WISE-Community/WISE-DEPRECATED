@@ -148,7 +148,7 @@ define(['nodeService'], function(nodeService) {
                     var studentData = componentState.studentData;
 
                     if (studentData != null) {
-                        var response = studentData.studentResponse;
+                        var response = studentData.response;
 
                         if (response != null) {
                             // there is a response so the component is completed
