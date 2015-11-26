@@ -1596,6 +1596,22 @@ define(['configService', 'projectService'], function(configService, projectServi
                         if (component != null) {
                             var componentId = component.id;
                             var componentType = component.componentType;
+                            var showPreviousWorkNodeId = component.showPreviousWorkNodeId;
+                            var showPreviousWorkComponentId = component.showPreviousWorkComponentId;
+
+                            var tempNodeId = nodeId;
+                            var tempComponentId = componentId;
+                            var tempComponent = component;
+
+                            if (showPreviousWorkNodeId != null && showPreviousWorkComponentId != null) {
+                                /*
+                                 * this is a show previous work component so we will check if the
+                                 * previous component was completed
+                                 */
+                                tempNodeId = showPreviousWorkNodeId;
+                                tempComponentId = showPreviousWorkComponentId;
+                                tempComponent = ProjectService.getComponentByNodeIdAndComponentId(tempNodeId, tempComponentId);
+                            }
 
                             if (componentType != null) {
                                 try {
@@ -1609,16 +1625,16 @@ define(['configService', 'projectService'], function(configService, projectServi
                                         var service = $injector.get(serviceName);
 
                                         // get the component states for the component
-                                        var componentStates = this.getComponentStatesByNodeIdAndComponentId(nodeId, componentId);
+                                        var componentStates = this.getComponentStatesByNodeIdAndComponentId(tempNodeId, tempComponentId);
 
                                         // get the component events
-                                        var componentEvents = this.getEventsByNodeIdAndComponentId(nodeId, componentId);
+                                        var componentEvents = this.getEventsByNodeIdAndComponentId(tempNodeId, tempComponentId);
 
                                         // get the node events
-                                        var nodeEvents = this.getEventsByNodeId(nodeId);
+                                        var nodeEvents = this.getEventsByNodeId(tempNodeId);
 
                                         // check if the component is completed
-                                        var isComponentCompleted = service.isCompleted(component, componentStates, componentEvents, nodeEvents);
+                                        var isComponentCompleted = service.isCompleted(tempComponent, componentStates, componentEvents, nodeEvents);
 
                                         if (firstResult) {
                                             // this is the first component we have looked at

@@ -22,7 +22,8 @@ define(['app'], function(app) {
                       StudentDataService,
                       StudentStatusService,
                       TeacherDataService) {
-        this.title = 'Node Grading!!!';
+
+        this.title = 'Node Grading';
 
         this.nodeId = $stateParams.nodeId;
         

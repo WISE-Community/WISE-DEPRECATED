@@ -13,7 +13,9 @@ define(['app'], function(app) {
                       ConfigService,
                       ProjectService,
                       StudentStatusService) {
-        this.title = 'Node Progress!!!';
+
+        this.title = 'Node Progress';
+
         this.currentGroup = null;
 
         this.items = null;
