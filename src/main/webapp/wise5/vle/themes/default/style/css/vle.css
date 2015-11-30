@@ -2474,3 +2474,5 @@ md-input-container.discussion-new__input-container > textarea.md-input { min-hei
 .account-menu__caret:before { content: ''; position: absolute; border-bottom: 8px solid #fff; border-left: 8px solid transparent; border-right: 8px solid transparent; }
 
 .account-menu__actions { background-color: #f7f7f7; }
+
+.auto-save-span { margin-top:15px; margin-left:15px; }

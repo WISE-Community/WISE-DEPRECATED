@@ -41,6 +41,8 @@ define(['app'], function(app) {
             $scope.componentToScope = {};
             this.notebookOpen = false;
 
+            this.saveMessage = '';
+
             /**
              * Perform setup of the node
              */
@@ -383,6 +385,14 @@ define(['app'], function(app) {
             };
 
             /**
+             * Set the message next to the save button
+             * @param message the message to display
+             */
+            this.setSaveMessage = function(message) {
+                this.saveMessage = message;
+            };
+
+            /**
              * Start the auto save interval for this node
              */
             this.startAutoSaveInterval = function() {
@@ -398,6 +408,7 @@ define(['app'], function(app) {
                          * to the server
                          */
                         this.createAndSaveComponentData(isAutoSave);
+                        //this.setSaveMessage('Auto-Saved');
                     }
                 }), this.autoSaveInterval);
             };
@@ -424,6 +435,18 @@ define(['app'], function(app) {
                 var componentEvents = null;
                 var nodeStates = null;
 
+                if (ConfigService.getConfigParam('mode') === 'preview') {
+                    // we are in preview mode so we will pretend that the data was saved to the server
+
+                    this.isDirty = false;
+
+                    if (isAutoSave) {
+                        this.setSaveMessage('Auto-Saved');
+                    } else {
+                        this.setSaveMessage('Saved');
+                    }
+                }
+
                 if ((componentStates != null && componentStates.length > 0) ||
                     (componentAnnotations != null && componentAnnotations.length > 0) ||
                     (componentEvents != null && componentEvents.length > 0)) {
@@ -437,6 +460,12 @@ define(['app'], function(app) {
 
                         // TODO: handle error response from server if POST fails
                         this.isDirty = false;
+
+                        if (isAutoSave) {
+                            this.setSaveMessage('Auto-Saved');
+                        } else {
+                            this.setSaveMessage('Saved');
+                        }
 
                         return savedStudentDataResponse;
                     }));
@@ -655,6 +684,7 @@ define(['app'], function(app) {
                  * we will need to save
                  */
                 this.isDirty = true;
+                this.setSaveMessage('');
 
                 if (args != null) {
 

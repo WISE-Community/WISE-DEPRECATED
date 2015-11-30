@@ -11,6 +11,7 @@
                     ng-click='nodeController.saveButtonClicked()'
                     ng-disabled='nodeController.isDisabled || !nodeController.isDirty'
                     ng-if='nodeController.showSaveButton()'>Save</md-button>
+            <span class="auto-save-span">{{nodeController.saveMessage}}</span>
             <md-button class="md-raised md-primary"
                     ng-click='nodeController.submitButtonClicked()'
                     ng-disabled='nodeController.isDisabled || !nodeController.isDirty'
