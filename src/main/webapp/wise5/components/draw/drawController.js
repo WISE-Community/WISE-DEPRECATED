@@ -74,9 +74,9 @@ define(['app', 'drawingTool', 'vendor'], function(app) {
                 // get the component type
                 this.componentType = this.componentContent.componentType;
 
-                if (this.mode === "normal") {
+                if (this.mode === "student") {
                     this.drawingToolId = "drawingtool_" + this.nodeId + "_" + this.componentId;
-                } else if (this.mode === "showStudentWorkOnly") {
+                } else if (this.mode === 'grading' || this.mode === "onlyShowWork") {
                     // get the component state from the scope
                     var componentState = $scope.componentState;
                     if (componentState != null) {
@@ -196,7 +196,7 @@ define(['app', 'drawingTool', 'vendor'], function(app) {
                             StudentDataService.saveComponentEvent(this, category, event, data);
                         }.bind(this));
 
-                        if (this.mode === 'showStudentWorkOnly') {
+                        if (this.mode === 'grading' || this.mode === 'onlyShowWork') {
                             // we're in show student work mode, so hide the toolbar and make the drawing non-editable
                             $(".dt-tools").hide();
                         }

@@ -1080,6 +1080,30 @@ define(['configService'], function(configService) {
             return title;
         };
 
+        /**
+         * Get the node position and title
+         * @param nodeId the node id
+         * @returns the node position and title
+         */
+        serviceObject.getNodePositionAndTitleByNodeId = function(nodeId) {
+            var title = null;
+
+            var node = this.getNodeById(nodeId);
+
+            if (node != null) {
+
+                var position = this.getNodePositionById(nodeId);
+
+                if (position != null) {
+                    title = position + ' ' + node.title;
+                } else {
+                    title = node.title;
+                }
+            }
+
+            return title;
+        };
+
         serviceObject.getNodeIconByNodeId = function(nodeId) {
             var node = this.getNodeById(nodeId);
             var nodeIcon = null;

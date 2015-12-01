@@ -22,8 +22,9 @@
 <div ng-repeat='item in nodeProgressController.items | toArray | orderBy : "order"'
      ng-if='item.order!==0'
      ng-class='{"node-select--group": nodeProgressController.isGroupNode(item.$key), "node-select--node": !nodeProgressController.isGroupNode(item.$key)}'
-     ng-click='nodeProgressController.nodeClicked(item.$key)'>
-    <p>{{nodeProgressController.getNodePositionById(item.$key)}} {{nodeProgressController.getNodeTitleByNodeId(item.$key)}}</p>
+     ng-click='nodeProgressController.nodeClicked(item.$key)'
+     style='cursor: pointer'>
+    <h6>{{nodeProgressController.getNodePositionById(item.$key)}} {{nodeProgressController.getNodeTitleByNodeId(item.$key)}}</h6>
 </div>
     
 </group>

@@ -1,28 +1,35 @@
-<style>
-    .nodeTitle {
-        font-weight: bold;
-        margin-top: 10px;
-    }
-</style>
-{{studentGradingController.title}}
-<h3>User Name: {{studentGradingController.userName}} | WorkgroupId: {{studentGradingController.workgroupId}}</h3>
+<h3>{{studentGradingController.userName}}</h3>
 <div ng-repeat='nodeId in studentGradingController.nodeIds' ng-show='studentGradingController.showNodeIdForStudent(nodeId)'>
-    <div class="nodeTitle">{{studentGradingController.getNodeTitleByNodeId(nodeId)}}</div>
+    <hr style='height: 1px; background-color: black'/>
+    <div style='margin-left: 20px'><h4>{{studentGradingController.getNodePositionAndTitleByNodeId(nodeId)}}</h4></div>
+    <!--
     <div>{{studentGradingController.getEventsByWorkgroupIdAndNodeId(studentGradingController.workgroupId, nodeId).length}} events</div>
     <div>{{studentGradingController.getAnnotationsToWorkgroupIdAndNodeId(studentGradingController.workgroupId, nodeId).length}} annotations</div>
+    -->
     <table border="1">
-    <tr ng-repeat='componentState in studentGradingController.getComponentStatesByWorkgroupIdAndNodeId(studentGradingController.workgroupId, nodeId)'>
-                <td><componentstatehtml componentstate={{componentState}}></componentstatehtml></td>
-                <!--
-                <td>
-                Score: <input type='text' size=5 ng-model='studentGradingController.annotationMappings[nodeVisit.id + "-score"].value' ng-change='studentGradingController.scoreChanged(nodeVisit.id)' ng-model-options='{debounce:{"default":1000, "blur":0}}' />
-                <br>
-                Comment: <textarea rows=4 cols=50 ng-model='studentGradingController.annotationMappings[nodeVisit.id + "-comment"].value' ng-change='studentGradingController.commentChanged(nodeVisit.id)' ng-model-options='{debounce:{"default":2000, "blur":0}}'></textarea>
-                </td>
-                -->
+    <tr ng-repeat='component in studentGradingController.getComponentsByNodeId(nodeId)'>
+        <td>
+            <component ng-if='component.showPreviousWorkNodeId != null && component.showPreviousWorkComponentId != null' nodeid='{{component.showPreviousWorkNodeId}}' componentid='{{component.showPreviousWorkComponentId}}' componentstate='{{studentGradingController.getLatestComponentStateByWorkgroupIdAndNodeIdAndComponentId(studentGradingController.workgroupId, component.showPreviousWorkNodeId, component.showPreviousWorkComponentId)}}' workgroupid='{{studentGradingController.workgroupId}}' mode='grading'></component>
+            <component ng-if='component.showPreviousWorkNodeId == null || component.showPreviousWorkComponentId == null' nodeid='{{nodeId}}' componentid='{{component.id}}' componentstate='{{studentGradingController.getLatestComponentStateByWorkgroupIdAndNodeIdAndComponentId(studentGradingController.workgroupId, nodeId, component.id)}}' workgroupid='{{studentGradingController.workgroupId}}' mode='grading'></component>
+        </td>
     </tr>
+        <!--
+            <tr ng-repeat='componentState in studentGradingController.getComponentStatesByWorkgroupIdAndNodeId(studentGradingController.workgroupId, nodeId)'>
+
+                        <td><componentstatehtml componentstate={{componentState}}></componentstatehtml></td>
+
+                        <td>
+                        Score: <input type='text' size=5 ng-model='studentGradingController.annotationMappings[nodeVisit.id + "-score"].value' ng-change='studentGradingController.scoreChanged(nodeVisit.id)' ng-model-options='{debounce:{"default":1000, "blur":0}}' />
+                        <br>
+                        Comment: <textarea rows=4 cols=50 ng-model='studentGradingController.annotationMappings[nodeVisit.id + "-comment"].value' ng-change='studentGradingController.commentChanged(nodeVisit.id)' ng-model-options='{debounce:{"default":2000, "blur":0}}'></textarea>
+                        </td>
+
+            </tr>
+        -->
     </table>
 </div>
+
+<!--
 <hr/>
 <h2>All Events for this workgroup</h2>
 <table border="1">
@@ -52,3 +59,4 @@
         <td>{{annotation.data}}</td>
     </tr>
 </table>
+-->

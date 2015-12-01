@@ -23,12 +23,29 @@ define(['app'], function(app) {
                       StudentStatusService,
                       TeacherDataService) {
 
-        this.title = 'Node Grading';
 
         this.nodeId = $stateParams.nodeId;
-        
+
+        this.nodeTitle = null;
+
         // field that will hold the node content
-        this.nodeContent = ProjectService.getNodeContentByNodeId(this.nodeId);
+        this.nodeContent = null;
+
+        var node = ProjectService.getNodeById(this.nodeId);
+
+        if (node != null) {
+            var position = ProjectService.getPositionById(this.nodeId);
+
+            if (position != null) {
+                this.nodeTitle = position + ' ' + node.title;
+            } else {
+                this.nodeTitle = node.title;
+            }
+
+
+            // field that will hold the node content
+            this.nodeContent = node.content;
+        }
 
         // render components in show student work only mode
         this.mode = "showStudentWorkOnly";
@@ -176,6 +193,9 @@ define(['app'], function(app) {
         this.setupComponentStateHistory = function() {
             this.getComponentStatesByWorkgroupIdAndNodeId()
         };
+
+        // scroll to the top of the page when the page loads
+        document.body.scrollTop = document.documentElement.scrollTop = 0;
     }]);
     
 });

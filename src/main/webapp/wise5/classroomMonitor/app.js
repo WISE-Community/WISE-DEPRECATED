@@ -234,7 +234,7 @@ define([
                     annotations: function(AnnotationService, config) {
                         return AnnotationService.retrieveAnnotationsByNodeId();
                     },
-                    loadController: app.loadController('nodeGradingController'),
+                    nodeGradingController: app.loadController('nodeGradingController'),
                     embeddedController: app.loadController('embeddedController'),
                     graphController: app.loadController('graphController'),
                     discussionController: app.loadController('discussionController'),
@@ -258,7 +258,16 @@ define([
                     annotations: function(AnnotationService, config) {
                         return AnnotationService.retrieveAnnotationsByNodeId();
                     },
-                    loadController: app.loadController('studentGradingController')
+                    studentGradingController: app.loadController('studentGradingController'),
+                    embeddedController: app.loadController('embeddedController'),
+                    graphController: app.loadController('graphController'),
+                    discussionController: app.loadController('discussionController'),
+                    drawController: app.loadController('drawController'),
+                    htmlChoiceController: app.loadController('htmlController'),
+                    multipleChoiceController: app.loadController('multipleChoiceController'),
+                    nodeController: app.loadController('nodeController'),
+                    openResponseController: app.loadController('openResponseController'),
+                    tableController: app.loadController('tableController')
                 }
             });
             

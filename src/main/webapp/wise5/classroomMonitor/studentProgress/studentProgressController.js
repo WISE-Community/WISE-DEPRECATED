@@ -4,7 +4,7 @@ define(['app'], function(app) {
     .$controllerProvider
     .register('StudentProgressController', ['$rootScope', '$state', 'ConfigService', 'StudentStatusService', 'TeacherWebSocketService',
     function ($rootScope, $state, ConfigService, StudentStatusService, TeacherWebSocketService) {
-        this.title = 'Student Progress!!!';
+        this.title = 'Grade By Student';
 
         this.workgroups = ConfigService.getClassmateUserInfos();
 

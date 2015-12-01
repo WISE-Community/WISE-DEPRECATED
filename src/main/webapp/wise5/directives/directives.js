@@ -277,7 +277,7 @@ define(['angular', 'projectService', 'studentDataService'], function(angular, pr
                 var componentState = attrs.componentstate;
                 var workgroupId = null;
 
-                $scope.mode = "normal";
+                $scope.mode = "student";
                 if (attrs.mode) {
                     $scope.mode = attrs.mode;
                 }

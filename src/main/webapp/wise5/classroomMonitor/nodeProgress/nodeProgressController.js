@@ -14,7 +14,7 @@ define(['app'], function(app) {
                       ProjectService,
                       StudentStatusService) {
 
-        this.title = 'Node Progress';
+        this.title = 'Grade By Step';
 
         this.currentGroup = null;
 
