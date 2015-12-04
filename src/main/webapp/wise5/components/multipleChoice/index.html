@@ -2,7 +2,7 @@
     <head></head>
     <body>
         <div ng-controller="MultipleChoiceController as multipleChoiceController">
-            <md-input-container class="input-container md-block" ng-switch on="multipleChoiceController.getChoiceType()">
+            <md-input-container class="input-container input-container--component md-block" ng-switch on="multipleChoiceController.getChoiceType()">
                 <label class="input-label md-no-float" ng-if="multipleChoiceController.getPrompt()" compile="multipleChoiceController.getPrompt()"></label>
                 <md-radio-group ng-switch-when="radio" ng-model="multipleChoiceController.studentChoices"
                                 ng-change="multipleChoiceController.studentDataChanged()">

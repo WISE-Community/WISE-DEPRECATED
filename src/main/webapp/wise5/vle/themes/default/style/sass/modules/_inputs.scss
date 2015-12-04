@@ -1,16 +1,18 @@
 // Variables
-$input-action-width: 48px;
+$input-action-width: 44px;
 $input-action-vertical-offset: 0;
 $input-action-vertical-offset-richtext: -7px;
 
 // Base
 .input-container {
-  padding-top: 8px;
+  padding-top: 12px;
+}
+
+.input-container--component {
+  margin-bottom: 0;
 }
 
 .input-container--open-response {
-  margin-bottom: 0;
-
   &.md-has-icon {
     padding-left: 0;
   }
@@ -34,6 +36,7 @@ $input-action-vertical-offset-richtext: -7px;
   &.input--textarea--hasaction {
     padding-right: $input-action-width;
     min-height: 96px;
+    float: none;
 
     .mce-toolbar-grp {
       padding-right: $input-action-width;
@@ -57,7 +60,7 @@ $input-action-vertical-offset-richtext: -7px;
 
 .input--textarea__action {
   position: absolute;
-  right: -8px;
+  right: -4px;
 
   &[disabled] md-icon {
     color: $text-color-disabled !important;

@@ -2687,7 +2687,9 @@ md-icon.md-light.md-inactive { color: rgba(255, 255, 255, 0.3); }
 
 body { background: #eeeeee; overflow: hidden; }
 
-h1, h2, h3, h4, h5, h6 { margin-bottom: 1rem; margin-top: 1rem; }
+h1, h2, h3, h4, h5, h6 { margin-bottom: 1rem; margin-top: 1rem; line-height: 1.2em; }
+
+p { line-height: 1.25rem; margin-top: 0.5rem; margin-bottom: 0.5rem; }
 
 a { color: #1C8CA8; cursor: pointer; text-decoration: none; border-bottom: 1px solid transparent; transition: 300ms border-bottom; }
 a:not(.md-button):hover, a:not(.md-button):focus { border-bottom: 1px solid; outline: none; }
@@ -2785,9 +2787,10 @@ md-input-container.md-wise-theme label { color: rgba(0, 0, 0, 0.87); }
 
 .component-revision__actions { color: #777777; padding-top: 4px; }
 
-.input-container { padding-top: 8px; }
+.input-container { padding-top: 12px; }
 
-.input-container--open-response { margin-bottom: 0; }
+.input-container--component { margin-bottom: 0; }
+
 .input-container--open-response.md-has-icon { padding-left: 0; }
 
 .input-wrapper { position: relative; }
@@ -2795,15 +2798,15 @@ md-input-container.md-wise-theme label { color: rgba(0, 0, 0, 0.87); }
 .input-wrapper--focused .input--textarea__action md-icon { color: #1C8CA8; }
 
 .input--textarea, .input-container textarea.input--textarea { padding: 8px; background-color: #f7f7f7; border: 1px solid #cccccc; }
-.input--textarea.input--textarea--hasaction, .input-container textarea.input--textarea.input--textarea--hasaction { padding-right: 48px; min-height: 96px; }
-.input--textarea.input--textarea--hasaction .mce-toolbar-grp, .input-container textarea.input--textarea.input--textarea--hasaction .mce-toolbar-grp { padding-right: 48px; }
+.input--textarea.input--textarea--hasaction, .input-container textarea.input--textarea.input--textarea--hasaction { padding-right: 44px; min-height: 96px; float: none; }
+.input--textarea.input--textarea--hasaction .mce-toolbar-grp, .input-container textarea.input--textarea.input--textarea--hasaction .mce-toolbar-grp { padding-right: 44px; }
 .input--textarea:focus, .input-container textarea.input--textarea:focus { background-color: #ffffff; }
 
 .input-container textarea.input--textarea { width: 100%; }
 
 .input--textarea--disabled { color: rgba(0, 0, 0, 0.54); }
 
-.input--textarea__action { position: absolute; right: -8px; }
+.input--textarea__action { position: absolute; right: -4px; }
 .input--textarea__action[disabled] md-icon { color: rgba(0, 0, 0, 0.26) !important; }
 
 .input--textarea__action--notebook { top: 0; }
