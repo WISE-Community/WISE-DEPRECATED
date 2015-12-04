@@ -37,23 +37,57 @@ $input-action-vertical-offset-richtext: -7px;
 }
 
 .node-select {
-  margin-left: 8px;
-  margin-right: 8px;
+  margin: 0 8px;
   min-width: 0;
+
+  .md-select-value {
+    *:first-child {
+      transform: translate3d(0,0,0);
+      flex: 1 0 0;
+    }
+
+    .node-select__icon {
+      display: none;
+    }
+
+    .node-select__status {
+      display: none;
+    }
+  }
+
+  .md-select-icon {
+    margin-left: 0;
+    color: $text-color-dark;
+  }
 }
 
-.node-select--group {
-  color: rgba(0,0,0,0.54);
-  background-color: $gray-lighter;
+.node-select-option--group {
+  //color: rgba(0,0,0,0.54);
+  background-color: $gray-lightest;
+  border-bottom: 1px solid $gray-lighter;
+  border-top: 1px solid $gray-lighter;
 }
 
-.node-select--node {
-  padding-left: 24px;
+.node-select-option--node {
+  padding-left: 20px;
 }
 
 .node-select__icon {
-  margin-left: 4px;
-  margin-top: -1px; // hack for now; ng-material needs to fix alignment issue
+  margin-right: 8px;
+}
+
+.node-select__status {
+  margin-left: 8px;
+}
+
+.node-select__text {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+
+  @media only screen and (min-width: $layout-breakpoint-xs) {
+    margin-top: 2px;
+  }
 }
 
 .node-title {
