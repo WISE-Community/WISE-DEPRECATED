@@ -2633,8 +2633,8 @@ md-card { border-radius: 4px; }
 md-progress-linear:not([md-mode="indeterminate"]) .md-container.md-ready { transform: none; }
 md-progress-linear:not([md-mode="indeterminate"]) .md-container { transition: none; }
 
-md-list-item .md-list-item-inner { line-height: 1.6rem; }
-md-list-item .md-list-item-inner p > md-icon { vertical-align: top; }
+md-list-item .md-list-item-inner p { line-height: 1.6rem; }
+md-list-item .md-list-item-inner p md-icon { vertical-align: top; }
 
 md-list-item .md-list-item-inner > .md-avatar:first-child, md-list-item > .md-avatar:first-child { display: flex; }
 
