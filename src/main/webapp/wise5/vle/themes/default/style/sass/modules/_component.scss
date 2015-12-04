@@ -19,13 +19,13 @@
   margin: 0 8px;
   padding-bottom: 8px;
 
-  @media only screen and (min-width: $layout-breakpoint-sm) {
+  @media only screen and (min-width: $layout-breakpoint-xs) {
     padding-top: 8px;
   }
 }
 
 .component__add-attachment {
-  @media only screen and (max-width: ($layout-breakpoint-sm - 1)) {
+  @media only screen and (max-width: ($layout-breakpoint-xs - 1)) {
     width: 100%;
   }
 }

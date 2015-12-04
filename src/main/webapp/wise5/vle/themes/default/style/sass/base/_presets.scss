@@ -79,6 +79,7 @@ a {
 .avatar--icon {
   padding: $avatar-icon-padding;
   background-color: $gray-light;
+  white-space: normal !important;
 
   &.md-18 {
     height: 18px;

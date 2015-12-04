@@ -72,7 +72,11 @@ md-progress-linear:not([md-mode="indeterminate"]) {
 }
 
 md-list-item .md-list-item-inner {
-  line-height: 1.25em;
+  line-height: 1.6rem;
+
+  p > md-icon {
+    vertical-align: top;
+  }
 }
 
 md-list-item .md-list-item-inner>.md-avatar:first-child, md-list-item>.md-avatar:first-child {

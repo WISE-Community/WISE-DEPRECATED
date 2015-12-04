@@ -2,7 +2,7 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v1.0.0-rc3-master-c7c5358
+ * v1.0.0-rc6-master-cdc9719
  */
 (function( window, angular, undefined ){
 "use strict";
@@ -131,14 +131,35 @@ function MdTooltipDirective($timeout, $window, $$rAF, $document, $mdUtil, $mdThe
 
       var ngWindow = angular.element($window);
 
+      // add an mutationObserver when there is support for it
+      // and the need for it in the form of viable host(parent[0])
+      if (parent[0] && 'MutationObserver' in $window) {
+        // use an mutationObserver to tackle #2602
+        var attributeObserver = new MutationObserver(function(mutations) {
+          mutations
+            .forEach(function (mutation) {
+              if (mutation.attributeName === 'disabled' && parent[0].disabled) {
+                setVisible(false);
+                scope.$digest(); // make sure the elements gets updated
+              }
+            });
+        });
+
+        attributeObserver.observe(parent[0], { attributes: true});
+      };
+
       // Store whether the element was focused when the window loses focus.
       var windowBlurHandler = function() {
         elementFocusedOnWindowBlur = document.activeElement === parent[0];
       };
       var elementFocusedOnWindowBlur = false;
+
       ngWindow.on('blur', windowBlurHandler);
+      ngWindow.on('resize', debouncedOnResize);
       scope.$on('$destroy', function() {
         ngWindow.off('blur', windowBlurHandler);
+        ngWindow.off('resize', debouncedOnResize);
+        attributeObserver && attributeObserver.disconnect();
       });
 
       var enterHandler = function(e) {
@@ -165,7 +186,6 @@ function MdTooltipDirective($timeout, $window, $$rAF, $document, $mdUtil, $mdThe
       parent.on('focus mouseenter touchstart', enterHandler );
 
 
-      angular.element($window).on('resize', debouncedOnResize);
     }
 
     function setVisible (value) {

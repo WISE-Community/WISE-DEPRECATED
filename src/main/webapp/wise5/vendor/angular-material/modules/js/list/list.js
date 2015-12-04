@@ -2,7 +2,7 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v1.0.0-rc3-master-c7c5358
+ * v1.0.0-rc6-master-cdc9719
  */
 (function( window, angular, undefined ){
 "use strict";
@@ -105,7 +105,7 @@ function mdListItemDirective($mdAria, $mdConstant, $mdUtil, $timeout) {
 
       tEl[0].setAttribute('role', 'listitem');
 
-      if (tAttrs.ngClick || tAttrs.ngHref || tAttrs.href || tAttrs.uiSref || tAttrs.ngAttrUiSref) {
+      if (tAttrs.ngIf || tAttrs.ngClick || tAttrs.ngHref || tAttrs.href || tAttrs.uiSref || tAttrs.ngAttrUiSref) {
         wrapIn('button');
       } else {
         for (var i = 0, type; type = proxiedTypes[i]; ++i) {
@@ -120,6 +120,7 @@ function mdListItemDirective($mdAria, $mdConstant, $mdUtil, $timeout) {
           tEl.addClass('md-no-proxy');
         }
       }
+      wrapSecondary();
       setupToggleAria();
 
 
@@ -146,25 +147,19 @@ function mdListItemDirective($mdAria, $mdConstant, $mdUtil, $timeout) {
           tEl.addClass('md-proxy-focus');
         } else {
           container = angular.element('<md-button class="md-no-style"><div class="md-list-item-inner"></div></md-button>');
-          var copiedAttrs = ['ng-click', 'aria-label', 'ng-disabled', 
-            'ui-sref', 'href', 'ng-href', 'ng-attr-ui-sref'];
-          angular.forEach(copiedAttrs, function(attr) {
-            if (tEl[0].hasAttribute(attr)) {
-              container[0].setAttribute(attr, tEl[0].getAttribute(attr));
-              tEl[0].removeAttribute(attr);
-            }
-          });
+          copyAttributes(tEl[0], container[0]);
           container.children().eq(0).append(tEl.contents());
         }
 
         tEl[0].setAttribute('tabindex', '-1');
         tEl.append(container);
+      }
 
-        if (secondaryItem && secondaryItem.hasAttribute('ng-click')) {
+      function wrapSecondary() {
+        if (secondaryItem && !isButton(secondaryItem) && secondaryItem.hasAttribute('ng-click')) {
           $mdAria.expect(secondaryItem, 'aria-label');
           var buttonWrapper = angular.element('<md-button class="md-secondary-container md-icon-button">');
-          buttonWrapper.attr('ng-click', secondaryItem.getAttribute('ng-click'));
-          secondaryItem.removeAttribute('ng-click');
+          copyAttributes(secondaryItem, buttonWrapper[0]);
           secondaryItem.setAttribute('tabindex', '-1');
           secondaryItem.classList.remove('md-secondary');
           buttonWrapper.append(secondaryItem);
@@ -173,17 +168,34 @@ function mdListItemDirective($mdAria, $mdConstant, $mdUtil, $timeout) {
 
         // Check for a secondary item and move it outside
         if ( secondaryItem && (
-          secondaryItem.hasAttribute('ng-click') ||
+            secondaryItem.hasAttribute('ng-click') ||
             ( tAttrs.ngClick &&
-             isProxiedElement(secondaryItem) )
-        )) {
+            isProxiedElement(secondaryItem) )
+          )) {
           tEl.addClass('md-with-secondary');
           tEl.append(secondaryItem);
         }
       }
 
+      function copyAttributes(item, wrapper) {
+        var copiedAttrs = ['ng-if', 'ng-click', 'aria-label', 'ng-disabled',
+          'ui-sref', 'href', 'ng-href', 'ng-attr-ui-sref'];
+        angular.forEach(copiedAttrs, function(attr) {
+          if (item.hasAttribute(attr)) {
+            wrapper.setAttribute(attr, item.getAttribute(attr));
+            item.removeAttribute(attr);
+          }
+        });
+      }
+
       function isProxiedElement(el) {
         return proxiedTypes.indexOf(el.nodeName.toLowerCase()) != -1;
+      }
+
+      function isButton(el) {
+        var nodeName = el.nodeName.toUpperCase();
+
+        return nodeName == "MD-BUTTON" || nodeName == "BUTTON";
       }
 
       return postLink;
@@ -237,10 +249,12 @@ function mdListItemDirective($mdAria, $mdConstant, $mdUtil, $timeout) {
           }
         }
         function computeClickable() {
-          if (proxies.length || hasClick) {
+          if (proxies.length == 1 || hasClick) {
             $element.addClass('md-clickable');
 
-            ctrl.attachRipple($scope, angular.element($element[0].querySelector('.md-no-style')));
+            if (!hasClick) {
+              ctrl.attachRipple($scope, angular.element($element[0].querySelector('.md-no-style')));
+            }
           }
         }
 
@@ -262,7 +276,7 @@ function mdListItemDirective($mdAria, $mdConstant, $mdUtil, $timeout) {
         $element.off('click');
         $element.off('keypress');
 
-        if (proxies.length && firstChild) {
+        if (proxies.length == 1 && firstChild) {
           $element.children().eq(0).on('click', function(e) {
             var parentButton = $mdUtil.getClosest(e.target, 'BUTTON');
             if (!parentButton && firstChild.contains(e.target)) {

@@ -17,8 +17,7 @@
   }
 
   // Handle mobile portrait
-  @media only screen and (min-width: 0) and (max-width: $layout-breakpoint-sm) and
-  (orientation: portrait) {
+  @media only screen and (max-width: ($layout-breakpoint-xs - 1)) {
     .md-toolbar-tools {
       h1, h2, h3 {
         font-size: $body-font-size-base;

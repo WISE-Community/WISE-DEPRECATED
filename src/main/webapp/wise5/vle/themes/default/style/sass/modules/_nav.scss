@@ -70,7 +70,7 @@
 .nav-contents__list {
   padding: 0;
 
-  @media (min-width: $layout-breakpoint-sm) {
+  @media (min-width: $layout-breakpoint-xs) {
     padding: 8px;
   }
 }

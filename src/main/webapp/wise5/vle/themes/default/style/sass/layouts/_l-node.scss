@@ -6,11 +6,11 @@
   background-color: $body-bgcolor !important;
   padding: 0;
 
-  @media only screen and (min-width: $layout-breakpoint-sm) {
+  @media only screen and (min-width: $layout-breakpoint-xs) {
     padding: 0 16px;
   }
 
-  @media only screen and (min-width: $layout-breakpoint-md) {
+  @media only screen and (min-width: $layout-breakpoint-sm) {
     padding: 0 32px;
   }
 }

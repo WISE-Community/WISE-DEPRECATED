@@ -9,16 +9,16 @@
 .discussion-posts {
   padding: 16px 8px 8px;
 
-  @media only screen and (min-width: $layout-breakpoint-sm) {
+  @media only screen and (min-width: $layout-breakpoint-xs) {
     padding: 16px 16px 0;
   }
 }
 
 .discussion-post {
   margin: 0 auto 16px;
-  max-width: $layout-breakpoint-sm;
+  max-width: $layout-breakpoint-xs;
 
-  @media only screen and (min-width: $layout-breakpoint-sm) {
+  @media only screen and (min-width: $layout-breakpoint-xs) {
     margin-bottom: 32px;
   }
 }
@@ -138,7 +138,7 @@ md-input-container.discussion-new__input-container {
   max-height: 9999px;
   overflow-y: auto;
 
-  @media only screen and (min-width: $layout-breakpoint-sm) {
+  @media only screen and (min-width: $layout-breakpoint-xs) {
     max-height: 400px;
   }
 }
