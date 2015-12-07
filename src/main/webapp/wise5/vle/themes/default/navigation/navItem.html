@@ -13,9 +13,12 @@
             </md-card-content>
             <md-card-content ng-if="navitemCtrl.isGroup" ng-show="navitemCtrl.expanded" class="nav-contents nav-contents--group">
                 <md-list class="nav-contents__list">
-                    <nav-item ng-repeat="childId in navitemCtrl.item.ids" ng-class="{'expanded': itemExpanded}" class="nav-item"
+                    <nav-item ng-repeat="childId in navitemCtrl.item.ids"
+                              ng-class="{'expanded': itemExpanded, 'prev': isPrevNode}"
+                              aria-label="{{ isPrevNode ? 'Last Visited Item' : null }}"
                               show-position="navitemCtrl.showPosition"
-                              node-id="childId" type="'list'" ng-animate-ref="{{ childId }}" class="nav-item ng-enter"></nav-item>
+                              node-id="childId" type="'list'" ng-animate-ref="{{ childId }}" class="nav-item ng-enter">
+                    </nav-item>
                 </md-list>
             </md-card-content>
             <md-card-footer class="nav-item__more" layout="row" layout-align="center center" flex>

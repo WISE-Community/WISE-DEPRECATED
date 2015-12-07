@@ -2850,6 +2850,8 @@ md-input-container.md-wise-theme label { color: rgba(0, 0, 0, 0.87); }
 .nav-item--card__content:focus { outline: none; }
 .nav-item--card__content:focus .nav-item__title > span { border-bottom: 1px dashed #cccccc; }
 
+.nav-item.prev md-list-item > .md-button { border-left: 3px solid #1C8CA8; margin-left: -3px; background-color: #f4fbfd; }
+
 .nav-item--root { transition: margin 250ms, box-shadow 500ms; }
 .nav-item--root.expanded { flex-basis: 100%; max-width: 100%; max-height: none !important; margin: 8px auto; padding-left: 4px; }
 .nav-item--root.expanded:first-of-type { margin-top: 0; }

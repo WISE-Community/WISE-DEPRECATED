@@ -47,6 +47,9 @@ define(['angular', /*'annotationService',*/ 'configService', 'nodeService', 'not
                         function () { return StudentDataService.currentNode; },
                         function (newNode) {
                             scope.currentNode = newNode;
+                            if (StudentDataService.previousNode) {
+                                $scope.$parent.isPrevNode = (scope.nodeId === StudentDataService.previousNode.id);
+                            }
                             isCurrentNode = (scope.currentNode.id === scope.nodeId);
                             if (isCurrentNode || ProjectService.isApplicationNode(newNode.id) || newNode.id === ProjectService.rootNode.id) {
                                 setExpanded();
