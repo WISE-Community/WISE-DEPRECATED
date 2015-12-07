@@ -176,6 +176,34 @@ define(['angular', /*'annotationService',*/ 'configService', 'nodeService', 'not
                     );
                 }
             )
+            .directive('nodeStatusIcon', function() {
+                return {
+                    scope: {
+                        nodeId: '=',
+                        customClass: '='
+                    },
+                    template: '<ng-include src="nodeStatusIconCtrl.getTemplateUrl()"></ng-include>',
+                    controller: 'NodeStatusIconCtrl',
+                    controllerAs: 'nodeStatusIconCtrl',
+                    bindToController: true
+                };
+            })
+            .controller('NodeStatusIconCtrl',
+                function($scope,
+                         $state,
+                         $stateParams,
+                         $element,
+                         ProjectService,
+                         StudentDataService) {
+
+                    this.getTemplateUrl = function(){
+                        return ProjectService.getThemePath() + '/templates/nodeStatusIcon.html';
+                    };
+
+                    this.nodeStatuses = StudentDataService.nodeStatuses;
+                    this.nodeStatus = this.nodeStatuses[this.nodeId];
+                }
+            )
             /*.directive('notebook', function() {
                 return {
                     scope: {

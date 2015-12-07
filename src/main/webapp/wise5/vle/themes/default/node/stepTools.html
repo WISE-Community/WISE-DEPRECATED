@@ -16,14 +16,14 @@
                         <md-icon md-font-set="{{stepToolsCtrl.nodeStatuses[item.$key].icon.fontSet}}" class="md-18 md-light node-icon" md-theme="default">{{stepToolsCtrl.nodeStatuses[item.$key].icon.fontName}}</md-icon>&nbsp;
                     </div>
                     <span class="node-select__text">{{ stepToolsCtrl.showPosition ? stepToolsCtrl.getNodePositionById(item.$key) + ': ' : '' }}{{ stepToolsCtrl.getNodeTitleByNodeId(item.$key) }}</span>
-                    <md-icon class="node-select__status" ng-if="stepToolsCtrl.nodeStatuses[item.$key].isCompleted" ng-class="'success'" aria-label="Completed"> check_circle </md-icon>
+                    <node-status-icon node-id="item.$key" custom-class="'node-select__status'"></node-status-icon>
                 </div>
             </md-option>
         </md-select>
         <!--<md-button aria-label="Notifications" class="md-icon-button">
             <md-icon md-theme="default"> message </md-icon>
         </md-button> TODO: Add notifications and score when operational-->
-        <md-icon ng-if="stepToolsCtrl.nodeStatus.isCompleted" md-theme="default" ng-class="'success'" aria-label="Completed"> check_circle </md-icon>
+        <node-status-icon node-id="stepToolsCtrl.nodeId"></node-status-icon>
         <span flex></span>
         <md-button aria-label="Previous Item" class="md-icon-button node-nav"
                    ng-disabled="!stepToolsCtrl.prevId" ng-click="stepToolsCtrl.goToPrevNode()">
