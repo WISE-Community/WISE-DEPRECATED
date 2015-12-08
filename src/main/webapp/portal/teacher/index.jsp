@@ -73,7 +73,7 @@ $(document).ready(function() {
 							<tr>
 								<td><a href="${contextPath}/teacher/management/classroomruns.html"><spring:message code="teacher.index.gradeAndManageClassroomRuns"/></a></td>
 							</tr>
-							<!--  TODO: uncomment me to re-enable premade comments when it's added to ClassroomManager tool
+							<!--  TODO: uncomment me to re-enable premade comments when it's added to ClassroomMonitor tool
 							<tr>
 								<td><a onclick="editPremadeComments()"><spring:message code="accountmenu.editpremadecomments" /></a></td>
 							</tr>

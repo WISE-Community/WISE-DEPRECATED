@@ -65,8 +65,7 @@ public class GradeWorkController {
 	@RequestMapping(value = {
 			"/classroomMonitor",
 			"/teacher/grading/gradework.html",
-			"/teacher/classroomMonitor/classroomMonitor",
-			"/teacher/classroomManager"})
+			"/teacher/classroomMonitor/classroomMonitor"})
 	protected ModelAndView handleRequestInternal(
 			@RequestParam("runId") String runId,
 			@RequestParam(value = "action", required = false) String action,
@@ -131,11 +130,6 @@ public class GradeWorkController {
                         if ("monitor".equals(gradingType)) {
                             modelAndView.addObject("vleurl", getClassroomMonitorUrl);
                             modelAndView.addObject("vleConfigUrl", getClassroomMonitorConfigUrl);
-                        } else if ("classroomManager".equals(gradingType)) {
-                            String classroomManagerUrl = wiseBaseURL + "/vle5/classroomManager/index.html";
-                            String classroomManagerConfigUrl = wiseBaseURL + "/vleconfig?runId=" + run.getId().toString() + "&gradingType=" + gradingType + "&mode=grading&getRevisions=" + getRevisions;
-                            modelAndView.addObject("vleurl", classroomManagerUrl);
-                            modelAndView.addObject("vleConfigUrl", classroomManagerConfigUrl);
                         } else {
                             modelAndView.addObject("vleurl", getGradeWorkUrl);
                             modelAndView.addObject("vleConfigUrl", getGradingConfigUrl);

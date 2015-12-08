@@ -35,14 +35,7 @@
 	        }
 			window.open(path);
 		});
-		
-		$('.classroomManager').on('click',function() {
-			var settings = $(this).attr('id');
-			var title = $(this).attr('title');
-			var path = "${contextPath}/teacher/classroomManager.html?" + settings;
-			window.open(path);
-		});
-		
+
 		// setup share project run dialog
 		$('.shareRun').on('click',function() {
 			var title = $(this).attr('title');
@@ -384,15 +377,17 @@
 						    <td>
 							 <ul class="actionList">
 							    	<spring:message code="teacher.run.recentactivity.gradingAndFeedback" var="gradingAndFeedback"/>
-                 							<sec:accesscontrollist domainObject="${run}" hasPermission="2">
-                                                <li style="font-size:1.1em; padding-bottom:3px;"><a class="classroomMonitor" wiseVersion="${run.project.wiseVersion == null ? 4 : run.project.wiseVersion}" title="<spring:message code="teacher.run.recentactivity.classroomMonitor"/>: ${run.name} (<spring:message code="teacher.run.recentactivity.runId2"/> ${run.id})" id="runId=${run.id}&gradingType=monitor"><img class="icon" alt="monitor" src="${contextPath}/<spring:theme code="bar_chart"/>" /><span><spring:message code="teacher.management.projectruntabs.gradingTool"/></span></a></li>
-                 							</sec:accesscontrollist>
-	                  					<a id='linkToSeeOldGradingTools_${run.id}' onclick="$('#oldGradingTools_${run.id}').show();$('#linkToSeeOldGradingTools_${run.id}').hide();">(click here to access old grading tools)</a>
-	                  					<span id="oldGradingTools_${run.id}" style="display:none">
-									<li><span style="font-weight:bold;"><spring:message code="teacher.run.recentactivity.gradeByStep"/>:</span> <a class="grading" title="${gradingAndFeedback}: ${run.name} (<spring:message code="teacher.run.recentactivity.runId2"/> ${run.id})" id="runId=${run.id}&gradingType=step&getRevisions=false&minified=true"><spring:message code="teacher.run.recentactivity.latestWork"/></a>&nbsp;|&nbsp;<a class="grading" title="${gradingAndFeedback}: ${run.name} (<spring:message code="teacher.run.recentactivity.runId2"/>: ${run.id})" id="runId=${run.id}&gradingType=step&getRevisions=true&minified=true"><spring:message code="teacher.run.recentactivity.allRevisions"/></a></li>
-			  	                    <li><span style="font-weight:bold;"><spring:message code="teacher.run.recentactivity.gradeByTeam"/>:</span> <a class="grading" title="${gradingAndFeedback}: ${run.name} (<spring:message code="teacher.run.recentactivity.runId2"/> ${run.id})" id="runId=${run.id}&gradingType=team&getRevisions=false&minified=true"><spring:message code="teacher.run.recentactivity.latestWork"/></a>&nbsp;|&nbsp;<a class="grading" title="${gradingAndFeedback}: ${run.name} (<spring:message code="teacher.run.recentactivity.runId2"/>: ${run.id})" id="runId=${run.id}&gradingType=team&getRevisions=true&minified=true"><spring:message code="teacher.run.recentactivity.allRevisions"/></a></li>
-			  	                    <li><span>Please note that these old grading tools will be removed in the near future!</span></li>
-			  	                    </span>
+									<sec:accesscontrollist domainObject="${run}" hasPermission="2">
+										<li style="font-size:1.1em; padding-bottom:3px;"><a class="classroomMonitor" wiseVersion="${run.project.wiseVersion == null ? 4 : run.project.wiseVersion}" title="<spring:message code="teacher.run.recentactivity.classroomMonitor"/>: ${run.name} (<spring:message code="teacher.run.recentactivity.runId2"/> ${run.id})" id="runId=${run.id}&gradingType=monitor"><img class="icon" alt="monitor" src="${contextPath}/<spring:theme code="bar_chart"/>" /><span><spring:message code="teacher.management.projectruntabs.gradingTool"/></span></a></li>
+									</sec:accesscontrollist>
+									 <c:if test="${run.project.wiseVersion == null || run.project.wiseVersion == 4}">
+										<a id='linkToSeeOldGradingTools_${run.id}' onclick="$('#oldGradingTools_${run.id}').show();$('#linkToSeeOldGradingTools_${run.id}').hide();">(click here to access old grading tools)</a>
+										<span id="oldGradingTools_${run.id}" style="display:none">
+											<li><span style="font-weight:bold;"><spring:message code="teacher.run.recentactivity.gradeByStep"/>:</span> <a class="grading" title="${gradingAndFeedback}: ${run.name} (<spring:message code="teacher.run.recentactivity.runId2"/> ${run.id})" id="runId=${run.id}&gradingType=step&getRevisions=false&minified=true"><spring:message code="teacher.run.recentactivity.latestWork"/></a>&nbsp;|&nbsp;<a class="grading" title="${gradingAndFeedback}: ${run.name} (<spring:message code="teacher.run.recentactivity.runId2"/>: ${run.id})" id="runId=${run.id}&gradingType=step&getRevisions=true&minified=true"><spring:message code="teacher.run.recentactivity.allRevisions"/></a></li>
+											<li><span style="font-weight:bold;"><spring:message code="teacher.run.recentactivity.gradeByTeam"/>:</span> <a class="grading" title="${gradingAndFeedback}: ${run.name} (<spring:message code="teacher.run.recentactivity.runId2"/> ${run.id})" id="runId=${run.id}&gradingType=team&getRevisions=false&minified=true"><spring:message code="teacher.run.recentactivity.latestWork"/></a>&nbsp;|&nbsp;<a class="grading" title="${gradingAndFeedback}: ${run.name} (<spring:message code="teacher.run.recentactivity.runId2"/>: ${run.id})" id="runId=${run.id}&gradingType=team&getRevisions=true&minified=true"><spring:message code="teacher.run.recentactivity.allRevisions"/></a></li>
+											<li><span>Please note that these old grading tools will be removed in the near future!</span></li>
+										</span>
+									 </c:if>
 				               </ul>
 				               <ul class="actionList">
 							        <li>
