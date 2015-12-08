@@ -65,6 +65,8 @@ define(['app'], function(app) {
             var currentNode = StudentDataService.getCurrentNode();
             if (currentNode != null) {
                 this.nodeId = currentNode.id;
+            } else {
+                this.nodeId = $scope.nodeId;
             }
             
             // get the component content from the scope
@@ -81,6 +83,7 @@ define(['app'], function(app) {
                     this.isPromptVisible = true;
                     this.isSaveButtonVisible = this.componentContent.showSaveButton;
                     this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+                    this.workgroupId = ConfigService.getWorkgroupId();
                 } else if (this.mode === 'grading') {
                     this.isPromptVisible = true;
                     this.isSaveButtonVisible = false;

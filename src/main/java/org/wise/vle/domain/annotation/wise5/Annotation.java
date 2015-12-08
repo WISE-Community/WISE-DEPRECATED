@@ -230,7 +230,11 @@ public class Annotation extends PersistableDomain {
 
             // set the data
             if (this.data != null) {
-                eventJSONObject.put("data", this.data);
+                try {
+                    eventJSONObject.put("data", new JSONObject(this.data));
+                } catch (JSONException e) {
+                    eventJSONObject.put("data", this.data);
+                }
             }
 
             // set the clientSaveTime

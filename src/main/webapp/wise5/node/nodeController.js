@@ -34,6 +34,10 @@ define(['app'], function(app) {
             // whether the student work is dirty and needs saving
             this.isDirty = false;
 
+            this.workgroupId = ConfigService.getWorkgroupId();
+
+            this.teacherWorkgroupId = ConfigService.getTeacherWorkgroupId();
+
             /*
              * an object that holds the mappings with the key being the component
              * and the value being the scope object from the child controller

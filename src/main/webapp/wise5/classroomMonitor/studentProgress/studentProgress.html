@@ -20,6 +20,11 @@
 {{ studentProgressController.title }}
 <br>
 
+<div>
+    <button ng-repeat='period in studentProgressController.periods' ng-click='studentProgressController.setCurrentPeriod(period)'>{{period.periodName}}</button>
+    <p>Current Period: {{studentProgressController.getCurrentPeriod()}}</p>
+</div>
+
 <table>
     <tr>
         <th>Team</th>
@@ -27,7 +32,10 @@
         <th>Time Spent</th>
         <th>Project Completion</th>     
     </tr>
-    <tr ng-class="{online: studentProgressController.isWorkgroupOnline(workgroup.workgroupId)}" ng-repeat="workgroup in studentProgressController.workgroups" ng-click="studentProgressController.studentRowClicked(workgroup)">
+    <tr ng-class="{online: studentProgressController.isWorkgroupOnline(workgroup.workgroupId)}"
+        ng-repeat="workgroup in studentProgressController.workgroups"
+        ng-click="studentProgressController.studentRowClicked(workgroup)"
+        ng-show="studentProgressController.getCurrentPeriod().periodName == 'All' || workgroup.periodId == studentProgressController.getCurrentPeriod().periodId">
         <td>{{workgroup.userName}} ({{workgroup.workgroupId}})</td>
         <td>{{studentProgressController.getCurrentNodeForWorkgroupId(workgroup.workgroupId)}}</td>
         <td></td>

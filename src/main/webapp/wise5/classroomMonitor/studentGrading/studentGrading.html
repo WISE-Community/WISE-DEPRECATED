@@ -6,11 +6,11 @@
     <div>{{studentGradingController.getEventsByWorkgroupIdAndNodeId(studentGradingController.workgroupId, nodeId).length}} events</div>
     <div>{{studentGradingController.getAnnotationsToWorkgroupIdAndNodeId(studentGradingController.workgroupId, nodeId).length}} annotations</div>
     -->
-    <table border="1">
+    <table border="1" style='width: 100%'>
     <tr ng-repeat='component in studentGradingController.getComponentsByNodeId(nodeId)'>
         <td>
-            <component ng-if='component.showPreviousWorkNodeId != null && component.showPreviousWorkComponentId != null' nodeid='{{component.showPreviousWorkNodeId}}' componentid='{{component.showPreviousWorkComponentId}}' componentstate='{{studentGradingController.getLatestComponentStateByWorkgroupIdAndNodeIdAndComponentId(studentGradingController.workgroupId, component.showPreviousWorkNodeId, component.showPreviousWorkComponentId)}}' workgroupid='{{studentGradingController.workgroupId}}' mode='grading'></component>
-            <component ng-if='component.showPreviousWorkNodeId == null || component.showPreviousWorkComponentId == null' nodeid='{{nodeId}}' componentid='{{component.id}}' componentstate='{{studentGradingController.getLatestComponentStateByWorkgroupIdAndNodeIdAndComponentId(studentGradingController.workgroupId, nodeId, component.id)}}' workgroupid='{{studentGradingController.workgroupId}}' mode='grading'></component>
+            <component ng-if='component.showPreviousWorkNodeId != null && component.showPreviousWorkComponentId != null' nodeid='{{component.showPreviousWorkNodeId}}' componentid='{{component.showPreviousWorkComponentId}}' componentstate='{{studentGradingController.getLatestComponentStateByWorkgroupIdAndNodeIdAndComponentId(studentGradingController.workgroupId, component.showPreviousWorkNodeId, component.showPreviousWorkComponentId)}}' workgroupid='{{studentGradingController.workgroupId}}' teacherworkgroupid='{{studentGradingController.teacherWorkgroupId}}' mode='grading'></component>
+            <component ng-if='component.showPreviousWorkNodeId == null || component.showPreviousWorkComponentId == null' nodeid='{{nodeId}}' componentid='{{component.id}}' componentstate='{{studentGradingController.getLatestComponentStateByWorkgroupIdAndNodeIdAndComponentId(studentGradingController.workgroupId, nodeId, component.id)}}' workgroupid='{{studentGradingController.workgroupId}}' teacherworkgroupid='{{studentGradingController.teacherWorkgroupId}}' mode='grading'></component>
         </td>
     </tr>
         <!--

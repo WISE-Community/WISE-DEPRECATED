@@ -255,7 +255,11 @@ public class StudentWork extends PersistableDomain {
 
             // set the student data
 			if (this.studentData != null) {
-				studentWorkJSONObject.put("studentData", new JSONObject(studentData));
+                try {
+                    studentWorkJSONObject.put("studentData", new JSONObject(studentData));
+                } catch (JSONException e) {
+                    studentWorkJSONObject.put("studentData", this.studentData);
+                }
 			}
 
         } catch (JSONException e) {

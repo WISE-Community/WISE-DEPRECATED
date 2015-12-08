@@ -20,6 +20,7 @@ define([
     'angularUITinymce',
     'angularUITree',
     'angularWebSocket',
+    'annotationService',
     'audioRecorderService',
     'configService',
     'cRaterService',
@@ -48,6 +49,7 @@ define([
     'tableService',
     'teacherDataService',
     'tinymce',
+    'utilService',
     'webfont',
     'webfonts'
 ], function (angular,
@@ -71,6 +73,7 @@ define([
              angularUITinymce,
              angularUITree,
              angularWebSocket,
+             annotationService,
              audioRecorderService,
              configService,
              cRaterService,
@@ -99,6 +102,7 @@ define([
              tableService,
              teacherDataService,
              tinymce,
+             utilService,
              webfont,
              webfonts) {
 
@@ -125,6 +129,7 @@ define([
     ]);
 
     // core services
+    app.factory('AnnotationService', annotationService);
     app.factory('ConfigService', configService);
     app.factory('CRaterService', cRaterService);
     app.factory('NodeService', nodeService);
@@ -136,6 +141,7 @@ define([
     app.factory('StudentStatusService', studentStatusService);
     app.factory('StudentWebSocketService', studentWebSocketService);
     app.factory('TeacherDataService', teacherDataService);
+    app.factory('UtilService', utilService);
 
     // node services
     app.factory('AudioRecorderService', audioRecorderService);
@@ -226,6 +232,7 @@ define([
                             controller: 'NodeController as nodeController',
                             resolve: {
                                 audioRecorderController: app.loadController('audioRecorderController'),
+                                annotationController: app.loadController('annotationController'),
                                 cRaterController: app.loadController('cRaterController'),
                                 discussionController: app.loadController('discussionController'),
                                 drawController: app.loadController('drawController'),

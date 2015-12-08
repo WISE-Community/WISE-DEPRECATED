@@ -15,6 +15,8 @@ define(['app'], function(app) {
 
         this.branches = ProjectService.getBranches();
 
+        this.teacherWorkgroupId = ConfigService.getWorkgroupId();
+
         /**
          * Check if we should show the given node id for the student. We will
          * determine whether to show a node id or not by checking to see if

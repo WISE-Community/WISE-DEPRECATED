@@ -276,6 +276,7 @@ define(['angular', 'projectService', 'studentDataService'], function(angular, pr
                 var componentId = attrs.componentid;
                 var componentState = attrs.componentstate;
                 var workgroupId = null;
+                var teacherWorkgroupId = null;
 
                 $scope.mode = "student";
                 if (attrs.mode) {
@@ -285,6 +286,14 @@ define(['angular', 'projectService', 'studentDataService'], function(angular, pr
                 if (attrs.workgroupid != null) {
                     try {
                         workgroupId = parseInt(attrs.workgroupid);
+                    } catch(e) {
+
+                    }
+                }
+
+                if (attrs.teacherworkgroupid) {
+                    try {
+                        teacherWorkgroupId = parseInt(attrs.teacherworkgroupid);
                     } catch(e) {
 
                     }
@@ -303,6 +312,7 @@ define(['angular', 'projectService', 'studentDataService'], function(angular, pr
                 $scope.componentTemplatePath = NodeService.getComponentTemplatePath(component.componentType);
                 $scope.nodeId = nodeId;
                 $scope.workgroupId = workgroupId;
+                $scope.teacherWorkgroupId = teacherWorkgroupId;
 
                 var studentWorkHTML = "<div id=\"{{component.id}}\" class=\"component-content\" >" +
                     "<div ng-include='componentTemplatePath' ></div></div>";
@@ -434,4 +444,193 @@ define(['angular', 'projectService', 'studentDataService'], function(angular, pr
             }
         }
     ])
+
+    .directive('annotation', function($injector,
+                                      $compile,
+                                      AnnotationService,
+                                      ConfigService,
+                                      NodeService,
+                                      ProjectService,
+                                      StudentDataService,
+                                      TeacherDataService,
+                                      UtilService) {
+            return {
+                restrict: 'E',
+                controller: 'AnnotationController',
+                controllerAs: 'annotationController',
+                bindToController: true,
+                scope: {
+                },
+                link: function($scope, element, attrs) {
+
+                    var annotationHTML = '';
+
+                    var type = attrs.type;
+                    var mode = attrs.mode;
+                    var nodeId = attrs.nodeid;
+                    var componentId = attrs.componentid;
+                    var fromWorkgroupId = attrs.fromworkgroupid;
+                    var toWorkgroupId = attrs.toworkgroupid;
+                    var componentStateId = attrs.componentstateid;
+                    var active = attrs.active;
+
+                    if (fromWorkgroupId == '') {
+                        fromWorkgroupId = null;
+                    } else if (fromWorkgroupId != null) {
+                        // convert the string to a number
+                        fromWorkgroupId = UtilService.convertStringToNumber(fromWorkgroupId);
+                    }
+
+                    if (toWorkgroupId == '') {
+                        toWorkgroupId = null;
+                    } else if (toWorkgroupId != null) {
+                        // convert the string to a number
+                        toWorkgroupId = UtilService.convertStringToNumber(toWorkgroupId);
+                    }
+
+                    if (componentStateId == '') {
+                        componentStateId = null;
+                    } else if (componentStateId != null) {
+                        // convert the string to a number
+                        componentStateId = UtilService.convertStringToNumber(componentStateId);
+                    }
+
+                    if (active == 'true') {
+                        active = true;
+                    } else {
+                        active = false;
+                    }
+
+                    if (mode === 'student') {
+
+                        var annotationParams = {};
+                        annotationParams.nodeId = nodeId;
+                        annotationParams.componentId = componentId;
+                        annotationParams.fromWorkgroupId = fromWorkgroupId;
+                        annotationParams.toWorkgroupId = toWorkgroupId;
+                        annotationParams.type = type;
+                        annotationParams.studentWorkId = componentStateId;
+
+                        // get the latest annotation that matches the params
+                        annotation = AnnotationService.getLatestAnnotation(annotationParams);
+
+                        if (type === 'score') {
+
+                            if (annotation != null) {
+                                var data = annotation.data;
+                                var dataJSONObject = angular.fromJson(data);
+
+                                if (dataJSONObject) {
+                                    var value = dataJSONObject.value;
+
+                                    if (value != null) {
+                                        // display the score to the student
+                                        annotationHTML += '<span>Score: ' + value + '</span>';
+                                    }
+                                }
+                            }
+                        } else if (type === 'comment') {
+                            if (annotation != null) {
+                                var data = annotation.data;
+                                var dataJSONObject = angular.fromJson(data);
+
+                                if (dataJSONObject) {
+                                    var value = dataJSONObject.value;
+
+                                    if (value != null) {
+                                        // display the comment to the student
+                                        annotationHTML += '<span>Comment: ' + value + '</span>';
+                                    }
+                                }
+                            }
+                        }
+                    } else if (mode === 'grading') {
+
+                        var annotationParams = {};
+                        annotationParams.nodeId = nodeId;
+                        annotationParams.componentId = componentId;
+                        annotationParams.fromWorkgroupId = fromWorkgroupId;
+                        annotationParams.toWorkgroupId = toWorkgroupId;
+                        annotationParams.type = type;
+                        annotationParams.studentWorkId = componentStateId;
+
+                        var annotation = null;
+
+                        if (active) {
+                            /*
+                             * this directive instance is the active annotation that the teacher can use to
+                             * grade so we will get the latest annotation for the student work
+                             */
+                            annotation = AnnotationService.getLatestAnnotation(annotationParams);
+                        } else {
+                            /*
+                             * this directive instance is not the active annotation so we will get the
+                             * annotation directly associated with the student work
+                             */
+                            annotation = AnnotationService.getAnnotation(annotationParams);
+                        }
+
+                        // set the values into the controller so we can access them in the controller
+                        $scope.annotationController.annotationId = null;
+                        $scope.annotationController.nodeId = nodeId;
+                        $scope.annotationController.periodId = null;
+                        $scope.annotationController.componentId = componentId;
+                        $scope.annotationController.fromWorkgroupId = fromWorkgroupId;
+                        $scope.annotationController.toWorkgroupId = toWorkgroupId;
+                        $scope.annotationController.type = type;
+                        $scope.annotationController.componentStateId = componentStateId;
+                        $scope.annotationController.isDisabled = !active;
+
+                        if (annotation != null) {
+                            if (componentStateId == annotation.studentWorkId) {
+                                /*
+                                 * the annotation is for the component state that is being displayed.
+                                 * sometimes the annotation may not be for the component state that
+                                 * is being displayed which can happen when student submits work,
+                                 * the teacher annotates it, and then the student submits new work.
+                                 * when this happens, we will show the teacher annotation but the
+                                 * annotation is associated with the first student work and not the
+                                 * second student work. setting the annotationId in the scope will
+                                 * cause the server to update the annotation as opposed to creating
+                                 * a new annotation row in the database.
+                                 */
+                                $scope.annotationController.annotationId = annotation.id;
+                            }
+                        }
+
+                        var toUserInfo = ConfigService.getUserInfoByWorkgroupId(toWorkgroupId);
+
+                        if (toUserInfo != null) {
+                            // set the period id
+                            $scope.annotationController.periodId = toUserInfo.periodId;
+                        }
+
+                        if (annotation != null) {
+                            var data = annotation.data;
+
+                            if (data != null) {
+                                var dataJSONObject = angular.fromJson(data);
+
+                                if (dataJSONObject != null) {
+                                    // set the annotation value
+                                    $scope.annotationController.value = dataJSONObject.value;
+                                }
+                            }
+                        }
+
+                        if (type === 'score') {
+                            annotationHTML += 'Score: ';
+                            annotationHTML += '<input size="10" ng-model="annotationController.value" ng-disabled="annotationController.isDisabled" ng-change="annotationController.postAnnotation()" ng-model-options="{ debounce: 2000 }"></input>';
+                        } else if (type === 'comment') {
+                            annotationHTML += 'Comment: ';
+                            annotationHTML += '<br/>';
+                            annotationHTML += '<textarea ng-model="annotationController.value" ng-disabled="annotationController.isDisabled" ng-change="annotationController.postAnnotation()" ng-model-options="{ debounce: 2000 }" rows="5" cols="30"></textarea>';
+                        }
+                    }
+
+                    element.html(annotationHTML);
+                    $compile(element.contents())($scope);
+                }
+            };
+        })
 });

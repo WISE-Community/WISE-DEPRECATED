@@ -1,67 +1,105 @@
 <html>
     <head></head>
     <body>
-        <div class='openResponse' ng-controller='OpenResponseController as openResponseController'>
-            <style>
-            {{openResponseController.nodeContent.style}}
-            </style>
+        <div class='openResponse' ng-controller='OpenResponseController as openResponseController' style='display: flex'>
+            <div style='flex: 1'>
+                <style>
+                    {{openResponseController.nodeContent.style}}
+                </style>
 
-            <md-input-container class="input-container md-block input-container--open-response md-no-float">
-                <label class="input-label md-no-float" ng-disabled="openResponseController.isDisabled"
-                       compile="openResponseController.getPrompt()" ng-if="openResponseController.showPrompt()"></label>
-                <div class="input-wrapper" ng-class="{'input-wrapper--richtext': openResponseController.isRichTextEnabled}">
+                <md-input-container class="input-container md-block input-container--open-response md-no-float">
+                    <label class="input-label md-no-float" ng-disabled="openResponseController.isDisabled"
+                           compile="openResponseController.getPrompt()" ng-if="openResponseController.showPrompt()"></label>
+                    <div class="input-wrapper" ng-class="{'input-wrapper--richtext': openResponseController.isRichTextEnabled}">
                     <textarea ng-if="openResponseController.isRichTextEnabled && !openResponseController.isDisabled"
                               ui-tinymce="openResponseController.tinymceOptions"
                               ng-model="openResponseController.studentResponse"
                               ng-change="openResponseController.studentDataChanged()"></textarea>
-                    <div ng-if="openResponseController.isRichTextEnabled && openResponseController.isDisabled"
-                         class="input--textarea input--textarea--disabled">
-                        <componentstatehtml componentstate="{{componentState}}"></componentstatehtml>
-                    </div>
+                        <div ng-if="openResponseController.isRichTextEnabled && openResponseController.isDisabled"
+                             class="input--textarea input--textarea--disabled">
+                            <componentstatehtml componentstate="{{componentState}}"></componentstatehtml>
+                        </div>
                     <textarea ng-if="!openResponseController.isRichTextEnabled"
                               class="input--textarea input--textarea--hasaction"
                               rows="{{openResponseController.getNumRows() || 3}}"
                               ng-model="openResponseController.studentResponse"
                               ng-disabled="openResponseController.isDisabled"
                               ng-change="openResponseController.studentDataChanged()"></textarea>
-                    <!-- TODO: uncomment me when adding student work to notebook is styled and ready for use in a run
-                    <md-button class="input--textarea__action input--textarea__action--notebook md-icon-button"
-                               ng-click='nodeController.addStudentWorkItemToNotebook(component.id)'
-                               ng-disabled="!openResponseController.getStudentResponse()">
-                        <md-icon> book </md-icon>
-                        <md-tooltip md-direction="left">Add to Notebook</md-tooltip>
-                    </md-button>
-                    -->
-                    <md-button class="input--textarea__action input--textarea__action--revision md-icon-button"
-                               ng-click='nodeController.showRevisions($event, component.id, openResponseController.isDisabled)'
-                               ng-if="nodeController.getRevisions(component.id).length > 1">
-                        <md-icon> history </md-icon>
-                        <md-tooltip md-direction="left">{{nodeController.getRevisions(component.id).length}} Versions</md-tooltip>
-                    </md-button>
+                        <!-- TODO: uncomment me when adding student work to notebook is styled and ready for use in a run
+                        <md-button class="input--textarea__action input--textarea__action--notebook md-icon-button"
+                                   ng-click='nodeController.addStudentWorkItemToNotebook(component.id)'
+                                   ng-disabled="!openResponseController.getStudentResponse()">
+                            <md-icon> book </md-icon>
+                            <md-tooltip md-direction="left">Add to Notebook</md-tooltip>
+                        </md-button>
+                        -->
+                        <md-button class="input--textarea__action input--textarea__action--revision md-icon-button"
+                                   ng-click='nodeController.showRevisions($event, component.id, openResponseController.isDisabled)'
+                                   ng-if="nodeController.getRevisions(component.id).length > 1">
+                            <md-icon> history </md-icon>
+                            <md-tooltip md-direction="left">{{nodeController.getRevisions(component.id).length}} Versions</md-tooltip>
+                        </md-button>
+                    </div>
+                </md-input-container>
+                <div class="component-content__actions" ng-show="openResponseController.attachments.length && openResponseController.isStudentAttachmentEnabled" layout="row" layout-wrap="true">
+                    <div class="component__add-attachment">
+                        <md-button class="md-accent"
+                                   ng-click="nodeController.showNotebook($event, component.id, openResponseController.isDisabled)">
+                            <md-icon>image</md-icon> <span>Add File</span>
+                        </md-button>
+                    </div>
+                    <div class="component__attachment" ng-repeat="attachment in openResponseController.attachments">
+                        <img src="{{attachment.iconURL}}" class="component__attachment__content" />
+                        <md-button class="component__attachment__delete" ng-click='openResponseController.removeAttachment(attachment)' title="Remove file"><md-icon>cancel</md-icon></md-button>
+                    </div>
                 </div>
-            </md-input-container>
-            <div class="component-content__actions" ng-show="openResponseController.attachments.length && openResponseController.isStudentAttachmentEnabled" layout="row" layout-wrap="true">
-                <div class="component__add-attachment">
-                    <md-button class="md-accent"
-                               ng-click="nodeController.showNotebook($event, component.id, openResponseController.isDisabled)">
-                        <md-icon>image</md-icon> <span>Add File</span>
-                    </md-button>
+
+                <div class="component-content__actions" layout="row">
+                    <md-button class="md-raised md-primary"
+                               ng-click="openResponseController.saveButtonClicked()"
+                               ng-disabled="openResponseController.isDisabled"
+                               ng-if="openResponseController.showSaveButton()">Save</md-button>
+                    <md-button class="md-raised md-primary"
+                               ng-click="openResponseController.submitButtonClicked()"
+                               ng-disabled="openResponseController.isDisabled"
+                               ng-if="openResponseController.showSubmitButton()">Submit</md-button>
                 </div>
-                <div class="component__attachment" ng-repeat="attachment in openResponseController.attachments">
-                    <img src="{{attachment.iconURL}}" class="component__attachment__content" />
-                    <md-button class="component__attachment__delete" ng-click='openResponseController.removeAttachment(attachment)' title="Remove file"><md-icon>cancel</md-icon></md-button>
+                <div ng-if='openResponseController.mode == "student"'>
+                    <annotation type='score'
+                                mode='{{openResponseController.mode}}'
+                                nodeid='{{openResponseController.nodeId}}'
+                                componentid='{{openResponseController.componentId}}'
+                                fromworkgroupid='{{teacherWorkgroupId}}'
+                                toworkgroupid='{{workgroupId}}'
+                                componentstateid='{{componentState.id}}'></annotation>
+                    <br/>
+                    <annotation type='comment'
+                                mode='{{openResponseController.mode}}'
+                                nodeid='{{openResponseController.nodeId}}'
+                                componentid='{{openResponseController.componentId}}'
+                                fromworkgroupid='{{teacherWorkgroupId}}'
+                                toworkgroupid='{{workgroupId}}'
+                                componentstateid='{{componentState.id}}'></annotation>
                 </div>
             </div>
-
-            <div class="component-content__actions" layout="row">
-                <md-button class="md-raised md-primary"
-                           ng-click="openResponseController.saveButtonClicked()"
-                           ng-disabled="openResponseController.isDisabled"
-                           ng-if="openResponseController.showSaveButton()">Save</md-button>
-                <md-button class="md-raised md-primary"
-                        ng-click="openResponseController.submitButtonClicked()"
-                        ng-disabled="openResponseController.isDisabled"
-                        ng-if="openResponseController.showSubmitButton()">Submit</md-button>
+            <div ng-if='openResponseController.mode == "grading"' style='width: 400px'>
+                <annotation type='score'
+                            mode='{{openResponseController.mode}}'
+                            nodeid='{{openResponseController.nodeId}}'
+                            componentid='{{openResponseController.componentId}}'
+                            fromworkgroupid='{{teacherWorkgroupId}}'
+                            toworkgroupid='{{workgroupId}}'
+                            componentstateid='{{componentState.id}}'
+                            active='true'></annotation>
+                <br/>
+                <annotation type='comment'
+                            mode='{{openResponseController.mode}}'
+                            nodeid='{{openResponseController.nodeId}}'
+                            componentid='{{openResponseController.componentId}}'
+                            fromworkgroupid='{{teacherWorkgroupId}}'
+                            toworkgroupid='{{workgroupId}}'
+                            componentstateid='{{componentState.id}}'
+                            active='true'></annotation>
             </div>
         </div>
     </body>

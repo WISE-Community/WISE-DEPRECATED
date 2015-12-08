@@ -50,6 +50,7 @@ define([
     'teacherDataService',
     'teacherWebSocketService',
     'tinymce',
+    'utilService',
     'webfont',
     'webfonts'
 ], function (angular,
@@ -103,6 +104,7 @@ define([
              teacherDataService,
              teacherWebSocketService,
              tinymce,
+             utilService,
              webfont,
              webfonts) {
 
@@ -138,6 +140,7 @@ define([
     app.factory('StudentWebSocketService', studentWebSocketService);
     app.factory('TeacherDataService', teacherDataService);
     app.factory('TeacherWebSocketService', teacherWebSocketService);
+    app.factory('UtilService', utilService);
     
     // node services
     app.factory('DiscussionService', discussionService);
@@ -228,13 +231,11 @@ define([
                 controller: 'NodeGradingController',
                 controllerAs: 'nodeGradingController',
                 resolve: {
-                    studentData: function(TeacherDataService, config) {
-                        return TeacherDataService.retrieveStudentDataByNodeId();
-                    },
-                    annotations: function(AnnotationService, config) {
-                        return AnnotationService.retrieveAnnotationsByNodeId();
+                    studentData: function($stateParams, TeacherDataService, config) {
+                        return TeacherDataService.retrieveStudentDataByNodeId($stateParams.nodeId);
                     },
                     nodeGradingController: app.loadController('nodeGradingController'),
+                    annotationController: app.loadController('annotationController'),
                     embeddedController: app.loadController('embeddedController'),
                     graphController: app.loadController('graphController'),
                     discussionController: app.loadController('discussionController'),
@@ -252,13 +253,11 @@ define([
                 controller: 'StudentGradingController',
                 controllerAs: 'studentGradingController',
                 resolve: {
-                    studentData: function(TeacherDataService, config) {
-                        return TeacherDataService.retrieveStudentDataByNodeId();
-                    },
-                    annotations: function(AnnotationService, config) {
-                        return AnnotationService.retrieveAnnotationsByNodeId();
+                    studentData: function($stateParams, TeacherDataService, config) {
+                        return TeacherDataService.retrieveStudentDataByWorkgroupId($stateParams.workgroupId);
                     },
                     studentGradingController: app.loadController('studentGradingController'),
+                    annotationController: app.loadController('annotationController'),
                     embeddedController: app.loadController('embeddedController'),
                     graphController: app.loadController('graphController'),
                     discussionController: app.loadController('discussionController'),

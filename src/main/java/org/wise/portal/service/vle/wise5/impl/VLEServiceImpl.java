@@ -355,9 +355,18 @@ public class VLEServiceImpl implements VLEService {
 
     @Override
     public Annotation saveAnnotation(
-            Integer id, Integer runId, Integer periodId, Integer fromWorkgroupId, Integer toWorkgroupId,
-            String nodeId, String componentId, Integer studentWorkId,
-            String type, String data, String clientSaveTime) throws ObjectNotFoundException {
+            Integer id,
+            Integer runId,
+            Integer periodId,
+            Integer fromWorkgroupId,
+            Integer toWorkgroupId,
+            String nodeId,
+            String componentId,
+            Integer studentWorkId,
+            String type,
+            String data,
+            String clientSaveTime) throws ObjectNotFoundException {
+
         Annotation annotation;
         if (id != null) {
             // if the id is passed in, the client is requesting an update, so fetch the Event from data store

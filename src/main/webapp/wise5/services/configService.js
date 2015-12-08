@@ -49,6 +49,33 @@ define([], function() {
             return periodId;
         };
 
+        /**
+         * Get the periods
+         * @returns an array of period objects
+         */
+        serviceObject.getPeriods = function() {
+            var periods = [];
+
+            var userInfo = this.getConfigParam('userInfo');
+
+            if (userInfo != null) {
+
+                var myUserInfo = userInfo.myUserInfo;
+                if (myUserInfo != null) {
+
+                    var myClassInfo = myUserInfo.myClassInfo;
+                    if (myClassInfo != null) {
+
+                        if (myClassInfo.periods != null) {
+                            periods = myClassInfo.periods;
+                        }
+                    }
+                }
+            }
+
+            return periods;
+        };
+
         serviceObject.getRunId = function() { 
             return this.getConfigParam('runId');
         };
@@ -219,7 +246,7 @@ define([], function() {
                             if (classmateUserInfo != null) {
                                 var tempWorkgroupId = classmateUserInfo.workgroupId;
                                 
-                                if (workgroupId === tempWorkgroupId) {
+                                if (workgroupId == tempWorkgroupId) {
                                     userInfo = classmateUserInfo;
                                     break;
                                 }
@@ -230,6 +257,25 @@ define([], function() {
             }
             
             return userInfo;
+        };
+
+        /**
+         * Get the period id for a workgroup id
+         * @param workgroupId the workgroup id
+         * @returns the period id the workgroup id is in
+         */
+        serviceObject.getPeriodIdByWorkgroupId = function(workgroupId) {
+            var periodId = null;
+
+            if (workgroupId != null) {
+                var userInfo = this.getUserInfoByWorkgroupId(workgroupId);
+
+                if (userInfo != null) {
+                    periodId = userInfo.periodId;
+                }
+            }
+
+            return periodId;
         };
 
         /**

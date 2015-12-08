@@ -18,6 +18,11 @@
 }
 </style>
 
+<div>
+    <button ng-repeat='period in nodeProgressController.periods' ng-click='nodeProgressController.setCurrentPeriod(period)'>{{period.periodName}}</button>
+    <p>Current Period: {{nodeProgressController.getCurrentPeriod()}}</p>
+</div>
+
 <div>{{nodeProgressController.title}}</div>
 <div ng-repeat='item in nodeProgressController.items | toArray | orderBy : "order"'
      ng-if='item.order!==0'

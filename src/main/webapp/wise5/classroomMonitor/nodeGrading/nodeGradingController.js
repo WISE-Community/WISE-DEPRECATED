@@ -31,6 +31,10 @@ define(['app'], function(app) {
         // field that will hold the node content
         this.nodeContent = null;
 
+        this.teacherWorkgroupId = ConfigService.getWorkgroupId();
+
+        this.periods = [];
+
         var node = ProjectService.getNodeById(this.nodeId);
 
         if (node != null) {
@@ -48,7 +52,7 @@ define(['app'], function(app) {
         }
 
         // render components in show student work only mode
-        this.mode = "showStudentWorkOnly";
+        //this.mode = "showStudentWorkOnly";
 
         //var vleStates = TeacherDataService.getVLEStates();
         var vleStates = null;
@@ -193,6 +197,57 @@ define(['app'], function(app) {
         this.setupComponentStateHistory = function() {
             this.getComponentStatesByWorkgroupIdAndNodeId()
         };
+
+        /**
+         * Get the period id for a workgroup id
+         * @param workgroupId the workgroup id
+         * @returns the period id for the workgroup id
+         */
+        this.getPeriodIdByWorkgroupId = function(workgroupId) {
+            return ConfigService.getPeriodIdByWorkgroupId(workgroupId);
+        };
+
+        /**
+         * Initialize the periods
+         */
+        this.initializePeriods = function() {
+
+            // create an option for all periods
+            var allPeriodOption = {
+                periodId: -1,
+                periodName: 'All'
+            };
+
+            this.periods.push(allPeriodOption);
+
+            this.periods = this.periods.concat(ConfigService.getPeriods());
+
+            // set the current period if it hasn't been set yet
+            if (this.getCurrentPeriod() == null) {
+                if (this.periods != null && this.periods.length > 0) {
+                    // set it to the all periods option
+                    this.setCurrentPeriod(this.periods[0]);
+                }
+            }
+        };
+
+        /**
+         * Set the current period
+         * @param period the period object
+         */
+        this.setCurrentPeriod = function(period) {
+            TeacherDataService.setCurrentPeriod(period);
+        };
+
+        /**
+         * Get the current period
+         */
+        this.getCurrentPeriod = function() {
+            return TeacherDataService.getCurrentPeriod();
+        };
+
+        // initialize the periods
+        this.initializePeriods();
 
         // scroll to the top of the page when the page loads
         document.body.scrollTop = document.documentElement.scrollTop = 0;

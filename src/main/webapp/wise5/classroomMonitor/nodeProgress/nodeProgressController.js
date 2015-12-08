@@ -8,17 +8,21 @@ define(['app'], function(app) {
             'ConfigService',
             'ProjectService',
             'StudentStatusService',
+            'TeacherDataService',
             function ($scope,
                       $state,
                       ConfigService,
                       ProjectService,
-                      StudentStatusService) {
+                      StudentStatusService,
+                      TeacherDataService) {
 
         this.title = 'Grade By Step';
 
         this.currentGroup = null;
 
         this.items = null;
+
+        this.periods = [];
 
         this.getNodeTitleByNodeId = function(nodeId) {
             return ProjectService.getNodeTitleByNodeId(nodeId);
@@ -31,6 +35,48 @@ define(['app'], function(app) {
         this.getNodePositionById = function(nodeId) {
             return ProjectService.getNodePositionById(nodeId);
         };
+
+        /**
+         * Initialize the periods
+         */
+        this.initializePeriods = function() {
+
+            // create an option for all periods
+            var allPeriodOption = {
+                periodId: -1,
+                periodName: 'All'
+            };
+
+            this.periods.push(allPeriodOption);
+
+            this.periods = this.periods.concat(ConfigService.getPeriods());
+
+            // set the current period if it hasn't been set yet
+            if (this.getCurrentPeriod() == null) {
+                if (this.periods != null && this.periods.length > 0) {
+                    // set it to the all periods option
+                    this.setCurrentPeriod(this.periods[0]);
+                }
+            }
+        };
+
+        /**
+         * Set the current period
+         * @param period the period object
+         */
+        this.setCurrentPeriod = function(period) {
+            TeacherDataService.setCurrentPeriod(period);
+        };
+
+        /**
+         * Get the current period
+         */
+        this.getCurrentPeriod = function() {
+            return TeacherDataService.getCurrentPeriod();
+        };
+
+        // initialize the periods
+        this.initializePeriods();
 
         //this.nodeIds = ProjectService.getFlattenedProjectAsNodeIds();
         this.items = ProjectService.idToOrder;

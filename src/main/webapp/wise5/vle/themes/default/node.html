@@ -3,8 +3,8 @@
 <div class="node-container">
     <md-content class="l-constrained node-content md-padding">
         <div id="{{component.id}}" class="component-content" ng-repeat='component in nodeController.getComponents()'>
-            <component ng-if='component.showPreviousWorkNodeId != null && component.showPreviousWorkComponentId != null' nodeid='{{component.showPreviousWorkNodeId}}' componentid='{{component.showPreviousWorkComponentId}}' componentstate='{{nodeController.getComponentStateByNodeIdAndComponentId(component.showPreviousWorkNodeId, component.showPreviousWorkComponentId)}}' mode='onlyShowWork'></component>
-            <component ng-if='component.showPreviousWorkNodeId == null || component.showPreviousWorkComponentId == null' nodeid='{{nodeController.nodeId}}' componentid='{{component.id}}' componentstate='{{nodeController.getComponentStateByComponentId(component.id)}}' mode='student'></component>
+            <component ng-if='component.showPreviousWorkNodeId != null && component.showPreviousWorkComponentId != null' nodeid='{{component.showPreviousWorkNodeId}}' componentid='{{component.showPreviousWorkComponentId}}' componentstate='{{nodeController.getComponentStateByNodeIdAndComponentId(component.showPreviousWorkNodeId, component.showPreviousWorkComponentId)}}' workgroupid='{{nodeController.workgroupId}}' teacherworkgroupid='{{nodeController.teacherWorkgroupId}}' mode='onlyShowWork'></component>
+            <component ng-if='component.showPreviousWorkNodeId == null || component.showPreviousWorkComponentId == null' nodeid='{{nodeController.nodeId}}' componentid='{{component.id}}' componentstate='{{nodeController.getComponentStateByComponentId(component.id)}}' workgroupid='{{nodeController.workgroupId}}' teacherworkgroupid='{{nodeController.teacherWorkgroupId}}' mode='student'></component>
         </div>
         <div ng-if='nodeController.showSaveButton() || nodeController.showSubmitButton()' class="node-content__actions" layout="row">
             <md-button class="md-raised md-primary"

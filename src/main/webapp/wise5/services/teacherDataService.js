@@ -1,143 +1,162 @@
-define(['configService', 'studentDataService'], function(configService, studentDataService) {
+define(['annotationService', 'configService', 'studentDataService'], function(annotationService, configService, studentDataService) {
 
-    var service = ['$http', '$q', '$rootScope', 'ConfigService', 'StudentDataService',
-                                    function($http, $q, $rootScope, ConfigService, StudentDataService) {
+    var service = ['$http',
+                    '$q',
+                    '$rootScope',
+                    'AnnotationService',
+                    'ConfigService',
+                    'StudentDataService',
+                                    function(
+                                        $http,
+                                        $q,
+                                        $rootScope,
+                                        AnnotationService,
+                                        ConfigService,
+                                        StudentDataService) {
+
         var serviceObject = {};
-        
-        serviceObject.vleStates = null;
-        
-        serviceObject.getVLEStates = function() {
-            return this.vleStates;
-        };
-        
+
+        serviceObject.studentData = {};
+
+        serviceObject.currentPeriod = null;
+
+        /**
+         * Retrieve the student data for a node id
+         * @param nodeId the node id
+         * @returns the student data for the node id
+         */
         serviceObject.retrieveStudentDataByNodeId = function(nodeId) {
-            var nodeIds = [];
-            var workgroupIds = [];
-            
-            var currentNodeId = StudentDataService.getCurrentNodeId();
-            if (currentNodeId != null) {
-                nodeIds.push(currentNodeId);
+
+            var periodId = null;
+
+            if (this.currentPeriod != null && this.currentPeriod.periodName != 'All') {
+                periodId = this.currentPeriod.periodId;
             }
-            
-            var classmateWorkgroupIds = ConfigService.getClassmateWorkgroupIds();
-            
-            if (classmateWorkgroupIds != null) {
-                workgroupIds = classmateWorkgroupIds;
-            }
-            
-            return this.retrieveStudentData(nodeIds, workgroupIds);
+
+            var params = {};
+            params.runId = ConfigService.getRunId();
+            params.periodId = periodId;
+            params.nodeId = nodeId;
+            params.workgroupId = null;
+
+            return this.retrieveStudentData(params);
         };
-        
-        serviceObject.retrieveStudentDataByWorkgroupId = function() {
-            
+
+        /**
+         * Retrieve the student data for the workgroup id
+         * @param workgroupId the workgroup id
+         * @returns the student data for the workgroup id
+         */
+        serviceObject.retrieveStudentDataByWorkgroupId = function(workgroupId) {
+
+            var params = {};
+            params.runId = ConfigService.getRunId();
+            params.periodId = null;
+            params.nodeId = null;
+            params.workgroupId = workgroupId;
+            params.toWorkgroupId = workgroupId;
+
+            return this.retrieveStudentData(params);
         };
-        
-        serviceObject.retrieveStudentData = function(nodeIds, workgroupIds) {
-            var studentDataURL = ConfigService.getConfigParam('studentDataURL');
+
+        /**
+         * Retrieve the student data
+         * @param params the params that specify what student data we want
+         * @returns a promise
+         */
+        serviceObject.retrieveStudentData = function(params) {
+            var studentDataURL = ConfigService.getConfigParam('teacherDataURL');
+
+            params.getStudentWork = true;
+            params.getEvents = false;
+            params.getAnnotations = true;
+
             var httpParams = {};
             httpParams.method = 'GET';
             httpParams.url = studentDataURL;
-            var params = {};
-            //params.userId = ConfigService.getWorkgroupId();
-            
-            if (nodeIds != null) {
-                params.nodeIds = nodeIds.join(':');
-            }
-            
-            if (workgroupIds != null) {
-                params.userId = workgroupIds.join(':');
-            }
-            
-            params.runId = ConfigService.getRunId();
-            params.getStudentWork = true;
-            params.getEvents = true;
-            params.getAnnotations = true;
-
             httpParams.params = params;
+
             return $http(httpParams).then(angular.bind(this, function(result) {
                 var resultData = result.data;
                 if (resultData != null) {
 
                     this.studentData = {};
 
-                    // get student work
-                    var componentStates = [];
-                    var nodeStates = [];
-                    var studentWorkList = resultData.studentWorkList;
-                    for (var s = 0; s < studentWorkList.length; s++) {
-                        var studentWork = studentWorkList[s];
-                        if (studentWork.componentId != null) {
-                            componentStates.push(studentWork);
-                        } else {
-                            nodeStates.push(studentWork);
+                    if (resultData.studentWorkList != null) {
+                        var componentStates = resultData.studentWorkList;
+
+                        // populate allComponentStates, componentStatesByWorkgroupId and componentStatesByNodeId arrays
+                        this.studentData.componentStates = componentStates;
+                        this.studentData.componentStatesByWorkgroupId = {};
+                        this.studentData.componentStatesByNodeId = {};
+                        this.studentData.componentStatesByComponentId = {};
+
+                        for (var i = 0; i < componentStates.length; i++) {
+                            var componentState = componentStates[i];
+
+                            var componentStateWorkgroupId = componentState.workgroupId;
+                            if (this.studentData.componentStatesByWorkgroupId[componentStateWorkgroupId] == null) {
+                                this.studentData.componentStatesByWorkgroupId[componentStateWorkgroupId] = new Array();
+                            }
+                            this.studentData.componentStatesByWorkgroupId[componentStateWorkgroupId].push(componentState);
+
+                            var componentStateNodeId = componentState.nodeId;
+                            if (this.studentData.componentStatesByNodeId[componentStateNodeId] == null) {
+                                this.studentData.componentStatesByNodeId[componentStateNodeId] = new Array();
+                            }
+                            this.studentData.componentStatesByNodeId[componentStateNodeId].push(componentState);
+
+                            var componentId = componentState.componentId;
+                            if (this.studentData.componentStatesByComponentId[componentId] == null) {
+                                this.studentData.componentStatesByComponentId[componentId] = new Array();
+                            }
+                            this.studentData.componentStatesByComponentId[componentId].push(componentState);
                         }
                     }
 
-                    // populate allComponentStates, componentStatesByWorkgroupId and componentStatesByNodeId arrays
-                    this.studentData.allComponentStates = componentStates;
-                    this.studentData.componentStatesByWorkgroupId = {};
-                    this.studentData.componentStatesByNodeId = {};
-                    this.studentData.componentStatesByComponentId = {};
+                    if (resultData.events != null) {
+                        // populate allEvents, eventsByWorkgroupId, and eventsByNodeId arrays
+                        this.studentData.allEvents = resultData.events;
+                        this.studentData.eventsByWorkgroupId = {};
+                        this.studentData.eventsByNodeId = {};
+                        for (var i = 0; i < resultData.events.length; i++) {
+                            var event = resultData.events[i];
+                            var eventWorkgroupId = event.workgroupId;
+                            if (this.studentData.eventsByWorkgroupId[eventWorkgroupId] == null) {
+                                this.studentData.eventsByWorkgroupId[eventWorkgroupId] = new Array();
+                            }
+                            this.studentData.eventsByWorkgroupId[eventWorkgroupId].push(event);
 
-                    for (var i = 0; i < componentStates.length; i++) {
-                        var componentState = componentStates[i];
-
-                        var componentStateWorkgroupId = componentState.workgroupId;
-                        if (this.studentData.componentStatesByWorkgroupId[componentStateWorkgroupId] == null) {
-                            this.studentData.componentStatesByWorkgroupId[componentStateWorkgroupId] = new Array();
+                            var eventNodeId = event.nodeId;
+                            if (this.studentData.eventsByNodeId[eventNodeId] == null) {
+                                this.studentData.eventsByNodeId[eventNodeId] = new Array();
+                            }
+                            this.studentData.eventsByNodeId[eventNodeId].push(event);
                         }
-                        this.studentData.componentStatesByWorkgroupId[componentStateWorkgroupId].push(componentState);
-
-                        var componentStateNodeId = componentState.nodeId;
-                        if (this.studentData.componentStatesByNodeId[componentStateNodeId] == null) {
-                            this.studentData.componentStatesByNodeId[componentStateNodeId] = new Array();
-                        }
-                        this.studentData.componentStatesByNodeId[componentStateNodeId].push(componentState);
-
-                        var componentId = componentState.componentId;
-                        if (this.studentData.componentStatesByComponentId[componentId] == null) {
-                            this.studentData.componentStatesByComponentId[componentId] = new Array();
-                        }
-                        this.studentData.componentStatesByComponentId[componentId].push(componentState);
                     }
 
-                    // populate allEvents, eventsByWorkgroupId, and eventsByNodeId arrays
-                    this.studentData.allEvents = resultData.events;
-                    this.studentData.eventsByWorkgroupId = {};
-                    this.studentData.eventsByNodeId = {};
-                    for (var i = 0; i < resultData.events.length; i++) {
-                        var event = resultData.events[i];
-                        var eventWorkgroupId = event.workgroupId;
-                        if (this.studentData.eventsByWorkgroupId[eventWorkgroupId] == null) {
-                            this.studentData.eventsByWorkgroupId[eventWorkgroupId] = new Array();
-                        }
-                        this.studentData.eventsByWorkgroupId[eventWorkgroupId].push(event);
+                    if (resultData.annotations != null) {
+                        // populate annotations, annotationsByWorkgroupId, and annotationsByNodeId arrays
+                        this.studentData.annotations = resultData.annotations;
+                        this.studentData.annotationsToWorkgroupId = {};
+                        this.studentData.annotationsByNodeId = {};
+                        for (var i = 0; i < resultData.annotations.length; i++) {
+                            var annotation = resultData.annotations[i];
+                            var annotationWorkgroupId = annotation.toWorkgroupId;
+                            if (this.studentData.annotationsToWorkgroupId[annotationWorkgroupId] == null) {
+                                this.studentData.annotationsToWorkgroupId[annotationWorkgroupId] = new Array();
+                            }
+                            this.studentData.annotationsToWorkgroupId[annotationWorkgroupId].push(annotation);
 
-                        var eventNodeId = event.nodeId;
-                        if (this.studentData.eventsByNodeId[eventNodeId] == null) {
-                            this.studentData.eventsByNodeId[eventNodeId] = new Array();
+                            var annotationNodeId = annotation.nodeId;
+                            if (this.studentData.annotationsByNodeId[annotationNodeId] == null) {
+                                this.studentData.annotationsByNodeId[annotationNodeId] = new Array();
+                            }
+                            this.studentData.annotationsByNodeId[annotationNodeId].push(annotation);
                         }
-                        this.studentData.eventsByNodeId[eventNodeId].push(event);
                     }
 
-                    // populate allAnnotations, annotationsByWorkgroupId, and annotationsByNodeId arrays
-                    this.studentData.allAnnotations = resultData.annotations;
-                    this.studentData.annotationsToWorkgroupId = {};
-                    this.studentData.annotationsByNodeId = {};
-                    for (var i = 0; i < resultData.annotations.length; i++) {
-                        var annotation = resultData.annotations[i];
-                        var annotationWorkgroupId = annotation.toWorkgroupId;
-                        if (this.studentData.annotationsToWorkgroupId[annotationWorkgroupId] == null) {
-                            this.studentData.annotationsToWorkgroupId[annotationWorkgroupId] = new Array();
-                        }
-                        this.studentData.annotationsToWorkgroupId[annotationWorkgroupId].push(annotation);
-
-                        var annotationNodeId = annotation.nodeId;
-                        if (this.studentData.annotationsByNodeId[annotationNodeId] == null) {
-                            this.studentData.annotationsByNodeId[annotationNodeId] = new Array();
-                        }
-                        this.studentData.annotationsByNodeId[annotationNodeId].push(annotation);
-                    }
+                    AnnotationService.setAnnotations(this.studentData.annotations);
                 }
             }));
         };
@@ -310,6 +329,14 @@ define(['configService', 'studentDataService'], function(configService, studentD
             return annotationsToWorkgroupId.filter(function(n) {
                 return annotationsByNodeId.indexOf(n) != -1;
             });
+        };
+
+        serviceObject.setCurrentPeriod = function(period) {
+            this.currentPeriod = period;
+        };
+
+        serviceObject.getCurrentPeriod = function() {
+            return this.currentPeriod;
         };
 
         return serviceObject;

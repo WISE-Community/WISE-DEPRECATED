@@ -1,19 +1,23 @@
-define(['configService', 'projectService'], function(configService, projectService) {
+define(['annotationService', 'configService', 'projectService'], function(annotationService, configService, projectService) {
 
     var service = [
         '$http',
         '$injector',
         '$q',
         '$rootScope',
+        'AnnotationService',
         'ConfigService',
         'ProjectService',
+        'UtilService',
         function (
             $http,
             $injector,
             $q,
             $rootScope,
+            AnnotationService,
             ConfigService,
-            ProjectService) {
+            ProjectService,
+            UtilService) {
 
         var serviceObject = {};
 
@@ -88,6 +92,8 @@ define(['configService', 'projectService'], function(configService, projectServi
 
                         // get annotations
                         this.studentData.annotations = resultData.annotations;
+
+                        AnnotationService.setAnnotations(this.studentData.annotations);
 
                         // load the student planning nodes
                         //this.loadStudentNodes();
@@ -828,27 +834,6 @@ define(['configService', 'projectService'], function(configService, projectServi
             return componentState;
         };
 
-        serviceObject.createAnnotation = function(
-            annotationId, runId, periodId, fromWorkgroupId, toWorkgroupId,
-            nodeId, componentId, componentStateId,
-            annotationType, data, clientSaveTime) {
-
-            var annotation = {};
-            annotation.id = annotationId;
-            annotation.runId = runId;
-            annotation.periodId = periodId;
-            annotation.fromWorkgroupId = fromWorkgroupId;
-            annotation.toWorkgroupId = toWorkgroupId;
-            annotation.nodeId = nodeId;
-            annotation.componentId = componentId;
-            annotation.componentStateId = componentStateId;
-            annotation.type = annotationType;
-            annotation.data = data;
-            annotation.clientSaveTime = clientSaveTime;
-
-            return annotation;
-        };
-
         serviceObject.addComponentState = function(componentState) {
             if (this.studentData != null && this.studentData.componentStates != null) {
                 this.studentData.componentStates.push(componentState);
@@ -898,30 +883,6 @@ define(['configService', 'projectService'], function(configService, projectServi
             if (this.studentData != null && this.studentData.annotations != null) {
                 this.studentData.annotations.push(annotation);
             }
-        };
-
-       /**
-        * Generates and returns a random key of the given length if
-        * specified. If length is not specified, returns a key 10
-        * characters in length.
-        */
-        serviceObject.generateKey = function(length) {
-            this.CHARS = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r", "s","t",
-                          "u","v","w","x","y","z","0","1","2","3","4","5","6","7","8","9"];
-
-            /* set default length if not specified */
-            if (!length) {
-                length = 10;
-            }
-
-            /* generate the key */
-            var key = '';
-            for (var a = 0; a < length; a++) {
-                key += this.CHARS[Math.floor(Math.random() * (this.CHARS.length - 1))];
-            }
-
-            /* return the generated key */
-            return key;
         };
 
         serviceObject.saveComponentEvent = function(component, category, event, data) {
@@ -988,6 +949,14 @@ define(['configService', 'projectService'], function(configService, projectServi
             this.saveToServer(componentStates, nodeStates, events, annotations);
         };
 
+
+        serviceObject.saveAnnotations = function(annotations) {
+            var componentStates = null;
+            var nodeStates = null;
+            var events = null;
+            this.saveToServer(componentStates, nodeStates, events, annotations);
+        };
+
         serviceObject.saveToServer = function(componentStates, nodeStates, events, annotations) {
 
             // merge componentStates and nodeStates into StudentWork before posting
@@ -997,7 +966,7 @@ define(['configService', 'projectService'], function(configService, projectServi
                     var componentState = componentStates[c];
 
                     if (componentState != null) {
-                        componentState.requestToken = this.generateKey(); // use this to keep track of unsaved componentStates.
+                        componentState.requestToken = UtilService.generateKey(); // use this to keep track of unsaved componentStates.
                         this.addComponentState(componentState);
                         studentWorkList.push(componentState);
                     }
@@ -1009,7 +978,7 @@ define(['configService', 'projectService'], function(configService, projectServi
                     var nodeState = nodeStates[n];
 
                     if (nodeState != null) {
-                        nodeState.requestToken = this.generateKey(); // use this to keep track of unsaved componentStates.
+                        nodeState.requestToken = UtilService.generateKey(); // use this to keep track of unsaved componentStates.
                         this.addNodeState(nodeState);
                         studentWorkList.push(nodeState);
                     }
@@ -1021,7 +990,7 @@ define(['configService', 'projectService'], function(configService, projectServi
                     var event = events[e];
 
                     if (event != null) {
-                        event.requestToken = this.generateKey(); // use this to keep track of unsaved events.
+                        event.requestToken = UtilService.generateKey(); // use this to keep track of unsaved events.
                         this.addEvent(event);
                     }
                 }
@@ -1034,7 +1003,7 @@ define(['configService', 'projectService'], function(configService, projectServi
                     var annotation = annotations[a];
 
                     if (annotation != null) {
-                        annotation.requestToken = this.generateKey(); // use this to keep track of unsaved annotations.
+                        annotation.requestToken = UtilService.generateKey(); // use this to keep track of unsaved annotations.
                         this.addAnnotation(annotation);
                     }
                 }

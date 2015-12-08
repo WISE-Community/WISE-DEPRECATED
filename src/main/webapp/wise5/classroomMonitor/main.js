@@ -20,6 +20,7 @@ require.config({
         'angularUITinymce': 'vendor/angular-ui-tinymce/src/tinymce',
         'angularUITree': 'vendor/angular-ui-tree/dist/angular-ui-tree.min',
         'angularWebSocket': 'vendor/angular-websocket/angular-websocket.min',
+        'annotationController': 'controllers/annotationController',
         'annotationService': 'services/annotationService',
         'app': 'classroomMonitor/app',
         'audioRecorderController': 'components/audioRecorder/audioRecorderController',
@@ -94,6 +95,7 @@ require.config({
         'teacherDataService': 'services/teacherDataService',
         'teacherWebSocketService': 'services/teacherWebSocketService',
         'tinymce': 'vendor/tinymce-dist/tinymce.min',
+        'utilService': 'services/utilService',
         'vleController': 'vle/vleController',
         'webfont': [
             '//ajax.googleapis.com/ajax/libs/webfont/1.5.18/webfont',
