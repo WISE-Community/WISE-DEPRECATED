@@ -9,6 +9,7 @@
     <title>WISE Classroom Monitor</title>
     <meta name="description" content="WISE Classroom Monitor">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <base href="${contextPath}/" target="_blank">
 
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <!-- Place favicon.ico in the root directory -->

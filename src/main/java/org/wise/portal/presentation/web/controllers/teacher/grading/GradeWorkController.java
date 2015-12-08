@@ -35,10 +35,12 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
+import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.impl.ProjectTypeVisitor;
 import org.wise.portal.domain.run.Run;
@@ -62,8 +64,55 @@ public class GradeWorkController {
 	@Autowired
 	Properties wiseProperties;
 
+	/**
+	 * Handles launching classroom monitor for WISE5 runs
+	 * @param runId ID of the run
+	 * @return
+     * @throws Exception
+     */
+	@RequestMapping(value = "/classroomMonitor/{runId}")
+	protected ModelAndView launchClassroomMonitorWISE5(
+			@PathVariable Integer runId) throws Exception {
+
+		Run run = null;
+		try {
+			run = runService.retrieveById(new Long(runId));
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		} catch (ObjectNotFoundException e) {
+			e.printStackTrace();
+		}
+
+		User user = ControllerUtil.getSignedInUser();
+
+		// check that the user has read or write permission on the run
+		if (user.isAdmin() ||
+				this.runService.hasRunPermission(run, user, BasePermission.WRITE) ||
+				this.runService.hasRunPermission(run, user, BasePermission.READ)) {
+
+			String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
+
+			String getClassroomMonitorConfigUrl = wiseBaseURL + "/vleconfig?runId=" + run.getId().toString();
+
+			ModelAndView modelAndView = new ModelAndView("classroomMonitor");
+			modelAndView.addObject("vleConfigUrl", getClassroomMonitorConfigUrl);
+			return modelAndView;
+		}
+		return null;
+	}
+
+	/**
+	 * Handles launching classroom monitor for WISE4 runs
+	 * @param runId
+	 * @param action
+	 * @param gradingType
+	 * @param getRevisions
+	 * @param request
+	 * @param response
+     * @return
+     * @throws Exception
+     */
 	@RequestMapping(value = {
-			"/classroomMonitor",
 			"/teacher/grading/gradework.html",
 			"/teacher/classroomMonitor/classroomMonitor"})
 	protected ModelAndView handleRequestInternal(
@@ -88,7 +137,7 @@ public class GradeWorkController {
 			if (result.equals("LDProject")) {
 				User user = ControllerUtil.getSignedInUser();
 				
-				//check that the user has read or write permission on the run
+				// check that the user has read or write permission on the run
 				if (user.isAdmin() ||
 						this.runService.hasRunPermission(run, user, BasePermission.WRITE) ||
 						this.runService.hasRunPermission(run, user, BasePermission.READ)) {
@@ -98,11 +147,11 @@ public class GradeWorkController {
 			    	String getGradeWorkUrl = wiseBaseURL + "/vle/gradework.html";
 					String getGradingConfigUrl = wiseBaseURL + "/vleconfig?runId=" + run.getId().toString() + "&gradingType=" + gradingType + "&mode=grading&getRevisions=" + getRevisions;
 					
-					//get the classroom monitor urls
+					// get the classroom monitor urls
 					String getClassroomMonitorUrl = wiseBaseURL + "/vle/classroomMonitor.html";
 					String getClassroomMonitorConfigUrl = wiseBaseURL + "/vleconfig?runId=" + run.getId().toString() + "&gradingType=" + gradingType + "&mode=grading&getRevisions=" + getRevisions;
 					
-					//set the permission variable so that we can access it in the .jsp
+					// set the permission variable so that we can access it in the .jsp
 					if (this.runService.hasRunPermission(run, user, BasePermission.WRITE)) {
 						getGradeWorkUrl += "?loadScriptsIndividually&permission=write";
 						getClassroomMonitorUrl += "?loadScriptsIndividually&permission=write";
@@ -111,32 +160,18 @@ public class GradeWorkController {
 						getClassroomMonitorUrl += "?loadScriptsIndividually&permission=read";
 					}
 					
-					Project project = run.getProject();
-					Integer wiseVersion = null;
-					if (project != null) {
-					    wiseVersion = project.getWiseVersion();
-					} 
-					
-                    if (wiseVersion != null && wiseVersion == 5) {
-                        // WISE5 run
-                        ModelAndView modelAndView = new ModelAndView("classroomMonitor");
-                        modelAndView.addObject("vleConfigUrl", getClassroomMonitorConfigUrl);
-                        return modelAndView;
-                    } else {
-                        // WISE4 run
-                        ModelAndView modelAndView = new ModelAndView("vle");
-                        modelAndView.addObject("runId", runId);
-                        modelAndView.addObject("run", run);
-                        if ("monitor".equals(gradingType)) {
-                            modelAndView.addObject("vleurl", getClassroomMonitorUrl);
-                            modelAndView.addObject("vleConfigUrl", getClassroomMonitorConfigUrl);
-                        } else {
-                            modelAndView.addObject("vleurl", getGradeWorkUrl);
-                            modelAndView.addObject("vleConfigUrl", getGradingConfigUrl);
-                        }
-                        
-                        return modelAndView;                        
-                    }
+					ModelAndView modelAndView = new ModelAndView("vle");
+					modelAndView.addObject("runId", runId);
+					modelAndView.addObject("run", run);
+					if ("monitor".equals(gradingType)) {
+						modelAndView.addObject("vleurl", getClassroomMonitorUrl);
+						modelAndView.addObject("vleConfigUrl", getClassroomMonitorConfigUrl);
+					} else {
+						modelAndView.addObject("vleurl", getGradeWorkUrl);
+						modelAndView.addObject("vleConfigUrl", getGradingConfigUrl);
+					}
+
+					return modelAndView;
 
 				} else {
 					return new ModelAndView(new RedirectView("../../accessdenied.html"));

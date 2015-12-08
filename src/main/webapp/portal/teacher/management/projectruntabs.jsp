@@ -115,7 +115,7 @@
 									</td>
 									<td>
 										<ul class="actionList">
-                                            <li style="font-size:1.1em; padding-bottom:3px;"><a class="classroomMonitor" wiseVersion="${run.project.wiseVersion == null ? 4 : run.project.wiseVersion}" title="<spring:message code="teacher.management.projectruntabs.monitorTitle"/> ${run.name} (<spring:message code="run_id"/> ${run.id})" id="runId=${run.id}&gradingType=monitor"><img class="icon" alt="monitor" src="${contextPath}/<spring:theme code="bar_chart"/>" /><span><spring:message code="teacher.management.projectruntabs.gradingTool"/></span></a></li>
+                                            <li style="font-size:1.1em; padding-bottom:3px;"><a class="classroomMonitor" wiseVersion="${run.project.wiseVersion == null ? 4 : run.project.wiseVersion}" title="<spring:message code="teacher.management.projectruntabs.monitorTitle"/> ${run.name} (<spring:message code="run_id"/> ${run.id})" runId="${run.id}" id="runId=${run.id}&gradingType=monitor"><img class="icon" alt="monitor" src="${contextPath}/<spring:theme code="bar_chart"/>" /><span><spring:message code="teacher.management.projectruntabs.gradingTool"/></span></a></li>
 											<c:if test="${run.project.wiseVersion == null || run.project.wiseVersion == 4}">
 												<a id='linkToSeeOldGradingTools_${run.id}' onclick="$('#oldGradingTools_${run.id}').show();$('#linkToSeeOldGradingTools_${run.id}').hide();">(click here to access old grading tools)</a>
 												<span id="oldGradingTools_${run.id}" style="display:none">
@@ -487,11 +487,12 @@
 	// setup grading and classroom monitor dialogs
 	$('.classroomMonitor').on('click',function(){
 		var settings = $(this).attr('id');
+		var runId = $(this).attr('runId');
 		var title = $(this).attr('title');
 		var wiseVersion = $(this).attr('wiseVersion');
         var path = "${contextPath}/teacher/classroomMonitor/classroomMonitor?" + settings;
 		if (wiseVersion != null && wiseVersion == 5) {
-	         path = "${contextPath}/classroomMonitor?" + settings;
+	         path = "${contextPath}/classroomMonitor/" + runId;
 		}
 		window.open(path);
 	});
