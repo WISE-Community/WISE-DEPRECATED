@@ -7,13 +7,14 @@
                     {{openResponseController.nodeContent.style}}
                 </style>
 
-                <md-input-container class="input-container md-block input-container--open-response md-no-float">
-                    <label class="input-label md-no-float" ng-disabled="openResponseController.isDisabled"
-                           compile="openResponseController.getPrompt()" ng-if="openResponseController.showPrompt()"></label>
-                    <div class="input-wrapper" ng-class="{'input-wrapper--richtext': openResponseController.isRichTextEnabled}">
+            <md-input-container class="input-container md-block input-container--open-response input-container--component md-no-float">
+                <label class="input-label md-no-float" ng-disabled="openResponseController.isDisabled"
+                       compile="openResponseController.getPrompt()" ng-if="openResponseController.showPrompt()"></label>
+                <div class="input-wrapper" ng-class="{'input-wrapper--richtext': openResponseController.isRichTextEnabled}">
                     <textarea ng-if="openResponseController.isRichTextEnabled && !openResponseController.isDisabled"
                               ui-tinymce="openResponseController.tinymceOptions"
                               ng-model="openResponseController.studentResponse"
+                              ng-model-options='{ debounce: 100 }'
                               ng-change="openResponseController.studentDataChanged()"></textarea>
                         <div ng-if="openResponseController.isRichTextEnabled && openResponseController.isDisabled"
                              class="input--textarea input--textarea--disabled">
@@ -23,6 +24,7 @@
                               class="input--textarea input--textarea--hasaction"
                               rows="{{openResponseController.getNumRows() || 3}}"
                               ng-model="openResponseController.studentResponse"
+                              ng-model-options='{ debounce: 100 }'
                               ng-disabled="openResponseController.isDisabled"
                               ng-change="openResponseController.studentDataChanged()"></textarea>
                         <!-- TODO: uncomment me when adding student work to notebook is styled and ready for use in a run

@@ -70,7 +70,7 @@
 .nav-contents__list {
   padding: 0;
 
-  @media (min-width: $layout-breakpoint-sm) {
+  @media (min-width: $layout-breakpoint-xs) {
     padding: 8px;
   }
 }
@@ -89,6 +89,13 @@
 }
 
 .nav-item {
+  &.prev {
+    md-list-item > .md-button {
+      border-left: 3px solid $primary-color;
+      margin-left: -3px;
+      background-color: lighten($primary-color, 59%);
+    }
+  }
 }
 
 .nav-item--root {

@@ -15,11 +15,11 @@ $input-action-vertical-offset-richtext: -7px;
   margin: 0;
   width: 100%;
 
-  @media only screen and (min-width: $layout-breakpoint-sm) {
+  @media only screen and (min-width: $layout-breakpoint-xs) {
     margin: 16px auto;
   }
 
-  @media only screen and (min-width: $layout-breakpoint-md) {
+  @media only screen and (min-width: $layout-breakpoint-sm) {
     margin: 32px auto;
   }
 }
@@ -27,7 +27,7 @@ $input-action-vertical-offset-richtext: -7px;
 .node-content {
   padding: 0;
 
-  @media only screen and (min-width: $layout-breakpoint-sm) {
+  @media only screen and (min-width: $layout-breakpoint-xs) {
     border: 1px solid $gray;
   }
 }
@@ -37,23 +37,57 @@ $input-action-vertical-offset-richtext: -7px;
 }
 
 .node-select {
-  margin-left: 8px;
-  margin-right: 8px;
+  margin: 0 8px;
   min-width: 0;
+
+  .md-select-value {
+    *:first-child {
+      transform: translate3d(0,0,0);
+      flex: 1 0 0;
+    }
+
+    .node-select__icon {
+      display: none;
+    }
+
+    .node-select__status {
+      display: none;
+    }
+  }
+
+  .md-select-icon {
+    margin-left: 0;
+    color: $text-color-dark;
+  }
 }
 
-.node-select--group {
-  color: rgba(0,0,0,0.54);
-  background-color: $gray-lighter;
+.node-select-option--group {
+  //color: rgba(0,0,0,0.54);
+  background-color: $gray-lightest;
+  border-bottom: 1px solid $gray-lighter;
+  border-top: 1px solid $gray-lighter;
 }
 
-.node-select--node {
-  padding-left: 24px;
+.node-select-option--node {
+  padding-left: 20px;
 }
 
 .node-select__icon {
-  margin-left: 4px;
-  margin-top: -1px; // hack for now; ng-material needs to fix alignment issue
+  margin-right: 8px;
+}
+
+.node-select__status {
+  margin-left: 8px;
+}
+
+.node-select__text {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+
+  @media only screen and (min-width: $layout-breakpoint-xs) {
+    margin-top: 2px;
+  }
 }
 
 .node-title {
@@ -62,8 +96,7 @@ $input-action-vertical-offset-richtext: -7px;
   margin-top: 3px;
 }
 
-@media only screen and (min-width: 0) and (max-width: $layout-breakpoint-sm) and
-(orientation: portrait) {
+@media only screen and (max-width: ($layout-breakpoint-xs - 1)) {
   .node-title, .node-select {
     font-size: $body-font-size-base;
   }

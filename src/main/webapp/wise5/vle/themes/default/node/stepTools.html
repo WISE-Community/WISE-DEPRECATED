@@ -5,26 +5,25 @@
             <md-icon md-font-set="{{stepToolsCtrl.nodeStatus.icon.fontSet}}" class="md-18 md-light node-icon" md-theme="default">{{stepToolsCtrl.nodeStatus.icon.fontName}}</md-icon>
         </div>
 
-        <md-select md-theme="default" class="node-select md-subhead" ng-model="stepToolsCtrl.nodeId" style="color: {{stepToolsCtrl.nodeStatus.icon.color}};" aria-label="Go to other project item">
-            <div ng-repeat="item in stepToolsCtrl.idToOrder | toArray | orderBy : 'order'"
-                 ng-if="stepToolsCtrl.nodeStatuses[item.$key].isVisible && item.order!==0">
-                <md-option value="{{ item.$key }}"
-                           ng-click="stepToolsCtrl.nodeClicked(item.$key)"
-                           ng-class="{'node-select--group': stepToolsCtrl.isGroupNode(item.$key), 'node-select--node': !stepToolsCtrl.isGroupNode(item.$key)}">
-                    <div layout="row" layout-align="start center">
-                        <!--<img ng-if="stepToolsCtrl.nodeStatuses[item.$key].icon.type === 'img'" class="md-18 avatar node-avatar" ng-src="{{stepToolsCtrl.nodeStatuses[item.$key].icon.imgSrc}}" alt="{{stepToolsCtrl.nodeStatuses[item.$key].icon.imgAlt}}" />
-                        <div ng-if="stepToolsCtrl.nodeStatuses[item.$key].icon.type === 'font'" style="background-color: {{stepToolsCtrl.nodeStatuses[item.$key].icon.color}};" class="md-18 avatar avatar--icon node-avatar">
-                            <md-icon md-font-set="{{stepToolsCtrl.nodeStatuses[item.$key].icon.fontSet}}" class="md-18 md-light node-icon" md-theme="default">{{stepToolsCtrl.nodeStatuses[item.$key].icon.fontName}}</md-icon>&nbsp;
-                        </div> TODO: put back when ng-material supports <md-icon> in <md-option>-->
-                        <span ng-if="stepToolsCtrl.showPosition">{{ stepToolsCtrl.getNodePositionById(item.$key) }}:</span>&nbsp;{{ stepToolsCtrl.getNodeTitleByNodeId(item.$key) }}<md-icon ng-if="stepToolsCtrl.nodeStatuses[item.$key].isCompleted" ng-class="'success'" class="node-select__icon" aria-label="Completed" md-font-icon="check_circle"></md-icon>
+        <md-select md-theme="default" class="node-select md-subhead" ng-model="stepToolsCtrl.toNodeId" aria-label="Go to other project item">
+            <md-option ng-repeat="item in stepToolsCtrl.idToOrder | toArray | orderBy : 'order'"
+                       ng-if="stepToolsCtrl.nodeStatuses[item.$key].isVisible && item.order!==0"
+                       value="{{ item.$key }}"
+                       ng-class="{'node-select-option--group': stepToolsCtrl.isGroupNode(item.$key), 'node-select-option--node': !stepToolsCtrl.isGroupNode(item.$key)}">
+                <div layout="row" layout-align="start center">
+                    <img class="node-select__icon md-18 avatar node-avatar" ng-class="stepToolsCtrl.isGroupNode(item.$key) ? 'avatar--square' : ''" ng-if="stepToolsCtrl.nodeStatuses[item.$key].icon.type === 'img'" ng-src="{{stepToolsCtrl.nodeStatuses[item.$key].icon.imgSrc}}" alt="{{stepToolsCtrl.nodeStatuses[item.$key].icon.imgAlt}}" />
+                    <div class="node-select__icon md-18 avatar avatar--icon node-avatar" ng-class="stepToolsCtrl.isGroupNode(item.$key) ? 'avatar--square' : ''" ng-if="stepToolsCtrl.nodeStatuses[item.$key].icon.type === 'font'" style="background-color: {{stepToolsCtrl.nodeStatuses[item.$key].icon.color}};">
+                        <md-icon md-font-set="{{stepToolsCtrl.nodeStatuses[item.$key].icon.fontSet}}" class="md-18 md-light node-icon" md-theme="default">{{stepToolsCtrl.nodeStatuses[item.$key].icon.fontName}}</md-icon>&nbsp;
                     </div>
-                </md-option>
-            </div>
+                    <span class="node-select__text">{{ stepToolsCtrl.showPosition ? stepToolsCtrl.getNodePositionById(item.$key) + ': ' : '' }}{{ stepToolsCtrl.getNodeTitleByNodeId(item.$key) }}</span>
+                    <node-status-icon node-id="item.$key" custom-class="'node-select__status'"></node-status-icon>
+                </div>
+            </md-option>
         </md-select>
         <!--<md-button aria-label="Notifications" class="md-icon-button">
             <md-icon md-theme="default"> message </md-icon>
         </md-button> TODO: Add notifications and score when operational-->
-        <md-icon ng-if="stepToolsCtrl.nodeStatus.isCompleted" md-theme="default" ng-class="'success'" aria-label="Completed"> check_circle </md-icon>
+        <node-status-icon node-id="stepToolsCtrl.nodeId"></node-status-icon>
         <span flex></span>
         <md-button aria-label="Previous Item" class="md-icon-button node-nav"
                    ng-disabled="!stepToolsCtrl.prevId" ng-click="stepToolsCtrl.goToPrevNode()">

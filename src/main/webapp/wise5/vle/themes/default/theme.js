@@ -47,6 +47,9 @@ define(['angular', /*'annotationService',*/ 'configService', 'nodeService', 'not
                         function () { return StudentDataService.currentNode; },
                         function (newNode) {
                             scope.currentNode = newNode;
+                            if (StudentDataService.previousNode) {
+                                $scope.$parent.isPrevNode = (scope.nodeId === StudentDataService.previousNode.id);
+                            }
                             isCurrentNode = (scope.currentNode.id === scope.nodeId);
                             if (isCurrentNode || ProjectService.isApplicationNode(newNode.id) || newNode.id === ProjectService.rootNode.id) {
                                 setExpanded();
@@ -146,10 +149,6 @@ define(['angular', /*'annotationService',*/ 'configService', 'nodeService', 'not
                         return ProjectService.isGroupNode(nodeId);
                     };
 
-                    this.nodeClicked = function(nodeId) {
-                        StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(nodeId);
-                    };
-
                     this.goToPrevNode = function() {
                         NodeService.goToPrevNode();
                     };
@@ -158,13 +157,51 @@ define(['angular', /*'annotationService',*/ 'configService', 'nodeService', 'not
                         NodeService.goToNextNode();
                     };
 
-                    this.nodeClicked = function(nodeId) {
-                        StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(nodeId);
-                    };
-
                     this.closeNode = function() {
                         NodeService.closeNode();
                     };
+
+                    // model variable for selected node id
+                    this.toNodeId = this.nodeId;
+
+                    var scope = this;
+                    $scope.$watch(
+                        function () { return scope.toNodeId; },
+                        function (newId, oldId) {
+                            if (newId !== oldId) {
+                                // selected node id has changed, so open new node
+                                StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(newId);
+                            }
+                        }
+                    );
+                }
+            )
+            .directive('nodeStatusIcon', function() {
+                return {
+                    scope: {
+                        nodeId: '=',
+                        customClass: '='
+                    },
+                    template: '<ng-include src="nodeStatusIconCtrl.getTemplateUrl()"></ng-include>',
+                    controller: 'NodeStatusIconCtrl',
+                    controllerAs: 'nodeStatusIconCtrl',
+                    bindToController: true
+                };
+            })
+            .controller('NodeStatusIconCtrl',
+                function($scope,
+                         $state,
+                         $stateParams,
+                         $element,
+                         ProjectService,
+                         StudentDataService) {
+
+                    this.getTemplateUrl = function(){
+                        return ProjectService.getThemePath() + '/templates/nodeStatusIcon.html';
+                    };
+
+                    this.nodeStatuses = StudentDataService.nodeStatuses;
+                    this.nodeStatus = this.nodeStatuses[this.nodeId];
                 }
             )
             /*.directive('notebook', function() {
