@@ -1,47 +1,86 @@
 <html>
     <head></head>
     <body>
-        <div ng-controller="MultipleChoiceController as multipleChoiceController">
-            <md-input-container class="input-container input-container--component md-block" ng-switch on="multipleChoiceController.getChoiceType()">
-                <label class="input-label md-no-float" ng-if="multipleChoiceController.getPrompt()" compile="multipleChoiceController.getPrompt()"></label>
-                <md-radio-group ng-switch-when="radio" ng-model="multipleChoiceController.studentChoices"
-                                ng-change="multipleChoiceController.studentDataChanged()">
-                    <div ng-repeat="choice in multipleChoiceController.getChoices()">
-                        <md-radio-button class="md-primary"
-                                         ng-value="choice.id"
-                                         ng-click="multipleChoiceController.isDisabled || multipleChoiceController.radioChoiceSelected(choice.id)"
+        <div ng-controller="MultipleChoiceController as multipleChoiceController" style='display: flex'>
+            <div style='flex: 1'>
+                <md-input-container class="input-container input-container--component md-block" ng-switch on="multipleChoiceController.getChoiceType()">
+                    <label class="input-label md-no-float" ng-if="multipleChoiceController.getPrompt()" compile="multipleChoiceController.getPrompt()"></label>
+                    <md-radio-group ng-switch-when="radio" ng-model="multipleChoiceController.studentChoices"
+                                    ng-change="multipleChoiceController.studentDataChanged()">
+                        <div ng-repeat="choice in multipleChoiceController.getChoices()">
+                            <md-radio-button class="md-primary"
+                                             ng-value="choice.id"
+                                             ng-click="multipleChoiceController.isDisabled || multipleChoiceController.radioChoiceSelected(choice.id)"
+                                             ng-disabled="multipleChoiceController.isDisabled">
+                                {{ choice.text }}
+                                <div ng-message ng-show="choice.showFeedback">{{choice.feedbackToShow}}</div>
+                            </md-radio-button>
+                        </div>
+                    </md-radio-group>
+                    <div ng-switch-when="checkbox">
+                        <div ng-repeat="choice in multipleChoiceController.getChoices()">
+                            <md-checkbox class="md-primary"
+                                         ng-checked="multipleChoiceController.isChecked(choice.id)"
+                                         ng-click="multipleChoiceController.isDisabled || multipleChoiceController.toggleSelection(choice.id)"
                                          ng-disabled="multipleChoiceController.isDisabled">
-                            {{ choice.text }}
-                            <div ng-message ng-show="choice.showFeedback">{{choice.feedbackToShow}}</div>
-                        </md-radio-button>
+                                {{ choice.text }}
+                                <div ng-message ng-show="choice.showFeedback">{{choice.feedbackToShow}}</div>
+                            </md-checkbox>
+                        </div>
                     </div>
-                </md-radio-group>
-                <div ng-switch-when="checkbox">
-                    <div ng-repeat="choice in multipleChoiceController.getChoices()">
-                        <md-checkbox class="md-primary"
-                                     ng-checked="multipleChoiceController.isChecked(choice.id)"
-                                     ng-click="multipleChoiceController.isDisabled || multipleChoiceController.toggleSelection(choice.id)"
-                                     ng-disabled="multipleChoiceController.isDisabled">
-                            {{ choice.text }}
-                            <div ng-message ng-show="choice.showFeedback">{{choice.feedbackToShow}}</div>
-                        </md-checkbox>
-                    </div>
+                </md-input-container>
+
+                <div class="md-caption" ng-if="multipleChoiceController.hasCorrectChoices()" ng-show="multipleChoiceController.numberOfAttempts != null">Number of Attempts: {{multipleChoiceController.numberOfAttempts}}</div>
+                <div ng-if="multipleChoiceController.isCorrect">Correct!</div>
+                <div ng-if="multipleChoiceController.isCorrect">Incorrect</div>
+
+                <div ng-if='multipleChoiceController.mode == "student"'>
+                    <annotation type='score'
+                                mode='{{multipleChoiceController.mode}}'
+                                nodeid='{{multipleChoiceController.nodeId}}'
+                                componentid='{{multipleChoiceController.componentId}}'
+                                fromworkgroupid='{{teacherWorkgroupId}}'
+                                toworkgroupid='{{workgroupId}}'
+                                componentstateid='{{componentState.id}}'></annotation>
+                    <br/>
+                    <annotation type='comment'
+                                mode='{{multipleChoiceController.mode}}'
+                                nodeid='{{multipleChoiceController.nodeId}}'
+                                componentid='{{multipleChoiceController.componentId}}'
+                                fromworkgroupid='{{teacherWorkgroupId}}'
+                                toworkgroupid='{{workgroupId}}'
+                                componentstateid='{{componentState.id}}'></annotation>
                 </div>
-            </md-input-container>
 
-            <div class="md-caption" ng-if="multipleChoiceController.hasCorrectChoices()" ng-show="multipleChoiceController.numberOfAttempts != null">Number of Attempts: {{multipleChoiceController.numberOfAttempts}}</div>
-            <div ng-if="multipleChoiceController.isCorrect">Correct!</div>
-            <div ng-if="multipleChoiceController.isCorrect">Incorrect</div>
-
-            <div class="component-content__actions" layout="row">
-                <md-button class="md-raised md-primary"
-                           ng-click='multipleChoiceController.saveButtonClicked()'
-                           ng-disabled='multipleChoiceController.isDisabled'
-                           ng-show='multipleChoiceController.showSaveButton()'>Save</md-button>
-                <md-button class="md-raised md-primary"
-                           ng-click='multipleChoiceController.submitButtonClicked()'
-                           ng-disabled='multipleChoiceController.isDisabled'
-                           ng-show='multipleChoiceController.showSubmitButton()'>Submit</md-button>
+                <div class="component-content__actions" layout="row">
+                    <md-button class="md-raised md-primary"
+                               ng-click='multipleChoiceController.saveButtonClicked()'
+                               ng-disabled='multipleChoiceController.isDisabled'
+                               ng-show='multipleChoiceController.showSaveButton()'>Save</md-button>
+                    <md-button class="md-raised md-primary"
+                               ng-click='multipleChoiceController.submitButtonClicked()'
+                               ng-disabled='multipleChoiceController.isDisabled'
+                               ng-show='multipleChoiceController.showSubmitButton()'>Submit</md-button>
+                </div>
+            </div>
+            <div ng-if='multipleChoiceController.mode == "grading"' style='width: 400px'>
+                <annotation type='score'
+                            mode='{{multipleChoiceController.mode}}'
+                            nodeid='{{multipleChoiceController.nodeId}}'
+                            componentid='{{multipleChoiceController.componentId}}'
+                            fromworkgroupid='{{teacherWorkgroupId}}'
+                            toworkgroupid='{{workgroupId}}'
+                            componentstateid='{{componentState.id}}'
+                            active='true'></annotation>
+                <br/>
+                <annotation type='comment'
+                            mode='{{multipleChoiceController.mode}}'
+                            nodeid='{{multipleChoiceController.nodeId}}'
+                            componentid='{{multipleChoiceController.componentId}}'
+                            fromworkgroupid='{{teacherWorkgroupId}}'
+                            toworkgroupid='{{workgroupId}}'
+                            componentstateid='{{componentState.id}}'
+                            active='true'></annotation>
             </div>
         </div>
     </body>

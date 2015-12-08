@@ -1,29 +1,67 @@
-<div ng-controller='TableController as tableController'>
-    <div id='prompt' compile='tableController.getPrompt()'></div>
-    <div class="component-content__actions" layout="row">
-        <md-button class="md-accent" ng-show="tableController.isStudentAttachmentEnabled"
-                   ng-click="nodeController.showNotebook($event, component.id, tableController.isDisabled)">
-            <md-icon>image</md-icon> Import Data
-        </md-button>
+<div ng-controller='TableController as tableController' style='display: flex'>
+    <div style='flex: 1'>
+        <div id='prompt' compile='tableController.getPrompt()'></div>
+        <div class="component-content__actions" layout="row">
+            <md-button class="md-accent" ng-show="tableController.isStudentAttachmentEnabled"
+                       ng-click="nodeController.showNotebook($event, component.id, tableController.isDisabled)">
+                <md-icon>image</md-icon> Import Data
+            </md-button>
+        </div>
+        <button ng-click='tableController.resetTable()' ng-show='tableController.showResetTableButton()'>Reset Table</button>
+        <table>
+            <tr ng-repeat='row in tableController.getTableDataRows()'>
+                <td ng-repeat='cell in row'>
+                    <input type='text'
+                        ng-model='cell.text'
+                        ng-change='tableController.studentDataChanged()'
+                        size={{cell.size}}
+                        ng-disabled='!cell.editable || tableController.isDisabled'/>
+                </td>
+            </tr>
+        </table>
+        <div ng-if='tableController.mode == "student"'>
+            <annotation type='score'
+                        mode='{{tableController.mode}}'
+                        nodeid='{{tableController.nodeId}}'
+                        componentid='{{tableController.componentId}}'
+                        fromworkgroupid='{{teacherWorkgroupId}}'
+                        toworkgroupid='{{workgroupId}}'
+                        componentstateid='{{componentState.id}}'></annotation>
+            <br/>
+            <annotation type='comment'
+                        mode='{{tableController.mode}}'
+                        nodeid='{{tableController.nodeId}}'
+                        componentid='{{tableController.componentId}}'
+                        fromworkgroupid='{{teacherWorkgroupId}}'
+                        toworkgroupid='{{workgroupId}}'
+                        componentstateid='{{componentState.id}}'></annotation>
+        </div>
+        <button id='saveButton'
+            ng-click='tableController.saveButtonClicked()'
+            ng-disabled='tableController.isDisabled'
+            ng-show='tableController.showSaveButton()'>Save</button>
+        <button id='submitButton'
+            ng-click='tableController.submitButtonClicked()'
+            ng-disabled='tableController.isDisabled'
+            ng-show='tableController.showSubmitButton()'>Submit</button>
     </div>
-    <button ng-click='tableController.resetTable()' ng-show='tableController.showResetTableButton()'>Reset Table</button>
-    <table>
-        <tr ng-repeat='row in tableController.getTableDataRows()'>
-            <td ng-repeat='cell in row'>
-                <input type='text' 
-                    ng-model='cell.text'
-                    ng-change='tableController.studentDataChanged()'
-                    size={{cell.size}}
-                    ng-disabled='!cell.editable || tableController.isDisabled'/>
-            </td>
-        </tr>
-    </table>
-    <button id='saveButton' 
-        ng-click='tableController.saveButtonClicked()' 
-        ng-disabled='tableController.isDisabled' 
-        ng-show='tableController.showSaveButton()'>Save</button>
-    <button id='submitButton' 
-        ng-click='tableController.submitButtonClicked()' 
-        ng-disabled='tableController.isDisabled' 
-        ng-show='tableController.showSubmitButton()'>Submit</button>
+    <div ng-if='tableController.mode == "grading"' style='width: 400px'>
+        <annotation type='score'
+                    mode='{{tableController.mode}}'
+                    nodeid='{{tableController.nodeId}}'
+                    componentid='{{tableController.componentId}}'
+                    fromworkgroupid='{{teacherWorkgroupId}}'
+                    toworkgroupid='{{workgroupId}}'
+                    componentstateid='{{componentState.id}}'
+                    active='true'></annotation>
+        <br/>
+        <annotation type='comment'
+                    mode='{{tableController.mode}}'
+                    nodeid='{{tableController.nodeId}}'
+                    componentid='{{tableController.componentId}}'
+                    fromworkgroupid='{{teacherWorkgroupId}}'
+                    toworkgroupid='{{workgroupId}}'
+                    componentstateid='{{componentState.id}}'
+                    active='true'></annotation>
+    </div>
 </div>

@@ -83,7 +83,6 @@ define(['app'], function(app) {
                     this.isPromptVisible = true;
                     this.isSaveButtonVisible = this.componentContent.showSaveButton;
                     this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-                    this.workgroupId = ConfigService.getWorkgroupId();
                 } else if (this.mode === 'grading') {
                     this.isPromptVisible = true;
                     this.isSaveButtonVisible = false;

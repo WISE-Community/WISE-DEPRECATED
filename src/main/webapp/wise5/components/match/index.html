@@ -49,30 +49,68 @@
     </style>
 </head>
 <body>
-<div ng-controller='MatchController as matchController'>
-<div id='prompt' compile='matchController.getPrompt()'></div>
-<div ui-tree='options'>
-    <ol ui-tree-nodes data-type='bucket' ng-model='matchController.buckets'>
-        <li ui-tree-node ng-repeat='bucket in matchController.buckets' class='bucket'>
-            <div class='group-title angular-ui-tree-handle' data-nodrag>
-                <div>{{bucket.value}}</div>
-            </div>
-            <ol ui-tree-nodes data-type='choice' ng-model='bucket.items'>
-                <li ui-tree-node ng-repeat='item in bucket.items'>
-                    <div class='category-title angular-ui-tree-handle' data-nodrag='{{matchController.isDisabled}}'>
-                        <div compile='item.value'></div>
-                        <div ng-class='{"correct": item.isCorrect, "incorrectPosition": item.isIncorrectPosition, "incorrect": !item.isCorrect}'>{{item.feedback}}</div>
+<div ng-controller='MatchController as matchController' style='display: flex'>
+    <div style='flex: 1'>
+        <div id='prompt' compile='matchController.getPrompt()'></div>
+        <div ui-tree='options'>
+            <ol ui-tree-nodes data-type='bucket' ng-model='matchController.buckets'>
+                <li ui-tree-node ng-repeat='bucket in matchController.buckets' class='bucket'>
+                    <div class='group-title angular-ui-tree-handle' data-nodrag>
+                        <div>{{bucket.value}}</div>
                     </div>
+                    <ol ui-tree-nodes data-type='choice' ng-model='bucket.items'>
+                        <li ui-tree-node ng-repeat='item in bucket.items'>
+                            <div class='category-title angular-ui-tree-handle' data-nodrag='{{matchController.isDisabled}}'>
+                                <div compile='item.value'></div>
+                                <div ng-class='{"correct": item.isCorrect, "incorrectPosition": item.isIncorrectPosition, "incorrect": !item.isCorrect}'>{{item.feedback}}</div>
+                            </div>
+                        </li>
+                    </ol>
                 </li>
             </ol>
-        </li>
-    </ol>
-</div>
-<button ng-click='matchController.saveButtonClicked()' 
-    ng-show='matchController.showSaveButton()' 
-    ng-disabled='matchController.isDisabled'>Save</button>
-<button ng-click='matchController.submitButtonClicked()' 
-    ng-show='matchController.showSubmitButton()' 
-    ng-disabled='matchController.isDisabled'>Submit</button>
+        </div>
+        <div ng-if='matchController.mode == "student"'>
+            <annotation type='score'
+                        mode='{{matchController.mode}}'
+                        nodeid='{{matchController.nodeId}}'
+                        componentid='{{matchController.componentId}}'
+                        fromworkgroupid='{{teacherWorkgroupId}}'
+                        toworkgroupid='{{workgroupId}}'
+                        componentstateid='{{componentState.id}}'></annotation>
+            <br/>
+            <annotation type='comment'
+                        mode='{{matchController.mode}}'
+                        nodeid='{{matchController.nodeId}}'
+                        componentid='{{matchController.componentId}}'
+                        fromworkgroupid='{{teacherWorkgroupId}}'
+                        toworkgroupid='{{workgroupId}}'
+                        componentstateid='{{componentState.id}}'></annotation>
+        </div>
+        <button ng-click='matchController.saveButtonClicked()'
+            ng-show='matchController.showSaveButton()'
+            ng-disabled='matchController.isDisabled'>Save</button>
+        <button ng-click='matchController.submitButtonClicked()'
+            ng-show='matchController.showSubmitButton()'
+            ng-disabled='matchController.isDisabled'>Submit</button>
+    </div>
+    <div ng-if='matchController.mode == "grading"' style='width: 400px'>
+        <annotation type='score'
+                    mode='{{matchController.mode}}'
+                    nodeid='{{matchController.nodeId}}'
+                    componentid='{{matchController.componentId}}'
+                    fromworkgroupid='{{teacherWorkgroupId}}'
+                    toworkgroupid='{{workgroupId}}'
+                    componentstateid='{{componentState.id}}'
+                    active='true'></annotation>
+        <br/>
+        <annotation type='comment'
+                    mode='{{matchController.mode}}'
+                    nodeid='{{matchController.nodeId}}'
+                    componentid='{{matchController.componentId}}'
+                    fromworkgroupid='{{teacherWorkgroupId}}'
+                    toworkgroupid='{{workgroupId}}'
+                    componentstateid='{{componentState.id}}'
+                    active='true'></annotation>
+    </div>
 </div>
 </body>

@@ -55,17 +55,6 @@
                         <md-button class="component__attachment__delete" ng-click='openResponseController.removeAttachment(attachment)' title="Remove file"><md-icon>cancel</md-icon></md-button>
                     </div>
                 </div>
-
-                <div class="component-content__actions" layout="row">
-                    <md-button class="md-raised md-primary"
-                               ng-click="openResponseController.saveButtonClicked()"
-                               ng-disabled="openResponseController.isDisabled"
-                               ng-if="openResponseController.showSaveButton()">Save</md-button>
-                    <md-button class="md-raised md-primary"
-                               ng-click="openResponseController.submitButtonClicked()"
-                               ng-disabled="openResponseController.isDisabled"
-                               ng-if="openResponseController.showSubmitButton()">Submit</md-button>
-                </div>
                 <div ng-if='openResponseController.mode == "student"'>
                     <annotation type='score'
                                 mode='{{openResponseController.mode}}'
@@ -82,6 +71,16 @@
                                 fromworkgroupid='{{teacherWorkgroupId}}'
                                 toworkgroupid='{{workgroupId}}'
                                 componentstateid='{{componentState.id}}'></annotation>
+                </div>
+                <div class="component-content__actions" layout="row">
+                    <md-button class="md-raised md-primary"
+                               ng-click="openResponseController.saveButtonClicked()"
+                               ng-disabled="openResponseController.isDisabled"
+                               ng-if="openResponseController.showSaveButton()">Save</md-button>
+                    <md-button class="md-raised md-primary"
+                               ng-click="openResponseController.submitButtonClicked()"
+                               ng-disabled="openResponseController.isDisabled"
+                               ng-if="openResponseController.showSubmitButton()">Submit</md-button>
                 </div>
             </div>
             <div ng-if='openResponseController.mode == "grading"' style='width: 400px'>

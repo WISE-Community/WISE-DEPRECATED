@@ -60,6 +60,8 @@ define(['app'], function(app) {
             var currentNode = StudentDataService.getCurrentNode();
             if (currentNode != null) {
                 this.nodeId = currentNode.id;
+            } else {
+                this.nodeId = $scope.nodeId;
             }
             
             // get the component content from the scope

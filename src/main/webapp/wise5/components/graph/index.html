@@ -1,30 +1,68 @@
-<div ng-controller='GraphController as graphController' listen-for-delete-keypress>
-    <div id='prompt' compile='graphController.getPrompt()' ng-show='graphController.showPrompt()'></div>
-    <div class="component-content__actions" layout="row">
-        <md-button class="md-accent" ng-show="graphController.isStudentAttachmentEnabled"
-                   ng-click="nodeController.showNotebook($event, component.id, graphController.isDisabled)">
-            <md-icon>image</md-icon> Import Data
-        </md-button>
+<div ng-controller='GraphController as graphController' listen-for-delete-keypress style='display: flex'>
+    <div style='flex: 1'>
+        <div id='prompt' compile='graphController.getPrompt()' ng-show='graphController.showPrompt()'></div>
+        <div class="component-content__actions" layout="row">
+            <md-button class="md-accent" ng-show="graphController.isStudentAttachmentEnabled"
+                       ng-click="nodeController.showNotebook($event, component.id, graphController.isDisabled)">
+                <md-icon>image</md-icon> Import Data
+            </md-button>
+        </div>
+        <button id='resetGraphButton'
+                ng-click='graphController.resetGraph()'
+                ng-show='graphController.showResetGraphButton()'>Reset Graph</button>
+
+        <select ng-model='graphController.activeSeries'
+                ng-options='series.name for series in graphController.series'
+                ng-change='graphController.activeSeriesChanged()'
+                ng-show='graphController.series.length > 1'>
+        </select>
+
+        <highchart id="chart1" config="graphController.chartConfig" class="span10"></highchart>
+        <div ng-if='graphController.mode == "student"'>
+            <annotation type='score'
+                        mode='{{graphController.mode}}'
+                        nodeid='{{graphController.nodeId}}'
+                        componentid='{{graphController.componentId}}'
+                        fromworkgroupid='{{teacherWorkgroupId}}'
+                        toworkgroupid='{{workgroupId}}'
+                        componentstateid='{{componentState.id}}'></annotation>
+            <br/>
+            <annotation type='comment'
+                        mode='{{graphController.mode}}'
+                        nodeid='{{graphController.nodeId}}'
+                        componentid='{{graphController.componentId}}'
+                        fromworkgroupid='{{teacherWorkgroupId}}'
+                        toworkgroupid='{{workgroupId}}'
+                        componentstateid='{{componentState.id}}'></annotation>
+        </div>
+        <button id='saveButton'
+                ng-click='graphController.saveButtonClicked()'
+                ng-disabled='graphController.isDisabled'
+                ng-show='graphController.showSaveButton()'>Save
+        </button>
+        <button id='submitButton'
+                ng-click='graphController.submitButtonClicked()'
+                ng-disabled='graphController.isDisabled'
+                ng-show='graphController.showSubmitButton()'>Submit
+        </button>
     </div>
-    <button id='resetGraphButton'
-            ng-click='graphController.resetGraph()'
-            ng-show='graphController.showResetGraphButton()'>Reset Graph</button>
-
-    <select ng-model='graphController.activeSeries'
-            ng-options='series.name for series in graphController.series'
-            ng-change='graphController.activeSeriesChanged()'
-            ng-show='graphController.series.length > 1'>
-    </select>
-
-    <highchart id="chart1" config="graphController.chartConfig" class="span10"></highchart>
-    <button id='saveButton'
-            ng-click='graphController.saveButtonClicked()'
-            ng-disabled='graphController.isDisabled'
-            ng-show='graphController.showSaveButton()'>Save
-    </button>
-    <button id='submitButton'
-            ng-click='graphController.submitButtonClicked()'
-            ng-disabled='graphController.isDisabled'
-            ng-show='graphController.showSubmitButton()'>Submit
-    </button>
+    <div ng-if='graphController.mode == "grading"' style='width: 400px'>
+        <annotation type='score'
+                    mode='{{graphController.mode}}'
+                    nodeid='{{graphController.nodeId}}'
+                    componentid='{{graphController.componentId}}'
+                    fromworkgroupid='{{teacherWorkgroupId}}'
+                    toworkgroupid='{{workgroupId}}'
+                    componentstateid='{{componentState.id}}'
+                    active='true'></annotation>
+        <br/>
+        <annotation type='comment'
+                    mode='{{graphController.mode}}'
+                    nodeid='{{graphController.nodeId}}'
+                    componentid='{{graphController.componentId}}'
+                    fromworkgroupid='{{teacherWorkgroupId}}'
+                    toworkgroupid='{{workgroupId}}'
+                    componentstateid='{{componentState.id}}'
+                    active='true'></annotation>
+    </div>
 </div>

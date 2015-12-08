@@ -64,6 +64,8 @@ define(['app', 'drawingTool', 'vendor'], function(app) {
             var currentNode = StudentDataService.getCurrentNode();
             if (currentNode != null) {
                 this.nodeId = currentNode.id;
+            } else {
+                this.nodeId = $scope.nodeId;
             }
 
             if (this.componentContent != null) {

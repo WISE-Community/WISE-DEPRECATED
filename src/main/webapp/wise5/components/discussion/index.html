@@ -74,6 +74,42 @@
                     </div>
                 </div>
             </div>
+            <div ng-if='discussionController.mode == "student"'>
+                <annotation type='score'
+                            mode='{{discussionController.mode}}'
+                            nodeid='{{discussionController.nodeId}}'
+                            componentid='{{discussionController.componentId}}'
+                            fromworkgroupid='{{teacherWorkgroupId}}'
+                            toworkgroupid='{{workgroupId}}'
+                            componentstateid='{{componentState.id}}'></annotation>
+                <br/>
+                <annotation type='comment'
+                            mode='{{discussionController.mode}}'
+                            nodeid='{{discussionController.nodeId}}'
+                            componentid='{{discussionController.componentId}}'
+                            fromworkgroupid='{{teacherWorkgroupId}}'
+                            toworkgroupid='{{workgroupId}}'
+                            componentstateid='{{componentState.id}}'></annotation>
+            </div>
+            <div ng-if='discussionController.mode == "grading"' style='width: 400px'>
+                <annotation type='score'
+                            mode='{{discussionController.mode}}'
+                            nodeid='{{discussionController.nodeId}}'
+                            componentid='{{discussionController.componentId}}'
+                            fromworkgroupid='{{teacherWorkgroupId}}'
+                            toworkgroupid='{{workgroupId}}'
+                            componentstateid='{{componentState.id}}'
+                            active='true'></annotation>
+                <br/>
+                <annotation type='comment'
+                            mode='{{discussionController.mode}}'
+                            nodeid='{{discussionController.nodeId}}'
+                            componentid='{{discussionController.componentId}}'
+                            fromworkgroupid='{{teacherWorkgroupId}}'
+                            toworkgroupid='{{workgroupId}}'
+                            componentstateid='{{componentState.id}}'
+                            active='true'></annotation>
+            </div>
         </div>
     </body>
 </html>

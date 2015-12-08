@@ -1,7 +1,45 @@
-<div ng-controller='EmbeddedController as embeddedController' style="text-align: center;">
-    <script>
-        var embeddedController = embeddedController;
-    </script>
-    <iframe ng-src='{{embeddedController.url}}'
-            style="height: 100%; width:100%; max-width: {{embeddedController.maxWidth}}; max-height: {{embeddedController.maxHeight}};"></iframe>
+<div ng-controller='EmbeddedController as embeddedController' style="text-align: center; display: flex">
+    <div style='flex: 1'>
+        <script>
+            var embeddedController = embeddedController;
+        </script>
+        <iframe ng-src='{{embeddedController.url}}'
+                style="height: 100%; width:100%; max-width: {{embeddedController.maxWidth}}; max-height: {{embeddedController.maxHeight}};"></iframe>
+        <div ng-if='embeddedController.mode == "student"' style='text-align: left'>
+            <annotation type='score'
+                        mode='{{embeddedController.mode}}'
+                        nodeid='{{embeddedController.nodeId}}'
+                        componentid='{{embeddedController.componentId}}'
+                        fromworkgroupid='{{teacherWorkgroupId}}'
+                        toworkgroupid='{{workgroupId}}'
+                        componentstateid='{{componentState.id}}'></annotation>
+            <br/>
+            <annotation type='comment'
+                        mode='{{embeddedController.mode}}'
+                        nodeid='{{embeddedController.nodeId}}'
+                        componentid='{{embeddedController.componentId}}'
+                        fromworkgroupid='{{teacherWorkgroupId}}'
+                        toworkgroupid='{{workgroupId}}'
+                        componentstateid='{{componentState.id}}'></annotation>
+        </div>
+    </div>
+    <div ng-if='embeddedController.mode == "grading"' style='width: 400px; text-align: left'>
+        <annotation type='score'
+                    mode='{{embeddedController.mode}}'
+                    nodeid='{{embeddedController.nodeId}}'
+                    componentid='{{embeddedController.componentId}}'
+                    fromworkgroupid='{{teacherWorkgroupId}}'
+                    toworkgroupid='{{workgroupId}}'
+                    componentstateid='{{componentState.id}}'
+                    active='true'></annotation>
+        <br/>
+        <annotation type='comment'
+                    mode='{{embeddedController.mode}}'
+                    nodeid='{{embeddedController.nodeId}}'
+                    componentid='{{embeddedController.componentId}}'
+                    fromworkgroupid='{{teacherWorkgroupId}}'
+                    toworkgroupid='{{workgroupId}}'
+                    componentstateid='{{componentState.id}}'
+                    active='true'></annotation>
+    </div>
 </div>

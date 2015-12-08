@@ -1,46 +1,84 @@
-<div ng-controller='DrawController as drawController'>
-    <div id='prompt' compile='drawController.getPrompt()'></div>
-    <meta charset="utf-8">
-    <link rel="stylesheet" type="text/css" href="wise5/lib/drawingTool/drawing-tool.css">
-    <div class="component-content__actions" layout="row">
-        <md-button class="md-accent" ng-show="drawController.isStudentAttachmentEnabled"
-                   ng-click="nodeController.showNotebook($event, component.id, drawController.isDisabled)">
-            <md-icon>image</md-icon> Insert file
+<div ng-controller='DrawController as drawController' style='display: flex'>
+    <div style='flex: 1'>
+        <div id='prompt' compile='drawController.getPrompt()'></div>
+        <meta charset="utf-8">
+        <link rel="stylesheet" type="text/css" href="wise5/lib/drawingTool/drawing-tool.css">
+        <div class="component-content__actions" layout="row">
+            <md-button class="md-accent" ng-show="drawController.isStudentAttachmentEnabled"
+                       ng-click="nodeController.showNotebook($event, component.id, drawController.isDisabled)">
+                <md-icon>image</md-icon> Insert file
+            </md-button>
+        </div>
+            <div class="container"
+             data-drop="true"
+             jqyoui-droppable="{onDrop: 'drawController.dropCallback(item, $index)'}">
+            <div id="{{drawController.drawingToolId}}"></div>
+            <!--
+            <h2>API examples:</h2>
+            <div>
+              <button id="set-background">Set background</button>
+              <input type="text" id="background-src" value="https://ccshutterbugtest.s3.amazonaws.com/7a72684bb7e.png" size="70" />
+              <button id="resize-background">Resize background to canvas</button>
+              <button id="resize-canvas">Resize cavas to background</button>
+              <button id="shrink-background">Shrink background to cavas</button>
+            </div>
+            <div>
+              <button id="clear">Clear</button>
+              <button id="save">Save</button>
+              <button id="load" disabled>Load</button>
+            </div>
+            -->
+        </div>
+        <md-button class="revision md-icon-button" ng-click='nodeController.showRevisions($event, component.id)'
+                   ng-if="nodeController.getRevisions(component.id).length > 1">
+            <md-icon> history </md-icon>
+            <md-tooltip md-direction="top">{{nodeController.getRevisions(component.id).length}} Versions</md-tooltip>
         </md-button>
-    </div>
-        <div class="container"
-         data-drop="true"
-         jqyoui-droppable="{onDrop: 'drawController.dropCallback(item, $index)'}">
-        <div id="{{drawController.drawingToolId}}"></div>
-        <!--
-        <h2>API examples:</h2>
-        <div>
-          <button id="set-background">Set background</button>
-          <input type="text" id="background-src" value="https://ccshutterbugtest.s3.amazonaws.com/7a72684bb7e.png" size="70" />
-          <button id="resize-background">Resize background to canvas</button>
-          <button id="resize-canvas">Resize cavas to background</button>
-          <button id="shrink-background">Shrink background to cavas</button>
+        <div ng-if='drawController.mode == "student"'>
+            <annotation type='score'
+                        mode='{{drawController.mode}}'
+                        nodeid='{{drawController.nodeId}}'
+                        componentid='{{drawController.componentId}}'
+                        fromworkgroupid='{{teacherWorkgroupId}}'
+                        toworkgroupid='{{workgroupId}}'
+                        componentstateid='{{componentState.id}}'></annotation>
+            <br/>
+            <annotation type='comment'
+                        mode='{{drawController.mode}}'
+                        nodeid='{{drawController.nodeId}}'
+                        componentid='{{drawController.componentId}}'
+                        fromworkgroupid='{{teacherWorkgroupId}}'
+                        toworkgroupid='{{workgroupId}}'
+                        componentstateid='{{componentState.id}}'></annotation>
         </div>
-        <div>
-          <button id="clear">Clear</button>
-          <button id="save">Save</button>
-          <button id="load" disabled>Load</button>
+        <div class="component-content__actions" layout="row">
+            <md-button class="md-raised md-primary"
+                       ng-click='drawController.saveButtonClicked()'
+                       ng-disabled='drawController.isDisabled'
+                       ng-show='drawController.showSaveButton()'>Save</md-button>
+            <button class="md-raised md-primary"
+                    ng-click='drawController.submitButtonClicked()'
+                    ng-disabled='drawController.isDisabled'
+                    ng-show='drawController.showSubmitButton()'>Submit</button>
         </div>
-        -->
     </div>
-    <md-button class="revision md-icon-button" ng-click='nodeController.showRevisions($event, component.id)'
-               ng-if="nodeController.getRevisions(component.id).length > 1">
-        <md-icon> history </md-icon>
-        <md-tooltip md-direction="top">{{nodeController.getRevisions(component.id).length}} Versions</md-tooltip>
-    </md-button>
-    <div class="component-content__actions" layout="row">
-        <md-button class="md-raised md-primary"
-                   ng-click='drawController.saveButtonClicked()'
-                   ng-disabled='drawController.isDisabled'
-                   ng-show='drawController.showSaveButton()'>Save</md-button>
-        <button class="md-raised md-primary"
-                ng-click='drawController.submitButtonClicked()'
-                ng-disabled='drawController.isDisabled'
-                ng-show='drawController.showSubmitButton()'>Submit</button>
+    <div ng-if='drawController.mode == "grading"' style='width: 400px'>
+        <annotation type='score'
+                    mode='{{drawController.mode}}'
+                    nodeid='{{drawController.nodeId}}'
+                    componentid='{{drawController.componentId}}'
+                    fromworkgroupid='{{teacherWorkgroupId}}'
+                    toworkgroupid='{{workgroupId}}'
+                    componentstateid='{{componentState.id}}'
+                    active='true'></annotation>
+        <br/>
+        <annotation type='comment'
+                    mode='{{drawController.mode}}'
+                    nodeid='{{drawController.nodeId}}'
+                    componentid='{{drawController.componentId}}'
+                    fromworkgroupid='{{teacherWorkgroupId}}'
+                    toworkgroupid='{{workgroupId}}'
+                    componentstateid='{{componentState.id}}'
+                    active='true'></annotation>
     </div>
 </div>

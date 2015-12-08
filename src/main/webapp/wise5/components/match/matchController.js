@@ -54,15 +54,35 @@ define(['app', 'angular'], function(app, angular) {
             var currentNode = StudentDataService.getCurrentNode();
             if (currentNode != null) {
                 this.nodeId = currentNode.id;
+            } else {
+                this.nodeId = $scope.nodeId;
             }
             
             // get the component content from the scope
             this.componentContent = $scope.component;
-            
+
+            this.mode = $scope.mode;
+
             if (this.componentContent != null) {
                 
                 // get the component id
                 this.componentId = this.componentContent.id;
+
+                if (this.mode === 'student') {
+                    this.isPromptVisible = true;
+                    this.isSaveButtonVisible = this.componentContent.showSaveButton;
+                    this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+                } else if (this.mode === 'grading') {
+                    this.isPromptVisible = true;
+                    this.isSaveButtonVisible = false;
+                    this.isSubmitButtonVisible = false;
+                    this.isDisabled = true;
+                } else if (this.mode === 'onlyShowWork') {
+                    this.isPromptVisible = false;
+                    this.isSaveButtonVisible = false;
+                    this.isSubmitButtonVisible = false;
+                    this.isDisabled = true;
+                }
                 
                 // get the show previous work node id if it is provided
                 var showPreviousWorkNodeId = this.componentContent.showPreviousWorkNodeId;
@@ -132,9 +152,11 @@ define(['app', 'angular'], function(app, angular) {
                     
                     // check if we need to lock this component
                     this.calculateDisabled();
-                    
-                    // register this component with the parent node
-                    $scope.$parent.registerComponentController($scope, this.componentContent);
+
+                    if ($scope.$parent.registerComponentController != null) {
+                        // register this component with the parent node
+                        $scope.$parent.registerComponentController($scope, this.componentContent);
+                    }
                 }
             }
         };
