@@ -49,7 +49,7 @@ function validateForm() {
 			Keywords: ${newProject.metadata.keywords}<br/>
 		</c:if>		
 		<br/><br/>
-		<a href="${contextPath}/admin/project/manageallprojects.html?projectId=${newProject.id}">Manage Project</a>		
+		<a href="${contextPath}/admin/project/manageallprojects.html?projectLookupType=id&projectLookupValue=${newProject.id}">Manage Project</a>
 		<br/><br/>
 		<a target=_blank href="${contextPath}/previewproject.html?projectId=${newProject.id}">Preview Project</a>
 	</div>
@@ -64,8 +64,9 @@ function validateForm() {
 NOTE:
 <ol>
   <li>1. File must be a zip file, and must have a .zip extension</li>
-  <li>2. ZipFile name must be the same as the root folder inside it</li>
-  <li>3. File must contain a wise4.project.json file in the top/root level</li>
+  <li>2. Zip filename must be the same as the root folder inside it</li>
+  <li>3. If the project is a WISE 4 project, the unzipped folder must contain a wise4.project.json file in the top/root level</li>
+  <li>4. If the project is a WISE 5 project, the unzipped folder must contain a project.json file in the top/root level</li>
 </ol>
 <br/>
 <pre>
@@ -76,7 +77,7 @@ unzipped:
     + assets/
       - car.jpg
       - cup.png
-    - wise4.project.json
+    - wise4.project.json (or project.json for WISE 5 project)
     - intro.ht
     - intro.html
     ...    
@@ -86,6 +87,12 @@ unzipped:
 <form:form method="post" action="import"
 	commandName="projectZipFile" id="editproject" enctype="multipart/form-data" autocomplete='off' onsubmit="return validateForm();">
 
+	Which WISE version is this project?<br/>
+	<select name="projectVersion">
+		<option value="wise4">WISE 4</option>
+		<option value="wise5">WISE 5</option>
+	</select>
+	<br/><br/>
 	<div>Project Zip File</div>
 	<input type="file" name="file" id="projectZipFile"/>
     <br/><br/>

@@ -44,6 +44,7 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.wise.portal.domain.module.Curnit;
 import org.wise.portal.domain.module.impl.ModuleParameters;
@@ -80,6 +81,7 @@ public class ImportProjectController {
 	@RequestMapping(method = RequestMethod.POST)
 	protected String onSubmit(
             @ModelAttribute("projectZipFile") ProjectUpload projectUpload,
+            @RequestParam(value = "projectVersion", required = true) String projectVersion,
             ModelMap modelMap
 		) throws Exception {
 		// probably should do some kind of virus check. but for now, it's only
@@ -93,7 +95,7 @@ public class ImportProjectController {
 
 		File uploadDir = new File(curriculumBaseDir);
 		if (!uploadDir.exists()) {
-			throw new Exception("Curriculum upload directory \""+curriculumBaseDir+"\" does not exist. Please verify the path you specified for curriculum_base_dir in wise.properties.");
+			throw new Exception("Curriculum upload directory \"" + curriculumBaseDir + "\" does not exist. Please verify the path you specified for curriculum_base_dir in wise.properties.");
 		}
 
 		// save the upload zip file in the curriculum folder.
@@ -140,7 +142,7 @@ public class ImportProjectController {
 					// if this is the case, import will fail, so throw an error.
 					if (i == 0) {
 						if (!entry.getName().startsWith(filename)) {
-						    throw new Exception("Zip file name \""+entry.getName()+"\" does not match folder name \""+filename+"\". Do not change zip filename");
+						    throw new Exception("Zip file name \"" + entry.getName() + "\" does not match folder name \"" + filename + "\". Do not change zip filename");
 						}
 						i++;						
 					}
@@ -167,17 +169,25 @@ public class ImportProjectController {
 		// remove the temp zip file
 		uploadedFile.delete();
 		
-		// now create a project in the db with the new path
-		String path = sep +  newFilename + sep + "wise4.project.json";
-		
+		// now create a project in the db
+		String path = "";
 		String name = "";
 
-		// get the project name from zip file
+		// get the project path and name from zip file
 		try {
-			String projectJSONFilePath = newFileFullDir + sep + "wise4.project.json";
-			String projectJSONStr = FileUtils.readFileToString(new File(projectJSONFilePath));
-			JSONObject projectJSONObj = new JSONObject(projectJSONStr);
-			name = projectJSONObj.getString("title");
+            if ("wise4".equals(projectVersion)) {
+                path = sep +  newFilename + sep + "wise4.project.json";
+                String projectJSONFilePath = newFileFullDir + sep + "wise4.project.json";
+                String projectJSONStr = FileUtils.readFileToString(new File(projectJSONFilePath));
+                JSONObject projectJSONObj = new JSONObject(projectJSONStr);
+                name = projectJSONObj.getString("title");
+            } else if ("wise5".equals(projectVersion)) {
+                path = sep +  newFilename + sep + "project.json";
+                String projectJSONFilePath = newFileFullDir + sep + "project.json";
+                String projectJSONStr = FileUtils.readFileToString(new File(projectJSONFilePath));
+                JSONObject projectJSONObj = new JSONObject(projectJSONStr);
+                name = projectJSONObj.getJSONObject("metadata").getString("title");
+            }
 		} catch (Exception e) {
 			// there was an error getting project title.
 			name = "Undefined";
@@ -195,15 +205,29 @@ public class ImportProjectController {
 		pParams.setProjectname(name);
 		pParams.setProjectType(ProjectType.LD);
 
-		ProjectMetadata metadata = null;
+        if ("wise4".equals(projectVersion)) {
+            pParams.setWiseVersion(new Integer(4));
+        } else if ("wise5".equals(projectVersion)) {
+            pParams.setWiseVersion(new Integer(5));
+        }
+
+        ProjectMetadata metadata = null;
 
 		// see if a file called wise4.project-meta.json exists. if yes, try parsing it.
 		try {
-			String projectMetadataFilePath = newFileFullDir + sep + "wise4.project-meta.json";
-			String projectMetadataStr = FileUtils.readFileToString(new File(projectMetadataFilePath));
-			JSONObject metadataJSONObj = new JSONObject(projectMetadataStr);
-			metadata = new ProjectMetadataImpl();
-			metadata.populateFromJSON(metadataJSONObj);
+            metadata = new ProjectMetadataImpl();
+            if ("wise4".equals(projectVersion)) {
+                String projectMetadataFilePath = newFileFullDir + sep + "wise4.project-meta.json";
+                String projectMetadataStr = FileUtils.readFileToString(new File(projectMetadataFilePath));
+                JSONObject metadataJSONObj = new JSONObject(projectMetadataStr);
+                metadata.populateFromJSON(metadataJSONObj);
+            } else if ("wise5".equals(projectVersion)) {
+                String projectFilePath = newFileFullDir + sep + "project.json";
+                String projectStr = FileUtils.readFileToString(new File(projectFilePath));
+                JSONObject projectJSONObj = new JSONObject(projectStr);
+                JSONObject metadataJSONObj = projectJSONObj.getJSONObject("metadata");
+                metadata.populateFromJSON(metadataJSONObj);
+            }
 		} catch (Exception e) {
 			// if there is any error during the parsing of the metadata, set the metadata to null
 			metadata = null;
