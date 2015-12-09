@@ -1513,7 +1513,7 @@ define(['annotationService', 'configService', 'projectService'], function(annota
                 if (component != null) {
 
                     // get the component type
-                    var componentType = component.componentType;
+                    var componentType = component.type;
 
                     if (componentType != null) {
 

@@ -294,7 +294,7 @@
 			// ground shape drawing is offloaded because it can be changed
 			this.groundShape = new createjs.Shape();
 			this.addChild(this.groundShape);
-			this.createGround(0.5);
+			this.createGround(.5);
 
 			if (typeof worldSpecs.settings.draw_left_wall === "boolean" && worldSpecs.settings.draw_left_wall){
 		  		var leftWallFixture = new b2FixtureDef;
@@ -514,7 +514,8 @@
 					bd.position = new b2Vec2(bd.relative_position.x + parent_position.x, bd.relative_position.y + parent_position.y);
 				}
 				
-				if (specs.class == "wheel"){
+				if (specs.class == "wheel" && typeof worldSpecs.uivars.wheel_friction !== "undefined"){
+					//bd["angularDamping"] = worldSpecs.uivars.wheel_friction.value;
 					bd["linearDamping"] = worldSpecs.uivars.wheel_friction.value;
 				}
 				//bd.position = specs.position
@@ -640,15 +641,15 @@
 					var gradient_direction = typeof specs.easel.direction !== "undefined" ? specs.easel.direction : new b2Vec2(1, 1);
 					var tl_x = -width*this.SCALE;
 					var tl_y = 0;
-					var br_x = edgevertices[Math.floor(edgevertices.length/2)+2].x*this.SCALE;
-					var br_y = edgevertices[Math.floor(edgevertices.length/2)+2].y*this.SCALE;
+					var br_x = edgevertices[Math.floor(edgevertices.length/2)].x*this.SCALE;
+					var br_y = edgevertices[Math.floor(edgevertices.length/2)].y*this.SCALE;
 					g.clear().beginLinearGradientStroke(stroke_colors, stroke_ratios, tl_x, tl_y, br_x, br_y).beginLinearGradientFill(fill_colors, fill_ratios, tl_x, tl_y, br_x, br_y);
 					for (var i = 0; i < edgevertices.length; i++){
 						var addx = 0; addy = 0;
-						if (i == 0){/*nothing*/}
-						else if (i == 1){ addx = 5; }
-						else if (i == edgevertices.length-1){addy = -5;}
-						else {addx = 5; addy = -5;}
+						//if (i == 0){/*nothing*/}
+						//else if (i == 1){ addx = 5; }
+						//else if (i == edgevertices.length-1){addy = -5;}
+						//else {addx = 5; addy = -5;}
 						g.lineTo(edgevertices[i].x*this.SCALE+addx, edgevertices[i].y*this.SCALE+addy);
 					}
 					g.lineTo(edgevertices[0].x*this.SCALE, edgevertices[0].y*this.SCALE).endStroke().endFill();
@@ -1566,23 +1567,33 @@
 							} else if (key == "energy_lost"){
 								// is ke still rising
 								//console.log("ke 2, ke 1", object.data["kinetic_energy"].slice(-2)[0], object.data["kinetic_energy"].slice(-1)[0])
-								if (object.data["kinetic_energy"] == null || object.data["kinetic_energy"].length < 6 || (object.data["gravitational_potential_energy"] == null && object.data["elastic_potential_energy"] == null) ||
-										(object.data["kinetic_energy"].slice(-2)[0] - object.data["kinetic_energy"].slice(-1)[0] < -20 && !this.lostStarted)){
+								if (object.data["kinetic_energy"] == null || object.data["kinetic_energy"].length < 1){ //6 || (object.data["gravitational_potential_energy"] == null && object.data["elastic_potential_energy"] == null) || (object.data["kinetic_energy"].slice(-2)[0] - object.data["kinetic_energy"].slice(-1)[0] < -20 && !this.lostStarted)){
 									object.data[key].push(0);											
 								} else {
 									this.lostStarted = true;
-									var ke = kineticSet ? object.data["kinetic_energy"][object.data["kinetic_energy"].length-1] : this.calcKineticEnergy(object);
-									var pe;
+									var ke = kineticSet ? object.data["kinetic_energy"].slice(-1)[0] : this.calcKineticEnergy(object);
+									var max_pe = 0, pe = 0;
 									if (object.data["gravitational_potential_energy"] != null){
-										pe = Math.max.apply(null, object.data["gravitational_potential_energy"]);
+										max_pe = Math.max.apply(null, object.data["gravitational_potential_energy"]);
+										pe = object.data["gravitational_potential_energy"].slice(-1)[0];
 									} else {
-										pe = Math.max.apply(null, object.data["elastic_potential_energy"]);
+										max_pe = Math.max.apply(null, object.data["elastic_potential_energy"]);
+										pe = object.data["elastic_potential_energy"].slice(-1)[0];
+									}
+									
+									var lost = max_pe-(ke+pe);
+									// if lost is less than previous remove that energy from potential (a hack)
+									var extra = 0;
+									if (lost < object.data[key].slice(-1)[0]){
+										extra = object.data[key].slice(-1)[0] - lost;
+										object.data["kinetic_energy"][object.data["kinetic_energy"].length-1] -= extra;
+										lost = object.data[key].slice(-1)[0];
 									}
 
-									var lost = Math.max(object.data[key].slice(-1)[0], pe-ke);
-									//console.log("P - K = Lost", pe, ke, lost)
 									object.data[key].push(lost);
+									//console.log("max_pe", max_pe, "ke", ke ,"pe",pe, "therm",lost, "extra", extra);
 								}
+								
 							}
 						}
 					}
@@ -1594,7 +1605,7 @@
 		p.distance = function (p1,p2){return(Math.sqrt(Math.pow(p1.x-p2.x,2)+Math.pow(p1.y-p2.y,2)))}
 
 		p.calcGravitationalPotentialEnergy = function (composite){
-			var m = composite.Total_Mass/3;
+			var m = composite.Total_Mass * (typeof worldSpecs.settings.gravityMassFudge === "numeric" ? worldSpecs.settings.gravityMassFudge : 0.33);
 			var g = this.b2.GetGravity().Length();
 			var p = composite.bodies[0].body.GetPosition().y + composite.below_px / this.SCALE;
 			var h = this.ground.GetPosition().y - 0.25 - p;
@@ -1634,7 +1645,7 @@
 					lever_mass = leverspecs.width * leverspecs.height * leverspecs.b2FixtureDef.density; 
 				}
 				// I have no idea why the mass doesn't work, using a fudge factor here
-				var m = 1.9 * (composite.Total_Mass + lever_mass);			
+				var m = (composite.Total_Mass + lever_mass) * (typeof worldSpecs.settings.elasticMassFudge === "numeric" ? worldSpecs.settings.gravityMassFudge : 1.9);;			
 				var w = djoint.GetFrequency();
 				var E = 0.5*m*(w*w*x*x); // + springBody.GetLinearVelocity().LengthSquared());
 			}

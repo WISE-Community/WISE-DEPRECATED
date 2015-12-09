@@ -479,7 +479,7 @@ define(['app'], function(app) {
             if (connectedComponent != null && connectedComponentParams != null && componentState != null) {
                 
                 // get the component type that has changed
-                var componentType = connectedComponent.componentType;
+                var componentType = connectedComponent.type;
                 
                 if (componentType === 'Graph') {
                     

@@ -74,7 +74,7 @@ define(['app', 'drawingTool', 'vendor'], function(app) {
                 this.componentId = this.componentContent.id;
 
                 // get the component type
-                this.componentType = this.componentContent.componentType;
+                this.componentType = this.componentContent.type;
 
                 if (this.mode === "student") {
                     this.drawingToolId = "drawingtool_" + this.nodeId + "_" + this.componentId;

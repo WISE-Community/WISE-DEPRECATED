@@ -527,7 +527,7 @@ define(['app'], function(app) {
                                     componentState.componentId = tempComponentId;
 
                                     // set the component type
-                                    componentState.componentType = component.componentType;
+                                    componentState.componentType = component.type;
 
                                     if (componentId == null) {
                                         /*

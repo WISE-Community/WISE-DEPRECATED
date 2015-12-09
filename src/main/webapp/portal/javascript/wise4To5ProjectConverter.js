@@ -534,7 +534,7 @@ function convertHTML(node, nodeContent) {
 
                 // set the component id
                 component.id = createRandomId();
-                component.componentType = 'HTML';
+                component.type = 'HTML';
 
                 // set the html
                 component.html = html;
@@ -592,7 +592,7 @@ function convertAssessmentList(node, nodeContent) {
         // create an html component for the prompt
         var htmlPromptComponent = {};
         htmlPromptComponent.id = createRandomId();
-        htmlPromptComponent.componentType = 'HTML';
+        htmlPromptComponent.type = 'HTML';
         htmlPromptComponent.html = prompt;
 
         content.components.push(htmlPromptComponent);
@@ -620,7 +620,7 @@ function convertAssessmentList(node, nodeContent) {
 
                 if (assessment.type === 'text') {
                     // create an open response component
-                    component.componentType = 'OpenResponse';
+                    component.type = 'OpenResponse';
 
                     if (assessment.starter != null) {
                         if (assessment.starter.display == 2 &&
@@ -633,7 +633,7 @@ function convertAssessmentList(node, nodeContent) {
                     }
                 } else if (assessment.type === 'radio' || assessment.type === 'checkbox') {
                     // create an multiple choice component
-                    component.componentType = 'MultipleChoice';
+                    component.type = 'MultipleChoice';
 
                     if (assessment.type === 'radio') {
                         component.choiceType = 'radio';
@@ -712,7 +712,7 @@ function convertOpenResponse(node, nodeContent) {
     // set the component id
     component.id = createRandomId();
 
-    component.componentType = 'OpenResponse';
+    component.type = 'OpenResponse';
     component.prompt = nodeContent.prompt;
 
     if (nodeContent.starterSentence != null) {
@@ -758,7 +758,7 @@ function convertTable(node, nodeContent) {
 
     // set the component id
     tableComponent.id = createRandomId();
-    tableComponent.componentType = 'Table';
+    tableComponent.type = 'Table';
     tableComponent.prompt = nodeContent.prompt;
     tableComponent.globalCellSize = nodeContent.globalCellSize;
 
@@ -777,7 +777,7 @@ function convertTable(node, nodeContent) {
         var openResponseComponent = {};
 
         openResponseComponent.id = createRandomId();
-        openResponseComponent.componentType = 'OpenResponse';
+        openResponseComponent.type = 'OpenResponse';
         openResponseComponent.prompt = nodeContent.prompt2;
 
         content.components.push(openResponseComponent);
@@ -854,7 +854,7 @@ function convertPhet(node, nodeContent) {
     var component = {};
 
     component.id = createRandomId();
-    component.componentType = 'OutsideURL';
+    component.type = 'OutsideURL';
 
     // set the url for the Phet model
     component.url = nodeContent.url;
@@ -886,7 +886,7 @@ function convertDraw(node, nodeContent) {
 
     var component = {};
     component.id = createRandomId();
-    component.componentType = 'Draw';
+    component.type = 'Draw';
     component.prompt = nodeContent.prompt;
 
     if (nodeContent.stamps != null) {
@@ -941,7 +941,7 @@ function convertBrainstorm(node, nodeContent) {
 
     var component = {};
     component.id = createRandomId();
-    component.componentType = 'Discussion';
+    component.type = 'Discussion';
 
     var prompt = '';
 
@@ -985,7 +985,7 @@ function convertAnnotator(node, nodeContent) {
 
     var component = {};
     component.id = createRandomId();
-    component.componentType = 'HTML';
+    component.type = 'HTML';
     component.html = 'Insert Annotator component here';
     component.prompt = nodeContent.prompt;
 
@@ -1016,7 +1016,7 @@ function convertGrapher(node, nodeContent) {
 
     var component = {};
     component.id = createRandomId();
-    component.componentType = 'Graph';
+    component.type = 'Graph';
 
     component.prompt = nodeContent.prompt;
     component.showSaveButton = false;

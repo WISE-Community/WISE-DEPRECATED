@@ -309,7 +309,7 @@ define(['angular', 'projectService', 'studentDataService'], function(angular, pr
 
                 $scope.component = component;
                 $scope.componentState = componentState;
-                $scope.componentTemplatePath = NodeService.getComponentTemplatePath(component.componentType);
+                $scope.componentTemplatePath = NodeService.getComponentTemplatePath(component.type);
                 $scope.nodeId = nodeId;
                 $scope.workgroupId = workgroupId;
                 $scope.teacherWorkgroupId = teacherWorkgroupId;
@@ -523,7 +523,7 @@ define(['angular', 'projectService', 'studentDataService'], function(angular, pr
                                 if (dataJSONObject) {
                                     var value = dataJSONObject.value;
 
-                                    if (value != null) {
+                                    if (value != null && value != '') {
                                         // display the score to the student
                                         annotationHTML += '<span>Score: ' + value + '</span>';
                                     }
@@ -537,7 +537,7 @@ define(['angular', 'projectService', 'studentDataService'], function(angular, pr
                                 if (dataJSONObject) {
                                     var value = dataJSONObject.value;
 
-                                    if (value != null) {
+                                    if (value != null && value != '') {
                                         // display the comment to the student
                                         annotationHTML += '<span>Comment: ' + value + '</span>';
                                     }

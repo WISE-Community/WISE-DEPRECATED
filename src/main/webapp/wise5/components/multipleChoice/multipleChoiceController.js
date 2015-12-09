@@ -92,7 +92,7 @@ define(['app'], function(app) {
                 }
 
                 // get the component type
-                this.componentType = this.componentContent.componentType;
+                this.componentType = this.componentContent.type;
                 
                 // get the show previous work node id if it is provided
                 var showPreviousWorkNodeId = this.componentContent.showPreviousWorkNodeId;

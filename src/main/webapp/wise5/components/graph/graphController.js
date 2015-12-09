@@ -1230,7 +1230,7 @@ define(['app',
             if (connectedComponent != null && componentState != null) {
                 
                 // get the component type that has changed
-                var componentType = connectedComponent.componentType;
+                var componentType = connectedComponent.type;
                 
                 if (componentType === 'Table') {
                     
