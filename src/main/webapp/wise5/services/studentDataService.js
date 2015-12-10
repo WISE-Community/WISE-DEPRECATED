@@ -894,7 +894,7 @@ define(['annotationService', 'configService', 'projectService'], function(annota
             var context = "Component";
             var nodeId = component.nodeId;
             var componentId = component.componentId;
-            var componentType = component.componentType;
+            var componentType = component.type;
             if (nodeId == null || componentId == null || componentType == null) {
                 alert("StudentDataService.saveComponentEvent: nodeId, componentId, componentType must not be null");
                 return;
@@ -917,7 +917,7 @@ define(['annotationService', 'configService', 'projectService'], function(annota
             newEvent.context = context;
             newEvent.nodeId = nodeId;
             newEvent.componentId = componentId;
-            newEvent.componentType = componentType;
+            newEvent.type = componentType;
             newEvent.category = category;
             newEvent.event = event;
             newEvent.data = data;
@@ -1496,7 +1496,7 @@ define(['annotationService', 'configService', 'projectService'], function(annota
 
             var result = false;
 
-            if (nodeId != null && componentId != null) {
+            if (nodeId && componentId) {
                 // check that the component is completed
 
                 // get the component states for the component
@@ -1527,7 +1527,7 @@ define(['annotationService', 'configService', 'projectService'], function(annota
                         }
                     }
                 }
-            } else if (nodeId != null && componentId == null) {
+            } else if (nodeId) {
                 // check if node is a group
                 var isGroup = ProjectService.isGroupNode(nodeId);
 
@@ -1565,7 +1565,7 @@ define(['annotationService', 'configService', 'projectService'], function(annota
 
                         if (component != null) {
                             var componentId = component.id;
-                            var componentType = component.componentType;
+                            var componentType = component.type;
                             var showPreviousWorkNodeId = component.showPreviousWorkNodeId;
                             var showPreviousWorkComponentId = component.showPreviousWorkComponentId;
 
