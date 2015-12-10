@@ -22,6 +22,7 @@ define(['annotationService', 'configService', 'projectService'], function(annota
         var serviceObject = {};
 
         serviceObject.currentNode = null;
+        serviceObject.previousStep = null;
         serviceObject.studentData = null;
         serviceObject.stackHistory = [];  // array of node id's
         serviceObject.visitedNodesHistory = [];
@@ -1671,6 +1672,11 @@ define(['annotationService', 'configService', 'projectService'], function(annota
 
             if (previousCurrentNode !== node) {
                 // the current node is about to change
+
+                if(previousCurrentNode && !ProjectService.isGroupNode(previousCurrentNode.id)){
+                    // set the previous node to the current node
+                    this.previousStep = previousCurrentNode;
+                }
 
                 // set the current node to the new node
                 this.currentNode = node;
