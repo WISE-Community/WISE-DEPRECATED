@@ -4,55 +4,52 @@
 <style>
     {{vleController.projectStyle}}
 </style>
-<div layout="column" disable-delete-keypress layout-fill>
-    <div ng-if="vleController.themeLoaded" ng-controller="ThemeController as themeCtrl" layout="row" layout-fill>
-        <div layout="column" flex>
-            <md-toolbar class="l-header" ng-class="{'md-whiteframe-z1': vleController.layoutState == 'nav'}">
-                <div class="md-toolbar-tools">
-                    <a ng-click="vleController.loadRoot()" class="md-button logo-link">
-                        <img ng-src="{{vleController.themePath}}/images/WISE-logo-1b8ca8.svg" alt="WISE Logo" class="logo" />
-                    </a>
-                    <h3>
-                        <span>{{vleController.projectName}}</span>
-                    </h3>
-                    <span flex></span>
-                    <md-button aria-label="Toggle Notebook" class="md-icon-button" ng-click="vleController.toggleNotebook()">
-                        <md-icon md-menu-origin> book </md-icon>
-                        <md-tooltip md-direction="left">Notebook</md-tooltip>
-                    </md-button>
-                    <md-menu md-position-mode="target-right target" md-offset="8 26">
-                        <md-button aria-label="Open exit menu" class="md-icon-button" ng-click="$mdOpenMenu()">
-                            <md-icon md-menu-origin> account_circle </md-icon>
-                        </md-button>
-                        <md-menu-content width="5" class="account-menu">
-                            <ng-include src="vleController.themePath + '/templates/accountMenu.html'"></ng-include>
-                        </md-menu-content>
-                    </md-menu>
-                </div>
-            </md-toolbar>
-            <md-content id="content" flex role="main" ng-class="{'l-nav': vleController.layoutState == 'nav', 'l-node': vleController.layoutState == 'node'}" layout="column">
-                <div ng-include="vleController.themePath + '/navigation/navigation.html'" autoscroll="true" ng-show="vleController.layoutState == 'nav'"></div>
-                <div ng-cloak ui-view="nodeView" autoscroll="true" ng-show="vleController.layoutState == 'node'"
-                     data-drop="true"
-                     jqyoui-droppable="{onDrop: 'vleController.notebookDropCallback()'}"
-                     ng-mousemove='vleController.mouseMoved()'
-                     layout="column"></div>
-            </md-content>
+
+<div disable-delete-keypress ng-if="vleController.themeLoaded" ng-controller="ThemeController as themeCtrl" role="main" layout="column" layout-fill>
+    <md-toolbar class="l-header" ng-class="{'md-whiteframe-z1': vleController.layoutState == 'nav'}">
+        <div class="md-toolbar-tools">
+            <a ng-click="vleController.loadRoot()" class="md-button logo-link">
+                <img ng-src="{{vleController.themePath}}/images/WISE-logo-1b8ca8.svg" alt="WISE Logo" class="logo" />
+            </a>
+            <h3>
+                <span>{{vleController.projectName}}</span>
+            </h3>
+            <span flex></span>
+            <md-button aria-label="Toggle Notebook" class="md-icon-button" ng-click="vleController.toggleNotebook()">
+                <md-icon md-menu-origin> book </md-icon>
+                <md-tooltip md-direction="left">Notebook</md-tooltip>
+            </md-button>
+            <md-menu md-position-mode="target-right target" md-offset="8 26">
+                <md-button aria-label="Open exit menu" class="md-icon-button" ng-click="$mdOpenMenu()">
+                    <md-icon md-menu-origin> account_circle </md-icon>
+                </md-button>
+                <md-menu-content width="5" class="account-menu">
+                    <ng-include src="vleController.themePath + '/templates/accountMenu.html'"></ng-include>
+                </md-menu-content>
+            </md-menu>
         </div>
-        <md-sidenav class="md-sidenav-right md-whiteframe-z2" md-component-id="notebook" layout="column" flex
-                md-is-open="vleController.notebookOpen"> <!--md-is-locked-open="vleController.notebookOpen && $mdMedia('gt-lg')"-->
-            <md-toolbar class="l-sidebar__header md-whiteframe-z1">
-                <div class="md-toolbar-tools">
-                    <h3>Notebook</h3>
-                    <span flex></span>
-                    <md-select class="md-body-1" placeholder="Filter" ng-model="vleController.notebookFilter">
-                        <md-option ng-repeat="filter in vleController.notebookFilters" value="{{filter.name}}">{{filter.label}}</md-option>
-                    </md-select>
-                </div>
-            </md-toolbar>
-            <md-content class="md-padding">
-                <notebook template-url="vleController.themePath + '/notebook/notebook.html'" filter="vleController.notebookFilter"></notebook>
-            </md-content>
-        </md-sidenav>
-    </div>
+    </md-toolbar>
+    <md-content id="content" flex role="main" ng-class="{'l-nav': vleController.layoutState == 'nav', 'l-node': vleController.layoutState == 'node'}" layout="column">
+        <div ng-include="vleController.themePath + '/navigation/navigation.html'" autoscroll="true" ng-show="vleController.layoutState == 'nav'"></div>
+        <div ng-cloak ui-view="nodeView" autoscroll="true" ng-show="vleController.layoutState == 'node'"
+             data-drop="true"
+             jqyoui-droppable="{onDrop: 'vleController.notebookDropCallback()'}"
+             ng-mousemove='vleController.mouseMoved()'
+             layout="column"></div>
+    </md-content>
 </div>
+<md-sidenav class="md-sidenav-right md-whiteframe-z2" md-component-id="notebook" layout="column" flex
+        md-is-open="vleController.notebookOpen"> <!--md-is-locked-open="vleController.notebookOpen && $mdMedia('gt-lg')"-->
+    <md-toolbar class="l-sidebar__header md-whiteframe-z1">
+        <div class="md-toolbar-tools">
+            <h3>Notebook</h3>
+            <span flex></span>
+            <md-select class="md-body-1" placeholder="Filter" ng-model="vleController.notebookFilter">
+                <md-option ng-repeat="filter in vleController.notebookFilters" value="{{filter.name}}">{{filter.label}}</md-option>
+            </md-select>
+        </div>
+    </md-toolbar>
+    <md-content class="md-padding">
+        <notebook template-url="vleController.themePath + '/notebook/notebook.html'" filter="vleController.notebookFilter"></notebook>
+    </md-content>
+</md-sidenav>

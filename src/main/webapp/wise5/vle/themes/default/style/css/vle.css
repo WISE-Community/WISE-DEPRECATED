@@ -3048,7 +3048,7 @@ md-icon.md-light.md-inactive { color: rgba(255, 255, 255, 0.3); }
 .accent-color-3 { color: #CAD266; }
 .accent-color-3 md-icon { color: #CAD266; }
 
-body { background: #eeeeee; overflow: hidden; }
+body { background: #eeeeee; /*overflow: hidden;*/ }
 
 h1, h2, h3, h4, h5, h6 { margin-bottom: 1rem; margin-top: 1rem; line-height: 1.2em; }
 

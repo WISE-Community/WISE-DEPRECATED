@@ -17,9 +17,7 @@
 		<script src="${contextPath}/wise5/lib/modernizr/modernizr.custom.js"></script>
 
 	</head>
-	<body layout="row">
-		<div ui-view layout="column" layout-fill></div>
-
+	<body layout="row" ui-view>
 		<script>
 			var configUrl = '${vleConfigUrl}';
 		</script>

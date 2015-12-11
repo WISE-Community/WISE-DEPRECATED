@@ -315,7 +315,7 @@ define(['angular', 'projectService', 'studentDataService'], function(angular, pr
                 $scope.teacherWorkgroupId = teacherWorkgroupId;
 
                 var studentWorkHTML = "<div id=\"{{component.id}}\" class=\"component-content\" >" +
-                    "<div ng-include='componentTemplatePath' ></div></div>";
+                    "<div ng-include=\"componentTemplatePath\" style=\"overflow-x: auto;\"></div></div>";
 
                 if (studentWorkHTML != null) {
                     element.html(studentWorkHTML);
