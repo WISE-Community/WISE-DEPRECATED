@@ -37,6 +37,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -428,6 +429,7 @@ public class InformationController {
 	private void handleGetConfig(HttpServletRequest request, HttpServletResponse response)
 	        throws ObjectNotFoundException, IOException {
         String contextPath = request.getContextPath(); //get the context path e.g. /wise
+		User signedInUser = ControllerUtil.getSignedInUser();
 		String projectIdString = request.getParameter("projectId");
 		Long projectId = null;
 		String runId = request.getParameter("runId");
@@ -492,7 +494,6 @@ public class InformationController {
 				 * the user is not in a workgroup for the run so they should not be
 				 * allowed to access the config, unless the user is an admin
 				 */
-				User signedInUser = ControllerUtil.getSignedInUser();
 				if (signedInUser == null || !signedInUser.isAdmin()) {
 					//user is not signed in or is not admin so we will not let them proceed
 					return;
@@ -600,7 +601,14 @@ public class InformationController {
 					config.put("studentDataURL", wiseBaseURL + "/student/data");
 					config.put("studentAssetsURL", wiseBaseURL + "/student/asset/" + runId);
 					config.put("studentNotebookURL", wiseBaseURL + "/student/notebook/" + runId);
-                    config.put("teacherDataURL", wiseBaseURL + "/teacher/data");
+
+					// check that the user has read or write permission on the run
+					if (signedInUser.isAdmin() ||
+							this.runService.hasRunPermission(run, signedInUser, BasePermission.WRITE) ||
+							this.runService.hasRunPermission(run, signedInUser, BasePermission.READ)) {
+						config.put("teacherDataURL", wiseBaseURL + "/teacher/data");
+						config.put("runDataExportURL", wiseBaseURL + "/teacher/export");
+					}
 				}
 				
 				// add the config fields specific to the teacher grading
@@ -668,8 +676,6 @@ public class InformationController {
                 config.put("userInfoURL", userInfoURL);
             }
 
-            User signedInUser = ControllerUtil.getSignedInUser();
-			
 	        // set user's locale
 	        Locale locale = request.getLocale();
 	        if (signedInUser != null) {

@@ -24,6 +24,7 @@
 package org.wise.portal.dao.work.impl;
 
 import org.hibernate.Criteria;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
@@ -34,6 +35,7 @@ import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.workgroup.WISEWorkgroup;
 import org.wise.vle.domain.work.StudentWork;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -49,6 +51,33 @@ public class HibernateStudentWorkDao extends AbstractHibernateDao<StudentWork> i
     @Override
     protected Class<? extends StudentWork> getDataObjectClass() {
         return StudentWork.class;
+    }
+
+    public List<Object[]> getStudentWorkExport(Integer runId) {
+        String queryString =
+                "SELECT sw.id, sw.nodeId, sw.componentId, sw.componentType, 'step number', 'step title', 'component part number', " +
+                "sw.isAutoSave, sw.isSubmit, sw.clientSaveTime, sw.serverSaveTime, sw.studentData, sw.periodId, sw.runId, sw.workgroupId, " +
+                "g.name 'Period Name', ud.username 'Teacher Username', r.project_fk 'Project ID', GROUP_CONCAT(gu.user_fk SEPARATOR ', ') 'WISE IDs' " +
+                "FROM studentWork sw, " +
+                "workgroups w, " +
+                "groups_related_to_users gu, " +
+                "groups g, " +
+                "runs r, " +
+                "users u, " +
+                "user_details ud " +
+                "where sw.runId = :runId and sw.workgroupId = w.id and w.group_fk = gu.group_fk and g.id = sw.periodId and " +
+                "sw.runId = r.id and r.owner_fk = u.id and u.user_details_fk = ud.id " +
+                "group by sw.id order by workgroupId";
+        Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
+        SQLQuery query = session.createSQLQuery(queryString);
+        query.setParameter("runId", runId);
+        List resultList = new ArrayList<Object[]>();
+        Object[] headerRow = new String[]{"id","node id","component id","component type","step number","step title","component part number",
+                "isAutoSave","isSubmit","client save time","server save time","student data","period id","run id","workgroup id",
+                "period name", "teacher username", "project id", "WISE ids"};
+        resultList.add(headerRow);
+        resultList.addAll(query.list());
+        return resultList;
     }
 
     @Override

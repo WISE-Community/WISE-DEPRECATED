@@ -23,6 +23,9 @@
  */
 package org.wise.portal.service.vle.wise5.impl;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -46,7 +49,9 @@ import org.wise.vle.domain.work.StudentAsset;
 import org.wise.vle.domain.work.StudentWork;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -112,6 +117,36 @@ public class VLEServiceImpl implements VLEService {
 
         return studentWorkDao.getStudentWorkListByParams(id, run, period, workgroup,
                 isAutoSave, isSubmit, nodeId, componentId, componentType);
+    }
+
+    public JSONArray getStudentWorkExport(Integer runId) {
+        SimpleDateFormat df = new SimpleDateFormat("YYYY/MM/dd HH:mm:ss");
+        List<Object[]> studentWorkExport = studentWorkDao.getStudentWorkExport(runId);
+        for (int i = 1; i < studentWorkExport.size(); i++) {
+            // skip header row
+            Object[] studentWorkExportRow = studentWorkExport.get(i);
+
+            // format the timestamps so they don't have a trailing ".0" at the end and mess up display in excel
+            Timestamp studentWorkExportRowClientSaveTimeTimestamp = (Timestamp) studentWorkExportRow[9];
+            studentWorkExportRow[9] = df.format(studentWorkExportRowClientSaveTimeTimestamp);
+            Timestamp studentWorkExportRowServerSaveTimeTimestamp = (Timestamp) studentWorkExportRow[10];
+            studentWorkExportRow[10] = df.format(studentWorkExportRowServerSaveTimeTimestamp);
+
+            // set TRUE=1, FALSE=0 instead of "TRUE" and "FALSE"
+            boolean studentWorkExportRowIsAutoSave = (boolean) studentWorkExportRow[7];
+            studentWorkExportRow[7] = studentWorkExportRowIsAutoSave ? 1 : 0;
+
+            boolean studentWorkExportRowIsSubmit = (boolean) studentWorkExportRow[8];
+            studentWorkExportRow[8] = studentWorkExportRowIsSubmit ? 1 : 0;
+
+            String studentWorkExportRowStudentDataString = (String) studentWorkExportRow[11];
+            try {
+                studentWorkExportRow[11] = new JSONObject(studentWorkExportRowStudentDataString);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return new JSONArray(studentWorkExport);
     }
 
     @Override
