@@ -1,11 +1,11 @@
 {
   "name": "highcharts-regression",
   "homepage": "https://github.com/streamlinesocial/highcharts-regression",
-  "_release": "f719f6f584",
+  "_release": "64ed390e61",
   "_resolution": {
     "type": "branch",
     "branch": "master",
-    "commit": "f719f6f584907278b87f68b5930f00878d0a35db"
+    "commit": "64ed390e616f5036ae285a30293f920b398e1fb3"
   },
   "_source": "git://github.com/streamlinesocial/highcharts-regression.git",
   "_target": "*",
