@@ -30,6 +30,7 @@ define([
     'graphService',
     'highcharts-ng',
     'htmlService',
+    'labelService',
     'matchService',
     'moment',
     'multipleChoiceService',
@@ -84,6 +85,7 @@ define([
              graphService,
              highchartsng,
              htmlService,
+             labelService,
              matchService,
              moment,
              multipleChoiceService,
@@ -146,6 +148,7 @@ define([
     app.factory('DiscussionService', discussionService);
     app.factory('DrawService', drawService);
     app.factory('GraphService', graphService);
+    app.factory('LabelService', labelService);
     app.factory('MatchService', matchService);
     app.factory('MultipleChoiceService', multipleChoiceService);
     app.factory('OpenResponseService', openResponseService);
@@ -241,6 +244,7 @@ define([
                     discussionController: app.loadController('discussionController'),
                     drawController: app.loadController('drawController'),
                     htmlChoiceController: app.loadController('htmlController'),
+                    labelController: app.loadController('labelController'),
                     matchController: app.loadController('matchController'),
                     multipleChoiceController: app.loadController('multipleChoiceController'),
                     nodeController: app.loadController('nodeController'),
@@ -264,6 +268,7 @@ define([
                     discussionController: app.loadController('discussionController'),
                     drawController: app.loadController('drawController'),
                     htmlChoiceController: app.loadController('htmlController'),
+                    labelController: app.loadController('labelController'),
                     matchController: app.loadController('matchController'),
                     multipleChoiceController: app.loadController('multipleChoiceController'),
                     nodeController: app.loadController('nodeController'),

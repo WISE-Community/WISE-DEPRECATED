@@ -1,0 +1,85 @@
+<html>
+    <head></head>
+    <body>
+        <div class='openResponse' ng-controller='LabelController as labelController' style='display: flex'>
+            <div style='flex: 1'>
+                <style>
+                    {{labelController.nodeContent.style}}
+                </style>
+            <md-input-container class="input-container md-block input-container--open-response input-container--component md-no-float">
+                <label class="input-label md-no-float" ng-disabled="labelController.isDisabled"
+                       compile="labelController.getPrompt()" ng-if="labelController.showPrompt()"></label>
+                <div class="input-wrapper" ng-class="{'input-wrapper--richtext': labelController.isRichTextEnabled}">
+                    <md-button class="md-raised md-primary"
+                               ng-click="labelController.newLabelButtonClicked()"
+                               ng-disabled="labelController.isDisabled"
+                               ng-if="labelController.showNewLabelButton()">New Label</md-button>
+                    <md-button class="md-raised md-primary"
+                               ng-click="labelController.cancelButtonClicked()"
+                               ng-disabled="labelController.isDisabled"
+                               ng-if="labelController.showCancelButton()">Cancel</md-button>
+                    <canvas id="c" width="800" height="600" style="border:1px solid black;"></canvas>
+                </div>
+            </md-input-container>
+                <div class="component-content__actions" ng-show="labelController.attachments.length && labelController.isStudentAttachmentEnabled" layout="row" layout-wrap="true">
+                    <div class="component__add-attachment">
+                        <md-button class="md-accent"
+                                   ng-click="nodeController.showNotebook($event, component.id, labelController.isDisabled)">
+                            <md-icon>image</md-icon> <span>Add File</span>
+                        </md-button>
+                    </div>
+                    <div class="component__attachment" ng-repeat="attachment in labelController.attachments">
+                        <img src="{{attachment.iconURL}}" class="component__attachment__content" />
+                        <md-button class="component__attachment__delete" ng-click='labelController.removeAttachment(attachment)' title="Remove file"><md-icon>cancel</md-icon></md-button>
+                    </div>
+                </div>
+                <div ng-if='labelController.mode == "student"'>
+                    <annotation type='score'
+                                mode='{{labelController.mode}}'
+                                nodeid='{{labelController.nodeId}}'
+                                componentid='{{labelController.componentId}}'
+                                fromworkgroupid='{{teacherWorkgroupId}}'
+                                toworkgroupid='{{workgroupId}}'
+                                componentstateid='{{componentState.id}}'></annotation>
+                    <br/>
+                    <annotation type='comment'
+                                mode='{{labelController.mode}}'
+                                nodeid='{{labelController.nodeId}}'
+                                componentid='{{labelController.componentId}}'
+                                fromworkgroupid='{{teacherWorkgroupId}}'
+                                toworkgroupid='{{workgroupId}}'
+                                componentstateid='{{componentState.id}}'></annotation>
+                </div>
+                <div class="component-content__actions" layout="row">
+                    <md-button class="md-raised md-primary"
+                               ng-click="labelController.saveButtonClicked()"
+                               ng-disabled="labelController.isDisabled"
+                               ng-if="labelController.showSaveButton()">Save</md-button>
+                    <md-button class="md-raised md-primary"
+                               ng-click="labelController.submitButtonClicked()"
+                               ng-disabled="labelController.isDisabled"
+                               ng-if="labelController.showSubmitButton()">Submit</md-button>
+                </div>
+            </div>
+            <div ng-if='labelController.mode == "grading"' style='width: 400px'>
+                <annotation type='score'
+                            mode='{{labelController.mode}}'
+                            nodeid='{{labelController.nodeId}}'
+                            componentid='{{labelController.componentId}}'
+                            fromworkgroupid='{{teacherWorkgroupId}}'
+                            toworkgroupid='{{workgroupId}}'
+                            componentstateid='{{componentState.id}}'
+                            active='true'></annotation>
+                <br/>
+                <annotation type='comment'
+                            mode='{{labelController.mode}}'
+                            nodeid='{{labelController.nodeId}}'
+                            componentid='{{labelController.componentId}}'
+                            fromworkgroupid='{{teacherWorkgroupId}}'
+                            toworkgroupid='{{workgroupId}}'
+                            componentstateid='{{componentState.id}}'
+                            active='true'></annotation>
+            </div>
+        </div>
+    </body>
+</html>

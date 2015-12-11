@@ -30,6 +30,7 @@ define([
     'graphService',
     'highcharts-ng',
     'htmlService',
+    'labelService',
     'matchService',
     'moment',
     'multipleChoiceService',
@@ -83,6 +84,7 @@ define([
              graphService,
              highchartsng,
              htmlService,
+             labelService,
              matchService,
              moment,
              multipleChoiceService,
@@ -150,6 +152,7 @@ define([
     app.factory('EmbeddedService', embeddedService);
     app.factory('GraphService', graphService);
     app.factory('HTMLService', htmlService);
+    app.factory('LabelService', labelService);
     app.factory('MatchService', matchService);
     app.factory('MultipleChoiceService', multipleChoiceService);
     app.factory('PhotoBoothService', photoBoothService);
@@ -239,6 +242,7 @@ define([
                                 embeddedController: app.loadController('embeddedController'),
                                 graphController: app.loadController('graphController'),
                                 htmlController: app.loadController('htmlController'),
+                                labelController: app.loadController('labelController'),
                                 matchController: app.loadController('matchController'),
                                 multipleChoiceController: app.loadController('multipleChoiceController'),
                                 nodeController: app.loadController('nodeController'),

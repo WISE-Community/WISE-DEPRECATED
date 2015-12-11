@@ -35,7 +35,6 @@ require.config({
         'cRaterService': 'components/cRater/cRaterService',
         'd3': 'lib/d3/d3',
         'drawingTool': 'lib/drawingTool/drawing-tool',
-        'vendor': 'lib/drawingTool/vendor',
         'directives': 'directives/directives',
         'discussionController': 'components/discussion/discussionController',
         'discussionService': 'components/discussion/discussionService',
@@ -44,6 +43,7 @@ require.config({
         'drawService': 'components/draw/drawService',
         'embeddedController': 'components/embedded/embeddedController',
         'embeddedService': 'components/embedded/embeddedService',
+        'fabric': 'vendor/fabric/dist/fabric.min',
         'filters': 'filters/filters',
         'graphController': 'components/graph/graphController',
         'graphService': 'components/graph/graphService',
@@ -60,6 +60,8 @@ require.config({
             '//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min',
             'vendor/jquery-ui/jquery-ui.min'
         ],
+        'labelController': 'components/label/labelController',
+        'labelService': 'components/label/labelService',
         'matchController': 'components/match/matchController',
         'matchService': 'components/match/matchService',
         'moment': 'vendor/moment/min/moment.min',
@@ -96,6 +98,7 @@ require.config({
         'teacherWebSocketService': 'services/teacherWebSocketService',
         'tinymce': 'vendor/tinymce-dist/tinymce.min',
         'utilService': 'services/utilService',
+        'vendor': 'lib/drawingTool/vendor',
         'vleController': 'vle/vleController',
         'webfont': [
             '//ajax.googleapis.com/ajax/libs/webfont/1.5.18/webfont',
@@ -216,8 +219,8 @@ require.config({
                 'vendor'
             ]
         },
-        'vendor': {
-            'exports': 'vendor'
+        'fabric': {
+            'exports': 'fabric'
         },
         'highcharts': {
             'exports': 'highcharts',
@@ -260,6 +263,9 @@ require.config({
         },
         'tinymce': {
             'exports': 'tinymce'
+        },
+        'vendor': {
+            'exports': 'vendor'
         },
         'webfont': {
             'exports': 'webfont'
