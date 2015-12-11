@@ -45,7 +45,10 @@ define(['app'], function(app) {
             $scope.componentToScope = {};
             this.notebookOpen = false;
 
-            this.saveMessage = '';
+            this.saveMessage = {
+                text: '',
+                time: ''
+            };
 
             /**
              * Perform setup of the node
@@ -393,7 +396,8 @@ define(['app'], function(app) {
              * @param message the message to display
              */
             this.setSaveMessage = function(message) {
-                this.saveMessage = message;
+                this.saveMessage.text = message;
+                this.saveMessage.time = new Date();
             };
 
             /**

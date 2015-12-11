@@ -6,16 +6,16 @@
             <component ng-if='component.showPreviousWorkNodeId != null && component.showPreviousWorkComponentId != null' nodeid='{{component.showPreviousWorkNodeId}}' componentid='{{component.showPreviousWorkComponentId}}' componentstate='{{nodeController.getComponentStateByNodeIdAndComponentId(component.showPreviousWorkNodeId, component.showPreviousWorkComponentId)}}' workgroupid='{{nodeController.workgroupId}}' teacherworkgroupid='{{nodeController.teacherWorkgroupId}}' mode='onlyShowWork'></component>
             <component ng-if='component.showPreviousWorkNodeId == null || component.showPreviousWorkComponentId == null' nodeid='{{nodeController.nodeId}}' componentid='{{component.id}}' componentstate='{{nodeController.getComponentStateByComponentId(component.id)}}' workgroupid='{{nodeController.workgroupId}}' teacherworkgroupid='{{nodeController.teacherWorkgroupId}}' mode='student'></component>
         </div>
-        <div ng-if='nodeController.showSaveButton() || nodeController.showSubmitButton()' class="node-content__actions" layout="row">
+        <div ng-if='nodeController.showSaveButton() || nodeController.showSubmitButton()' class="node-content__actions" layout="row" layout-align="start center">
             <md-button class="md-raised md-primary"
                     ng-click='nodeController.saveButtonClicked()'
                     ng-disabled='nodeController.isDisabled || !nodeController.isDirty'
                     ng-if='nodeController.showSaveButton()'>Save</md-button>
-            <span class="auto-save-span">{{nodeController.saveMessage}}</span>
             <md-button class="md-raised md-primary"
                     ng-click='nodeController.submitButtonClicked()'
                     ng-disabled='nodeController.isDisabled || !nodeController.isDirty'
                     ng-if='nodeController.showSubmitButton()'>Submit</md-button>
+            <span ng-show="nodeController.saveMessage.text" class="accent-color-2 md-body-1">{{nodeController.saveMessage.text}} <span am-time-ago="nodeController.saveMessage.time"></span></span>
         </div>
     </md-content>
 </div>

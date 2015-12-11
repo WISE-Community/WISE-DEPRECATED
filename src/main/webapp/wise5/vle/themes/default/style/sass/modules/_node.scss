@@ -105,11 +105,11 @@ $input-action-vertical-offset-richtext: -7px;
 .node-content__actions {
   padding: 0 16px 16px 16px;
 
-  .md-button:first-of-type {
+  .md-button:first-child {
     margin-left: 0;
   }
 
-  .md-button:last-of-type {
+  .md-button:last-child {
     margin-right: 0;
   }
 }
