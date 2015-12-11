@@ -21,6 +21,32 @@ define(['annotationService', 'configService', 'studentDataService'], function(an
         serviceObject.currentPeriod = null;
 
         /**
+         * Retrieves the export given the export Type
+         * @param exportType
+         */
+        serviceObject.getExport = function(exportType) {
+            var exportURL = ConfigService.getConfigParam('runDataExportURL');
+            var runId = ConfigService.getRunId();
+            exportURL += "/" + runId + "/" + exportType;
+
+            var params = {};
+            params.getStudentWork = true;
+            params.getEvents = false;
+            params.getAnnotations = true;
+
+            var httpParams = {};
+            httpParams.method = 'GET';
+            httpParams.url = exportURL;
+            httpParams.params = params;
+
+            return $http(httpParams).then(angular.bind(this, function(result) {
+                return result.data;
+            }));
+        };
+
+
+
+        /**
          * Retrieve the student data for a node id
          * @param nodeId the node id
          * @returns the student data for the node id
@@ -160,28 +186,28 @@ define(['annotationService', 'configService', 'studentDataService'], function(an
                 }
             }));
         };
-        
+
         serviceObject.sortVLEStatesAlphabeticallyByUserName = function() {
             var vleStates = this.vleStates;
-            
+
             if (vleStates != null) {
                 vleStates.sort(this.sortVLEStatesAlphabeticallyByUserNameHelper);
             }
-            
+
             return vleStates;
         };
-        
+
         serviceObject.sortVLEStatesAlphabeticallyByUserNameHelper = function(a, b) {
             var aUserId = a.userId;
             var bUserId = b.userId;
             var result = 0;
-            
+
             if (aUserId < bUserId) {
                 result = -1;
             } else if (aUserId > bUserId) {
                 result = 1;
             }
-            
+
             return result;
         };
 

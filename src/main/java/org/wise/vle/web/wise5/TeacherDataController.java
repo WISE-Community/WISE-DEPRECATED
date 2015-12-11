@@ -5,9 +5,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
@@ -34,6 +32,32 @@ public class TeacherDataController {
 
     @Autowired
     private RunService runService;
+
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.GET, value = "/teacher/export/{runId}/{exportType}")
+    public void getWISE5TeacherData(
+            @PathVariable Integer runId,
+            @PathVariable String exportType,
+            @RequestParam(value = "id", required = false) Integer id,
+            @RequestParam(value = "periodId", required = false) Integer periodId,
+            @RequestParam(value = "workgroupId", required = false) Integer workgroupId,
+            @RequestParam(value = "isAutoSave", required = false) Boolean isAutoSave,
+            @RequestParam(value = "isSubmit", required = false) Boolean isSubmit,
+            @RequestParam(value = "nodeId", required = false) String nodeId,
+            @RequestParam(value = "componentId", required = false) String componentId,
+            @RequestParam(value = "componentType", required = false) String componentType,
+            HttpServletResponse response) {
+        try {
+            if ("allStudentWork".equals(exportType)) {
+                JSONArray resultArray = vleService.getStudentWorkExport(runId);
+                PrintWriter writer = response.getWriter();
+                writer.write(resultArray.toString());
+                writer.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     @RequestMapping(method = RequestMethod.GET, value = "/teacher/data")
     public void getWISE5TeacherData(

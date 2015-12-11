@@ -1,6 +1,13 @@
 <link rel="stylesheet" href="wise5/vle/themes/default/style/css/vle.css">
+<style>
+    body {
+        overflow: auto;
+    }
+</style>
 
 <button ui-sref='root.studentProgress'>Grade By Student</button>
 <button ui-sref='root.nodeProgress'>Grade By Step</button>
+<button ng-click='classroomMonitorController.export("allStudentWork")'>Download All Student Work</button>
+<button ng-click='classroomMonitorController.export("allStudentEvents")'>Download All Student Events</button>
 
 <div ui-view></div>

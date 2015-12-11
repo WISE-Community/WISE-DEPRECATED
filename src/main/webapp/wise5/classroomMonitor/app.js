@@ -192,6 +192,8 @@ define([
                 url: '',
                 abstract: true,
                 templateUrl: 'wise5/classroomMonitor/classroomMonitor.html',
+                controller: 'ClassroomMonitorController',
+                controllerAs: 'classroomMonitorController',
                 resolve: {
                     classroomMonitorController: app.loadController('classroomMonitorController'),
                     config: function(ConfigService) {

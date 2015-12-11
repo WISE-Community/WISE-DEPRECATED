@@ -2200,34 +2200,21 @@ define(['configService'], function(configService) {
 
             if (nodeId != null && componentId != null) {
 
-                // get the node
-                var node = this.getNodeById(nodeId);
+                var components = this.getComponentsByNodeId(nodeId);
 
-                if (node != null) {
+                if (components != null) {
 
-                    // get the node content
-                    var content = node.content;
+                    // loop through all the components
+                    for (var c = 0; c < components.length; c++) {
+                        var tempComponent = components[c];
 
-                    if (content != null) {
+                        if (tempComponent != null) {
+                            var tempComponentId = tempComponent.id;
 
-                        // get all the components in the node
-                        var components = content.components;
-
-                        if (components != null) {
-
-                            // loop through all the components
-                            for (var c = 0; c < components.length; c++) {
-                                var tempComponent = components[c];
-
-                                if (tempComponent != null) {
-                                    var tempComponentId = tempComponent.id;
-
-                                    if (componentId === tempComponentId) {
-                                        // we have found the component we want
-                                        component = tempComponent;
-                                        break;
-                                    }
-                                }
+                            if (componentId === tempComponentId) {
+                                // we have found the component we want
+                                component = tempComponent;
+                                break;
                             }
                         }
                     }
@@ -2235,6 +2222,41 @@ define(['configService'], function(configService) {
             }
 
             return component;
+        };
+
+        /**
+         * Returns the position of the component in the node by node id and component id, 0-indexed.
+         * @param nodeId the node id
+         * @param componentId the component id
+         * @returns the component's position
+         */
+        serviceObject.getComponentPositionByNodeIdAndComponentId = function(nodeId, componentId) {
+            var componentPosition = -1;
+
+            if (nodeId != null && componentId != null) {
+
+                var components = this.getComponentsByNodeId(nodeId);
+
+                if (components != null) {
+
+                    // loop through all the components
+                    for (var c = 0; c < components.length; c++) {
+                        var tempComponent = components[c];
+
+                        if (tempComponent != null) {
+                            var tempComponentId = tempComponent.id;
+
+                            if (componentId === tempComponentId) {
+                                // we have found the component we want
+                                componentPosition = c;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return componentPosition;
         };
 
         /**
