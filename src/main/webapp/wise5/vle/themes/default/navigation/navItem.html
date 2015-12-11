@@ -14,7 +14,7 @@
             <md-card-content ng-if="navitemCtrl.isGroup" ng-show="navitemCtrl.expanded" class="nav-contents nav-contents--group">
                 <md-list class="nav-contents__list">
                     <nav-item ng-repeat="childId in navitemCtrl.item.ids"
-                              ng-class="{'expanded': itemExpanded, 'prev': isPrevNode}"
+                              ng-class="{'expanded': itemExpanded, 'prev': isPrevStep}"
                               aria-label="{{ isPrevNode ? 'Last Visited Item' : null }}"
                               show-position="navitemCtrl.showPosition"
                               node-id="childId" type="'list'" ng-animate-ref="{{ childId }}" class="nav-item ng-enter">
