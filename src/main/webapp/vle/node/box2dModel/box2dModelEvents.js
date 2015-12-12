@@ -55,7 +55,9 @@ var events =
 	'test-on-balance',
 	'release-from-beaker',
 	'gave-feedback',
-	'save-pressed'
+	'save-pressed',
+	'graph-clicked',
+	'table-changed'
 ];
 
 

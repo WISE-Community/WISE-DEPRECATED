@@ -98,7 +98,7 @@
 				max_height += this.heights[i];
 				if (this.depths[i] > max_depth) max_depth = this.depths[i];
 				materialSpaces = this.widths[i] * this.depths[i] * this.heights[i];
-				var material = GLOBAL_PARAMETERS.materials[this.materials[i]];
+				var material = typeof this.materials[i] === "string" ? GLOBAL_PARAMETERS.materials[this.materials[i]] : this.materials[i];
 				var material_name = material.display_name;
 				if (unique_materials.indexOf(material_name) == -1) unique_materials.push(material_name);	
 				mass = material.density * materialSpaces;
@@ -182,9 +182,9 @@
 		} else {
 			for (i = 0; i < rowarr.length; i++)
 			{
-				row = rowarr[i];						
-				
-				var material = GLOBAL_PARAMETERS.materials[this.materials[row]];
+				row = rowarr[i];
+
+				var material = typeof this.materials[row] === "string" ? GLOBAL_PARAMETERS.materials[this.materials[row]] : this.materials[row];
 				var width = this.widths[row];
 				var depth = this.depths[row];
 				var height = this.heights[row];

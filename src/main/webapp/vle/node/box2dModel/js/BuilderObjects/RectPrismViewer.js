@@ -88,8 +88,7 @@
 						{
 							this.cubes[index].bottom = null;
 						}
-					} else
-					{}
+					}
 				}
 			}
 		}

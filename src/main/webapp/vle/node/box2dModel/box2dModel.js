@@ -151,6 +151,7 @@ Box2dModel.prototype.render = function() {
 	var previousModels = [];
 	var custom_objects_made_count = 0;
 	var density = -2;
+	this.currentDataPoint = null;
 	// store details of liquids that were tested for mass, volume
 	this.liquids_tested = [];
 
@@ -401,10 +402,12 @@ Box2dModel.prototype.interpretEvent = function(type, args, obj) {
 			for (var i = 0; i < GLOBAL_PARAMETERS.liquids_in_world.length; i++){
 				var liquid_name = GLOBAL_PARAMETERS.liquids_in_world[i];
 				var liquid_density = GLOBAL_PARAMETERS.liquids[liquid_name].density;
-				if (model.Total_Density > liquid_density){
+				if (model.Total_Density / liquid_density > 1.03){
 					model["Sink_in_"+liquid_name] = "Sink";
-				} else {
+				} else if (liquid_density / model.Total_Density > 1.03){
 					model["Sink_in_"+liquid_name] = "Float";
+				} else {
+					model["Sink_in_"+liquid_name] = "Divider";
 				}
 				model["Percent_Submerged_in_"+liquid_name] = Math.min(1, model.Total_Density / liquid_density);
 				model["Percent_Above_"+liquid_name] = 1 - model["Percent_Submerged_in_"+liquid_name];
@@ -414,8 +417,6 @@ Box2dModel.prototype.interpretEvent = function(type, args, obj) {
 			}
 			if (evt.type == "add-to-beaker" || evt.type == "test-in-beaker" || evt.type == "remove-from-beaker"){
 				model["Tested_in_"+args[1].liquid_name] = 1;
-
-
 			} else if (evt.type == "add-to-scale" || evt.type == "test-on-scale" || evt.type == "remove-from-scale"){
 				model["Tested_on_Scale"] = 1;
 			} else if (evt.type == "add-to-balance" || evt.type == "test-on-balance" || evt.type == "remove-from-balance"){
@@ -425,14 +426,14 @@ Box2dModel.prototype.interpretEvent = function(type, args, obj) {
 			// determine whether we have all the info we need to plot point
 			if (evt.type == "test-in-beaker"){
 				isResultsEvent = true;
-				if ((typeof args[0].volume_tested === "undefined" || !args[0].volume_tested) && (typeof args[0].mass_tested !== "undefined" && args[0].mass_tested)){
+				if ((typeof args[0].volume_tested === "undefined" || !args[0].volume_tested) && (typeof args[0].mass_tested !== "undefined" && args[0].mass_tested || !showTestedMassValuesOnly)){
 					mass_volume_determined = true;
 				}
 				args[0].volume_tested = true;
 			}
-			if (evt.type == "test-on-scale" || evt.type == "test-on-balance"){
+			if (evt.type == "test-on-scale" || evt.type == "test-on-balance") {
 				isResultsEvent = true;
-				if ((typeof args[0].mass_tested === "undefined" || !args[0].mass_tested) && (typeof args[0].volume_tested !== "undefined" && args[0].volume_tested)){
+				if ((typeof args[0].mass_tested === "undefined" || !args[0].mass_tested) && (typeof args[0].volume_tested !== "undefined" && args[0].volume_tested || !showTestedLiquidValuesOnly)){
 					mass_volume_determined = true;
 				}
 				args[0].mass_tested = true;
@@ -541,9 +542,16 @@ Box2dModel.prototype.interpretEvent = function(type, args, obj) {
 	}
 
 	// send results to graph
-	if ((includeGraph || includeTable) && isResultsEvent){
+	if ((includeGraph || includeTable) && (isResultsEvent || evt.type == "graph-clicked" || evt.type == "table-changed"|| (evt.type == "make-beaker" && ( GLOBAL_PARAMETERS.INCLUDE_GRAPH_BUILDER || GLOBAL_PARAMETERS.INCLUDE_TABLE_BUILDER)))){
 
 		if (includeGraph) {
+			if (evt.type == "graph-clicked"){
+				this.currentDataPoint = args;
+				builder.drawMaterial(this.currentDataPoint[1], this.currentDataPoint[0]);
+			} else if (evt.type == "make-model"){
+				this.currentDataPoint = null;
+			}
+
 			// get index for total mass
 			var massIndex = -1;
 			for (var i = 0; i < tableData.length; i++) {
@@ -732,28 +740,43 @@ Box2dModel.prototype.interpretEvent = function(type, args, obj) {
 					var sinkPoints = [];
 					var floatPoints = [];
 					var unknownPoints = [];
+					var dividerPoints = [];
 
-					var includeUnknown = false;
+					var includeUnknown = GLOBAL_PARAMETERS.INCLUDE_GRAPH_BUILDER || GLOBAL_PARAMETERS.INCLUDE_TABLE_BUILDER ? true : false;
+					var displayAll = GLOBAL_PARAMETERS.INCLUDE_GRAPH_BUILDER;
+
+					if (this.currentDataPoint != null) unknownPoints.push(this.currentDataPoint);
 
 					if (tableData[0].length > 0) {
 						for (var j = 1; j < tableData[0].length; j++) {
 							var point;
-							if (tableData[beakerIndex][j].text === 1 && tableData[scaleIndex][j].text === 1) {
-								if (tableData[sinkIndex][j].text === "Sink") {
-									point = [parseFloat(tableData[volumeIndex][j].text), parseFloat(tableData[massIndex][j].text)];
-									sinkPoints.push(point);
+							if ((tableData[beakerIndex][j].text === 1 && tableData[scaleIndex][j].text === 1) || displayAll) {
+								if (tableData[beakerIndex][j].text === 1) {
+									if (tableData[sinkIndex][j].text === "Sink") {
+										point = [parseFloat(tableData[volumeIndex][j].text), parseFloat(tableData[massIndex][j].text)];
+										sinkPoints.push(point);
+									} else if (tableData[sinkIndex][j].text === "Float"){
+										point = [parseFloat(tableData[volumeIndex][j].text), parseFloat(tableData[massIndex][j].text)];
+										floatPoints.push(point);
+									} else {
+										point = [parseFloat(tableData[volumeIndex][j].text), parseFloat(tableData[massIndex][j].text)];
+										dividerPoints.push(point);
+									}
 								} else {
 									point = [parseFloat(tableData[volumeIndex][j].text), parseFloat(tableData[massIndex][j].text)];
-									floatPoints.push(point);
+									unknownPoints.push(point);
 								}
 							} else if (tableData[beakerIndex][j].text == 1 && tableData[scaleIndex][j].text === 0) {
 								// we have the volume and not the mass
 								if (tableData[sinkIndex][j].text === "Sink") {
 									point = [parseFloat(tableData[volumeIndex][j].text), includeUnknown ? -1 : 0];
 									sinkPoints.push(point);
-								} else {
+								} else if (tableData[sinkIndex][j].text === "Float"){
 									point = [parseFloat(tableData[volumeIndex][j].text), includeUnknown ? -1 : 0];
 									floatPoints.push(point);
+								} else {
+									point = [parseFloat(tableData[volumeIndex][j].text), includeUnknown ? -1 : 0];
+									dividerPoints.push(point);
 								}
 							} else if (tableData[beakerIndex][j].text === 0 && tableData[scaleIndex][j].text === 1) {
 								// we have the mass and not the volume
@@ -762,9 +785,12 @@ Box2dModel.prototype.interpretEvent = function(type, args, obj) {
 									if (tableData[sinkIndex][j].text === "Sink") {
 										point = [parseFloat(tableData[volumeIndex][j].text), -1];
 										sinkPoints.push(point);
-									} else {
+									} else if (tableData[sinkIndex][j].text === "Float") {
 										point = [parseFloat(tableData[volumeIndex][j].text), -1];
 										floatPoints.push(point);
+									} else {
+										point = [parseFloat(tableData[volumeIndex][j].text), -1];
+										dividerPoints.push(point);
 									}
 								} else {
 									point = [0, parseFloat(tableData[massIndex][j].text)];
@@ -776,9 +802,12 @@ Box2dModel.prototype.interpretEvent = function(type, args, obj) {
 									if (tableData[sinkIndex][j].text === "Sink") {
 										point = [-1, -1];
 										sinkPoints.push(point);
-									} else {
+									} else if (tableData[sinkIndex][j].text === "Float"){
 										point = [parseFloat(tableData[volumeIndex][j].text), -1];
 										floatPoints.push(point);
+									} else {
+										point = [parseFloat(tableData[volumeIndex][j].text), -1];
+										dividerPoints.push(point);
 									}
 								} else {
 									point = [0, 0];
@@ -815,6 +844,12 @@ Box2dModel.prototype.interpretEvent = function(type, args, obj) {
 								name: 'Float',
 								color: 'rgba(0, 0, 155, .5)',
 								data: floatPoints
+							},
+							{
+								id: 'divider',
+								name: 'Divider',
+								color: 'rgba(0, 155, 0, .5)',
+								data: dividerPoints
 							}
 						]
 						if (includeUnknown) {
@@ -970,6 +1005,12 @@ Box2dModel.prototype.interpretEvent = function(type, args, obj) {
 				console.log("problem with index (mass, vol, liq, scale)", massIndex, volumeIndex, beakerIndex, scaleIndex);
 			}
 		} else if (includeTable && arrColumnNamesToImport.length > 0){
+			if (evt.type == "table-changed"){
+				this.currentDataPoint = args;
+				builder.drawMaterial(this.currentDataPoint[1], this.currentDataPoint[0]);
+			} else if (evt.type == "make-model"){
+				this.currentDataPoint = null;
+			}
 			// search for indices matching arrColumnNamesToImport
 			this.chart = [];
 			for (var c = 0; c < arrColumnNamesToImport.length; c++){
@@ -1002,7 +1043,7 @@ Box2dModel.prototype.interpretEvent = function(type, args, obj) {
 							if (tableData[i][j].text == 0){
 								for (var k = 0; k < this.chart.length; k++){
 									if (this.chart[k][0].substr(this.chart[k][0].length - liquid_name.length) == liquid_name && this.chart[k][0].substr(0,10) != "Tested_in_"){
-										this.chart[k][j] = "?";
+										this.chart[k][j] = "Unknown";
 									}
 								}
 							} else {
@@ -1011,21 +1052,23 @@ Box2dModel.prototype.interpretEvent = function(type, args, obj) {
 						}
 					}
 				}
-				// now we know for each row whether object has been tested in any beaker
-				// go through each tested_in_any_beaker and update volume
-				for (var t = 0; t < tested_in_any_beaker.length; t++){
-					j = t + 1;
-					if (!tested_in_any_beaker[t]){
-						for (var k = 0; k < this.chart.length; k++){
-							if (this.chart[k][0].match(/volume/i) != null || this.chart[k][0].match(/density/i) != null){
-								this.chart[k][j] = "?";
+				if (!GLOBAL_PARAMETERS.INCLUDE_TABLE_BUILDER) {
+					// now we know for each row whether object has been tested in any beaker
+					// go through each tested_in_any_beaker and update volume
+					for (var t = 0; t < tested_in_any_beaker.length; t++) {
+						j = t + 1;
+						if (!tested_in_any_beaker[t]) {
+							for (var k = 0; k < this.chart.length; k++) {
+								if (this.chart[k][0].match(/volume/i) != null || this.chart[k][0].match(/density/i) != null) {
+									this.chart[k][j] = "?";
+								}
 							}
 						}
 					}
 				}
 			}
 
-			if (showTestedMassValuesOnly){
+			if (showTestedMassValuesOnly && !GLOBAL_PARAMETERS.INCLUDE_TABLE_BUILDER){
 				for (var i = tableData.length-1; i >= 0; i--){
 					if (tableData[i][0].text.substr(0,15) == "Tested_on_Scale"){
 						for (var j = 1; j < tableData[i].length; j++){
@@ -1109,6 +1152,7 @@ Box2dModel.prototype.interpretEvent = function(type, args, obj) {
  */
 Box2dModel.prototype.renderChart = function(popup) {
 	var chartObject = this.chart;
+	var highchartsObject;
 	var divId;
 	var otherdivId;
 	if (popup){
@@ -1122,7 +1166,7 @@ Box2dModel.prototype.renderChart = function(popup) {
 	//check if the div exists
 	if($('#' + divId).length > 0) {
 		//get the highcharts object from the div
-		var highchartsObject = $('#' + divId).highcharts();
+		highchartsObject = $('#' + divId).highcharts();
 
 		if(highchartsObject != null) {
 			//destroy the existing chart because we will be making a new one
@@ -1131,7 +1175,7 @@ Box2dModel.prototype.renderChart = function(popup) {
 	}
 	if($('#' + otherdivId).length > 0) {
 		//get the highcharts object from the div
-		var highchartsObject = $('#' + otherdivId).highcharts();
+		highchartsObject = $('#' + otherdivId).highcharts();
 
 		if(highchartsObject != null) {
 			//destroy the existing chart because we will be making a new one
@@ -1156,8 +1200,25 @@ Box2dModel.prototype.renderChart = function(popup) {
 	//set the divId into the chart object so we can access it in other contexts
 	chartObject.chart.renderTo = divId;
 
+	if (GLOBAL_PARAMETERS.INCLUDE_GRAPH_BUILDER && !popup){
+		chartObject.chart.height = 370;
+		chartObject.chart.width = 490;
+		chartObject.chart.marginRight = 150;
+		chartObject.chart.backgroundColor = "transparent";
+		chartObject.chart.plotBackgroundColor = "white";
+		chartObject.title.text = "Click to select Mass and Volume";
+	}
+
 	//render the highcharts chart
-	new Highcharts.Chart(chartObject);
+	highchartsObject = new Highcharts.Chart(chartObject);
+
+	if (GLOBAL_PARAMETERS.INCLUDE_GRAPH_BUILDER && !popup) {
+		Highcharts.addEvent(highchartsObject.container, 'click', function (e) {
+			e = highchartsObject.pointer.normalize();
+			eventManager.fire('graph-clicked',[e.xAxis[0].value, e.yAxis[0].value], box2dModel);
+		});
+		builder.addDataElement($('#' + divId)[0]);
+	}
 }
 
 /**
@@ -1195,11 +1256,32 @@ Box2dModel.prototype.renderTable = function(popup) {
 				elem += "<span style='color:#aa4444;'>" + chartObject[ci][ri] + "</span>";
 			} else if  (chartObject[ci][ri] == "Float"){
 				elem += "<span style='color:#4444aa;'>" + chartObject[ci][ri] + "</span>";
+			} else if  (chartObject[ci][ri] == "Divider"){
+				elem += "<span style='color:#44aa44;'>" + chartObject[ci][ri] + "</span>";
 			} else {
 				elem += chartObject[ci][ri].replace(/_/g, " ");
 			}
 
 			if (ri == 0) elem += "</strong>";
+			elem += "</td>";
+		}
+		elem += "</tr>";
+	}
+	// if this is a table building step create a row of empty, editable values
+	if (GLOBAL_PARAMETERS.INCLUDE_TABLE_BUILDER && !popup) {
+		elem += "<tr>";
+		for (var ci = 0; ci < chartObject.length; ci++){
+			elem += "<td style='border: 1px solid black; padding: 5px;'>";
+			if (chartObject[ci][0].toLowerCase().match("mass")){
+				var mass = this.currentDataPoint != null ? this.currentDataPoint[1] : "  ";
+				elem += "<input type='text' id='mass-edit' size='2' value='"+mass+"' />";
+			} else if (chartObject[ci][0].toLowerCase().match("volume")){
+				var volume = this.currentDataPoint != null ? this.currentDataPoint[0] : "  ";
+				elem += "<input type='text'  id='volume-edit' size='2' value='"+volume+"' />";
+			} else if (chartObject[ci][0].toLowerCase().match("sink")){
+				elem += "Unknown";
+			}
+
 			elem += "</td>";
 		}
 		elem += "</tr>";
@@ -1219,6 +1301,69 @@ Box2dModel.prototype.renderTable = function(popup) {
 				box2dModel.renderTable(false);
 			}
 		});
+	}
+
+	if (GLOBAL_PARAMETERS.INCLUDE_TABLE_BUILDER && !popup) {
+		$("#mass-edit").change(function (e) {
+			var mass = $("#mass-edit").val();
+			if ($.isNumeric(mass)){
+				mass = parseFloat(mass);
+				if (mass > GLOBAL_PARAMETERS.MAX_WIDTH_UNITS * GLOBAL_PARAMETERS.MAX_HEIGHT_UNITS * GLOBAL_PARAMETERS.MAX_DEPTH_UNITS){
+					mass = GLOBAL_PARAMETERS.MAX_WIDTH_UNITS * GLOBAL_PARAMETERS.MAX_HEIGHT_UNITS * GLOBAL_PARAMETERS.MAX_DEPTH_UNITS;
+					$("#mass-edit").val(mass)
+				} else if (mass < GLOBAL_PARAMETERS.BUILDER_SLIDER_INCREMENT){
+					mass = GLOBAL_PARAMETERS.BUILDER_SLIDER_INCREMENT;
+					$("#mass-edit").val(mass)
+				}
+			} else {
+				return;
+			}
+			var volume = $("#volume-edit").val();
+			if ($.isNumeric(volume)){
+				volume = parseFloat(volume);
+				if (volume > GLOBAL_PARAMETERS.MAX_WIDTH_UNITS * GLOBAL_PARAMETERS.MAX_HEIGHT_UNITS * GLOBAL_PARAMETERS.MAX_DEPTH_UNITS){
+					volume = GLOBAL_PARAMETERS.MAX_WIDTH_UNITS * GLOBAL_PARAMETERS.MAX_HEIGHT_UNITS * GLOBAL_PARAMETERS.MAX_DEPTH_UNITS;
+					$("#volume-edit").val(volume)
+				} else if (volume < GLOBAL_PARAMETERS.BUILDER_SLIDER_INCREMENT){
+					volume = GLOBAL_PARAMETERS.BUILDER_SLIDER_INCREMENT;
+					$("#volume-edit").val(volume)
+				}
+			} else {
+				return;
+			}
+			eventManager.fire('table-changed',[volume, mass], box2dModel);
+		});
+		$("#volume-edit").change(function (e) {
+			var mass = $("#mass-edit").val();
+			if ($.isNumeric(mass)){
+				mass = parseFloat(mass);
+				if (mass > GLOBAL_PARAMETERS.MAX_WIDTH_UNITS * GLOBAL_PARAMETERS.MAX_HEIGHT_UNITS * GLOBAL_PARAMETERS.MAX_DEPTH_UNITS){
+					mass = GLOBAL_PARAMETERS.MAX_WIDTH_UNITS * GLOBAL_PARAMETERS.MAX_HEIGHT_UNITS * GLOBAL_PARAMETERS.MAX_DEPTH_UNITS;
+					$("#mass-edit").val(mass)
+				} else if (mass < GLOBAL_PARAMETERS.BUILDER_SLIDER_INCREMENT){
+					mass = GLOBAL_PARAMETERS.BUILDER_SLIDER_INCREMENT;
+					$("#mass-edit").val(mass)
+				}
+			} else {
+				return;
+			}
+			var volume = $("#volume-edit").val();
+			if ($.isNumeric(volume)){
+				volume = parseFloat(volume);
+				if (volume > GLOBAL_PARAMETERS.MAX_WIDTH_UNITS * GLOBAL_PARAMETERS.MAX_HEIGHT_UNITS * GLOBAL_PARAMETERS.MAX_DEPTH_UNITS){
+					volume = GLOBAL_PARAMETERS.MAX_WIDTH_UNITS * GLOBAL_PARAMETERS.MAX_HEIGHT_UNITS * GLOBAL_PARAMETERS.MAX_DEPTH_UNITS;
+					$("#volume-edit").val(volume)
+				} else if (volume < GLOBAL_PARAMETERS.BUILDER_SLIDER_INCREMENT){
+					volume = GLOBAL_PARAMETERS.BUILDER_SLIDER_INCREMENT;
+					$("#volume-edit").val(volume)
+				}
+			}else {
+				return;
+			}
+			eventManager.fire('table-changed',[volume, mass], box2dModel);
+		});
+
+		builder.addDataElement($('#' + divId)[0]);
 	}
 }
 
