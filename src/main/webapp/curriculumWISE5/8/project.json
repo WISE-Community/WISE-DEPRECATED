@@ -3072,6 +3072,50 @@
                         "stamps": {
                             "Stamps": []
                         }
+                    },
+                    {
+                        "id": "x4twq80e2n",
+                        "prompt": "Label the picture.",
+                        "type": "Label",
+                        "backgroundImage": "assets/ballon cars and skateboarder.png",
+                        "canCreateLabels": true,
+                        "canDeleteLabels": true,
+                        "width": 800,
+                        "height": 600,
+                        "labels": [
+                            {
+                                "pointX": 25,
+                                "pointY": 200,
+                                "textX": 100,
+                                "textY": -25,
+                                "text": "more potential energy",
+                                "color": "blue"
+                            },
+                            {
+                                "pointX": 25,
+                                "pointY": 250,
+                                "textX": 100,
+                                "textY": -25,
+                                "text": "more potential energy",
+                                "color": "blue"
+                            },
+                            {
+                                "pointX": 25,
+                                "pointY": 300,
+                                "textX": 100,
+                                "textY": -25,
+                                "text": "more kinetic energy",
+                                "color": "green"
+                            },
+                            {
+                                "pointX": 25,
+                                "pointY": 350,
+                                "textX": 100,
+                                "textY": -25,
+                                "text": "more kinetic energy",
+                                "color": "green"
+                            }
+                        ]
                     }
                 ]
             },

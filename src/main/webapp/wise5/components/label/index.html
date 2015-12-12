@@ -14,11 +14,12 @@
                                ng-click="labelController.newLabelButtonClicked()"
                                ng-disabled="labelController.isDisabled"
                                ng-if="labelController.showNewLabelButton()">New Label</md-button>
+                    <span ng-show="labelController.createLabelMode">{{labelController.newLabelMessage}}</span>
                     <md-button class="md-raised md-primary"
                                ng-click="labelController.cancelButtonClicked()"
                                ng-disabled="labelController.isDisabled"
                                ng-if="labelController.showCancelButton()">Cancel</md-button>
-                    <canvas id="c" width="800" height="600" style="border:1px solid black;"></canvas>
+                    <canvas id="{{labelController.canvasId}}" width="800" height="600" style="border:1px solid black;"></canvas>
                 </div>
             </md-input-container>
                 <div class="component-content__actions" ng-show="labelController.attachments.length && labelController.isStudentAttachmentEnabled" layout="row" layout-wrap="true">

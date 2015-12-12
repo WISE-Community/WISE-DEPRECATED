@@ -6,6 +6,7 @@ define(['app'], function(app) {
             $scope,
             $state,
             $stateParams,
+            $timeout,
             ConfigService,
             LabelService,
             NodeService,
@@ -84,6 +85,15 @@ define(['app'], function(app) {
         // the z index of circle elements
         this.circleZIndex = 2;
 
+        // the canvas id
+        this.canvasId = 'c';
+
+        // the background image path
+        this.backgroundImage = null;
+
+        // the message to display when the student is in create label mode
+        this.newLabelMessage = 'Click on the image or ';
+
         /**
          * Perform setup of the component
          */
@@ -106,6 +116,9 @@ define(['app'], function(app) {
                 
                 // get the component id
                 this.componentId = this.componentContent.id;
+
+                // get the component state from the scope
+                var componentState = $scope.componentState;
 
                 if (this.componentContent.canCreateLabels != null) {
                     this.canCreateLabels = this.componentContent.canCreateLabels;
@@ -138,71 +151,83 @@ define(['app'], function(app) {
                     this.isSaveButtonVisible = false;
                     this.isSubmitButtonVisible = false;
                     this.isNewLabelButtonVisible = false;
+                    this.canDeleteLabels = false;
                     this.isDisabled = true;
+
+                    if (componentState != null) {
+                        this.canvasId = 'labelCanvas_' + componentState.id;
+                    }
                 } else if (this.mode === 'onlyShowWork') {
                     this.isPromptVisible = false;
                     this.isSaveButtonVisible = false;
                     this.isSubmitButtonVisible = false;
                     this.isNewLabelButtonVisible = false;
+                    this.canDeleteLabels = false;
                     this.isDisabled = true;
                 }
 
-                // create the canvas
-                var canvas = this.createCanvas();
-                this.canvas = canvas;
+                $timeout(angular.bind(this, function() {
+                    // wait for angular to completely render the html before we initialize the canvas
 
-                if (this.canDeleteLabels) {
-                    // create the key down listener to listen for the delete key
-                    this.createKeydownListener();
-                }
+                    // initialize the canvas
+                    var canvas = this.initializeCanvas();
+                    this.canvas = canvas;
 
-                // set the background image if it exists
-                var backgroundImage = this.componentContent.backgroundImage;
-                if (backgroundImage != null) {
-                    this.setBackgroundImage(backgroundImage);
-                }
+                    // get the component state from the scope
+                    var componentState = $scope.componentState;
 
-                // set whether studentAttachment is enabled
-                this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
-
-                // get the component state from the scope
-                var componentState = $scope.componentState;
-
-                if (componentState == null) {
-                    /*
-                     * only import work if the student does not already have
-                     * work for this component
-                     */
-
-                    // check if we need to import work
-                    var importWorkNodeId = this.componentContent.importWorkNodeId;
-                    var importWorkComponentId = this.componentContent.importWorkComponentId;
-
-                    if (importWorkNodeId != null && importWorkComponentId != null) {
-                        // import the work from the other component
-                        this.importWork();
-                    } else if (this.componentContent.labels != null) {
-                        /*
-                         * the student has not done any work and there are starter labels
-                         * so we will populate the canvas with the starter labels
-                         */
-                        this.addLabelsToCanvas(this.componentContent.labels);
+                    if (this.canDeleteLabels && !this.disabled) {
+                        // create the key down listener to listen for the delete key
+                        this.createKeydownListener();
                     }
-                } else {
-                    // populate the student work into this component
-                    this.setStudentWork(componentState);
-                }
 
-                // check if we need to lock this component
-                this.calculateDisabled();
+                    // set whether studentAttachment is enabled
+                    this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
 
-                if ($scope.$parent.registerComponentController != null) {
-                    // register this component with the parent node
-                    $scope.$parent.registerComponentController($scope, this.componentContent);
-                }
+                    if (componentState == null) {
+                        /*
+                         * only import work if the student does not already have
+                         * work for this component
+                         */
+
+                        // check if we need to import work
+                        var importWorkNodeId = this.componentContent.importWorkNodeId;
+                        var importWorkComponentId = this.componentContent.importWorkComponentId;
+
+                        if (importWorkNodeId != null && importWorkComponentId != null) {
+                            // import the work from the other component
+                            this.importWork();
+                        } else if (this.componentContent.labels != null) {
+                            /*
+                             * the student has not done any work and there are starter labels
+                             * so we will populate the canvas with the starter labels
+                             */
+                            this.addLabelsToCanvas(this.componentContent.labels);
+                        }
+                    } else {
+                        // populate the student work into this component
+                        this.setStudentWork(componentState);
+                    }
+
+                    // get the background image that may have been set by the student data
+                    var backgroundImage = this.getBackgroundImage();
+
+                    if (backgroundImage == null && this.componentContent.backgroundImage != null) {
+                        // get the background image from the component content if any
+                        this.setBackgroundImage(this.componentContent.backgroundImage);
+                    }
+
+                    // check if we need to lock this component
+                    this.calculateDisabled();
+
+                    if ($scope.$parent.registerComponentController != null) {
+                        // register this component with the parent node
+                        $scope.$parent.registerComponentController($scope, this.componentContent);
+                    }
+                }));
             }
         };
-        
+
         /**
          * Populate the student work into the component
          * @param componentState the component state to populate into the component
@@ -220,6 +245,13 @@ define(['app'], function(app) {
 
                     // add the labels to the canvas
                     this.addLabelsToCanvas(labels);
+
+                    // get the background image from the student data
+                    var backgroundImage = studentData.backgroundImage;
+
+                    if (backgroundImage != null) {
+                        this.setBackgroundImage(backgroundImage);
+                    }
                 }
             }
         };
@@ -428,6 +460,13 @@ define(['app'], function(app) {
             // set the labels into the student data
             var studentData = {};
             studentData.labels = this.getLabels();
+
+            var backgroundImage = this.getBackgroundImage();
+
+            if (backgroundImage != null) {
+                studentData.backgroundImage = backgroundImage;
+            }
+
             //studentData.attachments = this.attachments;
 
             if (this.isSubmit) {
@@ -646,12 +685,21 @@ define(['app'], function(app) {
         };
 
         /**
-         * Create and setup the canvas
+         * Initialize the canvas
          * @returns the canvas object
          */
-        this.createCanvas = function() {
+        this.initializeCanvas = function() {
+
+            var canvas = null;
+
             // get the canvas object from the html
-            var canvas = new fabric.Canvas('c');
+            if (this.isDisabled) {
+                // we will make the canvas uneditable
+                canvas = new fabric.StaticCanvas(this.canvasId);
+            } else {
+                // make the canvas editable
+                canvas = new fabric.Canvas(this.canvasId);
+            }
 
             // disable selection of items
             canvas.selection = false;
@@ -827,11 +875,23 @@ define(['app'], function(app) {
         };
 
         /**
-         * Set the background imate
+         * Set the background image
          * @param backgroundImagePath the url path to an image
          */
         this.setBackgroundImage = function(backgroundImagePath) {
-            this.canvas.setBackgroundImage(backgroundImagePath, this.canvas.renderAll.bind(this.canvas));
+
+            if (backgroundImagePath != null) {
+                this.backgroundImage = backgroundImagePath;
+                this.canvas.setBackgroundImage(backgroundImagePath, this.canvas.renderAll.bind(this.canvas));
+            }
+        };
+
+        /**
+         * Get the background image
+         * @returns the background image path
+         */
+        this.getBackgroundImage = function() {
+            return this.backgroundImage;
         };
 
         /**
@@ -930,7 +990,6 @@ define(['app'], function(app) {
                 fill: 'white',
                 backgroundColor: color,
                 width: 100,
-                padding: 50,
                 hasControls: false,
                 hasBorders: false,
                 selectable: true
