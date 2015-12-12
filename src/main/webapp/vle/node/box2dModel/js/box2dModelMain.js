@@ -45,6 +45,8 @@ function init(wiseData, previousModels, forceDensityValue, tableData, custom_obj
 	GLOBAL_PARAMETERS["INCLUDE_CYLINDER_BUILDER"] = false;
 	GLOBAL_PARAMETERS["INCLUDE_RECTPRISM_BUILDER"] = false;
 	GLOBAL_PARAMETERS["INCLUDE_BEAKER_BUILDER"] = false;
+	GLOBAL_PARAMETERS["INCLUDE_GRAPH_BUILDER"] = false;
+	GLOBAL_PARAMETERS["INCLUDE_TABLE_BUILDER"] = false;
 	GLOBAL_PARAMETERS["ALLOW_REVISION"] = true;
 	GLOBAL_PARAMETERS["ALLOW_DUPLICATION"] = false;
 	GLOBAL_PARAMETERS["BUILDER_SHOW_SLIDER_VALUES"] = true;
@@ -148,7 +150,7 @@ function init(wiseData, previousModels, forceDensityValue, tableData, custom_obj
 			});
 		}
 	// can't manually change stage height, only lab height
-		GLOBAL_PARAMETERS.INCLUDE_BUILDER = GLOBAL_PARAMETERS.INCLUDE_BLOCKCOMP_BUILDER || GLOBAL_PARAMETERS.INCLUDE_CYLINDER_BUILDER || GLOBAL_PARAMETERS.INCLUDE_RECTPRISM_BUILDER; 
+		GLOBAL_PARAMETERS.INCLUDE_BUILDER = GLOBAL_PARAMETERS.INCLUDE_BLOCKCOMP_BUILDER || GLOBAL_PARAMETERS.INCLUDE_CYLINDER_BUILDER || GLOBAL_PARAMETERS.INCLUDE_RECTPRISM_BUILDER  || GLOBAL_PARAMETERS.INCLUDE_GRAPH_BUILDER  || GLOBAL_PARAMETERS.INCLUDE_TABLE_BUILDER;
 		GLOBAL_PARAMETERS.STAGE_HEIGHT = GLOBAL_PARAMETERS.LAB_HEIGHT;
 		GLOBAL_PARAMETERS.STAGE_WIDTH = GLOBAL_PARAMETERS.LAB_WIDTH;
 
@@ -304,13 +306,18 @@ function start(previousModels){
 	stage.mouseEventsEnabled = true;
 	stage.enableMouseOver();
 	createjs.Touch.enable(stage);
-	stage.needs_to_update = false;
+	stage.needs_to_update = true;
 	imgstage = new createjs.Stage(document.getElementById("imgcanvas"));
+	// if this is a data building step move chartDiv above canvas
+	if (GLOBAL_PARAMETERS.INCLUDE_GRAPH_BUILDER || GLOBAL_PARAMETERS.INCLUDE_TABLE_BUILDER){
+		$("#b2canvas").before($("#chartDiv"));
+	}
+
+
 	// setup builder
 	var labWorld_y;
 	var wall_width_units = 0.3;
-	if (GLOBAL_PARAMETERS.INCLUDE_BLOCKCOMP_BUILDER)
-	{
+	if (GLOBAL_PARAMETERS.INCLUDE_BLOCKCOMP_BUILDER){
 		builder = new BlockCompBuildingPanel(GLOBAL_PARAMETERS.STAGE_WIDTH, GLOBAL_PARAMETERS.BUILDER_HEIGHT, wall_width_units*GLOBAL_PARAMETERS.SCALE);
 		labWorld_y = builder.height_px;	
 	} else if (GLOBAL_PARAMETERS.INCLUDE_CYLINDER_BUILDER){
@@ -319,6 +326,12 @@ function start(previousModels){
 	} else if (GLOBAL_PARAMETERS.INCLUDE_RECTPRISM_BUILDER){
 		builder = new RectPrismBuildingPanel(GLOBAL_PARAMETERS.STAGE_WIDTH, GLOBAL_PARAMETERS.BUILDER_HEIGHT, wall_width_units*GLOBAL_PARAMETERS.SCALE);
 		labWorld_y = builder.height_px;	
+	} else if (GLOBAL_PARAMETERS.INCLUDE_GRAPH_BUILDER){
+		builder = new DataSpecsBuildingPanel(true, GLOBAL_PARAMETERS.STAGE_WIDTH, GLOBAL_PARAMETERS.BUILDER_HEIGHT, wall_width_units*GLOBAL_PARAMETERS.SCALE);
+		labWorld_y = builder.height_px;
+	} else if (GLOBAL_PARAMETERS.INCLUDE_TABLE_BUILDER){
+		builder = new DataSpecsBuildingPanel(false, GLOBAL_PARAMETERS.STAGE_WIDTH, GLOBAL_PARAMETERS.BUILDER_HEIGHT, wall_width_units*GLOBAL_PARAMETERS.SCALE);
+		labWorld_y = builder.height_px;
 	} else if (GLOBAL_PARAMETERS.INCLUDE_BEAKER_BUILDER){
 		builder = new BeakerBuildingPanel(GLOBAL_PARAMETERS.STAGE_WIDTH, GLOBAL_PARAMETERS.BUILDER_HEIGHT, wall_width_units*GLOBAL_PARAMETERS.SCALE);
 		labWorld_y = builder.height_px;	

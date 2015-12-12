@@ -3090,6 +3090,8 @@ md-icon.warn { color: #F44336 !important; }
 
 md-input-container.md-wise-theme label { color: rgba(0, 0, 0, 0.87); }
 
+md-select-menu.md-default-theme md-option[selected], md-select-menu md-option[selected] { background-color: #f4fbfd; }
+
 .animate-show { max-height: 9999px; opacity: 1; }
 
 .animate-show.ng-hide-add, .animate-show.ng-hide-remove { transition: all 250ms; }
@@ -3130,8 +3132,8 @@ md-input-container.md-wise-theme label { color: rgba(0, 0, 0, 0.87); }
 
 .component-content { padding: 16px; }
 
-.component-content__actions .md-button:first-of-type { margin-left: 0; }
-.component-content__actions .md-button:last-of-type { margin-right: 0; }
+.component-content__actions .md-button:first-child { margin-left: 0; }
+.component-content__actions .md-button:last-child { margin-right: 0; }
 
 .component__attachment { position: relative; margin: 0 8px; padding-bottom: 8px; }
 @media only screen and (min-width: 600px) { .component__attachment { padding-top: 8px; } }
@@ -3267,8 +3269,8 @@ md-input-container.md-wise-theme label { color: rgba(0, 0, 0, 0.87); }
 
 @media only screen and (max-width: 599px) { .node-title, .node-select { font-size: 15px; } }
 .node-content__actions { padding: 0 16px 16px 16px; }
-.node-content__actions .md-button:first-of-type { margin-left: 0; }
-.node-content__actions .md-button:last-of-type { margin-right: 0; }
+.node-content__actions .md-button:first-child { margin-left: 0; }
+.node-content__actions .md-button:last-child { margin-right: 0; }
 
 .md-button.md-icon-button.node-nav:first-of-type { margin-right: 0; }
 
@@ -3361,7 +3363,7 @@ md-input-container.discussion-new__input-container > textarea.md-input { min-hei
 .account-menu__users md-list-item .md-avatar { margin-right: 0; min-width: 40px; }
 .account-menu__users .md-subheader .md-subheader-inner { padding: 12px 0; }
 
-.account-menu__caret { position: absolute; right: 32px; top: -8px; outline: none; }
+.account-menu__caret { position: absolute; right: 28px; top: -8px; outline: none; }
 .account-menu__caret:before { content: ''; position: absolute; border-bottom: 8px solid #fff; border-left: 8px solid transparent; border-right: 8px solid transparent; }
 
 .account-menu__actions { background-color: #f7f7f7; }

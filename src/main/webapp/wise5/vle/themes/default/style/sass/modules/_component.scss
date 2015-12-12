@@ -5,11 +5,11 @@
 }
 
 .component-content__actions {
-  .md-button:first-of-type {
+  .md-button:first-child {
     margin-left: 0;
   }
 
-  .md-button:last-of-type {
+  .md-button:last-child {
     margin-right: 0;
   }
 }

@@ -139,7 +139,7 @@ md-icon {
   color: $accent-color-2;
 }
 
-// Drawing tool custom
+// Drawing tool custom - TODO: move to draw tool module scss
 .dt-container .dt-tools {
   z-index: 1;
 }
@@ -147,6 +147,10 @@ md-icon {
 // Theme overrides
 md-input-container.md-wise-theme label {
   color: $text-color-dark;
+}
+
+md-select-menu.md-default-theme md-option[selected], md-select-menu md-option[selected] {
+  background-color: $selected-bg;
 }
 
 // Animations
