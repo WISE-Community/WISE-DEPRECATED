@@ -86,12 +86,16 @@
                         toworkgroupid='{{workgroupId}}'
                         componentstateid='{{componentState.id}}'></annotation>
         </div>
-        <button ng-click='matchController.saveButtonClicked()'
-            ng-show='matchController.showSaveButton()'
-            ng-disabled='matchController.isDisabled'>Save</button>
-        <button ng-click='matchController.submitButtonClicked()'
-            ng-show='matchController.showSubmitButton()'
-            ng-disabled='matchController.isDisabled'>Submit</button>
+        <div class="component-content__actions" layout="row">
+            <md-button class="md-raised md-primary"
+                       ng-click='matchController.saveButtonClicked()'
+                       ng-show='matchController.showSaveButton()'
+                       ng-disabled='matchController.isDisabled'>Save</md-button>
+            <md-button class="md-raised md-primary"
+                       ng-click='matchController.submitButtonClicked()'
+                       ng-show='matchController.showSubmitButton()'
+                       ng-disabled='matchController.isDisabled'>Submit</md-button>
+        </div>
     </div>
     <div ng-if='matchController.mode == "grading"' style='width: 400px'>
         <annotation type='score'

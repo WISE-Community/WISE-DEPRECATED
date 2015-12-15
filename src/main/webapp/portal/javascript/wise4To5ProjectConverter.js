@@ -382,33 +382,33 @@ function convertNode(node, nodeContent) {
         } else if (nodeType === 'OpenResponse') {
             wise5Node = convertOpenResponse(node, nodeContent);
         } else if (nodeType === 'Note') {
-
+            wise5Node = convertOpenResponse(node, nodeContent);
         } else if (nodeType === 'MultipleChoice' || nodeType === 'Challenge') {
-
+            wise5Node = convertMultipleChoice(node, nodeContent);
         } else if (nodeType === 'MatchSequence') {
-
+            wise5Node = convertMatchSequence(node, nodeContent);
         } else if (nodeType === 'SVGDraw') {
             wise5Node = convertDraw(node, nodeContent);
         } else if (nodeType === 'Brainstorm') {
             wise5Node = convertBrainstorm(node, nodeContent);
         } else if (nodeType === 'Fillin') {
-
+            // TODO
         } else if (nodeType === 'Sensor') {
-
+            // TODO
         } else if (nodeType === 'Table') {
             wise5Node = convertTable(node, nodeContent);
         } else if (nodeType === 'IdeaBasket') {
-
+            // TODO
         } else if (nodeType === 'ExplanationBuilder') {
-
+            // TODO
         } else if (nodeType === 'OutsideUrl') {
-
+            wise5Node = convertOutsideURL(node, nodeContent);
         } else if (nodeType === 'Mysystem2') {
-
+            // TODO
         } else if (nodeType === 'Annotator') {
             wise5Node = convertAnnotator(node, nodeContent);
         } else if (nodeType === 'Branching') {
-
+            // TODO
         } else if (nodeType === 'PhET') {
             wise5Node = convertPhet(node, nodeContent);
         } else if (nodeType === 'Grapher') {
@@ -489,6 +489,25 @@ function createWISE5Node() {
 
     return wise5Node;
 }
+
+/**
+ * Get the prompt from a WISE4 assessment item
+ * @param nodeContent the WISE4 node content
+ * @returns the prompt
+ */
+function getPromptFromAssessmentItem(nodeContent) {
+    var prompt = null;
+
+    if (nodeContent != null &&
+        nodeContent.assessmentItem != null &&
+        nodeContent.assessmentItem.interaction != null &&
+        nodeContent.assessmentItem.interaction.prompt != null) {
+
+        prompt = nodeContent.assessmentItem.interaction.prompt;
+    }
+
+    return prompt;
+};
 
 /**
  * Convert a WISE4 html node into a WISE5 node with an html component
@@ -698,9 +717,7 @@ function convertOpenResponse(node, nodeContent) {
     // set the title
     wise5Node.title = node.title;
 
-    var prompt = nodeContent.prompt;
-
-    //console.log(prompt);
+    var prompt = getPromptFromAssessmentItem(nodeContent);
 
     var content = {};
     content.showSaveButton = true;
@@ -713,7 +730,7 @@ function convertOpenResponse(node, nodeContent) {
     component.id = createRandomId();
 
     component.type = 'OpenResponse';
-    component.prompt = nodeContent.prompt;
+    component.prompt = prompt;
 
     if (nodeContent.starterSentence != null) {
         if (nodeContent.starterSentence.display == 2 &&
@@ -723,6 +740,327 @@ function convertOpenResponse(node, nodeContent) {
             // this component has a starter sentence
             component.starterSentence = nodeContent.starterSentence.sentence;
         }
+    }
+
+    content.components.push(component);
+
+    wise5Node.content = content;
+
+    // add the WISE5 node to the project
+    addWISE5Node(wise5Node);
+
+    return wise5Node;
+}
+
+/**
+ * Convert a WISE4 multiple choice node into a WISE5 node with a multiple choice component
+ * @param node the WISE4 node
+ * @param nodeContent the WISE4 node content
+ * @returns a WISE5 node
+ */
+function convertMultipleChoice(node, nodeContent) {
+
+    // create a WISE5 node
+    var wise5Node = createWISE5Node();
+
+    // set the title
+    wise5Node.title = node.title;
+
+    // get the prompt
+    var prompt = getPromptFromAssessmentItem(nodeContent);
+
+    var content = {};
+    content.showSaveButton = true;
+    content.showSubmitButton = false;
+    content.components = [];
+
+    var component = {};
+
+    // set the component id
+    component.id = createRandomId();
+
+    component.type = 'MultipleChoice';
+    component.prompt = prompt;
+    component.choices = [];
+    component.showSaveButton = false;
+    component.showSubmitButton = false;
+
+    var assessmentItem = nodeContent.assessmentItem;
+
+    if (assessmentItem != null) {
+
+        // choice type will default to radio
+        var choiceType = 'radio';
+
+        var interaction = assessmentItem.interaction;
+
+        var wise4ChoiceIdToWISE5ChoiceId = {};
+
+        if (interaction != null) {
+            // handle the choices
+
+            // get the WISE4 choices
+            var choices = interaction.choices;
+
+            // get the max number of choices the student can choose
+            var maxChoices = interaction.maxChoices;
+
+            if (maxChoices != 1) {
+                // the student can choose more than one choice so the choice type will be checkbox
+                choiceType = 'checkbox';
+            }
+
+            if (choices != null) {
+
+                // loop through all the WISE4 choices
+                for (var c = 0; c < choices.length; c++) {
+                    var choice = choices[c];
+
+                    if (choice != null) {
+                        var wise5Choice = {};
+
+                        // create an id for the choice
+                        wise5Choice.id = createRandomId();
+
+                        // set the text and feedback
+                        wise5Choice.text = choice.text;
+                        wise5Choice.feedback = choice.feedback;
+
+                        // add an entry to map WISE4 choice id to WISE5 choice id
+                        wise4ChoiceIdToWISE5ChoiceId[choice.identifier] = wise5Choice.id;
+
+                        // add the WISE5 choice
+                        component.choices.push(wise5Choice);
+                    }
+                }
+            }
+        }
+
+        var responseDeclaration = assessmentItem.responseDeclaration;
+
+        if (responseDeclaration != null) {
+            // handle the correct choices
+
+            // get the array of correct choice ids
+            var correctResponse = responseDeclaration.correctResponse;
+
+            if (correctResponse != null) {
+                if (choiceType === 'radio') {
+                    // this is a radio button choice type so there is only one correct answer
+
+                    if (correctResponse.length > 0) {
+
+                        // get the WISE4 correct choice id
+                        var wise4ChoiceId = correctResponse[0];
+
+                        if (wise4ChoiceId != null) {
+                            // get the WISE5 correct choice id
+                            var wise5ChoiceId = wise4ChoiceIdToWISE5ChoiceId[wise4ChoiceId];
+
+                            if (wise5ChoiceId != null) {
+                                component.correctChoice = wise5ChoiceId;
+                            }
+                        }
+                    }
+                } else if (choiceType === 'checkbox') {
+                    // this is a checkbox type so there may be more than one correct answer
+                    component.correctChoices = [];
+
+                    // loop through all the WISE4 correct choice ids
+                    for (var x = 0; x < correctResponse.length; x++) {
+
+                        // get a WISE4 correct choice id
+                        var wise4ChoiceId = correctResponse[x];
+
+                        if (wise4ChoiceId != null) {
+                            // get the WISE5 correct choice id
+                            var wise5ChoiceId = wise4ChoiceIdToWISE5ChoiceId[wise4ChoiceId];
+
+                            if (wise5ChoiceId != null) {
+                                component.correctChoices.push(wise5ChoiceId);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // set the choice type
+        component.choiceType = choiceType;
+
+        // show the submit button if there is a correct choice
+        if (component.correctChoice != null ||
+            (component.correctChoices != null && component.correctChoices.length > 0)) {
+            component.showSubmitButton = true;
+        }
+    }
+
+    content.components.push(component);
+
+    wise5Node.content = content;
+
+    // add the WISE5 node to the project
+    addWISE5Node(wise5Node);
+
+    return wise5Node;
+}
+
+/**
+ * Convert a WISE4 match sequence node into a WISE5 node with a match component
+ * @param node the WISE4 node
+ * @param nodeContent the WISE4 node content
+ * @returns a WISE5 node
+ */
+function convertMatchSequence(node, nodeContent) {
+
+    // create a WISE5 node
+    var wise5Node = createWISE5Node();
+
+    // set the title
+    wise5Node.title = node.title;
+
+    // get the prompt
+    var prompt = getPromptFromAssessmentItem(nodeContent);
+
+    var content = {};
+    content.showSaveButton = true;
+    content.showSubmitButton = false;
+    content.components = [];
+
+    var component = {};
+
+    // set the component id
+    component.id = createRandomId();
+
+    component.type = 'Match';
+    component.prompt = prompt;
+    component.choices = [];
+    component.buckets = [];
+    component.feedback = [];
+    component.showSaveButton = false;
+    component.showSubmitButton = true;
+
+    var hasCorrectAnswer = false;
+
+    var assessmentItem = nodeContent.assessmentItem;
+
+    if (assessmentItem != null) {
+
+        var interaction = assessmentItem.interaction;
+
+        var wise4ChoiceIdToWISE5ChoiceId = {};
+        var wise4BucketIdToWISE5BucketId = {};
+
+        if (interaction != null) {
+            var choices = interaction.choices;
+            var fields = interaction.fields;
+
+            if (choices != null) {
+                // handle the choices
+
+                // loop through all the WISE4 choices
+                for (var c = 0; c < choices.length; c++) {
+                    var choice = choices[c];
+
+                    if (choice != null) {
+                        var wise5Choice = {};
+
+                        // create an id for the choice
+                        wise5Choice.id = createRandomId();
+
+                        // set the value
+                        wise5Choice.value = choice.value;
+
+                        // set the type
+                        wise5Choice.type = 'choice';
+
+                        // add an entry to map WISE4 choice id to WISE5 choice id
+                        wise4ChoiceIdToWISE5ChoiceId[choice.identifier] = wise5Choice.id;
+
+                        // add the WISE5 choice
+                        component.choices.push(wise5Choice);
+                    }
+                }
+            }
+
+            if (fields != null) {
+                // handle the buckets
+
+                // loop through all the buckets
+                for (var f = 0; f < fields.length; f++) {
+                    var field = fields[f];
+
+                    if (field != null) {
+                        var wise5Bucket = {};
+
+                        // create an id for the bucket
+                        wise5Bucket.id = createRandomId();
+
+                        // set the value
+                        wise5Bucket.value = field.name;
+
+                        // set the type
+                        wise5Bucket.type = 'bucket';
+
+                        // add an entry to map WISE4 choice id to WISE5 choice id
+                        wise4BucketIdToWISE5BucketId[field.identifier] = wise5Bucket.id;
+
+                        // add the WISE5 choice
+                        component.buckets.push(wise5Bucket);
+                    }
+                }
+            }
+        }
+
+        var responseDeclaration = assessmentItem.responseDeclaration;
+
+        if (responseDeclaration != null) {
+            // handle the feedback
+
+            // get the array of feedback objects
+            var correctResponses = responseDeclaration.correctResponses;
+
+            if (correctResponses != null) {
+
+                // loop through all the feedback
+                for (var c = 0; c < correctResponses.length; c++) {
+
+                    // get a feedback object
+                    var correctResponse = correctResponses[c];
+
+                    if (correctResponse != null) {
+                        var wise5Feedback = {};
+
+                        // get the WISE5 choice id
+                        var choiceId = wise4ChoiceIdToWISE5ChoiceId[correctResponse.choiceIdentifier];
+
+                        // get the WISE5 bucket id
+                        var bucketId = wise4BucketIdToWISE5BucketId[correctResponse.fieldIdentifier];
+
+                        if (choiceId != null && bucketId != null) {
+
+                            // create the WISE5 feedback
+                            wise5Feedback.choiceId = choiceId;
+                            wise5Feedback.bucketId = bucketId;
+                            wise5Feedback.isCorrect = correctResponse.isCorrect;
+                            wise5Feedback.feedback = correctResponse.feedback;
+
+                            component.feedback.push(wise5Feedback);
+
+                            if (correctResponse.isCorrect) {
+                                // there is a correct answer
+                                hasCorrectAnswer = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // show the submit button if there is a correct answer
+    if (hasCorrectAnswer) {
+        component.showSubmitButton = true;
     }
 
     content.components.push(component);
@@ -969,7 +1307,7 @@ function convertBrainstorm(node, nodeContent) {
 }
 
 /**
- * Convert a WISE4 annotator node into a WISE5 node with an html component
+ * Convert a WISE4 annotator node into a WISE5 node with a label component
  * @param node the WISE4 node
  * @param nodeContent the WISE4 node content
  * @returns a WISE5 node
@@ -985,9 +1323,68 @@ function convertAnnotator(node, nodeContent) {
 
     var component = {};
     component.id = createRandomId();
-    component.type = 'HTML';
-    component.html = 'Insert Annotator component here';
+    component.type = 'Label';
     component.prompt = nodeContent.prompt;
+    component.showSaveButton = false;
+    component.showSubmitButton = false;
+    component.backgroundImage = nodeContent.backgroundImg;
+    component.width = 800;
+    component.height = 600;
+    component.labels = [];
+
+    // get the pre-defined labels
+    var defaultLabels = nodeContent.labels_default;
+
+    if (defaultLabels != null) {
+
+        // loop through all the pre-defined labels
+        for (var d = 0; d < defaultLabels.length; d++) {
+
+            // get a pre-defined label
+            var defaultLabel = defaultLabels[d];
+
+            if (defaultLabel != null) {
+
+                var label = {};
+
+                // get the text
+                label.text = defaultLabel.text;
+
+                // get the color
+                var color = defaultLabel.color;
+
+                // regex to match 6 character hex strings
+                var hexRegex = /[0-9A-Fa-f]{6}/g;
+
+                if (color != null) {
+                    if (hexRegex.test(color)) {
+                        // preprend a # if the color is a hex string and doesn't start with #
+                        label.color = '#' + color;
+                    } else {
+                        label.color = color
+                    }
+                }
+
+                var location = defaultLabel.location;
+                if (location != null) {
+
+                    // get the position of the point
+                    label.pointX = location.x;
+                    label.pointY = location.y;
+                }
+
+                var textLocation = defaultLabel.textLocation;
+                if (textLocation != null) {
+
+                    // get the relative position of the text relative to the point
+                    label.textX = textLocation.x - location.x;
+                    label.textY = textLocation.y - location.y;
+                }
+
+                component.labels.push(label);
+            }
+        }
+    }
 
     content.components.push(component);
 
@@ -1061,6 +1458,41 @@ function convertGrapher(node, nodeContent) {
             "canEdit": true
         }
     ];
+
+    content.components.push(component);
+
+    wise5Node.content = content;
+
+    // add the WISE5 node to the project
+    addWISE5Node(wise5Node);
+
+    return wise5Node;
+}
+
+/**
+ * Convert a WISE4 outside url node into a WISE5 node with an outside url component
+ * @param node the WISE4 node
+ * @param nodeContent the WISE4 node content
+ * @returns a WISE5 node
+ */
+function convertOutsideURL(node, nodeContent) {
+
+    // create a WISE5 node
+    var wise5Node = createWISE5Node();
+
+    // set the title
+    wise5Node.title = node.title;
+
+    var content = {};
+    content.components = [];
+
+    var component = {};
+
+    // set the component id
+    component.id = createRandomId();
+
+    component.type = 'OutsideURL';
+    component.url = nodeContent.url;
 
     content.components.push(component);
 

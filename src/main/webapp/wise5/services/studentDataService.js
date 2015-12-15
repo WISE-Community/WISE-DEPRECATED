@@ -894,7 +894,7 @@ define(['annotationService', 'configService', 'projectService'], function(annota
             var context = "Component";
             var nodeId = component.nodeId;
             var componentId = component.componentId;
-            var componentType = component.type;
+            var componentType = component.componentType;
             if (nodeId == null || componentId == null || componentType == null) {
                 alert("StudentDataService.saveComponentEvent: nodeId, componentId, componentType must not be null");
                 return;

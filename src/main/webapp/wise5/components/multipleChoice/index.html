@@ -3,7 +3,8 @@
     <body>
         <div ng-controller="MultipleChoiceController as multipleChoiceController" style='display: flex'>
             <div style='flex: 1'>
-                <md-input-container class="input-container input-container--component md-block" ng-switch on="multipleChoiceController.getChoiceType()">
+                <md-input-container class="input-container md-block input-container--open-response input-container--component md-no-float"
+                                    ng-switch on="multipleChoiceController.getChoiceType()">
                     <label class="input-label md-no-float" ng-if="multipleChoiceController.getPrompt()" compile="multipleChoiceController.getPrompt()"></label>
                     <md-radio-group ng-switch-when="radio" ng-model="multipleChoiceController.studentChoices"
                                     ng-change="multipleChoiceController.studentDataChanged()">
@@ -31,8 +32,8 @@
                 </md-input-container>
 
                 <div class="md-caption" ng-if="multipleChoiceController.hasCorrectChoices()" ng-show="multipleChoiceController.numberOfAttempts != null">Number of Attempts: {{multipleChoiceController.numberOfAttempts}}</div>
-                <div ng-if="multipleChoiceController.isCorrect">Correct!</div>
-                <div ng-if="multipleChoiceController.isCorrect">Incorrect</div>
+                <div ng-if="multipleChoiceController.isCorrect != null && multipleChoiceController.isCorrect">Correct!</div>
+                <div ng-if="multipleChoiceController.isCorrect != null && !multipleChoiceController.isCorrect">Incorrect</div>
 
                 <div ng-if='multipleChoiceController.mode == "student"'>
                     <annotation type='score'
