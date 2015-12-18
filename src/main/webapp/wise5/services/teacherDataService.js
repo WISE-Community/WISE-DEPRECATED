@@ -1,4 +1,6 @@
-define(['annotationService', 'configService', 'studentDataService'], function(annotationService, configService, studentDataService) {
+'use strict';
+
+define(['annotationService', 'configService'], function(annotationService, configService) {
 
     var service = ['$http',
                     '$q',
@@ -11,8 +13,7 @@ define(['annotationService', 'configService', 'studentDataService'], function(an
                                         $q,
                                         $rootScope,
                                         AnnotationService,
-                                        ConfigService,
-                                        StudentDataService) {
+                                        ConfigService) {
 
         var serviceObject = {};
 

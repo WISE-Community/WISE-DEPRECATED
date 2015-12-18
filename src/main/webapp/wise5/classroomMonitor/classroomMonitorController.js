@@ -1,4 +1,6 @@
-define(['app'], 
+'use strict';
+
+define(['app'],
         function(app) {
     app.$controllerProvider.register('ClassroomMonitorController', 
             [
@@ -24,6 +26,31 @@ define(['app'],
                     UtilService,
                     TeacherDataService) {
 
+                    this.hello = function() {
+                        ocpu.seturl("//128.32.189.240:81/ocpu/user/wiser/library/wiser/R");
+                        //perform the request
+                        var req = ocpu.call("hello", {
+                            "name" : "Hiroki"
+                        }, function(session) {
+                                session.getStdout(function(returnedCSVString){
+                                debugger;
+                                var csvBlob = new Blob([returnedCSVString], { type: 'text/csv' });
+                                var csvUrl = URL.createObjectURL(csvBlob);
+                                var a = document.createElement("a");
+                                document.body.appendChild(a);
+                                a.style = "display: none";
+                                a.href =  csvUrl;
+                                a.download = "export_" + runId + ".csv";
+                                a.click();
+
+                                // timeout is required for FF.
+                                window.setTimeout(function() {
+                                    URL.revokeObjectURL(csvUrl);  // tell browser to release URL reference
+                                }, 3000);
+                            });
+                        });
+                    };
+
                     this.export = function(exportType) {
                         TeacherDataService.getExport(exportType).then(function(result) {
                             var COLUMN_INDEX_NODE_ID = 1;
@@ -44,7 +71,7 @@ define(['app'],
                                 var row = result[rowIndex];
 
                                 if (rowIndex === 0) {
-                                    // append additional headers
+                                    // append additional header columns
                                     row[COLUMN_INDEX_WISE_ID_1] = "WISE ID 1";
                                     row[COLUMN_INDEX_WISE_ID_2] = "WISE ID 2";
                                     row[COLUMN_INDEX_WISE_ID_3] = "WISE ID 3";
@@ -79,22 +106,55 @@ define(['app'],
                                 }
                                 csvString += "\r\n";
                             }
-
-                            // create a downloadable CSV file
-                            var a = document.createElement("a");
-                            document.body.appendChild(a);
-                            var csvData = new Blob([csvString], { type: 'text/csv' });
-                            var csvUrl = URL.createObjectURL(csvData);
                             var runId = ConfigService.getRunId();
-                            a.style = "display: none";
-                            a.href =  csvUrl;
-                            a.download = "export_" + runId + ".csv";
-                            a.click();
+                            var csvBlob = new Blob([csvString], { type: 'text/csv' });
+                            var csvFile = new File([csvBlob], "export_" + runId + ".csv");
 
-                            // timeout is required for FF.
-                            window.setTimeout(function() {
-                                URL.revokeObjectURL(csvUrl);  // tell browser to release URL reference
-                            }, 3000);
+                            /*
+                             // create a downloadable CSV file
+                             var csvUrl = URL.createObjectURL(csvBlob);
+                             var a = document.createElement("a");
+                             document.body.appendChild(a);
+                             a.style = "display: none";
+                             a.href =  csvUrl;
+                             a.download = "export_" + runId + ".csv";
+                             a.click();
+
+                             // timeout is required for FF.
+                             window.setTimeout(function() {
+                             URL.revokeObjectURL(csvUrl);  // tell browser to release URL reference
+                             }, 3000);
+                             */
+
+                            //ocpu.seturl("//localhost:1234/ocpu/library/wise/R");
+                            ocpu.seturl("http://128.32.189.240:81/ocpu/user/wiser/library/wiser/R");
+                            //perform the request
+                            var request = ocpu.call("extractchoices", {
+                                "csvFile" : csvFile
+                            }, function(session){
+                                session.getStdout(function(returnedCSVString) {
+                                    var csvBlob = new Blob([returnedCSVString], { type: 'text/csv' });
+                                    var csvUrl = URL.createObjectURL(csvBlob);
+                                    var a = document.createElement("a");
+                                    document.body.appendChild(a);
+                                    a.style = "display: none";
+                                    a.href =  csvUrl;
+                                    a.download = "export_" + runId + ".csv";
+                                    a.click();
+
+                                    // timeout is required for FF.
+                                    window.setTimeout(function() {
+                                        URL.revokeObjectURL(csvUrl);  // tell browser to release URL reference
+                                    }, 3000);
+
+                                    //return returnedCSVString;
+                                });
+                            });
+
+                            //if R returns an error, alert the error message
+                            request.fail(function(){
+                                alert("Server error: " + request.responseText);
+                            });
                         });
                     }
     }]);

@@ -84,6 +84,10 @@ define([], function() {
             return this.getConfigParam('projectId');
         };
 
+        serviceObject.getOpenCPUURL = function() {
+            return this.getConfigParam('openCPUURL');
+        };
+
         serviceObject.getSessionLogOutURL = function() {
             return this.getConfigParam('sessionLogOutURL');
         };
