@@ -69,7 +69,7 @@ define(['nodeService', 'studentDataService'], function(nodeService, studentDataS
                 var response = componentState.studentData.response;
 
                 if (response != null) {
-                    studentWorkAsHTML = '<p>' + response + '</p>';
+                    studentWorkAsHTML = response.replace(/\n/gi, '<br />');
                 }
 
                 var attachments = componentState.studentData.attachments;
