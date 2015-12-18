@@ -7,6 +7,18 @@
                     {{openResponseController.nodeContent.style}}
                 </style>
 
+                <div ng-if='openResponseController.mode === "authoring"'>
+                    <textarea ng-model='openResponseController.componentContent.prompt'
+                              ng-change='openResponseController.authoringViewComponentChanged()'
+                              ng-model-options='{ debounce: 1000 }'
+                              rows='10'
+                              cols='100'></textarea>
+                    <textarea ng-model='openResponseController.componentContentJSONString'
+                              ng-change='openResponseController.advancedAuthoringViewComponentChanged()'
+                              ng-model-options='{ debounce: 1000 }'
+                              rows='10'
+                              cols='100'></textarea>
+                </div>
             <md-input-container class="input-container md-block input-container--open-response input-container--component md-no-float">
                 <label class="input-label md-no-float" ng-disabled="openResponseController.isDisabled"
                        compile="openResponseController.getPrompt()" ng-if="openResponseController.showPrompt()"></label>

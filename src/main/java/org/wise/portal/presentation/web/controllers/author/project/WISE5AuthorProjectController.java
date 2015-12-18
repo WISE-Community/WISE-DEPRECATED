@@ -96,34 +96,35 @@ public class WISE5AuthorProjectController {
             writer.write(projectJSONString.toString());
             writer.close();
 
-            // now commit changes
-            JGitUtils.commitAllChangesToCurriculumHistory(fullProjectDir, commitMessage);
-
-            Iterable<RevCommit> commitHistory = JGitUtils.getCommitHistory(fullProjectDir);
-            JSONArray commitHistoryJSONArray = new JSONArray();
             try {
-                if (commitHistory != null) {
-                    for (RevCommit commit : commitHistory) {
-                        JSONObject commitHistoryJSONObject = new JSONObject();
-                        ObjectId commitId = commit.getId();
+                // now commit changes
+                JGitUtils.commitAllChangesToCurriculumHistory(fullProjectDir, commitMessage);
+
+                Iterable<RevCommit> commitHistory = JGitUtils.getCommitHistory(fullProjectDir);
+                JSONArray commitHistoryJSONArray = new JSONArray();
+                try {
+                    if (commitHistory != null) {
+                        for (RevCommit commit : commitHistory) {
+                            JSONObject commitHistoryJSONObject = new JSONObject();
+                            ObjectId commitId = commit.getId();
                             commitHistoryJSONObject.put("commitId", commitId);
-                        String commitName = commit.getName();
-                        commitHistoryJSONObject.put("commitName", commitName);
-                        String commitMsg = commit.getFullMessage();
-                        commitHistoryJSONObject.put("commitMessage", commitMsg);
-                        long commitTime = commit.getCommitTime() * 1000l; // x1000 to make into milliseconds since epoch
-                        commitHistoryJSONObject.put("commitTime", commitTime);
-                        commitHistoryJSONArray.put(commitHistoryJSONObject);
+                            String commitName = commit.getName();
+                            commitHistoryJSONObject.put("commitName", commitName);
+                            String commitMsg = commit.getFullMessage();
+                            commitHistoryJSONObject.put("commitMessage", commitMsg);
+                            long commitTime = commit.getCommitTime() * 1000l; // x1000 to make into milliseconds since epoch
+                            commitHistoryJSONObject.put("commitTime", commitTime);
+                            commitHistoryJSONArray.put(commitHistoryJSONObject);
+                        }
+                        response.getWriter().print(commitHistoryJSONArray);
                     }
-                    response.getWriter().print(commitHistoryJSONArray);
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-            } catch (JSONException e) {
+            } catch (GitAPIException e) {
                 e.printStackTrace();
             }
-
         } catch (IOException e) {
-            e.printStackTrace();
-        } catch (GitAPIException e) {
             e.printStackTrace();
         }
     }

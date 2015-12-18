@@ -76,8 +76,12 @@ define([], function() {
             return periods;
         };
 
-        serviceObject.getRunId = function() { 
+        serviceObject.getRunId = function() {
             return this.getConfigParam('runId');
+        };
+
+        serviceObject.getProjectId = function() {
+            return this.getConfigParam('projectId');
         };
 
         serviceObject.getSessionLogOutURL = function() {

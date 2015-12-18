@@ -1,3 +1,15 @@
 <div ng-controller='HTMLController as htmlController'>
-<div compile='htmlController.html'></div>
+    <div ng-if='htmlController.mode === "authoring"'>
+        <textarea ng-model='htmlController.componentContent.html'
+                  ng-change='htmlController.authoringViewComponentChanged()'
+                  ng-model-options='{ debounce: 1000 }'
+                  rows='10'
+                  cols='100'></textarea>
+        <textarea ng-model='htmlController.componentContentJSONString'
+                  ng-change='htmlController.advancedAuthoringViewComponentChanged()'
+                  ng-model-options='{ debounce: 1000 }'
+                  rows='10'
+                  cols='100'></textarea>
+    </div>
+    <div compile='htmlController.componentContent.html'></div>
 </div>

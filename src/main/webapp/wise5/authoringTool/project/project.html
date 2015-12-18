@@ -15,7 +15,6 @@
         margin: 10px 0px;
     }
     #projectStylesDiv {
-        display:none;
     }
 </style>
 <button ng-click='projectController.previewProject()'>Preview Project</button>
@@ -23,6 +22,13 @@
 <label id="editMessageLabel">Edit Message:</label>
 <input id="commitMessageInput" type="text" size="50" placeholder="Write a small message here explaining this change. (Optional)" />
 <button id="saveButton" ng-click='projectController.saveProject()'>Save Project</button>
+</div>
+<div ng-repeat='item in projectController.items | toArray | orderBy : "order"'
+     ng-if='item.order!==0'
+     ng-class='{"node-select--group": projectController.isGroupNode(item.$key), "node-select--node": !projectController.isGroupNode(item.$key)}'
+     ng-click='projectController.nodeClicked(item.$key)'
+     style='cursor: pointer'>
+    <h6>{{projectController.getNodePositionById(item.$key)}} {{projectController.getNodeTitleByNodeId(item.$key)}}</h6>
 </div>
 <textarea id="project" rows="40" cols="150" ng-model="projectController.projectAsText"></textarea>
 <div id="projectStylesDiv">Project Styles:

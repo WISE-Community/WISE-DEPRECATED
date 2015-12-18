@@ -8,6 +8,8 @@ define(['app'], function(app) {
 
         this.project = ProjectService.getProject();
 
+        this.items = ProjectService.idToOrder;
+
         // updates projectAsText field, which is the string representation of the project that we'll show in the textarea
         this.updateProjectAsText = function() {
             this.projectAsText = JSON.stringify(this.project, null, 4);
@@ -54,6 +56,41 @@ define(['app'], function(app) {
                 this.commitHistory = commitHistoryArray;
             }));
         }
+
+        /**
+         * Get the node position
+         * @param nodeId the node id
+         * @returns the node position
+         */
+        this.getNodePositionById = function(nodeId) {
+            return ProjectService.getNodePositionById(nodeId);
+        };
+
+        /**
+         * Get the node title for a node
+         * @param nodeId the node id
+         * @returns the node title
+         */
+        this.getNodeTitleByNodeId = function(nodeId) {
+            return ProjectService.getNodeTitleByNodeId(nodeId);
+        };
+
+        /**
+         * Check if a node id is for a group
+         * @param nodeId
+         * @returns whether the node is a group node
+         */
+        this.isGroupNode = function(nodeId) {
+            return ProjectService.isGroupNode(nodeId);
+        };
+
+        /**
+         * A node was clicked so we will go to the node authoring view
+         * @param nodeId
+         */
+        this.nodeClicked = function(nodeId) {
+            $state.go('root.node', {nodeId:nodeId});
+        };
 
         this.showCommitHistory();
 

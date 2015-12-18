@@ -11,6 +11,7 @@ require.config({
         'angularFileUpload': 'vendor/ng-file-upload/ng-file-upload.min',
         'angularMaterial': 'vendor/angular-material/angular-material.min',
         'angularSortable': 'vendor/angular-ui-sortable/sortable.min',
+        'angularToArrayFilter': 'vendor/angular-toArrayFilter/toArrayFilter',
         'angularUIRouter': 'vendor/angular-ui-router/release/angular-ui-router.min',
         'angularWebSocket': 'vendor/angular-websocket/angular-websocket.min',
         'annotationService': 'services/annotationService',
@@ -36,7 +37,7 @@ require.config({
         'matchService': 'components/match/matchService',
         'multipleChoiceService': 'components/multipleChoice/multipleChoiceService',
         'navigationController': 'classroomMonitor/navigation/navigationController',
-        'nodeController': 'classroomMonitor/node/nodeController',
+        'nodeController': 'authoringTool/node/nodeController',
         'nodeGradingController': 'classroomMonitor/nodeGrading/nodeGradingController',
         'nodeProgressController': 'classroomMonitor/nodeProgress/nodeProgressController',
         'nodeService': 'services/nodeService',
@@ -57,7 +58,8 @@ require.config({
         'studentStatusService': 'services/studentStatusService',
         'tableService': 'components/table/tableService',
         'teacherDataService': 'services/teacherDataService',
-        'teacherWebSocketService': 'services/teacherWebSocketService'
+        'teacherWebSocketService': 'services/teacherWebSocketService',
+        'utilService': 'services/utilService'
     },
     shim: {
         'angular': {
@@ -103,6 +105,12 @@ require.config({
             'deps': [
                 'angular',
                 'jqueryUI'
+            ]
+        },
+        'angularToArrayFilter': {
+            'exports': 'angularToArrayFilter',
+            'deps': [
+                'angular'
             ]
         },
         'angularUIRouter': {

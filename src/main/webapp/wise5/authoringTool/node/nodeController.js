@@ -1,8 +1,17 @@
-define(['../../test/app'], function(app) {
+define(['app'], function(app) {
     app.$controllerProvider.register('NodeController', 
-        function($scope, $state, $stateParams) {
-            var nodeId = $stateParams.nodeId;
-            
+        function($scope,
+                 $state,
+                 $stateParams,
+                 ProjectService) {
+            this.nodeId = $stateParams.nodeId;
+
+            // get the node
+            this.node = ProjectService.getNodeById(this.nodeId);
+
+            // get the components in the node
+            this.components = ProjectService.getComponentsByNodeId(this.nodeId);
+
             this.showNormal = function() {
                 $state.go('root.node.normal', {nodeId: nodeId});
             };
@@ -18,5 +27,12 @@ define(['../../test/app'], function(app) {
             this.close = function() {
                 $state.go('root.project.normal');
             };
+
+            /**
+             * The node has changed in the authoring view
+             */
+            this.authoringViewNodeChanged = function() {
+                ProjectService.saveProject();
+            }
         });
 });

@@ -93,6 +93,8 @@ define(['app'], function(app) {
                     this.isSaveButtonVisible = false;
                     this.isSubmitButtonVisible = false;
                     this.isDisabled = true;
+                } else if (this.mode === 'authoring') {
+                    this.updateAdvancedAuthoringView();
                 }
                 
                 // get the show previous work node id if it is provided
@@ -553,6 +555,51 @@ define(['app'], function(app) {
             var componentId = this.componentContent.id;
             
             return componentId;
+        };
+
+        /**
+         * The component has changed in the regular authoring view so we will save the project
+         */
+        this.authoringViewComponentChanged = function() {
+
+            // update the JSON string in the advanced authoring view textarea
+            this.updateAdvancedAuthoringView();
+
+            // save the project to the server
+            ProjectService.saveProject();
+        };
+
+        /**
+         * The component has changed in the advanced authoring view so we will update
+         * the component and save the project.
+         */
+        this.advancedAuthoringViewComponentChanged = function() {
+
+            try {
+                /*
+                 * create a new comopnent by converting the JSON string in the advanced
+                 * authoring view into a JSON object
+                 */
+                var editedComponentContent = angular.fromJson(this.componentContentJSONString);
+
+                // replace the component in the project
+                ProjectService.replaceComponent(this.nodeId, this.componentId, editedComponentContent);
+
+                // set the new component into the controller
+                this.componentContent = editedComponentContent;
+
+                // save the project to the server
+                ProjectService.saveProject();
+            } catch(e) {
+
+            }
+        };
+
+        /**
+         * Update the component JSON string that will be displayed in the advanced authoring view textarea
+         */
+        this.updateAdvancedAuthoringView = function() {
+            this.componentContentJSONString = angular.toJson(this.componentContent, 4);
         };
 
         /**

@@ -11,6 +11,7 @@ define([
     'angularFileUpload',
     'angularMaterial',
     'angularSortable',
+    'angularToArrayFilter',
     'angularUIRouter',
     'angularWebSocket',
     'annotationService',
@@ -33,7 +34,8 @@ define([
     'studentStatusService',
     'tableService',
     'teacherDataService',
-    'teacherWebSocketService'
+    'teacherWebSocketService',
+    'utilService'
 ], function(
     angular,
     d3,
@@ -47,6 +49,7 @@ define([
     angularFileUpload,
     angularMaterial,
     angularSortable,
+    angularToArrayFilter,
     angularUIRouter,
     angularWebSocket,
     annotationService,
@@ -69,9 +72,11 @@ define([
     studentStatusService,
     tableService,
     teacherDataService,
-    teacherWebSocketService) {
+    teacherWebSocketService,
+    utilService) {
 
     var app = angular.module('app', [
+        'angular-toArrayFilter',
         'directives',
         'filters',
         'ui.router',
@@ -97,6 +102,7 @@ define([
     app.factory('StudentStatusService', studentStatusService);
     app.factory('TeacherDataService', teacherDataService);
     app.factory('TeacherWebSocketService', teacherWebSocketService);
+    app.factory('UtilService', utilService);
 
     // node services
     app.factory('DiscussionService', discussionService);
@@ -166,48 +172,18 @@ define([
                     resolve: {
                         loadController: app.loadController('projectController')
                     }
-                });
-            /*
-                .state('root.nodeProgress', {
-                    url: '/nodeProgress',
-                    templateUrl: 'wise5/classroomMonitor/nodeProgress/nodeProgress.html',
-                    controller: 'NodeProgressController',
-                    controllerAs: 'nodeProgressController',
-                    resolve: {
-                        loadController: app.loadController('nodeProgressController')
-                    }
                 })
-                .state('root.nodeGrading', {
-                    url: '/nodeGrading',
-                    templateUrl: 'wise5/classroomMonitor/nodeGrading/nodeGrading.html',
-                    controller: 'NodeGradingController',
-                    controllerAs: 'nodeGradingController',
+                .state('root.node', {
+                    url: '/node/:nodeId',
+                    templateUrl: 'wise5/authoringTool/node/node.html',
+                    controller: 'NodeController',
+                    controllerAs: 'nodeController',
                     resolve: {
-                        studentData: function(TeacherDataService, config) {
-                            return TeacherDataService.retrieveStudentDataByNodeId();
-                        },
-                        annotations: function(AnnotationService, config) {
-                            return AnnotationService.retrieveAnnotationsByNodeId();
-                        },
-                        loadController: app.loadController('nodeGradingController')
-                    }
-                })
-                .state('root.studentGrading', {
-                    url: '/studentGrading/:workgroupId',
-                    templateUrl: 'wise5/classroomMonitor/studentGrading/studentGrading.html',
-                    controller: 'StudentGradingController',
-                    controllerAs: 'studentGradingController',
-                    resolve: {
-                        studentData: function(TeacherDataService, config) {
-                            return TeacherDataService.retrieveStudentDataByNodeId();
-                        },
-                        annotations: function(AnnotationService, config) {
-                            return AnnotationService.retrieveAnnotationsByNodeId();
-                        },
-                        loadController: app.loadController('studentGradingController')
+                        loadController: app.loadController('nodeController'),
+                        htmlController: app.loadController('htmlController'),
+                        openResponseController: app.loadController('openResponseController')
                     }
                 });
-                */
 
         // ngMaterial default theme configuration
         // TODO: make dynamic and support alternate themes; allow projects to specify theme parameters and settings

@@ -981,13 +981,18 @@ define(['configService'], function(configService) {
 
         serviceObject.saveProject = function(projectJSON, commitMessage) {
 
+            if (projectJSON == null) {
+                // get the project from this service
+                projectJSON = angular.toJson(this.project, 4);
+            }
+
             var httpParams = {};
             httpParams.method = 'POST';
             httpParams.url = ConfigService.getConfigParam('saveProjectURL');
             httpParams.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
 
             var params = {};
-            params.runId = 12;
+            params.projectId = ConfigService.getProjectId();
             params.commitMessage = commitMessage;
             params.projectJSONString = projectJSON;
             httpParams.data = $.param(params);
@@ -2303,6 +2308,38 @@ define(['configService'], function(configService) {
             }
 
             return nodeContent;
+        };
+
+        /**
+         * Replace a component
+         * @param nodeId the node id
+         * @param componentId the component id
+         * @param component the new component
+         */
+        serviceObject.replaceComponent = function(nodeId, componentId, component) {
+
+            if (nodeId != null && componentId != null && component != null) {
+
+                // get all the components for the node
+                var components = this.getComponentsByNodeId(nodeId);
+
+                if (components != null) {
+
+                    // loop through all the components
+                    for (var c = 0; c < components.length; c++) {
+                        var tempComponent = components[c];
+
+                        if (tempComponent != null) {
+
+                            if (tempComponent.id === componentId) {
+                                // the component id matches the one we want so we will replace it
+                                components[c] = component;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
         };
 
         return serviceObject;
