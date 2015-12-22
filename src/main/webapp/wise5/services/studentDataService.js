@@ -1,3 +1,5 @@
+
+
 define(['annotationService', 'configService', 'projectService'], function(annotationService, configService, projectService) {
 
     var service = [

@@ -1,3 +1,167 @@
+'use strict';
+
+import $ from 'jquery';
+import angular from 'angular';
+import angularUIRouter from 'angular-ui-router';
+import ngFileUpload from 'ng-file-upload';
+import ngMaterial from 'angular-material';
+import angularToArrayFilter from '../lib/angular-toArrayFilter/toArrayFilter';
+import AnnotationService from '../services/annotationService2';
+import AuthoringToolController from './authoringToolController2';
+import ConfigService from '../services/configService2';
+import Directives from '../directives/directives2';
+import HTMLController from '../components/html/htmlController2';
+import NodeController from './node/nodeController2';
+import NodeService from '../services/nodeService2';
+import OpenResponseController from '../components/openResponse/openResponseController2';
+import OpenResponseService from '../components/openResponse/openResponseService2';
+import ProjectController from './project/projectController2';
+import ProjectService from '../services/projectService2';
+import SessionService from '../services/sessionService2';
+import StudentAssetService from '../services/studentAssetService2';
+import StudentDataService from '../services/studentDataService2';
+import UtilService from '../services/utilService2';
+
+//import filters from '../filters/filters';
+
+console.log(angular.version, $.fn.jquery);
+
+let mainModule = angular.module('app', [
+    'angular-toArrayFilter',
+    'directives',
+    //'filters',
+    'ui.router',
+    //'ui.sortable',
+    'ngAnimate',
+    'ngAria',
+    //'ngDragDrop',
+    'ngFileUpload',
+    'ngMaterial',
+    //'ngWebSocket'
+])
+    .service(AnnotationService.name, AnnotationService)
+    .service(ConfigService.name, ConfigService)
+    .service(NodeService.name, NodeService)
+    .service(OpenResponseService.name, OpenResponseService)
+    .service(ProjectService.name, ProjectService)
+    .service(SessionService.name, SessionService)
+    .service(StudentAssetService.name, StudentAssetService)
+    .service(StudentDataService.name, StudentDataService)
+    .service(UtilService.name, UtilService)
+    .controller(AuthoringToolController.name, AuthoringToolController)
+    .controller(HTMLController.name, HTMLController)
+    .controller(NodeController.name, NodeController)
+    .controller(OpenResponseController.name, OpenResponseController)
+    .controller(ProjectController.name, ProjectController)
+    .config(['$urlRouterProvider',
+        '$stateProvider',
+        '$controllerProvider',
+        '$mdThemingProvider',
+        function($urlRouterProvider,
+                 $stateProvider,
+                 $controllerProvider,
+                 $mdThemingProvider) {
+
+            $urlRouterProvider.otherwise('/project');
+
+            $stateProvider
+                .state('root', {
+                    url: '',
+                    abstract: true,
+                    templateUrl: 'wise5/authoringTool/authoringTool.html',
+                    controller: 'AuthoringToolController',
+                    controllerAs: 'authoringToolController',
+                    resolve: {
+                        //authoringToolController: function() {return mainModule.controller(AuthoringToolController.name, AuthoringToolController); },
+                        //authoringToolController: app.loadController('authoringToolController'),
+                        config: function(ConfigService) {
+                            var configURL = window.configURL;
+
+                            return ConfigService.retrieveConfig(configURL);
+                        },
+                        project: function(ProjectService, config) {
+                            return ProjectService.retrieveProject();
+                        },
+                        sessionTimers: function (SessionService, config) {
+                            return SessionService.initializeSession();
+                        }
+                    }
+                })
+                .state('root.project', {
+                    url: '/project',
+                    templateUrl: 'wise5/authoringTool/project/project.html',
+                    controller: 'ProjectController',
+                    controllerAs: 'projectController',
+                    resolve: {
+                        //projectController: function() { console.log('hello'); let pc = mainModule.controller(ProjectController.name, ProjectController); debugger; return pc; }
+                        //loadController: app.loadController('projectController')
+                    }
+                })
+                .state('root.node', {
+                    url: '/node/:nodeId',
+                    templateUrl: 'wise5/authoringTool/node/node.html',
+                    controller: 'NodeController',
+                    controllerAs: 'nodeController',
+                    resolve: {
+                        //loadController: app.loadController('nodeController'),
+                        //htmlController: HTMLController.name
+                        //openResponseController: app.loadController('openResponseController')
+                    }
+                });
+            // ngMaterial default theme configuration
+            // TODO: make dynamic and support alternate themes; allow projects to specify theme parameters and settings
+            $mdThemingProvider.definePalette('primaryPaletteWise', {
+                '50': 'e1f0f4',
+                '100': 'b8dbe4',
+                '200': '8ec6d4',
+                '300': '5faec2',
+                '400': '3d9db5',
+                '500': '1c8ca8',
+                '600': '197f98',
+                '700': '167188',
+                '800': '136377',
+                '900': '0e4957',
+                'A100': 'abf3ff',
+                'A200': '66e2ff',
+                'A400': '17bee5',
+                'A700': '00A1C6',
+                'contrastDefaultColor': 'light',    // whether, by default, text (contrast)
+                                                    // on this palette should be dark or light
+                'contrastDarkColors': ['50', '100', //hues which contrast should be 'dark' by default
+                    '200', '300', 'A100'],
+                'contrastLightColors': undefined    // could also specify this if default was 'dark'
+            });
+
+            $mdThemingProvider.definePalette('accentPaletteWise', {
+                '50': 'fde9e6',
+                '100': 'fbcbc4',
+                '200': 'f8aca1',
+                '300': 'f4897b',
+                '400': 'f2705f',
+                '500': 'f05843',
+                '600': 'da503c',
+                '700': 'c34736',
+                '800': 'aa3e2f',
+                '900': '7d2e23',
+                'A100': 'ff897d',
+                'A200': 'ff7061',
+                'A400': 'ff3829',
+                'A700': 'cc1705',
+                'contrastDefaultColor': 'light',    // whether, by default, text (contrast)
+                                                    // on this palette should be dark or light
+                'contrastDarkColors': ['50', '100', //hues which contrast should be 'dark' by default
+                    '200', '300', 'A100'],
+                'contrastLightColors': undefined    // could also specify this if default was 'dark'
+            });
+
+            $mdThemingProvider.theme('default')
+                .primaryPalette('primaryPaletteWise')
+                .accentPalette('accentPaletteWise');
+    }]);
+
+export default mainModule;
+
+/*
 require.config({
     baseUrl: 'wise5/',
     paths: {
@@ -140,3 +304,4 @@ require.config({
 require(['app'],function(app){
     app.init();
 });
+    */

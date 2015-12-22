@@ -1,0 +1,42 @@
+{
+  "name": "wise",
+  "version": "5.0.0",
+  "description": "Web-based Inquiry Science Environment",
+  "main": "app.js",
+  "dependencies": {
+    "compass": "^0.1.1",
+    "eslint": "^1.7.3",
+    "jspm": "^0.16.19",
+    "sass": "^0.5.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WISE-Community/WISE.git"
+  },
+  "keywords": [
+    "WISE",
+    "education",
+    "science",
+    "inquiry"
+  ],
+  "author": "",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/WISE-Community/WISE/issues"
+  },
+  "homepage": "https://github.com/WISE-Community/WISE#readme",
+  "jspm": {
+    "dependencies": {
+      "jquery": "github:components/jquery@^2.1.4"
+    },
+    "devDependencies": {
+      "babel": "npm:babel-core@^5.8.24",
+      "babel-runtime": "npm:babel-runtime@^5.8.24",
+      "core-js": "npm:core-js@^1.1.4"
+    }
+  }
+}

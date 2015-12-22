@@ -370,6 +370,6 @@ define([], function() {
         
         return serviceObject;
     }];
-    
+
     return service;
 });

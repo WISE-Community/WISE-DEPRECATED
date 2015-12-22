@@ -1,3 +1,4 @@
+
 define(['configService'], function(configService) {
 
     var service = ['$http', '$rootScope', 'ConfigService', function($http, $rootScope, ConfigService) {
