@@ -10,10 +10,8 @@ import AnnotationService from '../services/annotationService2';
 import AuthoringToolController from './authoringToolController2';
 import ConfigService from '../services/configService2';
 import Directives from '../directives/directives2';
-import HTMLController from '../components/html/htmlController2';
 import NodeController from './node/nodeController2';
 import NodeService from '../services/nodeService2';
-import OpenResponseController from '../components/openResponse/openResponseController2';
 import OpenResponseService from '../components/openResponse/openResponseService2';
 import ProjectController from './project/projectController2';
 import ProjectService from '../services/projectService2';
@@ -22,14 +20,10 @@ import StudentAssetService from '../services/studentAssetService2';
 import StudentDataService from '../services/studentDataService2';
 import UtilService from '../services/utilService2';
 
-//import filters from '../filters/filters';
-
 console.log(angular.version, $.fn.jquery);
-
-let mainModule = angular.module('app', [
+var mainModule = angular.module('app', [
     'angular-toArrayFilter',
     'directives',
-    //'filters',
     'ui.router',
     //'ui.sortable',
     'ngAnimate',
@@ -37,7 +31,6 @@ let mainModule = angular.module('app', [
     //'ngDragDrop',
     'ngFileUpload',
     'ngMaterial',
-    //'ngWebSocket'
 ])
     .service(AnnotationService.name, AnnotationService)
     .service(ConfigService.name, ConfigService)
@@ -49,9 +42,7 @@ let mainModule = angular.module('app', [
     .service(StudentDataService.name, StudentDataService)
     .service(UtilService.name, UtilService)
     .controller(AuthoringToolController.name, AuthoringToolController)
-    .controller(HTMLController.name, HTMLController)
     .controller(NodeController.name, NodeController)
-    .controller(OpenResponseController.name, OpenResponseController)
     .controller(ProjectController.name, ProjectController)
     .config(['$urlRouterProvider',
         '$stateProvider',
@@ -72,8 +63,6 @@ let mainModule = angular.module('app', [
                     controller: 'AuthoringToolController',
                     controllerAs: 'authoringToolController',
                     resolve: {
-                        //authoringToolController: function() {return mainModule.controller(AuthoringToolController.name, AuthoringToolController); },
-                        //authoringToolController: app.loadController('authoringToolController'),
                         config: function(ConfigService) {
                             var configURL = window.configURL;
 
@@ -93,8 +82,6 @@ let mainModule = angular.module('app', [
                     controller: 'ProjectController',
                     controllerAs: 'projectController',
                     resolve: {
-                        //projectController: function() { console.log('hello'); let pc = mainModule.controller(ProjectController.name, ProjectController); debugger; return pc; }
-                        //loadController: app.loadController('projectController')
                     }
                 })
                 .state('root.node', {
@@ -103,9 +90,15 @@ let mainModule = angular.module('app', [
                     controller: 'NodeController',
                     controllerAs: 'nodeController',
                     resolve: {
-                        //loadController: app.loadController('nodeController'),
-                        //htmlController: HTMLController.name
-                        //openResponseController: app.loadController('openResponseController')
+                        load: () => {
+                             System.import('components/html/htmlController2').then((HTMLController) => {
+                                $controllerProvider.register(HTMLController.default.name, HTMLController.default);
+                             });
+                            System.import('components/openResponse/openResponseController2').then((OpenResponseController) => {
+                                $controllerProvider.register(OpenResponseController.default.name, OpenResponseController.default);
+                            });
+
+                        }
                     }
                 });
             // ngMaterial default theme configuration
