@@ -13,16 +13,25 @@
 
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <!-- Place favicon.ico in the root directory -->
+    <script src="${contextPath}/wise5/jspm_packages/system.js"></script>
+    <script src="${contextPath}/wise5/config.js"></script>
+    <script>
+        System.import('${contextPath}/wise5/classroomMonitor/bootstrap');
+    </script>
 
+<!--
     <script src="${contextPath}/wise5/lib/modernizr/modernizr.custom.js"></script>
+    -->
 </head>
 <body>
     <div ng-view>
         <div ui-view></div>
     </div>
     <script>
-    var configUrl = '${vleConfigUrl}';
+    var configURL = '${configURL}';
     </script>
+    <!--
     <script data-main='${contextPath}/wise5/classroomMonitor/main' src='${contextPath}/wise5/vendor/requirejs/require.js'></script>
+    -->
 </body>
 </html>

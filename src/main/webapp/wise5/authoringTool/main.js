@@ -20,15 +20,12 @@ import StudentAssetService from '../services/studentAssetService2';
 import StudentDataService from '../services/studentDataService2';
 import UtilService from '../services/utilService2';
 
-console.log(angular.version, $.fn.jquery);
-var mainModule = angular.module('app', [
+let mainModule = angular.module('authoring', [
     'angular-toArrayFilter',
     'directives',
     'ui.router',
-    //'ui.sortable',
     'ngAnimate',
     'ngAria',
-    //'ngDragDrop',
     'ngFileUpload',
     'ngMaterial',
 ])
@@ -297,4 +294,5 @@ require.config({
 require(['app'],function(app){
     app.init();
 });
-    */
+
+   */

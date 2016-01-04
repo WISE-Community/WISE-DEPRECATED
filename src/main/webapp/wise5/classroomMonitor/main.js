@@ -1,3 +1,227 @@
+
+'use strict';
+
+import $ from 'jquery';
+import angular from 'angular';
+import angularUIRouter from 'angular-ui-router';
+import ngFileUpload from 'ng-file-upload';
+import ngMaterial from 'angular-material';
+import ngWebSocket from 'angular-websocket';
+import angularToArrayFilter from '../lib/angular-toArrayFilter/toArrayFilter';
+import AnnotationService from '../services/annotationService2';
+import ClassroomMonitorController from './classroomMonitorController2';
+import ConfigService from '../services/configService2';
+import Directives from '../directives/directives2';
+import DrawingTool from '../lib/drawingTool/drawing-tool';
+import DrawingToolVendor from '../lib/drawingTool/vendor';
+import DrawService from '../components/draw/drawService2';
+import NodeProgressController from './nodeProgress/nodeProgressController2';
+import NodeGradingController from './nodeGrading/nodeGradingController2';
+import NodeService from '../services/nodeService2';
+import OpenResponseService from '../components/openResponse/openResponseService2';
+import ProjectService from '../services/projectService2';
+import SessionService from '../services/sessionService2';
+import StudentAssetService from '../services/studentAssetService2';
+import StudentDataService from '../services/studentDataService2';
+import StudentStatusService from '../services/studentStatusService2';
+import TeacherDataService from '../services/teacherDataService2';
+import StudentProgressController from './studentProgress/studentProgressController2';
+import TeacherWebSocketService from '../services/teacherWebSocketService2';
+import UtilService from '../services/utilService2';
+
+let mainModule = angular.module('classroomMonitor', [
+        'angular-toArrayFilter',
+        'directives',
+        'ui.router',
+        'ngAnimate',
+        'ngAria',
+        'ngFileUpload',
+        'ngMaterial',
+        'ngWebSocket'
+    ])
+    .service(AnnotationService.name, AnnotationService)
+    .service(ConfigService.name, ConfigService)
+    .service(DrawService.name, DrawService)
+    .service(NodeService.name, NodeService)
+    .service(OpenResponseService.name, OpenResponseService)
+    .service(ProjectService.name, ProjectService)
+    .service(SessionService.name, SessionService)
+    .service(StudentAssetService.name, StudentAssetService)
+    .service(StudentDataService.name, StudentDataService)
+    .service(StudentStatusService.name, StudentStatusService)
+    .service(TeacherDataService.name, TeacherDataService)
+    .service(TeacherWebSocketService.name, TeacherWebSocketService)
+    .service(UtilService.name, UtilService)
+    .controller(ClassroomMonitorController.name, ClassroomMonitorController)
+    .controller(NodeGradingController.name, NodeGradingController)
+    .controller(NodeProgressController.name, NodeProgressController)
+    .controller(StudentProgressController.name, StudentProgressController)
+    .config(['$urlRouterProvider',
+        '$stateProvider',
+        '$controllerProvider',
+        '$mdThemingProvider',
+        function($urlRouterProvider,
+                 $stateProvider,
+                 $controllerProvider,
+                 $mdThemingProvider) {
+
+            $urlRouterProvider.otherwise('/studentProgress');
+
+            $stateProvider
+                .state('root', {
+                    url: '',
+                    abstract: true,
+                    templateUrl: 'wise5/classroomMonitor/classroomMonitor.html',
+                    controller: 'ClassroomMonitorController',
+                    controllerAs: 'classroomMonitorController',
+                    resolve: {
+                        config: function(ConfigService) {
+                            var configURL = window.configURL;
+
+                            return ConfigService.retrieveConfig(configURL);
+                        },
+                        project: function(ProjectService, config) {
+                            return ProjectService.retrieveProject();
+                        },
+                        studentStatuses: function(StudentStatusService, config) {
+                            return StudentStatusService.retrieveStudentStatuses();
+                        },
+                        webSocket: function(TeacherWebSocketService, config) {
+                            return TeacherWebSocketService.initialize();
+                        }
+                    }
+                })
+                .state('root.studentProgress', {
+                    url: '/studentProgress',
+                    templateUrl: 'wise5/classroomMonitor/studentProgress/studentProgress.html',
+                    controller: 'StudentProgressController',
+                    controllerAs: 'studentProgressController',
+                    resolve: {
+                    }
+                })
+                .state('root.nodeProgress', {
+                    url: '/nodeProgress',
+                    templateUrl: 'wise5/classroomMonitor/nodeProgress/nodeProgress.html',
+                    controller: 'NodeProgressController',
+                    controllerAs: 'nodeProgressController',
+                    resolve: {
+                    }
+                })
+                .state('root.nodeGrading', {
+                    url: '/nodeGrading/:nodeId',
+                    templateUrl: 'wise5/classroomMonitor/nodeGrading/nodeGrading.html',
+                    controller: 'NodeGradingController',
+                    controllerAs: 'nodeGradingController',
+                    resolve: {
+                        studentData: function($stateParams, TeacherDataService, config) {
+                            return TeacherDataService.retrieveStudentDataByNodeId($stateParams.nodeId);
+                        },
+                        load: () => {
+                        System.import('components/html/htmlController2').then((HTMLController) => {
+                            $controllerProvider.register(HTMLController.default.name, HTMLController.default);
+                        });
+                        System.import('components/openResponse/openResponseController2').then((OpenResponseController) => {
+                            $controllerProvider.register(OpenResponseController.default.name, OpenResponseController.default);
+                        });
+                        System.import('components/draw/drawController2').then((DrawController) => {
+                            $controllerProvider.register(DrawController.default.name, DrawController.default);
+                        });
+                        }
+                        /*
+                        annotationController: app.loadController('annotationController'),
+                        embeddedController: app.loadController('embeddedController'),
+                        graphController: app.loadController('graphController'),
+                        discussionController: app.loadController('discussionController'),
+                        drawController: app.loadController('drawController'),
+                        labelController: app.loadController('labelController'),
+                        matchController: app.loadController('matchController'),
+                        multipleChoiceController: app.loadController('multipleChoiceController'),
+                        nodeController: app.loadController('nodeController'),
+                        tableController: app.loadController('tableController')
+                        */
+                    }
+                })
+/*
+                .state('root.project', {
+                    url: '/project',
+                    templateUrl: 'wise5/authoringTool/project/project.html',
+                    controller: 'ProjectController',
+                    controllerAs: 'projectController',
+                    resolve: {
+                    }
+                })
+                .state('root.node', {
+                    url: '/node/:nodeId',
+                    templateUrl: 'wise5/authoringTool/node/node.html',
+                    controller: 'NodeController',
+                    controllerAs: 'nodeController',
+                    resolve: {
+                        load: () => {
+                        System.import('components/html/htmlController2').then((HTMLController) => {
+                        $controllerProvider.register(HTMLController.default.name, HTMLController.default);
+                        });
+                            System.import('components/openResponse/openResponseController2').then((OpenResponseController) => {
+                                $controllerProvider.register(OpenResponseController.default.name, OpenResponseController.default);
+                        });
+
+                        }
+                    }
+
+                });
+            */
+            // ngMaterial default theme configuration
+            // TODO: make dynamic and support alternate themes; allow projects to specify theme parameters and settings
+            $mdThemingProvider.definePalette('primaryPaletteWise', {
+                '50': 'e1f0f4',
+                '100': 'b8dbe4',
+                '200': '8ec6d4',
+                '300': '5faec2',
+                '400': '3d9db5',
+                '500': '1c8ca8',
+                '600': '197f98',
+                '700': '167188',
+                '800': '136377',
+                '900': '0e4957',
+                'A100': 'abf3ff',
+                'A200': '66e2ff',
+                'A400': '17bee5',
+                'A700': '00A1C6',
+                'contrastDefaultColor': 'light',    // whether, by default, text (contrast)
+                                                    // on this palette should be dark or light
+                'contrastDarkColors': ['50', '100', //hues which contrast should be 'dark' by default
+                    '200', '300', 'A100'],
+                'contrastLightColors': undefined    // could also specify this if default was 'dark'
+            });
+
+            $mdThemingProvider.definePalette('accentPaletteWise', {
+                '50': 'fde9e6',
+                '100': 'fbcbc4',
+                '200': 'f8aca1',
+                '300': 'f4897b',
+                '400': 'f2705f',
+                '500': 'f05843',
+                '600': 'da503c',
+                '700': 'c34736',
+                '800': 'aa3e2f',
+                '900': '7d2e23',
+                'A100': 'ff897d',
+                'A200': 'ff7061',
+                'A400': 'ff3829',
+                'A700': 'cc1705',
+                'contrastDefaultColor': 'light',    // whether, by default, text (contrast)
+                                                    // on this palette should be dark or light
+                'contrastDarkColors': ['50', '100', //hues which contrast should be 'dark' by default
+                    '200', '300', 'A100'],
+                'contrastLightColors': undefined    // could also specify this if default was 'dark'
+            });
+
+            $mdThemingProvider.theme('default')
+                .primaryPalette('primaryPaletteWise')
+                .accentPalette('accentPaletteWise');
+        }]);
+
+export default mainModule;
+/*
 require.config({
     baseUrl: 'wise5/',
     waitSeconds: 0,
@@ -72,7 +296,6 @@ require.config({
         'nodeGradingController': 'classroomMonitor/nodeGrading/nodeGradingController',
         'nodeProgressController': 'classroomMonitor/nodeProgress/nodeProgressController',
         'nodeService': 'services/nodeService',
-        'ocLazyLoad': 'vendor/oclazyload/dist/ocLazyLoad.require',
         'openResponseController': 'components/openResponse/openResponseController',
         'openResponseService': 'components/openResponse/openResponseService',
         'outsideURLController': 'components/outsideURL/outsideURLController',
@@ -281,3 +504,4 @@ require.config({
 require(['app'],function(app){
     app.init();
 });
+    */

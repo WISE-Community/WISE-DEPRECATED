@@ -1,10 +1,8 @@
 import NodeService from '../../services/nodeService2';
 
 class OpenResponseService extends NodeService {
-    constructor($http, NodeService, StudentDataService) {
+    constructor(StudentDataService) {
         super();
-        this.$http = $http;
-        this.NodeService = NodeService;
         this.StudentDataService = StudentDataService;
 
         this.config = null;
@@ -108,6 +106,6 @@ class OpenResponseService extends NodeService {
 
 }
 
-OpenResponseService.$inject = ['$http', 'NodeService', 'StudentDataService'];
+OpenResponseService.$inject = ['StudentDataService'];
 
 export default OpenResponseService;

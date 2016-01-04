@@ -1,0 +1,1 @@
+module.exports = require("npm:ws@0.7.2/lib/browser.js");

@@ -35,7 +35,6 @@ define([
     'moment',
     'multipleChoiceService',
     'nodeService',
-    'ocLazyLoad',
     'openResponseService',
     'outsideURLService',
     'photoBoothService',
@@ -90,7 +89,6 @@ define([
              moment,
              multipleChoiceService,
              nodeService,
-             ocLazyLoad,
              openResponseService,
              outsideURLService,
              photoBoothService,
@@ -197,9 +195,9 @@ define([
                 resolve: {
                     classroomMonitorController: app.loadController('classroomMonitorController'),
                     config: function(ConfigService) {
-                        var configUrl = window.configUrl;
+                        var configURL = window.configURL;
 
-                        return ConfigService.retrieveConfig(configUrl);
+                        return ConfigService.retrieveConfig(configURL);
                     },
                     project: function(ProjectService, config) {
                         return ProjectService.retrieveProject();
