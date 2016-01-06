@@ -24,32 +24,21 @@
 </head>
 <body>
 <div id="pageWrapper">
-
 	<%@ include file="headermain.jsp"%>
-
 	<div id="page">
-
 		<div id="pageContent">
-
 			<div class="contentPanel">
-
 				<div class="panelHeader">
 					<spring:message code="teacher.management.library.title" />
 				</div>
-
 				<div class="panelContent">
-
 					<%@ include file="/portal/teacher/management/projectlibrarydisplay.jsp"%>
-
 				</div>
-
 			</div>
 		</div>
 		<div style="clear: both;"></div>
 	</div>   <!-- End of page -->
-
 	<%@ include file="footer.jsp"%>
-
 </div>
 </body>
 </html>

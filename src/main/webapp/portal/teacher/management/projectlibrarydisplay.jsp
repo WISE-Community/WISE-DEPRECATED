@@ -12,12 +12,12 @@
 </script>
 </sec:authorize>
 <div id="projectTabs" class="panelTabs">
-	<c:if test="${!fn:endsWith(pageContext.request.requestURI, 'projectlibrary.jsp')}">
 	<ul id="tabsUL">
-		<li><a href="#activeProjects"><spring:message code="current"/>  (${totalActiveProjects})</a></li>
-		<li><a href="#archivedProjects"><spring:message code="archived"/>  (${totalArchivedProjects})</a></li>
+		<c:if test="${!fn:endsWith(pageContext.request.requestURI, 'projectlibrary.jsp')}">
+			<li><a href="#activeProjects"><spring:message code="current"/>  (${totalActiveProjects})</a></li>
+			<li><a href="#archivedProjects"><spring:message code="archived"/>  (${totalArchivedProjects})</a></li>
+		</c:if>
 	</ul>
-</c:if>
     <div id="activeProjects">
     	<div class="runBox">
 			<table id="myProjects" class="projectTable">
