@@ -68,7 +68,7 @@ public class AnnouncementImpl implements Announcement, Comparable<Announcement>{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "id", columnDefinition = "mediumint")
+	@Column(name = "id", columnDefinition = "int")
 	private Integer id;
 
 	/**
