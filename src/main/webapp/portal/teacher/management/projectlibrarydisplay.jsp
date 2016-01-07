@@ -11,12 +11,13 @@
 	var isTeacher = true;
 </script>
 </sec:authorize>
-
 <div id="projectTabs" class="panelTabs">
-    <ul id="tabsUL">
-    	<li><a href="#activeProjects"><spring:message code="current"/>  (${totalActiveProjects})</a></li>
-    	<li><a href="#archivedProjects"><spring:message code="archived"/>  (${totalArchivedProjects})</a></li>
-    </ul>
+	<ul id="tabsUL">
+		<c:if test="${!fn:endsWith(pageContext.request.requestURI, 'projectlibrary.jsp')}">
+			<li><a href="#activeProjects"><spring:message code="current"/>  (${totalActiveProjects})</a></li>
+			<li><a href="#archivedProjects"><spring:message code="archived"/>  (${totalArchivedProjects})</a></li>
+		</c:if>
+	</ul>
     <div id="activeProjects">
     	<div class="runBox">
 			<table id="myProjects" class="projectTable">
@@ -132,7 +133,7 @@
 																</c:if>
 																<c:if test="${isOwner == 'true'}">
 																	<li><a class="tooltip" title="<spring:message code="teacher.management.projectlibrarydisplay.archive_tip" />" onclick="archiveProject('<spring:escapeBody javaScriptEscape="true">${project.name}</spring:escapeBody>', ${project.id})"><img class="icon" alt="archive" src="${contextPath}/<spring:theme code="lock"/>" />
-																	<span><spring:message code="teacher.management.projectlibrarydisplay.archive" /></span></a>&nbsp;|</li>												
+																	<span><spring:message code="teacher.management.projectlibrarydisplay.archive" /></span></a>&nbsp;|</li>
 																</c:if>
 																<li><a class="setupRun tooltip" title="<spring:message code="teacher.management.projectlibrarydisplay.startRun_tip" />" href="<c:url value="/teacher/run/createRun.html"><c:param name="projectId" value="${project.id}"/></c:url>"><img class="icon" alt="new run" src="${contextPath}/<spring:theme code="computer"/>" />
 																	<span<c:if test="${!isChild && !isChildNoRoot}"> style="font-weight:bold;"</c:if>><spring:message code="teacher.management.projectlibrarydisplay.startRun" /></span></a>
@@ -215,7 +216,7 @@
 																<c:if test="${fn:length(project.sharedowners) > 0}">
 																	<div class="sharedIcon">
 																		<img src="${contextPath}/<spring:theme code="shared"/>" alt="shared project" />
-																		<spring:message code="teacher.management.projectlibrarydisplay.sharedWith" /> 
+																		<spring:message code="teacher.management.projectlibrarydisplay.sharedWith" />
 																		<span style="font-weight:normal"><c:forEach var="sharedowner" items="${project.sharedowners}" varStatus="status">
 																		  <c:out value="${sharedowner.userDetails.firstname}"/>
 																		  <c:out value="${sharedowner.userDetails.lastname}"/>${not status.last ? ', ' : ''}
@@ -452,7 +453,7 @@
 																<c:if test="${fn:length(project.sharedowners) > 0}">
 																	<div class="sharedIcon">
 																		<img src="${contextPath}/<spring:theme code="shared"/>" alt="shared project" />
-																		<spring:message code="teacher.management.projectlibrarydisplay.sharedWith" /> 
+																		<spring:message code="teacher.management.projectlibrarydisplay.sharedWith" />
 																		<span style="font-weight:normal"><c:forEach var="sharedowner" items="${project.sharedowners}" varStatus="status">
 																		  <c:out value="${sharedowner.userDetails.firstname}"/>
 																		  <c:out value="${sharedowner.userDetails.lastname}"/>${not status.last ? ', ' : ''}
@@ -515,7 +516,7 @@
 							</c:forEach>
 						</c:when>
 					</c:choose>
-					
+
 					<c:choose>
 						<c:when test="${fn:length(libraryProjectsList) > 0}">
 							<c:forEach var="project" items="${libraryProjectsList}">
@@ -585,7 +586,7 @@
 															<c:if test="${fn:length(project.sharedowners) > 0}">
 																<div class="sharedIcon" style="float:right;">
 																	<img src="${contextPath}/<spring:theme code="shared"/>" alt="shared project" />
-																	<spring:message code="teacher.management.projectlibrarydisplay.ownedBy" /> 
+																	<spring:message code="teacher.management.projectlibrarydisplay.ownedBy" />
 																	<c:out value="${project.owner.userDetails.firstname}" />
 											  						<c:out value="${project.owner.userDetails.lastname}" />
 																</div>
@@ -687,7 +688,7 @@
 							</c:forEach>
 						</c:when>
 					</c:choose>
-					
+
 				</tbody>
 			</table>
 		</div>
@@ -696,7 +697,7 @@
 		<c:choose>
 			<c:when test="${totalArchivedProjects > 0}">
 				<p class="info"><spring:message code="teacher.management.projectlibrarydisplay.archive_intro" /></p>
-				
+
 				<div class="runBox">
 					<table id="myArchivedProjects" class="projectTable">
 						<thead class="tableHeaderMain">
@@ -803,7 +804,7 @@
 																		</c:if>
 																		<c:if test="${isOwner == 'true'}">
 																			<li><a class="tooltip" title="<spring:message code="teacher.management.projectlibrarydisplay.restore_tip" />" onclick="archiveProject('<spring:escapeBody javaScriptEscape="true">${project.name}</spring:escapeBody>', ${project.id}, true)"><img class="icon" alt="restore" src="${contextPath}/<spring:theme code="unlock"/>" />
-																			<span><spring:message code="teacher.management.projectlibrarydisplay.restore" /></span></a></li>												
+																			<span><spring:message code="teacher.management.projectlibrarydisplay.restore" /></span></a></li>
 																		</c:if>
 																	</ul>
 																</div>
@@ -883,7 +884,7 @@
 																		<c:if test="${fn:length(project.sharedowners) > 0}">
 																			<div class="sharedIcon">
 																				<img src="${contextPath}/<spring:theme code="shared"/>" alt="shared project" />
-																				<spring:message code="teacher.management.projectlibrarydisplay.sharedWith" /> 
+																				<spring:message code="teacher.management.projectlibrarydisplay.sharedWith" />
 																				<span style="font-weight:normal"><c:forEach var="sharedowner" items="${project.sharedowners}" varStatus="status">
 																				  <c:out value="${sharedowner.userDetails.firstname}"/>
 																				  <c:out value="${sharedowner.userDetails.lastname}"/>${not status.last ? ', ' : ''}
@@ -1034,7 +1035,7 @@
 																	<div class="sharedIcon">
 																	<c:if test="${fn:length(project.sharedowners) > 0}">
 																		<img src="${contextPath}/<spring:theme code="shared"/>" alt="shared project" />
-																		<spring:message code="teacher.management.projectlibrarydisplay.ownedBy" /> 
+																		<spring:message code="teacher.management.projectlibrarydisplay.ownedBy" />
 																		<c:out value="${project.owner.userDetails.firstname}" />
 												  						<c:out value="${project.owner.userDetails.lastname}" />
 																		<a class="unshare" onclick="unshareFromProject('${project.id}','<spring:escapeBody javaScriptEscape="true">${project.name}</spring:escapeBody>')"><spring:message code="teacher.management.projectlibrarydisplay.unshare" /></a>
@@ -1111,7 +1112,7 @@
 																		<c:if test="${fn:length(project.sharedowners) > 0}">
 																			<div class="sharedIcon">
 																				<img src="${contextPath}/<spring:theme code="shared"/>" alt="shared project" />
-																				<spring:message code="teacher.management.projectlibrarydisplay.sharedWith" /> 
+																				<spring:message code="teacher.management.projectlibrarydisplay.sharedWith" />
 																				<span style="font-weight:normal"><c:forEach var="sharedowner" items="${project.sharedowners}" varStatus="status">
 																				  <c:out value="${sharedowner.userDetails.firstname}"/>
 																				  <c:out value="${sharedowner.userDetails.lastname}"/>${not status.last ? ', ' : ''}
@@ -1174,7 +1175,7 @@
 									</c:forEach>
 								</c:when>
 							</c:choose>
-							
+
 							<c:choose>
 								<c:when test="${fn:length(libraryProjectsList) > 0}">
 									<c:forEach var="project" items="${libraryProjectsList}">
@@ -1225,7 +1226,7 @@
 																			<c:set var="isOwner" value="true"/>
 																		</c:if>
 																		<c:if test="${isOwner == 'true'}">
-																			<li><a onclick="archiveProject('<spring:escapeBody javaScriptEscape="true">${project.name}</spring:escapeBody>', ${project.id}, true)"><span><spring:message code="teacher.management.projectlibrarydisplay.restore" /></span></a></li>												
+																			<li><a onclick="archiveProject('<spring:escapeBody javaScriptEscape="true">${project.name}</spring:escapeBody>', ${project.id}, true)"><span><spring:message code="teacher.management.projectlibrarydisplay.restore" /></span></a></li>
 																		</c:if>
 																	</ul>
 																</div>
@@ -1237,7 +1238,7 @@
 																	<c:if test="${fn:length(project.sharedowners) > 0}">
 																		<div class="sharedIcon" style="float:right;">
 																			<img src="${contextPath}/<spring:theme code="shared"/>" alt="shared project" />
-																			<spring:message code="teacher.management.projectlibrarydisplay.ownedBy" /> 
+																			<spring:message code="teacher.management.projectlibrarydisplay.ownedBy" />
 																			<c:out value="${project.owner.userDetails.firstname}" />
 													  						<c:out value="${project.owner.userDetails.lastname}" />
 																		</div>
@@ -1334,7 +1335,7 @@
 									</c:forEach>
 								</c:when>
 							</c:choose>
-							
+
 						</tbody>
 					</table>
 				</div>
@@ -1367,7 +1368,7 @@
 		activeRootProjectIds = [], archivedRootProjectIds = [], // arrays to hold root project ids
 		totalActiveProjects = 0, totalArchivedProjects = 0, totalProjects = 0, // ints to hold total number of projects in user's library
 		otable; // object to hold datatables instances (requires jQuery datatables plugin: http://datatables.net/)
-	
+
 	// adds/removes bookmark (favorite) for the specified project. pID=projectID of project to remove bookmark
 	function toggleBookmark(pID){
 		var bookmarkLink = $('.bookmark[data-id="' + pID + '"]'),
@@ -1421,7 +1422,7 @@
 	 * @param type the project type e.g. "LD"
 	 * @param name the project name
 	 * @param fileName the project file name e.g. "/wise4.project.json"
-	 * @param relativeProjectFilePathUrl the relative project file path e.g. "/513/wise4.project.json" 
+	 * @param relativeProjectFilePathUrl the relative project file path e.g. "/513/wise4.project.json"
 	 */
 	function copy(pID, type, name, fileName, relativeProjectFilePathUrl){
 		if (typeof(isTeacher) == "undefined") {
@@ -1430,7 +1431,7 @@
 		}
 		var $copyDialog = '<div id="copyDialog" class="dialog"><p><spring:message code="teacher.management.projectlibrarydisplay.copy_info" /></p>' +
 			'<p><spring:message code="teacher.management.projectlibrarydisplay.copy_confirm" /></p></div>';
-		
+
 		var agreed = false;
 		$($copyDialog).dialog({
 			modal: true,
@@ -1444,7 +1445,7 @@
 					$(this).dialog('close');
 				} },
 				{ text: '<spring:message code="ok" />', click: function(){
-					var $copyingDialog = '<p><spring:message code="teacher.management.projectlibrarydisplay.copy_processing" /></p>' + 
+					var $copyingDialog = '<p><spring:message code="teacher.management.projectlibrarydisplay.copy_processing" /></p>' +
 						'<p><img src="${contextPath}/themes/default/images/rel_interstitial_loading.gif" /></p>';
 					$('#copyDialog').css('text-align','center');
 					$('#copyDialog').html($copyingDialog);
@@ -1463,14 +1464,14 @@
 								 * e.g.
 								 * 513
 								 */
-								
+
 								/*
 								 * get the relative project file path for the new project
 								 * e.g.
 								 * /513/wise4.project.json
-								 */ 
+								 */
 								var projectPath = '/' + response + fileName;
-								
+
 								$.ajax({
 									type: 'post',
 									url: '${contextPath}/author/authorproject.html',
@@ -1485,7 +1486,7 @@
 										processCopyResult(this,failureText,false);
 									},
 									context: this
-								});								
+								});
 							},
 							error: function(response){
 								var failureText = '<p><spring:message code="teacher.management.projectlibrarydisplay.copy_error" /></p><p><spring:message code="teacher.management.projectlibrarydisplay.copy_please" /></p>';
@@ -1510,7 +1511,7 @@
 				} }
 			]
 		});
-		
+
 		function processCopyResult(item,message,success){
 			$('#copyDialog').html(message);
 			$('.ui-dialog-buttonset button:eq(1)',$('#copyDialog').parent()).show().click(function(){
@@ -1529,7 +1530,7 @@
 	 * @method loadProjectThumbnails
 	 * @returns void
 	 */
-	function loadProjectThumbnails() {		
+	function loadProjectThumbnails() {
 		$(".projectThumb").each(function() {
 			var thumbUrl = $(this).attr("thumbUrl");
 			// check if thumbUrl exists
@@ -1549,7 +1550,7 @@
 			});
 		});
 	};
-	
+
 	function getRootId(id){
 		var rootBox = $('.projectBox[data-id="' + id + '"]');
 		var newId = rootBox.attr('data-rootid');
@@ -1559,27 +1560,27 @@
        		return id;
        	}
 	};
-	
+
 	$(document).ready(function() {
-		
+
 		totalActiveProjects = $('#activeProjects div.projectBox').length;
 		totalArchivedProjects = $('#archivedProjects div.projectBox').length;
-		
+
 		$('.runBox').each(function(){
 			var target = $(this).parent(),
 				context = target.attr('id') == 'activeProjects' ? 'active' : 'archived',
 				rootIds = context == 'active' ? activeRootProjectIds : archivedRootProjectIds,
 				children = context == 'active' ? activeChildren : archivedChildren,
 				tableBody = $('.projectTable > tbody',target);
-			
+
 			var missingRootIds = [];
-			
+
 			// resolve child projects that have roots set that are also children
 			$("div.childProject",target).each(function(){
 				var rootId = $(this).attr('data-rootid'),
 					newRootId = getRootId(rootId);
 				$(this).attr('data-rootid',newRootId);
-				
+
 				if($('.projectBox[data-id="' + newRootId + '"]',target).length==0){
 					$(this).addClass('missingRoot');
 					if($.inArray(newRootId,missingRootIds)<0){
@@ -1587,7 +1588,7 @@
 					}
 				}
 			});
-			
+
 			// for all child projects with missing root, set new root to first project in family
 			for(var i=0;i<missingRootIds.length;i++){
 				var missingChildren = $('div.childProject.missingRoot[data-rootid="' + missingRootIds[i] + '"]',target),
@@ -1601,7 +1602,7 @@
 					}
 				});
 			}
-			
+
 			// Show child link for projects with children
 			$("div.projectBox",target).not(".childProject").each(function(){
 				var id = $(this).attr('data-id');
@@ -1633,13 +1634,13 @@
 						} else {
 							toggleChildren(id,true);
 						}
-						
+
 					});
-					
+
 					// add child divs to global children object
 					var key = "children_" + id;
 					children[key] = projectChildren;
-					
+
 					// add all metadata (used for filtering) from child trs to corresponding root project
 					// since child trs are removed from datatables object (and therefore can't be used in default serach/filter),
 					// we append child characteristics to root projects so the children will be included in search and filters
@@ -1660,23 +1661,23 @@
 						td.eq(4).append(', ' + childTd.eq(4).text());
 						td.eq(5).append(', ' + childTd.eq(5).text());
 						td.eq(7).append(', ' + childTd.eq(7).text());
-						
+
 						// remove all child trs from DOM
 						$(projectChildren[i]).parent().parent().remove();
 					}
 				}
 			});
-			
+
 			// add child project divs back into DOM
 			addChildren(rootIds,children,target);
 		});
-		
+
 		// Set up the bookmark link click action for each project
 		$('a.bookmark').on('click',function(){
 			var id = $(this).attr('data-id');
 			toggleBookmark(id);
 		});
-		
+
 		// Set up more details toggle click action for each project
 		$('.detailsToggle, .projectTitle').on("click",function(){
 			var id;
@@ -1685,14 +1686,14 @@
 			} else if($(this).hasClass('projectTitle')){
 				id = $(this).attr('data-id');
 			}
-			
+
 			if($('.detailsToggle[data-id="' + id + '"]').hasClass('expanded')){
 				toggleDetails(id,false);
 			} else {
 				toggleDetails(id,true);
 			}
 		});
-		
+
 		// Set up view project details click action for each project id link
 		$('a.projectDetail').on('click',function(){
 			var title = $(this).attr('title');
@@ -1707,14 +1708,14 @@
 				position: 'center',
 				close: function(){ $(this).html(''); },
 				buttons: [ {
-						text: '<spring:message code="close" />', 
+						text: '<spring:message code="close" />',
 						click: function(){ $(this).dialog('close'); }
 					}
 				]
 			});
 			$("#projectDetailDialog > #projectIfrm").attr('src',path);
 		});
-		
+
 		// Set up view lesson plan click action for each project
 		$('a.viewLesson').on('click',function(){
 			var id = $(this).attr('data-id');
@@ -1722,13 +1723,13 @@
 				width: 800,
 				height: 400, // TODO: modify so height is set to 'auto', but if content results in dialog taller than window on load, set height smaller than window
 				buttons: [ {
-						text: '<spring:message code="close" />', 
+						text: '<spring:message code="close" />',
 						click: function(){ $(this).dialog('close'); }
 					}
 				]
 			});
 		});
-		
+
 		// Set up print lesson click action for each project
 		$('.printLesson').on('click',function(){
 			var id = $(this).attr('data-id');
@@ -1738,7 +1739,7 @@
 				overrideElementCSS:[{href:printstyle, media:'print'}] // TODO: create print-optimized stylesheet
 			});
 		});
-		
+
 		// Set up project run dialog
 		$('.shareProject').on('click',function(){
 			var title = $(this).attr('dialog-title');
@@ -1753,14 +1754,14 @@
 				position: 'center',
 				close: function(){ $(this).html('');},
 				buttons: [ {
-						text: '<spring:message code="close" />', 
+						text: '<spring:message code="close" />',
 						click: function(){ $(this).dialog('close'); }
 					}
 				]
 			});
 			$("#shareDialog > #shareIfrm").attr('src',path);
 		});
-		
+
 		// initialize datatables
 		otable = $('.projectTable').dataTable({
 			"sPaginationType": "full_numbers",
@@ -1792,7 +1793,7 @@
 						filtered = true;
 					}
 				}
-				if(filtered){					
+				if(filtered){
 					// calculate which projects, including children, are actual matches for current filters (and not just family matches)
 					processFilters(oSettings,target);
 				} else {
@@ -1805,24 +1806,24 @@
 						//} else {
 							toggleChildren(id,false);
 						//}
-						
+
 					});
 					updateProjectCounts(filtered,null,target); // update project counts display
 				}
-				
+
 				// setup all miniTip tooltips
 				insertTooltips();
-				
+
 				// automatically scroll to top of page
 				var targetOffset = $('.projectTable',target).offset().top - 10;
 				if ($(window).scrollTop() > targetOffset){
 					$('html,body').scrollTop(targetOffset);
 				}
-				
+
 				//if($(this).is(':visible')){
 					$('.projectBox',target).each(function(){setTitleWidth($(this));}); //set project title widths
 				//}
-				
+
 				// hide all project details
 				$('div.projectBox',target).each(function(){
 					var id = $(this).attr('data-id');
@@ -1831,7 +1832,7 @@
 
 				// load project thumbnails
 				loadProjectThumbnails();
-				
+
 				// TODO: add url params to current page location for each filter/search/sort/pagination/projects per page
 			},
 			"fnInitComplete":function(){
@@ -1842,14 +1843,14 @@
 					return;
 				}
 				// setup tabs if logged in
-				$( "#projectTabs" ).tabs({ 
+				$( "#projectTabs" ).tabs({
 					active: 0,
 					activate: function(event, ui){
 						$('div.projectBox.rootProject',ui.panel).show(); // TODO: not sure why this is necessary for some projects
-						
+
 						// set project title widths
 						$('div.projectBox',ui.panel).each(function(){setTitleWidth($(this));});
-						
+
 						// Make top header scroll with page
 						var $stickyEl = $('.dataTables_wrapper .top', ui.newPanel);
 						var elTop = $stickyEl.offset().top,
@@ -1870,7 +1871,7 @@
 			"sDom":'<"top"lip>rt<"bottom"ip<"clear">><"clear">'
 			//"sDom":'<"top"lip<"clear">>rt<"bottom"ip><"clear">'
 		});
-		
+
 		// define sort options
 		var sortParams = {
 			"items": [
@@ -1888,7 +1889,7 @@
 			var wrapper = otable.fnSettings().nTableWrapper,
 				table = otable.fnSettings(),
 				id = $(table.oInstance).attr('id');
-			
+
 			// Define FacetedFilter options for datatable objects
 			var facets = new FacetedFilter( table, {
 				"bScroll": false,
@@ -1971,11 +1972,11 @@
 					}
 				]
 			});
-			
+
 			// add sort logic
 			setSort(i,sortParams,wrapper);
 		}
-		
+
 		// Make top header scroll with page
 		var $stickyEl = $('.dataTables_wrapper .top');
 		var elTop = $stickyEl.offset().top,
@@ -1990,7 +1991,7 @@
 	        	$stickyEl.css('width','auto');
 	        }
 	    });
-		
+
 		/**
 		 * Setup datatable sorting
 		 * @method setSort
@@ -2008,7 +2009,7 @@
 				});
 				sortHtml +=	'</select></div>';
 				$(wrapper).children('.top').prepend(sortHtml);
-				
+
 				$('#datatablesSort_' + index).change(function(){
 					$.fn.dataTableExt.iApiIndex = index;
 					var i = $('option:selected', '#datatablesSort_' + index).index();
@@ -2020,12 +2021,12 @@
 				});
 			}
 		};
-		
+
 		/**
 		 * Show or hide list of child projects for a root project
 		 * @method toggleChildren
 		 * @param {string} id Root project's projectId
-		 * @param {boolean} open Boolean to specify whether children should be shown (optional) 
+		 * @param {boolean} open Boolean to specify whether children should be shown (optional)
 		 * @returns void
 		 */
 		function toggleChildren(id,open){
@@ -2052,7 +2053,7 @@
 				childToggle.text(text);
 			}
 		};
-		
+
 		/**
 		 * Add child projects back into DOM as appended divs (not trs - to preserve datatables paging)
 		 * @method addChildren
@@ -2071,7 +2072,7 @@
 				}
 			}
 		};
-		
+
 		/**
 		 * Dynamically set width of project title depending on which tool links are active for the project
 		 * @method setTitleWidth
@@ -2083,7 +2084,7 @@
 			var titleWidth = projectDiv.find('.projectHeader').width() - toolWidth - 10;
 			projectDiv.find('.projectInfo').width(titleWidth);
 		}
-		
+
 		/**
 		 * Show or hide detailed info for a project
 		 * @method toggleDetails
@@ -2129,7 +2130,7 @@
 					}
 				} else {
 					if(summary.find('span.ellipsis').length == 0){
-						summary.find('.truncated').before('<span class="ellipsis">...</span>');	
+						summary.find('.truncated').before('<span class="ellipsis">...</span>');
 					}
 					if(box.is(":hidden")) {
 						summary.find('.truncated').hide();
@@ -2145,24 +2146,24 @@
 				detailsToggle.removeClass('expanded').text('<spring:message code="teacher.management.projectlibrarydisplay.detailsShow" />');
 			}
 		};
-		
+
 		/**
 		 * Gray out project parents or children that are not matches for the current filters
 		 * @method processFilters
 		 * @param {object} oSettings Setting object of datatables instance
-		 * @param target jQuery Dom object 
+		 * @param target jQuery Dom object
 		 * @returns void
 		 */
 		function processFilters(oSettings,target){
 			var oTable = $('.projectTable',target).dataTable();
 			$('.projectBox',oTable.fnGetNodes()).removeClass('noMatch');
-			
+
 			var searchStrings = [], // array to hold keyword search strings
 				filterStrings = [], // array to hold selected faceted filter options (except source)
 				sourceStrings = [], // array to hold selected source options
 				favoriteOptions = []; // array to hold favorite filter options
 			var matchIds = []; // array to hold div ids that match all filters
-			
+
 			// populate filter arrays
 			for(iCol = 0; iCol < oSettings.aoPreSearchCols.length; iCol++) {
 				if (oSettings.aoPreSearchCols[ iCol ].sSearch != '' && oSettings.aoPreSearchCols[ iCol ].sSearch != null) {
@@ -2186,10 +2187,10 @@
 							filterStrings.push(current[i]);
 						}
 					}
-					
+
 				}
 			}
-			
+
 			// process filter arrays - check whether current filters match each project in filter results
 			// gray out divs of non-matches
 			$('.projectBox',oTable.fnGetFilteredNodes()).each(function(){
@@ -2247,7 +2248,7 @@
 					$(this).addClass('noMatch');
 				}
 			});
-			
+
 			// if at least one child matches in a family, show them
 			$('.childToggle',target).each(function(){
 				var id = $(this).attr('data-id'),
@@ -2265,12 +2266,12 @@
 			});
 			updateProjectCounts(true,oTable.fnGetFilteredNodes(),target);
 		};
-		
+
 		/**
 		 * Update the jQuery datables instance's info display with correct project count depending on set filters (count all matched projects)
 		 * @method updateProjectCounts
 		 * @param {boolean} filtered Boolean specifying whether datables instance has been filtered
-		 * @param {object} $targets Set of target DOM elements 
+		 * @param {object} $targets Set of target DOM elements
 		 * @param {DOM element} target jQuery DOM element
 		 * @returns void
 		 */
@@ -2285,19 +2286,19 @@
 			}
 			if(filtered){
 				var numResults = $items.length;
-				$info.html('<spring:message code="datatable_info_showing"/> ' + 
-						numResults + ' <spring:message code="project_plural"/> ' + 
+				$info.html('<spring:message code="datatable_info_showing"/> ' +
+						numResults + ' <spring:message code="project_plural"/> ' +
 						'<spring:message code="datatable_info_filtered_pre"/> ' +
 						totalProjects + ' <spring:message code="datatable_info_filtered_post"/>');
 			} else {
 				$info.html(totalProjects + ' <spring:message code="project_plural"/>');
 			}
 		};
-		
-		// load project thumbnails		
+
+		// load project thumbnails
 		loadProjectThumbnails();
 	});
-	
+
 	/**
 	 * Archive the project. This won't actually delete the project content,
 	 * it will only set a boolean flag in the projects table in the database.
@@ -2325,7 +2326,7 @@
 					$(this).dialog('close');
 				} },
 				{ text: '<spring:message code="ok" />', click: function(){
-					var processingHtml = '<p>' + processing + '</p>' + 
+					var processingHtml = '<p>' + processing + '</p>' +
 						'<p><img src="${contextPath}/themes/default/images/rel_interstitial_loading.gif" /></p>';
 					$('#archiveDialog').css('text-align','center');
 					$('#archiveDialog').html(processingHtml);
@@ -2381,7 +2382,7 @@
 			]
 		});
 	};
-	
+
 	function unshareFromProject(projectId,projectTitle) {
 		var agreed = false,
 			dialogContent = '<spring:message code="teacher.management.projectlibrarydisplay.unshare_confirm" htmlEscape="false" />',
@@ -2399,7 +2400,7 @@
 					$(this).dialog('close');
 				} },
 				{ text: '<spring:message code="ok" />', click: function(){
-					var processingHtml = '<p>' + processing + '</p>' + 
+					var processingHtml = '<p>' + processing + '</p>' +
 						'<p><img src="${contextPath}/themes/default/images/rel_interstitial_loading.gif" /></p>';
 					$('#unshareDialog').css('text-align','center');
 					$('#unshareDialog').html(processingHtml);

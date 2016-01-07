@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- 
+<!--
  * Copyright (c) 2006-2015 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
- * 
+ *
  * Permission is hereby granted, without written agreement and without license
  * or royalty fees, to use, copy, modify, and distribute this software and its
  * documentation for any purpose, provided that the above copyright notice and
@@ -21,35 +21,35 @@
  -->
 
 <!-- $Id$ -->
-<beans 
-    xmlns="http://www.springframework.org/schema/beans" 
+<beans
+    xmlns="http://www.springframework.org/schema/beans"
     xmlns:sec="http://www.springframework.org/schema/security"
 	xmlns:cache="http://www.springframework.org/schema/cache"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:util="http://www.springframework.org/schema/util"
 	xmlns:tx="http://www.springframework.org/schema/tx"
 	xmlns:task="http://www.springframework.org/schema/task"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xsi:schemaLocation="
-      http://www.springframework.org/schema/beans 
-      http://www.springframework.org/schema/beans/spring-beans-4.0.xsd 
-      http://www.springframework.org/schema/util 
+      http://www.springframework.org/schema/beans
+      http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+      http://www.springframework.org/schema/util
       http://www.springframework.org/schema/util/spring-util-4.0.xsd
-      http://www.springframework.org/schema/tx 
+      http://www.springframework.org/schema/tx
       http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
       http://www.springframework.org/schema/task
-      http://www.springframework.org/schema/task/spring-task-4.0.xsd 
-      http://www.springframework.org/schema/context    
+      http://www.springframework.org/schema/task/spring-task-4.0.xsd
+      http://www.springframework.org/schema/context
       http://www.springframework.org/schema/context/spring-context-4.0.xsd
       http://www.springframework.org/schema/cache
       http://www.springframework.org/schema/cache/spring-cache-4.0.xsd
       http://www.springframework.org/schema/security
-      http://www.springframework.org/schema/security/spring-security-4.0.xsd      
+      http://www.springframework.org/schema/security/spring-security-4.0.xsd
       ">
-      
+
 	<!-- ======================== FILTER CHAIN ======================= -->
 
-	<!-- if you wish to use channel security, add "channelProcessingFilter," in front of "httpSessionContextIntegrationFilter" 
+	<!-- if you wish to use channel security, add "channelProcessingFilter," in front of "httpSessionContextIntegrationFilter"
 		in the list below -->
 	<bean id="filterChainProxy" class="org.springframework.security.web.FilterChainProxy">
 		<sec:filter-chain-map request-matcher="ant">
@@ -69,7 +69,7 @@
 	</bean>
 
 	<!-- ======================== AUTHENTICATION ======================= -->
-	
+
 
 	<bean id="authenticationManager" class="org.springframework.security.authentication.ProviderManager">
 	    <constructor-arg>
@@ -644,7 +644,7 @@
 		            </list>
 		        </constructor-arg>
 		    </bean>
-		</constructor-arg>		
+		</constructor-arg>
 	</bean>
 
 	<bean id="lookupStrategy" class="org.springframework.security.acls.jdbc.BasicLookupStrategy">
@@ -901,7 +901,7 @@
 				<prop key="hibernate.connection.release_mode">auto</prop>
 				<prop key="hibernate.dialect">${hibernate.dialect}</prop>
 				<prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
-				<!-- Force Hibernate to order SQL updates by the primary key value of the items being updated. This will result in fewer 
+				<!-- Force Hibernate to order SQL updates by the primary key value of the items being updated. This will result in fewer
 					transaction deadlocks in highly concurrent systems. -->
 				<prop key="hibernate.order_updates">true</prop>
 				<prop key="hibernate.flush_before_completion">true</prop>
@@ -980,6 +980,7 @@
 		<property name="securityMetadataSource">
 			<sec:filter-security-metadata-source use-expressions="false">
 				<sec:intercept-url pattern="/admin*" access="ROLE_ADMINISTRATOR,ROLE_RESEARCHER" />
+        <sec:intercept-url pattern="/curriculum/**" access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/student/join" access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/student*" access="ROLE_STUDENT,ROLE_TEACHER,ROLE_ADMINISTRATOR,ROLE_RESEARCHER" />
 				<sec:intercept-url pattern="/student.html" access="ROLE_ANONYMOUS,ROLE_USER" />
@@ -1006,7 +1007,7 @@
 				<sec:intercept-url pattern="/forgotaccount/**/*.html" access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/session/renew" access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/login/impersonate" access="ROLE_ADMINISTRATOR,ROLE_RESEARCHER" />
-                <sec:intercept-url pattern="/logout/impersonate" access="ROLE_ANONYMOUS" />  <!-- this ensures that no-one can switch back to original user -->
+        <sec:intercept-url pattern="/logout/impersonate" access="ROLE_ANONYMOUS" />  <!-- this ensures that no-one can switch back to original user -->
 				<sec:intercept-url pattern="/authorize.html" access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/errors/*.html" access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/project/edit" access="ROLE_USER" />
@@ -1019,22 +1020,22 @@
 			</sec:filter-security-metadata-source>
 		</property>
 	</bean>
-	
+
 	<!-- enabled web expressions (e.g. hasRole() ) -->
-	<bean id="webexpressionHandler" class="org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler" /> 
+	<bean id="webexpressionHandler" class="org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler" />
 
 	<!-- i18n default properties file (english) -->
 	<util:properties id="i18nProperties" location="classpath:i18n/i18n.properties" />
 
 	<!-- wise property file -->
 	<util:properties id="wiseProperties" location="classpath:wise.properties" />
-	
+
 	<cache:annotation-driven />
-	
+
 	<bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
 		<property name="cacheManager" ref="ehcache"/>
 	</bean>
-	
+
 	<bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
 		<property name="configLocation" value="classpath:ehcache.xml" />
 	</bean>

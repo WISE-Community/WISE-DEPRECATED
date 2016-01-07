@@ -21,41 +21,24 @@
 <script src="${contextPath}/<spring:theme code="superfishsource"/>" type="text/javascript"></script>
 <script src="${contextPath}/<spring:theme code="generalsource"/>" type="text/javascript"></script>
 
-<!--NOTE: the following scripts has CONDITIONAL items that only apply to IE (MattFish)-->
-<!--[if lt IE 7]>
-<script defer type="text/javascript" src="javascript/iefixes.js"></script>
-<![endif]-->
-
 </head>
 <body>
 <div id="pageWrapper">
-
 	<%@ include file="headermain.jsp"%>
-		
 	<div id="page">
-			
 		<div id="pageContent">
-			
 			<div class="contentPanel">
-			
 				<div class="panelHeader">
 					<spring:message code="teacher.management.library.title" />
-					<span class="pageTitle"><spring:message code="header_location_teacherManagement"/></span>
 				</div>
-				
 				<div class="panelContent">
-					
 					<%@ include file="/portal/teacher/management/projectlibrarydisplay.jsp"%>
-					
 				</div>
-					
 			</div>
 		</div>
 		<div style="clear: both;"></div>
 	</div>   <!-- End of page -->
-	
 	<%@ include file="footer.jsp"%>
-	
 </div>
 </body>
 </html>
