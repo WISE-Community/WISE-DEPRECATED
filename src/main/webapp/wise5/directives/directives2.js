@@ -66,11 +66,69 @@ class ComponentDirective {
     }
 }
 
-ComponentDirective.directiveFactory.$inject = ['$injector', '$compile', 'NodeService', 'ProjectService', 'StudentDataService'];
+class ClassResponseDirective {
+    constructor() {
+        this.restrict = 'E';
+        this.scope = {
+            response: '=',
+            submitbuttonclicked: '&',
+            studentdatachanged: '&'
+        };
+        this.templateUrl = 'wise5/components/discussion/classResponse.html';
+    }
+
+    static directiveFactory() {
+        ClassResponseDirective.instance = new ClassResponseDirective();
+        return ClassResponseDirective.instance;
+    }
+
+    link($scope, $element, StudentStatusService) {
+        $scope.element = $element[0];
+
+        $scope.getAvatarColorForWorkgroupId = function (workgroupId) {
+            return StudentStatusService.getAvatarColorForWorkgroupId(workgroupId);
+        }
+
+        // handle the submit button click
+        $scope.submitButtonClicked = function(response) {
+            $scope.submitbuttonclicked({r: response});
+        };
+
+        $scope.expanded = false;
+
+        $scope.$watch(
+            function () { return $scope.response.replies.length; },
+            function (oldValue, newValue) {
+                if (newValue !== oldValue) {
+                    $scope.toggleExpanded(true);
+                }
+            }
+        );
+
+        $scope.toggleExpanded = function (open) {
+            if (open) {
+                $scope.expanded = true;
+            } else {
+                $scope.expanded = !$scope.expanded;
+            }
+
+            if ($scope.expanded) {
+                var $clist = $($scope.element).find('.discussion-comments__list');
+                setTimeout(function () {
+                    $clist.animate({scrollTop: $clist.height()}, 250);
+                }, 250);
+            }
+        }
+    };
+}
 
 let Directives = angular.module('directives', []);
 
+ComponentDirective.directiveFactory.$inject = ['$injector', '$compile', 'NodeService', 'ProjectService', 'StudentDataService'];
+ClassResponseDirective.directiveFactory.$inject = [];
+
 Directives.directive('component', ComponentDirective.directiveFactory);
+Directives.directive('classResponse', ClassResponseDirective.directiveFactory);
 
 export default Directives;
 

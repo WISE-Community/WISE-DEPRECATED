@@ -1,1 +1,1 @@
-module.exports = require("npm:highcharts@4.2.1/highcharts.src.js");
+module.exports = require("lib/highcharts/highcharts.src.js");

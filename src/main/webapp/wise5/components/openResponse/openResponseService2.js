@@ -4,8 +4,6 @@ class OpenResponseService extends NodeService {
     constructor(StudentDataService) {
         super();
         this.StudentDataService = StudentDataService;
-
-        this.config = null;
     }
 
     getStudentWorkAsHTML(componentState) {
@@ -106,6 +104,8 @@ class OpenResponseService extends NodeService {
 
 }
 
-OpenResponseService.$inject = ['StudentDataService'];
+OpenResponseService.$inject = [
+    'StudentDataService'
+];
 
 export default OpenResponseService;

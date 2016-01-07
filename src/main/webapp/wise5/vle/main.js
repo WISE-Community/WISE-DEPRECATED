@@ -49,7 +49,7 @@ require.config({
         'graphService': 'components/graph/graphService',
         'highcharts': 'vendor/highcharts/lib/highcharts',
         'highcharts-more': 'vendor/highcharts/lib/highcharts-more',
-        'highcharts-ng': 'vendor/highcharts-ng/dist/highcharts-ng.min',
+        'highcharts-ng': 'vendor/highcharts-ng/dist/highcharts-ng',
         'htmlController': 'components/html/htmlController',
         'htmlService': 'components/html/htmlService',
         'jquery': [

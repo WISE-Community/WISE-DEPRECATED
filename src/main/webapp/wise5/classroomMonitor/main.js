@@ -3,6 +3,7 @@
 
 import $ from 'jquery';
 import angular from 'angular';
+import angularMoment from 'angular-moment';
 import angularUIRouter from 'angular-ui-router';
 import ngFileUpload from 'ng-file-upload';
 import ngMaterial from 'angular-material';
@@ -12,43 +13,63 @@ import AnnotationService from '../services/annotationService2';
 import ClassroomMonitorController from './classroomMonitorController2';
 import ConfigService from '../services/configService2';
 import Directives from '../directives/directives2';
-import DrawingTool from '../lib/drawingTool/drawing-tool';
-import DrawingToolVendor from '../lib/drawingTool/vendor';
+import DiscussionService from '../components/discussion/discussionService2';
 import DrawService from '../components/draw/drawService2';
+import EmbeddedService from '../components/embedded/embeddedService2';
+import GraphService from '../components/graph/graphService2';
+import Highcharts from 'highcharts';
+import highchartsng from 'highcharts-ng';
+import LabelService from '../components/label/labelService2';
+import MatchService from '../components/match/matchService2';
+import MultipleChoiceService from '../components/multipleChoice/multipleChoiceService2';
 import NodeProgressController from './nodeProgress/nodeProgressController2';
 import NodeGradingController from './nodeGrading/nodeGradingController2';
 import NodeService from '../services/nodeService2';
 import OpenResponseService from '../components/openResponse/openResponseService2';
+import OutsideURLService from '../components/outsideURL/outsideURLService2';
 import ProjectService from '../services/projectService2';
 import SessionService from '../services/sessionService2';
 import StudentAssetService from '../services/studentAssetService2';
 import StudentDataService from '../services/studentDataService2';
 import StudentStatusService from '../services/studentStatusService2';
+import StudentWebSocketService from '../services/studentWebSocketService2';
+import TableService from '../components/table/tableService2';
 import TeacherDataService from '../services/teacherDataService2';
 import StudentProgressController from './studentProgress/studentProgressController2';
 import TeacherWebSocketService from '../services/teacherWebSocketService2';
 import UtilService from '../services/utilService2';
 
 let mainModule = angular.module('classroomMonitor', [
+        'angularMoment',
         'angular-toArrayFilter',
         'directives',
-        'ui.router',
+        'highcharts-ng',
         'ngAnimate',
         'ngAria',
         'ngFileUpload',
         'ngMaterial',
-        'ngWebSocket'
+        'ngWebSocket',
+        'ui.router'
     ])
     .service(AnnotationService.name, AnnotationService)
     .service(ConfigService.name, ConfigService)
+    .service(DiscussionService.name, DiscussionService)
     .service(DrawService.name, DrawService)
+    .service(EmbeddedService.name, EmbeddedService)
+    .service(GraphService.name, GraphService)
+    .service(LabelService.name, LabelService)
+    .service(MatchService.name, MatchService)
+    .service(MultipleChoiceService.name, MultipleChoiceService)
     .service(NodeService.name, NodeService)
     .service(OpenResponseService.name, OpenResponseService)
+    .service(OutsideURLService.name, OutsideURLService)
     .service(ProjectService.name, ProjectService)
     .service(SessionService.name, SessionService)
     .service(StudentAssetService.name, StudentAssetService)
     .service(StudentDataService.name, StudentDataService)
     .service(StudentStatusService.name, StudentStatusService)
+    .service(StudentWebSocketService.name, StudentWebSocketService)
+    .service(TableService.name, TableService)
     .service(TeacherDataService.name, TeacherDataService)
     .service(TeacherWebSocketService.name, TeacherWebSocketService)
     .service(UtilService.name, UtilService)
@@ -117,15 +138,39 @@ let mainModule = angular.module('classroomMonitor', [
                             return TeacherDataService.retrieveStudentDataByNodeId($stateParams.nodeId);
                         },
                         load: () => {
-                        System.import('components/html/htmlController2').then((HTMLController) => {
-                            $controllerProvider.register(HTMLController.default.name, HTMLController.default);
-                        });
-                        System.import('components/openResponse/openResponseController2').then((OpenResponseController) => {
-                            $controllerProvider.register(OpenResponseController.default.name, OpenResponseController.default);
-                        });
-                        System.import('components/draw/drawController2').then((DrawController) => {
-                            $controllerProvider.register(DrawController.default.name, DrawController.default);
-                        });
+                            System.import('components/discussion/discussionController2').then((DiscussionController) => {
+                                $controllerProvider.register(DiscussionController.default.name, DiscussionController.default);
+                            });
+                            System.import('components/draw/drawController2').then((DrawController) => {
+                                $controllerProvider.register(DrawController.default.name, DrawController.default);
+                            });
+                            System.import('components/embedded/embeddedController2').then((EmbeddedController) => {
+                                $controllerProvider.register(EmbeddedController.default.name, EmbeddedController.default);
+                            });
+                            System.import('components/graph/graphController2').then((GraphController) => {
+                                $controllerProvider.register(GraphController.default.name, GraphController.default);
+                            });
+                            System.import('components/match/matchController2').then((MatchController) => {
+                                $controllerProvider.register(MatchController.default.name, MatchController.default);
+                            });
+                            System.import('components/multipleChoice/multipleChoiceController2').then((MultipleChoiceController) => {
+                                $controllerProvider.register(MultipleChoiceController.default.name, MultipleChoiceController.default);
+                            });
+                            System.import('components/html/htmlController2').then((HTMLController) => {
+                                $controllerProvider.register(HTMLController.default.name, HTMLController.default);
+                            });
+                            System.import('components/label/labelController2').then((LabelController) => {
+                                $controllerProvider.register(LabelController.default.name, LabelController.default);
+                            });
+                            System.import('components/openResponse/openResponseController2').then((OpenResponseController) => {
+                                $controllerProvider.register(OpenResponseController.default.name, OpenResponseController.default);
+                            });
+                            System.import('components/outsideURL/outsideURLController2').then((OutsideURLController) => {
+                                $controllerProvider.register(OutsideURLController.default.name, OutsideURLController.default);
+                            });
+                            System.import('components/table/tableController2').then((TableController) => {
+                                $controllerProvider.register(TableController.default.name, TableController.default);
+                            });
                         }
                         /*
                         annotationController: app.loadController('annotationController'),

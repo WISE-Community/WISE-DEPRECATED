@@ -665,8 +665,18 @@ class OpenResponseController {
     };
 };
 
-OpenResponseController.$inject = ['$injector', '$rootScope', '$scope', '$state', '$stateParams', 'ConfigService',
-    'NodeService', 'OpenResponseService', 'ProjectService', 'StudentAssetService', 'StudentDataService'];
+OpenResponseController.$inject = [
+    '$injector',
+    '$rootScope',
+    '$scope',
+    '$state',
+    '$stateParams',
+    'ConfigService',
+    'NodeService',
+    'OpenResponseService',
+    'ProjectService',
+    'StudentAssetService',
+    'StudentDataService'
+];
 
 export default OpenResponseController;
-

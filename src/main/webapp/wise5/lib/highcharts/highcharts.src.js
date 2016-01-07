@@ -19260,6 +19260,7 @@
         product: PRODUCT,
         version: VERSION
     });
-    
+
+    window.Highcharts = Highcharts;
     return Highcharts;
 }));
