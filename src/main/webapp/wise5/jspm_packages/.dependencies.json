@@ -392,12 +392,19 @@
     "process": "github:jspm/nodelibs-process@^0.1.0"
   },
   "github:highcharts/draggable-points@master": {
-      "highcharts": "lib/highcharts@4.2.1"
+    "highcharts": "lib/highcharts@4.2.1"
   },
   "npm:angular-moment@1.0.0-beta.3": {
     "moment": "npm:moment@~2.10.0"
   },
   "npm:moment@2.10.6": {
+    "process": "github:jspm/nodelibs-process@^0.1.0"
+  },
+  "npm:oclazyload@1.0.9": {
+    "angular": "npm:angular@1.4.8",
+    "child_process": "github:jspm/nodelibs-child_process@^0.1.0",
+    "fs": "github:jspm/nodelibs-fs@^0.1.0",
+    "util": "github:jspm/nodelibs-util@^0.1.0",
     "process": "github:jspm/nodelibs-process@^0.1.0"
   }
 }

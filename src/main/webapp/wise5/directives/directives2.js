@@ -49,19 +49,40 @@ class ComponentDirective {
 
         var component = ComponentDirective.instance.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
 
-        $scope.component = component;
-        $scope.componentState = componentState;
-        $scope.componentTemplatePath = ComponentDirective.instance.NodeService.getComponentTemplatePath(component.type);
-        $scope.nodeId = nodeId;
-        $scope.workgroupId = workgroupId;
-        $scope.teacherWorkgroupId = teacherWorkgroupId;
+        if (component.type === 'OpenResponse') {
+            System.import('components/openResponse/openResponseController2').then((OpenResponseController) => {
+                this.$controllerProvider.register(OpenResponseController.default.name, OpenResponseController.default);
 
-        var componentHTML = "<div id=\"{{component.id}}\" class=\"component-content\" >" +
-            "<div ng-include=\"componentTemplatePath\" style=\"overflow-x: auto;\"></div></div>";
+                $scope.component = component;
+                $scope.componentState = componentState;
+                $scope.componentTemplatePath = ComponentDirective.instance.NodeService.getComponentTemplatePath(component.type);
+                $scope.nodeId = nodeId;
+                $scope.workgroupId = workgroupId;
+                $scope.teacherWorkgroupId = teacherWorkgroupId;
 
-        if (componentHTML != null) {
-            element.html(componentHTML);
-            ComponentDirective.instance.$compile(element.contents())($scope);
+                var componentHTML = "<div id=\"{{component.id}}\" class=\"component-content\" >" +
+                    "<div ng-include=\"componentTemplatePath\" style=\"overflow-x: auto;\"></div></div>";
+
+                if (componentHTML != null) {
+                    element.html(componentHTML);
+                    ComponentDirective.instance.$compile(element.contents())($scope);
+                }
+            });
+        } else {
+            $scope.component = component;
+            $scope.componentState = componentState;
+            $scope.componentTemplatePath = ComponentDirective.instance.NodeService.getComponentTemplatePath(component.type);
+            $scope.nodeId = nodeId;
+            $scope.workgroupId = workgroupId;
+            $scope.teacherWorkgroupId = teacherWorkgroupId;
+
+            var componentHTML = "<div id=\"{{component.id}}\" class=\"component-content\" >" +
+                "<div ng-include=\"componentTemplatePath\" style=\"overflow-x: auto;\"></div></div>";
+
+            if (componentHTML != null) {
+                element.html(componentHTML);
+                ComponentDirective.instance.$compile(element.contents())($scope);
+            }
         }
     }
 }
@@ -122,13 +143,102 @@ class ClassResponseDirective {
     };
 }
 
+class CompileDirective {
+    constructor($compile) {
+
+        this.$compile = $compile;
+    }
+
+    static directiveFactory($compile) {
+        CompileDirective.instance = new CompileDirective($compile);
+        return CompileDirective.instance;
+    }
+
+    link(scope, ele, attrs) {
+        scope.$watch(
+            function(scope) {
+                return scope.$eval(attrs.compile);
+            },
+            function(value) {
+                ele.html(value);
+                CompileDirective.instance.$compile(ele.contents())(scope);
+            }
+        );
+    }
+}
+
+class navItemDirective {
+    constructor() {
+        this.scope = {
+            nodeId: '=',
+            showPosition: '=',
+            type: '='
+        };
+        this.template = '<ng-include src="navitemCtrl.getTemplateUrl()"></ng-include>';
+        this.controller = 'NavItemController';
+        this.controllerAs = 'navitemCtrl';
+        this.bindToController = true;
+    }
+
+    static directiveFactory() {
+        navItemDirective.instance = new navItemDirective();
+        return navItemDirective.instance;
+    }
+}
+
+class stepToolsDirective {
+    constructor() {
+        this.scope = {
+            nodeId: '=',
+            showPosition: '='
+        };
+        this.template = '<ng-include src="stepToolsCtrl.getTemplateUrl()"></ng-include>';
+        this.controller = 'StepToolsCtrl';
+        this.controllerAs = 'stepToolsCtrl';
+        this.bindToController = true;
+    }
+
+    static directiveFactory() {
+        stepToolsDirective.instance = new stepToolsDirective();
+        return stepToolsDirective.instance;
+    }
+}
+
+class nodeStatusIconDirective {
+    constructor() {
+        this.scope = {
+            nodeId: '=',
+            customClass: '='
+        };
+        this.template = '<ng-include src="nodeStatusIconCtrl.getTemplateUrl()"></ng-include>';
+        this.controller = 'NodeStatusIconCtrl';
+        this.controllerAs = 'nodeStatusIconCtrl';
+        this.bindToController = true;
+    }
+
+    static directiveFactory() {
+        nodeStatusIconDirective.instance = new nodeStatusIconDirective();
+        return nodeStatusIconDirective.instance;
+    }
+}
+
 let Directives = angular.module('directives', []);
 
 ComponentDirective.directiveFactory.$inject = ['$injector', '$compile', 'NodeService', 'ProjectService', 'StudentDataService'];
 ClassResponseDirective.directiveFactory.$inject = [];
+CompileDirective.directiveFactory.$inject = ['$compile'];
 
 Directives.directive('component', ComponentDirective.directiveFactory);
 Directives.directive('classResponse', ClassResponseDirective.directiveFactory);
+Directives.directive('compile', CompileDirective.directiveFactory);
+
+navItemDirective.directiveFactory.$inject = [];
+stepToolsDirective.directiveFactory.$inject = [];
+nodeStatusIconDirective.directiveFactory.$inject = [];
+
+Directives.directive('navItem', navItemDirective.directiveFactory);
+Directives.directive('stepTools', stepToolsDirective.directiveFactory);
+Directives.directive('nodeStatusIcon', nodeStatusIconDirective.directiveFactory);
 
 export default Directives;
 

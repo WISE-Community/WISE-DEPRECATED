@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for ./src/ocLazyLoad.loaders.templatesLoader.js</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="../prettify.css">
+    <link rel="stylesheet" href="../base.css">
+    <style type='text/css'>
+        div.coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class="header high">
+    <h1>Code coverage report for <span class="entity">./src/ocLazyLoad.loaders.templatesLoader.js</span></h1>
+    <h2>
+        Statements: <span class="metric">100% <small>(22 / 22)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Branches: <span class="metric">70% <small>(7 / 10)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Functions: <span class="metric">100% <small>(10 / 10)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Lines: <span class="metric">100% <small>(22 / 22)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Ignored: <span class="metric"><span class="ignore-none">none</span></span> &nbsp;&nbsp;&nbsp;&nbsp;
+    </h2>
+    <div class="path"><a href="../index.html">All files</a> &#187; <a href="index.html">./src/</a> &#187; ocLazyLoad.loaders.templatesLoader.js</div>
+</div>
+<div class="body">
+<pre><table class="coverage">
+<tr><td class="line-count">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51</td><td class="line-coverage"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">29</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">28</span>
+<span class="cline-any cline-yes">4</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4</span>
+<span class="cline-any cline-yes">4</span>
+<span class="cline-any cline-yes">4</span>
+<span class="cline-any cline-yes">4</span>
+<span class="cline-any cline-yes">3</span>
+<span class="cline-any cline-yes">3</span>
+<span class="cline-any cline-yes">3</span>
+<span class="cline-any cline-yes">3</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3</span>
+<span class="cline-any cline-yes">3</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4</span>
+<span class="cline-any cline-yes">3</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">28</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">28</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">'use strict';
+&nbsp;
+(function (angular) {
+    'use strict';
+&nbsp;
+    angular.module('oc.lazyLoad').config(function ($provide) {
+        $provide.decorator('$ocLazyLoad', function ($delegate, $templateCache, $q, $http) {
+            /**
+             * templatesLoader function
+             * @type Function
+             * @param paths array list of css files to load
+             * @param callback to call when everything is loaded. We use a callback and not a promise
+             * @param params object config parameters for $http
+             * because the user can overwrite templatesLoader and it will probably not use promises :(
+             */
+            $delegate.templatesLoader = function (paths, callback, params) {
+                var promises = [],
+                    filesCache = $delegate._getFilesCache();
+&nbsp;
+                angular.forEach(paths, function (url) {
+                    var deferred = $q.defer();
+                    promises.push(deferred.promise);
+                    $http.get(url, params).success(function (data) {
+                        <span class="missing-if-branch" title="else path not taken" >E</span>if (angular.isString(data) &amp;&amp; data.length &gt; 0) {
+                            angular.forEach(angular.element(data), function (node) {
+                                <span class="missing-if-branch" title="else path not taken" >E</span>if (node.nodeName === 'SCRIPT' &amp;&amp; node.type === 'text/ng-template') {
+                                    $templateCache.put(node.id, node.innerHTML);
+                                }
+                            });
+                        }
+                        <span class="missing-if-branch" title="else path not taken" >E</span>if (angular.isUndefined(filesCache.get(url))) {
+                            filesCache.put(url, true);
+                        }
+                        deferred.resolve();
+                    }).error(function (err) {
+                        deferred.reject(new Error('Unable to load template file "' + url + '": ' + err));
+                    });
+                });
+                return $q.all(promises).then(function () {
+                    callback();
+                }, function (err) {
+                    callback(err);
+                });
+            };
+            $delegate.templatesLoader.ocLazyLoadLoader = true;
+&nbsp;
+            return $delegate;
+        });
+    });
+})(angular);
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIkM6L3dhbXAvd3d3L29jTGF6eUxvYWQvc3JjL29jTGF6eUxvYWQubG9hZGVycy50ZW1wbGF0ZXNMb2FkZXIuanMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7QUFBQSxDQUFDLFVBQUEsT0FBTyxFQUFJO0FBQ1IsZ0JBQVksQ0FBQzs7QUFFYixXQUFPLENBQUMsTUFBTSxDQUFDLGFBQWEsQ0FBQyxDQUFDLE1BQU0sQ0FBQyxVQUFTLFFBQVEsRUFBRTtBQUNwRCxnQkFBUSxDQUFDLFNBQVMsQ0FBQyxhQUFhLEVBQUUsVUFBVSxTQUFTLEVBQUUsY0FBYyxFQUFFLEVBQUUsRUFBRSxLQUFLLEVBQUU7Ozs7Ozs7OztBQVM5RSxxQkFBUyxDQUFDLGVBQWUsR0FBRyxVQUFTLEtBQUssRUFBRSxRQUFRLEVBQUUsTUFBTSxFQUFFO0FBQzFELG9CQUFJLFFBQVEsR0FBRyxFQUFFO29CQUNiLFVBQVUsR0FBRyxTQUFTLENBQUMsY0FBYyxFQUFFLENBQUM7O0FBRTVDLHVCQUFPLENBQUMsT0FBTyxDQUFDLEtBQUssRUFBRSxVQUFBLEdBQUcsRUFBSTtBQUMxQix3QkFBSSxRQUFRLEdBQUcsRUFBRSxDQUFDLEtBQUssRUFBRSxDQUFDO0FBQzFCLDRCQUFRLENBQUMsSUFBSSxDQUFDLFFBQVEsQ0FBQyxPQUFPLENBQUMsQ0FBQztBQUNoQyx5QkFBSyxDQUFDLEdBQUcsQ0FBQyxHQUFHLEVBQUUsTUFBTSxDQUFDLENBQUMsT0FBTyxDQUFDLFVBQUEsSUFBSSxFQUFJO0FBQ25DLDRCQUFHLE9BQU8sQ0FBQyxRQUFRLENBQUMsSUFBSSxDQUFDLElBQUksSUFBSSxDQUFDLE1BQU0sR0FBRyxDQUFDLEVBQUU7QUFDMUMsbUNBQU8sQ0FBQyxPQUFPLENBQUMsT0FBTyxDQUFDLE9BQU8sQ0FBQyxJQUFJLENBQUMsRUFBRSxVQUFBLElBQUksRUFBSTtBQUMzQyxvQ0FBRyxJQUFJLENBQUMsUUFBUSxLQUFLLFFBQVEsSUFBSSxJQUFJLENBQUMsSUFBSSxLQUFLLGtCQUFrQixFQUFFO0FBQy9ELGtEQUFjLENBQUMsR0FBRyxDQUFDLElBQUksQ0FBQyxFQUFFLEVBQUUsSUFBSSxDQUFDLFNBQVMsQ0FBQyxDQUFDO2lDQUMvQzs2QkFDSixDQUFDLENBQUM7eUJBQ047QUFDRCw0QkFBRyxPQUFPLENBQUMsV0FBVyxDQUFDLFVBQVUsQ0FBQyxHQUFHLENBQUMsR0FBRyxDQUFDLENBQUMsRUFBRTtBQUN6QyxzQ0FBVSxDQUFDLEdBQUcsQ0FBQyxHQUFHLEVBQUUsSUFBSSxDQUFDLENBQUM7eUJBQzdCO0FBQ0QsZ0NBQVEsQ0FBQyxPQUFPLEVBQUUsQ0FBQztxQkFDdEIsQ0FBQyxDQUFDLEtBQUssQ0FBQyxVQUFTLEdBQUcsRUFBRTtBQUNuQixnQ0FBUSxDQUFDLE1BQU0sQ0FBQyxJQUFJLEtBQUssb0NBQW1DLEdBQUcsV0FBUSxHQUFHLENBQUksQ0FBQyxDQUFDO3FCQUNuRixDQUFDLENBQUM7aUJBQ04sQ0FBQyxDQUFDO0FBQ0gsdUJBQU8sRUFBRSxDQUFDLEdBQUcsQ0FBQyxRQUFRLENBQUMsQ0FBQyxJQUFJLENBQUMsWUFBTTtBQUMvQiw0QkFBUSxFQUFFLENBQUM7aUJBQ2QsRUFBRSxVQUFBLEdBQUcsRUFBSTtBQUNOLDRCQUFRLENBQUMsR0FBRyxDQUFDLENBQUM7aUJBQ2pCLENBQUMsQ0FBQzthQUNOLENBQUM7QUFDRixxQkFBUyxDQUFDLGVBQWUsQ0FBQyxnQkFBZ0IsR0FBRyxJQUFJLENBQUM7O0FBRWxELG1CQUFPLFNBQVMsQ0FBQztTQUNwQixDQUFDLENBQUE7S0FDTCxDQUFDLENBQUM7Q0FFTixDQUFBLENBQUUsT0FBTyxDQUFDLENBQUMiLCJmaWxlIjoiQzovd2FtcC93d3cvb2NMYXp5TG9hZC9zcmMvb2NMYXp5TG9hZC5sb2FkZXJzLnRlbXBsYXRlc0xvYWRlci5qcyIsInNvdXJjZXNDb250ZW50IjpbIihhbmd1bGFyID0+IHtcbiAgICAndXNlIHN0cmljdCc7XG5cbiAgICBhbmd1bGFyLm1vZHVsZSgnb2MubGF6eUxvYWQnKS5jb25maWcoZnVuY3Rpb24oJHByb3ZpZGUpIHtcbiAgICAgICAgJHByb3ZpZGUuZGVjb3JhdG9yKCckb2NMYXp5TG9hZCcsIGZ1bmN0aW9uICgkZGVsZWdhdGUsICR0ZW1wbGF0ZUNhY2hlLCAkcSwgJGh0dHApIHtcbiAgICAgICAgICAgIC8qKlxuICAgICAgICAgICAgICogdGVtcGxhdGVzTG9hZGVyIGZ1bmN0aW9uXG4gICAgICAgICAgICAgKiBAdHlwZSBGdW5jdGlvblxuICAgICAgICAgICAgICogQHBhcmFtIHBhdGhzIGFycmF5IGxpc3Qgb2YgY3NzIGZpbGVzIHRvIGxvYWRcbiAgICAgICAgICAgICAqIEBwYXJhbSBjYWxsYmFjayB0byBjYWxsIHdoZW4gZXZlcnl0aGluZyBpcyBsb2FkZWQuIFdlIHVzZSBhIGNhbGxiYWNrIGFuZCBub3QgYSBwcm9taXNlXG4gICAgICAgICAgICAgKiBAcGFyYW0gcGFyYW1zIG9iamVjdCBjb25maWcgcGFyYW1ldGVycyBmb3IgJGh0dHBcbiAgICAgICAgICAgICAqIGJlY2F1c2UgdGhlIHVzZXIgY2FuIG92ZXJ3cml0ZSB0ZW1wbGF0ZXNMb2FkZXIgYW5kIGl0IHdpbGwgcHJvYmFibHkgbm90IHVzZSBwcm9taXNlcyA6KFxuICAgICAgICAgICAgICovXG4gICAgICAgICAgICAkZGVsZWdhdGUudGVtcGxhdGVzTG9hZGVyID0gZnVuY3Rpb24ocGF0aHMsIGNhbGxiYWNrLCBwYXJhbXMpIHtcbiAgICAgICAgICAgICAgICB2YXIgcHJvbWlzZXMgPSBbXSxcbiAgICAgICAgICAgICAgICAgICAgZmlsZXNDYWNoZSA9ICRkZWxlZ2F0ZS5fZ2V0RmlsZXNDYWNoZSgpO1xuXG4gICAgICAgICAgICAgICAgYW5ndWxhci5mb3JFYWNoKHBhdGhzLCB1cmwgPT4ge1xuICAgICAgICAgICAgICAgICAgICB2YXIgZGVmZXJyZWQgPSAkcS5kZWZlcigpO1xuICAgICAgICAgICAgICAgICAgICBwcm9taXNlcy5wdXNoKGRlZmVycmVkLnByb21pc2UpO1xuICAgICAgICAgICAgICAgICAgICAkaHR0cC5nZXQodXJsLCBwYXJhbXMpLnN1Y2Nlc3MoZGF0YSA9PiB7XG4gICAgICAgICAgICAgICAgICAgICAgICBpZihhbmd1bGFyLmlzU3RyaW5nKGRhdGEpICYmIGRhdGEubGVuZ3RoID4gMCkge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgIGFuZ3VsYXIuZm9yRWFjaChhbmd1bGFyLmVsZW1lbnQoZGF0YSksIG5vZGUgPT4ge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBpZihub2RlLm5vZGVOYW1lID09PSAnU0NSSVBUJyAmJiBub2RlLnR5cGUgPT09ICd0ZXh0L25nLXRlbXBsYXRlJykge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgJHRlbXBsYXRlQ2FjaGUucHV0KG5vZGUuaWQsIG5vZGUuaW5uZXJIVE1MKTtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIH0pO1xuICAgICAgICAgICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICAgICAgICAgICAgaWYoYW5ndWxhci5pc1VuZGVmaW5lZChmaWxlc0NhY2hlLmdldCh1cmwpKSkge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgIGZpbGVzQ2FjaGUucHV0KHVybCwgdHJ1ZSk7XG4gICAgICAgICAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICAgICAgICAgICAgICBkZWZlcnJlZC5yZXNvbHZlKCk7XG4gICAgICAgICAgICAgICAgICAgIH0pLmVycm9yKGZ1bmN0aW9uKGVycikge1xuICAgICAgICAgICAgICAgICAgICAgICAgZGVmZXJyZWQucmVqZWN0KG5ldyBFcnJvcihgVW5hYmxlIHRvIGxvYWQgdGVtcGxhdGUgZmlsZSBcIiR7IHVybCB9XCI6ICR7IGVyciB9YCkpO1xuICAgICAgICAgICAgICAgICAgICB9KTtcbiAgICAgICAgICAgICAgICB9KTtcbiAgICAgICAgICAgICAgICByZXR1cm4gJHEuYWxsKHByb21pc2VzKS50aGVuKCgpID0+IHtcbiAgICAgICAgICAgICAgICAgICAgY2FsbGJhY2soKTtcbiAgICAgICAgICAgICAgICB9LCBlcnIgPT4ge1xuICAgICAgICAgICAgICAgICAgICBjYWxsYmFjayhlcnIpO1xuICAgICAgICAgICAgICAgIH0pO1xuICAgICAgICAgICAgfTtcbiAgICAgICAgICAgICRkZWxlZ2F0ZS50ZW1wbGF0ZXNMb2FkZXIub2NMYXp5TG9hZExvYWRlciA9IHRydWU7XG5cbiAgICAgICAgICAgIHJldHVybiAkZGVsZWdhdGU7XG4gICAgICAgIH0pXG4gICAgfSk7XG5cbn0pKGFuZ3VsYXIpO1xuIl19</pre></td></tr>
+</table></pre>
+
+</div>
+<div class="footer">
+    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue Nov 24 2015 22:30:46 GMT+0100 (Paris, Madrid)</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>

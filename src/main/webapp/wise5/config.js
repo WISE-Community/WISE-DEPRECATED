@@ -27,6 +27,7 @@ System.config({
     "highcharts/draggable-points": "github:highcharts/draggable-points@master",
     "jquery": "github:components/jquery@2.1.4",
     "ng-file-upload": "npm:ng-file-upload@10.1.11",
+    "oclazyload": "npm:oclazyload@1.0.9",
     "github:angular-ui/ui-router@0.2.15": {
       "angular": "github:angular/bower-angular@1.4.8"
     },
@@ -293,6 +294,13 @@ System.config({
     },
     "npm:ng-file-upload@10.1.11": {
       "process": "github:jspm/nodelibs-process@0.1.2"
+    },
+    "npm:oclazyload@1.0.9": {
+      "angular": "npm:angular@1.4.8",
+      "child_process": "github:jspm/nodelibs-child_process@0.1.0",
+      "fs": "github:jspm/nodelibs-fs@0.1.2",
+      "process": "github:jspm/nodelibs-process@0.1.2",
+      "util": "github:jspm/nodelibs-util@0.1.0"
     },
     "npm:options@0.0.6": {
       "fs": "github:jspm/nodelibs-fs@0.1.2"

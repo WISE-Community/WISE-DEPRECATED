@@ -15,13 +15,19 @@
 		<!-- Place favicon.ico in the root directory -->
 
 		<script src="${contextPath}/wise5/lib/modernizr/modernizr.custom.js"></script>
-
+        <script src="${contextPath}/wise5/jspm_packages/system.js"></script>
+        <script src="${contextPath}/wise5/config.js"></script>
+        <script>
+            System.import('${contextPath}/wise5/vle/bootstrap');
+        </script>
 	</head>
 	<body layout="row" ui-view>
 		<script>
 			var configUrl = '${vleConfigUrl}';
 		</script>
+        <!--
 		<script data-main='${contextPath}/wise5/vle/main' src='${contextPath}/wise5/vendor/requirejs/require.js'></script>
+        -->
 
 		<!-- Google Analytics: change UA-XXXXX-X to be your site's ID.
 		<script>

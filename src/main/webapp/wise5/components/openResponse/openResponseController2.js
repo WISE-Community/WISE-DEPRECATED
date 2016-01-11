@@ -2,9 +2,6 @@ class OpenResponseController {
     constructor($injector,
                 $rootScope,
                 $scope,
-                $state,
-                $stateParams,
-                ConfigService,
                 NodeService,
                 OpenResponseService,
                 ProjectService,
@@ -14,9 +11,6 @@ class OpenResponseController {
         this.$injector = $injector;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
-        this.$state = $state;
-        this.$stateParams = $stateParams;
-        this.ConfigService = ConfigService;
         this.NodeService = NodeService;
         this.OpenResponseService = OpenResponseService;
         this.ProjectService = ProjectService;
@@ -101,13 +95,13 @@ class OpenResponseController {
         if (currentNode != null) {
             this.nodeId = currentNode.id;
         } else {
-            this.nodeId = $scope.nodeId;
+            this.nodeId = this.$scope.nodeId;
         }
 
         // get the component content from the scope
-        this.componentContent = $scope.component;
+        this.componentContent = this.$scope.component;
 
-        this.mode = $scope.mode;
+        this.mode = this.$scope.mode;
 
         if (this.componentContent != null) {
 
@@ -160,7 +154,7 @@ class OpenResponseController {
                 this.isDisabled = true;
 
                 // register this component with the parent node
-                $scope.$parent.registerComponentController($scope, this.componentContent);
+                this.$scope.$parent.registerComponentController(this.$scope, this.componentContent);
             } else {
                 // this is a regular component
 
@@ -171,7 +165,7 @@ class OpenResponseController {
                 this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
 
                 // get the component state from the scope
-                componentState = $scope.componentState;
+                componentState = this.$scope.componentState;
 
                 if (componentState == null) {
                     /*
@@ -201,9 +195,9 @@ class OpenResponseController {
                 // check if we need to lock this component
                 this.calculateDisabled();
 
-                if ($scope.$parent.registerComponentController != null) {
+                if (this.$scope.$parent.registerComponentController != null) {
                     // register this component with the parent node
-                    $scope.$parent.registerComponentController($scope, this.componentContent);
+                    this.$scope.$parent.registerComponentController(this.$scope, this.componentContent);
                 }
             }
         }
@@ -214,9 +208,9 @@ class OpenResponseController {
         /**
          * Returns true iff there is student work that hasn't been saved yet
          */
-        $scope.isDirty = function() {
-            return $scope.openResponseController.isDirty;
-        };
+        this.$scope.isDirty = function() {
+            return this.$scope.openResponseController.isDirty;
+        }.bind(this);
 
         /**
          * Get the component state from this component. The parent node will
@@ -224,25 +218,25 @@ class OpenResponseController {
          * save student data.
          * @return a component state containing the student data
          */
-        $scope.getComponentState = function() {
+        this.$scope.getComponentState = function() {
 
             var componentState = null;
 
-            if ($scope.openResponseController.isDirty) {
+            if (this.$scope.openResponseController.isDirty) {
                 // create a component state populated with the student data
-                componentState = $scope.openResponseController.createComponentState();
+                componentState = this.$scope.openResponseController.createComponentState();
 
                 // set isDirty to false since this student work is about to be saved
-                $scope.openResponseController.isDirty = false;
+                this.$scope.openResponseController.isDirty = false;
             }
 
             return componentState;
-        };
+        }.bind(this);
 
         /**
          * The parent node submit button was clicked
          */
-        $scope.$on('nodeSubmitClicked', angular.bind(this, function(event, args) {
+        this.$scope.$on('nodeSubmitClicked', function(event, args) {
 
             // get the node id of the node
             var nodeId = args.nodeId;
@@ -255,16 +249,16 @@ class OpenResponseController {
                     this.isDisabled = true;
                 }
             }
-        }));
+        }).bind(this);
 
         /**
          * Listen for the 'exitNode' event which is fired when the student
          * exits the parent node. This will perform any necessary cleanup
          * when the student exits the parent node.
          */
-        $scope.$on('exitNode', angular.bind(this, function(event, args) {
+        this.$scope.$on('exitNode', function(event, args) {
 
-        }));
+        }.bind(this));
     }
 
     /**
@@ -299,7 +293,7 @@ class OpenResponseController {
     saveButtonClicked() {
 
         // tell the parent node that this component wants to save
-        $scope.$emit('componentSaveTriggered', {nodeId: this.nodeId, componentId: this.componentId});
+        this.$scope.$emit('componentSaveTriggered', {nodeId: this.nodeId, componentId: this.componentId});
     };
 
     /**
@@ -314,7 +308,7 @@ class OpenResponseController {
         }
 
         // tell the parent node that this component wants to submit
-        $scope.$emit('componentSubmitTriggered', {nodeId: this.nodeId, componentId: this.componentId});
+        this.$scope.$emit('componentSubmitTriggered', {nodeId: this.nodeId, componentId: this.componentId});
     };
 
     /**
@@ -339,7 +333,7 @@ class OpenResponseController {
          * this will also notify connected parts that this component's student
          * data has changed.
          */
-        $scope.$emit('componentStudentDataChanged', {componentId: componentId, componentState: componentState});
+        this.$scope.$emit('componentStudentDataChanged', {componentId: componentId, componentState: componentState});
     };
 
     /**
@@ -485,7 +479,7 @@ class OpenResponseController {
             var componentType = studentWork.componentType;
 
             if (componentType != null) {
-                var childService = $injector.get(componentType + 'Service');
+                var childService = this.$injector.get(componentType + 'Service');
 
                 if (childService != null) {
                     var studentWorkHTML = childService.getStudentWorkAsHTML(studentWork);
@@ -659,7 +653,7 @@ class OpenResponseController {
          * Listen for the 'exit' event which is fired when the student exits
          * the VLE. This will perform saving before the VLE exits.
          */
-        exitListener = $scope.$on('exit', angular.bind(this, function(event, args) {
+        exitListener = this.$scope.$on('exit', angular.bind(this, function(event, args) {
 
         }));
     };
@@ -669,9 +663,6 @@ OpenResponseController.$inject = [
     '$injector',
     '$rootScope',
     '$scope',
-    '$state',
-    '$stateParams',
-    'ConfigService',
     'NodeService',
     'OpenResponseService',
     'ProjectService',
