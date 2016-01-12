@@ -1,0 +1,1 @@
+module.exports = require("github:angular-ui/ui-sortable@0.13.4/sortable.js");

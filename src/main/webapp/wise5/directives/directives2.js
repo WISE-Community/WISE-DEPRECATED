@@ -49,40 +49,19 @@ class ComponentDirective {
 
         var component = ComponentDirective.instance.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
 
-        if (component.type === 'OpenResponse') {
-            System.import('components/openResponse/openResponseController2').then((OpenResponseController) => {
-                this.$controllerProvider.register(OpenResponseController.default.name, OpenResponseController.default);
+        $scope.component = component;
+        $scope.componentState = componentState;
+        $scope.componentTemplatePath = ComponentDirective.instance.NodeService.getComponentTemplatePath(component.type);
+        $scope.nodeId = nodeId;
+        $scope.workgroupId = workgroupId;
+        $scope.teacherWorkgroupId = teacherWorkgroupId;
 
-                $scope.component = component;
-                $scope.componentState = componentState;
-                $scope.componentTemplatePath = ComponentDirective.instance.NodeService.getComponentTemplatePath(component.type);
-                $scope.nodeId = nodeId;
-                $scope.workgroupId = workgroupId;
-                $scope.teacherWorkgroupId = teacherWorkgroupId;
+        var componentHTML = "<div id=\"{{component.id}}\" class=\"component-content\" >" +
+            "<div ng-include=\"componentTemplatePath\" style=\"overflow-x: auto;\"></div></div>";
 
-                var componentHTML = "<div id=\"{{component.id}}\" class=\"component-content\" >" +
-                    "<div ng-include=\"componentTemplatePath\" style=\"overflow-x: auto;\"></div></div>";
-
-                if (componentHTML != null) {
-                    element.html(componentHTML);
-                    ComponentDirective.instance.$compile(element.contents())($scope);
-                }
-            });
-        } else {
-            $scope.component = component;
-            $scope.componentState = componentState;
-            $scope.componentTemplatePath = ComponentDirective.instance.NodeService.getComponentTemplatePath(component.type);
-            $scope.nodeId = nodeId;
-            $scope.workgroupId = workgroupId;
-            $scope.teacherWorkgroupId = teacherWorkgroupId;
-
-            var componentHTML = "<div id=\"{{component.id}}\" class=\"component-content\" >" +
-                "<div ng-include=\"componentTemplatePath\" style=\"overflow-x: auto;\"></div></div>";
-
-            if (componentHTML != null) {
-                element.html(componentHTML);
-                ComponentDirective.instance.$compile(element.contents())($scope);
-            }
+        if (componentHTML != null) {
+            element.html(componentHTML);
+            ComponentDirective.instance.$compile(element.contents())($scope);
         }
     }
 }

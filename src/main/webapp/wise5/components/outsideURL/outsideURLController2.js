@@ -99,7 +99,7 @@ class OutsideURLController {
             var studentWork = null;
 
             return studentWork;
-        };
+        }.bind(this);
     }
 
     /**

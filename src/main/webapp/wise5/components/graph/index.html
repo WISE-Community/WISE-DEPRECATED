@@ -16,8 +16,6 @@
                 ng-change='graphController.activeSeriesChanged()'
                 ng-show='graphController.series.length > 1'>
         </select>
-graph goes here2
-        <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
         <highchart id="chart1" config="graphController.chartConfig" class="span10"></highchart>
         <div ng-if='graphController.mode == "student"'>
             <annotation type='score'

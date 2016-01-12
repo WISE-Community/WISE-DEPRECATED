@@ -206,7 +206,7 @@ class DiscussionController {
 
             // change the value to the opposite of what it was previously
             componentState.showReplyTextarea = !previousValue;
-        };
+        }.bind(this);
 
         /**
          * The submit button was clicked
@@ -251,7 +251,7 @@ class DiscussionController {
 
             // tell the parent node that this component wants to submit
             this.$scope.$emit('componentSubmitTriggered', {nodeId: this.$scope.discussionController.nodeId, componentId: this.$scope.discussionController.componentId});
-        };
+        }.bind(this);
 
         /**
          * Get the component state from this component. The parent node will
@@ -278,7 +278,7 @@ class DiscussionController {
             }
 
             return componentState;
-        };
+        }.bind(this);
 
         /**
          * The parent node submit button was clicked

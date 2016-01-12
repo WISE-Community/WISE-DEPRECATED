@@ -204,7 +204,6 @@ class OpenResponseController {
 
         $('.openResponse').off('dragover').off('drop');
 
-
         /**
          * Returns true iff there is student work that hasn't been saved yet
          */
@@ -249,7 +248,7 @@ class OpenResponseController {
                     this.isDisabled = true;
                 }
             }
-        }).bind(this);
+        }.bind(this));
 
         /**
          * Listen for the 'exitNode' event which is fired when the student

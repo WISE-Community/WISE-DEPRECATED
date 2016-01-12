@@ -165,7 +165,7 @@ class EmbeddedController {
             }
 
             return componentState;
-        };
+        }.bind(this);
 
 
         /**

@@ -230,7 +230,7 @@ class LabelController {
          */
         this.$scope.isDirty = function() {
             return this.$scope.labelController.isDirty;
-        };
+        }.bind(this);
 
         /**
          * Get the component state from this component. The parent node will
@@ -251,7 +251,7 @@ class LabelController {
             }
 
             return componentState;
-        };
+        }.bind(this);
 
         /**
          * The parent node submit button was clicked

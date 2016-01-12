@@ -5,7 +5,6 @@ class DrawController {
     constructor($injector,
                 $rootScope,
                 $scope,
-                $state,
                 $timeout,
                 DrawService,
                 NodeService,
@@ -15,7 +14,6 @@ class DrawController {
         this.$injector = $injector;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
-        this.$state = $state;
         this.$timeout = $timeout;
         this.DrawService = DrawService;
         this.NodeService = NodeService;
@@ -49,7 +47,7 @@ class DrawController {
         this.drawingTool = null;
 
         // get the component content from the scope
-        this.componentContent = $scope.component;
+        this.componentContent = this.$scope.component;
 
         // whether students can attach files to their work
         this.isStudentAttachmentEnabled = false;
@@ -63,16 +61,16 @@ class DrawController {
 
         // setup
         // set mode if it's passed in through the scope.
-        if ($scope.mode) {
-            this.mode = $scope.mode;
+        if (this.$scope.mode) {
+            this.mode = this.$scope.mode;
         }
 
         // get the current node and node id
-        var currentNode = StudentDataService.getCurrentNode();
+        var currentNode = this.StudentDataService.getCurrentNode();
         if (currentNode != null) {
             this.nodeId = currentNode.id;
         } else {
-            this.nodeId = $scope.nodeId;
+            this.nodeId = this.$scope.nodeId;
         }
 
         if (this.componentContent != null) {
@@ -87,13 +85,13 @@ class DrawController {
                 this.drawingToolId = "drawingtool_" + this.nodeId + "_" + this.componentId;
             } else if (this.mode === 'grading' || this.mode === "onlyShowWork") {
                 // get the component state from the scope
-                var componentState = $scope.componentState;
+                var componentState = this.$scope.componentState;
                 if (componentState != null) {
                     this.drawingToolId = "drawingtool_" + componentState.id;
                 }
             }
 
-            $timeout(angular.bind(this, function () {
+            this.$timeout(angular.bind(this, function () {
                 // running this in side a timeout ensures that the code only runs after the markup is rendered.
                 // maybe there's a better way to do this, like with an event?
 
@@ -140,13 +138,13 @@ class DrawController {
                     var showPreviousWorkComponentId = this.componentContent.showPreviousWorkComponentId;
 
                     // get the node content for the other node
-                    var showPreviousWorkNodeContent = ProjectService.getNodeContentByNodeId(showPreviousWorkNodeId);
+                    var showPreviousWorkNodeContent = this.ProjectService.getNodeContentByNodeId(showPreviousWorkNodeId);
 
                     // get the node content for the component we are showing previous work for
-                    this.componentContent = NodeService.getComponentContentById(showPreviousWorkNodeContent, showPreviousWorkComponentId);
+                    this.componentContent = this.NodeService.getComponentContentById(showPreviousWorkNodeContent, showPreviousWorkComponentId);
 
                     // get the component state for the show previous work
-                    componentState = StudentDataService.getLatestComponentStateByNodeIdAndComponentId(showPreviousWorkNodeId, showPreviousWorkComponentId);
+                    componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(showPreviousWorkNodeId, showPreviousWorkComponentId);
 
                     // populate the student work into this component
                     this.setStudentWork(componentState);
@@ -155,12 +153,12 @@ class DrawController {
                     this.isDisabled = true;
 
                     // register this component with the parent node
-                    $scope.$parent.registerComponentController($scope, this.componentContent);
+                    this.$scope.$parent.registerComponentController(this.$scope, this.componentContent);
                 } else {
                     // this is a regular component
 
                     // get the component state from the scope
-                    componentState = $scope.componentState;
+                    componentState = this.$scope.componentState;
 
                     // set whether studentAttachment is enabled
                     this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
@@ -188,8 +186,8 @@ class DrawController {
                     this.calculateDisabled();
 
                     // register this component with the parent node
-                    if ($scope.$parent && $scope.$parent.registerComponentController) {
-                        $scope.$parent.registerComponentController($scope, this.componentContent);
+                    if (this.$scope.$parent && this.$scope.$parent.registerComponentController) {
+                        this.$scope.$parent.registerComponentController(this.$scope, this.componentContent);
                     }
 
                     // listen for the drawing changed event
@@ -202,7 +200,7 @@ class DrawController {
                         var event = "toolSelected";
                         var data = {};
                         data.selectedToolName = toolName;
-                        StudentDataService.saveComponentEvent(this, category, event, data);
+                        this.StudentDataService.saveComponentEvent(this, category, event, data);
                     }.bind(this));
 
                     if (this.mode === 'grading' || this.mode === 'onlyShowWork') {
@@ -220,25 +218,25 @@ class DrawController {
          * save student data.
          * @return a component state containing the student data
          */
-        $scope.getComponentState = function() {
+        this.$scope.getComponentState = function() {
 
             var componentState = null;
 
-            if ($scope.drawController.isDirty) {
+            if (this.$scope.drawController.isDirty) {
                 // create a component state populated with the student data
-                componentState = $scope.drawController.createComponentState();
+                componentState = this.$scope.drawController.createComponentState();
 
                 // set isDirty to false since this student work is about to be saved
-                $scope.drawController.isDirty = false;
+                this.$scope.drawController.isDirty = false;
             }
 
             return componentState;
-        };
+        }.bind(this);
 
         /**
          * The parent node submit button was clicked
          */
-        $scope.$on('nodeSubmitClicked', angular.bind(this, function(event, args) {
+        this.$scope.$on('nodeSubmitClicked', angular.bind(this, function(event, args) {
 
             // get the node id of the node
             var nodeId = args.nodeId;
@@ -258,7 +256,7 @@ class DrawController {
          * exits the parent node. This will perform any necessary cleanup
          * when the student exits the parent node.
          */
-        $scope.$on('exitNode', angular.bind(this, function(event, args) {
+        this.$scope.$on('exitNode', angular.bind(this, function(event, args) {
 
         }));
 
@@ -294,7 +292,7 @@ class DrawController {
     saveButtonClicked() {
 
         // tell the parent node that this component wants to save
-        $scope.$emit('componentSaveTriggered', {nodeId: this.nodeId, componentId: this.componentId});
+        this.$scope.$emit('componentSaveTriggered', {nodeId: this.nodeId, componentId: this.componentId});
     };
 
     /**
@@ -309,7 +307,7 @@ class DrawController {
         }
 
         // tell the parent node that this component wants to submit
-        $scope.$emit('componentSubmitTriggered', {nodeId: this.nodeId, componentId: this.componentId});
+        this.$scope.$emit('componentSubmitTriggered', {nodeId: this.nodeId, componentId: this.componentId});
     };
 
     /**
@@ -334,7 +332,7 @@ class DrawController {
          * this will also notify connected parts that this component's student
          * data has changed.
          */
-        $scope.$emit('componentStudentDataChanged', {componentId: componentId, componentState: componentState});
+        this.$scope.$emit('componentStudentDataChanged', {componentId: componentId, componentState: componentState});
     };
 
     /**
@@ -344,7 +342,7 @@ class DrawController {
     createComponentState() {
 
         // create a new component state
-        var componentState = NodeService.createNewComponentState();
+        var componentState = this.NodeService.createNewComponentState();
 
         if (componentState != null) {
             var studentData = {};
@@ -392,10 +390,10 @@ class DrawController {
                 // we need to lock the step after the student has submitted
 
                 // get the component states for this component
-                var componentStates = StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
+                var componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
 
                 // check if any of the component states were submitted
-                var isSubmitted = NodeService.isWorkSubmitted(componentStates);
+                var isSubmitted = this.NodeService.isWorkSubmitted(componentStates);
 
                 if (isSubmitted) {
                     // the student has submitted work for this component
@@ -468,7 +466,7 @@ class DrawController {
         if (notebookItem.studentAsset != null) {
             // we're importing a StudentAssetNotebookItem
             var studentAsset = notebookItem.studentAsset;
-            StudentAssetService.copyAssetForReference(studentAsset).then(angular.bind(this, function(copiedAsset) {
+            this.StudentAssetService.copyAssetForReference(studentAsset).then(angular.bind(this, function(copiedAsset) {
                 if (copiedAsset != null) {
                     fabric.Image.fromURL(copiedAsset.url, angular.bind(this, function(oImg) {
                         oImg.scaleToWidth(200);  // set max width and have height scale proportionally
@@ -488,7 +486,7 @@ class DrawController {
             var componentType = studentWork.componentType;
 
             if (componentType != null) {
-                var childService = $injector.get(componentType + 'Service');
+                var childService = this.$injector.get(componentType + 'Service');
 
                 if (childService != null) {
                     var studentWorkHTML = childService.getStudentWorkAsHTML(studentWork);
@@ -543,7 +541,7 @@ class DrawController {
             if (importWorkNodeId != null && importWorkComponentId != null) {
 
                 // get the latest component state for this component
-                var componentState = StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
+                var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
 
                 /*
                  * we will only import work into this component if the student
@@ -553,14 +551,14 @@ class DrawController {
                     // the student has not done any work for this component
 
                     // get the latest component state from the component we are importing from
-                    var importWorkComponentState = StudentDataService.getLatestComponentStateByNodeIdAndComponentId(importWorkNodeId, importWorkComponentId);
+                    var importWorkComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(importWorkNodeId, importWorkComponentId);
 
                     if (importWorkComponentState != null) {
                         /*
                          * populate a new component state with the work from the
                          * imported component state
                          */
-                        var populatedComponentState = DrawService.populateComponentState(importWorkComponentState);
+                        var populatedComponentState = this.DrawService.populateComponentState(importWorkComponentState);
 
                         // populate the component state into this component
                         this.setStudentWork(populatedComponentState);
@@ -590,9 +588,9 @@ class DrawController {
          * Listen for the 'exit' event which is fired when the student exits
          * the VLE. This will perform saving before the VLE exits.
          */
-        this.exitListener = $scope.$on('exit', angular.bind(this, function(event, args) {
+        this.exitListener = this.$scope.$on('exit', angular.bind(this, function(event, args) {
 
-            $rootScope.$broadcast('doneExiting');
+            this.$rootScope.$broadcast('doneExiting');
         }));
     };
 
@@ -601,7 +599,6 @@ class DrawController {
 DrawController.$inject = ['$injector',
     '$rootScope',
     '$scope',
-    '$state',
     '$timeout',
     'DrawService',
     'NodeService',

@@ -81,15 +81,21 @@ class GraphService extends NodeService {
                 s.regressionSettings =  s.regressionSettings || {} ;
                 var regressionType = s.regressionSettings.type || "linear" ;
                 var regression;
+
+                var color = s.color;
+
+                if (s.regressionSettings.color != null) {
+                    color = s.regressionSettings.color;
+                }
+
                 var extraSerie = {
                     data:[],
-                    color: s.color ,
+                    color: color ,
                     yAxis: s.yAxis ,
                     lineWidth: 2,
                     marker: {enabled: false} ,
                     isRegressionLine: true,
-                    name: s.regressionSettings.label || "Equation: %eq",
-                    color: s.regressionSettings.color || '',
+                    name: s.regressionSettings.label || "Equation: %eq"
                 };
 
 

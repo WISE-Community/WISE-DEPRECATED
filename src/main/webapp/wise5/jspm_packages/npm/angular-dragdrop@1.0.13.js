@@ -1,0 +1,1 @@
+module.exports = require("npm:angular-dragdrop@1.0.13/src/angular-dragdrop.js");

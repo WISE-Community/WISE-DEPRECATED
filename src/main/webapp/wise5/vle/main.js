@@ -2,13 +2,18 @@
 'use strict';
 
 import $ from 'jquery';
+import jqueryUI from 'jquery-ui';
 import angular from 'angular';
+import angularAnimate from 'angular-animate';
+import angularDrapDrop from 'angular-dragdrop';
 import angularFileUpload from 'ng-file-upload';
 import angularHighcharts from 'highcharts-ng';
 import angularMaterial from 'angular-material';
 import angularMoment from 'angular-moment';
 import angularToArrayFilter from '../lib/angular-toArrayFilter/toArrayFilter';
 import angularUIRouter from 'angular-ui-router';
+import angularUITree from 'angular-ui-tree';
+import angularUISortable from 'angular-ui/ui-sortable';
 import angularWebSocket from 'angular-websocket';
 import AnnotationController from '../controllers/annotationController2';
 import AnnotationService from '../services/annotationService2';
@@ -16,20 +21,30 @@ import AnnotationService from '../services/annotationService2';
 import ConfigService from '../services/configService2';
 //import CRaterService from '../components/cRater/cRaterService2';
 import Directives from '../directives/directives2';
+import DiscussionController from '../components/discussion/discussionController2';
 import DiscussionService from '../components/discussion/discussionService2';
+import DrawController from '../components/draw/drawController2';
 import DrawService from '../components/draw/drawService2';
+import EmbeddedController from '../components/embedded/embeddedController2';
 import EmbeddedService from '../components/embedded/embeddedService2';
+import GraphController from '../components/graph/graphController2';
 import GraphService from '../components/graph/graphService2';
 import Highcharts from 'highcharts';
-//import HtmlService from '../components/html/htmlService2';
+//import HTMLService from '../components/html/htmlService2';
+import HTMLController from '../components/html/htmlController2';
+import LabelController from '../components/label/labelController2';
 import LabelService from '../components/label/labelService2';
+import MatchController from '../components/match/matchController2';
 import MatchService from '../components/match/matchService2';
+import MultipleChoiceController from '../components/multipleChoice/multipleChoiceController2';
 import MultipleChoiceService from '../components/multipleChoice/multipleChoiceService2';
 import NavigationController from './navigation/navigationController2';
 import NodeController from '../node/nodeController2';
 import NodeService from '../services/nodeService2';
 import NotebookService from '../services/notebookService2';
+import OpenResponseController from '../components/openResponse/openResponseController2';
 import OpenResponseService from '../components/openResponse/openResponseService2';
+import OutsideURLController from '../components/outsideURL/outsideURLController2';
 import OutsideURLService from '../components/outsideURL/outsideURLService2';
 //import PhotoBoothService from '../components/photoBooth/photoBoothService2';
 import ProjectService from '../services/projectService2';
@@ -38,6 +53,7 @@ import StudentAssetService from '../services/studentAssetService2';
 import StudentDataService from '../services/studentDataService2';
 import StudentStatusService from '../services/studentStatusService2';
 import StudentWebSocketService from '../services/studentWebSocketService2';
+import TableController from '../components/table/tableController2';
 import TableService from '../components/table/tableService2';
 import TeacherDataService from '../services/teacherDataService2';
 import UtilService from '../services/utilService2';
@@ -63,7 +79,7 @@ let mainModule = angular.module('vle', [
     'ngAnimate',
     //'ngAudio',
     'ngAria',
-    //'ngDragDrop',
+    'ngDragDrop',
     'ngFileUpload',
     'ngMaterial',
     //'ngSanitize',
@@ -71,9 +87,9 @@ let mainModule = angular.module('vle', [
     //'notebook',
     'oc.lazyLoad',
     'ui.router',
-    //'ui.sortable',
+    'ui.sortable',
     //'ui.tinymce',
-    //'ui.tree'
+    'ui.tree'
     ])
 
     .service(AnnotationService.name, AnnotationService)
@@ -81,6 +97,7 @@ let mainModule = angular.module('vle', [
     .service(ConfigService.name, ConfigService)
     //.service(CRaterService.name, CRaterService)
     .service(DiscussionService.name, DiscussionService)
+    .service(DrawController.name, DrawController)
     .service(DrawService.name, DrawService)
     .service(EmbeddedService.name, EmbeddedService)
     .service(GraphService.name, GraphService)
@@ -103,13 +120,24 @@ let mainModule = angular.module('vle', [
     .service(TeacherDataService.name, TeacherDataService)
     .service(UtilService.name, UtilService)
     .controller(AnnotationController.name, AnnotationController)
+    .controller(DiscussionController.name, DiscussionController)
+    .controller(DrawController.name, DrawController)
+    .controller(EmbeddedController.name, EmbeddedController)
+    .controller(GraphController.name, GraphController)
+    .controller(HTMLController.name, HTMLController)
+    .controller(LabelController.name, LabelController)
+    .controller(MatchController.name, MatchController)
+    .controller(MultipleChoiceController.name, MultipleChoiceController)
     .controller(NavigationController.name, NavigationController)
     .controller(NodeController.name, NodeController)
     .controller(VLEController.name, VLEController)
     .controller(NavItemController.name, NavItemController)
+    .controller(OpenResponseController.name, OpenResponseController)
+    .controller(OutsideURLController.name, OutsideURLController)
     .controller(StepToolsCtrl.name, StepToolsCtrl)
     .controller(NodeStatusIconCtrl.name, NodeStatusIconCtrl)
     .controller(ProjectStatusController.name, ProjectStatusController)
+    .controller(TableController.name, TableController)
     .controller(ThemeController.name, ThemeController)
     .config([
         '$urlRouterProvider',
@@ -177,46 +205,54 @@ let mainModule = angular.module('vle', [
                                         $controllerProvider.register(CRaterController.default.name, CRaterController.default);
                                     });
                                     */
+                                    /*
                                     System.import('components/discussion/discussionController2').then((DiscussionController) => {
                                         $controllerProvider.register(DiscussionController.default.name, DiscussionController.default);
                                     });
+
                                     System.import('components/draw/drawController2').then((DrawController) => {
                                         $controllerProvider.register(DrawController.default.name, DrawController.default);
                                     });
+
                                     System.import('components/embedded/embeddedController2').then((EmbeddedController) => {
                                         $controllerProvider.register(EmbeddedController.default.name, EmbeddedController.default);
                                     });
+
                                     System.import('components/graph/graphController2').then((GraphController) => {
                                         $controllerProvider.register(GraphController.default.name, GraphController.default);
                                     });
+
                                     System.import('components/html/htmlController2').then((HTMLController) => {
                                         $controllerProvider.register(HTMLController.default.name, HTMLController.default);
                                     });
+
                                     System.import('components/label/labelController2').then((LabelController) => {
                                         $controllerProvider.register(LabelController.default.name, LabelController.default);
                                     });
+
                                     System.import('components/match/matchController2').then((MatchController) => {
                                         $controllerProvider.register(MatchController.default.name, MatchController.default);
                                     });
+
                                     System.import('components/multipleChoice/multipleChoiceController2').then((MultipleChoiceController) => {
                                         $controllerProvider.register(MultipleChoiceController.default.name, MultipleChoiceController.default);
                                     });
-                                    /*
                                     System.import('components/openResponse/openResponseController2').then((OpenResponseController) => {
                                         $controllerProvider.register(OpenResponseController.default.name, OpenResponseController.default);
                                     });
-                                    */
+
                                     System.import('components/outsideURL/outsideURLController2').then((OutsideURLController) => {
                                         $controllerProvider.register(OutsideURLController.default.name, OutsideURLController.default);
                                     });
+                                     */
                                     /*
                                     System.import('components/photoBooth/photoBoothController2').then((PhotoBoothController) => {
                                         $controllerProvider.register(PhotoBoothController.default.name, PhotoBoothController.default);
                                     });
-                                    */
                                     System.import('components/table/tableController2').then((TableController) => {
                                         $controllerProvider.register(TableController.default.name, TableController.default);
                                     });
+                                     */
                                 }
                             }
                         }

@@ -183,7 +183,7 @@ class TableController {
                     this.$scope.tableController.isDirty = true;
                 }
             }
-        }
+        }.bind(this);
 
         /**
          * Get the component state from this component. The parent node will
@@ -204,7 +204,7 @@ class TableController {
             }
 
             return componentState;
-        };
+        }.bind(this);
 
         /**
          * The parent node submit button was clicked

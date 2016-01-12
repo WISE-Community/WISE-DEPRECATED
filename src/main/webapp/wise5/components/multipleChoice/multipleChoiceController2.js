@@ -174,7 +174,7 @@ class MultipleChoiceController {
             }
 
             return componentState;
-        };
+        }.bind(this);
 
         /**
          * The parent node submit button was clicked

@@ -24,13 +24,13 @@ class StepToolsCtrl {
 
         var scope = this;
         this.$scope.$watch(
-            function () { return scope.toNodeId; },
+            function () { return scope.toNodeId; }.bind(this),
             function (newId, oldId) {
                 if (newId !== oldId) {
                     // selected node id has changed, so open new node
                     this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(newId);
                 }
-            }
+            }.bind(this)
         );
     }
 

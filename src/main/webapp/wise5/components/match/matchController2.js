@@ -1,3 +1,8 @@
+
+//import $ from 'jquery';
+//import jqueryUI from 'jquery-ui';
+//import angularDrapDrop from 'angular-dragdrop';
+
 class MatchController {
     constructor($rootScope,
                 $scope,
@@ -205,7 +210,7 @@ class MatchController {
             }
 
             return componentState;
-        };
+        }.bind(this);
 
         /**
          * The parent node submit button was clicked
