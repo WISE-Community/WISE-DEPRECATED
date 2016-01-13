@@ -7,8 +7,13 @@ import NodeStatusIconCtrl from './nodeStatusIconController';
 import ProjectStatusController from './projectStatusController';
 import ThemeController from './themeController';
 
-angular.module('vle').controller(NavItemController.name, NavItemController);
-angular.module('vle').controller(StepToolsCtrl.name, StepToolsCtrl);
-angular.module('vle').controller(NodeStatusIconCtrl.name, NodeStatusIconCtrl);
-angular.module('vle').controller(ProjectStatusController.name, ProjectStatusController);
-angular.module('vle').controller(ThemeController.name, ThemeController);
+import './js/webfonts';
+
+let themeModule = angular.module('vle.theme', [])
+    .controller(NavItemController.name, NavItemController)
+    .controller(StepToolsCtrl.name, StepToolsCtrl)
+    .controller(NodeStatusIconCtrl.name, NodeStatusIconCtrl)
+    .controller(ProjectStatusController.name, ProjectStatusController)
+    .controller(ThemeController.name, ThemeController);
+
+export default themeModule;

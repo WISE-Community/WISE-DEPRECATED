@@ -13,7 +13,8 @@
       "highcharts/draggable-points": "github:highcharts/draggable-points@master",
       "jquery-ui": "github:components/jqueryui@^1.11.4",
       "ng-file-upload": "npm:ng-file-upload@^10.1.11",
-      "oclazyload": "npm:oclazyload@^1.0.9"
+      "oclazyload": "npm:oclazyload@^1.0.9",
+      "webfontloader": "npm:webfontloader@^1.6.20"
     },
     "devDependencies": {
       "babel": "npm:babel-core@^5.8.24",

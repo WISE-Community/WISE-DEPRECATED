@@ -60,13 +60,6 @@ import VLEController from './vleController2';
 //import ocLazyLoad from '../vendor/oclazyload/dist/ocLazyLoad.require';
 import ocLazyLoad from 'oclazyload';
 import moment from 'vendor/moment/min/moment.min';
-//import theme from './themes/default/theme2.js';
-
-import NavItemController from './themes/default/navItemController';
-import StepToolsCtrl from './themes/default/stepToolsController';
-import NodeStatusIconCtrl from './themes/default/nodeStatusIconController';
-import ProjectStatusController from './themes/default/projectStatusController';
-import ThemeController from './themes/default/themeController'
 
 let mainModule = angular.module('vle', [
     'angularMoment',
@@ -126,14 +119,9 @@ let mainModule = angular.module('vle', [
     .controller(NavigationController.name, NavigationController)
     .controller(NodeController.name, NodeController)
     .controller(VLEController.name, VLEController)
-    .controller(NavItemController.name, NavItemController)
     .controller(OpenResponseController.name, OpenResponseController)
     .controller(OutsideURLController.name, OutsideURLController)
-    .controller(StepToolsCtrl.name, StepToolsCtrl)
-    .controller(NodeStatusIconCtrl.name, NodeStatusIconCtrl)
-    .controller(ProjectStatusController.name, ProjectStatusController)
     .controller(TableController.name, TableController)
-    .controller(ThemeController.name, ThemeController)
     .config([
         '$urlRouterProvider',
         '$stateProvider',
