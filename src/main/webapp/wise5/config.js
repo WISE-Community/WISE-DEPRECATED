@@ -19,6 +19,7 @@ System.config({
     "angular-animate": "github:angular/bower-angular-animate@1.4.8",
     "angular-material": "github:angular/bower-material@1.0.1",
     "angular-moment": "npm:angular-moment@1.0.0-beta.3",
+    "angular-sanitize": "github:angular/bower-angular-sanitize@1.4.8",
     "angular-ui-router": "github:angular-ui/ui-router@0.2.15",
     "angular-ui-tree": "github:angular-ui-tree/angular-ui-tree@2.5.0",
     "angular-websocket": "npm:angular-websocket@1.0.14",
@@ -42,6 +43,9 @@ System.config({
       "angular": "github:angular/bower-angular@1.4.8"
     },
     "github:angular/bower-angular-aria@1.4.8": {
+      "angular": "github:angular/bower-angular@1.4.8"
+    },
+    "github:angular/bower-angular-sanitize@1.4.8": {
       "angular": "github:angular/bower-angular@1.4.8"
     },
     "github:angular/bower-material@1.0.1": {

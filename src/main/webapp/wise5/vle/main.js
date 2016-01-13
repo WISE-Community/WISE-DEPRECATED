@@ -8,6 +8,7 @@ import angularFileUpload from 'ng-file-upload';
 import angularHighcharts from 'highcharts-ng';
 import angularMaterial from 'angular-material';
 import angularMoment from 'angular-moment';
+import angularSanitize from 'angular-sanitize';
 import angularToArrayFilter from '../lib/angular-toArrayFilter/toArrayFilter';
 import angularUIRouter from 'angular-ui-router';
 import angularUITree from 'angular-ui-tree';
@@ -77,7 +78,7 @@ let mainModule = angular.module('vle', [
     'ngAria',
     'ngFileUpload',
     'ngMaterial',
-    //'ngSanitize',
+    'ngSanitize',
     'ngWebSocket',
     //'notebook',
     'oc.lazyLoad',

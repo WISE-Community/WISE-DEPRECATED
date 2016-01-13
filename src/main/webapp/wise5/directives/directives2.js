@@ -67,7 +67,7 @@ class ComponentDirective {
 }
 
 class ClassResponseDirective {
-    constructor() {
+    constructor(StudentStatusService) {
         this.restrict = 'E';
         this.scope = {
             response: '=',
@@ -75,19 +75,20 @@ class ClassResponseDirective {
             studentdatachanged: '&'
         };
         this.templateUrl = 'wise5/components/discussion/classResponse.html';
+        this.StudentStatusService = StudentStatusService;
     }
 
-    static directiveFactory() {
-        ClassResponseDirective.instance = new ClassResponseDirective();
+    static directiveFactory(StudentStatusService) {
+        ClassResponseDirective.instance = new ClassResponseDirective(StudentStatusService);
         return ClassResponseDirective.instance;
     }
 
-    link($scope, $element, StudentStatusService) {
+    link($scope, $element, attrs) {
         $scope.element = $element[0];
 
         $scope.getAvatarColorForWorkgroupId = function (workgroupId) {
-            return StudentStatusService.getAvatarColorForWorkgroupId(workgroupId);
-        }
+            return ClassResponseDirective.instance.StudentStatusService.getAvatarColorForWorkgroupId(workgroupId);
+        };
 
         // handle the submit button click
         $scope.submitButtonClicked = function(response) {
@@ -118,7 +119,7 @@ class ClassResponseDirective {
                     $clist.animate({scrollTop: $clist.height()}, 250);
                 }, 250);
             }
-        }
+        };
     };
 }
 
@@ -204,7 +205,7 @@ class nodeStatusIconDirective {
 let Directives = angular.module('directives', []);
 
 ComponentDirective.directiveFactory.$inject = ['$injector', '$compile', 'NodeService', 'ProjectService', 'StudentDataService'];
-ClassResponseDirective.directiveFactory.$inject = [];
+ClassResponseDirective.directiveFactory.$inject = ['StudentStatusService'];
 CompileDirective.directiveFactory.$inject = ['$compile'];
 
 Directives.directive('component', ComponentDirective.directiveFactory);

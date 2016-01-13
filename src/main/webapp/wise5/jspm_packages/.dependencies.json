@@ -413,5 +413,8 @@
   "npm:jquery@2.1.4": {},
   "github:angular-ui-tree/angular-ui-tree@2.5.0": {
     "angular": "jspm:angular@1.4.8"
+  },
+  "github:angular/bower-angular-sanitize@1.4.8": {
+    "angular": "jspm:angular@1.4.8"
   }
 }
