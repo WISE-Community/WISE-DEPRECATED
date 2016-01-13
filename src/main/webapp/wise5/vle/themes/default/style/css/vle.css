@@ -1940,7 +1940,7 @@ md-card md-card-header md-card-avatar + md-card-header-text { max-height: 40px; 
 md-card md-card-header md-card-avatar + md-card-header-text .md-title { font-size: 14px; }
 md-card md-card-header md-card-header-text { display: flex; flex: 1; flex-direction: column; }
 md-card md-card-header md-card-header-text .md-subhead { font-size: 14px; }
-md-card md-card img, md-card > :not(md-card-content) img { box-sizing: border-box; display: flex; flex: 0 0 auto; width: 100%; height: auto; }
+md-card > img, md-card > :not(md-card-content) img { box-sizing: border-box; display: flex; flex: 0 0 auto; width: 100%; height: auto; }
 md-card md-card-title { padding: 24px 16px 16px; display: flex; flex: 1; flex-direction: row; }
 md-card md-card-title + md-card-content { padding-top: 0; }
 md-card md-card-title md-card-title-text { flex: 1; flex-direction: column; display: flex; }
@@ -2190,7 +2190,9 @@ md-fab-speed-dial.md-right md-fab-trigger { order: 1; }
 md-fab-speed-dial.md-right md-fab-actions { flex-direction: row; order: 2; }
 md-fab-speed-dial.md-right md-fab-actions .md-fab-action-item { transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2); }
 md-fab-speed-dial.md-fling-remove .md-fab-action-item > *, md-fab-speed-dial.md-scale-remove .md-fab-action-item > * { visibility: hidden; }
-md-fab-speed-dial.md-scale .md-fab-action-item { opacity: 0; transform: scale(0.1); transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2); transition-duration: 0.14286s; }
+md-fab-speed-dial.md-fling .md-fab-action-item { opacity: 1; }
+md-fab-speed-dial.md-fling.md-animations-waiting .md-fab-action-item { opacity: 0; transition-duration: 0s; }
+md-fab-speed-dial.md-scale .md-fab-action-item { transform: scale(0.1); transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2); transition-duration: 0.14286s; }
 
 md-fab-toolbar { display: block; /* Closed styling */ /* Hover styling */ }
 md-fab-toolbar.md-fab-bottom-right { top: auto; right: 20px; bottom: 20px; left: auto; position: absolute; }
@@ -2241,7 +2243,6 @@ html[dir=rtl] md-input-container .md-errors-spacer { float: left; unicode-bidi: 
 body[dir=rtl] md-input-container .md-errors-spacer { float: left; unicode-bidi: embed; }
 md-input-container .md-errors-spacer bdo[dir=rtl] { direction: rtl; unicode-bidi: bidi-override; }
 md-input-container .md-errors-spacer bdo[dir=ltr] { direction: ltr; unicode-bidi: bidi-override; }
-md-input-container .md-errors-spacer + * { margin-top: -24px; }
 md-input-container > md-icon { position: absolute; top: 5px; left: 2px; right: auto; }
 html[dir=rtl] md-input-container > md-icon { left: auto; unicode-bidi: embed; }
 body[dir=rtl] md-input-container > md-icon { left: auto; unicode-bidi: embed; }
@@ -2282,13 +2283,13 @@ html[dir=rtl] md-input-container.md-has-icon > label { right: 36px; unicode-bidi
 body[dir=rtl] md-input-container.md-has-icon > label { right: 36px; unicode-bidi: embed; }
 md-input-container.md-has-icon > label bdo[dir=rtl] { direction: rtl; unicode-bidi: bidi-override; }
 md-input-container.md-has-icon > label bdo[dir=ltr] { direction: ltr; unicode-bidi: bidi-override; }
-md-input-container label:not(.md-no-float):not(.md-container-ignore), md-input-container .md-placeholder { order: 1; pointer-events: none; -webkit-font-smoothing: antialiased; padding-left: 2px; padding-right: 0; z-index: 1; transform: translate3d(0, 28px, 0) scale(1); transition: transform cubic-bezier(0.25, 0.8, 0.25, 1) 0.25s; transform-origin: left top; }
+md-input-container label:not(.md-no-float):not(.md-container-ignore), md-input-container .md-placeholder { order: 1; pointer-events: none; -webkit-font-smoothing: antialiased; padding-left: 3px; padding-right: 0; z-index: 1; transform: translate3d(0, 28px, 0) scale(1); transition: transform cubic-bezier(0.25, 0.8, 0.25, 1) 0.25s; transform-origin: left top; }
 html[dir=rtl] md-input-container label:not(.md-no-float):not(.md-container-ignore), html[dir=rtl] md-input-container .md-placeholder { padding-left: 0; unicode-bidi: embed; }
 body[dir=rtl] md-input-container label:not(.md-no-float):not(.md-container-ignore), body[dir=rtl] md-input-container .md-placeholder { padding-left: 0; unicode-bidi: embed; }
 md-input-container label:not(.md-no-float):not(.md-container-ignore) bdo[dir=rtl], md-input-container .md-placeholder bdo[dir=rtl] { direction: rtl; unicode-bidi: bidi-override; }
 md-input-container label:not(.md-no-float):not(.md-container-ignore) bdo[dir=ltr], md-input-container .md-placeholder bdo[dir=ltr] { direction: ltr; unicode-bidi: bidi-override; }
-html[dir=rtl] md-input-container label:not(.md-no-float):not(.md-container-ignore), html[dir=rtl] md-input-container .md-placeholder { padding-right: 2px; unicode-bidi: embed; }
-body[dir=rtl] md-input-container label:not(.md-no-float):not(.md-container-ignore), body[dir=rtl] md-input-container .md-placeholder { padding-right: 2px; unicode-bidi: embed; }
+html[dir=rtl] md-input-container label:not(.md-no-float):not(.md-container-ignore), html[dir=rtl] md-input-container .md-placeholder { padding-right: 3px; unicode-bidi: embed; }
+body[dir=rtl] md-input-container label:not(.md-no-float):not(.md-container-ignore), body[dir=rtl] md-input-container .md-placeholder { padding-right: 3px; unicode-bidi: embed; }
 md-input-container label:not(.md-no-float):not(.md-container-ignore) bdo[dir=rtl], md-input-container .md-placeholder bdo[dir=rtl] { direction: rtl; unicode-bidi: bidi-override; }
 md-input-container label:not(.md-no-float):not(.md-container-ignore) bdo[dir=ltr], md-input-container .md-placeholder bdo[dir=ltr] { direction: ltr; unicode-bidi: bidi-override; }
 html[dir=rtl] md-input-container label:not(.md-no-float):not(.md-container-ignore), html[dir=rtl] md-input-container .md-placeholder { transform-origin: right top; unicode-bidi: embed; }
@@ -2320,7 +2321,7 @@ html[dir=rtl] md-input-container .md-char-counter { padding-left: 2px; unicode-b
 body[dir=rtl] md-input-container .md-char-counter { padding-left: 2px; unicode-bidi: embed; }
 md-input-container .md-char-counter bdo[dir=rtl] { direction: rtl; unicode-bidi: bidi-override; }
 md-input-container .md-char-counter bdo[dir=ltr] { direction: ltr; unicode-bidi: bidi-override; }
-md-input-container ng-messages, md-input-container data-ng-messages, md-input-container x-ng-messages, md-input-container [ng-messages], md-input-container [data-ng-messages], md-input-container [x-ng-messages] { position: relative; order: 4; overflow: hidden; min-height: 24px; clear: left; }
+md-input-container ng-messages, md-input-container data-ng-messages, md-input-container x-ng-messages, md-input-container [ng-messages], md-input-container [data-ng-messages], md-input-container [x-ng-messages] { position: relative; order: 4; overflow: hidden; clear: left; }
 html[dir=rtl] md-input-container ng-messages, html[dir=rtl] md-input-container data-ng-messages, html[dir=rtl] md-input-container x-ng-messages, html[dir=rtl] md-input-container [ng-messages], html[dir=rtl] md-input-container [data-ng-messages], html[dir=rtl] md-input-container [x-ng-messages] { clear: right; unicode-bidi: embed; }
 body[dir=rtl] md-input-container ng-messages, body[dir=rtl] md-input-container data-ng-messages, body[dir=rtl] md-input-container x-ng-messages, body[dir=rtl] md-input-container [ng-messages], body[dir=rtl] md-input-container [data-ng-messages], body[dir=rtl] md-input-container [x-ng-messages] { clear: right; unicode-bidi: embed; }
 md-input-container ng-messages bdo[dir=rtl], md-input-container data-ng-messages bdo[dir=rtl], md-input-container x-ng-messages bdo[dir=rtl], md-input-container [ng-messages] bdo[dir=rtl], md-input-container [data-ng-messages] bdo[dir=rtl], md-input-container [x-ng-messages] bdo[dir=rtl] { direction: rtl; unicode-bidi: bidi-override; }
@@ -2337,7 +2338,8 @@ body[dir=rtl] md-input-container ng-message:not(.md-char-counter), body[dir=rtl]
 md-input-container ng-message:not(.md-char-counter) bdo[dir=rtl], md-input-container data-ng-message:not(.md-char-counter) bdo[dir=rtl], md-input-container x-ng-message:not(.md-char-counter) bdo[dir=rtl], md-input-container [ng-message]:not(.md-char-counter) bdo[dir=rtl], md-input-container [data-ng-message]:not(.md-char-counter) bdo[dir=rtl], md-input-container [x-ng-message]:not(.md-char-counter) bdo[dir=rtl], md-input-container [ng-message-exp]:not(.md-char-counter) bdo[dir=rtl], md-input-container [data-ng-message-exp]:not(.md-char-counter) bdo[dir=rtl], md-input-container [x-ng-message-exp]:not(.md-char-counter) bdo[dir=rtl], md-input-container .md-char-counter:not(.md-char-counter) bdo[dir=rtl] { direction: rtl; unicode-bidi: bidi-override; }
 md-input-container ng-message:not(.md-char-counter) bdo[dir=ltr], md-input-container data-ng-message:not(.md-char-counter) bdo[dir=ltr], md-input-container x-ng-message:not(.md-char-counter) bdo[dir=ltr], md-input-container [ng-message]:not(.md-char-counter) bdo[dir=ltr], md-input-container [data-ng-message]:not(.md-char-counter) bdo[dir=ltr], md-input-container [x-ng-message]:not(.md-char-counter) bdo[dir=ltr], md-input-container [ng-message-exp]:not(.md-char-counter) bdo[dir=ltr], md-input-container [data-ng-message-exp]:not(.md-char-counter) bdo[dir=ltr], md-input-container [x-ng-message-exp]:not(.md-char-counter) bdo[dir=ltr], md-input-container .md-char-counter:not(.md-char-counter) bdo[dir=ltr] { direction: ltr; unicode-bidi: bidi-override; }
 md-input-container:not(.md-input-invalid) .md-auto-hide .md-input-message-animation { opacity: 0; margin-top: -100px; }
-md-input-container .md-input-message-animation.ng-enter, md-input-container .md-input-message-animation:not(.ng-animate) { opacity: 0; margin-top: -100px; }
+md-input-container .md-auto-hide .md-input-message-animation:not(.ng-animate) { opacity: 0; margin-top: -100px; }
+md-input-container .md-input-message-animation.ng-enter { opacity: 0; margin-top: -100px; }
 md-input-container.md-input-focused label:not(.md-no-float), md-input-container.md-input-has-placeholder label:not(.md-no-float), md-input-container.md-input-has-value label:not(.md-no-float) { transform: translate3d(0, 6px, 0) scale(0.75); }
 md-input-container.md-input-has-value label { transition: none; }
 md-input-container.md-input-focused .md-input, md-input-container .md-input.ng-invalid.ng-dirty { padding-bottom: 0; border-width: 0 0 2px 0; }
@@ -2821,10 +2823,10 @@ md-tabs-content-wrapper { display: block; position: absolute; top: 48px; left: 0
 md-tab-content { display: block; position: absolute; top: 0; left: 0; right: 0; bottom: 0; transition: transform 0.5s cubic-bezier(0.35, 0, 0.25, 1); overflow: auto; }
 md-tab-content.md-no-scroll { bottom: auto; overflow: hidden; }
 md-tab-content.ng-leave, md-tab-content.md-no-transition { transition: none; }
-md-tab-content.md-left { transform: translateX(-100%); animation: 1s md-tab-content-hide; opacity: 0; }
-md-tab-content.md-left * { transition: visibility 0s linear; transition-delay: 0.5s; visibility: hidden; }
-md-tab-content.md-right { transform: translateX(100%); animation: 1s md-tab-content-hide; opacity: 0; }
-md-tab-content.md-right * { transition: visibility 0s linear; transition-delay: 0.5s; visibility: hidden; }
+md-tab-content.md-left:not(.md-active) { transform: translateX(-100%); animation: 1s md-tab-content-hide; opacity: 0; }
+md-tab-content.md-left:not(.md-active) * { transition: visibility 0s linear; transition-delay: 0.5s; visibility: hidden; }
+md-tab-content.md-right:not(.md-active) { transform: translateX(100%); animation: 1s md-tab-content-hide; opacity: 0; }
+md-tab-content.md-right:not(.md-active) * { transition: visibility 0s linear; transition-delay: 0.5s; visibility: hidden; }
 md-tab-content > div.ng-leave { animation: 1s md-tab-content-hide; }
 
 md-ink-bar { position: absolute; left: auto; right: auto; bottom: 0; height: 2px; }
@@ -2911,7 +2913,7 @@ md-tooltip .md-content.md-show, md-tooltip .md-content.md-show-add-active { tran
 md-tooltip .md-content.md-show-remove { transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); transition-duration: .2s; }
 md-tooltip .md-content.md-show-remove.md-show-remove-active { transform: scale(0); opacity: 0; }
 md-tooltip.md-hide { transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2); }
-md-tooltip.md-show { transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); pointer-events: auto; transform: translate3d(0, 0, 0); }
+md-tooltip.md-show { transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); pointer-events: auto; will-change: opacity, height, width; }
 
 .md-virtual-repeat-container { box-sizing: border-box; display: block; margin: 0; overflow: hidden; padding: 0; position: relative; }
 .md-virtual-repeat-container .md-virtual-repeat-scroller { bottom: 0; box-sizing: border-box; left: 0; margin: 0; overflow-x: hidden; padding: 0; position: absolute; right: 0; top: 0; }
@@ -3148,7 +3150,7 @@ md-select-menu.md-default-theme md-option[selected], md-select-menu md-option[se
 .component-revision { margin: 8px 0; padding: 8px; }
 .component-revision:nth-child(odd) { background-color: #f7f7f7; }
 
-.component-revision__content { margin-bottom: 4px; padding: 8px 0 12px 0; border-bottom: 1px solid #dddddd; }
+.component-revision__content { padding: 4px 0 8px 0; border-bottom: 1px solid #dddddd; }
 
 .component-revision__actions { color: #777777; padding-top: 4px; }
 

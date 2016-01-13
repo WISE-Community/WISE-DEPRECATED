@@ -32,9 +32,11 @@ System.config({
     "highcharts/draggable-points": "github:highcharts/draggable-points@master",
     "jquery": "github:components/jquery@2.1.4",
     "jquery-ui": "github:components/jqueryui@1.11.4",
+    "moment": "npm:moment@2.11.1",
     "ng-file-upload": "npm:ng-file-upload@10.1.11",
     "oclazyload": "npm:oclazyload@1.0.9",
     "github:angular-ui-tree/angular-ui-tree@2.5.0": {
+    "webfontloader": "npm:webfontloader@1.6.20",
       "angular": "github:angular/bower-angular@1.4.8"
     },
     "github:angular-ui/ui-router@0.2.15": {
@@ -307,6 +309,9 @@ System.config({
     "npm:moment@2.10.6": {
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
+    "npm:moment@2.11.1": {
+      "process": "github:jspm/nodelibs-process@0.1.2"
+    },
     "npm:nan@1.8.4": {
       "path": "github:jspm/nodelibs-path@0.1.0"
     },
@@ -415,6 +420,9 @@ System.config({
     },
     "npm:vm-browserify@0.0.4": {
       "indexof": "npm:indexof@0.0.1"
+    },
+    "npm:webfontloader@1.6.20": {
+      "process": "github:jspm/nodelibs-process@0.1.2"
     },
     "npm:ws@0.7.2": {
       "buffer": "github:jspm/nodelibs-buffer@0.1.0",

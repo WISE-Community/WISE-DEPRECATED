@@ -1,0 +1,1 @@
+module.exports = require("npm:webfontloader@1.6.20/webfontloader.js");

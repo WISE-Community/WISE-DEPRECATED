@@ -6,7 +6,8 @@
 @import "material/config";
 
 // Default Angular Material styles (NOTE: this gives all theme SCSS files imported below access to all Angular Material variables and mixins)
-@import "../../../../../vendor/angular-material/angular-material";
+// TODO: figure out how to reference latest jspm package without needing full path/version number
+@import "../../../../../jspm_packages/github/angular/bower-material@1.0.1/angular-material";
 
 @import "material/custom";
 

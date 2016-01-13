@@ -6,7 +6,7 @@ md-toast.project-status {
   display: block;
   color: $text-color-dark;
 
-  @media (min-width: $layout-breakpoint-sm) {
+  @media (min-width: $layout-breakpoint-xs) {
     bottom: $wise-toolbar-height + 6px;
   }
 }
