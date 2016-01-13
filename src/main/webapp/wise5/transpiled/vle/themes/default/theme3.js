@@ -1,6 +1,10 @@
 
 'use strict';
 
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
 var _navItemController = require('./navItemController');
 
 var _navItemController2 = _interopRequireDefault(_navItemController);
@@ -21,10 +25,10 @@ var _themeController = require('./themeController');
 
 var _themeController2 = _interopRequireDefault(_themeController);
 
+require('./js/webfonts');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-angular.module('vle').controller(_navItemController2.default.name, _navItemController2.default);
-angular.module('vle').controller(_stepToolsController2.default.name, _stepToolsController2.default);
-angular.module('vle').controller(_nodeStatusIconController2.default.name, _nodeStatusIconController2.default);
-angular.module('vle').controller(_projectStatusController2.default.name, _projectStatusController2.default);
-angular.module('vle').controller(_themeController2.default.name, _themeController2.default);
+var themeModule = angular.module('vle.theme', []).controller(_navItemController2.default.name, _navItemController2.default).controller(_stepToolsController2.default.name, _stepToolsController2.default).controller(_nodeStatusIconController2.default.name, _nodeStatusIconController2.default).controller(_projectStatusController2.default.name, _projectStatusController2.default).controller(_themeController2.default.name, _themeController2.default);
+
+exports.default = themeModule;

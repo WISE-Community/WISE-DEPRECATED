@@ -35,8 +35,8 @@ System.config({
     "moment": "npm:moment@2.11.1",
     "ng-file-upload": "npm:ng-file-upload@10.1.11",
     "oclazyload": "npm:oclazyload@1.0.9",
-    "github:angular-ui-tree/angular-ui-tree@2.5.0": {
     "webfontloader": "npm:webfontloader@1.6.20",
+    "github:angular-ui-tree/angular-ui-tree@2.5.0": {
       "angular": "github:angular/bower-angular@1.4.8"
     },
     "github:angular-ui/ui-router@0.2.15": {
