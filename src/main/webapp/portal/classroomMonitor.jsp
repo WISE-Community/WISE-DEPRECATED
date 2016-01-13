@@ -16,7 +16,7 @@
     <script src="${contextPath}/wise5/jspm_packages/system.js"></script>
     <script src="${contextPath}/wise5/config.js"></script>
     <script>
-        System.import('${contextPath}/wise5/classroomMonitor/bootstrap');
+        System.import('${contextPath}/wise5/transpiled/classroomMonitor/bootstrap');
     </script>
 
 <!--

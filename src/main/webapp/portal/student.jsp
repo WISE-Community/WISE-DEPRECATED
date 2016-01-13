@@ -18,7 +18,7 @@
         <script src="${contextPath}/wise5/jspm_packages/system.js"></script>
         <script src="${contextPath}/wise5/config.js"></script>
         <script>
-            System.import('${contextPath}/wise5/vle/bootstrap');
+            System.import('${contextPath}/wise5/transpiled/vle/bootstrap');
         </script>
 	</head>
 	<body layout="row" ui-view>

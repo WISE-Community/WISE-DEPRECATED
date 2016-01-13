@@ -554,7 +554,12 @@ public class InformationController {
 				 * e.g.
 				 * ws://localhost:8080/wise
 				 */
-				webSocketBaseURL = wiseBaseURL.replace("http", "ws");
+				if (wiseBaseURL.contains("http")) {
+					webSocketBaseURL = wiseBaseURL.replace("http", "ws");
+				} else {
+					String portalContextPath = ControllerUtil.getPortalUrlString(request);
+					webSocketBaseURL = portalContextPath.replace("http", "ws");
+				}
 			}
 			
 			//get the url for websocket connections

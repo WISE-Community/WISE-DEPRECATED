@@ -1,4 +1,4 @@
-importScripts('libmp3lame.min.js');
+importScripts('../../lib/audio/libmp3lame.min.js');
 
 var recLength = 0,
   recBuffer = [],

@@ -17,7 +17,7 @@
     <script src="${contextPath}/wise5/jspm_packages/system.js"></script>
     <script src="${contextPath}/wise5/config.js"></script>
     <script>
-        System.import('${contextPath}/wise5/authoringTool/bootstrap');
+        System.import('${contextPath}/wise5/transpiled/authoringTool/bootstrap');
     </script>
 <!--
     <script src="${contextPath}/wise5/lib/modernizr/modernizr.custom.js"></script>

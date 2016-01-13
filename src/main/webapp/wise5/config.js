@@ -3,6 +3,7 @@ System.config({
   defaultJSExtensions: true,
   transpiler: "babel",
   babelOptions: {
+    "only": ["/wise/wise5/classroomMonitor/","/wise/wise5/services","/wise/wise5/directives","/wise/wise5/components"],
     "optional": [
       "runtime",
       "optimisation.modules.system"

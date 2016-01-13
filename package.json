@@ -9,8 +9,12 @@
     "jspm": "^0.16.19",
     "sass": "^0.5.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "babel-cli": "^6.4.0",
+    "connect-history-api-fallback": "^1.1.0"
+  },
   "scripts": {
+    "transpile": "babel --presets babel-preset-es2015 --watch src/main/webapp/wise5/ --only wise5/services,wise5/classroomMonitor,wise5/authoringTool,wise5/directives,wise5/components,wise5/vle,wise5/controllers,wise5/node/ --out-dir src/main/webapp/wise5/transpiled/",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

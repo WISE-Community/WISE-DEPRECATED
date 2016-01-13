@@ -1,7 +1,7 @@
 class SessionService {
     constructor($http,
                 $rootScope,
-                ConfigService,
+                ConfigService
                 //StudentDataService) {
     ) {
         this.$http = $http;

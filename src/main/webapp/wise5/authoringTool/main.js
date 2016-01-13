@@ -5,7 +5,7 @@ import angular from 'angular';
 import angularUIRouter from 'angular-ui-router';
 import ngFileUpload from 'ng-file-upload';
 import ngMaterial from 'angular-material';
-import angularToArrayFilter from '../lib/angular-toArrayFilter/toArrayFilter';
+import angularToArrayFilter from 'lib/angular-toArrayFilter/toArrayFilter';
 import AnnotationService from '../services/annotationService2';
 import AuthoringToolController from './authoringToolController2';
 import ConfigService from '../services/configService2';

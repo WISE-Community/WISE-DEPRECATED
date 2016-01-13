@@ -1,3 +1,5 @@
+'use strict';
+
 class AnnotationService {
     constructor($http, $rootScope, ConfigService, UtilService) {
         this.$http = $http;

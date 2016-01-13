@@ -8,7 +8,7 @@ import angularFileUpload from 'ng-file-upload';
 import angularHighcharts from 'highcharts-ng';
 import angularMaterial from 'angular-material';
 import angularMoment from 'angular-moment';
-import angularToArrayFilter from '../lib/angular-toArrayFilter/toArrayFilter';
+import angularToArrayFilter from 'lib/angular-toArrayFilter/toArrayFilter';
 import angularUIRouter from 'angular-ui-router';
 import angularUITree from 'angular-ui-tree';
 import angularWebSocket from 'angular-websocket';
@@ -58,7 +58,7 @@ import VLEController from './vleController2';
 
 //import ocLazyLoad from '../vendor/oclazyload/dist/ocLazyLoad.require';
 import ocLazyLoad from 'oclazyload';
-import moment from '../vendor/moment/min/moment.min';
+import moment from 'vendor/moment/min/moment.min';
 //import theme from './themes/default/theme2.js';
 
 import NavItemController from './themes/default/navItemController';
