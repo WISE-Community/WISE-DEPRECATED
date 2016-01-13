@@ -3,28 +3,39 @@
 import $ from 'jquery';
 import angular from 'angular';
 import angularMoment from 'angular-moment';
+import angularToArrayFilter from 'lib/angular-toArrayFilter/toArrayFilter';
 import angularUIRouter from 'angular-ui-router';
 import ngFileUpload from 'ng-file-upload';
 import ngMaterial from 'angular-material';
 import ngWebSocket from 'angular-websocket';
-import angularToArrayFilter from 'lib/angular-toArrayFilter/toArrayFilter';
+import AnnotationController from '../controllers/annotationController2';
 import AnnotationService from '../services/annotationService2';
 import ClassroomMonitorController from './classroomMonitorController2';
 import ConfigService from '../services/configService2';
 import Directives from '../directives/directives2';
+import DiscussionController from '../components/discussion/discussionController2';
 import DiscussionService from '../components/discussion/discussionService2';
+import DrawController from '../components/draw/drawController2';
 import DrawService from '../components/draw/drawService2';
+import EmbeddedController from '../components/embedded/embeddedController2';
 import EmbeddedService from '../components/embedded/embeddedService2';
+import GraphController from '../components/graph/graphController2';
 import GraphService from '../components/graph/graphService2';
 import Highcharts from 'highcharts';
 import highchartsng from 'highcharts-ng';
+import HTMLController from '../components/html/htmlController2';
+import LabelController from '../components/label/labelController2';
 import LabelService from '../components/label/labelService2';
+import MatchController from '../components/match/matchController2';
 import MatchService from '../components/match/matchService2';
+import MultipleChoiceController from '../components/multipleChoice/multipleChoiceController2';
 import MultipleChoiceService from '../components/multipleChoice/multipleChoiceService2';
 import NodeProgressController from './nodeProgress/nodeProgressController2';
 import NodeGradingController from './nodeGrading/nodeGradingController2';
 import NodeService from '../services/nodeService2';
+import OpenResponseController from '../components/openResponse/openResponseController2';
 import OpenResponseService from '../components/openResponse/openResponseService2';
+import OutsideURLController from '../components/outsideURL/outsideURLController2';
 import OutsideURLService from '../components/outsideURL/outsideURLService2';
 import ProjectService from '../services/projectService2';
 import SessionService from '../services/sessionService2';
@@ -32,6 +43,7 @@ import StudentAssetService from '../services/studentAssetService2';
 import StudentDataService from '../services/studentDataService2';
 import StudentStatusService from '../services/studentStatusService2';
 import StudentWebSocketService from '../services/studentWebSocketService2';
+import TableController from '../components/table/tableController2';
 import TableService from '../components/table/tableService2';
 import TeacherDataService from '../services/teacherDataService2';
 import StudentProgressController from './studentProgress/studentProgressController2';
@@ -72,10 +84,22 @@ let mainModule = angular.module('classroomMonitor', [
     .service(TeacherDataService.name, TeacherDataService)
     .service(TeacherWebSocketService.name, TeacherWebSocketService)
     .service(UtilService.name, UtilService)
+    .controller(AnnotationController.name, AnnotationController)
     .controller(ClassroomMonitorController.name, ClassroomMonitorController)
+    .controller(DiscussionController.name, DiscussionController)
+    .controller(DrawController.name, DrawController)
+    .controller(EmbeddedController.name, EmbeddedController)
+    .controller(GraphController.name, GraphController)
+    .controller(HTMLController.name, HTMLController)
+    .controller(LabelController.name, LabelController)
+    .controller(MatchController.name, MatchController)
+    .controller(MultipleChoiceController.name, MultipleChoiceController)
     .controller(NodeGradingController.name, NodeGradingController)
     .controller(NodeProgressController.name, NodeProgressController)
+    .controller(OpenResponseController.name, OpenResponseController)
+    .controller(OutsideURLController.name, OutsideURLController)
     .controller(StudentProgressController.name, StudentProgressController)
+    .controller(TableController.name, TableController)
     .config(['$urlRouterProvider',
         '$stateProvider',
         '$controllerProvider',
@@ -137,6 +161,7 @@ let mainModule = angular.module('classroomMonitor', [
                             return TeacherDataService.retrieveStudentDataByNodeId($stateParams.nodeId);
                         },
                         load: () => {
+                            /*
                             System.import('components/discussion/discussionController2').then((DiscussionController) => {
                                 $controllerProvider.register(DiscussionController.default.name, DiscussionController.default);
                             });
@@ -170,6 +195,7 @@ let mainModule = angular.module('classroomMonitor', [
                             System.import('components/table/tableController2').then((TableController) => {
                                 $controllerProvider.register(TableController.default.name, TableController.default);
                             });
+                            */
                         }
                         /*
                         annotationController: app.loadController('annotationController'),

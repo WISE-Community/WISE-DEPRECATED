@@ -33,6 +33,10 @@ var _angularMoment = require('angular-moment');
 
 var _angularMoment2 = _interopRequireDefault(_angularMoment);
 
+var _angularSanitize = require('angular-sanitize');
+
+var _angularSanitize2 = _interopRequireDefault(_angularSanitize);
+
 var _toArrayFilter = require('lib/angular-toArrayFilter/toArrayFilter');
 
 var _toArrayFilter2 = _interopRequireDefault(_toArrayFilter);
@@ -243,9 +247,7 @@ var mainModule = _angular2.default.module('vle', ['angularMoment', 'angular-toAr
 //'filters',
 'highcharts-ng',
 //'ngAudio',
-'ngAria', 'ngFileUpload', 'ngMaterial',
-//'ngSanitize',
-'ngWebSocket',
+'ngAria', 'ngFileUpload', 'ngMaterial', 'ngSanitize', 'ngWebSocket',
 //'notebook',
 'oc.lazyLoad', 'ui.router',
 //'ui.tinymce',

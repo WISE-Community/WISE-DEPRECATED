@@ -16,6 +16,10 @@ var _angularMoment = require('angular-moment');
 
 var _angularMoment2 = _interopRequireDefault(_angularMoment);
 
+var _toArrayFilter = require('lib/angular-toArrayFilter/toArrayFilter');
+
+var _toArrayFilter2 = _interopRequireDefault(_toArrayFilter);
+
 var _angularUiRouter = require('angular-ui-router');
 
 var _angularUiRouter2 = _interopRequireDefault(_angularUiRouter);
@@ -32,9 +36,9 @@ var _angularWebsocket = require('angular-websocket');
 
 var _angularWebsocket2 = _interopRequireDefault(_angularWebsocket);
 
-var _toArrayFilter = require('lib/angular-toArrayFilter/toArrayFilter');
+var _annotationController = require('../controllers/annotationController2');
 
-var _toArrayFilter2 = _interopRequireDefault(_toArrayFilter);
+var _annotationController2 = _interopRequireDefault(_annotationController);
 
 var _annotationService = require('../services/annotationService2');
 
@@ -52,17 +56,33 @@ var _directives = require('../directives/directives2');
 
 var _directives2 = _interopRequireDefault(_directives);
 
+var _discussionController = require('../components/discussion/discussionController2');
+
+var _discussionController2 = _interopRequireDefault(_discussionController);
+
 var _discussionService = require('../components/discussion/discussionService2');
 
 var _discussionService2 = _interopRequireDefault(_discussionService);
+
+var _drawController = require('../components/draw/drawController2');
+
+var _drawController2 = _interopRequireDefault(_drawController);
 
 var _drawService = require('../components/draw/drawService2');
 
 var _drawService2 = _interopRequireDefault(_drawService);
 
+var _embeddedController = require('../components/embedded/embeddedController2');
+
+var _embeddedController2 = _interopRequireDefault(_embeddedController);
+
 var _embeddedService = require('../components/embedded/embeddedService2');
 
 var _embeddedService2 = _interopRequireDefault(_embeddedService);
+
+var _graphController = require('../components/graph/graphController2');
+
+var _graphController2 = _interopRequireDefault(_graphController);
 
 var _graphService = require('../components/graph/graphService2');
 
@@ -76,13 +96,29 @@ var _highchartsNg = require('highcharts-ng');
 
 var _highchartsNg2 = _interopRequireDefault(_highchartsNg);
 
+var _htmlController = require('../components/html/htmlController2');
+
+var _htmlController2 = _interopRequireDefault(_htmlController);
+
+var _labelController = require('../components/label/labelController2');
+
+var _labelController2 = _interopRequireDefault(_labelController);
+
 var _labelService = require('../components/label/labelService2');
 
 var _labelService2 = _interopRequireDefault(_labelService);
 
+var _matchController = require('../components/match/matchController2');
+
+var _matchController2 = _interopRequireDefault(_matchController);
+
 var _matchService = require('../components/match/matchService2');
 
 var _matchService2 = _interopRequireDefault(_matchService);
+
+var _multipleChoiceController = require('../components/multipleChoice/multipleChoiceController2');
+
+var _multipleChoiceController2 = _interopRequireDefault(_multipleChoiceController);
 
 var _multipleChoiceService = require('../components/multipleChoice/multipleChoiceService2');
 
@@ -100,9 +136,17 @@ var _nodeService = require('../services/nodeService2');
 
 var _nodeService2 = _interopRequireDefault(_nodeService);
 
+var _openResponseController = require('../components/openResponse/openResponseController2');
+
+var _openResponseController2 = _interopRequireDefault(_openResponseController);
+
 var _openResponseService = require('../components/openResponse/openResponseService2');
 
 var _openResponseService2 = _interopRequireDefault(_openResponseService);
+
+var _outsideURLController = require('../components/outsideURL/outsideURLController2');
+
+var _outsideURLController2 = _interopRequireDefault(_outsideURLController);
 
 var _outsideURLService = require('../components/outsideURL/outsideURLService2');
 
@@ -132,6 +176,10 @@ var _studentWebSocketService = require('../services/studentWebSocketService2');
 
 var _studentWebSocketService2 = _interopRequireDefault(_studentWebSocketService);
 
+var _tableController = require('../components/table/tableController2');
+
+var _tableController2 = _interopRequireDefault(_tableController);
+
 var _tableService = require('../components/table/tableService2');
 
 var _tableService2 = _interopRequireDefault(_tableService);
@@ -154,7 +202,7 @@ var _utilService2 = _interopRequireDefault(_utilService);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var mainModule = _angular2.default.module('classroomMonitor', ['angularMoment', 'angular-toArrayFilter', 'directives', 'highcharts-ng', 'ngAnimate', 'ngAria', 'ngFileUpload', 'ngMaterial', 'ngWebSocket', 'ui.router']).service(_annotationService2.default.name, _annotationService2.default).service(_configService2.default.name, _configService2.default).service(_discussionService2.default.name, _discussionService2.default).service(_drawService2.default.name, _drawService2.default).service(_embeddedService2.default.name, _embeddedService2.default).service(_graphService2.default.name, _graphService2.default).service(_labelService2.default.name, _labelService2.default).service(_matchService2.default.name, _matchService2.default).service(_multipleChoiceService2.default.name, _multipleChoiceService2.default).service(_nodeService2.default.name, _nodeService2.default).service(_openResponseService2.default.name, _openResponseService2.default).service(_outsideURLService2.default.name, _outsideURLService2.default).service(_projectService2.default.name, _projectService2.default).service(_sessionService2.default.name, _sessionService2.default).service(_studentAssetService2.default.name, _studentAssetService2.default).service(_studentDataService2.default.name, _studentDataService2.default).service(_studentStatusService2.default.name, _studentStatusService2.default).service(_studentWebSocketService2.default.name, _studentWebSocketService2.default).service(_tableService2.default.name, _tableService2.default).service(_teacherDataService2.default.name, _teacherDataService2.default).service(_teacherWebSocketService2.default.name, _teacherWebSocketService2.default).service(_utilService2.default.name, _utilService2.default).controller(_classroomMonitorController2.default.name, _classroomMonitorController2.default).controller(_nodeGradingController2.default.name, _nodeGradingController2.default).controller(_nodeProgressController2.default.name, _nodeProgressController2.default).controller(_studentProgressController2.default.name, _studentProgressController2.default).config(['$urlRouterProvider', '$stateProvider', '$controllerProvider', '$mdThemingProvider', function ($urlRouterProvider, $stateProvider, $controllerProvider, $mdThemingProvider) {
+var mainModule = _angular2.default.module('classroomMonitor', ['angularMoment', 'angular-toArrayFilter', 'directives', 'highcharts-ng', 'ngAnimate', 'ngAria', 'ngFileUpload', 'ngMaterial', 'ngWebSocket', 'ui.router']).service(_annotationService2.default.name, _annotationService2.default).service(_configService2.default.name, _configService2.default).service(_discussionService2.default.name, _discussionService2.default).service(_drawService2.default.name, _drawService2.default).service(_embeddedService2.default.name, _embeddedService2.default).service(_graphService2.default.name, _graphService2.default).service(_labelService2.default.name, _labelService2.default).service(_matchService2.default.name, _matchService2.default).service(_multipleChoiceService2.default.name, _multipleChoiceService2.default).service(_nodeService2.default.name, _nodeService2.default).service(_openResponseService2.default.name, _openResponseService2.default).service(_outsideURLService2.default.name, _outsideURLService2.default).service(_projectService2.default.name, _projectService2.default).service(_sessionService2.default.name, _sessionService2.default).service(_studentAssetService2.default.name, _studentAssetService2.default).service(_studentDataService2.default.name, _studentDataService2.default).service(_studentStatusService2.default.name, _studentStatusService2.default).service(_studentWebSocketService2.default.name, _studentWebSocketService2.default).service(_tableService2.default.name, _tableService2.default).service(_teacherDataService2.default.name, _teacherDataService2.default).service(_teacherWebSocketService2.default.name, _teacherWebSocketService2.default).service(_utilService2.default.name, _utilService2.default).controller(_annotationController2.default.name, _annotationController2.default).controller(_classroomMonitorController2.default.name, _classroomMonitorController2.default).controller(_discussionController2.default.name, _discussionController2.default).controller(_drawController2.default.name, _drawController2.default).controller(_embeddedController2.default.name, _embeddedController2.default).controller(_graphController2.default.name, _graphController2.default).controller(_htmlController2.default.name, _htmlController2.default).controller(_labelController2.default.name, _labelController2.default).controller(_matchController2.default.name, _matchController2.default).controller(_multipleChoiceController2.default.name, _multipleChoiceController2.default).controller(_nodeGradingController2.default.name, _nodeGradingController2.default).controller(_nodeProgressController2.default.name, _nodeProgressController2.default).controller(_openResponseController2.default.name, _openResponseController2.default).controller(_outsideURLController2.default.name, _outsideURLController2.default).controller(_studentProgressController2.default.name, _studentProgressController2.default).controller(_tableController2.default.name, _tableController2.default).config(['$urlRouterProvider', '$stateProvider', '$controllerProvider', '$mdThemingProvider', function ($urlRouterProvider, $stateProvider, $controllerProvider, $mdThemingProvider) {
 
     $urlRouterProvider.otherwise('/studentProgress');
 
@@ -201,41 +249,43 @@ var mainModule = _angular2.default.module('classroomMonitor', ['angularMoment', 
             studentData: function studentData($stateParams, TeacherDataService, config) {
                 return TeacherDataService.retrieveStudentDataByNodeId($stateParams.nodeId);
             },
-            load: function load() {
-                System.import('components/discussion/discussionController2').then(function (DiscussionController) {
-                    $controllerProvider.register(DiscussionController.default.name, DiscussionController.default);
-                });
-                System.import('components/draw/drawController2').then(function (DrawController) {
-                    $controllerProvider.register(DrawController.default.name, DrawController.default);
-                });
-                System.import('components/embedded/embeddedController2').then(function (EmbeddedController) {
-                    $controllerProvider.register(EmbeddedController.default.name, EmbeddedController.default);
-                });
-                System.import('components/graph/graphController2').then(function (GraphController) {
-                    $controllerProvider.register(GraphController.default.name, GraphController.default);
-                });
-                System.import('components/match/matchController2').then(function (MatchController) {
-                    $controllerProvider.register(MatchController.default.name, MatchController.default);
-                });
-                System.import('components/multipleChoice/multipleChoiceController2').then(function (MultipleChoiceController) {
-                    $controllerProvider.register(MultipleChoiceController.default.name, MultipleChoiceController.default);
-                });
-                System.import('components/html/htmlController2').then(function (HTMLController) {
-                    $controllerProvider.register(HTMLController.default.name, HTMLController.default);
-                });
-                System.import('components/label/labelController2').then(function (LabelController) {
-                    $controllerProvider.register(LabelController.default.name, LabelController.default);
-                });
-                System.import('components/openResponse/openResponseController2').then(function (OpenResponseController) {
-                    $controllerProvider.register(OpenResponseController.default.name, OpenResponseController.default);
-                });
-                System.import('components/outsideURL/outsideURLController2').then(function (OutsideURLController) {
-                    $controllerProvider.register(OutsideURLController.default.name, OutsideURLController.default);
-                });
-                System.import('components/table/tableController2').then(function (TableController) {
-                    $controllerProvider.register(TableController.default.name, TableController.default);
-                });
-            }
+            load: function load() {}
+            /*
+            System.import('components/discussion/discussionController2').then((DiscussionController) => {
+                $controllerProvider.register(DiscussionController.default.name, DiscussionController.default);
+            });
+            System.import('components/draw/drawController2').then((DrawController) => {
+                $controllerProvider.register(DrawController.default.name, DrawController.default);
+            });
+            System.import('components/embedded/embeddedController2').then((EmbeddedController) => {
+                $controllerProvider.register(EmbeddedController.default.name, EmbeddedController.default);
+            });
+            System.import('components/graph/graphController2').then((GraphController) => {
+                $controllerProvider.register(GraphController.default.name, GraphController.default);
+            });
+            System.import('components/match/matchController2').then((MatchController) => {
+                $controllerProvider.register(MatchController.default.name, MatchController.default);
+            });
+            System.import('components/multipleChoice/multipleChoiceController2').then((MultipleChoiceController) => {
+                $controllerProvider.register(MultipleChoiceController.default.name, MultipleChoiceController.default);
+            });
+            System.import('components/html/htmlController2').then((HTMLController) => {
+                $controllerProvider.register(HTMLController.default.name, HTMLController.default);
+            });
+            System.import('components/label/labelController2').then((LabelController) => {
+                $controllerProvider.register(LabelController.default.name, LabelController.default);
+            });
+            System.import('components/openResponse/openResponseController2').then((OpenResponseController) => {
+                $controllerProvider.register(OpenResponseController.default.name, OpenResponseController.default);
+            });
+            System.import('components/outsideURL/outsideURLController2').then((OutsideURLController) => {
+                $controllerProvider.register(OutsideURLController.default.name, OutsideURLController.default);
+            });
+            System.import('components/table/tableController2').then((TableController) => {
+                $controllerProvider.register(TableController.default.name, TableController.default);
+            });
+            */
+
             /*
             annotationController: app.loadController('annotationController'),
             embeddedController: app.loadController('embeddedController'),
