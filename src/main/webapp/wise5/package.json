@@ -3,12 +3,10 @@
     "dependencies": {
       "angular": "github:angular/bower-angular@~1.3",
       "angular-animate": "github:angular/bower-angular-animate@^1.4.8",
-      "angular-dragdrop": "npm:angular-dragdrop@^1.0.13",
       "angular-material": "github:angular/bower-material@^1.0.1",
       "angular-moment": "npm:angular-moment@^1.0.0-beta.3",
       "angular-ui-router": "github:angular-ui/ui-router@^0.2.15",
-      "angular-ui-tree": "github:angular-ui-tree/angular-ui-tree@^2.13.0",
-      "angular-ui/ui-sortable": "github:angular-ui/ui-sortable@^0.13.4",
+      "angular-ui-tree": "github:angular-ui-tree/angular-ui-tree@2.5",
       "angular-websocket": "npm:angular-websocket@^1.0.14",
       "highcharts-ng": "npm:highcharts-ng@^0.0.11",
       "highcharts/draggable-points": "github:highcharts/draggable-points@master",
@@ -47,12 +45,7 @@
           "angular": "1.4.8"
         }
       },
-      "github:angular-ui/ui-sortable@0.13.4": {
-        "dependencies": {
-          "angular": "jspm:angular@1.4.8"
-        }
-      },
-      "github:angular-ui-tree/angular-ui-tree@2.13.0": {
+      "github:angular-ui-tree/angular-ui-tree@2.5.0": {
         "dependencies": {
           "angular": "jspm:angular@1.4.8"
         }

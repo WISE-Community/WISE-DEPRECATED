@@ -407,17 +407,11 @@
     "util": "github:jspm/nodelibs-util@^0.1.0",
     "process": "github:jspm/nodelibs-process@^0.1.0"
   },
-  "npm:angular-dragdrop@1.0.13": {
-    "process": "github:jspm/nodelibs-process@^0.1.0"
-  },
   "github:components/jqueryui@1.11.4": {
     "jquery": "jspm:jquery@2.1.4"
   },
   "npm:jquery@2.1.4": {},
-  "github:angular-ui/ui-sortable@0.13.4": {
-    "angular": "jspm:angular@1.4.8"
-  },
-  "github:angular-ui-tree/angular-ui-tree@2.13.0": {
+  "github:angular-ui-tree/angular-ui-tree@2.5.0": {
     "angular": "jspm:angular@1.4.8"
   }
 }

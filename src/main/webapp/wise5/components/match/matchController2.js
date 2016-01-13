@@ -1,8 +1,4 @@
 
-//import $ from 'jquery';
-//import jqueryUI from 'jquery-ui';
-//import angularDrapDrop from 'angular-dragdrop';
-
 class MatchController {
     constructor($rootScope,
                 $scope,
@@ -181,14 +177,14 @@ class MatchController {
                 }
 
                 return result;
-            },
+            }.bind(this),
             dropped: function(event) {
                 var sourceNode = event.source.nodeScope;
                 var destNodes = event.dest.nodesScope;
 
                 // tell the controller that the student data has changed
                 this.$scope.matchController.studentDataChanged();
-            }
+            }.bind(this)
         };
 
         /**

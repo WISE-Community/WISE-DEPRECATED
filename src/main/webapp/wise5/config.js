@@ -17,12 +17,10 @@ System.config({
   map: {
     "angular": "github:angular/bower-angular@1.4.8",
     "angular-animate": "github:angular/bower-angular-animate@1.4.8",
-    "angular-dragdrop": "npm:angular-dragdrop@1.0.13",
     "angular-material": "github:angular/bower-material@1.0.1",
     "angular-moment": "npm:angular-moment@1.0.0-beta.3",
     "angular-ui-router": "github:angular-ui/ui-router@0.2.15",
-    "angular-ui-tree": "github:angular-ui-tree/angular-ui-tree@2.13.0",
-    "angular-ui/ui-sortable": "github:angular-ui/ui-sortable@0.13.4",
+    "angular-ui-tree": "github:angular-ui-tree/angular-ui-tree@2.5.0",
     "angular-websocket": "npm:angular-websocket@1.0.14",
     "babel": "npm:babel-core@5.8.34",
     "babel-runtime": "npm:babel-runtime@5.8.34",
@@ -34,13 +32,10 @@ System.config({
     "jquery-ui": "github:components/jqueryui@1.11.4",
     "ng-file-upload": "npm:ng-file-upload@10.1.11",
     "oclazyload": "npm:oclazyload@1.0.9",
-    "github:angular-ui-tree/angular-ui-tree@2.13.0": {
+    "github:angular-ui-tree/angular-ui-tree@2.5.0": {
       "angular": "github:angular/bower-angular@1.4.8"
     },
     "github:angular-ui/ui-router@0.2.15": {
-      "angular": "github:angular/bower-angular@1.4.8"
-    },
-    "github:angular-ui/ui-sortable@0.13.4": {
       "angular": "github:angular/bower-angular@1.4.8"
     },
     "github:angular/bower-angular-animate@1.4.8": {
@@ -114,10 +109,6 @@ System.config({
     },
     "lib/highcharts@4.2.1": {
       "jquery": "npm:jquery@2.1.4"
-    },
-    "npm:angular-dragdrop@1.0.13": {
-      "angular": "npm:angular@1.4.8",
-      "process": "github:jspm/nodelibs-process@0.1.2"
     },
     "npm:angular-moment@1.0.0-beta.3": {
       "moment": "npm:moment@2.10.6"

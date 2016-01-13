@@ -4,8 +4,6 @@
 import $ from 'jquery';
 import jqueryUI from 'jquery-ui';
 import angular from 'angular';
-import angularAnimate from 'angular-animate';
-import angularDrapDrop from 'angular-dragdrop';
 import angularFileUpload from 'ng-file-upload';
 import angularHighcharts from 'highcharts-ng';
 import angularMaterial from 'angular-material';
@@ -13,7 +11,6 @@ import angularMoment from 'angular-moment';
 import angularToArrayFilter from '../lib/angular-toArrayFilter/toArrayFilter';
 import angularUIRouter from 'angular-ui-router';
 import angularUITree from 'angular-ui-tree';
-import angularUISortable from 'angular-ui/ui-sortable';
 import angularWebSocket from 'angular-websocket';
 import AnnotationController from '../controllers/annotationController2';
 import AnnotationService from '../services/annotationService2';
@@ -76,10 +73,8 @@ let mainModule = angular.module('vle', [
     'directives',
     //'filters',
     'highcharts-ng',
-    'ngAnimate',
     //'ngAudio',
     'ngAria',
-    'ngDragDrop',
     'ngFileUpload',
     'ngMaterial',
     //'ngSanitize',
@@ -87,7 +82,6 @@ let mainModule = angular.module('vle', [
     //'notebook',
     'oc.lazyLoad',
     'ui.router',
-    'ui.sortable',
     //'ui.tinymce',
     'ui.tree'
     ])

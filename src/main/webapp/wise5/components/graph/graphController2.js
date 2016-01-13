@@ -1,19 +1,8 @@
-/*
- bootstrap,
- draggablePoints,
- highcharts,
- highchartsMore,
- highchartsng,
- $,
- studentAssetService
- */
 
-import $ from 'jquery';
+//import $ from 'jquery';
 import Highcharts from 'highcharts';
-//import highchartsMore from 'highcharts-more';
-import angularHighcharts from 'highcharts-ng';
+//import angularHighcharts from 'highcharts-ng';
 import draggablePoints from 'highcharts/draggable-points';
-//import highchartsng from '../../vendor/highcharts-ng/dist/highcharts-ng';
 
 class GraphController {
     constructor($rootScope,
@@ -23,15 +12,6 @@ class GraphController {
                 ProjectService,
                 StudentAssetService,
                 StudentDataService) {
-
-        /*
-        //var injector = angular.injector(['highcharts-ng']);
-        var requires = angular.module('classroomMonitor').requires;
-
-        if (requires.indexOf('highcharts-ng') == -1) {
-            angular.module('classroomMonitor').requires.push('highcharts-ng');
-        }
-        */
 
         this.$rootScope = $rootScope;
         this.$scope = $scope;
