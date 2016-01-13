@@ -59,7 +59,7 @@ import VLEController from './vleController2';
 
 //import ocLazyLoad from '../vendor/oclazyload/dist/ocLazyLoad.require';
 import ocLazyLoad from 'oclazyload';
-import moment from 'vendor/moment/min/moment.min';
+import moment from 'moment';
 
 let mainModule = angular.module('vle', [
     'angularMoment',

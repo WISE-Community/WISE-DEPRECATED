@@ -32,6 +32,7 @@ System.config({
     "highcharts/draggable-points": "github:highcharts/draggable-points@master",
     "jquery": "github:components/jquery@2.1.4",
     "jquery-ui": "github:components/jqueryui@1.11.4",
+    "moment": "npm:moment@2.11.1",
     "ng-file-upload": "npm:ng-file-upload@10.1.11",
     "oclazyload": "npm:oclazyload@1.0.9",
     "github:angular-ui-tree/angular-ui-tree@2.5.0": {
@@ -306,6 +307,9 @@ System.config({
       "brorand": "npm:brorand@1.0.5"
     },
     "npm:moment@2.10.6": {
+      "process": "github:jspm/nodelibs-process@0.1.2"
+    },
+    "npm:moment@2.11.1": {
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
     "npm:nan@1.8.4": {
