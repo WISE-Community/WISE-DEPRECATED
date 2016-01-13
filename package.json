@@ -11,10 +11,17 @@
   },
   "devDependencies": {
     "babel-cli": "^6.4.0",
-    "connect-history-api-fallback": "^1.1.0"
+    "connect-history-api-fallback": "^1.1.0",
+    "node-sass": "^3.4.2"
   },
   "scripts": {
+    "watch-all": "npm run transpile & npm run watch-css",
     "transpile": "babel --presets babel-preset-es2015 --watch src/main/webapp/wise5/ --only wise5/services,wise5/classroomMonitor,wise5/authoringTool,wise5/directives,wise5/components,wise5/vle,wise5/controllers,wise5/node/ --out-dir src/main/webapp/wise5/transpiled/",
+    "watch-css": "npm run watch-core-css & npm run watch-theme-css",
+    "watch-core-css": "node-sass -w src/main/webapp/wise5/style -o src/main/webapp/wise5/style",
+    "watch-theme-css": "node-sass -w src/main/webapp/wise5/vle/themes -o src/main/webapp/wise5/vle/themes",
+    "build-core-css": "node-sass src/main/webapp/wise5/style -o src/main/webapp/wise5/style",
+    "build-theme-css": "node-sass src/main/webapp/wise5/vle/themes -o src/main/webapp/wise5/vle/themes",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
