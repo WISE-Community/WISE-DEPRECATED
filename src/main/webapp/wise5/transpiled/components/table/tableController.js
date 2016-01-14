@@ -1,7 +1,23 @@
 'use strict';
 
-define(['app'], function (app) {
-    app.$controllerProvider.register('TableController', function ($rootScope, $scope, $state, $stateParams, ConfigService, NodeService, ProjectService, SessionService, StudentAssetService, StudentDataService, TableService) {
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var TableController = function () {
+    function TableController($rootScope, $scope, NodeService, ProjectService, StudentDataService, TableService) {
+        _classCallCheck(this, TableController);
+
+        this.$rootScope = $rootScope;
+        this.$scope = $scope;
+        this.NodeService = NodeService;
+        this.ProjectService = ProjectService;
+        this.StudentDataService = StudentDataService;
+        this.TableService = TableService;
 
         // the node id of the current node
         this.nodeId = null;
@@ -42,125 +58,195 @@ define(['app'], function (app) {
         // whether the reset table button is shown or not
         this.isResetTableButtonVisible = true;
 
-        /**
-         * Perform setup of the component
-         */
-        this.setup = function () {
+        // get the current node and node id
+        var currentNode = this.StudentDataService.getCurrentNode();
+        if (currentNode != null) {
+            this.nodeId = currentNode.id;
+        } else {
+            this.nodeId = this.$scope.nodeId;
+        }
 
-            // get the current node and node id
-            var currentNode = StudentDataService.getCurrentNode();
-            if (currentNode != null) {
-                this.nodeId = currentNode.id;
-            } else {
-                this.nodeId = $scope.nodeId;
+        // get the component content from the scope
+        this.componentContent = this.$scope.component;
+
+        this.mode = this.$scope.mode;
+
+        if (this.componentContent != null) {
+
+            // get the component id
+            this.componentId = this.componentContent.id;
+
+            if (this.mode === 'student') {
+                this.isPromptVisible = true;
+                this.isSaveButtonVisible = this.componentContent.showSaveButton;
+                this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+                this.isResetTableButtonVisible = true;
+            } else if (this.mode === 'grading') {
+                this.isPromptVisible = true;
+                this.isSaveButtonVisible = false;
+                this.isSubmitButtonVisible = false;
+                this.isResetTableButtonVisible = false;
+                this.isDisabled = true;
+            } else if (this.mode === 'onlyShowWork') {
+                this.isPromptVisible = false;
+                this.isSaveButtonVisible = false;
+                this.isSubmitButtonVisible = false;
+                this.isResetTableButtonVisible = false;
+                this.isDisabled = true;
             }
 
-            // get the component content from the scope
-            this.componentContent = $scope.component;
+            // get the show previous work node id if it is provided
+            var showPreviousWorkNodeId = this.componentContent.showPreviousWorkNodeId;
 
-            this.mode = $scope.mode;
+            var componentState = null;
 
-            if (this.componentContent != null) {
+            if (showPreviousWorkNodeId != null) {
+                // this component is showing previous work
+                this.isShowPreviousWork = true;
 
-                // get the component id
-                this.componentId = this.componentContent.id;
+                // get the show previous work component id if it is provided
+                var showPreviousWorkComponentId = this.componentContent.showPreviousWorkComponentId;
 
-                if (this.mode === 'student') {
-                    this.isPromptVisible = true;
-                    this.isSaveButtonVisible = this.componentContent.showSaveButton;
-                    this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-                    this.isResetTableButtonVisible = true;
-                } else if (this.mode === 'grading') {
-                    this.isPromptVisible = true;
-                    this.isSaveButtonVisible = false;
-                    this.isSubmitButtonVisible = false;
-                    this.isResetTableButtonVisible = false;
-                    this.isDisabled = true;
-                } else if (this.mode === 'onlyShowWork') {
-                    this.isPromptVisible = false;
-                    this.isSaveButtonVisible = false;
-                    this.isSubmitButtonVisible = false;
-                    this.isResetTableButtonVisible = false;
-                    this.isDisabled = true;
-                }
+                // get the node content for the other node
+                var showPreviousWorkNodeContent = this.ProjectService.getNodeContentByNodeId(showPreviousWorkNodeId);
 
-                // get the show previous work node id if it is provided
-                var showPreviousWorkNodeId = this.componentContent.showPreviousWorkNodeId;
+                // get the component content for the component we are showing previous work for
+                this.componentContent = this.NodeService.getComponentContentById(showPreviousWorkNodeContent, showPreviousWorkComponentId);
 
-                var componentState = null;
+                // get the component state for the show previous work
+                componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(showPreviousWorkNodeId, showPreviousWorkComponentId);
 
-                if (showPreviousWorkNodeId != null) {
-                    // this component is showing previous work
-                    this.isShowPreviousWork = true;
+                // populate the student work into this component
+                this.setStudentWork(componentState);
 
-                    // get the show previous work component id if it is provided
-                    var showPreviousWorkComponentId = this.componentContent.showPreviousWorkComponentId;
+                // disable the component since we are just showing previous work
+                this.isDisabled = true;
 
-                    // get the node content for the other node
-                    var showPreviousWorkNodeContent = ProjectService.getNodeContentByNodeId(showPreviousWorkNodeId);
+                // set up the table
+                this.setupTable();
 
-                    // get the component content for the component we are showing previous work for
-                    this.componentContent = NodeService.getComponentContentById(showPreviousWorkNodeContent, showPreviousWorkComponentId);
+                // register this component with the parent node
+                this.$scope.$parent.registerComponentController(this.$scope, this.componentContent);
+            } else {
+                // this is a regular component
 
-                    // get the component state for the show previous work
-                    componentState = StudentDataService.getLatestComponentStateByNodeIdAndComponentId(showPreviousWorkNodeId, showPreviousWorkComponentId);
+                // get the component state from the scope
+                componentState = this.$scope.componentState;
 
+                // set whether studentAttachment is enabled
+                this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
+
+                if (componentState == null) {
+                    // check if we need to import work.
+                    // only import work if the student does not already have
+                    // work for this component
+                    var importWorkNodeId = this.componentContent.importWorkNodeId;
+                    var importWorkComponentId = this.componentContent.importWorkComponentId;
+
+                    if (importWorkNodeId != null && importWorkComponentId != null) {
+                        // import the work from the other component
+                        this.importWork();
+                    }
+                } else {
                     // populate the student work into this component
                     this.setStudentWork(componentState);
+                }
 
-                    // disable the component since we are just showing previous work
-                    this.isDisabled = true;
+                // set up the table
+                this.setupTable();
 
-                    // set up the table
-                    this.setupTable();
+                // check if we need to lock this component
+                this.calculateDisabled();
 
+                if (this.$scope.$parent.registerComponentController != null) {
                     // register this component with the parent node
-                    $scope.$parent.registerComponentController($scope, this.componentContent);
-                } else {
-                    // this is a regular component
-
-                    // get the component state from the scope
-                    componentState = $scope.componentState;
-
-                    // set whether studentAttachment is enabled
-                    this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
-
-                    if (componentState == null) {
-                        // check if we need to import work.
-                        // only import work if the student does not already have
-                        // work for this component
-                        var importWorkNodeId = this.componentContent.importWorkNodeId;
-                        var importWorkComponentId = this.componentContent.importWorkComponentId;
-
-                        if (importWorkNodeId != null && importWorkComponentId != null) {
-                            // import the work from the other component
-                            this.importWork();
-                        }
-                    } else {
-                        // populate the student work into this component
-                        this.setStudentWork(componentState);
-                    }
-
-                    // set up the table
-                    this.setupTable();
-
-                    // check if we need to lock this component
-                    this.calculateDisabled();
-
-                    if ($scope.$parent.registerComponentController != null) {
-                        // register this component with the parent node
-                        $scope.$parent.registerComponentController($scope, this.componentContent);
-                    }
+                    this.$scope.$parent.registerComponentController(this.$scope, this.componentContent);
                 }
             }
-        };
+        }
 
         /**
-         * Get a copy of the table data
-         * @param tableData the table data to copy
-         * @return a copy of the table data
+         * A connected component has changed its student data so we will
+         * perform any necessary changes to this component
+         * @param connectedComponent the connected component
+         * @param connectedComponentParams the connected component params
+         * @param componentState the component state from the connected
+         * component that has changed
          */
-        this.getCopyOfTableData = function (tableData) {
+        this.$scope.handleConnectedComponentStudentDataChanged = function (connectedComponent, connectedComponentParams, componentState) {
+
+            if (connectedComponent != null && connectedComponentParams != null && componentState != null) {
+
+                // get the component type that has changed
+                var componentType = connectedComponent.type;
+
+                if (componentType === 'Graph') {
+
+                    // set the graph data into the table
+                    this.$scope.tableController.setGraphDataIntoTableData(componentState, connectedComponentParams);
+
+                    // the table has changed
+                    this.$scope.tableController.isDirty = true;
+                }
+            }
+        }.bind(this);
+
+        /**
+         * Get the component state from this component. The parent node will
+         * call this function to obtain the component state when it needs to
+         * save student data.
+         * @return a component state containing the student data
+         */
+        this.$scope.getComponentState = function () {
+
+            var componentState = null;
+
+            if (this.$scope.tableController.isDirty) {
+                // create a component state populated with the student data
+                componentState = this.$scope.tableController.createComponentState();
+
+                // set isDirty to false since this student work is about to be saved
+                this.$scope.tableController.isDirty = false;
+            }
+
+            return componentState;
+        }.bind(this);
+
+        /**
+         * The parent node submit button was clicked
+         */
+        this.$scope.$on('nodeSubmitClicked', angular.bind(this, function (event, args) {
+
+            // get the node id of the node
+            var nodeId = args.nodeId;
+
+            // make sure the node id matches our parent node
+            if (this.nodeId === nodeId) {
+
+                if (this.isLockAfterSubmit()) {
+                    // disable the component if it was authored to lock after submit
+                    this.isDisabled = true;
+                }
+            }
+        }));
+
+        /**
+         * Listen for the 'exitNode' event which is fired when the student
+         * exits the parent node. This will perform any necessary cleanup
+         * when the student exits the parent node.
+         */
+        this.$scope.$on('exitNode', angular.bind(this, function (event, args) {}));
+    }
+
+    /**
+     * Get a copy of the table data
+     * @param tableData the table data to copy
+     * @return a copy of the table data
+     */
+
+    _createClass(TableController, [{
+        key: 'getCopyOfTableData',
+        value: function getCopyOfTableData(tableData) {
             var tableDataCopy = null;
 
             if (tableData != null) {
@@ -174,12 +260,14 @@ define(['app'], function (app) {
             }
 
             return tableDataCopy;
-        };
+        }
+    }, {
+        key: 'setupTable',
 
         /**
          * Setup the table
          */
-        this.setupTable = function () {
+        value: function setupTable() {
 
             if (this.tableData == null) {
                 /*
@@ -188,31 +276,37 @@ define(['app'], function (app) {
                  */
                 this.tableData = this.getCopyOfTableData(this.componentContent.tableData);
             }
-        };
+        }
+    }, {
+        key: 'resetTable',
 
         /**
          * Reset the table data to its initial state from the component content
          */
-        this.resetTable = function () {
+        value: function resetTable() {
             // get the original table from the step content
             this.tableData = this.getCopyOfTableData(this.componentContent.tableData);
 
             // the table has changed so we will perform additional processing
             this.studentDataChanged();
-        };
+        }
+    }, {
+        key: 'getTableDataRows',
 
         /**
          * Get the rows of the table data
          */
-        this.getTableDataRows = function () {
+        value: function getTableDataRows() {
             return this.tableData;
-        };
+        }
+    }, {
+        key: 'setStudentWork',
 
         /**
          * Populate the student work into the component
          * @param componentState the component state to populate into the component
          */
-        this.setStudentWork = function (componentState) {
+        value: function setStudentWork(componentState) {
 
             if (componentState != null) {
 
@@ -224,21 +318,25 @@ define(['app'], function (app) {
                     this.tableData = studentData.tableData;
                 }
             }
-        };
+        }
+    }, {
+        key: 'saveButtonClicked',
 
         /**
          * Called when the student clicks the save button
          */
-        this.saveButtonClicked = function () {
+        value: function saveButtonClicked() {
 
             // tell the parent node that this component wants to save
-            $scope.$emit('componentSaveTriggered', { nodeId: this.nodeId, componentId: this.componentId });
-        };
+            this.$scope.$emit('componentSaveTriggered', { nodeId: this.nodeId, componentId: this.componentId });
+        }
+    }, {
+        key: 'submitButtonClicked',
 
         /**
          * Called when the student clicks the submit button
          */
-        this.submitButtonClicked = function () {
+        value: function submitButtonClicked() {
             this.isSubmit = true;
 
             // check if we need to lock the component after the student submits
@@ -246,15 +344,17 @@ define(['app'], function (app) {
                 this.isDisabled = true;
             }
 
-            $scope.$emit('componentSubmitTriggered', { nodeId: this.nodeId, componentId: this.componentId });
-        };
+            this.$scope.$emit('componentSubmitTriggered', { nodeId: this.nodeId, componentId: this.componentId });
+        }
+    }, {
+        key: 'studentDataChanged',
 
         /**
          * Called when the student changes their work
          */
-        this.studentDataChanged = function () {
+        value: function studentDataChanged() {
             /*
-             * set the dirty flag so we will know we need to save the 
+             * set the dirty flag so we will know we need to save the
              * student work later
              */
             this.isDirty = true;
@@ -267,21 +367,23 @@ define(['app'], function (app) {
 
             /*
              * the student work in this component has changed so we will tell
-             * the parent node that the student data will need to be saved. 
-             * this will also notify connected parts that this component's student 
+             * the parent node that the student data will need to be saved.
+             * this will also notify connected parts that this component's student
              * data has changed.
              */
-            $scope.$emit('componentStudentDataChanged', { componentId: componentId, componentState: componentState });
-        };
+            this.$scope.$emit('componentStudentDataChanged', { componentId: componentId, componentState: componentState });
+        }
+    }, {
+        key: 'createComponentState',
 
         /**
          * Create a new component state populated with the student data
          * @return the componentState after it has been populated
          */
-        this.createComponentState = function () {
+        value: function createComponentState() {
 
             // create a new component state
-            var componentState = NodeService.createNewComponentState();
+            var componentState = this.NodeService.createNewComponentState();
 
             if (componentState != null) {
                 var studentData = {};
@@ -305,12 +407,14 @@ define(['app'], function (app) {
             }
 
             return componentState;
-        };
+        }
+    }, {
+        key: 'calculateDisabled',
 
         /**
          * Check if we need to lock the component
          */
-        this.calculateDisabled = function () {
+        value: function calculateDisabled() {
 
             var nodeId = this.nodeId;
 
@@ -326,10 +430,10 @@ define(['app'], function (app) {
                     // we need to lock the step after the student has submitted
 
                     // get the component states for this component
-                    var componentStates = StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
+                    var componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
 
                     // check if any of the component states were submitted
-                    var isSubmitted = NodeService.isWorkSubmitted(componentStates);
+                    var isSubmitted = this.NodeService.isWorkSubmitted(componentStates);
 
                     if (isSubmitted) {
                         // the student has submitted work for this component
@@ -337,45 +441,55 @@ define(['app'], function (app) {
                     }
                 }
             }
-        };
+        }
+    }, {
+        key: 'showPrompt',
 
         /**
          * Check whether we need to show the prompt
          * @return whether to show the prompt
          */
-        this.showPrompt = function () {
+        value: function showPrompt() {
             return this.isPromptVisible;
-        };
+        }
+    }, {
+        key: 'showSaveButton',
 
         /**
          * Check whether we need to show the save button
          * @return whether to show the save button
          */
-        this.showSaveButton = function () {
+        value: function showSaveButton() {
             return this.isSaveButtonVisible;
-        };
+        }
+    }, {
+        key: 'showSubmitButton',
 
         /**
          * Check whether we need to show the submit button
          * @return whether to show the submit button
          */
-        this.showSubmitButton = function () {
+        value: function showSubmitButton() {
             return this.isSubmitButtonVisible;
-        };
+        }
+    }, {
+        key: 'showResetTableButton',
 
         /**
          * Check whether we need to show the reset table button
          * @return whether to show the reset table button
          */
-        this.showResetTableButton = function () {
+        value: function showResetTableButton() {
             return this.isResetTableButtonVisible;
-        };
+        }
+    }, {
+        key: 'isLockAfterSubmit',
 
         /**
          * Check whether we need to lock the component after the student
          * submits an answer.
          */
-        this.isLockAfterSubmit = function () {
+        value: function isLockAfterSubmit() {
             var result = false;
 
             if (this.componentContent != null) {
@@ -387,12 +501,14 @@ define(['app'], function (app) {
             }
 
             return result;
-        };
+        }
+    }, {
+        key: 'getPrompt',
 
         /**
          * Get the prompt to show to the student
          */
-        this.getPrompt = function () {
+        value: function getPrompt() {
             var prompt = null;
 
             if (this.componentContent != null) {
@@ -400,12 +516,14 @@ define(['app'], function (app) {
             }
 
             return prompt;
-        };
+        }
+    }, {
+        key: 'importWork',
 
         /**
          * Import work from another component
          */
-        this.importWork = function () {
+        value: function importWork() {
 
             // get the component content
             var componentContent = this.componentContent;
@@ -418,7 +536,7 @@ define(['app'], function (app) {
                 if (importWorkNodeId != null && importWorkComponentId != null) {
 
                     // get the latest component state for this component
-                    var componentState = StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
+                    var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
 
                     /*
                      * we will only import work into this component if the student
@@ -428,14 +546,14 @@ define(['app'], function (app) {
                         // the student has not done any work for this component
 
                         // get the latest component state from the component we are importing from
-                        var importWorkComponentState = StudentDataService.getLatestComponentStateByNodeIdAndComponentId(importWorkNodeId, importWorkComponentId);
+                        var importWorkComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(importWorkNodeId, importWorkComponentId);
 
                         if (importWorkComponentState != null) {
                             /*
-                             * populate a new component state with the work from the 
+                             * populate a new component state with the work from the
                              * imported component state
                              */
-                            var populatedComponentState = TableService.populateComponentState(importWorkComponentState);
+                            var populatedComponentState = this.TableService.populateComponentState(importWorkComponentState);
 
                             // populate the component state into this component
                             this.setStudentWork(populatedComponentState);
@@ -443,44 +561,22 @@ define(['app'], function (app) {
                     }
                 }
             }
-        };
+        }
+    }, {
+        key: 'attachNotebookItemToComponent',
 
         /**
          * handle importing notebook item data (we only support csv for now)
          */
-        this.attachNotebookItemToComponent = angular.bind(this, function (notebookItem) {
+        value: function attachNotebookItemToComponent(notebookItem) {
             if (notebookItem.studentAsset != null) {
                 // TODO implement me
             } else if (notebookItem.studentWork != null) {
                     // TODO implement me
                 }
-        });
-
-        /**
-         * A connected component has changed its student data so we will
-         * perform any necessary changes to this component
-         * @param connectedComponent the connected component
-         * @param connectedComponentParams the connected component params
-         * @param componentState the component state from the connected 
-         * component that has changed
-         */
-        $scope.handleConnectedComponentStudentDataChanged = function (connectedComponent, connectedComponentParams, componentState) {
-
-            if (connectedComponent != null && connectedComponentParams != null && componentState != null) {
-
-                // get the component type that has changed
-                var componentType = connectedComponent.type;
-
-                if (componentType === 'Graph') {
-
-                    // set the graph data into the table
-                    $scope.tableController.setGraphDataIntoTableData(componentState, connectedComponentParams);
-
-                    // the table has changed
-                    $scope.tableController.isDirty = true;
-                }
-            }
-        };
+        }
+    }, {
+        key: 'setGraphDataIntoTableData',
 
         /**
          * Set the graph data into the table data
@@ -488,7 +584,7 @@ define(['app'], function (app) {
          * @param params (optional) the params to specify what columns
          * and rows to overwrite in the table data
          */
-        this.setGraphDataIntoTableData = function (componentState, params) {
+        value: function setGraphDataIntoTableData(componentState, params) {
 
             /*
              * the default is set to not skip the first row and for the
@@ -584,7 +680,9 @@ define(['app'], function (app) {
                     }
                 }
             }
-        };
+        }
+    }, {
+        key: 'setTableDataCellValue',
 
         /**
          * Set the table data cell value
@@ -592,7 +690,7 @@ define(['app'], function (app) {
          * @param y the y index (0 indexed)
          * @param value the value to set in the cell
          */
-        this.setTableDataCellValue = function (x, y, value) {
+        value: function setTableDataCellValue(x, y, value) {
 
             // get the table data rows
             var tableDataRows = this.getTableDataRows();
@@ -614,81 +712,42 @@ define(['app'], function (app) {
                     }
                 }
             }
-        };
+        }
+    }, {
+        key: 'getComponentId',
 
         /**
          * Get the component id
          * @return the component id
          */
-        this.getComponentId = function () {
+        value: function getComponentId() {
             var componentId = this.componentContent.id;
 
             return componentId;
-        };
-
-        /**
-         * Get the component state from this component. The parent node will 
-         * call this function to obtain the component state when it needs to
-         * save student data.
-         * @return a component state containing the student data
-         */
-        $scope.getComponentState = function () {
-
-            var componentState = null;
-
-            if ($scope.tableController.isDirty) {
-                // create a component state populated with the student data
-                componentState = $scope.tableController.createComponentState();
-
-                // set isDirty to false since this student work is about to be saved
-                $scope.tableController.isDirty = false;
-            }
-
-            return componentState;
-        };
-
-        /**
-         * The parent node submit button was clicked
-         */
-        $scope.$on('nodeSubmitClicked', angular.bind(this, function (event, args) {
-
-            // get the node id of the node
-            var nodeId = args.nodeId;
-
-            // make sure the node id matches our parent node
-            if (this.nodeId === nodeId) {
-
-                if (this.isLockAfterSubmit()) {
-                    // disable the component if it was authored to lock after submit
-                    this.isDisabled = true;
-                }
-            }
-        }));
-
-        /**
-         * Listen for the 'exitNode' event which is fired when the student
-         * exits the parent node. This will perform any necessary cleanup
-         * when the student exits the parent node.
-         */
-        $scope.$on('exitNode', angular.bind(this, function (event, args) {}));
+        }
+    }, {
+        key: 'registerExitListener',
 
         /**
          * Register the the listener that will listen for the exit event
          * so that we can perform saving before exiting.
          */
-        this.registerExitListener = function () {
+        value: function registerExitListener() {
 
             /*
              * Listen for the 'exit' event which is fired when the student exits
              * the VLE. This will perform saving before the VLE exits.
              */
-            this.exitListener = $scope.$on('exit', angular.bind(this, function (event, args) {
+            this.exitListener = this.$scope.$on('exit', angular.bind(this, function (event, args) {
 
-                $rootScope.$broadcast('doneExiting');
+                this.$rootScope.$broadcast('doneExiting');
             }));
-        };
+        }
+    }]);
 
-        // perform setup of this component
-        this.setup();
-    });
-});
+    return TableController;
+}();
+
+TableController.$inject = ['$rootScope', '$scope', 'NodeService', 'ProjectService', 'StudentDataService', 'TableService'];
+
+exports.default = TableController;

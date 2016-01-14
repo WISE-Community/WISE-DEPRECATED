@@ -1,23 +1,38 @@
 'use strict';
 
-define(['nodeService', 'studentDataService'], function (nodeService, studentDataService) {
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-    var service = ['$http', 'NodeService', 'StudentDataService', function ($http, NodeService, StudentDataService) {
-        var serviceObject = Object.create(NodeService);
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
 
-        serviceObject.config = null;
+var _nodeService = require('../../services/nodeService');
 
-        serviceObject.callFunction = function (node, component, functionName, functionParams, componentStates, nodeStates, componentEvents, nodeEvents) {
-            var result = null;
+var _nodeService2 = _interopRequireDefault(_nodeService);
 
-            if (functionName === 'wordCountCompare') {
-                result = this.wordCountCompare(functionParams);
-            }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-            return result;
-        };
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-        serviceObject.getStudentWorkJPEG = function (componentState) {
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var DrawService = function (_NodeService) {
+    _inherits(DrawService, _NodeService);
+
+    function DrawService(StudentDataService) {
+        _classCallCheck(this, DrawService);
+
+        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(DrawService).call(this));
+
+        _this.StudentDataService = StudentDataService;
+        return _this;
+    }
+
+    _createClass(DrawService, [{
+        key: 'getStudentWorkJPEG',
+        value: function getStudentWorkJPEG(componentState) {
             if (componentState != null) {
                 var studentData = componentState.studentData;
 
@@ -29,9 +44,10 @@ define(['nodeService', 'studentDataService'], function (nodeService, studentData
                 }
             }
             return null;
-        };
-
-        serviceObject.getStudentWorkAsHTML = function (componentState) {
+        }
+    }, {
+        key: 'getStudentWorkAsHTML',
+        value: function getStudentWorkAsHTML(componentState) {
             var studentWorkAsHTML = '<p>Your drawing</p>';
 
             if (componentState != null) {
@@ -46,7 +62,9 @@ define(['nodeService', 'studentDataService'], function (nodeService, studentData
             }
 
             return studentWorkAsHTML;
-        };
+        }
+    }, {
+        key: 'populateComponentState',
 
         /**
          * Populate a component state with the data from another component state
@@ -54,7 +72,7 @@ define(['nodeService', 'studentDataService'], function (nodeService, studentData
          * @return a new component state that contains the student data from the other
          * component state
          */
-        serviceObject.populateComponentState = function (componentStateFromOtherComponent) {
+        value: function populateComponentState(componentStateFromOtherComponent) {
             var componentState = null;
 
             if (componentStateFromOtherComponent != null) {
@@ -80,7 +98,9 @@ define(['nodeService', 'studentDataService'], function (nodeService, studentData
             }
 
             return componentState;
-        };
+        }
+    }, {
+        key: 'isCompleted',
 
         /**
          * Check if the component was completed
@@ -90,7 +110,7 @@ define(['nodeService', 'studentDataService'], function (nodeService, studentData
          * @param nodeEvents the events for the parent node of the component
          * @returns whether the component was completed
          */
-        serviceObject.isCompleted = function (component, componentStates, componentEvents, nodeEvents) {
+        value: function isCompleted(component, componentStates, componentEvents, nodeEvents) {
             var result = false;
 
             if (componentStates != null) {
@@ -117,10 +137,12 @@ define(['nodeService', 'studentDataService'], function (nodeService, studentData
             }
 
             return result;
-        };
+        }
+    }]);
 
-        return serviceObject;
-    }];
+    return DrawService;
+}(_nodeService2.default);
 
-    return service;
-});
+DrawService.$inject = ['StudentDataService'];
+
+exports.default = DrawService;

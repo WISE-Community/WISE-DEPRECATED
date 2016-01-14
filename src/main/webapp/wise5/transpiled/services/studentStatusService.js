@@ -1,17 +1,30 @@
 'use strict';
 
-define(['configService', 'projectService'], function (configService, projectService) {
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-    var service = ['$http', '$q', '$rootScope', 'ConfigService', 'ProjectService', 'OpenResponseService', function ($http, $q, $rootScope, ConfigService, ProjectService, OpenResponseService) {
-        var serviceObject = {};
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
 
-        serviceObject.studentStatuses = null;
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-        serviceObject.newNodeVisits = [];
+var StudentStatusService = function () {
+    function StudentStatusService($http, ConfigService, ProjectService) {
+        _classCallCheck(this, StudentStatusService);
 
-        serviceObject.retrieveStudentStatuses = function (config) {
-            var studentStatusURL = ConfigService.getStudentStatusURL();
-            var runId = ConfigService.getRunId();
+        this.$http = $http;
+        this.ConfigService = ConfigService;
+        this.ProjectService = ProjectService;
+        this.studentStatuses = null;
+
+        this.newNodeVisits = [];
+    }
+
+    _createClass(StudentStatusService, [{
+        key: 'retrieveStudentStatuses',
+        value: function retrieveStudentStatuses(config) {
+            var studentStatusURL = this.ConfigService.getStudentStatusURL();
+            var runId = this.ConfigService.getRunId();
 
             var requestConfig = {
                 params: {
@@ -19,41 +32,46 @@ define(['configService', 'projectService'], function (configService, projectServ
                 }
             };
 
-            return $http.get(studentStatusURL, requestConfig).then(angular.bind(this, function (result) {
+            return this.$http.get(studentStatusURL, requestConfig).then(angular.bind(this, function (result) {
                 var studentStatuses = result.data;
 
                 this.studentStatuses = studentStatuses;
 
                 return studentStatuses;
             }));
-        };
-
-        serviceObject.getStudentStatuses = function () {
+        }
+    }, {
+        key: 'getStudentStatuses',
+        value: function getStudentStatuses() {
             return this.studentStatuses;
-        };
-
-        serviceObject.getCurrentNodeTitleForWorkgroupId = function (workgroupId) {
+        }
+    }, {
+        key: 'getCurrentNodeTitleForWorkgroupId',
+        value: function getCurrentNodeTitleForWorkgroupId(workgroupId) {
             var nodeTitle = null;
 
             var studentStatus = this.getStudentStatusForWorkgroupId(workgroupId);
 
             if (studentStatus != null) {
                 var currentNodeId = studentStatus.currentNodeId;
-                nodeTitle = ProjectService.getNodeTitleByNodeId(currentNodeId);
+                nodeTitle = this.ProjectService.getNodeTitleByNodeId(currentNodeId);
             }
 
             return nodeTitle;
-        };
-
-        serviceObject.getNewNodeVisits = function () {
+        }
+    }, {
+        key: 'getNewNodeVisits',
+        value: function getNewNodeVisits() {
             return this.newNodeVisits;
-        };
-
-        serviceObject.addNewNodeVisit = function (nodeVisit) {
+        }
+    }, {
+        key: 'addNewNodeVisit',
+        value: function addNewNodeVisit(nodeVisit) {
             this.newNodeVisits.push(nodeVisit);
-        };
-
-        serviceObject.getStudentStatusForWorkgroupId = function (workgroupId) {
+        }
+    }, {
+        key: 'getStudentStatusForWorkgroupId',
+        value: function getStudentStatusForWorkgroupId(workgroupId) {
 
             var studentStatus = null;
             var studentStatuses = this.getStudentStatuses();
@@ -72,9 +90,10 @@ define(['configService', 'projectService'], function (configService, projectServ
             }
 
             return studentStatus;
-        };
-
-        serviceObject.setStudentStatusForWorkgroupId = function (workgroupId, studentStatus) {
+        }
+    }, {
+        key: 'setStudentStatusForWorkgroupId',
+        value: function setStudentStatusForWorkgroupId(workgroupId, studentStatus) {
 
             var studentStatuses = this.getStudentStatuses();
 
@@ -90,16 +109,19 @@ define(['configService', 'projectService'], function (configService, projectServ
                     }
                 }
             }
-        };
-
-        serviceObject.getAvatarColorForWorkgroupId = function (workgroupId) {
+        }
+    }, {
+        key: 'getAvatarColorForWorkgroupId',
+        value: function getAvatarColorForWorkgroupId(workgroupId) {
             var avatarColors = ['#E91E63', '#9C27B0', '#CDDC39', '#2196F3', '#FDD835', '#43A047', '#795548', '#EF6C00', '#C62828', '#607D8B'];
             var modulo = workgroupId % 10;
             return avatarColors[modulo];
-        };
+        }
+    }]);
 
-        return serviceObject;
-    }];
+    return StudentStatusService;
+}();
 
-    return service;
-});
+StudentStatusService.$inject = ['$http', 'ConfigService', 'ProjectService'];
+
+exports.default = StudentStatusService;

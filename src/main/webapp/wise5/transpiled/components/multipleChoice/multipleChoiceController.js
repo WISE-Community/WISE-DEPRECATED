@@ -1,7 +1,22 @@
 'use strict';
 
-define(['app'], function (app) {
-    app.$controllerProvider.register('MultipleChoiceController', function ($rootScope, $scope, $state, $stateParams, ConfigService, MultipleChoiceService, NodeService, ProjectService, SessionService, StudentDataService) {
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var MultipleChoiceController = function () {
+    function MultipleChoiceController($scope, MultipleChoiceService, NodeService, ProjectService, StudentDataService) {
+        _classCallCheck(this, MultipleChoiceController);
+
+        this.$scope = $scope;
+        this.MultipleChoiceService = MultipleChoiceService;
+        this.NodeService = NodeService;
+        this.ProjectService = ProjectService;
+        this.StudentDataService = StudentDataService;
 
         // the node id of the current node
         this.nodeId = null;
@@ -45,117 +60,162 @@ define(['app'], function (app) {
         // whether the submit button is shown or not
         this.isSubmitButtonVisible = false;
 
-        /**
-         * Perform setup of the component
-         */
-        this.setup = function () {
-            // get the current node and node id
-            var currentNode = StudentDataService.getCurrentNode();
-            if (currentNode != null) {
-                this.nodeId = currentNode.id;
-            } else {
-                this.nodeId = $scope.nodeId;
+        // get the current node and node id
+        var currentNode = this.StudentDataService.getCurrentNode();
+        if (currentNode != null) {
+            this.nodeId = currentNode.id;
+        } else {
+            this.nodeId = this.$scope.nodeId;
+        }
+
+        // get the component content from the scope
+        this.componentContent = this.$scope.component;
+
+        this.mode = this.$scope.mode;
+
+        if (this.componentContent != null) {
+
+            // get the component id
+            this.componentId = this.componentContent.id;
+
+            if (this.mode === 'student') {
+                this.isPromptVisible = true;
+                this.isSaveButtonVisible = this.componentContent.showSaveButton;
+                this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+            } else if (this.mode === 'grading') {
+                this.isPromptVisible = true;
+                this.isSaveButtonVisible = false;
+                this.isSubmitButtonVisible = false;
+                this.isDisabled = true;
+            } else if (this.mode === 'onlyShowWork') {
+                this.isPromptVisible = false;
+                this.isSaveButtonVisible = false;
+                this.isSubmitButtonVisible = false;
+                this.isDisabled = true;
             }
 
-            // get the component content from the scope
-            this.componentContent = $scope.component;
+            // get the component type
+            this.componentType = this.componentContent.type;
 
-            this.mode = $scope.mode;
+            // get the show previous work node id if it is provided
+            var showPreviousWorkNodeId = this.componentContent.showPreviousWorkNodeId;
 
-            if (this.componentContent != null) {
+            var componentState = null;
 
-                // get the component id
-                this.componentId = this.componentContent.id;
+            if (false) {
+                // this component is showing previous work
+                this.isShowPreviousWork = true;
 
-                if (this.mode === 'student') {
-                    this.isPromptVisible = true;
-                    this.isSaveButtonVisible = this.componentContent.showSaveButton;
-                    this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-                } else if (this.mode === 'grading') {
-                    this.isPromptVisible = true;
-                    this.isSaveButtonVisible = false;
-                    this.isSubmitButtonVisible = false;
-                    this.isDisabled = true;
-                } else if (this.mode === 'onlyShowWork') {
-                    this.isPromptVisible = false;
-                    this.isSaveButtonVisible = false;
-                    this.isSubmitButtonVisible = false;
-                    this.isDisabled = true;
-                }
+                // get the show previous work component id if it is provided
+                var showPreviousWorkComponentId = this.componentContent.showPreviousWorkComponentId;
 
-                // get the component type
-                this.componentType = this.componentContent.type;
+                // get the node content for the other node
+                var showPreviousWorkNodeContent = this.ProjectService.getNodeContentByNodeId(showPreviousWorkNodeId);
 
-                // get the show previous work node id if it is provided
-                var showPreviousWorkNodeId = this.componentContent.showPreviousWorkNodeId;
+                // get the component content for the component we are showing previous work for
+                this.componentContent = this.NodeService.getComponentContentById(showPreviousWorkNodeContent, showPreviousWorkComponentId);
 
-                var componentState = null;
+                // get the component state for the show previous work
+                componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(showPreviousWorkNodeId, showPreviousWorkComponentId);
 
-                if (false) {
-                    // this component is showing previous work
-                    this.isShowPreviousWork = true;
+                // populate the student work into this component
+                this.setStudentWork(componentState);
 
-                    // get the show previous work component id if it is provided
-                    var showPreviousWorkComponentId = this.componentContent.showPreviousWorkComponentId;
+                // disable the component since we are just showing previous work
+                this.isDisabled = true;
 
-                    // get the node content for the other node
-                    var showPreviousWorkNodeContent = ProjectService.getNodeContentByNodeId(showPreviousWorkNodeId);
+                // register this component with the parent node
+                this.$scope.$parent.registerComponentController(this.$scope, this.componentContent);
+            } else {
+                // this is a regular component
 
-                    // get the component content for the component we are showing previous work for
-                    this.componentContent = NodeService.getComponentContentById(showPreviousWorkNodeContent, showPreviousWorkComponentId);
+                // get the component state from the scope
+                componentState = this.$scope.componentState;
 
-                    // get the component state for the show previous work
-                    componentState = StudentDataService.getLatestComponentStateByNodeIdAndComponentId(showPreviousWorkNodeId, showPreviousWorkComponentId);
+                if (componentState == null) {
+                    /*
+                     * only import work if the student does not already have
+                     * work for this component
+                     */
 
+                    // check if we need to import work
+                    var importWorkNodeId = this.componentContent.importWorkNodeId;
+                    var importWorkComponentId = this.componentContent.importWorkComponentId;
+
+                    if (importWorkNodeId != null && importWorkComponentId != null) {
+                        // import the work from the other component
+                        this.importWork();
+                    }
+                } else {
                     // populate the student work into this component
                     this.setStudentWork(componentState);
+                }
 
-                    // disable the component since we are just showing previous work
-                    this.isDisabled = true;
+                // check if we need to lock this component
+                this.calculateDisabled();
 
+                if (this.$scope.$parent.registerComponentController != null) {
                     // register this component with the parent node
-                    $scope.$parent.registerComponentController($scope, this.componentContent);
-                } else {
-                    // this is a regular component
-
-                    // get the component state from the scope
-                    componentState = $scope.componentState;
-
-                    if (componentState == null) {
-                        /*
-                         * only import work if the student does not already have
-                         * work for this component
-                         */
-
-                        // check if we need to import work
-                        var importWorkNodeId = this.componentContent.importWorkNodeId;
-                        var importWorkComponentId = this.componentContent.importWorkComponentId;
-
-                        if (importWorkNodeId != null && importWorkComponentId != null) {
-                            // import the work from the other component
-                            this.importWork();
-                        }
-                    } else {
-                        // populate the student work into this component
-                        this.setStudentWork(componentState);
-                    }
-
-                    // check if we need to lock this component
-                    this.calculateDisabled();
-
-                    if ($scope.$parent.registerComponentController != null) {
-                        // register this component with the parent node
-                        $scope.$parent.registerComponentController($scope, this.componentContent);
-                    }
+                    this.$scope.$parent.registerComponentController(this.$scope, this.componentContent);
                 }
             }
-        };
+        }
+
+        /**
+         * Get the component state from this component. The parent node will
+         * call this function to obtain the component state when it needs to
+         * save student data.
+         * @return a component state containing the student data
+         */
+        this.$scope.getComponentState = function () {
+
+            var componentState = null;
+
+            if (this.$scope.multipleChoiceController.isDirty || this.$scope.multipleChoiceController.isSubmit) {
+                // create a component state populated with the student data
+                componentState = this.$scope.multipleChoiceController.createComponentState();
+
+                // set isDirty to false since this student work is about to be saved
+                this.$scope.multipleChoiceController.isDirty = false;
+            }
+
+            return componentState;
+        }.bind(this);
+
+        /**
+         * The parent node submit button was clicked
+         */
+        this.$scope.$on('nodeSubmitClicked', angular.bind(this, function (event, args) {
+
+            // get the node id of the node
+            var nodeId = args.nodeId;
+
+            // make sure the node id matches our parent node
+            if (this.nodeId === nodeId) {
+
+                if (this.isLockAfterSubmit()) {
+                    // disable the component if it was authored to lock after submit
+                    this.isDisabled = true;
+                }
+            }
+        }));
+
+        /**
+         * Listen for the 'exitNode' event which is fired when the student
+         * exits the parent node. This will perform any necessary cleanup
+         * when the student exits the parent node.
+         */
+        this.$scope.$on('exitNode', angular.bind(this, function (event, args) {}));
+    }
+
+    _createClass(MultipleChoiceController, [{
+        key: 'setStudentWork',
 
         /**
          * Populate the student work into the component
          * @param componentState the component state to populate into the component
          */
-        this.setStudentWork = function (componentState) {
+        value: function setStudentWork(componentState) {
 
             if (componentState != null) {
 
@@ -190,9 +250,10 @@ define(['app'], function (app) {
                     }
                 }
             }
-        };
-
-        this.showFeedbackForChoiceIds = function (choiceIds) {
+        }
+    }, {
+        key: 'showFeedbackForChoiceIds',
+        value: function showFeedbackForChoiceIds(choiceIds) {
 
             if (choiceIds != null) {
                 for (var c = 0; c < choiceIds.length; c++) {
@@ -206,14 +267,16 @@ define(['app'], function (app) {
                     }
                 }
             }
-        };
+        }
+    }, {
+        key: 'isChecked',
 
         /**
          * Determine if the choice id has been checked
          * @param the choice id to look at
          * @return whether the choice id was checked
          */
-        this.isChecked = function (choiceId) {
+        value: function isChecked(choiceId) {
             var result = false;
 
             // get the choices the student chose
@@ -238,7 +301,9 @@ define(['app'], function (app) {
             }
 
             return result;
-        };
+        }
+    }, {
+        key: 'getChoiceIdsFromStudentData',
 
         /**
          * Get the choice ids from the student data
@@ -246,7 +311,7 @@ define(['app'], function (app) {
          * choices the student chose
          * @return an array containing the choice id(s) the student chose
          */
-        this.getChoiceIdsFromStudentData = function (studentData) {
+        value: function getChoiceIdsFromStudentData(studentData) {
             var choiceIds = [];
 
             if (studentData != null && studentData.studentChoices != null) {
@@ -270,13 +335,15 @@ define(['app'], function (app) {
             }
 
             return choiceIds;
-        };
+        }
+    }, {
+        key: 'radioChoiceSelected',
 
         /**
          * The student clicked on one of the radio button choices
          * @param choiceId the choice id of the radio button the student clicked
          */
-        this.radioChoiceSelected = function (choiceId) {
+        value: function radioChoiceSelected(choiceId) {
             // notify this node that the student choice has changed
             this.studentDataChanged();
 
@@ -286,15 +353,17 @@ define(['app'], function (app) {
                 var event = "choiceSelected";
                 var data = {};
                 data.selectedChoiceId = choiceId;
-                StudentDataService.saveComponentEvent(this, category, event, data);
+                this.StudentDataService.saveComponentEvent(this, category, event, data);
             }
-        };
+        }
+    }, {
+        key: 'toggleSelection',
 
         /**
          * The student clicked on one of the check box choices
          * @param choiceId the choice id of the checkbox the student clicked
          */
-        this.toggleSelection = function (choiceId) {
+        value: function toggleSelection(choiceId) {
 
             if (choiceId != null) {
                 /*
@@ -334,25 +403,31 @@ define(['app'], function (app) {
                 var data = {};
                 data.selectedChoiceId = choiceId;
                 data.choicesAfter = studentChoices;
-                StudentDataService.saveComponentEvent(this, category, event, data);
+                this.StudentDataService.saveComponentEvent(this, category, event, data);
             }
-        };
+        }
+    }, {
+        key: 'isRadio',
 
         /**
          * Check if this multiple choice component is using radio buttons
          * @return whether this multiple choice component is using radio buttons
          */
-        this.isRadio = function () {
+        value: function isRadio() {
             return this.isChoiceType('radio');
-        };
+        }
+    }, {
+        key: 'isCheckbox',
 
         /**
          * Check if this multiple choice component is using checkboxes
          * @return whether this multiple choice component is using checkboxes
          */
-        this.isCheckbox = function () {
+        value: function isCheckbox() {
             return this.isChoiceType('checkbox');
-        };
+        }
+    }, {
+        key: 'isChoiceType',
 
         /**
          * Check if the component is authored to use the given choice type
@@ -360,7 +435,7 @@ define(['app'], function (app) {
          * @return whether the component is authored to use the given
          * choice type
          */
-        this.isChoiceType = function (choiceType) {
+        value: function isChoiceType(choiceType) {
             var result = false;
 
             // get the component content
@@ -377,21 +452,25 @@ define(['app'], function (app) {
             }
 
             return result;
-        };
+        }
+    }, {
+        key: 'saveButtonClicked',
 
         /**
          * Called when the student clicks the save button
          */
-        this.saveButtonClicked = function () {
+        value: function saveButtonClicked() {
 
             // tell the parent node that this component wants to save
-            $scope.$emit('componentSaveTriggered', { nodeId: this.nodeId, componentId: this.componentId });
-        };
+            this.$scope.$emit('componentSaveTriggered', { nodeId: this.nodeId, componentId: this.componentId });
+        }
+    }, {
+        key: 'submitButtonClicked',
 
         /**
          * Called when the student clicks the submit button
          */
-        this.submitButtonClicked = function () {
+        value: function submitButtonClicked() {
             this.isSubmit = true;
 
             // check if we need to lock the component after the student submits
@@ -402,13 +481,15 @@ define(['app'], function (app) {
             this.checkAnswer();
 
             // tell the parent node that this component wants to submit
-            $scope.$emit('componentSubmitTriggered', { nodeId: this.nodeId, componentId: this.componentId });
-        };
+            this.$scope.$emit('componentSubmitTriggered', { nodeId: this.nodeId, componentId: this.componentId });
+        }
+    }, {
+        key: 'hideAllFeedback',
 
         /**
          * Hide all the feedback
          */
-        this.hideAllFeedback = function () {
+        value: function hideAllFeedback() {
 
             // get all the choices
             var choices = this.getChoices();
@@ -422,25 +503,29 @@ define(['app'], function (app) {
                     choice.showFeedback = false;
                 }
             }
-        };
+        }
+    }, {
+        key: 'incrementNumberOfAttempts',
 
         /**
          * Increment the number of attempts the student has made
          */
-        this.incrementNumberOfAttempts = function () {
+        value: function incrementNumberOfAttempts() {
 
             if (this.numberOfAttempts == null) {
                 this.numberOfAttempts = 0;
             }
 
             this.numberOfAttempts++;
-        };
+        }
+    }, {
+        key: 'checkAnswer',
 
         /**
          * Check the answer the student has submitted and display feedback
          * for the choices the student has checked
          */
-        this.checkAnswer = function () {
+        value: function checkAnswer() {
             var isCorrect = false;
 
             this.incrementNumberOfAttempts();
@@ -522,13 +607,15 @@ define(['app'], function (app) {
             }
 
             this.isCorrect = isCorrect;
-        };
+        }
+    }, {
+        key: 'getCorrectChoice',
 
         /**
          * Get the correct choice for a radio button component
          * @return a choice id string
          */
-        this.getCorrectChoice = function () {
+        value: function getCorrectChoice() {
             var correctChoice = null;
 
             if (this.componentContent != null) {
@@ -536,13 +623,15 @@ define(['app'], function (app) {
             }
 
             return correctChoice;
-        };
+        }
+    }, {
+        key: 'getCorrectChoices',
 
         /**
          * Get the correct choices for a checkbox component
          * @return an array of correct choice ids
          */
-        this.getCorrectChoices = function () {
+        value: function getCorrectChoices() {
             var correctChoices = null;
 
             if (this.componentContent != null) {
@@ -550,14 +639,16 @@ define(['app'], function (app) {
             }
 
             return correctChoices;
-        };
+        }
+    }, {
+        key: 'studentDataChanged',
 
         /**
          * Called when the student changes their work
          */
-        this.studentDataChanged = function () {
+        value: function studentDataChanged() {
             /*
-             * set the dirty flag so we will know we need to save the 
+             * set the dirty flag so we will know we need to save the
              * student work later
              */
             this.isDirty = true;
@@ -577,21 +668,23 @@ define(['app'], function (app) {
 
             /*
              * the student work in this component has changed so we will tell
-             * the parent node that the student data will need to be saved. 
-             * this will also notify connected parts that this component's student 
+             * the parent node that the student data will need to be saved.
+             * this will also notify connected parts that this component's student
              * data has changed.
              */
-            $scope.$emit('componentStudentDataChanged', { componentId: componentId, componentState: componentState });
-        };
+            this.$scope.$emit('componentStudentDataChanged', { componentId: componentId, componentState: componentState });
+        }
+    }, {
+        key: 'createComponentState',
 
         /**
          * Create a new component state populated with the student data
          * @return the componentState after it has been populated
          */
-        this.createComponentState = function () {
+        value: function createComponentState() {
 
             // create a new component state
-            var componentState = NodeService.createNewComponentState();
+            var componentState = this.NodeService.createNewComponentState();
 
             if (componentState != null) {
 
@@ -636,12 +729,14 @@ define(['app'], function (app) {
             }
 
             return componentState;
-        };
+        }
+    }, {
+        key: 'calculateDisabled',
 
         /**
          * Check if we need to lock the component
          */
-        this.calculateDisabled = function () {
+        value: function calculateDisabled() {
 
             var nodeId = this.nodeId;
 
@@ -657,10 +752,10 @@ define(['app'], function (app) {
                     // we need to lock the step after the student has submitted
 
                     // get the component states for this component
-                    var componentStates = StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
+                    var componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
 
                     // check if any of the component states were submitted
-                    var isSubmitted = NodeService.isWorkSubmitted(componentStates);
+                    var isSubmitted = this.NodeService.isWorkSubmitted(componentStates);
 
                     if (isSubmitted) {
                         // the student has submitted work for this component
@@ -668,13 +763,15 @@ define(['app'], function (app) {
                     }
                 }
             }
-        };
+        }
+    }, {
+        key: 'getStudentChoiceObjects',
 
         /**
          * Get the choices the student has chosen as objects. The objects
          * will contain the choice id and the choice text.
          */
-        this.getStudentChoiceObjects = function () {
+        value: function getStudentChoiceObjects() {
             var studentChoiceObjects = [];
 
             /*
@@ -728,13 +825,15 @@ define(['app'], function (app) {
             }
 
             return studentChoiceObjects;
-        };
+        }
+    }, {
+        key: 'hasCorrectChoices',
 
         /**
          * Check if the component has been authored with a correct choice
          * @return whether the component has been authored with a correct choice
          */
-        this.hasCorrectChoices = function () {
+        value: function hasCorrectChoices() {
             var result = false;
 
             // get the component content
@@ -765,14 +864,16 @@ define(['app'], function (app) {
             }
 
             return result;
-        };
+        }
+    }, {
+        key: 'getChoiceById',
 
         /**
          * Get a choice object by choice id
          * @param choiceId the choice id
          * @return the choice object with the given choice id
          */
-        this.getChoiceById = function (choiceId) {
+        value: function getChoiceById(choiceId) {
             var choice = null;
 
             if (choiceId != null) {
@@ -808,13 +909,15 @@ define(['app'], function (app) {
             }
 
             return choice;
-        };
+        }
+    }, {
+        key: 'getChoiceType',
 
         /**
          * Get the choice type for this component ('radio' or 'checkbox')
          * @return the choice type for this component
          */
-        this.getChoiceType = function () {
+        value: function getChoiceType() {
             var choiceType = null;
 
             // get the component content
@@ -826,13 +929,15 @@ define(['app'], function (app) {
             }
 
             return choiceType;
-        };
+        }
+    }, {
+        key: 'getChoices',
 
         /**
          * Get the available choices from component content
          * @return the available choices from the component content
          */
-        this.getChoices = function () {
+        value: function getChoices() {
             var choices = null;
 
             // get the component content
@@ -845,13 +950,15 @@ define(['app'], function (app) {
             }
 
             return choices;
-        };
+        }
+    }, {
+        key: 'showPrompt',
 
         /**
          * Check whether we need to show the prompt
          * @return whether to show the prompt
          */
-        this.showPrompt = function () {
+        value: function showPrompt() {
             var show = false;
 
             if (this.isPromptVisible) {
@@ -859,13 +966,15 @@ define(['app'], function (app) {
             }
 
             return show;
-        };
+        }
+    }, {
+        key: 'showSaveButton',
 
         /**
          * Check whether we need to show the save button
          * @return whether to show the save button
          */
-        this.showSaveButton = function () {
+        value: function showSaveButton() {
             var show = false;
 
             // check the showSaveButton field in the component content
@@ -874,13 +983,15 @@ define(['app'], function (app) {
             }
 
             return show;
-        };
+        }
+    }, {
+        key: 'showSubmitButton',
 
         /**
          * Check whether we need to show the submit button
          * @return whether to show the submit button
          */
-        this.showSubmitButton = function () {
+        value: function showSubmitButton() {
             var show = false;
 
             if (this.componentContent != null) {
@@ -892,13 +1003,15 @@ define(['app'], function (app) {
             }
 
             return show;
-        };
+        }
+    }, {
+        key: 'isLockAfterSubmit',
 
         /**
          * Check whether we need to lock the component after the student
          * submits an answer.
          */
-        this.isLockAfterSubmit = function () {
+        value: function isLockAfterSubmit() {
             var result = false;
 
             if (this.componentContent != null) {
@@ -910,12 +1023,14 @@ define(['app'], function (app) {
             }
 
             return result;
-        };
+        }
+    }, {
+        key: 'getPrompt',
 
         /**
          * Get the prompt to show to the student
          */
-        this.getPrompt = function () {
+        value: function getPrompt() {
             var prompt = null;
 
             if (this.componentContent != null) {
@@ -923,12 +1038,14 @@ define(['app'], function (app) {
             }
 
             return prompt;
-        };
+        }
+    }, {
+        key: 'importWork',
 
         /**
          * Import work from another component
          */
-        this.importWork = function () {
+        value: function importWork() {
 
             // get the component content
             var componentContent = this.componentContent;
@@ -941,7 +1058,7 @@ define(['app'], function (app) {
                 if (importWorkNodeId != null && importWorkComponentId != null) {
 
                     // get the latest component state for this component
-                    var componentState = StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
+                    var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
 
                     /*
                      * we will only import work into this component if the student
@@ -951,14 +1068,14 @@ define(['app'], function (app) {
                         // the student has not done any work for this component
 
                         // get the latest component state from the component we are importing from
-                        var importWorkComponentState = StudentDataService.getLatestComponentStateByNodeIdAndComponentId(importWorkNodeId, importWorkComponentId);
+                        var importWorkComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(importWorkNodeId, importWorkComponentId);
 
                         if (importWorkComponentState != null) {
                             /*
-                             * populate a new component state with the work from the 
+                             * populate a new component state with the work from the
                              * imported component state
                              */
-                            var populatedComponentState = MultipleChoiceService.populateComponentState(importWorkComponentState);
+                            var populatedComponentState = this.MultipleChoiceService.populateComponentState(importWorkComponentState);
 
                             // populate the component state into this component
                             this.setStudentWork(populatedComponentState);
@@ -966,78 +1083,41 @@ define(['app'], function (app) {
                     }
                 }
             }
-        };
+        }
+    }, {
+        key: 'getComponentId',
 
         /**
          * Get the component id
          * @return the component id
          */
-        this.getComponentId = function () {
+        value: function getComponentId() {
             var componentId = this.componentContent.id;
 
             return componentId;
-        };
-
-        /**
-         * Get the component state from this component. The parent node will 
-         * call this function to obtain the component state when it needs to
-         * save student data.
-         * @return a component state containing the student data
-         */
-        $scope.getComponentState = function () {
-
-            var componentState = null;
-
-            if ($scope.multipleChoiceController.isDirty || $scope.multipleChoiceController.isSubmit) {
-                // create a component state populated with the student data
-                componentState = $scope.multipleChoiceController.createComponentState();
-
-                // set isDirty to false since this student work is about to be saved
-                $scope.multipleChoiceController.isDirty = false;
-            }
-
-            return componentState;
-        };
-
-        /**
-         * The parent node submit button was clicked
-         */
-        $scope.$on('nodeSubmitClicked', angular.bind(this, function (event, args) {
-
-            // get the node id of the node
-            var nodeId = args.nodeId;
-
-            // make sure the node id matches our parent node
-            if (this.nodeId === nodeId) {
-
-                if (this.isLockAfterSubmit()) {
-                    // disable the component if it was authored to lock after submit
-                    this.isDisabled = true;
-                }
-            }
-        }));
-
-        /**
-         * Listen for the 'exitNode' event which is fired when the student
-         * exits the parent node. This will perform any necessary cleanup
-         * when the student exits the parent node.
-         */
-        $scope.$on('exitNode', angular.bind(this, function (event, args) {}));
+        }
+    }, {
+        key: 'registerExitListener',
 
         /**
          * Register the the listener that will listen for the exit event
          * so that we can perform saving before exiting.
          */
-        this.registerExitListener = function () {
+        value: function registerExitListener() {
 
             /*
              * Listen for the 'exit' event which is fired when the student exits
              * the VLE. This will perform saving before the VLE exits.
              */
-            this.exitListener = $scope.$on('exit', angular.bind(this, function (event, args) {}));
-        };
+            this.exitListener = this.$scope.$on('exit', angular.bind(this, function (event, args) {}));
+        }
+    }]);
 
-        // perform setup of this component
-        this.setup();
-    });
-});
+    return MultipleChoiceController;
+}();
+
+;
+
+MultipleChoiceController.$inject = ['$scope', 'MultipleChoiceService', 'NodeService', 'ProjectService', 'StudentDataService'];
+
+exports.default = MultipleChoiceController;

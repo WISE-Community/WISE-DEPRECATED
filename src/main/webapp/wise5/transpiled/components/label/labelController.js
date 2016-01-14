@@ -1,7 +1,25 @@
 'use strict';
 
-define(['app'], function (app) {
-    app.$controllerProvider.register('LabelController', function ($injector, $rootScope, $scope, $state, $stateParams, $timeout, ConfigService, LabelService, NodeService, OpenResponseService, ProjectService, SessionService, StudentAssetService, StudentDataService) {
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var LabelController = function () {
+    function LabelController($injector, $scope, $timeout, LabelService, NodeService, OpenResponseService, StudentAssetService, StudentDataService) {
+        _classCallCheck(this, LabelController);
+
+        this.$injector = $injector;
+        this.$scope = $scope;
+        this.$timeout = $timeout;
+        this.LabelService = LabelService;
+        this.NodeService = NodeService;
+        this.OpenResponseService = OpenResponseService;
+        this.StudentAssetService = StudentAssetService;
+        this.StudentDataService = StudentDataService;
 
         // the node id of the current node
         this.nodeId = null;
@@ -81,145 +99,196 @@ define(['app'], function (app) {
         // the message to display when the student is in create label mode
         this.newLabelMessage = 'Click on the image or ';
 
-        /**
-         * Perform setup of the component
-         */
-        this.setup = function () {
+        // get the current node and node id
+        var currentNode = this.StudentDataService.getCurrentNode();
+        if (currentNode != null) {
+            this.nodeId = currentNode.id;
+        } else {
+            this.nodeId = this.$scope.nodeId;
+        }
 
-            // get the current node and node id
-            var currentNode = StudentDataService.getCurrentNode();
-            if (currentNode != null) {
-                this.nodeId = currentNode.id;
-            } else {
-                this.nodeId = $scope.nodeId;
+        // get the component content from the scope
+        this.componentContent = this.$scope.component;
+
+        this.mode = this.$scope.mode;
+
+        if (this.componentContent != null) {
+
+            // get the component id
+            this.componentId = this.componentContent.id;
+
+            // get the component state from the scope
+            var componentState = this.$scope.componentState;
+
+            if (this.componentContent.canCreateLabels != null) {
+                this.canCreateLabels = this.componentContent.canCreateLabels;
             }
 
-            // get the component content from the scope
-            this.componentContent = $scope.component;
+            if (this.componentContent.canDeleteLabels != null) {
+                this.canDeleteLabels = this.componentContent.canDeleteLabels;
+            }
 
-            this.mode = $scope.mode;
+            if (this.componentContent.width != null) {
+                this.canvasWidth = this.componentContent.width;
+            }
 
-            if (this.componentContent != null) {
+            if (this.componentContent.height != null) {
+                this.canvasHeight = this.componentContent.height;
+            }
 
-                // get the component id
-                this.componentId = this.componentContent.id;
+            if (this.mode === 'student') {
+                this.isPromptVisible = true;
+                this.isSaveButtonVisible = this.componentContent.showSaveButton;
+                this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+
+                if (this.canCreateLabels) {
+                    this.isNewLabelButtonVisible = true;
+                } else {
+                    this.isNewLabelButtonVisible = false;
+                }
+            } else if (this.mode === 'grading') {
+                this.isPromptVisible = true;
+                this.isSaveButtonVisible = false;
+                this.isSubmitButtonVisible = false;
+                this.isNewLabelButtonVisible = false;
+                this.canDeleteLabels = false;
+                this.isDisabled = true;
+
+                if (componentState != null) {
+                    this.canvasId = 'labelCanvas_' + componentState.id;
+                }
+            } else if (this.mode === 'onlyShowWork') {
+                this.isPromptVisible = false;
+                this.isSaveButtonVisible = false;
+                this.isSubmitButtonVisible = false;
+                this.isNewLabelButtonVisible = false;
+                this.canDeleteLabels = false;
+                this.isDisabled = true;
+            }
+
+            this.$timeout(angular.bind(this, function () {
+                // wait for angular to completely render the html before we initialize the canvas
+
+                // initialize the canvas
+                var canvas = this.initializeCanvas();
+                this.canvas = canvas;
 
                 // get the component state from the scope
-                var componentState = $scope.componentState;
+                var componentState = this.$scope.componentState;
 
-                if (this.componentContent.canCreateLabels != null) {
-                    this.canCreateLabels = this.componentContent.canCreateLabels;
+                if (this.canDeleteLabels && !this.disabled) {
+                    // create the key down listener to listen for the delete key
+                    this.createKeydownListener();
                 }
 
-                if (this.componentContent.canDeleteLabels != null) {
-                    this.canDeleteLabels = this.componentContent.canDeleteLabels;
-                }
+                // set whether studentAttachment is enabled
+                this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
 
-                if (this.componentContent.width != null) {
-                    this.canvasWidth = this.componentContent.width;
-                }
+                if (componentState == null) {
+                    /*
+                     * only import work if the student does not already have
+                     * work for this component
+                     */
 
-                if (this.componentContent.height != null) {
-                    this.canvasHeight = this.componentContent.height;
-                }
+                    // check if we need to import work
+                    var importWorkNodeId = this.componentContent.importWorkNodeId;
+                    var importWorkComponentId = this.componentContent.importWorkComponentId;
 
-                if (this.mode === 'student') {
-                    this.isPromptVisible = true;
-                    this.isSaveButtonVisible = this.componentContent.showSaveButton;
-                    this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-
-                    if (this.canCreateLabels) {
-                        this.isNewLabelButtonVisible = true;
-                    } else {
-                        this.isNewLabelButtonVisible = false;
-                    }
-                } else if (this.mode === 'grading') {
-                    this.isPromptVisible = true;
-                    this.isSaveButtonVisible = false;
-                    this.isSubmitButtonVisible = false;
-                    this.isNewLabelButtonVisible = false;
-                    this.canDeleteLabels = false;
-                    this.isDisabled = true;
-
-                    if (componentState != null) {
-                        this.canvasId = 'labelCanvas_' + componentState.id;
-                    }
-                } else if (this.mode === 'onlyShowWork') {
-                    this.isPromptVisible = false;
-                    this.isSaveButtonVisible = false;
-                    this.isSubmitButtonVisible = false;
-                    this.isNewLabelButtonVisible = false;
-                    this.canDeleteLabels = false;
-                    this.isDisabled = true;
-                }
-
-                $timeout(angular.bind(this, function () {
-                    // wait for angular to completely render the html before we initialize the canvas
-
-                    // initialize the canvas
-                    var canvas = this.initializeCanvas();
-                    this.canvas = canvas;
-
-                    // get the component state from the scope
-                    var componentState = $scope.componentState;
-
-                    if (this.canDeleteLabels && !this.disabled) {
-                        // create the key down listener to listen for the delete key
-                        this.createKeydownListener();
-                    }
-
-                    // set whether studentAttachment is enabled
-                    this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
-
-                    if (componentState == null) {
+                    if (importWorkNodeId != null && importWorkComponentId != null) {
+                        // import the work from the other component
+                        this.importWork();
+                    } else if (this.componentContent.labels != null) {
                         /*
-                         * only import work if the student does not already have
-                         * work for this component
+                         * the student has not done any work and there are starter labels
+                         * so we will populate the canvas with the starter labels
                          */
-
-                        // check if we need to import work
-                        var importWorkNodeId = this.componentContent.importWorkNodeId;
-                        var importWorkComponentId = this.componentContent.importWorkComponentId;
-
-                        if (importWorkNodeId != null && importWorkComponentId != null) {
-                            // import the work from the other component
-                            this.importWork();
-                        } else if (this.componentContent.labels != null) {
-                            /*
-                             * the student has not done any work and there are starter labels
-                             * so we will populate the canvas with the starter labels
-                             */
-                            this.addLabelsToCanvas(this.componentContent.labels);
-                        }
-                    } else {
-                        // populate the student work into this component
-                        this.setStudentWork(componentState);
+                        this.addLabelsToCanvas(this.componentContent.labels);
                     }
+                } else {
+                    // populate the student work into this component
+                    this.setStudentWork(componentState);
+                }
 
-                    // get the background image that may have been set by the student data
-                    var backgroundImage = this.getBackgroundImage();
+                // get the background image that may have been set by the student data
+                var backgroundImage = this.getBackgroundImage();
 
-                    if (backgroundImage == null && this.componentContent.backgroundImage != null) {
-                        // get the background image from the component content if any
-                        this.setBackgroundImage(this.componentContent.backgroundImage);
-                    }
+                if (backgroundImage == null && this.componentContent.backgroundImage != null) {
+                    // get the background image from the component content if any
+                    this.setBackgroundImage(this.componentContent.backgroundImage);
+                }
 
-                    // check if we need to lock this component
-                    this.calculateDisabled();
+                // check if we need to lock this component
+                this.calculateDisabled();
 
-                    if ($scope.$parent.registerComponentController != null) {
-                        // register this component with the parent node
-                        $scope.$parent.registerComponentController($scope, this.componentContent);
-                    }
-                }));
-            }
-        };
+                if (this.$scope.$parent.registerComponentController != null) {
+                    // register this component with the parent node
+                    this.$scope.$parent.registerComponentController(this.$scope, this.componentContent);
+                }
+            }));
+        }
 
         /**
-         * Populate the student work into the component
-         * @param componentState the component state to populate into the component
+         * Returns true iff there is student work that hasn't been saved yet
          */
-        this.setStudentWork = function (componentState) {
+        this.$scope.isDirty = function () {
+            return this.$scope.labelController.isDirty;
+        }.bind(this);
+
+        /**
+         * Get the component state from this component. The parent node will
+         * call this function to obtain the component state when it needs to
+         * save student data.
+         * @return a component state containing the student data
+         */
+        this.$scope.getComponentState = function () {
+
+            var componentState = null;
+
+            if (this.$scope.labelController.isDirty) {
+                // create a component state populated with the student data
+                componentState = this.$scope.labelController.createComponentState();
+
+                // set isDirty to false since this student work is about to be saved
+                this.$scope.labelController.isDirty = false;
+            }
+
+            return componentState;
+        }.bind(this);
+
+        /**
+         * The parent node submit button was clicked
+         */
+        this.$scope.$on('nodeSubmitClicked', angular.bind(this, function (event, args) {
+
+            // get the node id of the node
+            var nodeId = args.nodeId;
+
+            // make sure the node id matches our parent node
+            if (this.nodeId === nodeId) {
+
+                if (this.isLockAfterSubmit()) {
+                    // disable the component if it was authored to lock after submit
+                    this.isDisabled = true;
+                }
+            }
+        }));
+
+        /**
+         * Listen for the 'exitNode' event which is fired when the student
+         * exits the parent node. This will perform any necessary cleanup
+         * when the student exits the parent node.
+         */
+        this.$scope.$on('exitNode', angular.bind(this, function (event, args) {}));
+    }
+
+    /**
+     * Populate the student work into the component
+     * @param componentState the component state to populate into the component
+     */
+
+    _createClass(LabelController, [{
+        key: 'setStudentWork',
+        value: function setStudentWork(componentState) {
 
             if (componentState != null) {
 
@@ -241,13 +310,15 @@ define(['app'], function (app) {
                     }
                 }
             }
-        };
+        }
+    }, {
+        key: 'addLabelsToCanvas',
 
         /**
          * Add labels ot the canvas
          * @param labels an array of objects that contain the values for a label
          */
-        this.addLabelsToCanvas = function (labels) {
+        value: function addLabelsToCanvas(labels) {
             if (labels != null) {
 
                 // loop through all the labels
@@ -274,21 +345,25 @@ define(['app'], function (app) {
                     }
                 }
             }
-        };
+        }
+    }, {
+        key: 'saveButtonClicked',
 
         /**
          * Called when the student clicks the save button
          */
-        this.saveButtonClicked = function () {
+        value: function saveButtonClicked() {
 
             // tell the parent node that this component wants to save
-            $scope.$emit('componentSaveTriggered', { nodeId: this.nodeId, componentId: this.componentId });
-        };
+            this.$scope.$emit('componentSaveTriggered', { nodeId: this.nodeId, componentId: this.componentId });
+        }
+    }, {
+        key: 'submitButtonClicked',
 
         /**
          * Called when the student clicks the submit button
          */
-        this.submitButtonClicked = function () {
+        value: function submitButtonClicked() {
             this.isSubmit = true;
 
             // check if we need to lock the component after the student submits
@@ -297,33 +372,39 @@ define(['app'], function (app) {
             }
 
             // tell the parent node that this component wants to submit
-            $scope.$emit('componentSubmitTriggered', { nodeId: this.nodeId, componentId: this.componentId });
-        };
+            this.$scope.$emit('componentSubmitTriggered', { nodeId: this.nodeId, componentId: this.componentId });
+        }
+    }, {
+        key: 'newLabelButtonClicked',
 
         /**
          * Called when the student clicks on the new label button to enter
          * create label mode
          */
-        this.newLabelButtonClicked = function () {
+        value: function newLabelButtonClicked() {
             this.createLabelMode = true;
             this.isCancelButtonVisible = true;
-        };
+        }
+    }, {
+        key: 'cancelButtonClicked',
 
         /**
          * Called when the student clicks on the cancel button to exit
          * create label mode
          */
-        this.cancelButtonClicked = function () {
+        value: function cancelButtonClicked() {
             this.createLabelMode = false;
             this.isCancelButtonVisible = false;
-        };
+        }
+    }, {
+        key: 'studentDataChanged',
 
         /**
          * Called when the student changes their work
          */
-        this.studentDataChanged = function () {
+        value: function studentDataChanged() {
             /*
-             * set the dirty flag so we will know we need to save the 
+             * set the dirty flag so we will know we need to save the
              * student work later
              */
             this.isDirty = true;
@@ -336,18 +417,20 @@ define(['app'], function (app) {
 
             /*
              * the student work in this component has changed so we will tell
-             * the parent node that the student data will need to be saved. 
-             * this will also notify connected parts that this component's student 
+             * the parent node that the student data will need to be saved.
+             * this will also notify connected parts that this component's student
              * data has changed.
              */
-            $scope.$emit('componentStudentDataChanged', { componentId: componentId, componentState: componentState });
-        };
+            this.$scope.$emit('componentStudentDataChanged', { componentId: componentId, componentState: componentState });
+        }
+    }, {
+        key: 'getLabels',
 
         /**
          * Get the label objects from the canvas
          * @returns an array of simple JSON objects that represent the labels
          */
-        this.getLabels = function () {
+        value: function getLabels() {
             var labels = [];
 
             // get all the objects from the canvas
@@ -383,14 +466,16 @@ define(['app'], function (app) {
             }
 
             return labels;
-        };
+        }
+    }, {
+        key: 'getLabelJSONObjectFromCircle',
 
         /**
          * Get the simple JSON object that represents the label
          * @param circle a Fabric circle object
          * @returns a simple JSON object that represents the label
          */
-        this.getLabelJSONObjectFromCircle = function (circle) {
+        value: function getLabelJSONObjectFromCircle(circle) {
             var labelJSONObject = {};
 
             if (circle != null) {
@@ -433,16 +518,18 @@ define(['app'], function (app) {
             }
 
             return labelJSONObject;
-        };
+        }
+    }, {
+        key: 'createComponentState',
 
         /**
          * Create a new component state populated with the student data
          * @return the componentState after it has been populated
          */
-        this.createComponentState = function () {
+        value: function createComponentState() {
 
             // create a new component state
-            var componentState = NodeService.createNewComponentState();
+            var componentState = this.NodeService.createNewComponentState();
 
             // set the labels into the student data
             var studentData = {};
@@ -471,12 +558,14 @@ define(['app'], function (app) {
             componentState.studentData = studentData;
 
             return componentState;
-        };
+        }
+    }, {
+        key: 'calculateDisabled',
 
         /**
          * Check if we need to lock the component
          */
-        this.calculateDisabled = function () {
+        value: function calculateDisabled() {
 
             // get the component content
             var componentContent = this.componentContent;
@@ -490,10 +579,10 @@ define(['app'], function (app) {
                     // we need to lock the component after the student has submitted
 
                     // get the component states for this component
-                    var componentStates = StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
+                    var componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
 
                     // check if any of the component states were submitted
-                    var isSubmitted = NodeService.isWorkSubmitted(componentStates);
+                    var isSubmitted = this.NodeService.isWorkSubmitted(componentStates);
 
                     if (isSubmitted) {
                         // the student has submitted work for this component
@@ -501,53 +590,65 @@ define(['app'], function (app) {
                     }
                 }
             }
-        };
+        }
+    }, {
+        key: 'showPrompt',
 
         /**
          * Check whether we need to show the prompt
          * @return whether to show the prompt
          */
-        this.showPrompt = function () {
+        value: function showPrompt() {
             return this.isPromptVisible;
-        };
+        }
+    }, {
+        key: 'showSaveButton',
 
         /**
          * Check whether we need to show the save button
          * @return whether to show the save button
          */
-        this.showSaveButton = function () {
+        value: function showSaveButton() {
             return this.isSaveButtonVisible;
-        };
+        }
+    }, {
+        key: 'showSubmitButton',
 
         /**
          * Check whether we need to show the submit button
          * @return whether to show the submit button
          */
-        this.showSubmitButton = function () {
+        value: function showSubmitButton() {
             return this.isSubmitButtonVisible;
-        };
+        }
+    }, {
+        key: 'showNewLabelButton',
 
         /**
          * Check whether we need to show the new label button
          * @returns whether to show the new label button
          */
-        this.showNewLabelButton = function () {
+        value: function showNewLabelButton() {
             return this.isNewLabelButtonVisible;
-        };
+        }
+    }, {
+        key: 'showCancelButton',
 
         /**
          * Check whether we need to show the cancel button
          * @returns whether to show the cancel button
          */
-        this.showCancelButton = function () {
+        value: function showCancelButton() {
             return this.isCancelButtonVisible;
-        };
+        }
+    }, {
+        key: 'isLockAfterSubmit',
 
         /**
          * Check whether we need to lock the component after the student
          * submits an answer.
          */
-        this.isLockAfterSubmit = function () {
+        value: function isLockAfterSubmit() {
             var result = false;
 
             if (this.componentContent != null) {
@@ -559,20 +660,22 @@ define(['app'], function (app) {
             }
 
             return result;
-        };
-
-        this.removeAttachment = function (attachment) {
+        }
+    }, {
+        key: 'removeAttachment',
+        value: function removeAttachment(attachment) {
             if (this.attachments.indexOf(attachment) != -1) {
                 this.attachments.splice(this.attachments.indexOf(attachment), 1);
                 this.studentDataChanged();
             }
-        };
-
-        this.attachNotebookItemToComponent = angular.bind(this, function (notebookItem) {
+        }
+    }, {
+        key: 'attachNotebookItemToComponent',
+        value: function attachNotebookItemToComponent(notebookItem) {
             if (notebookItem.studentAsset != null) {
                 // we're importing a StudentAssetNotebookItem
                 var studentAsset = notebookItem.studentAsset;
-                StudentAssetService.copyAssetForReference(studentAsset).then(angular.bind(this, function (copiedAsset) {
+                this.StudentAssetService.copyAssetForReference(studentAsset).then(angular.bind(this, function (copiedAsset) {
                     if (copiedAsset != null) {
                         var attachment = {
                             notebookItemId: notebookItem.id,
@@ -591,7 +694,7 @@ define(['app'], function (app) {
                 var componentType = studentWork.componentType;
 
                 if (componentType != null) {
-                    var childService = $injector.get(componentType + 'Service');
+                    var childService = this.$injector.get(componentType + 'Service');
 
                     if (childService != null) {
                         var studentWorkHTML = childService.getStudentWorkAsHTML(studentWork);
@@ -603,12 +706,14 @@ define(['app'], function (app) {
                     }
                 }
             }
-        });
+        }
+    }, {
+        key: 'getPrompt',
 
         /**
          * Get the prompt to show to the student
          */
-        this.getPrompt = function () {
+        value: function getPrompt() {
             var prompt = null;
 
             if (this.componentContent != null) {
@@ -616,12 +721,14 @@ define(['app'], function (app) {
             }
 
             return prompt;
-        };
+        }
+    }, {
+        key: 'importWork',
 
         /**
          * Import work from another component
          */
-        this.importWork = function () {
+        value: function importWork() {
 
             // get the component content
             var componentContent = this.componentContent;
@@ -634,7 +741,7 @@ define(['app'], function (app) {
                 if (importWorkNodeId != null && importWorkComponentId != null) {
 
                     // get the latest component state for this component
-                    var componentState = StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
+                    var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
 
                     /*
                      * we will only import work into this component if the student
@@ -644,14 +751,14 @@ define(['app'], function (app) {
                         // the student has not done any work for this component
 
                         // get the latest component state from the component we are importing from
-                        var importWorkComponentState = StudentDataService.getLatestComponentStateByNodeIdAndComponentId(importWorkNodeId, importWorkComponentId);
+                        var importWorkComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(importWorkNodeId, importWorkComponentId);
 
                         if (importWorkComponentState != null) {
                             /*
-                             * populate a new component state with the work from the 
+                             * populate a new component state with the work from the
                              * imported component state
                              */
-                            var populatedComponentState = OpenResponseService.populateComponentState(importWorkComponentState);
+                            var populatedComponentState = this.OpenResponseService.populateComponentState(importWorkComponentState);
 
                             // populate the component state into this component
                             this.setStudentWork(populatedComponentState);
@@ -659,23 +766,27 @@ define(['app'], function (app) {
                     }
                 }
             }
-        };
+        }
+    }, {
+        key: 'getComponentId',
 
         /**
          * Get the component id
          * @return the component id
          */
-        this.getComponentId = function () {
+        value: function getComponentId() {
             var componentId = this.componentContent.id;
 
             return componentId;
-        };
+        }
+    }, {
+        key: 'initializeCanvas',
 
         /**
          * Initialize the canvas
          * @returns the canvas object
          */
-        this.initializeCanvas = function () {
+        value: function initializeCanvas() {
 
             var canvas = null;
 
@@ -859,40 +970,48 @@ define(['app'], function (app) {
             }));
 
             return canvas;
-        };
+        }
+    }, {
+        key: 'setBackgroundImage',
 
         /**
          * Set the background image
          * @param backgroundImagePath the url path to an image
          */
-        this.setBackgroundImage = function (backgroundImagePath) {
+        value: function setBackgroundImage(backgroundImagePath) {
 
             if (backgroundImagePath != null) {
                 this.backgroundImage = backgroundImagePath;
                 this.canvas.setBackgroundImage(backgroundImagePath, this.canvas.renderAll.bind(this.canvas));
             }
-        };
+        }
+    }, {
+        key: 'getBackgroundImage',
 
         /**
          * Get the background image
          * @returns the background image path
          */
-        this.getBackgroundImage = function () {
+        value: function getBackgroundImage() {
             return this.backgroundImage;
-        };
+        }
+    }, {
+        key: 'createKeydownListener',
 
         /**
          * Create the keydown listener that we will use for deleting labels
          */
-        this.createKeydownListener = function () {
+        value: function createKeydownListener() {
             window.addEventListener('keydown', angular.bind(this, this.keyPressed), false);
-        };
+        }
+    }, {
+        key: 'keyPressed',
 
         /**
          * The callback handler for the keydown event
          * @param e the event
          */
-        this.keyPressed = function (e) {
+        value: function keyPressed(e) {
 
             // get the key code of the key that was pressed
             var keyCode = e.keyCode;
@@ -916,7 +1035,9 @@ define(['app'], function (app) {
                     }
                 }
             }
-        };
+        }
+    }, {
+        key: 'createLabel',
 
         /**
          * Create a label object. The label object is represented by a circle
@@ -931,7 +1052,7 @@ define(['app'], function (app) {
          * @param color the background color of the label
          * @returns an object containing a circle, line, and text
          */
-        this.createLabel = function (pointX, pointY, textX, textY, textString, color) {
+        value: function createLabel(pointX, pointY, textX, textY, textString, color) {
             var label = {};
 
             // get the position of the point
@@ -995,7 +1116,9 @@ define(['app'], function (app) {
             label.text = text;
 
             return label;
-        };
+        }
+    }, {
+        key: 'addLabelToCanvas',
 
         /**
          * Add a label to canvas
@@ -1003,7 +1126,7 @@ define(['app'], function (app) {
          * @param label an object that contains a Fabric circle, Fabric line,
          * and Fabric itext elements
          */
-        this.addLabelToCanvas = function (canvas, label) {
+        value: function addLabelToCanvas(canvas, label) {
 
             if (canvas != null && label != null) {
 
@@ -1026,14 +1149,16 @@ define(['app'], function (app) {
                     canvas.renderAll();
                 }
             }
-        };
+        }
+    }, {
+        key: 'removeLabelFromCanvas',
 
         /**
          * Remove a label from the canvas
          * @param canvas the canvas
          * @param label the Fabric circle element that represents the label
          */
-        this.removeLabelFromCanvas = function (canvas, label) {
+        value: function removeLabelFromCanvas(canvas, label) {
 
             if (canvas != null && label != null) {
 
@@ -1053,75 +1178,27 @@ define(['app'], function (app) {
                     canvas.renderAll();
                 }
             }
-        };
-
-        /**
-         * Returns true iff there is student work that hasn't been saved yet
-         */
-        $scope.isDirty = function () {
-            return $scope.labelController.isDirty;
-        };
-
-        /**
-         * Get the component state from this component. The parent node will 
-         * call this function to obtain the component state when it needs to
-         * save student data.
-         * @return a component state containing the student data
-         */
-        $scope.getComponentState = function () {
-
-            var componentState = null;
-
-            if ($scope.labelController.isDirty) {
-                // create a component state populated with the student data
-                componentState = $scope.labelController.createComponentState();
-
-                // set isDirty to false since this student work is about to be saved
-                $scope.labelController.isDirty = false;
-            }
-
-            return componentState;
-        };
-
-        /**
-         * The parent node submit button was clicked
-         */
-        $scope.$on('nodeSubmitClicked', angular.bind(this, function (event, args) {
-
-            // get the node id of the node
-            var nodeId = args.nodeId;
-
-            // make sure the node id matches our parent node
-            if (this.nodeId === nodeId) {
-
-                if (this.isLockAfterSubmit()) {
-                    // disable the component if it was authored to lock after submit
-                    this.isDisabled = true;
-                }
-            }
-        }));
-
-        /**
-         * Listen for the 'exitNode' event which is fired when the student
-         * exits the parent node. This will perform any necessary cleanup
-         * when the student exits the parent node.
-         */
-        $scope.$on('exitNode', angular.bind(this, function (event, args) {}));
+        }
+    }, {
+        key: 'registerExitListener',
 
         /**
          * Register the the listener that will listen for the exit event
          * so that we can perform saving before exiting.
          */
-        this.registerExitListener = function () {
+        value: function registerExitListener() {
 
             /*
              * Listen for the 'exit' event which is fired when the student exits
              * the VLE. This will perform saving before the VLE exits.
              */
-            this.exitListener = $scope.$on('exit', angular.bind(this, function (event, args) {}));
-        };
+            this.exitListener = this.$scope.$on('exit', angular.bind(this, function (event, args) {}));
+        }
+    }]);
 
-        // perform setup of this component
-        this.setup();
-    });
-});
+    return LabelController;
+}();
+
+LabelController.$inject = ['$injector', '$scope', '$timeout', 'LabelService', 'NodeService', 'OpenResponseService', 'StudentAssetService', 'StudentDataService'];
+
+exports.default = LabelController;

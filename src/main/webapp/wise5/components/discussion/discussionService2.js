@@ -1,4 +1,4 @@
-import NodeService from '../../services/nodeService2';
+import NodeService from '../../services/nodeService';
 
 class DiscussionService extends NodeService {
     constructor($http,

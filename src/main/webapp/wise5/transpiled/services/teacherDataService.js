@@ -1,22 +1,37 @@
 'use strict';
 
-define(['annotationService', 'configService'], function (annotationService, configService) {
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-    var service = ['$http', '$q', '$rootScope', 'AnnotationService', 'ConfigService', 'StudentDataService', function ($http, $q, $rootScope, AnnotationService, ConfigService) {
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
 
-        var serviceObject = {};
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-        serviceObject.studentData = {};
+var TeacherDataService = function () {
+    function TeacherDataService($http, $rootScope, AnnotationService, ConfigService) {
+        _classCallCheck(this, TeacherDataService);
 
-        serviceObject.currentPeriod = null;
+        this.$http = $http;
+        this.$rootScope = $rootScope;
+        this.AnnotationService = AnnotationService;
+        this.ConfigService = ConfigService;
 
-        /**
-         * Retrieves the export given the export Type
-         * @param exportType
-         */
-        serviceObject.getExport = function (exportType) {
-            var exportURL = ConfigService.getConfigParam('runDataExportURL');
-            var runId = ConfigService.getRunId();
+        this.studentData = {};
+
+        this.currentPeriod = null;
+    }
+
+    /**
+     * Retrieves the export given the export Type
+     * @param exportType
+     */
+
+    _createClass(TeacherDataService, [{
+        key: 'getExport',
+        value: function getExport(exportType) {
+            var exportURL = this.ConfigService.getConfigParam('runDataExportURL');
+            var runId = this.ConfigService.getRunId();
             exportURL += "/" + runId + "/" + exportType;
 
             var params = {};
@@ -29,17 +44,19 @@ define(['annotationService', 'configService'], function (annotationService, conf
             httpParams.url = exportURL;
             httpParams.params = params;
 
-            return $http(httpParams).then(angular.bind(this, function (result) {
+            return this.$http(httpParams).then(angular.bind(this, function (result) {
                 return result.data;
             }));
-        };
+        }
+    }, {
+        key: 'retrieveStudentDataByNodeId',
 
         /**
          * Retrieve the student data for a node id
          * @param nodeId the node id
          * @returns the student data for the node id
          */
-        serviceObject.retrieveStudentDataByNodeId = function (nodeId) {
+        value: function retrieveStudentDataByNodeId(nodeId) {
 
             var periodId = null;
 
@@ -48,38 +65,42 @@ define(['annotationService', 'configService'], function (annotationService, conf
             }
 
             var params = {};
-            params.runId = ConfigService.getRunId();
+            params.runId = this.ConfigService.getRunId();
             params.periodId = periodId;
             params.nodeId = nodeId;
             params.workgroupId = null;
 
             return this.retrieveStudentData(params);
-        };
+        }
+    }, {
+        key: 'retrieveStudentDataByWorkgroupId',
 
         /**
          * Retrieve the student data for the workgroup id
          * @param workgroupId the workgroup id
          * @returns the student data for the workgroup id
          */
-        serviceObject.retrieveStudentDataByWorkgroupId = function (workgroupId) {
+        value: function retrieveStudentDataByWorkgroupId(workgroupId) {
 
             var params = {};
-            params.runId = ConfigService.getRunId();
+            params.runId = this.ConfigService.getRunId();
             params.periodId = null;
             params.nodeId = null;
             params.workgroupId = workgroupId;
             params.toWorkgroupId = workgroupId;
 
             return this.retrieveStudentData(params);
-        };
+        }
+    }, {
+        key: 'retrieveStudentData',
 
         /**
          * Retrieve the student data
          * @param params the params that specify what student data we want
          * @returns a promise
          */
-        serviceObject.retrieveStudentData = function (params) {
-            var studentDataURL = ConfigService.getConfigParam('teacherDataURL');
+        value: function retrieveStudentData(params) {
+            var studentDataURL = this.ConfigService.getConfigParam('teacherDataURL');
 
             params.getStudentWork = true;
             params.getEvents = false;
@@ -90,7 +111,7 @@ define(['annotationService', 'configService'], function (annotationService, conf
             httpParams.url = studentDataURL;
             httpParams.params = params;
 
-            return $http(httpParams).then(angular.bind(this, function (result) {
+            return this.$http(httpParams).then(angular.bind(this, function (result) {
                 var resultData = result.data;
                 if (resultData != null) {
 
@@ -170,12 +191,13 @@ define(['annotationService', 'configService'], function (annotationService, conf
                         }
                     }
 
-                    AnnotationService.setAnnotations(this.studentData.annotations);
+                    this.AnnotationService.setAnnotations(this.studentData.annotations);
                 }
             }));
-        };
-
-        serviceObject.sortVLEStatesAlphabeticallyByUserName = function () {
+        }
+    }, {
+        key: 'sortVLEStatesAlphabeticallyByUserName',
+        value: function sortVLEStatesAlphabeticallyByUserName() {
             var vleStates = this.vleStates;
 
             if (vleStates != null) {
@@ -183,9 +205,10 @@ define(['annotationService', 'configService'], function (annotationService, conf
             }
 
             return vleStates;
-        };
-
-        serviceObject.sortVLEStatesAlphabeticallyByUserNameHelper = function (a, b) {
+        }
+    }, {
+        key: 'sortVLEStatesAlphabeticallyByUserNameHelper',
+        value: function sortVLEStatesAlphabeticallyByUserNameHelper(a, b) {
             var aUserId = a.userId;
             var bUserId = b.userId;
             var result = 0;
@@ -197,32 +220,36 @@ define(['annotationService', 'configService'], function (annotationService, conf
             }
 
             return result;
-        };
-
-        serviceObject.getComponentStatesByWorkgroupId = function (workgroupId) {
+        }
+    }, {
+        key: 'getComponentStatesByWorkgroupId',
+        value: function getComponentStatesByWorkgroupId(workgroupId) {
             var componentStatesByWorkgroupId = this.studentData.componentStatesByWorkgroupId[workgroupId];
             if (componentStatesByWorkgroupId != null) {
                 return componentStatesByWorkgroupId;
             } else {
                 return [];
             }
-        };
-
-        serviceObject.getComponentStatesByNodeId = function (nodeId) {
+        }
+    }, {
+        key: 'getComponentStatesByNodeId',
+        value: function getComponentStatesByNodeId(nodeId) {
             var componentStatesByNodeId = this.studentData.componentStatesByNodeId[nodeId];
             if (componentStatesByNodeId != null) {
                 return componentStatesByNodeId;
             } else {
                 return [];
             }
-        };
+        }
+    }, {
+        key: 'getComponentStatesByComponentId',
 
         /**
          * Get the component stats for a component id
          * @param componentId the component id
          * @returns an array containing component states for a component id
          */
-        serviceObject.getComponentStatesByComponentId = function (componentId) {
+        value: function getComponentStatesByComponentId(componentId) {
             var componentStates = [];
 
             var componentStatesByComponentId = this.studentData.componentStatesByComponentId[componentId];
@@ -232,9 +259,10 @@ define(['annotationService', 'configService'], function (annotationService, conf
             }
 
             return componentStates;
-        };
-
-        serviceObject.getLatestComponentStateByWorkgroupIdNodeIdAndComponentId = function (workgroupId, nodeId, componentId) {
+        }
+    }, {
+        key: 'getLatestComponentStateByWorkgroupIdNodeIdAndComponentId',
+        value: function getLatestComponentStateByWorkgroupIdNodeIdAndComponentId(workgroupId, nodeId, componentId) {
             var latestComponentState = null;
 
             var componentStates = this.getComponentStatesByWorkgroupIdAndNodeId(workgroupId, nodeId);
@@ -259,9 +287,10 @@ define(['annotationService', 'configService'], function (annotationService, conf
             }
 
             return latestComponentState;
-        };
-
-        serviceObject.getComponentStatesByWorkgroupIdAndNodeId = function (workgroupId, nodeId) {
+        }
+    }, {
+        key: 'getComponentStatesByWorkgroupIdAndNodeId',
+        value: function getComponentStatesByWorkgroupIdAndNodeId(workgroupId, nodeId) {
 
             var componentStatesByWorkgroupId = this.getComponentStatesByWorkgroupId(workgroupId);
             var componentStatesByNodeId = this.getComponentStatesByNodeId(nodeId);
@@ -270,7 +299,9 @@ define(['annotationService', 'configService'], function (annotationService, conf
             return componentStatesByWorkgroupId.filter(function (n) {
                 return componentStatesByNodeId.indexOf(n) != -1;
             });
-        };
+        }
+    }, {
+        key: 'getComponentStatesByWorkgroupIdAndComponentId',
 
         /**
          * Get component states for a workgroup id and component id
@@ -278,7 +309,7 @@ define(['annotationService', 'configService'], function (annotationService, conf
          * @param componentId the component id
          * @returns an array of component states
          */
-        serviceObject.getComponentStatesByWorkgroupIdAndComponentId = function (workgroupId, componentId) {
+        value: function getComponentStatesByWorkgroupIdAndComponentId(workgroupId, componentId) {
             var componentStatesByWorkgroupId = this.getComponentStatesByWorkgroupId(workgroupId);
             var componentStatesByComponentId = this.getComponentStatesByComponentId(componentId);
 
@@ -286,27 +317,30 @@ define(['annotationService', 'configService'], function (annotationService, conf
             return componentStatesByWorkgroupId.filter(function (n) {
                 return componentStatesByComponentId.indexOf(n) != -1;
             });
-        };
-
-        serviceObject.getEventsByWorkgroupId = function (workgroupId) {
+        }
+    }, {
+        key: 'getEventsByWorkgroupId',
+        value: function getEventsByWorkgroupId(workgroupId) {
             var eventsByWorkgroupId = this.studentData.eventsByWorkgroupId[workgroupId];
             if (eventsByWorkgroupId != null) {
                 return eventsByWorkgroupId;
             } else {
                 return [];
             }
-        };
-
-        serviceObject.getEventsByNodeId = function (nodeId) {
+        }
+    }, {
+        key: 'getEventsByNodeId',
+        value: function getEventsByNodeId(nodeId) {
             var eventsByNodeId = this.studentData.eventsByNodeId[nodeId];
             if (eventsByNodeId != null) {
                 return eventsByNodeId;
             } else {
                 return [];
             }
-        };
-
-        serviceObject.getEventsByWorkgroupIdAndNodeId = function (workgroupId, nodeId) {
+        }
+    }, {
+        key: 'getEventsByWorkgroupIdAndNodeId',
+        value: function getEventsByWorkgroupIdAndNodeId(workgroupId, nodeId) {
             var eventsByWorkgroupId = this.getEventsByWorkgroupId(workgroupId);
             var eventsByNodeId = this.getEventsByNodeId(nodeId);
 
@@ -314,27 +348,30 @@ define(['annotationService', 'configService'], function (annotationService, conf
             return eventsByWorkgroupId.filter(function (n) {
                 return eventsByNodeId.indexOf(n) != -1;
             });
-        };
-
-        serviceObject.getAnnotationsToWorkgroupId = function (workgroupId) {
+        }
+    }, {
+        key: 'getAnnotationsToWorkgroupId',
+        value: function getAnnotationsToWorkgroupId(workgroupId) {
             var annotationsToWorkgroupId = this.studentData.annotationsToWorkgroupId[workgroupId];
             if (annotationsToWorkgroupId != null) {
                 return annotationsToWorkgroupId;
             } else {
                 return [];
             }
-        };
-
-        serviceObject.getAnnotationsByNodeId = function (nodeId) {
+        }
+    }, {
+        key: 'getAnnotationsByNodeId',
+        value: function getAnnotationsByNodeId(nodeId) {
             var annotationsByNodeId = this.studentData.annotationsByNodeId[nodeId];
             if (annotationsByNodeId != null) {
                 return annotationsByNodeId;
             } else {
                 return [];
             }
-        };
-
-        serviceObject.getAnnotationsToWorkgroupIdAndNodeId = function (workgroupId, nodeId) {
+        }
+    }, {
+        key: 'getAnnotationsToWorkgroupIdAndNodeId',
+        value: function getAnnotationsToWorkgroupIdAndNodeId(workgroupId, nodeId) {
             var annotationsToWorkgroupId = this.getAnnotationsToWorkgroupId(workgroupId);
             var annotationsByNodeId = this.getAnnotationsByNodeId(nodeId);
 
@@ -342,18 +379,22 @@ define(['annotationService', 'configService'], function (annotationService, conf
             return annotationsToWorkgroupId.filter(function (n) {
                 return annotationsByNodeId.indexOf(n) != -1;
             });
-        };
-
-        serviceObject.setCurrentPeriod = function (period) {
+        }
+    }, {
+        key: 'setCurrentPeriod',
+        value: function setCurrentPeriod(period) {
             this.currentPeriod = period;
-        };
-
-        serviceObject.getCurrentPeriod = function () {
+        }
+    }, {
+        key: 'getCurrentPeriod',
+        value: function getCurrentPeriod() {
             return this.currentPeriod;
-        };
+        }
+    }]);
 
-        return serviceObject;
-    }];
+    return TeacherDataService;
+}();
 
-    return service;
-});
+TeacherDataService.$inject = ['$http', '$rootScope', 'AnnotationService', 'ConfigService'];
+
+exports.default = TeacherDataService;

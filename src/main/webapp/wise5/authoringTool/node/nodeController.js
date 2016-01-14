@@ -1,38 +1,44 @@
-define(['app'], function(app) {
-    app.$controllerProvider.register('NodeController', 
-        function($scope,
-                 $state,
-                 $stateParams,
-                 ProjectService) {
-            this.nodeId = $stateParams.nodeId;
+class NodeController {
+    constructor($scope,
+                $state,
+                $stateParams,
+                ProjectService) {
+        this.$scope = $scope;
+        this.$state = $state;
+        this.$stateParams = $stateParams;
+        this.ProjectService = ProjectService;
+        this.nodeId = $stateParams.nodeId;
 
-            // get the node
-            this.node = ProjectService.getNodeById(this.nodeId);
+        // get the node
+        this.node = this.ProjectService.getNodeById(this.nodeId);
 
-            // get the components in the node
-            this.components = ProjectService.getComponentsByNodeId(this.nodeId);
+        // get the components in the node
+        this.components = this.ProjectService.getComponentsByNodeId(this.nodeId);
+    }
+    showNormal() {
+        this.$state.go('root.node.normal', {nodeId: this.nodeId});
+    };
 
-            this.showNormal = function() {
-                $state.go('root.node.normal', {nodeId: nodeId});
-            };
-            
-            this.showPreview = function() {
-                $state.go('root.node.preview', {nodeId: nodeId});
-            };
-            
-            this.showAdvanced = function() {
-                $state.go('root.node.advanced', {nodeId: nodeId});
-            };
-            
-            this.close = function() {
-                $state.go('root.project.normal');
-            };
+    showPreview() {
+        this.$state.go('root.node.preview', {nodeId: this.nodeId});
+    };
 
-            /**
-             * The node has changed in the authoring view
-             */
-            this.authoringViewNodeChanged = function() {
-                ProjectService.saveProject();
-            }
-        });
-});
+    showAdvanced() {
+        this.$state.go('root.node.advanced', {nodeId: this.nodeId});
+    };
+
+    close() {
+        this.$state.go('root.project');
+    };
+
+    /**
+     * The node has changed in the authoring view
+     */
+    authoringViewNodeChanged() {
+        this.ProjectService.saveProject();
+    }
+}
+
+NodeController.$inject = ['$scope', '$state', '$stateParams', 'ProjectService'];
+
+export default NodeController;

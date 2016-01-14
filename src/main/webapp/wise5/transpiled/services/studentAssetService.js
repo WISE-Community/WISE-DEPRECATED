@@ -1,13 +1,29 @@
 'use strict';
 
-define(['configService'], function (configService) {
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-    var service = ['$http', '$q', 'Upload', '$rootScope', 'ConfigService', function ($http, $q, Upload, $rootScope, ConfigService) {
-        var serviceObject = {};
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
 
-        serviceObject.allAssets = []; // keep track of student's assets
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-        serviceObject.getAssetById = function (assetId) {
+var StudentAssetService = function () {
+    function StudentAssetService($http, $q, Upload, $rootScope, ConfigService) {
+        _classCallCheck(this, StudentAssetService);
+
+        this.$http = $http;
+        this.$q = $q;
+        this.Upload = Upload;
+        this.$rootScope = $rootScope;
+        this.ConfigService = ConfigService;
+
+        this.allAssets = []; // keep track of student's assets
+    }
+
+    _createClass(StudentAssetService, [{
+        key: 'getAssetById',
+        value: function getAssetById(assetId) {
             for (var a = 0; a < this.allAssets.length; a++) {
                 var asset = this.allAssets[a];
                 if (asset.id === assetId) {
@@ -15,19 +31,20 @@ define(['configService'], function (configService) {
                 }
             }
             return null;
-        };
-
-        serviceObject.retrieveAssets = function () {
+        }
+    }, {
+        key: 'retrieveAssets',
+        value: function retrieveAssets() {
             var config = {};
             config.method = 'GET';
-            config.url = ConfigService.getStudentAssetsURL();
+            config.url = this.ConfigService.getStudentAssetsURL();
             config.params = {};
-            config.params.workgroupId = ConfigService.getWorkgroupId();
-            return $http(config).then(angular.bind(this, function (response) {
+            config.params.workgroupId = this.ConfigService.getWorkgroupId();
+            return this.$http(config).then(angular.bind(this, function (response) {
                 // loop through the assets and make them into JSON object with more details
                 var result = [];
                 var assets = response.data;
-                var studentUploadsBaseURL = ConfigService.getStudentUploadsBaseURL();
+                var studentUploadsBaseURL = this.ConfigService.getStudentUploadsBaseURL();
                 for (var a = 0; a < assets.length; a++) {
                     var asset = assets[a];
                     if (!asset.isReferenced && asset.serverDeleteTime == null && asset.fileName !== '.DS_Store') {
@@ -48,21 +65,23 @@ define(['configService'], function (configService) {
                 this.allAssets = result;
                 return result;
             }));
-        };
-
-        serviceObject.getAssetContent = function (asset) {
+        }
+    }, {
+        key: 'getAssetContent',
+        value: function getAssetContent(asset) {
             var assetContentURL = asset.url;
 
             // retrieve the csv file and parse it
             var config = {};
             config.method = 'GET';
             config.url = assetContentURL;
-            return $http(config).then(angular.bind(this, function (response) {
+            return this.$http(config).then(angular.bind(this, function (response) {
                 return response.data;
             }));
-        };
-
-        serviceObject.isImage = function (asset) {
+        }
+    }, {
+        key: 'isImage',
+        value: function isImage(asset) {
             var isImage = false;
             var imageFileExtensions = ['png', 'jpg', 'jpeg', 'gif'];
             if (asset != null) {
@@ -75,9 +94,10 @@ define(['configService'], function (configService) {
                 }
             }
             return isImage;
-        };
-
-        serviceObject.isAudio = function (asset) {
+        }
+    }, {
+        key: 'isAudio',
+        value: function isAudio(asset) {
             var isAudio = false;
             var imageFileExtensions = ['wav', 'mp3', 'ogg', 'm4a', 'm4p', 'raw', 'aiff'];
             if (asset != null) {
@@ -90,18 +110,19 @@ define(['configService'], function (configService) {
                 }
             }
             return isAudio;
-        };
+        }
+    }, {
+        key: 'uploadAsset',
+        value: function uploadAsset(file) {
+            var studentAssetsURL = this.ConfigService.getStudentAssetsURL();
+            var deferred = this.$q.defer();
 
-        serviceObject.uploadAsset = function (file) {
-            var studentAssetsURL = ConfigService.getStudentAssetsURL();
-            var deferred = $q.defer();
-
-            Upload.upload({
+            this.Upload.upload({
                 url: studentAssetsURL,
                 fields: {
-                    'runId': ConfigService.getRunId(),
-                    'workgroupId': ConfigService.getWorkgroupId(),
-                    'periodId': ConfigService.getPeriodId(),
+                    'runId': this.ConfigService.getRunId(),
+                    'workgroupId': this.ConfigService.getWorkgroupId(),
+                    'periodId': this.ConfigService.getPeriodId(),
                     'clientSaveTime': Date.parse(new Date())
                 },
                 file: file
@@ -109,7 +130,7 @@ define(['configService'], function (configService) {
                 if (asset === "error") {
                     alert("There was an error uploading.");
                 } else {
-                    var studentUploadsBaseURL = ConfigService.getStudentUploadsBaseURL();
+                    var studentUploadsBaseURL = this.ConfigService.getStudentUploadsBaseURL();
                     asset.url = studentUploadsBaseURL + asset.filePath;
                     if (this.isImage(asset)) {
                         asset.type = 'image';
@@ -122,7 +143,7 @@ define(['configService'], function (configService) {
                         asset.iconURL = 'wise5/vle/notebook/file.png';
                     }
                     this.allAssets.push(asset);
-                    $rootScope.$broadcast('studentAssetsUpdated');
+                    this.$rootScope.$broadcast('studentAssetsUpdated');
                     deferred.resolve(asset);
                 }
             })).error(angular.bind(this, function (asset, status, headers, config) {
@@ -130,17 +151,18 @@ define(['configService'], function (configService) {
             }));
 
             return deferred.promise;
-        };
-
-        serviceObject.uploadAssets = function (files) {
-            var studentAssetsURL = ConfigService.getStudentAssetsURL();
+        }
+    }, {
+        key: 'uploadAssets',
+        value: function uploadAssets(files) {
+            var studentAssetsURL = this.ConfigService.getStudentAssetsURL();
             var promises = files.map(function (file) {
-                return Upload.upload({
+                return this.Upload.upload({
                     url: studentAssetsURL,
                     fields: {
-                        'runId': ConfigService.getRunId(),
-                        'workgroupId': ConfigService.getWorkgroupId(),
-                        'periodId': ConfigService.getPeriodId(),
+                        'runId': this.ConfigService.getRunId(),
+                        'workgroupId': this.ConfigService.getWorkgroupId(),
+                        'periodId': this.ConfigService.getPeriodId(),
                         'clientSaveTime': Date.parse(new Date())
                     },
                     file: file
@@ -151,27 +173,29 @@ define(['configService'], function (configService) {
                     //console.log('file ' + config.file.name + 'uploaded. Response: ' + JSON.stringify(data));
                 });
             });
-            return $q.all(promises);
-        };
+            return this.$q.all(promises);
+        }
+    }, {
+        key: 'copyAssetForReference',
 
         // given asset, makes a copy of it so steps can use for reference. Returns newly-copied asset.
-        serviceObject.copyAssetForReference = function (studentAsset) {
+        value: function copyAssetForReference(studentAsset) {
             var config = {};
             config.method = 'POST';
-            config.url = ConfigService.getStudentAssetsURL() + '/copy';
+            config.url = this.ConfigService.getStudentAssetsURL() + '/copy';
             config.headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
             var params = {};
             params.studentAssetId = studentAsset.id;
-            params.workgroupId = ConfigService.getWorkgroupId();
-            params.periodId = ConfigService.getPeriodId();
+            params.workgroupId = this.ConfigService.getWorkgroupId();
+            params.periodId = this.ConfigService.getPeriodId();
             params.clientSaveTime = Date.parse(new Date());
 
             config.data = $.param(params);
 
-            return $http(config).then(angular.bind(this, function (result) {
+            return this.$http(config).then(angular.bind(this, function (result) {
                 var copiedAsset = result.data;
                 if (copiedAsset != null) {
-                    var studentUploadsBaseURL = ConfigService.getStudentUploadsBaseURL();
+                    var studentUploadsBaseURL = this.ConfigService.getStudentUploadsBaseURL();
                     if (copiedAsset.isReferenced && copiedAsset.fileName !== '.DS_Store') {
                         copiedAsset.url = studentUploadsBaseURL + copiedAsset.filePath;
                         if (this.isImage(copiedAsset)) {
@@ -184,36 +208,40 @@ define(['configService'], function (configService) {
                             copiedAsset.type = 'file';
                             copiedAsset.iconURL = 'wise5/vle/notebook/file.png';
                         }
-                        //$rootScope.$broadcast('studentAssetsUpdated');
+                        //this.$rootScope.$broadcast('studentAssetsUpdated');
                         return copiedAsset;
                     }
                 }
                 return null;
             }));
-        };
-
-        serviceObject.deleteAsset = function (studentAsset) {
+        }
+    }, {
+        key: 'deleteAsset',
+        value: function deleteAsset(studentAsset) {
             var config = {};
             config.method = 'POST';
-            config.url = ConfigService.getStudentAssetsURL() + '/remove';
+            config.url = this.ConfigService.getStudentAssetsURL() + '/remove';
             config.headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
             var params = {};
             params.studentAssetId = studentAsset.id;
-            params.workgroupId = ConfigService.getWorkgroupId();
-            params.periodId = ConfigService.getPeriodId();
+            params.workgroupId = this.ConfigService.getWorkgroupId();
+            params.periodId = this.ConfigService.getPeriodId();
             params.clientDeleteTime = Date.parse(new Date());
             config.data = $.param(params);
 
-            return $http(config).then(angular.bind(this, function (result) {
+            return this.$http(config).then(angular.bind(this, function (result) {
                 //var deletedAsset = result.data;
                 // also remove from local copy of all assets
                 this.allAssets = this.allAssets.splice(this.allAssets.indexOf(studentAsset), 1);
-                $rootScope.$broadcast('studentAssetsUpdated');
+                this.$rootScope.$broadcast('studentAssetsUpdated');
                 return studentAsset;
             }));
-        };
-        return serviceObject;
-    }];
+        }
+    }]);
 
-    return service;
-});
+    return StudentAssetService;
+}();
+
+StudentAssetService.$inject = ['$http', '$q', 'Upload', '$rootScope', 'ConfigService'];
+
+exports.default = StudentAssetService;

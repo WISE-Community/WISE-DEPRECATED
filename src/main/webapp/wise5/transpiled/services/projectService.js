@@ -2,69 +2,88 @@
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
-define(['configService'], function (configService) {
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-    var service = ['$http', '$rootScope', 'ConfigService', function ($http, $rootScope, ConfigService) {
-        var serviceObject = {};
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
 
-        serviceObject.project = null;
-        serviceObject.transitions = [];
-        serviceObject.applicationNodes = [];
-        serviceObject.groupNodes = [];
-        serviceObject.idToNode = {};
-        serviceObject.idToElement = {};
-        serviceObject.idToTransition = {};
-        serviceObject.metadata = {};
-        serviceObject.idToContent = {};
-        serviceObject.activeConstraints = [];
-        serviceObject.rootNode = null;
-        serviceObject.idToPosition = {};
-        serviceObject.idToOrder = {};
-        serviceObject.nodeCount = 0;
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-        serviceObject.getProject = function () {
+var ProjectService = function () {
+    function ProjectService($http, $rootScope, ConfigService) {
+        _classCallCheck(this, ProjectService);
+
+        this.$http = $http;
+        this.$rootScope = $rootScope;
+        this.ConfigService = ConfigService;
+        this.project = null;
+        this.transitions = [];
+        this.applicationNodes = [];
+        this.groupNodes = [];
+        this.idToNode = {};
+        this.idToElement = {};
+        this.idToTransition = {};
+        this.metadata = {};
+        this.idToContent = {};
+        this.activeConstraints = [];
+        this.rootNode = null;
+        this.idToPosition = {};
+        this.idToOrder = {};
+        this.nodeCount = 0;
+
+        // filtering options for navigation displays
+        this.filters = [{ 'name': 'all', 'label': 'All' },
+        //{'name': 'todo', 'label': 'Todo'},
+        //{'name': 'completed', 'label': 'Completed'},
+        { 'name': 'bookmark', 'label': 'Bookmarks' } // TODO: Add when bookmarks are active
+        ];
+    }
+
+    _createClass(ProjectService, [{
+        key: 'getProject',
+        value: function getProject() {
             return this.project;
-        };
-
-        serviceObject.setProject = function (project) {
+        }
+    }, {
+        key: 'setProject',
+        value: function setProject(project) {
             this.project = project;
             if (project.metadata) {
                 this.metadata = project.metadata;
             }
             this.parseProject();
-        };
-
-        serviceObject.getStyle = function () {
+        }
+    }, {
+        key: 'getStyle',
+        value: function getStyle() {
             var style = '';
             var project = this.project;
             if (project != null) {
                 style = project.style;
             }
             return style;
-        };
-
-        // filtering options for navigation displays
-        serviceObject.filters = [{ 'name': 'all', 'label': 'All' },
-        //{'name': 'todo', 'label': 'Todo'},
-        //{'name': 'completed', 'label': 'Completed'},
-        { 'name': 'bookmark', 'label': 'Bookmarks' } // TODO: Add when bookmarks are active
-        ];
-
-        serviceObject.getFilters = function () {
+        }
+    }, {
+        key: 'getFilters',
+        value: function getFilters() {
             return this.filters;
-        };
-
-        serviceObject.getName = function () {
+        }
+    }, {
+        key: 'getName',
+        value: function getName() {
             var name = this.getProjectMetadata().title;
             name = name ? name : 'A WISE Project (No name)';
             return name;
-        };
-
-        serviceObject.getProjectMetadata = function () {
+        }
+    }, {
+        key: 'getProjectMetadata',
+        value: function getProjectMetadata() {
             return this.metadata;
-        };
-
-        serviceObject.getNodes = function () {
+        }
+    }, {
+        key: 'getNodes',
+        value: function getNodes() {
             var nodes = null;
             var project = this.project;
 
@@ -73,9 +92,10 @@ define(['configService'], function (configService) {
             }
 
             return nodes;
-        };
-
-        serviceObject.getChildNodeIdsById = function (nodeId) {
+        }
+    }, {
+        key: 'getChildNodeIdsById',
+        value: function getChildNodeIdsById(nodeId) {
             var childIds = [];
             var node = this.getNodeById(nodeId);
 
@@ -84,21 +104,25 @@ define(['configService'], function (configService) {
             }
 
             return childIds;
-        };
-
-        serviceObject.getApplicationNodes = function () {
+        }
+    }, {
+        key: 'getApplicationNodes',
+        value: function getApplicationNodes() {
             return this.applicationNodes;
-        };
-
-        serviceObject.getGroupNodes = function () {
+        }
+    }, {
+        key: 'getGroupNodes',
+        value: function getGroupNodes() {
             return this.groupNodes;
-        };
-
-        serviceObject.getIdToNode = function () {
+        }
+    }, {
+        key: 'getIdToNode',
+        value: function getIdToNode() {
             return this.idToNode;
-        };
-
-        serviceObject.isNode = function (id) {
+        }
+    }, {
+        key: 'isNode',
+        value: function isNode(id) {
             var result = false;
             var nodes = this.getNodes();
 
@@ -118,10 +142,12 @@ define(['configService'], function (configService) {
             }
 
             return result;
-        };
+        }
+    }, {
+        key: 'addTransition',
 
         // adds or update transition if exists
-        serviceObject.addTransition = function (transition) {
+        value: function addTransition(transition) {
 
             var existingTransitions = this.getTransitions();
             var replaced = false;
@@ -135,9 +161,10 @@ define(['configService'], function (configService) {
             if (!replaced) {
                 existingTransitions.push(transition);
             }
-        };
-
-        serviceObject.addNode = function (node) {
+        }
+    }, {
+        key: 'addNode',
+        value: function addNode(node) {
             var existingNodes = this.project.nodes;
 
             var replaced = false;
@@ -154,18 +181,20 @@ define(['configService'], function (configService) {
             if (!replaced) {
                 existingNodes.push(node);
             }
-        };
-
-        serviceObject.addApplicationNode = function (node) {
+        }
+    }, {
+        key: 'addApplicationNode',
+        value: function addApplicationNode(node) {
 
             var applicationNodes = this.applicationNodes;
 
             if (node != null && applicationNodes != null) {
                 applicationNodes.push(node);
             }
-        };
-
-        serviceObject.addGroupNode = function (node) {
+        }
+    }, {
+        key: 'addGroupNode',
+        value: function addGroupNode(node) {
 
             var groupNodes = this.groupNodes;
 
@@ -173,10 +202,11 @@ define(['configService'], function (configService) {
                 groupNodes.push(node);
             }
 
-            $rootScope.$broadcast('groupsChanged');
-        };
-
-        serviceObject.addNodeToGroupNode = function (groupId, nodeId) {
+            this.$rootScope.$broadcast('groupsChanged');
+        }
+    }, {
+        key: 'addNodeToGroupNode',
+        value: function addNodeToGroupNode(groupId, nodeId) {
             if (groupId != null && nodeId != null) {
                 var group = this.getNodeById(groupId);
                 if (group != null) {
@@ -188,9 +218,10 @@ define(['configService'], function (configService) {
                     }
                 }
             }
-        };
-
-        serviceObject.isGroupNode = function (id) {
+        }
+    }, {
+        key: 'isGroupNode',
+        value: function isGroupNode(id) {
             var result = false;
 
             var groupNode = this.getNodeById(id);
@@ -204,9 +235,10 @@ define(['configService'], function (configService) {
             }
 
             return result;
-        };
-
-        serviceObject.isApplicationNode = function (id) {
+        }
+    }, {
+        key: 'isApplicationNode',
+        value: function isApplicationNode(id) {
             var result = false;
 
             var applicationNode = this.getNodeById(id);
@@ -220,13 +252,15 @@ define(['configService'], function (configService) {
             }
 
             return result;
-        };
-
-        serviceObject.getGroups = function () {
+        }
+    }, {
+        key: 'getGroups',
+        value: function getGroups() {
             return this.groupNodes;
-        };
-
-        serviceObject.loadNodes = function (nodes) {
+        }
+    }, {
+        key: 'loadNodes',
+        value: function loadNodes(nodes) {
             if (nodes != null) {
                 for (var n = 0; n < nodes.length; n++) {
                     var node = nodes[n];
@@ -268,9 +302,10 @@ define(['configService'], function (configService) {
                     }
                 }
             }
-        };
-
-        serviceObject.loadTransitions = function (transitions) {
+        }
+    }, {
+        key: 'loadTransitions',
+        value: function loadTransitions(transitions) {
             if (transitions != null) {
                 for (var t = 0; t < transitions.length; t++) {
                     var transition = transitions[t];
@@ -285,9 +320,10 @@ define(['configService'], function (configService) {
                     }
                 }
             }
-        };
-
-        serviceObject.parseProject = function () {
+        }
+    }, {
+        key: 'parseProject',
+        value: function parseProject() {
             var project = this.project;
             if (project != null) {
                 var nodes = project.nodes;
@@ -346,9 +382,10 @@ define(['configService'], function (configService) {
                     this.setIdToPosition(id, pos);
                 }
             }
-        };
-
-        serviceObject.setNodeOrder = function (node) {
+        }
+    }, {
+        key: 'setNodeOrder',
+        value: function setNodeOrder(node) {
             this.idToOrder[node.id] = { 'order': this.nodeCount };
             this.nodeCount++;
             if (this.isGroupNode(node.id)) {
@@ -358,14 +395,16 @@ define(['configService'], function (configService) {
                     this.setNodeOrder(child);
                 }
             }
-        };
+        }
+    }, {
+        key: 'getPositionById',
 
         /**
          * Returns the position in the project for the node with the given id. Returns null if no node with id exists.
          * @param id a node id
          * @return string position of the given node id in the project
          */
-        serviceObject.getPositionById = function (id) {
+        value: function getPositionById(id) {
             for (var i = 0; i < this.rootNode.ids.length; i++) {
                 var node = this.getNodeById(this.rootNode.ids[i]);
                 var path = this.getPathToNode(node, i + 1, id);
@@ -375,26 +414,31 @@ define(['configService'], function (configService) {
             }
 
             return null;
-        };
+        }
+    }, {
+        key: 'getOrderById',
 
         /**
          * Returns the order of the given node id in the project. Returns null if no node with id exists.
          * @param id String node id
          * @return Number order of the given node id in the project
          */
-        serviceObject.getOrderById = function (id) {
+        value: function getOrderById(id) {
             if (this.idToOrder[id]) {
                 return this.idToOrder[id].order;
             }
 
             return null;
-        };
+        }
+    }, {
+        key: 'getIdByOrder',
+
         /**
          * Returns the id of the node with the given order in the project. Returns null if no order with node exists.
          * @param order Number
          * @return Number node id of the given order in the project
          */
-        serviceObject.getIdByOrder = function (order) {
+        value: function getIdByOrder(order) {
             var nodeId = null;
 
             for (var id in this.idToOrder) {
@@ -409,14 +453,16 @@ define(['configService'], function (configService) {
             }
 
             return nodeId;
-        };
+        }
+    }, {
+        key: 'getBranchNodePositionById',
 
         /**
          * Returns the position in the project for the branch node with the given id. Returns null if no node with id exists or node is not a branch node.
          * @param id a node id
          * @return string position of the given node id in the project
          */
-        serviceObject.getBranchNodePositionById = function (id) {
+        value: function getBranchNodePositionById(id) {
             var branches = this.getBranches();
             var b = branches.length;
 
@@ -446,7 +492,9 @@ define(['configService'], function (configService) {
             }
 
             return null;
-        };
+        }
+    }, {
+        key: 'getPathToNode',
 
         /**
          * Recursively searches for the given node id from the point of the given node down and returns the path number (position)
@@ -455,7 +503,7 @@ define(['configService'], function (configService) {
          * @param id the node id to search for
          * @return string path of the given node id in the project
          */
-        serviceObject.getPathToNode = function (node, path, id) {
+        value: function getPathToNode(node, path, id) {
             if (node.id === id) {
                 return path + '';
             } else if (node.type === 'group') {
@@ -474,31 +522,37 @@ define(['configService'], function (configService) {
                     }
                 }
             }
-        };
-
-        serviceObject.setIdToPosition = function (id, pos) {
+        }
+    }, {
+        key: 'setIdToPosition',
+        value: function setIdToPosition(id, pos) {
             if (id != null) {
                 this.idToPosition[id] = pos;
             }
-        };
-
-        serviceObject.getNodePositionById = function (id) {
+        }
+    }, {
+        key: 'getNodePositionById',
+        value: function getNodePositionById(id) {
             if (id != null) {
                 return this.idToPosition[id];
             }
-        };
-
-        serviceObject.setIdToNode = function (id, element) {
+        }
+    }, {
+        key: 'setIdToNode',
+        value: function setIdToNode(id, element) {
             if (id != null) {
                 this.idToNode[id] = element;
             }
-        };
-
-        serviceObject.setIdToElement = function (id, element) {
+        }
+    }, {
+        key: 'setIdToElement',
+        value: function setIdToElement(id, element) {
             if (id != null) {
                 this.idToElement[id] = element;
             }
-        };
+        }
+    }, {
+        key: 'injectAssetPaths',
 
         /**
          * Replace relative asset paths with absolute paths
@@ -510,7 +564,7 @@ define(['configService'], function (configService) {
          * @return the same type of object that was passed in as the content
          * but with relative asset paths replaced with absolute paths
          */
-        serviceObject.injectAssetPaths = function (content) {
+        value: function injectAssetPaths(content) {
 
             if (content != null) {
 
@@ -533,7 +587,9 @@ define(['configService'], function (configService) {
             }
 
             return content;
-        };
+        }
+    }, {
+        key: 'replaceAssetPaths',
 
         /**
          * Replace the relative asset paths with absolute paths
@@ -541,12 +597,12 @@ define(['configService'], function (configService) {
          * @return the content string with relative asset paths replaced
          * with absolute asset paths
          */
-        serviceObject.replaceAssetPaths = function (contentString) {
+        value: function replaceAssetPaths(contentString) {
 
             if (contentString != null) {
 
                 // get the content base url e.g. http://wise.berkeley.edu/curriculum/123456
-                var contentBaseUrl = ConfigService.getConfigParam('projectBaseURL');
+                var contentBaseUrl = this.ConfigService.getConfigParam('projectBaseURL');
 
                 // replace instances of 'assets/myimage.jpg' with 'http://wise.berkeley.edu/curriculum/123456/assets/myimage.jpg'
                 contentString = contentString.replace(new RegExp('\'(\\.)*(/)*assets', 'g'), '\'' + contentBaseUrl + 'assets');
@@ -556,9 +612,10 @@ define(['configService'], function (configService) {
             }
 
             return contentString;
-        };
-
-        serviceObject.getElementById = function (id) {
+        }
+    }, {
+        key: 'getElementById',
+        value: function getElementById(id) {
             var element = null;
 
             if (id != null) {
@@ -566,9 +623,10 @@ define(['configService'], function (configService) {
             }
 
             return element;
-        };
-
-        serviceObject.getNodeById = function (id) {
+        }
+    }, {
+        key: 'getNodeById',
+        value: function getNodeById(id) {
             var element = null;
 
             if (id != null) {
@@ -576,15 +634,17 @@ define(['configService'], function (configService) {
             }
 
             return element;
-        };
-
-        serviceObject.setIdToTransition = function (id, transition) {
+        }
+    }, {
+        key: 'setIdToTransition',
+        value: function setIdToTransition(id, transition) {
             if (id != null) {
                 this.idToTransition[id] = transition;
             }
-        };
-
-        serviceObject.getTransitionById = function (id) {
+        }
+    }, {
+        key: 'getTransitionById',
+        value: function getTransitionById(id) {
             var element = null;
 
             if (id != null) {
@@ -592,9 +652,10 @@ define(['configService'], function (configService) {
             }
 
             return element;
-        };
-
-        serviceObject.getConstraintById = function (id) {
+        }
+    }, {
+        key: 'getConstraintById',
+        value: function getConstraintById(id) {
             var element = null;
 
             if (id != null) {
@@ -602,9 +663,10 @@ define(['configService'], function (configService) {
             }
 
             return element;
-        };
-
-        serviceObject.getParentGroup = function (nodeId) {
+        }
+    }, {
+        key: 'getParentGroup',
+        value: function getParentGroup(nodeId) {
             var result = null;
 
             if (nodeId != null) {
@@ -625,9 +687,10 @@ define(['configService'], function (configService) {
             }
 
             return result;
-        };
-
-        serviceObject.getNodeDepth = function (nodeId, val) {
+        }
+    }, {
+        key: 'getNodeDepth',
+        value: function getNodeDepth(nodeId, val) {
             var result = null;
 
             if (nodeId != null) {
@@ -640,9 +703,10 @@ define(['configService'], function (configService) {
             }
 
             return result;
-        };
-
-        serviceObject.getRootNode = function (nodeId) {
+        }
+    }, {
+        key: 'getRootNode',
+        value: function getRootNode(nodeId) {
             var result = null;
 
             var parentGroup = this.getParentGroup(nodeId);
@@ -654,9 +718,10 @@ define(['configService'], function (configService) {
             }
 
             return result;
-        };
-
-        serviceObject.isNodeDirectChildOfGroup = function (node, group) {
+        }
+    }, {
+        key: 'isNodeDirectChildOfGroup',
+        value: function isNodeDirectChildOfGroup(node, group) {
             var result = false;
 
             if (node != null && group != null) {
@@ -669,9 +734,10 @@ define(['configService'], function (configService) {
             }
 
             return result;
-        };
-
-        serviceObject.isNodeDescendentOfGroup = function (node, group) {
+        }
+    }, {
+        key: 'isNodeDescendentOfGroup',
+        value: function isNodeDescendentOfGroup(node, group) {
             var result = false;
 
             if (node != null && group != null) {
@@ -684,9 +750,10 @@ define(['configService'], function (configService) {
             }
 
             return result;
-        };
-
-        serviceObject.getDescendentsOfGroup = function (group) {
+        }
+    }, {
+        key: 'getDescendentsOfGroup',
+        value: function getDescendentsOfGroup(group) {
             var descendents = [];
 
             if (group != null) {
@@ -710,9 +777,10 @@ define(['configService'], function (configService) {
             }
 
             return descendents;
-        };
-
-        serviceObject.isStartNode = function (node) {
+        }
+    }, {
+        key: 'isStartNode',
+        value: function isStartNode(node) {
             var result = false;
 
             if (node != null) {
@@ -741,24 +809,27 @@ define(['configService'], function (configService) {
             }
 
             return result;
-        };
-
-        serviceObject.getStartNodeId = function () {
+        }
+    }, {
+        key: 'getStartNodeId',
+        value: function getStartNodeId() {
             var startNodeId = null;
             var project = this.getProject();
             if (project != null) {
                 startNodeId = project.startNodeId;
             }
             return startNodeId;
-        };
-
-        serviceObject.getConstraints = function () {
+        }
+    }, {
+        key: 'getConstraints',
+        value: function getConstraints() {
             var constraints = this.activeConstraints;
 
             return constraints;
-        };
-
-        serviceObject.getConstraintsForNode = function (node) {
+        }
+    }, {
+        key: 'getConstraintsForNode',
+        value: function getConstraintsForNode(node) {
             var constraints = [];
 
             var allConstraints = this.getConstraints();
@@ -772,9 +843,10 @@ define(['configService'], function (configService) {
             }
 
             return constraints;
-        };
-
-        serviceObject.isNodeAffectedByConstraint = function (node, constraint) {
+        }
+    }, {
+        key: 'isNodeAffectedByConstraint',
+        value: function isNodeAffectedByConstraint(node, constraint) {
             var result = false;
 
             if (node != null && constraint != null) {
@@ -803,36 +875,40 @@ define(['configService'], function (configService) {
             }
 
             return result;
-        };
-
-        serviceObject.getNavigationMode = function () {
+        }
+    }, {
+        key: 'getNavigationMode',
+        value: function getNavigationMode() {
             var navigationMode = null;
             var project = this.getProject();
             if (project != null) {
                 navigationMode = project.navigationMode;
             }
             return navigationMode;
-        };
-
-        serviceObject.getNavigationApplications = function () {
+        }
+    }, {
+        key: 'getNavigationApplications',
+        value: function getNavigationApplications() {
             var navigationApplications = null;
             var project = this.getProject();
             if (project != null) {
                 navigationApplications = project.navigationApplications;
             }
             return navigationApplications;
-        };
-
-        serviceObject.getTransitions = function () {
+        }
+    }, {
+        key: 'getTransitions',
+        value: function getTransitions() {
             var transitions = null;
             var project = this.getProject();
             if (project != null) {
                 transitions = project.transitions;
             }
             return transitions;
-        };
-
-        serviceObject.getTransitionsByGroupId = function (groupId) {
+        }
+    }, {
+        key: 'getTransitionsByGroupId',
+        value: function getTransitionsByGroupId(groupId) {
             var transitionsInGroup = [];
 
             if (groupId != null) {
@@ -867,9 +943,10 @@ define(['configService'], function (configService) {
                 transitions = project.transitions;
             }
             return transitionsInGroup;
-        };
-
-        serviceObject.getTransitionsByFromNodeId0 = function (fromNodeId) {
+        }
+    }, {
+        key: 'getTransitionsByFromNodeId0',
+        value: function getTransitionsByFromNodeId0(fromNodeId) {
             var transitionsResults = [];
             if (fromNodeId != null) {
                 var transitions = this.getTransitions();
@@ -885,14 +962,16 @@ define(['configService'], function (configService) {
             }
 
             return transitionsResults;
-        };
+        }
+    }, {
+        key: 'getTransitionLogicByFromNodeId',
 
         /**
          * Get the transition logic for a node
          * @param fromNodeId the from node id
          * @returns the transition logic object
          */
-        serviceObject.getTransitionLogicByFromNodeId = function (fromNodeId) {
+        value: function getTransitionLogicByFromNodeId(fromNodeId) {
             var transitionLogic = null;
 
             if (fromNodeId != null) {
@@ -907,9 +986,10 @@ define(['configService'], function (configService) {
             }
 
             return transitionLogic;
-        };
-
-        serviceObject.getTransitionsByToNodeId = function (toNodeId) {
+        }
+    }, {
+        key: 'getTransitionsByToNodeId',
+        value: function getTransitionsByToNodeId(toNodeId) {
             var transitionsResults = [];
             if (toNodeId != null) {
                 var transitions = this.getTransitions();
@@ -925,9 +1005,10 @@ define(['configService'], function (configService) {
             }
 
             return transitionsResults;
-        };
-
-        serviceObject.getTransitionsByFromAndToNodeId = function (fromNodeId, toNodeId) {
+        }
+    }, {
+        key: 'getTransitionsByFromAndToNodeId',
+        value: function getTransitionsByFromAndToNodeId(fromNodeId, toNodeId) {
             var transitionsResults = [];
 
             if (fromNodeId != null && toNodeId != null) {
@@ -958,28 +1039,31 @@ define(['configService'], function (configService) {
             }
 
             return transitionsResults;
-        };
-
-        serviceObject.getLayoutLogic = function () {
+        }
+    }, {
+        key: 'getLayoutLogic',
+        value: function getLayoutLogic() {
             var layoutLogic = null;
             var project = this.getProject();
             if (project != null) {
                 layoutLogic = project.layoutLogic;
             }
             return layoutLogic;
-        };
+        }
+    }, {
+        key: 'retrieveProject',
+        value: function retrieveProject() {
+            var projectFileUrl = this.ConfigService.getConfigParam('projectURL');
 
-        serviceObject.retrieveProject = function () {
-            var projectFileUrl = ConfigService.getConfigParam('projectURL');
-
-            return $http.get(projectFileUrl).then(angular.bind(this, function (result) {
+            return this.$http.get(projectFileUrl).then(angular.bind(this, function (result) {
                 var projectJSON = result.data;
                 this.setProject(projectJSON);
                 return projectJSON;
             }));
-        };
-
-        serviceObject.saveProject = function (projectJSON, commitMessage) {
+        }
+    }, {
+        key: 'saveProject',
+        value: function saveProject(projectJSON, commitMessage) {
 
             if (projectJSON == null) {
                 // get the project from this service
@@ -988,25 +1072,26 @@ define(['configService'], function (configService) {
 
             var httpParams = {};
             httpParams.method = 'POST';
-            httpParams.url = ConfigService.getConfigParam('saveProjectURL');
+            httpParams.url = this.ConfigService.getConfigParam('saveProjectURL');
             httpParams.headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
 
             var params = {};
-            params.projectId = ConfigService.getProjectId();
+            params.projectId = this.ConfigService.getProjectId();
             params.commitMessage = commitMessage;
             params.projectJSONString = projectJSON;
             httpParams.data = $.param(params);
 
-            return $http(httpParams).then(angular.bind(this, function (result) {
+            return this.$http(httpParams).then(angular.bind(this, function (result) {
                 var commitHistory = result.data;
                 return commitHistory;
             }));
-        };
+        }
+    }, {
+        key: 'commitChanges',
+        value: function commitChanges(commitMessage) {
+            var commitProjectURL = this.ConfigService.getConfigParam('commitProjectURL');
 
-        serviceObject.commitChanges = function (commitMessage) {
-            var commitProjectURL = ConfigService.getConfigParam('commitProjectURL');
-
-            return $http({
+            return this.$http({
                 url: commitProjectURL,
                 method: 'POST',
                 params: { commitMessage: commitMessage }
@@ -1014,20 +1099,22 @@ define(['configService'], function (configService) {
                 var commitResult = result.data;
                 return commitResult;
             }));
-        };
+        }
+    }, {
+        key: 'getCommitHistory',
+        value: function getCommitHistory() {
+            var commitProjectURL = this.ConfigService.getConfigParam('commitProjectURL');
 
-        serviceObject.getCommitHistory = function () {
-            var commitProjectURL = ConfigService.getConfigParam('commitProjectURL');
-
-            return $http({
+            return this.$http({
                 url: commitProjectURL,
                 method: 'GET'
             }).then(angular.bind(this, function (result) {
                 return result.data;
             }));
-        };
-
-        serviceObject.getThemePath = function () {
+        }
+    }, {
+        key: 'getThemePath',
+        value: function getThemePath() {
             var project = this.getProject();
             if (project && project.theme) {
                 // TODO: check if this is a valid theme (using ConfigService) rather than just truthy
@@ -1035,9 +1122,10 @@ define(['configService'], function (configService) {
             } else {
                 return "wise5/vle/themes/default"; // TODO: get default theme name from ConfigService
             }
-        };
-
-        serviceObject.getNodeTypeByNode = function (node) {
+        }
+    }, {
+        key: 'getNodeTypeByNode',
+        value: function getNodeTypeByNode(node) {
             var nodeType = null;
 
             if (node != null) {
@@ -1045,9 +1133,10 @@ define(['configService'], function (configService) {
             }
 
             return nodeType;
-        };
-
-        serviceObject.getApplicationTypeByNode = function (node) {
+        }
+    }, {
+        key: 'getApplicationTypeByNode',
+        value: function getApplicationTypeByNode(node) {
             var applicationType = null;
 
             if (node != null) {
@@ -1055,9 +1144,10 @@ define(['configService'], function (configService) {
             }
 
             return applicationType;
-        };
-
-        serviceObject.getNodeSrcByNodeId = function (nodeId) {
+        }
+    }, {
+        key: 'getNodeSrcByNodeId',
+        value: function getNodeSrcByNodeId(nodeId) {
             var nodeSrc = null;
 
             var node = this.getNodeById(nodeId);
@@ -1067,14 +1157,15 @@ define(['configService'], function (configService) {
             }
 
             if (nodeSrc != null) {
-                var projectBaseURL = ConfigService.getConfigParam('projectBaseURL');
+                var projectBaseURL = this.ConfigService.getConfigParam('projectBaseURL');
                 nodeSrc = projectBaseURL + nodeSrc;
             }
 
             return nodeSrc;
-        };
-
-        serviceObject.getNodeTitleByNodeId = function (nodeId) {
+        }
+    }, {
+        key: 'getNodeTitleByNodeId',
+        value: function getNodeTitleByNodeId(nodeId) {
             var title = null;
 
             var node = this.getNodeById(nodeId);
@@ -1084,14 +1175,16 @@ define(['configService'], function (configService) {
             }
 
             return title;
-        };
+        }
+    }, {
+        key: 'getNodePositionAndTitleByNodeId',
 
         /**
          * Get the node position and title
          * @param nodeId the node id
          * @returns the node position and title
          */
-        serviceObject.getNodePositionAndTitleByNodeId = function (nodeId) {
+        value: function getNodePositionAndTitleByNodeId(nodeId) {
             var title = null;
 
             var node = this.getNodeById(nodeId);
@@ -1108,9 +1201,10 @@ define(['configService'], function (configService) {
             }
 
             return title;
-        };
-
-        serviceObject.getNodeIconByNodeId = function (nodeId) {
+        }
+    }, {
+        key: 'getNodeIconByNodeId',
+        value: function getNodeIconByNodeId(nodeId) {
             var node = this.getNodeById(nodeId);
             var nodeIcon = null;
 
@@ -1143,9 +1237,10 @@ define(['configService'], function (configService) {
             }
 
             return nodeIcon;
-        };
-
-        serviceObject.getStudentIsOnGroupNodeClass = function () {
+        }
+    }, {
+        key: 'getStudentIsOnGroupNodeClass',
+        value: function getStudentIsOnGroupNodeClass() {
             var studentIsOnGroupNodeClass = null;
             var project = this.getProject();
 
@@ -1158,9 +1253,10 @@ define(['configService'], function (configService) {
             }
 
             return studentIsOnGroupNodeClass;
-        };
-
-        serviceObject.getStudentIsOnApplicationNodeClass = function () {
+        }
+    }, {
+        key: 'getStudentIsOnApplicationNodeClass',
+        value: function getStudentIsOnApplicationNodeClass() {
             var studentIsOnApplicationNodeClass = null;
             var project = this.getProject();
 
@@ -1173,21 +1269,24 @@ define(['configService'], function (configService) {
             }
 
             return studentIsOnApplicationNodeClass;
-        };
-
-        serviceObject.getStartGroupId = function () {
+        }
+    }, {
+        key: 'getStartGroupId',
+        value: function getStartGroupId() {
             var startGroupId = null;
             var project = this.getProject();
             if (project != null) {
                 startGroupId = project.startGroupId;
             }
             return startGroupId;
-        };
+        }
+    }, {
+        key: 'getFlattenedProjectAsNodeIds',
 
         /**
          * Flatten the project to obtain a list of node ids
          */
-        serviceObject.getFlattenedProjectAsNodeIds = function () {
+        value: function getFlattenedProjectAsNodeIds() {
             var nodeIds = [];
 
             // get the start node id
@@ -1208,7 +1307,9 @@ define(['configService'], function (configService) {
             //nodeIds = this.consolidatePaths(allPaths.reverse());
 
             return nodeIds;
-        };
+        }
+    }, {
+        key: 'getAllPaths',
 
         /**
          * Get all the possible paths through the project. This function
@@ -1219,7 +1320,7 @@ define(['configService'], function (configService) {
          * @param nodeId the node id we are want to get the paths from
          * @return an array of paths. each path is an array of node ids.
          */
-        serviceObject.getAllPaths = function (pathSoFar, nodeId) {
+        value: function getAllPaths(pathSoFar, nodeId) {
             var allPaths = [];
 
             if (nodeId != null) {
@@ -1317,14 +1418,16 @@ define(['configService'], function (configService) {
             }
 
             return allPaths;
-        };
+        }
+    }, {
+        key: 'consolidatePaths',
 
         /**
          * Consolidate all the paths into a linear list of node ids
          * @param paths an array of paths. each path is an array of node ids.
          * @return an array of node ids that have been properly ordered
          */
-        serviceObject.consolidatePaths = function (paths) {
+        value: function consolidatePaths(paths) {
             var consolidatedPath = [];
 
             if (paths != null) {
@@ -1386,7 +1489,9 @@ define(['configService'], function (configService) {
             }
 
             return consolidatedPath;
-        };
+        }
+    }, {
+        key: 'consumePathsUntilNodeId',
 
         /**
          * Consume the node ids in the paths until we get to the given node id
@@ -1394,7 +1499,7 @@ define(['configService'], function (configService) {
          * @param nodeId the node id to stop consuming at
          * @return an array of node ids that we have consumed
          */
-        serviceObject.consumePathsUntilNodeId = function (paths, nodeId) {
+        value: function consumePathsUntilNodeId(paths, nodeId) {
             var consumedNodeIds = [];
 
             if (paths != null && nodeId != null) {
@@ -1516,7 +1621,9 @@ define(['configService'], function (configService) {
             }
 
             return consumedNodeIds;
-        };
+        }
+    }, {
+        key: 'getFirstNodeIdInPathAtIndex',
 
         /**
          * Get the path at the given index and get the first node id in
@@ -1525,7 +1632,7 @@ define(['configService'], function (configService) {
          * @param index the index of the path we want
          * @return the first node in the given path
          */
-        serviceObject.getFirstNodeIdInPathAtIndex = function (paths, index) {
+        value: function getFirstNodeIdInPathAtIndex(paths, index) {
             var nodeId = null;
 
             if (paths != null && index != null) {
@@ -1539,14 +1646,16 @@ define(['configService'], function (configService) {
             }
 
             return nodeId;
-        };
+        }
+    }, {
+        key: 'removeNodeIdFromPaths',
 
         /**
          * Remove the node ifrom the paths
          * @param nodeId the node id to remove
          * @param paths an array of paths. each path is an array of node ids
          */
-        serviceObject.removeNodeIdFromPaths = function (nodeId, paths) {
+        value: function removeNodeIdFromPaths(nodeId, paths) {
 
             if (nodeId != null && paths != null) {
                 // loop through all the paths
@@ -1582,7 +1691,9 @@ define(['configService'], function (configService) {
                     }
                 }
             }
-        };
+        }
+    }, {
+        key: 'removeNodeIdFromPath',
 
         /**
          * Remove the node id from the path
@@ -1590,7 +1701,7 @@ define(['configService'], function (configService) {
          * @param paths an array of paths. each path is an array of node ids
          * @param pathIndex the path to remove from
          */
-        serviceObject.removeNodeIdFromPath = function (nodeId, paths, pathIndex) {
+        value: function removeNodeIdFromPath(nodeId, paths, pathIndex) {
 
             if (nodeId != null && paths != null && pathIndex != null) {
 
@@ -1626,14 +1737,16 @@ define(['configService'], function (configService) {
                     }
                 }
             }
-        };
+        }
+    }, {
+        key: 'areFirstNodeIdsInPathsTheSame',
 
         /**
          * Check if the first node ids in the paths are the same
          * @param paths an array of paths. each path is an array of node ids
          * @return whether all the paths have the same first node id
          */
-        serviceObject.areFirstNodeIdsInPathsTheSame = function (paths) {
+        value: function areFirstNodeIdsInPathsTheSame(paths) {
             var result = true;
 
             var nodeId = null;
@@ -1668,14 +1781,16 @@ define(['configService'], function (configService) {
             }
 
             return result;
-        };
+        }
+    }, {
+        key: 'arePathsEmpty',
 
         /**
          * Check if all the paths are empty
          * @param paths an array of paths. each path is an array of node ids
          * @return whether all the paths are empty
          */
-        serviceObject.arePathsEmpty = function (paths) {
+        value: function arePathsEmpty(paths) {
             var result = true;
 
             if (paths != null) {
@@ -1699,7 +1814,9 @@ define(['configService'], function (configService) {
             }
 
             return result;
-        };
+        }
+    }, {
+        key: 'getPathsThatContainNodeId',
 
         /**
          * Get the paths that contain the node id
@@ -1707,7 +1824,7 @@ define(['configService'], function (configService) {
          * @param paths an array of paths. each path is an array of node ids
          * @return an array of paths that contain the given node id
          */
-        serviceObject.getPathsThatContainNodeId = function (nodeId, paths) {
+        value: function getPathsThatContainNodeId(nodeId, paths) {
             var pathsThatContainNodeId = [];
 
             if (nodeId != null && paths != null) {
@@ -1729,7 +1846,9 @@ define(['configService'], function (configService) {
             }
 
             return pathsThatContainNodeId;
-        };
+        }
+    }, {
+        key: 'getNonEmptyPathIndex',
 
         /**
          * Get a non empty path index. It will loop through the paths and
@@ -1737,7 +1856,7 @@ define(['configService'], function (configService) {
          * @param paths an array of paths. each path is an array of node ids
          * @return the index of the path that is not empty
          */
-        serviceObject.getNonEmptyPathIndex = function (paths) {
+        value: function getNonEmptyPathIndex(paths) {
             var index = null;
 
             if (paths != null) {
@@ -1756,12 +1875,14 @@ define(['configService'], function (configService) {
             }
 
             return index;
-        };
+        }
+    }, {
+        key: 'getBranches',
 
         /**
          * Get the branches in the project
          */
-        serviceObject.getBranches = function () {
+        value: function getBranches() {
 
             // get the start node id
             var startNodeId = this.getStartNodeId();
@@ -1780,7 +1901,9 @@ define(['configService'], function (configService) {
             var branches = this.findBranches(allPaths);
 
             return branches;
-        };
+        }
+    }, {
+        key: 'findBranches',
 
         /**
          * Find the branches in the project
@@ -1789,7 +1912,7 @@ define(['configService'], function (configService) {
          * the branch start point, the branch paths, and the branch
          * end point
          */
-        serviceObject.findBranches = function (paths) {
+        value: function findBranches(paths) {
             var branches = [];
 
             var previousNodeId = null;
@@ -1840,7 +1963,9 @@ define(['configService'], function (configService) {
             }
 
             return branches;
-        };
+        }
+    }, {
+        key: 'createBranchMetaObject',
 
         /**
          * Create a branch meta object that will contain the branch start
@@ -1848,7 +1973,7 @@ define(['configService'], function (configService) {
          * @return an object that contains a branch start point, branch paths,
          * and a branch end point
          */
-        serviceObject.createBranchMetaObject = function () {
+        value: function createBranchMetaObject() {
             var branchMetaObject = {};
 
             branchMetaObject.branchStartPoint = null;
@@ -1856,7 +1981,9 @@ define(['configService'], function (configService) {
             branchMetaObject.branchEndPoint = null;
 
             return branchMetaObject;
-        };
+        }
+    }, {
+        key: 'findNextCommonNodeId',
 
         /**
          * Find the next common node id in all the paths
@@ -1864,7 +1991,7 @@ define(['configService'], function (configService) {
          * @return a node id that is in all the paths or null
          * if there is no node id that is in all the paths
          */
-        serviceObject.findNextCommonNodeId = function (paths) {
+        value: function findNextCommonNodeId(paths) {
             var nextCommonNodeId = null;
             var subPaths = [];
 
@@ -1892,7 +2019,9 @@ define(['configService'], function (configService) {
             }
 
             return nextCommonNodeId;
-        };
+        }
+    }, {
+        key: 'allPathsContainNodeId',
 
         /**
          * Check if all the paths contain the node id
@@ -1900,7 +2029,7 @@ define(['configService'], function (configService) {
          * @param nodeId the node id that we will check is in all the paths
          * @return whether the node id is in all the paths
          */
-        serviceObject.allPathsContainNodeId = function (paths, nodeId) {
+        value: function allPathsContainNodeId(paths, nodeId) {
             var result = false;
 
             if (paths != null) {
@@ -1925,7 +2054,9 @@ define(['configService'], function (configService) {
             }
 
             return result;
-        };
+        }
+    }, {
+        key: 'trimPathsUpToNodeId',
 
         /**
          * Trim the paths up to the given node id so that the paths will contain
@@ -1934,7 +2065,7 @@ define(['configService'], function (configService) {
          * @param paths the paths to trim
          * @param nodeId the node id to trim up to
          */
-        serviceObject.trimPathsUpToNodeId = function (paths, nodeId) {
+        value: function trimPathsUpToNodeId(paths, nodeId) {
             if (paths != null) {
                 // loop through all the paths
                 for (var p = 0; p < paths.length; p++) {
@@ -1962,7 +2093,9 @@ define(['configService'], function (configService) {
                     }
                 }
             }
-        };
+        }
+    }, {
+        key: 'extractPathsUpToNodeId',
 
         /**
          * Extract the paths up to a given node id. This will be used to
@@ -1971,7 +2104,7 @@ define(['configService'], function (configService) {
          * @param nodeId the node id to extract up to
          * @return paths that go up to but do not include the node id
          */
-        serviceObject.extractPathsUpToNodeId = function (paths, nodeId) {
+        value: function extractPathsUpToNodeId(paths, nodeId) {
             var extractedPaths = [];
 
             if (paths != null) {
@@ -2007,14 +2140,16 @@ define(['configService'], function (configService) {
             }
 
             return extractedPaths;
-        };
+        }
+    }, {
+        key: 'removeDuplicatePaths',
 
         /**
          * Removes duplicate paths
          * @param paths an array of paths. each path contains an array of node ids
          * @return an array of unique paths
          */
-        serviceObject.removeDuplicatePaths = function (paths) {
+        value: function removeDuplicatePaths(paths) {
             var uniquePaths = [];
 
             if (paths != null) {
@@ -2049,7 +2184,9 @@ define(['configService'], function (configService) {
             }
 
             return uniquePaths;
-        };
+        }
+    }, {
+        key: 'pathsEqual',
 
         /**
          * Check if two paths are equal
@@ -2058,7 +2195,7 @@ define(['configService'], function (configService) {
          * @return whether the two paths contain the same node ids
          * in the same order
          */
-        serviceObject.pathsEqual = function (path1, path2) {
+        value: function pathsEqual(path1, path2) {
             var result = false;
 
             if (path1 != null && path2 != null) {
@@ -2089,7 +2226,9 @@ define(['configService'], function (configService) {
             }
 
             return result;
-        };
+        }
+    }, {
+        key: 'isNodeIdInABranch',
 
         /**
          * Check if a node id is in any branch
@@ -2097,7 +2236,7 @@ define(['configService'], function (configService) {
          * @param nodeId the node id to check
          * @return whether the node id is in any branch
          */
-        serviceObject.isNodeIdInABranch = function (branches, nodeId) {
+        value: function isNodeIdInABranch(branches, nodeId) {
 
             if (branches != null && nodeId != null) {
 
@@ -2137,7 +2276,9 @@ define(['configService'], function (configService) {
             }
 
             return false;
-        };
+        }
+    }, {
+        key: 'getBranchPathsByNodeId',
 
         /**
          * Get the branch paths that a node id is in
@@ -2145,7 +2286,7 @@ define(['configService'], function (configService) {
          * @param nodeId the node id to check
          * @return an array of the branch paths that the node id is in
          */
-        serviceObject.getBranchPathsByNodeId = function (branches, nodeId) {
+        value: function getBranchPathsByNodeId(branches, nodeId) {
             var branchPathsIn = [];
 
             if (branches != null && nodeId != null) {
@@ -2189,7 +2330,7 @@ define(['configService'], function (configService) {
             }
 
             return branchPathsIn;
-        };
+        }
 
         /**
          * Get the component by node id and component id
@@ -2197,7 +2338,10 @@ define(['configService'], function (configService) {
          * @param componentId the component id
          * @returns the component
          */
-        serviceObject.getComponentByNodeIdAndComponentId = function (nodeId, componentId) {
+
+    }, {
+        key: 'getComponentByNodeIdAndComponentId',
+        value: function getComponentByNodeIdAndComponentId(nodeId, componentId) {
             var component = null;
 
             if (nodeId != null && componentId != null) {
@@ -2224,7 +2368,9 @@ define(['configService'], function (configService) {
             }
 
             return component;
-        };
+        }
+    }, {
+        key: 'getComponentPositionByNodeIdAndComponentId',
 
         /**
          * Returns the position of the component in the node by node id and component id, 0-indexed.
@@ -2232,7 +2378,7 @@ define(['configService'], function (configService) {
          * @param componentId the component id
          * @returns the component's position
          */
-        serviceObject.getComponentPositionByNodeIdAndComponentId = function (nodeId, componentId) {
+        value: function getComponentPositionByNodeIdAndComponentId(nodeId, componentId) {
             var componentPosition = -1;
 
             if (nodeId != null && componentId != null) {
@@ -2259,14 +2405,16 @@ define(['configService'], function (configService) {
             }
 
             return componentPosition;
-        };
+        }
+    }, {
+        key: 'getComponentsByNodeId',
 
         /**
          * Get the components in a node
          * @param nodeId the node id
          * @returns an array of components
          */
-        serviceObject.getComponentsByNodeId = function (nodeId) {
+        value: function getComponentsByNodeId(nodeId) {
             var components = [];
 
             if (nodeId != null) {
@@ -2291,9 +2439,10 @@ define(['configService'], function (configService) {
             }
 
             return components;
-        };
-
-        serviceObject.getNodeContentByNodeId = function (nodeId) {
+        }
+    }, {
+        key: 'getNodeContentByNodeId',
+        value: function getNodeContentByNodeId(nodeId) {
             var nodeContent = null;
 
             if (nodeId != null) {
@@ -2305,7 +2454,9 @@ define(['configService'], function (configService) {
             }
 
             return nodeContent;
-        };
+        }
+    }, {
+        key: 'replaceComponent',
 
         /**
          * Replace a component
@@ -2313,7 +2464,7 @@ define(['configService'], function (configService) {
          * @param componentId the component id
          * @param component the new component
          */
-        serviceObject.replaceComponent = function (nodeId, componentId, component) {
+        value: function replaceComponent(nodeId, componentId, component) {
 
             if (nodeId != null && componentId != null && component != null) {
 
@@ -2337,10 +2488,12 @@ define(['configService'], function (configService) {
                     }
                 }
             }
-        };
+        }
+    }]);
 
-        return serviceObject;
-    }];
+    return ProjectService;
+}();
 
-    return service;
-});
+ProjectService.$inject = ['$http', '$rootScope', 'ConfigService'];
+
+exports.default = ProjectService;

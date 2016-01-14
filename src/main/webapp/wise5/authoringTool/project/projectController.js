@@ -1,19 +1,16 @@
-define(['app'], function(app) {
-    app
-    .$controllerProvider
-    .register('ProjectController', ['$scope', '$state', '$stateParams', 'ProjectService', 'ConfigService',
-                                    function($scope, $state, $stateParams, ProjectService, ConfigService) {
+class ProjectController {
+
+    constructor($scope, $state, $stateParams, ProjectService, ConfigService) {
+        this.$scope = $scope;
+        this.$state = $state;
+        this.$stateParams = $stateParams;
+        this.ProjectService = ProjectService;
+        this.ConfigService = ConfigService;
 
         this.title = "project controller title";
-
-        this.project = ProjectService.getProject();
-
-        this.items = ProjectService.idToOrder;
-
-        // updates projectAsText field, which is the string representation of the project that we'll show in the textarea
-        this.updateProjectAsText = function() {
-            this.projectAsText = JSON.stringify(this.project, null, 4);
-        };
+        this.project = this.ProjectService.getProject();
+        this.items = this.ProjectService.idToOrder;
+        this.nodeIds = this.ProjectService.getFlattenedProjectAsNodeIds();
 
         this.updateProjectAsText();
 
@@ -27,72 +24,78 @@ define(['app'], function(app) {
             };
         }));
 
-        this.nodeIds = ProjectService.getFlattenedProjectAsNodeIds();
-
-        this.previewProject = function() {
-            var previewProjectURL = ConfigService.getConfigParam("previewProjectURL");
-            window.open(previewProjectURL);
-        };
-
-        this.saveProject = function() {
-            var projectJSONString = JSON.stringify(this.project, null, 4);
-            var commitMessage = $("#commitMessageInput").val();
-            try {
-                // if projectJSONString is bad json, it will throw an exception and not save.
-                JSON.parse(projectJSONString);
-
-                ProjectService.saveProject(projectJSONString, commitMessage).then(angular.bind(this, function(commitHistoryArray) {
-                    this.commitHistory = commitHistoryArray;
-                    $("#commitMessageInput").val("");  // clear field after commit
-                }));
-            } catch (error) {
-                alert("Invalid JSON. Please check syntax. Aborting save.");
-                return;
-            }
-        };
-
-        this.showCommitHistory = function() {
-            ProjectService.getCommitHistory().then(angular.bind(this, function (commitHistoryArray) {
-                this.commitHistory = commitHistoryArray;
-            }));
-        }
-
-        /**
-         * Get the node position
-         * @param nodeId the node id
-         * @returns the node position
-         */
-        this.getNodePositionById = function(nodeId) {
-            return ProjectService.getNodePositionById(nodeId);
-        };
-
-        /**
-         * Get the node title for a node
-         * @param nodeId the node id
-         * @returns the node title
-         */
-        this.getNodeTitleByNodeId = function(nodeId) {
-            return ProjectService.getNodeTitleByNodeId(nodeId);
-        };
-
-        /**
-         * Check if a node id is for a group
-         * @param nodeId
-         * @returns whether the node is a group node
-         */
-        this.isGroupNode = function(nodeId) {
-            return ProjectService.isGroupNode(nodeId);
-        };
-
-        /**
-         * A node was clicked so we will go to the node authoring view
-         * @param nodeId
-         */
-        this.nodeClicked = function(nodeId) {
-            $state.go('root.node', {nodeId:nodeId});
-        };
-
         this.showCommitHistory();
+    };
 
-    }]);
-});
+    // updates projectAsText field, which is the string representation of the project that we'll show in the textarea
+    updateProjectAsText() {
+        this.projectAsText = JSON.stringify(this.project, null, 4);
+    };
+
+    previewProject() {
+        let previewProjectURL = this.ConfigService.getConfigParam("previewProjectURL");
+        window.open(previewProjectURL);
+    };
+
+    saveProject() {
+        let projectJSONString = JSON.stringify(this.project, null, 4);
+        let commitMessage = $("#commitMessageInput").val();
+        try {
+            // if projectJSONString is bad json, it will throw an exception and not save.
+            JSON.parse(projectJSONString);
+
+            this.ProjectService.saveProject(projectJSONString, commitMessage).then(angular.bind(this, function(commitHistoryArray) {
+                this.commitHistory = commitHistoryArray;
+                $("#commitMessageInput").val("");  // clear field after commit
+            }));
+        } catch (error) {
+            alert("Invalid JSON. Please check syntax. Aborting save.");
+            return;
+        }
+    };
+
+    showCommitHistory() {
+        this.ProjectService.getCommitHistory().then(angular.bind(this, function (commitHistoryArray) {
+            this.commitHistory = commitHistoryArray;
+        }));
+    }
+
+    /**
+     * Get the node position
+     * @param nodeId the node id
+     * @returns the node position
+     */
+    getNodePositionById(nodeId) {
+        return this.ProjectService.getNodePositionById(nodeId);
+    };
+
+    /**
+     * Get the node title for a node
+     * @param nodeId the node id
+     * @returns the node title
+     */
+    getNodeTitleByNodeId(nodeId) {
+        return this.ProjectService.getNodeTitleByNodeId(nodeId);
+    };
+
+    /**
+     * Check if a node id is for a group
+     * @param nodeId
+     * @returns whether the node is a group node
+     */
+    isGroupNode(nodeId) {
+        return this.ProjectService.isGroupNode(nodeId);
+    };
+
+    /**
+     * A node was clicked so we will go to the node authoring view
+     * @param nodeId
+     */
+    nodeClicked(nodeId) {
+        this.$state.go('root.node', {nodeId:nodeId});
+    };
+}
+
+ProjectController.$inject = ['$scope', '$state', '$stateParams', 'ProjectService', 'ConfigService'];
+
+export default ProjectController;

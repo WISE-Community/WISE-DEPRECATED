@@ -2,9 +2,38 @@
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
-define(['app', 'bootstrap', 'draggablePoints', 'highcharts', 'highcharts-more', 'highcharts-ng', 'jquery', 'studentAssetService'], function (app, bootstrap, draggablePoints, highcharts, highchartsMore, highchartsng, $, studentAssetService) {
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+//import $ from 'jquery';
 
-    app.$controllerProvider.register('GraphController', function ($rootScope, $scope, $state, $stateParams, ConfigService, GraphService, NodeService, ProjectService, SessionService, StudentAssetService, StudentDataService) {
+//import angularHighcharts from 'highcharts-ng';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _highcharts = require('highcharts');
+
+var _highcharts2 = _interopRequireDefault(_highcharts);
+
+var _draggablePoints = require('highcharts/draggable-points');
+
+var _draggablePoints2 = _interopRequireDefault(_draggablePoints);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var GraphController = function () {
+    function GraphController($rootScope, $scope, GraphService, NodeService, ProjectService, StudentAssetService, StudentDataService) {
+        _classCallCheck(this, GraphController);
+
+        this.$rootScope = $rootScope;
+        this.$scope = $scope;
+        this.GraphService = GraphService;
+        this.NodeService = NodeService;
+        this.ProjectService = ProjectService;
+        this.StudentAssetService = StudentAssetService;
+        this.StudentDataService = StudentDataService;
 
         // the node id of the current node
         this.nodeId = null;
@@ -57,147 +86,257 @@ define(['app', 'bootstrap', 'draggablePoints', 'highcharts', 'highcharts-more', 
         // whether the reset graph button is shown or not
         this.isResetGraphButtonVisible = true;
 
-        /**
-         * Perform setup of the component
-         */
-        this.setup = function () {
+        // get the current node and node id
+        var currentNode = this.StudentDataService.getCurrentNode();
+        if (currentNode != null) {
+            this.nodeId = currentNode.id;
+        } else {
+            this.nodeId = this.$scope.nodeId;
+        }
 
-            // get the current node and node id
-            var currentNode = StudentDataService.getCurrentNode();
-            if (currentNode != null) {
-                this.nodeId = currentNode.id;
-            } else {
-                this.nodeId = $scope.nodeId;
+        // get the component content from the scope
+        this.componentContent = this.$scope.component;
+
+        this.mode = this.$scope.mode;
+
+        if (this.componentContent != null) {
+
+            // get the component id
+            this.componentId = this.componentContent.id;
+
+            if (this.mode === 'student') {
+                this.isPromptVisible = true;
+                this.isSaveButtonVisible = this.componentContent.showSaveButton;
+                this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+                this.isResetGraphButtonVisible = true;
+            } else if (this.mode === 'grading') {
+                this.isPromptVisible = true;
+                this.isSaveButtonVisible = false;
+                this.isSubmitButtonVisible = false;
+                this.isResetGraphButtonVisible = false;
+                this.isDisabled = true;
+            } else if (this.mode === 'onlyShowWork') {
+                this.isPromptVisible = false;
+                this.isSaveButtonVisible = false;
+                this.isSubmitButtonVisible = false;
+                this.isResetGraphButtonVisible = false;
+                this.isDisabled = true;
             }
 
-            // get the component content from the scope
-            this.componentContent = $scope.component;
+            // get the show previous work node id if it is provided
+            var showPreviousWorkNodeId = this.componentContent.showPreviousWorkNodeId;
 
-            this.mode = $scope.mode;
+            var componentState = null;
 
-            if (this.componentContent != null) {
+            if (false) {
+                // this component is showing previous work
+                this.isShowPreviousWork = true;
 
-                // get the component id
-                this.componentId = this.componentContent.id;
+                // get the show previous work component id if it is provided
+                var showPreviousWorkComponentId = this.componentContent.showPreviousWorkComponentId;
 
-                if (this.mode === 'student') {
-                    this.isPromptVisible = true;
-                    this.isSaveButtonVisible = this.componentContent.showSaveButton;
-                    this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-                    this.isResetGraphButtonVisible = true;
-                } else if (this.mode === 'grading') {
-                    this.isPromptVisible = true;
-                    this.isSaveButtonVisible = false;
-                    this.isSubmitButtonVisible = false;
-                    this.isResetGraphButtonVisible = false;
-                    this.isDisabled = true;
-                } else if (this.mode === 'onlyShowWork') {
-                    this.isPromptVisible = false;
-                    this.isSaveButtonVisible = false;
-                    this.isSubmitButtonVisible = false;
-                    this.isResetGraphButtonVisible = false;
-                    this.isDisabled = true;
+                // get the node content for the other node
+                var showPreviousWorkNodeContent = this.ProjectService.getNodeContentByNodeId(showPreviousWorkNodeId);
+
+                //var showPreviousWorkPrompt = this.componentContent.showPreviousWorkPrompt;
+
+                // get the component content for the component we are showing previous work for
+                this.componentContent = this.NodeService.getComponentContentById(showPreviousWorkNodeContent, showPreviousWorkComponentId);
+
+                /*
+                 if (!showPreviousWorkPrompt) {
+                 this.componentContent = '';
+                 }
+                 */
+
+                // hide the prompt, save, submit, and reset graph buttons when showing previous work
+                this.isPromptVisible = false;
+                this.isSaveButtonVisible = false;
+                this.isSubmitButtonVisible = false;
+                this.isResetGraphButtonVisible = false;
+
+                // get the component state for the show previous work
+                componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(showPreviousWorkNodeId, showPreviousWorkComponentId);
+
+                if (componentState == null) {
+                    // the component state will be passed into the scope when we are in the grading tool
+                    componentState = this.$scope.componentState;
                 }
 
-                // get the show previous work node id if it is provided
-                var showPreviousWorkNodeId = this.componentContent.showPreviousWorkNodeId;
+                // populate the student work into this component
+                this.setStudentWork(componentState);
 
-                var componentState = null;
+                // setup the graph
+                this.setupGraph();
 
-                if (false) {
-                    // this component is showing previous work
-                    this.isShowPreviousWork = true;
+                // disable the component since we are just showing previous work
+                this.isDisabled = true;
 
-                    // get the show previous work component id if it is provided
-                    var showPreviousWorkComponentId = this.componentContent.showPreviousWorkComponentId;
+                if (this.$scope.$parent.registerComponentController != null) {
+                    // register this component with the parent node
+                    this.$scope.$parent.registerComponentController(this.$scope, this.componentContent);
+                }
+            } else {
+                // this is a regular component
 
-                    // get the node content for the other node
-                    var showPreviousWorkNodeContent = ProjectService.getNodeContentByNodeId(showPreviousWorkNodeId);
+                // get the component state from the scope
+                componentState = this.$scope.componentState;
 
-                    //var showPreviousWorkPrompt = this.componentContent.showPreviousWorkPrompt;
+                // set whether studentAttachment is enabled
+                this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
 
-                    // get the component content for the component we are showing previous work for
-                    this.componentContent = NodeService.getComponentContentById(showPreviousWorkNodeContent, showPreviousWorkComponentId);
-
+                if (componentState == null) {
                     /*
-                    if (!showPreviousWorkPrompt) {
-                        this.componentContent = '';
-                    }
-                    */
+                     * only import work if the student does not already have
+                     * work for this component
+                     */
 
-                    // hide the prompt, save, submit, and reset graph buttons when showing previous work
-                    this.isPromptVisible = false;
-                    this.isSaveButtonVisible = false;
-                    this.isSubmitButtonVisible = false;
-                    this.isResetGraphButtonVisible = false;
+                    // check if we need to import work
+                    var importWorkNodeId = this.componentContent.importWorkNodeId;
+                    var importWorkComponentId = this.componentContent.importWorkComponentId;
 
-                    // get the component state for the show previous work
-                    componentState = StudentDataService.getLatestComponentStateByNodeIdAndComponentId(showPreviousWorkNodeId, showPreviousWorkComponentId);
-
-                    if (componentState == null) {
-                        // the component state will be passed into the scope when we are in the grading tool
-                        componentState = $scope.componentState;
-                    }
-
-                    // populate the student work into this component
-                    this.setStudentWork(componentState);
-
-                    // setup the graph
-                    this.setupGraph();
-
-                    // disable the component since we are just showing previous work
-                    this.isDisabled = true;
-
-                    if ($scope.$parent.registerComponentController != null) {
-                        // register this component with the parent node
-                        $scope.$parent.registerComponentController($scope, this.componentContent);
+                    if (importWorkNodeId != null && importWorkComponentId != null) {
+                        // import the work from the other component
+                        this.importWork();
                     }
                 } else {
-                    // this is a regular component
+                    // populate the student work into this component
+                    this.setStudentWork(componentState);
+                }
 
-                    // get the component state from the scope
-                    componentState = $scope.componentState;
+                // check if we need to lock this component
+                this.calculateDisabled();
 
-                    // set whether studentAttachment is enabled
-                    this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
+                // setup the graph
+                this.setupGraph();
 
-                    if (componentState == null) {
-                        /*
-                         * only import work if the student does not already have
-                         * work for this component
-                         */
+                if (this.$scope.$parent.registerComponentController != null) {
+                    // register this component with the parent node
+                    this.$scope.$parent.registerComponentController(this.$scope, this.componentContent);
+                }
+            }
+        }
 
-                        // check if we need to import work
-                        var importWorkNodeId = this.componentContent.importWorkNodeId;
-                        var importWorkComponentId = this.componentContent.importWorkComponentId;
+        /**
+         * A connected component has changed its student data so we will
+         * perform any necessary changes to this component
+         * @param connectedComponent the connected component
+         * @param connectedComponentParams the connected component params
+         * @param componentState the student data from the connected
+         * component that has changed
+         */
+        this.$scope.handleConnectedComponentStudentDataChanged = function (connectedComponent, connectedComponentParams, componentState) {
 
-                        if (importWorkNodeId != null && importWorkComponentId != null) {
-                            // import the work from the other component
-                            this.importWork();
+            if (connectedComponent != null && componentState != null) {
+
+                // get the component type that has changed
+                var componentType = connectedComponent.type;
+
+                if (componentType === 'Table') {
+
+                    // convert the table data to series data
+                    if (componentState != null) {
+
+                        // get the student data
+                        var studentData = componentState.studentData;
+
+                        if (studentData != null && studentData.tableData != null) {
+
+                            // get the rows in the table
+                            var rows = studentData.tableData;
+
+                            var data = this.$scope.graphController.convertRowDataToSeriesData(rows, connectedComponentParams);
+
+                            // get the index of the series that we will put the data into
+                            var seriesIndex = connectedComponentParams.seriesIndex;
+
+                            if (seriesIndex != null) {
+
+                                // get the series
+                                var series = this.$scope.graphController.series[seriesIndex];
+
+                                if (series == null) {
+                                    // the series is null so we will create a series
+                                    series = {};
+                                    this.$scope.graphController.series[seriesIndex] = series;
+                                }
+
+                                // set the data into the series
+                                series.data = data;
+                            }
+
+                            // render the graph
+                            this.$scope.graphController.setupGraph();
+
+                            // the graph has changed
+                            this.$scope.graphController.isDirty = true;
                         }
-                    } else {
-                        // populate the student work into this component
-                        this.setStudentWork(componentState);
-                    }
-
-                    // check if we need to lock this component
-                    this.calculateDisabled();
-
-                    // setup the graph
-                    this.setupGraph();
-
-                    if ($scope.$parent.registerComponentController != null) {
-                        // register this component with the parent node
-                        $scope.$parent.registerComponentController($scope, this.componentContent);
                     }
                 }
             }
-        };
+        }.bind(this);
 
         /**
-         * Setup the graph
+         * Handle the delete key press
          */
-        this.setupGraph = function () {
+        this.$scope.handleDeleteKeyPressed = function () {
+            this.$scope.graphController.handleDeleteKeyPressed();
+        }.bind(this);
+
+        /**
+         * Get the component state from this component. The parent node will
+         * call this function to obtain the component state when it needs to
+         * save student data.
+         * @return a component state containing the student data
+         */
+        this.$scope.getComponentState = function () {
+
+            var componentState = null;
+
+            if (this.$scope.graphController.isDirty) {
+                // create a component state populated with the student data
+                componentState = this.$scope.graphController.createComponentState();
+
+                // set isDirty to false since this student work is about to be saved
+                this.$scope.graphController.isDirty = false;
+            }
+
+            return componentState;
+        }.bind(this);
+
+        /**
+         * The parent node submit button was clicked
+         */
+        this.$scope.$on('nodeSubmitClicked', angular.bind(this, function (event, args) {
+
+            // get the node id of the node
+            var nodeId = args.nodeId;
+
+            // make sure the node id matches our parent node
+            if (this.nodeId === nodeId) {
+
+                if (this.isLockAfterSubmit()) {
+                    // disable the component if it was authored to lock after submit
+                    this.isDisabled = true;
+                }
+            }
+        }));
+
+        /**
+         * Listen for the 'exitNode' event which is fired when the student
+         * exits the parent node. This will perform any necessary cleanup
+         * when the student exits the parent node.
+         */
+        this.$scope.$on('exitNode', angular.bind(this, function (event, args) {}));
+    }
+
+    /**
+     * Setup the graph
+     */
+
+    _createClass(GraphController, [{
+        key: 'setupGraph',
+        value: function setupGraph() {
 
             // get the title
             var title = this.componentContent.title;
@@ -241,7 +380,7 @@ define(['app', 'bootstrap', 'draggablePoints', 'highcharts', 'highcharts-more', 
                  * use the series from the component content if the student does not
                  * have any series data
                  */
-                series = StudentDataService.makeCopyOfJSONObject(this.componentContent.series);
+                series = this.StudentDataService.makeCopyOfJSONObject(this.componentContent.series);
                 this.setSeries(series);
             }
 
@@ -287,7 +426,7 @@ define(['app', 'bootstrap', 'draggablePoints', 'highcharts', 'highcharts-more', 
              * generate an array of regression series for the series that
              * requrie a regression line
              */
-            //var regressionSeries = GraphService.generateRegressionSeries(series);
+            //var regressionSeries = this.GraphService.generateRegressionSeries(series);
             var regressionSeries = [];
             this.regressionSeries = regressionSeries;
 
@@ -462,7 +601,9 @@ define(['app', 'bootstrap', 'draggablePoints', 'highcharts', 'highcharts-more', 
                 yAxis: yAxis,
                 loading: false
             };
-        };
+        }
+    }, {
+        key: 'addPointToSeries0',
 
         /**
          * Add a point to a series. The point will be inserted into the series
@@ -471,7 +612,7 @@ define(['app', 'bootstrap', 'draggablePoints', 'highcharts', 'highcharts-more', 
          * @param x the x value
          * @param y the y value
          */
-        this.addPointToSeries0 = function (series, x, y) {
+        value: function addPointToSeries0(series, x, y) {
             if (series != null && x != null && y != null) {
 
                 // get the data points from the series
@@ -513,7 +654,9 @@ define(['app', 'bootstrap', 'draggablePoints', 'highcharts', 'highcharts-more', 
                     }
                 }
             }
-        };
+        }
+    }, {
+        key: 'addPointToSeries',
 
         /**
          * Add a point to a series. The point will be inserted at the end of
@@ -522,7 +665,7 @@ define(['app', 'bootstrap', 'draggablePoints', 'highcharts', 'highcharts-more', 
          * @param x the x value
          * @param y the y value
          */
-        this.addPointToSeries = function (series, x, y) {
+        value: function addPointToSeries(series, x, y) {
             if (series != null && x != null && y != null) {
 
                 // get the data points from the series
@@ -532,7 +675,9 @@ define(['app', 'bootstrap', 'draggablePoints', 'highcharts', 'highcharts-more', 
                     data.push([x, y]);
                 }
             }
-        };
+        }
+    }, {
+        key: 'removePointFromSeries',
 
         /**
          * Remove a point from a series. We will remove all points that
@@ -540,7 +685,7 @@ define(['app', 'bootstrap', 'draggablePoints', 'highcharts', 'highcharts-more', 
          * @param series the series to remove the point from
          * @param x the x value of the point to remove
          */
-        this.removePointFromSeries = function (series, x) {
+        value: function removePointFromSeries(series, x) {
             if (series != null && x != null) {
                 var data = series.data;
 
@@ -570,13 +715,15 @@ define(['app', 'bootstrap', 'draggablePoints', 'highcharts', 'highcharts-more', 
                     }
                 }
             }
-        };
+        }
+    }, {
+        key: 'addClickToRemovePointEvent',
 
         /**
          * Check if we need to add the click to remove event to the series
          * @param series an array of series
          */
-        this.addClickToRemovePointEvent = function (series) {
+        value: function addClickToRemovePointEvent(series) {
 
             if (!this.isDisabled) {
                 /*
@@ -655,14 +802,16 @@ define(['app', 'bootstrap', 'draggablePoints', 'highcharts', 'highcharts-more', 
                     }
                 }
             }
-        };
+        }
+    }, {
+        key: 'canEdit',
 
         /**
          * Check whether the student is allowed to edit a given series
          * @param series the series to check
          * @return whether the series can edit the series
          */
-        this.canEdit = function (series) {
+        value: function canEdit(series) {
             var result = false;
 
             if (series != null && series.canEdit) {
@@ -670,69 +819,85 @@ define(['app', 'bootstrap', 'draggablePoints', 'highcharts', 'highcharts-more', 
             }
 
             return result;
-        };
+        }
+    }, {
+        key: 'setSeries',
 
         /**
          * Set all the series
          * @param series an array of series
          */
-        this.setSeries = function (series) {
+        value: function setSeries(series) {
             this.series = series;
-        };
+        }
+    }, {
+        key: 'getSeries',
 
         /**
          * Get all the series
          * @returns an array of series
          */
-        this.getSeries = function () {
+        value: function getSeries() {
             return this.series;
-        };
+        }
+    }, {
+        key: 'setXAxis',
 
         /**
          * Set the xAxis object
          * @param xAxis the xAxis object that can be used to render the graph
          */
-        this.setXAxis = function (xAxis) {
+        value: function setXAxis(xAxis) {
             this.xAxis = xAxis;
-        };
+        }
+    }, {
+        key: 'getXAxis',
 
         /**
          * Get the xAxis object
          * @return the xAxis object that can be used to render the graph
          */
-        this.getXAxis = function () {
+        value: function getXAxis() {
             return this.xAxis;
-        };
+        }
+    }, {
+        key: 'setYAxis',
 
         /**
          * Set the yAxis object
          * @param yAxis the yAxis object that can be used to render the graph
          */
-        this.setYAxis = function (yAxis) {
+        value: function setYAxis(yAxis) {
             this.yAxis = yAxis;
-        };
+        }
+    }, {
+        key: 'getYAxis',
 
         /**
          * Get the yAxis object
          * @return the yAxis object that can be used to render the graph
          */
-        this.getYAxis = function () {
+        value: function getYAxis() {
             return this.yAxis;
-        };
+        }
+    }, {
+        key: 'setActiveSeries',
 
         /**
          * Set the active series
          * @param series the series
          */
-        this.setActiveSeries = function (series) {
+        value: function setActiveSeries(series) {
             this.activeSeries = series;
-        };
+        }
+    }, {
+        key: 'setActiveSeriesByIndex',
 
         /**
          * Set the active series by the index
          * @param index the index
          */
-        this.setActiveSeriesByIndex = function (index) {
+        value: function setActiveSeriesByIndex(index) {
 
             if (index == null) {
                 // the index is null so we will set the active series to null
@@ -747,14 +912,16 @@ define(['app', 'bootstrap', 'draggablePoints', 'highcharts', 'highcharts-more', 
                     this.setActiveSeries(series);
                 }
             }
-        };
+        }
+    }, {
+        key: 'resetGraph',
 
         /**
          * Reset the table data to its initial state from the component content
          */
-        this.resetGraph = function () {
+        value: function resetGraph() {
             // get the original series from the component content
-            this.setSeries(StudentDataService.makeCopyOfJSONObject(this.componentContent.series));
+            this.setSeries(this.StudentDataService.makeCopyOfJSONObject(this.componentContent.series));
 
             if (this.componentContent.xAxis != null) {
                 this.setXAxis(this.componentContent.xAxis);
@@ -772,13 +939,15 @@ define(['app', 'bootstrap', 'draggablePoints', 'highcharts', 'highcharts-more', 
              * so that the graph will be redrawn
              */
             this.studentDataChanged();
-        };
+        }
+    }, {
+        key: 'setStudentWork',
 
         /**
          * Populate the student work into the component
          * @param componentState the component state to populate into the component
          */
-        this.setStudentWork = function (componentState) {
+        value: function setStudentWork(componentState) {
 
             if (componentState != null) {
 
@@ -787,27 +956,31 @@ define(['app', 'bootstrap', 'draggablePoints', 'highcharts', 'highcharts-more', 
 
                 if (studentData != null) {
                     // populate the student data into the component
-                    this.setSeries(StudentDataService.makeCopyOfJSONObject(studentData.series));
+                    this.setSeries(this.StudentDataService.makeCopyOfJSONObject(studentData.series));
                     this.setXAxis(studentData.xAxis);
                     this.setYAxis(studentData.yAxis);
                     this.setActiveSeriesByIndex(studentData.activeSeriesIndex);
                 }
             }
-        };
+        }
+    }, {
+        key: 'saveButtonClicked',
 
         /**
          * Called when the student clicks the save button
          */
-        this.saveButtonClicked = function () {
+        value: function saveButtonClicked() {
 
             // tell the parent node that this component wants to save
-            $scope.$emit('componentSaveTriggered', { nodeId: this.nodeId, componentId: this.componentId });
-        };
+            this.$scope.$emit('componentSaveTriggered', { nodeId: this.nodeId, componentId: this.componentId });
+        }
+    }, {
+        key: 'submitButtonClicked',
 
         /**
          * Called when the student clicks the submit button
          */
-        this.submitButtonClicked = function () {
+        value: function submitButtonClicked() {
             this.isSubmit = true;
 
             // check if we need to lock the component after the student submits
@@ -819,24 +992,28 @@ define(['app', 'bootstrap', 'draggablePoints', 'highcharts', 'highcharts-more', 
             }
 
             // tell the parent node that this component wants to submit
-            $scope.$emit('componentSubmitTriggered', { nodeId: this.nodeId, componentId: this.componentId });
-        };
+            this.$scope.$emit('componentSubmitTriggered', { nodeId: this.nodeId, componentId: this.componentId });
+        }
+    }, {
+        key: 'activeSeriesChanged',
 
         /**
          * The active series has changed
          */
-        this.activeSeriesChanged = function () {
+        value: function activeSeriesChanged() {
 
             // the student data has changed
             this.studentDataChanged();
-        };
+        }
+    }, {
+        key: 'studentDataChanged',
 
         /**
          * Called when the student changes their work
          */
-        this.studentDataChanged = function () {
+        value: function studentDataChanged() {
             /*
-             * set the dirty flag so we will know we need to save the 
+             * set the dirty flag so we will know we need to save the
              * student work later
              */
             this.isDirty = true;
@@ -851,31 +1028,33 @@ define(['app', 'bootstrap', 'draggablePoints', 'highcharts', 'highcharts-more', 
             var componentState = this.createComponentState();
 
             //force redraw
-            $scope.$apply();
+            this.$scope.$apply();
 
             /*
              * the student work in this component has changed so we will tell
-             * the parent node that the student data will need to be saved. 
-             * this will also notify connected parts that this component's student 
+             * the parent node that the student data will need to be saved.
+             * this will also notify connected parts that this component's student
              * data has changed.
              */
-            $scope.$emit('componentStudentDataChanged', { componentId: componentId, componentState: componentState });
-        };
+            this.$scope.$emit('componentStudentDataChanged', { componentId: componentId, componentState: componentState });
+        }
+    }, {
+        key: 'createComponentState',
 
         /**
          * Create a new component state populated with the student data
          * @return the componentState after it has been populated
          */
-        this.createComponentState = function () {
+        value: function createComponentState() {
 
             // create a new component state
-            var componentState = NodeService.createNewComponentState();
+            var componentState = this.NodeService.createNewComponentState();
 
             if (componentState != null) {
                 var studentData = {};
 
                 // insert the series data
-                studentData.series = StudentDataService.makeCopyOfJSONObject(this.getSeries());
+                studentData.series = this.StudentDataService.makeCopyOfJSONObject(this.getSeries());
 
                 // remove high-charts assigned id's from each series before saving
                 for (var s = 0; s < studentData.series.length; s++) {
@@ -912,12 +1091,14 @@ define(['app', 'bootstrap', 'draggablePoints', 'highcharts', 'highcharts-more', 
             }
 
             return componentState;
-        };
+        }
+    }, {
+        key: 'calculateDisabled',
 
         /**
          * Check if we need to lock the component
          */
-        this.calculateDisabled = function () {
+        value: function calculateDisabled() {
 
             var nodeId = this.nodeId;
 
@@ -933,10 +1114,10 @@ define(['app', 'bootstrap', 'draggablePoints', 'highcharts', 'highcharts-more', 
                     // we need to lock the step after the student has submitted
 
                     // get the component states for this component
-                    var componentStates = StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
+                    var componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
 
                     // check if any of the component states were submitted
-                    var isSubmitted = NodeService.isWorkSubmitted(componentStates);
+                    var isSubmitted = this.NodeService.isWorkSubmitted(componentStates);
 
                     if (isSubmitted) {
                         // the student has submitted work for this component
@@ -944,13 +1125,15 @@ define(['app', 'bootstrap', 'draggablePoints', 'highcharts', 'highcharts-more', 
                     }
                 }
             }
-        };
+        }
+    }, {
+        key: 'showPrompt',
 
         /**
          * Check whether we need to show the prompt
          * @return whether to show the prompt
          */
-        this.showPrompt = function () {
+        value: function showPrompt() {
             var show = false;
 
             if (this.isPromptVisible) {
@@ -958,13 +1141,15 @@ define(['app', 'bootstrap', 'draggablePoints', 'highcharts', 'highcharts-more', 
             }
 
             return show;
-        };
+        }
+    }, {
+        key: 'showSaveButton',
 
         /**
          * Check whether we need to show the save button
          * @return whether to show the save button
          */
-        this.showSaveButton = function () {
+        value: function showSaveButton() {
             var show = false;
 
             if (this.isSaveButtonVisible) {
@@ -972,13 +1157,15 @@ define(['app', 'bootstrap', 'draggablePoints', 'highcharts', 'highcharts-more', 
             }
 
             return show;
-        };
+        }
+    }, {
+        key: 'showSubmitButton',
 
         /**
          * Check whether we need to show the submit button
          * @return whether to show the submit button
          */
-        this.showSubmitButton = function () {
+        value: function showSubmitButton() {
             var show = false;
 
             if (this.isSubmitButtonVisible) {
@@ -986,13 +1173,15 @@ define(['app', 'bootstrap', 'draggablePoints', 'highcharts', 'highcharts-more', 
             }
 
             return show;
-        };
+        }
+    }, {
+        key: 'showResetGraphButton',
 
         /**
          * Check whether we need to show the reset graph button
          * @return whether to show the reset graph button
          */
-        this.showResetGraphButton = function () {
+        value: function showResetGraphButton() {
             var show = false;
 
             if (this.isResetGraphButtonVisible) {
@@ -1000,13 +1189,15 @@ define(['app', 'bootstrap', 'draggablePoints', 'highcharts', 'highcharts-more', 
             }
 
             return show;
-        };
+        }
+    }, {
+        key: 'isLockAfterSubmit',
 
         /**
          * Check whether we need to lock the component after the student
          * submits an answer.
          */
-        this.isLockAfterSubmit = function () {
+        value: function isLockAfterSubmit() {
             var result = false;
 
             if (this.componentContent != null) {
@@ -1018,13 +1209,15 @@ define(['app', 'bootstrap', 'draggablePoints', 'highcharts', 'highcharts-more', 
             }
 
             return result;
-        };
+        }
+    }, {
+        key: 'getPrompt',
 
         /**
          * Get the prompt to show to the student
          * @return a string containing the prompt
          */
-        this.getPrompt = function () {
+        value: function getPrompt() {
             var prompt = null;
 
             if (this.componentContent != null) {
@@ -1032,14 +1225,16 @@ define(['app', 'bootstrap', 'draggablePoints', 'highcharts', 'highcharts-more', 
             }
 
             return prompt;
-        };
+        }
+    }, {
+        key: 'getSeriesIndex',
 
         /**
          * Get the index of a series
          * @param series the series
          * @return the index of the series
          */
-        this.getSeriesIndex = function (series) {
+        value: function getSeriesIndex(series) {
             var index = null;
 
             if (series != null) {
@@ -1063,14 +1258,16 @@ define(['app', 'bootstrap', 'draggablePoints', 'highcharts', 'highcharts-more', 
             }
 
             return index;
-        };
+        }
+    }, {
+        key: 'getSeriesByIndex',
 
         /**
          * Get a series by the index
          * @param index the index of the series in the series array
          * @returns the series object or null if not found
          */
-        this.getSeriesByIndex = function (index) {
+        value: function getSeriesByIndex(index) {
             var series = null;
 
             if (index != null && index >= 0) {
@@ -1084,12 +1281,15 @@ define(['app', 'bootstrap', 'draggablePoints', 'highcharts', 'highcharts-more', 
             }
 
             return series;
-        };
+        }
 
         /**
          * Import work from another component
          */
-        this.importWork = function () {
+
+    }, {
+        key: 'importWork',
+        value: function importWork() {
 
             // get the component content
             var componentContent = this.componentContent;
@@ -1102,7 +1302,7 @@ define(['app', 'bootstrap', 'draggablePoints', 'highcharts', 'highcharts-more', 
                 if (importWorkNodeId != null && importWorkComponentId != null) {
 
                     // get the latest component state for this component
-                    var componentState = StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
+                    var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
 
                     /*
                      * we will only import work into this component if the student
@@ -1112,14 +1312,14 @@ define(['app', 'bootstrap', 'draggablePoints', 'highcharts', 'highcharts-more', 
                         // the student has not done any work for this component
 
                         // get the latest component state from the component we are importing from
-                        var importWorkComponentState = StudentDataService.getLatestComponentStateByNodeIdAndComponentId(importWorkNodeId, importWorkComponentId);
+                        var importWorkComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(importWorkNodeId, importWorkComponentId);
 
                         if (importWorkComponentState != null) {
                             /*
-                             * populate a new component state with the work from the 
+                             * populate a new component state with the work from the
                              * imported component state
                              */
-                            var populatedComponentState = GraphService.populateComponentState(importWorkComponentState);
+                            var populatedComponentState = this.GraphService.populateComponentState(importWorkComponentState);
 
                             // populate the component state into this component
                             this.setStudentWork(populatedComponentState);
@@ -1127,16 +1327,18 @@ define(['app', 'bootstrap', 'draggablePoints', 'highcharts', 'highcharts-more', 
                     }
                 }
             }
-        };
+        }
+    }, {
+        key: 'attachNotebookItemToComponent',
 
         /**
          * handle importing notebook item data (we only support csv for now)
          */
-        this.attachNotebookItemToComponent = angular.bind(this, function (notebookItem) {
+        value: function attachNotebookItemToComponent(notebookItem) {
             if (notebookItem.studentAsset != null) {
                 // we're importing a StudentAssetNotebookItem
                 var studentAsset = notebookItem.studentAsset;
-                StudentAssetService.copyAssetForReference(studentAsset).then(angular.bind(this, function (copiedAsset) {
+                this.StudentAssetService.copyAssetForReference(studentAsset).then(angular.bind(this, function (copiedAsset) {
                     if (copiedAsset != null) {
                         var attachment = {
                             notebookItemId: notebookItem.id,
@@ -1144,8 +1346,8 @@ define(['app', 'bootstrap', 'draggablePoints', 'highcharts', 'highcharts-more', 
                             iconURL: copiedAsset.iconURL
                         };
 
-                        StudentAssetService.getAssetContent(copiedAsset).then(angular.bind(this, function (assetContent) {
-                            var rowData = StudentDataService.CSVToArray(assetContent);
+                        this.StudentAssetService.getAssetContent(copiedAsset).then(angular.bind(this, function (assetContent) {
+                            var rowData = this.StudentDataService.CSVToArray(assetContent);
                             var params = {};
                             params.skipFirstRow = true; // first row contains header, so ignore it
                             params.xColumn = 0; // assume (for now) x-axis data is in first column
@@ -1191,66 +1393,9 @@ define(['app', 'bootstrap', 'draggablePoints', 'highcharts', 'highcharts-more', 
             } else if (notebookItem.studentWork != null) {
                 // TODO implement me
             }
-        });
-
-        /**
-         * A connected component has changed its student data so we will
-         * perform any necessary changes to this component
-         * @param connectedComponent the connected component
-         * @param connectedComponentParams the connected component params
-         * @param componentState the student data from the connected 
-         * component that has changed
-         */
-        $scope.handleConnectedComponentStudentDataChanged = function (connectedComponent, connectedComponentParams, componentState) {
-
-            if (connectedComponent != null && componentState != null) {
-
-                // get the component type that has changed
-                var componentType = connectedComponent.type;
-
-                if (componentType === 'Table') {
-
-                    // convert the table data to series data
-                    if (componentState != null) {
-
-                        // get the student data
-                        var studentData = componentState.studentData;
-
-                        if (studentData != null && studentData.tableData != null) {
-
-                            // get the rows in the table
-                            var rows = studentData.tableData;
-
-                            var data = $scope.graphController.convertRowDataToSeriesData(rows, connectedComponentParams);
-
-                            // get the index of the series that we will put the data into
-                            var seriesIndex = connectedComponentParams.seriesIndex;
-
-                            if (seriesIndex != null) {
-
-                                // get the series
-                                var series = $scope.graphController.series[seriesIndex];
-
-                                if (series == null) {
-                                    // the series is null so we will create a series
-                                    series = {};
-                                    $scope.graphController.series[seriesIndex] = series;
-                                }
-
-                                // set the data into the series
-                                series.data = data;
-                            }
-
-                            // render the graph
-                            $scope.graphController.setupGraph();
-
-                            // the graph has changed
-                            $scope.graphController.isDirty = true;
-                        }
-                    }
-                }
-            }
-        };
+        }
+    }, {
+        key: 'convertRowDataToSeriesData',
 
         /**
          * Convert the table data into series data
@@ -1258,7 +1403,7 @@ define(['app', 'bootstrap', 'draggablePoints', 'highcharts', 'highcharts-more', 
          * @param params (optional) the params to specify what columns
          * and rows to use from the table data
          */
-        this.convertRowDataToSeriesData = function (rows, params) {
+        value: function convertRowDataToSeriesData(rows, params) {
             var data = [];
 
             /*
@@ -1367,13 +1512,15 @@ define(['app', 'bootstrap', 'draggablePoints', 'highcharts', 'highcharts-more', 
             }
 
             return data;
-        };
+        }
+    }, {
+        key: 'setSeriesIds',
 
         /**
          * Set the series id for each series
          * @param allSeries an array of series
          */
-        this.setSeriesIds = function (allSeries) {
+        value: function setSeriesIds(allSeries) {
             var usedSeriesIds = [];
 
             if (allSeries != null) {
@@ -1387,20 +1534,22 @@ define(['app', 'bootstrap', 'draggablePoints', 'highcharts', 'highcharts-more', 
 
                     if (seriesId == null) {
                         // the series doesn't have a series id so we will give it one
-                        var nextSeriesId = this.getNextSeriesId(usedSeriesIds);
+                        var nextSeriesId = getNextSeriesId(usedSeriesIds);
                         series.id = nextSeriesId;
                         usedSeriesIds.push(nextSeriesId);
                     }
                 }
             }
-        };
+        }
+    }, {
+        key: 'getNextSeriesId',
 
         /**
          * Get the next available series id
          * @param usedSeriesIds an array of used series ids
          * @returns the next available series id
          */
-        this.getNextSeriesId = function (usedSeriesIds) {
+        value: function getNextSeriesId(usedSeriesIds) {
             var nextSeriesId = null;
             var currentSeriesNumber = 0;
             var foundNextSeriesId = false;
@@ -1427,12 +1576,14 @@ define(['app', 'bootstrap', 'draggablePoints', 'highcharts', 'highcharts-more', 
             }
 
             return nextSeriesId;
-        };
+        }
+    }, {
+        key: 'roundToNearestTenth',
 
         /**
          * Round a number to the nearest tenth
          */
-        this.roundToNearestTenth = function (x) {
+        value: function roundToNearestTenth(x) {
 
             // make sure x is a number
             x = parseFloat(x);
@@ -1441,19 +1592,15 @@ define(['app', 'bootstrap', 'draggablePoints', 'highcharts', 'highcharts-more', 
             x = Math.round(x * 10) / 10;
 
             return x;
-        };
+        }
 
         /**
          * Handle the delete key press
          */
-        $scope.handleDeleteKeyPressed = function () {
-            $scope.graphController.handleDeleteKeyPressed();
-        };
 
-        /**
-         * Handle the delete key press
-         */
-        this.handleDeleteKeyPressed = function () {
+    }, {
+        key: 'handleDeleteKeyPressed',
+        value: function handleDeleteKeyPressed() {
 
             // get the active series
             var series = this.activeSeries;
@@ -1506,81 +1653,42 @@ define(['app', 'bootstrap', 'draggablePoints', 'highcharts', 'highcharts-more', 
                     this.studentDataChanged();
                 }
             }
-        };
+        }
+    }, {
+        key: 'getComponentId',
 
         /**
          * Get the component id
          * @return the component id
          */
-        this.getComponentId = function () {
+        value: function getComponentId() {
             var componentId = this.componentContent.id;
 
             return componentId;
-        };
-
-        /**
-         * Get the component state from this component. The parent node will 
-         * call this function to obtain the component state when it needs to
-         * save student data.
-         * @return a component state containing the student data
-         */
-        $scope.getComponentState = function () {
-
-            var componentState = null;
-
-            if ($scope.graphController.isDirty) {
-                // create a component state populated with the student data
-                componentState = $scope.graphController.createComponentState();
-
-                // set isDirty to false since this student work is about to be saved
-                $scope.graphController.isDirty = false;
-            }
-
-            return componentState;
-        };
-
-        /**
-         * The parent node submit button was clicked
-         */
-        $scope.$on('nodeSubmitClicked', angular.bind(this, function (event, args) {
-
-            // get the node id of the node
-            var nodeId = args.nodeId;
-
-            // make sure the node id matches our parent node
-            if (this.nodeId === nodeId) {
-
-                if (this.isLockAfterSubmit()) {
-                    // disable the component if it was authored to lock after submit
-                    this.isDisabled = true;
-                }
-            }
-        }));
-
-        /**
-         * Listen for the 'exitNode' event which is fired when the student
-         * exits the parent node. This will perform any necessary cleanup
-         * when the student exits the parent node.
-         */
-        $scope.$on('exitNode', angular.bind(this, function (event, args) {}));
+        }
+    }, {
+        key: 'registerExitListener',
 
         /**
          * Register the the listener that will listen for the exit event
          * so that we can perform saving before exiting.
          */
-        this.registerExitListener = function () {
+        value: function registerExitListener() {
 
             /*
              * Listen for the 'exit' event which is fired when the student exits
              * the VLE. This will perform saving before the VLE exits.
              */
-            this.exitListener = $scope.$on('exit', angular.bind(this, function (event, args) {
+            this.exitListener = this.$scope.$on('exit', angular.bind(this, function (event, args) {
 
-                $rootScope.$broadcast('doneExiting');
+                this.$rootScope.$broadcast('doneExiting');
             }));
-        };
+        }
+    }]);
 
-        // perform setup of this component
-        this.setup();
-    });
-});
+    return GraphController;
+}();
+
+GraphController.$inject = ['$rootScope', '$scope', 'GraphService', 'NodeService', 'ProjectService', 'StudentAssetService', 'StudentDataService'];
+
+exports.default = GraphController;

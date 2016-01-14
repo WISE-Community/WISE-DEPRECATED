@@ -28,135 +28,135 @@ var _toArrayFilter = require('lib/angular-toArrayFilter/toArrayFilter');
 
 var _toArrayFilter2 = _interopRequireDefault(_toArrayFilter);
 
-var _annotationService = require('../services/annotationService2');
+var _annotationService = require('../services/annotationService');
 
 var _annotationService2 = _interopRequireDefault(_annotationService);
 
-var _authoringToolController = require('./authoringToolController2');
+var _authoringToolController = require('./authoringToolController');
 
 var _authoringToolController2 = _interopRequireDefault(_authoringToolController);
 
-var _configService = require('../services/configService2');
+var _configService = require('../services/configService');
 
 var _configService2 = _interopRequireDefault(_configService);
 
-var _directives = require('../directives/directives2');
+var _directives = require('../directives/directives');
 
 var _directives2 = _interopRequireDefault(_directives);
 
-var _discussionController = require('../components/discussion/discussionController2');
+var _discussionController = require('../components/discussion/discussionController');
 
 var _discussionController2 = _interopRequireDefault(_discussionController);
 
-var _discussionService = require('../components/discussion/discussionService2');
+var _discussionService = require('../components/discussion/discussionService');
 
 var _discussionService2 = _interopRequireDefault(_discussionService);
 
-var _drawController = require('../components/draw/drawController2');
+var _drawController = require('../components/draw/drawController');
 
 var _drawController2 = _interopRequireDefault(_drawController);
 
-var _drawService = require('../components/draw/drawService2');
+var _drawService = require('../components/draw/drawService');
 
 var _drawService2 = _interopRequireDefault(_drawService);
 
-var _embeddedController = require('../components/embedded/embeddedController2');
+var _embeddedController = require('../components/embedded/embeddedController');
 
 var _embeddedController2 = _interopRequireDefault(_embeddedController);
 
-var _embeddedService = require('../components/embedded/embeddedService2');
+var _embeddedService = require('../components/embedded/embeddedService');
 
 var _embeddedService2 = _interopRequireDefault(_embeddedService);
 
-var _graphController = require('../components/graph/graphController2');
+var _graphController = require('../components/graph/graphController');
 
 var _graphController2 = _interopRequireDefault(_graphController);
 
-var _graphService = require('../components/graph/graphService2');
+var _graphService = require('../components/graph/graphService');
 
 var _graphService2 = _interopRequireDefault(_graphService);
 
-var _htmlController = require('../components/html/htmlController2');
+var _htmlController = require('../components/html/htmlController');
 
 var _htmlController2 = _interopRequireDefault(_htmlController);
 
-var _labelController = require('../components/label/labelController2');
+var _labelController = require('../components/label/labelController');
 
 var _labelController2 = _interopRequireDefault(_labelController);
 
-var _labelService = require('../components/label/labelService2');
+var _labelService = require('../components/label/labelService');
 
 var _labelService2 = _interopRequireDefault(_labelService);
 
-var _matchController = require('../components/match/matchController2');
+var _matchController = require('../components/match/matchController');
 
 var _matchController2 = _interopRequireDefault(_matchController);
 
-var _matchService = require('../components/match/matchService2');
+var _matchService = require('../components/match/matchService');
 
 var _matchService2 = _interopRequireDefault(_matchService);
 
-var _multipleChoiceController = require('../components/multipleChoice/multipleChoiceController2');
+var _multipleChoiceController = require('../components/multipleChoice/multipleChoiceController');
 
 var _multipleChoiceController2 = _interopRequireDefault(_multipleChoiceController);
 
-var _multipleChoiceService = require('../components/multipleChoice/multipleChoiceService2');
+var _multipleChoiceService = require('../components/multipleChoice/multipleChoiceService');
 
 var _multipleChoiceService2 = _interopRequireDefault(_multipleChoiceService);
 
-var _nodeController = require('./node/nodeController2');
+var _nodeController = require('./node/nodeController');
 
 var _nodeController2 = _interopRequireDefault(_nodeController);
 
-var _nodeService = require('../services/nodeService2');
+var _nodeService = require('../services/nodeService');
 
 var _nodeService2 = _interopRequireDefault(_nodeService);
 
-var _openResponseController = require('../components/openResponse/openResponseController2');
+var _openResponseController = require('../components/openResponse/openResponseController');
 
 var _openResponseController2 = _interopRequireDefault(_openResponseController);
 
-var _openResponseService = require('../components/openResponse/openResponseService2');
+var _openResponseService = require('../components/openResponse/openResponseService');
 
 var _openResponseService2 = _interopRequireDefault(_openResponseService);
 
-var _outsideURLController = require('../components/outsideURL/outsideURLController2');
+var _outsideURLController = require('../components/outsideURL/outsideURLController');
 
 var _outsideURLController2 = _interopRequireDefault(_outsideURLController);
 
-var _outsideURLService = require('../components/outsideURL/outsideURLService2');
+var _outsideURLService = require('../components/outsideURL/outsideURLService');
 
 var _outsideURLService2 = _interopRequireDefault(_outsideURLService);
 
-var _projectController = require('./project/projectController2');
+var _projectController = require('./project/projectController');
 
 var _projectController2 = _interopRequireDefault(_projectController);
 
-var _projectService = require('../services/projectService2');
+var _projectService = require('../services/projectService');
 
 var _projectService2 = _interopRequireDefault(_projectService);
 
-var _sessionService = require('../services/sessionService2');
+var _sessionService = require('../services/sessionService');
 
 var _sessionService2 = _interopRequireDefault(_sessionService);
 
-var _studentAssetService = require('../services/studentAssetService2');
+var _studentAssetService = require('../services/studentAssetService');
 
 var _studentAssetService2 = _interopRequireDefault(_studentAssetService);
 
-var _studentDataService = require('../services/studentDataService2');
+var _studentDataService = require('../services/studentDataService');
 
 var _studentDataService2 = _interopRequireDefault(_studentDataService);
 
-var _tableController = require('../components/table/tableController2');
+var _tableController = require('../components/table/tableController');
 
 var _tableController2 = _interopRequireDefault(_tableController);
 
-var _tableService = require('../components/table/tableService2');
+var _tableService = require('../components/table/tableService');
 
 var _tableService2 = _interopRequireDefault(_tableService);
 
-var _utilService = require('../services/utilService2');
+var _utilService = require('../services/utilService');
 
 var _utilService2 = _interopRequireDefault(_utilService);
 
@@ -197,16 +197,7 @@ var mainModule = _angular2.default.module('authoring', ['angular-toArrayFilter',
         controller: 'NodeController',
         controllerAs: 'nodeController',
         resolve: {
-            load: function load() {
-                /*
-                 System.import('components/html/htmlController2').then((HTMLController) => {
-                    $controllerProvider.register(HTMLController.default.name, HTMLController.default);
-                 });
-                System.import('components/openResponse/openResponseController2').then((OpenResponseController) => {
-                    $controllerProvider.register(OpenResponseController.default.name, OpenResponseController.default);
-                });
-                */
-            }
+            load: function load() {}
         }
     });
     // ngMaterial default theme configuration

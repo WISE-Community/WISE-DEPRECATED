@@ -1,39 +1,40 @@
-define(['nodeService'], function(nodeService) {
-    
-    var service = ['$http', 'NodeService', function($http, NodeService) {
-        var serviceObject = Object.create(NodeService);
+import NodeService from '../../services/nodeService';
 
-        /**
-         * Check if the component was completed
-         * @param component the component object
-         * @param componentStates the component states for the specific component
-         * @param componentEvents the events for the specific component
-         * @param nodeEvents the events for the parent node of the component
-         * @returns whether the component was completed
-         */
-        serviceObject.isCompleted = function(component, componentStates, componentEvents, nodeEvents) {
-            var result = false;
+class EmbeddedService extends NodeService {
+    constructor() {
+        super();
+    }
 
-            if (nodeEvents != null) {
+    /**
+     * Check if the component was completed
+     * @param component the component object
+     * @param componentStates the component states for the specific component
+     * @param componentEvents the events for the specific component
+     * @param nodeEvents the events for the parent node of the component
+     * @returns whether the component was completed
+     */
+    isCompleted(component, componentStates, componentEvents, nodeEvents) {
+        var result = false;
 
-                // loop through all the events
-                for (var e = 0; e < nodeEvents.length; e++) {
+        if (nodeEvents != null) {
 
-                    // get an event
-                    var event = nodeEvents[e];
+            // loop through all the events
+            for (var e = 0; e < nodeEvents.length; e++) {
 
-                    if (event != null && event.event === 'nodeEntered') {
-                        result = true;
-                        break;
-                    }
+                // get an event
+                var event = nodeEvents[e];
+
+                if (event != null && event.event === 'nodeEntered') {
+                    result = true;
+                    break;
                 }
             }
+        }
 
-            return result;
-        };
-        
-        return serviceObject;
-    }];
-    
-    return service;
-});
+        return result;
+    };
+}
+
+EmbeddedService.$inject = [];
+
+export default EmbeddedService;

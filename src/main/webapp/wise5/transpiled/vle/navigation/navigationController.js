@@ -1,19 +1,29 @@
 'use strict';
 
-define(['app'], function (app) {
-    app.$controllerProvider.register('NavigationController', function ($rootScope, $scope, $state, $stateParams, ConfigService, ProjectService, StudentDataService) {
-        this.rootNode = ProjectService.rootNode;
-
-        this.filterByName = function (filter) {
-            return true; // TODO: create filter
-        };
-
-        $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
-            var toNodeId = toParams.nodeId;
-            var fromNodeId = fromParams.nodeId;
-            if (toNodeId && fromNodeId && toNodeId !== fromNodeId) {
-                StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(toNodeId);
-            }
-        });
-    });
+Object.defineProperty(exports, "__esModule", {
+    value: true
 });
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var NavigationController = function NavigationController($rootScope, ProjectService, StudentDataService) {
+    _classCallCheck(this, NavigationController);
+
+    this.$rootScope = $rootScope;
+    this.ProjectService = ProjectService;
+    this.StudentDataService = StudentDataService;
+
+    this.rootNode = this.ProjectService.rootNode;
+
+    this.$rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
+        var toNodeId = toParams.nodeId;
+        var fromNodeId = fromParams.nodeId;
+        if (toNodeId && fromNodeId && toNodeId !== fromNodeId) {
+            this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(toNodeId);
+        }
+    }.bind(this));
+};
+
+NavigationController.$inject = ['$rootScope', 'ProjectService', 'StudentDataService'];
+
+exports.default = NavigationController;

@@ -2,10 +2,30 @@
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
-define(['app'], function (app) {
-    app.$controllerProvider.register('ClassroomMonitorController', ['$scope', '$rootScope', '$state', '$stateParams', 'ConfigService', 'NodeService', 'NotebookService', 'ProjectService', 'UtilService', 'TeacherDataService', function ($scope, $rootScope, $state, $stateParams, ConfigService, NodeService, NotebookService, ProjectService, UtilService, TeacherDataService) {
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-        this.hello = function () {
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var ClassroomMonitorController = function () {
+    function ClassroomMonitorController($scope, $rootScope, $state, $stateParams, ConfigService, ProjectService, TeacherDataService) {
+        _classCallCheck(this, ClassroomMonitorController);
+
+        this.$scope = $scope;
+        this.$rootScope = $rootScope;
+        this.$state = $state;
+        this.$stateParams = $stateParams;
+        this.ConfigService = ConfigService;
+        this.ProjectService = ProjectService;
+        this.TeacherDataService = TeacherDataService;
+    }
+
+    _createClass(ClassroomMonitorController, [{
+        key: "hello",
+        value: function hello() {
             ocpu.seturl("//128.32.189.240:81/ocpu/user/wiser/library/wiser/R");
             //perform the request
             var req = ocpu.call("hello", {
@@ -28,10 +48,11 @@ define(['app'], function (app) {
                     }, 3000);
                 });
             });
-        };
-
-        this.export = function (exportType) {
-            TeacherDataService.getExport(exportType).then(function (result) {
+        }
+    }, {
+        key: "export",
+        value: function _export(exportType) {
+            this.TeacherDataService.getExport(exportType).then(function (result) {
                 var COLUMN_INDEX_NODE_ID = 1;
                 var COLUMN_INDEX_COMPONENT_ID = 2;
                 var COLUMN_INDEX_STEP_NUMBER = 4;
@@ -59,9 +80,9 @@ define(['app'], function (app) {
                         // for all non-header rows, fill in step numbers, titles, and component part numbers.
                         var nodeId = row[COLUMN_INDEX_NODE_ID];
                         var componentId = row[COLUMN_INDEX_COMPONENT_ID];
-                        row[COLUMN_INDEX_STEP_NUMBER] = ProjectService.getNodePositionById(nodeId);
-                        row[COLUMN_INDEX_STEP_TITLE] = ProjectService.getNodeTitleByNodeId(nodeId);
-                        row[COLUMN_INDEX_COMPONENT_PART_NUMBER] = ProjectService.getComponentPositionByNodeIdAndComponentId(nodeId, componentId) + 1; // make it 1-indexed for researchers
+                        row[COLUMN_INDEX_STEP_NUMBER] = this.ProjectService.getNodePositionById(nodeId);
+                        row[COLUMN_INDEX_STEP_TITLE] = this.ProjectService.getNodeTitleByNodeId(nodeId);
+                        row[COLUMN_INDEX_COMPONENT_PART_NUMBER] = this.ProjectService.getComponentPositionByNodeIdAndComponentId(nodeId, componentId) + 1; // make it 1-indexed for researchers
                         var wiseIDs = row[COLUMN_INDEX_WISE_IDS];
                         var wiseIDsArray = wiseIDs.split(",");
                         row[COLUMN_INDEX_WISE_ID_1] = wiseIDsArray[0];
@@ -76,7 +97,7 @@ define(['app'], function (app) {
                     // append row to cvsString
                     for (var cellIndex = 0; cellIndex < row.length; cellIndex++) {
                         var cell = row[cellIndex];
-                        if ((typeof cell === 'undefined' ? 'undefined' : _typeof(cell)) === "object") {
+                        if ((typeof cell === "undefined" ? "undefined" : _typeof(cell)) === "object") {
                             cell = "\"" + JSON.stringify(cell).replace(/"/g, '""') + "\"";
                         } else if (typeof cell === "string") {
                             cell = "\"" + cell + "\"";
@@ -85,24 +106,9 @@ define(['app'], function (app) {
                     }
                     csvString += "\r\n";
                 }
-                var runId = ConfigService.getRunId();
+                var runId = this.ConfigService.getRunId();
                 var csvBlob = new Blob([csvString], { type: 'text/csv' });
                 var csvFile = new File([csvBlob], "export_" + runId + ".csv");
-
-                /*
-                 // create a downloadable CSV file
-                 var csvUrl = URL.createObjectURL(csvBlob);
-                 var a = document.createElement("a");
-                 document.body.appendChild(a);
-                 a.style = "display: none";
-                 a.href =  csvUrl;
-                 a.download = "export_" + runId + ".csv";
-                 a.click();
-                  // timeout is required for FF.
-                 window.setTimeout(function() {
-                 URL.revokeObjectURL(csvUrl);  // tell browser to release URL reference
-                 }, 3000);
-                 */
 
                 //ocpu.seturl("//localhost:1234/ocpu/library/wise/R");
                 ocpu.seturl("http://128.32.189.240:81/ocpu/user/wiser/library/wiser/R");
@@ -134,6 +140,12 @@ define(['app'], function (app) {
                     alert("Server error: " + request.responseText);
                 });
             });
-        };
+        }
     }]);
-});
+
+    return ClassroomMonitorController;
+}();
+
+ClassroomMonitorController.$inject = ['$scope', '$rootScope', '$state', '$stateParams', 'ConfigService', 'ProjectService', 'TeacherDataService'];
+
+exports.default = ClassroomMonitorController;

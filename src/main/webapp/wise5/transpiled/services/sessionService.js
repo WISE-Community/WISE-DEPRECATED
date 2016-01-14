@@ -1,45 +1,118 @@
 'use strict';
 
-define(['configService'], function (configService, studentDataService) {
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-    var service = ['$http', '$rootScope', 'ConfigService', 'StudentDataService', function ($http, $rootScope, ConfigService, StudentDataService) {
-        var serviceObject = {};
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
 
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var SessionService = function () {
+    function SessionService($http, $rootScope, ConfigService
+    //StudentDataService) {
+    ) {
+        _classCallCheck(this, SessionService);
+
+        this.$http = $http;
+        this.$rootScope = $rootScope;
+        this.ConfigService = ConfigService;
+        //this.StudentDataService = StudentDataService;
         /*
          * the amount of time (in milliseconds) before we automatically log
          * out the user
          */
-        serviceObject.sessionTimeoutInterval = null;
+        this.sessionTimeoutInterval = null;
 
         /*
          * the amount of time (in milliseconds) before we check if there
          * were any mouse events
          */
-        serviceObject.checkMouseEventInterval = null;
+        this.checkMouseEventInterval = null;
 
         /*
          * the timestamp when the last mouse event occurred
          */
-        serviceObject.lastMouseEventTimestamp = null;
+        this.lastMouseEventTimestamp = null;
 
         // the id for the setTimeout of the warning message
-        serviceObject.warningId = null;
+        this.warningId = null;
 
         // the id for the setTimeout of the automatic log out
-        serviceObject.logOutId = null;
+        this.logOutId = null;
 
         /*
          * boolean value used to determine if we need to log out the
          * user or just bring them back to the home page when we exit
          * the VLE
          */
-        serviceObject.performLogOut = false;
+        this.performLogOut = false;
 
         /**
-         * Start the timers, save session initialized event
+         * Listen for the 'componentDoneUnloading' event. When the user logs
+         * out of the VLE, we will need to wait for certain components to
+         * finish performing any necessary processing (such as saving) before
+         * we actually log out. Once a component has completed their unloading
+         * they will fire the 'componentDoneUnloading' event. We will listen
+         * for this event and when there are no more components left to wait
+         * for, we will then log out.
          */
-        serviceObject.initializeSession = function () {
-            if (ConfigService.isPreview()) {
+        this.$rootScope.$on('doneExiting', angular.bind(this, function () {
+
+            // check if all components are done unloading so we can exit
+            // no longer needed.
+            //this.attemptExit();
+        }));
+
+        /**
+         * Listen for the 'goHome' event. We will attempt to go home when
+         * the 'goHome' even is fired. There may be components that have not
+         * saved their data yet so we may not be able to go home right away.
+         * If there are components that have not saved their data yet, we
+         * will wait for those components to fire the 'componentDoneUnloading'
+         * event and then try to go home again.
+         */
+        this.$rootScope.$on('goHome', angular.bind(this, function () {
+
+            // let other components know that we are exiting
+            this.$rootScope.$broadcast('exit');
+
+            // check if all components are done unloading so we can exit
+            this.attemptExit();
+        }));
+
+        /**
+         * Listen for the 'logOut' event. We will attempt to log out when
+         * the 'logOut' even is fired. There may be components that have not
+         * saved their data yet so we may not be able to log out right away.
+         * If there are components that have not saved their data yet, we
+         * will wait for those components to fire the 'componentDoneUnloading'
+         * event and then try to log out again.
+         */
+        this.$rootScope.$on('logOut', angular.bind(this, function () {
+
+            /*
+             * set the perform log out boolean to true so that we know to
+             * log out the user later
+             */
+            this.performLogOut = true;
+
+            // let other components know that we are exiting
+            this.$rootScope.$broadcast('exit');
+
+            // check if all components are done unloading so we can exit
+            this.attemptExit();
+        }));
+    }
+
+    /**
+     * Start the timers, save session initialized event
+     */
+
+    _createClass(SessionService, [{
+        key: 'initializeSession',
+        value: function initializeSession() {
+            if (this.ConfigService.isPreview()) {
                 // no session management for previewers
                 return;
             }
@@ -64,53 +137,65 @@ define(['configService'], function (configService, studentDataService) {
             var category = "Navigation";
             var event = "sessionStarted";
             var eventData = {};
-            StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
-        };
+            //this.StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
+        }
+    }, {
+        key: 'startTimers',
 
         /**
          * Start the warning and auto log out timers
          */
-        serviceObject.startTimers = function () {
+        value: function startTimers() {
             this.startWarningTimer();
             this.startLogOutTimer();
-        };
+        }
+    }, {
+        key: 'startWarningTimer',
 
         /**
          * Start the warning timer
          */
-        serviceObject.startWarningTimer = function () {
+        value: function startWarningTimer() {
             var warningTimeoutInterval = this.sessionTimeoutInterval * 0.75;
             this.warningId = setTimeout(angular.bind(this, this.showWarning), warningTimeoutInterval);
-        };
+        }
+    }, {
+        key: 'startLogOutTimer',
 
         /**
          * Start the auto log out timer
          */
-        serviceObject.startLogOutTimer = function () {
+        value: function startLogOutTimer() {
             this.logOutId = setTimeout(angular.bind(this, this.forceLogOut), this.sessionTimeoutInterval);
-        };
+        }
+    }, {
+        key: 'startCheckMouseEventTimer',
 
         /**
          * Start the check mouse event timer
          */
-        serviceObject.startCheckMouseEventTimer = function () {
+        value: function startCheckMouseEventTimer() {
             setInterval(angular.bind(this, this.checkMouseEvent), this.checkMouseEventInterval);
-        };
+        }
+    }, {
+        key: 'showWarning',
 
         /**
          * Fire the event that will show the warning message
          */
-        serviceObject.showWarning = function () {
+        value: function showWarning() {
             $rootScope.$broadcast('showSessionWarning');
-        };
+        }
+    }, {
+        key: 'renewSession',
 
         /**
          * Refresh the timers
          */
-        serviceObject.renewSession = function () {
-            var renewSessionURL = ConfigService.getConfigParam('renewSessionURL');
+        value: function renewSession() {
+            var renewSessionURL = this.ConfigService.getConfigParam('renewSessionURL');
             // make a request to the log out url
-            $http.get(renewSessionURL).then(angular.bind(this, function (result) {
+            this.$http.get(renewSessionURL).then(angular.bind(this, function (result) {
                 var isRenewSessionSuccessful = result.data;
 
                 if (isRenewSessionSuccessful === 'true') {
@@ -120,20 +205,24 @@ define(['configService'], function (configService, studentDataService) {
                     this.forceLogOut();
                 }
             }));
-        };
+        }
+    }, {
+        key: 'clearTimers',
 
         /**
          * Delete the existing timers
          */
-        serviceObject.clearTimers = function () {
+        value: function clearTimers() {
             clearTimeout(this.warningId);
             clearTimeout(this.logOutId);
-        };
+        }
+    }, {
+        key: 'mouseEventOccurred',
 
         /**
          * Called when a mouse event occurs
          */
-        serviceObject.mouseEventOccurred = function () {
+        value: function mouseEventOccurred() {
 
             // get the current timestamp
             var date = new Date();
@@ -141,12 +230,14 @@ define(['configService'], function (configService, studentDataService) {
 
             // remember this timestamp
             this.lastMouseEventTimestamp = timestamp;
-        };
+        }
+    }, {
+        key: 'checkMouseEvent',
 
         /**
          * Check if there were any mouse events since the last time we checked
          */
-        serviceObject.checkMouseEvent = function () {
+        value: function checkMouseEvent() {
             if (this.lastMouseEventTimestamp != null) {
                 // there was a mouse event since the last time we checked
 
@@ -156,14 +247,16 @@ define(['configService'], function (configService, studentDataService) {
                 // clear the mouse event timestamp
                 this.lastMouseEventTimestamp = null;
             }
-        };
+        }
+    }, {
+        key: 'convertMinutesToMilliseconds',
 
         /**
          * Convert minutes to milliseconds
          * @param minutes the number of minutes
          * @return the number of milliseconds
          */
-        serviceObject.convertMinutesToMilliseconds = function (minutes) {
+        value: function convertMinutesToMilliseconds(minutes) {
             var milliseconds = null;
 
             if (minutes != null) {
@@ -175,36 +268,40 @@ define(['configService'], function (configService, studentDataService) {
             }
 
             return milliseconds;
-        };
+        }
+    }, {
+        key: 'forceLogOut',
 
         /**
          * Log out the user
          */
-        serviceObject.forceLogOut = function () {
+        value: function forceLogOut() {
             this.clearTimers();
-            $rootScope.$broadcast('logOut');
-        };
+            this.$rootScope.$broadcast('logOut');
+        }
+    }, {
+        key: 'attemptExit',
 
         /**
          * Check if there are components that are not ready to exit
          * because they have not saved their data yet. If there are no
          * components left to wait for, we can then exit.
          */
-        serviceObject.attemptExit = function () {
+        value: function attemptExit() {
 
             // get all the components listening for the exit event
-            var exitListenerCount = $rootScope.$$listenerCount.exit;
+            var exitListenerCount = this.$rootScope.$$listenerCount.exit;
 
             /*
              * Check how many exit listeners are still listening for the
-             * exit event. Components such as nodes will finish saving their 
+             * exit event. Components such as nodes will finish saving their
              * data and then be removed from the listener count.
              */
             if (exitListenerCount != null && exitListenerCount > 0) {
                 // don't log out yet because there are still listeners
             } else {
                     // there are no more listeners so we will exit
-                    var mainHomePageURL = ConfigService.getMainHomePageURL();
+                    var mainHomePageURL = this.ConfigService.getMainHomePageURL();
 
                     // save sessionEnded event
                     var nodeId = null;
@@ -213,29 +310,29 @@ define(['configService'], function (configService, studentDataService) {
                     var category = "Navigation";
                     var event = "sessionEnded";
                     var eventData = {};
-                    StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
+                    //this.StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
 
                     if (this.performLogOut) {
                         // log out the user and bring them to the home page
 
                         // get the url that will log out the user
-                        var sessionLogOutURL = ConfigService.getSessionLogOutURL();
+                        var sessionLogOutURL = this.ConfigService.getSessionLogOutURL();
 
                         // take user to log out url
                         window.location.href = sessionLogOutURL;
                     } else {
                         /*
-                         * bring the user to the student or teacher home page but 
+                         * bring the user to the student or teacher home page but
                          * do not log them out
                          */
 
                         //get the context path e.g. /wise
-                        var contextPath = ConfigService.getConfigParam('contextPath');
+                        var contextPath = this.ConfigService.getConfigParam('contextPath');
 
                         var homePageURL = '';
 
                         // get the user type
-                        var userType = ConfigService.getConfigParam('userType');
+                        var userType = this.ConfigService.getConfigParam('userType');
 
                         if (userType === 'student') {
                             // send the user to the student home page
@@ -251,66 +348,14 @@ define(['configService'], function (configService, studentDataService) {
                         window.location.href = homePageURL;
                     }
                 }
-        };
+        }
+    }]);
 
-        /**
-         * Listen for the 'componentDoneUnloading' event. When the user logs
-         * out of the VLE, we will need to wait for certain components to 
-         * finish performing any necessary processing (such as saving) before
-         * we actually log out. Once a component has completed their unloading
-         * they will fire the 'componentDoneUnloading' event. We will listen
-         * for this event and when there are no more components left to wait
-         * for, we will then log out.
-         */
-        $rootScope.$on('doneExiting', angular.bind(serviceObject, function () {
+    return SessionService;
+}();
 
-            // check if all components are done unloading so we can exit
-            // no longer needed.
-            //this.attemptExit();
-        }));
+//SessionService.$inject = ['$http','$rootScope','ConfigService','StudentDataService'];
 
-        /**
-         * Listen for the 'goHome' event. We will attempt to go home when
-         * the 'goHome' even is fired. There may be components that have not
-         * saved their data yet so we may not be able to go home right away.
-         * If there are components that have not saved their data yet, we 
-         * will wait for those components to fire the 'componentDoneUnloading'
-         * event and then try to go home again.
-         */
-        $rootScope.$on('goHome', angular.bind(serviceObject, function () {
+SessionService.$inject = ['$http', '$rootScope', 'ConfigService'];
 
-            // let other components know that we are exiting
-            $rootScope.$broadcast('exit');
-
-            // check if all components are done unloading so we can exit
-            this.attemptExit();
-        }));
-
-        /**
-         * Listen for the 'logOut' event. We will attempt to log out when
-         * the 'logOut' even is fired. There may be components that have not
-         * saved their data yet so we may not be able to log out right away.
-         * If there are components that have not saved their data yet, we 
-         * will wait for those components to fire the 'componentDoneUnloading'
-         * event and then try to log out again.
-         */
-        $rootScope.$on('logOut', angular.bind(serviceObject, function () {
-
-            /*
-             * set the perform log out boolean to true so that we know to
-             * log out the user later
-             */
-            this.performLogOut = true;
-
-            // let other components know that we are exiting
-            $rootScope.$broadcast('exit');
-
-            // check if all components are done unloading so we can exit
-            this.attemptExit();
-        }));
-
-        return serviceObject;
-    }];
-
-    return service;
-});
+exports.default = SessionService;

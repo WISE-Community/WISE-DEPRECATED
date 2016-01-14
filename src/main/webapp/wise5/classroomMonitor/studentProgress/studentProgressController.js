@@ -1,91 +1,44 @@
-define(['app'], function(app) {
+class StudentProgressController {
+    constructor($rootScope,
+                $state,
+                ConfigService,
+                StudentStatusService,
+                TeacherDataService,
+                TeacherWebSocketService) {
+        this.$rootScope = $rootScope;
+        this.$state = $state;
+        this.ConfigService = ConfigService;
+        this.StudentStatusService = StudentStatusService;
+        this.TeacherDataService = TeacherDataService;
+        this.TeacherWebSocketService = TeacherWebSocketService;
 
-    app
-    .$controllerProvider
-    .register('StudentProgressController', ['$rootScope',
-                                            '$state',
-                                            'ConfigService',
-                                            'StudentStatusService',
-                                            'TeacherDataService',
-                                            'TeacherWebSocketService',
-    function ($rootScope,
-              $state,
-              ConfigService,
-              StudentStatusService,
-              TeacherDataService,
-              TeacherWebSocketService) {
         this.title = 'Grade By Student';
 
-        this.workgroups = ConfigService.getClassmateUserInfos();
+        this.workgroups = this.ConfigService.getClassmateUserInfos();
 
-        this.studentStatuses = StudentStatusService.getStudentStatuses();
+        this.studentStatuses = this.StudentStatusService.getStudentStatuses();
 
         this.periods = [];
 
-        this.getNewNodeVisits = function() {
-            return StudentStatusService.getNewNodeVisits();
+        // create an option for all periods
+        var allPeriodOption = {
+            periodId: -1,
+            periodName: 'All'
         };
 
-        this.getCurrentNodeForWorkgroupId = function(workgroupId) {
-            return StudentStatusService.getCurrentNodeTitleForWorkgroupId(workgroupId);
-        };
+        this.periods.push(allPeriodOption);
 
-        this.getStudentProjectCompletion = function(workgroupId) {
-            return StudentStatusService.getStudentProjectCompletion(workgroupId);
-        };
+        this.periods = this.periods.concat(this.ConfigService.getPeriods());
 
-        this.studentRowClicked = function(workgroup) {
-            var workgroupId = workgroup.workgroupId;
-
-            $state.go('root.studentGrading', {workgroupId: workgroupId});
-        };
-
-        this.isWorkgroupOnline = function(workgroupId) {
-            return this.studentsOnline.indexOf(workgroupId) != -1;
-        };
-
-        /**
-         * Set the current period
-         * @param period the period object
-         */
-        this.setCurrentPeriod = function(period) {
-            TeacherDataService.setCurrentPeriod(period);
-        };
-
-        /**
-         * Get the current period
-         */
-        this.getCurrentPeriod = function() {
-            return TeacherDataService.getCurrentPeriod();
-        };
-
-        /**
-         * Initialize the periods
-         */
-        this.initializePeriods = function() {
-
-            // create an option for all periods
-            var allPeriodOption = {
-                periodId: -1,
-                periodName: 'All'
-            };
-
-            this.periods.push(allPeriodOption);
-
-            this.periods = this.periods.concat(ConfigService.getPeriods());
-
-            // set the current period if it hasn't been set yet
-            if (this.getCurrentPeriod() == null) {
-                if (this.periods != null && this.periods.length > 0) {
-                    // set it to the all periods option
-                    this.setCurrentPeriod(this.periods[0]);
-                }
+        // set the current period if it hasn't been set yet
+        if (this.getCurrentPeriod() == null) {
+            if (this.periods != null && this.periods.length > 0) {
+                // set it to the all periods option
+                this.setCurrentPeriod(this.periods[0]);
             }
-        };
+        }
 
-        this.initializePeriods();
-
-        this.studentsOnline = TeacherWebSocketService.getStudentsOnline();
+        this.studentsOnline = this.TeacherWebSocketService.getStudentsOnline();
 
         /**
          * Listen for the studentsOnlineReceived event
@@ -93,5 +46,48 @@ define(['app'], function(app) {
         $rootScope.$on('studentsOnlineReceived', angular.bind(this, function (event, args) {
             this.studentsOnline = args.studentsOnline;
         }));
-    }])
-});
+
+    }
+
+    getNewNodeVisits() {
+        return this.StudentStatusService.getNewNodeVisits();
+    };
+
+    getCurrentNodeForWorkgroupId(workgroupId) {
+        return this.StudentStatusService.getCurrentNodeTitleForWorkgroupId(workgroupId);
+    };
+
+    getStudentProjectCompletion(workgroupId) {
+        return this.StudentStatusService.getStudentProjectCompletion(workgroupId);
+    };
+
+    studentRowClicked(workgroup) {
+        var workgroupId = workgroup.workgroupId;
+
+        $state.go('root.studentGrading', {workgroupId: workgroupId});
+    };
+
+    isWorkgroupOnline(workgroupId) {
+        return this.studentsOnline.indexOf(workgroupId) != -1;
+    };
+
+    /**
+     * Set the current period
+     * @param period the period object
+     */
+    setCurrentPeriod(period) {
+        this.TeacherDataService.setCurrentPeriod(period);
+    };
+
+    /**
+     * Get the current period
+     */
+    getCurrentPeriod() {
+        return this.TeacherDataService.getCurrentPeriod();
+    };
+
+}
+
+StudentProgressController.$inject = ['$rootScope', '$state', 'ConfigService', 'StudentStatusService', 'TeacherDataService','TeacherWebSocketService'];
+
+export default StudentProgressController;

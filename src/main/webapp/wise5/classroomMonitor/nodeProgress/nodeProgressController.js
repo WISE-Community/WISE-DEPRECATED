@@ -1,143 +1,120 @@
-define(['app'], function(app) {
-
-    app
-    .$controllerProvider
-    .register('NodeProgressController', [
-            '$scope',
-            '$state',
-            'ConfigService',
-            'ProjectService',
-            'StudentStatusService',
-            'TeacherDataService',
-            function ($scope,
-                      $state,
-                      ConfigService,
-                      ProjectService,
-                      StudentStatusService,
-                      TeacherDataService) {
-
+class NodeProgressController {
+    constructor($scope, $state, ConfigService, ProjectService, TeacherDataService) {
+        this.$scope = $scope;
+        this.$state = $state;
+        this.ConfigService = ConfigService;
+        this.ProjectService = ProjectService;
+        this.TeacherDataService = TeacherDataService;
         this.title = 'Grade By Step';
-
         this.currentGroup = null;
-
         this.items = null;
-
         this.periods = [];
-
-        this.getNodeTitleByNodeId = function(nodeId) {
-            return ProjectService.getNodeTitleByNodeId(nodeId);
-        };
-
-        this.isGroupNode = function(nodeId) {
-            return ProjectService.isGroupNode(nodeId);
-        };
-
-        this.getNodePositionById = function(nodeId) {
-            return ProjectService.getNodePositionById(nodeId);
-        };
-
-        /**
-         * Initialize the periods
-         */
-        this.initializePeriods = function() {
-
-            // create an option for all periods
-            var allPeriodOption = {
-                periodId: -1,
-                periodName: 'All'
-            };
-
-            this.periods.push(allPeriodOption);
-
-            this.periods = this.periods.concat(ConfigService.getPeriods());
-
-            // set the current period if it hasn't been set yet
-            if (this.getCurrentPeriod() == null) {
-                if (this.periods != null && this.periods.length > 0) {
-                    // set it to the all periods option
-                    this.setCurrentPeriod(this.periods[0]);
-                }
-            }
-        };
-
-        /**
-         * Set the current period
-         * @param period the period object
-         */
-        this.setCurrentPeriod = function(period) {
-            TeacherDataService.setCurrentPeriod(period);
-        };
-
-        /**
-         * Get the current period
-         */
-        this.getCurrentPeriod = function() {
-            return TeacherDataService.getCurrentPeriod();
-        };
 
         // initialize the periods
         this.initializePeriods();
 
-        //this.nodeIds = ProjectService.getFlattenedProjectAsNodeIds();
-        this.items = ProjectService.idToOrder;
-        
-        $scope.$on('currentNodeChanged', angular.bind(this, function(event, args) {
+        this.items = this.ProjectService.idToOrder;
+
+        this.$scope.$on('currentNodeChanged', angular.bind(this, function(event, args) {
             var previousNode = args.previousNode;
             var currentNode = args.currentNode;
             if (previousNode != null && previousNode.type === 'group') {
                 var nodeId = previousNode.id;
-                //StudentDataService.endNodeVisitByNodeId(nodeId);
             }
-            
+
             if (currentNode != null) {
-                //var nodeId = currentNode.id;
-                //var newNodeVisit = StudentDataService.createNodeVisit(nodeId);
-                //this.updateNavigation();
-                
+
                 var currentNodeId = currentNode.id;
-                
-                if (ProjectService.isGroupNode(currentNodeId)) {
+
+                if (this.ProjectService.isGroupNode(currentNodeId)) {
                     // current node is a group
-                    
+
                     this.currentGroup = currentNode;
                     this.currentGroupId = this.currentGroup.id;
-                    $scope.currentgroupid = this.currentGroupId;
-                } else if (ProjectService.isApplicationNode(currentNodeId)) {
+                    this.$scope.currentgroupid = this.currentGroupId;
+                } else if (this.ProjectService.isApplicationNode(currentNodeId)) {
                     // current node is an application node
-                    
                     // load the step grading view
-                    
-                    $state.go('root.nodeGrading', {nodeId: currentNodeId});
+                    this.$state.go('root.nodeGrading', {nodeId: currentNodeId});
                 }
             }
-            
-            $scope.$apply();
+
+            this.$scope.$apply();
         }));
-        
-        var startNodeId = ProjectService.getStartNodeId();
-        var rootNode = ProjectService.getRootNode(startNodeId);
-        
+
+        var startNodeId = this.ProjectService.getStartNodeId();
+        var rootNode = this.ProjectService.getRootNode(startNodeId);
+
         this.currentGroup = rootNode;
-        
-        
+
+
         if (this.currentGroup != null) {
             this.currentGroupId = this.currentGroup.id;
-            $scope.currentgroupid = this.currentGroupId;
+            this.$scope.currentgroupid = this.currentGroupId;
         }
-        
-        var flattenedProjectNodeIds = ProjectService.getFlattenedProjectAsNodeIds();
+
+        var flattenedProjectNodeIds = this.ProjectService.getFlattenedProjectAsNodeIds();
         //console.log(JSON.stringify(flattenedProjectNodeIds, null, 4));
-        
-        var branches = ProjectService.getBranches();
-        //console.log(JSON.stringify(branches, null, 4));
-        
-        //console.log('end');
 
-        this.nodeClicked = function(nodeId) {
+        var branches = this.ProjectService.getBranches();
+    }
 
-            $state.go('root.nodeGrading', {nodeId:nodeId});
+    getNodeTitleByNodeId(nodeId) {
+        return this.ProjectService.getNodeTitleByNodeId(nodeId);
+    };
+
+    isGroupNode(nodeId) {
+        return this.ProjectService.isGroupNode(nodeId);
+    };
+
+    getNodePositionById(nodeId) {
+        return this.ProjectService.getNodePositionById(nodeId);
+    };
+
+    /**
+     * Initialize the periods
+     */
+    initializePeriods() {
+
+        // create an option for all periods
+        var allPeriodOption = {
+            periodId: -1,
+            periodName: 'All'
         };
 
-    }]);
-    
-});
+        this.periods.push(allPeriodOption);
+
+        this.periods = this.periods.concat(this.ConfigService.getPeriods());
+
+        // set the current period if it hasn't been set yet
+        if (this.getCurrentPeriod() == null) {
+            if (this.periods != null && this.periods.length > 0) {
+                // set it to the all periods option
+                this.setCurrentPeriod(this.periods[0]);
+            }
+        }
+    };
+
+    /**
+     * Set the current period
+     * @param period the period object
+     */
+    setCurrentPeriod(period) {
+        this.TeacherDataService.setCurrentPeriod(period);
+    };
+
+    /**
+     * Get the current period
+     */
+    getCurrentPeriod() {
+        return this.TeacherDataService.getCurrentPeriod();
+    };
+
+    nodeClicked(nodeId) {
+
+        this.$state.go('root.nodeGrading', {nodeId:nodeId});
+    };
+}
+NodeProgressController.$inject = ['$scope', '$state', 'ConfigService', 'ProjectService', 'TeacherDataService'];
+
+export default NodeProgressController;

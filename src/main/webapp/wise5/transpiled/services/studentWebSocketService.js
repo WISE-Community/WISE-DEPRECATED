@@ -1,19 +1,35 @@
 'use strict';
 
-define(['configService'], function (configService) {
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-    var service = ['$http', '$rootScope', '$websocket', 'ConfigService', 'StudentDataService', function ($http, $rootScope, $websocket, ConfigService, StudentDataService) {
-        var serviceObject = {};
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
 
-        serviceObject.dataStream = null;
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-        /**
-         * Initialize the websocket connection
-         */
-        serviceObject.initialize = function () {
+var StudentWebSocketService = function () {
+    function StudentWebSocketService($rootScope, $websocket, ConfigService, StudentDataService) {
+        _classCallCheck(this, StudentWebSocketService);
+
+        this.$rootScope = $rootScope;
+        this.$websocket = $websocket;
+        this.ConfigService = ConfigService;
+        this.StudentDataService = StudentDataService;
+
+        this.dataStream = null;
+    }
+
+    /**
+     * Initialize the websocket connection
+     */
+
+    _createClass(StudentWebSocketService, [{
+        key: 'initialize',
+        value: function initialize() {
 
             // get the mode
-            var mode = ConfigService.getConfigParam('mode');
+            var mode = this.ConfigService.getConfigParam('mode');
 
             if (mode === 'preview') {
                 // we are previewing the project
@@ -21,14 +37,14 @@ define(['configService'], function (configService) {
                     // we are in a run
 
                     // get the parameters for initializing the websocket connection
-                    var runId = ConfigService.getRunId();
-                    var periodId = ConfigService.getPeriodId();
-                    var workgroupId = ConfigService.getWorkgroupId();
-                    var webSocketURL = ConfigService.getWebSocketURL();
+                    var runId = this.ConfigService.getRunId();
+                    var periodId = this.ConfigService.getPeriodId();
+                    var workgroupId = this.ConfigService.getWorkgroupId();
+                    var webSocketURL = this.ConfigService.getWebSocketURL();
                     webSocketURL += "?runId=" + runId + "&periodId=" + periodId + "&workgroupId=" + workgroupId;
 
                     // start the websocket connection
-                    this.dataStream = $websocket(webSocketURL);
+                    this.dataStream = this.$websocket(webSocketURL);
 
                     // this is the function that handles messages we receive from web sockets
                     this.dataStream.onMessage(angular.bind(this, function (message) {
@@ -45,37 +61,41 @@ define(['configService'], function (configService) {
                         }
                     }));
                 }
-        };
+        }
+    }, {
+        key: 'handleWebSocketMessageReceived',
 
         /**
          * Handle the message we have received
          * @param data the data from the message
          */
-        serviceObject.handleWebSocketMessageReceived = function (data) {
+        value: function handleWebSocketMessageReceived(data) {
 
             // broadcast the data to all listeners
-            $rootScope.$broadcast('webSocketMessageRecieved', { data: data });
-        };
+            this.$rootScope.$broadcast('webSocketMessageRecieved', { data: data });
+        }
+    }, {
+        key: 'sendStudentStatus',
 
         /**
          * Send the student status to the server through websockets
          */
-        serviceObject.sendStudentStatus = function () {
+        value: function sendStudentStatus() {
 
-            var mode = ConfigService.getConfigParam('mode');
+            var mode = this.ConfigService.getConfigParam('mode');
 
             if (mode !== 'preview') {
                 // we are in a run
 
                 // get the current node id
-                var currentNodeId = StudentDataService.getCurrentNodeId();
+                var currentNodeId = this.StudentDataService.getCurrentNodeId();
 
                 // get the node statuses
-                var nodeStatuses = StudentDataService.getNodeStatuses();
+                var nodeStatuses = this.StudentDataService.getNodeStatuses();
 
                 // get the latest node visit
-                //var latestCompletedNodeVisit = StudentDataService.getLatestCompletedNodeVisit();
-                var latestComponentState = StudentDataService.getLatestComponentState();
+                //var latestCompletedNodeVisit = this.StudentDataService.getLatestCompletedNodeVisit();
+                var latestComponentState = this.StudentDataService.getLatestComponentState();
 
                 // make the websocket message
                 var messageJSON = {};
@@ -89,20 +109,22 @@ define(['configService'], function (configService) {
                 // send the websocket message
                 this.dataStream.send(messageJSON);
             }
-        };
+        }
+    }, {
+        key: 'sendStudentToClassmatesInPeriodMessage',
 
         /**
          * Send a message to classmates in the period
          * @param data the data to send to the classmates
          */
-        serviceObject.sendStudentToClassmatesInPeriodMessage = function (data) {
-            var mode = ConfigService.getConfigParam('mode');
+        value: function sendStudentToClassmatesInPeriodMessage(data) {
+            var mode = this.ConfigService.getConfigParam('mode');
 
             if (mode !== 'preview') {
                 // we are in a run
 
                 // get the current node id
-                var currentNodeId = StudentDataService.getCurrentNodeId();
+                var currentNodeId = this.StudentDataService.getCurrentNodeId();
 
                 // make the websocket message
                 var messageJSON = {};
@@ -114,10 +136,12 @@ define(['configService'], function (configService) {
                 // send the websocket message
                 this.dataStream.send(messageJSON);
             }
-        };
+        }
+    }]);
 
-        return serviceObject;
-    }];
+    return StudentWebSocketService;
+}();
 
-    return service;
-});
+StudentWebSocketService.$inject = ['$rootScope', '$websocket', 'ConfigService', 'StudentDataService'];
+
+exports.default = StudentWebSocketService;

@@ -13,49 +13,49 @@ import angularToArrayFilter from 'lib/angular-toArrayFilter/toArrayFilter';
 import angularUIRouter from 'angular-ui-router';
 import angularUITree from 'angular-ui-tree';
 import angularWebSocket from 'angular-websocket';
-import AnnotationController from '../controllers/annotationController2';
-import AnnotationService from '../services/annotationService2';
-//import AudioRecorderService from '../components/audioRecorder/audioRecorderService2';
-import ConfigService from '../services/configService2';
-//import CRaterService from '../components/cRater/cRaterService2';
-import Directives from '../directives/directives2';
-import DiscussionController from '../components/discussion/discussionController2';
-import DiscussionService from '../components/discussion/discussionService2';
-import DrawController from '../components/draw/drawController2';
-import DrawService from '../components/draw/drawService2';
-import EmbeddedController from '../components/embedded/embeddedController2';
-import EmbeddedService from '../components/embedded/embeddedService2';
-import GraphController from '../components/graph/graphController2';
-import GraphService from '../components/graph/graphService2';
+import AnnotationController from '../controllers/annotationController';
+import AnnotationService from '../services/annotationService';
+//import AudioRecorderService from '../components/audioRecorder/audioRecorderService';
+import ConfigService from '../services/configService';
+//import CRaterService from '../components/cRater/cRaterService';
+import Directives from '../directives/directives';
+import DiscussionController from '../components/discussion/discussionController';
+import DiscussionService from '../components/discussion/discussionService';
+import DrawController from '../components/draw/drawController';
+import DrawService from '../components/draw/drawService';
+import EmbeddedController from '../components/embedded/embeddedController';
+import EmbeddedService from '../components/embedded/embeddedService';
+import GraphController from '../components/graph/graphController';
+import GraphService from '../components/graph/graphService';
 import Highcharts from 'highcharts';
-//import HTMLService from '../components/html/htmlService2';
-import HTMLController from '../components/html/htmlController2';
-import LabelController from '../components/label/labelController2';
-import LabelService from '../components/label/labelService2';
-import MatchController from '../components/match/matchController2';
-import MatchService from '../components/match/matchService2';
-import MultipleChoiceController from '../components/multipleChoice/multipleChoiceController2';
-import MultipleChoiceService from '../components/multipleChoice/multipleChoiceService2';
-import NavigationController from './navigation/navigationController2';
-import NodeController from '../node/nodeController2';
-import NodeService from '../services/nodeService2';
-import NotebookService from '../services/notebookService2';
-import OpenResponseController from '../components/openResponse/openResponseController2';
-import OpenResponseService from '../components/openResponse/openResponseService2';
-import OutsideURLController from '../components/outsideURL/outsideURLController2';
-import OutsideURLService from '../components/outsideURL/outsideURLService2';
-//import PhotoBoothService from '../components/photoBooth/photoBoothService2';
-import ProjectService from '../services/projectService2';
-import SessionService from '../services/sessionService2';
-import StudentAssetService from '../services/studentAssetService2';
-import StudentDataService from '../services/studentDataService2';
-import StudentStatusService from '../services/studentStatusService2';
-import StudentWebSocketService from '../services/studentWebSocketService2';
-import TableController from '../components/table/tableController2';
-import TableService from '../components/table/tableService2';
-import TeacherDataService from '../services/teacherDataService2';
-import UtilService from '../services/utilService2';
-import VLEController from './vleController2';
+//import HTMLService from '../components/html/htmlService';
+import HTMLController from '../components/html/htmlController';
+import LabelController from '../components/label/labelController';
+import LabelService from '../components/label/labelService';
+import MatchController from '../components/match/matchController';
+import MatchService from '../components/match/matchService';
+import MultipleChoiceController from '../components/multipleChoice/multipleChoiceController';
+import MultipleChoiceService from '../components/multipleChoice/multipleChoiceService';
+import NavigationController from './navigation/navigationController';
+import NodeController from '../node/nodeController';
+import NodeService from '../services/nodeService';
+import NotebookService from '../services/notebookService';
+import OpenResponseController from '../components/openResponse/openResponseController';
+import OpenResponseService from '../components/openResponse/openResponseService';
+import OutsideURLController from '../components/outsideURL/outsideURLController';
+import OutsideURLService from '../components/outsideURL/outsideURLService';
+//import PhotoBoothService from '../components/photoBooth/photoBoothService';
+import ProjectService from '../services/projectService';
+import SessionService from '../services/sessionService';
+import StudentAssetService from '../services/studentAssetService';
+import StudentDataService from '../services/studentDataService';
+import StudentStatusService from '../services/studentStatusService';
+import StudentWebSocketService from '../services/studentWebSocketService';
+import TableController from '../components/table/tableController';
+import TableService from '../components/table/tableService';
+import TeacherDataService from '../services/teacherDataService';
+import UtilService from '../services/utilService';
+import VLEController from './vleController';
 
 //import ocLazyLoad from '../vendor/oclazyload/dist/ocLazyLoad.require';
 import ocLazyLoad from 'oclazyload';
@@ -178,60 +178,60 @@ let mainModule = angular.module('vle', [
                             resolve: {
                                 load: () => {
                                     /*
-                                    System.import('components/audioRecorder/audioRecorderController2').then((AudioRecorderController) => {
+                                    System.import('components/audioRecorder/audioRecorderController').then((AudioRecorderController) => {
                                         $controllerProvider.register(AudioRecorderController.default.name, AudioRecorderController.default);
                                     });
                                     */
                                     /*
-                                    System.import('components/cRater/cRaterController2').then((CRaterController) => {
+                                    System.import('components/cRater/cRaterController').then((CRaterController) => {
                                         $controllerProvider.register(CRaterController.default.name, CRaterController.default);
                                     });
                                     */
                                     /*
-                                    System.import('components/discussion/discussionController2').then((DiscussionController) => {
+                                    System.import('components/discussion/discussionController').then((DiscussionController) => {
                                         $controllerProvider.register(DiscussionController.default.name, DiscussionController.default);
                                     });
 
-                                    System.import('components/draw/drawController2').then((DrawController) => {
+                                    System.import('components/draw/drawController').then((DrawController) => {
                                         $controllerProvider.register(DrawController.default.name, DrawController.default);
                                     });
 
-                                    System.import('components/embedded/embeddedController2').then((EmbeddedController) => {
+                                    System.import('components/embedded/embeddedController').then((EmbeddedController) => {
                                         $controllerProvider.register(EmbeddedController.default.name, EmbeddedController.default);
                                     });
 
-                                    System.import('components/graph/graphController2').then((GraphController) => {
+                                    System.import('components/graph/graphController').then((GraphController) => {
                                         $controllerProvider.register(GraphController.default.name, GraphController.default);
                                     });
 
-                                    System.import('components/html/htmlController2').then((HTMLController) => {
+                                    System.import('components/html/htmlController').then((HTMLController) => {
                                         $controllerProvider.register(HTMLController.default.name, HTMLController.default);
                                     });
 
-                                    System.import('components/label/labelController2').then((LabelController) => {
+                                    System.import('components/label/labelController').then((LabelController) => {
                                         $controllerProvider.register(LabelController.default.name, LabelController.default);
                                     });
 
-                                    System.import('components/match/matchController2').then((MatchController) => {
+                                    System.import('components/match/matchController').then((MatchController) => {
                                         $controllerProvider.register(MatchController.default.name, MatchController.default);
                                     });
 
-                                    System.import('components/multipleChoice/multipleChoiceController2').then((MultipleChoiceController) => {
+                                    System.import('components/multipleChoice/multipleChoiceController').then((MultipleChoiceController) => {
                                         $controllerProvider.register(MultipleChoiceController.default.name, MultipleChoiceController.default);
                                     });
-                                    System.import('components/openResponse/openResponseController2').then((OpenResponseController) => {
+                                    System.import('components/openResponse/openResponseController').then((OpenResponseController) => {
                                         $controllerProvider.register(OpenResponseController.default.name, OpenResponseController.default);
                                     });
 
-                                    System.import('components/outsideURL/outsideURLController2').then((OutsideURLController) => {
+                                    System.import('components/outsideURL/outsideURLController').then((OutsideURLController) => {
                                         $controllerProvider.register(OutsideURLController.default.name, OutsideURLController.default);
                                     });
                                      */
                                     /*
-                                    System.import('components/photoBooth/photoBoothController2').then((PhotoBoothController) => {
+                                    System.import('components/photoBooth/photoBoothController').then((PhotoBoothController) => {
                                         $controllerProvider.register(PhotoBoothController.default.name, PhotoBoothController.default);
                                     });
-                                    System.import('components/table/tableController2').then((TableController) => {
+                                    System.import('components/table/tableController').then((TableController) => {
                                         $controllerProvider.register(TableController.default.name, TableController.default);
                                     });
                                      */

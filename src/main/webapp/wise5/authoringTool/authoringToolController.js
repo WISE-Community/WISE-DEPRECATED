@@ -1,22 +1,17 @@
-define(['app'], function(app) {
-    app
-    .$controllerProvider
-    .register('AuthoringToolController',
-    function($scope,
-             $rootScope,
-             $state,
-             $stateParams,
-             ConfigService,
-             NotebookService,
-             ProjectService,
-             NodeService,
-             SessionService,
-             TeacherDataService,
-             $mdDialog) {
+'use strict';
+
+class AuthoringToolController {
+
+    constructor($scope,
+                ConfigService,
+                SessionService,
+                $mdDialog) {
+        this.ConfigService = ConfigService;
+        this.SessionService = SessionService;
 
         $scope.$on('showSessionWarning', angular.bind(this, function() {
             // Appending dialog to document.body
-            var confirm = $mdDialog.confirm()
+            let confirm = $mdDialog.confirm()
                 .parent(angular.element(document.body))
                 .title('Session Timeout')
                 .content('You have been inactive for a long time. Do you want to stay logged in?')
@@ -24,18 +19,22 @@ define(['app'], function(app) {
                 .ok('YES')
                 .cancel('No');
             $mdDialog.show(confirm).then(function() {
-                SessionService.renewSession();
+                this.SessionService.renewSession();
             }, function() {
-                SessionService.forceLogOut();
+                this.SessionService.forceLogOut();
             });
         }));
+    }
 
-        this.exit = function() {
-            //get the context path e.g. /wise
-            var contextPath = ConfigService.getConfigParam('contextPath');
-            // send the user to the teacher home page
-            homePageURL = contextPath + '/teacher';
-            window.location = homePageURL;
-        }
-    });
-});
+    exit() {
+        //get the context path e.g. /wise
+        let contextPath = this.ConfigService.getConfigParam('contextPath');
+        // send the user to the teacher home page
+        let homePageURL = contextPath + '/teacher';
+        window.location = homePageURL;
+    }
+}
+
+AuthoringToolController.$inject = ['$scope', 'ConfigService', 'SessionService', '$mdDialog'];
+
+export default AuthoringToolController;

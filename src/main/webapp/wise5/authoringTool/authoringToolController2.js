@@ -24,7 +24,7 @@ class AuthoringToolController {
                 this.SessionService.forceLogOut();
             });
         }));
-    }
+    };
 
     exit() {
         //get the context path e.g. /wise

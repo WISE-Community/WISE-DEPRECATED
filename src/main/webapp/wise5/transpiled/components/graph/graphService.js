@@ -1,23 +1,50 @@
 'use strict';
 
-define(['nodeService', 'studentDataService'], function (nodeService, studentDataService) {
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-    var service = ['$http', 'NodeService', 'StudentDataService', function ($http, NodeService, StudentDataService) {
-        var serviceObject = Object.create(NodeService);
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
 
-        serviceObject.config = null;
+var _nodeService = require('../../services/nodeService');
 
-        serviceObject.callFunction = function (node, component, functionName, functionParams, componentStates, nodeStates, componentEvents, nodeEvents) {
+var _nodeService2 = _interopRequireDefault(_nodeService);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var GraphService = function (_NodeService) {
+    _inherits(GraphService, _NodeService);
+
+    function GraphService(StudentDataService) {
+        _classCallCheck(this, GraphService);
+
+        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(GraphService).call(this));
+
+        _this.StudentDataService = StudentDataService;
+        return _this;
+    }
+
+    _createClass(GraphService, [{
+        key: 'callFunction',
+        value: function callFunction(node, component, functionName, functionParams, componentStates, nodeStates, componentEvents, nodeEvents) {
             var result = null;
 
             return result;
-        };
+        }
+    }, {
+        key: 'getStudentWorkAsHTML',
 
         /**
          * Get the student work as html
          * @param nodeState the node state
          */
-        serviceObject.getStudentWorkAsHTML = function (nodeState) {
+        value: function getStudentWorkAsHTML(nodeState) {
             var studentWorkAsHTML = null;
 
             if (nodeState != null) {
@@ -29,7 +56,9 @@ define(['nodeService', 'studentDataService'], function (nodeService, studentData
             }
 
             return studentWorkAsHTML;
-        };
+        }
+    }, {
+        key: 'populateComponentState',
 
         /**
          * Populate a component state with the data from another component state
@@ -37,13 +66,13 @@ define(['nodeService', 'studentDataService'], function (nodeService, studentData
          * @return a new component state that contains the student data from the other
          * component state
          */
-        serviceObject.populateComponentState = function (componentStateFromOtherComponent) {
+        value: function populateComponentState(componentStateFromOtherComponent) {
             var componentState = null;
 
             if (componentStateFromOtherComponent != null) {
 
                 // create an empty component state
-                componentState = StudentDataService.createComponentState();
+                componentState = this.StudentDataService.createComponentState();
 
                 // get the component type of the other component state
                 var otherComponentType = componentStateFromOtherComponent.componentType;
@@ -55,7 +84,7 @@ define(['nodeService', 'studentDataService'], function (nodeService, studentData
                     var studentData = componentStateFromOtherComponent.studentData;
 
                     // create a copy of the student data
-                    var studentDataCopy = StudentDataService.makeCopyOfJSONObject(studentData);
+                    var studentDataCopy = this.StudentDataService.makeCopyOfJSONObject(studentData);
 
                     // set the student data into the new component state
                     componentState.studentData = studentDataCopy;
@@ -63,7 +92,9 @@ define(['nodeService', 'studentDataService'], function (nodeService, studentData
             }
 
             return componentState;
-        };
+        }
+    }, {
+        key: 'generateRegressionSeries',
 
         /**
          * Code extracted from https://github.com/streamlinesocial/highcharts-regression
@@ -73,7 +104,7 @@ define(['nodeService', 'studentDataService'], function (nodeService, studentData
          * @param series an array of series
          * @return an array of regression series
          */
-        serviceObject.generateRegressionSeries = function (series) {
+        value: function generateRegressionSeries(series) {
             var regressionSeries = [];
             var i = 0;
             for (i = 0; i < series.length; i++) {
@@ -82,37 +113,43 @@ define(['nodeService', 'studentDataService'], function (nodeService, studentData
                     s.regressionSettings = s.regressionSettings || {};
                     var regressionType = s.regressionSettings.type || "linear";
                     var regression;
+
+                    var color = s.color;
+
+                    if (s.regressionSettings.color != null) {
+                        color = s.regressionSettings.color;
+                    }
+
                     var extraSerie = {
                         data: [],
-                        color: s.color,
+                        color: color,
                         yAxis: s.yAxis,
                         lineWidth: 2,
                         marker: { enabled: false },
                         isRegressionLine: true,
-                        name: s.regressionSettings.label || "Equation: %eq",
-                        color: s.regressionSettings.color || ''
+                        name: s.regressionSettings.label || "Equation: %eq"
                     };
 
                     extraSerie.type = "spline";
 
                     if (regressionType == "linear") {
-                        regression = _linear(s.data, s.regressionSettings);
+                        regression = this._linear(s.data, s.regressionSettings);
                         extraSerie.type = "line";
                     } else if (regressionType == "exponential") {
-                        regression = _exponential(s.data, s.regressionSettings);
+                        regression = this._exponential(s.data, s.regressionSettings);
                     } else if (regressionType == "polynomial") {
-                        regression = _polynomial(s.data, 2, s.regressionSettings);
+                        regression = this._polynomial(s.data, 2, s.regressionSettings);
                     } else if (regressionType == "logarithmic") {
-                        regression = _logarithmic(s.data, s.regressionSettings);
+                        regression = this._logarithmic(s.data, s.regressionSettings);
                     } else if (regressionType == "loess") {
                         var loessSmooth = s.regressionSettings.loessSmooth || 25;
-                        regression = _loess(s.data, loessSmooth / 100);
+                        regression = this._loess(s.data, loessSmooth / 100);
                     } else {
                         console.error("Invalid regression type: ", regressionType);
                         break;
                     }
 
-                    regression.rSquared = coefficientOfDetermination(s.data, regression.points).toFixed(2);
+                    regression.rSquared = this.coefficientOfDetermination(s.data, regression.points).toFixed(2);
                     regression.rValue = Math.sqrt(regression.rSquared, 2).toFixed(2);
                     extraSerie.data = regression.points;
                     extraSerie.name = extraSerie.name.replace("%r2", regression.rSquared);
@@ -126,12 +163,14 @@ define(['nodeService', 'studentDataService'], function (nodeService, studentData
             }
 
             return regressionSeries;
-        };
+        }
+    }, {
+        key: '_exponential',
 
         /**
          * Code extracted from https://github.com/Tom-Alexander/regression-js/
          */
-        function _exponential(data, regressionSettings) {
+        value: function _exponential(data, regressionSettings) {
             var sum = [0, 0, 0, 0, 0, 0],
                 n = 0,
                 results = [];
@@ -207,16 +246,19 @@ define(['nodeService', 'studentDataService'], function (nodeService, studentData
 
         /**
          * Code extracted from https://github.com/Tom-Alexander/regression-js/
-         * Human readable formulas: 
-         * 
-         *              N * Σ(XY) - Σ(X) 
+         * Human readable formulas:
+         *
+         *              N * Σ(XY) - Σ(X)
          * intercept = ---------------------
          *              N * Σ(X^2) - Σ(X)^2
-         * 
+         *
          * correlation = N * Σ(XY) - Σ(X) * Σ (Y) / √ (  N * Σ(X^2) - Σ(X) ) * ( N * Σ(Y^2) - Σ(Y)^2 ) ) )
-         * 
+         *
          */
-        function _linear(data, regressionSettings) {
+
+    }, {
+        key: '_linear',
+        value: function _linear(data, regressionSettings) {
             var sum = [0, 0, 0, 0, 0],
                 n = 0,
                 results = [],
@@ -292,7 +334,10 @@ define(['nodeService', 'studentDataService'], function (nodeService, studentData
         /**
          *  Code extracted from https://github.com/Tom-Alexander/regression-js/
          */
-        function _logarithmic(data, regressionSettings) {
+
+    }, {
+        key: '_logarithmic',
+        value: function _logarithmic(data, regressionSettings) {
             var sum = [0, 0, 0, 0],
                 n = 0,
                 results = [],
@@ -373,7 +418,10 @@ define(['nodeService', 'studentDataService'], function (nodeService, studentData
         /**
          * Code extracted from https://github.com/Tom-Alexander/regression-js/
          */
-        function _power(data) {
+
+    }, {
+        key: '_power',
+        value: function _power(data) {
             var sum = [0, 0, 0, 0],
                 n = 0,
                 results = [];
@@ -417,7 +465,10 @@ define(['nodeService', 'studentDataService'], function (nodeService, studentData
         /**
          * Code extracted from https://github.com/Tom-Alexander/regression-js/
          */
-        function _polynomial(data, order, regressionSettings) {
+
+    }, {
+        key: '_polynomial',
+        value: function _polynomial(data, order, regressionSettings) {
             if (typeof order == 'undefined') {
                 order = 2;
             }
@@ -453,7 +504,7 @@ define(['nodeService', 'studentDataService'], function (nodeService, studentData
             }
             rhs.push(lhs);
 
-            var equation = gaussianElimination(rhs, k);
+            var equation = this.gaussianElimination(rhs, k);
 
             if (regressionSettings != null && regressionSettings.xMin != null && regressionSettings.xMax != null && regressionSettings.numberOfPoints != null) {
 
@@ -516,11 +567,14 @@ define(['nodeService', 'studentDataService'], function (nodeService, studentData
 
         /**
          * @author: Ignacio Vazquez
-         * Based on 
+         * Based on
          * - http://commons.apache.org/proper/commons-math/download_math.cgi LoesInterpolator.java
          * - https://gist.github.com/avibryant/1151823
          */
-        function _loess(data, bandwidth) {
+
+    }, {
+        key: '_loess',
+        value: function _loess(data, bandwidth) {
             var bandwidth = bandwidth || 0.25;
 
             var xval = data.map(function (pair) {
@@ -622,7 +676,10 @@ define(['nodeService', 'studentDataService'], function (nodeService, studentData
         /**
          * Code extracted from https://github.com/Tom-Alexander/regression-js/
          */
-        function gaussianElimination(a, o) {
+
+    }, {
+        key: 'gaussianElimination',
+        value: function gaussianElimination(a, o) {
             var i = 0,
                 j = 0,
                 k = 0,
@@ -656,10 +713,13 @@ define(['nodeService', 'studentDataService'], function (nodeService, studentData
         }
 
         /**
-         * @author Ignacio Vazquez 
-         * See http://en.wikipedia.org/wiki/Coefficient_of_determination for theaorical details 
+         * @author Ignacio Vazquez
+         * See http://en.wikipedia.org/wiki/Coefficient_of_determination for theaorical details
          */
-        function coefficientOfDetermination(data, pred) {
+
+    }, {
+        key: 'coefficientOfDetermination',
+        value: function coefficientOfDetermination(data, pred) {
 
             var i = SSE = SSYY = mean = 0;
 
@@ -684,7 +744,10 @@ define(['nodeService', 'studentDataService'], function (nodeService, studentData
          * @param nodeEvents the events for the parent node of the component
          * @returns whether the component was completed
          */
-        serviceObject.isCompleted = function (component, componentStates, componentEvents, nodeEvents) {
+
+    }, {
+        key: 'isCompleted',
+        value: function isCompleted(component, componentStates, componentEvents, nodeEvents) {
             var result = false;
 
             if (componentStates != null) {
@@ -711,10 +774,12 @@ define(['nodeService', 'studentDataService'], function (nodeService, studentData
             }
 
             return result;
-        };
+        }
+    }]);
 
-        return serviceObject;
-    }];
+    return GraphService;
+}(_nodeService2.default);
 
-    return service;
-});
+GraphService.$inject = ['StudentDataService'];
+
+exports.default = GraphService;

@@ -1,13 +1,41 @@
 'use strict';
 
-define(['nodeService'], function (nodeService) {
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-    var service = ['$http', '$q', 'ConfigService', 'NodeService', 'TeacherDataService', function ($http, $q, ConfigService, NodeService, TeacherDataService) {
-        var serviceObject = Object.create(NodeService);
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
 
-        serviceObject.config = null;
+var _nodeService = require('../../services/nodeService');
 
-        serviceObject.callFunction = function (node, component, functionName, functionParams, componentStates, nodeStates, componentEvents, nodeEvents) {
+var _nodeService2 = _interopRequireDefault(_nodeService);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var DiscussionService = function (_NodeService) {
+    _inherits(DiscussionService, _NodeService);
+
+    function DiscussionService($http, $q, ConfigService, TeacherDataService) {
+        _classCallCheck(this, DiscussionService);
+
+        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(DiscussionService).call(this));
+
+        _this.$http = $http;
+        _this.$q = $q;
+        _this.ConfigService = ConfigService;
+        _this.TeacherDataService = TeacherDataService;
+        return _this;
+    }
+
+    _createClass(DiscussionService, [{
+        key: 'callFunction',
+        value: function callFunction(node, component, functionName, functionParams, componentStates, nodeStates, componentEvents, nodeEvents) {
             var result = null;
 
             if (functionName === 'wordCountCompare') {
@@ -15,9 +43,10 @@ define(['nodeService'], function (nodeService) {
             }
 
             return result;
-        };
-
-        serviceObject.wordCountCompare = function (params) {
+        }
+    }, {
+        key: 'wordCountCompare',
+        value: function wordCountCompare(params) {
             var result = false;
 
             if (params != null) {
@@ -49,9 +78,10 @@ define(['nodeService'], function (nodeService) {
             }
 
             return result;
-        };
-
-        serviceObject.getWordCount = function (response) {
+        }
+    }, {
+        key: 'getWordCount',
+        value: function getWordCount(response) {
             var wordCount = 0;
 
             if (response != null) {
@@ -60,9 +90,10 @@ define(['nodeService'], function (nodeService) {
             }
 
             return wordCount;
-        };
-
-        serviceObject.getStudentWorkAsHTML = function (nodeState) {
+        }
+    }, {
+        key: 'getStudentWorkAsHTML',
+        value: function getStudentWorkAsHTML(nodeState) {
             var studentWorkAsHTML = null;
 
             if (nodeState != null) {
@@ -74,9 +105,10 @@ define(['nodeService'], function (nodeService) {
             }
 
             return studentWorkAsHTML;
-        };
-
-        serviceObject.populateComponentState = function (componentStateFromOtherComponent, otherComponentType) {
+        }
+    }, {
+        key: 'populateComponentState',
+        value: function populateComponentState(componentStateFromOtherComponent, otherComponentType) {
             var componentState = null;
 
             if (componentStateFromOtherComponent != null && otherComponentType != null) {
@@ -88,16 +120,17 @@ define(['nodeService'], function (nodeService) {
             }
 
             return componentState;
-        };
-
-        serviceObject.getClassmateResponses = function (runId, periodId, nodeId, componentId) {
+        }
+    }, {
+        key: 'getClassmateResponses',
+        value: function getClassmateResponses(runId, periodId, nodeId, componentId) {
 
             if (runId != null && periodId != null && nodeId != null && componentId != null) {
-                return $q(angular.bind(this, function (resolve, reject) {
+                return this.$q(angular.bind(this, function (resolve, reject) {
 
                     var httpParams = {};
                     httpParams.method = 'GET';
-                    httpParams.url = ConfigService.getConfigParam('studentDataURL');
+                    httpParams.url = this.ConfigService.getConfigParam('studentDataURL');
 
                     var params = {};
                     params.runId = runId;
@@ -107,7 +140,7 @@ define(['nodeService'], function (nodeService) {
                     params.getStudentWork = true;
                     httpParams.params = params;
 
-                    $http(httpParams).then(angular.bind(this, function (result) {
+                    this.$http(httpParams).then(angular.bind(this, function (result) {
                         var classmateData = result.data;
 
                         //console.log(classmateData);
@@ -116,17 +149,19 @@ define(['nodeService'], function (nodeService) {
                     }));
                 }));
             }
-        };
+        }
+    }, {
+        key: 'isCompleted',
 
         /**
-        * Check if the component was completed
-        * @param component the component object
-        * @param componentStates the component states for the specific component
-        * @param componentEvents the events for the specific component
-        * @param nodeEvents the events for the parent node of the component
-        * @returns whether the component was completed
-        */
-        serviceObject.isCompleted = function (component, componentStates, componentEvents, nodeEvents) {
+         * Check if the component was completed
+         * @param component the component object
+         * @param componentStates the component states for the specific component
+         * @param componentEvents the events for the specific component
+         * @param nodeEvents the events for the parent node of the component
+         * @returns whether the component was completed
+         */
+        value: function isCompleted(component, componentStates, componentEvents, nodeEvents) {
             var result = false;
 
             if (componentStates != null) {
@@ -153,7 +188,9 @@ define(['nodeService'], function (nodeService) {
             }
 
             return result;
-        };
+        }
+    }, {
+        key: 'getPostsAssociatedWithWorkgroupId',
 
         /**
          * Get all the posts associated with a workgroup id. This will
@@ -165,13 +202,13 @@ define(['nodeService'], function (nodeService) {
          * top level posts and replies that are associated with the
          * workgroup
          */
-        serviceObject.getPostsAssociatedWithWorkgroupId = function (componentId, workgroupId) {
+        value: function getPostsAssociatedWithWorkgroupId(componentId, workgroupId) {
             var allPosts = [];
 
             var topLevelComponentIdsFound = [];
 
             // get all the component states for the workgroup id
-            var componentStates = TeacherDataService.getComponentStatesByWorkgroupIdAndComponentId(workgroupId, componentId);
+            var componentStates = this.TeacherDataService.getComponentStatesByWorkgroupIdAndComponentId(workgroupId, componentId);
 
             if (componentStates != null) {
 
@@ -219,7 +256,7 @@ define(['nodeService'], function (nodeService) {
             }
 
             return allPosts;
-        };
+        }
 
         /**
          * Get the top level post and all the replies to it
@@ -227,11 +264,14 @@ define(['nodeService'], function (nodeService) {
          * @param componentStateId the component state id
          * @returns an array containing the top level post and all the replies
          */
-        serviceObject.getPostAndAllReplies = function (componentId, componentStateId) {
+
+    }, {
+        key: 'getPostAndAllReplies',
+        value: function getPostAndAllReplies(componentId, componentStateId) {
             var postAndAllReplies = [];
 
             // get all the component states for the node
-            var componentStatesForNodeId = TeacherDataService.getComponentStatesByComponentId(componentId);
+            var componentStatesForNodeId = this.TeacherDataService.getComponentStatesByComponentId(componentId);
 
             for (var c = 0; c < componentStatesForNodeId.length; c++) {
                 var tempComponentState = componentStatesForNodeId[c];
@@ -259,10 +299,12 @@ define(['nodeService'], function (nodeService) {
             }
 
             return postAndAllReplies;
-        };
+        }
+    }]);
 
-        return serviceObject;
-    }];
+    return DiscussionService;
+}(_nodeService2.default);
 
-    return service;
-});
+DiscussionService.$inject = ['$http', '$q', 'ConfigService', 'TeacherDataService'];
+
+exports.default = DiscussionService;
