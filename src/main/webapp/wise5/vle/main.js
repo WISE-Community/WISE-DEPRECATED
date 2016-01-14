@@ -85,7 +85,6 @@ let mainModule = angular.module('vle', [
     .service(ConfigService.name, ConfigService)
     //.service(CRaterService.name, CRaterService)
     .service(DiscussionService.name, DiscussionService)
-    .service(DrawController.name, DrawController)
     .service(DrawService.name, DrawService)
     .service(EmbeddedService.name, EmbeddedService)
     .service(GraphService.name, GraphService)

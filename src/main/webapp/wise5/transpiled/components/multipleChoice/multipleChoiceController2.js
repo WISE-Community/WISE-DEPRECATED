@@ -9,7 +9,7 @@ Object.defineProperty(exports, "__esModule", {
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var MultipleChoiceController = function () {
-    function MultipleChoiceController($scope, MultipleChoiceService, NodeService, ProjectService, StudentDataService) {
+    function MultipleChoiceController($scope, MultipleChoiceService, NodeService, ProjectService, StudentDataService, UtilService) {
         _classCallCheck(this, MultipleChoiceController);
 
         this.$scope = $scope;
@@ -17,6 +17,7 @@ var MultipleChoiceController = function () {
         this.NodeService = NodeService;
         this.ProjectService = ProjectService;
         this.StudentDataService = StudentDataService;
+        this.UtilService = UtilService;
 
         // the node id of the current node
         this.nodeId = null;
@@ -92,6 +93,8 @@ var MultipleChoiceController = function () {
                 this.isSaveButtonVisible = false;
                 this.isSubmitButtonVisible = false;
                 this.isDisabled = true;
+            } else if (this.mode === 'authoring') {
+                this.updateAdvancedAuthoringView();
             }
 
             // get the component type
@@ -531,79 +534,42 @@ var MultipleChoiceController = function () {
             this.incrementNumberOfAttempts();
             this.hideAllFeedback();
 
-            if (this.isRadio()) {
+            // check if any correct choices have been authored
+            if (this.hasCorrectChoices()) {
 
-                // get the choice the student chose
-                var studentChoice = this.studentChoices;
+                var isCorrectSoFar = true;
 
-                var choiceObject = this.getChoiceById(studentChoice);
-
-                // show the feedback for the choice if there is any
-                if (choiceObject.feedback != null && choiceObject !== '') {
-                    choiceObject.showFeedback = true;
-                    choiceObject.feedbackToShow = choiceObject.feedback;
-                }
-
-                // get the correct choice
-                var correctChoice = this.getCorrectChoice();
-
-                // check if the correct choice is chosen
-                if (this.isChecked(correctChoice)) {
-                    // the student has checked the correct choice
-                    isCorrect = true;
-                }
-            } else if (this.isCheckbox()) {
-
-                // get the correct choices
-                var correctChoices = this.getCorrectChoices();
-
-                // get all the choices
+                // get all the authored choices
                 var choices = this.getChoices();
 
-                if (choices != null) {
+                // loop through all the choices and check if each should be checked or not
 
-                    var correctSoFar = true;
+                for (var c = 0; c < choices.length; c++) {
+                    var choice = choices[c];
 
-                    // check if only the correct choices are chosen
-                    for (var c = 0; c < choices.length; c++) {
-                        var choice = choices[c];
+                    if (choice != null) {
+                        var choiceId = choice.id;
 
-                        if (choice != null) {
-                            var choiceId = choice.id;
+                        // whether the choice is correct
+                        var isChoiceCorrect = choice.isCorrect;
 
-                            var isChoiceCorrect = false;
+                        // whether the student checked the choice
+                        var isChoiceChecked = this.isChecked(choiceId);
 
-                            // check if the choice is correct
-                            if (correctChoices.indexOf(choiceId) != -1) {
-                                isChoiceCorrect = true;
-                            }
+                        if (isChoiceCorrect != isChoiceChecked) {
+                            // the student answered this choice incorrectly
+                            isCorrectSoFar = false;
+                        }
 
-                            // check if the student checked the choice
-                            var isChecked = this.isChecked(choiceId);
-
-                            // show the feedback if it exists and the student checked it
-                            if (isChecked && choice.feedback != null && choice.feedback !== '') {
-                                choice.showFeedback = true;
-                                choice.feedbackToShow = choice.feedback;
-                            }
-
-                            if (isChecked && isChoiceCorrect || !isChecked && !isChoiceCorrect) {
-                                /*
-                                 * the choice is correct and the student has checked it or
-                                 * the choice is incorrect and the student has not checked it
-                                 */
-                            } else {
-                                    /*
-                                     * the choice is correct and the student has not checked it or
-                                     * the choice is incorrect and the student has checked it
-                                     */
-                                    correctSoFar = false;
-                                }
+                        // show the feedback if it exists and the student checked it
+                        if (isChoiceChecked && choice.feedback != null && choice.feedback !== '') {
+                            choice.showFeedback = true;
+                            choice.feedbackToShow = choice.feedback;
                         }
                     }
-
-                    isCorrect = correctSoFar;
                 }
+
+                isCorrect = isCorrectSoFar;
             }
 
             this.isCorrect = isCorrect;
@@ -841,24 +807,19 @@ var MultipleChoiceController = function () {
 
             if (componentContent != null) {
 
-                // get the choice type
-                var choiceType = componentContent.choiceType;
+                var choices = componentContent.choices;
 
-                if (choiceType === 'radio') {
+                if (choices != null) {
 
-                    // get the correct choice id
-                    var correctChoice = componentContent.correctChoice;
+                    // loop through all the authored choices
+                    for (var c = 0; c < choices.length; c++) {
+                        var choice = choices[c];
 
-                    if (correctChoice != null) {
-                        result = true;
-                    }
-                } else if (choiceType === 'checkbox') {
-
-                    // get the correct choice ids
-                    var correctChoices = componentContent.correctChoices;
-
-                    if (correctChoices != null && correctChoices.length > 0) {
-                        result = true;
+                        if (choice != null) {
+                            if (choice.isCorrect) {
+                                result = true;
+                            }
+                        }
                     }
                 }
             }
@@ -1097,12 +1058,151 @@ var MultipleChoiceController = function () {
             return componentId;
         }
     }, {
-        key: 'registerExitListener',
+        key: 'authoringViewComponentChanged',
+
+        /**
+         * The component has changed in the regular authoring view so we will save the project
+         */
+        value: function authoringViewComponentChanged() {
+
+            // clean up the choices by removing fields injected by the controller during run time
+            this.cleanUpChoices();
+
+            // update the JSON string in the advanced authoring view textarea
+            this.updateAdvancedAuthoringView();
+
+            // save the project to the server
+            this.ProjectService.saveProject();
+        }
+    }, {
+        key: 'advancedAuthoringViewComponentChanged',
+
+        /**
+         * The component has changed in the advanced authoring view so we will update
+         * the component and save the project.
+         */
+        value: function advancedAuthoringViewComponentChanged() {
+
+            try {
+                /*
+                 * create a new comopnent by converting the JSON string in the advanced
+                 * authoring view into a JSON object
+                 */
+                var editedComponentContent = angular.fromJson(this.componentContentJSONString);
+
+                // replace the component in the project
+                this.ProjectService.replaceComponent(this.nodeId, this.componentId, editedComponentContent);
+
+                // set the new component into the controller
+                this.componentContent = editedComponentContent;
+
+                // save the project to the server
+                this.ProjectService.saveProject();
+            } catch (e) {}
+        }
+    }, {
+        key: 'updateAdvancedAuthoringView',
+
+        /**
+         * Update the component JSON string that will be displayed in the advanced authoring view textarea
+         */
+        value: function updateAdvancedAuthoringView() {
+            this.componentContentJSONString = angular.toJson(this.componentContent, 4);
+            //this.componentContentChoices = this.componentContent.choices;
+        }
+    }, {
+        key: 'addChoice',
+
+        /**
+         * Add a choice from within the authoring tool
+         */
+        value: function addChoice() {
+
+            // get the authored choices
+            var choices = this.componentContent.choices;
+
+            // make the new choice
+            var newChoice = {};
+            newChoice.id = this.UtilService.generateKey(10);
+            newChoice.text = '';
+            newChoice.feedback = '';
+            newChoice.isCorrect = false;
+
+            // add the new choice
+            choices.push(newChoice);
+
+            // save the component
+            this.authoringViewComponentChanged();
+        }
+
+        /**
+         * Delete a choice from within the authoring tool
+         * @param choiceId
+         */
+
+    }, {
+        key: 'deleteChoice',
+        value: function deleteChoice(choiceId) {
+
+            // get the authored choices
+            var choices = this.componentContent.choices;
+
+            if (choices != null) {
+
+                // loop through all the authored choices
+                for (var c = 0; c < choices.length; c++) {
+                    var choice = choices[c];
+
+                    if (choice != null) {
+                        var tempChoiceId = choice.id;
+
+                        if (choiceId === tempChoiceId) {
+                            // we have found the choice that we want to delete so we will remove it
+                            choices.splice(c, 1);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            this.authoringViewComponentChanged();
+        }
+
+        /**
+         * Clean up the choice objects. In the authoring tool this is required
+         * because we use the choice objects as ng-model values and inject
+         * fields into the choice objects such as showFeedback and feedbackToShow.
+         */
+
+    }, {
+        key: 'cleanUpChoices',
+        value: function cleanUpChoices() {
+
+            // get the authored choices
+            var choices = this.getChoices();
+
+            if (choices != null) {
+
+                // loop through all the authored choices
+                for (var c = 0; c < choices.length; c++) {
+                    var choice = choices[c];
+
+                    if (choice != null) {
+                        // remove the fields we don't want to be saved
+                        delete choice.showFeedback;
+                        delete choice.feedbackToShow;
+                    }
+                }
+            }
+        }
 
         /**
          * Register the the listener that will listen for the exit event
          * so that we can perform saving before exiting.
          */
+
+    }, {
+        key: 'registerExitListener',
         value: function registerExitListener() {
 
             /*
@@ -1118,6 +1218,6 @@ var MultipleChoiceController = function () {
 
 ;
 
-MultipleChoiceController.$inject = ['$scope', 'MultipleChoiceService', 'NodeService', 'ProjectService', 'StudentDataService'];
+MultipleChoiceController.$inject = ['$scope', 'MultipleChoiceService', 'NodeService', 'ProjectService', 'StudentDataService', 'UtilService'];
 
 exports.default = MultipleChoiceController;

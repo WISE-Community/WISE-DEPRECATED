@@ -10,14 +10,34 @@ import AnnotationService from '../services/annotationService2';
 import AuthoringToolController from './authoringToolController2';
 import ConfigService from '../services/configService2';
 import Directives from '../directives/directives2';
+import DiscussionController from '../components/discussion/discussionController2';
+import DiscussionService from '../components/discussion/discussionService2';
+import DrawController from '../components/draw/drawController2';
+import DrawService from '../components/draw/drawService2';
+import EmbeddedController from '../components/embedded/embeddedController2';
+import EmbeddedService from '../components/embedded/embeddedService2';
+import GraphController from '../components/graph/graphController2';
+import GraphService from '../components/graph/graphService2';
+import HTMLController from '../components/html/htmlController2';
+import LabelController from '../components/label/labelController2';
+import LabelService from '../components/label/labelService2';
+import MatchController from '../components/match/matchController2';
+import MatchService from '../components/match/matchService2';
+import MultipleChoiceController from '../components/multipleChoice/multipleChoiceController2';
+import MultipleChoiceService from '../components/multipleChoice/multipleChoiceService2';
 import NodeController from './node/nodeController2';
 import NodeService from '../services/nodeService2';
+import OpenResponseController from '../components/openResponse/openResponseController2';
 import OpenResponseService from '../components/openResponse/openResponseService2';
+import OutsideURLController from '../components/outsideURL/outsideURLController2';
+import OutsideURLService from '../components/outsideURL/outsideURLService2';
 import ProjectController from './project/projectController2';
 import ProjectService from '../services/projectService2';
 import SessionService from '../services/sessionService2';
 import StudentAssetService from '../services/studentAssetService2';
 import StudentDataService from '../services/studentDataService2';
+import TableController from '../components/table/tableController2';
+import TableService from '../components/table/tableService2';
 import UtilService from '../services/utilService2';
 
 let mainModule = angular.module('authoring', [
@@ -27,20 +47,40 @@ let mainModule = angular.module('authoring', [
     'ngAnimate',
     'ngAria',
     'ngFileUpload',
-    'ngMaterial',
+    'ngMaterial'
 ])
     .service(AnnotationService.name, AnnotationService)
     .service(ConfigService.name, ConfigService)
+    .service(DiscussionService.name, DiscussionService)
+    .service(DrawService.name, DrawService)
+    .service(EmbeddedService.name, EmbeddedService)
+    .service(GraphService.name, GraphService)
+    .service(LabelService.name, LabelService)
+    .service(MatchService.name, MatchService)
+    .service(MultipleChoiceService.name, MultipleChoiceService)
     .service(NodeService.name, NodeService)
     .service(OpenResponseService.name, OpenResponseService)
+    .service(OutsideURLService.name, OutsideURLService)
     .service(ProjectService.name, ProjectService)
     .service(SessionService.name, SessionService)
     .service(StudentAssetService.name, StudentAssetService)
     .service(StudentDataService.name, StudentDataService)
+    .service(TableService.name, TableService)
     .service(UtilService.name, UtilService)
     .controller(AuthoringToolController.name, AuthoringToolController)
+    .controller(DiscussionController.name, DiscussionController)
+    .controller(DrawController.name, DrawController)
+    .controller(EmbeddedController.name, EmbeddedController)
+    .controller(GraphController.name, GraphController)
+    .controller(HTMLController.name, HTMLController)
+    .controller(LabelController.name, LabelController)
+    .controller(MatchController.name, MatchController)
+    .controller(MultipleChoiceController.name, MultipleChoiceController)
     .controller(NodeController.name, NodeController)
+    .controller(OpenResponseController.name, OpenResponseController)
+    .controller(OutsideURLController.name, OutsideURLController)
     .controller(ProjectController.name, ProjectController)
+    .controller(TableController.name, TableController)
     .config(['$urlRouterProvider',
         '$stateProvider',
         '$controllerProvider',
@@ -88,13 +128,14 @@ let mainModule = angular.module('authoring', [
                     controllerAs: 'nodeController',
                     resolve: {
                         load: () => {
+                            /*
                              System.import('components/html/htmlController2').then((HTMLController) => {
                                 $controllerProvider.register(HTMLController.default.name, HTMLController.default);
                              });
                             System.import('components/openResponse/openResponseController2').then((OpenResponseController) => {
                                 $controllerProvider.register(OpenResponseController.default.name, OpenResponseController.default);
                             });
-
+                            */
                         }
                     }
                 });

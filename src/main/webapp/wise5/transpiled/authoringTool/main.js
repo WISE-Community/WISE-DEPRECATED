@@ -44,6 +44,66 @@ var _directives = require('../directives/directives2');
 
 var _directives2 = _interopRequireDefault(_directives);
 
+var _discussionController = require('../components/discussion/discussionController2');
+
+var _discussionController2 = _interopRequireDefault(_discussionController);
+
+var _discussionService = require('../components/discussion/discussionService2');
+
+var _discussionService2 = _interopRequireDefault(_discussionService);
+
+var _drawController = require('../components/draw/drawController2');
+
+var _drawController2 = _interopRequireDefault(_drawController);
+
+var _drawService = require('../components/draw/drawService2');
+
+var _drawService2 = _interopRequireDefault(_drawService);
+
+var _embeddedController = require('../components/embedded/embeddedController2');
+
+var _embeddedController2 = _interopRequireDefault(_embeddedController);
+
+var _embeddedService = require('../components/embedded/embeddedService2');
+
+var _embeddedService2 = _interopRequireDefault(_embeddedService);
+
+var _graphController = require('../components/graph/graphController2');
+
+var _graphController2 = _interopRequireDefault(_graphController);
+
+var _graphService = require('../components/graph/graphService2');
+
+var _graphService2 = _interopRequireDefault(_graphService);
+
+var _htmlController = require('../components/html/htmlController2');
+
+var _htmlController2 = _interopRequireDefault(_htmlController);
+
+var _labelController = require('../components/label/labelController2');
+
+var _labelController2 = _interopRequireDefault(_labelController);
+
+var _labelService = require('../components/label/labelService2');
+
+var _labelService2 = _interopRequireDefault(_labelService);
+
+var _matchController = require('../components/match/matchController2');
+
+var _matchController2 = _interopRequireDefault(_matchController);
+
+var _matchService = require('../components/match/matchService2');
+
+var _matchService2 = _interopRequireDefault(_matchService);
+
+var _multipleChoiceController = require('../components/multipleChoice/multipleChoiceController2');
+
+var _multipleChoiceController2 = _interopRequireDefault(_multipleChoiceController);
+
+var _multipleChoiceService = require('../components/multipleChoice/multipleChoiceService2');
+
+var _multipleChoiceService2 = _interopRequireDefault(_multipleChoiceService);
+
 var _nodeController = require('./node/nodeController2');
 
 var _nodeController2 = _interopRequireDefault(_nodeController);
@@ -52,9 +112,21 @@ var _nodeService = require('../services/nodeService2');
 
 var _nodeService2 = _interopRequireDefault(_nodeService);
 
+var _openResponseController = require('../components/openResponse/openResponseController2');
+
+var _openResponseController2 = _interopRequireDefault(_openResponseController);
+
 var _openResponseService = require('../components/openResponse/openResponseService2');
 
 var _openResponseService2 = _interopRequireDefault(_openResponseService);
+
+var _outsideURLController = require('../components/outsideURL/outsideURLController2');
+
+var _outsideURLController2 = _interopRequireDefault(_outsideURLController);
+
+var _outsideURLService = require('../components/outsideURL/outsideURLService2');
+
+var _outsideURLService2 = _interopRequireDefault(_outsideURLService);
 
 var _projectController = require('./project/projectController2');
 
@@ -76,13 +148,21 @@ var _studentDataService = require('../services/studentDataService2');
 
 var _studentDataService2 = _interopRequireDefault(_studentDataService);
 
+var _tableController = require('../components/table/tableController2');
+
+var _tableController2 = _interopRequireDefault(_tableController);
+
+var _tableService = require('../components/table/tableService2');
+
+var _tableService2 = _interopRequireDefault(_tableService);
+
 var _utilService = require('../services/utilService2');
 
 var _utilService2 = _interopRequireDefault(_utilService);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var mainModule = _angular2.default.module('authoring', ['angular-toArrayFilter', 'directives', 'ui.router', 'ngAnimate', 'ngAria', 'ngFileUpload', 'ngMaterial']).service(_annotationService2.default.name, _annotationService2.default).service(_configService2.default.name, _configService2.default).service(_nodeService2.default.name, _nodeService2.default).service(_openResponseService2.default.name, _openResponseService2.default).service(_projectService2.default.name, _projectService2.default).service(_sessionService2.default.name, _sessionService2.default).service(_studentAssetService2.default.name, _studentAssetService2.default).service(_studentDataService2.default.name, _studentDataService2.default).service(_utilService2.default.name, _utilService2.default).controller(_authoringToolController2.default.name, _authoringToolController2.default).controller(_nodeController2.default.name, _nodeController2.default).controller(_projectController2.default.name, _projectController2.default).config(['$urlRouterProvider', '$stateProvider', '$controllerProvider', '$mdThemingProvider', function ($urlRouterProvider, $stateProvider, $controllerProvider, $mdThemingProvider) {
+var mainModule = _angular2.default.module('authoring', ['angular-toArrayFilter', 'directives', 'ui.router', 'ngAnimate', 'ngAria', 'ngFileUpload', 'ngMaterial']).service(_annotationService2.default.name, _annotationService2.default).service(_configService2.default.name, _configService2.default).service(_discussionService2.default.name, _discussionService2.default).service(_drawService2.default.name, _drawService2.default).service(_embeddedService2.default.name, _embeddedService2.default).service(_graphService2.default.name, _graphService2.default).service(_labelService2.default.name, _labelService2.default).service(_matchService2.default.name, _matchService2.default).service(_multipleChoiceService2.default.name, _multipleChoiceService2.default).service(_nodeService2.default.name, _nodeService2.default).service(_openResponseService2.default.name, _openResponseService2.default).service(_outsideURLService2.default.name, _outsideURLService2.default).service(_projectService2.default.name, _projectService2.default).service(_sessionService2.default.name, _sessionService2.default).service(_studentAssetService2.default.name, _studentAssetService2.default).service(_studentDataService2.default.name, _studentDataService2.default).service(_tableService2.default.name, _tableService2.default).service(_utilService2.default.name, _utilService2.default).controller(_authoringToolController2.default.name, _authoringToolController2.default).controller(_discussionController2.default.name, _discussionController2.default).controller(_drawController2.default.name, _drawController2.default).controller(_embeddedController2.default.name, _embeddedController2.default).controller(_graphController2.default.name, _graphController2.default).controller(_htmlController2.default.name, _htmlController2.default).controller(_labelController2.default.name, _labelController2.default).controller(_matchController2.default.name, _matchController2.default).controller(_multipleChoiceController2.default.name, _multipleChoiceController2.default).controller(_nodeController2.default.name, _nodeController2.default).controller(_openResponseController2.default.name, _openResponseController2.default).controller(_outsideURLController2.default.name, _outsideURLController2.default).controller(_projectController2.default.name, _projectController2.default).controller(_tableController2.default.name, _tableController2.default).config(['$urlRouterProvider', '$stateProvider', '$controllerProvider', '$mdThemingProvider', function ($urlRouterProvider, $stateProvider, $controllerProvider, $mdThemingProvider) {
 
     $urlRouterProvider.otherwise('/project');
 
@@ -118,12 +198,14 @@ var mainModule = _angular2.default.module('authoring', ['angular-toArrayFilter',
         controllerAs: 'nodeController',
         resolve: {
             load: function load() {
-                System.import('components/html/htmlController2').then(function (HTMLController) {
+                /*
+                 System.import('components/html/htmlController2').then((HTMLController) => {
                     $controllerProvider.register(HTMLController.default.name, HTMLController.default);
-                });
-                System.import('components/openResponse/openResponseController2').then(function (OpenResponseController) {
+                 });
+                System.import('components/openResponse/openResponseController2').then((OpenResponseController) => {
                     $controllerProvider.register(OpenResponseController.default.name, OpenResponseController.default);
                 });
+                */
             }
         }
     });
