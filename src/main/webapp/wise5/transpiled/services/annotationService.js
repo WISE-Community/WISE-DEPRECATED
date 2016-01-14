@@ -1,18 +1,34 @@
 'use strict';
 
-define([], function () {
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-    var service = ['$http', '$rootScope', 'ConfigService', 'UtilService', function ($http, $rootScope, ConfigService, UtilService) {
-        var serviceObject = {};
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
 
-        serviceObject.annotations = null;
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-        /**
-         * Get the latest annotation with the given params
-         * @param params an object containing the params to match
-         * @returns the latest annotation that matches the params
-         */
-        serviceObject.getLatestAnnotation = function (params) {
+var AnnotationService = function () {
+    function AnnotationService($http, $rootScope, ConfigService, UtilService) {
+        _classCallCheck(this, AnnotationService);
+
+        this.$http = $http;
+        this.$rootScope = $rootScope;
+        this.ConfigService = ConfigService;
+        this.UtilService = UtilService;
+
+        this.annotations = null;
+    }
+
+    /**
+     * Get the latest annotation with the given params
+     * @param params an object containing the params to match
+     * @returns the latest annotation that matches the params
+     */
+
+    _createClass(AnnotationService, [{
+        key: 'getLatestAnnotation',
+        value: function getLatestAnnotation(params) {
             var annotation = null;
 
             if (params != null) {
@@ -41,7 +57,9 @@ define([], function () {
             }
 
             return annotation;
-        };
+        }
+    }, {
+        key: 'createAnnotation',
 
         /**
          * Create an annotation object
@@ -58,7 +76,7 @@ define([], function () {
          * @param clientSaveTime the client save time
          * @returns an annotation object
          */
-        serviceObject.createAnnotation = function (annotationId, runId, periodId, fromWorkgroupId, toWorkgroupId, nodeId, componentId, studentWorkId, annotationType, data, clientSaveTime) {
+        value: function createAnnotation(annotationId, runId, periodId, fromWorkgroupId, toWorkgroupId, nodeId, componentId, studentWorkId, annotationType, data, clientSaveTime) {
 
             var annotation = {};
             annotation.id = annotationId;
@@ -74,14 +92,16 @@ define([], function () {
             annotation.clientSaveTime = clientSaveTime;
 
             return annotation;
-        };
+        }
+    }, {
+        key: 'saveAnnotation',
 
         /**
          * Save the annotation to the server
          * @param annotation the annotation object
          * @returns a promise
          */
-        serviceObject.saveAnnotation = function (annotation) {
+        value: function saveAnnotation(annotation) {
 
             if (annotation != null) {
                 var annotations = [];
@@ -93,7 +113,7 @@ define([], function () {
                         var annotation = annotations[a];
 
                         if (annotation != null) {
-                            annotation.requestToken = UtilService.generateKey(); // use this to keep track of unsaved annotations.
+                            annotation.requestToken = this.UtilService.generateKey(); // use this to keep track of unsaved annotations.
                             this.addOrUpdateAnnotation(annotation);
                         }
                     }
@@ -102,17 +122,17 @@ define([], function () {
                 }
 
                 var params = {};
-                params.runId = ConfigService.getRunId();
-                params.workgroupId = ConfigService.getWorkgroupId();
+                params.runId = this.ConfigService.getRunId();
+                params.workgroupId = this.ConfigService.getWorkgroupId();
                 params.annotations = angular.toJson(annotations);
 
                 var httpParams = {};
                 httpParams.method = 'POST';
-                httpParams.url = ConfigService.getConfigParam('teacherDataURL');
+                httpParams.url = this.ConfigService.getConfigParam('teacherDataURL');
                 httpParams.headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
                 httpParams.data = $.param(params);
 
-                return $http(httpParams).then(angular.bind(this, function (result) {
+                return this.$http(httpParams).then(angular.bind(this, function (result) {
 
                     var localAnnotation = null;
 
@@ -144,7 +164,7 @@ define([], function () {
                                             localAnnotation.serverSaveTime = savedAnnotation.serverSaveTime;
                                             localAnnotation.requestToken = null; // requestToken is no longer needed.
 
-                                            $rootScope.$broadcast('annotationSavedToServer', { annotation: localAnnotation });
+                                            this.$rootScope.$broadcast('annotationSavedToServer', { annotation: localAnnotation });
                                             break;
                                         }
                                     }
@@ -156,13 +176,15 @@ define([], function () {
                     return localAnnotation;
                 }));
             }
-        };
+        }
+    }, {
+        key: 'addOrUpdateAnnotation',
 
         /**
          * Add or update the annotation to our local collection
          * @param annotation the annotation object
          */
-        serviceObject.addOrUpdateAnnotation = function (annotation) {
+        value: function addOrUpdateAnnotation(annotation) {
 
             if (annotation != null) {
 
@@ -194,18 +216,22 @@ define([], function () {
                     annotations.push(annotation);
                 }
             }
-        };
+        }
+    }, {
+        key: 'setAnnotations',
 
         /**
          * Set the annotations
          * @param annotations the annotations aray
          */
-        serviceObject.setAnnotations = function (annotations) {
+        value: function setAnnotations(annotations) {
             this.annotations = annotations;
-        };
+        }
+    }]);
 
-        return serviceObject;
-    }];
+    return AnnotationService;
+}();
 
-    return service;
-});
+AnnotationService.$inject = ['$http', '$rootScope', 'ConfigService', 'UtilService'];
+
+exports.default = AnnotationService;

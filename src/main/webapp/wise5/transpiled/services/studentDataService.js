@@ -1,22 +1,40 @@
 'use strict';
 
-define(['annotationService', 'configService', 'projectService'], function (annotationService, configService, projectService) {
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-    var service = ['$http', '$injector', '$q', '$rootScope', 'AnnotationService', 'ConfigService', 'ProjectService', 'UtilService', function ($http, $injector, $q, $rootScope, AnnotationService, ConfigService, ProjectService, UtilService) {
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
 
-        var serviceObject = {};
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-        serviceObject.currentNode = null;
-        serviceObject.previousStep = null;
-        serviceObject.studentData = null;
-        serviceObject.stackHistory = []; // array of node id's
-        serviceObject.visitedNodesHistory = [];
-        serviceObject.nodeStatuses = {};
+var StudentDataService = function () {
+    function StudentDataService($http, $injector, $q, $rootScope, AnnotationService, ConfigService, ProjectService, UtilService) {
+        _classCallCheck(this, StudentDataService);
 
-        serviceObject.retrieveStudentData = function () {
+        this.$http = $http;
+        this.$injector = $injector;
+        this.$q = $q;
+        this.$rootScope = $rootScope;
+        this.AnnotationService = AnnotationService;
+        this.ConfigService = ConfigService;
+        this.ProjectService = ProjectService;
+        this.UtilService = UtilService;
+
+        this.currentNode = null;
+        this.previousStep = null;
+        this.studentData = null;
+        this.stackHistory = []; // array of node id's
+        this.visitedNodesHistory = [];
+        this.nodeStatuses = {};
+    }
+
+    _createClass(StudentDataService, [{
+        key: 'retrieveStudentData',
+        value: function retrieveStudentData() {
 
             // get the mode
-            var mode = ConfigService.getConfigParam('mode');
+            var mode = this.ConfigService.getConfigParam('mode');
 
             if (mode === 'preview') {
                 // we are previewing the project
@@ -37,7 +55,7 @@ define(['annotationService', 'configService', 'projectService'], function (annot
                 // we are in a run
 
                 // get the url to get the student data
-                var studentDataURL = ConfigService.getConfigParam('studentDataURL');
+                var studentDataURL = this.ConfigService.getConfigParam('studentDataURL');
 
                 var httpParams = {};
                 httpParams.method = 'GET';
@@ -45,16 +63,16 @@ define(['annotationService', 'configService', 'projectService'], function (annot
 
                 // set the workgroup id and run id
                 var params = {};
-                params.workgroupId = ConfigService.getWorkgroupId();
-                params.runId = ConfigService.getRunId();
+                params.workgroupId = this.ConfigService.getWorkgroupId();
+                params.runId = this.ConfigService.getRunId();
                 params.getStudentWork = true;
                 params.getEvents = true;
                 params.getAnnotations = true;
-                params.toWorkgroupId = ConfigService.getWorkgroupId();
+                params.toWorkgroupId = this.ConfigService.getWorkgroupId();
                 httpParams.params = params;
 
                 // make the request for the student data
-                return $http(httpParams).then(angular.bind(this, function (result) {
+                return this.$http(httpParams).then(angular.bind(this, function (result) {
                     var resultData = result.data;
                     if (resultData != null) {
 
@@ -79,7 +97,7 @@ define(['annotationService', 'configService', 'projectService'], function (annot
                         // get annotations
                         this.studentData.annotations = resultData.annotations;
 
-                        AnnotationService.setAnnotations(this.studentData.annotations);
+                        this.AnnotationService.setAnnotations(this.studentData.annotations);
 
                         // load the student planning nodes
                         //this.loadStudentNodes();
@@ -96,10 +114,11 @@ define(['annotationService', 'configService', 'projectService'], function (annot
                     return this.studentData;
                 }));
             }
-        };
-
-        serviceObject.loadStudentNodes = function () {
-            var nodes = ProjectService.getApplicationNodes();
+        }
+    }, {
+        key: 'loadStudentNodes',
+        value: function loadStudentNodes() {
+            var nodes = this.ProjectService.getApplicationNodes();
 
             if (nodes != null) {
                 for (var n = 0; n < nodes.length; n++) {
@@ -115,20 +134,22 @@ define(['annotationService', 'configService', 'projectService'], function (annot
                                 var latestStateStudentNodes = latestNodeState.studentNodes;
                                 var latestTransitions = latestNodeState.studentTransition;
 
-                                ProjectService.loadNodes(latestStateStudentNodes);
-                                ProjectService.loadTransitions(latestTransitions);
+                                this.ProjectService.loadNodes(latestStateStudentNodes);
+                                this.ProjectService.loadTransitions(latestTransitions);
                             }
                         }
                     }
                 }
             }
-        };
-
-        serviceObject.getNodeStatuses = function () {
+        }
+    }, {
+        key: 'getNodeStatuses',
+        value: function getNodeStatuses() {
             return this.nodeStatuses;
-        };
-
-        serviceObject.setNodeStatusByNodeId = function (nodeId, nodeStatus) {
+        }
+    }, {
+        key: 'setNodeStatusByNodeId',
+        value: function setNodeStatusByNodeId(nodeId, nodeStatus) {
 
             if (nodeId != null && nodeStatus != null) {
                 var nodeStatuses = this.nodeStatuses;
@@ -137,9 +158,10 @@ define(['annotationService', 'configService', 'projectService'], function (annot
                     nodeStatuses[nodeId] = nodeStatus;
                 }
             }
-        };
-
-        serviceObject.getNodeStatusByNodeId = function (nodeId) {
+        }
+    }, {
+        key: 'getNodeStatusByNodeId',
+        value: function getNodeStatusByNodeId(nodeId) {
             var nodeStatus = null;
 
             var nodeStatuses = this.nodeStatuses;
@@ -149,13 +171,14 @@ define(['annotationService', 'configService', 'projectService'], function (annot
             }
 
             return nodeStatus;
-        };
-
-        serviceObject.updateNodeStatuses = function () {
+        }
+    }, {
+        key: 'updateNodeStatuses',
+        value: function updateNodeStatuses() {
             //this.nodeStatuses = [];
 
-            var nodes = ProjectService.getNodes();
-            var groups = ProjectService.getGroups();
+            var nodes = this.ProjectService.getNodes();
+            var groups = this.ProjectService.getGroups();
 
             if (nodes != null) {
 
@@ -163,7 +186,7 @@ define(['annotationService', 'configService', 'projectService'], function (annot
 
                 for (var n = 0; n < nodes.length; n++) {
                     var node = nodes[n];
-                    if (!ProjectService.isGroupNode(node.id)) {
+                    if (!this.ProjectService.isGroupNode(node.id)) {
                         this.updateNodeStatusByNode(node);
                     }
 
@@ -179,7 +202,7 @@ define(['annotationService', 'configService', 'projectService'], function (annot
             if (groups != null) {
                 for (var g = 0; g < groups.length; g++) {
                     group = groups[g];
-                    group.depth = ProjectService.getNodeDepth(group.id);
+                    group.depth = this.ProjectService.getNodeDepth(group.id);
                 }
 
                 // sort by descending depth order (need to calculate completion for lowest level groups first)
@@ -193,10 +216,11 @@ define(['annotationService', 'configService', 'projectService'], function (annot
                 }
             }
 
-            $rootScope.$broadcast('nodeStatusesChanged');
-        };
-
-        serviceObject.updateNodeStatusByNode = function (node) {
+            this.$rootScope.$broadcast('nodeStatusesChanged');
+        }
+    }, {
+        key: 'updateNodeStatusByNode',
+        value: function updateNodeStatusByNode(node) {
 
             if (node != null) {
                 var nodeId = node.id;
@@ -207,7 +231,7 @@ define(['annotationService', 'configService', 'projectService'], function (annot
                 tempNodeStatus.isCompleted = true;
 
                 // get the constraints that affect this node
-                var constraintsForNode = ProjectService.getConstraintsForNode(node);
+                var constraintsForNode = this.ProjectService.getConstraintsForNode(node);
 
                 if (constraintsForNode == null || constraintsForNode.length == 0) {
                     // this node does not have any constraints so it is clickable
@@ -231,15 +255,15 @@ define(['annotationService', 'configService', 'projectService'], function (annot
                             var tempResult = this.evaluateConstraint(node, constraintForNode);
 
                             /*
-                            if (firstResult) {
-                                // this is the first constraint in this for loop
-                                result = tempResult;
-                                firstResult = false;
-                            } else {
-                                // this is not the first constraint in this for loop so we will && the result
-                                result = result && tempResult;
-                            }
-                            */
+                             if (firstResult) {
+                             // this is the first constraint in this for loop
+                             result = tempResult;
+                             firstResult = false;
+                             } else {
+                             // this is not the first constraint in this for loop so we will && the result
+                             result = result && tempResult;
+                             }
+                             */
 
                             var action = constraintForNode.action;
 
@@ -295,13 +319,15 @@ define(['annotationService', 'configService', 'projectService'], function (annot
                 }
 
                 this.nodeStatuses[nodeId].progress = this.getNodeProgressById(nodeId);
-                this.nodeStatuses[nodeId].icon = ProjectService.getNodeIconByNodeId(nodeId);
+                this.nodeStatuses[nodeId].icon = this.ProjectService.getNodeIconByNodeId(nodeId);
 
                 //console.log(angular.toJson(tempNodeStatus));
             }
 
             //return nodeStatus;
-        };
+        }
+    }, {
+        key: 'evaluateConstraint',
 
         /**
          * Evaluate the constraint
@@ -309,7 +335,7 @@ define(['annotationService', 'configService', 'projectService'], function (annot
          * @param constraintForNode the constraint object
          * @returns whether the node has satisfied the constraint
          */
-        serviceObject.evaluateConstraint = function (node, constraintForNode) {
+        value: function evaluateConstraint(node, constraintForNode) {
             var result = false;
 
             if (constraintForNode != null) {
@@ -322,7 +348,9 @@ define(['annotationService', 'configService', 'projectService'], function (annot
             }
 
             return result;
-        };
+        }
+    }, {
+        key: 'evaluateGuidedNavigationConstraint',
 
         /**
          * Evaluate the guided navigation constraint
@@ -330,7 +358,7 @@ define(['annotationService', 'configService', 'projectService'], function (annot
          * @param constraintForNode the constraint object
          * @returns whether the node can be visited or not
          */
-        serviceObject.evaluateGuidedNavigationConstraint = function (node, constraintForNode) {
+        value: function evaluateGuidedNavigationConstraint(node, constraintForNode) {
 
             var result = false;
 
@@ -352,7 +380,7 @@ define(['annotationService', 'configService', 'projectService'], function (annot
                         var visitedNodeId = visitedNodes[v];
 
                         // get the transitions from the visited node to the node status node
-                        var transitions = ProjectService.getTransitionsByFromAndToNodeId(visitedNodeId, nodeId);
+                        var transitions = this.ProjectService.getTransitionsByFromAndToNodeId(visitedNodeId, nodeId);
 
                         // TODO: check if the transition can be used by the student
 
@@ -376,7 +404,7 @@ define(['annotationService', 'configService', 'projectService'], function (annot
                         result = false;
                     }
 
-                    if (ProjectService.isStartNode(node)) {
+                    if (this.ProjectService.isStartNode(node)) {
                         /*
                          * the node is the start node of the project or a start node of a group
                          * so we will make it clickable
@@ -387,7 +415,9 @@ define(['annotationService', 'configService', 'projectService'], function (annot
             }
 
             return result;
-        };
+        }
+    }, {
+        key: 'evaluateNodeConstraint',
 
         /**
          * Evaluate the node constraint
@@ -395,7 +425,7 @@ define(['annotationService', 'configService', 'projectService'], function (annot
          * @param constraintForNode the constraint object
          * @returns whether the node satisifies the constraint
          */
-        serviceObject.evaluateNodeConstraint = function (node, constraintForNode) {
+        value: function evaluateNodeConstraint(node, constraintForNode) {
             var result = false;
 
             if (constraintForNode != null) {
@@ -431,14 +461,16 @@ define(['annotationService', 'configService', 'projectService'], function (annot
             }
 
             return result;
-        };
+        }
+    }, {
+        key: 'evaluateCriteria',
 
         /**
          * Evaluate the criteria
          * @param criteria the criteria
          * @returns whether the criteria is satisfied or not
          */
-        serviceObject.evaluateCriteria = function (criteria) {
+        value: function evaluateCriteria(criteria) {
 
             var result = false;
 
@@ -455,9 +487,10 @@ define(['annotationService', 'configService', 'projectService'], function (annot
             }
 
             return result;
-        };
-
-        serviceObject.evaluateBranchPathTakenCriteria = function (criteria) {
+        }
+    }, {
+        key: 'evaluateBranchPathTakenCriteria',
+        value: function evaluateBranchPathTakenCriteria(criteria) {
             var result = false;
 
             if (criteria != null) {
@@ -493,9 +526,10 @@ define(['annotationService', 'configService', 'projectService'], function (annot
             }
 
             return result;
-        };
-
-        serviceObject.getBranchPathTakenNodeStates = function (fromNodeId) {
+        }
+    }, {
+        key: 'getBranchPathTakenNodeStates',
+        value: function getBranchPathTakenNodeStates(fromNodeId) {
 
             var branchpathTakenNodeStates = [];
 
@@ -522,32 +556,35 @@ define(['annotationService', 'configService', 'projectService'], function (annot
             }
 
             return branchpathTakenNodeStates;
-        };
+        }
+    }, {
+        key: 'evaluateChoiceChosenCriteria',
 
         /**
          * Evaluate the choice chosen criteria
          * @param criteria the criteria to evaluate
          * @returns a boolena value whether the criteria was satisfied or not
          */
-        serviceObject.evaluateChoiceChosenCriteria = function (criteria) {
+        value: function evaluateChoiceChosenCriteria(criteria) {
 
             var result = false;
 
             var serviceName = 'MultipleChoiceService';
 
-            if ($injector.has(serviceName)) {
+            if (this.$injector.has(serviceName)) {
 
                 // get the MultipleChoiceService
-                var service = $injector.get(serviceName);
+                var service = this.$injector.get(serviceName);
 
                 // check if the criteria was satisfied
                 result = service.choiceChosen(criteria);
             }
 
             return result;
-        };
-
-        serviceObject.updateNodeStatusesByNode0 = function (node) {
+        }
+    }, {
+        key: 'updateNodeStatusesByNode0',
+        value: function updateNodeStatusesByNode0(node) {
             return $q(angular.bind(this, function (resolve, reject) {
 
                 var nodeStatus = null;
@@ -561,7 +598,7 @@ define(['annotationService', 'configService', 'projectService'], function (annot
                     nodeStatus.isVisitable = false;
 
                     // get the constraints that affect this node
-                    var constraintsForNode = ProjectService.getConstraintsForNode(node);
+                    var constraintsForNode = this.ProjectService.getConstraintsForNode(node);
 
                     if (constraintsForNode == null || constraintsForNode.length == 0) {
                         // this node does not have any constraints so it is clickable
@@ -591,12 +628,12 @@ define(['annotationService', 'configService', 'projectService'], function (annot
                                             var currentNodeId = currentNode.id;
 
                                             // get the transitions from the current node
-                                            var transitions = ProjectService.getTransitionsByFromNodeId(currentNodeId);
+                                            var transitions = this.ProjectService.getTransitionsByFromNodeId(currentNodeId);
 
                                             if (transitions != null) {
 
                                                 // get the transitions from the current node to the node status node
-                                                var transitionsToNodeId = ProjectService.getTransitionsByFromAndToNodeId(currentNodeId, nodeId);
+                                                var transitionsToNodeId = this.ProjectService.getTransitionsByFromAndToNodeId(currentNodeId, nodeId);
 
                                                 if (transitionsToNodeId != null && transitionsToNodeId.length > 0) {
                                                     // there is a transition between the current node and the node status node
@@ -622,7 +659,7 @@ define(['annotationService', 'configService', 'projectService'], function (annot
                                             // there is no current node because the student has just started the project
                                         }
 
-                                        if (ProjectService.isStartNode(node)) {
+                                        if (this.ProjectService.isStartNode(node)) {
                                             /*
                                              * the node is the start node of the project or a start node of a group
                                              * so we will make it clickable
@@ -648,7 +685,7 @@ define(['annotationService', 'configService', 'projectService'], function (annot
                                             var nodeType = node.type;
 
                                             // get the service for the node type
-                                            var service = $injector.get(nodeType + 'Service');
+                                            var service = this.$injector.get(nodeType + 'Service');
 
                                             if (service != null) {
 
@@ -675,18 +712,20 @@ define(['annotationService', 'configService', 'projectService'], function (annot
                         }
                     }
                 }
-                $q.all(allPromises).then(function () {
+                this.$q.all(allPromises).then(function () {
                     resolve(nodeStatus);
                 });
             }));
-        };
+        }
+    }, {
+        key: 'populateHistories',
 
         /**
          * Populate the stack history and visited nodes history
          * @param componentStates the component states
          * @param events the events
          */
-        serviceObject.populateHistories = function (componentStates, events) {
+        value: function populateHistories(componentStates, events) {
             this.stackHistory = [];
             this.visitedNodesHistory = [];
 
@@ -722,9 +761,10 @@ define(['annotationService', 'configService', 'projectService'], function (annot
                     }
                 }
             }
-        };
-
-        serviceObject.getStackHistoryAtIndex = function (index) {
+        }
+    }, {
+        key: 'getStackHistoryAtIndex',
+        value: function getStackHistoryAtIndex(index) {
             if (index < 0) {
                 index = this.stackHistory.length + index;
             }
@@ -733,33 +773,38 @@ define(['annotationService', 'configService', 'projectService'], function (annot
                 stackHistoryResult = this.stackHistory[index];
             }
             return stackHistoryResult;
-        };
-
-        serviceObject.getStackHistory = function () {
+        }
+    }, {
+        key: 'getStackHistory',
+        value: function getStackHistory() {
             return this.stackHistory;
-        };
-
-        serviceObject.updateStackHistory = function (nodeId) {
+        }
+    }, {
+        key: 'updateStackHistory',
+        value: function updateStackHistory(nodeId) {
             var indexOfNodeId = this.stackHistory.indexOf(nodeId);
             if (indexOfNodeId === -1) {
                 this.stackHistory.push(nodeId);
             } else {
                 this.stackHistory.splice(indexOfNodeId + 1, this.stackHistory.length);
             }
-        };
-
-        serviceObject.updateVisitedNodesHistory = function (nodeId) {
+        }
+    }, {
+        key: 'updateVisitedNodesHistory',
+        value: function updateVisitedNodesHistory(nodeId) {
             var indexOfNodeId = this.visitedNodesHistory.indexOf(nodeId);
             if (indexOfNodeId === -1) {
                 this.visitedNodesHistory.push(nodeId);
             }
-        };
-
-        serviceObject.getVisitedNodesHistory = function () {
+        }
+    }, {
+        key: 'getVisitedNodesHistory',
+        value: function getVisitedNodesHistory() {
             return this.visitedNodesHistory;
-        };
-
-        serviceObject.isNodeVisited = function (nodeId) {
+        }
+    }, {
+        key: 'isNodeVisited',
+        value: function isNodeVisited(nodeId) {
             var result = false;
             var visitedNodesHistory = this.visitedNodesHistory;
 
@@ -772,12 +817,13 @@ define(['annotationService', 'configService', 'projectService'], function (annot
             }
 
             return result;
-        };
-
-        serviceObject.getLatestStudentWorkForNodeAsHTML = function (nodeId) {
+        }
+    }, {
+        key: 'getLatestStudentWorkForNodeAsHTML',
+        value: function getLatestStudentWorkForNodeAsHTML(nodeId) {
             var studentWorkAsHTML = null;
 
-            var node = ProjectService.getNodeById(nodeId);
+            var node = this.ProjectService.getNodeById(nodeId);
 
             if (node != null) {
                 //var nodeType = node.type;
@@ -790,33 +836,37 @@ define(['annotationService', 'configService', 'projectService'], function (annot
             }
 
             return studentWorkAsHTML;
-        };
-
-        serviceObject.createComponentState = function () {
+        }
+    }, {
+        key: 'createComponentState',
+        value: function createComponentState() {
             var componentState = {};
 
             componentState.timestamp = Date.parse(new Date());
 
             return componentState;
-        };
-
-        serviceObject.addComponentState = function (componentState) {
+        }
+    }, {
+        key: 'addComponentState',
+        value: function addComponentState(componentState) {
             if (this.studentData != null && this.studentData.componentStates != null) {
                 this.studentData.componentStates.push(componentState);
 
                 this.updateNodeStatuses();
             }
-        };
-
-        serviceObject.addNodeState = function (nodeState) {
+        }
+    }, {
+        key: 'addNodeState',
+        value: function addNodeState(nodeState) {
             if (this.studentData != null && this.studentData.nodeStates != null) {
                 this.studentData.nodeStates.push(nodeState);
 
                 this.updateNodeStatuses();
             }
-        };
-
-        serviceObject.getNodeStatesByNodeId = function (nodeId) {
+        }
+    }, {
+        key: 'getNodeStatesByNodeId',
+        value: function getNodeStatesByNodeId(nodeId) {
             var nodeStatesByNodeId = [];
 
             if (this.studentData != null && this.studentData.nodeStates != null) {
@@ -836,21 +886,24 @@ define(['annotationService', 'configService', 'projectService'], function (annot
             }
 
             return nodeStatesByNodeId;
-        };
-
-        serviceObject.addEvent = function (event) {
+        }
+    }, {
+        key: 'addEvent',
+        value: function addEvent(event) {
             if (this.studentData != null && this.studentData.events != null) {
                 this.studentData.events.push(event);
             }
-        };
-
-        serviceObject.addAnnotation = function (annotation) {
+        }
+    }, {
+        key: 'addAnnotation',
+        value: function addAnnotation(annotation) {
             if (this.studentData != null && this.studentData.annotations != null) {
                 this.studentData.annotations.push(annotation);
             }
-        };
-
-        serviceObject.saveComponentEvent = function (component, category, event, data) {
+        }
+    }, {
+        key: 'saveComponentEvent',
+        value: function saveComponentEvent(component, category, event, data) {
             if (component == null || category == null || event == null) {
                 alert("StudentDataService.saveComponentEvent: component, category, event args must not be null");
                 return;
@@ -864,18 +917,20 @@ define(['annotationService', 'configService', 'projectService'], function (annot
                 return;
             }
             this.saveEvent(context, nodeId, componentId, componentType, category, event, data);
-        };
-
-        serviceObject.saveVLEEvent = function (nodeId, componentId, componentType, category, event, data) {
+        }
+    }, {
+        key: 'saveVLEEvent',
+        value: function saveVLEEvent(nodeId, componentId, componentType, category, event, data) {
             if (category == null || event == null) {
                 alert("StudentDataService.saveVLEEvent: category and event args must not be null");
                 return;
             }
             var context = "VLE";
             this.saveEvent(context, nodeId, componentId, componentType, category, event, data);
-        };
-
-        serviceObject.saveEvent = function (context, nodeId, componentId, componentType, category, event, data) {
+        }
+    }, {
+        key: 'saveEvent',
+        value: function saveEvent(context, nodeId, componentId, componentType, category, event, data) {
             var events = [];
             var newEvent = this.createNewEvent();
             newEvent.context = context;
@@ -890,38 +945,43 @@ define(['annotationService', 'configService', 'projectService'], function (annot
             var nodeStates = null;
             var annotations = null;
             this.saveToServer(componentStates, nodeStates, events, annotations);
-        };
+        }
+    }, {
+        key: 'createNewEvent',
 
         /**
-        * Create a new empty event
-        * @return a new empty event
-        */
-        serviceObject.createNewEvent = function () {
+         * Create a new empty event
+         * @return a new empty event
+         */
+        value: function createNewEvent() {
             var event = {};
 
-            event.runId = ConfigService.getRunId();
-            event.periodId = ConfigService.getPeriodId();
-            event.workgroupId = ConfigService.getWorkgroupId();
+            event.runId = this.ConfigService.getRunId();
+            event.periodId = this.ConfigService.getPeriodId();
+            event.workgroupId = this.ConfigService.getWorkgroupId();
             event.clientSaveTime = Date.parse(new Date());
 
             return event;
-        };
-
-        serviceObject.saveNodeStates = function (nodeStates) {
+        }
+    }, {
+        key: 'saveNodeStates',
+        value: function saveNodeStates(nodeStates) {
             var componentStates = null;
             var events = null;
             var annotations = null;
             this.saveToServer(componentStates, nodeStates, events, annotations);
-        };
-
-        serviceObject.saveAnnotations = function (annotations) {
+        }
+    }, {
+        key: 'saveAnnotations',
+        value: function saveAnnotations(annotations) {
             var componentStates = null;
             var nodeStates = null;
             var events = null;
             this.saveToServer(componentStates, nodeStates, events, annotations);
-        };
-
-        serviceObject.saveToServer = function (componentStates, nodeStates, events, annotations) {
+        }
+    }, {
+        key: 'saveToServer',
+        value: function saveToServer(componentStates, nodeStates, events, annotations) {
 
             // merge componentStates and nodeStates into StudentWork before posting
             var studentWorkList = [];
@@ -930,7 +990,7 @@ define(['annotationService', 'configService', 'projectService'], function (annot
                     var componentState = componentStates[c];
 
                     if (componentState != null) {
-                        componentState.requestToken = UtilService.generateKey(); // use this to keep track of unsaved componentStates.
+                        componentState.requestToken = this.UtilService.generateKey(); // use this to keep track of unsaved componentStates.
                         this.addComponentState(componentState);
                         studentWorkList.push(componentState);
                     }
@@ -942,7 +1002,7 @@ define(['annotationService', 'configService', 'projectService'], function (annot
                     var nodeState = nodeStates[n];
 
                     if (nodeState != null) {
-                        nodeState.requestToken = UtilService.generateKey(); // use this to keep track of unsaved componentStates.
+                        nodeState.requestToken = this.UtilService.generateKey(); // use this to keep track of unsaved componentStates.
                         this.addNodeState(nodeState);
                         studentWorkList.push(nodeState);
                     }
@@ -954,7 +1014,7 @@ define(['annotationService', 'configService', 'projectService'], function (annot
                     var event = events[e];
 
                     if (event != null) {
-                        event.requestToken = UtilService.generateKey(); // use this to keep track of unsaved events.
+                        event.requestToken = this.UtilService.generateKey(); // use this to keep track of unsaved events.
                         this.addEvent(event);
                     }
                 }
@@ -967,7 +1027,7 @@ define(['annotationService', 'configService', 'projectService'], function (annot
                     var annotation = annotations[a];
 
                     if (annotation != null) {
-                        annotation.requestToken = UtilService.generateKey(); // use this to keep track of unsaved annotations.
+                        annotation.requestToken = this.UtilService.generateKey(); // use this to keep track of unsaved annotations.
                         this.addAnnotation(annotation);
                     }
                 }
@@ -978,20 +1038,20 @@ define(['annotationService', 'configService', 'projectService'], function (annot
             // get the url to POST the student data
             var httpParams = {};
             httpParams.method = 'POST';
-            httpParams.url = ConfigService.getConfigParam('studentDataURL');
+            httpParams.url = this.ConfigService.getConfigParam('studentDataURL');
             httpParams.headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
 
             // set the workgroup id and run id
             var params = {};
-            params.runId = ConfigService.getRunId();
-            params.workgroupId = ConfigService.getWorkgroupId();
+            params.runId = this.ConfigService.getRunId();
+            params.workgroupId = this.ConfigService.getWorkgroupId();
             params.studentWorkList = angular.toJson(studentWorkList);
             params.events = angular.toJson(events);
             params.annotations = angular.toJson(annotations);
             httpParams.data = $.param(params);
 
             // make the request to post the student data
-            return $http(httpParams).then(angular.bind(this, function (result) {
+            return this.$http(httpParams).then(angular.bind(this, function (result) {
 
                 // get the local references to the component states that were posted and set their id and serverSaveTime
                 if (result != null && result.data != null) {
@@ -1019,7 +1079,7 @@ define(['annotationService', 'configService', 'projectService'], function (annot
                                     localStudentWork.serverSaveTime = savedStudentWork.serverSaveTime;
                                     localStudentWork.requestToken = null; // requestToken is no longer needed.
 
-                                    $rootScope.$broadcast('studentWorkSavedToServer', { studentWork: localStudentWork });
+                                    this.$rootScope.$broadcast('studentWorkSavedToServer', { studentWork: localStudentWork });
                                     break;
                                 }
                             }
@@ -1046,7 +1106,7 @@ define(['annotationService', 'configService', 'projectService'], function (annot
                                     localEvent.serverSaveTime = savedEvent.serverSaveTime;
                                     localEvent.requestToken = null; // requestToken is no longer needed.
 
-                                    $rootScope.$broadcast('eventSavedToServer', { event: localEvent });
+                                    this.$rootScope.$broadcast('eventSavedToServer', { event: localEvent });
                                     break;
                                 }
                             }
@@ -1074,7 +1134,7 @@ define(['annotationService', 'configService', 'projectService'], function (annot
                                     localAnnotation.serverSaveTime = savedAnnotation.serverSaveTime;
                                     localAnnotation.requestToken = null; // requestToken is no longer needed.
 
-                                    $rootScope.$broadcast('annotationSavedToServer', { annotation: localAnnotation });
+                                    this.$rootScope.$broadcast('annotationSavedToServer', { annotation: localAnnotation });
                                     break;
                                 }
                             }
@@ -1084,11 +1144,13 @@ define(['annotationService', 'configService', 'projectService'], function (annot
 
                 return savedStudentDataResponse;
             }));
-        };
-
-        serviceObject.retrieveComponentStates = function (runId, periodId, workgroupId) {};
-
-        serviceObject.getLatestComponentState = function () {
+        }
+    }, {
+        key: 'retrieveComponentStates',
+        value: function retrieveComponentStates(runId, periodId, workgroupId) {}
+    }, {
+        key: 'getLatestComponentState',
+        value: function getLatestComponentState() {
             var latestComponentState = null;
 
             var studentData = this.studentData;
@@ -1102,7 +1164,9 @@ define(['annotationService', 'configService', 'projectService'], function (annot
             }
 
             return latestComponentState;
-        };
+        }
+    }, {
+        key: 'getLatestComponentStateByNodeIdAndComponentId',
 
         /**
          * Get the latest component state for the given node id and component
@@ -1112,7 +1176,7 @@ define(['annotationService', 'configService', 'projectService'], function (annot
          * @return the latest component state with the matching node id and
          * component id or null if none are found
          */
-        serviceObject.getLatestComponentStateByNodeIdAndComponentId = function (nodeId, componentId) {
+        value: function getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId) {
             var latestComponentState = null;
 
             if (nodeId != null && componentId != null) {
@@ -1145,14 +1209,16 @@ define(['annotationService', 'configService', 'projectService'], function (annot
             }
 
             return latestComponentState;
-        };
+        }
+    }, {
+        key: 'getStudentWorkByStudentWorkId',
 
         /**
          * Get the student work by specified student work id, which can be a ComponentState or NodeState
          * @param studentWorkId the student work id
          * @return an StudentWork or null
          */
-        serviceObject.getStudentWorkByStudentWorkId = function (studentWorkId) {
+        value: function getStudentWorkByStudentWorkId(studentWorkId) {
             if (studentWorkId != null) {
                 // get the component states
                 var componentStates = this.studentData.componentStates;
@@ -1184,14 +1250,16 @@ define(['annotationService', 'configService', 'projectService'], function (annot
                 }
             }
             return null;
-        };
+        }
+    }, {
+        key: 'getComponentStatesByNodeId',
 
         /**
          * Get the component states for the given node id
          * @param nodeId the node id
          * @return an array of component states for the given node id
          */
-        serviceObject.getComponentStatesByNodeId = function (nodeId) {
+        value: function getComponentStatesByNodeId(nodeId) {
             var componentStatesByNodeId = [];
 
             if (nodeId != null) {
@@ -1223,16 +1291,18 @@ define(['annotationService', 'configService', 'projectService'], function (annot
             }
 
             return componentStatesByNodeId;
-        };
+        }
+    }, {
+        key: 'getComponentStatesByNodeIdAndComponentId',
 
         /**
          * Get the component states for the given node id and component id
          * @param nodeId the node id
          * @param componentId the component id
-         * @return an array of component states for the given node id and 
+         * @return an array of component states for the given node id and
          * component id
          */
-        serviceObject.getComponentStatesByNodeIdAndComponentId = function (nodeId, componentId) {
+        value: function getComponentStatesByNodeIdAndComponentId(nodeId, componentId) {
             var componentStatesByNodeIdAndComponentId = [];
 
             if (nodeId != null && componentId != null) {
@@ -1265,14 +1335,16 @@ define(['annotationService', 'configService', 'projectService'], function (annot
             }
 
             return componentStatesByNodeIdAndComponentId;
-        };
+        }
+    }, {
+        key: 'getEventsByNodeId',
 
         /**
          * Get the events for a node id
          * @param nodeId the node id
          * @returns the events for the node id
          */
-        serviceObject.getEventsByNodeId = function (nodeId) {
+        value: function getEventsByNodeId(nodeId) {
             var eventsByNodeId = [];
 
             if (nodeId != null) {
@@ -1299,7 +1371,9 @@ define(['annotationService', 'configService', 'projectService'], function (annot
             }
 
             return eventsByNodeId;
-        };
+        }
+    }, {
+        key: 'getEventsByNodeIdAndComponentId',
 
         /**
          * Get the events for a component id
@@ -1307,7 +1381,7 @@ define(['annotationService', 'configService', 'projectService'], function (annot
          * @param componentId the component id
          * @returns an array of events for the component id
          */
-        serviceObject.getEventsByNodeIdAndComponentId = function (nodeId, componentId) {
+        value: function getEventsByNodeIdAndComponentId(nodeId, componentId) {
             var eventsByNodeId = [];
 
             if (nodeId != null) {
@@ -1335,14 +1409,16 @@ define(['annotationService', 'configService', 'projectService'], function (annot
             }
 
             return eventsByNodeId;
-        };
+        }
+    }, {
+        key: 'makeCopyOfJSONObject',
 
         /**
          * Create a copy of a JSON object
          * @param jsonObject the JSON object to get a copy of
          * @return a copy of the JSON object that was passed in
          */
-        serviceObject.makeCopyOfJSONObject = function (jsonObject) {
+        value: function makeCopyOfJSONObject(jsonObject) {
             var copyOfJSONObject = null;
 
             if (jsonObject != null) {
@@ -1354,14 +1430,16 @@ define(['annotationService', 'configService', 'projectService'], function (annot
             }
 
             return copyOfJSONObject;
-        };
+        }
+    }, {
+        key: 'canVisitNode',
 
         /**
          * Check if the student can visit the node
          * @param nodeId the node id
          * @returns whether the student can visit the node
          */
-        serviceObject.canVisitNode = function (nodeId) {
+        value: function canVisitNode(nodeId) {
 
             var result = false;
 
@@ -1378,14 +1456,16 @@ define(['annotationService', 'configService', 'projectService'], function (annot
             }
 
             return result;
-        };
+        }
+    }, {
+        key: 'getNodeStatusByNodeId',
 
         /**
          * Get the node status by node id
          * @param nodeId the node id
          * @returns the node status object for a node
          */
-        serviceObject.getNodeStatusByNodeId = function (nodeId) {
+        value: function getNodeStatusByNodeId(nodeId) {
             var nodeStatuses = this.nodeStatuses;
             var nodeStatus = null;
 
@@ -1394,23 +1474,25 @@ define(['annotationService', 'configService', 'projectService'], function (annot
             }
 
             return nodeStatus;
-        };
+        }
+    }, {
+        key: 'getNodeProgressById',
 
         /**
          * Get completed items, total number of visible items, completion % for a node
          * @param nodeId the node id
          * @returns object with number of completed items and number of visible items
          */
-        serviceObject.getNodeProgressById = function (nodeId) {
+        value: function getNodeProgressById(nodeId) {
             var completedItems = 0;
             var totalItems = 0;
 
-            if (ProjectService.isGroupNode(nodeId)) {
-                var nodeIds = ProjectService.getChildNodeIdsById(nodeId);
+            if (this.ProjectService.isGroupNode(nodeId)) {
+                var nodeIds = this.ProjectService.getChildNodeIdsById(nodeId);
                 for (var n = 0; n < nodeIds.length; n++) {
                     var id = nodeIds[n];
                     var status = this.nodeStatuses[id];
-                    if (ProjectService.isGroupNode(id)) {
+                    if (this.ProjectService.isGroupNode(id)) {
                         var completedGroupItems = status.progress.completedItems;
                         var totalGroupItems = status.progress.totalItems;
                         completedItems += completedGroupItems;
@@ -1435,7 +1517,9 @@ define(['annotationService', 'configService', 'projectService'], function (annot
                 "completionPct": completionPct
             };
             return progress;
-        };
+        }
+    }, {
+        key: 'isCompleted',
 
         /**
          * Check if the given node or component is completed
@@ -1443,7 +1527,7 @@ define(['annotationService', 'configService', 'projectService'], function (annot
          * @param componentId (optional) the component id
          * @returns whether the node or component is completed
          */
-        serviceObject.isCompleted = function (nodeId, componentId) {
+        value: function isCompleted(nodeId, componentId) {
 
             var result = false;
 
@@ -1460,7 +1544,7 @@ define(['annotationService', 'configService', 'projectService'], function (annot
                 var nodeEvents = this.getEventsByNodeId(nodeId);
 
                 // get the component object
-                var component = ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
+                var component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
 
                 if (component != null) {
 
@@ -1470,7 +1554,7 @@ define(['annotationService', 'configService', 'projectService'], function (annot
                     if (componentType != null) {
 
                         // get the service for the component type
-                        var service = $injector.get(componentType + 'Service');
+                        var service = this.$injector.get(componentType + 'Service');
 
                         // check if the component is completed
                         if (service.isCompleted(component, componentStates, componentEvents, nodeEvents)) {
@@ -1480,14 +1564,14 @@ define(['annotationService', 'configService', 'projectService'], function (annot
                 }
             } else if (nodeId) {
                 // check if node is a group
-                var isGroup = ProjectService.isGroupNode(nodeId);
+                var isGroup = this.ProjectService.isGroupNode(nodeId);
 
                 if (isGroup) {
                     // node is a group
                     var tempResult = true;
 
                     // check that all the nodes in the group and visible are completed
-                    var nodeIds = ProjectService.getChildNodeIdsById(nodeId);
+                    var nodeIds = this.ProjectService.getChildNodeIdsById(nodeId);
                     for (var n = 0; n < nodeIds.length; n++) {
                         var id = nodeIds[n];
                         if (this.nodeStatuses[id].isVisible && !this.nodeStatuses[id].isCompleted) {
@@ -1501,7 +1585,7 @@ define(['annotationService', 'configService', 'projectService'], function (annot
                     // check that all the components in the node are completed
 
                     // get all the components in the node
-                    var components = ProjectService.getComponentsByNodeId(nodeId);
+                    var components = this.ProjectService.getComponentsByNodeId(nodeId);
 
                     var tempResult = false;
                     var firstResult = true;
@@ -1531,7 +1615,7 @@ define(['annotationService', 'configService', 'projectService'], function (annot
                                  */
                                 tempNodeId = showPreviousWorkNodeId;
                                 tempComponentId = showPreviousWorkComponentId;
-                                tempComponent = ProjectService.getComponentByNodeIdAndComponentId(tempNodeId, tempComponentId);
+                                tempComponent = this.ProjectService.getComponentByNodeIdAndComponentId(tempNodeId, tempComponentId);
                             }
 
                             if (componentType != null) {
@@ -1540,10 +1624,10 @@ define(['annotationService', 'configService', 'projectService'], function (annot
                                     // get the service name
                                     var serviceName = componentType + 'Service';
 
-                                    if ($injector.has(serviceName)) {
+                                    if (this.$injector.has(serviceName)) {
 
                                         // get the service for the component type
-                                        var service = $injector.get(serviceName);
+                                        var service = this.$injector.get(serviceName);
 
                                         // get the component states for the component
                                         var componentStates = this.getComponentStatesByNodeIdAndComponentId(tempNodeId, tempComponentId);
@@ -1578,21 +1662,25 @@ define(['annotationService', 'configService', 'projectService'], function (annot
             }
 
             return result;
-        };
+        }
+    }, {
+        key: 'getCurrentNode',
 
         /**
          * Get the current node
          * @returns the current node object
          */
-        serviceObject.getCurrentNode = function () {
+        value: function getCurrentNode() {
             return this.currentNode;
-        };
+        }
+    }, {
+        key: 'getCurrentNodeId',
 
         /**
          * Get the current node id
          * @returns the current node id
          */
-        serviceObject.getCurrentNodeId = function () {
+        value: function getCurrentNodeId() {
             var currentNodeId = null;
 
             if (this.currentNode != null) {
@@ -1600,31 +1688,35 @@ define(['annotationService', 'configService', 'projectService'], function (annot
             }
 
             return currentNodeId;
-        };
+        }
+    }, {
+        key: 'setCurrentNodeByNodeId',
 
         /**
          * Set the current node
          * @param nodeId the node id
          */
-        serviceObject.setCurrentNodeByNodeId = function (nodeId) {
+        value: function setCurrentNodeByNodeId(nodeId) {
             if (nodeId != null) {
-                var node = ProjectService.getNodeById(nodeId);
+                var node = this.ProjectService.getNodeById(nodeId);
 
                 this.setCurrentNode(node);
             }
-        };
+        }
+    }, {
+        key: 'setCurrentNode',
 
         /**
          * Set the current node
          * @param node the node object
          */
-        serviceObject.setCurrentNode = function (node) {
+        value: function setCurrentNode(node) {
             var previousCurrentNode = this.currentNode;
 
             if (previousCurrentNode !== node) {
                 // the current node is about to change
 
-                if (previousCurrentNode && !ProjectService.isGroupNode(previousCurrentNode.id)) {
+                if (previousCurrentNode && !this.ProjectService.isGroupNode(previousCurrentNode.id)) {
                     // set the previous node to the current node
                     this.previousStep = previousCurrentNode;
                 }
@@ -1633,14 +1725,16 @@ define(['annotationService', 'configService', 'projectService'], function (annot
                 this.currentNode = node;
 
                 // broadcast the event that the current node has changed
-                $rootScope.$broadcast('currentNodeChanged', { previousNode: previousCurrentNode, currentNode: this.currentNode });
+                this.$rootScope.$broadcast('currentNodeChanged', { previousNode: previousCurrentNode, currentNode: this.currentNode });
             }
-        };
+        }
+    }, {
+        key: 'endCurrentNode',
 
         /**
          * End the current node
          */
-        serviceObject.endCurrentNode = function () {
+        value: function endCurrentNode() {
 
             // get the current node
             var previousCurrentNode = this.currentNode;
@@ -1648,15 +1742,17 @@ define(['annotationService', 'configService', 'projectService'], function (annot
             if (previousCurrentNode != null) {
 
                 // tell the node to exit
-                $rootScope.$broadcast('exitNode', { nodeToExit: previousCurrentNode });
+                this.$rootScope.$broadcast('exitNode', { nodeToExit: previousCurrentNode });
             }
-        };
+        }
+    }, {
+        key: 'endCurrentNodeAndSetCurrentNodeByNodeId',
 
         /**
          * End the current node and set the current node
          * @param nodeId the node id of the new current node
          */
-        serviceObject.endCurrentNodeAndSetCurrentNodeByNodeId = function (nodeId) {
+        value: function endCurrentNodeAndSetCurrentNodeByNodeId(nodeId) {
 
             // check if the node is visitable
             if (this.nodeStatuses[nodeId].isVisitable) {
@@ -1670,15 +1766,19 @@ define(['annotationService', 'configService', 'projectService'], function (annot
                 // the node is not visitable
                 this.nodeClickLocked(nodeId);
             }
-        };
+        }
+    }, {
+        key: 'nodeClickLocked',
 
         /**
          * Broadcast a listenable event that a locked node has been clicked (attempted to be opened)
          * @param nodeId
          */
-        serviceObject.nodeClickLocked = function (nodeId) {
-            $rootScope.$broadcast('nodeClickLocked', { nodeId: nodeId });
-        };
+        value: function nodeClickLocked(nodeId) {
+            this.$rootScope.$broadcast('nodeClickLocked', { nodeId: nodeId });
+        }
+    }, {
+        key: 'CSVToArray',
 
         /**
          * This will parse a delimited string into an array of
@@ -1686,7 +1786,7 @@ define(['annotationService', 'configService', 'projectService'], function (annot
          * can be overriden in the second argument.
          * Source: http://www.bennadel.com/blog/1504-ask-ben-parsing-csv-strings-with-javascript-exec-regular-expression-command.htm
          */
-        serviceObject.CSVToArray = function (strData, strDelimiter) {
+        value: function CSVToArray(strData, strDelimiter) {
             // Check to see if the delimiter is defined. If not,
             // then default to comma.
             strDelimiter = strDelimiter || ",";
@@ -1754,10 +1854,12 @@ define(['annotationService', 'configService', 'projectService'], function (annot
 
             // Return the parsed data.
             return arrData;
-        };
+        }
+    }]);
 
-        return serviceObject;
-    }];
+    return StudentDataService;
+}();
 
-    return service;
-});
+StudentDataService.$inject = ['$http', '$injector', '$q', '$rootScope', 'AnnotationService', 'ConfigService', 'ProjectService', 'UtilService'];
+
+exports.default = StudentDataService;

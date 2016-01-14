@@ -1,18 +1,30 @@
 'use strict';
 
-define([], function () {
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-    var service = ['$http', function ($http) {
-        var serviceObject = {};
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
 
-        serviceObject.config = null;
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-        serviceObject.getConfig = function () {
+var ConfigService = function () {
+    function ConfigService($http) {
+        _classCallCheck(this, ConfigService);
+
+        this.$http = $http;
+        this.config = null;
+    }
+
+    _createClass(ConfigService, [{
+        key: 'getConfig',
+        value: function getConfig() {
             return this.config;
-        };
-
-        serviceObject.retrieveConfig = function (configUrl) {
-            return $http.get(configUrl).then(angular.bind(this, function (result) {
+        }
+    }, {
+        key: 'retrieveConfig',
+        value: function retrieveConfig(configUrl) {
+            return this.$http.get(configUrl).then(angular.bind(this, function (result) {
                 var config = result.data;
 
                 this.config = config;
@@ -21,25 +33,29 @@ define([], function () {
 
                 return config;
             }));
-        };
-
-        serviceObject.getConfigParam = function (paramName) {
+        }
+    }, {
+        key: 'getConfigParam',
+        value: function getConfigParam(paramName) {
             if (this.config !== null) {
                 return this.config[paramName];
             } else {
                 return null;
             }
-        };
-
-        serviceObject.getCRaterRequestURL = function () {
+        }
+    }, {
+        key: 'getCRaterRequestURL',
+        value: function getCRaterRequestURL() {
             return this.getConfigParam('cRaterRequestURL');
-        };
-
-        serviceObject.getMainHomePageURL = function () {
+        }
+    }, {
+        key: 'getMainHomePageURL',
+        value: function getMainHomePageURL() {
             return this.getConfigParam('mainHomePageURL');
-        };
-
-        serviceObject.getPeriodId = function () {
+        }
+    }, {
+        key: 'getPeriodId',
+        value: function getPeriodId() {
             var periodId = null;
             var userInfo = this.getConfigParam('userInfo');
             if (userInfo != null) {
@@ -49,13 +65,15 @@ define([], function () {
                 }
             }
             return periodId;
-        };
+        }
+    }, {
+        key: 'getPeriods',
 
         /**
          * Get the periods
          * @returns an array of period objects
          */
-        serviceObject.getPeriods = function () {
+        value: function getPeriods() {
             var periods = [];
 
             var userInfo = this.getConfigParam('userInfo');
@@ -76,53 +94,65 @@ define([], function () {
             }
 
             return periods;
-        };
-
-        serviceObject.getRunId = function () {
+        }
+    }, {
+        key: 'getRunId',
+        value: function getRunId() {
             return this.getConfigParam('runId');
-        };
-
-        serviceObject.getProjectId = function () {
+        }
+    }, {
+        key: 'getProjectId',
+        value: function getProjectId() {
             return this.getConfigParam('projectId');
-        };
-
-        serviceObject.getOpenCPUURL = function () {
+        }
+    }, {
+        key: 'getOpenCPUURL',
+        value: function getOpenCPUURL() {
             return this.getConfigParam('openCPUURL');
-        };
-
-        serviceObject.getSessionLogOutURL = function () {
+        }
+    }, {
+        key: 'getSessionLogOutURL',
+        value: function getSessionLogOutURL() {
             return this.getConfigParam('sessionLogOutURL');
-        };
-
-        serviceObject.getStudentAssetsURL = function () {
+        }
+    }, {
+        key: 'getStudentAssetsURL',
+        value: function getStudentAssetsURL() {
             return this.getConfigParam('studentAssetsURL');
-        };
-
-        serviceObject.getStudentStatusURL = function () {
+        }
+    }, {
+        key: 'getStudentStatusURL',
+        value: function getStudentStatusURL() {
             return this.getConfigParam('studentStatusURL');
-        };
-
-        serviceObject.getStudentMaxTotalAssetsSize = function () {
+        }
+    }, {
+        key: 'getStudentMaxTotalAssetsSize',
+        value: function getStudentMaxTotalAssetsSize() {
             return this.getConfigParam('studentMaxTotalAssetsSize');
-        };
-
-        serviceObject.getStudentNotebookURL = function () {
+        }
+    }, {
+        key: 'getStudentNotebookURL',
+        value: function getStudentNotebookURL() {
             return this.getConfigParam('studentNotebookURL');
-        };
-
-        serviceObject.getStudentUploadsBaseURL = function () {
+        }
+    }, {
+        key: 'getStudentUploadsBaseURL',
+        value: function getStudentUploadsBaseURL() {
             return this.getConfigParam('studentUploadsBaseURL');
-        };
-
-        serviceObject.getWebSocketURL = function () {
+        }
+    }, {
+        key: 'getWebSocketURL',
+        value: function getWebSocketURL() {
             return this.getConfigParam('webSocketURL');
-        };
-
-        serviceObject.getMode = function () {
+        }
+    }, {
+        key: 'getMode',
+        value: function getMode() {
             return this.getConfigParam('mode');
-        };
-
-        serviceObject.getWorkgroupId = function () {
+        }
+    }, {
+        key: 'getWorkgroupId',
+        value: function getWorkgroupId() {
             var workgroupId = null;
             var userInfo = this.getConfigParam('userInfo');
             if (userInfo != null) {
@@ -132,9 +162,10 @@ define([], function () {
                 }
             }
             return workgroupId;
-        };
-
-        serviceObject.getMyUserInfo = function () {
+        }
+    }, {
+        key: 'getMyUserInfo',
+        value: function getMyUserInfo() {
             var myUserInfo = null;
 
             var userInfo = this.getConfigParam('userInfo');
@@ -143,9 +174,10 @@ define([], function () {
             }
 
             return myUserInfo;
-        };
-
-        serviceObject.getClassmateUserInfos = function () {
+        }
+    }, {
+        key: 'getClassmateUserInfos',
+        value: function getClassmateUserInfos() {
             var classmateUserInfos = null;
             var userInfo = this.getConfigParam('userInfo');
             if (userInfo != null) {
@@ -158,18 +190,20 @@ define([], function () {
                 }
             }
             return classmateUserInfos;
-        };
-
-        serviceObject.getTeacherWorkgroupId = function () {
+        }
+    }, {
+        key: 'getTeacherWorkgroupId',
+        value: function getTeacherWorkgroupId() {
             var teacherWorkgroupId = null;
             var teacherUserInfo = this.getTeacherUserInfo();
             if (teacherUserInfo != null) {
                 teacherWorkgroupId = teacherUserInfo.workgroupId;
             }
             return teacherWorkgroupId;
-        };
-
-        serviceObject.getTeacherUserInfo = function () {
+        }
+    }, {
+        key: 'getTeacherUserInfo',
+        value: function getTeacherUserInfo() {
             var teacherUserInfo = null;
             var myUserInfo = this.getMyUserInfo();
             if (myUserInfo != null) {
@@ -179,9 +213,10 @@ define([], function () {
                 }
             }
             return teacherUserInfo;
-        };
-
-        serviceObject.getClassmateWorkgroupIds = function (includeSelf) {
+        }
+    }, {
+        key: 'getClassmateWorkgroupIds',
+        value: function getClassmateWorkgroupIds(includeSelf) {
             var workgroupIds = [];
 
             if (includeSelf) {
@@ -205,9 +240,10 @@ define([], function () {
             }
 
             return workgroupIds;
-        };
-
-        serviceObject.sortClassmateUserInfosAlphabeticallyByName = function () {
+        }
+    }, {
+        key: 'sortClassmateUserInfosAlphabeticallyByName',
+        value: function sortClassmateUserInfosAlphabeticallyByName() {
             var classmateUserInfos = this.getClassmateUserInfos();
 
             if (classmateUserInfos != null) {
@@ -215,9 +251,10 @@ define([], function () {
             }
 
             return classmateUserInfos;
-        };
-
-        serviceObject.sortClassmateUserInfosAlphabeticallyByNameHelper = function (a, b) {
+        }
+    }, {
+        key: 'sortClassmateUserInfosAlphabeticallyByNameHelper',
+        value: function sortClassmateUserInfosAlphabeticallyByNameHelper(a, b) {
             var aUserName = a.userName;
             var bUserName = b.userName;
             var result = 0;
@@ -229,9 +266,10 @@ define([], function () {
             }
 
             return result;
-        };
-
-        serviceObject.getUserInfoByWorkgroupId = function (workgroupId) {
+        }
+    }, {
+        key: 'getUserInfoByWorkgroupId',
+        value: function getUserInfoByWorkgroupId(workgroupId) {
             var userInfo = null;
 
             if (workgroupId != null) {
@@ -244,7 +282,8 @@ define([], function () {
                     if (workgroupId === tempWorkgroupId) {
                         userInfo = myUserInfo;
                     }
-                };
+                }
+                ;
 
                 if (userInfo == null) {
                     var classmateUserInfos = this.getClassmateUserInfos();
@@ -267,14 +306,16 @@ define([], function () {
             }
 
             return userInfo;
-        };
+        }
+    }, {
+        key: 'getPeriodIdByWorkgroupId',
 
         /**
          * Get the period id for a workgroup id
          * @param workgroupId the workgroup id
          * @returns the period id the workgroup id is in
          */
-        serviceObject.getPeriodIdByWorkgroupId = function (workgroupId) {
+        value: function getPeriodIdByWorkgroupId(workgroupId) {
             var periodId = null;
 
             if (workgroupId != null) {
@@ -286,14 +327,16 @@ define([], function () {
             }
 
             return periodId;
-        };
+        }
+    }, {
+        key: 'getStudentFirstNamesByWorkgroupId',
 
         /**
          * Get the student names
          * @param workgroupId the workgroup id
          * @return an array containing the student names
          */
-        serviceObject.getStudentFirstNamesByWorkgroupId = function (workgroupId) {
+        value: function getStudentFirstNamesByWorkgroupId(workgroupId) {
             var studentNames = [];
 
             // get the user names for the workgroup e.g. "Spongebob Squarepants (SpongebobS0101):Patrick Star (PatrickS0101)"
@@ -322,9 +365,10 @@ define([], function () {
             }
 
             return studentNames;
-        };
-
-        serviceObject.getUserNameByWorkgroupId = function (workgroupId) {
+        }
+    }, {
+        key: 'getUserNameByWorkgroupId',
+        value: function getUserNameByWorkgroupId(workgroupId) {
             var userName = null;
 
             if (workgroupId != null) {
@@ -336,9 +380,10 @@ define([], function () {
             }
 
             return userName;
-        };
-
-        serviceObject.getUserNamesByWorkgroupId = function (workgroupId, noUserIds) {
+        }
+    }, {
+        key: 'getUserNamesByWorkgroupId',
+        value: function getUserNamesByWorkgroupId(workgroupId, noUserIds) {
             var userNames = [];
 
             if (workgroupId != null) {
@@ -356,9 +401,10 @@ define([], function () {
             }
 
             return userNames;
-        };
-
-        serviceObject.isPreview = function () {
+        }
+    }, {
+        key: 'isPreview',
+        value: function isPreview() {
             var result = false;
 
             var mode = this.getMode();
@@ -368,10 +414,14 @@ define([], function () {
             }
 
             return result;
-        };
+        }
+    }]);
 
-        return serviceObject;
-    }];
+    return ConfigService;
+}();
 
-    return service;
-});
+;
+
+ConfigService.$inject = ['$http'];
+
+exports.default = ConfigService;

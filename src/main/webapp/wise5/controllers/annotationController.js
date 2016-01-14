@@ -1,87 +1,84 @@
-define(['app'], function(app) {
-    app.$controllerProvider.register('AnnotationController',
-        function(
-            $injector,
-            $rootScope,
-            $scope,
-            $state,
-            $stateParams,
-            AnnotationService,
-            ConfigService,
-            UtilService) {
+class AnnotationController {
+    constructor(AnnotationService,
+                ConfigService,
+                UtilService) {
 
-            this.annotationId = null;
-            this.nodeId = null;
-            this.periodId = null;
-            this.componentId = null;
-            this.fromWorkgroupId = null;
-            this.toWorkgroupId = null;
-            this.componentStateId = null;
-            this.type = null;
-            this.value = null;
+        this.AnnotationService = AnnotationService;
+        this.ConfigService = ConfigService;
+        this.UtilService = UtilService;
 
-            /**
-             * Perform any necessary setup for the controller
-             */
-            this.setup = function() {
-                this.runId = ConfigService.getRunId();
-            };
+        this.annotationId = null;
+        this.nodeId = null;
+        this.periodId = null;
+        this.componentId = null;
+        this.fromWorkgroupId = null;
+        this.toWorkgroupId = null;
+        this.componentStateId = null;
+        this.type = null;
+        this.value = null;
 
-            /**
-             * Save the annotation to the server
-             */
-            this.postAnnotation = function() {
+        this.runId = this.ConfigService.getRunId();
+    }
 
-                if (this.runId != null &&
-                    this.periodId != null &&
-                    this.nodeId != null &&
-                    this.componentId != null &&
-                    this.fromWorkgroupId != null &&
-                    this.toWorkgroupId != null &&
-                    this.type != null &&
-                    this.value != null) {
+    /**
+     * Save the annotation to the server
+     */
+    postAnnotation() {
 
-                    // get the current time
-                    var clientSaveTime = new Date().getTime();
+        if (this.runId != null &&
+            this.periodId != null &&
+            this.nodeId != null &&
+            this.componentId != null &&
+            this.fromWorkgroupId != null &&
+            this.toWorkgroupId != null &&
+            this.type != null &&
+            this.value != null) {
 
-                    // get the value
-                    var value = this.value;
+            // get the current time
+            var clientSaveTime = new Date().getTime();
 
-                    // convert the value to a number if possible
-                    value = UtilService.convertStringToNumber(value);
+            // get the value
+            var value = this.value;
 
-                    var data = {};
-                    data.value = value;
+            // convert the value to a number if possible
+            value = this.UtilService.convertStringToNumber(value);
 
-                    // create the annotation object
-                    var annotation = AnnotationService.createAnnotation(
-                        this.annotationId,
-                        this.runId,
-                        this.periodId,
-                        this.fromWorkgroupId,
-                        this.toWorkgroupId,
-                        this.nodeId,
-                        this.componentId,
-                        this.componentStateId,
-                        this.type,
-                        data,
-                        clientSaveTime);
+            var data = {};
+            data.value = value;
 
-                    // save the annotation to the server
-                    AnnotationService.saveAnnotation(annotation).then(angular.bind(this, function(result) {
-                        var localAnnotation = result;
+            // create the annotation object
+            var annotation = this.AnnotationService.createAnnotation(
+                this.annotationId,
+                this.runId,
+                this.periodId,
+                this.fromWorkgroupId,
+                this.toWorkgroupId,
+                this.nodeId,
+                this.componentId,
+                this.componentStateId,
+                this.type,
+                data,
+                clientSaveTime);
 
-                        if (localAnnotation != null) {
-                            if (this.annotationId == null) {
-                                // set the annotation id if there was no annotation id
-                                this.annotationId = localAnnotation.id;
-                            }
-                        }
-                    }));
+            // save the annotation to the server
+            this.AnnotationService.saveAnnotation(annotation).then(angular.bind(this, function(result) {
+                var localAnnotation = result;
+
+                if (localAnnotation != null) {
+                    if (this.annotationId == null) {
+                        // set the annotation id if there was no annotation id
+                        this.annotationId = localAnnotation.id;
+                    }
                 }
-            };
-
-            this.setup();
+            }));
         }
-    )
-});
+    };
+}
+
+AnnotationController.$inject = [
+    'AnnotationService',
+    'ConfigService',
+    'UtilService'
+];
+
+export default AnnotationController;

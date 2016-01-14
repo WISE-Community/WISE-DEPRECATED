@@ -1,25 +1,28 @@
-define(['app'], function(app) {
-    app.$controllerProvider.register('NavigationController',
-        function ($rootScope,
-                  $scope,
-                  $state,
-                  $stateParams,
-                  ConfigService,
-                  ProjectService,
-                  StudentDataService) {
-            this.rootNode = ProjectService.rootNode;
+class NavigationController {
+    constructor($rootScope,
+                ProjectService,
+                StudentDataService) {
 
-            this.filterByName = function (filter) {
-                return true; // TODO: create filter
-            };
+        this.$rootScope = $rootScope;
+        this.ProjectService = ProjectService;
+        this.StudentDataService = StudentDataService;
 
+        this.rootNode = this.ProjectService.rootNode;
 
-            $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
-                var toNodeId = toParams.nodeId;
-                var fromNodeId = fromParams.nodeId;
-                if (toNodeId && fromNodeId && toNodeId !== fromNodeId) {
-                    StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(toNodeId);
-                }
-            });
-        })
-});
+        this.$rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
+            var toNodeId = toParams.nodeId;
+            var fromNodeId = fromParams.nodeId;
+            if (toNodeId && fromNodeId && toNodeId !== fromNodeId) {
+                this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(toNodeId);
+            }
+        }.bind(this));
+    }
+}
+
+NavigationController.$inject = [
+    '$rootScope',
+    'ProjectService',
+    'StudentDataService'
+];
+
+export default NavigationController;

@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _nodeService = require('../../services/nodeService2');
+var _nodeService = require('../../services/nodeService');
 
 var _nodeService2 = _interopRequireDefault(_nodeService);
 

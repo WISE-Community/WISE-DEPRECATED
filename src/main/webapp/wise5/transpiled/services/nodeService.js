@@ -1,11 +1,28 @@
 'use strict';
 
-define(['configService', 'projectService', 'studentDataService'], function (configService, projectService, studentDataService) {
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-    var service = ['$http', '$injector', '$q', 'ConfigService', 'ProjectService', 'StudentDataService', function ($http, $injector, $q, ConfigService, ProjectService, StudentDataService) {
-        var serviceObject = {};
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
 
-        serviceObject.getLatestNodeState = function (nodeVisits) {
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var NodeService = function () {
+    function NodeService($http, $injector, $q, ConfigService, ProjectService, StudentDataService) {
+        _classCallCheck(this, NodeService);
+
+        this.$http = $http;
+        this.$injector = $injector;
+        this.$q = $q;
+        this.ConfigService = ConfigService;
+        this.ProjectService = ProjectService;
+        this.StudentDataService = StudentDataService;
+    }
+
+    _createClass(NodeService, [{
+        key: 'getLatestNodeState',
+        value: function getLatestNodeState(nodeVisits) {
             var result = null;
 
             if (nodeVisits != null) {
@@ -32,9 +49,10 @@ define(['configService', 'projectService', 'studentDataService'], function (conf
             }
 
             return result;
-        };
-
-        serviceObject.getStudentWorkAsHTML = function (nodeState) {
+        }
+    }, {
+        key: 'getStudentWorkAsHTML',
+        value: function getStudentWorkAsHTML(nodeState) {
             var studentWorkAsHTML = null;
 
             if (nodeState != null) {
@@ -44,33 +62,39 @@ define(['configService', 'projectService', 'studentDataService'], function (conf
             }
 
             return studentWorkAsHTML;
-        };
+        }
+    }, {
+        key: 'createNewComponentState',
 
         /**
          * Create a new empty node state
          * @return a new empty node state
          */
-        serviceObject.createNewComponentState = function () {
+        value: function createNewComponentState() {
             var componentState = {};
 
             // set the timestamp
             componentState.clientSaveTime = Date.parse(new Date());
 
             return componentState;
-        };
+        }
+    }, {
+        key: 'createNewNodeState',
 
         /**
          * Create a new empty node state
          * @return a new empty node state
          */
-        serviceObject.createNewNodeState = function () {
+        value: function createNewNodeState() {
             var nodeState = {};
 
             // set the timestamp
             nodeState.clientSaveTime = Date.parse(new Date());
 
             return nodeState;
-        };
+        }
+    }, {
+        key: 'toCamelCase',
 
         /**
          * Get the node type in camel case
@@ -79,7 +103,7 @@ define(['configService', 'projectService', 'studentDataService'], function (conf
          * e.g.
          * openResponse
          */
-        serviceObject.toCamelCase = function (nodeType) {
+        value: function toCamelCase(nodeType) {
             var nodeTypeCamelCased = null;
 
             if (nodeType != null && nodeType.length > 0) {
@@ -104,14 +128,16 @@ define(['configService', 'projectService', 'studentDataService'], function (conf
             }
 
             return nodeTypeCamelCased;
-        };
+        }
+    }, {
+        key: 'isStringUpperCase',
 
         /**
          * Check if the string is in all uppercase
          * @param str the string to check
          * @return whether the string is in all uppercase
          */
-        serviceObject.isStringUpperCase = function (str) {
+        value: function isStringUpperCase(str) {
             var result = false;
 
             if (str != null) {
@@ -122,14 +148,16 @@ define(['configService', 'projectService', 'studentDataService'], function (conf
             }
 
             return result;
-        };
+        }
+    }, {
+        key: 'getComponentTemplatePath',
 
         /**
          * Get the html template for the component
          * @param componentType the component type
          * @return the path to the html template for the component
          */
-        serviceObject.getComponentTemplatePath = function (componentType) {
+        value: function getComponentTemplatePath(componentType) {
 
             if (componentType == null) {
                 // error
@@ -145,7 +173,9 @@ define(['configService', 'projectService', 'studentDataService'], function (conf
                 }
 
             return 'wise5/components/' + componentType + '/index.html';
-        };
+        }
+    }, {
+        key: 'getComponentContentById',
 
         /**
          * Get the component content
@@ -153,7 +183,7 @@ define(['configService', 'projectService', 'studentDataService'], function (conf
          * @param componentId the component id
          * @return the component content
          */
-        serviceObject.getComponentContentById = function (nodeContent, componentId) {
+        value: function getComponentContentById(nodeContent, componentId) {
             var componentContent = null;
 
             if (nodeContent != null && componentId != null) {
@@ -181,14 +211,16 @@ define(['configService', 'projectService', 'studentDataService'], function (conf
             }
 
             return componentContent;
-        };
+        }
+    }, {
+        key: 'isWorkSubmitted',
 
         /**
          * Check if any of the component states were submitted
          * @param componentStates an array of component states
          * @return whether any of the component states were submitted
          */
-        serviceObject.isWorkSubmitted = function (componentStates) {
+        value: function isWorkSubmitted(componentStates) {
             var result = false;
 
             if (componentStates != null) {
@@ -208,9 +240,10 @@ define(['configService', 'projectService', 'studentDataService'], function (conf
             }
 
             return result;
-        };
-
-        serviceObject.callFunction = function (node, component, functionName, functionParams, componentStates, nodeStates, componentEvents, nodeEvents) {
+        }
+    }, {
+        key: 'callFunction',
+        value: function callFunction(node, component, functionName, functionParams, componentStates, nodeStates, componentEvents, nodeEvents) {
             var result = null;
 
             if (functionName === 'isCompleted') {
@@ -220,7 +253,9 @@ define(['configService', 'projectService', 'studentDataService'], function (conf
             }
 
             return result;
-        };
+        }
+    }, {
+        key: 'isCompleted',
 
         /**
          * Check if the node or component is completed
@@ -228,7 +263,7 @@ define(['configService', 'projectService', 'studentDataService'], function (conf
          * to check for completion
          * @returns whether the specified node or component is completed
          */
-        serviceObject.isCompleted = function (functionParams) {
+        value: function isCompleted(functionParams) {
 
             var result = false;
 
@@ -236,13 +271,14 @@ define(['configService', 'projectService', 'studentDataService'], function (conf
                 var nodeId = functionParams.nodeId;
                 var componentId = functionParams.componentId;
 
-                result = StudentDataService.isCompleted(nodeId, componentId);
+                result = this.StudentDataService.isCompleted(nodeId, componentId);
             }
 
             return result;
-        };
-
-        serviceObject.branchPathTaken = function (node, component, functionName, functionParams, componentStates, nodeStates, componentEvents, nodeEvents) {
+        }
+    }, {
+        key: 'branchPathTaken',
+        value: function branchPathTaken(node, component, functionName, functionParams, componentStates, nodeStates, componentEvents, nodeEvents) {
 
             var result = false;
 
@@ -282,34 +318,39 @@ define(['configService', 'projectService', 'studentDataService'], function (conf
             }
 
             return result;
-        };
+        }
 
         /**
          * Go to the next node
          */
-        serviceObject.goToNextNode = function () {
+
+    }, {
+        key: 'goToNextNode',
+        value: function goToNextNode() {
 
             var nextNodeId = this.getNextNodeId();
             if (nextNodeId != null) {
-                StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(nextNodeId);
+                this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(nextNodeId);
             }
-        };
+        }
+    }, {
+        key: 'getNextNodeId',
 
         /**
          * Get the next node in the project sequence
          */
-        serviceObject.getNextNodeId = function () {
+        value: function getNextNodeId() {
 
             var nextNodeId = null;
 
             // get the current node
-            var currentNode = StudentDataService.getCurrentNode();
+            var currentNode = this.StudentDataService.getCurrentNode();
 
             if (currentNode != null) {
                 var currentNodeId = currentNode.id;
 
                 // get the branch path node states
-                var branchPathNodeStates = StudentDataService.getBranchPathTakenNodeStates(currentNodeId);
+                var branchPathNodeStates = this.StudentDataService.getBranchPathTakenNodeStates(currentNodeId);
 
                 if (branchPathNodeStates != null && branchPathNodeStates.length > 0) {
 
@@ -326,7 +367,7 @@ define(['configService', 'projectService', 'studentDataService'], function (conf
                     }
                 } else {
                     // get the transition logic from the current node
-                    var transitions = ProjectService.getTransitionLogicByFromNodeId(currentNodeId);
+                    var transitions = this.ProjectService.getTransitionLogicByFromNodeId(currentNodeId);
 
                     // choose a transition
                     var transition = this.chooseTransition(transitions);
@@ -339,34 +380,38 @@ define(['configService', 'projectService', 'studentDataService'], function (conf
             }
 
             return nextNodeId;
-        };
+        }
+    }, {
+        key: 'goToPrevNode',
 
         /**
          * Go to the previous node
          */
-        serviceObject.goToPrevNode = function () {
+        value: function goToPrevNode() {
 
             var prevNodeId = this.getPrevNodeId();
             if (prevNodeId != null) {
-                StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(prevNodeId);
+                this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(prevNodeId);
             }
-        };
+        }
+    }, {
+        key: 'getPrevNodeId',
 
         /**
          * Get the previous node in the project sequence
          */
-        serviceObject.getPrevNodeId = function () {
+        value: function getPrevNodeId() {
 
             var prevNodeId = null;
 
             // get the current node
-            var currentNode = StudentDataService.getCurrentNode();
+            var currentNode = this.StudentDataService.getCurrentNode();
 
             if (currentNode != null) {
 
                 var currentNodeId = currentNode.id;
 
-                var transitions = ProjectService.getTransitionsByToNodeId(currentNodeId);
+                var transitions = this.ProjectService.getTransitionsByToNodeId(currentNodeId);
 
                 if (transitions != null && transitions.length === 1) {
                     // TODO: remove this if case, as transition.from has been deprecated
@@ -376,35 +421,39 @@ define(['configService', 'projectService', 'studentDataService'], function (conf
                         prevNodeId = transition.from;
                     }
                 } else {
-                    var currentNodePos = ProjectService.getOrderById(currentNode.id);
+                    var currentNodePos = this.ProjectService.getOrderById(currentNode.id);
                     var previousPos = currentNodePos - 1;
                     if (previousPos > 0) {
-                        prevNodeId = ProjectService.getIdByOrder(previousPos);
+                        prevNodeId = this.ProjectService.getIdByOrder(previousPos);
                     }
                 }
             }
 
             return prevNodeId;
-        };
+        }
+    }, {
+        key: 'closeNode',
 
         /**
          * Close the current node (and open the current node's parent group)
          */
-        serviceObject.closeNode = function () {
-            var currentNode = StudentDataService.getCurrentNode();
+        value: function closeNode() {
+            var currentNode = this.StudentDataService.getCurrentNode();
             if (currentNode) {
 
                 var currentNodeId = currentNode.id;
 
                 // get the parent node of the current node
-                var parentNode = ProjectService.getParentGroup(currentNodeId);
+                var parentNode = this.ProjectService.getParentGroup(currentNodeId);
 
                 var parentNodeId = parentNode.id;
 
                 // set the current node to the parent node
-                StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(parentNodeId);
+                this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(parentNodeId);
             }
-        };
+        }
+    }, {
+        key: 'chooseTransition',
 
         /**
          * Choose the transition the student will take
@@ -412,7 +461,7 @@ define(['configService', 'projectService', 'studentDataService'], function (conf
          * for how to choose a transition
          * @returns a transition object
          */
-        serviceObject.chooseTransition = function (transitionLogic) {
+        value: function chooseTransition(transitionLogic) {
             var transitionResult = null;
             if (transitionLogic != null) {
 
@@ -450,7 +499,7 @@ define(['configService', 'projectService', 'studentDataService'], function (conf
                                 var tempCriteria = criteria[c];
 
                                 // check if the criteria is satisfied
-                                tempResult = StudentDataService.evaluateCriteria(tempCriteria);
+                                tempResult = this.StudentDataService.evaluateCriteria(tempCriteria);
 
                                 if (firstResult) {
                                     // this is the first criteria in this for loop
@@ -497,12 +546,13 @@ define(['configService', 'projectService', 'studentDataService'], function (conf
                 }
             }
             return transitionResult;
-        };
-
-        serviceObject.hasTransitionLogic = function () {
+        }
+    }, {
+        key: 'hasTransitionLogic',
+        value: function hasTransitionLogic() {
             var result = false;
 
-            var currentNode = StudentDataService.getCurrentNode();
+            var currentNode = this.StudentDataService.getCurrentNode();
 
             if (currentNode != null) {
                 var transitionLogic = currentNode.transitionLogic;
@@ -513,12 +563,13 @@ define(['configService', 'projectService', 'studentDataService'], function (conf
             }
 
             return result;
-        };
-
-        serviceObject.evaluateTransitionLogic = function () {
+        }
+    }, {
+        key: 'evaluateTransitionLogic',
+        value: function evaluateTransitionLogic() {
 
             // get the current node
-            var currentNode = StudentDataService.getCurrentNode();
+            var currentNode = this.StudentDataService.getCurrentNode();
 
             if (currentNode != null) {
 
@@ -527,7 +578,7 @@ define(['configService', 'projectService', 'studentDataService'], function (conf
                 if (transitionLogic != null) {
                     //var whenToChoosePath = transitionLogic.whenToChoosePath;
 
-                    //var nodeStates = StudentDataService.getNodeStatesByNodeId(currentNode.id);
+                    //var nodeStates = this.StudentDataService.getNodeStatesByNodeId(currentNode.id);
 
                     var transitions = transitionLogic.transitions;
                     var canChangePath = transitionLogic.canChangePath;
@@ -575,12 +626,13 @@ define(['configService', 'projectService', 'studentDataService'], function (conf
                         }
                 }
             }
-        };
-
-        serviceObject.getBranchNodeStates = function () {
+        }
+    }, {
+        key: 'getBranchNodeStates',
+        value: function getBranchNodeStates() {
             var branchNodeStates = [];
 
-            var nodeStates = StudentDataService.getNodeStatesByNodeId(currentNode.id);
+            var nodeStates = this.StudentDataService.getNodeStatesByNodeId(currentNode.id);
 
             if (nodeStates != null) {
                 for (var n = 0; n < nodeStates.length; n++) {
@@ -601,17 +653,18 @@ define(['configService', 'projectService', 'studentDataService'], function (conf
             }
 
             return branchNodeStates;
-        };
-
-        serviceObject.createBranchNodeState = function (fromNodeId, toNodeId) {
+        }
+    }, {
+        key: 'createBranchNodeState',
+        value: function createBranchNodeState(fromNodeId, toNodeId) {
 
             if (fromNodeId != null && toNodeId != null) {
 
                 // create a new node state
                 var nodeState = this.createNewNodeState();
-                nodeState.runId = ConfigService.getRunId();
-                nodeState.periodId = ConfigService.getPeriodId();
-                nodeState.workgroupId = ConfigService.getWorkgroupId();
+                nodeState.runId = this.ConfigService.getRunId();
+                nodeState.periodId = this.ConfigService.getPeriodId();
+                nodeState.workgroupId = this.ConfigService.getWorkgroupId();
                 nodeState.nodeId = fromNodeId;
                 nodeState.isAutoSave = false;
                 nodeState.isSubmit = false;
@@ -624,18 +677,20 @@ define(['configService', 'projectService', 'studentDataService'], function (conf
                 nodeState.studentData = studentData;
                 var nodeStates = [];
                 nodeStates.push(nodeState);
-                StudentDataService.saveNodeStates(nodeStates);
+                this.StudentDataService.saveNodeStates(nodeStates);
             }
-        };
+        }
+    }, {
+        key: 'getLatestBranchNodeState',
 
         /**
          * Get the latest branch node state for given nodeId
          */
-        serviceObject.getLatestBranchNodeState = function (nodeId) {
+        value: function getLatestBranchNodeState(nodeId) {
 
             var latestBranchNodeState = null;
 
-            var nodeStates = StudentDataService.getNodeStatesByNodeId(nodeId);
+            var nodeStates = this.StudentDataService.getNodeStatesByNodeId(nodeId);
 
             if (nodeStates != null) {
                 for (var n = nodeStates.length - 1; n >= 0; n--) {
@@ -656,14 +711,15 @@ define(['configService', 'projectService', 'studentDataService'], function (conf
             }
 
             return latestBranchNodeState;
-        };
-
-        serviceObject.evaluateTransitionLogicOn = function (event) {
+        }
+    }, {
+        key: 'evaluateTransitionLogicOn',
+        value: function evaluateTransitionLogicOn(event) {
 
             var result = false;
 
             // get the current node
-            var currentNode = StudentDataService.getCurrentNode();
+            var currentNode = this.StudentDataService.getCurrentNode();
 
             if (currentNode != null) {
                 var transitionLogic = currentNode.transitionLogic;
@@ -676,10 +732,12 @@ define(['configService', 'projectService', 'studentDataService'], function (conf
             }
 
             return result;
-        };
+        }
+    }]);
 
-        return serviceObject;
-    }];
+    return NodeService;
+}();
 
-    return service;
-});
+NodeService.$inject = ['$http', '$injector', '$q', 'ConfigService', 'ProjectService', 'StudentDataService'];
+
+exports.default = NodeService;

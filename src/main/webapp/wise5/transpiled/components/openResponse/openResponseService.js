@@ -1,70 +1,38 @@
 'use strict';
 
-define(['nodeService', 'studentDataService'], function (nodeService, studentDataService) {
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-    var service = ['$http', 'NodeService', 'StudentDataService', function ($http, NodeService, StudentDataService) {
-        var serviceObject = Object.create(NodeService);
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
 
-        serviceObject.config = null;
+var _nodeService = require('../../services/nodeService');
 
-        serviceObject.callFunction = function (node, component, functionName, functionParams, componentStates, nodeStates, componentEvents, nodeEvents) {
-            var result = null;
+var _nodeService2 = _interopRequireDefault(_nodeService);
 
-            if (functionName === 'isCompleted') {
-                result = this.isCompleted(component, componentStates, componentEvents, nodeEvents);
-            } else if (functionName === 'wordCountCompare') {
-                result = this.wordCountCompare(functionParams);
-            }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-            return result;
-        };
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-        serviceObject.wordCountCompare = function (params) {
-            var result = false;
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-            if (params != null) {
-                var operator = params.operator;
-                var count = params.count;
-                var nodeVisits = params.nodeVisits;
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-                var latestNodeState = this.getLatestNodeState(nodeVisits);
+var OpenResponseService = function (_NodeService) {
+    _inherits(OpenResponseService, _NodeService);
 
-                var wordCount = 0;
+    function OpenResponseService(StudentDataService) {
+        _classCallCheck(this, OpenResponseService);
 
-                if (latestNodeState != null) {
-                    var response = latestNodeState.studentData;
+        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(OpenResponseService).call(this));
 
-                    if (response != null) {
-                        wordCount = this.getWordCount(response);
+        _this.StudentDataService = StudentDataService;
+        return _this;
+    }
 
-                        if (operator === '<') {
-                            if (wordCount < count) {
-                                result = true;
-                            }
-                        } else if (operator === '>=') {
-                            if (wordCount >= count) {
-                                result = true;
-                            }
-                        }
-                    }
-                }
-            }
-
-            return result;
-        };
-
-        serviceObject.getWordCount = function (response) {
-            var wordCount = 0;
-
-            if (response != null) {
-                var regex = /\s+/gi;
-                wordCount = response.trim().replace(regex, ' ').split(' ').length;
-            }
-
-            return wordCount;
-        };
-
-        serviceObject.getStudentWorkAsHTML = function (componentState) {
+    _createClass(OpenResponseService, [{
+        key: 'getStudentWorkAsHTML',
+        value: function getStudentWorkAsHTML(componentState) {
             var studentWorkAsHTML = null;
 
             if (componentState != null && componentState.studentData != null) {
@@ -88,7 +56,9 @@ define(['nodeService', 'studentDataService'], function (nodeService, studentData
             }
 
             return studentWorkAsHTML;
-        };
+        }
+    }, {
+        key: 'populateComponentState',
 
         /**
          * Populate a component state with the data from another component state
@@ -96,13 +66,13 @@ define(['nodeService', 'studentDataService'], function (nodeService, studentData
          * @return a new component state that contains the student data from the other
          * component state
          */
-        serviceObject.populateComponentState = function (componentStateFromOtherComponent) {
+        value: function populateComponentState(componentStateFromOtherComponent) {
             var componentState = null;
 
             if (componentStateFromOtherComponent != null) {
 
                 // create an empty component state
-                componentState = StudentDataService.createComponentState();
+                componentState = this.StudentDataService.createComponentState();
 
                 // get the component type of the other component state
                 var otherComponentType = componentStateFromOtherComponent.componentType;
@@ -114,7 +84,7 @@ define(['nodeService', 'studentDataService'], function (nodeService, studentData
                     var studentData = componentStateFromOtherComponent.studentData;
 
                     // create a copy of the student data
-                    var studentDataCopy = StudentDataService.makeCopyOfJSONObject(studentData);
+                    var studentDataCopy = this.StudentDataService.makeCopyOfJSONObject(studentData);
 
                     // set the student data into the new component state
                     componentState.studentData = studentDataCopy;
@@ -124,7 +94,9 @@ define(['nodeService', 'studentDataService'], function (nodeService, studentData
             }
 
             return componentState;
-        };
+        }
+    }, {
+        key: 'isCompleted',
 
         /**
          * Check if the component was completed
@@ -134,7 +106,7 @@ define(['nodeService', 'studentDataService'], function (nodeService, studentData
          * @param nodeEvents the events for the parent node of the component
          * @returns whether the component was completed
          */
-        serviceObject.isCompleted = function (component, componentStates, componentEvents, nodeEvents) {
+        value: function isCompleted(component, componentStates, componentEvents, nodeEvents) {
             var result = false;
 
             if (componentStates != null && componentStates.length) {
@@ -156,10 +128,12 @@ define(['nodeService', 'studentDataService'], function (nodeService, studentData
             }
 
             return result;
-        };
+        }
+    }]);
 
-        return serviceObject;
-    }];
+    return OpenResponseService;
+}(_nodeService2.default);
 
-    return service;
-});
+OpenResponseService.$inject = ['StudentDataService'];
+
+exports.default = OpenResponseService;

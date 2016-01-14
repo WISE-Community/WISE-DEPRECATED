@@ -28,55 +28,55 @@ var _toArrayFilter = require('lib/angular-toArrayFilter/toArrayFilter');
 
 var _toArrayFilter2 = _interopRequireDefault(_toArrayFilter);
 
-var _annotationService = require('../services/annotationService2');
+var _annotationService = require('../services/annotationService');
 
 var _annotationService2 = _interopRequireDefault(_annotationService);
 
-var _authoringToolController = require('./authoringToolController2');
+var _authoringToolController = require('./authoringToolController');
 
 var _authoringToolController2 = _interopRequireDefault(_authoringToolController);
 
-var _configService = require('../services/configService2');
+var _configService = require('../services/configService');
 
 var _configService2 = _interopRequireDefault(_configService);
 
-var _directives = require('../directives/directives2');
+var _directives = require('../directives/directives');
 
 var _directives2 = _interopRequireDefault(_directives);
 
-var _nodeController = require('./node/nodeController2');
+var _nodeController = require('./node/nodeController');
 
 var _nodeController2 = _interopRequireDefault(_nodeController);
 
-var _nodeService = require('../services/nodeService2');
+var _nodeService = require('../services/nodeService');
 
 var _nodeService2 = _interopRequireDefault(_nodeService);
 
-var _openResponseService = require('../components/openResponse/openResponseService2');
+var _openResponseService = require('../components/openResponse/openResponseService');
 
 var _openResponseService2 = _interopRequireDefault(_openResponseService);
 
-var _projectController = require('./project/projectController2');
+var _projectController = require('./project/projectController');
 
 var _projectController2 = _interopRequireDefault(_projectController);
 
-var _projectService = require('../services/projectService2');
+var _projectService = require('../services/projectService');
 
 var _projectService2 = _interopRequireDefault(_projectService);
 
-var _sessionService = require('../services/sessionService2');
+var _sessionService = require('../services/sessionService');
 
 var _sessionService2 = _interopRequireDefault(_sessionService);
 
-var _studentAssetService = require('../services/studentAssetService2');
+var _studentAssetService = require('../services/studentAssetService');
 
 var _studentAssetService2 = _interopRequireDefault(_studentAssetService);
 
-var _studentDataService = require('../services/studentDataService2');
+var _studentDataService = require('../services/studentDataService');
 
 var _studentDataService2 = _interopRequireDefault(_studentDataService);
 
-var _utilService = require('../services/utilService2');
+var _utilService = require('../services/utilService');
 
 var _utilService2 = _interopRequireDefault(_utilService);
 
@@ -118,10 +118,10 @@ var mainModule = _angular2.default.module('authoring', ['angular-toArrayFilter',
         controllerAs: 'nodeController',
         resolve: {
             load: function load() {
-                System.import('components/html/htmlController2').then(function (HTMLController) {
+                System.import('components/html/htmlController').then(function (HTMLController) {
                     $controllerProvider.register(HTMLController.default.name, HTMLController.default);
                 });
-                System.import('components/openResponse/openResponseController2').then(function (OpenResponseController) {
+                System.import('components/openResponse/openResponseController').then(function (OpenResponseController) {
                     $controllerProvider.register(OpenResponseController.default.name, OpenResponseController.default);
                 });
             }

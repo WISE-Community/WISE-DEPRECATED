@@ -1,35 +1,51 @@
 'use strict';
 
-define(['configService', 'studentDataService'], function (configService, studentDataService) {
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-    var service = ['$http', '$q', '$rootScope', 'ConfigService', 'StudentAssetService', 'StudentDataService', function ($http, $q, $rootScope, ConfigService, StudentAssetService, StudentDataService) {
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
 
-        var serviceObject = {};
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-        // filtering options for notebook displays
-        // TODO: make dynamic based on project settings
-        serviceObject.filters = [{ 'name': 'all', 'label': 'All' },
+var NotebookService = function () {
+    function NotebookService($http, $q, $rootScope, ConfigService, StudentAssetService, StudentDataService) {
+        _classCallCheck(this, NotebookService);
+
+        this.$http = $http;
+        this.$q = $q;
+        this.$rootScope = $rootScope;
+        this.ConfigService = ConfigService;
+        this.StudentAssetService = StudentAssetService;
+        this.StudentDataService = StudentDataService;
+
+        this.filters = [{ 'name': 'all', 'label': 'All' },
         //{'name': 'work', 'label': 'Work'}, TODO: uncomment me when adding student work to notebook is styled and ready for use in a run
         { 'name': 'files', 'label': 'Files' }
         //{'name': 'ideas', 'label': 'Ideas'} TODO: Add when Idea Manager is active
         ];
 
-        serviceObject.getFilters = function () {
+        this.notebook = {};
+        this.notebook.items = [];
+        this.notebook.deletedItems = [];
+    }
+
+    _createClass(NotebookService, [{
+        key: 'getFilters',
+        value: function getFilters() {
             return this.filters;
-        };
-
-        serviceObject.notebook = {};
-        serviceObject.notebook.items = [];
-        serviceObject.notebook.deletedItems = [];
-
-        serviceObject.addItem = function (notebookItem) {
+        }
+    }, {
+        key: 'addItem',
+        value: function addItem(notebookItem) {
             this.notebook.items.push(notebookItem);
 
             // the current node is about to change
             $rootScope.$broadcast('notebookUpdated', { notebook: this.notebook });
-        };
-
-        serviceObject.deleteItem = function (itemToDelete) {
+        }
+    }, {
+        key: 'deleteItem',
+        value: function deleteItem(itemToDelete) {
             var items = this.notebook.items;
             var deletedItems = this.notebook.deletedItems;
             for (var i = 0; i < items.length; i++) {
@@ -39,9 +55,10 @@ define(['configService', 'studentDataService'], function (configService, student
                     deletedItems.push(itemToDelete);
                 }
             }
-        };
-
-        serviceObject.calculateTotalUsage = function () {
+        }
+    }, {
+        key: 'calculateTotalUsage',
+        value: function calculateTotalUsage() {
             // get the total size
             var totalSizeSoFar = 0;
             for (var i = 0; i < this.notebook.items.length; i++) {
@@ -54,9 +71,10 @@ define(['configService', 'studentDataService'], function (configService, student
             this.notebook.totalSize = totalSizeSoFar;
             this.notebook.totalSizeMax = ConfigService.getStudentMaxTotalAssetsSize();
             this.notebook.usagePercentage = this.notebook.totalSize / this.notebook.totalSizeMax * 100;
-        };
-
-        serviceObject.retrieveNotebookItems = function () {
+        }
+    }, {
+        key: 'retrieveNotebookItems',
+        value: function retrieveNotebookItems() {
             var config = {};
             config.method = 'GET';
             config.url = ConfigService.getStudentNotebookURL();
@@ -87,9 +105,10 @@ define(['configService', 'studentDataService'], function (configService, student
 
                 return this.notebook;
             }));
-        };
-
-        serviceObject.hasStudentWorkNotebookItem = function (studentWork) {
+        }
+    }, {
+        key: 'hasStudentWorkNotebookItem',
+        value: function hasStudentWorkNotebookItem(studentWork) {
             for (var i = 0; i < this.notebook.items.length; i++) {
                 var notebookItem = this.notebook.items[i];
                 if (notebookItem.studentWorkId === studentWork.id) {
@@ -97,9 +116,10 @@ define(['configService', 'studentDataService'], function (configService, student
                 }
             }
             return false;
-        };
-
-        serviceObject.addStudentWorkNotebookItem = function (studentWork) {
+        }
+    }, {
+        key: 'addStudentWorkNotebookItem',
+        value: function addStudentWorkNotebookItem(studentWork) {
             // don't allow duplicate student work notebook items
             if (this.hasStudentWorkNotebookItem(studentWork)) {
                 $rootScope.$broadcast('notebookAddDuplicateAttempt');
@@ -128,9 +148,10 @@ define(['configService', 'studentDataService'], function (configService, student
                 }
                 return null;
             }));
-        };
-
-        serviceObject.uploadStudentAssetNotebookItem = function (file) {
+        }
+    }, {
+        key: 'uploadStudentAssetNotebookItem',
+        value: function uploadStudentAssetNotebookItem(file) {
             StudentAssetService.uploadAsset(file).then(angular.bind(this, function (studentAsset) {
 
                 var config = {};
@@ -155,9 +176,10 @@ define(['configService', 'studentDataService'], function (configService, student
                     return notebookItem;
                 }));
             }));
-        };
-
-        serviceObject.saveNotebookToggleEvent = function (isOpen, currentNode) {
+        }
+    }, {
+        key: 'saveNotebookToggleEvent',
+        value: function saveNotebookToggleEvent(isOpen, currentNode) {
             var nodeId = null;
             var componentId = null;
             var componentType = null;
@@ -169,10 +191,12 @@ define(['configService', 'studentDataService'], function (configService, student
 
             // save notebook open/close event
             StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
-        };
+        }
+    }]);
 
-        return serviceObject;
-    }];
+    return NotebookService;
+}();
 
-    return service;
-});
+NotebookService.$inject = ['$http', '$q', '$rootScope', 'ConfigService', 'StudentAssetService', 'StudentDataService'];
+
+exports.default = NotebookService;

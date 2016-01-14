@@ -1,7 +1,24 @@
-'use strict';
+"use strict";
 
-define(['app'], function (app) {
-    app.$controllerProvider.register('EmbeddedController', function ($rootScope, $scope, $sce, $state, $stateParams, $window, ConfigService, NodeService, EmbeddedService, ProjectService, SessionService, StudentAssetService, StudentDataService) {
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var EmbeddedController = function () {
+    function EmbeddedController($scope, $sce, $window, NodeService, EmbeddedService, ProjectService, StudentDataService) {
+        _classCallCheck(this, EmbeddedController);
+
+        this.$scope = $scope;
+        this.$sce = $sce;
+        this.$window = $window;
+        this.NodeService = NodeService;
+        this.EmbeddedService = EmbeddedService;
+        this.ProjectService = ProjectService;
+        this.StudentDataService = StudentDataService;
 
         // the node id of the current node
         this.nodeId = null;
@@ -40,11 +57,11 @@ define(['app'], function (app) {
                 var eventData = messageEventData.eventData;
 
                 // save notebook open/close event
-                StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
+                this.StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
             } else if (messageEventData.messageType === "studentWork") {
                 // save student work to WISE
                 // create a new component state
-                this.componentState = NodeService.createNewComponentState();
+                this.componentState = this.NodeService.createNewComponentState();
 
                 // set the student data into the component state
                 this.componentState.studentData = messageEventData.studentData;
@@ -62,139 +79,142 @@ define(['app'], function (app) {
                 this.isDirty = true;
 
                 // tell the parent node that this component wants to save
-                $scope.$emit('componentSaveTriggered', { nodeId: this.nodeId, componentId: this.componentId });
+                this.$scope.$emit('componentSaveTriggered', { nodeId: this.nodeId, componentId: this.componentId });
             }
         });
 
-        /**
-         * Perform setup of the component
-         */
-        this.setup = function () {
+        // listen for message events from embedded iframe application
+        this.$window.addEventListener('message', this.messageEventListener);
 
-            // listen for message events from embedded iframe application
-            $window.addEventListener('message', this.messageEventListener);
+        // get the current node and node id
+        var currentNode = this.StudentDataService.getCurrentNode();
+        if (currentNode != null) {
+            this.nodeId = currentNode.id;
+        } else {
+            this.nodeId = this.$scope.nodeId;
+        }
 
-            // get the current node and node id
-            var currentNode = StudentDataService.getCurrentNode();
-            if (currentNode != null) {
-                this.nodeId = currentNode.id;
+        // get the component content from the scope
+        this.componentContent = this.$scope.component;
+
+        this.mode = this.$scope.mode;
+
+        if (this.componentContent != null) {
+
+            // get the component id
+            this.componentId = this.componentContent.id;
+
+            this.componentType = this.componentContent.type;
+
+            // get the show previous work node id if it is provided
+            var showPreviousWorkNodeId = this.componentContent.showPreviousWorkNodeId;
+
+            if (showPreviousWorkNodeId != null) {
+                // this component is showing previous work
+                this.isShowPreviousWork = true;
+
+                // get the show previous work component id if it is provided
+                var showPreviousWorkComponentId = this.componentContent.showPreviousWorkComponentId;
+
+                // get the node content for the other node
+                var showPreviousWorkNodeContent = this.ProjectService.getNodeContentByNodeId(showPreviousWorkNodeId);
+
+                // get the component content for the component we are showing previous work for
+                this.componentContent = this.NodeService.getComponentContentById(showPreviousWorkNodeContent, showPreviousWorkComponentId);
+
+                if (this.componentContent != null) {
+                    // set the url
+                    this.setURL(this.componentContent.url);
+                }
+
+                // disable the component since we are just showing previous work
+                this.isDisabled = true;
             } else {
-                this.nodeId = $scope.nodeId;
-            }
+                // this is a regular component
 
-            // get the component content from the scope
-            this.componentContent = $scope.component;
-
-            this.mode = $scope.mode;
-
-            if (this.componentContent != null) {
-
-                // get the component id
-                this.componentId = this.componentContent.id;
-
-                this.componentType = this.componentContent.type;
-
-                // get the show previous work node id if it is provided
-                var showPreviousWorkNodeId = this.componentContent.showPreviousWorkNodeId;
-
-                if (showPreviousWorkNodeId != null) {
-                    // this component is showing previous work
-                    this.isShowPreviousWork = true;
-
-                    // get the show previous work component id if it is provided
-                    var showPreviousWorkComponentId = this.componentContent.showPreviousWorkComponentId;
-
-                    // get the node content for the other node
-                    var showPreviousWorkNodeContent = ProjectService.getNodeContentByNodeId(showPreviousWorkNodeId);
-
-                    // get the component content for the component we are showing previous work for
-                    this.componentContent = NodeService.getComponentContentById(showPreviousWorkNodeContent, showPreviousWorkComponentId);
-
-                    if (this.componentContent != null) {
-                        // set the url
-                        this.setURL(this.componentContent.url);
-                    }
-
-                    // disable the component since we are just showing previous work
-                    this.isDisabled = true;
-                } else {
-                    // this is a regular component
-
-                    if (this.componentContent != null) {
-                        // set the url
-                        this.setURL(this.componentContent.url);
-                    }
-                }
-
-                // get the max width
-                this.maxWidth = this.componentContent.maxWidth ? this.componentContent.maxWidth : "none";
-
-                // get the max height
-                this.maxHeight = this.componentContent.maxHeight ? this.componentContent.maxHeight : "none";
-
-                if ($scope.$parent.registerComponentController != null) {
-                    // register this component with the parent node
-                    $scope.$parent.registerComponentController($scope, this.componentContent);
+                if (this.componentContent != null) {
+                    // set the url
+                    this.setURL(this.componentContent.url);
                 }
             }
-        };
 
-        /**
-         * Set the url
-         * @param url the url
-         */
-        this.setURL = function (url) {
-            if (url != null) {
-                var trustedURL = $sce.trustAsResourceUrl(url);
-                this.url = trustedURL;
+            // get the max width
+            this.maxWidth = this.componentContent.maxWidth ? this.componentContent.maxWidth : "none";
+
+            // get the max height
+            this.maxHeight = this.componentContent.maxHeight ? this.componentContent.maxHeight : "none";
+
+            if (this.$scope.$parent.registerComponentController != null) {
+                // register this component with the parent node
+                this.$scope.$parent.registerComponentController(this.$scope, this.componentContent);
             }
-        };
+        }
 
         /**
-         * Get the component state from this component. The parent node will 
+         * Get the component state from this component. The parent node will
          * call this function to obtain the component state when it needs to
          * save student data.
          * @return a component state containing the student data
          */
-        $scope.getComponentState = function () {
+        this.$scope.getComponentState = function () {
             var componentState = null;
 
-            if ($scope.embeddedController.isDirty) {
+            if (this.$scope.embeddedController.isDirty) {
                 // create a component state populated with the student data
-                componentState = $scope.embeddedController.componentState;
+                componentState = this.$scope.embeddedController.componentState;
 
                 // set isDirty to false since this student work is about to be saved
-                $scope.embeddedController.isDirty = false;
-                $scope.embeddedController.componentState = null;
+                this.$scope.embeddedController.isDirty = false;
+                this.$scope.embeddedController.componentState = null;
             }
 
             return componentState;
-        };
-
-        /**
-         * Register the the listener that will listen for the exit event
-         * so that we can perform saving before exiting.
-         */
-        this.registerExitListener = function () {
-
-            /*
-             * Listen for the 'exit' event which is fired when the student exits
-             * the VLE. This will perform saving before the VLE exits.
-             */
-            this.exitListener = $scope.$on('exit', angular.bind(this, function (event, args) {}));
-        };
+        }.bind(this);
 
         /**
          * Listen for the 'exitNode' event which is fired when the student
          * exits the parent node. This will perform any necessary cleanup
          * when the student exits the parent node.
          */
-        $scope.$on('exitNode', angular.bind(this, function (event, args) {
+        this.$scope.$on('exitNode', angular.bind(this, function (event, args) {
             // unregister messageEventListener
-            $window.removeEventListener('message', this.messageEventListener);
+            this.$window.removeEventListener('message', this.messageEventListener);
         }));
+    }
 
-        // perform setup of this component
-        this.setup();
-    });
-});
+    /**
+     * Set the url
+     * @param url the url
+     */
+
+    _createClass(EmbeddedController, [{
+        key: "setURL",
+        value: function setURL(url) {
+            if (url != null) {
+                var trustedURL = this.$sce.trustAsResourceUrl(url);
+                this.url = trustedURL;
+            }
+        }
+    }, {
+        key: "registerExitListener",
+
+        /**
+         * Register the the listener that will listen for the exit event
+         * so that we can perform saving before exiting.
+         */
+        value: function registerExitListener() {
+
+            /*
+             * Listen for the 'exit' event which is fired when the student exits
+             * the VLE. This will perform saving before the VLE exits.
+             */
+            this.exitListener = this.$scope.$on('exit', angular.bind(this, function (event, args) {}));
+        }
+    }]);
+
+    return EmbeddedController;
+}();
+
+EmbeddedController.$inject = ['$scope', '$sce', '$window', 'NodeService', 'EmbeddedService', 'ProjectService', 'StudentDataService'];
+
+exports.default = EmbeddedController;

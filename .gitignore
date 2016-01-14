@@ -8,3 +8,4 @@ src/main/resources/wise.properties
 .idea/workspace.xml
 .idea/tasks.xml
 *.sass-cache
+npm-debug.log

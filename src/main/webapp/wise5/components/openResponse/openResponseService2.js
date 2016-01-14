@@ -1,4 +1,4 @@
-import NodeService from '../../services/nodeService2';
+import NodeService from '../../services/nodeService';
 
 class OpenResponseService extends NodeService {
     constructor(StudentDataService) {

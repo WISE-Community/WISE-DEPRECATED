@@ -1,7 +1,36 @@
 'use strict';
 
-define(['app', 'drawingTool', 'vendor'], function (app) {
-    app.$controllerProvider.register('DrawController', function ($injector, $rootScope, $scope, $state, $stateParams, $timeout, ConfigService, DrawService, NodeService, ProjectService, SessionService, StudentAssetService, StudentDataService) {
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _drawingTool = require('lib/drawingTool/drawing-tool');
+
+var _drawingTool2 = _interopRequireDefault(_drawingTool);
+
+var _vendor = require('lib/drawingTool/vendor');
+
+var _vendor2 = _interopRequireDefault(_vendor);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var DrawController = function () {
+    function DrawController($injector, $rootScope, $scope, $timeout, DrawService, NodeService, ProjectService, StudentAssetService, StudentDataService) {
+        _classCallCheck(this, DrawController);
+
+        this.$injector = $injector;
+        this.$rootScope = $rootScope;
+        this.$scope = $scope;
+        this.$timeout = $timeout;
+        this.DrawService = DrawService;
+        this.NodeService = NodeService;
+        this.ProjectService = ProjectService;
+        this.StudentAssetService = StudentAssetService;
+        this.StudentDataService = StudentDataService;
 
         // the node id of the current node
         this.nodeId = null;
@@ -28,7 +57,7 @@ define(['app', 'drawingTool', 'vendor'], function (app) {
         this.drawingTool = null;
 
         // get the component content from the scope
-        this.componentContent = $scope.component;
+        this.componentContent = this.$scope.component;
 
         // whether students can attach files to their work
         this.isStudentAttachmentEnabled = false;
@@ -38,168 +67,213 @@ define(['app', 'drawingTool', 'vendor'], function (app) {
         // If showStudentWorkOnly, usually this means that this component is not editable and nothing will be saved
         this.mode = "normal";
 
-        /**
-         * Perform setup of the component
-         */
-        this.setup = function () {
+        // setup
+        // set mode if it's passed in through the scope.
+        if (this.$scope.mode) {
+            this.mode = this.$scope.mode;
+        }
 
-            // set mode if it's passed in through the scope.
-            if ($scope.mode) {
-                this.mode = $scope.mode;
-            }
+        // get the current node and node id
+        var currentNode = this.StudentDataService.getCurrentNode();
+        if (currentNode != null) {
+            this.nodeId = currentNode.id;
+        } else {
+            this.nodeId = this.$scope.nodeId;
+        }
 
-            // get the current node and node id
-            var currentNode = StudentDataService.getCurrentNode();
-            if (currentNode != null) {
-                this.nodeId = currentNode.id;
-            } else {
-                this.nodeId = $scope.nodeId;
-            }
+        if (this.componentContent != null) {
 
-            if (this.componentContent != null) {
+            // get the component id
+            this.componentId = this.componentContent.id;
 
-                // get the component id
-                this.componentId = this.componentContent.id;
+            // get the component type
+            this.componentType = this.componentContent.type;
 
-                // get the component type
-                this.componentType = this.componentContent.type;
-
-                if (this.mode === "student") {
-                    this.drawingToolId = "drawingtool_" + this.nodeId + "_" + this.componentId;
-                } else if (this.mode === 'grading' || this.mode === "onlyShowWork") {
-                    // get the component state from the scope
-                    var componentState = $scope.componentState;
-                    if (componentState != null) {
-                        this.drawingToolId = "drawingtool_" + componentState.id;
-                    }
+            if (this.mode === "student") {
+                this.drawingToolId = "drawingtool_" + this.nodeId + "_" + this.componentId;
+            } else if (this.mode === 'grading' || this.mode === "onlyShowWork") {
+                // get the component state from the scope
+                var componentState = this.$scope.componentState;
+                if (componentState != null) {
+                    this.drawingToolId = "drawingtool_" + componentState.id;
                 }
+            }
 
-                $timeout(angular.bind(this, function () {
-                    // running this in side a timeout ensures that the code only runs after the markup is rendered.
-                    // maybe there's a better way to do this, like with an event?
+            this.$timeout(angular.bind(this, function () {
+                // running this in side a timeout ensures that the code only runs after the markup is rendered.
+                // maybe there's a better way to do this, like with an event?
 
-                    // initialize the drawing tool
-                    this.drawingTool = new DrawingTool("#" + this.drawingToolId, {
-                        stamps: this.componentContent.stamps || {},
-                        parseSVG: true
-                    });
-                    var state = null;
-                    $("#set-background").on("click", angular.bind(this, function () {
-                        this.drawingTool.setBackgroundImage($("#background-src").val());
-                    }));
-                    $("#resize-background").on("click", angular.bind(this, function () {
-                        this.drawingTool.resizeBackgroundToCanvas();
-                    }));
-                    $("#resize-canvas").on("click", angular.bind(this, function () {
-                        this.drawingTool.resizeCanvasToBackground();
-                    }));
-                    $("#shrink-background").on("click", angular.bind(this, function () {
-                        this.drawingTool.shrinkBackgroundToCanvas();
-                    }));
-                    $("#clear").on("click", angular.bind(this, function () {
-                        this.drawingTool.clear(true);
-                    }));
-                    $("#save").on("click", angular.bind(this, function () {
-                        state = drawingTool.save();
-                        $("#load").removeAttr("disabled");
-                    }));
-                    $("#load").on("click", angular.bind(this, function () {
-                        if (state === null) return;
-                        this.drawingTool.load(state);
-                    }));
+                // initialize the drawing tool
+                this.drawingTool = new DrawingTool("#" + this.drawingToolId, {
+                    stamps: this.componentContent.stamps || {},
+                    parseSVG: true
+                });
+                var state = null;
+                $("#set-background").on("click", angular.bind(this, function () {
+                    this.drawingTool.setBackgroundImage($("#background-src").val());
+                }));
+                $("#resize-background").on("click", angular.bind(this, function () {
+                    this.drawingTool.resizeBackgroundToCanvas();
+                }));
+                $("#resize-canvas").on("click", angular.bind(this, function () {
+                    this.drawingTool.resizeCanvasToBackground();
+                }));
+                $("#shrink-background").on("click", angular.bind(this, function () {
+                    this.drawingTool.shrinkBackgroundToCanvas();
+                }));
+                $("#clear").on("click", angular.bind(this, function () {
+                    this.drawingTool.clear(true);
+                }));
+                $("#save").on("click", angular.bind(this, function () {
+                    state = _drawingTool2.default.save();
+                    $("#load").removeAttr("disabled");
+                }));
+                $("#load").on("click", angular.bind(this, function () {
+                    if (state === null) return;
+                    this.drawingTool.load(state);
+                }));
 
-                    // get the show previous work node id if it is provided
-                    var showPreviousWorkNodeId = this.componentContent.showPreviousWorkNodeId;
+                // get the show previous work node id if it is provided
+                var showPreviousWorkNodeId = this.componentContent.showPreviousWorkNodeId;
 
-                    var componentState = null;
+                var componentState = null;
 
-                    if (showPreviousWorkNodeId != null) {
-                        // this component is showing previous work
-                        this.isShowPreviousWork = true;
+                if (showPreviousWorkNodeId != null) {
+                    // this component is showing previous work
+                    this.isShowPreviousWork = true;
 
-                        // get the show previous work component id if it is provided
-                        var showPreviousWorkComponentId = this.componentContent.showPreviousWorkComponentId;
+                    // get the show previous work component id if it is provided
+                    var showPreviousWorkComponentId = this.componentContent.showPreviousWorkComponentId;
 
-                        // get the node content for the other node
-                        var showPreviousWorkNodeContent = ProjectService.getNodeContentByNodeId(showPreviousWorkNodeId);
+                    // get the node content for the other node
+                    var showPreviousWorkNodeContent = this.ProjectService.getNodeContentByNodeId(showPreviousWorkNodeId);
 
-                        // get the node content for the component we are showing previous work for
-                        this.componentContent = NodeService.getComponentContentById(showPreviousWorkNodeContent, showPreviousWorkComponentId);
+                    // get the node content for the component we are showing previous work for
+                    this.componentContent = this.NodeService.getComponentContentById(showPreviousWorkNodeContent, showPreviousWorkComponentId);
 
-                        // get the component state for the show previous work
-                        componentState = StudentDataService.getLatestComponentStateByNodeIdAndComponentId(showPreviousWorkNodeId, showPreviousWorkComponentId);
+                    // get the component state for the show previous work
+                    componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(showPreviousWorkNodeId, showPreviousWorkComponentId);
 
+                    // populate the student work into this component
+                    this.setStudentWork(componentState);
+
+                    // disable the component since we are just showing previous work
+                    this.isDisabled = true;
+
+                    // register this component with the parent node
+                    this.$scope.$parent.registerComponentController(this.$scope, this.componentContent);
+                } else {
+                    // this is a regular component
+
+                    // get the component state from the scope
+                    componentState = this.$scope.componentState;
+
+                    // set whether studentAttachment is enabled
+                    this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
+
+                    if (componentState == null) {
+                        /*
+                         * only import work if the student does not already have
+                         * work for this component
+                         */
+
+                        // check if we need to import work
+                        var importWorkNodeId = this.componentContent.importWorkNodeId;
+                        var importWorkComponentId = this.componentContent.importWorkComponentId;
+
+                        if (importWorkNodeId != null && importWorkComponentId != null) {
+                            // import the work from the other component
+                            this.importWork();
+                        }
+                    } else {
                         // populate the student work into this component
                         this.setStudentWork(componentState);
-
-                        // disable the component since we are just showing previous work
-                        this.isDisabled = true;
-
-                        // register this component with the parent node
-                        $scope.$parent.registerComponentController($scope, this.componentContent);
-                    } else {
-                        // this is a regular component
-
-                        // get the component state from the scope
-                        componentState = $scope.componentState;
-
-                        // set whether studentAttachment is enabled
-                        this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
-
-                        if (componentState == null) {
-                            /*
-                             * only import work if the student does not already have
-                             * work for this component
-                             */
-
-                            // check if we need to import work
-                            var importWorkNodeId = this.componentContent.importWorkNodeId;
-                            var importWorkComponentId = this.componentContent.importWorkComponentId;
-
-                            if (importWorkNodeId != null && importWorkComponentId != null) {
-                                // import the work from the other component
-                                this.importWork();
-                            }
-                        } else {
-                            // populate the student work into this component
-                            this.setStudentWork(componentState);
-                        }
-
-                        // check if we need to lock this component
-                        this.calculateDisabled();
-
-                        // register this component with the parent node
-                        if ($scope.$parent && $scope.$parent.registerComponentController) {
-                            $scope.$parent.registerComponentController($scope, this.componentContent);
-                        }
-
-                        // listen for the drawing changed event
-                        this.drawingTool.on('drawing:changed', angular.bind(this, this.studentDataChanged));
-
-                        // listen for selected tool changed event
-                        this.drawingTool.on('tool:changed', function (toolName) {
-                            // log this event
-                            var category = "Tool";
-                            var event = "toolSelected";
-                            var data = {};
-                            data.selectedToolName = toolName;
-                            StudentDataService.saveComponentEvent(this, category, event, data);
-                        }.bind(this));
-
-                        if (this.mode === 'grading' || this.mode === 'onlyShowWork') {
-                            // we're in show student work mode, so hide the toolbar and make the drawing non-editable
-                            $(".dt-tools").hide();
-                        }
                     }
-                }));
-            }
-        };
+
+                    // check if we need to lock this component
+                    this.calculateDisabled();
+
+                    // register this component with the parent node
+                    if (this.$scope.$parent && this.$scope.$parent.registerComponentController) {
+                        this.$scope.$parent.registerComponentController(this.$scope, this.componentContent);
+                    }
+
+                    // listen for the drawing changed event
+                    this.drawingTool.on('drawing:changed', angular.bind(this, this.studentDataChanged));
+
+                    // listen for selected tool changed event
+                    this.drawingTool.on('tool:changed', function (toolName) {
+                        // log this event
+                        var category = "Tool";
+                        var event = "toolSelected";
+                        var data = {};
+                        data.selectedToolName = toolName;
+                        this.StudentDataService.saveComponentEvent(this, category, event, data);
+                    }.bind(this));
+
+                    if (this.mode === 'grading' || this.mode === 'onlyShowWork') {
+                        // we're in show student work mode, so hide the toolbar and make the drawing non-editable
+                        $(".dt-tools").hide();
+                    }
+                }
+            }));
+        }
 
         /**
-         * Populate the student work into the component
-         * @param componentState the component state to populate into the component
+         * Get the component state from this component. The parent node will
+         * call this function to obtain the component state when it needs to
+         * save student data.
+         * @return a component state containing the student data
          */
-        this.setStudentWork = function (componentState) {
+        this.$scope.getComponentState = function () {
+
+            var componentState = null;
+
+            if (this.$scope.drawController.isDirty) {
+                // create a component state populated with the student data
+                componentState = this.$scope.drawController.createComponentState();
+
+                // set isDirty to false since this student work is about to be saved
+                this.$scope.drawController.isDirty = false;
+            }
+
+            return componentState;
+        }.bind(this);
+
+        /**
+         * The parent node submit button was clicked
+         */
+        this.$scope.$on('nodeSubmitClicked', angular.bind(this, function (event, args) {
+
+            // get the node id of the node
+            var nodeId = args.nodeId;
+
+            // make sure the node id matches our parent node
+            if (this.nodeId === nodeId) {
+
+                if (this.isLockAfterSubmit()) {
+                    // disable the component if it was authored to lock after submit
+                    this.isDisabled = true;
+                }
+            }
+        }));
+
+        /**
+         * Listen for the 'exitNode' event which is fired when the student
+         * exits the parent node. This will perform any necessary cleanup
+         * when the student exits the parent node.
+         */
+        this.$scope.$on('exitNode', angular.bind(this, function (event, args) {}));
+    } // end of constructor
+
+    /**
+     * Populate the student work into the component
+     * @param componentState the component state to populate into the component
+     */
+
+    _createClass(DrawController, [{
+        key: 'setStudentWork',
+        value: function setStudentWork(componentState) {
 
             if (componentState != null) {
 
@@ -217,21 +291,25 @@ define(['app', 'drawingTool', 'vendor'], function (app) {
                     }
                 }
             }
-        };
+        }
+    }, {
+        key: 'saveButtonClicked',
 
         /**
          * Called when the student clicks the save button
          */
-        this.saveButtonClicked = function () {
+        value: function saveButtonClicked() {
 
             // tell the parent node that this component wants to save
-            $scope.$emit('componentSaveTriggered', { nodeId: this.nodeId, componentId: this.componentId });
-        };
+            this.$scope.$emit('componentSaveTriggered', { nodeId: this.nodeId, componentId: this.componentId });
+        }
+    }, {
+        key: 'submitButtonClicked',
 
         /**
          * Called when the student clicks the submit button
          */
-        this.submitButtonClicked = function () {
+        value: function submitButtonClicked() {
             this.isSubmit = true;
 
             // check if we need to lock the component after the student submits
@@ -240,13 +318,15 @@ define(['app', 'drawingTool', 'vendor'], function (app) {
             }
 
             // tell the parent node that this component wants to submit
-            $scope.$emit('componentSubmitTriggered', { nodeId: this.nodeId, componentId: this.componentId });
-        };
+            this.$scope.$emit('componentSubmitTriggered', { nodeId: this.nodeId, componentId: this.componentId });
+        }
+    }, {
+        key: 'studentDataChanged',
 
         /**
          * Called when the student changes their work
          */
-        this.studentDataChanged = function () {
+        value: function studentDataChanged() {
             /*
              * set the dirty flag so we will know we need to save the
              * student work later
@@ -265,17 +345,19 @@ define(['app', 'drawingTool', 'vendor'], function (app) {
              * this will also notify connected parts that this component's student
              * data has changed.
              */
-            $scope.$emit('componentStudentDataChanged', { componentId: componentId, componentState: componentState });
-        };
+            this.$scope.$emit('componentStudentDataChanged', { componentId: componentId, componentState: componentState });
+        }
+    }, {
+        key: 'createComponentState',
 
         /**
          * Create a new component state populated with the student data
          * @return the componentState after it has been populated
          */
-        this.createComponentState = function () {
+        value: function createComponentState() {
 
             // create a new component state
-            var componentState = NodeService.createNewComponentState();
+            var componentState = this.NodeService.createNewComponentState();
 
             if (componentState != null) {
                 var studentData = {};
@@ -302,12 +384,14 @@ define(['app', 'drawingTool', 'vendor'], function (app) {
             }
 
             return componentState;
-        };
+        }
+    }, {
+        key: 'calculateDisabled',
 
         /**
          * Check if we need to lock the component
          */
-        this.calculateDisabled = function () {
+        value: function calculateDisabled() {
 
             var nodeId = this.nodeId;
 
@@ -323,10 +407,10 @@ define(['app', 'drawingTool', 'vendor'], function (app) {
                     // we need to lock the step after the student has submitted
 
                     // get the component states for this component
-                    var componentStates = StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
+                    var componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
 
                     // check if any of the component states were submitted
-                    var isSubmitted = NodeService.isWorkSubmitted(componentStates);
+                    var isSubmitted = this.NodeService.isWorkSubmitted(componentStates);
 
                     if (isSubmitted) {
                         // the student has submitted work for this component
@@ -339,13 +423,15 @@ define(['app', 'drawingTool', 'vendor'], function (app) {
                 // distable saving if we're in showStudentWorkOnly mode
                 this.isDisabled = true;
             }
-        };
+        }
+    }, {
+        key: 'showSaveButton',
 
         /**
          * Check whether we need to show the save button
          * @return whether to show the save button
          */
-        this.showSaveButton = function () {
+        value: function showSaveButton() {
             var show = false;
 
             if (this.componentContent != null) {
@@ -357,13 +443,15 @@ define(['app', 'drawingTool', 'vendor'], function (app) {
             }
 
             return show;
-        };
+        }
+    }, {
+        key: 'showSubmitButton',
 
         /**
          * Check whether we need to show the submit button
          * @return whether to show the submit button
          */
-        this.showSubmitButton = function () {
+        value: function showSubmitButton() {
             var show = false;
 
             if (this.componentContent != null) {
@@ -375,13 +463,15 @@ define(['app', 'drawingTool', 'vendor'], function (app) {
             }
 
             return show;
-        };
+        }
+    }, {
+        key: 'isLockAfterSubmit',
 
         /**
          * Check whether we need to lock the component after the student
          * submits an answer.
          */
-        this.isLockAfterSubmit = function () {
+        value: function isLockAfterSubmit() {
             var result = false;
 
             if (this.componentContent != null) {
@@ -393,13 +483,14 @@ define(['app', 'drawingTool', 'vendor'], function (app) {
             }
 
             return result;
-        };
-
-        this.attachNotebookItemToComponent = angular.bind(this, function (notebookItem) {
+        }
+    }, {
+        key: 'attachNotebookItemToComponent',
+        value: function attachNotebookItemToComponent(notebookItem) {
             if (notebookItem.studentAsset != null) {
                 // we're importing a StudentAssetNotebookItem
                 var studentAsset = notebookItem.studentAsset;
-                StudentAssetService.copyAssetForReference(studentAsset).then(angular.bind(this, function (copiedAsset) {
+                this.StudentAssetService.copyAssetForReference(studentAsset).then(angular.bind(this, function (copiedAsset) {
                     if (copiedAsset != null) {
                         fabric.Image.fromURL(copiedAsset.url, angular.bind(this, function (oImg) {
                             oImg.scaleToWidth(200); // set max width and have height scale proportionally
@@ -419,7 +510,7 @@ define(['app', 'drawingTool', 'vendor'], function (app) {
                     var componentType = studentWork.componentType;
 
                     if (componentType != null) {
-                        var childService = $injector.get(componentType + 'Service');
+                        var childService = this.$injector.get(componentType + 'Service');
 
                         if (childService != null) {
                             var studentWorkHTML = childService.getStudentWorkAsHTML(studentWork);
@@ -431,12 +522,14 @@ define(['app', 'drawingTool', 'vendor'], function (app) {
                         }
                     }
                 }
-        });
+        }
+    }, {
+        key: 'getPrompt',
 
         /**
          * Get the prompt to show to the student
          */
-        this.getPrompt = function () {
+        value: function getPrompt() {
             var prompt = null;
 
             if (this.componentContent != null) {
@@ -444,24 +537,28 @@ define(['app', 'drawingTool', 'vendor'], function (app) {
             }
 
             return prompt;
-        };
+        }
+    }, {
+        key: 'getDrawData',
 
         /**
          * Get the draw data
          * @return the draw data from the drawing tool as a JSON string
          */
-        this.getDrawData = function () {
+        value: function getDrawData() {
             var drawData = null;
 
             drawData = this.drawingTool.save();
 
             return drawData;
-        };
+        }
+    }, {
+        key: 'importWork',
 
         /**
          * Import work from another component
          */
-        this.importWork = function () {
+        value: function importWork() {
 
             // get the component content
             var componentContent = this.componentContent;
@@ -474,7 +571,7 @@ define(['app', 'drawingTool', 'vendor'], function (app) {
                 if (importWorkNodeId != null && importWorkComponentId != null) {
 
                     // get the latest component state for this component
-                    var componentState = StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
+                    var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
 
                     /*
                      * we will only import work into this component if the student
@@ -484,14 +581,14 @@ define(['app', 'drawingTool', 'vendor'], function (app) {
                         // the student has not done any work for this component
 
                         // get the latest component state from the component we are importing from
-                        var importWorkComponentState = StudentDataService.getLatestComponentStateByNodeIdAndComponentId(importWorkNodeId, importWorkComponentId);
+                        var importWorkComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(importWorkNodeId, importWorkComponentId);
 
                         if (importWorkComponentState != null) {
                             /*
                              * populate a new component state with the work from the
                              * imported component state
                              */
-                            var populatedComponentState = DrawService.populateComponentState(importWorkComponentState);
+                            var populatedComponentState = this.DrawService.populateComponentState(importWorkComponentState);
 
                             // populate the component state into this component
                             this.setStudentWork(populatedComponentState);
@@ -499,81 +596,42 @@ define(['app', 'drawingTool', 'vendor'], function (app) {
                     }
                 }
             }
-        };
+        }
+    }, {
+        key: 'getComponentId',
 
         /**
          * Get the component id
          * @return the component id
          */
-        this.getComponentId = function () {
+        value: function getComponentId() {
             var componentId = this.componentContent.id;
 
             return componentId;
-        };
-
-        /**
-         * Get the component state from this component. The parent node will
-         * call this function to obtain the component state when it needs to
-         * save student data.
-         * @return a component state containing the student data
-         */
-        $scope.getComponentState = function () {
-
-            var componentState = null;
-
-            if ($scope.drawController.isDirty) {
-                // create a component state populated with the student data
-                componentState = $scope.drawController.createComponentState();
-
-                // set isDirty to false since this student work is about to be saved
-                $scope.drawController.isDirty = false;
-            }
-
-            return componentState;
-        };
-
-        /**
-         * The parent node submit button was clicked
-         */
-        $scope.$on('nodeSubmitClicked', angular.bind(this, function (event, args) {
-
-            // get the node id of the node
-            var nodeId = args.nodeId;
-
-            // make sure the node id matches our parent node
-            if (this.nodeId === nodeId) {
-
-                if (this.isLockAfterSubmit()) {
-                    // disable the component if it was authored to lock after submit
-                    this.isDisabled = true;
-                }
-            }
-        }));
-
-        /**
-         * Listen for the 'exitNode' event which is fired when the student
-         * exits the parent node. This will perform any necessary cleanup
-         * when the student exits the parent node.
-         */
-        $scope.$on('exitNode', angular.bind(this, function (event, args) {}));
+        }
+    }, {
+        key: 'registerExitListener',
 
         /**
          * Register the the listener that will listen for the exit event
          * so that we can perform saving before exiting.
          */
-        this.registerExitListener = function () {
+        value: function registerExitListener() {
 
             /*
              * Listen for the 'exit' event which is fired when the student exits
              * the VLE. This will perform saving before the VLE exits.
              */
-            this.exitListener = $scope.$on('exit', angular.bind(this, function (event, args) {
+            this.exitListener = this.$scope.$on('exit', angular.bind(this, function (event, args) {
 
-                $rootScope.$broadcast('doneExiting');
+                this.$rootScope.$broadcast('doneExiting');
             }));
-        };
+        }
+    }]);
 
-        // perform setup of this component
-        this.setup();
-    });
-});
+    return DrawController;
+}();
+
+DrawController.$inject = ['$injector', '$rootScope', '$scope', '$timeout', 'DrawService', 'NodeService', 'ProjectService', 'StudentAssetService', 'StudentDataService'];
+
+exports.default = DrawController;

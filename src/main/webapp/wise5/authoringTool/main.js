@@ -6,19 +6,19 @@ import angularUIRouter from 'angular-ui-router';
 import ngFileUpload from 'ng-file-upload';
 import ngMaterial from 'angular-material';
 import angularToArrayFilter from 'lib/angular-toArrayFilter/toArrayFilter';
-import AnnotationService from '../services/annotationService2';
-import AuthoringToolController from './authoringToolController2';
-import ConfigService from '../services/configService2';
-import Directives from '../directives/directives2';
-import NodeController from './node/nodeController2';
-import NodeService from '../services/nodeService2';
-import OpenResponseService from '../components/openResponse/openResponseService2';
-import ProjectController from './project/projectController2';
-import ProjectService from '../services/projectService2';
-import SessionService from '../services/sessionService2';
-import StudentAssetService from '../services/studentAssetService2';
-import StudentDataService from '../services/studentDataService2';
-import UtilService from '../services/utilService2';
+import AnnotationService from '../services/annotationService';
+import AuthoringToolController from './authoringToolController';
+import ConfigService from '../services/configService';
+import Directives from '../directives/directives';
+import NodeController from './node/nodeController';
+import NodeService from '../services/nodeService';
+import OpenResponseService from '../components/openResponse/openResponseService';
+import ProjectController from './project/projectController';
+import ProjectService from '../services/projectService';
+import SessionService from '../services/sessionService';
+import StudentAssetService from '../services/studentAssetService';
+import StudentDataService from '../services/studentDataService';
+import UtilService from '../services/utilService';
 
 let mainModule = angular.module('authoring', [
     'angular-toArrayFilter',
@@ -27,7 +27,7 @@ let mainModule = angular.module('authoring', [
     'ngAnimate',
     'ngAria',
     'ngFileUpload',
-    'ngMaterial',
+    'ngMaterial'
 ])
     .service(AnnotationService.name, AnnotationService)
     .service(ConfigService.name, ConfigService)
@@ -88,10 +88,10 @@ let mainModule = angular.module('authoring', [
                     controllerAs: 'nodeController',
                     resolve: {
                         load: () => {
-                             System.import('components/html/htmlController2').then((HTMLController) => {
+                             System.import('components/html/htmlController').then((HTMLController) => {
                                 $controllerProvider.register(HTMLController.default.name, HTMLController.default);
                              });
-                            System.import('components/openResponse/openResponseController2').then((OpenResponseController) => {
+                            System.import('components/openResponse/openResponseController').then((OpenResponseController) => {
                                 $controllerProvider.register(OpenResponseController.default.name, OpenResponseController.default);
                             });
 
