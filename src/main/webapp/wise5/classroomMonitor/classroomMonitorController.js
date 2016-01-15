@@ -1,6 +1,7 @@
 'use strict';
 
 class ClassroomMonitorController {
+
     constructor($scope, $rootScope, $state, $stateParams, ConfigService, ProjectService, TeacherDataService) {
         this.$scope = $scope;
         this.$rootScope = $rootScope;
@@ -9,7 +10,7 @@ class ClassroomMonitorController {
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
         this.TeacherDataService = TeacherDataService;
-    }
+    };
 
     hello() {
         ocpu.seturl("//128.32.189.240:81/ocpu/user/wiser/library/wiser/R");
@@ -18,7 +19,6 @@ class ClassroomMonitorController {
             "name": "Hiroki"
         }, function (session) {
             session.getStdout(function (returnedCSVString) {
-                debugger;
                 var csvBlob = new Blob([returnedCSVString], {type: 'text/csv'});
                 var csvUrl = URL.createObjectURL(csvBlob);
                 var a = document.createElement("a");
@@ -37,7 +37,7 @@ class ClassroomMonitorController {
     };
 
     export(exportType) {
-        this.TeacherDataService.getExport(exportType).then(function (result) {
+        this.TeacherDataService.getExport(exportType).then((result) => {
             var COLUMN_INDEX_NODE_ID = 1;
             var COLUMN_INDEX_COMPONENT_ID = 2;
             var COLUMN_INDEX_STEP_NUMBER = 4;
@@ -106,7 +106,6 @@ class ClassroomMonitorController {
                     var csvUrl = URL.createObjectURL(csvBlob);
                     var a = document.createElement("a");
                     document.body.appendChild(a);
-                    a.style = "display: none";
                     a.href = csvUrl;
                     a.download = "export_" + runId + ".csv";
                     a.click();
