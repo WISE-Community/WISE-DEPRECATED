@@ -52,6 +52,8 @@ var ClassroomMonitorController = function () {
     }, {
         key: "export",
         value: function _export(exportType) {
+            var _this = this;
+
             this.TeacherDataService.getExport(exportType).then(function (result) {
                 var COLUMN_INDEX_NODE_ID = 1;
                 var COLUMN_INDEX_COMPONENT_ID = 2;
@@ -66,7 +68,7 @@ var ClassroomMonitorController = function () {
                 var COLUMN_INDEX_STUDENT_RESPONSE = 21;
 
                 var csvString = "";
-                for (var rowIndex = 0; rowIndex < result.length; rowIndex++) {
+                for (var rowIndex = 0; rowIndex < 100; rowIndex++) {
 
                     var row = result[rowIndex];
 
@@ -80,9 +82,9 @@ var ClassroomMonitorController = function () {
                         // for all non-header rows, fill in step numbers, titles, and component part numbers.
                         var nodeId = row[COLUMN_INDEX_NODE_ID];
                         var componentId = row[COLUMN_INDEX_COMPONENT_ID];
-                        row[COLUMN_INDEX_STEP_NUMBER] = this.ProjectService.getNodePositionById(nodeId);
-                        row[COLUMN_INDEX_STEP_TITLE] = this.ProjectService.getNodeTitleByNodeId(nodeId);
-                        row[COLUMN_INDEX_COMPONENT_PART_NUMBER] = this.ProjectService.getComponentPositionByNodeIdAndComponentId(nodeId, componentId) + 1; // make it 1-indexed for researchers
+                        row[COLUMN_INDEX_STEP_NUMBER] = _this.ProjectService.getNodePositionById(nodeId);
+                        row[COLUMN_INDEX_STEP_TITLE] = _this.ProjectService.getNodeTitleByNodeId(nodeId);
+                        row[COLUMN_INDEX_COMPONENT_PART_NUMBER] = _this.ProjectService.getComponentPositionByNodeIdAndComponentId(nodeId, componentId) + 1; // make it 1-indexed for researchers
                         var wiseIDs = row[COLUMN_INDEX_WISE_IDS];
                         var wiseIDsArray = wiseIDs.split(",");
                         row[COLUMN_INDEX_WISE_ID_1] = wiseIDsArray[0];
@@ -106,7 +108,7 @@ var ClassroomMonitorController = function () {
                     }
                     csvString += "\r\n";
                 }
-                var runId = this.ConfigService.getRunId();
+                var runId = _this.ConfigService.getRunId();
                 var csvBlob = new Blob([csvString], { type: 'text/csv' });
                 var csvFile = new File([csvBlob], "export_" + runId + ".csv");
 
@@ -117,11 +119,11 @@ var ClassroomMonitorController = function () {
                     "csvFile": csvFile
                 }, function (session) {
                     session.getStdout(function (returnedCSVString) {
+                        debugger;
                         var csvBlob = new Blob([returnedCSVString], { type: 'text/csv' });
                         var csvUrl = URL.createObjectURL(csvBlob);
                         var a = document.createElement("a");
                         document.body.appendChild(a);
-                        a.style = "display: none";
                         a.href = csvUrl;
                         a.download = "export_" + runId + ".csv";
                         a.click();
