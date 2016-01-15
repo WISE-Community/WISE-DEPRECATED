@@ -97,6 +97,9 @@ var DrawController = function () {
                 if (componentState != null) {
                     this.drawingToolId = "drawingtool_" + componentState.id;
                 }
+            } else if (this.mode === 'authoring') {
+                this.drawingToolId = "drawingtool_" + this.nodeId + "_" + this.componentId;
+                this.updateAdvancedAuthoringView();
             }
 
             this.$timeout(angular.bind(this, function () {
@@ -608,6 +611,55 @@ var DrawController = function () {
             var componentId = this.componentContent.id;
 
             return componentId;
+        }
+    }, {
+        key: 'authoringViewComponentChanged',
+
+        /**
+         * The component has changed in the regular authoring view so we will save the project
+         */
+        value: function authoringViewComponentChanged() {
+
+            // update the JSON string in the advanced authoring view textarea
+            this.updateAdvancedAuthoringView();
+
+            // save the project to the server
+            this.ProjectService.saveProject();
+        }
+    }, {
+        key: 'advancedAuthoringViewComponentChanged',
+
+        /**
+         * The component has changed in the advanced authoring view so we will update
+         * the component and save the project.
+         */
+        value: function advancedAuthoringViewComponentChanged() {
+
+            try {
+                /*
+                 * create a new comopnent by converting the JSON string in the advanced
+                 * authoring view into a JSON object
+                 */
+                var editedComponentContent = angular.fromJson(this.componentContentJSONString);
+
+                // replace the component in the project
+                this.ProjectService.replaceComponent(this.nodeId, this.componentId, editedComponentContent);
+
+                // set the new component into the controller
+                this.componentContent = editedComponentContent;
+
+                // save the project to the server
+                this.ProjectService.saveProject();
+            } catch (e) {}
+        }
+    }, {
+        key: 'updateAdvancedAuthoringView',
+
+        /**
+         * Update the component JSON string that will be displayed in the advanced authoring view textarea
+         */
+        value: function updateAdvancedAuthoringView() {
+            this.componentContentJSONString = angular.toJson(this.componentContent, 4);
         }
     }, {
         key: 'registerExitListener',

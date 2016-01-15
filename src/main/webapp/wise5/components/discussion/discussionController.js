@@ -177,6 +177,8 @@ class DiscussionController {
                     this.isDisabled = true;
                 } else if (this.mode === 'onlyShowWork') {
                     this.isDisabled = true;
+                } else if (this.mode === 'authoring') {
+                    this.updateAdvancedAuthoringView();
                 }
             }
 
@@ -1042,6 +1044,51 @@ class DiscussionController {
         }
 
         return level1Responses;
+    };
+
+    /**
+     * The component has changed in the regular authoring view so we will save the project
+     */
+    authoringViewComponentChanged() {
+
+        // update the JSON string in the advanced authoring view textarea
+        this.updateAdvancedAuthoringView();
+
+        // save the project to the server
+        this.ProjectService.saveProject();
+    };
+
+    /**
+     * The component has changed in the advanced authoring view so we will update
+     * the component and save the project.
+     */
+    advancedAuthoringViewComponentChanged() {
+
+        try {
+            /*
+             * create a new comopnent by converting the JSON string in the advanced
+             * authoring view into a JSON object
+             */
+            var editedComponentContent = angular.fromJson(this.componentContentJSONString);
+
+            // replace the component in the project
+            this.ProjectService.replaceComponent(this.nodeId, this.componentId, editedComponentContent);
+
+            // set the new component into the controller
+            this.componentContent = editedComponentContent;
+
+            // save the project to the server
+            this.ProjectService.saveProject();
+        } catch(e) {
+
+        }
+    };
+
+    /**
+     * Update the component JSON string that will be displayed in the advanced authoring view textarea
+     */
+    updateAdvancedAuthoringView() {
+        this.componentContentJSONString = angular.toJson(this.componentContent, 4);
     };
 
     /**

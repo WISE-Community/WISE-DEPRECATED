@@ -24,9 +24,17 @@ var _angularMaterial = require('angular-material');
 
 var _angularMaterial2 = _interopRequireDefault(_angularMaterial);
 
+var _angularMoment = require('angular-moment');
+
+var _angularMoment2 = _interopRequireDefault(_angularMoment);
+
 var _toArrayFilter = require('lib/angular-toArrayFilter/toArrayFilter');
 
 var _toArrayFilter2 = _interopRequireDefault(_toArrayFilter);
+
+var _angularWebsocket = require('angular-websocket');
+
+var _angularWebsocket2 = _interopRequireDefault(_angularWebsocket);
 
 var _annotationService = require('../services/annotationService');
 
@@ -148,6 +156,14 @@ var _studentDataService = require('../services/studentDataService');
 
 var _studentDataService2 = _interopRequireDefault(_studentDataService);
 
+var _studentStatusService = require('../services/studentStatusService');
+
+var _studentStatusService2 = _interopRequireDefault(_studentStatusService);
+
+var _studentWebSocketService = require('../services/studentWebSocketService');
+
+var _studentWebSocketService2 = _interopRequireDefault(_studentWebSocketService);
+
 var _tableController = require('../components/table/tableController');
 
 var _tableController2 = _interopRequireDefault(_tableController);
@@ -156,13 +172,17 @@ var _tableService = require('../components/table/tableService');
 
 var _tableService2 = _interopRequireDefault(_tableService);
 
+var _teacherDataService = require('../services/teacherDataService');
+
+var _teacherDataService2 = _interopRequireDefault(_teacherDataService);
+
 var _utilService = require('../services/utilService');
 
 var _utilService2 = _interopRequireDefault(_utilService);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var mainModule = _angular2.default.module('authoring', ['angular-toArrayFilter', 'directives', 'ui.router', 'ngAnimate', 'ngAria', 'ngFileUpload', 'ngMaterial']).service(_annotationService2.default.name, _annotationService2.default).service(_configService2.default.name, _configService2.default).service(_discussionService2.default.name, _discussionService2.default).service(_drawService2.default.name, _drawService2.default).service(_embeddedService2.default.name, _embeddedService2.default).service(_graphService2.default.name, _graphService2.default).service(_labelService2.default.name, _labelService2.default).service(_matchService2.default.name, _matchService2.default).service(_multipleChoiceService2.default.name, _multipleChoiceService2.default).service(_nodeService2.default.name, _nodeService2.default).service(_openResponseService2.default.name, _openResponseService2.default).service(_outsideURLService2.default.name, _outsideURLService2.default).service(_projectService2.default.name, _projectService2.default).service(_sessionService2.default.name, _sessionService2.default).service(_studentAssetService2.default.name, _studentAssetService2.default).service(_studentDataService2.default.name, _studentDataService2.default).service(_tableService2.default.name, _tableService2.default).service(_utilService2.default.name, _utilService2.default).controller(_authoringToolController2.default.name, _authoringToolController2.default).controller(_discussionController2.default.name, _discussionController2.default).controller(_drawController2.default.name, _drawController2.default).controller(_embeddedController2.default.name, _embeddedController2.default).controller(_graphController2.default.name, _graphController2.default).controller(_htmlController2.default.name, _htmlController2.default).controller(_labelController2.default.name, _labelController2.default).controller(_matchController2.default.name, _matchController2.default).controller(_multipleChoiceController2.default.name, _multipleChoiceController2.default).controller(_nodeController2.default.name, _nodeController2.default).controller(_openResponseController2.default.name, _openResponseController2.default).controller(_outsideURLController2.default.name, _outsideURLController2.default).controller(_projectController2.default.name, _projectController2.default).controller(_tableController2.default.name, _tableController2.default).config(['$urlRouterProvider', '$stateProvider', '$controllerProvider', '$mdThemingProvider', function ($urlRouterProvider, $stateProvider, $controllerProvider, $mdThemingProvider) {
+var mainModule = _angular2.default.module('authoring', ['angularMoment', 'angular-toArrayFilter', 'directives', 'ui.router', 'ngAnimate', 'ngAria', 'ngFileUpload', 'ngMaterial', 'ngWebSocket']).service(_annotationService2.default.name, _annotationService2.default).service(_configService2.default.name, _configService2.default).service(_discussionService2.default.name, _discussionService2.default).service(_drawService2.default.name, _drawService2.default).service(_embeddedService2.default.name, _embeddedService2.default).service(_graphService2.default.name, _graphService2.default).service(_labelService2.default.name, _labelService2.default).service(_matchService2.default.name, _matchService2.default).service(_multipleChoiceService2.default.name, _multipleChoiceService2.default).service(_nodeService2.default.name, _nodeService2.default).service(_openResponseService2.default.name, _openResponseService2.default).service(_outsideURLService2.default.name, _outsideURLService2.default).service(_projectService2.default.name, _projectService2.default).service(_sessionService2.default.name, _sessionService2.default).service(_studentAssetService2.default.name, _studentAssetService2.default).service(_studentDataService2.default.name, _studentDataService2.default).service(_studentStatusService2.default.name, _studentStatusService2.default).service(_studentWebSocketService2.default.name, _studentWebSocketService2.default).service(_tableService2.default.name, _tableService2.default).service(_teacherDataService2.default.name, _teacherDataService2.default).service(_utilService2.default.name, _utilService2.default).controller(_authoringToolController2.default.name, _authoringToolController2.default).controller(_discussionController2.default.name, _discussionController2.default).controller(_drawController2.default.name, _drawController2.default).controller(_embeddedController2.default.name, _embeddedController2.default).controller(_graphController2.default.name, _graphController2.default).controller(_htmlController2.default.name, _htmlController2.default).controller(_labelController2.default.name, _labelController2.default).controller(_matchController2.default.name, _matchController2.default).controller(_multipleChoiceController2.default.name, _multipleChoiceController2.default).controller(_nodeController2.default.name, _nodeController2.default).controller(_openResponseController2.default.name, _openResponseController2.default).controller(_outsideURLController2.default.name, _outsideURLController2.default).controller(_projectController2.default.name, _projectController2.default).controller(_tableController2.default.name, _tableController2.default).config(['$urlRouterProvider', '$stateProvider', '$controllerProvider', '$mdThemingProvider', function ($urlRouterProvider, $stateProvider, $controllerProvider, $mdThemingProvider) {
 
     $urlRouterProvider.otherwise('/project');
 

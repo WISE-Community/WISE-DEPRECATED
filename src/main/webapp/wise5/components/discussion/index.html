@@ -3,6 +3,18 @@
     </head>
     <body>
         <div ng-controller="DiscussionController as discussionController">
+            <div ng-if='discussionController.mode === "authoring"'>
+                    <textarea ng-model='discussionController.componentContent.prompt'
+                              ng-change='discussionController.authoringViewComponentChanged()'
+                              ng-model-options='{ debounce: 1000 }'
+                              rows='10'
+                              cols='100'></textarea>
+                    <textarea ng-model='discussionController.componentContentJSONString'
+                              ng-change='discussionController.advancedAuthoringViewComponentChanged()'
+                              ng-model-options='{ debounce: 1000 }'
+                              rows='10'
+                              cols='100'></textarea>
+            </div>
             <div class="md-padding" compile="discussionController.getPrompt()" ng-if="discussionController.getPrompt()"></div>
             <div class="md-padding discussion-content">
                 <div layout="row">

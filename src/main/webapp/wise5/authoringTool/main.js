@@ -5,7 +5,9 @@ import angular from 'angular';
 import angularUIRouter from 'angular-ui-router';
 import ngFileUpload from 'ng-file-upload';
 import ngMaterial from 'angular-material';
+import angularMoment from 'angular-moment';
 import angularToArrayFilter from 'lib/angular-toArrayFilter/toArrayFilter';
+import angularWebSocket from 'angular-websocket';
 import AnnotationService from '../services/annotationService';
 import AuthoringToolController from './authoringToolController';
 import ConfigService from '../services/configService';
@@ -36,18 +38,23 @@ import ProjectService from '../services/projectService';
 import SessionService from '../services/sessionService';
 import StudentAssetService from '../services/studentAssetService';
 import StudentDataService from '../services/studentDataService';
+import StudentStatusService from '../services/studentStatusService';
+import StudentWebSocketService from '../services/studentWebSocketService';
 import TableController from '../components/table/tableController';
 import TableService from '../components/table/tableService';
+import TeacherDataService from '../services/teacherDataService';
 import UtilService from '../services/utilService';
 
 let mainModule = angular.module('authoring', [
+    'angularMoment',
     'angular-toArrayFilter',
     'directives',
     'ui.router',
     'ngAnimate',
     'ngAria',
     'ngFileUpload',
-    'ngMaterial'
+    'ngMaterial',
+    'ngWebSocket'
 ])
     .service(AnnotationService.name, AnnotationService)
     .service(ConfigService.name, ConfigService)
@@ -65,7 +72,10 @@ let mainModule = angular.module('authoring', [
     .service(SessionService.name, SessionService)
     .service(StudentAssetService.name, StudentAssetService)
     .service(StudentDataService.name, StudentDataService)
+    .service(StudentStatusService.name, StudentStatusService)
+    .service(StudentWebSocketService.name, StudentWebSocketService)
     .service(TableService.name, TableService)
+    .service(TeacherDataService.name, TeacherDataService)
     .service(UtilService.name, UtilService)
     .controller(AuthoringToolController.name, AuthoringToolController)
     .controller(DiscussionController.name, DiscussionController)
