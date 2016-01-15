@@ -1,4 +1,16 @@
-<div ng-controller='OutsideURLController as outsideURLController' style="text-align: center;">
+<div ng-controller='OutsideURLController as outsideURLController'>
+    <div ng-if='outsideURLController.mode === "authoring"'>
+                    <input ng-model='outsideURLController.componentContent.url'
+                           ng-change='outsideURLController.authoringViewComponentChanged()'
+                           ng-model-options='{ debounce: 1000 }'
+                           size='80'/>
+                    <br/>
+                    <textarea ng-model='outsideURLController.componentContentJSONString'
+                              ng-change='outsideURLController.advancedAuthoringViewComponentChanged()'
+                              ng-model-options='{ debounce: 1000 }'
+                              rows='10'
+                              cols='100'></textarea>
+    </div>
     <iframe ng-src='{{outsideURLController.url}}'
             style="height: 100%; width:100%; max-width: {{outsideURLController.maxWidth}}; max-height: {{outsideURLController.maxHeight}};"></iframe>
 </div>

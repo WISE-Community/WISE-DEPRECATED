@@ -1,5 +1,17 @@
 <div ng-controller='DrawController as drawController' style='display: flex'>
     <div style='flex: 1'>
+        <div ng-if='drawController.mode === "authoring"'>
+                    <textarea ng-model='drawController.componentContent.prompt'
+                              ng-change='drawController.authoringViewComponentChanged()'
+                              ng-model-options='{ debounce: 1000 }'
+                              rows='10'
+                              cols='100'></textarea>
+                    <textarea ng-model='drawController.componentContentJSONString'
+                              ng-change='drawController.advancedAuthoringViewComponentChanged()'
+                              ng-model-options='{ debounce: 1000 }'
+                              rows='10'
+                              cols='100'></textarea>
+        </div>
         <div id='prompt' compile='drawController.getPrompt()'></div>
         <meta charset="utf-8">
         <link rel="stylesheet" type="text/css" href="wise5/lib/drawingTool/drawing-tool.css">
