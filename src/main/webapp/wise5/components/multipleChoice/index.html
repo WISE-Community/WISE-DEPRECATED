@@ -3,6 +3,34 @@
     <body>
         <div ng-controller="MultipleChoiceController as multipleChoiceController" style='display: flex'>
             <div style='flex: 1'>
+
+                <div ng-if='multipleChoiceController.mode === "authoring"'>
+
+                    <textarea ng-model='multipleChoiceController.componentContent.prompt'
+                              ng-change='multipleChoiceController.authoringViewComponentChanged()'
+                              ng-model-options='{ debounce: 1000 }'
+                              rows='10'
+                              cols='100'></textarea>
+                    <br/>
+                    Radio: <input type='radio' name='choiceType' ng-model='multipleChoiceController.componentContent.choiceType' value='radio' ng-change='multipleChoiceController.authoringViewComponentChanged()'/>
+                    Checkbox: <input type='radio' name='choiceType' ng-model='multipleChoiceController.componentContent.choiceType' value='checkbox' ng-change='multipleChoiceController.authoringViewComponentChanged()'/>
+                    <br/>
+                    <button ng-click='multipleChoiceController.addChoice()'>Add Choice</button>
+                    <div ng-repeat='choice in multipleChoiceController.componentContent.choices'
+                         style='border: 1px solid black'>
+                        Text: <input ng-model='choice.text' ng-change='multipleChoiceController.authoringViewComponentChanged()' ng-model-options='{ debounce: 1000 }' size='100'></input>
+                        <br/>
+                        Feedback: <input ng-model='choice.feedback' ng-change='multipleChoiceController.authoringViewComponentChanged()' ng-model-options='{ debounce: 1000 }' size='100'></input>
+                        <br/>
+                        <div>Is Correct: <input type='checkbox' ng-model='choice.isCorrect' ng-change='multipleChoiceController.authoringViewComponentChanged()'/></div>
+                        <button ng-click='multipleChoiceController.deleteChoice(choice.id)'>Delete</button>
+                    </div>
+                    <textarea ng-model='multipleChoiceController.componentContentJSONString'
+                              ng-change='multipleChoiceController.authoringViewComponentChanged()'
+                              ng-model-options='{ debounce: 1000 }'
+                              rows='10'
+                              cols='100'></textarea>
+                </div>
                 <md-input-container class="input-container md-block input-container--open-response input-container--component md-no-float"
                                     ng-switch on="multipleChoiceController.getChoiceType()">
                     <label class="input-label md-no-float" ng-if="multipleChoiceController.getPrompt()" compile="multipleChoiceController.getPrompt()"></label>

@@ -237,7 +237,7 @@ var mainModule = _angular2.default.module('vle', ['angularMoment', 'angular-toAr
 //.service(AudioRecorderService.name, AudioRecorderService)
 .service(_configService2.default.name, _configService2.default)
 //.service(CRaterService.name, CRaterService)
-.service(_discussionService2.default.name, _discussionService2.default).service(_drawController2.default.name, _drawController2.default).service(_drawService2.default.name, _drawService2.default).service(_embeddedService2.default.name, _embeddedService2.default).service(_graphService2.default.name, _graphService2.default)
+.service(_discussionService2.default.name, _discussionService2.default).service(_drawService2.default.name, _drawService2.default).service(_embeddedService2.default.name, _embeddedService2.default).service(_graphService2.default.name, _graphService2.default)
 //.service(HTMLService.name, HTMLService)
 .service(_labelService2.default.name, _labelService2.default).service(_matchService2.default.name, _matchService2.default).service(_multipleChoiceService2.default.name, _multipleChoiceService2.default).service(_nodeService2.default.name, _nodeService2.default).service(_notebookService2.default.name, _notebookService2.default).service(_openResponseService2.default.name, _openResponseService2.default).service(_outsideURLService2.default.name, _outsideURLService2.default)
 //.service(PhotoBoothService.name, PhotoBoothService)
