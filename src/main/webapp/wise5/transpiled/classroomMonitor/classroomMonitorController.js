@@ -32,7 +32,6 @@ var ClassroomMonitorController = function () {
                 "name": "Hiroki"
             }, function (session) {
                 session.getStdout(function (returnedCSVString) {
-                    debugger;
                     var csvBlob = new Blob([returnedCSVString], { type: 'text/csv' });
                     var csvUrl = URL.createObjectURL(csvBlob);
                     var a = document.createElement("a");
@@ -68,7 +67,7 @@ var ClassroomMonitorController = function () {
                 var COLUMN_INDEX_STUDENT_RESPONSE = 21;
 
                 var csvString = "";
-                for (var rowIndex = 0; rowIndex < 100; rowIndex++) {
+                for (var rowIndex = 0; rowIndex < result.length; rowIndex++) {
 
                     var row = result[rowIndex];
 
@@ -119,7 +118,6 @@ var ClassroomMonitorController = function () {
                     "csvFile": csvFile
                 }, function (session) {
                     session.getStdout(function (returnedCSVString) {
-                        debugger;
                         var csvBlob = new Blob([returnedCSVString], { type: 'text/csv' });
                         var csvUrl = URL.createObjectURL(csvBlob);
                         var a = document.createElement("a");
