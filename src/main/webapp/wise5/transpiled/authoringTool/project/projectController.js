@@ -18,7 +18,7 @@ var ProjectController = function () {
         this.ProjectService = ProjectService;
         this.ConfigService = ConfigService;
 
-        this.title = "project controller title";
+        this.title = "project controller";
         this.project = this.ProjectService.getProject();
         this.items = this.ProjectService.idToOrder;
         this.nodeIds = this.ProjectService.getFlattenedProjectAsNodeIds();
