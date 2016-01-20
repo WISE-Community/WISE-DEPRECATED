@@ -62,16 +62,6 @@ var NodeController = function () {
                 this.nodeId = currentNode.id;
             }
 
-            // save nodeEntered event
-            var nodeId = this.nodeId;
-            var componentId = null;
-            var componentType = null;
-            var category = "Navigation";
-            var event = "nodeEntered";
-            var eventData = {};
-            eventData.nodeId = nodeId;
-            this.StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
-
             // get the node content
             this.nodeContent = this.ProjectService.getNodeContentByNodeId(this.nodeId);
 
@@ -99,6 +89,16 @@ var NodeController = function () {
             if (this.NodeService.hasTransitionLogic() && this.NodeService.evaluateTransitionLogicOn('enterNode')) {
                 this.NodeService.evaluateTransitionLogic();
             }
+
+            // save nodeEntered event
+            var nodeId = this.nodeId;
+            var componentId = null;
+            var componentType = null;
+            var category = "Navigation";
+            var event = "nodeEntered";
+            var eventData = {};
+            eventData.nodeId = nodeId;
+            this.StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
         }
 
         /**
@@ -989,4 +989,5 @@ var NodeController = function () {
 NodeController.$inject = ['$rootScope', '$scope', 'ConfigService', 'NodeService', 'NotebookService', 'ProjectService', 'StudentDataService'];
 
 exports.default = NodeController;
+
 //# sourceMappingURL=nodeController.js.map

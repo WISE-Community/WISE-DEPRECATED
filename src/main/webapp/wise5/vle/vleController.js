@@ -33,36 +33,8 @@ var VLEController = function () {
         this.navFilters = this.ProjectService.getFilters();
         this.navFilter = this.navFilters[0].name;
 
-        var nodeId = null;
-        var stateParams = null;
-        var stateParamNodeId = null;
-
-        if (this.$state != null) {
-            stateParams = this.$state.params;
-        }
-
-        if (stateParams != null) {
-            stateParamNodeId = stateParams.nodeId;
-        }
-
-        if (stateParamNodeId != null && stateParamNodeId !== '') {
-            nodeId = stateParamNodeId;
-        } else {
-            var latestComponentState = this.StudentDataService.getLatestComponentState();
-
-            if (latestComponentState != null) {
-                nodeId = latestComponentState.nodeId;
-            }
-        }
-
-        if (nodeId == null || nodeId === '') {
-            nodeId = this.ProjectService.getStartNodeId();
-        }
-
         this.projectStyle = this.ProjectService.getStyle();
         this.projectName = this.ProjectService.getName();
-
-        this.StudentDataService.setCurrentNodeByNodeId(nodeId);
 
         this.notebookFilters = this.NotebookService.getFilters();
         this.notebookFilter = this.notebookFilters[0].name;
@@ -144,6 +116,34 @@ var VLEController = function () {
         scope.themeLoaded = true;
         scope.setLayoutState();
         scope.updateLayout();
+
+        var nodeId = null;
+        var stateParams = null;
+        var stateParamNodeId = null;
+
+        if (this.$state != null) {
+            stateParams = this.$state.params;
+        }
+
+        if (stateParams != null) {
+            stateParamNodeId = stateParams.nodeId;
+        }
+
+        if (stateParamNodeId != null && stateParamNodeId !== '') {
+            nodeId = stateParamNodeId;
+        } else {
+            var latestComponentState = this.StudentDataService.getLatestComponentState();
+
+            if (latestComponentState != null) {
+                nodeId = latestComponentState.nodeId;
+            }
+        }
+
+        if (nodeId == null || nodeId === '') {
+            nodeId = this.ProjectService.getStartNodeId();
+        }
+
+        this.StudentDataService.setCurrentNodeByNodeId(nodeId);
     }
 
     _createClass(VLEController, [{
@@ -259,4 +259,5 @@ var VLEController = function () {
 VLEController.$inject = ['$scope', '$rootScope', '$state', 'ConfigService', 'NotebookService', 'ProjectService', 'SessionService', 'StudentDataService', 'StudentWebSocketService', '$ocLazyLoad'];
 
 exports.default = VLEController;
+
 //# sourceMappingURL=vleController.js.map

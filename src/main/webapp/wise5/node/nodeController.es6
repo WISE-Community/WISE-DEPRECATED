@@ -57,16 +57,6 @@ class NodeController {
                 this.nodeId = currentNode.id;
             }
 
-            // save nodeEntered event
-            var nodeId = this.nodeId;
-            var componentId = null;
-            var componentType = null;
-            var category = "Navigation";
-            var event = "nodeEntered";
-            var eventData = {};
-            eventData.nodeId = nodeId;
-            this.StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
-
             // get the node content
             this.nodeContent = this.ProjectService.getNodeContentByNodeId(this.nodeId);
 
@@ -94,6 +84,16 @@ class NodeController {
             if (this.NodeService.hasTransitionLogic() && this.NodeService.evaluateTransitionLogicOn('enterNode')) {
                 this.NodeService.evaluateTransitionLogic();
             }
+
+            // save nodeEntered event
+            var nodeId = this.nodeId;
+            var componentId = null;
+            var componentType = null;
+            var category = "Navigation";
+            var event = "nodeEntered";
+            var eventData = {};
+            eventData.nodeId = nodeId;
+            this.StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
         }
 
         /**
