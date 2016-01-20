@@ -1,5 +1,3 @@
-'use strict';
-
 class TableController {
     constructor($rootScope,
                 $scope,
@@ -89,6 +87,8 @@ class TableController {
                 this.isSubmitButtonVisible = false;
                 this.isResetTableButtonVisible = false;
                 this.isDisabled = true;
+            } else if (this.mode === 'authoring') {
+                this.updateAdvancedAuthoringView();
             }
 
             // get the show previous work node id if it is provided
@@ -234,6 +234,10 @@ class TableController {
         this.$scope.$on('exitNode', angular.bind(this, function(event, args) {
 
         }));
+
+        this.$scope.getNumber = function(num) {
+            return new Array(parseInt(num));
+        }
     }
 
     /**
@@ -682,6 +686,284 @@ class TableController {
 
         return componentId;
     };
+
+    /**
+     * The component has changed in the regular authoring view so we will save the project
+     */
+    authoringViewComponentChanged() {
+
+        // update the JSON string in the advanced authoring view textarea
+        this.updateAdvancedAuthoringView();
+
+        // render the preview table again so it will pick up any changes
+        this.resetTable();
+
+        // save the project to the server
+        this.ProjectService.saveProject();
+    };
+
+    /**
+     * The component has changed in the advanced authoring view so we will update
+     * the component and save the project.
+     */
+    advancedAuthoringViewComponentChanged() {
+
+        try {
+            /*
+             * create a new comopnent by converting the JSON string in the advanced
+             * authoring view into a JSON object
+             */
+            var editedComponentContent = angular.fromJson(this.componentContentJSONString);
+
+            // replace the component in the project
+            this.ProjectService.replaceComponent(this.nodeId, this.componentId, editedComponentContent);
+
+            // set the new component into the controller
+            this.componentContent = editedComponentContent;
+
+            // save the project to the server
+            this.ProjectService.saveProject();
+        } catch(e) {
+
+        }
+    };
+
+    /**
+     * Update the component JSON string that will be displayed in the advanced authoring view textarea
+     */
+    updateAdvancedAuthoringView() {
+        this.componentContentJSONString = angular.toJson(this.componentContent, 4);
+    };
+
+    /**
+     * The table size has changed in the authoring view so we will update it
+     */
+    authoringViewTableSizeChanged() {
+
+        // create a new table with the new size and populate it with the existing cells
+        var newTable = this.getUpdatedTableSize(this.componentContent.numRows, this.componentContent.numColumns);
+
+        // set the new table into the component content
+        this.componentContent.tableData = newTable;
+
+        // perform preview updating and project saving
+        this.authoringViewComponentChanged();
+    }
+
+    /**
+     * Create a table with the given dimensions. Populate the cells with
+     * the cells from the old table.
+     * @param newNumRows the number of rows in the new table
+     * @param newNumColumns the number of columns in the new table
+     * @returns a new table
+     */
+    getUpdatedTableSize(newNumRows, newNumColumns) {
+
+        var newTable = [];
+
+        // create the rows
+        for (var r = 0; r < newNumRows; r++) {
+
+            var newRow = [];
+
+            // create the columns
+            for (var c = 0; c < newNumColumns; c++) {
+
+                // try to get the cell from the old table
+                var cell = this.getCellObjectFromComponentContent(c, r);
+
+                if (cell == null) {
+                    /*
+                     * the old table does not have a cell for the given
+                     * row/column location so we will create an empty cell
+                     */
+                    cell = this.createEmptyCell();
+                }
+
+                newRow.push(cell);
+            }
+
+            newTable.push(newRow);
+        }
+
+        return newTable;
+    }
+
+    /**
+     * Get the cell object at the given x, y location
+     * @param x the column number (zero indexed)
+     * @param y the row number (zero indexed)
+     * @returns the cell at the given x, y location or null if there is none
+     */
+    getCellObjectFromComponentContent(x, y) {
+        var cellObject = null;
+
+        var tableData = this.componentContent.tableData;
+
+        if (tableData != null) {
+
+            // get the row
+            var row = tableData[y];
+
+            if (row != null) {
+
+                // get the cell
+                cellObject = row[x];
+            }
+        }
+
+        return cellObject;
+    }
+
+    /**
+     * Create an empty cell
+     * @returns an empty cell object
+     */
+    createEmptyCell() {
+        var cell = {};
+
+        cell.text = '';
+        cell.editable = true;
+        cell.size = null;
+
+        return cell;
+    }
+
+    /**
+     * Insert a row into the table from the authoring view
+     * @param y the row number to insert at
+     */
+    authoringViewInsertRow(y) {
+
+        // get the table
+        var tableData = this.componentContent.tableData;
+
+        if (tableData != null) {
+
+            // create the new row that we will insert
+            var newRow = [];
+
+            // get the number of columns
+            var numColumns = this.componentContent.numColumns;
+
+            // populate the new row with the correct number of cells
+            for (var c = 0; c < numColumns; c++) {
+                // create an empty cell
+                var newCell = this.createEmptyCell();
+                newRow.push(newCell);
+            }
+
+            // insert the new row into the table
+            tableData.splice(y, 0, newRow);
+
+            // update the number of rows value
+            this.componentContent.numRows++;
+        }
+
+        // save the project and update the preview
+        this.authoringViewComponentChanged();
+    }
+
+    /**
+     * Delete a row in the table from the authoring view
+     * @param y the row number to delete
+     */
+    authoringViewDeleteRow(y) {
+
+        var answer = confirm('Are you sure you want to delete this column?');
+
+        if (answer) {
+            // get the table
+            var tableData = this.componentContent.tableData;
+
+            if (tableData != null) {
+
+                // remove the row
+                tableData.splice(y, 1);
+
+                // update the number of rows value
+                this.componentContent.numRows--;
+            }
+
+            // save the project and update the preview
+            this.authoringViewComponentChanged();
+        }
+    }
+
+    /**
+     * Insert a column into the table from the authoring view
+     * @param x the column number to insert at
+     */
+    authoringViewInsertColumn(x) {
+
+        // get the table
+        var tableData = this.componentContent.tableData;
+
+        if (tableData != null) {
+
+            var numRows = this.componentContent.numRows;
+
+            // loop through all the rows
+            for (var r = 0; r < numRows; r++) {
+
+                // get a row
+                var tempRow = tableData[r];
+
+                if (tempRow != null) {
+
+                    // create an empty cell
+                    var newCell = this.createEmptyCell();
+
+                    // insert the cell into the row
+                    tempRow.splice(x, 0, newCell);
+                }
+            }
+
+            // update the number of columns value
+            this.componentContent.numColumns++;
+        }
+
+        // save the project and update the preview
+        this.authoringViewComponentChanged();
+    }
+
+    /**
+     * Delete a column in the table from the authoring view
+     * @param x the column number to delete
+     */
+    authoringViewDeleteColumn(x) {
+
+        var answer = confirm('Are you sure you want to delete this column?');
+
+        if (answer) {
+            // get the table
+            var tableData = this.componentContent.tableData;
+
+            if (tableData != null) {
+
+                var numRows = this.componentContent.numRows;
+
+                // loop through all the rows
+                for (var r = 0; r < numRows; r++) {
+
+                    // get a row
+                    var tempRow = tableData[r];
+
+                    if (tempRow != null) {
+
+                        // remove the cell from the row
+                        tempRow.splice(x, 1);
+                    }
+                }
+
+                // update the number of columns value
+                this.componentContent.numColumns--;
+            }
+
+            // save the project and update the preview
+            this.authoringViewComponentChanged();
+        }
+    }
 
     /**
      * Register the the listener that will listen for the exit event

@@ -397,17 +397,77 @@ class AnnotationDirective {
     }
 }
 
+/**
+ * A directive that asks the user if they are sure they want to change a
+ * number input value to a lower value. We will not ask the user if they
+ * change the number to a higher value. This directive is intended to
+ * be used in cases when changing to a lower value will have a destructive
+ * effect such as setting the number of rows in the authoring view of the
+ * table component.
+ */
+class ConfirmNumberDecrease {
+    constructor() {
+        this.priority = -1;
+        this.restrict = 'A';
+        this.require = 'ngModel';
+    }
+
+    static directiveFactory() {
+        ConfirmNumberDecrease.instance = new ConfirmNumberDecrease();
+        return ConfirmNumberDecrease.instance;
+    }
+
+    link($scope, element, attrs, modelCtrl) {
+
+        // get the message
+        var message = attrs.confirmNumberDecrease;
+
+        modelCtrl.$parsers.push(function (newValue) {
+
+            // get the old value
+            var oldValue = modelCtrl.$modelValue;
+
+            // check if the new value is less than the old value
+            if (newValue < oldValue) {
+                /*
+                 * the new value is less than the old value so we will ask them to confirm
+                 * the change since it may be destructive
+                 */
+                var answer = confirm(message);
+
+                if (answer) {
+                    // the user wants to change the value
+                    return newValue;
+                } else {
+                    // the user does not want to change the value so we will roll it back
+                    modelCtrl.$setViewValue(oldValue);
+                    modelCtrl.$render();
+                    return oldValue;
+                }
+            } else {
+                /*
+                 * the new value is equal or greater than the old value so we do
+                 * not need the user to confirm the change
+                 */
+                return newValue;
+            }
+        });
+    }
+}
+
 let Directives = angular.module('directives', []);
 
 AnnotationDirective.directiveFactory.$inject = ['$compile', 'AnnotationService', 'ConfigService', 'UtilService'];
 ClassResponseDirective.directiveFactory.$inject = ['StudentStatusService'];
 CompileDirective.directiveFactory.$inject = ['$compile'];
 ComponentDirective.directiveFactory.$inject = ['$injector', '$compile', 'NodeService', 'ProjectService', 'StudentDataService'];
+ConfirmNumberDecrease.directiveFactory.$inject = [];
 
 Directives.directive('annotation', AnnotationDirective.directiveFactory);
 Directives.directive('classResponse', ClassResponseDirective.directiveFactory);
 Directives.directive('compile', CompileDirective.directiveFactory);
 Directives.directive('component', ComponentDirective.directiveFactory);
+Directives.directive('confirmNumberDecrease', ConfirmNumberDecrease.directiveFactory);
 
 navItemDirective.directiveFactory.$inject = [];
 stepToolsDirective.directiveFactory.$inject = [];

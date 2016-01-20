@@ -1,5 +1,60 @@
 <div ng-controller='TableController as tableController' style='display: flex'>
     <div style='flex: 1'>
+        <div ng-if='tableController.mode === "authoring"'>
+                    <textarea ng-model='tableController.componentContent.prompt'
+                              ng-change='tableController.authoringViewComponentChanged()'
+                              ng-model-options='{ debounce: 1000 }'
+                              rows='10'
+                              cols='100'></textarea>
+                    <br/>
+                    Columns: <input type='number'
+                                    ng-model='tableController.componentContent.numColumns'
+                                    confirm-number-decrease='Are you sure you want to decrease the number of columns?'
+                                    ng-change='tableController.authoringViewTableSizeChanged()'
+                                    ng-model-options='{ debounce: 1000 }'
+                                    style='width: 3em'/>
+                    Rows: <input type='number'
+                                 ng-model='tableController.componentContent.numRows'
+                                 confirm-number-decrease='Are you sure you want to decrease the number of rows?'
+                                 ng-change='tableController.authoringViewTableSizeChanged()'
+                                 ng-model-options='{ debounce: 1000 }'
+                                 style='width: 3em'/>
+                    Cell Size: <input type='number'
+                                      ng-model='tableController.componentContent.globalCellSize'
+                                      ng-change='tableController.authoringViewComponentChanged()'
+                                      ng-model-options='{ debounce: 1000 }'
+                                      style='width: 3em'/>
+                    <br/>
+                    <table style='border: 1px solid black;'>
+                        <tr>
+                            <td style='border: 1px solid black;'></td>
+                            <td ng-repeat='x in getNumber(tableController.componentContent.numColumns) track by $index'style='border: 1px solid black;'>
+                                <button ng-click='tableController.authoringViewInsertColumn($index)'>I</button>
+                                <button ng-click='tableController.authoringViewDeleteColumn($index)'>D</button>
+                            </td>
+                        </tr>
+                        <tr ng-repeat='row in tableController.componentContent.tableData'>
+                            <td style='border: 1px solid black;'>
+                                <button ng-click='tableController.authoringViewInsertRow($index)'>I</button>
+                                <button ng-click='tableController.authoringViewDeleteRow($index)'>D</button>
+                            </td>
+                            <td ng-repeat='cell in row' style='border: 1px solid black;'>
+                                <input type='text'
+                                       ng-model='cell.text'
+                                       ng-change='tableController.authoringViewComponentChanged()'
+                                       size='20'/>
+                                <br/>
+                                U <input type='checkbox' ng-model='cell.editable' ng-checked='!cell.editable' ng-true-value='false' ng-false-value='true' ng-change='tableController.authoringViewComponentChanged()'/>
+                                S <input type='number' ng-model='cell.size' ng-change='tableController.authoringViewComponentChanged()' size='3' style='width: 3em'/>
+                            </td>
+                        </tr>
+                    </table>
+                    <textarea ng-model='tableController.componentContentJSONString'
+                              ng-change='tableController.advancedAuthoringViewComponentChanged()'
+                              ng-model-options='{ debounce: 1000 }'
+                              rows='10'
+                              cols='100'></textarea>
+        </div>
         <div id='prompt' compile='tableController.getPrompt()'></div>
         <div class="component-content__actions" layout="row">
             <md-button class="md-accent" ng-show="tableController.isStudentAttachmentEnabled"
@@ -14,7 +69,7 @@
                     <input type='text'
                         ng-model='cell.text'
                         ng-change='tableController.studentDataChanged()'
-                        size={{cell.size}}
+                        size='{{cell.size || tableController.componentContent.globalCellSize}}'
                         ng-disabled='!cell.editable || tableController.isDisabled'/>
                 </td>
             </tr>
