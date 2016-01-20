@@ -1,10 +1,17 @@
-class StudentProgressController {
-    constructor($rootScope,
-                $state,
-                ConfigService,
-                StudentStatusService,
-                TeacherDataService,
-                TeacherWebSocketService) {
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var StudentProgressController = function () {
+    function StudentProgressController($rootScope, $state, ConfigService, StudentStatusService, TeacherDataService, TeacherWebSocketService) {
+        _classCallCheck(this, StudentProgressController);
+
         this.$rootScope = $rootScope;
         this.$state = $state;
         this.ConfigService = ConfigService;
@@ -12,7 +19,7 @@ class StudentProgressController {
         this.TeacherDataService = TeacherDataService;
         this.TeacherWebSocketService = TeacherWebSocketService;
 
-        this.title = 'Grade By Student';
+        this.title = 'Grade By Student ';
 
         this.workgroups = this.ConfigService.getClassmateUserInfos();
 
@@ -46,48 +53,60 @@ class StudentProgressController {
         $rootScope.$on('studentsOnlineReceived', angular.bind(this, function (event, args) {
             this.studentsOnline = args.studentsOnline;
         }));
-
     }
 
-    getNewNodeVisits() {
-        return this.StudentStatusService.getNewNodeVisits();
-    };
+    _createClass(StudentProgressController, [{
+        key: 'getNewNodeVisits',
+        value: function getNewNodeVisits() {
+            return this.StudentStatusService.getNewNodeVisits();
+        }
+    }, {
+        key: 'getCurrentNodeForWorkgroupId',
+        value: function getCurrentNodeForWorkgroupId(workgroupId) {
+            return this.StudentStatusService.getCurrentNodeTitleForWorkgroupId(workgroupId);
+        }
+    }, {
+        key: 'getStudentProjectCompletion',
+        value: function getStudentProjectCompletion(workgroupId) {
+            return this.StudentStatusService.getStudentProjectCompletion(workgroupId);
+        }
+    }, {
+        key: 'studentRowClicked',
+        value: function studentRowClicked(workgroup) {
+            var workgroupId = workgroup.workgroupId;
 
-    getCurrentNodeForWorkgroupId(workgroupId) {
-        return this.StudentStatusService.getCurrentNodeTitleForWorkgroupId(workgroupId);
-    };
+            $state.go('root.studentGrading', { workgroupId: workgroupId });
+        }
+    }, {
+        key: 'isWorkgroupOnline',
+        value: function isWorkgroupOnline(workgroupId) {
+            return this.studentsOnline.indexOf(workgroupId) != -1;
+        }
+    }, {
+        key: 'setCurrentPeriod',
 
-    getStudentProjectCompletion(workgroupId) {
-        return this.StudentStatusService.getStudentProjectCompletion(workgroupId);
-    };
+        /**
+         * Set the current period
+         * @param period the period object
+         */
+        value: function setCurrentPeriod(period) {
+            this.TeacherDataService.setCurrentPeriod(period);
+        }
+    }, {
+        key: 'getCurrentPeriod',
 
-    studentRowClicked(workgroup) {
-        var workgroupId = workgroup.workgroupId;
+        /**
+         * Get the current period
+         */
+        value: function getCurrentPeriod() {
+            return this.TeacherDataService.getCurrentPeriod();
+        }
+    }]);
 
-        $state.go('root.studentGrading', {workgroupId: workgroupId});
-    };
+    return StudentProgressController;
+}();
 
-    isWorkgroupOnline(workgroupId) {
-        return this.studentsOnline.indexOf(workgroupId) != -1;
-    };
+StudentProgressController.$inject = ['$rootScope', '$state', 'ConfigService', 'StudentStatusService', 'TeacherDataService', 'TeacherWebSocketService'];
 
-    /**
-     * Set the current period
-     * @param period the period object
-     */
-    setCurrentPeriod(period) {
-        this.TeacherDataService.setCurrentPeriod(period);
-    };
-
-    /**
-     * Get the current period
-     */
-    getCurrentPeriod() {
-        return this.TeacherDataService.getCurrentPeriod();
-    };
-
-}
-
-StudentProgressController.$inject = ['$rootScope', '$state', 'ConfigService', 'StudentStatusService', 'TeacherDataService','TeacherWebSocketService'];
-
-export default StudentProgressController;
+exports.default = StudentProgressController;
+//# sourceMappingURL=studentProgressController.js.map

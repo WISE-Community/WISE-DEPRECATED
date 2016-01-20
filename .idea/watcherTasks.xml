@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectTasksOptions">
+    <TaskOptions isEnabled="true">
+      <option name="arguments" value="--extensions .es6 --source-maps --out-file $FileNameWithoutExtension$.js $FilePath$" />
+      <option name="checkSyntaxErrors" value="true" />
+      <option name="description" value="Transpiles ECMAScript 6 code to ECMAScript 5" />
+      <option name="exitCodeBehavior" value="ALWAYS" />
+      <option name="fileExtension" value="es6" />
+      <option name="immediateSync" value="true" />
+      <option name="name" value="Babel" />
+      <option name="output" value="$FileNameWithoutExtension$.js:$FileNameWithoutExtension$.js.map" />
+      <option name="outputFilters">
+        <array />
+      </option>
+      <option name="outputFromStdout" value="false" />
+      <option name="program" value="/usr/local/bin/babel" />
+      <option name="scopeName" value="wise5-es6-classes" />
+      <option name="trackOnlyRoot" value="false" />
+      <option name="workingDir" value="$FileDir$" />
+      <envs />
+    </TaskOptions>
+  </component>
+</project>

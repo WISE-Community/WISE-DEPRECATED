@@ -1,375 +1,428 @@
+'use strict';
 
-class ConfigService {
-    constructor($http) {
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var ConfigService = function () {
+    function ConfigService($http) {
+        _classCallCheck(this, ConfigService);
+
         this.$http = $http;
         this.config = null;
     }
 
-    getConfig() {
-        return this.config;
-    };
-
-    retrieveConfig(configUrl) {
-        return this.$http.get(configUrl).then(angular.bind(this, function (result) {
-            var config = result.data;
-
-            this.config = config;
-
-            this.sortClassmateUserInfosAlphabeticallyByName();
-
-            return config;
-        }));
-    };
-
-    getConfigParam(paramName) {
-        if (this.config !== null) {
-            return this.config[paramName];
-        } else {
-            return null;
+    _createClass(ConfigService, [{
+        key: 'getConfig',
+        value: function getConfig() {
+            return this.config;
         }
-    };
+    }, {
+        key: 'retrieveConfig',
+        value: function retrieveConfig(configUrl) {
+            return this.$http.get(configUrl).then(angular.bind(this, function (result) {
+                var config = result.data;
 
-    getCRaterRequestURL() {
-        return this.getConfigParam('cRaterRequestURL');
-    };
+                this.config = config;
 
-    getMainHomePageURL() {
-        return this.getConfigParam('mainHomePageURL');
-    };
+                this.sortClassmateUserInfosAlphabeticallyByName();
 
-    getPeriodId() {
-        var periodId = null;
-        var userInfo = this.getConfigParam('userInfo');
-        if (userInfo != null) {
-            var myUserInfo = userInfo.myUserInfo;
-            if (myUserInfo != null) {
-                periodId = myUserInfo.periodId;
+                return config;
+            }));
+        }
+    }, {
+        key: 'getConfigParam',
+        value: function getConfigParam(paramName) {
+            if (this.config !== null) {
+                return this.config[paramName];
+            } else {
+                return null;
             }
         }
-        return periodId;
-    };
+    }, {
+        key: 'getCRaterRequestURL',
+        value: function getCRaterRequestURL() {
+            return this.getConfigParam('cRaterRequestURL');
+        }
+    }, {
+        key: 'getMainHomePageURL',
+        value: function getMainHomePageURL() {
+            return this.getConfigParam('mainHomePageURL');
+        }
+    }, {
+        key: 'getPeriodId',
+        value: function getPeriodId() {
+            var periodId = null;
+            var userInfo = this.getConfigParam('userInfo');
+            if (userInfo != null) {
+                var myUserInfo = userInfo.myUserInfo;
+                if (myUserInfo != null) {
+                    periodId = myUserInfo.periodId;
+                }
+            }
+            return periodId;
+        }
+    }, {
+        key: 'getPeriods',
 
-    /**
-     * Get the periods
-     * @returns an array of period objects
-     */
-    getPeriods() {
-        var periods = [];
+        /**
+         * Get the periods
+         * @returns an array of period objects
+         */
+        value: function getPeriods() {
+            var periods = [];
 
-        var userInfo = this.getConfigParam('userInfo');
+            var userInfo = this.getConfigParam('userInfo');
 
-        if (userInfo != null) {
+            if (userInfo != null) {
 
-            var myUserInfo = userInfo.myUserInfo;
-            if (myUserInfo != null) {
+                var myUserInfo = userInfo.myUserInfo;
+                if (myUserInfo != null) {
 
-                var myClassInfo = myUserInfo.myClassInfo;
-                if (myClassInfo != null) {
+                    var myClassInfo = myUserInfo.myClassInfo;
+                    if (myClassInfo != null) {
 
-                    if (myClassInfo.periods != null) {
-                        periods = myClassInfo.periods;
+                        if (myClassInfo.periods != null) {
+                            periods = myClassInfo.periods;
+                        }
                     }
                 }
             }
+
+            return periods;
         }
-
-        return periods;
-    };
-
-    getRunId() {
-        return this.getConfigParam('runId');
-    };
-
-    getProjectId() {
-        return this.getConfigParam('projectId');
-    };
-
-    getOpenCPUURL() {
-        return this.getConfigParam('openCPUURL');
-    };
-
-    getSessionLogOutURL() {
-        return this.getConfigParam('sessionLogOutURL');
-    };
-
-    getStudentAssetsURL() {
-        return this.getConfigParam('studentAssetsURL');
-    };
-
-    getStudentStatusURL() {
-        return this.getConfigParam('studentStatusURL');
-    };
-
-    getStudentMaxTotalAssetsSize() {
-        return this.getConfigParam('studentMaxTotalAssetsSize');
-    };
-
-    getStudentNotebookURL() {
-        return this.getConfigParam('studentNotebookURL');
-    };
-
-    getStudentUploadsBaseURL() {
-        return this.getConfigParam('studentUploadsBaseURL');
-    };
-
-    getWebSocketURL() {
-        return this.getConfigParam('webSocketURL');
-    };
-
-    getMode() {
-        return this.getConfigParam('mode');
-    };
-
-    getWorkgroupId() {
-        var workgroupId = null;
-        var userInfo = this.getConfigParam('userInfo');
-        if (userInfo != null) {
-            var myUserInfo = userInfo.myUserInfo;
-            if (myUserInfo != null) {
-                workgroupId = myUserInfo.workgroupId;
-            }
+    }, {
+        key: 'getRunId',
+        value: function getRunId() {
+            return this.getConfigParam('runId');
         }
-        return workgroupId;
-    };
-
-    getMyUserInfo() {
-        var myUserInfo = null;
-
-        var userInfo = this.getConfigParam('userInfo');
-        if (userInfo != null) {
-            myUserInfo = userInfo.myUserInfo;
+    }, {
+        key: 'getProjectId',
+        value: function getProjectId() {
+            return this.getConfigParam('projectId');
         }
-
-        return myUserInfo;
-    };
-
-    getClassmateUserInfos() {
-        var classmateUserInfos = null;
-        var userInfo = this.getConfigParam('userInfo');
-        if (userInfo != null) {
-            var myUserInfo = userInfo.myUserInfo;
-            if (myUserInfo != null) {
-                var myClassInfo = myUserInfo.myClassInfo;
-                if (myClassInfo != null) {
-                    classmateUserInfos = myClassInfo.classmateUserInfos;
+    }, {
+        key: 'getOpenCPUURL',
+        value: function getOpenCPUURL() {
+            return this.getConfigParam('openCPUURL');
+        }
+    }, {
+        key: 'getSessionLogOutURL',
+        value: function getSessionLogOutURL() {
+            return this.getConfigParam('sessionLogOutURL');
+        }
+    }, {
+        key: 'getStudentAssetsURL',
+        value: function getStudentAssetsURL() {
+            return this.getConfigParam('studentAssetsURL');
+        }
+    }, {
+        key: 'getStudentStatusURL',
+        value: function getStudentStatusURL() {
+            return this.getConfigParam('studentStatusURL');
+        }
+    }, {
+        key: 'getStudentMaxTotalAssetsSize',
+        value: function getStudentMaxTotalAssetsSize() {
+            return this.getConfigParam('studentMaxTotalAssetsSize');
+        }
+    }, {
+        key: 'getStudentNotebookURL',
+        value: function getStudentNotebookURL() {
+            return this.getConfigParam('studentNotebookURL');
+        }
+    }, {
+        key: 'getStudentUploadsBaseURL',
+        value: function getStudentUploadsBaseURL() {
+            return this.getConfigParam('studentUploadsBaseURL');
+        }
+    }, {
+        key: 'getWebSocketURL',
+        value: function getWebSocketURL() {
+            return this.getConfigParam('webSocketURL');
+        }
+    }, {
+        key: 'getMode',
+        value: function getMode() {
+            return this.getConfigParam('mode');
+        }
+    }, {
+        key: 'getWorkgroupId',
+        value: function getWorkgroupId() {
+            var workgroupId = null;
+            var userInfo = this.getConfigParam('userInfo');
+            if (userInfo != null) {
+                var myUserInfo = userInfo.myUserInfo;
+                if (myUserInfo != null) {
+                    workgroupId = myUserInfo.workgroupId;
                 }
             }
+            return workgroupId;
         }
-        return classmateUserInfos;
-    };
+    }, {
+        key: 'getMyUserInfo',
+        value: function getMyUserInfo() {
+            var myUserInfo = null;
 
-    getTeacherWorkgroupId() {
-        var teacherWorkgroupId = null;
-        var teacherUserInfo = this.getTeacherUserInfo();
-        if (teacherUserInfo != null) {
-            teacherWorkgroupId = teacherUserInfo.workgroupId;
-        }
-        return teacherWorkgroupId;
-    };
-
-    getTeacherUserInfo() {
-        var teacherUserInfo = null;
-        var myUserInfo = this.getMyUserInfo();
-        if (myUserInfo != null) {
-            var myClassInfo = myUserInfo.myClassInfo;
-            if (myClassInfo != null) {
-                teacherUserInfo = myClassInfo.teacherUserInfo;
+            var userInfo = this.getConfigParam('userInfo');
+            if (userInfo != null) {
+                myUserInfo = userInfo.myUserInfo;
             }
+
+            return myUserInfo;
         }
-        return teacherUserInfo;
-    };
-
-    getClassmateWorkgroupIds(includeSelf) {
-        var workgroupIds = [];
-
-        if (includeSelf) {
-            workgroupIds.push(this.getWorkgroupId());
-        }
-
-        var classmateUserInfos = this.getClassmateUserInfos();
-
-        if (classmateUserInfos != null) {
-            for (var c = 0; c < classmateUserInfos.length; c++) {
-                var classmateUserInfo = classmateUserInfos[c];
-
-                if (classmateUserInfo != null) {
-                    var workgroupId = classmateUserInfo.workgroupId;
-
-                    if (workgroupId != null) {
-                        workgroupIds.push(workgroupId);
+    }, {
+        key: 'getClassmateUserInfos',
+        value: function getClassmateUserInfos() {
+            var classmateUserInfos = null;
+            var userInfo = this.getConfigParam('userInfo');
+            if (userInfo != null) {
+                var myUserInfo = userInfo.myUserInfo;
+                if (myUserInfo != null) {
+                    var myClassInfo = myUserInfo.myClassInfo;
+                    if (myClassInfo != null) {
+                        classmateUserInfos = myClassInfo.classmateUserInfos;
                     }
                 }
             }
+            return classmateUserInfos;
         }
-
-        return workgroupIds;
-    };
-
-    sortClassmateUserInfosAlphabeticallyByName() {
-        var classmateUserInfos = this.getClassmateUserInfos();
-
-        if (classmateUserInfos != null) {
-            classmateUserInfos.sort(this.sortClassmateUserInfosAlphabeticallyByNameHelper);
+    }, {
+        key: 'getTeacherWorkgroupId',
+        value: function getTeacherWorkgroupId() {
+            var teacherWorkgroupId = null;
+            var teacherUserInfo = this.getTeacherUserInfo();
+            if (teacherUserInfo != null) {
+                teacherWorkgroupId = teacherUserInfo.workgroupId;
+            }
+            return teacherWorkgroupId;
         }
-
-        return classmateUserInfos;
-    };
-
-    sortClassmateUserInfosAlphabeticallyByNameHelper(a, b) {
-        var aUserName = a.userName;
-        var bUserName = b.userName;
-        var result = 0;
-
-        if (aUserName < bUserName) {
-            result = -1;
-        } else if (aUserName > bUserName) {
-            result = 1;
-        }
-
-        return result;
-    };
-
-    getUserInfoByWorkgroupId(workgroupId) {
-        var userInfo = null;
-
-        if (workgroupId != null) {
-
+    }, {
+        key: 'getTeacherUserInfo',
+        value: function getTeacherUserInfo() {
+            var teacherUserInfo = null;
             var myUserInfo = this.getMyUserInfo();
-
             if (myUserInfo != null) {
-                var tempWorkgroupId = myUserInfo.workgroupId;
-
-                if (workgroupId === tempWorkgroupId) {
-                    userInfo = myUserInfo;
+                var myClassInfo = myUserInfo.myClassInfo;
+                if (myClassInfo != null) {
+                    teacherUserInfo = myClassInfo.teacherUserInfo;
                 }
             }
-            ;
+            return teacherUserInfo;
+        }
+    }, {
+        key: 'getClassmateWorkgroupIds',
+        value: function getClassmateWorkgroupIds(includeSelf) {
+            var workgroupIds = [];
 
-            if (userInfo == null) {
-                var classmateUserInfos = this.getClassmateUserInfos();
+            if (includeSelf) {
+                workgroupIds.push(this.getWorkgroupId());
+            }
 
-                if (classmateUserInfos != null) {
-                    for (var c = 0; c < classmateUserInfos.length; c++) {
-                        var classmateUserInfo = classmateUserInfos[c];
+            var classmateUserInfos = this.getClassmateUserInfos();
 
-                        if (classmateUserInfo != null) {
-                            var tempWorkgroupId = classmateUserInfo.workgroupId;
+            if (classmateUserInfos != null) {
+                for (var c = 0; c < classmateUserInfos.length; c++) {
+                    var classmateUserInfo = classmateUserInfos[c];
 
-                            if (workgroupId == tempWorkgroupId) {
-                                userInfo = classmateUserInfo;
-                                break;
+                    if (classmateUserInfo != null) {
+                        var workgroupId = classmateUserInfo.workgroupId;
+
+                        if (workgroupId != null) {
+                            workgroupIds.push(workgroupId);
+                        }
+                    }
+                }
+            }
+
+            return workgroupIds;
+        }
+    }, {
+        key: 'sortClassmateUserInfosAlphabeticallyByName',
+        value: function sortClassmateUserInfosAlphabeticallyByName() {
+            var classmateUserInfos = this.getClassmateUserInfos();
+
+            if (classmateUserInfos != null) {
+                classmateUserInfos.sort(this.sortClassmateUserInfosAlphabeticallyByNameHelper);
+            }
+
+            return classmateUserInfos;
+        }
+    }, {
+        key: 'sortClassmateUserInfosAlphabeticallyByNameHelper',
+        value: function sortClassmateUserInfosAlphabeticallyByNameHelper(a, b) {
+            var aUserName = a.userName;
+            var bUserName = b.userName;
+            var result = 0;
+
+            if (aUserName < bUserName) {
+                result = -1;
+            } else if (aUserName > bUserName) {
+                result = 1;
+            }
+
+            return result;
+        }
+    }, {
+        key: 'getUserInfoByWorkgroupId',
+        value: function getUserInfoByWorkgroupId(workgroupId) {
+            var userInfo = null;
+
+            if (workgroupId != null) {
+
+                var myUserInfo = this.getMyUserInfo();
+
+                if (myUserInfo != null) {
+                    var tempWorkgroupId = myUserInfo.workgroupId;
+
+                    if (workgroupId === tempWorkgroupId) {
+                        userInfo = myUserInfo;
+                    }
+                }
+                ;
+
+                if (userInfo == null) {
+                    var classmateUserInfos = this.getClassmateUserInfos();
+
+                    if (classmateUserInfos != null) {
+                        for (var c = 0; c < classmateUserInfos.length; c++) {
+                            var classmateUserInfo = classmateUserInfos[c];
+
+                            if (classmateUserInfo != null) {
+                                var tempWorkgroupId = classmateUserInfo.workgroupId;
+
+                                if (workgroupId == tempWorkgroupId) {
+                                    userInfo = classmateUserInfo;
+                                    break;
+                                }
                             }
                         }
                     }
                 }
             }
+
+            return userInfo;
         }
+    }, {
+        key: 'getPeriodIdByWorkgroupId',
 
-        return userInfo;
-    };
+        /**
+         * Get the period id for a workgroup id
+         * @param workgroupId the workgroup id
+         * @returns the period id the workgroup id is in
+         */
+        value: function getPeriodIdByWorkgroupId(workgroupId) {
+            var periodId = null;
 
-    /**
-     * Get the period id for a workgroup id
-     * @param workgroupId the workgroup id
-     * @returns the period id the workgroup id is in
-     */
-    getPeriodIdByWorkgroupId(workgroupId) {
-        var periodId = null;
+            if (workgroupId != null) {
+                var userInfo = this.getUserInfoByWorkgroupId(workgroupId);
 
-        if (workgroupId != null) {
-            var userInfo = this.getUserInfoByWorkgroupId(workgroupId);
-
-            if (userInfo != null) {
-                periodId = userInfo.periodId;
-            }
-        }
-
-        return periodId;
-    };
-
-    /**
-     * Get the student names
-     * @param workgroupId the workgroup id
-     * @return an array containing the student names
-     */
-    getStudentFirstNamesByWorkgroupId(workgroupId) {
-        var studentNames = [];
-
-        // get the user names for the workgroup e.g. "Spongebob Squarepants (SpongebobS0101):Patrick Star (PatrickS0101)"
-        var userNames = this.getUserNameByWorkgroupId(workgroupId);
-
-        if (userNames != null) {
-            // split the user names string by ':'
-            var userNamesSplit = userNames.split(':');
-
-            if (userNamesSplit != null) {
-                // loop through each user name
-                for (var x = 0; x < userNamesSplit.length; x++) {
-                    // get a user name e.g. "Spongebob Squarepants (spongebobs0101)"
-                    var userName = userNamesSplit[x];
-
-                    // get the index of the first empty space
-                    var indexOfSpace = userName.indexOf(' ');
-
-                    // get the student first name e.g. "Spongebob"
-                    var studentFirstName = userName.substring(0, indexOfSpace);
-
-                    // add the student name to the array
-                    studentNames.push(studentFirstName);
+                if (userInfo != null) {
+                    periodId = userInfo.periodId;
                 }
             }
+
+            return periodId;
         }
+    }, {
+        key: 'getStudentFirstNamesByWorkgroupId',
 
-        return studentNames;
-    };
+        /**
+         * Get the student names
+         * @param workgroupId the workgroup id
+         * @return an array containing the student names
+         */
+        value: function getStudentFirstNamesByWorkgroupId(workgroupId) {
+            var studentNames = [];
 
-    getUserNameByWorkgroupId(workgroupId) {
-        var userName = null;
+            // get the user names for the workgroup e.g. "Spongebob Squarepants (SpongebobS0101):Patrick Star (PatrickS0101)"
+            var userNames = this.getUserNameByWorkgroupId(workgroupId);
 
-        if (workgroupId != null) {
-            var userInfo = this.getUserInfoByWorkgroupId(workgroupId);
+            if (userNames != null) {
+                // split the user names string by ':'
+                var userNamesSplit = userNames.split(':');
 
-            if (userInfo != null) {
-                userName = userInfo.userName;
-            }
-        }
+                if (userNamesSplit != null) {
+                    // loop through each user name
+                    for (var x = 0; x < userNamesSplit.length; x++) {
+                        // get a user name e.g. "Spongebob Squarepants (spongebobs0101)"
+                        var userName = userNamesSplit[x];
 
-        return userName;
-    };
+                        // get the index of the first empty space
+                        var indexOfSpace = userName.indexOf(' ');
 
-    getUserNamesByWorkgroupId(workgroupId, noUserIds) {
-        var userNames = [];
+                        // get the student first name e.g. "Spongebob"
+                        var studentFirstName = userName.substring(0, indexOfSpace);
 
-        if (workgroupId != null) {
-            var userInfo = this.getUserInfoByWorkgroupId(workgroupId);
-
-            if (userInfo != null) {
-                userNames = userInfo.userName.split(':');
-
-                if (noUserIds) {
-                    for (var i = 0; i < userNames.length; i++) {
-                        userNames[i] = userNames[i].replace(/ \(.*\)$/g, '');
+                        // add the student name to the array
+                        studentNames.push(studentFirstName);
                     }
                 }
             }
+
+            return studentNames;
         }
+    }, {
+        key: 'getUserNameByWorkgroupId',
+        value: function getUserNameByWorkgroupId(workgroupId) {
+            var userName = null;
 
-        return userNames;
-    };
+            if (workgroupId != null) {
+                var userInfo = this.getUserInfoByWorkgroupId(workgroupId);
 
-    isPreview() {
-        var result = false;
+                if (userInfo != null) {
+                    userName = userInfo.userName;
+                }
+            }
 
-        var mode = this.getMode();
-
-        if (mode != null && mode === 'preview') {
-            result = true;
+            return userName;
         }
+    }, {
+        key: 'getUserNamesByWorkgroupId',
+        value: function getUserNamesByWorkgroupId(workgroupId, noUserIds) {
+            var userNames = [];
 
-        return result;
-    };
-};
+            if (workgroupId != null) {
+                var userInfo = this.getUserInfoByWorkgroupId(workgroupId);
+
+                if (userInfo != null) {
+                    userNames = userInfo.userName.split(':');
+
+                    if (noUserIds) {
+                        for (var i = 0; i < userNames.length; i++) {
+                            userNames[i] = userNames[i].replace(/ \(.*\)$/g, '');
+                        }
+                    }
+                }
+            }
+
+            return userNames;
+        }
+    }, {
+        key: 'isPreview',
+        value: function isPreview() {
+            var result = false;
+
+            var mode = this.getMode();
+
+            if (mode != null && mode === 'preview') {
+                result = true;
+            }
+
+            return result;
+        }
+    }]);
+
+    return ConfigService;
+}();
+
+;
 
 ConfigService.$inject = ['$http'];
 
-export default ConfigService;
+exports.default = ConfigService;
+//# sourceMappingURL=configService.js.map

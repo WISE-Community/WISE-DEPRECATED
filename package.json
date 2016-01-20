@@ -16,7 +16,7 @@
   },
   "scripts": {
     "watch-all": "npm run transpile & npm run watch-css",
-    "transpile": "babel --presets babel-preset-es2015 --watch src/main/webapp/wise5/ --only wise5/services,wise5/classroomMonitor,wise5/authoringTool,wise5/directives,wise5/components,wise5/vle,wise5/controllers,wise5/node/ --out-dir src/main/webapp/wise5/transpiled/",
+    "transpile": "babel --extensions .es6 --source-maps --presets babel-preset-es2015 --watch src/main/webapp/wise5/ --only wise5/services,wise5/classroomMonitor,wise5/authoringTool,wise5/directives,wise5/components,wise5/vle,wise5/controllers,wise5/node/ --out-dir src/main/webapp/wise5/",
     "watch-css": "npm run watch-core-css & npm run watch-theme-css",
     "watch-core-css": "node-sass -w src/main/webapp/wise5/style -o src/main/webapp/wise5/style",
     "watch-theme-css": "node-sass -w src/main/webapp/wise5/vle/themes -o src/main/webapp/wise5/vle/themes",

@@ -1,9 +1,19 @@
-class SessionService {
-    constructor($http,
-                $rootScope,
-                ConfigService
-                //StudentDataService) {
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var SessionService = function () {
+    function SessionService($http, $rootScope, ConfigService
+    //StudentDataService) {
     ) {
+        _classCallCheck(this, SessionService);
+
         this.$http = $http;
         this.$rootScope = $rootScope;
         this.ConfigService = ConfigService;
@@ -47,7 +57,7 @@ class SessionService {
          * for this event and when there are no more components left to wait
          * for, we will then log out.
          */
-        this.$rootScope.$on('doneExiting', angular.bind(this, function() {
+        this.$rootScope.$on('doneExiting', angular.bind(this, function () {
 
             // check if all components are done unloading so we can exit
             // no longer needed.
@@ -62,7 +72,7 @@ class SessionService {
          * will wait for those components to fire the 'componentDoneUnloading'
          * event and then try to go home again.
          */
-        this.$rootScope.$on('goHome', angular.bind(this, function() {
+        this.$rootScope.$on('goHome', angular.bind(this, function () {
 
             // let other components know that we are exiting
             this.$rootScope.$broadcast('exit');
@@ -79,7 +89,7 @@ class SessionService {
          * will wait for those components to fire the 'componentDoneUnloading'
          * event and then try to log out again.
          */
-        this.$rootScope.$on('logOut', angular.bind(this, function() {
+        this.$rootScope.$on('logOut', angular.bind(this, function () {
 
             /*
              * set the perform log out boolean to true so that we know to
@@ -98,223 +108,255 @@ class SessionService {
     /**
      * Start the timers, save session initialized event
      */
-    initializeSession() {
-        if (this.ConfigService.isPreview()) {
-            // no session management for previewers
-            return;
-        }
-        var minutes = 20;
-        var seconds = minutes * 60;
-        var milliseconds = seconds * 1000;
-        this.sessionTimeoutInterval = milliseconds;
 
-        // set the check mouse interval to one minute
-        this.checkMouseEventInterval = this.convertMinutesToMilliseconds(1);
-
-        // start the warning and auto log out timers
-        this.startTimers();
-
-        // start the check mouse event timer
-        this.startCheckMouseEventTimer();
-
-        // save session started event
-        var nodeId = null;
-        var componentId = null;
-        var componentType = null;
-        var category = "Navigation";
-        var event = "sessionStarted";
-        var eventData = {};
-        //this.StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
-    };
-
-    /**
-     * Start the warning and auto log out timers
-     */
-    startTimers() {
-        this.startWarningTimer();
-        this.startLogOutTimer();
-    };
-
-    /**
-     * Start the warning timer
-     */
-    startWarningTimer() {
-        var warningTimeoutInterval = this.sessionTimeoutInterval * 0.75;
-        this.warningId = setTimeout(angular.bind(this, this.showWarning), warningTimeoutInterval);
-    };
-
-    /**
-     * Start the auto log out timer
-     */
-    startLogOutTimer() {
-        this.logOutId = setTimeout(angular.bind(this, this.forceLogOut), this.sessionTimeoutInterval);
-    };
-
-    /**
-     * Start the check mouse event timer
-     */
-    startCheckMouseEventTimer() {
-        setInterval(angular.bind(this, this.checkMouseEvent), this.checkMouseEventInterval);
-    };
-
-    /**
-     * Fire the event that will show the warning message
-     */
-    showWarning() {
-        $rootScope.$broadcast('showSessionWarning');
-    };
-
-    /**
-     * Refresh the timers
-     */
-    renewSession() {
-        var renewSessionURL = this.ConfigService.getConfigParam('renewSessionURL');
-        // make a request to the log out url
-        this.$http.get(renewSessionURL).then(angular.bind(this, function(result) {
-            var isRenewSessionSuccessful = result.data;
-
-            if (isRenewSessionSuccessful === 'true') {
-                this.clearTimers();
-                this.startTimers();
-            } else {
-                this.forceLogOut();
+    _createClass(SessionService, [{
+        key: 'initializeSession',
+        value: function initializeSession() {
+            if (this.ConfigService.isPreview()) {
+                // no session management for previewers
+                return;
             }
-        }));
-    };
-
-    /**
-     * Delete the existing timers
-     */
-    clearTimers() {
-        clearTimeout(this.warningId);
-        clearTimeout(this.logOutId);
-    };
-
-    /**
-     * Called when a mouse event occurs
-     */
-    mouseEventOccurred() {
-
-        // get the current timestamp
-        var date = new Date();
-        var timestamp = date.getTime();
-
-        // remember this timestamp
-        this.lastMouseEventTimestamp = timestamp;
-    };
-
-    /**
-     * Check if there were any mouse events since the last time we checked
-     */
-    checkMouseEvent() {
-        if (this.lastMouseEventTimestamp != null) {
-            // there was a mouse event since the last time we checked
-
-            // reset the timers
-            this.renewSession();
-
-            // clear the mouse event timestamp
-            this.lastMouseEventTimestamp = null;
-        }
-    };
-
-    /**
-     * Convert minutes to milliseconds
-     * @param minutes the number of minutes
-     * @return the number of milliseconds
-     */
-    convertMinutesToMilliseconds(minutes) {
-        var milliseconds = null;
-
-        if (minutes != null) {
-            // get the number of seconds
+            var minutes = 20;
             var seconds = minutes * 60;
+            var milliseconds = seconds * 1000;
+            this.sessionTimeoutInterval = milliseconds;
 
-            // get the number of milliseconds
-            milliseconds = seconds * 1000;
-        }
+            // set the check mouse interval to one minute
+            this.checkMouseEventInterval = this.convertMinutesToMilliseconds(1);
 
-        return milliseconds;
-    };
+            // start the warning and auto log out timers
+            this.startTimers();
 
-    /**
-     * Log out the user
-     */
-    forceLogOut() {
-        this.clearTimers();
-        this.$rootScope.$broadcast('logOut');
-    };
+            // start the check mouse event timer
+            this.startCheckMouseEventTimer();
 
-    /**
-     * Check if there are components that are not ready to exit
-     * because they have not saved their data yet. If there are no
-     * components left to wait for, we can then exit.
-     */
-    attemptExit() {
-
-        // get all the components listening for the exit event
-        var exitListenerCount = this.$rootScope.$$listenerCount.exit;
-
-        /*
-         * Check how many exit listeners are still listening for the
-         * exit event. Components such as nodes will finish saving their
-         * data and then be removed from the listener count.
-         */
-        if (exitListenerCount != null && exitListenerCount > 0) {
-            // don't log out yet because there are still listeners
-        } else {
-            // there are no more listeners so we will exit
-            var mainHomePageURL = this.ConfigService.getMainHomePageURL();
-
-            // save sessionEnded event
+            // save session started event
             var nodeId = null;
             var componentId = null;
             var componentType = null;
             var category = "Navigation";
-            var event = "sessionEnded";
+            var event = "sessionStarted";
             var eventData = {};
             //this.StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
+        }
+    }, {
+        key: 'startTimers',
 
-            if (this.performLogOut) {
-                // log out the user and bring them to the home page
+        /**
+         * Start the warning and auto log out timers
+         */
+        value: function startTimers() {
+            this.startWarningTimer();
+            this.startLogOutTimer();
+        }
+    }, {
+        key: 'startWarningTimer',
 
-                // get the url that will log out the user
-                var sessionLogOutURL = this.ConfigService.getSessionLogOutURL();
+        /**
+         * Start the warning timer
+         */
+        value: function startWarningTimer() {
+            var warningTimeoutInterval = this.sessionTimeoutInterval * 0.75;
+            this.warningId = setTimeout(angular.bind(this, this.showWarning), warningTimeoutInterval);
+        }
+    }, {
+        key: 'startLogOutTimer',
 
-                // take user to log out url
-                window.location.href = sessionLogOutURL;
-            } else {
-                /*
-                 * bring the user to the student or teacher home page but
-                 * do not log them out
-                 */
+        /**
+         * Start the auto log out timer
+         */
+        value: function startLogOutTimer() {
+            this.logOutId = setTimeout(angular.bind(this, this.forceLogOut), this.sessionTimeoutInterval);
+        }
+    }, {
+        key: 'startCheckMouseEventTimer',
 
-                //get the context path e.g. /wise
-                var contextPath = this.ConfigService.getConfigParam('contextPath');
+        /**
+         * Start the check mouse event timer
+         */
+        value: function startCheckMouseEventTimer() {
+            setInterval(angular.bind(this, this.checkMouseEvent), this.checkMouseEventInterval);
+        }
+    }, {
+        key: 'showWarning',
 
-                var homePageURL = '';
+        /**
+         * Fire the event that will show the warning message
+         */
+        value: function showWarning() {
+            $rootScope.$broadcast('showSessionWarning');
+        }
+    }, {
+        key: 'renewSession',
 
-                // get the user type
-                var userType = this.ConfigService.getConfigParam('userType');
+        /**
+         * Refresh the timers
+         */
+        value: function renewSession() {
+            var renewSessionURL = this.ConfigService.getConfigParam('renewSessionURL');
+            // make a request to the log out url
+            this.$http.get(renewSessionURL).then(angular.bind(this, function (result) {
+                var isRenewSessionSuccessful = result.data;
 
-                if (userType === 'student') {
-                    // send the user to the student home page
-                    homePageURL = contextPath + '/student';
-                } else if (userType === 'teacher') {
-                    // send the user to the teacher home page
-                    homePageURL = contextPath + '/teacher';
+                if (isRenewSessionSuccessful === 'true') {
+                    this.clearTimers();
+                    this.startTimers();
                 } else {
-                    // send the user to the main home page
-                    homePageURL = mainHomePageURL;
+                    this.forceLogOut();
                 }
+            }));
+        }
+    }, {
+        key: 'clearTimers',
 
-                window.location.href = homePageURL;
+        /**
+         * Delete the existing timers
+         */
+        value: function clearTimers() {
+            clearTimeout(this.warningId);
+            clearTimeout(this.logOutId);
+        }
+    }, {
+        key: 'mouseEventOccurred',
+
+        /**
+         * Called when a mouse event occurs
+         */
+        value: function mouseEventOccurred() {
+
+            // get the current timestamp
+            var date = new Date();
+            var timestamp = date.getTime();
+
+            // remember this timestamp
+            this.lastMouseEventTimestamp = timestamp;
+        }
+    }, {
+        key: 'checkMouseEvent',
+
+        /**
+         * Check if there were any mouse events since the last time we checked
+         */
+        value: function checkMouseEvent() {
+            if (this.lastMouseEventTimestamp != null) {
+                // there was a mouse event since the last time we checked
+
+                // reset the timers
+                this.renewSession();
+
+                // clear the mouse event timestamp
+                this.lastMouseEventTimestamp = null;
             }
         }
-    };
-}
+    }, {
+        key: 'convertMinutesToMilliseconds',
+
+        /**
+         * Convert minutes to milliseconds
+         * @param minutes the number of minutes
+         * @return the number of milliseconds
+         */
+        value: function convertMinutesToMilliseconds(minutes) {
+            var milliseconds = null;
+
+            if (minutes != null) {
+                // get the number of seconds
+                var seconds = minutes * 60;
+
+                // get the number of milliseconds
+                milliseconds = seconds * 1000;
+            }
+
+            return milliseconds;
+        }
+    }, {
+        key: 'forceLogOut',
+
+        /**
+         * Log out the user
+         */
+        value: function forceLogOut() {
+            this.clearTimers();
+            this.$rootScope.$broadcast('logOut');
+        }
+    }, {
+        key: 'attemptExit',
+
+        /**
+         * Check if there are components that are not ready to exit
+         * because they have not saved their data yet. If there are no
+         * components left to wait for, we can then exit.
+         */
+        value: function attemptExit() {
+
+            // get all the components listening for the exit event
+            var exitListenerCount = this.$rootScope.$$listenerCount.exit;
+
+            /*
+             * Check how many exit listeners are still listening for the
+             * exit event. Components such as nodes will finish saving their
+             * data and then be removed from the listener count.
+             */
+            if (exitListenerCount != null && exitListenerCount > 0) {
+                // don't log out yet because there are still listeners
+            } else {
+                    // there are no more listeners so we will exit
+                    var mainHomePageURL = this.ConfigService.getMainHomePageURL();
+
+                    // save sessionEnded event
+                    var nodeId = null;
+                    var componentId = null;
+                    var componentType = null;
+                    var category = "Navigation";
+                    var event = "sessionEnded";
+                    var eventData = {};
+                    //this.StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
+
+                    if (this.performLogOut) {
+                        // log out the user and bring them to the home page
+
+                        // get the url that will log out the user
+                        var sessionLogOutURL = this.ConfigService.getSessionLogOutURL();
+
+                        // take user to log out url
+                        window.location.href = sessionLogOutURL;
+                    } else {
+                        /*
+                         * bring the user to the student or teacher home page but
+                         * do not log them out
+                         */
+
+                        //get the context path e.g. /wise
+                        var contextPath = this.ConfigService.getConfigParam('contextPath');
+
+                        var homePageURL = '';
+
+                        // get the user type
+                        var userType = this.ConfigService.getConfigParam('userType');
+
+                        if (userType === 'student') {
+                            // send the user to the student home page
+                            homePageURL = contextPath + '/student';
+                        } else if (userType === 'teacher') {
+                            // send the user to the teacher home page
+                            homePageURL = contextPath + '/teacher';
+                        } else {
+                            // send the user to the main home page
+                            homePageURL = mainHomePageURL;
+                        }
+
+                        window.location.href = homePageURL;
+                    }
+                }
+        }
+    }]);
+
+    return SessionService;
+}();
 
 //SessionService.$inject = ['$http','$rootScope','ConfigService','StudentDataService'];
-SessionService.$inject = ['$http','$rootScope','ConfigService'];
 
-export default SessionService;
+SessionService.$inject = ['$http', '$rootScope', 'ConfigService'];
+
+exports.default = SessionService;
+//# sourceMappingURL=sessionService.js.map

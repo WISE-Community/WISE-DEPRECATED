@@ -1,10 +1,16 @@
-class OutsideURLController {
-    constructor($scope,
-                $sce,
-                NodeService,
-                OutsideURLService,
-                ProjectService,
-                StudentDataService) {
+"use strict";
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var OutsideURLController = function () {
+    function OutsideURLController($scope, $sce, NodeService, OutsideURLService, ProjectService, StudentDataService) {
+        _classCallCheck(this, OutsideURLController);
 
         this.$scope = $scope;
         this.$sce = $sce;
@@ -101,7 +107,7 @@ class OutsideURLController {
          * save student data.
          * @return a component state containing the student data
          */
-        this.$scope.getComponentState = function() {
+        this.$scope.getComponentState = function () {
             var studentWork = null;
 
             return studentWork;
@@ -112,87 +118,91 @@ class OutsideURLController {
      * Set the url
      * @param url the url
      */
-    setURL(url) {
-        if (url != null) {
-            var trustedURL = this.$sce.trustAsResourceUrl(url);
-            this.url = trustedURL;
+
+    _createClass(OutsideURLController, [{
+        key: "setURL",
+        value: function setURL(url) {
+            if (url != null) {
+                var trustedURL = this.$sce.trustAsResourceUrl(url);
+                this.url = trustedURL;
+            }
         }
-    };
+    }, {
+        key: "authoringViewComponentChanged",
 
-    /**
-     * The component has changed in the regular authoring view so we will save the project
-     */
-    authoringViewComponentChanged() {
-
-        // set the url
-        this.setURL(this.componentContent.url);
-
-        // update the JSON string in the advanced authoring view textarea
-        this.updateAdvancedAuthoringView();
-
-        // save the project to the server
-        this.ProjectService.saveProject();
-    };
-
-    /**
-     * The component has changed in the advanced authoring view so we will update
-     * the component and save the project.
-     */
-    advancedAuthoringViewComponentChanged() {
-
-        try {
-            /*
-             * create a new comopnent by converting the JSON string in the advanced
-             * authoring view into a JSON object
-             */
-            var editedComponentContent = angular.fromJson(this.componentContentJSONString);
-
-            // replace the component in the project
-            this.ProjectService.replaceComponent(this.nodeId, this.componentId, editedComponentContent);
-
-            // set the new component into the controller
-            this.componentContent = editedComponentContent;
+        /**
+         * The component has changed in the regular authoring view so we will save the project
+         */
+        value: function authoringViewComponentChanged() {
 
             // set the url
             this.setURL(this.componentContent.url);
 
+            // update the JSON string in the advanced authoring view textarea
+            this.updateAdvancedAuthoringView();
+
             // save the project to the server
             this.ProjectService.saveProject();
-        } catch(e) {
-
         }
-    };
+    }, {
+        key: "advancedAuthoringViewComponentChanged",
 
-    /**
-     * Update the component JSON string that will be displayed in the advanced authoring view textarea
-     */
-    updateAdvancedAuthoringView() {
-        this.componentContentJSONString = angular.toJson(this.componentContent, 4);
-    };
-
-    /**
-     * Register the the listener that will listen for the exit event
-     * so that we can perform saving before exiting.
-     */
-    registerExitListener() {
-
-        /*
-         * Listen for the 'exit' event which is fired when the student exits
-         * the VLE. This will perform saving before the VLE exits.
+        /**
+         * The component has changed in the advanced authoring view so we will update
+         * the component and save the project.
          */
-        this.exitListener = this.$scope.$on('exit', angular.bind(this, function(event, args) {
+        value: function advancedAuthoringViewComponentChanged() {
 
-        }));
-    };
-}
+            try {
+                /*
+                 * create a new comopnent by converting the JSON string in the advanced
+                 * authoring view into a JSON object
+                 */
+                var editedComponentContent = angular.fromJson(this.componentContentJSONString);
 
-OutsideURLController.$inject = [
-    '$scope',
-    '$sce',
-    'NodeService',
-    'OutsideURLService',
-    'ProjectService',
-    'StudentDataService'
-];
+                // replace the component in the project
+                this.ProjectService.replaceComponent(this.nodeId, this.componentId, editedComponentContent);
 
-export default OutsideURLController;
+                // set the new component into the controller
+                this.componentContent = editedComponentContent;
+
+                // set the url
+                this.setURL(this.componentContent.url);
+
+                // save the project to the server
+                this.ProjectService.saveProject();
+            } catch (e) {}
+        }
+    }, {
+        key: "updateAdvancedAuthoringView",
+
+        /**
+         * Update the component JSON string that will be displayed in the advanced authoring view textarea
+         */
+        value: function updateAdvancedAuthoringView() {
+            this.componentContentJSONString = angular.toJson(this.componentContent, 4);
+        }
+    }, {
+        key: "registerExitListener",
+
+        /**
+         * Register the the listener that will listen for the exit event
+         * so that we can perform saving before exiting.
+         */
+        value: function registerExitListener() {
+
+            /*
+             * Listen for the 'exit' event which is fired when the student exits
+             * the VLE. This will perform saving before the VLE exits.
+             */
+            this.exitListener = this.$scope.$on('exit', angular.bind(this, function (event, args) {}));
+        }
+    }]);
+
+    return OutsideURLController;
+}();
+
+OutsideURLController.$inject = ['$scope', '$sce', 'NodeService', 'OutsideURLService', 'ProjectService', 'StudentDataService'];
+
+exports.default = OutsideURLController;
+//# sourceMappingURL=outsideURLController.js.map
