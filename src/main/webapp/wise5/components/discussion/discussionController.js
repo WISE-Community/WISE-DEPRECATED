@@ -1,15 +1,16 @@
-class DiscussionController {
-    constructor($injector,
-                $rootScope,
-                $scope,
-                ConfigService,
-                DiscussionService,
-                NodeService,
-                ProjectService,
-                StudentAssetService,
-                StudentDataService,
-                StudentWebSocketService,
-                $mdMedia) {
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var DiscussionController = function () {
+    function DiscussionController($injector, $rootScope, $scope, ConfigService, DiscussionService, NodeService, ProjectService, StudentAssetService, StudentDataService, StudentWebSocketService, $mdMedia) {
+        _classCallCheck(this, DiscussionController);
 
         this.$injector = $injector;
         this.$rootScope = $rootScope;
@@ -136,29 +137,29 @@ class DiscussionController {
                     if (this.ConfigService.isPreview()) {
                         // we are in preview mode
                     } else {
-                        // we are in regular student run mode
+                            // we are in regular student run mode
 
-                        if (this.isClassmateResponsesGated()) {
-                            /*
-                             * classmate responses are gated so we will not show them if the student
-                             * has not submitted a response
-                             */
-
-                            // get the component state from the scope
-                            var componentState = this.$scope.componentState;
-
-                            if (componentState != null) {
+                            if (this.isClassmateResponsesGated()) {
                                 /*
-                                 * the student has already submitted a response so we will
-                                 * display the classmate responses
+                                 * classmate responses are gated so we will not show them if the student
+                                 * has not submitted a response
                                  */
+
+                                // get the component state from the scope
+                                var componentState = this.$scope.componentState;
+
+                                if (componentState != null) {
+                                    /*
+                                     * the student has already submitted a response so we will
+                                     * display the classmate responses
+                                     */
+                                    this.getClassmateResponses();
+                                }
+                            } else {
+                                // classmate responses are not gated so we will show them
                                 this.getClassmateResponses();
                             }
-                        } else {
-                            // classmate responses are not gated so we will show them
-                            this.getClassmateResponses();
                         }
-                    }
 
                     // check if we need to lock this component
                     this.calculateDisabled();
@@ -198,7 +199,7 @@ class DiscussionController {
          * used to reply to the specific component state
          * @param componentState the component state that the student wants to reply to
          */
-        this.$scope.replybuttonclicked = function(componentState) {
+        this.$scope.replybuttonclicked = function (componentState) {
 
             /*
              * get the value for whether the textarea is currently shown
@@ -214,12 +215,12 @@ class DiscussionController {
          * The submit button was clicked
          * @param response the response object related to the submit button
          */
-        this.$scope.submitbuttonclicked = function(response) {
+        this.$scope.submitbuttonclicked = function (response) {
 
             if (response) {
                 // this submit button was clicked for a reply
 
-                if(response.replyText){
+                if (response.replyText) {
                     var componentState = response;
 
                     // get the component state id
@@ -252,7 +253,7 @@ class DiscussionController {
             }
 
             // tell the parent node that this component wants to submit
-            this.$scope.$emit('componentSubmitTriggered', {nodeId: this.$scope.discussionController.nodeId, componentId: this.$scope.discussionController.componentId});
+            this.$scope.$emit('componentSubmitTriggered', { nodeId: this.$scope.discussionController.nodeId, componentId: this.$scope.discussionController.componentId });
         }.bind(this);
 
         /**
@@ -261,7 +262,7 @@ class DiscussionController {
          * save student data.
          * @return a component state containing the student data
          */
-        this.$scope.getComponentState = function() {
+        this.$scope.getComponentState = function () {
             var componentState = null;
 
             // check if the student work is dirty and the student clicked the submit button
@@ -285,7 +286,7 @@ class DiscussionController {
         /**
          * The parent node submit button was clicked
          */
-        this.$scope.$on('nodeSubmitClicked', angular.bind(this, function(event, args) {
+        this.$scope.$on('nodeSubmitClicked', angular.bind(this, function (event, args) {
 
             // get the node id of the node
             var nodeId = args.nodeId;
@@ -305,7 +306,7 @@ class DiscussionController {
          * exits the parent node. This will perform any necessary cleanup
          * when the student exits the parent node.
          */
-        this.$scope.$on('exitNode', angular.bind(this, function(event, args) {
+        this.$scope.$on('exitNode', angular.bind(this, function (event, args) {
 
             // do nothing
         }));
@@ -314,7 +315,7 @@ class DiscussionController {
          * Listen for the 'studentWorkSavedToServer' event which is fired when
          * we receive the response from saving a component state to the server
          */
-        this.$scope.$on('studentWorkSavedToServer', angular.bind(this, function(event, args) {
+        this.$scope.$on('studentWorkSavedToServer', angular.bind(this, function (event, args) {
 
             var componentState = args.studentWork;
 
@@ -353,14 +354,14 @@ class DiscussionController {
             this.isSubmit = null;
         }));
 
-        this.$scope.studentdatachanged = function() {
+        this.$scope.studentdatachanged = function () {
             this.$scope.discussionController.studentDataChanged();
         };
 
         /**
          * We have recived a web socket message
          */
-        this.$rootScope.$on('webSocketMessageRecieved', angular.bind(this, function(event, args) {
+        this.$rootScope.$on('webSocketMessageRecieved', angular.bind(this, function (event, args) {
             if (args != null) {
                 var data = args.data;
 
@@ -411,7 +412,7 @@ class DiscussionController {
             content_css: themePath + "/style/css/tinymce.css",
             statusbar: false,
             forced_root_block: false,
-            setup: function (ed) {
+            setup: function setup(ed) {
                 ed.on("focus", function (e) {
                     $(e.target.editorContainer).addClass('input--focused').parent().addClass('input-wrapper--focused');
                     $('label[for="' + e.target.id + '"]').addClass('input-label--focused');
@@ -424,316 +425,304 @@ class DiscussionController {
             }
         };
 
-        this.$scope.$watch(function() { return $mdMedia('gt-md'); }, function(lg) {
+        this.$scope.$watch(function () {
+            return $mdMedia('gt-md');
+        }, function (lg) {
             $scope.lgScreen = lg;
         });
-
     }
 
     /**
      * Get the classmate responses
      */
-    getClassmateResponses() {
-        var runId = this.ConfigService.getRunId();
-        var periodId = this.ConfigService.getPeriodId();
-        var nodeId = this.nodeId;
-        var componentId = this.componentId;
 
-        // make the request for the classmate responses
-        this.DiscussionService.getClassmateResponses(runId, periodId, nodeId, componentId).then(angular.bind(this, function(result) {
+    _createClass(DiscussionController, [{
+        key: 'getClassmateResponses',
+        value: function getClassmateResponses() {
+            var runId = this.ConfigService.getRunId();
+            var periodId = this.ConfigService.getPeriodId();
+            var nodeId = this.nodeId;
+            var componentId = this.componentId;
 
-            if (result != null) {
-                var componentStates = result.studentWorkList;
+            // make the request for the classmate responses
+            this.DiscussionService.getClassmateResponses(runId, periodId, nodeId, componentId).then(angular.bind(this, function (result) {
 
-                // set the classmate responses
-                this.setClassResponses(componentStates);
-            }
-        }));
-    };
+                if (result != null) {
+                    var componentStates = result.studentWorkList;
 
-    /**
-     * Populate the student work into the component
-     * @param componentState the component state to populate into the component
-     */
-    setStudentWork(componentState) {
-
-        if (componentState != null) {
-            // populate the text the student previously typed
-            var studentData = componentState.studentData;
-        }
-    };
-
-    /**
-     * Called when the student clicks the save button
-     */
-    saveButtonClicked() {
-
-        // tell the parent node that this component wants to save
-        this.$scope.$emit('componentSaveTriggered', {nodeId: this.nodeId, componentId: this.componentId});
-    };
-
-    /**
-     * Called when the student clicks the submit button
-     */
-    submitButtonClicked() {
-        this.isSubmit = true;
-
-        // check if we need to lock the component after the student submits
-        if (this.isLockAfterSubmit()) {
-            this.isDisabled = true;
-        }
-
-        // handle the submit button click
-        this.$scope.submitbuttonclicked();
-    };
-
-    /**
-     * Called when the student changes their work
-     */
-    studentDataChanged() {
-        /*
-         * set the dirty flag so we will know we need to save the
-         * student work later
-         */
-        this.isDirty = true;
-
-        // get this part id
-        var componentId = this.getComponentId();
-
-        // create a component state populated with the student data
-        var componentState = this.createComponentState();
-
-        /*
-         * the student work in this component has changed so we will tell
-         * the parent node that the student data will need to be saved.
-         * this will also notify connected parts that this component's student
-         * data has changed.
-         */
-        this.$scope.$emit('componentStudentDataChanged', {componentId: componentId, componentState: componentState});
-    };
-
-    /**
-     * Create a new component state populated with the student data
-     * @return the componentState after it has been populated
-     */
-    createComponentState() {
-
-        // create a new component state
-        var componentState = this.NodeService.createNewComponentState();
-
-        if (componentState != null) {
-            var studentData = {};
-
-            // set the response into the component state
-            studentData.response = this.studentResponse;
-
-            studentData.attachments = this.newAttachments;
-
-            if (this.componentStateIdReplyingTo != null) {
-                // if this step is replying, set the component state id replying to
-                studentData.componentStateIdReplyingTo = this.componentStateIdReplyingTo;
-            }
-
-            componentState.studentData = studentData;
-
-            if (this.isSubmit) {
-                // the student submitted this work
-                componentState.studentData.isSubmit = this.isSubmit;
-
-                /*
-                 * reset the isSubmit value so that the next component state
-                 * doesn't maintain the same value
-                 */
-                this.isSubmit = false;
-            }
-        }
-
-        return componentState;
-    };
-
-    /**
-     * Clear the component values so they aren't accidentally used again
-     */
-    clearComponentValues() {
-
-        // clear the student response
-        this.studentResponse = '';
-
-        // clear the new response input
-        this.newResponse = '';
-
-        // clear new attachments input
-        this.newAttachments = [];
-
-        // clear the component state id replying to
-        this.componentStateIdReplyingTo = null;
-    };
-
-    /**
-     * Check if we need to lock the component
-     */
-    calculateDisabled() {
-
-        var nodeId = this.nodeId;
-
-        // get the component content
-        var componentContent = this.componentContent;
-
-        if (componentContent != null) {
-
-            // check if the parent has set this component to disabled
-            if (componentContent.isDisabled) {
-                this.isDisabled = true;
-            } else if (componentContent.lockAfterSubmit) {
-                // we need to lock the step after the student has submitted
-
-                // get the component states for this component
-                var componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
-
-                // check if any of the component states were submitted
-                var isSubmitted = this.NodeService.isWorkSubmitted(componentStates);
-
-                if (isSubmitted) {
-                    // the student has submitted work for this component
-                    this.isDisabled = true;
-                }
-            }
-        }
-    };
-
-    /**
-     * Check whether we need to show the save button
-     * @return whether to show the save button
-     */
-    showSaveButton() {
-        var show = false;
-
-        if (this.componentContent != null) {
-
-            // check the showSaveButton field in the component content
-            if (this.componentContent.showSaveButton) {
-                show = true;
-            }
-        }
-
-        return show;
-    };
-
-    /**
-     * Check whether we need to show the submit button
-     * @return whether to show the submit button
-     */
-    showSubmitButton() {
-        var show = false;
-
-        if (this.componentContent != null) {
-
-            // check the showSubmitButton field in the component content
-            if (this.componentContent.showSubmitButton) {
-                show = true;
-            }
-        }
-
-        return show;
-    };
-
-    /**
-     * Check whether we need to lock the component after the student
-     * submits an answer.
-     * @return whether to lock the component after the student submits
-     */
-    isLockAfterSubmit() {
-        var result = false;
-
-        if (this.componentContent != null) {
-
-            // check the lockAfterSubmit field in the component content
-            if (this.componentContent.lockAfterSubmit) {
-                result = true;
-            }
-        }
-
-        return result;
-    };
-
-    /**
-     * Check whether we need to gate the classmate responses
-     * @return whether to gate the classmate responses
-     */
-    isClassmateResponsesGated() {
-        var result = false;
-
-        if (this.componentContent != null) {
-
-            // check the gateClassmateResponses field in the component content
-            if (this.componentContent.gateClassmateResponses) {
-                result = true;
-            }
-        }
-
-        return result;
-    };
-
-    removeAttachment(attachment) {
-        if (this.newAttachments.indexOf(attachment) != -1) {
-            this.newAttachments.splice(this.newAttachments.indexOf(attachment), 1);
-            this.studentDataChanged();
-        }
-    };
-
-    attachNotebookItemToComponent(notebookItem) {
-        if (notebookItem.studentAsset != null) {
-            // we're importing a StudentAssetNotebookItem
-            var studentAsset = notebookItem.studentAsset;
-            this.StudentAssetService.copyAssetForReference(studentAsset).then(angular.bind(this, function(copiedAsset) {
-                if (copiedAsset != null) {
-                    var attachment = {
-                        notebookItemId: notebookItem.id,
-                        studentAssetId: copiedAsset.id,
-                        iconURL: copiedAsset.iconURL
-                    };
-
-                    this.newAttachments.push(attachment);
-                    this.studentDataChanged();
+                    // set the classmate responses
+                    this.setClassResponses(componentStates);
                 }
             }));
-        } else if (notebookItem.studentWork != null) {
-            // we're importing a StudentWorkNotebookItem
-            var studentWork = notebookItem.studentWork;
+        }
+    }, {
+        key: 'setStudentWork',
 
-            var componentType = studentWork.componentType;
+        /**
+         * Populate the student work into the component
+         * @param componentState the component state to populate into the component
+         */
+        value: function setStudentWork(componentState) {
 
-            if (componentType != null) {
-                var childService = this.$injector.get(componentType + 'Service');
+            if (componentState != null) {
+                // populate the text the student previously typed
+                var studentData = componentState.studentData;
+            }
+        }
+    }, {
+        key: 'saveButtonClicked',
 
-                if (childService != null) {
-                    var studentWorkHTML = childService.getStudentWorkAsHTML(studentWork);
+        /**
+         * Called when the student clicks the save button
+         */
+        value: function saveButtonClicked() {
 
-                    if (studentWorkHTML != null) {
-                        this.studentResponse += studentWorkHTML;
-                        this.studentDataChanged();
+            // tell the parent node that this component wants to save
+            this.$scope.$emit('componentSaveTriggered', { nodeId: this.nodeId, componentId: this.componentId });
+        }
+    }, {
+        key: 'submitButtonClicked',
+
+        /**
+         * Called when the student clicks the submit button
+         */
+        value: function submitButtonClicked() {
+            this.isSubmit = true;
+
+            // check if we need to lock the component after the student submits
+            if (this.isLockAfterSubmit()) {
+                this.isDisabled = true;
+            }
+
+            // handle the submit button click
+            this.$scope.submitbuttonclicked();
+        }
+    }, {
+        key: 'studentDataChanged',
+
+        /**
+         * Called when the student changes their work
+         */
+        value: function studentDataChanged() {
+            /*
+             * set the dirty flag so we will know we need to save the
+             * student work later
+             */
+            this.isDirty = true;
+
+            // get this part id
+            var componentId = this.getComponentId();
+
+            // create a component state populated with the student data
+            var componentState = this.createComponentState();
+
+            /*
+             * the student work in this component has changed so we will tell
+             * the parent node that the student data will need to be saved.
+             * this will also notify connected parts that this component's student
+             * data has changed.
+             */
+            this.$scope.$emit('componentStudentDataChanged', { componentId: componentId, componentState: componentState });
+        }
+    }, {
+        key: 'createComponentState',
+
+        /**
+         * Create a new component state populated with the student data
+         * @return the componentState after it has been populated
+         */
+        value: function createComponentState() {
+
+            // create a new component state
+            var componentState = this.NodeService.createNewComponentState();
+
+            if (componentState != null) {
+                var studentData = {};
+
+                // set the response into the component state
+                studentData.response = this.studentResponse;
+
+                studentData.attachments = this.newAttachments;
+
+                if (this.componentStateIdReplyingTo != null) {
+                    // if this step is replying, set the component state id replying to
+                    studentData.componentStateIdReplyingTo = this.componentStateIdReplyingTo;
+                }
+
+                componentState.studentData = studentData;
+
+                if (this.isSubmit) {
+                    // the student submitted this work
+                    componentState.studentData.isSubmit = this.isSubmit;
+
+                    /*
+                     * reset the isSubmit value so that the next component state
+                     * doesn't maintain the same value
+                     */
+                    this.isSubmit = false;
+                }
+            }
+
+            return componentState;
+        }
+    }, {
+        key: 'clearComponentValues',
+
+        /**
+         * Clear the component values so they aren't accidentally used again
+         */
+        value: function clearComponentValues() {
+
+            // clear the student response
+            this.studentResponse = '';
+
+            // clear the new response input
+            this.newResponse = '';
+
+            // clear new attachments input
+            this.newAttachments = [];
+
+            // clear the component state id replying to
+            this.componentStateIdReplyingTo = null;
+        }
+    }, {
+        key: 'calculateDisabled',
+
+        /**
+         * Check if we need to lock the component
+         */
+        value: function calculateDisabled() {
+
+            var nodeId = this.nodeId;
+
+            // get the component content
+            var componentContent = this.componentContent;
+
+            if (componentContent != null) {
+
+                // check if the parent has set this component to disabled
+                if (componentContent.isDisabled) {
+                    this.isDisabled = true;
+                } else if (componentContent.lockAfterSubmit) {
+                    // we need to lock the step after the student has submitted
+
+                    // get the component states for this component
+                    var componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
+
+                    // check if any of the component states were submitted
+                    var isSubmitted = this.NodeService.isWorkSubmitted(componentStates);
+
+                    if (isSubmitted) {
+                        // the student has submitted work for this component
+                        this.isDisabled = true;
                     }
                 }
             }
         }
-    };
+    }, {
+        key: 'showSaveButton',
 
-    dropCallback_NOLONGER_USED(event, ui, title, $index) {
-        if (this.isDisabled) {
-            // don't import if step is disabled/locked
-            return;
+        /**
+         * Check whether we need to show the save button
+         * @return whether to show the save button
+         */
+        value: function showSaveButton() {
+            var show = false;
+
+            if (this.componentContent != null) {
+
+                // check the showSaveButton field in the component content
+                if (this.componentContent.showSaveButton) {
+                    show = true;
+                }
+            }
+
+            return show;
         }
+    }, {
+        key: 'showSubmitButton',
 
-        var objectType = $(ui.helper.context).data('objectType');
-        if (objectType === 'NotebookItem') {
-            var notebookItem = $(ui.helper.context).data('objectData');
+        /**
+         * Check whether we need to show the submit button
+         * @return whether to show the submit button
+         */
+        value: function showSubmitButton() {
+            var show = false;
+
+            if (this.componentContent != null) {
+
+                // check the showSubmitButton field in the component content
+                if (this.componentContent.showSubmitButton) {
+                    show = true;
+                }
+            }
+
+            return show;
+        }
+    }, {
+        key: 'isLockAfterSubmit',
+
+        /**
+         * Check whether we need to lock the component after the student
+         * submits an answer.
+         * @return whether to lock the component after the student submits
+         */
+        value: function isLockAfterSubmit() {
+            var result = false;
+
+            if (this.componentContent != null) {
+
+                // check the lockAfterSubmit field in the component content
+                if (this.componentContent.lockAfterSubmit) {
+                    result = true;
+                }
+            }
+
+            return result;
+        }
+    }, {
+        key: 'isClassmateResponsesGated',
+
+        /**
+         * Check whether we need to gate the classmate responses
+         * @return whether to gate the classmate responses
+         */
+        value: function isClassmateResponsesGated() {
+            var result = false;
+
+            if (this.componentContent != null) {
+
+                // check the gateClassmateResponses field in the component content
+                if (this.componentContent.gateClassmateResponses) {
+                    result = true;
+                }
+            }
+
+            return result;
+        }
+    }, {
+        key: 'removeAttachment',
+        value: function removeAttachment(attachment) {
+            if (this.newAttachments.indexOf(attachment) != -1) {
+                this.newAttachments.splice(this.newAttachments.indexOf(attachment), 1);
+                this.studentDataChanged();
+            }
+        }
+    }, {
+        key: 'attachNotebookItemToComponent',
+        value: function attachNotebookItemToComponent(notebookItem) {
             if (notebookItem.studentAsset != null) {
                 // we're importing a StudentAssetNotebookItem
                 var studentAsset = notebookItem.studentAsset;
                 this.StudentAssetService.copyAssetForReference(studentAsset).then(angular.bind(this, function (copiedAsset) {
                     if (copiedAsset != null) {
-                        var copiedAssetImg = '<img notebookItemId="' + notebookItem.id + '" studentAssetId="' + copiedAsset.id + '" id="studentAsset_' + copiedAsset.id + '" class="studentAssetReference" src="' + copiedAsset.iconURL + '"></img>';
-                        this.newResponse += copiedAssetImg;
+                        var attachment = {
+                            notebookItemId: notebookItem.id,
+                            studentAssetId: copiedAsset.id,
+                            iconURL: copiedAsset.iconURL
+                        };
+
+                        this.newAttachments.push(attachment);
                         this.studentDataChanged();
                     }
                 }));
@@ -750,122 +739,272 @@ class DiscussionController {
                         var studentWorkHTML = childService.getStudentWorkAsHTML(studentWork);
 
                         if (studentWorkHTML != null) {
-                            this.newResponse += studentWorkHTML;
+                            this.studentResponse += studentWorkHTML;
                             this.studentDataChanged();
                         }
                     }
                 }
             }
         }
-    };
+    }, {
+        key: 'dropCallback_NOLONGER_USED',
+        value: function dropCallback_NOLONGER_USED(event, ui, title, $index) {
+            if (this.isDisabled) {
+                // don't import if step is disabled/locked
+                return;
+            }
 
-    /**
-     * Get the prompt to show to the student
-     */
-    getPrompt() {
-        var prompt = null;
+            var objectType = $(ui.helper.context).data('objectType');
+            if (objectType === 'NotebookItem') {
+                var notebookItem = $(ui.helper.context).data('objectData');
+                if (notebookItem.studentAsset != null) {
+                    // we're importing a StudentAssetNotebookItem
+                    var studentAsset = notebookItem.studentAsset;
+                    this.StudentAssetService.copyAssetForReference(studentAsset).then(angular.bind(this, function (copiedAsset) {
+                        if (copiedAsset != null) {
+                            var copiedAssetImg = '<img notebookItemId="' + notebookItem.id + '" studentAssetId="' + copiedAsset.id + '" id="studentAsset_' + copiedAsset.id + '" class="studentAssetReference" src="' + copiedAsset.iconURL + '"></img>';
+                            this.newResponse += copiedAssetImg;
+                            this.studentDataChanged();
+                        }
+                    }));
+                } else if (notebookItem.studentWork != null) {
+                    // we're importing a StudentWorkNotebookItem
+                    var studentWork = notebookItem.studentWork;
 
-        if (this.componentContent != null) {
-            prompt = this.componentContent.prompt;
-        }
+                    var componentType = studentWork.componentType;
 
-        return prompt;
-    };
+                    if (componentType != null) {
+                        var childService = this.$injector.get(componentType + 'Service');
 
-    /**
-     * Get the number of rows for the textarea
-     */
-    getNumRows() {
-        var numRows = null;
+                        if (childService != null) {
+                            var studentWorkHTML = childService.getStudentWorkAsHTML(studentWork);
 
-        if (this.componentContent != null) {
-            numRows = this.componentContent.numRows;
-        }
-
-        return numRows;
-    };
-
-    /**
-     * Import work from another component
-     */
-    importWork() {
-
-        // get the component content
-        var componentContent = this.componentContent;
-
-        if (componentContent != null) {
-
-            var importWorkNodeId = componentContent.importWorkNodeId;
-            var importWorkComponentId = componentContent.importWorkComponentId;
-
-            if (importWorkNodeId != null && importWorkComponentId != null) {
-
-                // get the latest component state for this component
-                var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
-
-                /*
-                 * we will only import work into this component if the student
-                 * has not done any work for this component
-                 */
-                if(componentState == null) {
-                    // the student has not done any work for this component
-
-                    // get the latest component state from the component we are importing from
-                    var importWorkComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(importWorkNodeId, importWorkComponentId);
-
-                    if (importWorkComponentState != null) {
-                        /*
-                         * populate a new component state with the work from the
-                         * imported component state
-                         */
-                        var populatedComponentState = this.DiscussionService.populateComponentState(importWorkComponentState);
-
-                        // populate the component state into this component
-                        this.setStudentWork(populatedComponentState);
+                            if (studentWorkHTML != null) {
+                                this.newResponse += studentWorkHTML;
+                                this.studentDataChanged();
+                            }
+                        }
                     }
                 }
             }
         }
-    };
+    }, {
+        key: 'getPrompt',
 
-    /**
-     * Get the component id
-     * @return the component id
-     */
-    getComponentId() {
-        var componentId = this.componentContent.id;
+        /**
+         * Get the prompt to show to the student
+         */
+        value: function getPrompt() {
+            var prompt = null;
 
-        return componentId;
-    };
+            if (this.componentContent != null) {
+                prompt = this.componentContent.prompt;
+            }
 
-    /**
-     * Set the class responses into the controller
-     * @param componentStates the class component states
-     */
-    setClassResponses(componentStates) {
+            return prompt;
+        }
+    }, {
+        key: 'getNumRows',
 
-        this.classResponses = [];
+        /**
+         * Get the number of rows for the textarea
+         */
+        value: function getNumRows() {
+            var numRows = null;
 
-        if (componentStates != null) {
+            if (this.componentContent != null) {
+                numRows = this.componentContent.numRows;
+            }
 
-            // loop through all the component states
-            for (var c = 0; c < componentStates.length; c++) {
-                var componentState = componentStates[c];
+            return numRows;
+        }
+    }, {
+        key: 'importWork',
 
-                if (componentState != null) {
+        /**
+         * Import work from another component
+         */
+        value: function importWork() {
 
-                    // get the component state id
-                    var id = componentState.id;
+            // get the component content
+            var componentContent = this.componentContent;
 
-                    // get the workgroup id
-                    var workgroupId = componentState.workgroupId;
+            if (componentContent != null) {
 
-                    // get the student data
-                    var studentData = componentState.studentData;
+                var importWorkNodeId = componentContent.importWorkNodeId;
+                var importWorkComponentId = componentContent.importWorkComponentId;
 
-                    if (studentData != null) {
+                if (importWorkNodeId != null && importWorkComponentId != null) {
 
-                        if (componentState.studentData.isSubmit) {
+                    // get the latest component state for this component
+                    var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
+
+                    /*
+                     * we will only import work into this component if the student
+                     * has not done any work for this component
+                     */
+                    if (componentState == null) {
+                        // the student has not done any work for this component
+
+                        // get the latest component state from the component we are importing from
+                        var importWorkComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(importWorkNodeId, importWorkComponentId);
+
+                        if (importWorkComponentState != null) {
+                            /*
+                             * populate a new component state with the work from the
+                             * imported component state
+                             */
+                            var populatedComponentState = this.DiscussionService.populateComponentState(importWorkComponentState);
+
+                            // populate the component state into this component
+                            this.setStudentWork(populatedComponentState);
+                        }
+                    }
+                }
+            }
+        }
+    }, {
+        key: 'getComponentId',
+
+        /**
+         * Get the component id
+         * @return the component id
+         */
+        value: function getComponentId() {
+            var componentId = this.componentContent.id;
+
+            return componentId;
+        }
+    }, {
+        key: 'setClassResponses',
+
+        /**
+         * Set the class responses into the controller
+         * @param componentStates the class component states
+         */
+        value: function setClassResponses(componentStates) {
+
+            this.classResponses = [];
+
+            if (componentStates != null) {
+
+                // loop through all the component states
+                for (var c = 0; c < componentStates.length; c++) {
+                    var componentState = componentStates[c];
+
+                    if (componentState != null) {
+
+                        // get the component state id
+                        var id = componentState.id;
+
+                        // get the workgroup id
+                        var workgroupId = componentState.workgroupId;
+
+                        // get the student data
+                        var studentData = componentState.studentData;
+
+                        if (studentData != null) {
+
+                            if (componentState.studentData.isSubmit) {
+
+                                // add the user names to the component state so we can display next to the response
+                                componentState.userNames = this.ConfigService.getUserNamesByWorkgroupId(workgroupId, true).join(', ');
+
+                                // add a replies array to the component state that we will fill with component state replies later
+                                componentState.replies = [];
+
+                                // add the component state to our array
+                                this.classResponses.push(componentState);
+                            }
+                        }
+                    }
+                }
+            }
+
+            // process the class responses
+            this.processResponses(this.classResponses);
+
+            this.retrievedClassmateResponses = true;
+        }
+    }, {
+        key: 'processResponses',
+
+        /**
+         * Process the class responses. This will put responses into the
+         * replies arrays.
+         * @param classResponses an array of component states
+         */
+        value: function processResponses(componentStates) {
+
+            if (componentStates) {
+                var componentState;
+
+                // loop through all the component states
+                for (var i = 0; i < componentStates.length; i++) {
+                    componentState = componentStates[i];
+
+                    if (componentState) {
+                        var componentStateId = componentState.id;
+
+                        // set the component state into the map
+                        this.responsesMap[componentStateId] = componentState;
+                    }
+                }
+
+                // loop through all the component states
+                for (var c = 0; c < componentStates.length; c++) {
+                    componentState = componentStates[c];
+
+                    if (componentState && componentState.studentData) {
+
+                        // get the student data
+                        var studentData = componentState.studentData;
+
+                        // get the component state id replying to if any
+                        var componentStateIdReplyingTo = studentData.componentStateIdReplyingTo;
+
+                        if (componentStateIdReplyingTo) {
+
+                            if (this.responsesMap[componentStateIdReplyingTo] && this.responsesMap[componentStateIdReplyingTo].replies) {
+                                /*
+                                 * add this component state to the replies array of the
+                                 * component state that was replied to
+                                 */
+                                this.responsesMap[componentStateIdReplyingTo].replies.push(componentState);
+                            }
+                        }
+                    }
+                }
+
+                this.topLevelResponses = this.getLevel1Responses();
+            }
+        }
+    }, {
+        key: 'addClassResponse',
+
+        /**
+         * Add a class response to our model
+         * @param componentState the component state to add to our model
+         */
+        value: function addClassResponse(componentState) {
+
+            if (componentState != null) {
+
+                // get the student data
+                var studentData = componentState.studentData;
+
+                if (studentData != null) {
+
+                    // check if the student data was a submit
+                    var isSubmit = componentState.studentData.isSubmit;
+
+                    if (isSubmit) {
+                        // this component state is a submit so we will add it
+
+                        if (componentState != null) {
+
+                            // get the workgroup id
+                            var workgroupId = componentState.workgroupId;
 
                             // add the user names to the component state so we can display next to the response
                             componentState.userNames = this.ConfigService.getUserNamesByWorkgroupId(workgroupId, true).join(', ');
@@ -873,254 +1012,159 @@ class DiscussionController {
                             // add a replies array to the component state that we will fill with component state replies later
                             componentState.replies = [];
 
-                            // add the component state to our array
+                            // add the component state to our array of class responses
                             this.classResponses.push(componentState);
+
+                            // get the component state id
+                            var componentStateId = componentState.id;
+
+                            // add the response to our map
+                            this.responsesMap[componentStateId] = componentState;
+
+                            // get the component state id replying to if any
+                            var componentStateIdReplyingTo = studentData.componentStateIdReplyingTo;
+
+                            if (componentStateIdReplyingTo != null) {
+
+                                // check if we have the component state that was replied to
+                                if (this.responsesMap[componentStateIdReplyingTo] != null && this.responsesMap[componentStateIdReplyingTo].replies != null) {
+                                    /*
+                                     * add this response to the replies array of the response
+                                     * that was replied to
+                                     */
+                                    this.responsesMap[componentStateIdReplyingTo].replies.push(componentState);
+                                }
+                            }
+
+                            this.topLevelResponses = this.getLevel1Responses();
                         }
                     }
                 }
             }
         }
+    }, {
+        key: 'getClassResponses',
 
-        // process the class responses
-        this.processResponses(this.classResponses);
-
-        this.retrievedClassmateResponses = true;
-    };
-
-    /**
-     * Process the class responses. This will put responses into the
-     * replies arrays.
-     * @param classResponses an array of component states
-     */
-    processResponses(componentStates) {
-
-        if (componentStates) {
-            var componentState;
-
-            // loop through all the component states
-            for (var i = 0; i < componentStates.length; i++) {
-                componentState = componentStates[i];
-
-                if (componentState) {
-                    var componentStateId = componentState.id;
-
-                    // set the component state into the map
-                    this.responsesMap[componentStateId] = componentState;
-                }
-            }
-
-            // loop through all the component states
-            for (var c = 0; c < componentStates.length; c++) {
-                componentState = componentStates[c];
-
-                if (componentState && componentState.studentData) {
-
-                    // get the student data
-                    var studentData = componentState.studentData;
-
-                    // get the component state id replying to if any
-                    var componentStateIdReplyingTo = studentData.componentStateIdReplyingTo;
-
-                    if (componentStateIdReplyingTo) {
-
-                        if (this.responsesMap[componentStateIdReplyingTo] &&
-                            this.responsesMap[componentStateIdReplyingTo].replies) {
-                            /*
-                             * add this component state to the replies array of the
-                             * component state that was replied to
-                             */
-                            this.responsesMap[componentStateIdReplyingTo].replies.push(componentState);
-                        }
-                    }
-                }
-            }
-
-            this.topLevelResponses = this.getLevel1Responses();
+        /**
+         * Get the class responses
+         */
+        value: function getClassResponses() {
+            return this.classResponses;
         }
-    };
+    }, {
+        key: 'getLevel1Responses',
 
-    /**
-     * Add a class response to our model
-     * @param componentState the component state to add to our model
-     */
-    addClassResponse(componentState) {
+        /**
+         * Get the level 1 responses which are posts that are not a
+         * reply to another response.
+         * @return an array of responses that are not a reply to another
+         * response
+         */
+        value: function getLevel1Responses() {
+            var level1Responses = [];
+            var classResponses = this.classResponses;
 
-        if (componentState != null) {
+            if (classResponses != null) {
 
-            // get the student data
-            var studentData = componentState.studentData;
+                // loop through all the class responses
+                for (var r = 0; r < classResponses.length; r++) {
+                    var tempClassResponse = classResponses[r];
 
-            if (studentData != null) {
+                    if (tempClassResponse != null && tempClassResponse.studentData) {
 
-                // check if the student data was a submit
-                var isSubmit = componentState.studentData.isSubmit;
-
-                if (isSubmit) {
-                    // this component state is a submit so we will add it
-
-                    if (componentState != null) {
-
-                        // get the workgroup id
-                        var workgroupId = componentState.workgroupId;
-
-                        // add the user names to the component state so we can display next to the response
-                        componentState.userNames = this.ConfigService.getUserNamesByWorkgroupId(workgroupId, true).join(', ');
-
-                        // add a replies array to the component state that we will fill with component state replies later
-                        componentState.replies = [];
-
-                        // add the component state to our array of class responses
-                        this.classResponses.push(componentState);
-
-                        // get the component state id
-                        var componentStateId = componentState.id;
-
-                        // add the response to our map
-                        this.responsesMap[componentStateId] = componentState;
+                        // get the student data
+                        var studentData = tempClassResponse.studentData;
 
                         // get the component state id replying to if any
                         var componentStateIdReplyingTo = studentData.componentStateIdReplyingTo;
 
-                        if (componentStateIdReplyingTo != null) {
-
-                            // check if we have the component state that was replied to
-                            if (this.responsesMap[componentStateIdReplyingTo] != null &&
-                                this.responsesMap[componentStateIdReplyingTo].replies != null) {
-                                /*
-                                 * add this response to the replies array of the response
-                                 * that was replied to
-                                 */
-                                this.responsesMap[componentStateIdReplyingTo].replies.push(componentState);
-                            }
+                        if (componentStateIdReplyingTo == null) {
+                            /*
+                             * this response was not a reply to another post so it is a
+                             * level 1 response
+                             */
+                            level1Responses.push(tempClassResponse);
                         }
-
-                        this.topLevelResponses = this.getLevel1Responses();
                     }
                 }
             }
+
+            return level1Responses;
         }
-    };
+    }, {
+        key: 'authoringViewComponentChanged',
 
-    /**
-     * Get the class responses
-     */
-    getClassResponses() {
-        return this.classResponses;
-    };
+        /**
+         * The component has changed in the regular authoring view so we will save the project
+         */
+        value: function authoringViewComponentChanged() {
 
-    /**
-     * Get the level 1 responses which are posts that are not a
-     * reply to another response.
-     * @return an array of responses that are not a reply to another
-     * response
-     */
-    getLevel1Responses() {
-        var level1Responses = [];
-        var classResponses = this.classResponses;
-
-        if (classResponses != null) {
-
-            // loop through all the class responses
-            for (var r = 0; r < classResponses.length; r++) {
-                var tempClassResponse = classResponses[r];
-
-                if (tempClassResponse != null && tempClassResponse.studentData) {
-
-                    // get the student data
-                    var studentData = tempClassResponse.studentData;
-
-                    // get the component state id replying to if any
-                    var componentStateIdReplyingTo = studentData.componentStateIdReplyingTo;
-
-                    if (componentStateIdReplyingTo == null) {
-                        /*
-                         * this response was not a reply to another post so it is a
-                         * level 1 response
-                         */
-                        level1Responses.push(tempClassResponse);
-                    }
-                }
-            }
-        }
-
-        return level1Responses;
-    };
-
-    /**
-     * The component has changed in the regular authoring view so we will save the project
-     */
-    authoringViewComponentChanged() {
-
-        // update the JSON string in the advanced authoring view textarea
-        this.updateAdvancedAuthoringView();
-
-        // save the project to the server
-        this.ProjectService.saveProject();
-    };
-
-    /**
-     * The component has changed in the advanced authoring view so we will update
-     * the component and save the project.
-     */
-    advancedAuthoringViewComponentChanged() {
-
-        try {
-            /*
-             * create a new comopnent by converting the JSON string in the advanced
-             * authoring view into a JSON object
-             */
-            var editedComponentContent = angular.fromJson(this.componentContentJSONString);
-
-            // replace the component in the project
-            this.ProjectService.replaceComponent(this.nodeId, this.componentId, editedComponentContent);
-
-            // set the new component into the controller
-            this.componentContent = editedComponentContent;
+            // update the JSON string in the advanced authoring view textarea
+            this.updateAdvancedAuthoringView();
 
             // save the project to the server
             this.ProjectService.saveProject();
-        } catch(e) {
-
         }
-    };
+    }, {
+        key: 'advancedAuthoringViewComponentChanged',
 
-    /**
-     * Update the component JSON string that will be displayed in the advanced authoring view textarea
-     */
-    updateAdvancedAuthoringView() {
-        this.componentContentJSONString = angular.toJson(this.componentContent, 4);
-    };
-
-    /**
-     * Register the the listener that will listen for the exit event
-     * so that we can perform saving before exiting.
-     */
-    registerExitListener() {
-
-        /*
-         * Listen for the 'exit' event which is fired when the student exits
-         * the VLE. This will perform saving before the VLE exits.
+        /**
+         * The component has changed in the advanced authoring view so we will update
+         * the component and save the project.
          */
-        this.exitListener = this.$scope.$on('exit', angular.bind(this, function(event, args) {
+        value: function advancedAuthoringViewComponentChanged() {
 
-            // do nothing
-            this.$rootScope.$broadcast('doneExiting');
-        }));
-    };
-}
+            try {
+                /*
+                 * create a new comopnent by converting the JSON string in the advanced
+                 * authoring view into a JSON object
+                 */
+                var editedComponentContent = angular.fromJson(this.componentContentJSONString);
 
-DiscussionController.$inject = [
-    '$injector',
-    '$rootScope',
-    '$scope',
-    'ConfigService',
-    'DiscussionService',
-    'NodeService',
-    'ProjectService',
-    'StudentAssetService',
-    'StudentDataService',
-    'StudentWebSocketService',
-    '$mdMedia'
-];
+                // replace the component in the project
+                this.ProjectService.replaceComponent(this.nodeId, this.componentId, editedComponentContent);
 
-export default DiscussionController;
+                // set the new component into the controller
+                this.componentContent = editedComponentContent;
+
+                // save the project to the server
+                this.ProjectService.saveProject();
+            } catch (e) {}
+        }
+    }, {
+        key: 'updateAdvancedAuthoringView',
+
+        /**
+         * Update the component JSON string that will be displayed in the advanced authoring view textarea
+         */
+        value: function updateAdvancedAuthoringView() {
+            this.componentContentJSONString = angular.toJson(this.componentContent, 4);
+        }
+    }, {
+        key: 'registerExitListener',
+
+        /**
+         * Register the the listener that will listen for the exit event
+         * so that we can perform saving before exiting.
+         */
+        value: function registerExitListener() {
+
+            /*
+             * Listen for the 'exit' event which is fired when the student exits
+             * the VLE. This will perform saving before the VLE exits.
+             */
+            this.exitListener = this.$scope.$on('exit', angular.bind(this, function (event, args) {
+
+                // do nothing
+                this.$rootScope.$broadcast('doneExiting');
+            }));
+        }
+    }]);
+
+    return DiscussionController;
+}();
+
+DiscussionController.$inject = ['$injector', '$rootScope', '$scope', 'ConfigService', 'DiscussionService', 'NodeService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'StudentWebSocketService', '$mdMedia'];
+
+exports.default = DiscussionController;
+//# sourceMappingURL=discussionController.js.map

@@ -1,17 +1,31 @@
+'use strict';
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 //import $ from 'jquery';
-import Highcharts from 'highcharts';
-//import angularHighcharts from 'highcharts-ng';
-import draggablePoints from 'highcharts/draggable-points';
 
-class GraphController {
-    constructor($rootScope,
-                $scope,
-                GraphService,
-                NodeService,
-                ProjectService,
-                StudentAssetService,
-                StudentDataService) {
+//import angularHighcharts from 'highcharts-ng';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _highcharts = require('highcharts');
+
+var _highcharts2 = _interopRequireDefault(_highcharts);
+
+var _draggablePoints = require('highcharts/draggable-points');
+
+var _draggablePoints2 = _interopRequireDefault(_draggablePoints);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var GraphController = function () {
+    function GraphController($rootScope, $scope, GraphService, NodeService, ProjectService, StudentAssetService, StudentDataService) {
+        _classCallCheck(this, GraphController);
 
         this.$rootScope = $rootScope;
         this.$scope = $scope;
@@ -211,7 +225,7 @@ class GraphController {
          * @param componentState the student data from the connected
          * component that has changed
          */
-        this.$scope.handleConnectedComponentStudentDataChanged = function(connectedComponent, connectedComponentParams, componentState) {
+        this.$scope.handleConnectedComponentStudentDataChanged = function (connectedComponent, connectedComponentParams, componentState) {
 
             if (connectedComponent != null && componentState != null) {
 
@@ -265,7 +279,7 @@ class GraphController {
         /**
          * Handle the delete key press
          */
-        this.$scope.handleDeleteKeyPressed = function() {
+        this.$scope.handleDeleteKeyPressed = function () {
             this.$scope.graphController.handleDeleteKeyPressed();
         }.bind(this);
 
@@ -275,7 +289,7 @@ class GraphController {
          * save student data.
          * @return a component state containing the student data
          */
-        this.$scope.getComponentState = function() {
+        this.$scope.getComponentState = function () {
 
             var componentState = null;
 
@@ -293,7 +307,7 @@ class GraphController {
         /**
          * The parent node submit button was clicked
          */
-        this.$scope.$on('nodeSubmitClicked', angular.bind(this, function(event, args) {
+        this.$scope.$on('nodeSubmitClicked', angular.bind(this, function (event, args) {
 
             // get the node id of the node
             var nodeId = args.nodeId;
@@ -313,261 +327,263 @@ class GraphController {
          * exits the parent node. This will perform any necessary cleanup
          * when the student exits the parent node.
          */
-        this.$scope.$on('exitNode', angular.bind(this, function(event, args) {
-
-        }));
+        this.$scope.$on('exitNode', angular.bind(this, function (event, args) {}));
     }
 
     /**
      * Setup the graph
      */
-    setupGraph() {
 
-        // get the title
-        var title = this.componentContent.title;
+    _createClass(GraphController, [{
+        key: 'setupGraph',
+        value: function setupGraph() {
 
-        // get the graph type
-        var graphType = this.componentContent.graphType;
+            // get the title
+            var title = this.componentContent.title;
 
-        // get the x and y axis attributes from the student data
-        var xAxis = this.xAxis;
-        var yAxis = this.yAxis;
+            // get the graph type
+            var graphType = this.componentContent.graphType;
 
-        if (this.xAxis == null && this.componentContent.xAxis != null) {
+            // get the x and y axis attributes from the student data
+            var xAxis = this.xAxis;
+            var yAxis = this.yAxis;
+
+            if (this.xAxis == null && this.componentContent.xAxis != null) {
+                /*
+                 * the student does not have x axis data so we will use the
+                 * x axis from the component content
+                 */
+                xAxis = this.componentContent.xAxis;
+                this.xAxis = xAxis;
+            }
+
+            if (this.yAxis == null && this.componentContent.yAxis != null) {
+                /*
+                 * the student does not have y axis data so we will use the
+                 * y axis from the component content
+                 */
+                yAxis = this.componentContent.yAxis;
+                this.yAxis = yAxis;
+            }
+
             /*
-             * the student does not have x axis data so we will use the
-             * x axis from the component content
+             * remember this graph controller so we can access it in the click
+             * event for the graph
              */
-            xAxis = this.componentContent.xAxis;
-            this.xAxis = xAxis;
-        }
+            var thisGraphController = this;
 
-        if (this.yAxis == null && this.componentContent.yAxis != null) {
-            /*
-             * the student does not have y axis data so we will use the
-             * y axis from the component content
-             */
-            yAxis = this.componentContent.yAxis;
-            this.yAxis = yAxis;
-        }
+            // get all the series from the student data
+            var series = this.getSeries();
 
-        /*
-         * remember this graph controller so we can access it in the click
-         * event for the graph
-         */
-        var thisGraphController = this;
+            if ((series == null || series.length === 0) && this.componentContent.series != null) {
+                /*
+                 * use the series from the component content if the student does not
+                 * have any series data
+                 */
+                series = this.StudentDataService.makeCopyOfJSONObject(this.componentContent.series);
+                this.setSeries(series);
+            }
 
-        // get all the series from the student data
-        var series = this.getSeries();
+            // add the event that will remove a point when clicked
+            //this.addClickToRemovePointEvent(series);
 
-        if ((series == null || series.length === 0) && this.componentContent.series != null) {
-            /*
-             * use the series from the component content if the student does not
-             * have any series data
-             */
-            series = this.StudentDataService.makeCopyOfJSONObject(this.componentContent.series);
-            this.setSeries(series);
-        }
+            // loop through all the series and
+            for (var s = 0; s < series.length; s++) {
+                var tempSeries = series[s];
 
-        // add the event that will remove a point when clicked
-        //this.addClickToRemovePointEvent(series);
+                // check if the series should have a regression line generated for it
+                if (tempSeries != null) {
 
-        // loop through all the series and
-        for (var s = 0; s < series.length; s++) {
-            var tempSeries = series[s];
+                    if (tempSeries.regression) {
+                        if (tempSeries.regressionSettings == null) {
+                            // initialize the regression settings object if necessary
+                            tempSeries.regressionSettings = {};
+                        }
 
-            // check if the series should have a regression line generated for it
-            if (tempSeries != null) {
+                        // get the regression settings object
+                        var regressionSettings = tempSeries.regressionSettings;
 
-                if (tempSeries.regression) {
-                    if (tempSeries.regressionSettings == null) {
-                        // initialize the regression settings object if necessary
-                        tempSeries.regressionSettings = {};
+                        // add these regression settings
+                        regressionSettings.xMin = xAxis.min;
+                        regressionSettings.xMax = xAxis.max;
+                        regressionSettings.numberOfPoints = 100;
                     }
 
-                    // get the regression settings object
-                    var regressionSettings = tempSeries.regressionSettings;
-
-                    // add these regression settings
-                    regressionSettings.xMin = xAxis.min;
-                    regressionSettings.xMax = xAxis.max;
-                    regressionSettings.numberOfPoints = 100;
-                }
-
-                if (this.isDisabled) {
-                    // disable dragging
-                    tempSeries.draggableX = false;
-                    tempSeries.draggableY = false;
-                } else if (tempSeries.canEdit) {
-                    // set the fields to allow points to be draggable
-                    tempSeries.draggableX = true;
-                    tempSeries.draggableY = true;
-                    tempSeries.cursor = 'move';
+                    if (this.isDisabled) {
+                        // disable dragging
+                        tempSeries.draggableX = false;
+                        tempSeries.draggableY = false;
+                    } else if (tempSeries.canEdit) {
+                        // set the fields to allow points to be draggable
+                        tempSeries.draggableX = true;
+                        tempSeries.draggableY = true;
+                        tempSeries.cursor = 'move';
+                    }
                 }
             }
-        }
 
-        /*
-         * generate an array of regression series for the series that
-         * requrie a regression line
-         */
-        //var regressionSeries = this.GraphService.generateRegressionSeries(series);
-        var regressionSeries = [];
-        this.regressionSeries = regressionSeries;
+            /*
+             * generate an array of regression series for the series that
+             * requrie a regression line
+             */
+            //var regressionSeries = this.GraphService.generateRegressionSeries(series);
+            var regressionSeries = [];
+            this.regressionSeries = regressionSeries;
 
-        /*
-         * create an array that will contain all the regular series and all
-         * the regression series
-         */
-        var allSeries = [];
-        allSeries = allSeries.concat(series);
+            /*
+             * create an array that will contain all the regular series and all
+             * the regression series
+             */
+            var allSeries = [];
+            allSeries = allSeries.concat(series);
 
-        //regressionSeries[0].id = 'series-2';
-        //regressionSeries[1].id = 'series-3';
-        //this.setSeriesIds(regressionSeries);
-        allSeries = allSeries.concat(regressionSeries);
+            //regressionSeries[0].id = 'series-2';
+            //regressionSeries[1].id = 'series-3';
+            //this.setSeriesIds(regressionSeries);
+            allSeries = allSeries.concat(regressionSeries);
 
-        //this.setSeriesIds(allSeries);
+            //this.setSeriesIds(allSeries);
 
-        if (this.activeSeries == null && series.length > 0) {
-            // the active series has not been set so we will set the active series to the first series
-            this.setActiveSeriesByIndex(0);
-        }
+            if (this.activeSeries == null && series.length > 0) {
+                // the active series has not been set so we will set the active series to the first series
+                this.setActiveSeriesByIndex(0);
+            }
 
-        this.chartConfig = {
-            options: {
-                tooltip: {
-                    formatter:function(){
-                        /*
-                         * When the user mouseovers a point, display a tooltip that looks like
-                         *
-                         * x: 10
-                         * y: 15
-                         *
-                         */
-                        var x = thisGraphController.roundToNearestTenth(this.x);
-                        var y = thisGraphController.roundToNearestTenth(this.y);
-
-                        return 'x: ' + x + '<br/>y: ' + y;
-                    }
-                },
-                chart: {
-                    type: graphType,
-                    events: {
-                        click: function(e) {
-                            // get the current time
-                            var currentTime = new Date().getTime();
-
-                            // check if a drop event recently occurred
-                            if (thisGraphController.lastDropTime != null) {
-
-                                // check if the last drop event was not within the last 100 milliseconds
-                                if ((currentTime - thisGraphController.lastDropTime) < 100) {
-
-                                    /*
-                                     * the last drope event was within the last 100 milliseconds so we
-                                     * will not register this click. we need to do this because when
-                                     * students drag points, a click event is fired when they release
-                                     * the mouse button. we don't want that click event to create a new
-                                     * point so we need to ignore it.
-                                     */
-                                    return;
-                                }
-                            }
-
+            this.chartConfig = {
+                options: {
+                    tooltip: {
+                        formatter: function formatter() {
                             /*
-                             * check if the student can click to add data
-                             * on the graph
+                             * When the user mouseovers a point, display a tooltip that looks like
+                             *
+                             * x: 10
+                             * y: 15
+                             *
                              */
-                            if (!thisGraphController.isDisabled) {
+                            var x = thisGraphController.roundToNearestTenth(this.x);
+                            var y = thisGraphController.roundToNearestTenth(this.y);
 
-                                // get the active series
-                                var series = thisGraphController.activeSeries;
+                            return 'x: ' + x + '<br/>y: ' + y;
+                        }
+                    },
+                    chart: {
+                        type: graphType,
+                        events: {
+                            click: function click(e) {
+                                // get the current time
+                                var currentTime = new Date().getTime();
 
-                                // check if the student is allowed to edit the active series
-                                if (series != null && thisGraphController.canEdit(series)) {
+                                // check if a drop event recently occurred
+                                if (thisGraphController.lastDropTime != null) {
 
-                                    /*
-                                     * get the x and y positions that were clicked and round
-                                     * them to the nearest tenth
-                                     */
-                                    var x = thisGraphController.roundToNearestTenth(e.xAxis[0].value);
-                                    var y = thisGraphController.roundToNearestTenth(e.yAxis[0].value);
+                                    // check if the last drop event was not within the last 100 milliseconds
+                                    if (currentTime - thisGraphController.lastDropTime < 100) {
 
-                                    // remove any point with the given x value
-                                    //thisGraphController.removePointFromSeries(series, x);
+                                        /*
+                                         * the last drope event was within the last 100 milliseconds so we
+                                         * will not register this click. we need to do this because when
+                                         * students drag points, a click event is fired when they release
+                                         * the mouse button. we don't want that click event to create a new
+                                         * point so we need to ignore it.
+                                         */
+                                        return;
+                                    }
+                                }
 
-                                    // add the point to the series
-                                    thisGraphController.addPointToSeries(series, x, y);
+                                /*
+                                 * check if the student can click to add data
+                                 * on the graph
+                                 */
+                                if (!thisGraphController.isDisabled) {
 
-                                    /*
-                                     * notify the controller that the student data has changed
-                                     * so that the graph will be redrawn
-                                     */
-                                    thisGraphController.studentDataChanged();
+                                    // get the active series
+                                    var series = thisGraphController.activeSeries;
+
+                                    // check if the student is allowed to edit the active series
+                                    if (series != null && thisGraphController.canEdit(series)) {
+
+                                        /*
+                                         * get the x and y positions that were clicked and round
+                                         * them to the nearest tenth
+                                         */
+                                        var x = thisGraphController.roundToNearestTenth(e.xAxis[0].value);
+                                        var y = thisGraphController.roundToNearestTenth(e.yAxis[0].value);
+
+                                        // remove any point with the given x value
+                                        //thisGraphController.removePointFromSeries(series, x);
+
+                                        // add the point to the series
+                                        thisGraphController.addPointToSeries(series, x, y);
+
+                                        /*
+                                         * notify the controller that the student data has changed
+                                         * so that the graph will be redrawn
+                                         */
+                                        thisGraphController.studentDataChanged();
+                                    }
                                 }
                             }
                         }
-                    }
-                },
-                plotOptions: {
-                    series: {
-                        allowPointSelect: true,
-                        point: {
-                            events: {
-                                drag: function (e) {
-                                    // the student has started dragging a point
+                    },
+                    plotOptions: {
+                        series: {
+                            allowPointSelect: true,
+                            point: {
+                                events: {
+                                    drag: function drag(e) {
+                                        // the student has started dragging a point
 
-                                    // get the active series
-                                    var series = thisGraphController.activeSeries;
+                                        // get the active series
+                                        var series = thisGraphController.activeSeries;
 
-                                    // check if the student is allowed to edit the active series
-                                    if (series != null && thisGraphController.canEdit(series)) {
-                                        // set a flag to note that the student is dragging a point
-                                        thisGraphController.dragging = true;
-                                    }
-                                },
-                                drop: function (e) {
-                                    // the student has stopped dragging the point and dropped the point
+                                        // check if the student is allowed to edit the active series
+                                        if (series != null && thisGraphController.canEdit(series)) {
+                                            // set a flag to note that the student is dragging a point
+                                            thisGraphController.dragging = true;
+                                        }
+                                    },
+                                    drop: function drop(e) {
+                                        // the student has stopped dragging the point and dropped the point
 
-                                    // get the active series
-                                    var series = thisGraphController.activeSeries;
+                                        // get the active series
+                                        var series = thisGraphController.activeSeries;
 
-                                    // check if the student is allowed to edit the active series
-                                    if (series != null && thisGraphController.canEdit(series)) {
+                                        // check if the student is allowed to edit the active series
+                                        if (series != null && thisGraphController.canEdit(series)) {
 
-                                        if (thisGraphController.dragging) {
+                                            if (thisGraphController.dragging) {
 
-                                            // set the dragging flag off
-                                            thisGraphController.dragging = false;
+                                                // set the dragging flag off
+                                                thisGraphController.dragging = false;
 
-                                            // remember this drop time
-                                            thisGraphController.lastDropTime = new Date().getTime();
+                                                // remember this drop time
+                                                thisGraphController.lastDropTime = new Date().getTime();
 
-                                            // get the current target
-                                            var currentTarget = e.currentTarget;
+                                                // get the current target
+                                                var currentTarget = e.currentTarget;
 
-                                            if (currentTarget != null) {
+                                                if (currentTarget != null) {
 
-                                                /*
-                                                 * get the x and y positions where the point was dropped and round
-                                                 * them to the nearest tenth
-                                                 */
-                                                var x = thisGraphController.roundToNearestTenth(currentTarget.x);
-                                                var y = thisGraphController.roundToNearestTenth(currentTarget.y);
+                                                    /*
+                                                     * get the x and y positions where the point was dropped and round
+                                                     * them to the nearest tenth
+                                                     */
+                                                    var x = thisGraphController.roundToNearestTenth(currentTarget.x);
+                                                    var y = thisGraphController.roundToNearestTenth(currentTarget.y);
 
-                                                // get the index of the point
-                                                var index = currentTarget.index;
+                                                    // get the index of the point
+                                                    var index = currentTarget.index;
 
-                                                // get the series data
-                                                var data = series.data;
+                                                    // get the series data
+                                                    var data = series.data;
 
-                                                if (data != null) {
-                                                    // update the point
-                                                    data[index] = [x, y];
+                                                    if (data != null) {
+                                                        // update the point
+                                                        data[index] = [x, y];
 
-                                                    // tell the controller the student data has changed
-                                                    thisGraphController.studentDataChanged();
+                                                        // tell the controller the student data has changed
+                                                        thisGraphController.studentDataChanged();
+                                                    }
                                                 }
                                             }
                                         }
@@ -576,1035 +592,1104 @@ class GraphController {
                             }
                         }
                     }
-                }
-            },
-            series: allSeries,
-            title: {
-                text: title
-            },
-            xAxis: xAxis,
-            yAxis: yAxis,
-            loading: false
-        };
-    };
+                },
+                series: allSeries,
+                title: {
+                    text: title
+                },
+                xAxis: xAxis,
+                yAxis: yAxis,
+                loading: false
+            };
+        }
+    }, {
+        key: 'addPointToSeries0',
 
-    /**
-     * Add a point to a series. The point will be inserted into the series
-     * in the appropriate position that will keep the series data sorted.
-     * @param series the series
-     * @param x the x value
-     * @param y the y value
-     */
-    addPointToSeries0(series, x, y) {
-        if (series != null && x != null && y != null) {
+        /**
+         * Add a point to a series. The point will be inserted into the series
+         * in the appropriate position that will keep the series data sorted.
+         * @param series the series
+         * @param x the x value
+         * @param y the y value
+         */
+        value: function addPointToSeries0(series, x, y) {
+            if (series != null && x != null && y != null) {
 
-            // get the data points from the series
-            var data = series.data;
+                // get the data points from the series
+                var data = series.data;
 
-            if (data != null) {
-                var pointAdded = false;
+                if (data != null) {
+                    var pointAdded = false;
 
-                // loop through the data points
-                for (var d = 0; d < data.length; d++) {
-                    var tempPoint = data[d];
+                    // loop through the data points
+                    for (var d = 0; d < data.length; d++) {
+                        var tempPoint = data[d];
 
-                    if (tempPoint != null) {
-                        // get the x value of the temp point
-                        var tempDataXValue = tempPoint[0];
+                        if (tempPoint != null) {
+                            // get the x value of the temp point
+                            var tempDataXValue = tempPoint[0];
 
-                        /*
-                         * check if the x value of the point we want to add is
-                         * less than the x value of the temp point
-                         */
-                        if (x < tempDataXValue) {
                             /*
-                             * the x value is less so we will insert the point
-                             * before this current temp point
+                             * check if the x value of the point we want to add is
+                             * less than the x value of the temp point
                              */
-                            data.splice(d, 0, [x, y]);
-                            pointAdded = true;
-                            break;
+                            if (x < tempDataXValue) {
+                                /*
+                                 * the x value is less so we will insert the point
+                                 * before this current temp point
+                                 */
+                                data.splice(d, 0, [x, y]);
+                                pointAdded = true;
+                                break;
+                            }
                         }
                     }
-                }
 
-                /*
-                 * add the point to the end of the series if we haven't
-                 * already added the point to the series
-                 */
-                if (!pointAdded) {
+                    /*
+                     * add the point to the end of the series if we haven't
+                     * already added the point to the series
+                     */
+                    if (!pointAdded) {
+                        data.push([x, y]);
+                    }
+                }
+            }
+        }
+    }, {
+        key: 'addPointToSeries',
+
+        /**
+         * Add a point to a series. The point will be inserted at the end of
+         * the series.
+         * @param series the series
+         * @param x the x value
+         * @param y the y value
+         */
+        value: function addPointToSeries(series, x, y) {
+            if (series != null && x != null && y != null) {
+
+                // get the data points from the series
+                var data = series.data;
+
+                if (data != null) {
                     data.push([x, y]);
                 }
             }
         }
-    };
+    }, {
+        key: 'removePointFromSeries',
 
-    /**
-     * Add a point to a series. The point will be inserted at the end of
-     * the series.
-     * @param series the series
-     * @param x the x value
-     * @param y the y value
-     */
-    addPointToSeries(series, x, y) {
-        if (series != null && x != null && y != null) {
+        /**
+         * Remove a point from a series. We will remove all points that
+         * have the given x value.
+         * @param series the series to remove the point from
+         * @param x the x value of the point to remove
+         */
+        value: function removePointFromSeries(series, x) {
+            if (series != null && x != null) {
+                var data = series.data;
 
-            // get the data points from the series
-            var data = series.data;
+                if (data != null) {
 
-            if (data != null) {
-                data.push([x, y]);
-            }
-        }
-    };
+                    // loop through all the points
+                    for (var d = 0; d < data.length; d++) {
+                        var tempData = data[d];
 
-    /**
-     * Remove a point from a series. We will remove all points that
-     * have the given x value.
-     * @param series the series to remove the point from
-     * @param x the x value of the point to remove
-     */
-    removePointFromSeries(series, x) {
-        if (series != null && x != null) {
-            var data = series.data;
+                        if (tempData != null) {
+                            // get the x value of the point
+                            var tempDataXValue = tempData[0];
 
-            if (data != null) {
+                            if (x == tempDataXValue) {
+                                // the x value matches the one we want
 
-                // loop through all the points
-                for (var d = 0; d < data.length; d++) {
-                    var tempData = data[d];
+                                // remove the point from the data
+                                data.splice(d, 1);
 
-                    if (tempData != null) {
-                        // get the x value of the point
-                        var tempDataXValue = tempData[0];
-
-                        if (x == tempDataXValue) {
-                            // the x value matches the one we want
-
-                            // remove the point from the data
-                            data.splice(d, 1);
-
-                            /*
-                             * move the counter back one since we have just
-                             * removed an element from the data array
-                             */
-                            d--;
+                                /*
+                                 * move the counter back one since we have just
+                                 * removed an element from the data array
+                                 */
+                                d--;
+                            }
                         }
                     }
                 }
             }
         }
-    };
+    }, {
+        key: 'addClickToRemovePointEvent',
 
-    /**
-     * Check if we need to add the click to remove event to the series
-     * @param series an array of series
-     */
-    addClickToRemovePointEvent(series) {
+        /**
+         * Check if we need to add the click to remove event to the series
+         * @param series an array of series
+         */
+        value: function addClickToRemovePointEvent(series) {
 
-        if (!this.isDisabled) {
-            /*
-             * the student can click to add a point so we will also allow
-             * them to click to remove a point
-             */
+            if (!this.isDisabled) {
+                /*
+                 * the student can click to add a point so we will also allow
+                 * them to click to remove a point
+                 */
 
-            if (series != null) {
-                var thisGraphController = this;
+                if (series != null) {
+                    var thisGraphController = this;
 
-                // loop through all the series
-                for (var s = 0; s < series.length; s++) {
+                    // loop through all the series
+                    for (var s = 0; s < series.length; s++) {
 
-                    var tempSeries = series[s];
+                        var tempSeries = series[s];
 
-                    if (this.canEdit(tempSeries)) {
-                        /*
-                         * create a point click event to remove a point when
-                         * it is clicked
-                         */
-                        var point = {
-                            events: {
-                                click: function (e) {
+                        if (this.canEdit(tempSeries)) {
+                            /*
+                             * create a point click event to remove a point when
+                             * it is clicked
+                             */
+                            var point = {
+                                events: {
+                                    click: function click(e) {
 
-                                    /*
-                                     * make sure the point that was clicked is from the active series.
-                                     * if it isn't from the active series we will not do anything.
-                                     */
+                                        /*
+                                         * make sure the point that was clicked is from the active series.
+                                         * if it isn't from the active series we will not do anything.
+                                         */
 
-                                    // get the series that was clicked
-                                    var series = this.series;
+                                        // get the series that was clicked
+                                        var series = this.series;
 
-                                    if (series != null && series.userOptions != null) {
+                                        if (series != null && series.userOptions != null) {
 
-                                        // get the id of the series that was clicked
-                                        var seriesId = series.userOptions.id;
+                                            // get the id of the series that was clicked
+                                            var seriesId = series.userOptions.id;
 
-                                        // get the active series
-                                        var activeSeries = thisGraphController.activeSeries;
+                                            // get the active series
+                                            var activeSeries = thisGraphController.activeSeries;
 
-                                        if (activeSeries != null) {
+                                            if (activeSeries != null) {
 
-                                            // get the active series id
-                                            var activeSeriesId = activeSeries.id;
+                                                // get the active series id
+                                                var activeSeriesId = activeSeries.id;
 
-                                            // check if the series that was clicked is the active series
-                                            if (seriesId == activeSeriesId) {
+                                                // check if the series that was clicked is the active series
+                                                if (seriesId == activeSeriesId) {
 
-                                                // get the data from the active series
-                                                var data = activeSeries.data;
+                                                    // get the data from the active series
+                                                    var data = activeSeries.data;
 
-                                                if (data != null) {
+                                                    if (data != null) {
 
-                                                    // get the index of the point
-                                                    var index = this.index;
+                                                        // get the index of the point
+                                                        var index = this.index;
 
-                                                    // remove the element at the given index
-                                                    data.splice(index, 1);
+                                                        // remove the element at the given index
+                                                        data.splice(index, 1);
 
-                                                    /*
-                                                     * notify the controller that the student data has changed
-                                                     * so that the graph will be redrawn
-                                                     */
-                                                    thisGraphController.studentDataChanged();
+                                                        /*
+                                                         * notify the controller that the student data has changed
+                                                         * so that the graph will be redrawn
+                                                         */
+                                                        thisGraphController.studentDataChanged();
+                                                    }
                                                 }
                                             }
                                         }
                                     }
                                 }
-                            }
-                        };
+                            };
 
-                        // set this point event into the series
-                        tempSeries.point = point;
+                            // set this point event into the series
+                            tempSeries.point = point;
+                        }
                     }
                 }
             }
         }
-    };
+    }, {
+        key: 'canEdit',
 
-    /**
-     * Check whether the student is allowed to edit a given series
-     * @param series the series to check
-     * @return whether the series can edit the series
-     */
-    canEdit(series) {
-        var result = false;
+        /**
+         * Check whether the student is allowed to edit a given series
+         * @param series the series to check
+         * @return whether the series can edit the series
+         */
+        value: function canEdit(series) {
+            var result = false;
 
-        if (series != null && series.canEdit) {
-            result = true;
+            if (series != null && series.canEdit) {
+                result = true;
+            }
+
+            return result;
         }
+    }, {
+        key: 'setSeries',
 
-        return result;
-    };
+        /**
+         * Set all the series
+         * @param series an array of series
+         */
+        value: function setSeries(series) {
+            this.series = series;
+        }
+    }, {
+        key: 'getSeries',
 
-    /**
-     * Set all the series
-     * @param series an array of series
-     */
-    setSeries(series) {
-        this.series = series;
-    };
+        /**
+         * Get all the series
+         * @returns an array of series
+         */
+        value: function getSeries() {
+            return this.series;
+        }
+    }, {
+        key: 'setXAxis',
 
-    /**
-     * Get all the series
-     * @returns an array of series
-     */
-    getSeries() {
-        return this.series;
-    };
+        /**
+         * Set the xAxis object
+         * @param xAxis the xAxis object that can be used to render the graph
+         */
+        value: function setXAxis(xAxis) {
+            this.xAxis = xAxis;
+        }
+    }, {
+        key: 'getXAxis',
 
-    /**
-     * Set the xAxis object
-     * @param xAxis the xAxis object that can be used to render the graph
-     */
-    setXAxis(xAxis) {
-        this.xAxis = xAxis;
-    };
+        /**
+         * Get the xAxis object
+         * @return the xAxis object that can be used to render the graph
+         */
+        value: function getXAxis() {
+            return this.xAxis;
+        }
+    }, {
+        key: 'setYAxis',
 
-    /**
-     * Get the xAxis object
-     * @return the xAxis object that can be used to render the graph
-     */
-    getXAxis() {
-        return this.xAxis;
-    };
+        /**
+         * Set the yAxis object
+         * @param yAxis the yAxis object that can be used to render the graph
+         */
+        value: function setYAxis(yAxis) {
+            this.yAxis = yAxis;
+        }
+    }, {
+        key: 'getYAxis',
 
-    /**
-     * Set the yAxis object
-     * @param yAxis the yAxis object that can be used to render the graph
-     */
-    setYAxis(yAxis) {
-        this.yAxis = yAxis;
-    };
+        /**
+         * Get the yAxis object
+         * @return the yAxis object that can be used to render the graph
+         */
+        value: function getYAxis() {
+            return this.yAxis;
+        }
+    }, {
+        key: 'setActiveSeries',
 
-    /**
-     * Get the yAxis object
-     * @return the yAxis object that can be used to render the graph
-     */
-    getYAxis() {
-        return this.yAxis;
-    };
+        /**
+         * Set the active series
+         * @param series the series
+         */
+        value: function setActiveSeries(series) {
+            this.activeSeries = series;
+        }
+    }, {
+        key: 'setActiveSeriesByIndex',
 
-    /**
-     * Set the active series
-     * @param series the series
-     */
-    setActiveSeries(series) {
-        this.activeSeries = series;
-    };
+        /**
+         * Set the active series by the index
+         * @param index the index
+         */
+        value: function setActiveSeriesByIndex(index) {
 
-    /**
-     * Set the active series by the index
-     * @param index the index
-     */
-    setActiveSeriesByIndex(index) {
-
-        if (index == null) {
-            // the index is null so we will set the active series to null
-            this.setActiveSeries(null);
-        } else {
-            // get the series at the index
-            var series = this.getSeriesByIndex(index);
-
-            if (series == null) {
+            if (index == null) {
+                // the index is null so we will set the active series to null
                 this.setActiveSeries(null);
             } else {
-                this.setActiveSeries(series);
+                // get the series at the index
+                var series = this.getSeriesByIndex(index);
+
+                if (series == null) {
+                    this.setActiveSeries(null);
+                } else {
+                    this.setActiveSeries(series);
+                }
             }
         }
-    };
+    }, {
+        key: 'resetGraph',
 
-    /**
-     * Reset the table data to its initial state from the component content
-     */
-    resetGraph() {
-        // get the original series from the component content
-        this.setSeries(this.StudentDataService.makeCopyOfJSONObject(this.componentContent.series));
-
-        if (this.componentContent.xAxis != null) {
-            this.setXAxis(this.componentContent.xAxis);
-        }
-
-        if (this.componentContent.yAxis != null) {
-            this.setYAxis(this.componentContent.yAxis);
-        }
-
-        // set the active series to null so that the default series will become selected later
-        this.setActiveSeries(null);
-
-        /*
-         * notify the controller that the student data has changed
-         * so that the graph will be redrawn
+        /**
+         * Reset the table data to its initial state from the component content
          */
-        this.studentDataChanged();
-    };
+        value: function resetGraph() {
+            // get the original series from the component content
+            this.setSeries(this.StudentDataService.makeCopyOfJSONObject(this.componentContent.series));
 
-    /**
-     * Populate the student work into the component
-     * @param componentState the component state to populate into the component
-     */
-    setStudentWork(componentState) {
+            if (this.componentContent.xAxis != null) {
+                this.setXAxis(this.componentContent.xAxis);
+            }
 
-        if (componentState != null) {
+            if (this.componentContent.yAxis != null) {
+                this.setYAxis(this.componentContent.yAxis);
+            }
 
-            // get the student data from the component state
-            var studentData = componentState.studentData;
+            // set the active series to null so that the default series will become selected later
+            this.setActiveSeries(null);
 
-            if (studentData != null) {
-                // populate the student data into the component
-                this.setSeries(this.StudentDataService.makeCopyOfJSONObject(studentData.series));
-                this.setXAxis(studentData.xAxis);
-                this.setYAxis(studentData.yAxis);
-                this.setActiveSeriesByIndex(studentData.activeSeriesIndex);
+            /*
+             * notify the controller that the student data has changed
+             * so that the graph will be redrawn
+             */
+            this.studentDataChanged();
+        }
+    }, {
+        key: 'setStudentWork',
+
+        /**
+         * Populate the student work into the component
+         * @param componentState the component state to populate into the component
+         */
+        value: function setStudentWork(componentState) {
+
+            if (componentState != null) {
+
+                // get the student data from the component state
+                var studentData = componentState.studentData;
+
+                if (studentData != null) {
+                    // populate the student data into the component
+                    this.setSeries(this.StudentDataService.makeCopyOfJSONObject(studentData.series));
+                    this.setXAxis(studentData.xAxis);
+                    this.setYAxis(studentData.yAxis);
+                    this.setActiveSeriesByIndex(studentData.activeSeriesIndex);
+                }
             }
         }
-    };
+    }, {
+        key: 'saveButtonClicked',
 
-    /**
-     * Called when the student clicks the save button
-     */
-    saveButtonClicked() {
+        /**
+         * Called when the student clicks the save button
+         */
+        value: function saveButtonClicked() {
 
-        // tell the parent node that this component wants to save
-        this.$scope.$emit('componentSaveTriggered', {nodeId: this.nodeId, componentId: this.componentId});
-    };
+            // tell the parent node that this component wants to save
+            this.$scope.$emit('componentSaveTriggered', { nodeId: this.nodeId, componentId: this.componentId });
+        }
+    }, {
+        key: 'submitButtonClicked',
 
-    /**
-     * Called when the student clicks the submit button
-     */
-    submitButtonClicked() {
-        this.isSubmit = true;
+        /**
+         * Called when the student clicks the submit button
+         */
+        value: function submitButtonClicked() {
+            this.isSubmit = true;
 
-        // check if we need to lock the component after the student submits
-        if (this.isLockAfterSubmit()) {
-            this.isDisabled = true;
+            // check if we need to lock the component after the student submits
+            if (this.isLockAfterSubmit()) {
+                this.isDisabled = true;
+
+                // re-draw the graph
+                this.setupGraph();
+            }
+
+            // tell the parent node that this component wants to submit
+            this.$scope.$emit('componentSubmitTriggered', { nodeId: this.nodeId, componentId: this.componentId });
+        }
+    }, {
+        key: 'activeSeriesChanged',
+
+        /**
+         * The active series has changed
+         */
+        value: function activeSeriesChanged() {
+
+            // the student data has changed
+            this.studentDataChanged();
+        }
+    }, {
+        key: 'studentDataChanged',
+
+        /**
+         * Called when the student changes their work
+         */
+        value: function studentDataChanged() {
+            /*
+             * set the dirty flag so we will know we need to save the
+             * student work later
+             */
+            this.isDirty = true;
 
             // re-draw the graph
             this.setupGraph();
+
+            // get this component id
+            var componentId = this.getComponentId();
+
+            // create a component state populated with the student data
+            var componentState = this.createComponentState();
+
+            //force redraw
+            this.$scope.$apply();
+
+            /*
+             * the student work in this component has changed so we will tell
+             * the parent node that the student data will need to be saved.
+             * this will also notify connected parts that this component's student
+             * data has changed.
+             */
+            this.$scope.$emit('componentStudentDataChanged', { componentId: componentId, componentState: componentState });
         }
+    }, {
+        key: 'createComponentState',
 
-        // tell the parent node that this component wants to submit
-        this.$scope.$emit('componentSubmitTriggered', {nodeId: this.nodeId, componentId: this.componentId});
-    };
-
-    /**
-     * The active series has changed
-     */
-    activeSeriesChanged() {
-
-        // the student data has changed
-        this.studentDataChanged();
-    };
-
-    /**
-     * Called when the student changes their work
-     */
-    studentDataChanged() {
-        /*
-         * set the dirty flag so we will know we need to save the
-         * student work later
+        /**
+         * Create a new component state populated with the student data
+         * @return the componentState after it has been populated
          */
-        this.isDirty = true;
+        value: function createComponentState() {
 
-        // re-draw the graph
-        this.setupGraph();
+            // create a new component state
+            var componentState = this.NodeService.createNewComponentState();
 
-        // get this component id
-        var componentId = this.getComponentId();
+            if (componentState != null) {
+                var studentData = {};
 
-        // create a component state populated with the student data
-        var componentState = this.createComponentState();
+                // insert the series data
+                studentData.series = this.StudentDataService.makeCopyOfJSONObject(this.getSeries());
 
-        //force redraw
-        this.$scope.$apply();
+                // remove high-charts assigned id's from each series before saving
+                for (var s = 0; s < studentData.series.length; s++) {
+                    var series = studentData.series[s];
+                    series.id = null;
+                }
 
-        /*
-         * the student work in this component has changed so we will tell
-         * the parent node that the student data will need to be saved.
-         * this will also notify connected parts that this component's student
-         * data has changed.
-         */
-        this.$scope.$emit('componentStudentDataChanged', {componentId: componentId, componentState: componentState});
-    };
+                // insert the x axis data
+                studentData.xAxis = this.getXAxis();
 
-    /**
-     * Create a new component state populated with the student data
-     * @return the componentState after it has been populated
-     */
-    createComponentState() {
+                // insert the y axis data
+                studentData.yAxis = this.getYAxis();
 
-        // create a new component state
-        var componentState = this.NodeService.createNewComponentState();
+                // get the active series index
+                var activeSeriesIndex = this.getSeriesIndex(this.activeSeries);
 
-        if (componentState != null) {
-            var studentData = {};
+                if (activeSeriesIndex != null) {
+                    // set the active series index
+                    studentData.activeSeriesIndex = activeSeriesIndex;
+                }
 
-            // insert the series data
-            studentData.series = this.StudentDataService.makeCopyOfJSONObject(this.getSeries());
+                if (this.isSubmit) {
+                    // the student submitted this work
+                    componentState.isSubmit = this.isSubmit;
 
-            // remove high-charts assigned id's from each series before saving
-            for (var s = 0; s < studentData.series.length; s++) {
-                var series = studentData.series[s];
-                series.id = null;
+                    /*
+                     * reset the isSubmit value so that the next component state
+                     * doesn't maintain the same value
+                     */
+                    this.isSubmit = false;
+                }
+
+                componentState.studentData = studentData;
             }
 
-            // insert the x axis data
-            studentData.xAxis = this.getXAxis();
-
-            // insert the y axis data
-            studentData.yAxis = this.getYAxis();
-
-            // get the active series index
-            var activeSeriesIndex  = this.getSeriesIndex(this.activeSeries);
-
-            if (activeSeriesIndex != null) {
-                // set the active series index
-                studentData.activeSeriesIndex = activeSeriesIndex;
-            }
-
-            if (this.isSubmit) {
-                // the student submitted this work
-                componentState.isSubmit = this.isSubmit;
-
-                /*
-                 * reset the isSubmit value so that the next component state
-                 * doesn't maintain the same value
-                 */
-                this.isSubmit = false;
-            }
-
-            componentState.studentData = studentData;
+            return componentState;
         }
+    }, {
+        key: 'calculateDisabled',
 
-        return componentState;
-    };
+        /**
+         * Check if we need to lock the component
+         */
+        value: function calculateDisabled() {
 
-    /**
-     * Check if we need to lock the component
-     */
-    calculateDisabled() {
+            var nodeId = this.nodeId;
 
-        var nodeId = this.nodeId;
+            // get the component content
+            var componentContent = this.componentContent;
 
-        // get the component content
-        var componentContent = this.componentContent;
+            if (componentContent != null) {
 
-        if (componentContent != null) {
-
-            // check if the parent has set this component to disabled
-            if (componentContent.isDisabled) {
-                this.isDisabled = true;
-            } else if (componentContent.lockAfterSubmit) {
-                // we need to lock the step after the student has submitted
-
-                // get the component states for this component
-                var componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
-
-                // check if any of the component states were submitted
-                var isSubmitted = this.NodeService.isWorkSubmitted(componentStates);
-
-                if (isSubmitted) {
-                    // the student has submitted work for this component
+                // check if the parent has set this component to disabled
+                if (componentContent.isDisabled) {
                     this.isDisabled = true;
-                }
-            }
-        }
-    };
+                } else if (componentContent.lockAfterSubmit) {
+                    // we need to lock the step after the student has submitted
 
-    /**
-     * Check whether we need to show the prompt
-     * @return whether to show the prompt
-     */
-    showPrompt() {
-        var show = false;
+                    // get the component states for this component
+                    var componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
 
-        if (this.isPromptVisible) {
-            show = true;
-        }
+                    // check if any of the component states were submitted
+                    var isSubmitted = this.NodeService.isWorkSubmitted(componentStates);
 
-        return show;
-    };
-
-    /**
-     * Check whether we need to show the save button
-     * @return whether to show the save button
-     */
-    showSaveButton() {
-        var show = false;
-
-        if (this.isSaveButtonVisible) {
-            show = true;
-        }
-
-        return show;
-    };
-
-    /**
-     * Check whether we need to show the submit button
-     * @return whether to show the submit button
-     */
-    showSubmitButton() {
-        var show = false;
-
-        if (this.isSubmitButtonVisible) {
-            show = true;
-        }
-
-        return show;
-    };
-
-    /**
-     * Check whether we need to show the reset graph button
-     * @return whether to show the reset graph button
-     */
-    showResetGraphButton() {
-        var show = false;
-
-        if (this.isResetGraphButtonVisible) {
-            show = true;
-        }
-
-        return show;
-    };
-
-    /**
-     * Check whether we need to lock the component after the student
-     * submits an answer.
-     */
-    isLockAfterSubmit() {
-        var result = false;
-
-        if (this.componentContent != null) {
-
-            // check the lockAfterSubmit field in the component content
-            if (this.componentContent.lockAfterSubmit) {
-                result = true;
-            }
-        }
-
-        return result;
-    };
-
-    /**
-     * Get the prompt to show to the student
-     * @return a string containing the prompt
-     */
-    getPrompt() {
-        var prompt = null;
-
-        if (this.componentContent != null) {
-            prompt = this.componentContent.prompt;
-        }
-
-        return prompt;
-    };
-
-    /**
-     * Get the index of a series
-     * @param series the series
-     * @return the index of the series
-     */
-    getSeriesIndex(series) {
-        var index = null;
-
-        if (series != null) {
-
-            // get all of the series
-            var seriesArray = this.getSeries();
-
-            if (seriesArray != null) {
-
-                // loop through all the series
-                for (var s = 0; s < seriesArray.length; s++) {
-                    var tempSeries = seriesArray[s];
-
-                    // check if this is the series we are looking for
-                    if (series == tempSeries) {
-                        index = s;
-                        break;
+                    if (isSubmitted) {
+                        // the student has submitted work for this component
+                        this.isDisabled = true;
                     }
                 }
             }
         }
+    }, {
+        key: 'showPrompt',
 
-        return index;
-    };
-
-    /**
-     * Get a series by the index
-     * @param index the index of the series in the series array
-     * @returns the series object or null if not found
-     */
-    getSeriesByIndex(index) {
-        var series = null;
-
-        if (index != null && index >= 0) {
-            // get all of the series
-            var seriesArray = this.getSeries();
-
-            if (seriesArray != null && seriesArray.length > 0) {
-                // get the series at the index
-                series = seriesArray[index];
-            }
-        }
-
-        return series;
-    }
-
-    /**
-     * Import work from another component
-     */
-    importWork() {
-
-        // get the component content
-        var componentContent = this.componentContent;
-
-        if (componentContent != null) {
-
-            var importWorkNodeId = componentContent.importWorkNodeId;
-            var importWorkComponentId = componentContent.importWorkComponentId;
-
-            if (importWorkNodeId != null && importWorkComponentId != null) {
-
-                // get the latest component state for this component
-                var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
-
-                /*
-                 * we will only import work into this component if the student
-                 * has not done any work for this component
-                 */
-                if(componentState == null) {
-                    // the student has not done any work for this component
-
-                    // get the latest component state from the component we are importing from
-                    var importWorkComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(importWorkNodeId, importWorkComponentId);
-
-                    if (importWorkComponentState != null) {
-                        /*
-                         * populate a new component state with the work from the
-                         * imported component state
-                         */
-                        var populatedComponentState = this.GraphService.populateComponentState(importWorkComponentState);
-
-                        // populate the component state into this component
-                        this.setStudentWork(populatedComponentState);
-                    }
-                }
-            }
-        }
-    };
-
-    /**
-     * handle importing notebook item data (we only support csv for now)
-     */
-    attachNotebookItemToComponent(notebookItem) {
-        if (notebookItem.studentAsset != null) {
-            // we're importing a StudentAssetNotebookItem
-            var studentAsset = notebookItem.studentAsset;
-            this.StudentAssetService.copyAssetForReference(studentAsset).then(angular.bind(this, function(copiedAsset) {
-                if (copiedAsset != null) {
-                    var attachment = {
-                        notebookItemId: notebookItem.id,
-                        studentAssetId: copiedAsset.id,
-                        iconURL: copiedAsset.iconURL
-                    };
-
-                    this.StudentAssetService.getAssetContent(copiedAsset).then(angular.bind(this, function(assetContent) {
-                        var rowData = this.StudentDataService.CSVToArray(assetContent);
-                        var params = {};
-                        params.skipFirstRow = true;  // first row contains header, so ignore it
-                        params.xColumn = 0;          // assume (for now) x-axis data is in first column
-                        params.yColumn = 1;          // assume (for now) y-axis data is in second column
-
-                        var seriesData = this.convertRowDataToSeriesData(rowData, params);
-
-                        // get the index of the series that we will put the data into
-                        var seriesIndex = this.series.length;  // we're always appending a new series
-
-                        if (seriesIndex != null) {
-
-                            // get the series
-                            var series = this.series[seriesIndex];
-
-                            if (series == null) {
-                                // the series is null so we will create a series
-                                series = {};
-                                series.name = copiedAsset.fileName;
-                                series.color = this.seriesColors[seriesIndex];
-                                series.marker = {
-                                    "symbol": this.seriesMarkers[seriesIndex]
-                                };
-                                series.regression = false;
-                                series.regressionSettings = {};
-                                series.canEdit = false;
-                                this.series[seriesIndex] = series;
-                            }
-
-                            // set the data into the series
-                            series.data = seriesData;
-                        }
-
-                        // render the graph
-                        this.setupGraph();
-
-                        // the graph has changed
-                        this.isDirty = true;
-                    }));
-                    this.studentDataChanged();
-                }
-            }));
-        } else if (notebookItem.studentWork != null) {
-            // TODO implement me
-        }
-    };
-
-    /**
-     * Convert the table data into series data
-     * @param componentState the component state to get table data from
-     * @param params (optional) the params to specify what columns
-     * and rows to use from the table data
-     */
-    convertRowDataToSeriesData(rows, params) {
-        var data = [];
-
-        /*
-         * the default is set to not skip the first row and for the
-         * x column to be the first column and the y column to be the
-         * second column
+        /**
+         * Check whether we need to show the prompt
+         * @return whether to show the prompt
          */
-        var skipFirstRow = false;
-        var xColumn = 0;
-        var yColumn = 1;
+        value: function showPrompt() {
+            var show = false;
 
-        if (params != null) {
-
-            if (params.skipFirstRow != null) {
-                // determine whether to skip the first row
-                skipFirstRow = params.skipFirstRow;
+            if (this.isPromptVisible) {
+                show = true;
             }
 
-            if (params.xColumn != null) {
-                // get the x column
-                xColumn = params.xColumn;
-            }
-
-            if (params.yColumn != null) {
-                // get the y column
-                yColumn = params.yColumn;
-            }
+            return show;
         }
+    }, {
+        key: 'showSaveButton',
 
-        // loop through all the rows
-        for (var r = 0; r < rows.length; r++) {
+        /**
+         * Check whether we need to show the save button
+         * @return whether to show the save button
+         */
+        value: function showSaveButton() {
+            var show = false;
 
-            if (skipFirstRow && r === 0) {
-                // skip the first row
-                continue;
+            if (this.isSaveButtonVisible) {
+                show = true;
             }
 
-            // get the row
-            var row = rows[r];
+            return show;
+        }
+    }, {
+        key: 'showSubmitButton',
 
-            // get the x cell and y cell from the row
-            var xCell = row[xColumn];
-            var yCell = row[yColumn];
+        /**
+         * Check whether we need to show the submit button
+         * @return whether to show the submit button
+         */
+        value: function showSubmitButton() {
+            var show = false;
 
-            if (xCell != null && yCell != null) {
+            if (this.isSubmitButtonVisible) {
+                show = true;
+            }
 
-                /*
-                 * the point array where the 0 index will contain the
-                 * x value and the 1 index will contain the y value
-                 */
-                var point = [];
+            return show;
+        }
+    }, {
+        key: 'showResetGraphButton',
 
-                // get the x text and y text
-                var xText = null;
-                if (typeof(xCell) === 'object' && xCell.text) {
-                    xText = xCell.text;
-                } else {
-                    xText = xCell;
-                }
+        /**
+         * Check whether we need to show the reset graph button
+         * @return whether to show the reset graph button
+         */
+        value: function showResetGraphButton() {
+            var show = false;
 
-                var yText = null;
-                if (typeof(yCell) === 'object' && yCell.text) {
-                    yText = yCell.text;
-                } else {
-                    yText = yCell;
-                }
+            if (this.isResetGraphButtonVisible) {
+                show = true;
+            }
 
-                if (xText != null &&
-                    xText !== '' &&
-                    yText != null &&
-                    yText !== '') {
+            return show;
+        }
+    }, {
+        key: 'isLockAfterSubmit',
 
-                    // try to convert the text values into numbers
-                    var xNumber = Number(xText);
-                    var yNumber = Number(yText);
+        /**
+         * Check whether we need to lock the component after the student
+         * submits an answer.
+         */
+        value: function isLockAfterSubmit() {
+            var result = false;
 
-                    if (!isNaN(xNumber)) {
-                        /*
-                         * we were able to convert the value into a
-                         * number so we will add that
-                         */
-                        point.push(xNumber);
-                    } else {
-                        /*
-                         * we were unable to convert the value into a
-                         * number so we will add the text
-                         */
-                        point.push(xText);
-                    }
+            if (this.componentContent != null) {
 
-                    if (!isNaN(yNumber)) {
-                        /*
-                         * we were able to convert the value into a
-                         * number so we will add that
-                         */
-                        point.push(yNumber);
-                    } else {
-                        /*
-                         * we were unable to convert the value into a
-                         * number so we will add the text
-                         */
-                        point.push(yText);
-                    }
-
-                    // add the point to our data
-                    data.push(point);
+                // check the lockAfterSubmit field in the component content
+                if (this.componentContent.lockAfterSubmit) {
+                    result = true;
                 }
             }
+
+            return result;
         }
+    }, {
+        key: 'getPrompt',
 
-        return data;
-    };
+        /**
+         * Get the prompt to show to the student
+         * @return a string containing the prompt
+         */
+        value: function getPrompt() {
+            var prompt = null;
 
-    /**
-     * Set the series id for each series
-     * @param allSeries an array of series
-     */
-    setSeriesIds(allSeries) {
-        var usedSeriesIds = [];
-
-        if (allSeries != null) {
-
-            // loop through all the series
-            for (var x = 0; x < allSeries.length; x++) {
-                var series = allSeries[x];
-
-                // get the series id if it is set
-                var seriesId = series.id;
-
-                if (seriesId == null) {
-                    // the series doesn't have a series id so we will give it one
-                    var nextSeriesId = getNextSeriesId(usedSeriesIds);
-                    series.id = nextSeriesId;
-                    usedSeriesIds.push(nextSeriesId);
-                }
+            if (this.componentContent != null) {
+                prompt = this.componentContent.prompt;
             }
+
+            return prompt;
         }
-    };
+    }, {
+        key: 'getSeriesIndex',
 
-    /**
-     * Get the next available series id
-     * @param usedSeriesIds an array of used series ids
-     * @returns the next available series id
-     */
-    getNextSeriesId(usedSeriesIds) {
-        var nextSeriesId = null;
-        var currentSeriesNumber = 0;
-        var foundNextSeriesId = false;
-
-        while (!foundNextSeriesId) {
-
-            // get a temp series id
-            var tempSeriesId = 'series-' + currentSeriesNumber;
-
-            // check if the temp series id is used
-            if (usedSeriesIds.indexOf(tempSeriesId) == -1) {
-                // temp series id has not been used
-
-                nextSeriesId = tempSeriesId;
-
-                foundNextSeriesId = true;
-            } else {
-                /*
-                 * the temp series id has been used so we will increment the
-                 * counter to try another series id the next iteration
-                 */
-                currentSeriesNumber++;
-            }
-        }
-
-        return nextSeriesId;
-    };
-
-    /**
-     * Round a number to the nearest tenth
-     */
-    roundToNearestTenth(x) {
-
-        // make sure x is a number
-        x = parseFloat(x);
-
-        // round the number to the nearest tenth
-        x = Math.round(x * 10) / 10;
-
-        return x;
-    }
-
-    /**
-     * Handle the delete key press
-     */
-    handleDeleteKeyPressed() {
-
-        // get the active series
-        var series = this.activeSeries;
-
-        // check if the student is allowed to edit the the active series
-        if (series != null && this.canEdit(series)) {
-
-            // get the chart
-            var chart = $('#chart1').highcharts();
-
-            // get the selected points
-            var selectedPoints = chart.getSelectedPoints();
-
+        /**
+         * Get the index of a series
+         * @param series the series
+         * @return the index of the series
+         */
+        value: function getSeriesIndex(series) {
             var index = null;
 
-            if (selectedPoints != null) {
+            if (series != null) {
 
-                // an array to hold the indexes of the selected points
-                var indexes = [];
+                // get all of the series
+                var seriesArray = this.getSeries();
 
-                // loop through all the selected points
-                for (var x = 0; x < selectedPoints.length; x++) {
+                if (seriesArray != null) {
 
-                    // get a selected point
-                    var selectedPoint = selectedPoints[x];
+                    // loop through all the series
+                    for (var s = 0; s < seriesArray.length; s++) {
+                        var tempSeries = seriesArray[s];
 
-                    // get the index of the selected point
-                    index = selectedPoint.index;
-
-                    // add the index to our array
-                    indexes.push(index);
-                }
-
-                // order the array from largest to smallest
-                indexes.sort().reverse();
-
-                // get the series data
-                var data = series.data;
-
-                // loop through all the indexes and remove them from the series data
-                for (var i = 0; i < indexes.length; i++) {
-
-                    index = indexes[i];
-
-                    if (data != null) {
-                        data.splice(index, 1);
+                        // check if this is the series we are looking for
+                        if (series == tempSeries) {
+                            index = s;
+                            break;
+                        }
                     }
                 }
+            }
 
-                this.studentDataChanged();
+            return index;
+        }
+    }, {
+        key: 'getSeriesByIndex',
+
+        /**
+         * Get a series by the index
+         * @param index the index of the series in the series array
+         * @returns the series object or null if not found
+         */
+        value: function getSeriesByIndex(index) {
+            var series = null;
+
+            if (index != null && index >= 0) {
+                // get all of the series
+                var seriesArray = this.getSeries();
+
+                if (seriesArray != null && seriesArray.length > 0) {
+                    // get the series at the index
+                    series = seriesArray[index];
+                }
+            }
+
+            return series;
+        }
+
+        /**
+         * Import work from another component
+         */
+
+    }, {
+        key: 'importWork',
+        value: function importWork() {
+
+            // get the component content
+            var componentContent = this.componentContent;
+
+            if (componentContent != null) {
+
+                var importWorkNodeId = componentContent.importWorkNodeId;
+                var importWorkComponentId = componentContent.importWorkComponentId;
+
+                if (importWorkNodeId != null && importWorkComponentId != null) {
+
+                    // get the latest component state for this component
+                    var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
+
+                    /*
+                     * we will only import work into this component if the student
+                     * has not done any work for this component
+                     */
+                    if (componentState == null) {
+                        // the student has not done any work for this component
+
+                        // get the latest component state from the component we are importing from
+                        var importWorkComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(importWorkNodeId, importWorkComponentId);
+
+                        if (importWorkComponentState != null) {
+                            /*
+                             * populate a new component state with the work from the
+                             * imported component state
+                             */
+                            var populatedComponentState = this.GraphService.populateComponentState(importWorkComponentState);
+
+                            // populate the component state into this component
+                            this.setStudentWork(populatedComponentState);
+                        }
+                    }
+                }
             }
         }
-    };
+    }, {
+        key: 'attachNotebookItemToComponent',
 
-    /**
-     * Get the component id
-     * @return the component id
-     */
-    getComponentId() {
-        var componentId = this.componentContent.id;
-
-        return componentId;
-    };
-
-    /**
-     * Register the the listener that will listen for the exit event
-     * so that we can perform saving before exiting.
-     */
-    registerExitListener() {
-
-        /*
-         * Listen for the 'exit' event which is fired when the student exits
-         * the VLE. This will perform saving before the VLE exits.
+        /**
+         * handle importing notebook item data (we only support csv for now)
          */
-        this.exitListener = this.$scope.$on('exit', angular.bind(this, function(event, args) {
+        value: function attachNotebookItemToComponent(notebookItem) {
+            if (notebookItem.studentAsset != null) {
+                // we're importing a StudentAssetNotebookItem
+                var studentAsset = notebookItem.studentAsset;
+                this.StudentAssetService.copyAssetForReference(studentAsset).then(angular.bind(this, function (copiedAsset) {
+                    if (copiedAsset != null) {
+                        var attachment = {
+                            notebookItemId: notebookItem.id,
+                            studentAssetId: copiedAsset.id,
+                            iconURL: copiedAsset.iconURL
+                        };
 
-            this.$rootScope.$broadcast('doneExiting');
-        }));
-    };
-}
+                        this.StudentAssetService.getAssetContent(copiedAsset).then(angular.bind(this, function (assetContent) {
+                            var rowData = this.StudentDataService.CSVToArray(assetContent);
+                            var params = {};
+                            params.skipFirstRow = true; // first row contains header, so ignore it
+                            params.xColumn = 0; // assume (for now) x-axis data is in first column
+                            params.yColumn = 1; // assume (for now) y-axis data is in second column
 
+                            var seriesData = this.convertRowDataToSeriesData(rowData, params);
 
-GraphController.$inject = [
-    '$rootScope',
-    '$scope',
-    'GraphService',
-    'NodeService',
-    'ProjectService',
-    'StudentAssetService',
-    'StudentDataService'
-];
+                            // get the index of the series that we will put the data into
+                            var seriesIndex = this.series.length; // we're always appending a new series
 
-export default GraphController;
+                            if (seriesIndex != null) {
+
+                                // get the series
+                                var series = this.series[seriesIndex];
+
+                                if (series == null) {
+                                    // the series is null so we will create a series
+                                    series = {};
+                                    series.name = copiedAsset.fileName;
+                                    series.color = this.seriesColors[seriesIndex];
+                                    series.marker = {
+                                        "symbol": this.seriesMarkers[seriesIndex]
+                                    };
+                                    series.regression = false;
+                                    series.regressionSettings = {};
+                                    series.canEdit = false;
+                                    this.series[seriesIndex] = series;
+                                }
+
+                                // set the data into the series
+                                series.data = seriesData;
+                            }
+
+                            // render the graph
+                            this.setupGraph();
+
+                            // the graph has changed
+                            this.isDirty = true;
+                        }));
+                        this.studentDataChanged();
+                    }
+                }));
+            } else if (notebookItem.studentWork != null) {
+                // TODO implement me
+            }
+        }
+    }, {
+        key: 'convertRowDataToSeriesData',
+
+        /**
+         * Convert the table data into series data
+         * @param componentState the component state to get table data from
+         * @param params (optional) the params to specify what columns
+         * and rows to use from the table data
+         */
+        value: function convertRowDataToSeriesData(rows, params) {
+            var data = [];
+
+            /*
+             * the default is set to not skip the first row and for the
+             * x column to be the first column and the y column to be the
+             * second column
+             */
+            var skipFirstRow = false;
+            var xColumn = 0;
+            var yColumn = 1;
+
+            if (params != null) {
+
+                if (params.skipFirstRow != null) {
+                    // determine whether to skip the first row
+                    skipFirstRow = params.skipFirstRow;
+                }
+
+                if (params.xColumn != null) {
+                    // get the x column
+                    xColumn = params.xColumn;
+                }
+
+                if (params.yColumn != null) {
+                    // get the y column
+                    yColumn = params.yColumn;
+                }
+            }
+
+            // loop through all the rows
+            for (var r = 0; r < rows.length; r++) {
+
+                if (skipFirstRow && r === 0) {
+                    // skip the first row
+                    continue;
+                }
+
+                // get the row
+                var row = rows[r];
+
+                // get the x cell and y cell from the row
+                var xCell = row[xColumn];
+                var yCell = row[yColumn];
+
+                if (xCell != null && yCell != null) {
+
+                    /*
+                     * the point array where the 0 index will contain the
+                     * x value and the 1 index will contain the y value
+                     */
+                    var point = [];
+
+                    // get the x text and y text
+                    var xText = null;
+                    if ((typeof xCell === 'undefined' ? 'undefined' : _typeof(xCell)) === 'object' && xCell.text) {
+                        xText = xCell.text;
+                    } else {
+                        xText = xCell;
+                    }
+
+                    var yText = null;
+                    if ((typeof yCell === 'undefined' ? 'undefined' : _typeof(yCell)) === 'object' && yCell.text) {
+                        yText = yCell.text;
+                    } else {
+                        yText = yCell;
+                    }
+
+                    if (xText != null && xText !== '' && yText != null && yText !== '') {
+
+                        // try to convert the text values into numbers
+                        var xNumber = Number(xText);
+                        var yNumber = Number(yText);
+
+                        if (!isNaN(xNumber)) {
+                            /*
+                             * we were able to convert the value into a
+                             * number so we will add that
+                             */
+                            point.push(xNumber);
+                        } else {
+                            /*
+                             * we were unable to convert the value into a
+                             * number so we will add the text
+                             */
+                            point.push(xText);
+                        }
+
+                        if (!isNaN(yNumber)) {
+                            /*
+                             * we were able to convert the value into a
+                             * number so we will add that
+                             */
+                            point.push(yNumber);
+                        } else {
+                            /*
+                             * we were unable to convert the value into a
+                             * number so we will add the text
+                             */
+                            point.push(yText);
+                        }
+
+                        // add the point to our data
+                        data.push(point);
+                    }
+                }
+            }
+
+            return data;
+        }
+    }, {
+        key: 'setSeriesIds',
+
+        /**
+         * Set the series id for each series
+         * @param allSeries an array of series
+         */
+        value: function setSeriesIds(allSeries) {
+            var usedSeriesIds = [];
+
+            if (allSeries != null) {
+
+                // loop through all the series
+                for (var x = 0; x < allSeries.length; x++) {
+                    var series = allSeries[x];
+
+                    // get the series id if it is set
+                    var seriesId = series.id;
+
+                    if (seriesId == null) {
+                        // the series doesn't have a series id so we will give it one
+                        var nextSeriesId = getNextSeriesId(usedSeriesIds);
+                        series.id = nextSeriesId;
+                        usedSeriesIds.push(nextSeriesId);
+                    }
+                }
+            }
+        }
+    }, {
+        key: 'getNextSeriesId',
+
+        /**
+         * Get the next available series id
+         * @param usedSeriesIds an array of used series ids
+         * @returns the next available series id
+         */
+        value: function getNextSeriesId(usedSeriesIds) {
+            var nextSeriesId = null;
+            var currentSeriesNumber = 0;
+            var foundNextSeriesId = false;
+
+            while (!foundNextSeriesId) {
+
+                // get a temp series id
+                var tempSeriesId = 'series-' + currentSeriesNumber;
+
+                // check if the temp series id is used
+                if (usedSeriesIds.indexOf(tempSeriesId) == -1) {
+                    // temp series id has not been used
+
+                    nextSeriesId = tempSeriesId;
+
+                    foundNextSeriesId = true;
+                } else {
+                    /*
+                     * the temp series id has been used so we will increment the
+                     * counter to try another series id the next iteration
+                     */
+                    currentSeriesNumber++;
+                }
+            }
+
+            return nextSeriesId;
+        }
+    }, {
+        key: 'roundToNearestTenth',
+
+        /**
+         * Round a number to the nearest tenth
+         */
+        value: function roundToNearestTenth(x) {
+
+            // make sure x is a number
+            x = parseFloat(x);
+
+            // round the number to the nearest tenth
+            x = Math.round(x * 10) / 10;
+
+            return x;
+        }
+
+        /**
+         * Handle the delete key press
+         */
+
+    }, {
+        key: 'handleDeleteKeyPressed',
+        value: function handleDeleteKeyPressed() {
+
+            // get the active series
+            var series = this.activeSeries;
+
+            // check if the student is allowed to edit the the active series
+            if (series != null && this.canEdit(series)) {
+
+                // get the chart
+                var chart = $('#chart1').highcharts();
+
+                // get the selected points
+                var selectedPoints = chart.getSelectedPoints();
+
+                var index = null;
+
+                if (selectedPoints != null) {
+
+                    // an array to hold the indexes of the selected points
+                    var indexes = [];
+
+                    // loop through all the selected points
+                    for (var x = 0; x < selectedPoints.length; x++) {
+
+                        // get a selected point
+                        var selectedPoint = selectedPoints[x];
+
+                        // get the index of the selected point
+                        index = selectedPoint.index;
+
+                        // add the index to our array
+                        indexes.push(index);
+                    }
+
+                    // order the array from largest to smallest
+                    indexes.sort().reverse();
+
+                    // get the series data
+                    var data = series.data;
+
+                    // loop through all the indexes and remove them from the series data
+                    for (var i = 0; i < indexes.length; i++) {
+
+                        index = indexes[i];
+
+                        if (data != null) {
+                            data.splice(index, 1);
+                        }
+                    }
+
+                    this.studentDataChanged();
+                }
+            }
+        }
+    }, {
+        key: 'getComponentId',
+
+        /**
+         * Get the component id
+         * @return the component id
+         */
+        value: function getComponentId() {
+            var componentId = this.componentContent.id;
+
+            return componentId;
+        }
+    }, {
+        key: 'registerExitListener',
+
+        /**
+         * Register the the listener that will listen for the exit event
+         * so that we can perform saving before exiting.
+         */
+        value: function registerExitListener() {
+
+            /*
+             * Listen for the 'exit' event which is fired when the student exits
+             * the VLE. This will perform saving before the VLE exits.
+             */
+            this.exitListener = this.$scope.$on('exit', angular.bind(this, function (event, args) {
+
+                this.$rootScope.$broadcast('doneExiting');
+            }));
+        }
+    }]);
+
+    return GraphController;
+}();
+
+GraphController.$inject = ['$rootScope', '$scope', 'GraphService', 'NodeService', 'ProjectService', 'StudentAssetService', 'StudentDataService'];
+
+exports.default = GraphController;
+//# sourceMappingURL=graphController.js.map

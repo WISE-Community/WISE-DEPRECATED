@@ -1,9 +1,8 @@
-define(['app'], function(app) {
+'use strict';
 
-    app
-    .$controllerProvider
-    .register('StudentGradingController', ['$state', '$stateParams', 'AnnotationService', 'ConfigService', 'ProjectService', 'TeacherDataService',
-                                            function ($state, $stateParams, AnnotationService, ConfigService, ProjectService, TeacherDataService) {
+define(['app'], function (app) {
+
+    app.$controllerProvider.register('StudentGradingController', ['$state', '$stateParams', 'AnnotationService', 'ConfigService', 'ProjectService', 'TeacherDataService', function ($state, $stateParams, AnnotationService, ConfigService, ProjectService, TeacherDataService) {
 
         this.annotationMappings = {};
 
@@ -28,7 +27,7 @@ define(['app'], function(app) {
          * @param nodeId the node id
          * @return whether to show the node for this student
          */
-        this.showNodeIdForStudent = function(nodeId) {
+        this.showNodeIdForStudent = function (nodeId) {
             var result = false;
 
             if (ProjectService.isNodeIdInABranch(this.branches, nodeId)) {
@@ -68,7 +67,6 @@ define(['app'], function(app) {
                         }
                     }
                 }
-
             } else {
                 // node is not in a branch so we will show it
                 result = true;
@@ -77,43 +75,43 @@ define(['app'], function(app) {
             return result;
         };
 
-        this.getNodePositionAndTitleByNodeId = function(nodeId) {
+        this.getNodePositionAndTitleByNodeId = function (nodeId) {
             return ProjectService.getNodePositionAndTitleByNodeId(nodeId);
         };
 
-        this.getEventsByWorkgroupId = function(workgroupId) {
+        this.getEventsByWorkgroupId = function (workgroupId) {
             return TeacherDataService.getEventsByWorkgroupId(workgroupId);
         };
 
-        this.getEventsByWorkgroupIdAndNodeId = function(workgroupId, nodeId) {
+        this.getEventsByWorkgroupIdAndNodeId = function (workgroupId, nodeId) {
             return TeacherDataService.getEventsByWorkgroupIdAndNodeId(workgroupId, nodeId);
         };
 
-        this.getAnnotationsToWorkgroupId = function(workgroupId) {
+        this.getAnnotationsToWorkgroupId = function (workgroupId) {
             return TeacherDataService.getAnnotationsToWorkgroupId(workgroupId);
         };
 
-        this.getAnnotationsToWorkgroupIdAndNodeId = function(workgroupId, nodeId) {
+        this.getAnnotationsToWorkgroupIdAndNodeId = function (workgroupId, nodeId) {
             return TeacherDataService.getAnnotationsToWorkgroupIdAndNodeId(workgroupId, nodeId);
         };
 
-        this.getComponentStatesByWorkgroupIdAndNodeId = function(workgroupId, nodeId) {
+        this.getComponentStatesByWorkgroupIdAndNodeId = function (workgroupId, nodeId) {
             return TeacherDataService.getComponentStatesByWorkgroupIdAndNodeId(workgroupId, nodeId);
         };
 
-        this.scoreChanged = function(stepWorkId) {
+        this.scoreChanged = function (stepWorkId) {
             var annotation = this.annotationMappings[stepWorkId + '-score'];
             AnnotationService.saveAnnotation(annotation);
         };
 
-        this.commentChanged = function(stepWorkId) {
+        this.commentChanged = function (stepWorkId) {
             var annotation = this.annotationMappings[stepWorkId + '-comment'];
             AnnotationService.saveAnnotation(annotation);
-        }
+        };
 
-        this.getComponentsByNodeId = function(nodeId) {
+        this.getComponentsByNodeId = function (nodeId) {
             return ProjectService.getComponentsByNodeId(nodeId);
-        }
+        };
 
         /**
          * Get the student data for a specific student for a specific component
@@ -122,7 +120,7 @@ define(['app'], function(app) {
          * @param componentId the componentId the component id
          * @return the student data for the given component
          */
-        this.getLatestComponentStateByWorkgroupIdAndNodeIdAndComponentId = function(workgroupId, nodeId, componentId) {
+        this.getLatestComponentStateByWorkgroupIdAndNodeIdAndComponentId = function (workgroupId, nodeId, componentId) {
             var componentState = null;
 
             if (workgroupId != null && nodeId != null && componentId != null) {
@@ -137,5 +135,5 @@ define(['app'], function(app) {
         // scroll to the top of the page when the page loads
         document.body.scrollTop = document.documentElement.scrollTop = 0;
     }]);
-
 });
+//# sourceMappingURL=studentGradingController.js.map

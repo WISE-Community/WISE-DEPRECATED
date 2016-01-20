@@ -1,9 +1,16 @@
+"use strict";
 
-class StepToolsCtrl {
-    constructor($scope,
-                NodeService,
-                ProjectService,
-                StudentDataService) {
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var StepToolsCtrl = function () {
+    function StepToolsCtrl($scope, NodeService, ProjectService, StudentDataService) {
+        _classCallCheck(this, StepToolsCtrl);
 
         this.$scope = $scope;
         this.NodeService = NodeService;
@@ -23,51 +30,57 @@ class StepToolsCtrl {
         this.toNodeId = this.nodeId;
 
         var scope = this;
-        this.$scope.$watch(
-            function () { return scope.toNodeId; }.bind(this),
-            function (newId, oldId) {
-                if (newId !== oldId) {
-                    // selected node id has changed, so open new node
-                    this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(newId);
-                }
-            }.bind(this)
-        );
+        this.$scope.$watch(function () {
+            return scope.toNodeId;
+        }.bind(this), function (newId, oldId) {
+            if (newId !== oldId) {
+                // selected node id has changed, so open new node
+                this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(newId);
+            }
+        }.bind(this));
     }
 
-    getTemplateUrl(){
-        return this.ProjectService.getThemePath() + '/node/stepTools.html';
-    };
+    _createClass(StepToolsCtrl, [{
+        key: 'getTemplateUrl',
+        value: function getTemplateUrl() {
+            return this.ProjectService.getThemePath() + '/node/stepTools.html';
+        }
+    }, {
+        key: 'getNodeTitleByNodeId',
+        value: function getNodeTitleByNodeId(nodeId) {
+            return this.ProjectService.getNodeTitleByNodeId(nodeId);
+        }
+    }, {
+        key: 'getNodePositionById',
+        value: function getNodePositionById(nodeId) {
+            return this.ProjectService.getNodePositionById(nodeId);
+        }
+    }, {
+        key: 'isGroupNode',
+        value: function isGroupNode(nodeId) {
+            return this.ProjectService.isGroupNode(nodeId);
+        }
+    }, {
+        key: 'goToPrevNode',
+        value: function goToPrevNode() {
+            this.NodeService.goToPrevNode();
+        }
+    }, {
+        key: 'goToNextNode',
+        value: function goToNextNode() {
+            this.NodeService.goToNextNode();
+        }
+    }, {
+        key: 'closeNode',
+        value: function closeNode() {
+            this.NodeService.closeNode();
+        }
+    }]);
 
-    getNodeTitleByNodeId(nodeId) {
-        return this.ProjectService.getNodeTitleByNodeId(nodeId);
-    };
+    return StepToolsCtrl;
+}();
 
-    getNodePositionById(nodeId) {
-        return this.ProjectService.getNodePositionById(nodeId);
-    };
+StepToolsCtrl.$inject = ['$scope', 'NodeService', 'ProjectService', 'StudentDataService'];
 
-    isGroupNode(nodeId) {
-        return this.ProjectService.isGroupNode(nodeId);
-    };
-
-    goToPrevNode() {
-        this.NodeService.goToPrevNode();
-    };
-
-    goToNextNode() {
-        this.NodeService.goToNextNode();
-    };
-
-    closeNode() {
-        this.NodeService.closeNode();
-    };
-}
-
-StepToolsCtrl.$inject = [
-    '$scope',
-    'NodeService',
-    'ProjectService',
-    'StudentDataService'
-];
-
-export default StepToolsCtrl;
+exports.default = StepToolsCtrl;
+//# sourceMappingURL=stepToolsController.js.map

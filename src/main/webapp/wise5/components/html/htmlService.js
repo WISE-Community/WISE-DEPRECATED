@@ -1,8 +1,10 @@
-define(['nodeService', 'studentDataService'], function(nodeService, studentDataService) {
-    
-    var service = ['$http', 'NodeService', 'StudentDataService', function($http, NodeService, StudentDataService) {
+'use strict';
+
+define(['nodeService', 'studentDataService'], function (nodeService, studentDataService) {
+
+    var service = ['$http', 'NodeService', 'StudentDataService', function ($http, NodeService, StudentDataService) {
         var serviceObject = Object.create(NodeService);
-        
+
         /**
          * Check if the component was completed
          * @param component the component object
@@ -11,7 +13,7 @@ define(['nodeService', 'studentDataService'], function(nodeService, studentDataS
          * @param nodeEvents the events for the parent node of the component
          * @returns whether the component was completed
          */
-        serviceObject.isCompleted = function(component, componentStates, componentEvents, nodeEvents) {
+        serviceObject.isCompleted = function (component, componentStates, componentEvents, nodeEvents) {
             var result = false;
 
             if (nodeEvents != null) {
@@ -31,9 +33,10 @@ define(['nodeService', 'studentDataService'], function(nodeService, studentDataS
 
             return result;
         };
-        
+
         return serviceObject;
     }];
-    
+
     return service;
 });
+//# sourceMappingURL=htmlService.js.map

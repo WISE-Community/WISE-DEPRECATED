@@ -1,5 +1,17 @@
-class ComponentDirective {
-    constructor($injector, $compile, NodeService, ProjectService, StudentDataService) {
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var ComponentDirective = function () {
+    function ComponentDirective($injector, $compile, NodeService, ProjectService, StudentDataService) {
+        _classCallCheck(this, ComponentDirective);
+
         this.restrict = 'E';
         this.$injector = $injector;
         this.$compile = $compile;
@@ -8,66 +20,69 @@ class ComponentDirective {
         this.StudentDataService = StudentDataService;
     }
 
-    static directiveFactory($injector, $compile, NodeService, ProjectService, StudentDataService) {
-        ComponentDirective.instance = new ComponentDirective($injector, $compile, NodeService, ProjectService, StudentDataService);
-        return ComponentDirective.instance;
-    }
+    _createClass(ComponentDirective, [{
+        key: 'link',
+        value: function link($scope, element, attrs) {
+            var nodeId = attrs.nodeid;
+            var componentId = attrs.componentid;
+            var componentState = attrs.componentstate;
+            var workgroupId = null;
+            var teacherWorkgroupId = null;
 
-    link($scope, element, attrs) {
-        var nodeId = attrs.nodeid;
-        var componentId = attrs.componentid;
-        var componentState = attrs.componentstate;
-        var workgroupId = null;
-        var teacherWorkgroupId = null;
+            $scope.mode = "student";
+            if (attrs.mode) {
+                $scope.mode = attrs.mode;
+            }
 
-        $scope.mode = "student";
-        if (attrs.mode) {
-            $scope.mode = attrs.mode;
-        }
+            if (attrs.workgroupid != null) {
+                try {
+                    workgroupId = parseInt(attrs.workgroupid);
+                } catch (e) {}
+            }
 
-        if (attrs.workgroupid != null) {
-            try {
-                workgroupId = parseInt(attrs.workgroupid);
-            } catch(e) {
+            if (attrs.teacherworkgroupid) {
+                try {
+                    teacherWorkgroupId = parseInt(attrs.teacherworkgroupid);
+                } catch (e) {}
+            }
 
+            if (componentState == null || componentState === '') {
+                componentState = ComponentDirective.instance.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
+            } else {
+                componentState = angular.fromJson(componentState);
+            }
+
+            var component = ComponentDirective.instance.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
+
+            $scope.component = component;
+            $scope.componentState = componentState;
+            $scope.componentTemplatePath = ComponentDirective.instance.NodeService.getComponentTemplatePath(component.type);
+            $scope.nodeId = nodeId;
+            $scope.workgroupId = workgroupId;
+            $scope.teacherWorkgroupId = teacherWorkgroupId;
+
+            var componentHTML = "<div id=\"{{component.id}}\" class=\"component-content\" >" + "<div ng-include=\"componentTemplatePath\" style=\"overflow-x: auto;\"></div></div>";
+
+            if (componentHTML != null) {
+                element.html(componentHTML);
+                ComponentDirective.instance.$compile(element.contents())($scope);
             }
         }
-
-        if (attrs.teacherworkgroupid) {
-            try {
-                teacherWorkgroupId = parseInt(attrs.teacherworkgroupid);
-            } catch(e) {
-
-            }
+    }], [{
+        key: 'directiveFactory',
+        value: function directiveFactory($injector, $compile, NodeService, ProjectService, StudentDataService) {
+            ComponentDirective.instance = new ComponentDirective($injector, $compile, NodeService, ProjectService, StudentDataService);
+            return ComponentDirective.instance;
         }
+    }]);
 
-        if (componentState == null || componentState === '') {
-            componentState = ComponentDirective.instance.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
-        } else {
-            componentState = angular.fromJson(componentState);
-        }
+    return ComponentDirective;
+}();
 
-        var component = ComponentDirective.instance.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
+var ClassResponseDirective = function () {
+    function ClassResponseDirective(StudentStatusService) {
+        _classCallCheck(this, ClassResponseDirective);
 
-        $scope.component = component;
-        $scope.componentState = componentState;
-        $scope.componentTemplatePath = ComponentDirective.instance.NodeService.getComponentTemplatePath(component.type);
-        $scope.nodeId = nodeId;
-        $scope.workgroupId = workgroupId;
-        $scope.teacherWorkgroupId = teacherWorkgroupId;
-
-        var componentHTML = "<div id=\"{{component.id}}\" class=\"component-content\" >" +
-            "<div ng-include=\"componentTemplatePath\" style=\"overflow-x: auto;\"></div></div>";
-
-        if (componentHTML != null) {
-            element.html(componentHTML);
-            ComponentDirective.instance.$compile(element.contents())($scope);
-        }
-    }
-}
-
-class ClassResponseDirective {
-    constructor(StudentStatusService) {
         this.restrict = 'E';
         this.scope = {
             response: '=',
@@ -78,77 +93,88 @@ class ClassResponseDirective {
         this.StudentStatusService = StudentStatusService;
     }
 
-    static directiveFactory(StudentStatusService) {
-        ClassResponseDirective.instance = new ClassResponseDirective(StudentStatusService);
-        return ClassResponseDirective.instance;
-    }
+    _createClass(ClassResponseDirective, [{
+        key: 'link',
+        value: function link($scope, $element, attrs) {
+            $scope.element = $element[0];
 
-    link($scope, $element, attrs) {
-        $scope.element = $element[0];
+            $scope.getAvatarColorForWorkgroupId = function (workgroupId) {
+                return ClassResponseDirective.instance.StudentStatusService.getAvatarColorForWorkgroupId(workgroupId);
+            };
 
-        $scope.getAvatarColorForWorkgroupId = function (workgroupId) {
-            return ClassResponseDirective.instance.StudentStatusService.getAvatarColorForWorkgroupId(workgroupId);
-        };
+            // handle the submit button click
+            $scope.submitButtonClicked = function (response) {
+                $scope.submitbuttonclicked({ r: response });
+            };
 
-        // handle the submit button click
-        $scope.submitButtonClicked = function(response) {
-            $scope.submitbuttonclicked({r: response});
-        };
+            $scope.expanded = false;
 
-        $scope.expanded = false;
-
-        $scope.$watch(
-            function () { return $scope.response.replies.length; },
-            function (oldValue, newValue) {
+            $scope.$watch(function () {
+                return $scope.response.replies.length;
+            }, function (oldValue, newValue) {
                 if (newValue !== oldValue) {
                     $scope.toggleExpanded(true);
                 }
-            }
-        );
+            });
 
-        $scope.toggleExpanded = function (open) {
-            if (open) {
-                $scope.expanded = true;
-            } else {
-                $scope.expanded = !$scope.expanded;
-            }
+            $scope.toggleExpanded = function (open) {
+                if (open) {
+                    $scope.expanded = true;
+                } else {
+                    $scope.expanded = !$scope.expanded;
+                }
 
-            if ($scope.expanded) {
-                var $clist = $($scope.element).find('.discussion-comments__list');
-                setTimeout(function () {
-                    $clist.animate({scrollTop: $clist.height()}, 250);
-                }, 250);
-            }
-        };
-    };
-}
+                if ($scope.expanded) {
+                    var $clist = $($scope.element).find('.discussion-comments__list');
+                    setTimeout(function () {
+                        $clist.animate({ scrollTop: $clist.height() }, 250);
+                    }, 250);
+                }
+            };
+        }
+    }], [{
+        key: 'directiveFactory',
+        value: function directiveFactory(StudentStatusService) {
+            ClassResponseDirective.instance = new ClassResponseDirective(StudentStatusService);
+            return ClassResponseDirective.instance;
+        }
+    }]);
 
-class CompileDirective {
-    constructor($compile) {
+    return ClassResponseDirective;
+}();
+
+var CompileDirective = function () {
+    function CompileDirective($compile) {
+        _classCallCheck(this, CompileDirective);
 
         this.$compile = $compile;
     }
 
-    static directiveFactory($compile) {
-        CompileDirective.instance = new CompileDirective($compile);
-        return CompileDirective.instance;
-    }
-
-    link(scope, ele, attrs) {
-        scope.$watch(
-            function(scope) {
+    _createClass(CompileDirective, [{
+        key: 'link',
+        value: function link(scope, ele, attrs) {
+            scope.$watch(function (scope) {
                 return scope.$eval(attrs.compile);
-            },
-            function(value) {
+            }, function (value) {
                 ele.html(value);
                 CompileDirective.instance.$compile(ele.contents())(scope);
-            }
-        );
-    }
-}
+            });
+        }
+    }], [{
+        key: 'directiveFactory',
+        value: function directiveFactory($compile) {
+            CompileDirective.instance = new CompileDirective($compile);
+            return CompileDirective.instance;
+        }
+    }]);
 
-class navItemDirective {
-    constructor() {
+    return CompileDirective;
+}();
+
+var navItemDirective = function () {
+    function navItemDirective() {
+        _classCallCheck(this, navItemDirective);
+
         this.scope = {
             nodeId: '=',
             showPosition: '=',
@@ -160,14 +186,21 @@ class navItemDirective {
         this.bindToController = true;
     }
 
-    static directiveFactory() {
-        navItemDirective.instance = new navItemDirective();
-        return navItemDirective.instance;
-    }
-}
+    _createClass(navItemDirective, null, [{
+        key: 'directiveFactory',
+        value: function directiveFactory() {
+            navItemDirective.instance = new navItemDirective();
+            return navItemDirective.instance;
+        }
+    }]);
 
-class stepToolsDirective {
-    constructor() {
+    return navItemDirective;
+}();
+
+var stepToolsDirective = function () {
+    function stepToolsDirective() {
+        _classCallCheck(this, stepToolsDirective);
+
         this.scope = {
             nodeId: '=',
             showPosition: '='
@@ -178,14 +211,21 @@ class stepToolsDirective {
         this.bindToController = true;
     }
 
-    static directiveFactory() {
-        stepToolsDirective.instance = new stepToolsDirective();
-        return stepToolsDirective.instance;
-    }
-}
+    _createClass(stepToolsDirective, null, [{
+        key: 'directiveFactory',
+        value: function directiveFactory() {
+            stepToolsDirective.instance = new stepToolsDirective();
+            return stepToolsDirective.instance;
+        }
+    }]);
 
-class nodeStatusIconDirective {
-    constructor() {
+    return stepToolsDirective;
+}();
+
+var nodeStatusIconDirective = function () {
+    function nodeStatusIconDirective() {
+        _classCallCheck(this, nodeStatusIconDirective);
+
         this.scope = {
             nodeId: '=',
             customClass: '='
@@ -196,17 +236,20 @@ class nodeStatusIconDirective {
         this.bindToController = true;
     }
 
-    static directiveFactory() {
-        nodeStatusIconDirective.instance = new nodeStatusIconDirective();
-        return nodeStatusIconDirective.instance;
-    }
-}
+    _createClass(nodeStatusIconDirective, null, [{
+        key: 'directiveFactory',
+        value: function directiveFactory() {
+            nodeStatusIconDirective.instance = new nodeStatusIconDirective();
+            return nodeStatusIconDirective.instance;
+        }
+    }]);
 
-class AnnotationDirective {
-    constructor($compile,
-                AnnotationService,
-                ConfigService,
-                UtilService) {
+    return nodeStatusIconDirective;
+}();
+
+var AnnotationDirective = function () {
+    function AnnotationDirective($compile, AnnotationService, ConfigService, UtilService) {
+        _classCallCheck(this, AnnotationDirective);
 
         this.$compile = $compile;
         this.AnnotationService = AnnotationService;
@@ -220,184 +263,190 @@ class AnnotationDirective {
         this.scope = {};
     }
 
-    static directiveFactory($compile, AnnotationService, ConfigService, UtilService) {
-        AnnotationDirective.instance = new AnnotationDirective($compile, AnnotationService, ConfigService, UtilService);
-        return AnnotationDirective.instance;
-    }
+    _createClass(AnnotationDirective, [{
+        key: 'link',
+        value: function link($scope, element, attrs) {
 
-    link($scope, element, attrs) {
+            var annotationHTML = '';
 
-        var annotationHTML = '';
+            var type = attrs.type;
+            var mode = attrs.mode;
+            var nodeId = attrs.nodeid;
+            var componentId = attrs.componentid;
+            var fromWorkgroupId = attrs.fromworkgroupid;
+            var toWorkgroupId = attrs.toworkgroupid;
+            var componentStateId = attrs.componentstateid;
+            var active = attrs.active;
 
-        var type = attrs.type;
-        var mode = attrs.mode;
-        var nodeId = attrs.nodeid;
-        var componentId = attrs.componentid;
-        var fromWorkgroupId = attrs.fromworkgroupid;
-        var toWorkgroupId = attrs.toworkgroupid;
-        var componentStateId = attrs.componentstateid;
-        var active = attrs.active;
-
-        if (fromWorkgroupId == '') {
-            fromWorkgroupId = null;
-        } else if (fromWorkgroupId != null) {
-            // convert the string to a number
-            fromWorkgroupId = AnnotationDirective.instance.UtilService.convertStringToNumber(fromWorkgroupId);
-        }
-
-        if (toWorkgroupId == '') {
-            toWorkgroupId = null;
-        } else if (toWorkgroupId != null) {
-            // convert the string to a number
-            toWorkgroupId = AnnotationDirective.instance.UtilService.convertStringToNumber(toWorkgroupId);
-        }
-
-        if (componentStateId == '') {
-            componentStateId = null;
-        } else if (componentStateId != null) {
-            // convert the string to a number
-            componentStateId = AnnotationDirective.instance.UtilService.convertStringToNumber(componentStateId);
-        }
-
-        if (active == 'true') {
-            active = true;
-        } else {
-            active = false;
-        }
-
-        if (mode === 'student') {
-
-            var annotationParams = {};
-            annotationParams.nodeId = nodeId;
-            annotationParams.componentId = componentId;
-            annotationParams.fromWorkgroupId = fromWorkgroupId;
-            annotationParams.toWorkgroupId = toWorkgroupId;
-            annotationParams.type = type;
-            annotationParams.studentWorkId = componentStateId;
-
-            // get the latest annotation that matches the params
-            annotation = AnnotationDirective.instance.AnnotationService.getLatestAnnotation(annotationParams);
-
-            if (type === 'score') {
-
-                if (annotation != null) {
-                    var data = annotation.data;
-                    var dataJSONObject = angular.fromJson(data);
-
-                    if (dataJSONObject) {
-                        var value = dataJSONObject.value;
-
-                        if (value != null && value != '') {
-                            // display the score to the student
-                            annotationHTML += '<span>Score: ' + value + '</span>';
-                        }
-                    }
-                }
-            } else if (type === 'comment') {
-                if (annotation != null) {
-                    var data = annotation.data;
-                    var dataJSONObject = angular.fromJson(data);
-
-                    if (dataJSONObject) {
-                        var value = dataJSONObject.value;
-
-                        if (value != null && value != '') {
-                            // display the comment to the student
-                            annotationHTML += '<span>Comment: ' + value + '</span>';
-                        }
-                    }
-                }
+            if (fromWorkgroupId == '') {
+                fromWorkgroupId = null;
+            } else if (fromWorkgroupId != null) {
+                // convert the string to a number
+                fromWorkgroupId = AnnotationDirective.instance.UtilService.convertStringToNumber(fromWorkgroupId);
             }
-        } else if (mode === 'grading') {
 
-            var annotationParams = {};
-            annotationParams.nodeId = nodeId;
-            annotationParams.componentId = componentId;
-            annotationParams.fromWorkgroupId = fromWorkgroupId;
-            annotationParams.toWorkgroupId = toWorkgroupId;
-            annotationParams.type = type;
-            annotationParams.studentWorkId = componentStateId;
+            if (toWorkgroupId == '') {
+                toWorkgroupId = null;
+            } else if (toWorkgroupId != null) {
+                // convert the string to a number
+                toWorkgroupId = AnnotationDirective.instance.UtilService.convertStringToNumber(toWorkgroupId);
+            }
 
-            var annotation = null;
+            if (componentStateId == '') {
+                componentStateId = null;
+            } else if (componentStateId != null) {
+                // convert the string to a number
+                componentStateId = AnnotationDirective.instance.UtilService.convertStringToNumber(componentStateId);
+            }
 
-            if (active) {
-                /*
-                 * this directive instance is the active annotation that the teacher can use to
-                 * grade so we will get the latest annotation for the student work
-                 */
-                annotation = AnnotationDirective.instance.AnnotationService.getLatestAnnotation(annotationParams);
+            if (active == 'true') {
+                active = true;
             } else {
-                /*
-                 * this directive instance is not the active annotation so we will get the
-                 * annotation directly associated with the student work
-                 */
-                annotation = AnnotationDirective.instance.AnnotationService.getAnnotation(annotationParams);
+                active = false;
             }
 
-            // set the values into the controller so we can access them in the controller
-            $scope.annotationController.annotationId = null;
-            $scope.annotationController.nodeId = nodeId;
-            $scope.annotationController.periodId = null;
-            $scope.annotationController.componentId = componentId;
-            $scope.annotationController.fromWorkgroupId = fromWorkgroupId;
-            $scope.annotationController.toWorkgroupId = toWorkgroupId;
-            $scope.annotationController.type = type;
-            $scope.annotationController.componentStateId = componentStateId;
-            $scope.annotationController.isDisabled = !active;
+            if (mode === 'student') {
 
-            if (annotation != null) {
-                if (componentStateId == annotation.studentWorkId) {
-                    /*
-                     * the annotation is for the component state that is being displayed.
-                     * sometimes the annotation may not be for the component state that
-                     * is being displayed which can happen when student submits work,
-                     * the teacher annotates it, and then the student submits new work.
-                     * when this happens, we will show the teacher annotation but the
-                     * annotation is associated with the first student work and not the
-                     * second student work. setting the annotationId in the scope will
-                     * cause the server to update the annotation as opposed to creating
-                     * a new annotation row in the database.
-                     */
-                    $scope.annotationController.annotationId = annotation.id;
-                }
-            }
+                var annotationParams = {};
+                annotationParams.nodeId = nodeId;
+                annotationParams.componentId = componentId;
+                annotationParams.fromWorkgroupId = fromWorkgroupId;
+                annotationParams.toWorkgroupId = toWorkgroupId;
+                annotationParams.type = type;
+                annotationParams.studentWorkId = componentStateId;
 
-            var toUserInfo = AnnotationDirective.instance.ConfigService.getUserInfoByWorkgroupId(toWorkgroupId);
+                // get the latest annotation that matches the params
+                annotation = AnnotationDirective.instance.AnnotationService.getLatestAnnotation(annotationParams);
 
-            if (toUserInfo != null) {
-                // set the period id
-                $scope.annotationController.periodId = toUserInfo.periodId;
-            }
+                if (type === 'score') {
 
-            if (annotation != null) {
-                var data = annotation.data;
+                    if (annotation != null) {
+                        var data = annotation.data;
+                        var dataJSONObject = angular.fromJson(data);
 
-                if (data != null) {
-                    var dataJSONObject = angular.fromJson(data);
+                        if (dataJSONObject) {
+                            var value = dataJSONObject.value;
 
-                    if (dataJSONObject != null) {
-                        // set the annotation value
-                        $scope.annotationController.value = dataJSONObject.value;
+                            if (value != null && value != '') {
+                                // display the score to the student
+                                annotationHTML += '<span>Score: ' + value + '</span>';
+                            }
+                        }
+                    }
+                } else if (type === 'comment') {
+                    if (annotation != null) {
+                        var data = annotation.data;
+                        var dataJSONObject = angular.fromJson(data);
+
+                        if (dataJSONObject) {
+                            var value = dataJSONObject.value;
+
+                            if (value != null && value != '') {
+                                // display the comment to the student
+                                annotationHTML += '<span>Comment: ' + value + '</span>';
+                            }
+                        }
                     }
                 }
+            } else if (mode === 'grading') {
+
+                var annotationParams = {};
+                annotationParams.nodeId = nodeId;
+                annotationParams.componentId = componentId;
+                annotationParams.fromWorkgroupId = fromWorkgroupId;
+                annotationParams.toWorkgroupId = toWorkgroupId;
+                annotationParams.type = type;
+                annotationParams.studentWorkId = componentStateId;
+
+                var annotation = null;
+
+                if (active) {
+                    /*
+                     * this directive instance is the active annotation that the teacher can use to
+                     * grade so we will get the latest annotation for the student work
+                     */
+                    annotation = AnnotationDirective.instance.AnnotationService.getLatestAnnotation(annotationParams);
+                } else {
+                    /*
+                     * this directive instance is not the active annotation so we will get the
+                     * annotation directly associated with the student work
+                     */
+                    annotation = AnnotationDirective.instance.AnnotationService.getAnnotation(annotationParams);
+                }
+
+                // set the values into the controller so we can access them in the controller
+                $scope.annotationController.annotationId = null;
+                $scope.annotationController.nodeId = nodeId;
+                $scope.annotationController.periodId = null;
+                $scope.annotationController.componentId = componentId;
+                $scope.annotationController.fromWorkgroupId = fromWorkgroupId;
+                $scope.annotationController.toWorkgroupId = toWorkgroupId;
+                $scope.annotationController.type = type;
+                $scope.annotationController.componentStateId = componentStateId;
+                $scope.annotationController.isDisabled = !active;
+
+                if (annotation != null) {
+                    if (componentStateId == annotation.studentWorkId) {
+                        /*
+                         * the annotation is for the component state that is being displayed.
+                         * sometimes the annotation may not be for the component state that
+                         * is being displayed which can happen when student submits work,
+                         * the teacher annotates it, and then the student submits new work.
+                         * when this happens, we will show the teacher annotation but the
+                         * annotation is associated with the first student work and not the
+                         * second student work. setting the annotationId in the scope will
+                         * cause the server to update the annotation as opposed to creating
+                         * a new annotation row in the database.
+                         */
+                        $scope.annotationController.annotationId = annotation.id;
+                    }
+                }
+
+                var toUserInfo = AnnotationDirective.instance.ConfigService.getUserInfoByWorkgroupId(toWorkgroupId);
+
+                if (toUserInfo != null) {
+                    // set the period id
+                    $scope.annotationController.periodId = toUserInfo.periodId;
+                }
+
+                if (annotation != null) {
+                    var data = annotation.data;
+
+                    if (data != null) {
+                        var dataJSONObject = angular.fromJson(data);
+
+                        if (dataJSONObject != null) {
+                            // set the annotation value
+                            $scope.annotationController.value = dataJSONObject.value;
+                        }
+                    }
+                }
+
+                if (type === 'score') {
+                    annotationHTML += 'Score: ';
+                    annotationHTML += '<input size="10" ng-model="annotationController.value" ng-disabled="annotationController.isDisabled" ng-change="annotationController.postAnnotation()" ng-model-options="{ debounce: 2000 }"></input>';
+                } else if (type === 'comment') {
+                    annotationHTML += 'Comment: ';
+                    annotationHTML += '<br/>';
+                    annotationHTML += '<textarea ng-model="annotationController.value" ng-disabled="annotationController.isDisabled" ng-change="annotationController.postAnnotation()" ng-model-options="{ debounce: 2000 }" rows="5" cols="30"></textarea>';
+                }
             }
 
-            if (type === 'score') {
-                annotationHTML += 'Score: ';
-                annotationHTML += '<input size="10" ng-model="annotationController.value" ng-disabled="annotationController.isDisabled" ng-change="annotationController.postAnnotation()" ng-model-options="{ debounce: 2000 }"></input>';
-            } else if (type === 'comment') {
-                annotationHTML += 'Comment: ';
-                annotationHTML += '<br/>';
-                annotationHTML += '<textarea ng-model="annotationController.value" ng-disabled="annotationController.isDisabled" ng-change="annotationController.postAnnotation()" ng-model-options="{ debounce: 2000 }" rows="5" cols="30"></textarea>';
-            }
+            element.html(annotationHTML);
+            AnnotationDirective.instance.$compile(element.contents())($scope);
         }
+    }], [{
+        key: 'directiveFactory',
+        value: function directiveFactory($compile, AnnotationService, ConfigService, UtilService) {
+            AnnotationDirective.instance = new AnnotationDirective($compile, AnnotationService, ConfigService, UtilService);
+            return AnnotationDirective.instance;
+        }
+    }]);
 
-        element.html(annotationHTML);
-        AnnotationDirective.instance.$compile(element.contents())($scope);
-    }
-}
+    return AnnotationDirective;
+}();
 
-let Directives = angular.module('directives', []);
+var Directives = angular.module('directives', []);
 
 AnnotationDirective.directiveFactory.$inject = ['$compile', 'AnnotationService', 'ConfigService', 'UtilService'];
 ClassResponseDirective.directiveFactory.$inject = ['StudentStatusService'];
@@ -417,6 +466,5 @@ Directives.directive('navItem', navItemDirective.directiveFactory);
 Directives.directive('stepTools', stepToolsDirective.directiveFactory);
 Directives.directive('nodeStatusIcon', nodeStatusIconDirective.directiveFactory);
 
-export default Directives;
-
-
+exports.default = Directives;
+//# sourceMappingURL=directives.js.map

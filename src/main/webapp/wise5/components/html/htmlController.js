@@ -1,12 +1,17 @@
-class HTMLController {
-    constructor($scope,
-                $state,
-                $stateParams,
-                $sce,
-                ConfigService,
-                NodeService,
-                ProjectService,
-                StudentDataService) {
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var HTMLController = function () {
+    function HTMLController($scope, $state, $stateParams, $sce, ConfigService, NodeService, ProjectService, StudentDataService) {
+        _classCallCheck(this, HTMLController);
+
         this.$scope = $scope;
         this.$state = $state;
         this.$stateParams = $stateParams;
@@ -94,53 +99,61 @@ class HTMLController {
         }
     }
 
-
     /**
      * The component has changed in the regular authoring view so we will save the project
      */
-    authoringViewComponentChanged() {
 
-        // update the JSON string in the advanced authoring view textarea
-        this.updateAdvancedAuthoringView();
+    _createClass(HTMLController, [{
+        key: 'authoringViewComponentChanged',
+        value: function authoringViewComponentChanged() {
 
-        // save the project to the server
-        this.ProjectService.saveProject();
-    };
-
-    /**
-     * The component has changed in the advanced authoring view so we will update
-     * the component and save the project.
-     */
-    advancedAuthoringViewComponentChanged() {
-
-        try {
-            /*
-             * create a new comopnent by converting the JSON string in the advanced
-             * authoring view into a JSON object
-             */
-            var editedComponentContent = angular.fromJson(this.componentContentJSONString);
-
-            // replace the component in the project
-            this.ProjectService.replaceComponent(this.nodeId, this.componentId, editedComponentContent);
-
-            // set the new component into the controller
-            this.componentContent = editedComponentContent;
+            // update the JSON string in the advanced authoring view textarea
+            this.updateAdvancedAuthoringView();
 
             // save the project to the server
-            ProjectService.saveProject();
-        } catch(e) {
-
+            this.ProjectService.saveProject();
         }
-    };
+    }, {
+        key: 'advancedAuthoringViewComponentChanged',
 
-    /**
-     * Update the component JSON string that will be displayed in the advanced authoring view textarea
-     */
-    updateAdvancedAuthoringView() {
-        this.componentContentJSONString = angular.toJson(this.componentContent, 4);
-    };
-}
+        /**
+         * The component has changed in the advanced authoring view so we will update
+         * the component and save the project.
+         */
+        value: function advancedAuthoringViewComponentChanged() {
+
+            try {
+                /*
+                 * create a new comopnent by converting the JSON string in the advanced
+                 * authoring view into a JSON object
+                 */
+                var editedComponentContent = angular.fromJson(this.componentContentJSONString);
+
+                // replace the component in the project
+                this.ProjectService.replaceComponent(this.nodeId, this.componentId, editedComponentContent);
+
+                // set the new component into the controller
+                this.componentContent = editedComponentContent;
+
+                // save the project to the server
+                ProjectService.saveProject();
+            } catch (e) {}
+        }
+    }, {
+        key: 'updateAdvancedAuthoringView',
+
+        /**
+         * Update the component JSON string that will be displayed in the advanced authoring view textarea
+         */
+        value: function updateAdvancedAuthoringView() {
+            this.componentContentJSONString = angular.toJson(this.componentContent, 4);
+        }
+    }]);
+
+    return HTMLController;
+}();
 
 HTMLController.$inject = ['$scope', '$state', '$stateParams', '$sce', 'ConfigService', 'NodeService', 'ProjectService', 'StudentDataService'];
 
-export default HTMLController;
+exports.default = HTMLController;
+//# sourceMappingURL=htmlController.js.map

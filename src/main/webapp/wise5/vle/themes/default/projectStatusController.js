@@ -1,22 +1,23 @@
+"use strict";
 
-class ProjectStatusController {
-    constructor($scope,
-                projectStatus,
-                userNames) {
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
 
-        this.$scope = $scope;
-        this.projectStatus = projectStatus;
-        this.userNames = userNames;
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-        $scope.projectStatus = projectStatus;
-        $scope.userNames = userNames;
-    }
-}
+var ProjectStatusController = function ProjectStatusController($scope, projectStatus, userNames) {
+    _classCallCheck(this, ProjectStatusController);
 
-ProjectStatusController.$inject = [
-    '$scope',
-    'projectStatus',
-    'userNames'
-];
+    this.$scope = $scope;
+    this.projectStatus = projectStatus;
+    this.userNames = userNames;
 
-export default ProjectStatusController;
+    $scope.projectStatus = projectStatus;
+    $scope.userNames = userNames;
+};
+
+ProjectStatusController.$inject = ['$scope', 'projectStatus', 'userNames'];
+
+exports.default = ProjectStatusController;
+//# sourceMappingURL=projectStatusController.js.map

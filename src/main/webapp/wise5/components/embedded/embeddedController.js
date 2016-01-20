@@ -1,11 +1,16 @@
-class EmbeddedController {
-    constructor($scope,
-                $sce,
-                $window,
-                NodeService,
-                EmbeddedService,
-                ProjectService,
-                StudentDataService) {
+"use strict";
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var EmbeddedController = function () {
+    function EmbeddedController($scope, $sce, $window, NodeService, EmbeddedService, ProjectService, StudentDataService) {
+        _classCallCheck(this, EmbeddedController);
 
         this.$scope = $scope;
         this.$sce = $sce;
@@ -39,7 +44,7 @@ class EmbeddedController {
         // whether we have data to save
         this.isDirty = false;
 
-        this.messageEventListener = angular.bind(this, function(messageEvent) {
+        this.messageEventListener = angular.bind(this, function (messageEvent) {
             // handle messages received from iframe
             var messageEventData = messageEvent.data;
             if (messageEventData.messageType === "event") {
@@ -74,8 +79,7 @@ class EmbeddedController {
                 this.isDirty = true;
 
                 // tell the parent node that this component wants to save
-                this.$scope.$emit('componentSaveTriggered', {nodeId: this.nodeId, componentId: this.componentId});
-
+                this.$scope.$emit('componentSaveTriggered', { nodeId: this.nodeId, componentId: this.componentId });
             }
         });
 
@@ -152,7 +156,7 @@ class EmbeddedController {
          * save student data.
          * @return a component state containing the student data
          */
-        this.$scope.getComponentState = function() {
+        this.$scope.getComponentState = function () {
             var componentState = null;
 
             if (this.$scope.embeddedController.isDirty) {
@@ -167,13 +171,12 @@ class EmbeddedController {
             return componentState;
         }.bind(this);
 
-
         /**
          * Listen for the 'exitNode' event which is fired when the student
          * exits the parent node. This will perform any necessary cleanup
          * when the student exits the parent node.
          */
-        this.$scope.$on('exitNode', angular.bind(this, function(event, args) {
+        this.$scope.$on('exitNode', angular.bind(this, function (event, args) {
             // unregister messageEventListener
             this.$window.removeEventListener('message', this.messageEventListener);
         }));
@@ -183,39 +186,36 @@ class EmbeddedController {
      * Set the url
      * @param url the url
      */
-    setURL(url) {
-        if (url != null) {
-            var trustedURL = this.$sce.trustAsResourceUrl(url);
-            this.url = trustedURL;
+
+    _createClass(EmbeddedController, [{
+        key: "setURL",
+        value: function setURL(url) {
+            if (url != null) {
+                var trustedURL = this.$sce.trustAsResourceUrl(url);
+                this.url = trustedURL;
+            }
         }
-    };
+    }, {
+        key: "registerExitListener",
 
-    /**
-     * Register the the listener that will listen for the exit event
-     * so that we can perform saving before exiting.
-     */
-    registerExitListener() {
-
-        /*
-         * Listen for the 'exit' event which is fired when the student exits
-         * the VLE. This will perform saving before the VLE exits.
+        /**
+         * Register the the listener that will listen for the exit event
+         * so that we can perform saving before exiting.
          */
-        this.exitListener = this.$scope.$on('exit', angular.bind(this, function(event, args) {
+        value: function registerExitListener() {
 
-        }));
-    };
+            /*
+             * Listen for the 'exit' event which is fired when the student exits
+             * the VLE. This will perform saving before the VLE exits.
+             */
+            this.exitListener = this.$scope.$on('exit', angular.bind(this, function (event, args) {}));
+        }
+    }]);
 
-}
+    return EmbeddedController;
+}();
 
-EmbeddedController.$inject = [
-    '$scope',
-    '$sce',
-    '$window',
-    'NodeService',
-    'EmbeddedService',
-    'ProjectService',
-    'StudentDataService'
-];
+EmbeddedController.$inject = ['$scope', '$sce', '$window', 'NodeService', 'EmbeddedService', 'ProjectService', 'StudentDataService'];
 
-export default EmbeddedController;
-
+exports.default = EmbeddedController;
+//# sourceMappingURL=embeddedController.js.map
