@@ -169,7 +169,20 @@ Node.prototype.getNodeAnnotations = function() {
 			var nodeAnnotation = allNodeAnnotations[i];
 			if (nodeAnnotation.type == "score" || nodeAnnotation.type == "comment" || nodeAnnotation.type == "cRater" || nodeAnnotation.type == "autoGraded") {
 				if (nodeAnnotation.toWorkgroup == loggedInWorkgroupId) {
-					filteredNodeAnnotations.push(nodeAnnotation);					
+
+                    if (nodeAnnotation.type == "autoGraded") {
+                        /*
+                         * this is an auto graded annotation but we only want to
+                         * show it if the step is authored to show auto score or
+                         * auto feedback
+                         */
+                        if (this.showAutoScore() || this.showAutoFeedback()) {
+                            // the step is authored to show auto score or auto feedback
+                            filteredNodeAnnotations.push(nodeAnnotation);
+                        }
+                    } else {
+                        filteredNodeAnnotations.push(nodeAnnotation);
+                    }
 				}
 			}
 		}
