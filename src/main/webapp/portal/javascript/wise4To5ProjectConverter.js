@@ -796,6 +796,16 @@ function convertMultipleChoice(node, nodeContent) {
 
         var wise4ChoiceIdToWISE5ChoiceId = {};
 
+        var responseDeclaration = assessmentItem.responseDeclaration;
+
+        var correctResponse = null;
+
+        if (responseDeclaration != null) {
+
+            // get the array of correct choice ids
+            correctResponse = responseDeclaration.correctResponse;
+        }
+
         if (interaction != null) {
             // handle the choices
 
@@ -822,9 +832,18 @@ function convertMultipleChoice(node, nodeContent) {
                         // create an id for the choice
                         wise5Choice.id = createRandomId();
 
+                        // check if this choice is correct
+                        var isCorrect = isChoiceCorrect(choice.identifier, correctResponse);
+
                         // set the text and feedback
                         wise5Choice.text = choice.text;
                         wise5Choice.feedback = choice.feedback;
+                        wise5Choice.isCorrect = isCorrect;
+
+                        if (isCorrect) {
+                            // there is a correct choice so we will show the submit button
+                            component.showSubmitButton = true;
+                        }
 
                         // add an entry to map WISE4 choice id to WISE5 choice id
                         wise4ChoiceIdToWISE5ChoiceId[choice.identifier] = wise5Choice.id;
@@ -835,65 +854,10 @@ function convertMultipleChoice(node, nodeContent) {
                 }
             }
         }
-
-        var responseDeclaration = assessmentItem.responseDeclaration;
-
-        if (responseDeclaration != null) {
-            // handle the correct choices
-
-            // get the array of correct choice ids
-            var correctResponse = responseDeclaration.correctResponse;
-
-            if (correctResponse != null) {
-                if (choiceType === 'radio') {
-                    // this is a radio button choice type so there is only one correct answer
-
-                    if (correctResponse.length > 0) {
-
-                        // get the WISE4 correct choice id
-                        var wise4ChoiceId = correctResponse[0];
-
-                        if (wise4ChoiceId != null) {
-                            // get the WISE5 correct choice id
-                            var wise5ChoiceId = wise4ChoiceIdToWISE5ChoiceId[wise4ChoiceId];
-
-                            if (wise5ChoiceId != null) {
-                                component.correctChoice = wise5ChoiceId;
-                            }
-                        }
-                    }
-                } else if (choiceType === 'checkbox') {
-                    // this is a checkbox type so there may be more than one correct answer
-                    component.correctChoices = [];
-
-                    // loop through all the WISE4 correct choice ids
-                    for (var x = 0; x < correctResponse.length; x++) {
-
-                        // get a WISE4 correct choice id
-                        var wise4ChoiceId = correctResponse[x];
-
-                        if (wise4ChoiceId != null) {
-                            // get the WISE5 correct choice id
-                            var wise5ChoiceId = wise4ChoiceIdToWISE5ChoiceId[wise4ChoiceId];
-
-                            if (wise5ChoiceId != null) {
-                                component.correctChoices.push(wise5ChoiceId);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        // set the choice type
-        component.choiceType = choiceType;
-
-        // show the submit button if there is a correct choice
-        if (component.correctChoice != null ||
-            (component.correctChoices != null && component.correctChoices.length > 0)) {
-            component.showSubmitButton = true;
-        }
     }
+
+    // set the choice type
+    component.choiceType = choiceType;
 
     content.components.push(component);
 
@@ -903,6 +867,26 @@ function convertMultipleChoice(node, nodeContent) {
     addWISE5Node(wise5Node);
 
     return wise5Node;
+}
+
+/**
+ * Check if the choice is correct
+ * @param wise4ChoiceId the WISE4 choice id
+ * @param wise4CorrectResponse the WISE4 correct response array
+ * @returns whether the choice is correct
+ */
+function isChoiceCorrect(wise4ChoiceId, wise4CorrectResponse) {
+
+    var result = false;
+
+    if (wise4CorrectResponse != null) {
+        // check if the id is in the array of correct responses
+        if (wise4CorrectResponse.indexOf(wise4ChoiceId) != -1) {
+            result = true;
+        }
+    }
+
+    return result;
 }
 
 /**
