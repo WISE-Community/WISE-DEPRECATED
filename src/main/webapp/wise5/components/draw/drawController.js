@@ -10,7 +10,7 @@ var _drawingTool = require('lib/drawingTool/drawing-tool');
 
 var _drawingTool2 = _interopRequireDefault(_drawingTool);
 
-var _vendor = require('lib/drawingTool/vendor');
+var _vendor = require('lib/drawingTool/vendor.min');
 
 var _vendor2 = _interopRequireDefault(_vendor);
 
@@ -687,4 +687,5 @@ var DrawController = function () {
 DrawController.$inject = ['$injector', '$rootScope', '$scope', '$timeout', 'DrawService', 'NodeService', 'ProjectService', 'StudentAssetService', 'StudentDataService'];
 
 exports.default = DrawController;
+
 //# sourceMappingURL=drawController.js.map
