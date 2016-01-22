@@ -22,6 +22,9 @@ class MultipleChoiceController {
         // field that will hold the component content
         this.componentContent = null;
 
+        // field that will hold the authoring component content
+        this.authoringComponentContent = null;
+
         // whether the component should be disabled
         this.isDisabled = false;
 
@@ -64,7 +67,10 @@ class MultipleChoiceController {
         }
 
         // get the component content from the scope
-        this.componentContent = this.$scope.component;
+        this.componentContent = this.$scope.componentContent;
+
+        // get the authoring component content
+        this.authoringComponentContent = this.$scope.authoringComponentContent;
 
         this.mode = this.$scope.mode;
 
@@ -89,6 +95,12 @@ class MultipleChoiceController {
                 this.isDisabled = true;
             } else if (this.mode === 'authoring') {
                 this.updateAdvancedAuthoringView();
+
+                $scope.$watch(function() {
+                    return this.authoringComponentContent;
+                }.bind(this), function(newValue, oldValue) {
+                    this.componentContent = this.ProjectService.injectAssetPaths(newValue);
+                }.bind(this), true);
             }
 
             // get the component type
@@ -863,6 +875,25 @@ class MultipleChoiceController {
     };
 
     /**
+     * Get the available choices from component content
+     * @return the available choices from the component content
+     */
+    getAuthoringChoices() {
+        var choices = null;
+
+        // get the component content
+        var authoringComponentContent = this.authoringComponentContent;
+
+        if (authoringComponentContent != null) {
+
+            // get the choices
+            choices = authoringComponentContent.choices;
+        }
+
+        return choices;
+    };
+
+    /**
      * Check whether we need to show the prompt
      * @return whether to show the prompt
      */
@@ -1000,7 +1031,7 @@ class MultipleChoiceController {
     authoringViewComponentChanged() {
 
         // clean up the choices by removing fields injected by the controller during run time
-        this.cleanUpChoices();
+        //this.cleanUpChoices();
 
         // update the JSON string in the advanced authoring view textarea
         this.updateAdvancedAuthoringView();
@@ -1017,10 +1048,10 @@ class MultipleChoiceController {
 
         try {
             /*
-             * create a new comopnent by converting the JSON string in the advanced
+             * create a new component by converting the JSON string in the advanced
              * authoring view into a JSON object
              */
-            var editedComponentContent = angular.fromJson(this.componentContentJSONString);
+            var editedComponentContent = angular.fromJson(this.authoringComponentContentJSONString);
 
             // replace the component in the project
             this.ProjectService.replaceComponent(this.nodeId, this.componentId, editedComponentContent);
@@ -1039,8 +1070,7 @@ class MultipleChoiceController {
      * Update the component JSON string that will be displayed in the advanced authoring view textarea
      */
     updateAdvancedAuthoringView() {
-        this.componentContentJSONString = angular.toJson(this.componentContent, 4);
-        //this.componentContentChoices = this.componentContent.choices;
+        this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
     };
 
     /**
@@ -1049,7 +1079,7 @@ class MultipleChoiceController {
     addChoice() {
 
         // get the authored choices
-        var choices = this.componentContent.choices;
+        var choices = this.authoringComponentContent.choices;
 
         // make the new choice
         var newChoice = {};
@@ -1072,7 +1102,7 @@ class MultipleChoiceController {
     deleteChoice(choiceId) {
 
         // get the authored choices
-        var choices = this.componentContent.choices;
+        var choices = this.authoringComponentContent.choices;
 
         if (choices != null) {
 
@@ -1103,7 +1133,7 @@ class MultipleChoiceController {
     cleanUpChoices() {
 
         // get the authored choices
-        var choices = this.getChoices();
+        var choices = this.getAuthoringChoices();
 
         if (choices != null) {
 

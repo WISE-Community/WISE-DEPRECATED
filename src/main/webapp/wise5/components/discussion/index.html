@@ -4,12 +4,12 @@
     <body>
         <div ng-controller="DiscussionController as discussionController">
             <div ng-if='discussionController.mode === "authoring"'>
-                    <textarea ng-model='discussionController.componentContent.prompt'
+                    <textarea ng-model='discussionController.authoringComponentContent.prompt'
                               ng-change='discussionController.authoringViewComponentChanged()'
                               ng-model-options='{ debounce: 1000 }'
                               rows='10'
                               cols='100'></textarea>
-                    <textarea ng-model='discussionController.componentContentJSONString'
+                    <textarea ng-model='discussionController.authoringComponentContentJSONString'
                               ng-change='discussionController.advancedAuthoringViewComponentChanged()'
                               ng-model-options='{ debounce: 1000 }'
                               rows='10'

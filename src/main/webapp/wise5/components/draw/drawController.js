@@ -41,6 +41,9 @@ var DrawController = function () {
         // field that will hold the component content
         this.componentContent = null;
 
+        // field that will hold the authoring component content
+        this.authoringComponentContent = null;
+
         // whether the step should be disabled
         this.isDisabled = false;
 
@@ -57,7 +60,10 @@ var DrawController = function () {
         this.drawingTool = null;
 
         // get the component content from the scope
-        this.componentContent = this.$scope.component;
+        this.componentContent = this.$scope.componentContent;
+
+        // get the authoring component content
+        this.authoringComponentContent = this.$scope.authoringComponentContent;
 
         // whether students can attach files to their work
         this.isStudentAttachmentEnabled = false;
@@ -100,6 +106,12 @@ var DrawController = function () {
             } else if (this.mode === 'authoring') {
                 this.drawingToolId = "drawingtool_" + this.nodeId + "_" + this.componentId;
                 this.updateAdvancedAuthoringView();
+
+                $scope.$watch(function () {
+                    return this.authoringComponentContent;
+                }.bind(this), function (newValue, oldValue) {
+                    this.componentContent = this.ProjectService.injectAssetPaths(newValue);
+                }.bind(this), true);
             }
 
             this.$timeout(angular.bind(this, function () {
@@ -637,10 +649,10 @@ var DrawController = function () {
 
             try {
                 /*
-                 * create a new comopnent by converting the JSON string in the advanced
+                 * create a new component by converting the JSON string in the advanced
                  * authoring view into a JSON object
                  */
-                var editedComponentContent = angular.fromJson(this.componentContentJSONString);
+                var editedComponentContent = angular.fromJson(this.authoringComponentContentJSONString);
 
                 // replace the component in the project
                 this.ProjectService.replaceComponent(this.nodeId, this.componentId, editedComponentContent);
@@ -659,7 +671,7 @@ var DrawController = function () {
          * Update the component JSON string that will be displayed in the advanced authoring view textarea
          */
         value: function updateAdvancedAuthoringView() {
-            this.componentContentJSONString = angular.toJson(this.componentContent, 4);
+            this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
         }
     }, {
         key: 'registerExitListener',
@@ -687,4 +699,5 @@ var DrawController = function () {
 DrawController.$inject = ['$injector', '$rootScope', '$scope', '$timeout', 'DrawService', 'NodeService', 'ProjectService', 'StudentAssetService', 'StudentDataService'];
 
 exports.default = DrawController;
+
 //# sourceMappingURL=drawController.js.map

@@ -33,6 +33,9 @@ var DiscussionController = function () {
         // field that will hold the component content
         this.componentContent = null;
 
+        // field that will hold the authoring component content
+        this.authoringComponentContent = null;
+
         // holds the text that the student has typed
         this.studentResponse = '';
 
@@ -89,7 +92,10 @@ var DiscussionController = function () {
         }
 
         // get the component content from the scope
-        this.componentContent = this.$scope.component;
+        this.componentContent = this.$scope.componentContent;
+
+        // get the authoring component content
+        this.authoringComponentContent = this.$scope.authoringComponentContent;
 
         if (this.componentContent != null) {
 
@@ -180,6 +186,12 @@ var DiscussionController = function () {
                     this.isDisabled = true;
                 } else if (this.mode === 'authoring') {
                     this.updateAdvancedAuthoringView();
+
+                    $scope.$watch(function () {
+                        return this.authoringComponentContent;
+                    }.bind(this), function (newValue, oldValue) {
+                        this.componentContent = this.ProjectService.injectAssetPaths(newValue);
+                    }.bind(this), true);
                 }
             }
 
@@ -1116,10 +1128,10 @@ var DiscussionController = function () {
 
             try {
                 /*
-                 * create a new comopnent by converting the JSON string in the advanced
+                 * create a new component by converting the JSON string in the advanced
                  * authoring view into a JSON object
                  */
-                var editedComponentContent = angular.fromJson(this.componentContentJSONString);
+                var editedComponentContent = angular.fromJson(this.authoringComponentContentJSONString);
 
                 // replace the component in the project
                 this.ProjectService.replaceComponent(this.nodeId, this.componentId, editedComponentContent);
@@ -1138,7 +1150,7 @@ var DiscussionController = function () {
          * Update the component JSON string that will be displayed in the advanced authoring view textarea
          */
         value: function updateAdvancedAuthoringView() {
-            this.componentContentJSONString = angular.toJson(this.componentContent, 4);
+            this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
         }
     }, {
         key: 'registerExitListener',
@@ -1167,4 +1179,5 @@ var DiscussionController = function () {
 DiscussionController.$inject = ['$injector', '$rootScope', '$scope', 'ConfigService', 'DiscussionService', 'NodeService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'StudentWebSocketService', '$mdMedia'];
 
 exports.default = DiscussionController;
+
 //# sourceMappingURL=discussionController.js.map

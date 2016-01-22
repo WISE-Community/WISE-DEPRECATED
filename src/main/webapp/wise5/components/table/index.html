@@ -1,26 +1,26 @@
 <div ng-controller='TableController as tableController' style='display: flex'>
     <div style='flex: 1'>
         <div ng-if='tableController.mode === "authoring"'>
-                    <textarea ng-model='tableController.componentContent.prompt'
+                    <textarea ng-model='tableController.authoringComponentContent.prompt'
                               ng-change='tableController.authoringViewComponentChanged()'
                               ng-model-options='{ debounce: 1000 }'
                               rows='10'
                               cols='100'></textarea>
                     <br/>
                     Columns: <input type='number'
-                                    ng-model='tableController.componentContent.numColumns'
+                                    ng-model='tableController.authoringComponentContent.numColumns'
                                     confirm-number-decrease='Are you sure you want to decrease the number of columns?'
                                     ng-change='tableController.authoringViewTableSizeChanged()'
                                     ng-model-options='{ debounce: 1000 }'
                                     style='width: 3em'/>
                     Rows: <input type='number'
-                                 ng-model='tableController.componentContent.numRows'
+                                 ng-model='tableController.authoringComponentContent.numRows'
                                  confirm-number-decrease='Are you sure you want to decrease the number of rows?'
                                  ng-change='tableController.authoringViewTableSizeChanged()'
                                  ng-model-options='{ debounce: 1000 }'
                                  style='width: 3em'/>
                     Cell Size: <input type='number'
-                                      ng-model='tableController.componentContent.globalCellSize'
+                                      ng-model='tableController.authoringComponentContent.globalCellSize'
                                       ng-change='tableController.authoringViewComponentChanged()'
                                       ng-model-options='{ debounce: 1000 }'
                                       style='width: 3em'/>
@@ -28,12 +28,12 @@
                     <table style='border: 1px solid black;'>
                         <tr>
                             <td style='border: 1px solid black;'></td>
-                            <td ng-repeat='x in getNumber(tableController.componentContent.numColumns) track by $index'style='border: 1px solid black;'>
+                            <td ng-repeat='x in getNumber(tableController.authoringComponentContent.numColumns) track by $index'style='border: 1px solid black;'>
                                 <button ng-click='tableController.authoringViewInsertColumn($index)'>I</button>
                                 <button ng-click='tableController.authoringViewDeleteColumn($index)'>D</button>
                             </td>
                         </tr>
-                        <tr ng-repeat='row in tableController.componentContent.tableData'>
+                        <tr ng-repeat='row in tableController.authoringComponentContent.tableData'>
                             <td style='border: 1px solid black;'>
                                 <button ng-click='tableController.authoringViewInsertRow($index)'>I</button>
                                 <button ng-click='tableController.authoringViewDeleteRow($index)'>D</button>
@@ -49,7 +49,7 @@
                             </td>
                         </tr>
                     </table>
-                    <textarea ng-model='tableController.componentContentJSONString'
+                    <textarea ng-model='tableController.authoringComponentContentJSONString'
                               ng-change='tableController.advancedAuthoringViewComponentChanged()'
                               ng-model-options='{ debounce: 1000 }'
                               rows='10'

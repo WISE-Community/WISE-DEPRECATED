@@ -272,7 +272,7 @@ var ProjectService = function () {
                         var constraints = node.constraints;
 
                         if (content != null) {
-                            node.content = this.injectAssetPaths(content);
+                            //node.content = this.injectAssetPaths(content);
                         }
 
                         this.setIdToNode(nodeId, node);
@@ -2497,4 +2497,5 @@ var ProjectService = function () {
 ProjectService.$inject = ['$http', '$rootScope', 'ConfigService'];
 
 exports.default = ProjectService;
+
 //# sourceMappingURL=projectService.js.map

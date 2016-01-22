@@ -1,12 +1,12 @@
 <div ng-controller='DrawController as drawController' style='display: flex'>
     <div style='flex: 1'>
         <div ng-if='drawController.mode === "authoring"'>
-                    <textarea ng-model='drawController.componentContent.prompt'
+                    <textarea ng-model='drawController.authoringComponentContent.prompt'
                               ng-change='drawController.authoringViewComponentChanged()'
                               ng-model-options='{ debounce: 1000 }'
                               rows='10'
                               cols='100'></textarea>
-                    <textarea ng-model='drawController.componentContentJSONString'
+                    <textarea ng-model='drawController.authoringComponentContentJSONString'
                               ng-change='drawController.advancedAuthoringViewComponentChanged()'
                               ng-model-options='{ debounce: 1000 }'
                               rows='10'

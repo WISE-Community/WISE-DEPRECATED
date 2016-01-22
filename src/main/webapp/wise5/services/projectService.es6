@@ -236,7 +236,7 @@ class ProjectService {
                     var constraints = node.constraints;
 
                     if (content != null) {
-                        node.content = this.injectAssetPaths(content);
+                        //node.content = this.injectAssetPaths(content);
                     }
 
                     this.setIdToNode(nodeId, node);

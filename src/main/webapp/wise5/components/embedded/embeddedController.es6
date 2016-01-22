@@ -24,6 +24,9 @@ class EmbeddedController {
         // field that will hold the component content
         this.componentContent = null;
 
+        // field that will hold the authoring component content
+        this.authoringComponentContent = null;
+
         // field that will hold the component type
         this.componentType = null;
 
@@ -91,7 +94,10 @@ class EmbeddedController {
         }
 
         // get the component content from the scope
-        this.componentContent = this.$scope.component;
+        this.componentContent = this.$scope.componentContent;
+
+        // get the authoring component content
+        this.authoringComponentContent = this.$scope.authoringComponentContent;
 
         this.mode = this.$scope.mode;
 
@@ -101,6 +107,17 @@ class EmbeddedController {
             this.componentId = this.componentContent.id;
 
             this.componentType = this.componentContent.type;
+
+            if (this.mode === 'authoring') {
+                this.updateAdvancedAuthoringView();
+
+                $scope.$watch(function() {
+                    return this.authoringComponentContent;
+                }.bind(this), function(newValue, oldValue) {
+                    this.componentContent = this.ProjectService.injectAssetPaths(newValue);
+                    this.setURL(this.componentContent.url);
+                }.bind(this), true);
+            }
 
             // get the show previous work node id if it is provided
             var showPreviousWorkNodeId = this.componentContent.showPreviousWorkNodeId;
@@ -188,6 +205,52 @@ class EmbeddedController {
             var trustedURL = this.$sce.trustAsResourceUrl(url);
             this.url = trustedURL;
         }
+    };
+
+
+    /**
+     * The component has changed in the regular authoring view so we will save the project
+     */
+    authoringViewComponentChanged() {
+
+        // update the JSON string in the advanced authoring view textarea
+        this.updateAdvancedAuthoringView();
+
+        // save the project to the server
+        this.ProjectService.saveProject();
+    };
+
+    /**
+     * The component has changed in the advanced authoring view so we will update
+     * the component and save the project.
+     */
+    advancedAuthoringViewComponentChanged() {
+
+        try {
+            /*
+             * create a new component by converting the JSON string in the advanced
+             * authoring view into a JSON object
+             */
+            var editedComponentContent = angular.fromJson(this.authoringComponentContentJSONString);
+
+            // replace the component in the project
+            this.ProjectService.replaceComponent(this.nodeId, this.componentId, editedComponentContent);
+
+            // set the new component into the controller
+            this.componentContent = editedComponentContent;
+
+            // save the project to the server
+            this.ProjectService.saveProject();
+        } catch(e) {
+
+        }
+    };
+
+    /**
+     * Update the component JSON string that will be displayed in the advanced authoring view textarea
+     */
+    updateAdvancedAuthoringView() {
+        this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
     };
 
     /**

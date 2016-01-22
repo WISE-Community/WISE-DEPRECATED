@@ -8,12 +8,12 @@
                 </style>
 
                 <div ng-if='openResponseController.mode === "authoring"'>
-                    <textarea ng-model='openResponseController.componentContent.prompt'
+                    <textarea ng-model='openResponseController.authoringComponentContent.prompt'
                               ng-change='openResponseController.authoringViewComponentChanged()'
                               ng-model-options='{ debounce: 1000 }'
                               rows='10'
                               cols='100'></textarea>
-                    <textarea ng-model='openResponseController.componentContentJSONString'
+                    <textarea ng-model='openResponseController.authoringComponentContentJSONString'
                               ng-change='openResponseController.advancedAuthoringViewComponentChanged()'
                               ng-model-options='{ debounce: 1000 }'
                               rows='10'

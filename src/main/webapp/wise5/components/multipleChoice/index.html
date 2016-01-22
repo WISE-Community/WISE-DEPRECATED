@@ -6,27 +6,27 @@
 
                 <div ng-if='multipleChoiceController.mode === "authoring"'>
 
-                    <textarea ng-model='multipleChoiceController.componentContent.prompt'
+                    <textarea ng-model='multipleChoiceController.authoringComponentContent.prompt'
                               ng-change='multipleChoiceController.authoringViewComponentChanged()'
                               ng-model-options='{ debounce: 1000 }'
                               rows='10'
                               cols='100'></textarea>
                     <br/>
-                    Radio: <input type='radio' name='choiceType' ng-model='multipleChoiceController.componentContent.choiceType' value='radio' ng-change='multipleChoiceController.authoringViewComponentChanged()'/>
-                    Checkbox: <input type='radio' name='choiceType' ng-model='multipleChoiceController.componentContent.choiceType' value='checkbox' ng-change='multipleChoiceController.authoringViewComponentChanged()'/>
+                    Radio: <input type='radio' name='choiceType' ng-model='multipleChoiceController.authoringComponentContent.choiceType' value='radio' ng-change='multipleChoiceController.authoringViewComponentChanged()'/>
+                    Checkbox: <input type='radio' name='choiceType' ng-model='multipleChoiceController.authoringComponentContent.choiceType' value='checkbox' ng-change='multipleChoiceController.authoringViewComponentChanged()'/>
                     <br/>
                     <button ng-click='multipleChoiceController.addChoice()'>Add Choice</button>
-                    <div ng-repeat='choice in multipleChoiceController.componentContent.choices'
+                    <div ng-repeat='choice in multipleChoiceController.authoringComponentContent.choices'
                          style='border: 1px solid black'>
-                        Text: <input ng-model='choice.text' ng-change='multipleChoiceController.authoringViewComponentChanged()' ng-model-options='{ debounce: 1000 }' size='100'></input>
+                        Text: <input ng-model='choice.text' ng-change='multipleChoiceController.authoringViewComponentChanged()' ng-model-options='{ debounce: 1000 }' size='100'/>
                         <br/>
-                        Feedback: <input ng-model='choice.feedback' ng-change='multipleChoiceController.authoringViewComponentChanged()' ng-model-options='{ debounce: 1000 }' size='100'></input>
+                        Feedback: <input ng-model='choice.feedback' ng-change='multipleChoiceController.authoringViewComponentChanged()' ng-model-options='{ debounce: 1000 }' size='100'/>
                         <br/>
                         <div>Is Correct: <input type='checkbox' ng-model='choice.isCorrect' ng-change='multipleChoiceController.authoringViewComponentChanged()'/></div>
                         <button ng-click='multipleChoiceController.deleteChoice(choice.id)'>Delete</button>
                     </div>
-                    <textarea ng-model='multipleChoiceController.componentContentJSONString'
-                              ng-change='multipleChoiceController.authoringViewComponentChanged()'
+                    <textarea ng-model='multipleChoiceController.authoringComponentContentJSONString'
+                              ng-change='multipleChoiceController.advancedAuthoringViewComponentChanged()'
                               ng-model-options='{ debounce: 1000 }'
                               rows='10'
                               cols='100'></textarea>

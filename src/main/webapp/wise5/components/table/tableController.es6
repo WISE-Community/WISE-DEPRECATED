@@ -22,6 +22,9 @@ class TableController {
         // field that will hold the component content
         this.componentContent = null;
 
+        // field that will hold the authoring component content
+        this.authoringComponentContent = null;
+
         // whether the step should be disabled
         this.isDisabled = false;
 
@@ -61,7 +64,10 @@ class TableController {
         }
 
         // get the component content from the scope
-        this.componentContent = this.$scope.component;
+        this.componentContent = this.$scope.componentContent;
+
+        // get the authoring component content
+        this.authoringComponentContent = this.$scope.authoringComponentContent;
 
         this.mode = this.$scope.mode;
 
@@ -89,6 +95,13 @@ class TableController {
                 this.isDisabled = true;
             } else if (this.mode === 'authoring') {
                 this.updateAdvancedAuthoringView();
+
+                $scope.$watch(function() {
+                    return this.authoringComponentContent;
+                }.bind(this), function(newValue, oldValue) {
+                    this.componentContent = this.ProjectService.injectAssetPaths(newValue);
+                    this.resetTable();
+                }.bind(this), true);
             }
 
             // get the show previous work node id if it is provided
@@ -691,12 +704,8 @@ class TableController {
      * The component has changed in the regular authoring view so we will save the project
      */
     authoringViewComponentChanged() {
-
         // update the JSON string in the advanced authoring view textarea
         this.updateAdvancedAuthoringView();
-
-        // render the preview table again so it will pick up any changes
-        this.resetTable();
 
         // save the project to the server
         this.ProjectService.saveProject();
@@ -710,16 +719,18 @@ class TableController {
 
         try {
             /*
-             * create a new comopnent by converting the JSON string in the advanced
+             * create a new component by converting the JSON string in the advanced
              * authoring view into a JSON object
              */
-            var editedComponentContent = angular.fromJson(this.componentContentJSONString);
+            var authoringComponentContent = angular.fromJson(this.authoringComponentContentJSONString);
 
             // replace the component in the project
-            this.ProjectService.replaceComponent(this.nodeId, this.componentId, editedComponentContent);
+            this.ProjectService.replaceComponent(this.nodeId, this.componentId, authoringComponentContent);
+
+            this.authoringComponentContent = authoringComponentContent;
 
             // set the new component into the controller
-            this.componentContent = editedComponentContent;
+            this.componentContent = this.ProjectService.injectAssetPaths(authoringComponentContent);
 
             // save the project to the server
             this.ProjectService.saveProject();
@@ -732,7 +743,7 @@ class TableController {
      * Update the component JSON string that will be displayed in the advanced authoring view textarea
      */
     updateAdvancedAuthoringView() {
-        this.componentContentJSONString = angular.toJson(this.componentContent, 4);
+        this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
     };
 
     /**
@@ -741,10 +752,10 @@ class TableController {
     authoringViewTableSizeChanged() {
 
         // create a new table with the new size and populate it with the existing cells
-        var newTable = this.getUpdatedTableSize(this.componentContent.numRows, this.componentContent.numColumns);
+        var newTable = this.getUpdatedTableSize(this.authoringComponentContent.numRows, this.authoringComponentContent.numColumns);
 
         // set the new table into the component content
-        this.componentContent.tableData = newTable;
+        this.authoringComponentContent.tableData = newTable;
 
         // perform preview updating and project saving
         this.authoringViewComponentChanged();
@@ -798,7 +809,7 @@ class TableController {
     getCellObjectFromComponentContent(x, y) {
         var cellObject = null;
 
-        var tableData = this.componentContent.tableData;
+        var tableData = this.authoringComponentContent.tableData;
 
         if (tableData != null) {
 
@@ -836,7 +847,7 @@ class TableController {
     authoringViewInsertRow(y) {
 
         // get the table
-        var tableData = this.componentContent.tableData;
+        var tableData = this.authoringComponentContent.tableData;
 
         if (tableData != null) {
 
@@ -844,7 +855,7 @@ class TableController {
             var newRow = [];
 
             // get the number of columns
-            var numColumns = this.componentContent.numColumns;
+            var numColumns = this.authoringComponentContent.numColumns;
 
             // populate the new row with the correct number of cells
             for (var c = 0; c < numColumns; c++) {
@@ -857,7 +868,7 @@ class TableController {
             tableData.splice(y, 0, newRow);
 
             // update the number of rows value
-            this.componentContent.numRows++;
+            this.authoringComponentContent.numRows++;
         }
 
         // save the project and update the preview
@@ -874,7 +885,7 @@ class TableController {
 
         if (answer) {
             // get the table
-            var tableData = this.componentContent.tableData;
+            var tableData = this.authoringComponentContent.tableData;
 
             if (tableData != null) {
 
@@ -882,7 +893,7 @@ class TableController {
                 tableData.splice(y, 1);
 
                 // update the number of rows value
-                this.componentContent.numRows--;
+                this.authoringComponentContent.numRows--;
             }
 
             // save the project and update the preview
@@ -897,11 +908,11 @@ class TableController {
     authoringViewInsertColumn(x) {
 
         // get the table
-        var tableData = this.componentContent.tableData;
+        var tableData = this.authoringComponentContent.tableData;
 
         if (tableData != null) {
 
-            var numRows = this.componentContent.numRows;
+            var numRows = this.authoringComponentContent.numRows;
 
             // loop through all the rows
             for (var r = 0; r < numRows; r++) {
@@ -920,7 +931,7 @@ class TableController {
             }
 
             // update the number of columns value
-            this.componentContent.numColumns++;
+            this.authoringComponentContent.numColumns++;
         }
 
         // save the project and update the preview
@@ -937,11 +948,11 @@ class TableController {
 
         if (answer) {
             // get the table
-            var tableData = this.componentContent.tableData;
+            var tableData = this.authoringComponentContent.tableData;
 
             if (tableData != null) {
 
-                var numRows = this.componentContent.numRows;
+                var numRows = this.authoringComponentContent.numRows;
 
                 // loop through all the rows
                 for (var r = 0; r < numRows; r++) {
@@ -957,7 +968,7 @@ class TableController {
                 }
 
                 // update the number of columns value
-                this.componentContent.numColumns--;
+                this.authoringComponentContent.numColumns--;
             }
 
             // save the project and update the preview

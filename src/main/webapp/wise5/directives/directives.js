@@ -52,11 +52,13 @@ var ComponentDirective = function () {
                 componentState = angular.fromJson(componentState);
             }
 
-            var component = ComponentDirective.instance.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
+            var authoringComponentContent = ComponentDirective.instance.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
+            var componentContent = ComponentDirective.instance.ProjectService.injectAssetPaths(authoringComponentContent);
 
-            $scope.component = component;
+            $scope.componentContent = componentContent;
+            $scope.authoringComponentContent = authoringComponentContent;
             $scope.componentState = componentState;
-            $scope.componentTemplatePath = ComponentDirective.instance.NodeService.getComponentTemplatePath(component.type);
+            $scope.componentTemplatePath = ComponentDirective.instance.NodeService.getComponentTemplatePath(componentContent.type);
             $scope.nodeId = nodeId;
             $scope.workgroupId = workgroupId;
             $scope.teacherWorkgroupId = teacherWorkgroupId;

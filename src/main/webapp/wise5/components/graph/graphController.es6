@@ -30,6 +30,9 @@ class GraphController {
         // field that will hold the component content
         this.componentContent = null;
 
+        // field that will hold the authoring component content
+        this.authoringComponentContent = null;
+
         // whether the component should be disabled
         this.isDisabled = false;
 
@@ -81,7 +84,10 @@ class GraphController {
         }
 
         // get the component content from the scope
-        this.componentContent = this.$scope.component;
+        this.componentContent = this.$scope.componentContent;
+
+        // get the authoring component content
+        this.authoringComponentContent = this.$scope.authoringComponentContent;
 
         this.mode = this.$scope.mode;
 

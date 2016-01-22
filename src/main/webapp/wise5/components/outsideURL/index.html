@@ -1,11 +1,11 @@
 <div ng-controller='OutsideURLController as outsideURLController'>
     <div ng-if='outsideURLController.mode === "authoring"'>
-                    <input ng-model='outsideURLController.componentContent.url'
+                    <input ng-model='outsideURLController.authoringComponentContent.url'
                            ng-change='outsideURLController.authoringViewComponentChanged()'
                            ng-model-options='{ debounce: 1000 }'
                            size='80'/>
                     <br/>
-                    <textarea ng-model='outsideURLController.componentContentJSONString'
+                    <textarea ng-model='outsideURLController.authoringComponentContentJSONString'
                               ng-change='outsideURLController.advancedAuthoringViewComponentChanged()'
                               ng-model-options='{ debounce: 1000 }'
                               rows='10'

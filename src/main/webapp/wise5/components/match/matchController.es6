@@ -23,6 +23,9 @@ class MatchController {
         // field that will hold the component content
         this.componentContent = null;
 
+        // field that will hold the authoring component content
+        this.authoringComponentContent = null;
+
         // whether the step should be disabled
         this.isDisabled = false;
 
@@ -56,7 +59,10 @@ class MatchController {
         }
 
         // get the component content from the scope
-        this.componentContent = this.$scope.component;
+        this.componentContent = this.$scope.componentContent;
+
+        // get the authoring component content
+        this.authoringComponentContent = this.$scope.authoringComponentContent;
 
         this.mode = this.$scope.mode;
 

@@ -156,6 +156,7 @@ public class WISE5AuthorProjectController {
             String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
             String rawProjectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
             String projectURL = curriculumBaseWWW + rawProjectUrl;
+            String projectBaseURL = projectURL.substring(0, projectURL.indexOf("project.json"));
             String previewProjectURL = wiseBaseURL + "/project/" + projectId;
             String saveProjectURL = wiseBaseURL + "/project/save/" + projectId;
             String commitProjectURL = wiseBaseURL + "/project/commit/" + projectId;
@@ -165,6 +166,7 @@ public class WISE5AuthorProjectController {
             config.put("renewSessionURL", wiseBaseURL + "/session/renew");
             config.put("sessionLogOutURL", wiseBaseURL + "/logout");
             config.put("projectURL", projectURL);
+            config.put("projectBaseURL", projectBaseURL);
             config.put("previewProjectURL", previewProjectURL);
             config.put("saveProjectURL", saveProjectURL);
             config.put("commitProjectURL", commitProjectURL);

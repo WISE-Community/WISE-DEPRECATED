@@ -28,6 +28,9 @@ var MultipleChoiceController = function () {
         // field that will hold the component content
         this.componentContent = null;
 
+        // field that will hold the authoring component content
+        this.authoringComponentContent = null;
+
         // whether the component should be disabled
         this.isDisabled = false;
 
@@ -70,7 +73,10 @@ var MultipleChoiceController = function () {
         }
 
         // get the component content from the scope
-        this.componentContent = this.$scope.component;
+        this.componentContent = this.$scope.componentContent;
+
+        // get the authoring component content
+        this.authoringComponentContent = this.$scope.authoringComponentContent;
 
         this.mode = this.$scope.mode;
 
@@ -95,6 +101,12 @@ var MultipleChoiceController = function () {
                 this.isDisabled = true;
             } else if (this.mode === 'authoring') {
                 this.updateAdvancedAuthoringView();
+
+                $scope.$watch(function () {
+                    return this.authoringComponentContent;
+                }.bind(this), function (newValue, oldValue) {
+                    this.componentContent = this.ProjectService.injectAssetPaths(newValue);
+                }.bind(this), true);
             }
 
             // get the component type
@@ -913,6 +925,27 @@ var MultipleChoiceController = function () {
             return choices;
         }
     }, {
+        key: 'getAuthoringChoices',
+
+        /**
+         * Get the available choices from component content
+         * @return the available choices from the component content
+         */
+        value: function getAuthoringChoices() {
+            var choices = null;
+
+            // get the component content
+            var authoringComponentContent = this.authoringComponentContent;
+
+            if (authoringComponentContent != null) {
+
+                // get the choices
+                choices = authoringComponentContent.choices;
+            }
+
+            return choices;
+        }
+    }, {
         key: 'showPrompt',
 
         /**
@@ -1066,7 +1099,7 @@ var MultipleChoiceController = function () {
         value: function authoringViewComponentChanged() {
 
             // clean up the choices by removing fields injected by the controller during run time
-            this.cleanUpChoices();
+            //this.cleanUpChoices();
 
             // update the JSON string in the advanced authoring view textarea
             this.updateAdvancedAuthoringView();
@@ -1085,10 +1118,10 @@ var MultipleChoiceController = function () {
 
             try {
                 /*
-                 * create a new comopnent by converting the JSON string in the advanced
+                 * create a new component by converting the JSON string in the advanced
                  * authoring view into a JSON object
                  */
-                var editedComponentContent = angular.fromJson(this.componentContentJSONString);
+                var editedComponentContent = angular.fromJson(this.authoringComponentContentJSONString);
 
                 // replace the component in the project
                 this.ProjectService.replaceComponent(this.nodeId, this.componentId, editedComponentContent);
@@ -1107,8 +1140,7 @@ var MultipleChoiceController = function () {
          * Update the component JSON string that will be displayed in the advanced authoring view textarea
          */
         value: function updateAdvancedAuthoringView() {
-            this.componentContentJSONString = angular.toJson(this.componentContent, 4);
-            //this.componentContentChoices = this.componentContent.choices;
+            this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
         }
     }, {
         key: 'addChoice',
@@ -1119,7 +1151,7 @@ var MultipleChoiceController = function () {
         value: function addChoice() {
 
             // get the authored choices
-            var choices = this.componentContent.choices;
+            var choices = this.authoringComponentContent.choices;
 
             // make the new choice
             var newChoice = {};
@@ -1145,7 +1177,7 @@ var MultipleChoiceController = function () {
         value: function deleteChoice(choiceId) {
 
             // get the authored choices
-            var choices = this.componentContent.choices;
+            var choices = this.authoringComponentContent.choices;
 
             if (choices != null) {
 
@@ -1179,7 +1211,7 @@ var MultipleChoiceController = function () {
         value: function cleanUpChoices() {
 
             // get the authored choices
-            var choices = this.getChoices();
+            var choices = this.getAuthoringChoices();
 
             if (choices != null) {
 
@@ -1221,4 +1253,5 @@ var MultipleChoiceController = function () {
 MultipleChoiceController.$inject = ['$scope', 'MultipleChoiceService', 'NodeService', 'ProjectService', 'StudentDataService', 'UtilService'];
 
 exports.default = MultipleChoiceController;
+
 //# sourceMappingURL=multipleChoiceController.js.map

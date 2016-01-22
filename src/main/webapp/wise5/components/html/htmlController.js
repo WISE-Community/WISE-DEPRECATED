@@ -30,6 +30,9 @@ var HTMLController = function () {
         // field that will hold the component content
         this.componentContent = null;
 
+        // field that will hold the authoring component content
+        this.authoringComponentContent = null;
+
         // whether this part is showing previous work
         this.isShowPreviousWork = false;
 
@@ -46,7 +49,10 @@ var HTMLController = function () {
         }
 
         // get the component content from the scope
-        this.componentContent = $scope.component;
+        this.componentContent = $scope.componentContent;
+
+        // get the authoring component content
+        this.authoringComponentContent = this.$scope.authoringComponentContent;
 
         this.mode = $scope.mode;
 
@@ -57,6 +63,12 @@ var HTMLController = function () {
 
             if (this.mode === 'authoring') {
                 this.updateAdvancedAuthoringView();
+
+                $scope.$watch(function () {
+                    return this.authoringComponentContent;
+                }.bind(this), function (newValue, oldValue) {
+                    this.componentContent = this.ProjectService.injectAssetPaths(newValue);
+                }.bind(this), true);
             }
 
             // get the show previous work node id if it is provided
@@ -124,10 +136,10 @@ var HTMLController = function () {
 
             try {
                 /*
-                 * create a new comopnent by converting the JSON string in the advanced
+                 * create a new component by converting the JSON string in the advanced
                  * authoring view into a JSON object
                  */
-                var editedComponentContent = angular.fromJson(this.componentContentJSONString);
+                var editedComponentContent = angular.fromJson(this.authoringComponentContentJSONString);
 
                 // replace the component in the project
                 this.ProjectService.replaceComponent(this.nodeId, this.componentId, editedComponentContent);
@@ -146,7 +158,7 @@ var HTMLController = function () {
          * Update the component JSON string that will be displayed in the advanced authoring view textarea
          */
         value: function updateAdvancedAuthoringView() {
-            this.componentContentJSONString = angular.toJson(this.componentContent, 4);
+            this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
         }
     }]);
 
@@ -156,4 +168,5 @@ var HTMLController = function () {
 HTMLController.$inject = ['$scope', '$state', '$stateParams', '$sce', 'ConfigService', 'NodeService', 'ProjectService', 'StudentDataService'];
 
 exports.default = HTMLController;
+
 //# sourceMappingURL=htmlController.js.map
