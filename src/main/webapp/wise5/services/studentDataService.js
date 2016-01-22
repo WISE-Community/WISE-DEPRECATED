@@ -1035,6 +1035,11 @@ var StudentDataService = function () {
                 annotations = [];
             }
 
+            if (this.ConfigService.getConfigParam('mode') === 'preview') {
+                // if we're in preview mode, don't make any request to the server
+                return;
+            }
+
             // get the url to POST the student data
             var httpParams = {};
             httpParams.method = 'POST';
@@ -1863,4 +1868,5 @@ var StudentDataService = function () {
 StudentDataService.$inject = ['$http', '$injector', '$q', '$rootScope', 'AnnotationService', 'ConfigService', 'ProjectService', 'UtilService'];
 
 exports.default = StudentDataService;
+
 //# sourceMappingURL=studentDataService.js.map

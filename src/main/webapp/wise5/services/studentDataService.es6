@@ -1002,6 +1002,11 @@ class StudentDataService {
             annotations = [];
         }
 
+        if (this.ConfigService.getConfigParam('mode') === 'preview') {
+            // if we're in preview mode, don't make any request to the server
+            return;
+        }
+
         // get the url to POST the student data
         var httpParams = {};
         httpParams.method = 'POST';

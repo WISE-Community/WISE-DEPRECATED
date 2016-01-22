@@ -1,5 +1,5 @@
 import drawingTool from 'lib/drawingTool/drawing-tool';
-import drawingToolVendor from 'lib/drawingTool/vendor';
+import drawingToolVendor from 'lib/drawingTool/vendor.min';
 
 class DrawController {
     constructor($injector,
