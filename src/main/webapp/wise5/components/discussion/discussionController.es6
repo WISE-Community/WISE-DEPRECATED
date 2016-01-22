@@ -420,7 +420,7 @@ class DiscussionController {
             autoresize_bottom_margin: "0",
             autoresize_min_height: "100",
             image_advtab: true,
-            content_css: themePath + "/style/css/tinymce.css",
+            content_css: themePath + "/style/tinymce.css",
             statusbar: false,
             forced_root_block: false,
             setup: function (ed) {

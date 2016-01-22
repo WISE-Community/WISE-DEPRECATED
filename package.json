@@ -10,19 +10,20 @@
     "sass": "^0.5.0"
   },
   "devDependencies": {
+    "autoprefixer": "^6.3.1",
     "babel-cli": "^6.4.0",
     "babel-preset-es2015": "^6.3.13",
     "connect-history-api-fallback": "^1.1.0",
-    "node-sass": "^3.4.2"
+    "cssnano": "^3.4.0",
+    "gulp": "^3.9.0",
+    "gulp-postcss": "^6.0.1",
+    "gulp-sass": "^2.1.1",
+    "gulp-sourcemaps": "^1.6.0"
   },
   "scripts": {
-    "watch-all": "npm run transpile & npm run watch-css",
+    "watch-all": "npm run transpile & npm run watch-sass",
     "transpile": "babel --extensions .es6 --source-maps --presets babel-preset-es2015 --watch src/main/webapp/wise5/ --only wise5/services,wise5/classroomMonitor,wise5/authoringTool,wise5/directives,wise5/components,wise5/vle,wise5/controllers,wise5/node/ --out-dir src/main/webapp/wise5/",
-    "watch-css": "npm run watch-core-css & npm run watch-theme-css",
-    "watch-core-css": "node-sass -w src/main/webapp/wise5/style -o src/main/webapp/wise5/style",
-    "watch-theme-css": "node-sass -w src/main/webapp/wise5/vle/themes -o src/main/webapp/wise5/vle/themes",
-    "build-core-css": "node-sass src/main/webapp/wise5/style -o src/main/webapp/wise5/style",
-    "build-theme-css": "node-sass src/main/webapp/wise5/vle/themes -o src/main/webapp/wise5/vle/themes",
+    "watch-sass": "gulp watch-sass",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

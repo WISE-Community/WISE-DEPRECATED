@@ -78,7 +78,7 @@ class OpenResponseController {
             autoresize_bottom_margin: "0",
             autoresize_min_height: "100",
             image_advtab: true,
-            content_css: themePath + "/style/css/tinymce.css",
+            content_css: themePath + "/style/tinymce.css",
             setup: function (ed) {
                 ed.on("focus", function (e) {
                     $(e.target.editorContainer).addClass('input--focused').parent().addClass('input-wrapper--focused');
