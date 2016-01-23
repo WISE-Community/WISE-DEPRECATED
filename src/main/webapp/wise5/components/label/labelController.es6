@@ -6,6 +6,7 @@ class LabelController {
         LabelService,
         NodeService,
         OpenResponseService,
+        ProjectService,
         StudentAssetService,
         StudentDataService
     ) {
@@ -16,6 +17,7 @@ class LabelController {
         this.LabelService = LabelService;
         this.NodeService = NodeService;
         this.OpenResponseService = OpenResponseService;
+        this.ProjectService = ProjectService;
         this.StudentAssetService = StudentAssetService;
         this.StudentDataService = StudentDataService;
 
@@ -168,66 +170,50 @@ class LabelController {
                 this.isNewLabelButtonVisible = false;
                 this.canDeleteLabels = false;
                 this.isDisabled = true;
+            } else if (this.mode === 'authoring') {
+
+                this.updateAdvancedAuthoringView();
+
+                $scope.$watch(function() {
+                    return this.authoringComponentContent;
+                }.bind(this), function(newValue, oldValue) {
+                    this.componentContent = this.ProjectService.injectAssetPaths(newValue);
+
+                    if (this.canvas != null) {
+
+                        // clear the parent to remove the canvas
+                        $('#canvasParent').empty();
+
+                        // create a new canvas
+                        var canvas = $('<canvas/>');
+                        canvas.attr('id', this.canvasId);
+                        canvas.css('border', '1px solid black');
+
+                        // add the new canvas
+                        $('#canvasParent').append(canvas);
+
+                        // setup the new canvas
+                        this.setupCanvas();
+                    }
+
+                    this.backgroundImage = null;
+
+                    if (this.componentContent.canCreateLabels != null) {
+                        this.canCreateLabels = this.componentContent.canCreateLabels;
+                    }
+
+                    if (this.canCreateLabels) {
+                        this.isNewLabelButtonVisible = true;
+                    } else {
+                        this.isNewLabelButtonVisible = false;
+                    }
+                }.bind(this), true);
             }
 
             this.$timeout(angular.bind(this, function() {
                 // wait for angular to completely render the html before we initialize the canvas
 
-                // initialize the canvas
-                var canvas = this.initializeCanvas();
-                this.canvas = canvas;
-
-                // get the component state from the scope
-                var componentState = this.$scope.componentState;
-
-                if (this.canDeleteLabels && !this.disabled) {
-                    // create the key down listener to listen for the delete key
-                    this.createKeydownListener();
-                }
-
-                // set whether studentAttachment is enabled
-                this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
-
-                if (componentState == null) {
-                    /*
-                     * only import work if the student does not already have
-                     * work for this component
-                     */
-
-                    // check if we need to import work
-                    var importWorkNodeId = this.componentContent.importWorkNodeId;
-                    var importWorkComponentId = this.componentContent.importWorkComponentId;
-
-                    if (importWorkNodeId != null && importWorkComponentId != null) {
-                        // import the work from the other component
-                        this.importWork();
-                    } else if (this.componentContent.labels != null) {
-                        /*
-                         * the student has not done any work and there are starter labels
-                         * so we will populate the canvas with the starter labels
-                         */
-                        this.addLabelsToCanvas(this.componentContent.labels);
-                    }
-                } else {
-                    // populate the student work into this component
-                    this.setStudentWork(componentState);
-                }
-
-                // get the background image that may have been set by the student data
-                var backgroundImage = this.getBackgroundImage();
-
-                if (backgroundImage == null && this.componentContent.backgroundImage != null) {
-                    // get the background image from the component content if any
-                    this.setBackgroundImage(this.componentContent.backgroundImage);
-                }
-
-                // check if we need to lock this component
-                this.calculateDisabled();
-
-                if (this.$scope.$parent.registerComponentController != null) {
-                    // register this component with the parent node
-                    this.$scope.$parent.registerComponentController(this.$scope, this.componentContent);
-                }
+                this.setupCanvas();
             }));
         }
 
@@ -285,6 +271,64 @@ class LabelController {
         this.$scope.$on('exitNode', angular.bind(this, function(event, args) {
 
         }));
+    }
+
+    setupCanvas() {
+        // initialize the canvas
+        var canvas = this.initializeCanvas();
+        this.canvas = canvas;
+
+        // get the component state from the scope
+        var componentState = this.$scope.componentState;
+
+        if (this.canDeleteLabels && !this.disabled) {
+            // create the key down listener to listen for the delete key
+            this.createKeydownListener();
+        }
+
+        // set whether studentAttachment is enabled
+        this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
+
+        if (componentState == null) {
+            /*
+             * only import work if the student does not already have
+             * work for this component
+             */
+
+            // check if we need to import work
+            var importWorkNodeId = this.componentContent.importWorkNodeId;
+            var importWorkComponentId = this.componentContent.importWorkComponentId;
+
+            if (importWorkNodeId != null && importWorkComponentId != null) {
+                // import the work from the other component
+                this.importWork();
+            } else if (this.componentContent.labels != null) {
+                /*
+                 * the student has not done any work and there are starter labels
+                 * so we will populate the canvas with the starter labels
+                 */
+                this.addLabelsToCanvas(this.componentContent.labels);
+            }
+        } else {
+            // populate the student work into this component
+            this.setStudentWork(componentState);
+        }
+
+        // get the background image that may have been set by the student data
+        var backgroundImage = this.getBackgroundImage();
+
+        if (backgroundImage == null && this.componentContent.backgroundImage != null) {
+            // get the background image from the component content if any
+            this.setBackgroundImage(this.componentContent.backgroundImage);
+        }
+
+        // check if we need to lock this component
+        this.calculateDisabled();
+
+        if (this.$scope.$parent.registerComponentController != null) {
+            // register this component with the parent node
+            this.$scope.$parent.registerComponentController(this.$scope, this.componentContent);
+        }
     }
 
     /**
@@ -751,6 +795,9 @@ class LabelController {
 
         var canvas = null;
 
+        this.canvasWidth = this.componentContent.width;
+        this.canvasHeight = this.componentContent.height;
+
         // get the canvas object from the html
         if (this.isDisabled) {
             // we will make the canvas uneditable
@@ -1128,6 +1175,88 @@ class LabelController {
     };
 
     /**
+     * The component has changed in the regular authoring view so we will save the project
+     */
+    authoringViewComponentChanged() {
+
+        // update the JSON string in the advanced authoring view textarea
+        this.updateAdvancedAuthoringView();
+
+        // save the project to the server
+        this.ProjectService.saveProject();
+    };
+
+    /**
+     * The component has changed in the advanced authoring view so we will update
+     * the component and save the project.
+     */
+    advancedAuthoringViewComponentChanged() {
+
+        try {
+            /*
+             * create a new component by converting the JSON string in the advanced
+             * authoring view into a JSON object
+             */
+            var authoringComponentContent = angular.fromJson(this.authoringComponentContentJSONString);
+
+            // replace the component in the project
+            this.ProjectService.replaceComponent(this.nodeId, this.componentId, authoringComponentContent);
+
+            // set the new authoring component content
+            this.authoringComponentContent = authoringComponentContent;
+
+            // set the component content
+            this.componentContent = this.ProjectService.injectAssetPaths(authoringComponentContent);
+
+            // save the project to the server
+            this.ProjectService.saveProject();
+        } catch(e) {
+
+        }
+    };
+
+    /**
+     * Update the component JSON string that will be displayed in the advanced authoring view textarea
+     */
+    updateAdvancedAuthoringView() {
+        this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
+    };
+
+    /**
+     * Add a label in the authoring view
+     */
+    authoringAddLabelClicked() {
+
+        // create the new label
+        var newLabel = {};
+        newLabel.text = 'Enter text here';
+        newLabel.color = 'blue';
+        newLabel.pointX = 100;
+        newLabel.pointY = 100;
+        newLabel.textX = 100;
+        newLabel.textY = -25;
+
+        // add the label to the array of labels
+        this.authoringComponentContent.labels.push(newLabel);
+
+        // save the project
+        this.authoringViewComponentChanged();
+    }
+
+    /**
+     * Delete a label in the authoring view
+     * @param index the index of the label in the labels array
+     */
+    authoringDeleteLabelClicked(index) {
+
+        // delete the label from the array
+        this.authoringComponentContent.labels.splice(index, 1);
+
+        // save the project
+        this.authoringViewComponentChanged();
+    }
+
+    /**
      * Register the the listener that will listen for the exit event
      * so that we can perform saving before exiting.
      */
@@ -1150,6 +1279,7 @@ LabelController.$inject = [
     'LabelService',
     'NodeService',
     'OpenResponseService',
+    'ProjectService',
     'StudentAssetService',
     'StudentDataService'
 ];

@@ -2,6 +2,7 @@
 
 import $ from 'jquery';
 import angular from 'angular';
+import angularHighcharts from 'highcharts-ng';
 import angularUIRouter from 'angular-ui-router';
 import ngFileUpload from 'ng-file-upload';
 import ngMaterial from 'angular-material';
@@ -20,6 +21,7 @@ import EmbeddedController from '../components/embedded/embeddedController';
 import EmbeddedService from '../components/embedded/embeddedService';
 import GraphController from '../components/graph/graphController';
 import GraphService from '../components/graph/graphService';
+import Highcharts from 'highcharts';
 import HTMLController from '../components/html/htmlController';
 import LabelController from '../components/label/labelController';
 import LabelService from '../components/label/labelService';
@@ -49,12 +51,13 @@ let mainModule = angular.module('authoring', [
     'angularMoment',
     'angular-toArrayFilter',
     'directives',
-    'ui.router',
+    'highcharts-ng',
     'ngAnimate',
     'ngAria',
     'ngFileUpload',
     'ngMaterial',
-    'ngWebSocket'
+    'ngWebSocket',
+    'ui.router'
 ])
     .service(AnnotationService.name, AnnotationService)
     .service(ConfigService.name, ConfigService)

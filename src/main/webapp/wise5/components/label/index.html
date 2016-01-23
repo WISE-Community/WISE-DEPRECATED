@@ -6,6 +6,74 @@
                 <style>
                     {{labelController.nodeContent.style}}
                 </style>
+                <div ng-if='labelController.mode === "authoring"'>
+                    <textarea ng-model='labelController.authoringComponentContent.prompt'
+                              ng-change='labelController.authoringViewComponentChanged()'
+                              ng-model-options='{ debounce: 1000 }'
+                              rows='10'
+                              cols='100'></textarea>
+                    <br/>
+                    Background Image: <input ng-model='labelController.authoringComponentContent.backgroundImage'
+                                             ng-change='labelController.authoringViewComponentChanged()'
+                                             ng-model-options='{ debounce: 1000 }'
+                                             size='50'/>
+                    <br/>
+                    Can Student Create Labels: <input type='checkbox'
+                                                      ng-model='labelController.authoringComponentContent.canCreateLabels'
+                                                      ng-change='labelController.authoringViewComponentChanged()'/>
+                    <br/>
+                    Can Student Delete Labels: <input type='checkbox'
+                                                      ng-model='labelController.authoringComponentContent.canDeleteLabels'
+                                                      ng-change='labelController.authoringViewComponentChanged()'/>
+                    <br/>
+                    Width: <input type='number'
+                                  ng-model='labelController.authoringComponentContent.width'
+                                  ng-change='labelController.authoringViewComponentChanged()'
+                                  ng-model-options='{ debounce: 1000 }'
+                                  style='width: 4em'/>
+                    Height: <input type='number'
+                                   ng-model='labelController.authoringComponentContent.height'
+                                   ng-change='labelController.authoringViewComponentChanged()'
+                                   ng-model-options='{ debounce: 1000 }'
+                                   style='width: 4em'/>
+                    <br/>
+                    Labels <button ng-click='labelController.authoringAddLabelClicked()'>Add Label</button>
+                    <div ng-repeat='label in labelController.authoringComponentContent.labels track by $index'
+                         style='border: 1px solid black'>
+                        Text: <input ng-model='label.text'
+                                     ng-change='labelController.authoringViewComponentChanged()'
+                                     ng-model-options='{ debounce: 1000 }'/>
+                        <br/>
+                        Color: <input ng-model='label.color'
+                                      ng-change='labelController.authoringViewComponentChanged()'
+                                      ng-model-options='{ debounce: 1000 }'/>
+                        <br/>
+                        X Location: <input type='number'
+                                           ng-model='label.pointX'
+                                           ng-change='labelController.authoringViewComponentChanged()'
+                                           ng-model-options='{ debounce: 1000 }'/>
+                        Y Location: <input type='number'
+                                           ng-model='label.pointY'
+                                           ng-change='labelController.authoringViewComponentChanged()'
+                                           ng-model-options='{ debounce: 1000 }'/>
+                        <br/>
+                        Relative Text X Location: <input type='number'
+                                                         ng-model='label.textX'
+                                                         ng-change='labelController.authoringViewComponentChanged()'
+                                                         ng-model-options='{ debounce: 1000 }'/>
+                        Relative Text Y Location: <input type='number'
+                                                         ng-model='label.textY'
+                                                         ng-change='labelController.authoringViewComponentChanged()'
+                                                         ng-model-options='{ debounce: 1000 }'/>
+                        <br/>
+                        <button ng-click='labelController.authoringDeleteLabelClicked($index)'>Delete Label</button>
+                    </div>
+                    <textarea ng-model='labelController.authoringComponentContentJSONString'
+                              ng-change='labelController.advancedAuthoringViewComponentChanged()'
+                              ng-model-options='{ debounce: 1000 }'
+                              rows='10'
+                              cols='100'></textarea>
+                </div>
             <md-input-container class="input-container md-block input-container--open-response input-container--component md-no-float">
                 <label class="input-label md-no-float" ng-disabled="labelController.isDisabled"
                        compile="labelController.getPrompt()" ng-if="labelController.showPrompt()"></label>
@@ -19,7 +87,9 @@
                                ng-click="labelController.cancelButtonClicked()"
                                ng-disabled="labelController.isDisabled"
                                ng-if="labelController.showCancelButton()">Cancel</md-button>
-                    <canvas id="{{labelController.canvasId}}" width="800" height="600" style="border:1px solid black;"></canvas>
+                    <div id="canvasParent">
+                        <canvas id="{{labelController.canvasId}}" width="800" height="600" style="border:1px solid black;"></canvas>
+                    </div>
                 </div>
             </md-input-container>
                 <div class="component-content__actions" ng-show="labelController.attachments.length && labelController.isStudentAttachmentEnabled" layout="row" layout-wrap="true">

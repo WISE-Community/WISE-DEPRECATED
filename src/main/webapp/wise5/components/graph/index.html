@@ -1,5 +1,61 @@
 <div ng-controller='GraphController as graphController' listen-for-delete-keypress style='display: flex'>
     <div style='flex: 1'>
+        <div ng-if='graphController.mode === "authoring"'>
+            <textarea ng-model='graphController.authoringComponentContent.prompt'
+                      ng-change='graphController.authoringViewComponentChanged()'
+                      ng-model-options='{ debounce: 1000 }'
+                      rows='10'
+                      cols='100'></textarea>
+            <br/>
+            Graph Title: <input ng-model='graphController.authoringComponentContent.title'
+                                ng-change='graphController.authoringViewComponentChanged()'
+                                size='30'/>
+            Graph Type: <input ng-model='graphController.authoringComponentContent.graphType'
+                               ng-change='graphController.authoringViewComponentChanged()'/>
+            <br/>
+            <br/>
+            X Axis Title: <input ng-model='graphController.authoringComponentContent.xAxis.title.text'
+                                 ng-change='graphController.authoringViewComponentChanged()'/>
+            X Min: <input type='number'
+                          ng-model='graphController.authoringComponentContent.xAxis.min'
+                          ng-change='graphController.authoringViewComponentChanged()'/>
+            X Max: <input type='number'
+                          ng-model='graphController.authoringComponentContent.xAxis.max'
+                          ng-change='graphController.authoringViewComponentChanged()'/>
+            <br/>
+            <br/>
+            Y Axis Title: <input ng-model='graphController.authoringComponentContent.yAxis.title.text'
+                                 ng-change='graphController.authoringViewComponentChanged()'/>
+            Y Min: <input type='number'
+                          ng-model='graphController.authoringComponentContent.yAxis.min'
+                          ng-change='graphController.authoringViewComponentChanged()'/>
+            Y Max: <input type='number'
+                          ng-model='graphController.authoringComponentContent.yAxis.max'
+                          ng-change='graphController.authoringViewComponentChanged()'/>
+            <br/>
+            Series
+            <button ng-click='graphController.authoringAddSeriesClicked()'>Add Series</button>
+            <div ng-repeat='series in graphController.authoringComponentContent.series track by $index'
+                 style='border: 1px solid black'>
+                Name: <input ng-model='series.name'
+                             ng-change='graphController.authoringViewComponentChanged()'
+                             size='30'/>
+                <br/>
+                Color: <input ng-model='series.color'/>
+                <br/>
+                Symbol: <input ng-model='series.marker.symbol'/>
+                <br/>
+                Can Student Edit: <input type='checkbox' ng-model='series.canEdit'/>
+                <br/>
+                <button ng-click='graphController.authoringDeleteSeriesClicked($index)'>Delete Series</button>
+            </div>
+            <br/>
+            <textarea ng-model='graphController.authoringComponentContentJSONString'
+                      ng-change='graphController.advancedAuthoringViewComponentChanged()'
+                      ng-model-options='{ debounce: 1000 }'
+                      rows='10'
+                      cols='100'></textarea>
+        </div>
         <div id='prompt' compile='graphController.getPrompt()' ng-show='graphController.showPrompt()'></div>
         <div class="component-content__actions" layout="row">
             <md-button class="md-accent" ng-show="graphController.isStudentAttachmentEnabled"

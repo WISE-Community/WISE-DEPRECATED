@@ -113,6 +113,18 @@ class GraphController {
                 this.isSubmitButtonVisible = false;
                 this.isResetGraphButtonVisible = false;
                 this.isDisabled = true;
+            } else if (this.mode === 'authoring') {
+                this.updateAdvancedAuthoringView()
+
+                $scope.$watch(function() {
+                    return this.authoringComponentContent;
+                }.bind(this), function(newValue, oldValue) {
+                    this.componentContent = this.ProjectService.injectAssetPaths(newValue);
+                    this.series = null;
+                    this.xAxis = null;
+                    this.yAxis = null;
+                    this.setupGraph();
+                }.bind(this), true);
             }
 
             // get the show previous work node id if it is provided
@@ -1584,6 +1596,104 @@ class GraphController {
 
         return componentId;
     };
+
+
+    /**
+     * The component has changed in the regular authoring view so we will save the project
+     */
+    authoringViewComponentChanged() {
+
+        // update the JSON string in the advanced authoring view textarea
+        this.updateAdvancedAuthoringView();
+
+        // save the project to the server
+        this.ProjectService.saveProject();
+    };
+
+    /**
+     * The component has changed in the advanced authoring view so we will update
+     * the component and save the project.
+     */
+    advancedAuthoringViewComponentChanged() {
+
+        try {
+            /*
+             * create a new component by converting the JSON string in the advanced
+             * authoring view into a JSON object
+             */
+            var authoringComponentContent = angular.fromJson(this.authoringComponentContentJSONString);
+
+            // replace the component in the project
+            this.ProjectService.replaceComponent(this.nodeId, this.componentId, authoringComponentContent);
+
+            // set the new authoring component content
+            this.authoringComponentContent = authoringComponentContent;
+
+            // set the new component into the controller
+            this.componentContent = editedComponentContent;
+
+            // save the project to the server
+            this.ProjectService.saveProject();
+        } catch(e) {
+
+        }
+    };
+
+    /**
+     * Update the component JSON string that will be displayed in the advanced authoring view textarea
+     */
+    updateAdvancedAuthoringView() {
+        this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
+    };
+
+    /**
+     * Add a series in the authoring view
+     */
+    authoringAddSeriesClicked() {
+
+        // create a new series
+        var newSeries = this.createNewSeries();
+
+        // add the new series
+        this.authoringComponentContent.series.push(newSeries);
+
+        // save the project
+        this.authoringViewComponentChanged();
+    }
+
+    /**
+     * Create a new series object
+     * @returns a new series object
+     */
+    createNewSeries() {
+        var newSeries = {};
+
+        newSeries.name = '';
+        newSeries.data = [];
+
+        var marker = {};
+        marker.symbol = 'circle';
+        newSeries.marker = marker;
+
+        newSeries.regression = false;
+        newSeries.regressionSettings = {};
+        newSeries.canEdit = true;
+
+        return newSeries;
+    }
+
+    /**
+     * Delete a series in the authoring view
+     * @param the index of the series in the series array
+     */
+    authoringDeleteSeriesClicked(index) {
+
+        // remove the series from the series array
+        this.authoringComponentContent.series.splice(index, 1);
+
+        // save the project
+        this.authoringViewComponentChanged();
+    }
 
     /**
      * Register the the listener that will listen for the exit event
