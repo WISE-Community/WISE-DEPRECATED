@@ -144,6 +144,10 @@ var _nodeService = require('../services/nodeService');
 
 var _nodeService2 = _interopRequireDefault(_nodeService);
 
+var _notebook = require('./notebook/notebook');
+
+var _notebook2 = _interopRequireDefault(_notebook);
+
 var _notebookService = require('../services/notebookService');
 
 var _notebookService2 = _interopRequireDefault(_notebookService);
@@ -220,17 +224,13 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 //import ocLazyLoad from '../vendor/oclazyload/dist/ocLazyLoad.require';
 
-//import HTMLService from '../components/html/htmlService';
-
-//import CRaterService from '../components/cRater/cRaterService';
+//import AudioRecorderService from '../components/audioRecorder/audioRecorderService';
 
 var mainModule = _angular2.default.module('vle', ['angularMoment', 'angular-toArrayFilter', 'directives',
 //'filters',
 'highcharts-ng',
 //'ngAudio',
-'ngAria', 'ngFileUpload', 'ngMaterial', 'ngSanitize', 'ngWebSocket',
-//'notebook',
-'oc.lazyLoad', 'ui.router',
+'ngAria', 'ngFileUpload', 'ngMaterial', 'ngSanitize', 'ngWebSocket', 'notebook', 'oc.lazyLoad', 'ui.router',
 //'ui.tinymce',
 'ui.tree']).service(_annotationService2.default.name, _annotationService2.default)
 //.service(AudioRecorderService.name, AudioRecorderService)
@@ -428,7 +428,9 @@ var mainModule = _angular2.default.module('vle', ['angularMoment', 'angular-toAr
 }]);
 //import PhotoBoothService from '../components/photoBooth/photoBoothService';
 
-//import AudioRecorderService from '../components/audioRecorder/audioRecorderService';
+//import HTMLService from '../components/html/htmlService';
+
+//import CRaterService from '../components/cRater/cRaterService';
 
 exports.default = mainModule;
 

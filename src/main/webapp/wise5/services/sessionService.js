@@ -184,7 +184,7 @@ var SessionService = function () {
          * Fire the event that will show the warning message
          */
         value: function showWarning() {
-            $rootScope.$broadcast('showSessionWarning');
+            this.$rootScope.$broadcast('showSessionWarning');
         }
     }, {
         key: 'renewSession',
@@ -359,4 +359,5 @@ var SessionService = function () {
 SessionService.$inject = ['$http', '$rootScope', 'ConfigService'];
 
 exports.default = SessionService;
+
 //# sourceMappingURL=sessionService.js.map

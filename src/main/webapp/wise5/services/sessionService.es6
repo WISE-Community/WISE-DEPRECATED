@@ -161,7 +161,7 @@ class SessionService {
      * Fire the event that will show the warning message
      */
     showWarning() {
-        $rootScope.$broadcast('showSessionWarning');
+        this.$rootScope.$broadcast('showSessionWarning');
     };
 
     /**

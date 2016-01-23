@@ -6,8 +6,10 @@
         <item url="file://$PROJECT_DIR$/src/main/webapp/wise5/components/html/htmlService.js" />
         <item url="file://$PROJECT_DIR$/src/main/webapp/wise5/services/studentStatusService.js" />
         <item url="file://$PROJECT_DIR$/src/main/webapp/wise5/services/studentDataService.js" />
+        <item url="file://$PROJECT_DIR$/src/main/webapp/wise5/vle/notebook/notebook.js" />
         <item url="file://$PROJECT_DIR$/src/main/webapp/wise5/services/studentAssetService.js" />
         <item url="file://$PROJECT_DIR$/src/main/webapp/wise5/services/teacherWebSocketService.js" />
+        <item url="file://$PROJECT_DIR$/src/main/webapp/wise5/vle/notebook/notebookController.js" />
         <item url="file://$PROJECT_DIR$/src/main/webapp/wise5/components/html/htmlController.js" />
         <item url="file://$PROJECT_DIR$/src/main/webapp/wise5/components/draw/drawController.js" />
         <item url="file://$PROJECT_DIR$/src/main/webapp/wise5/components/graph/graphService.js" />
@@ -47,7 +49,6 @@
         <item url="file://$PROJECT_DIR$/src/main/webapp/wise5/components/multipleChoice/multipleChoiceService.js" />
         <item url="file://$PROJECT_DIR$/src/main/webapp/wise5/node/nodeController.js" />
         <item url="file://$PROJECT_DIR$/src/main/webapp/wise5/components/multipleChoice/multipleChoiceController.js" />
-        <item url="file://$PROJECT_DIR$/src/main/webapp/wise5/directives/directives.js" />
         <item url="file://$PROJECT_DIR$/src/main/webapp/wise5/components/match/matchService.js" />
         <item url="file://$PROJECT_DIR$/src/main/webapp/wise5/components/match/matchController.js" />
         <item url="file://$PROJECT_DIR$/src/main/webapp/wise5/authoringTool/project/projectController.js" />
@@ -55,6 +56,7 @@
         <item url="file://$PROJECT_DIR$/src/main/webapp/wise5/authoringTool/authoringToolController.js" />
         <item url="file://$PROJECT_DIR$/src/main/webapp/wise5/authoringTool/main.js" />
         <item url="file://$PROJECT_DIR$/src/main/webapp/wise5/authoringTool/bootstrap.js" />
+        <item url="file://$PROJECT_DIR$/src/main/webapp/wise5/directives/directives.js" />
         <item url="file://$PROJECT_DIR$/src/main/webapp/wise5/components/label/labelService.js" />
         <item url="file://$PROJECT_DIR$/src/main/webapp/wise5/classroomMonitor/bootstrap.js" />
         <item url="file://$PROJECT_DIR$/src/main/webapp/wise5/classroomMonitor/main.js" />
@@ -67,8 +69,10 @@
       <root url="file://$PROJECT_DIR$/src/main/webapp/wise5/components/html/htmlService.js" />
       <root url="file://$PROJECT_DIR$/src/main/webapp/wise5/services/studentStatusService.js" />
       <root url="file://$PROJECT_DIR$/src/main/webapp/wise5/services/studentDataService.js" />
+      <root url="file://$PROJECT_DIR$/src/main/webapp/wise5/vle/notebook/notebook.js" />
       <root url="file://$PROJECT_DIR$/src/main/webapp/wise5/services/studentAssetService.js" />
       <root url="file://$PROJECT_DIR$/src/main/webapp/wise5/services/teacherWebSocketService.js" />
+      <root url="file://$PROJECT_DIR$/src/main/webapp/wise5/vle/notebook/notebookController.js" />
       <root url="file://$PROJECT_DIR$/src/main/webapp/wise5/components/html/htmlController.js" />
       <root url="file://$PROJECT_DIR$/src/main/webapp/wise5/components/draw/drawController.js" />
       <root url="file://$PROJECT_DIR$/src/main/webapp/wise5/components/graph/graphService.js" />
@@ -108,7 +112,6 @@
       <root url="file://$PROJECT_DIR$/src/main/webapp/wise5/components/multipleChoice/multipleChoiceService.js" />
       <root url="file://$PROJECT_DIR$/src/main/webapp/wise5/node/nodeController.js" />
       <root url="file://$PROJECT_DIR$/src/main/webapp/wise5/components/multipleChoice/multipleChoiceController.js" />
-      <root url="file://$PROJECT_DIR$/src/main/webapp/wise5/directives/directives.js" />
       <root url="file://$PROJECT_DIR$/src/main/webapp/wise5/components/match/matchService.js" />
       <root url="file://$PROJECT_DIR$/src/main/webapp/wise5/components/match/matchController.js" />
       <root url="file://$PROJECT_DIR$/src/main/webapp/wise5/authoringTool/project/projectController.js" />
@@ -116,6 +119,7 @@
       <root url="file://$PROJECT_DIR$/src/main/webapp/wise5/authoringTool/authoringToolController.js" />
       <root url="file://$PROJECT_DIR$/src/main/webapp/wise5/authoringTool/main.js" />
       <root url="file://$PROJECT_DIR$/src/main/webapp/wise5/authoringTool/bootstrap.js" />
+      <root url="file://$PROJECT_DIR$/src/main/webapp/wise5/directives/directives.js" />
       <root url="file://$PROJECT_DIR$/src/main/webapp/wise5/components/label/labelService.js" />
       <root url="file://$PROJECT_DIR$/src/main/webapp/wise5/classroomMonitor/bootstrap.js" />
       <root url="file://$PROJECT_DIR$/src/main/webapp/wise5/classroomMonitor/main.js" />

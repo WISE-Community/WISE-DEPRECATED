@@ -9,11 +9,10 @@ Object.defineProperty(exports, "__esModule", {
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var NotebookService = function () {
-    function NotebookService($http, $q, $rootScope, ConfigService, StudentAssetService, StudentDataService) {
+    function NotebookService($http, $rootScope, ConfigService, StudentAssetService, StudentDataService) {
         _classCallCheck(this, NotebookService);
 
         this.$http = $http;
-        this.$q = $q;
         this.$rootScope = $rootScope;
         this.ConfigService = ConfigService;
         this.StudentAssetService = StudentAssetService;
@@ -41,7 +40,7 @@ var NotebookService = function () {
             this.notebook.items.push(notebookItem);
 
             // the current node is about to change
-            $rootScope.$broadcast('notebookUpdated', { notebook: this.notebook });
+            this.$rootScope.$broadcast('notebookUpdated', { notebook: this.notebook });
         }
     }, {
         key: 'deleteItem',
@@ -69,42 +68,44 @@ var NotebookService = function () {
                 }
             }
             this.notebook.totalSize = totalSizeSoFar;
-            this.notebook.totalSizeMax = ConfigService.getStudentMaxTotalAssetsSize();
+            this.notebook.totalSizeMax = this.ConfigService.getStudentMaxTotalAssetsSize();
             this.notebook.usagePercentage = this.notebook.totalSize / this.notebook.totalSizeMax * 100;
         }
     }, {
         key: 'retrieveNotebookItems',
         value: function retrieveNotebookItems() {
+            var _this = this;
+
             var config = {};
             config.method = 'GET';
-            config.url = ConfigService.getStudentNotebookURL();
+            config.url = this.ConfigService.getStudentNotebookURL();
             config.params = {};
-            config.params.periodId = ConfigService.getPeriodId();
-            config.params.workgroupId = ConfigService.getWorkgroupId();
-            return $http(config).then(angular.bind(this, function (response) {
+            config.params.periodId = this.ConfigService.getPeriodId();
+            config.params.workgroupId = this.ConfigService.getWorkgroupId();
+            return this.$http(config).then(function (response) {
                 // loop through the assets and make them into JSON object with more details
-                this.notebook.items = []; // clear local notebook items array
+                _this.notebook.items = []; // clear local notebook items array
                 var result = [];
                 var allNotebookItems = response.data;
                 for (var n = 0; n < allNotebookItems.length; n++) {
                     var notebookItem = allNotebookItems[n];
                     if (notebookItem.studentAssetId != null) {
                         // if this notebook item is a StudentAsset item, add the association here
-                        notebookItem.studentAsset = StudentAssetService.getAssetById(notebookItem.studentAssetId);
+                        notebookItem.studentAsset = _this.StudentAssetService.getAssetById(notebookItem.studentAssetId);
                     } else if (notebookItem.studentWorkId != null) {
                         // if this notebook item is a StudentWork item, add the association here
-                        notebookItem.studentWork = StudentDataService.getStudentWorkByStudentWorkId(notebookItem.studentWorkId);
+                        notebookItem.studentWork = _this.StudentDataService.getStudentWorkByStudentWorkId(notebookItem.studentWorkId);
                     }
                     if (notebookItem.serverDeleteTime == null) {
-                        this.notebook.items.push(notebookItem);
+                        _this.notebook.items.push(notebookItem);
                     } else {
-                        this.notebook.deletedItems.push(notebookItem);
+                        _this.notebook.deletedItems.push(notebookItem);
                     }
                 }
-                this.calculateTotalUsage();
+                _this.calculateTotalUsage();
 
-                return this.notebook;
-            }));
+                return _this.notebook;
+            });
         }
     }, {
         key: 'hasStudentWorkNotebookItem',
@@ -120,19 +121,21 @@ var NotebookService = function () {
     }, {
         key: 'addStudentWorkNotebookItem',
         value: function addStudentWorkNotebookItem(studentWork) {
+            var _this2 = this;
+
             // don't allow duplicate student work notebook items
             if (this.hasStudentWorkNotebookItem(studentWork)) {
-                $rootScope.$broadcast('notebookAddDuplicateAttempt');
+                this.$rootScope.$broadcast('notebookAddDuplicateAttempt');
                 return;
             }
 
             var config = {};
             config.method = 'POST';
-            config.url = ConfigService.getStudentNotebookURL();
+            config.url = this.ConfigService.getStudentNotebookURL();
             config.headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
             var params = {};
-            params.workgroupId = ConfigService.getWorkgroupId();
-            params.periodId = ConfigService.getPeriodId();
+            params.workgroupId = this.ConfigService.getWorkgroupId();
+            params.periodId = this.ConfigService.getPeriodId();
             params.nodeId = studentWork.nodeId;
             params.componentId = studentWork.componentId;
             params.studentWorkId = studentWork.id;
@@ -140,42 +143,44 @@ var NotebookService = function () {
 
             config.data = $.param(params);
 
-            return $http(config).then(angular.bind(this, function (result) {
+            return this.$http(config).then(function (result) {
                 var notebookItem = result.data;
                 if (notebookItem != null) {
                     notebookItem.studentWork = studentWork;
-                    this.notebook.items.push(notebookItem);
+                    _this2.notebook.items.push(notebookItem);
                 }
                 return null;
-            }));
+            });
         }
     }, {
         key: 'uploadStudentAssetNotebookItem',
         value: function uploadStudentAssetNotebookItem(file) {
-            StudentAssetService.uploadAsset(file).then(angular.bind(this, function (studentAsset) {
+            var _this3 = this;
+
+            this.StudentAssetService.uploadAsset(file).then(function (studentAsset) {
 
                 var config = {};
                 config.method = 'POST';
-                config.url = ConfigService.getStudentNotebookURL();
+                config.url = _this3.ConfigService.getStudentNotebookURL();
                 config.headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
                 var params = {};
-                params.workgroupId = ConfigService.getWorkgroupId();
-                params.periodId = ConfigService.getPeriodId();
+                params.workgroupId = _this3.ConfigService.getWorkgroupId();
+                params.periodId = _this3.ConfigService.getPeriodId();
                 params.studentAssetId = studentAsset.id;
                 params.clientSaveTime = Date.parse(new Date());
 
                 config.data = $.param(params);
 
-                return $http(config).then(angular.bind(this, function (result) {
+                return _this3.$http(config).then(function (result) {
                     var notebookItem = result.data;
                     if (notebookItem != null) {
-                        notebookItem.studentAsset = StudentAssetService.getAssetById(notebookItem.studentAssetId);
-                        this.notebook.items.push(notebookItem);
+                        notebookItem.studentAsset = _this3.StudentAssetService.getAssetById(notebookItem.studentAssetId);
+                        _this3.notebook.items.push(notebookItem);
                     }
-                    this.calculateTotalUsage();
+                    _this3.calculateTotalUsage();
                     return notebookItem;
-                }));
-            }));
+                });
+            });
         }
     }, {
         key: 'saveNotebookToggleEvent',
@@ -190,14 +195,15 @@ var NotebookService = function () {
             var event = isOpen ? "notebookOpened" : "notebookClosed";
 
             // save notebook open/close event
-            StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
+            this.StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
         }
     }]);
 
     return NotebookService;
 }();
 
-NotebookService.$inject = ['$http', '$q', '$rootScope', 'ConfigService', 'StudentAssetService', 'StudentDataService'];
+NotebookService.$inject = ['$http', '$rootScope', 'ConfigService', 'StudentAssetService', 'StudentDataService'];
 
 exports.default = NotebookService;
+
 //# sourceMappingURL=notebookService.js.map
