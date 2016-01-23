@@ -1,134 +1,29 @@
-define(['angular', 'configService', 'openResponseService', 'notebookService',
-        'projectService', 'sessionService', 'studentAssetService', 'studentDataService'],
-    function(angular, configService, openResponseService, notebookService,
-             projectService, sessionService, studentAssetService, studentDataService) {
+'use strict';
 
-    angular.module('notebook', [])
-        .directive('notebook', function() {
-            return {
-                scope: {
-                    filter: '=',
-                    templateUrl: '=',
-                    componentController: '='
-                },
-                template: '<ng-include src="notebookController.getTemplateUrl()"></ng-include>',
-                controller: 'NotebookController',
-                controllerAs: 'notebookController',
-                bindToController: true
-            };
-        })
-        .controller('NotebookController',
-            function($injector,
-                     $rootScope,
-                     $scope,
-                     $state,
-                     $stateParams,
-                     ConfigService,
-                     OpenResponseService,
-                     NotebookService,
-                     ProjectService,
-                     SessionService,
-                     StudentAssetService,
-                     StudentDataService) {
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
 
-            this.getTemplateUrl = function() {
-              return this.templateUrl;
-            };
+var _notebookController = require('./notebookController');
 
-            this.notebook = null;
-            this.itemId = null;
-            this.item = null;
-            this.itemSource = false;
-            this.applicationNodes = ProjectService.getApplicationNodes();
+var _notebookController2 = _interopRequireDefault(_notebookController);
 
-            this.retrieveNotebookItems = function() {
-                // fetch all assets first because a subset of it will be referenced by a notebook item
-                StudentAssetService.retrieveAssets().then(angular.bind(this, function(studentAssets) {
-                     NotebookService.retrieveNotebookItems().then(angular.bind(this, function(notebook) {
-                        this.notebook = notebook;
-                     }));
-                }));
-            };
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-            this.uploadStudentAssetNotebookItems = function(files) {
-                if (files != null) {
-                    for (var f = 0; f < files.length; f++) {
-                        var file = files[f];
-                        NotebookService.uploadStudentAssetNotebookItem(file);
-                    }
-                }
-            };
+var notebookModule = angular.module('notebook', []).directive('notebook', function () {
+    return {
+        scope: {
+            filter: '=',
+            templateUrl: '=',
+            componentController: '='
+        },
+        template: '<ng-include src="notebookController.getTemplateUrl()"></ng-include>',
+        controller: 'NotebookController',
+        controllerAs: 'notebookController',
+        bindToController: true
+    };
+}).controller('NotebookController', _notebookController2.default);
 
-            this.deleteStudentAsset = function(studentAsset) {
-                alert('delete student asset from note book not implemented yet');
-                /*
-                StudentAssetService.deleteAsset(studentAsset).then(angular.bind(this, function(deletedStudentAsset) {
-                    // remove studentAsset
-                    this.studentAssets.splice(this.studentAssets.indexOf(deletedStudentAsset), 1);
-                    this.calculateTotalUsage();
-                }));
-                */
-            };
+exports.default = notebookModule;
 
-            $scope.$on('notebookUpdated', angular.bind(this, function(event, args) {
-                this.notebook = args.notebook;
-            }));
-
-            this.logOutListener = $scope.$on('logOut', angular.bind(this, function(event, args) {
-                this.logOutListener();
-                $rootScope.$broadcast('componentDoneUnloading');
-            }));
-
-            this.deleteItem = function(item) {
-                NotebookService.deleteItem(item);
-            };
-
-            this.notebookItemSelected = function($event, notebookItem) {
-                this.selectedNotebookItem = notebookItem;
-            };
-
-            this.attachNotebookItemToComponent = function($event, notebookItem) {
-                this.componentController.attachNotebookItemToComponent(notebookItem);
-                this.selectedNotebookItem = null;  // reset selected notebook item
-                // TODO: add some kind of unobtrusive confirmation to let student know that the notebook item has been added to current component
-                $event.stopPropagation();  // prevents parent notebook list item from getting the onclick event so this item won't be re-selected.
-            };
-
-            this.notebookItemDragStartCallback = function(event, ui, notebookItem) {
-                //$(ui.helper.context).data('objectType', 'NotebookItem');
-                //$(ui.helper.context).data('objectData', notebookItem);
-            };
-
-            this.myWorkDragStartCallback = function(event, ui, nodeId, nodeType) {
-                //$(ui.helper.context).data('importType', 'NodeState');
-                //$(ui.helper.context).data('importWorkNodeState', StudentDataService.getLatestNodeStateByNodeId(nodeId));
-                //$(ui.helper.context).data('importWorkNodeType', nodeType);
-            };
-
-            this.log = function() {
-            };
-
-            this.getLatestNodeStateByNodeId = function(nodeId) {
-                return StudentDataService.getLatestNodeStateByNodeId(nodeId);
-            };
-
-            this.showStudentWorkByNodeId = function(nodeId, nodeType) {
-                var result = null;
-
-                if (nodeId != null && nodeType != null) {
-                    var childService = $injector.get(nodeType + 'Service');
-
-                    if (childService != null) {
-                        var latestNodeState = StudentDataService.getLatestNodeStateByNodeId(nodeId);
-                        var studentWorkHTML = childService.getStudentWorkAsHTML(latestNodeState);
-                        result = studentWorkHTML;
-                    }
-                }
-
-                return result;
-            };
-
-            // retrieve assets when notebook is opened
-            this.retrieveNotebookItems();
-        });
-    });
+//# sourceMappingURL=notebook.js.map

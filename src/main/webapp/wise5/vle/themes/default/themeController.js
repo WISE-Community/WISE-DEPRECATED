@@ -113,6 +113,7 @@ var ThemeController = function ThemeController($scope, ConfigService, ProjectSer
                 $mdDialog.hide();
             };
         }
+        RevisionsController.$inject = ["$scope", "$mdDialog", "items", "componentController", "allowRevert"];
     }));
 
     this.$scope.$on('showNotebook', angular.bind(this, function (event, args) {
@@ -142,16 +143,19 @@ var ThemeController = function ThemeController($scope, ConfigService, ProjectSer
                 $mdDialog.hide();
             };
         }
+        NotebookDialogController.$inject = ["$scope", "$mdDialog", "componentController"];
     }));
 
     // capture notebook open/close events
     this.$mdComponentRegistry.when('notebook').then(function (it) {
+        var _this = this;
+
         this.$scope.$watch(function () {
             return it.isOpen();
         }, function (isOpenNewValue, isOpenOldValue) {
             if (isOpenNewValue !== isOpenOldValue) {
-                var currentNode = this.StudentDataService.getCurrentNode();
-                this.NotebookService.saveNotebookToggleEvent(isOpenNewValue, currentNode);
+                var currentNode = _this.StudentDataService.getCurrentNode();
+                _this.NotebookService.saveNotebookToggleEvent(isOpenNewValue, currentNode);
             }
         });
     }.bind(this));
@@ -176,4 +180,5 @@ angular.module('vle').controller('ThemeController', new ThemeController());
 //angular.module('vle').controller('ThemeController', ThemeController);
 
 exports.default = ThemeController;
+
 //# sourceMappingURL=themeController.js.map

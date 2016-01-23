@@ -139,6 +139,7 @@ class ThemeController {
                     $mdDialog.hide();
                 };
             }
+            RevisionsController.$inject = ["$scope", "$mdDialog", "items", "componentController", "allowRevert"];
         }));
 
         this.$scope.$on('showNotebook', angular.bind(this, function (event, args) {
@@ -168,13 +169,14 @@ class ThemeController {
                     $mdDialog.hide();
                 }
             }
+            NotebookDialogController.$inject = ["$scope", "$mdDialog", "componentController"];
         }));
 
         // capture notebook open/close events
         this.$mdComponentRegistry.when('notebook').then(function(it){
             this.$scope.$watch(function() {
                 return it.isOpen();
-            }, function(isOpenNewValue, isOpenOldValue) {
+            }, (isOpenNewValue, isOpenOldValue) => {
                 if (isOpenNewValue !== isOpenOldValue) {
                     var currentNode = this.StudentDataService.getCurrentNode();
                     this.NotebookService.saveNotebookToggleEvent(isOpenNewValue, currentNode);

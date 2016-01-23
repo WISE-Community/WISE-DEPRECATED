@@ -38,6 +38,7 @@ import MultipleChoiceService from '../components/multipleChoice/multipleChoiceSe
 import NavigationController from './navigation/navigationController';
 import NodeController from '../node/nodeController';
 import NodeService from '../services/nodeService';
+import Notebook from './notebook/notebook';
 import NotebookService from '../services/notebookService';
 import OpenResponseController from '../components/openResponse/openResponseController';
 import OpenResponseService from '../components/openResponse/openResponseService';
@@ -72,7 +73,7 @@ let mainModule = angular.module('vle', [
     'ngMaterial',
     'ngSanitize',
     'ngWebSocket',
-    //'notebook',
+    'notebook',
     'oc.lazyLoad',
     'ui.router',
     //'ui.tinymce',

@@ -1,0 +1,26 @@
+// Note: assumes md-diameter is set to "30" on accompanying <md-progress-circular>
+.progress-circular-with-label {
+  position: relative;
+  height: 30px;
+  width: 30px;
+}
+
+.progress-circular-with-label__label {
+  position: absolute;
+  z-index: 1;
+  left: 3px;
+  top: 38px;
+  font-size: 13px;
+  height: 24px;
+  width: 24px;
+  border-radius: 50%;
+  line-height: 25px;
+  background-color: #ffffff;
+}
+
+.progress-circular-with-label__progress {
+  background-color: $accent-color-3 !important;
+  border-radius: 50%;
+  margin-left: -35px;
+  margin-top: -50px;
+}
