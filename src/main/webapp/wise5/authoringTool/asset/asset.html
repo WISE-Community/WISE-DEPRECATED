@@ -1,0 +1,30 @@
+<style>
+    .drop-box {
+        background: #F8F8F8;
+        border: 5px dashed #DDD;
+        width: 90%;
+        height: 100px;
+        text-align: center;
+        padding-top: 50px;
+        margin: 10px;
+        bottom: 0px;
+    }
+
+    .drop-box:hover {
+        cursor: pointer;
+    }
+</style>
+<button ng-click='projectAssetController.exit()'>Close</button>
+
+<div ngf-drop ngf-select ngf-change="projectAssetController.uploadAssetItems($files)" class="drop-box"
+     drag-over-class="dragover" ngf-multiple="true" allow-dir="false"
+     accept="image/*,application/pdf,text/csv">Drop image or file here or click to upload!</div>
+You are using {{projectAssetController.projectAssets.totalFileSize}}
+out of {{projectAssetController.projectAssetTotalSizeMax}}
+
+<ul>
+<li ng-repeat='assetItem in projectAssetController.projectAssets.files'>
+    {{assetItem.fileName}} ({{assetItem.fileSize}} bytes)
+    <button ng-click='projectAssetController.deleteAsset(assetItem)'>X</button>
+</li>
+</ul>
