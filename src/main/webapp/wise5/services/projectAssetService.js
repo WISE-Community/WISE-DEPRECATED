@@ -20,6 +20,7 @@ var ProjectAssetService = function () {
         this.projectAssets = {};
         this.projectAssetURL = this.ConfigService.getConfigParam('projectAssetURL');
         this.projectAssetTotalSizeMax = this.ConfigService.getConfigParam('projectAssetTotalSizeMax');
+        this.projectAssetUsagePercentage = 0;
     }
 
     _createClass(ProjectAssetService, [{

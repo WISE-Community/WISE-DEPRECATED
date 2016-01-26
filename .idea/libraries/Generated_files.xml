@@ -60,6 +60,7 @@
         <item url="file://$PROJECT_DIR$/src/main/webapp/wise5/authoringTool/bootstrap.js" />
         <item url="file://$PROJECT_DIR$/src/main/webapp/wise5/directives/directives.js" />
         <item url="file://$PROJECT_DIR$/src/main/webapp/wise5/components/label/labelService.js" />
+        <item url="file://$PROJECT_DIR$/src/main/webapp/wise5/filters/filters.js" />
         <item url="file://$PROJECT_DIR$/src/main/webapp/wise5/classroomMonitor/bootstrap.js" />
         <item url="file://$PROJECT_DIR$/src/main/webapp/wise5/classroomMonitor/main.js" />
         <item url="file://$PROJECT_DIR$/src/main/webapp/wise5/services/utilService.js" />
@@ -125,6 +126,7 @@
       <root url="file://$PROJECT_DIR$/src/main/webapp/wise5/authoringTool/bootstrap.js" />
       <root url="file://$PROJECT_DIR$/src/main/webapp/wise5/directives/directives.js" />
       <root url="file://$PROJECT_DIR$/src/main/webapp/wise5/components/label/labelService.js" />
+      <root url="file://$PROJECT_DIR$/src/main/webapp/wise5/filters/filters.js" />
       <root url="file://$PROJECT_DIR$/src/main/webapp/wise5/classroomMonitor/bootstrap.js" />
       <root url="file://$PROJECT_DIR$/src/main/webapp/wise5/classroomMonitor/main.js" />
       <root url="file://$PROJECT_DIR$/src/main/webapp/wise5/services/utilService.js" />

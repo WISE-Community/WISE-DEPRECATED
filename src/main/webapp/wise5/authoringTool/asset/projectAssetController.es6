@@ -2,16 +2,25 @@
 
 class ProjectAssetController {
 
-    constructor($state, ProjectAssetService) {
+    constructor($state, $scope, ProjectAssetService) {
         this.$state = $state;
+        this.$scope = $scope;
         this.ProjectAssetService = ProjectAssetService;
         this.projectAssets = ProjectAssetService.projectAssets;
         this.projectAssetTotalSizeMax = ProjectAssetService.projectAssetTotalSizeMax;
+        this.projectAssetUsagePercentage = ProjectAssetService.projectAssetUsagePercentage;
+
+        this.$scope.$watch(
+            () => { return this.projectAssets },
+            angular.bind(this, function() {
+              this.projectAssetUsagePercentage = this.projectAssets.totalFileSize / this.projectAssetTotalSizeMax * 100;
+            }
+        ));
     }
 
     deleteAsset(assetItem) {
         this.ProjectAssetService.deleteAssetItem(assetItem).then((newProjectAssets) => {
-            this.projectAssets = newProjectAssets;
+            this.projectAssets = this.ProjectAssetService.projectAssets;
         });
     }
 
@@ -26,6 +35,6 @@ class ProjectAssetController {
     }
 }
 
-ProjectAssetController.$inject = ['$state', 'ProjectAssetService'];
+ProjectAssetController.$inject = ['$state', '$scope', 'ProjectAssetService'];
 
 export default ProjectAssetController

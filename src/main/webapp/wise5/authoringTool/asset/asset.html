@@ -19,12 +19,12 @@
 <div ngf-drop ngf-select ngf-change="projectAssetController.uploadAssetItems($files)" class="drop-box"
      drag-over-class="dragover" ngf-multiple="true" allow-dir="false"
      accept="image/*,application/pdf,text/csv">Drop image or file here or click to upload!</div>
-You are using {{projectAssetController.projectAssets.totalFileSize}}
-out of {{projectAssetController.projectAssetTotalSizeMax}}
-
+You are using {{projectAssetController.projectAssets.totalFileSize | appropriateSizeText }}
+out of {{projectAssetController.projectAssetTotalSizeMax | appropriateSizeText }}
+({{projectAssetController.projectAssetUsagePercentage | roundToDecimal:0 }}%)
 <ul>
 <li ng-repeat='assetItem in projectAssetController.projectAssets.files'>
-    {{assetItem.fileName}} ({{assetItem.fileSize}} bytes)
+    {{assetItem.fileName}} ({{assetItem.fileSize | appropriateSizeText}} bytes)
     <button ng-click='projectAssetController.deleteAsset(assetItem)'>X</button>
 </li>
 </ul>

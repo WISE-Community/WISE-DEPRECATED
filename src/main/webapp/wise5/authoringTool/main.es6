@@ -19,6 +19,7 @@ import DrawController from '../components/draw/drawController';
 import DrawService from '../components/draw/drawService';
 import EmbeddedController from '../components/embedded/embeddedController';
 import EmbeddedService from '../components/embedded/embeddedService';
+import Filters from '../filters/filters';
 import GraphController from '../components/graph/graphController';
 import GraphService from '../components/graph/graphService';
 import Highcharts from 'highcharts';
@@ -53,6 +54,7 @@ let mainModule = angular.module('authoring', [
     'angularMoment',
     'angular-toArrayFilter',
     'directives',
+    'filters',
     'highcharts-ng',
     'ngAnimate',
     'ngAria',

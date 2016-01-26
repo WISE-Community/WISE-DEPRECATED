@@ -9,31 +9,41 @@ Object.defineProperty(exports, "__esModule", {
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var ProjectAssetController = function () {
-    function ProjectAssetController($state, ProjectAssetService) {
+    function ProjectAssetController($state, $scope, ProjectAssetService) {
+        var _this = this;
+
         _classCallCheck(this, ProjectAssetController);
 
         this.$state = $state;
+        this.$scope = $scope;
         this.ProjectAssetService = ProjectAssetService;
         this.projectAssets = ProjectAssetService.projectAssets;
         this.projectAssetTotalSizeMax = ProjectAssetService.projectAssetTotalSizeMax;
+        this.projectAssetUsagePercentage = ProjectAssetService.projectAssetUsagePercentage;
+
+        this.$scope.$watch(function () {
+            return _this.projectAssets;
+        }, angular.bind(this, function () {
+            this.projectAssetUsagePercentage = this.projectAssets.totalFileSize / this.projectAssetTotalSizeMax * 100;
+        }));
     }
 
     _createClass(ProjectAssetController, [{
         key: 'deleteAsset',
         value: function deleteAsset(assetItem) {
-            var _this = this;
+            var _this2 = this;
 
             this.ProjectAssetService.deleteAssetItem(assetItem).then(function (newProjectAssets) {
-                _this.projectAssets = newProjectAssets;
+                _this2.projectAssets = _this2.ProjectAssetService.projectAssets;
             });
         }
     }, {
         key: 'uploadAssetItems',
         value: function uploadAssetItems(files) {
-            var _this2 = this;
+            var _this3 = this;
 
             this.ProjectAssetService.uploadAssets(files).then(function (newProjectAssets) {
-                _this2.projectAssets = _this2.ProjectAssetService.projectAssets;
+                _this3.projectAssets = _this3.ProjectAssetService.projectAssets;
             });
         }
     }, {
@@ -46,7 +56,7 @@ var ProjectAssetController = function () {
     return ProjectAssetController;
 }();
 
-ProjectAssetController.$inject = ['$state', 'ProjectAssetService'];
+ProjectAssetController.$inject = ['$state', '$scope', 'ProjectAssetService'];
 
 exports.default = ProjectAssetController;
 
