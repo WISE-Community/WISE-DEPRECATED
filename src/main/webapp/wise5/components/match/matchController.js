@@ -9,7 +9,7 @@ Object.defineProperty(exports, "__esModule", {
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var MatchController = function () {
-    function MatchController($rootScope, $scope, MatchService, NodeService, ProjectService, StudentDataService) {
+    function MatchController($rootScope, $scope, MatchService, NodeService, ProjectService, StudentDataService, UtilService) {
         _classCallCheck(this, MatchController);
 
         this.$rootScope = $rootScope;
@@ -18,6 +18,7 @@ var MatchController = function () {
         this.NodeService = NodeService;
         this.ProjectService = ProjectService;
         this.StudentDataService = StudentDataService;
+        this.UtilService = UtilService;
 
         // the node id of the current node
         this.nodeId = null;
@@ -90,6 +91,21 @@ var MatchController = function () {
                 this.isSaveButtonVisible = false;
                 this.isSubmitButtonVisible = false;
                 this.isDisabled = true;
+            } else if (this.mode === 'authoring') {
+                this.updateAdvancedAuthoringView();
+
+                $scope.$watch(function () {
+                    return this.authoringComponentContent;
+                }.bind(this), function (newValue, oldValue) {
+                    this.componentContent = this.ProjectService.injectAssetPaths(newValue);
+
+                    /*
+                     * initialize the choices and buckets with the values from the
+                     * component content
+                     */
+                    this.initializeChoices();
+                    this.initializeBuckets();
+                }.bind(this), true);
             }
 
             // get the show previous work node id if it is provided
@@ -457,7 +473,16 @@ var MatchController = function () {
                                         var feedbackPosition = feedbackObject.position;
                                         var feedbackIsCorrect = feedbackObject.isCorrect;
 
-                                        if (feedbackPosition == null) {
+                                        // set the default feedback if none is authored
+                                        if (feedback == null || feedback == '') {
+                                            if (feedbackIsCorrect) {
+                                                feedback = 'Correct';
+                                            } else {
+                                                feedback = 'Incorrect';
+                                            }
+                                        }
+
+                                        if (!this.componentContent.ordered || feedbackPosition == null) {
                                             /*
                                              * position does not matter and the choice may be
                                              * in the correct or incorrect bucket
@@ -509,6 +534,12 @@ var MatchController = function () {
                                                  * bucket but wrong position
                                                  */
                                                 var incorrectPositionFeedback = feedbackObject.incorrectPositionFeedback;
+
+                                                // set the default feedback if none is authored
+                                                if (incorrectPositionFeedback == null || incorrectPositionFeedback == '') {
+                                                    incorrectPositionFeedback = 'Correct bucket but wrong position';
+                                                }
+
                                                 item.feedback = incorrectPositionFeedback;
 
                                                 /*
@@ -553,25 +584,51 @@ var MatchController = function () {
 
             if (componentContent != null) {
 
-                // get the array of feedback objects
-                var feedbackArray = componentContent.feedback;
+                // get the feedback
+                var feedback = componentContent.feedback;
 
-                if (feedbackArray != null) {
+                if (feedback != null) {
 
-                    // loop througha ll the feedback objects
-                    for (var f = 0; f < feedbackArray.length; f++) {
-                        var tempFeedback = feedbackArray[f];
+                    /*
+                     * loop through the feedback. each element in the feedback represents
+                     * a bucket
+                     */
+                    for (var f = 0; f < feedback.length; f++) {
 
-                        if (tempFeedback != null) {
+                        // get a bucket feedback object
+                        var bucketFeedback = feedback[f];
 
-                            var tempBucketId = tempFeedback.bucketId;
-                            var tempChoiceId = tempFeedback.choiceId;
+                        if (bucketFeedback != null) {
 
-                            // check if the bucket id and choice id matches
-                            if (bucketId === tempBucketId && choiceId === tempChoiceId) {
-                                // we have found the feedback object we want
-                                feedbackObject = tempFeedback;
-                                break;
+                            // get the bucket id
+                            var tempBucketId = bucketFeedback.bucketId;
+
+                            if (bucketId === tempBucketId) {
+                                // we have found the bucket we are looking for
+
+                                var choices = bucketFeedback.choices;
+
+                                if (choices != null) {
+
+                                    // loop through all the choice feedback
+                                    for (var c = 0; c < choices.length; c++) {
+                                        var choiceFeedback = choices[c];
+
+                                        if (choiceFeedback != null) {
+                                            var tempChoiceId = choiceFeedback.choiceId;
+
+                                            if (choiceId === tempChoiceId) {
+                                                // we have found the choice we are looking for
+                                                feedbackObject = choiceFeedback;
+                                                break;
+                                            }
+                                        }
+                                    }
+
+                                    if (feedbackObject != null) {
+                                        break;
+                                    }
+                                }
                             }
                         }
                     }
@@ -818,12 +875,475 @@ var MatchController = function () {
             return componentId;
         }
     }, {
-        key: 'registerExitListener',
+        key: 'authoringViewComponentChanged',
+
+        /**
+         * The component has changed in the regular authoring view so we will save the project
+         */
+        value: function authoringViewComponentChanged() {
+
+            // update the JSON string in the advanced authoring view textarea
+            this.updateAdvancedAuthoringView();
+
+            // save the project to the server
+            this.ProjectService.saveProject();
+        }
+    }, {
+        key: 'advancedAuthoringViewComponentChanged',
+
+        /**
+         * The component has changed in the advanced authoring view so we will update
+         * the component and save the project.
+         */
+        value: function advancedAuthoringViewComponentChanged() {
+
+            try {
+                /*
+                 * create a new component by converting the JSON string in the advanced
+                 * authoring view into a JSON object
+                 */
+                var authoringComponentContent = angular.fromJson(this.authoringComponentContentJSONString);
+
+                // replace the component in the project
+                this.ProjectService.replaceComponent(this.nodeId, this.componentId, authoringComponentContent);
+
+                // set the new authoring component content
+                this.authoringComponentContent = authoringComponentContent;
+
+                // set the component content
+                this.componentContent = this.ProjectService.injectAssetPaths(authoringComponentContent);
+
+                // save the project to the server
+                this.ProjectService.saveProject();
+            } catch (e) {}
+        }
+    }, {
+        key: 'updateAdvancedAuthoringView',
+
+        /**
+         * Update the component JSON string that will be displayed in the advanced authoring view textarea
+         */
+        value: function updateAdvancedAuthoringView() {
+            this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
+        }
+    }, {
+        key: 'authoringAddChoice',
+
+        /**
+         * Add a choice
+         */
+        value: function authoringAddChoice() {
+
+            // create a new choice
+            var newChoice = {};
+            newChoice.id = this.UtilService.generateKey(10);
+            newChoice.value = '';
+            newChoice.type = 'choice';
+
+            // add the choice to the array of choices
+            this.authoringComponentContent.choices.push(newChoice);
+
+            // add the choice to the feedback
+            this.addChoiceToFeedback(newChoice.id);
+
+            // save the project
+            this.authoringViewComponentChanged();
+        }
+
+        /**
+         * Add a bucket
+         */
+
+    }, {
+        key: 'authoringAddBucket',
+        value: function authoringAddBucket() {
+
+            // create a new bucket
+            var newBucket = {};
+            newBucket.id = this.UtilService.generateKey(10);
+            newBucket.value = '';
+            newBucket.type = 'bucket';
+
+            // add the bucket to the array of buckets
+            this.authoringComponentContent.buckets.push(newBucket);
+
+            // add the bucket to the feedback
+            this.addBucketToFeedback(newBucket.id);
+
+            // save the project
+            this.authoringViewComponentChanged();
+        }
+
+        /**
+         * Delete a choice
+         * @param index the index of the choice in the choice array
+         */
+
+    }, {
+        key: 'authoringDeleteChoice',
+        value: function authoringDeleteChoice(index) {
+
+            // confirm with the user that they want to delete the choice
+            var answer = confirm('Are you sure you want to delete this choice?');
+
+            if (answer) {
+
+                // remove the choice from the array
+                var deletedChoice = this.authoringComponentContent.choices.splice(index, 1);
+
+                if (deletedChoice != null && deletedChoice.length > 0) {
+
+                    // splice returns an array so we need to get the element out of it
+                    deletedChoice = deletedChoice[0];
+
+                    // get the choice id
+                    var choiceId = deletedChoice.id;
+
+                    // remove the choice from the feedback
+                    this.removeChoiceFromFeedback(choiceId);
+                }
+
+                // save the project
+                this.authoringViewComponentChanged();
+            }
+        }
+
+        /**
+         * Delete a bucket
+         * @param index the index of the bucket in the bucket array
+         */
+
+    }, {
+        key: 'authoringDeleteBucket',
+        value: function authoringDeleteBucket(index) {
+
+            // confirm with the user tha tthey want to delete the bucket
+            var answer = confirm('Are you sure you want to delete this bucket?');
+
+            if (answer) {
+
+                // remove the bucket from the array
+                var deletedBucket = this.authoringComponentContent.buckets.splice(index, 1);
+
+                if (deletedBucket != null && deletedBucket.length > 0) {
+
+                    // splice returns an array so we need to get the element out of it
+                    deletedBucket = deletedBucket[0];
+
+                    // get the bucket id
+                    var bucketId = deletedBucket.id;
+
+                    // remove the bucket from the feedback
+                    this.removeBucketFromFeedback(bucketId);
+                }
+
+                // save the project
+                this.authoringViewComponentChanged();
+            }
+        }
+
+        /**
+         * Get the choice by id from the authoring component content
+         * @param id the choice id
+         * @returns the choice object from the authoring component content
+         */
+
+    }, {
+        key: 'getChoiceById',
+        value: function getChoiceById(id) {
+
+            var choice = null;
+
+            // get the choices
+            var choices = this.authoringComponentContent.choices;
+
+            // loop through all the choices
+            for (var c = 0; c < choices.length; c++) {
+                // get a choice
+                var tempChoice = choices[c];
+
+                if (tempChoice != null) {
+                    if (id === tempChoice.id) {
+                        // we have found the choice we want
+                        choice = tempChoice;
+                        break;
+                    }
+                }
+            }
+
+            return choice;
+        }
+
+        /**
+         * Get the bucket by id from the authoring component content
+         * @param id the bucket id
+         * @returns the bucket object from the authoring component content
+         */
+
+    }, {
+        key: 'getBucketById',
+        value: function getBucketById(id) {
+
+            var bucket = null;
+
+            // get the buckets
+            var buckets = this.authoringComponentContent.buckets;
+
+            // loop through the buckets
+            for (var b = 0; b < buckets.length; b++) {
+                var tempBucket = buckets[b];
+
+                if (tempBucket != null) {
+                    if (id === tempBucket.id) {
+                        // we have found teh bucket we want
+                        bucket = tempBucket;
+                        break;
+                    }
+                }
+            }
+
+            return bucket;
+        }
+
+        /**
+         * Get the choice value by id from the authoring component content
+         * @param id the choice id
+         * @returns the choice value from the authoring component content
+         */
+
+    }, {
+        key: 'getChoiceValueById',
+        value: function getChoiceValueById(id) {
+
+            var value = null;
+
+            // get the choice
+            var choice = this.getChoiceById(id);
+
+            if (choice != null) {
+                // get the value
+                value = choice.value;
+            }
+
+            return value;
+        }
+
+        /**
+         * Get the bucket value by id from the authoring component content
+         * @param id the bucket id
+         * @returns the bucket value from the authoring component content
+         */
+
+    }, {
+        key: 'getBucketValueById',
+        value: function getBucketValueById(id) {
+
+            var value = null;
+
+            // get the bucket
+            var bucket = this.getBucketById(id);
+
+            if (bucket != null) {
+                // get the value
+                value = bucket.value;
+            }
+
+            return value;
+        }
+
+        /**
+         * Add a choice to the feedback
+         * @param choiceId the choice id
+         */
+
+    }, {
+        key: 'addChoiceToFeedback',
+        value: function addChoiceToFeedback(choiceId) {
+
+            // get the feedback array
+            var feedback = this.authoringComponentContent.feedback;
+
+            if (feedback != null) {
+
+                /*
+                 * loop through all the elements in the feedback. each element
+                 * represents a bucket.
+                 */
+                for (var f = 0; f < feedback.length; f++) {
+                    // get a bucket
+                    var bucketFeedback = feedback[f];
+
+                    if (bucketFeedback != null) {
+
+                        // get the choices in the bucket
+                        var choices = bucketFeedback.choices;
+
+                        var feedbackText = '';
+                        var isCorrect = false;
+
+                        // create a feedback object
+                        var feedbackObject = this.createFeedbackObject(choiceId, feedbackText, isCorrect);
+
+                        // add the feedback object
+                        choices.push(feedbackObject);
+                    }
+                }
+            }
+        }
+
+        /**
+         * Add a bucket to the feedback
+         * @param bucketId the bucket id
+         */
+
+    }, {
+        key: 'addBucketToFeedback',
+        value: function addBucketToFeedback(bucketId) {
+
+            // get the feedback array. each element in the array represents a bucket.
+            var feedback = this.authoringComponentContent.feedback;
+
+            if (feedback != null) {
+
+                // create a new bucket feedback object
+                var bucket = {};
+                bucket.bucketId = bucketId;
+                bucket.choices = [];
+
+                // get all the choices
+                var choices = this.authoringComponentContent.choices;
+
+                // loop through all the choices and add a choice feedback object to the bucket
+                for (var c = 0; c < choices.length; c++) {
+                    var choice = choices[c];
+
+                    if (choice != null) {
+
+                        var choiceId = choice.id;
+                        var feedbackText = '';
+                        var isCorrect = false;
+
+                        // create a feedback object
+                        var feedbackObject = this.createFeedbackObject(choiceId, feedbackText, isCorrect);
+
+                        // add the feedback object
+                        bucket.choices.push(feedbackObject);
+                    }
+                }
+
+                // add the feedback bucket
+                feedback.push(bucket);
+            }
+        }
+
+        /**
+         * Create a feedback object
+         * @param choiceId the choice id
+         * @param feedback the feedback
+         * @param isCorrect whether the choice is correct
+         * @param position (optional) the position
+         * @param incorrectPositionFeedback (optional) the feedback for when the
+         * choice is in the correct but wrong position
+         * @returns the feedback object
+         */
+
+    }, {
+        key: 'createFeedbackObject',
+        value: function createFeedbackObject(choiceId, feedback, isCorrect, position, incorrectPositionFeedback) {
+
+            var feedbackObject = {};
+            feedbackObject.choiceId = choiceId;
+            feedbackObject.feedback = feedback;
+            feedbackObject.isCorrect = isCorrect;
+            feedbackObject.position = position;
+            feedbackObject.incorrectPositionFeedback = incorrectPositionFeedback;
+
+            return feedbackObject;
+        }
+
+        /**
+         * Remove a choice from the feedback
+         * @param choiceId the choice id to remove
+         */
+
+    }, {
+        key: 'removeChoiceFromFeedback',
+        value: function removeChoiceFromFeedback(choiceId) {
+
+            // get the feedback array. each element in the array represents a bucket.
+            var feedback = this.authoringComponentContent.feedback;
+
+            if (feedback != null) {
+
+                /*
+                 * loop through each bucket feedback and remove the choice from each
+                 * bucket feedback object
+                 */
+                for (var f = 0; f < feedback.length; f++) {
+                    var bucketFeedback = feedback[f];
+
+                    if (bucketFeedback != null) {
+
+                        var choices = bucketFeedback.choices;
+
+                        // loop through all the choices
+                        for (var c = 0; c < choices.length; c++) {
+                            var choice = choices[c];
+
+                            if (choice != null) {
+                                if (choiceId === choice.choiceId) {
+                                    // we have found the choice we want to remove
+
+                                    // remove the choice feedback object
+                                    choices.splice(c, 1);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        /**
+         * Remove a bucket from the feedback
+         * @param bucketId the bucket id to remove
+         */
+
+    }, {
+        key: 'removeBucketFromFeedback',
+        value: function removeBucketFromFeedback(bucketId) {
+
+            // get the feedback array. each element in the array represents a bucket.
+            var feedback = this.authoringComponentContent.feedback;
+
+            if (feedback != null) {
+
+                // loop through all the bucket feedback objects
+                for (var f = 0; f < feedback.length; f++) {
+                    var bucketFeedback = feedback[f];
+
+                    if (bucketFeedback != null) {
+
+                        if (bucketId === bucketFeedback.bucketId) {
+                            // we have found the bucket feedback object we want to remove
+
+                            // remove the bucket feedback object
+                            feedback.splice(f, 1);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
 
         /**
          * Register the the listener that will listen for the exit event
          * so that we can perform saving before exiting.
          */
+
+    }, {
+        key: 'registerExitListener',
         value: function registerExitListener() {
 
             /*
@@ -841,7 +1361,7 @@ var MatchController = function () {
     return MatchController;
 }();
 
-MatchController.$inject = ['$rootScope', '$scope', 'MatchService', 'NodeService', 'ProjectService', 'StudentDataService'];
+MatchController.$inject = ['$rootScope', '$scope', 'MatchService', 'NodeService', 'ProjectService', 'StudentDataService', 'UtilService'];
 
 exports.default = MatchController;
 

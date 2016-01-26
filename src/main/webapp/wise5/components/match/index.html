@@ -51,6 +51,68 @@
 <body>
 <div ng-controller='MatchController as matchController' style='display: flex'>
     <div style='flex: 1'>
+        <div ng-if='matchController.mode === "authoring"'>
+            <textarea ng-model='matchController.authoringComponentContent.prompt'
+                      ng-change='matchController.authoringViewComponentChanged()'
+                      ng-model-options='{ debounce: 1000 }'
+                      rows='10'
+                      cols='100'></textarea>
+            <br/>
+            <br/>
+            Choices <button ng-click='matchController.authoringAddChoice()'>Add Choice</button>
+            <div ng-repeat='choice in matchController.authoringComponentContent.choices track by $index'>
+                <input ng-model='choice.value'
+                       ng-change='matchController.authoringViewComponentChanged()'
+                       size='100'/>
+                <button ng-click='matchController.authoringDeleteChoice($index)'>Delete Choice</button>
+            </div>
+            <br/>
+            Buckets <button ng-click='matchController.authoringAddBucket()'>Add Bucket</button>
+            <div ng-repeat='bucket in matchController.authoringComponentContent.buckets track by $index'>
+                <input ng-model='bucket.value'
+                       ng-change='matchController.authoringViewComponentChanged()'
+                       size='100'/>
+                <button ng-click='matchController.authoringDeleteBucket($index)'>Delete Bucket</button>
+            </div>
+            <br/>
+            Feedback
+            <br/>
+            Ordered: <input type='checkbox'
+                            ng-model='matchController.authoringComponentContent.ordered'
+                            ng-change='matchController.authoringViewComponentChanged()'/>
+            <br/>
+            <div ng-repeat='bucketFeedback in matchController.authoringComponentContent.feedback'>
+                <span>{{matchController.getBucketValueById(bucketFeedback.bucketId)}}</span>
+                <div ng-repeat='choiceFeedback in bucketFeedback.choices'
+                     style='border: 1px solid black'>
+                    <span>{{matchController.getChoiceValueById(choiceFeedback.choiceId)}}</span>
+                    <br/>
+                    Feedback: <input ng-model='choiceFeedback.feedback'
+                           ng-change='matchController.authoringViewComponentChanged()'
+                           size='60'/>
+                    <br/>
+                    Is Correct: <input type='checkbox'
+                                       ng-model='choiceFeedback.isCorrect'
+                                       ng-change='matchController.authoringViewComponentChanged()'/>
+                    <br/>
+                    <span ng-show='matchController.authoringComponentContent.ordered && choiceFeedback.isCorrect'>
+                        Position: <input type='number'
+                                     ng-model='choiceFeedback.position'
+                                     ng-change='matchController.authoringViewComponentChanged()'
+                                     style='width: 3em'/>
+                        Incorrect Position Feedback: <input ng-model='choiceFeedback.incorrectPositionFeedback'
+                                                            ng-change='matchController.authoringViewComponentChanged()'
+                                                            size='60'/>
+                    </span>
+                </div>
+                <br/>
+            </div>
+            <textarea ng-model='matchController.authoringComponentContentJSONString'
+                      ng-change='matchController.advancedAuthoringViewComponentChanged()'
+                      ng-model-options='{ debounce: 1000 }'
+                      rows='10'
+                      cols='100'></textarea>
+        </div>
         <div id='prompt' compile='matchController.getPrompt()'></div>
         <div ui-tree='options'>
             <ol ui-tree-nodes data-type='bucket' ng-model='matchController.buckets'>

@@ -4,6 +4,7 @@ import $ from 'jquery';
 import angular from 'angular';
 import angularHighcharts from 'highcharts-ng';
 import angularUIRouter from 'angular-ui-router';
+import angularUITree from 'angular-ui-tree';
 import ngFileUpload from 'ng-file-upload';
 import ngMaterial from 'angular-material';
 import angularMoment from 'angular-moment';
@@ -57,7 +58,8 @@ let mainModule = angular.module('authoring', [
     'ngFileUpload',
     'ngMaterial',
     'ngWebSocket',
-    'ui.router'
+    'ui.router',
+    'ui.tree'
 ])
     .service(AnnotationService.name, AnnotationService)
     .service(ConfigService.name, ConfigService)
