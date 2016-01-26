@@ -2,7 +2,7 @@
 
 // Base
 .discussion-content {
-  background-color: $gray-light;
+  background-color: color('gray-light');
   margin: 0 -16px -16px;
 }
 
@@ -46,7 +46,7 @@
 }
 
 .discussion-post__date {
-  color: $gray-dark;
+  color: color('gray-dark');
 }
 
 .discussion-post__date--reply {
@@ -121,7 +121,7 @@ md-input-container.discussion-new__input-container {
 }
 
 .discussion-comments__contents {
-  background-color: $gray-lightest;
+  background-color: color('gray-lightest');
 }
 
 .discussion-comments__header {
@@ -171,7 +171,7 @@ md-input-container.discussion-new__input-container {
 
   p {
     font-weight: 400 !important;
-    color: $body-color !important;
+    color: color('body') !important;
   }
 }
 

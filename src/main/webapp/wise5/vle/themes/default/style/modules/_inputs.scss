@@ -24,14 +24,14 @@ $input-action-vertical-offset-richtext: -7px;
 
 .input-wrapper--focused {
   .input--textarea__action md-icon {
-    color: $primary-color;
+    color: color('primary');
   }
 }
 
 .input--textarea, .input-container textarea.input--textarea {
   padding: 8px;
-  background-color: $gray-lightest;
-  border: 1px solid $gray;
+  background-color: color('gray-lightest');
+  border: 1px solid color('gray');
 
   &.input--textarea--hasaction {
     padding-right: $input-action-width;
@@ -54,7 +54,7 @@ $input-action-vertical-offset-richtext: -7px;
 }
 
 .input--textarea--disabled {
-  color: $text-color-secondary;
+  color: color('text-secondary');
 }
 
 
@@ -63,7 +63,7 @@ $input-action-vertical-offset-richtext: -7px;
   right: -4px;
 
   &[disabled] md-icon {
-    color: $text-color-disabled !important;
+    color: color('text-disabled') !important;
   }
 }
 
@@ -87,13 +87,13 @@ $input-action-vertical-offset-richtext: -7px;
 .input-label, md-input-container:not(.md-input-invalid):not(.md-input-focused).md-input-has-value label.input-label {
   line-height: 1.2;
   font-weight: 500;
-  color: $text-color-dark;
+  color: color('text');
 
   &.input-label--focused {
-    color: $primary-color;
+    color: color('primary');
   }
 }
 
 .input--focused {
-  //border-color: $primary-color;
+  //border-color: color('primary');
 }

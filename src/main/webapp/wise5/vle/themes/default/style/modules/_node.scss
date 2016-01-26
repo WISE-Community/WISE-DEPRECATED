@@ -28,7 +28,7 @@ $input-action-vertical-offset-richtext: -7px;
   padding: 0;
 
   @media only screen and (min-width: $layout-breakpoint-xs) {
-    border: 1px solid $gray;
+    border: 1px solid color('gray');
   }
 }
 
@@ -57,15 +57,15 @@ $input-action-vertical-offset-richtext: -7px;
 
   .md-select-icon {
     margin-left: 0;
-    color: $text-color-dark;
+    color: color('text');
   }
 }
 
 .node-select-option--group {
   //color: rgba(0,0,0,0.54);
-  background-color: $gray-lightest;
-  border-bottom: 1px solid $gray-lighter;
-  border-top: 1px solid $gray-lighter;
+  background-color: color('gray-lightest');
+  border-bottom: 1px solid color('gray-lighter');
+  border-top: 1px solid color('gray-lighter');
 }
 
 .node-select-option--node {

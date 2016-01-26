@@ -7,9 +7,9 @@
 
 .l-sidebar__header {
   background-color: #ffffff !important;
-  color: $accent-color-2 !important;
+  color: color('accent-2') !important;
 
   md-select {
-    color: $body-color;
+    color: color('body');
   }
 }

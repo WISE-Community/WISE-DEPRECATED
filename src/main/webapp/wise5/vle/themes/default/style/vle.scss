@@ -1,51 +1,7 @@
 @charset "UTF-8";
 
+// Angular Material variables and overrides we want to use in our theme styles
 @import "material/config";
-
-// Default Angular Material styles (NOTE: this gives all theme SCSS files imported below access to all Angular Material variables and mixins)
-// TODO: figure out how to reference latest jspm package without needing full path/version number
-@import "../../../../jspm_packages/github/angular/bower-material@1.0.3/angular-material.scss";
-
-@import "material/custom";
-
-// Rules for sizing material icons
-md-icon {
-  &.md-18 {
-    font-size: 18px;
-    width: 18px;
-    height: 18px;
-  }
-  &.md-24 {
-    font-size: 24px;
-    width: 24px;
-    height: 24px;
-  }
-  &.md-36 {
-    font-size: 36px;
-    width: 36px;
-    height: 36px;
-  }
-  &.md-48 {
-    font-size: 48px;
-    width: 48px;
-    height: 48px;
-  }
-
-  // Rules for using material icons as black on a light background
-  &.md-dark {
-    color: rgba(0, 0, 0, 0.54);
-  }
-  &.md-dark.md-inactive {
-    color: rgba(0, 0, 0, 0.26);
-  }
-  // Rules for using material icons as white on a dark background
-  &.md-light {
-    color: rgba(255, 255, 255, 1);
-  }
-  &.md-light.md-inactive {
-    color: rgba(255, 255, 255, 0.3);
-  }
-}
 
 /*
  WISE Project Styles

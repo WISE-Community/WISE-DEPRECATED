@@ -1,4 +1,4 @@
-// Angular Material !default overrides
+// Angular Material variables for use and !default overrides
 $toolbar-tools-height: 52px;
 $toolbar-height: 52px;
 $toolbar-medium-tall-height: 74px;
@@ -10,3 +10,13 @@ $toolbar-height-mobile-landscape: 52px;
 //$list-item-height: 56px;
 
 $card-border-radius: 4px;
+
+$body-font-size-base:      rem(1.500);
+$caption-font-size-base:   rem(1.300);
+
+$layout-breakpoint-xs:     600px !default;
+$layout-breakpoint-sm:     960px !default;
+$layout-breakpoint-md:     1280px !default;
+$layout-breakpoint-lg:     1920px !default;
+
+$button-border-radius: 3px
