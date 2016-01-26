@@ -1,6 +1,5 @@
-
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2016 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -64,25 +63,19 @@ public class ChangeUserPasswordController {
 	protected ChangePasswordParametersValidator changePasswordParametersValidator;
 	
 	private final static String USER_NAME = "userName";
-	
-	//the path to this form view
-	protected String formView = "";
-	
-	//the path to the success view
-	protected String successView = "forgotaccount/changepasswordsuccess";
-	
+
     /**
      * Called before the page is loaded to initialize values
      * @param model the model object that contains values for the page to use when rendering the view
      * @param request the http request
      * @return the path of the view to display
      */
-    @RequestMapping(method=RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET)
     public String initializeForm(ModelMap model, HttpServletRequest request) {
-    	//get the signed in user
+    	// get the signed in user
     	User signedInUser = ControllerUtil.getSignedInUser();
     	
-    	//get the user name whose password we want to change
+    	// get the user name whose password we want to change
     	String userName = request.getParameter(USER_NAME);
     	
     	User userToChange = null;
@@ -91,7 +84,7 @@ public class ChangeUserPasswordController {
     	String view = "";
     	
     	if (userName != null) {
-    		//the username is provided which means a teacher is changing the password for a student
+    		// the username is provided which means a teacher is changing the password for a student
     		userToChange = userService.retrieveUserByUsername(userName);
     		teacherUser = ControllerUtil.getSignedInUser();
     	} else {
@@ -99,21 +92,21 @@ public class ChangeUserPasswordController {
     		userToChange = ControllerUtil.getSignedInUser();
     	}
     	
-    	//check if the signed in user can change the password for the specified user account
+    	// check if the signed in user can change the password for the specified user account
     	if (canChangePassword(signedInUser, userToChange)) {
-    		//the signed in user can change the password for the specified user account
+    		// the signed in user can change the password for the specified user account
     		
-    		//create the parameters for the page
+    		// create the parameters for the page
     		ChangeStudentPasswordParameters params = new ChangeStudentPasswordParameters();
     		params.setUser(userToChange);
     		params.setTeacherUser(teacherUser);
     		model.addAttribute("changeStudentPasswordParameters", params);
     		
-    		//get the servlet path e.g. /teacher/management/changestudentpassword
+    		// get the servlet path e.g. /teacher/management/changestudentpassword
     		String servletPath = getServletPath(request);
     		view = servletPath;
     	} else {
-    		//the signed in user is not allowed to change the password for the specified user account
+    		// the signed in user is not allowed to change the password for the specified user account
     		view = "redirect:/accessdenied.html";
     	}
     	
@@ -148,24 +141,28 @@ public class ChangeUserPasswordController {
      * @return the path of the view to display
      * 
      */
-    @RequestMapping(method=RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST)
     protected String onSubmit(
     		@ModelAttribute("changeStudentPasswordParameters") ChangeStudentPasswordParameters params,
+			HttpServletRequest request,
     		BindingResult bindingResult,
     		SessionStatus sessionStatus) {
     	String view = "";
     	
     	changePasswordParametersValidator.validate(params, bindingResult);
-    	
-    	if(bindingResult.hasErrors()) {
-    		//there were errors
-    		view = "redirect:/accessdenied.html";
+
+		String requestPath = getServletPath(request);
+    	if (bindingResult.hasErrors()) {
+    		// there were errors, take user back to form page
+			view = requestPath;
     	} else {
-    		//there were no errors
+    		// there were no errors
     		
-        	//update the user's password
+        	// update the user's password
        		userService.updateUserPassword(params.getUser(), params.getPasswd1());
-       		view = successView;
+
+			String successView = requestPath + "success";
+			view = successView;
        		sessionStatus.setComplete();
     	}
    		
@@ -183,15 +180,15 @@ public class ChangeUserPasswordController {
     	String servletPath = "";
     	
     	if(request != null) {
-    		//get the servlet path e.g. /teacher/management/changestudentpassword.html
+    		// get the servlet path e.g. /teacher/management/changestudentpassword.html
     		servletPath = request.getServletPath();
     		
     		if(servletPath != null) {
-    			//get the index of the .html in the string
+    			// get the index of the .html in the string
     			int indexOfDotHTML = servletPath.indexOf(".html");
     			
     			if(indexOfDotHTML != -1) {
-        			//remove the .html e.g. /teacher/management/changestudentpassword
+        			// remove the .html e.g. /teacher/management/changestudentpassword
     				servletPath = servletPath.substring(0, indexOfDotHTML);
     			}
     		}
