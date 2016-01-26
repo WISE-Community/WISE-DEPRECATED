@@ -42,6 +42,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.user.User;
+import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.mail.MailService;
 import org.wise.portal.service.user.UserService;
 
@@ -102,8 +103,10 @@ public class ForgotAccountTeacherIndexController {
 	 * @param request the http request
 	 * @return the path of the view to display
 	 */
-	@RequestMapping(method=RequestMethod.POST)
-	protected String onSubmit(@ModelAttribute("userDetails") TeacherUserDetails userDetails, Model model, HttpServletRequest request)
+	@RequestMapping(method = RequestMethod.POST)
+	protected String onSubmit(@ModelAttribute("userDetails") TeacherUserDetails userDetails,
+							  Model model,
+							  HttpServletRequest request)
 		throws Exception {
 
 		String username = null;
@@ -161,7 +164,16 @@ public class ForgotAccountTeacherIndexController {
 			 * e.g.
 			 * http://wise4.berkeley.edu/wise/forgotaccount/resetpassword.html?k=1234567890abc
 			 */
-			String passwordResetLink = wiseProperties.getProperty("wiseBaseURL") + "/forgotaccount/resetpassword.html?k=" + randomAlphanumeric;
+			String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
+			String portalContextURL = "";
+			if (wiseBaseURL.startsWith("http")) {
+				// in case wiseBaseURL is absolute, in the form "http://xyz:8080/wise"
+				portalContextURL = wiseBaseURL;
+			} else {
+				// in case wiseBaseURL is relative, in the form "/wise"
+				portalContextURL = ControllerUtil.getPortalUrlString(request);
+			}
+			String passwordResetLink = portalContextURL + "/forgotaccount/resetpassword.html?k=" + randomAlphanumeric;
 			
 			String portalName = wiseProperties.getProperty("wise.name");
 			
