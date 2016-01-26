@@ -10,6 +10,8 @@ var sass = require('gulp-sass');
 var autoprefixer = require('autoprefixer');
 var cssnano = require('cssnano');
 var sourcemaps = require('gulp-sourcemaps');
+var newer = require('gulp-newer');
+var gulpif = require('gulp-if');
 //var rtlscss = require('rtlcss');
 
 // -----------------------------------------------------------------------------
@@ -17,41 +19,40 @@ var sourcemaps = require('gulp-sourcemaps');
 // -----------------------------------------------------------------------------
 
 var sassOptions = { style: 'compact' };
-var corePath = './src/main/webapp/wise5/style/**/*.scss';
-var themesPath = './src/main/webapp/wise5/vle/themes/*/style/**/*.scss';
+var paths = ['./src/main/webapp/wise5/style/**/*.scss', './src/main/webapp/wise5/vle/themes/*/style/**/*.scss'];
 var autoprefixerOptions = { browsers: ['> 5%', 'last 2 versions', 'Firefox ESR', 'not ie <= 10'] };
 
 // -----------------------------------------------------------------------------
 // Sass compilation
 // -----------------------------------------------------------------------------
-
-function compileSass(file) {
+gulp.task('compile-sass', function() {
     return gulp
-        .src([file])
+        .src(paths, {base: './'})
+        .pipe(gulpif(global.isWatching, newer({dest: './', ext: '.css'})))
         .pipe(sourcemaps.init())
         .pipe(sass(sassOptions).on('error', sass.logError))
-        .pipe(sourcemaps.write({includeContent: false}))
-        .pipe(sourcemaps.init({loadMaps: true}))
         .pipe(postcss([ autoprefixer(autoprefixerOptions), cssnano/*, rtlcss*/ ]) )
         .pipe(sourcemaps.write('.'))
         //.pipe(rename({suffix: ".min"}))
-        //.pipe(gulp.dest('.'));
-        .pipe(gulp.dest(function(file) {
-            return file.base;
-        }));
-}
+        .pipe(gulp.dest('./'));
+        //.pipe(gulp.dest(function(file) {
+            //return file.base;
+        //}));
+});
 
 // -----------------------------------------------------------------------------
 // Watchers
 // -----------------------------------------------------------------------------
+gulp.task('set-watch', function() {
+    global.isWatching = true;
+});
 
-gulp.task('watch-sass', function() {
+gulp.task('watch-sass', ['set-watch'], function() {
     return gulp
         // Watch folders for *.scss changes in the specified paths,
-        // and run `sass` task on change
-        .watch([corePath, themesPath])
+        // and run `compile-sass` task on change
+        .watch(paths, ['compile-sass'])
         .on('change', function(event) {
-            compileSass(event.path);
             console.log('File ' + event.path + ' was ' + event.type + ', compiling...');
         });
 });
