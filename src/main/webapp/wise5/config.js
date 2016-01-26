@@ -21,9 +21,9 @@ System.config({
   "System.trace": true,
 
   map: {
-    "angular": "github:angular/bower-angular@1.4.8",
+    "angular": "github:angular/bower-angular@1.4.9",
     "angular-animate": "github:angular/bower-angular-animate@1.4.9",
-    "angular-material": "github:angular/bower-material@1.0.2",
+    "angular-material": "github:angular/bower-material@1.0.3",
     "angular-moment": "npm:angular-moment@1.0.0-beta.3",
     "angular-sanitize": "github:angular/bower-angular-sanitize@1.4.8",
     "angular-ui-router": "github:angular-ui/ui-router@0.2.15",
@@ -56,7 +56,7 @@ System.config({
     "github:angular/bower-angular-sanitize@1.4.8": {
       "angular": "github:angular/bower-angular@1.4.8"
     },
-    "github:angular/bower-material@1.0.2": {
+    "github:angular/bower-material@1.0.3": {
       "angular": "github:angular/bower-angular@1.4.8",
       "angular-animate": "github:angular/bower-angular-animate@1.4.9",
       "angular-aria": "github:angular/bower-angular-aria@1.4.9",

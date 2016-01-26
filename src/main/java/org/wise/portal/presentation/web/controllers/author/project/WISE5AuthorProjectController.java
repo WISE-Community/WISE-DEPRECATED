@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.module.impl.CurnitGetCurnitUrlVisitor;
 import org.wise.portal.domain.project.Project;
@@ -17,10 +19,14 @@ import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.project.ProjectService;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 /**
  * Controller for authoring WISE5 projects
@@ -157,15 +163,23 @@ public class WISE5AuthorProjectController {
             String rawProjectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
             String projectURL = curriculumBaseWWW + rawProjectUrl;
             String projectBaseURL = projectURL.substring(0, projectURL.indexOf("project.json"));
+            String projectAssetURL = wiseBaseURL + "/project/asset/" + projectId;
             String previewProjectURL = wiseBaseURL + "/project/" + projectId;
             String saveProjectURL = wiseBaseURL + "/project/save/" + projectId;
             String commitProjectURL = wiseBaseURL + "/project/commit/" + projectId;
+            Long projectAssetTotalSizeMax = project.getMaxTotalAssetsSize();
+            if (projectAssetTotalSizeMax == null) {
+                //get the default max project size
+                projectAssetTotalSizeMax = new Long(wiseProperties.getProperty("project_max_total_assets_size", "15728640"));
+            }
 
             config.put("contextPath", contextPath);
             config.put("mainHomePageURL", wiseBaseURL);
             config.put("renewSessionURL", wiseBaseURL + "/session/renew");
             config.put("sessionLogOutURL", wiseBaseURL + "/logout");
             config.put("projectURL", projectURL);
+            config.put("projectAssetTotalSizeMax", projectAssetTotalSizeMax);
+            config.put("projectAssetURL", projectAssetURL);
             config.put("projectBaseURL", projectBaseURL);
             config.put("previewProjectURL", previewProjectURL);
             config.put("saveProjectURL", saveProjectURL);
@@ -228,5 +242,150 @@ public class WISE5AuthorProjectController {
             }
         }
         response.getWriter().print(commitHistoryJSONArray);
+    }
+
+    /**
+     * Returns the absolute path to the specified project's assets directory
+     */
+    private String getProjectAssetsDirectoryPath(Project project) {
+        String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
+        String rawProjectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
+        String projectURL = curriculumBaseDir + rawProjectUrl;
+        String projectBaseDir = projectURL.substring(0, projectURL.indexOf("project.json"));
+        return projectBaseDir + "/assets";
+    }
+
+    /**
+     * Prints project assets in output stream.
+     */
+    @RequestMapping(value = "/project/asset/{projectId}", method = RequestMethod.GET)
+    protected void getProjectAssets(
+            HttpServletResponse response,
+            @PathVariable Long projectId) {
+        try {
+            Project project = projectService.getById(projectId);
+            User user = ControllerUtil.getSignedInUser();
+            if (projectService.canAuthorProject(project, user)) {
+                String projectAssetsPath = getProjectAssetsDirectoryPath(project);
+                File projectAssetsDirectory = new File(projectAssetsPath);
+                JSONObject projectAssetsJSONObject = getDirectoryJSONObject(projectAssetsDirectory);
+                PrintWriter writer = response.getWriter();
+                writer.write(projectAssetsJSONObject.toString());
+                writer.close();
+            }
+        } catch (ObjectNotFoundException e) {
+            e.printStackTrace();
+        } catch (JSONException je) {
+            je.printStackTrace();
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+    }
+
+    /**
+     * Saves POSTed file into the project's asset folder
+     */
+    @RequestMapping(method = RequestMethod.POST, value = "/project/asset/{projectId}")
+    protected void saveProjectAsset(
+            @PathVariable Long projectId,
+            HttpServletRequest request,
+            String assetFileName,
+            HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            Project project = projectService.getById(projectId);
+            User user = ControllerUtil.getSignedInUser();
+            if (projectService.canAuthorProject(project, user)) {
+                String projectAssetsPath = getProjectAssetsDirectoryPath(project);
+                File projectAssetsDir = new File(projectAssetsPath);
+
+                if (assetFileName != null) {
+                    // user wants to delete an existing asset
+                    File asset = new File(projectAssetsDir, assetFileName);
+                    if (asset.exists()) {
+                        asset.delete();
+                    }
+                } else {
+                    // user wants to add a new asset
+
+                    DefaultMultipartHttpServletRequest multiRequest = (DefaultMultipartHttpServletRequest) request;
+                    Map<String, MultipartFile> fileMap = multiRequest.getFileMap();
+                    if (fileMap != null && fileMap.size() > 0) {
+                        Set<String> keySet = fileMap.keySet();
+                        Iterator<String> iter = keySet.iterator();
+                        while (iter.hasNext()) {
+                            String key = iter.next();
+                            MultipartFile file = fileMap.get(key);
+
+                            // TODO add file size checking
+                            String filename = file.getOriginalFilename();
+                            File asset = new File(projectAssetsDir, filename);
+                            if (!asset.exists()) {
+                                asset.createNewFile();
+                            }
+                            byte[] fileContent = file.getBytes();
+                            FileOutputStream fos = new FileOutputStream(asset);
+                            fos.write(fileContent);
+                            fos.flush();
+                            fos.close();
+                        }
+                    }
+                }
+
+                File projectAssetsDirectory = new File(projectAssetsPath);
+                JSONObject projectAssetsJSONObject = getDirectoryJSONObject(projectAssetsDirectory);
+                PrintWriter writer = response.getWriter();
+                writer.write(projectAssetsJSONObject.toString());
+                writer.close();
+            }
+        } catch (ObjectNotFoundException e) {
+            e.printStackTrace();
+        } catch (JSONException je) {
+            je.printStackTrace();
+        }
+    }
+
+    /**
+     * Returns a JSONObject containing information about the specified directory.
+     * This includes totalFileSize and files in the directory
+     * @throws JSONException
+     */
+    private JSONObject getDirectoryJSONObject(File directory) throws JSONException {
+
+        JSONObject directoryJSONObject = new JSONObject();
+        JSONArray projectAssetsJSONArray = new JSONArray();
+        long totalDirectorySize = 0l;
+        File[] filesInProjectAssetsDir = getFilesInDirectory(directory);
+        if (filesInProjectAssetsDir != null) {
+            for (int v = 0; v < filesInProjectAssetsDir.length; v++) {
+                try {
+                    File file = filesInProjectAssetsDir[v];
+                    String fileName = file.getName();
+                    JSONObject fileObject = new JSONObject();
+                    fileObject.put("fileName", fileName);
+                    long fileSize = file.length();
+                    fileObject.put("fileSize", fileSize);
+                    totalDirectorySize += fileSize;
+                    projectAssetsJSONArray.put(fileObject);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        directoryJSONObject.put("totalFileSize", totalDirectorySize);
+        directoryJSONObject.put("files", projectAssetsJSONArray);
+        return directoryJSONObject;
+    }
+
+    /**
+     * Get the file names in the directory. Permission checks should be done before calling this method.
+     * @param directory the directory containing the files
+     * @return the JSONArray containing information of files in the specified directory
+     */
+    public static File[] getFilesInDirectory(File directory) {
+        if (directory.exists() && directory.isDirectory()) {
+            return directory.listFiles();
+        }
+        return new File[0];
     }
 }

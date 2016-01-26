@@ -52,6 +52,11 @@ var ProjectController = function () {
             window.open(previewProjectURL);
         }
     }, {
+        key: "viewProjectAssets",
+        value: function viewProjectAssets() {
+            this.$state.go('root.asset', {});
+        }
+    }, {
         key: "saveProject",
         value: function saveProject() {
             var projectJSONString = JSON.stringify(this.project, null, 4);
@@ -128,4 +133,5 @@ var ProjectController = function () {
 ProjectController.$inject = ['$scope', '$state', '$stateParams', 'ProjectService', 'ConfigService'];
 
 exports.default = ProjectController;
+
 //# sourceMappingURL=projectController.js.map

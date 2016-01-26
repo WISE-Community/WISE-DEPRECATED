@@ -31,6 +31,7 @@ import java.util.Properties;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.hibernate.StaleObjectStateException;
 import org.json.JSONArray;
@@ -113,6 +114,7 @@ public class TeamSignInController {
 	protected synchronized String onSubmit(@ModelAttribute("teamSignInForm") TeamSignInForm teamSignInForm, 
 			BindingResult result, 
 			HttpServletRequest request,
+		    HttpServletResponse response,
 			SessionStatus status)
 	throws Exception {
 		
@@ -272,8 +274,8 @@ public class TeamSignInController {
 
 		// clear the command object from the session
 		status.setComplete(); 
-
-		return "redirect:"+((RedirectView) modelAndView.getView()).getUrl();
+		response.sendRedirect(((RedirectView) modelAndView.getView()).getUrl());
+		return null;
 	}
 	
     @RequestMapping(method=RequestMethod.GET) 

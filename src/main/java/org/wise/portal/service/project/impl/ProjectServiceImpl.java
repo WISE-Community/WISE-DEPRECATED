@@ -423,11 +423,10 @@ public class ProjectServiceImpl implements ProjectService {
 	public String generateStudentStartProjectUrlString(Run run, Workgroup workgroup) {
 	    Project project = run.getProject();
 	    Integer wiseVersion = project.getWiseVersion();
+		String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
 	    if (wiseVersion == null || wiseVersion == 4) {
-	        String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
 	        return wiseBaseURL + "/student/vle/vle.html?runId=" + run.getId() + "&workgroupId=" + workgroup.getId();
 	    } else if (wiseVersion == 5) {
-	        String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
 	        return wiseBaseURL + "/student/run/" + run.getId();
 	    }
 	    return null;

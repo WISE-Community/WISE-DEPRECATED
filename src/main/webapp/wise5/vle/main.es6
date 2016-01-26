@@ -24,6 +24,7 @@ import DrawController from '../components/draw/drawController';
 import DrawService from '../components/draw/drawService';
 import EmbeddedController from '../components/embedded/embeddedController';
 import EmbeddedService from '../components/embedded/embeddedService';
+import Filters from '../filters/filters';
 import GraphController from '../components/graph/graphController';
 import GraphService from '../components/graph/graphService';
 import Highcharts from 'highcharts';
@@ -65,7 +66,7 @@ let mainModule = angular.module('vle', [
     'angularMoment',
     'angular-toArrayFilter',
     'directives',
-    //'filters',
+    'filters',
     'highcharts-ng',
     //'ngAudio',
     'ngAria',
@@ -121,6 +122,7 @@ let mainModule = angular.module('vle', [
     .controller(OpenResponseController.name, OpenResponseController)
     .controller(OutsideURLController.name, OutsideURLController)
     .controller(TableController.name, TableController)
+    .filter(Filters.name, Filters)
     .config([
         '$urlRouterProvider',
         '$stateProvider',

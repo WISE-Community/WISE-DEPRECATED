@@ -2,10 +2,10 @@
 
 import $ from 'jquery';
 import angular from 'angular';
+import angularFileUpload from 'ng-file-upload';
 import angularHighcharts from 'highcharts-ng';
 import angularUIRouter from 'angular-ui-router';
 import angularUITree from 'angular-ui-tree';
-import ngFileUpload from 'ng-file-upload';
 import ngMaterial from 'angular-material';
 import angularMoment from 'angular-moment';
 import angularToArrayFilter from 'lib/angular-toArrayFilter/toArrayFilter';
@@ -20,6 +20,7 @@ import DrawController from '../components/draw/drawController';
 import DrawService from '../components/draw/drawService';
 import EmbeddedController from '../components/embedded/embeddedController';
 import EmbeddedService from '../components/embedded/embeddedService';
+import Filters from '../filters/filters';
 import GraphController from '../components/graph/graphController';
 import GraphService from '../components/graph/graphService';
 import Highcharts from 'highcharts';
@@ -36,6 +37,8 @@ import OpenResponseController from '../components/openResponse/openResponseContr
 import OpenResponseService from '../components/openResponse/openResponseService';
 import OutsideURLController from '../components/outsideURL/outsideURLController';
 import OutsideURLService from '../components/outsideURL/outsideURLService';
+import ProjectAssetController from './asset/projectAssetController';
+import ProjectAssetService from '../services/projectAssetService';
 import ProjectController from './project/projectController';
 import ProjectService from '../services/projectService';
 import SessionService from '../services/sessionService';
@@ -52,6 +55,7 @@ let mainModule = angular.module('authoring', [
     'angularMoment',
     'angular-toArrayFilter',
     'directives',
+    'filters',
     'highcharts-ng',
     'ngAnimate',
     'ngAria',
@@ -74,6 +78,7 @@ let mainModule = angular.module('authoring', [
     .service(OpenResponseService.name, OpenResponseService)
     .service(OutsideURLService.name, OutsideURLService)
     .service(ProjectService.name, ProjectService)
+    .service(ProjectAssetService.name, ProjectAssetService)
     .service(SessionService.name, SessionService)
     .service(StudentAssetService.name, StudentAssetService)
     .service(StudentDataService.name, StudentDataService)
@@ -95,6 +100,7 @@ let mainModule = angular.module('authoring', [
     .controller(OpenResponseController.name, OpenResponseController)
     .controller(OutsideURLController.name, OutsideURLController)
     .controller(ProjectController.name, ProjectController)
+    .controller(ProjectAssetController.name, ProjectAssetController)
     .controller(TableController.name, TableController)
     .config(['$urlRouterProvider',
         '$stateProvider',
@@ -146,7 +152,18 @@ let mainModule = angular.module('authoring', [
 
                         }
                     }
-                });
+                })
+                .state('root.asset', {
+                    url: '/asset',
+                    templateUrl: 'wise5/authoringTool/asset/asset.html',
+                    controller: 'ProjectAssetController',
+                    controllerAs: 'projectAssetController',
+                    resolve: {
+                        projectAssets: function(ProjectAssetService, config) {
+                            return ProjectAssetService.retrieveProjectAssets();
+                        }
+                    }
+                })
             // ngMaterial default theme configuration
             // TODO: make dynamic and support alternate themes; allow projects to specify theme parameters and settings
             $mdThemingProvider.definePalette('primaryPaletteWise', {

@@ -37,6 +37,10 @@ class ProjectController {
         window.open(previewProjectURL);
     };
 
+    viewProjectAssets() {
+        this.$state.go('root.asset', {});
+    };
+
     saveProject() {
         let projectJSONString = JSON.stringify(this.project, null, 4);
         let commitMessage = $("#commitMessageInput").val();
