@@ -1,5 +1,33 @@
 // Colors
-$primary-color: #1C8CA8 !default;  // should match the default color of your ng-material default theme's 'primary' palette
+$_primary-color: #1C8CA8; // should match the default color of your ng-material default theme's 'primary' palette
+
+$color: (
+  'primary': $_primary-color,
+  'accent-1': #F05843, // should match the default color of your ng-material default theme's 'accent' palette
+  'accent-2': #795C3A,
+  'accent-3': #CAD266,
+  'warn': #F44336, // should match the default color of your ng-material default theme's 'warn' palette
+  'success': #62C766,
+  'gray-lightest': #f7f7f7,
+  'gray-lighter': #eeeeee,
+  'gray-light': #dddddd,
+  'gray': #cccccc,
+  'gray-dark': #777777,
+  'gray-darker': #333333,
+  'text': rgba(0, 0, 0, 0.87),
+  'text-secondary': rgba(0, 0, 0, 0.54),
+  'text-disabled': rgba(0, 0, 0, 0.26),
+  'selected-bg': lighten($_primary-color, 59%)
+);
+
+$body-color: (
+  'body': map-get($color, 'text'),
+  'body-bg': map-get($color, 'gray-lighter')
+);
+
+$colors: map-merge($color, $body-color);
+
+/*$primary-color: #1C8CA8 !default;  // should match the default color of your ng-material default theme's 'primary' palette
 $accent-color-1: #F05843 !default; // should match the default color of your ng-material default theme's 'accent' palette
 $accent-color-2: #795C3A !default;
 $accent-color-3: #CAD266 !default;
@@ -20,7 +48,7 @@ $text-color-dark: rgba(0, 0, 0, 0.87) !default;
 $text-color-secondary: rgba(0, 0, 0, 0.54) !default;
 $text-color-disabled: rgba(0, 0, 0, 0.26) !default;
 
-$body-color: $text-color-dark;
+$body-color: $text-color-dark;*/
 
 // Layout
 $wise-toolbar-height: 42px;

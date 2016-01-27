@@ -1,11 +1,10 @@
 // 1. Config
-$body-bgcolor: $gray-lighter !default;
 $avatar-icon-padding: 6px !default;
 $avatar-icon-padding-lg: 8px !default;
 
 // 2. Base
 body {
-  background: $body-bgcolor;
+  background: color('body-bg');
   /*overflow: hidden;*/
 }
 
@@ -24,7 +23,7 @@ p {
 
 // Links
 a {
-  color: $primary-color;
+  color: color('primary');
   cursor: pointer;
   text-decoration: none;
   border-bottom: 1px solid transparent;
@@ -85,7 +84,7 @@ a {
 // Rules for sizing avatar backgrounds (when using a child md-icon)
 .avatar--icon {
   padding: $avatar-icon-padding;
-  background-color: $gray-light;
+  background-color: color('gray-light');
   white-space: normal !important;
 
   &.md-18 {
@@ -108,12 +107,12 @@ a {
 
 md-toolbar.md-light-theme:not(.md-menu-toolbar) {
   md-icon {
-    color: rgba(0, 0, 0, 0.56);
+    color: color('text-secondary');
   }
 
   .md-button:disabled {
     md-icon {
-      color: rgba(0,0,0,0.26) !important;
+      color: color('text-disabled');
     }
   }
 }
@@ -121,22 +120,22 @@ md-toolbar.md-light-theme:not(.md-menu-toolbar) {
 // hacks for now
 md-icon {
   &.md-primary {
-    color: $primary-color !important;
+    color: color('primary') !important;
   }
   &.md-accent {
-    color: $accent-color-1 !important;
+    color: color('accent-1') !important;
   }
   &.success {
-    color: $success-color !important;
+    color: color('success') !important;
   }
   &.warn {
-    color: $warn-color !important;
+    color: color('warn') !important;
   }
 }
 
 .md-subheader, md-list .md-subheader, .md-subheader a, md-list .md-subheader a,
 .md-subheader md-icon, md-list .md-subheader md-icon {
-  color: $accent-color-2;
+  color: color('accent-2');
 }
 
 // Drawing tool custom - TODO: move to draw tool module scss
@@ -146,11 +145,11 @@ md-icon {
 
 // Theme overrides
 md-input-container.md-wise-theme label {
-  color: $text-color-dark;
+  color: color('text');
 }
 
 md-select-menu.md-default-theme md-option[selected], md-select-menu md-option[selected] {
-  background-color: $selected-bg;
+  background-color: color('selected-bg');
 }
 
 // Animations

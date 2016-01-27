@@ -1,5 +1,5 @@
 .nav-head {
-  color: $text-color-secondary;
+  color: color('text-secondary');
   font-weight: 500;
 
   md-icon {
@@ -59,7 +59,7 @@
 }*/
 
 .nav-contents--group {
-  background-color: $gray-light;
+  background-color: color('gray-light');
   padding: 8px;
 }
 
@@ -83,7 +83,7 @@
     outline: none;
 
     .nav-item__title > span {
-      border-bottom: 1px dashed $gray;
+      border-bottom: 1px dashed color('gray');
     }
   }
 }
@@ -91,9 +91,9 @@
 .nav-item {
   &.prev {
     md-list-item > .md-button {
-      border-left: 3px solid $primary-color;
+      border-left: 3px solid color('primary');
       margin-left: -3px;
-      background-color: $selected-bg;
+      background-color: color('selected-bg');
     }
   }
 }
@@ -121,7 +121,7 @@
 
 .nav-item--list {
   background-color: #ffffff;
-  border-bottom: 1px solid $gray-lighter;
+  border-bottom: 1px solid color('gray-lighter');
 }
 
 .nav-item--card {
@@ -140,8 +140,8 @@
 }
 
 .nav-item__more {
-  //background-color: $gray-lightest;
-  border-top: 1px solid $gray-light;
+  //background-color: color('gray-lightest');
+  border-top: 1px solid color('gray-light');
   border-bottom-right-radius: $card-border-radius;
   border-bottom-left-radius: $card-border-radius;
   padding: 8px 16px;
@@ -164,7 +164,7 @@
 }
 
 .nav-item__info {
-  color: $text-color-secondary;
+  color: color('text-secondary');
   padding: 0 8px;
 }
 

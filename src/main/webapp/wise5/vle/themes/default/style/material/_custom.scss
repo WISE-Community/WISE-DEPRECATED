@@ -1,9 +1,4 @@
-//@import "compass";
-
 // Angular Material customizations and additions
-$body-font-size-base:      rem(1.500);
-$caption-font-size-base:   rem(1.300);
-
 h1 {
   font-size: $display-3-font-size-base;
 }
@@ -125,4 +120,9 @@ md-dialog {
 
 md-radio-button {
   outline: none;
+}
+
+// TODO: remove when fixed
+.md-scroll-mask {
+  z-index: 10 !important;
 }

@@ -59,16 +59,16 @@
   padding: 8px;
 
   &:nth-child(odd) {
-    background-color: $gray-lightest;
+    background-color: color('gray-lightest');
   }
 }
 
 .component-revision__content {
   padding: 4px 0 8px 0;
-  border-bottom: 1px solid $gray-light;
+  border-bottom: 1px solid color('gray-light');
 }
 
 .component-revision__actions {
-  color: $gray-dark;
+  color: color('gray-dark');
   padding-top: 4px;
 }

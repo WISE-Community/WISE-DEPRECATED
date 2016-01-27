@@ -4,7 +4,7 @@ md-toast.project-status {
   padding: 8px;
   background-color: #ffffff;
   display: block;
-  color: $text-color-dark;
+  color: color('text');
 
   @media (min-width: $layout-breakpoint-xs) {
     bottom: $wise-toolbar-height + 6px;
@@ -23,7 +23,7 @@ md-toast.project-status {
 }
 
 .project-status__completionPct {
-  background-color: $success-color;
+  background-color: color('success');
   color: #ffffff;
   padding: 4px;
   border-radius: $button-border-radius;
