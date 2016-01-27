@@ -1,1 +1,0 @@
-module.exports = require("npm:angular@1.4.8/index.js");
