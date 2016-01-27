@@ -15,7 +15,7 @@
                     ng-click='nodeController.submitButtonClicked()'
                     ng-disabled='nodeController.isDisabled || !nodeController.isDirty'
                     ng-if='nodeController.showSubmitButton()'>Submit</md-button>
-            <span ng-show="nodeController.saveMessage.text" class="accent-color-2 md-body-1">{{nodeController.saveMessage.text}} <span am-time-ago="nodeController.saveMessage.time"></span></span>
+            <span ng-show="nodeController.saveMessage.text" class="accent-2 md-body-1">{{nodeController.saveMessage.text}} <span am-time-ago="nodeController.saveMessage.time"></span></span>
         </div>
     </md-content>
 </div>

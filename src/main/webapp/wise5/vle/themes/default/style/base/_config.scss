@@ -27,28 +27,9 @@ $body-color: (
 
 $colors: map-merge($color, $body-color);
 
-/*$primary-color: #1C8CA8 !default;  // should match the default color of your ng-material default theme's 'primary' palette
-$accent-color-1: #F05843 !default; // should match the default color of your ng-material default theme's 'accent' palette
-$accent-color-2: #795C3A !default;
-$accent-color-3: #CAD266 !default;
-$warn-color: #F44336 !default; // should match the default color of your ng-material default theme's 'warn' palette
-$success-color: #62C766 !default;
-
-$gray-lightest: #f7f7f7 !default;
-$gray-lighter: #eeeeee !default;
-$gray-light: #dddddd !default;
-$gray: #cccccc !default;
-$gray-dark: #777777 !default;
-$gray-darker: #333333 !default;
-
-$selected-bg: lighten($primary-color, 59%);
-
 // Typography
-$text-color-dark: rgba(0, 0, 0, 0.87) !default;
-$text-color-secondary: rgba(0, 0, 0, 0.54) !default;
-$text-color-disabled: rgba(0, 0, 0, 0.26) !default;
-
-$body-color: $text-color-dark;*/
+$body-font-size-base:      rem(1.500);
+$caption-font-size-base:   rem(1.300);
 
 // Layout
 $wise-toolbar-height: 42px;

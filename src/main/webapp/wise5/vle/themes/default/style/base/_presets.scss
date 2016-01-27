@@ -21,6 +21,25 @@ p {
   margin-bottom: 0.5rem;
 }
 
+// Color
+.primary {
+  color: color('primary');
+}
+
+.accent-1 {
+  color: color('accent-1');
+}
+.accent-2 {
+  color: color('accent-2');
+}
+.warn {
+  color: color('warn');
+}
+
+.success {
+  color: color('success');
+}
+
 // Links
 a {
   color: color('primary');
