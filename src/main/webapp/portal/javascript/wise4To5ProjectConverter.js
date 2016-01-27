@@ -923,6 +923,7 @@ function convertMatchSequence(node, nodeContent) {
     component.feedback = [];
     component.showSaveButton = false;
     component.showSubmitButton = true;
+    component.ordered = false;
 
     var hasCorrectAnswer = false;
 
@@ -935,9 +936,18 @@ function convertMatchSequence(node, nodeContent) {
         var wise4ChoiceIdToWISE5ChoiceId = {};
         var wise4BucketIdToWISE5BucketId = {};
 
+        var ordered = false;
+
         if (interaction != null) {
             var choices = interaction.choices;
             var fields = interaction.fields;
+
+            ordered = assessmentItem.interaction.ordered;
+
+            if (ordered) {
+                // the choices are ordered
+                component.ordered = true;
+            }
 
             if (choices != null) {
                 // handle the choices
@@ -994,6 +1004,41 @@ function convertMatchSequence(node, nodeContent) {
                     }
                 }
             }
+
+            var wise5Choices = component.choices;
+            var wise5Buckets = component.buckets;
+
+            /*
+             * create the feedback by creating all the feedback objects with default values
+             * that will be populated later.
+             */
+
+            // loop through all the buckets
+            for (var b = 0; b < wise5Buckets.length; b++) {
+                var wise5Bucket = wise5Buckets[b];
+
+                // create a bucket feedback
+                var bucketFeedback = {};
+                bucketFeedback.bucketId = wise5Bucket.id;
+                bucketFeedback.choices = [];
+
+                // loop through all the choices
+                for (var c = 0; c < wise5Choices.length; c++) {
+                    var wise5Choice = wise5Choices[c];
+
+                    // create a choice feedback
+                    var choiceFeedback = {};
+                    choiceFeedback.choiceId = wise5Choice.id;
+                    choiceFeedback.feedback = '';
+                    choiceFeedback.isCorrect = false;
+                    choiceFeedback.position = null;
+                    choiceFeedback.incorrectPositionFeedback;
+
+                    bucketFeedback.choices.push(choiceFeedback);
+                }
+
+                component.feedback.push(bucketFeedback);
+            }
         }
 
         var responseDeclaration = assessmentItem.responseDeclaration;
@@ -1006,6 +1051,8 @@ function convertMatchSequence(node, nodeContent) {
 
             if (correctResponses != null) {
 
+                var feedback = component.feedback;
+
                 // loop through all the feedback
                 for (var c = 0; c < correctResponses.length; c++) {
 
@@ -1013,7 +1060,6 @@ function convertMatchSequence(node, nodeContent) {
                     var correctResponse = correctResponses[c];
 
                     if (correctResponse != null) {
-                        var wise5Feedback = {};
 
                         // get the WISE5 choice id
                         var choiceId = wise4ChoiceIdToWISE5ChoiceId[correctResponse.choiceIdentifier];
@@ -1023,13 +1069,26 @@ function convertMatchSequence(node, nodeContent) {
 
                         if (choiceId != null && bucketId != null) {
 
-                            // create the WISE5 feedback
-                            wise5Feedback.choiceId = choiceId;
-                            wise5Feedback.bucketId = bucketId;
-                            wise5Feedback.isCorrect = correctResponse.isCorrect;
-                            wise5Feedback.feedback = correctResponse.feedback;
+                            // get the feedback object for the given choice id and bucket id combination
+                            var feedbackObject = getFeedbackObject(feedback, choiceId, bucketId);
 
-                            component.feedback.push(wise5Feedback);
+                            if (feedbackObject != null) {
+
+                                // populate the feedback object
+                                feedbackObject.feedback = correctResponse.feedback;
+                                feedbackObject.isCorrect = correctResponse.isCorrect;
+                                feedbackObject.position = null;
+                                feedbackObject.incorrectPositionFeedback = null;
+
+                                if (ordered && correctResponse.isCorrect && !isNaN(parseInt(correctResponse.order))) {
+                                    /*
+                                     * the choices are ordered so we will set the position. we will
+                                     * add 1 because WISE4 started counting positions at 0 where as
+                                     * WISE5 starts counting positions at 1.
+                                     */
+                                    feedbackObject.position = parseInt(correctResponse.order) + 1;
+                                }
+                            }
 
                             if (correctResponse.isCorrect) {
                                 // there is a correct answer
@@ -1055,6 +1114,48 @@ function convertMatchSequence(node, nodeContent) {
     addWISE5Node(wise5Node);
 
     return wise5Node;
+}
+
+/**
+ * Get the feedback object for the choice id and bucket id combination
+ * @param feedback the array of bucket feedback objects
+ * @param choiceId the choice id
+ * @param bucketId the bucket id
+ * @returns the choice feedback object
+ */
+function getFeedbackObject(feedback, choiceId, bucketId) {
+
+    if (feedback != null && choiceId != null && bucketId != null) {
+
+        // loop throgha all the buckets
+        for (var f = 0; f < feedback.length; f++) {
+            var bucketFeedback = feedback[f];
+
+            if (bucketFeedback != null) {
+
+                if (bucketId === bucketFeedback.bucketId) {
+                    // we have found the bucket we are looking for
+
+                    var choices = bucketFeedback.choices;
+
+                    // loop througha all the choices
+                    for (var c = 0; c < choices.length; c++) {
+
+                        var choiceFeedback = choices[c];
+
+                        if (choiceFeedback != null) {
+                            if (choiceId === choiceFeedback.choiceId) {
+                                // we have found the choice we are looking for
+                                return choiceFeedback;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return null;
 }
 
 /**
