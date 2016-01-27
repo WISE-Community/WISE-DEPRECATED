@@ -601,14 +601,20 @@ var ProjectService = function () {
 
             if (contentString != null) {
 
-                // get the content base url e.g. http://wise.berkeley.edu/curriculum/123456
-                var contentBaseUrl = this.ConfigService.getConfigParam('projectBaseURL');
+                // get the content base url e.g. http://wise.berkeley.edu/curriculum/123456/
+                var contentBaseURL = this.ConfigService.getConfigParam('projectBaseURL');
 
-                // replace instances of 'assets/myimage.jpg' with 'http://wise.berkeley.edu/curriculum/123456/assets/myimage.jpg'
-                contentString = contentString.replace(new RegExp('\'(\\.)*(/)*assets', 'g'), '\'' + contentBaseUrl + 'assets');
-
-                // replace instances of "assets/myimage.jpg" with "http://wise.berkeley.edu/curriculum/123456/assets/myimage.jpg"
-                contentString = contentString.replace(new RegExp('\"(\\.)*(/)*assets', 'g'), '\"' + contentBaseUrl + 'assets');
+                // only look for string that starts with ' or " and ends in png, jpg, jpeg, pdf, etc.
+                // the string we're looking for can't start with '/ and "/.
+                // note that this also works for \"abc.png and \'abc.png, where the quotes are escaped
+                var startTime = new Date().getTime();
+                contentString = contentString.replace(new RegExp('(\'|\")[^\/][^\/][a-zA-Z0-9@\\._\\/\\s\\-]*(png|jpe?g|pdf|gif|mp4|mp3|wav|swf|css|txt|json|xlsx?|doc)', 'gi'), function myFunction(matchedString) {
+                    // once found, we prepend the contentBaseURL + "assets/" to the string within the quotes and keep everything else the same.
+                    var firstQuote = matchedString.substr(0, 1); // this could be ' or "
+                    var matchedStringWithoutFirstQuote = matchedString.substr(1);
+                    return firstQuote + contentBaseURL + "assets/" + matchedStringWithoutFirstQuote;
+                });
+                var endTime = new Date().getTime();
             }
 
             return contentString;
