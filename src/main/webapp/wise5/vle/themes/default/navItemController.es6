@@ -65,10 +65,11 @@ class NavItemController {
     zoomToElement() {
         setTimeout(()=> {
             // smooth scroll to expanded group's page location
-            let location = this.$element[0].offsetTop - 32;
+            let location = this.isGroup ? this.$element[0].offsetTop - 32 : 0;
+            let delay = this.isGroup ? 350 : 0;
             $('#content').animate({
                 scrollTop: location
-            }, 350, 'linear', ()=> {
+            }, delay, 'linear', ()=> {
                 if (this.setNewNode) {
                     this.setNewNode = false;
                     this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(this.nodeId);

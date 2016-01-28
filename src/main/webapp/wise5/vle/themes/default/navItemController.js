@@ -75,10 +75,11 @@ var NavItemController = function () {
 
             setTimeout(function () {
                 // smooth scroll to expanded group's page location
-                var location = _this.$element[0].offsetTop - 32;
+                var location = _this.isGroup ? _this.$element[0].offsetTop - 32 : 0;
+                var delay = _this.isGroup ? 350 : 0;
                 $('#content').animate({
                     scrollTop: location
-                }, 350, 'linear', function () {
+                }, delay, 'linear', function () {
                     if (_this.setNewNode) {
                         _this.setNewNode = false;
                         _this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(_this.nodeId);
