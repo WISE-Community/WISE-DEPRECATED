@@ -19,6 +19,7 @@ var ProjectController = function () {
         this.ConfigService = ConfigService;
 
         this.title = "project controller";
+        this.projectId = this.$stateParams.projectId;
         this.project = this.ProjectService.getProject();
         this.items = this.ProjectService.idToOrder;
         this.nodeIds = this.ProjectService.getFlattenedProjectAsNodeIds();
@@ -54,7 +55,7 @@ var ProjectController = function () {
     }, {
         key: "viewProjectAssets",
         value: function viewProjectAssets() {
-            this.$state.go('root.asset', {});
+            this.$state.go('root.asset', { projectId: this.projectId });
         }
     }, {
         key: "saveProject",
@@ -123,7 +124,7 @@ var ProjectController = function () {
          * @param nodeId
          */
         value: function nodeClicked(nodeId) {
-            this.$state.go('root.node', { nodeId: nodeId });
+            this.$state.go('root.node', { projectId: this.projectId, nodeId: nodeId });
         }
     }]);
 

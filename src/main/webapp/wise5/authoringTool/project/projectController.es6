@@ -8,6 +8,7 @@ class ProjectController {
         this.ConfigService = ConfigService;
 
         this.title = "project controller";
+        this.projectId = this.$stateParams.projectId;
         this.project = this.ProjectService.getProject();
         this.items = this.ProjectService.idToOrder;
         this.nodeIds = this.ProjectService.getFlattenedProjectAsNodeIds();
@@ -38,7 +39,7 @@ class ProjectController {
     };
 
     viewProjectAssets() {
-        this.$state.go('root.asset', {});
+        this.$state.go('root.asset', {projectId:this.projectId});
     };
 
     saveProject() {
@@ -96,7 +97,7 @@ class ProjectController {
      * @param nodeId
      */
     nodeClicked(nodeId) {
-        this.$state.go('root.node', {nodeId:nodeId});
+        this.$state.go('root.node', {projectId: this.projectId, nodeId:nodeId});
     };
 }
 

@@ -7,6 +7,7 @@ class NodeController {
         this.$state = $state;
         this.$stateParams = $stateParams;
         this.ProjectService = ProjectService;
+        this.projectId = $stateParams.projectId;
         this.nodeId = $stateParams.nodeId;
 
         // get the node
@@ -28,7 +29,7 @@ class NodeController {
     };
 
     close() {
-        this.$state.go('root.project');
+        this.$state.go('root.project', {projectId: this.projectId});
     };
 
     /**

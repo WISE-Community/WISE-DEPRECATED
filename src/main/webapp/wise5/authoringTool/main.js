@@ -52,6 +52,14 @@ var _authoringToolController = require('./authoringToolController');
 
 var _authoringToolController2 = _interopRequireDefault(_authoringToolController);
 
+var _authoringToolMainController = require('./main/authoringToolMainController');
+
+var _authoringToolMainController2 = _interopRequireDefault(_authoringToolMainController);
+
+var _authoringToolNewProjectController = require('./main/authoringToolNewProjectController');
+
+var _authoringToolNewProjectController2 = _interopRequireDefault(_authoringToolNewProjectController);
+
 var _configService = require('../services/configService');
 
 var _configService2 = _interopRequireDefault(_configService);
@@ -206,9 +214,9 @@ var _utilService2 = _interopRequireDefault(_utilService);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var mainModule = _angular2.default.module('authoring', ['angularMoment', 'angular-toArrayFilter', 'directives', 'filters', 'highcharts-ng', 'ngAnimate', 'ngAria', 'ngFileUpload', 'ngMaterial', 'ngWebSocket', 'ui.router', 'ui.tree']).service(_annotationService2.default.name, _annotationService2.default).service(_configService2.default.name, _configService2.default).service(_discussionService2.default.name, _discussionService2.default).service(_drawService2.default.name, _drawService2.default).service(_embeddedService2.default.name, _embeddedService2.default).service(_graphService2.default.name, _graphService2.default).service(_labelService2.default.name, _labelService2.default).service(_matchService2.default.name, _matchService2.default).service(_multipleChoiceService2.default.name, _multipleChoiceService2.default).service(_nodeService2.default.name, _nodeService2.default).service(_openResponseService2.default.name, _openResponseService2.default).service(_outsideURLService2.default.name, _outsideURLService2.default).service(_projectService2.default.name, _projectService2.default).service(_projectAssetService2.default.name, _projectAssetService2.default).service(_sessionService2.default.name, _sessionService2.default).service(_studentAssetService2.default.name, _studentAssetService2.default).service(_studentDataService2.default.name, _studentDataService2.default).service(_studentStatusService2.default.name, _studentStatusService2.default).service(_studentWebSocketService2.default.name, _studentWebSocketService2.default).service(_tableService2.default.name, _tableService2.default).service(_teacherDataService2.default.name, _teacherDataService2.default).service(_utilService2.default.name, _utilService2.default).controller(_authoringToolController2.default.name, _authoringToolController2.default).controller(_discussionController2.default.name, _discussionController2.default).controller(_drawController2.default.name, _drawController2.default).controller(_embeddedController2.default.name, _embeddedController2.default).controller(_graphController2.default.name, _graphController2.default).controller(_htmlController2.default.name, _htmlController2.default).controller(_labelController2.default.name, _labelController2.default).controller(_matchController2.default.name, _matchController2.default).controller(_multipleChoiceController2.default.name, _multipleChoiceController2.default).controller(_nodeController2.default.name, _nodeController2.default).controller(_openResponseController2.default.name, _openResponseController2.default).controller(_outsideURLController2.default.name, _outsideURLController2.default).controller(_projectController2.default.name, _projectController2.default).controller(_projectAssetController2.default.name, _projectAssetController2.default).controller(_tableController2.default.name, _tableController2.default).config(['$urlRouterProvider', '$stateProvider', '$controllerProvider', '$mdThemingProvider', function ($urlRouterProvider, $stateProvider, $controllerProvider, $mdThemingProvider) {
+var mainModule = _angular2.default.module('authoring', ['angularMoment', 'angular-toArrayFilter', 'directives', 'filters', 'highcharts-ng', 'ngAnimate', 'ngAria', 'ngFileUpload', 'ngMaterial', 'ngWebSocket', 'ui.router', 'ui.tree']).service(_annotationService2.default.name, _annotationService2.default).service(_configService2.default.name, _configService2.default).service(_discussionService2.default.name, _discussionService2.default).service(_drawService2.default.name, _drawService2.default).service(_embeddedService2.default.name, _embeddedService2.default).service(_graphService2.default.name, _graphService2.default).service(_labelService2.default.name, _labelService2.default).service(_matchService2.default.name, _matchService2.default).service(_multipleChoiceService2.default.name, _multipleChoiceService2.default).service(_nodeService2.default.name, _nodeService2.default).service(_openResponseService2.default.name, _openResponseService2.default).service(_outsideURLService2.default.name, _outsideURLService2.default).service(_projectService2.default.name, _projectService2.default).service(_projectAssetService2.default.name, _projectAssetService2.default).service(_sessionService2.default.name, _sessionService2.default).service(_studentAssetService2.default.name, _studentAssetService2.default).service(_studentDataService2.default.name, _studentDataService2.default).service(_studentStatusService2.default.name, _studentStatusService2.default).service(_studentWebSocketService2.default.name, _studentWebSocketService2.default).service(_tableService2.default.name, _tableService2.default).service(_teacherDataService2.default.name, _teacherDataService2.default).service(_utilService2.default.name, _utilService2.default).controller(_authoringToolController2.default.name, _authoringToolController2.default).controller(_authoringToolMainController2.default.name, _authoringToolMainController2.default).controller(_authoringToolNewProjectController2.default.name, _authoringToolNewProjectController2.default).controller(_discussionController2.default.name, _discussionController2.default).controller(_drawController2.default.name, _drawController2.default).controller(_embeddedController2.default.name, _embeddedController2.default).controller(_graphController2.default.name, _graphController2.default).controller(_htmlController2.default.name, _htmlController2.default).controller(_labelController2.default.name, _labelController2.default).controller(_matchController2.default.name, _matchController2.default).controller(_multipleChoiceController2.default.name, _multipleChoiceController2.default).controller(_nodeController2.default.name, _nodeController2.default).controller(_openResponseController2.default.name, _openResponseController2.default).controller(_outsideURLController2.default.name, _outsideURLController2.default).controller(_projectController2.default.name, _projectController2.default).controller(_projectAssetController2.default.name, _projectAssetController2.default).controller(_tableController2.default.name, _tableController2.default).config(['$urlRouterProvider', '$stateProvider', '$controllerProvider', '$mdThemingProvider', function ($urlRouterProvider, $stateProvider, $controllerProvider, $mdThemingProvider) {
 
-    $urlRouterProvider.otherwise('/project');
+    $urlRouterProvider.otherwise('/');
 
     $stateProvider.state('root', {
         url: '',
@@ -222,21 +230,39 @@ var mainModule = _angular2.default.module('authoring', ['angularMoment', 'angula
 
                 return ConfigService.retrieveConfig(configURL);
             },
-            project: function project(ProjectService, config) {
-                return ProjectService.retrieveProject();
-            },
             sessionTimers: function sessionTimers(SessionService, config) {
                 return SessionService.initializeSession();
             }
         }
+    }).state('root.main', {
+        url: '/',
+        templateUrl: 'wise5/authoringTool/main/main.html',
+        controller: 'AuthoringToolMainController',
+        controllerAs: 'authoringToolMainController',
+        resolve: {}
+    }).state('root.new', {
+        url: '/new',
+        templateUrl: 'wise5/authoringTool/main/new.html',
+        controller: 'AuthoringToolNewProjectController',
+        controllerAs: 'authoringToolNewProjectController',
+        resolve: {}
     }).state('root.project', {
-        url: '/project',
+        url: '/project/:projectId',
         templateUrl: 'wise5/authoringTool/project/project.html',
         controller: 'ProjectController',
         controllerAs: 'projectController',
-        resolve: {}
+        resolve: {
+            projectConfig: function projectConfig(ConfigService, $stateParams) {
+                var configURL = window.configURL + '/' + $stateParams.projectId;
+
+                return ConfigService.retrieveConfig(configURL);
+            },
+            project: function project(ProjectService, projectConfig) {
+                return ProjectService.retrieveProject();
+            }
+        }
     }).state('root.node', {
-        url: '/node/:nodeId',
+        url: '/project/:projectId/node/:nodeId',
         templateUrl: 'wise5/authoringTool/node/node.html',
         controller: 'NodeController',
         controllerAs: 'nodeController',
@@ -244,7 +270,7 @@ var mainModule = _angular2.default.module('authoring', ['angularMoment', 'angula
             load: function load() {}
         }
     }).state('root.asset', {
-        url: '/asset',
+        url: '/project/:projectId/asset',
         templateUrl: 'wise5/authoringTool/asset/asset.html',
         controller: 'ProjectAssetController',
         controllerAs: 'projectAssetController',

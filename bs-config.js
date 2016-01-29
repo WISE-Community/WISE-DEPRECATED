@@ -13,6 +13,12 @@
  |
  */
 
+// run this command on the command-line:
+// browser-sync start --proxy="http://localhost:8080/wise" --files="**/*.css" --logLevel="debug" --ws=true
+
+// current issues:
+// * WISE5 VLE doesn't work properly in proxy mode, related to SPA history issue that other people are having, see below
+
 // required to work with single-page-apps, see here: https://github.com/BrowserSync/browser-sync/issues/204
 var historyApiFallback = require('connect-history-api-fallback');
 /*

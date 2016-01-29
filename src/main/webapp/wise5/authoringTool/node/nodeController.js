@@ -16,6 +16,7 @@ var NodeController = function () {
         this.$state = $state;
         this.$stateParams = $stateParams;
         this.ProjectService = ProjectService;
+        this.projectId = $stateParams.projectId;
         this.nodeId = $stateParams.nodeId;
 
         // get the node
@@ -43,7 +44,7 @@ var NodeController = function () {
     }, {
         key: 'close',
         value: function close() {
-            this.$state.go('root.project');
+            this.$state.go('root.project', { projectId: this.projectId });
         }
     }, {
         key: 'authoringViewNodeChanged',
@@ -62,4 +63,5 @@ var NodeController = function () {
 NodeController.$inject = ['$scope', '$state', '$stateParams', 'ProjectService'];
 
 exports.default = NodeController;
+
 //# sourceMappingURL=nodeController.js.map
