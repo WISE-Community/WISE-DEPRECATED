@@ -165,10 +165,13 @@ let mainModule = angular.module('authoring', [
                         project: function(ProjectService, projectConfig) {
                             return ProjectService.retrieveProject();
                         },
+                        projectAssets: function(ProjectAssetService, projectConfig) {
+                            return ProjectAssetService.retrieveProjectAssets();
+                        }
                     }
                 })
-                .state('root.node', {
-                    url: '/project/:projectId/node/:nodeId',
+                .state('root.project.node', {
+                    url: '/node/:nodeId',
                     templateUrl: 'wise5/authoringTool/node/node.html',
                     controller: 'NodeController',
                     controllerAs: 'nodeController',
@@ -178,15 +181,12 @@ let mainModule = angular.module('authoring', [
                         }
                     }
                 })
-                .state('root.asset', {
-                    url: '/project/:projectId/asset',
+                .state('root.project.asset', {
+                    url: '/asset',
                     templateUrl: 'wise5/authoringTool/asset/asset.html',
                     controller: 'ProjectAssetController',
                     controllerAs: 'projectAssetController',
                     resolve: {
-                        projectAssets: function(ProjectAssetService, config) {
-                            return ProjectAssetService.retrieveProjectAssets();
-                        }
                     }
                 })
             // ngMaterial default theme configuration

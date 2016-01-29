@@ -259,26 +259,25 @@ var mainModule = _angular2.default.module('authoring', ['angularMoment', 'angula
             },
             project: function project(ProjectService, projectConfig) {
                 return ProjectService.retrieveProject();
+            },
+            projectAssets: function projectAssets(ProjectAssetService, projectConfig) {
+                return ProjectAssetService.retrieveProjectAssets();
             }
         }
-    }).state('root.node', {
-        url: '/project/:projectId/node/:nodeId',
+    }).state('root.project.node', {
+        url: '/node/:nodeId',
         templateUrl: 'wise5/authoringTool/node/node.html',
         controller: 'NodeController',
         controllerAs: 'nodeController',
         resolve: {
             load: function load() {}
         }
-    }).state('root.asset', {
-        url: '/project/:projectId/asset',
+    }).state('root.project.asset', {
+        url: '/asset',
         templateUrl: 'wise5/authoringTool/asset/asset.html',
         controller: 'ProjectAssetController',
         controllerAs: 'projectAssetController',
-        resolve: {
-            projectAssets: function projectAssets(ProjectAssetService, config) {
-                return ProjectAssetService.retrieveProjectAssets();
-            }
-        }
+        resolve: {}
     });
     // ngMaterial default theme configuration
     // TODO: make dynamic and support alternate themes; allow projects to specify theme parameters and settings

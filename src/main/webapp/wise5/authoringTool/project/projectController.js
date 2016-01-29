@@ -55,7 +55,7 @@ var ProjectController = function () {
     }, {
         key: "viewProjectAssets",
         value: function viewProjectAssets() {
-            this.$state.go('root.asset', { projectId: this.projectId });
+            this.$state.go('root.project.asset', { projectId: this.projectId });
         }
     }, {
         key: "saveProject",
@@ -124,7 +124,7 @@ var ProjectController = function () {
          * @param nodeId
          */
         value: function nodeClicked(nodeId) {
-            this.$state.go('root.node', { projectId: this.projectId, nodeId: nodeId });
+            this.$state.go('root.project.node', { projectId: this.projectId, nodeId: nodeId });
         }
     }]);
 

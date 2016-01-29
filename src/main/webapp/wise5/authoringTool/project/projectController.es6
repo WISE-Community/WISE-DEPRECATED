@@ -39,7 +39,7 @@ class ProjectController {
     };
 
     viewProjectAssets() {
-        this.$state.go('root.asset', {projectId:this.projectId});
+        this.$state.go('root.project.asset', {projectId:this.projectId});
     };
 
     saveProject() {
@@ -97,7 +97,7 @@ class ProjectController {
      * @param nodeId
      */
     nodeClicked(nodeId) {
-        this.$state.go('root.node', {projectId: this.projectId, nodeId:nodeId});
+        this.$state.go('root.project.node', {projectId: this.projectId, nodeId:nodeId});
     };
 }
 

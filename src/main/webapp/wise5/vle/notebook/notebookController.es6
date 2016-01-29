@@ -4,6 +4,7 @@ class NotebookController {
     constructor($injector,
                 $rootScope,
                 $scope,
+                ConfigService,
                 NotebookService,
                 ProjectService,
                 StudentAssetService,
@@ -11,6 +12,8 @@ class NotebookController {
         this.$injector = $injector;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
+        this.ConfigService = ConfigService;
+        this.mode = this.ConfigService.getMode();
         this.NotebookService = NotebookService;
         this.ProjectService = ProjectService;
         this.StudentAssetService = StudentAssetService;
@@ -33,7 +36,9 @@ class NotebookController {
 
 
         // retrieve assets when notebook is opened
-        this.retrieveNotebookItems();
+        if (!this.ConfigService.isPreview()) {
+            this.retrieveNotebookItems();
+        }
     }
 
     getTemplateUrl() {
@@ -123,6 +128,7 @@ NotebookController.$inject = [
     "$injector",
     "$rootScope",
     "$scope",
+    "ConfigService",
     "NotebookService",
     "ProjectService",
     "StudentAssetService",
