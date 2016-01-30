@@ -64,7 +64,7 @@ class StudentProgressController {
     studentRowClicked(workgroup) {
         var workgroupId = workgroup.workgroupId;
 
-        $state.go('root.studentGrading', {workgroupId: workgroupId});
+        this.$state.go('root.studentGrading', {workgroupId: workgroupId});
     };
 
     isWorkgroupOnline(workgroupId) {

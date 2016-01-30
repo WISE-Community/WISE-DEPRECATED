@@ -41,12 +41,13 @@ import ProjectService from '../services/projectService';
 import SessionService from '../services/sessionService';
 import StudentAssetService from '../services/studentAssetService';
 import StudentDataService from '../services/studentDataService';
+import StudentGradingController from './studentGrading/studentGradingController';
+import StudentProgressController from './studentProgress/studentProgressController';
 import StudentStatusService from '../services/studentStatusService';
 import StudentWebSocketService from '../services/studentWebSocketService';
 import TableController from '../components/table/tableController';
 import TableService from '../components/table/tableService';
 import TeacherDataService from '../services/teacherDataService';
-import StudentProgressController from './studentProgress/studentProgressController';
 import TeacherWebSocketService from '../services/teacherWebSocketService';
 import UtilService from '../services/utilService';
 
@@ -98,6 +99,7 @@ let mainModule = angular.module('classroomMonitor', [
     .controller(NodeProgressController.name, NodeProgressController)
     .controller(OpenResponseController.name, OpenResponseController)
     .controller(OutsideURLController.name, OutsideURLController)
+    .controller(StudentGradingController.name, StudentGradingController)
     .controller(StudentProgressController.name, StudentProgressController)
     .controller(TableController.name, TableController)
     .config(['$urlRouterProvider',
@@ -143,6 +145,17 @@ let mainModule = angular.module('classroomMonitor', [
                     resolve: {
                     }
                 })
+                .state('root.studentGrading', {
+                    url: '/studentGrading/:workgroupId',
+                    templateUrl: 'wise5/classroomMonitor/studentGrading/studentGrading.html',
+                    controller: 'StudentGradingController',
+                    controllerAs: 'studentGradingController',
+                    resolve: {
+                        studentData: function($stateParams, TeacherDataService, config) {
+                            return TeacherDataService.retrieveStudentDataByWorkgroupId($stateParams.workgroupId);
+                        }
+                    }
+                })
                 .state('root.nodeProgress', {
                     url: '/nodeProgress',
                     templateUrl: 'wise5/classroomMonitor/nodeProgress/nodeProgress.html',
@@ -159,86 +172,9 @@ let mainModule = angular.module('classroomMonitor', [
                     resolve: {
                         studentData: function($stateParams, TeacherDataService, config) {
                             return TeacherDataService.retrieveStudentDataByNodeId($stateParams.nodeId);
-                        },
-                        load: () => {
-                            /*
-                            System.import('components/discussion/discussionController2').then((DiscussionController) => {
-                                $controllerProvider.register(DiscussionController.default.name, DiscussionController.default);
-                            });
-                            System.import('components/draw/drawController2').then((DrawController) => {
-                                $controllerProvider.register(DrawController.default.name, DrawController.default);
-                            });
-                            System.import('components/embedded/embeddedController2').then((EmbeddedController) => {
-                                $controllerProvider.register(EmbeddedController.default.name, EmbeddedController.default);
-                            });
-                            System.import('components/graph/graphController2').then((GraphController) => {
-                                $controllerProvider.register(GraphController.default.name, GraphController.default);
-                            });
-                            System.import('components/match/matchController2').then((MatchController) => {
-                                $controllerProvider.register(MatchController.default.name, MatchController.default);
-                            });
-                            System.import('components/multipleChoice/multipleChoiceController2').then((MultipleChoiceController) => {
-                                $controllerProvider.register(MultipleChoiceController.default.name, MultipleChoiceController.default);
-                            });
-                            System.import('components/html/htmlController2').then((HTMLController) => {
-                                $controllerProvider.register(HTMLController.default.name, HTMLController.default);
-                            });
-                            System.import('components/label/labelController2').then((LabelController) => {
-                                $controllerProvider.register(LabelController.default.name, LabelController.default);
-                            });
-                            System.import('components/openResponse/openResponseController2').then((OpenResponseController) => {
-                                $controllerProvider.register(OpenResponseController.default.name, OpenResponseController.default);
-                            });
-                            System.import('components/outsideURL/outsideURLController2').then((OutsideURLController) => {
-                                $controllerProvider.register(OutsideURLController.default.name, OutsideURLController.default);
-                            });
-                            System.import('components/table/tableController2').then((TableController) => {
-                                $controllerProvider.register(TableController.default.name, TableController.default);
-                            });
-                            */
-                        }
-                        /*
-                        annotationController: app.loadController('annotationController'),
-                        embeddedController: app.loadController('embeddedController'),
-                        graphController: app.loadController('graphController'),
-                        discussionController: app.loadController('discussionController'),
-                        drawController: app.loadController('drawController'),
-                        labelController: app.loadController('labelController'),
-                        matchController: app.loadController('matchController'),
-                        multipleChoiceController: app.loadController('multipleChoiceController'),
-                        nodeController: app.loadController('nodeController'),
-                        tableController: app.loadController('tableController')
-                        */
-                    }
-                })
-/*
-                .state('root.project', {
-                    url: '/project',
-                    templateUrl: 'wise5/authoringTool/project/project.html',
-                    controller: 'ProjectController',
-                    controllerAs: 'projectController',
-                    resolve: {
-                    }
-                })
-                .state('root.node', {
-                    url: '/node/:nodeId',
-                    templateUrl: 'wise5/authoringTool/node/node.html',
-                    controller: 'NodeController',
-                    controllerAs: 'nodeController',
-                    resolve: {
-                        load: () => {
-                        System.import('components/html/htmlController2').then((HTMLController) => {
-                        $controllerProvider.register(HTMLController.default.name, HTMLController.default);
-                        });
-                            System.import('components/openResponse/openResponseController2').then((OpenResponseController) => {
-                                $controllerProvider.register(OpenResponseController.default.name, OpenResponseController.default);
-                        });
-
                         }
                     }
-
-                });
-            */
+                })
             // ngMaterial default theme configuration
             // TODO: make dynamic and support alternate themes; allow projects to specify theme parameters and settings
             $mdThemingProvider.definePalette('primaryPaletteWise', {

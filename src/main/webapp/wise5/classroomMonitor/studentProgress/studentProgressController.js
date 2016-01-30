@@ -75,7 +75,7 @@ var StudentProgressController = function () {
         value: function studentRowClicked(workgroup) {
             var workgroupId = workgroup.workgroupId;
 
-            $state.go('root.studentGrading', { workgroupId: workgroupId });
+            this.$state.go('root.studentGrading', { workgroupId: workgroupId });
         }
     }, {
         key: 'isWorkgroupOnline',
@@ -109,4 +109,5 @@ var StudentProgressController = function () {
 StudentProgressController.$inject = ['$rootScope', '$state', 'ConfigService', 'StudentStatusService', 'TeacherDataService', 'TeacherWebSocketService'];
 
 exports.default = StudentProgressController;
+
 //# sourceMappingURL=studentProgressController.js.map

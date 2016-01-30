@@ -43,7 +43,7 @@ var NodeGradingController = function () {
             }
 
             // field that will hold the node content
-            this.nodeContent = node.content;
+            this.nodeContent = node;
         }
 
         // render components in show student work only mode
@@ -278,4 +278,5 @@ var NodeGradingController = function () {
 NodeGradingController.$inject = ['$state', '$stateParams', 'AnnotationService', 'ConfigService', 'NodeService', 'ProjectService', 'TeacherDataService'];
 
 exports.default = NodeGradingController;
+
 //# sourceMappingURL=nodeGradingController.js.map

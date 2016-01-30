@@ -33,7 +33,7 @@ class NodeGradingController {
 
 
             // field that will hold the node content
-            this.nodeContent = node.content;
+            this.nodeContent = node;
         }
 
         // render components in show student work only mode
