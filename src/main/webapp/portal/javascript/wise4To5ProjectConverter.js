@@ -351,6 +351,9 @@ function createWISE5NodeFromNodeContent(identifier) {
             // replace linkTos with wiselinks
             var responseUpdated = replaceLinkToWithWISELink(node, response);
 
+            // remove any usage of ./assets/ or assets/
+            responseUpdated = removeAssetsFromPaths(responseUpdated);
+
             // create the node content object
             var nodeContent = JSON.parse(responseUpdated);
 
@@ -360,6 +363,39 @@ function createWISE5NodeFromNodeContent(identifier) {
     });
 
     return wise5Node;
+}
+
+/**
+ * Remove assets from path strings
+ * e.g.
+ * ./assets/image.jpg will be converted to image.jpg
+ * assets/image.jpg will be converted to image.jpg
+ * @param wise4NodeJSONString the WISE4 node content string
+ * @returns the WISE4 node content string with assets paths removed
+ */
+function removeAssetsFromPaths(wise4NodeJSONString) {
+
+    var updated = wise4NodeJSONString;
+
+    // remove "./assets/ and replace with "
+    updated = updated.replace(/"\.\/assets\//g, '"');
+
+    // remove "/assets/ and replace with "
+    updated = updated.replace(/"\/assets\//g, '"');
+
+    // remove "assets/ and replace with "
+    updated = updated.replace(/"assets\//g, '"');
+
+    // remove './assets/ and replace with '
+    updated = updated.replace(/'\.\/assets\//g, "'");
+
+    // remove '/assets/ and replace with '
+    updated = updated.replace(/'\/assets\//g, "'");
+
+    // remove 'assets/ and replace with '
+    updated = updated.replace(/'assets\//g, "'");
+
+    return updated;
 }
 
 /**
@@ -536,18 +572,17 @@ function convertHTML(node, nodeContent) {
 
             if (html != null) {
 
+                html = removeAssetsFromPaths(html);
+
                 // create a WISE5 node
                 wise5Node = createWISE5Node();
 
                 // set the title
                 wise5Node.title = node.title;
 
-                // set the prompt
-                var content = {};
-                content.prompt = nodeContent.prompt;
-                content.showSaveButton = false;
-                content.showSubmitButton = false;
-                content.components = [];
+                wise5Node.showSaveButton = false;
+                wise5Node.showSubmitButton = false;
+                wise5Node.components = [];
 
                 var component = {};
 
@@ -559,10 +594,7 @@ function convertHTML(node, nodeContent) {
                 component.html = html;
 
                 // add the component
-                content.components.push(component);
-
-                // set the content
-                wise5Node.content = content;
+                wise5Node.components.push(component);
 
                 // add the WISE5 node to the project
                 addWISE5Node(wise5Node);
@@ -600,10 +632,9 @@ function convertAssessmentList(node, nodeContent) {
         //test = true;
     }
 
-    var content = {};
-    content.showSaveButton = true;
-    content.showSubmitButton = false;
-    content.components = [];
+    wise5Node.showSaveButton = true;
+    wise5Node.showSubmitButton = false;
+    wise5Node.components = [];
 
     var prompt = nodeContent.prompt;
 
@@ -614,7 +645,7 @@ function convertAssessmentList(node, nodeContent) {
         htmlPromptComponent.type = 'HTML';
         htmlPromptComponent.html = prompt;
 
-        content.components.push(htmlPromptComponent);
+        wise5Node.components.push(htmlPromptComponent);
     }
 
     // get all the assessment parts
@@ -689,13 +720,10 @@ function convertAssessmentList(node, nodeContent) {
                     }
                 }
 
-                content.components.push(component);
+                wise5Node.components.push(component);
             }
         }
     }
-
-    // set the content into the WISE5 node
-    wise5Node.content = content;
 
     // add the WISE5 node to the project
     addWISE5Node(wise5Node);
@@ -719,10 +747,9 @@ function convertOpenResponse(node, nodeContent) {
 
     var prompt = getPromptFromAssessmentItem(nodeContent);
 
-    var content = {};
-    content.showSaveButton = true;
-    content.showSubmitButton = false;
-    content.components = [];
+    wise5Node.showSaveButton = true;
+    wise5Node.showSubmitButton = false;
+    wise5Node.components = [];
 
     var component = {};
 
@@ -742,9 +769,7 @@ function convertOpenResponse(node, nodeContent) {
         }
     }
 
-    content.components.push(component);
-
-    wise5Node.content = content;
+    wise5Node.components.push(component);
 
     // add the WISE5 node to the project
     addWISE5Node(wise5Node);
@@ -769,10 +794,9 @@ function convertMultipleChoice(node, nodeContent) {
     // get the prompt
     var prompt = getPromptFromAssessmentItem(nodeContent);
 
-    var content = {};
-    content.showSaveButton = true;
-    content.showSubmitButton = false;
-    content.components = [];
+    wise5Node.showSaveButton = true;
+    wise5Node.showSubmitButton = false;
+    wise5Node.components = [];
 
     var component = {};
 
@@ -859,9 +883,7 @@ function convertMultipleChoice(node, nodeContent) {
     // set the choice type
     component.choiceType = choiceType;
 
-    content.components.push(component);
-
-    wise5Node.content = content;
+    wise5Node.components.push(component);
 
     // add the WISE5 node to the project
     addWISE5Node(wise5Node);
@@ -906,10 +928,9 @@ function convertMatchSequence(node, nodeContent) {
     // get the prompt
     var prompt = getPromptFromAssessmentItem(nodeContent);
 
-    var content = {};
-    content.showSaveButton = true;
-    content.showSubmitButton = false;
-    content.components = [];
+    wise5Node.showSaveButton = true;
+    wise5Node.showSubmitButton = false;
+    wise5Node.components = [];
 
     var component = {};
 
@@ -1106,9 +1127,7 @@ function convertMatchSequence(node, nodeContent) {
         component.showSubmitButton = true;
     }
 
-    content.components.push(component);
-
-    wise5Node.content = content;
+    wise5Node.components.push(component);
 
     // add the WISE5 node to the project
     addWISE5Node(wise5Node);
@@ -1172,10 +1191,9 @@ function convertTable(node, nodeContent) {
     // set the title
     wise5Node.title = node.title;
 
-    var content = {};
-    content.showSaveButton = true;
-    content.showSubmitButton = false;
-    content.components = [];
+    wise5Node.showSaveButton = true;
+    wise5Node.showSubmitButton = false;
+    wise5Node.components = [];
 
     var tableComponent = {};
 
@@ -1189,7 +1207,7 @@ function convertTable(node, nodeContent) {
     var newTableData = convertTableData(nodeContent.numColumns, nodeContent.numRows, nodeContent.tableData);
     tableComponent.tableData = newTableData;
 
-    content.components.push(tableComponent);
+    wise5Node.components.push(tableComponent);
 
     if (!nodeContent.hideEverythingBelowTable) {
         /*
@@ -1203,10 +1221,8 @@ function convertTable(node, nodeContent) {
         openResponseComponent.type = 'OpenResponse';
         openResponseComponent.prompt = nodeContent.prompt2;
 
-        content.components.push(openResponseComponent);
+        wise5Node.components.push(openResponseComponent);
     }
-
-    wise5Node.content = content;
 
     // add the WISE5 node to the project
     addWISE5Node(wise5Node);
@@ -1269,10 +1285,9 @@ function convertPhet(node, nodeContent) {
 
     wise5Node.title = node.title;
 
-    var content = {};
-    content.showSaveButton = true;
-    content.showSubmitButton = false;
-    content.components = [];
+    wise5Node.showSaveButton = true;
+    wise5Node.showSubmitButton = false;
+    wise5Node.components = [];
 
     var component = {};
 
@@ -1282,9 +1297,7 @@ function convertPhet(node, nodeContent) {
     // set the url for the Phet model
     component.url = nodeContent.url;
 
-    content.components.push(component);
-
-    wise5Node.content = content;
+    wise5Node.components.push(component);
 
     // add the WISE5 node to the project
     addWISE5Node(wise5Node);
@@ -1302,10 +1315,9 @@ function convertDraw(node, nodeContent) {
     var wise5Node = createWISE5Node();
     wise5Node.title = node.title;
 
-    var content = {};
-    content.showSaveButton = true;
-    content.showSubmitButton = false;
-    content.components = [];
+    wise5Node.showSaveButton = true;
+    wise5Node.showSubmitButton = false;
+    wise5Node.components = [];
 
     var component = {};
     component.id = createRandomId();
@@ -1337,9 +1349,7 @@ function convertDraw(node, nodeContent) {
         component.stamps = wise5Stamps;
     }
 
-    content.components.push(component);
-
-    wise5Node.content = content;
+    wise5Node.components.push(component);
 
     // add the WISE5 node to the project
     addWISE5Node(wise5Node);
@@ -1357,10 +1367,9 @@ function convertBrainstorm(node, nodeContent) {
     var wise5Node = createWISE5Node();
     wise5Node.title = node.title;
 
-    var content = {};
-    content.showSaveButton = true;
-    content.showSubmitButton = false;
-    content.components = [];
+    wise5Node.showSaveButton = true;
+    wise5Node.showSubmitButton = false;
+    wise5Node.components = [];
 
     var component = {};
     component.id = createRandomId();
@@ -1381,9 +1390,7 @@ function convertBrainstorm(node, nodeContent) {
     component.showSubmitButton = true;
     component.gateClassmateResponses = false;
 
-    content.components.push(component);
-
-    wise5Node.content = content;
+    wise5Node.components.push(component);
 
     // add the WISE5 node to the project
     addWISE5Node(wise5Node);
@@ -1401,10 +1408,9 @@ function convertAnnotator(node, nodeContent) {
     var wise5Node = createWISE5Node();
     wise5Node.title = node.title;
 
-    var content = {};
-    content.showSaveButton = true;
-    content.showSubmitButton = false;
-    content.components = [];
+    wise5Node.showSaveButton = true;
+    wise5Node.showSubmitButton = false;
+    wise5Node.components = [];
 
     var component = {};
     component.id = createRandomId();
@@ -1471,9 +1477,7 @@ function convertAnnotator(node, nodeContent) {
         }
     }
 
-    content.components.push(component);
-
-    wise5Node.content = content;
+    wise5Node.components.push(component);
 
     // add the WISE5 node to the project
     addWISE5Node(wise5Node);
@@ -1491,10 +1495,9 @@ function convertGrapher(node, nodeContent) {
     var wise5Node = createWISE5Node();
     wise5Node.title = node.title;
 
-    var content = {};
-    content.showSaveButton = true;
-    content.showSubmitButton = false;
-    content.components = [];
+    wise5Node.showSaveButton = true;
+    wise5Node.showSubmitButton = false;
+    wise5Node.components = [];
 
     var component = {};
     component.id = createRandomId();
@@ -1544,9 +1547,7 @@ function convertGrapher(node, nodeContent) {
         }
     ];
 
-    content.components.push(component);
-
-    wise5Node.content = content;
+    wise5Node.components.push(component);
 
     // add the WISE5 node to the project
     addWISE5Node(wise5Node);
@@ -1568,8 +1569,7 @@ function convertOutsideURL(node, nodeContent) {
     // set the title
     wise5Node.title = node.title;
 
-    var content = {};
-    content.components = [];
+    wise5Node.components = [];
 
     var component = {};
 
@@ -1579,9 +1579,7 @@ function convertOutsideURL(node, nodeContent) {
     component.type = 'OutsideURL';
     component.url = nodeContent.url;
 
-    content.components.push(component);
-
-    wise5Node.content = content;
+    wise5Node.components.push(component);
 
     // add the WISE5 node to the project
     addWISE5Node(wise5Node);
