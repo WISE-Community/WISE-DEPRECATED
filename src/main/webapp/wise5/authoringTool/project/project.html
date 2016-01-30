@@ -24,12 +24,28 @@
 <input id="commitMessageInput" type="text" size="50" placeholder="Write a small message here explaining this change. (Optional)" />
 <button id="saveButton" ng-click='projectController.saveProject()'>Save Project</button>
 </div>
+<button ng-click='projectController.showCreateGroup = !projectController.showCreateGroup'>Create Activity</button>
+<button ng-click='projectController.showCreateNode = !projectController.showCreateNode'>Create Step</button>
+<button ng-click='projectController.move()'>Move</button>
+<button ng-click='projectController.delete()'>Delete</button>
+<div ng-show='projectController.showCreateGroup'>
+    Activity Title: <input ng-model='projectController.createGroupTitle' size='50'/> <button ng-click='projectController.createGroup()'>Submit</button>
+</div>
+<div ng-show='projectController.showCreateNode'>
+    Step Title: <input ng-model='projectController.createNodeTitle' size='50'/> <button ng-click='projectController.createNode()'>Submit</button>
+</div>
 <div ng-repeat='item in projectController.items | toArray | orderBy : "order"'
      ng-if='item.order!==0'
      ng-class='{"node-select--group": projectController.isGroupNode(item.$key), "node-select--node": !projectController.isGroupNode(item.$key)}'
-     ng-click='projectController.nodeClicked(item.$key)'
      style='cursor: pointer'>
-    <h6>{{projectController.getNodePositionById(item.$key)}} {{projectController.getNodeTitleByNodeId(item.$key)}}</h6>
+    <input type='checkbox'
+           ng-model='item.checked'/>
+    <h6 ng-click='projectController.nodeClicked(item.$key)'
+        style='display:inline'>
+        {{projectController.getNodePositionById(item.$key)}} {{projectController.getNodeTitleByNodeId(item.$key)}}
+    </h6>
+    <button ng-show='projectController.insertMode' ng-if='projectController.isGroupNode(item.$key)' ng-click='projectController.insertInside(item.$key)'>Insert Inside</button>
+    <button ng-show='projectController.insertMode' ng-click='projectController.insertAfter(item.$key)'>Insert After</button>
 </div>
 <textarea id="project" rows="40" cols="150" ng-model="projectController.projectAsText"></textarea>
 <div id="projectStylesDiv">Project Styles:

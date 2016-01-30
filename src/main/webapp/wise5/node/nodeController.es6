@@ -58,7 +58,7 @@ class NodeController {
             }
 
             // get the node content
-            this.nodeContent = this.ProjectService.getNodeContentByNodeId(this.nodeId);
+            this.nodeContent = this.ProjectService.getNodeById(this.nodeId);
 
             this.nodeTitle = this.ProjectService.getNodeTitleByNodeId(this.nodeId);
 
