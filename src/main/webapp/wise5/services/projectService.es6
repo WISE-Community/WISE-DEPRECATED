@@ -1,3 +1,5 @@
+'use strict';
+
 class ProjectService {
     constructor($http, $rootScope, ConfigService) {
         this.$http = $http;
@@ -551,12 +553,13 @@ class ProjectService {
             // the string we're looking for can't start with '/ and "/.
             // note that this also works for \"abc.png and \'abc.png, where the quotes are escaped
             contentString = contentString.replace(
-                new RegExp('(\'|\")[^:][^\/][^\/][a-zA-Z0-9@\\._\\/\\s\\-]*\.(png|jpe?g|pdf|gif|mp4|mp3|wav|swf|css|txt|json|xlsx?|doc|html)', 'gi'),
+                new RegExp('(\'|\")[^:][^\/][^\/][a-zA-Z0-9@\\._\\/\\s\\-]*\.(png|jpe?g|pdf|gif|mp4|mp3|wav|swf|css|txt|json|xlsx?|doc|html)(\'|\")', 'gi'),
                 function myFunction(matchedString) {
                     // once found, we prepend the contentBaseURL + "assets/" to the string within the quotes and keep everything else the same.
                     var firstQuote = matchedString.substr(0,1);  // this could be ' or "
-                    var matchedStringWithoutFirstQuote = matchedString.substr(1);
-                    return  firstQuote + contentBaseURL + "assets/" + matchedStringWithoutFirstQuote;
+                    var matchedStringWithoutFirstAndLastQuote = matchedString.substr(1, matchedString.length - 2);  // everything but the beginning and end quote (' or ")
+                    // make a new string with the contentBaseURL + assets/ prepended to the path
+                    return  firstQuote + contentBaseURL + "assets/" + matchedStringWithoutFirstAndLastQuote + firstQuote;
                 }
             );
         }
