@@ -83,5 +83,4 @@ var ProjectAssetService = function () {
 ProjectAssetService.$inject = ['$q', '$http', '$rootScope', 'ConfigService', 'Upload'];
 
 exports.default = ProjectAssetService;
-
 //# sourceMappingURL=projectAssetService.js.map

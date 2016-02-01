@@ -278,5 +278,4 @@ var NodeGradingController = function () {
 NodeGradingController.$inject = ['$state', '$stateParams', 'AnnotationService', 'ConfigService', 'NodeService', 'ProjectService', 'TeacherDataService'];
 
 exports.default = NodeGradingController;
-
 //# sourceMappingURL=nodeGradingController.js.map

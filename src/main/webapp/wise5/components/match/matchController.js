@@ -1364,5 +1364,4 @@ var MatchController = function () {
 MatchController.$inject = ['$rootScope', '$scope', 'MatchService', 'NodeService', 'ProjectService', 'StudentDataService', 'UtilService'];
 
 exports.default = MatchController;
-
 //# sourceMappingURL=matchController.js.map

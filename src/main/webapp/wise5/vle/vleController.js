@@ -259,5 +259,4 @@ var VLEController = function () {
 VLEController.$inject = ['$scope', '$rootScope', '$state', 'ConfigService', 'NotebookService', 'ProjectService', 'SessionService', 'StudentDataService', 'StudentWebSocketService', '$ocLazyLoad'];
 
 exports.default = VLEController;
-
 //# sourceMappingURL=vleController.js.map

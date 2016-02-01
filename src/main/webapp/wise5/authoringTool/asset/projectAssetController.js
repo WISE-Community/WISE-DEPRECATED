@@ -9,13 +9,15 @@ Object.defineProperty(exports, "__esModule", {
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var ProjectAssetController = function () {
-    function ProjectAssetController($state, $scope, ProjectAssetService) {
+    function ProjectAssetController($state, $stateParams, $scope, ProjectAssetService) {
         var _this = this;
 
         _classCallCheck(this, ProjectAssetController);
 
         this.$state = $state;
+        this.$stateParams = $stateParams;
         this.$scope = $scope;
+        this.projectId = this.$stateParams.projectId;
         this.ProjectAssetService = ProjectAssetService;
         this.projectAssets = ProjectAssetService.projectAssets;
         this.projectAssetTotalSizeMax = ProjectAssetService.projectAssetTotalSizeMax;
@@ -49,15 +51,14 @@ var ProjectAssetController = function () {
     }, {
         key: 'exit',
         value: function exit() {
-            this.$state.go('root.project', {});
+            this.$state.go('root.project', { projectId: this.projectId });
         }
     }]);
 
     return ProjectAssetController;
 }();
 
-ProjectAssetController.$inject = ['$state', '$scope', 'ProjectAssetService'];
+ProjectAssetController.$inject = ['$state', '$stateParams', '$scope', 'ProjectAssetService'];
 
 exports.default = ProjectAssetController;
-
 //# sourceMappingURL=projectAssetController.js.map

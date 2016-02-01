@@ -1074,5 +1074,4 @@ var TableController = function () {
 TableController.$inject = ['$rootScope', '$scope', 'NodeService', 'ProjectService', 'StudentDataService', 'TableService'];
 
 exports.default = TableController;
-
 //# sourceMappingURL=tableController.js.map

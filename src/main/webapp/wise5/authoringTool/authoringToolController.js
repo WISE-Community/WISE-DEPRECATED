@@ -20,9 +20,9 @@ var AuthoringToolController = function () {
             var confirm = $mdDialog.confirm().parent(angular.element(document.body)).title('Session Timeout').content('You have been inactive for a long time. Do you want to stay logged in?').ariaLabel('Session Timeout').ok('YES').cancel('No');
             $mdDialog.show(confirm).then(function () {
                 this.SessionService.renewSession();
-            }, function () {
+            }.bind(this), function () {
                 this.SessionService.forceLogOut();
-            });
+            }.bind(this));
         }));
     }
 

@@ -20,9 +20,9 @@ class AuthoringToolController {
                 .cancel('No');
             $mdDialog.show(confirm).then(function() {
                 this.SessionService.renewSession();
-            }, function() {
+            }.bind(this), function() {
                 this.SessionService.forceLogOut();
-            });
+            }.bind(this));
         }));
     }
 

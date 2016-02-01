@@ -12,6 +12,8 @@ import angularToArrayFilter from 'lib/angular-toArrayFilter/toArrayFilter';
 import angularWebSocket from 'angular-websocket';
 import AnnotationService from '../services/annotationService';
 import AuthoringToolController from './authoringToolController';
+import AuthoringToolMainController from './main/authoringToolMainController';
+import AuthoringToolNewProjectController from './main/authoringToolNewProjectController';
 import ConfigService from '../services/configService';
 import Directives from '../directives/directives';
 import DiscussionController from '../components/discussion/discussionController';
@@ -88,6 +90,8 @@ let mainModule = angular.module('authoring', [
     .service(TeacherDataService.name, TeacherDataService)
     .service(UtilService.name, UtilService)
     .controller(AuthoringToolController.name, AuthoringToolController)
+    .controller(AuthoringToolMainController.name, AuthoringToolMainController)
+    .controller(AuthoringToolNewProjectController.name, AuthoringToolNewProjectController)
     .controller(DiscussionController.name, DiscussionController)
     .controller(DrawController.name, DrawController)
     .controller(EmbeddedController.name, EmbeddedController)
@@ -111,7 +115,7 @@ let mainModule = angular.module('authoring', [
                  $controllerProvider,
                  $mdThemingProvider) {
 
-            $urlRouterProvider.otherwise('/project');
+            $urlRouterProvider.otherwise('/');
 
             $stateProvider
                 .state('root', {
@@ -126,23 +130,47 @@ let mainModule = angular.module('authoring', [
 
                             return ConfigService.retrieveConfig(configURL);
                         },
-                        project: function(ProjectService, config) {
-                            return ProjectService.retrieveProject();
-                        },
                         sessionTimers: function (SessionService, config) {
                             return SessionService.initializeSession();
                         }
                     }
                 })
+                .state('root.main', {
+                    url: '/',
+                    templateUrl: 'wise5/authoringTool/main/main.html',
+                    controller: 'AuthoringToolMainController',
+                    controllerAs: 'authoringToolMainController',
+                    resolve: {
+                    }
+                })
+                .state('root.new', {
+                    url: '/new',
+                    templateUrl: 'wise5/authoringTool/main/new.html',
+                    controller: 'AuthoringToolNewProjectController',
+                    controllerAs: 'authoringToolNewProjectController',
+                    resolve: {
+                    }
+                })
                 .state('root.project', {
-                    url: '/project',
+                    url: '/project/:projectId',
                     templateUrl: 'wise5/authoringTool/project/project.html',
                     controller: 'ProjectController',
                     controllerAs: 'projectController',
                     resolve: {
+                        projectConfig: function(ConfigService, $stateParams) {
+                            var configURL = window.configURL + '/' + $stateParams.projectId;
+
+                            return ConfigService.retrieveConfig(configURL);
+                        },
+                        project: function(ProjectService, projectConfig) {
+                            return ProjectService.retrieveProject();
+                        },
+                        projectAssets: function(ProjectAssetService, projectConfig) {
+                            return ProjectAssetService.retrieveProjectAssets();
+                        }
                     }
                 })
-                .state('root.node', {
+                .state('root.project.node', {
                     url: '/node/:nodeId',
                     templateUrl: 'wise5/authoringTool/node/node.html',
                     controller: 'NodeController',
@@ -153,15 +181,12 @@ let mainModule = angular.module('authoring', [
                         }
                     }
                 })
-                .state('root.asset', {
+                .state('root.project.asset', {
                     url: '/asset',
                     templateUrl: 'wise5/authoringTool/asset/asset.html',
                     controller: 'ProjectAssetController',
                     controllerAs: 'projectAssetController',
                     resolve: {
-                        projectAssets: function(ProjectAssetService, config) {
-                            return ProjectAssetService.retrieveProjectAssets();
-                        }
                     }
                 })
             // ngMaterial default theme configuration

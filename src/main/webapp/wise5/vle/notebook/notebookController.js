@@ -9,7 +9,7 @@ Object.defineProperty(exports, "__esModule", {
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var NotebookController = function () {
-    function NotebookController($injector, $rootScope, $scope, NotebookService, ProjectService, StudentAssetService, StudentDataService) {
+    function NotebookController($injector, $rootScope, $scope, ConfigService, NotebookService, ProjectService, StudentAssetService, StudentDataService) {
         var _this = this;
 
         _classCallCheck(this, NotebookController);
@@ -17,6 +17,8 @@ var NotebookController = function () {
         this.$injector = $injector;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
+        this.ConfigService = ConfigService;
+        this.mode = this.ConfigService.getMode();
         this.NotebookService = NotebookService;
         this.ProjectService = ProjectService;
         this.StudentAssetService = StudentAssetService;
@@ -38,7 +40,9 @@ var NotebookController = function () {
         });
 
         // retrieve assets when notebook is opened
-        this.retrieveNotebookItems();
+        if (!this.ConfigService.isPreview()) {
+            this.retrieveNotebookItems();
+        }
     }
 
     _createClass(NotebookController, [{
@@ -140,8 +144,7 @@ var NotebookController = function () {
     return NotebookController;
 }();
 
-NotebookController.$inject = ["$injector", "$rootScope", "$scope", "NotebookService", "ProjectService", "StudentAssetService", "StudentDataService"];
+NotebookController.$inject = ["$injector", "$rootScope", "$scope", "ConfigService", "NotebookService", "ProjectService", "StudentAssetService", "StudentDataService"];
 
 exports.default = NotebookController;
-
 //# sourceMappingURL=notebookController.js.map

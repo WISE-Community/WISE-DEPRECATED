@@ -25,7 +25,7 @@ System.config({
     "angular-animate": "github:angular/bower-angular-animate@1.4.9",
     "angular-material": "github:angular/bower-material@1.0.3",
     "angular-moment": "npm:angular-moment@1.0.0-beta.3",
-    "angular-sanitize": "github:angular/bower-angular-sanitize@1.4.8",
+    "angular-sanitize": "github:angular/bower-angular-sanitize@1.4.9",
     "angular-ui-router": "github:angular-ui/ui-router@0.2.15",
     "angular-ui-tree": "github:angular-ui-tree/angular-ui-tree@2.5.0",
     "angular-websocket": "npm:angular-websocket@1.0.14",
@@ -42,22 +42,22 @@ System.config({
     "oclazyload": "npm:oclazyload@1.0.9",
     "webfontloader": "npm:webfontloader@1.6.20",
     "github:angular-ui-tree/angular-ui-tree@2.5.0": {
-      "angular": "github:angular/bower-angular@1.4.8"
+      "angular": "github:angular/bower-angular@1.4.9"
     },
     "github:angular-ui/ui-router@0.2.15": {
-      "angular": "github:angular/bower-angular@1.4.8"
+      "angular": "github:angular/bower-angular@1.4.9"
     },
     "github:angular/bower-angular-animate@1.4.9": {
-      "angular": "github:angular/bower-angular@1.4.8"
+      "angular": "github:angular/bower-angular@1.4.9"
     },
     "github:angular/bower-angular-aria@1.4.9": {
-      "angular": "github:angular/bower-angular@1.4.8"
+      "angular": "github:angular/bower-angular@1.4.9"
     },
     "github:angular/bower-angular-sanitize@1.4.8": {
-      "angular": "github:angular/bower-angular@1.4.8"
+      "angular": "github:angular/bower-angular@1.4.9"
     },
     "github:angular/bower-material@1.0.3": {
-      "angular": "github:angular/bower-angular@1.4.8",
+      "angular": "github:angular/bower-angular@1.4.9",
       "angular-animate": "github:angular/bower-angular-animate@1.4.9",
       "angular-aria": "github:angular/bower-angular-aria@1.4.9",
       "css": "github:systemjs/plugin-css@0.1.20"
@@ -126,11 +126,11 @@ System.config({
       "moment": "npm:moment@2.10.6"
     },
     "npm:angular-websocket@1.0.14": {
-      "angular": "npm:angular@1.4.8",
+      "angular": "npm:angular@1.4.9",
       "process": "github:jspm/nodelibs-process@0.1.2",
       "ws": "npm:ws@0.7.2"
     },
-    "npm:angular@1.4.8": {
+    "npm:angular@1.4.9": {
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
     "npm:asn1.js@4.2.1": {
@@ -324,7 +324,7 @@ System.config({
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
     "npm:oclazyload@1.0.9": {
-      "angular": "npm:angular@1.4.8",
+      "angular": "npm:angular@1.4.9",
       "child_process": "github:jspm/nodelibs-child_process@0.1.0",
       "fs": "github:jspm/nodelibs-fs@0.1.2",
       "process": "github:jspm/nodelibs-process@0.1.2",

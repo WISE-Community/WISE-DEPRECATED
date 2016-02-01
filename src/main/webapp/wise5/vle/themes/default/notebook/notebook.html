@@ -98,12 +98,14 @@
         <!-- <span class='studentAssetname'>{{studentAsset.name}}</span> -->
     </li>
 </ul>
-
 <div>
-    <div ngf-drop ngf-select ngf-change="notebookController.uploadStudentAssetNotebookItems($files)" class="drop-box"
+    <div ng-show="notebookController.mode != 'preview'" ngf-drop ngf-select ngf-change="notebookController.uploadStudentAssetNotebookItems($files)" class="drop-box"
          drag-over-class="dragover" ngf-multiple="true" allow-dir="false"
          accept="image/*,application/pdf,text/csv">Drop image or file here or click to upload!</div>
     <!-- TODO: ask researchers if we should display usage information to students. we'll hide it for now.
     You are using {{notebookController.notebook.totalSize | appropriateSizeText }} out of {{notebookController.notebook.totalSizeMax | appropriateSizeText}} ({{notebookController.notebook.usagePercentage | roundToDecimal:0 }}%)
     -->
+</div>
+<div ng-show="notebookController.mode == 'preview'">
+    The notebook items will appear here once you set up a classroom run.
 </div>

@@ -172,5 +172,4 @@ var StudentGradingController = function () {
 StudentGradingController.$inject = ['$stateParams', 'AnnotationService', 'ConfigService', 'ProjectService', 'TeacherDataService'];
 
 exports.default = StudentGradingController;
-
 //# sourceMappingURL=studentGradingController.js.map

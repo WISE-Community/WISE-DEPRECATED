@@ -109,5 +109,4 @@ var StudentProgressController = function () {
 StudentProgressController.$inject = ['$rootScope', '$state', 'ConfigService', 'StudentStatusService', 'TeacherDataService', 'TeacherWebSocketService'];
 
 exports.default = StudentProgressController;
-
 //# sourceMappingURL=studentProgressController.js.map

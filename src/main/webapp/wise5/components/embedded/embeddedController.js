@@ -284,5 +284,4 @@ var EmbeddedController = function () {
 EmbeddedController.$inject = ['$scope', '$sce', '$window', 'NodeService', 'EmbeddedService', 'ProjectService', 'StudentDataService'];
 
 exports.default = EmbeddedController;
-
 //# sourceMappingURL=embeddedController.js.map

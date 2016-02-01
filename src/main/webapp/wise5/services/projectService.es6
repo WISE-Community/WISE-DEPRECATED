@@ -548,15 +548,21 @@ class ProjectService {
 
         if (contentString != null) {
 
-            // get the content base url e.g. http://wise.berkeley.edu/curriculum/123456
-            var contentBaseUrl = this.ConfigService.getConfigParam('projectBaseURL');
+            // get the content base url e.g. http://wise.berkeley.edu/curriculum/123456/
+            var contentBaseURL = this.ConfigService.getConfigParam('projectBaseURL');
 
-            // replace instances of 'assets/myimage.jpg' with 'http://wise.berkeley.edu/curriculum/123456/assets/myimage.jpg'
-            contentString = contentString.replace(new RegExp('\'(\\.)*(/)*assets', 'g'), '\'' + contentBaseUrl + 'assets');
-
-            // replace instances of "assets/myimage.jpg" with "http://wise.berkeley.edu/curriculum/123456/assets/myimage.jpg"
-            contentString = contentString.replace(new RegExp('\"(\\.)*(/)*assets', 'g'), '\"' + contentBaseUrl + 'assets');
-
+            // only look for string that starts with ' or " and ends in png, jpg, jpeg, pdf, etc.
+            // the string we're looking for can't start with '/ and "/.
+            // note that this also works for \"abc.png and \'abc.png, where the quotes are escaped
+            contentString = contentString.replace(
+                new RegExp('(\'|\")[^:][^\/][^\/][a-zA-Z0-9@\\._\\/\\s\\-]*\.(png|jpe?g|pdf|gif|mp4|mp3|wav|swf|css|txt|json|xlsx?|doc|html)', 'gi'),
+                function myFunction(matchedString) {
+                    // once found, we prepend the contentBaseURL + "assets/" to the string within the quotes and keep everything else the same.
+                    var firstQuote = matchedString.substr(0,1);  // this could be ' or "
+                    var matchedStringWithoutFirstQuote = matchedString.substr(1);
+                    return  firstQuote + contentBaseURL + "assets/" + matchedStringWithoutFirstQuote;
+                }
+            );
         }
 
         return contentString;
@@ -1021,11 +1027,11 @@ class ProjectService {
     retrieveProject() {
         var projectFileUrl = this.ConfigService.getConfigParam('projectURL');
 
-        return this.$http.get(projectFileUrl).then(angular.bind(this, function(result) {
+        return this.$http.get(projectFileUrl).then(function(result) {
             var projectJSON = result.data;
             this.setProject(projectJSON);
             return projectJSON;
-        }));
+        }.bind(this));
     };
 
     saveProject(projectJSON, commitMessage) {
@@ -1052,6 +1058,24 @@ class ProjectService {
         }));
     };
 
+    registerNewProject(projectJSON, commitMessage) {
+        var httpParams = {};
+        httpParams.method = 'POST';
+        httpParams.url = this.ConfigService.getConfigParam('registerNewProjectURL');
+        httpParams.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
+
+        var params = {};
+        params.projectId = this.ConfigService.getProjectId();
+        params.commitMessage = commitMessage;
+        params.projectJSONString = projectJSON;
+        httpParams.data = $.param(params);
+
+        return this.$http(httpParams).then(angular.bind(this, function(result) {
+            var projectId = result.data;
+            return projectId;
+        }));
+    }
+
     commitChanges(commitMessage) {
         var commitProjectURL = this.ConfigService.getConfigParam('commitProjectURL');
 
@@ -1065,7 +1089,7 @@ class ProjectService {
         }));
     };
 
-    getCommitHistory() {
+    getCommitHistory(projectId) {
         var commitProjectURL = this.ConfigService.getConfigParam('commitProjectURL');
 
         return this.$http({
@@ -2594,7 +2618,7 @@ class ProjectService {
     insertNodeInsideInGroups(nodeIdToInsert, nodeIdToInsertInside) {
 
         // get the group we will insert into
-        var group = this.getNodeById(nodIdToInsertInto);
+        var group = this.getNodeById(nodeIdToInsertInside);
 
         if (group != null) {
             var ids = group.ids;
@@ -3039,4 +3063,3 @@ class ProjectService {
 ProjectService.$inject = ['$http', '$rootScope', 'ConfigService'];
 
 export default ProjectService;
-

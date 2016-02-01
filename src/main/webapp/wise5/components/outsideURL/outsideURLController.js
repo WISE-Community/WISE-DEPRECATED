@@ -220,5 +220,4 @@ var OutsideURLController = function () {
 OutsideURLController.$inject = ['$scope', '$sce', 'NodeService', 'OutsideURLService', 'ProjectService', 'StudentDataService'];
 
 exports.default = OutsideURLController;
-
 //# sourceMappingURL=outsideURLController.js.map

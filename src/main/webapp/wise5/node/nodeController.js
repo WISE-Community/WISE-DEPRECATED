@@ -989,5 +989,4 @@ var NodeController = function () {
 NodeController.$inject = ['$rootScope', '$scope', 'ConfigService', 'NodeService', 'NotebookService', 'ProjectService', 'StudentDataService'];
 
 exports.default = NodeController;
-
 //# sourceMappingURL=nodeController.js.map

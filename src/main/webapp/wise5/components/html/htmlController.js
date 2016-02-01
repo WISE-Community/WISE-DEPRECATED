@@ -168,5 +168,4 @@ var HTMLController = function () {
 HTMLController.$inject = ['$scope', '$state', '$stateParams', '$sce', 'ConfigService', 'NodeService', 'ProjectService', 'StudentDataService'];
 
 exports.default = HTMLController;
-
 //# sourceMappingURL=htmlController.js.map

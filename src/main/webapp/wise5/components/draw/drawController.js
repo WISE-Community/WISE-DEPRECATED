@@ -699,5 +699,4 @@ var DrawController = function () {
 DrawController.$inject = ['$injector', '$rootScope', '$scope', '$timeout', 'DrawService', 'NodeService', 'ProjectService', 'StudentAssetService', 'StudentDataService'];
 
 exports.default = DrawController;
-
 //# sourceMappingURL=drawController.js.map

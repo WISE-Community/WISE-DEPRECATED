@@ -13,20 +13,26 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 import org.wise.portal.dao.ObjectNotFoundException;
+import org.wise.portal.domain.module.Curnit;
 import org.wise.portal.domain.module.impl.CurnitGetCurnitUrlVisitor;
+import org.wise.portal.domain.module.impl.ModuleParameters;
 import org.wise.portal.domain.project.Project;
+import org.wise.portal.domain.project.ProjectMetadata;
+import org.wise.portal.domain.project.impl.ProjectMetadataImpl;
+import org.wise.portal.domain.project.impl.ProjectParameters;
+import org.wise.portal.domain.project.impl.ProjectType;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
+import org.wise.portal.service.authentication.UserDetailsService;
+import org.wise.portal.service.module.CurnitService;
 import org.wise.portal.service.project.ProjectService;
+import org.wise.vle.utils.FileManager;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Controller for authoring WISE5 projects
@@ -39,26 +45,141 @@ public class WISE5AuthorProjectController {
     ProjectService projectService;
 
     @Autowired
+    CurnitService curnitService;
+
+    @Autowired
     Properties wiseProperties;
 
-    @RequestMapping(value = "/project/edit/{projectId}", method = RequestMethod.GET)
+    /**
+     * Handle user's request to launch the Authoring Tool without specified project
+     * @return
+     */
+    @RequestMapping(value = "/author", method = RequestMethod.GET)
     protected String authorProject(
-            @PathVariable Long projectId,
             ModelMap modelMap) {
-        try {
-            Project project = projectService.getById(projectId);
-            User user = ControllerUtil.getSignedInUser();
-            if (projectService.canAuthorProject(project, user)) {
-                String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
-                String authorConfigURL = wiseBaseURL + "/authorConfig/" + projectId;
+        String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
+        String authorConfigURL = wiseBaseURL + "/authorConfig";
 
-                modelMap.put("configURL", authorConfigURL);
-                return "author";
+        modelMap.put("configURL", authorConfigURL);
+        return "author";
+    }
+
+    /**
+     * Handle user's request to register a new WISE5 project.
+     * Registers the new project in DB and returns the new project ID
+     * If the parentProjectId is specified, the user is requesting to copy that project
+     * @return
+     */
+    @RequestMapping(value = "/project/new", method = RequestMethod.POST)
+    protected void registerNewProject(
+            @RequestParam(value = "parentProjectId", required = false) String parentProjectId,
+            @RequestParam(value = "projectJSONString", required = true) String projectJSONString,
+            @RequestParam(value = "commitMessage", required = true) String commitMessage,
+            HttpServletResponse response) {
+        User user = ControllerUtil.getSignedInUser();
+        if (!this.hasAuthorPermissions(user)) {
+            return;
+        }
+
+        String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
+        File curriculumBaseDirFile = new File(curriculumBaseDir);
+
+        // create new directory for this project (returns absolute path)
+        File newProjectPath = FileManager.createNewprojectPath(curriculumBaseDirFile);
+
+        // also make the assets directory
+        File newProjectAssetsDir = new File(newProjectPath, "assets");
+        newProjectAssetsDir.mkdir();
+
+        try {
+            JSONObject projectJSONObject = new JSONObject(projectJSONString);
+            // get the name of the project from the project JSON
+            String projectName = projectJSONObject.getJSONObject("metadata").getString("title");
+
+            String projectJSONFilename = "project.json";
+
+            // File where we'll be writing the new project JSON
+            File newProjectJSONFile = new File(newProjectPath, projectJSONFilename);
+
+            if (!newProjectJSONFile.exists()) {
+                newProjectJSONFile.createNewFile();
             }
+            // write the project JSON to file system
+            Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(newProjectJSONFile), "UTF-8"));
+            writer.write(projectJSONString.toString());
+            writer.close();
+
+            String projectFolderName = newProjectJSONFile.getParentFile().getName();
+
+            // get the relative path to the project from curriculumBaseDir (e.g. /510/project.json)
+            String projectPathRelativeToCurriculumBaseDir = "/" + projectFolderName + "/" + projectJSONFilename;
+
+            ModuleParameters mParams = new ModuleParameters();
+            mParams.setUrl(projectPathRelativeToCurriculumBaseDir);
+            Curnit curnit = curnitService.createCurnit(mParams);
+
+            ProjectParameters pParams = new ProjectParameters();
+            pParams.setCurnitId(curnit.getId());
+            pParams.setOwner(user);
+            pParams.setProjectname(projectName);
+            pParams.setProjectType(ProjectType.LD);
+            pParams.setWiseVersion(new Integer(5));
+            if (parentProjectId != null) {
+                Project parentProject = projectService.getById(parentProjectId);
+                if (parentProject != null) {
+                    pParams.setParentProjectId(Long.valueOf(parentProjectId));
+                    // get the project's metadata from the parent
+                    ProjectMetadata parentProjectMetadata = parentProject.getMetadata();
+                    if (parentProjectMetadata != null) {
+                        // copy into new metadata object
+                        ProjectMetadata newProjectMetadata = new ProjectMetadataImpl(parentProjectMetadata.toJSONString());
+                        pParams.setMetadata(newProjectMetadata);
+                    }
+                }
+            } else {
+                // if this is new original project, set a new fresh metadata object
+                ProjectMetadata metadata = new ProjectMetadataImpl();
+                metadata.setTitle(projectName);
+                pParams.setMetadata(metadata);
+            }
+
+            Project project = projectService.createProject(pParams);
+            response.getWriter().write(project.getId().toString());
+
+            try {
+                // now commit changes
+                JGitUtils.commitAllChangesToCurriculumHistory(newProjectPath.getAbsolutePath(), commitMessage);
+
+                Iterable<RevCommit> commitHistory = JGitUtils.getCommitHistory(newProjectPath.getAbsolutePath());
+                JSONArray commitHistoryJSONArray = new JSONArray();
+                try {
+                    if (commitHistory != null) {
+                        for (RevCommit commit : commitHistory) {
+                            JSONObject commitHistoryJSONObject = new JSONObject();
+                            ObjectId commitId = commit.getId();
+                            commitHistoryJSONObject.put("commitId", commitId);
+                            String commitName = commit.getName();
+                            commitHistoryJSONObject.put("commitName", commitName);
+                            String commitMsg = commit.getFullMessage();
+                            commitHistoryJSONObject.put("commitMessage", commitMsg);
+                            long commitTime = commit.getCommitTime() * 1000l; // x1000 to make into milliseconds since epoch
+                            commitHistoryJSONObject.put("commitTime", commitTime);
+                            commitHistoryJSONArray.put(commitHistoryJSONObject);
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            } catch (GitAPIException e) {
+                e.printStackTrace();
+            }
+        } catch(IOException e){
+            e.printStackTrace();
         } catch (ObjectNotFoundException e) {
             e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
-        return "/accessdenied";
     }
 
     /**
@@ -73,8 +194,7 @@ public class WISE5AuthorProjectController {
             @PathVariable Long projectId,
             @RequestParam(value = "commitMessage", required = false) String commitMessage,
             @RequestParam(value = "projectJSONString", required = true) String projectJSONString,
-            HttpServletResponse response
-    ) {
+            HttpServletResponse response) {
         Project project;
         try {
             project = projectService.getById(projectId);
@@ -135,13 +255,35 @@ public class WISE5AuthorProjectController {
         }
     }
 
+    /**
+     * Handles request to get a config object for authoring tool without any specific project
+     * @param request
+     * @param response
+     * @throws IOException
+     */
+    @RequestMapping(value = "/authorConfig", method = RequestMethod.GET)
+    protected void getAuthorProjectConfigChooser(
+            HttpServletRequest request,
+            HttpServletResponse response) throws IOException {
+        JSONObject config = getDefaultAuthoringConfigJsonObject(request);
+
+        PrintWriter writer = response.getWriter();
+        writer.write(config.toString());
+        writer.close();
+    }
+
+    /**
+     * Handles request to get a config object for a specific project
+     * @param request
+     * @param response
+     * @param projectId
+     * @throws IOException
+     */
     @RequestMapping(value = "/authorConfig/{projectId}", method = RequestMethod.GET)
     protected void getAuthorProjectConfig(
             HttpServletRequest request,
             HttpServletResponse response,
             @PathVariable Long projectId) throws IOException {
-        //create a JSONObject to contain the config params
-        JSONObject config = new JSONObject();
         Project project;
         try {
             project = projectService.getById(projectId);
@@ -155,10 +297,9 @@ public class WISE5AuthorProjectController {
             return;
         }
 
+        JSONObject config = getDefaultAuthoringConfigJsonObject(request);
         try {
-            String contextPath = request.getContextPath(); //get the context path e.g. /wise
             String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
-            config.put("projectId", projectId);
             String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
             String rawProjectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
             String projectURL = curriculumBaseWWW + rawProjectUrl;
@@ -169,14 +310,9 @@ public class WISE5AuthorProjectController {
             String commitProjectURL = wiseBaseURL + "/project/commit/" + projectId;
             Long projectAssetTotalSizeMax = project.getMaxTotalAssetsSize();
             if (projectAssetTotalSizeMax == null) {
-                //get the default max project size
+                // get the default max project size
                 projectAssetTotalSizeMax = new Long(wiseProperties.getProperty("project_max_total_assets_size", "15728640"));
             }
-
-            config.put("contextPath", contextPath);
-            config.put("mainHomePageURL", wiseBaseURL);
-            config.put("renewSessionURL", wiseBaseURL + "/session/renew");
-            config.put("sessionLogOutURL", wiseBaseURL + "/logout");
             config.put("projectURL", projectURL);
             config.put("projectAssetTotalSizeMax", projectAssetTotalSizeMax);
             config.put("projectAssetURL", projectAssetURL);
@@ -190,6 +326,42 @@ public class WISE5AuthorProjectController {
         PrintWriter writer = response.getWriter();
         writer.write(config.toString());
         writer.close();
+    }
+
+    /**
+     * Creates and returns a default Authoring config object that is the same for all projects
+     * @param request
+     * @return
+     */
+    private JSONObject getDefaultAuthoringConfigJsonObject(HttpServletRequest request) {
+        // create a JSONObject to contain the config params
+        JSONObject config = new JSONObject();
+        User user = ControllerUtil.getSignedInUser();
+        try {
+            String contextPath = request.getContextPath(); //get the context path e.g. /wise
+            String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
+            config.put("contextPath", contextPath);
+            config.put("mainHomePageURL", wiseBaseURL);
+            config.put("renewSessionURL", wiseBaseURL + "/session/renew");
+            config.put("sessionLogOutURL", wiseBaseURL + "/logout");
+            config.put("registerNewProjectURL", wiseBaseURL + "/project/new");
+
+            // get a list of projects this user owns
+            List<Project> allProjectsOwnedByUser = projectService.getProjectList(user);
+            List<JSONObject> wise5ProjectsOwnedByUser = new ArrayList<JSONObject>();
+            for (Project project : allProjectsOwnedByUser) {
+                if (new Integer(5).equals(project.getWiseVersion())) {
+                    JSONObject projectJSONObject = new JSONObject();
+                    projectJSONObject.put("id", project.getId());
+                    projectJSONObject.put("name", project.getName());
+                    wise5ProjectsOwnedByUser.add(projectJSONObject);
+                }
+            }
+            config.put("projects", wise5ProjectsOwnedByUser);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return config;
     }
 
     /**
@@ -387,5 +559,17 @@ public class WISE5AuthorProjectController {
             return directory.listFiles();
         }
         return new File[0];
+    }
+
+    /**
+     * Returns <code>boolean</code> true iff the given <code>User</code> user has sufficient permissions
+     * to create a project
+     *
+     * @param user
+     * @return boolean
+     */
+    private boolean hasAuthorPermissions(User user) {
+        return user.getUserDetails().hasGrantedAuthority(UserDetailsService.AUTHOR_ROLE) ||
+                user.getUserDetails().hasGrantedAuthority(UserDetailsService.TEACHER_ROLE);
     }
 }

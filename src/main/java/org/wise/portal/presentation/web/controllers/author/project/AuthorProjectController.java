@@ -137,7 +137,7 @@ public class AuthorProjectController {
 
 			Integer wiseVersion = project.getWiseVersion();
 			if (wiseVersion != null && wiseVersion == 5) {
-				ModelAndView wise5AuthoringView = new ModelAndView(new RedirectView("../project/edit/" + projectIdStr));
+				ModelAndView wise5AuthoringView = new ModelAndView(new RedirectView("../author#/project/" + projectIdStr));
 				return wise5AuthoringView;
 			}
 		} else {

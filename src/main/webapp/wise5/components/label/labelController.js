@@ -1348,5 +1348,4 @@ var LabelController = function () {
 LabelController.$inject = ['$injector', '$scope', '$timeout', 'LabelService', 'NodeService', 'OpenResponseService', 'ProjectService', 'StudentAssetService', 'StudentDataService'];
 
 exports.default = LabelController;
-
 //# sourceMappingURL=labelController.js.map

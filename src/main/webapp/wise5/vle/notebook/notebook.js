@@ -25,5 +25,4 @@ var notebookModule = angular.module('notebook', []).directive('notebook', functi
 }).controller('NotebookController', _notebookController2.default);
 
 exports.default = notebookModule;
-
 //# sourceMappingURL=notebook.js.map

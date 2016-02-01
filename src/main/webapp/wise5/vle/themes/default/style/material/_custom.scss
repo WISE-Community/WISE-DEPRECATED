@@ -91,6 +91,14 @@ md-input-container {
       position: relative;
       padding-left: 0;
     }
+
+    md-radio-button {
+      margin-top: 16px;
+    }
+
+    md-checkbox {
+      top: 16px;
+    }
   }
 
   &:not(.md-input-invalid):not(.md-input-focused).md-input-has-value label {

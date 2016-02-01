@@ -3,7 +3,11 @@
 // Base
 .discussion-content {
   background-color: color('gray-light');
-  margin: 0 -16px -16px;
+  margin: 0 0 -16px;
+
+  @media only screen and (max-width: ($layout-breakpoint-xs - 1)) {
+    padding: 0;
+  }
 }
 
 .discussion-posts {
@@ -39,7 +43,6 @@
 .discussion-post__user, md-list-item.md-3-line .md-list-item-text h3.discussion-post__user {
   padding: 4px 0;
   font-weight: 600;
-  //color: $accent-color-2;
   line-height: 1.3;
   overflow: visible;
   white-space: normal;
@@ -51,6 +54,7 @@
 
 .discussion-post__date--reply {
   margin-left: 8px;
+  font-weight: 400;
 }
 
 .discussion-post__content {
@@ -146,8 +150,9 @@ md-input-container.discussion-new__input-container {
 .input--textarea.discussion-reply__input, .input-container textarea.input--textarea.discussion-reply__input {
   background-color: #ffffff;
   padding: 4px;
-  font-size: $body-font-size-base - 1;
+  font-size: ($body-font-size-base) - 1;
   border: 0 none;
+  margin-left: -1px;
 }
 
 .discussion-reply, md-list-item.md-3-line.md-long-text.discussion-reply {
@@ -161,13 +166,13 @@ md-input-container.discussion-new__input-container {
 }
 
 .discussion-post__user--reply, md-list-item.md-3-line .md-list-item-text h3.discussion-post__user--reply {
-  font-size: $body-font-size-base - 1;
+  font-size: ($body-font-size-base) - 1;
   padding: 0;
 }
 
 .discusstion-reply__content {
-  font-size: $body-font-size-base - 1;
   white-space: pre-wrap;
+  margin-top: 2px;
 
   p {
     font-weight: 400 !important;

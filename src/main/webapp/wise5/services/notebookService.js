@@ -205,5 +205,4 @@ var NotebookService = function () {
 NotebookService.$inject = ['$http', '$rootScope', 'ConfigService', 'StudentAssetService', 'StudentDataService'];
 
 exports.default = NotebookService;
-
 //# sourceMappingURL=notebookService.js.map

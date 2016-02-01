@@ -1179,5 +1179,4 @@ var DiscussionController = function () {
 DiscussionController.$inject = ['$injector', '$rootScope', '$scope', 'ConfigService', 'DiscussionService', 'NodeService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'StudentWebSocketService', '$mdMedia'];
 
 exports.default = DiscussionController;
-
 //# sourceMappingURL=discussionController.js.map

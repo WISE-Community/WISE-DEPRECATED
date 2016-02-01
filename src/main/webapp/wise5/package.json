@@ -1,7 +1,7 @@
 {
   "jspm": {
     "dependencies": {
-      "angular": "github:angular/bower-angular@~1.4",
+      "angular": "github:angular/bower-angular@^1.4.9",
       "angular-animate": "github:angular/bower-angular-animate@^1.4.9",
       "angular-material": "github:angular/bower-material@^1.0.1",
       "angular-moment": "npm:angular-moment@^1.0.0-beta.3",

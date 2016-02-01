@@ -180,5 +180,4 @@ angular.module('vle').controller('ThemeController', new ThemeController());
 //angular.module('vle').controller('ThemeController', ThemeController);
 
 exports.default = ThemeController;
-
 //# sourceMappingURL=themeController.js.map

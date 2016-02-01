@@ -719,5 +719,4 @@ var OpenResponseController = function () {
 OpenResponseController.$inject = ['$injector', '$rootScope', '$scope', 'NodeService', 'OpenResponseService', 'ProjectService', 'StudentAssetService', 'StudentDataService'];
 
 exports.default = OpenResponseController;
-
 //# sourceMappingURL=openResponseController.js.map

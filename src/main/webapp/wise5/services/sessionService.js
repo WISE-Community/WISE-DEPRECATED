@@ -359,5 +359,4 @@ var SessionService = function () {
 SessionService.$inject = ['$http', '$rootScope', 'ConfigService'];
 
 exports.default = SessionService;
-
 //# sourceMappingURL=sessionService.js.map

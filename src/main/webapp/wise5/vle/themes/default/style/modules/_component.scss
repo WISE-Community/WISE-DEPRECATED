@@ -1,7 +1,11 @@
 // TODO: Update to use BEM properly
 
 .component-content {
-  padding: 16px;
+  padding: 8px;
+
+  @media only screen and (min-width: $layout-breakpoint-xs) {
+    padding: 16px;
+  }
 }
 
 .component-content__actions {

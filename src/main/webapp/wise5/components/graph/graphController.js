@@ -1820,5 +1820,4 @@ var GraphController = function () {
 GraphController.$inject = ['$rootScope', '$scope', 'GraphService', 'NodeService', 'ProjectService', 'StudentAssetService', 'StudentDataService'];
 
 exports.default = GraphController;
-
 //# sourceMappingURL=graphController.js.map

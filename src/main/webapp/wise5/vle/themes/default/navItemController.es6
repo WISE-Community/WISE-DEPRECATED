@@ -20,27 +20,25 @@ class NavItemController {
 
         this.nodeTitle = this.showPosition ? (this.ProjectService.idToPosition[this.nodeId] + ': ' + this.item.title) : this.item.title;
         this.currentNode = this.StudentDataService.currentNode;
-        var isCurrentNode = (this.currentNode.id === this.nodeId);
-        var setNewNode = false;
-
-        var scope = this;
+        this.isCurrentNode = (this.currentNode.id === this.nodeId);
+        this.setNewNode = false;
 
         this.$scope.$watch(
             function () { return this.StudentDataService.currentNode; }.bind(this),
             function (newNode) {
-                scope.currentNode = newNode;
+                this.currentNode = newNode;
                 if (this.StudentDataService.previousStep) {
-                    this.$scope.$parent.isPrevStep = (scope.nodeId === this.StudentDataService.previousStep.id);
+                    this.$scope.$parent.isPrevStep = (this.nodeId === this.StudentDataService.previousStep.id);
                 }
-                isCurrentNode = (scope.currentNode.id === scope.nodeId);
-                if (isCurrentNode || this.ProjectService.isApplicationNode(newNode.id) || newNode.id === this.ProjectService.rootNode.id) {
+                this.isCurrentNode = (this.currentNode.id === this.nodeId);
+                if (this.isCurrentNode || this.ProjectService.isApplicationNode(newNode.id) || newNode.id === this.ProjectService.rootNode.id) {
                     this.setExpanded();
                 }
             }.bind(this)
         );
 
         this.$scope.$watch(
-            function () { return scope.expanded; }.bind(this),
+            function () { return this.expanded; }.bind(this),
             function (value) {
                 this.$scope.$parent.itemExpanded = value;
                 if (value) {
@@ -59,20 +57,22 @@ class NavItemController {
     setExpanded() {
         this.$scope.expanded = (this.isCurrentNode || (this.$scope.isGroup && this.ProjectService.isNodeDescendentOfGroup(this.$scope.currentNode, this.$scope.item)));
         if (this.$scope.expanded && this.isCurrentNode) {
+            this.expanded = true;
             this.zoomToElement();
         }
     };
 
     zoomToElement() {
-        setTimeout(function () {
+        setTimeout(()=> {
             // smooth scroll to expanded group's page location
-            var location = this.$element[0].offsetTop - 32;
+            let location = this.isGroup ? this.$element[0].offsetTop - 32 : 0;
+            let delay = this.isGroup ? 350 : 0;
             $('#content').animate({
                 scrollTop: location
-            }, 350, 'linear', function () {
-                if (setNewNode) {
-                    setNewNode = false;
-                    this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(scope.nodeId);
+            }, delay, 'linear', ()=> {
+                if (this.setNewNode) {
+                    this.setNewNode = false;
+                    this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(this.nodeId);
                 }
             });
         }, 250);
@@ -81,7 +81,7 @@ class NavItemController {
     itemClicked() {
         if (this.isGroup) {
             if (!this.expanded) {
-                setNewNode = true;
+                this.setNewNode = true;
             }
             this.expanded = !this.expanded;
         } else {

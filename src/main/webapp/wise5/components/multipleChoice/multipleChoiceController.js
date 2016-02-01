@@ -1253,5 +1253,4 @@ var MultipleChoiceController = function () {
 MultipleChoiceController.$inject = ['$scope', 'MultipleChoiceService', 'NodeService', 'ProjectService', 'StudentDataService', 'UtilService'];
 
 exports.default = MultipleChoiceController;
-
 //# sourceMappingURL=multipleChoiceController.js.map

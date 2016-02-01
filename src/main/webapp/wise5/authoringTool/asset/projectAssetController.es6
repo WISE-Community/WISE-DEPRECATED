@@ -2,9 +2,11 @@
 
 class ProjectAssetController {
 
-    constructor($state, $scope, ProjectAssetService) {
+    constructor($state, $stateParams, $scope, ProjectAssetService) {
         this.$state = $state;
+        this.$stateParams = $stateParams;
         this.$scope = $scope;
+        this.projectId = this.$stateParams.projectId;
         this.ProjectAssetService = ProjectAssetService;
         this.projectAssets = ProjectAssetService.projectAssets;
         this.projectAssetTotalSizeMax = ProjectAssetService.projectAssetTotalSizeMax;
@@ -31,10 +33,10 @@ class ProjectAssetController {
     }
 
     exit() {
-        this.$state.go('root.project', {});
+        this.$state.go('root.project', {projectId: this.projectId});
     }
 }
 
-ProjectAssetController.$inject = ['$state', '$scope', 'ProjectAssetService'];
+ProjectAssetController.$inject = ['$state', '$stateParams', '$scope', 'ProjectAssetService'];
 
 export default ProjectAssetController
