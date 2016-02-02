@@ -612,12 +612,33 @@ var ProjectService = function () {
                 // only look for string that starts with ' or " and ends in png, jpg, jpeg, pdf, etc.
                 // the string we're looking for can't start with '/ and "/.
                 // note that this also works for \"abc.png and \'abc.png, where the quotes are escaped
-                contentString = contentString.replace(new RegExp('(\'|\")[^:][^\/][^\/][a-zA-Z0-9@\\._\\/\\s\\-]*\.(png|jpe?g|pdf|gif|mp4|mp3|wav|swf|css|txt|json|xlsx?|doc|html)(\'|\")', 'gi'), function myFunction(matchedString) {
+                contentString = contentString.replace(new RegExp('(\'|\"|\\\\\'|\\\\\")[^:][^\/][^\/][a-zA-Z0-9@\\._\\/\\s\\-]*\.(png|jpe?g|pdf|gif|mov|mp4|mp3|wav|swf|css|txt|json|xlsx?|doc|html)(\'|\"|\\\\\'|\\\\\")', 'gi'), function myFunction(matchedString) {
                     // once found, we prepend the contentBaseURL + "assets/" to the string within the quotes and keep everything else the same.
-                    var firstQuote = matchedString.substr(0, 1); // this could be ' or "
-                    var matchedStringWithoutFirstAndLastQuote = matchedString.substr(1, matchedString.length - 2); // everything but the beginning and end quote (' or ")
+
+                    var delimiter = '';
+                    var matchedStringWithoutQuotes = '';
+
+                    if (matchedString.startsWith('\\')) {
+                        // the string has escaped quotes for example \"hello.png\"
+
+                        // get everything between the escaped quotes
+                        matchedStringWithoutQuotes = matchedString.substr(2, matchedString.length - 4);
+
+                        // get the delimiter which will be \' or \"
+                        delimiter = matchedString.substr(0, 2);
+                    } else {
+                        // the string does not have escaped qoutes for example "hello.png"
+
+                        // get everything between the quotes
+                        matchedStringWithoutQuotes = matchedString.substr(1, matchedString.length - 2);
+
+                        // get the delimiter which will be ' or "
+                        delimiter = matchedString.substr(0, 1);
+                    }
+
+                    //var matchedStringWithoutFirstAndLastQuote = matchedString.substr(1, matchedString.length - 2);  // everything but the beginning and end quote (' or ")
                     // make a new string with the contentBaseURL + assets/ prepended to the path
-                    return firstQuote + contentBaseURL + "assets/" + matchedStringWithoutFirstAndLastQuote + firstQuote;
+                    return delimiter + contentBaseURL + "assets/" + matchedStringWithoutQuotes + delimiter;
                 });
             }
 
