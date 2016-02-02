@@ -36,7 +36,6 @@ System.config({
     "highcharts-ng": "npm:highcharts-ng@0.0.11",
     "highcharts/draggable-points": "github:highcharts/draggable-points@master",
     "jquery": "github:components/jquery@2.1.4",
-    "jquery-ui": "github:components/jqueryui@1.11.4",
     "moment": "npm:moment@2.11.1",
     "ng-file-upload": "npm:ng-file-upload@10.1.11",
     "oclazyload": "npm:oclazyload@1.0.9",
@@ -61,9 +60,6 @@ System.config({
       "angular-animate": "github:angular/bower-angular-animate@1.4.9",
       "angular-aria": "github:angular/bower-angular-aria@1.4.9",
       "css": "github:systemjs/plugin-css@0.1.20"
-    },
-    "github:components/jqueryui@1.11.4": {
-      "jquery": "npm:jquery@2.1.4"
     },
     "github:highcharts/draggable-points@master": {
       "highcharts": "lib/highcharts@4.2.1",

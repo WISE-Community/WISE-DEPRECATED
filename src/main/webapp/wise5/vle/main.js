@@ -8,10 +8,6 @@ var _jquery = require('jquery');
 
 var _jquery2 = _interopRequireDefault(_jquery);
 
-var _jqueryUi = require('jquery-ui');
-
-var _jqueryUi2 = _interopRequireDefault(_jqueryUi);
-
 var _angular = require('angular');
 
 var _angular2 = _interopRequireDefault(_angular);
@@ -225,8 +221,6 @@ var _moment = require('moment');
 var _moment2 = _interopRequireDefault(_moment);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-//import ocLazyLoad from '../vendor/oclazyload/dist/ocLazyLoad.require';
 
 //import CRaterService from '../components/cRater/cRaterService';
 
@@ -716,4 +710,5 @@ require(['app'],function(app){
     app.init();
 });
 */
+
 //# sourceMappingURL=main.js.map

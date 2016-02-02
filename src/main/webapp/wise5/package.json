@@ -11,7 +11,6 @@
       "angular-websocket": "npm:angular-websocket@^1.0.14",
       "highcharts-ng": "npm:highcharts-ng@^0.0.11",
       "highcharts/draggable-points": "github:highcharts/draggable-points@master",
-      "jquery-ui": "github:components/jqueryui@^1.11.4",
       "moment": "npm:moment@^2.11.1",
       "ng-file-upload": "npm:ng-file-upload@^10.1.11",
       "oclazyload": "npm:oclazyload@^1.0.9",
@@ -36,11 +35,6 @@
       "npm:oclazyload@1.0.9": {
         "dependencies": {
           "angular": "1.4.8"
-        }
-      },
-      "github:components/jqueryui@1.11.4": {
-        "dependencies": {
-          "jquery": "2.1.4"
         }
       },
       "github:angular/bower-angular-animate@1.4.8": {

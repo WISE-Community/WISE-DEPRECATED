@@ -1,7 +1,6 @@
 'use strict';
 
 import $ from 'jquery';
-import jqueryUI from 'jquery-ui';
 import angular from 'angular';
 import angularFileUpload from 'ng-file-upload';
 import angularHighcharts from 'highcharts-ng';
@@ -58,7 +57,6 @@ import TeacherDataService from '../services/teacherDataService';
 import UtilService from '../services/utilService';
 import VLEController from './vleController';
 
-//import ocLazyLoad from '../vendor/oclazyload/dist/ocLazyLoad.require';
 import ocLazyLoad from 'oclazyload';
 import moment from 'moment';
 
