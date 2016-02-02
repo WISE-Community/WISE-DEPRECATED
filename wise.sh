@@ -13,6 +13,9 @@ then
 else
     if [ $1 == "setup" ]
     then
+  # install npm dependencies
+  npm install
+
 	# clear out curriculum and student uploads directories and any existing properties file
 	find src/main/webapp/curriculum/ ! \( -name README -o -name .gitignore \) -delete
 	find src/main/webapp/studentuploads/ ! \( -name README -o -name .gitignore \) -delete

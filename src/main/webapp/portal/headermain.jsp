@@ -1,6 +1,6 @@
 <div id="header">
 	<div class="banner">
-		
+
 		<a id="name" href="${contextPath}/" title="<spring:message code="wiseHomepage" />"></a>
 
 		<sec:authorize access="!hasAnyRole('ROLE_USER')">
@@ -97,8 +97,7 @@
 								<ul>
 									<li><a href="${contextPath}/teacher/management/library.html"><spring:message code="accountmenu.library" /></a></li>
 									<li><a href="${contextPath}/teacher/management/classroomruns.html"><spring:message code="accountmenu.runs" /></a></li>
-									<li><a href="${contextPath}/author/authorproject.html"><spring:message code="accountmenu.authoring" /> (WISE4)</a></li>
-									<li><a href="${contextPath}/author"><spring:message code="accountmenu.authoring" /> (WISE5)</a></li>
+									<li><a href="${contextPath}/author/authorproject.html"><spring:message code="accountmenu.authoring" /></a></li>
 								</ul>
 							</li>
 							<li class="level1 menu3"><a href="${contextPath}/teacher"><spring:message code="accountmenu.teacherHome" /></a></li>
