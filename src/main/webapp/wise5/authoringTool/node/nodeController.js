@@ -73,6 +73,54 @@ var NodeController = function () {
         }
 
         /**
+         * Move a component up within this node
+         * @param componentId the component id
+         */
+
+    }, {
+        key: 'moveComponentUp',
+        value: function moveComponentUp(componentId) {
+
+            // move the component up within the node
+            this.ProjectService.moveComponentUp(this.nodeId, componentId);
+
+            // save the project
+            this.ProjectService.saveProject();
+        }
+
+        /**
+         * Move a component up within this node
+         * @param componentId the component id
+         */
+
+    }, {
+        key: 'moveComponentDown',
+        value: function moveComponentDown(componentId) {
+
+            // move the component down within the node
+            this.ProjectService.moveComponentDown(this.nodeId, componentId);
+
+            // save the project
+            this.ProjectService.saveProject();
+        }
+
+        /**
+         * Delete the component from this node
+         * @param componentId the component id
+         */
+
+    }, {
+        key: 'deleteComponent',
+        value: function deleteComponent(componentId) {
+
+            // delete the component from the node
+            this.ProjectService.deleteComponent(this.nodeId, componentId);
+
+            // save the project
+            this.ProjectService.saveProject();
+        }
+
+        /**
          * The node has changed in the authoring view
          */
 

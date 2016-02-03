@@ -13,5 +13,11 @@
     <button ng-click='nodeController.createComponent()'>Submit</button>
 </div>
 <div ng-repeat='component in nodeController.components'>
+    <div>
+        {{component.type}}
+        <button ng-click='nodeController.moveComponentUp(component.id)'>Move Up</button>
+        <button ng-click='nodeController.moveComponentDown(component.id)'>Move Down</button>
+        <button ng-click='nodeController.deleteComponent(component.id)'>Delete</button>
+    </div>
     <component nodeid='{{nodeController.nodeId}}' componentid='{{component.id}}' mode='authoring'></component>
 </div>
