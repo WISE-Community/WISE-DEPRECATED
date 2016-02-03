@@ -1,9 +1,29 @@
 import NodeService from '../../services/nodeService';
 
 class DrawService extends NodeService {
-    constructor(StudentDataService) {
+    constructor(StudentDataService,
+                UtilService) {
         super();
         this.StudentDataService = StudentDataService;
+        this.UtilService = UtilService;
+    }
+
+    /**
+     * Create a Draw component object
+     * @returns a new Draw component object
+     */
+    createComponent() {
+
+        var component = {};
+        component.id = this.UtilService.generateKey();
+        component.type = 'Draw';
+        component.prompt = 'Enter prompt here';
+        component.showSaveButton = false;
+        component.showSubmitButton = false;
+        component.stamps = {};
+        component.stamps.Stamps = [];
+
+        return component;
     }
 
     getStudentWorkJPEG(componentState) {
@@ -109,6 +129,9 @@ class DrawService extends NodeService {
     };
 }
 
-DrawService.$inject = ['StudentDataService'];
+DrawService.$inject = [
+    'StudentDataService',
+    'UtilService'
+];
 
 export default DrawService;

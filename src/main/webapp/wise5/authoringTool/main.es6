@@ -27,6 +27,7 @@ import GraphController from '../components/graph/graphController';
 import GraphService from '../components/graph/graphService';
 import Highcharts from 'highcharts';
 import HTMLController from '../components/html/htmlController';
+import HTMLService from '../components/html/htmlService';
 import LabelController from '../components/label/labelController';
 import LabelService from '../components/label/labelService';
 import MatchController from '../components/match/matchController';
@@ -73,6 +74,7 @@ let mainModule = angular.module('authoring', [
     .service(DrawService.name, DrawService)
     .service(EmbeddedService.name, EmbeddedService)
     .service(GraphService.name, GraphService)
+    .service(HTMLService.name, HTMLService)
     .service(LabelService.name, LabelService)
     .service(MatchService.name, MatchService)
     .service(MultipleChoiceService.name, MultipleChoiceService)

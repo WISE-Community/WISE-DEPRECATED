@@ -21,16 +21,37 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var DrawService = function (_NodeService) {
     _inherits(DrawService, _NodeService);
 
-    function DrawService(StudentDataService) {
+    function DrawService(StudentDataService, UtilService) {
         _classCallCheck(this, DrawService);
 
         var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(DrawService).call(this));
 
         _this.StudentDataService = StudentDataService;
+        _this.UtilService = UtilService;
         return _this;
     }
 
+    /**
+     * Create a Draw component object
+     * @returns a new Draw component object
+     */
+
     _createClass(DrawService, [{
+        key: 'createComponent',
+        value: function createComponent() {
+
+            var component = {};
+            component.id = this.UtilService.generateKey();
+            component.type = 'Draw';
+            component.prompt = 'Enter prompt here';
+            component.showSaveButton = false;
+            component.showSubmitButton = false;
+            component.stamps = {};
+            component.stamps.Stamps = [];
+
+            return component;
+        }
+    }, {
         key: 'getStudentWorkJPEG',
         value: function getStudentWorkJPEG(componentState) {
             if (componentState != null) {
@@ -143,7 +164,7 @@ var DrawService = function (_NodeService) {
     return DrawService;
 }(_nodeService2.default);
 
-DrawService.$inject = ['StudentDataService'];
+DrawService.$inject = ['StudentDataService', 'UtilService'];
 
 exports.default = DrawService;
 //# sourceMappingURL=drawService.js.map

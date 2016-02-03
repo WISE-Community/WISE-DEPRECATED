@@ -21,22 +21,43 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var EmbeddedService = function (_NodeService) {
     _inherits(EmbeddedService, _NodeService);
 
-    function EmbeddedService() {
+    function EmbeddedService(UtilService) {
         _classCallCheck(this, EmbeddedService);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(EmbeddedService).call(this));
+        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(EmbeddedService).call(this));
+
+        _this.UtilService = UtilService;
+        return _this;
     }
 
     /**
-     * Check if the component was completed
-     * @param component the component object
-     * @param componentStates the component states for the specific component
-     * @param componentEvents the events for the specific component
-     * @param nodeEvents the events for the parent node of the component
-     * @returns whether the component was completed
+     * Create an Embedded component object
+     * @returns a new Embedded component object
      */
 
     _createClass(EmbeddedService, [{
+        key: 'createComponent',
+        value: function createComponent() {
+
+            var component = {};
+            component.id = this.UtilService.generateKey();
+            component.type = 'Embedded';
+            component.showSaveButton = false;
+            component.showSubmitButton = false;
+
+            return component;
+        }
+
+        /**
+         * Check if the component was completed
+         * @param component the component object
+         * @param componentStates the component states for the specific component
+         * @param componentEvents the events for the specific component
+         * @param nodeEvents the events for the parent node of the component
+         * @returns whether the component was completed
+         */
+
+    }, {
         key: 'isCompleted',
         value: function isCompleted(component, componentStates, componentEvents, nodeEvents) {
             var result = false;
@@ -63,7 +84,7 @@ var EmbeddedService = function (_NodeService) {
     return EmbeddedService;
 }(_nodeService2.default);
 
-EmbeddedService.$inject = [];
+EmbeddedService.$inject = ['UtilService'];
 
 exports.default = EmbeddedService;
 //# sourceMappingURL=embeddedService.js.map

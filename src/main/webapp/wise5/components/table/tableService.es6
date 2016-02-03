@@ -1,9 +1,82 @@
 import NodeService from '../../services/nodeService';
 
 class TableService extends NodeService {
-    constructor(StudentDataService) {
+    constructor(StudentDataService,
+                UtilService) {
         super();
         this.StudentDataService = StudentDataService;
+        this.UtilService = UtilService;
+    }
+
+    /**
+     * Create an Table component object
+     * @returns a new Table component object
+     */
+    createComponent() {
+
+        var component = {};
+        component.id = this.UtilService.generateKey();
+        component.type = 'Table';
+        component.showSaveButton = false;
+        component.showSubmitButton = false;
+        component.globalCellSize = 10;
+        component.numRows = 3;
+        component.numColumns = 3;
+        component.tableData = [
+            [
+                {
+                    "text": "",
+                    "editable": true,
+                    "size": null
+                },
+                {
+                    "text": "",
+                    "editable": true,
+                    "size": null
+                },
+                {
+                    "text": "",
+                    "editable": true,
+                    "size": null
+                }
+            ],
+            [
+                {
+                    "text": "",
+                    "editable": true,
+                    "size": null
+                },
+                {
+                    "text": "",
+                    "editable": true,
+                    "size": null
+                },
+                {
+                    "text": "",
+                    "editable": true,
+                    "size": null
+                }
+            ],
+            [
+                {
+                    "text": "",
+                    "editable": true,
+                    "size": null
+                },
+                {
+                    "text": "",
+                    "editable": true,
+                    "size": null
+                },
+                {
+                    "text": "",
+                    "editable": true,
+                    "size": null
+                }
+            ]
+        ];
+
+        return component;
     }
 
     callFunction(node, component, functionName, functionParams, componentStates, nodeStates, componentEvents, nodeEvents) {
@@ -102,6 +175,9 @@ class TableService extends NodeService {
     };
 }
 
-TableService.$inject = ['StudentDataService'];
+TableService.$inject = [
+    'StudentDataService',
+    'UtilService'
+];
 
 export default TableService;

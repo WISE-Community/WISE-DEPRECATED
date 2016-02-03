@@ -9,6 +9,26 @@ class NodeController {
         this.ProjectService = ProjectService;
         this.projectId = $stateParams.projectId;
         this.nodeId = $stateParams.nodeId;
+        this.showCreateComponent = false;
+        this.selectedComponent = null;
+
+        // the array of component types that can be created
+        this.componentTypes = [
+            {componentType: 'Discussion', componentName: 'Discussion'},
+            {componentType: 'Draw', componentName: 'Draw'},
+            {componentType: 'Embedded', componentName: 'Embedded'},
+            {componentType: 'Graph', componentName: 'Graph'},
+            {componentType: 'HTML', componentName: 'HTML'},
+            {componentType: 'Label', componentName: 'Label'},
+            {componentType: 'Match', componentName: 'Match'},
+            {componentType: 'MultipleChoice', componentName: 'Multiple Choice'},
+            {componentType: 'OpenResponse', componentName: 'Open Response'},
+            {componentType: 'OutsideURL', componentName: 'Outside URL'},
+            {componentType: 'Table', componentName: 'Table'}
+        ];
+
+        // set the drop down to the first item
+        this.selectedComponent = this.componentTypes[0].componentType;
 
         // get the node
         this.node = this.ProjectService.getNodeById(this.nodeId);
@@ -31,6 +51,21 @@ class NodeController {
     close() {
         this.$state.go('root.project', {projectId: this.projectId});
     };
+
+    /**
+     * Create a component in this node
+     */
+    createComponent() {
+
+        // create a component and add it to this node
+        this.ProjectService.createComponent(this.nodeId, this.selectedComponent);
+
+        // save the project
+        this.ProjectService.saveProject();
+
+        // hide the create component elements
+        this.showCreateComponent = false;
+    }
 
     /**
      * The node has changed in the authoring view

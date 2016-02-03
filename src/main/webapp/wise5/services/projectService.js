@@ -11,10 +11,11 @@ Object.defineProperty(exports, "__esModule", {
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var ProjectService = function () {
-    function ProjectService($http, $rootScope, ConfigService) {
+    function ProjectService($http, $injector, $rootScope, ConfigService) {
         _classCallCheck(this, ProjectService);
 
         this.$http = $http;
+        this.$injector = $injector;
         this.$rootScope = $rootScope;
         this.ConfigService = ConfigService;
         this.project = null;
@@ -3281,12 +3282,55 @@ var ProjectService = function () {
                 }
             }
         }
+
+        /**
+         * Create a new component
+         * @param nodeId the node id to create the component in
+         * @param componentType the component type
+         */
+
+    }, {
+        key: 'createComponent',
+        value: function createComponent(nodeId, componentType) {
+
+            if (nodeId != null && componentType != null) {
+                // get the node we will create the component in
+                var node = this.getNodeById(nodeId);
+
+                // get the service for the node type
+                var service = this.$injector.get(componentType + 'Service');
+
+                if (node != null && service != null) {
+
+                    // create the new component
+                    var component = service.createComponent();
+
+                    // add the component to the node
+                    this.addComponentToNode(node, component);
+                }
+            }
+        }
+
+        /**
+         * Add the component to the node
+         * @param node the node
+         * @param component the component
+         */
+
+    }, {
+        key: 'addComponentToNode',
+        value: function addComponentToNode(node, component) {
+
+            if (node != null && component != null) {
+                node.components.push(component);
+            }
+        }
     }]);
 
     return ProjectService;
 }();
 
-ProjectService.$inject = ['$http', '$rootScope', 'ConfigService'];
+ProjectService.$inject = ['$http', '$injector', '$rootScope', 'ConfigService'];
 
 exports.default = ProjectService;
 //# sourceMappingURL=projectService.js.map

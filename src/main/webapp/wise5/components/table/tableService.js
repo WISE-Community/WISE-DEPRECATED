@@ -21,16 +21,74 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var TableService = function (_NodeService) {
     _inherits(TableService, _NodeService);
 
-    function TableService(StudentDataService) {
+    function TableService(StudentDataService, UtilService) {
         _classCallCheck(this, TableService);
 
         var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(TableService).call(this));
 
         _this.StudentDataService = StudentDataService;
+        _this.UtilService = UtilService;
         return _this;
     }
 
+    /**
+     * Create an Table component object
+     * @returns a new Table component object
+     */
+
     _createClass(TableService, [{
+        key: 'createComponent',
+        value: function createComponent() {
+
+            var component = {};
+            component.id = this.UtilService.generateKey();
+            component.type = 'Table';
+            component.showSaveButton = false;
+            component.showSubmitButton = false;
+            component.globalCellSize = 10;
+            component.numRows = 3;
+            component.numColumns = 3;
+            component.tableData = [[{
+                "text": "",
+                "editable": true,
+                "size": null
+            }, {
+                "text": "",
+                "editable": true,
+                "size": null
+            }, {
+                "text": "",
+                "editable": true,
+                "size": null
+            }], [{
+                "text": "",
+                "editable": true,
+                "size": null
+            }, {
+                "text": "",
+                "editable": true,
+                "size": null
+            }, {
+                "text": "",
+                "editable": true,
+                "size": null
+            }], [{
+                "text": "",
+                "editable": true,
+                "size": null
+            }, {
+                "text": "",
+                "editable": true,
+                "size": null
+            }, {
+                "text": "",
+                "editable": true,
+                "size": null
+            }]];
+
+            return component;
+        }
+    }, {
         key: 'callFunction',
         value: function callFunction(node, component, functionName, functionParams, componentStates, nodeStates, componentEvents, nodeEvents) {
             var result = null;
@@ -136,7 +194,7 @@ var TableService = function (_NodeService) {
     return TableService;
 }(_nodeService2.default);
 
-TableService.$inject = ['StudentDataService'];
+TableService.$inject = ['StudentDataService', 'UtilService'];
 
 exports.default = TableService;
 //# sourceMappingURL=tableService.js.map

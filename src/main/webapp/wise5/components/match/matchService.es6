@@ -1,9 +1,31 @@
 import NodeService from '../../services/nodeService';
 
 class MatchService extends NodeService {
-    constructor(StudentDataService) {
+    constructor(StudentDataService,
+                UtilService) {
         super();
         this.StudentDataService = StudentDataService;
+        this.UtilService = UtilService;
+    }
+
+    /**
+     * Create a Match component object
+     * @returns a new Match component object
+     */
+    createComponent() {
+
+        var component = {};
+        component.id = this.UtilService.generateKey();
+        component.type = 'Match';
+        component.prompt = 'Enter prompt here';
+        component.showSaveButton = false;
+        component.showSubmitButton = true;
+        component.choices = [];
+        component.buckets = [];
+        component.feedback = [];
+        component.ordered = false;
+
+        return component;
     }
 
     callFunction(node, component, functionName, functionParams, componentStates, nodeStates, componentEvents, nodeEvents) {
@@ -131,6 +153,9 @@ class MatchService extends NodeService {
     };
 }
 
-MatchService.$inject = ['StudentDataService'];
+MatchService.$inject = [
+    'StudentDataService',
+    'UtilService'
+];
 
 export default MatchService;

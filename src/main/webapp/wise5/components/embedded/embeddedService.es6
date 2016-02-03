@@ -1,8 +1,24 @@
 import NodeService from '../../services/nodeService';
 
 class EmbeddedService extends NodeService {
-    constructor() {
+    constructor(UtilService) {
         super();
+        this.UtilService = UtilService;
+    }
+
+    /**
+     * Create an Embedded component object
+     * @returns a new Embedded component object
+     */
+    createComponent() {
+
+        var component = {};
+        component.id = this.UtilService.generateKey();
+        component.type = 'Embedded';
+        component.showSaveButton = false;
+        component.showSubmitButton = false;
+
+        return component;
     }
 
     /**
@@ -35,6 +51,8 @@ class EmbeddedService extends NodeService {
     };
 }
 
-EmbeddedService.$inject = [];
+EmbeddedService.$inject = [
+    'UtilService'
+];
 
 export default EmbeddedService;

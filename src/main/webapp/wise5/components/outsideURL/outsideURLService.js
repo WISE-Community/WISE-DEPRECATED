@@ -21,22 +21,44 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var OutsideURLService = function (_NodeService) {
     _inherits(OutsideURLService, _NodeService);
 
-    function OutsideURLService() {
+    function OutsideURLService(UtilService) {
         _classCallCheck(this, OutsideURLService);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(OutsideURLService).call(this));
+        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(OutsideURLService).call(this));
+
+        _this.UtilService = UtilService;
+        return _this;
     }
 
     /**
-     * Check if the component was completed
-     * @param component the component object
-     * @param componentStates the component states for the specific component
-     * @param componentEvents the events for the specific component
-     * @param nodeEvents the events for the parent node of the component
-     * @returns whether the component was completed
+     * Create an OutsideURL component object
+     * @returns a new OutsideURL component object
      */
 
     _createClass(OutsideURLService, [{
+        key: 'createComponent',
+        value: function createComponent() {
+
+            var component = {};
+            component.id = this.UtilService.generateKey();
+            component.type = 'OutsideURL';
+            component.url = '';
+            component.showSaveButton = false;
+            component.showSubmitButton = false;
+
+            return component;
+        }
+
+        /**
+         * Check if the component was completed
+         * @param component the component object
+         * @param componentStates the component states for the specific component
+         * @param componentEvents the events for the specific component
+         * @param nodeEvents the events for the parent node of the component
+         * @returns whether the component was completed
+         */
+
+    }, {
         key: 'isCompleted',
         value: function isCompleted(component, componentStates, componentEvents, nodeEvents) {
             var result = false;
@@ -63,7 +85,7 @@ var OutsideURLService = function (_NodeService) {
     return OutsideURLService;
 }(_nodeService2.default);
 
-OutsideURLService.$inject = [];
+OutsideURLService.$inject = ['UtilService'];
 
 exports.default = OutsideURLService;
 //# sourceMappingURL=outsideURLService.js.map

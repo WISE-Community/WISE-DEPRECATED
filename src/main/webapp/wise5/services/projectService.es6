@@ -1,8 +1,9 @@
 'use strict';
 
 class ProjectService {
-    constructor($http, $rootScope, ConfigService) {
+    constructor($http, $injector, $rootScope, ConfigService) {
         this.$http = $http;
+        this.$injector = $injector;
         this.$rootScope = $rootScope;
         this.ConfigService = ConfigService;
         this.project = null;
@@ -3082,8 +3083,52 @@ class ProjectService {
             }
         }
     }
+
+    /**
+     * Create a new component
+     * @param nodeId the node id to create the component in
+     * @param componentType the component type
+     */
+    createComponent(nodeId, componentType) {
+
+        if (nodeId != null && componentType != null) {
+            // get the node we will create the component in
+            var node = this.getNodeById(nodeId);
+
+            // get the service for the node type
+            var service = this.$injector.get(componentType + 'Service');
+
+            if (node != null && service != null) {
+
+                // create the new component
+                var component = service.createComponent();
+
+                // add the component to the node
+                this.addComponentToNode(node, component);
+            }
+        }
+
+    }
+
+    /**
+     * Add the component to the node
+     * @param node the node
+     * @param component the component
+     */
+    addComponentToNode(node, component) {
+
+        if (node != null && component != null) {
+            node.components.push(component);
+        }
+    }
+
 }
 
-ProjectService.$inject = ['$http', '$rootScope', 'ConfigService'];
+ProjectService.$inject = [
+    '$http',
+    '$injector',
+    '$rootScope',
+    'ConfigService'
+];
 
 export default ProjectService;

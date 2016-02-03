@@ -21,16 +21,41 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var LabelService = function (_NodeService) {
     _inherits(LabelService, _NodeService);
 
-    function LabelService(StudentDataService) {
+    function LabelService(StudentDataService, UtilService) {
         _classCallCheck(this, LabelService);
 
         var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(LabelService).call(this));
 
         _this.StudentDataService = StudentDataService;
+        _this.UtilService = UtilService;
         return _this;
     }
 
+    /**
+     * Create a Label component object
+     * @returns a new Label component object
+     */
+
     _createClass(LabelService, [{
+        key: 'createComponent',
+        value: function createComponent() {
+
+            var component = {};
+            component.id = this.UtilService.generateKey();
+            component.type = 'Label';
+            component.prompt = 'Enter prompt here';
+            component.showSaveButton = false;
+            component.showSubmitButton = false;
+            component.backgroundImage = '';
+            component.canCreateLabels = true;
+            component.canDeleteLabels = true;
+            component.width = 800;
+            component.height = 600;
+            component.labels = [];
+
+            return component;
+        }
+    }, {
         key: 'callFunction',
         value: function callFunction(node, component, functionName, functionParams, componentStates, nodeStates, componentEvents, nodeEvents) {
             var result = null;
@@ -194,7 +219,7 @@ var LabelService = function (_NodeService) {
     return LabelService;
 }(_nodeService2.default);
 
-LabelService.$inject = ['StudentDataService'];
+LabelService.$inject = ['StudentDataService', 'UtilService'];
 
 exports.default = LabelService;
 //# sourceMappingURL=labelService.js.map

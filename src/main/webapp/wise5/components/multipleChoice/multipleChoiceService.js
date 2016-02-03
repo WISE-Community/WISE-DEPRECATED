@@ -21,27 +21,49 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var MultipleChoiceService = function (_NodeService) {
     _inherits(MultipleChoiceService, _NodeService);
 
-    function MultipleChoiceService(StudentDataService) {
+    function MultipleChoiceService(StudentDataService, UtilService) {
         _classCallCheck(this, MultipleChoiceService);
 
         var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(MultipleChoiceService).call(this));
 
         _this.StudentDataService = StudentDataService;
+        _this.UtilService = UtilService;
         return _this;
     }
 
     /**
-     * Determine if the student has fulfilled the function requirements
-     * @param component the component content
-     * @param functionName the function name to call
-     * @param functionParams the parameters for the function
-     * @param componentStates the component states for the component
-     * @param componentEvents the component events for the component
-     * @param nodeEvents the node events for the parent of the component
-     * @returns whether the student has fulfilled the function requirements
+     * Create a MultipleChoice component object
+     * @returns a new MultipleChoice component object
      */
 
     _createClass(MultipleChoiceService, [{
+        key: 'createComponent',
+        value: function createComponent() {
+
+            var component = {};
+            component.id = this.UtilService.generateKey();
+            component.type = 'MultipleChoice';
+            component.prompt = 'Enter prompt here';
+            component.showSaveButton = false;
+            component.showSubmitButton = true;
+            component.choiceType = 'radio';
+            component.choices = [];
+
+            return component;
+        }
+
+        /**
+         * Determine if the student has fulfilled the function requirements
+         * @param component the component content
+         * @param functionName the function name to call
+         * @param functionParams the parameters for the function
+         * @param componentStates the component states for the component
+         * @param componentEvents the component events for the component
+         * @param nodeEvents the node events for the parent of the component
+         * @returns whether the student has fulfilled the function requirements
+         */
+
+    }, {
         key: 'callFunction',
         value: function callFunction(node, component, functionName, functionParams, componentStates, nodeStates, componentEvents, nodeEvents) {
             var result = null;
@@ -277,7 +299,7 @@ var MultipleChoiceService = function (_NodeService) {
     return MultipleChoiceService;
 }(_nodeService2.default);
 
-MultipleChoiceService.$inject = ['StudentDataService'];
+MultipleChoiceService.$inject = ['StudentDataService', 'UtilService'];
 
 exports.default = MultipleChoiceService;
 //# sourceMappingURL=multipleChoiceService.js.map

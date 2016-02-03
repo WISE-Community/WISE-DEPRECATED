@@ -1,8 +1,25 @@
 import NodeService from '../../services/nodeService';
 
 class OutsideURLService extends NodeService {
-    constructor() {
+    constructor(UtilService) {
         super();
+        this.UtilService = UtilService;
+    }
+
+    /**
+     * Create an OutsideURL component object
+     * @returns a new OutsideURL component object
+     */
+    createComponent() {
+
+        var component = {};
+        component.id = this.UtilService.generateKey();
+        component.type = 'OutsideURL';
+        component.url = '';
+        component.showSaveButton = false;
+        component.showSubmitButton = false;
+
+        return component;
     }
 
     /**
@@ -37,7 +54,7 @@ class OutsideURLService extends NodeService {
 
 
 OutsideURLService.$inject = [
-
+    'UtilService'
 ];
 
 export default OutsideURLService;

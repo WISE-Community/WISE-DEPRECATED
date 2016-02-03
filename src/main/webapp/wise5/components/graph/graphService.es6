@@ -1,9 +1,51 @@
 import NodeService from '../../services/nodeService';
 
 class GraphService extends NodeService {
-    constructor(StudentDataService) {
+    constructor(StudentDataService,
+                UtilService) {
         super();
         this.StudentDataService = StudentDataService;
+        this.UtilService = UtilService;
+    }
+
+    /**
+     * Create a Graph component object
+     * @returns a new Graph component object
+     */
+    createComponent() {
+
+        var component = {};
+        component.id = this.UtilService.generateKey();
+        component.type = 'Graph';
+        component.prompt = 'Enter prompt here';
+        component.showSaveButton = false;
+        component.showSubmitButton = false;
+        component.title = 'Enter graph title here';
+        component.xAxis = {
+            title: 'Time (seconds)',
+            min: 0,
+            max: 10
+        };
+        component.yAxis = {
+            title: 'Position (meters)',
+            min: 0,
+            max: 10
+        };
+        component.series = [
+            {
+                name: 'Prediction',
+                data: [],
+                color: 'blue',
+                marker: {
+                    symbol: 'circle'
+                },
+                regression: false,
+                regressionSettings: {},
+                canEdit: true
+            }
+        ];
+
+        return component;
     }
 
     callFunction(node, component, functionName, functionParams, componentStates, nodeStates, componentEvents, nodeEvents) {
@@ -691,7 +733,8 @@ class GraphService extends NodeService {
 }
 
 GraphService.$inject = [
-    'StudentDataService'
+    'StudentDataService',
+    'UtilService'
 ];
 
 export default GraphService;

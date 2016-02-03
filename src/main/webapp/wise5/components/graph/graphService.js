@@ -21,16 +21,57 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var GraphService = function (_NodeService) {
     _inherits(GraphService, _NodeService);
 
-    function GraphService(StudentDataService) {
+    function GraphService(StudentDataService, UtilService) {
         _classCallCheck(this, GraphService);
 
         var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(GraphService).call(this));
 
         _this.StudentDataService = StudentDataService;
+        _this.UtilService = UtilService;
         return _this;
     }
 
+    /**
+     * Create a Graph component object
+     * @returns a new Graph component object
+     */
+
     _createClass(GraphService, [{
+        key: 'createComponent',
+        value: function createComponent() {
+
+            var component = {};
+            component.id = this.UtilService.generateKey();
+            component.type = 'Graph';
+            component.prompt = 'Enter prompt here';
+            component.showSaveButton = false;
+            component.showSubmitButton = false;
+            component.title = 'Enter graph title here';
+            component.xAxis = {
+                title: 'Time (seconds)',
+                min: 0,
+                max: 10
+            };
+            component.yAxis = {
+                title: 'Position (meters)',
+                min: 0,
+                max: 10
+            };
+            component.series = [{
+                name: 'Prediction',
+                data: [],
+                color: 'blue',
+                marker: {
+                    symbol: 'circle'
+                },
+                regression: false,
+                regressionSettings: {},
+                canEdit: true
+            }];
+
+            return component;
+        }
+    }, {
         key: 'callFunction',
         value: function callFunction(node, component, functionName, functionParams, componentStates, nodeStates, componentEvents, nodeEvents) {
             var result = null;
@@ -780,7 +821,7 @@ var GraphService = function (_NodeService) {
     return GraphService;
 }(_nodeService2.default);
 
-GraphService.$inject = ['StudentDataService'];
+GraphService.$inject = ['StudentDataService', 'UtilService'];
 
 exports.default = GraphService;
 //# sourceMappingURL=graphService.js.map

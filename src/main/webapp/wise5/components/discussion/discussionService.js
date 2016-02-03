@@ -21,7 +21,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var DiscussionService = function (_NodeService) {
     _inherits(DiscussionService, _NodeService);
 
-    function DiscussionService($http, $q, ConfigService, TeacherDataService) {
+    function DiscussionService($http, $q, ConfigService, TeacherDataService, UtilService) {
         _classCallCheck(this, DiscussionService);
 
         var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(DiscussionService).call(this));
@@ -30,10 +30,31 @@ var DiscussionService = function (_NodeService) {
         _this.$q = $q;
         _this.ConfigService = ConfigService;
         _this.TeacherDataService = TeacherDataService;
+        _this.UtilService = UtilService;
         return _this;
     }
 
+    /**
+     * Create a Discussion component object
+     * @returns a new Discussion component object
+     */
+
     _createClass(DiscussionService, [{
+        key: 'createComponent',
+        value: function createComponent() {
+
+            var component = {};
+            component.id = this.UtilService.generateKey();
+            component.type = 'Discussion';
+            component.prompt = 'Enter prompt here';
+            component.showSaveButton = false;
+            component.showSubmitButton = true;
+            component.isStudentAttachmentEnabled = true;
+            component.gateClassmateResponses = true;
+
+            return component;
+        }
+    }, {
         key: 'callFunction',
         value: function callFunction(node, component, functionName, functionParams, componentStates, nodeStates, componentEvents, nodeEvents) {
             var result = null;
@@ -305,7 +326,7 @@ var DiscussionService = function (_NodeService) {
     return DiscussionService;
 }(_nodeService2.default);
 
-DiscussionService.$inject = ['$http', '$q', 'ConfigService', 'TeacherDataService'];
+DiscussionService.$inject = ['$http', '$q', 'ConfigService', 'TeacherDataService', 'UtilService'];
 
 exports.default = DiscussionService;
 //# sourceMappingURL=discussionService.js.map

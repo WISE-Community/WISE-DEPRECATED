@@ -21,16 +21,39 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var MatchService = function (_NodeService) {
     _inherits(MatchService, _NodeService);
 
-    function MatchService(StudentDataService) {
+    function MatchService(StudentDataService, UtilService) {
         _classCallCheck(this, MatchService);
 
         var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(MatchService).call(this));
 
         _this.StudentDataService = StudentDataService;
+        _this.UtilService = UtilService;
         return _this;
     }
 
+    /**
+     * Create a Match component object
+     * @returns a new Match component object
+     */
+
     _createClass(MatchService, [{
+        key: 'createComponent',
+        value: function createComponent() {
+
+            var component = {};
+            component.id = this.UtilService.generateKey();
+            component.type = 'Match';
+            component.prompt = 'Enter prompt here';
+            component.showSaveButton = false;
+            component.showSubmitButton = true;
+            component.choices = [];
+            component.buckets = [];
+            component.feedback = [];
+            component.ordered = false;
+
+            return component;
+        }
+    }, {
         key: 'callFunction',
         value: function callFunction(node, component, functionName, functionParams, componentStates, nodeStates, componentEvents, nodeEvents) {
             var result = null;
@@ -165,7 +188,7 @@ var MatchService = function (_NodeService) {
     return MatchService;
 }(_nodeService2.default);
 
-MatchService.$inject = ['StudentDataService'];
+MatchService.$inject = ['StudentDataService', 'UtilService'];
 
 exports.default = MatchService;
 //# sourceMappingURL=matchService.js.map

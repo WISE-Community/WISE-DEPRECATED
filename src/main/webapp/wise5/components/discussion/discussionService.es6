@@ -4,13 +4,33 @@ class DiscussionService extends NodeService {
     constructor($http,
                 $q,
                 ConfigService,
-                TeacherDataService) {
+                TeacherDataService,
+                UtilService) {
         super();
 
         this.$http = $http;
         this.$q = $q;
         this.ConfigService = ConfigService;
         this.TeacherDataService = TeacherDataService;
+        this.UtilService = UtilService;
+    }
+
+    /**
+     * Create a Discussion component object
+     * @returns a new Discussion component object
+     */
+    createComponent() {
+
+        var component = {};
+        component.id = this.UtilService.generateKey();
+        component.type = 'Discussion';
+        component.prompt = 'Enter prompt here';
+        component.showSaveButton = false;
+        component.showSubmitButton = true;
+        component.isStudentAttachmentEnabled = true;
+        component.gateClassmateResponses = true;
+
+        return component;
     }
 
     callFunction(node, component, functionName, functionParams, componentStates, nodeStates, componentEvents, nodeEvents) {
@@ -272,7 +292,8 @@ DiscussionService.$inject = [
     '$http',
     '$q',
     'ConfigService',
-    'TeacherDataService'
+    'TeacherDataService',
+    'UtilService'
 ];
 
 export default DiscussionService;

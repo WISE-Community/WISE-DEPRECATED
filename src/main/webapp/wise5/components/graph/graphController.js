@@ -1045,8 +1045,11 @@ var GraphController = function () {
             // create a component state populated with the student data
             var componentState = this.createComponentState();
 
-            //force redraw
-            this.$scope.$apply();
+            // check if a digest is in progress
+            if (!this.$scope.$$phase) {
+                // digest is not in progress so we can force a redraw
+                this.$scope.$apply();
+            }
 
             /*
              * the student work in this component has changed so we will tell

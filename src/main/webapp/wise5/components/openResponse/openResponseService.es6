@@ -1,9 +1,28 @@
 import NodeService from '../../services/nodeService';
 
 class OpenResponseService extends NodeService {
-    constructor(StudentDataService) {
+    constructor(StudentDataService,
+                UtilService) {
         super();
         this.StudentDataService = StudentDataService;
+        this.UtilService = UtilService;
+    }
+
+    /**
+     * Create a OpenResponse component object
+     * @returns a new OpenResponse component object
+     */
+    createComponent() {
+
+        var component = {};
+        component.id = this.UtilService.generateKey();
+        component.type = 'OpenResponse';
+        component.prompt = 'Enter prompt here';
+        component.showSaveButton = false;
+        component.showSubmitButton = false;
+        component.starterSentence = null;
+
+        return component;
     }
 
     getStudentWorkAsHTML(componentState) {
@@ -105,7 +124,8 @@ class OpenResponseService extends NodeService {
 }
 
 OpenResponseService.$inject = [
-    'StudentDataService'
+    'StudentDataService',
+    'UtilService'
 ];
 
 export default OpenResponseService;

@@ -1,10 +1,29 @@
 import NodeService from '../../services/nodeService';
 
 class MultipleChoiceService extends NodeService {
-    constructor(StudentDataService) {
+    constructor(StudentDataService,
+                UtilService) {
         super();
-
         this.StudentDataService = StudentDataService;
+        this.UtilService = UtilService;
+    }
+
+    /**
+     * Create a MultipleChoice component object
+     * @returns a new MultipleChoice component object
+     */
+    createComponent() {
+
+        var component = {};
+        component.id = this.UtilService.generateKey();
+        component.type = 'MultipleChoice';
+        component.prompt = 'Enter prompt here';
+        component.showSaveButton = false;
+        component.showSubmitButton = true;
+        component.choiceType = 'radio';
+        component.choices = [];
+
+        return component;
     }
 
     /**
@@ -242,7 +261,8 @@ class MultipleChoiceService extends NodeService {
 }
 
 MultipleChoiceService.$inject = [
-    'StudentDataService'
+    'StudentDataService',
+    'UtilService'
 ];
 
 export default MultipleChoiceService;

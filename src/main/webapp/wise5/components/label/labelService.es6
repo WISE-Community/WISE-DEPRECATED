@@ -1,9 +1,33 @@
 import NodeService from '../../services/nodeService';
 
 class LabelService extends NodeService {
-    constructor(StudentDataService) {
+    constructor(StudentDataService,
+                UtilService) {
         super();
         this.StudentDataService = StudentDataService;
+        this.UtilService = UtilService;
+    }
+
+    /**
+     * Create a Label component object
+     * @returns a new Label component object
+     */
+    createComponent() {
+
+        var component = {};
+        component.id = this.UtilService.generateKey();
+        component.type = 'Label';
+        component.prompt = 'Enter prompt here';
+        component.showSaveButton = false;
+        component.showSubmitButton = false;
+        component.backgroundImage = '';
+        component.canCreateLabels = true;
+        component.canDeleteLabels = true;
+        component.width = 800;
+        component.height = 600;
+        component.labels = [];
+
+        return component;
     }
 
     callFunction(node, component, functionName, functionParams, componentStates, nodeStates, componentEvents, nodeEvents) {
@@ -161,7 +185,8 @@ class LabelService extends NodeService {
 }
 
 LabelService.$inject = [
-    'StudentDataService'
+    'StudentDataService',
+    'UtilService'
 ];
 
 export default LabelService;
