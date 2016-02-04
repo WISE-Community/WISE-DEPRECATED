@@ -151,8 +151,8 @@ let mainModule = angular.module('vle', [
                     controllerAs: 'vleController',
                     resolve: {
                         config: function (ConfigService) {
-                            var configUrl = window.configUrl;
-                            return ConfigService.retrieveConfig(configUrl);
+                            var configURL = window.configURL;
+                            return ConfigService.retrieveConfig(configURL);
                         },
                         project: function (ProjectService, config) {
                             return ProjectService.retrieveProject();

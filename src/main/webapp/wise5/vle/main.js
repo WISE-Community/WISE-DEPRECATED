@@ -255,8 +255,8 @@ var mainModule = _angular2.default.module('vle', ['angularMoment', 'angular-toAr
         controllerAs: 'vleController',
         resolve: {
             config: function config(ConfigService) {
-                var configUrl = window.configUrl;
-                return ConfigService.retrieveConfig(configUrl);
+                var configURL = window.configURL;
+                return ConfigService.retrieveConfig(configURL);
             },
             project: function project(ProjectService, config) {
                 return ProjectService.retrieveProject();
