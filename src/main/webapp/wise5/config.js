@@ -52,7 +52,7 @@ System.config({
     "github:angular/bower-angular-aria@1.4.9": {
       "angular": "github:angular/bower-angular@1.4.9"
     },
-    "github:angular/bower-angular-sanitize@1.4.8": {
+    "github:angular/bower-angular-sanitize@1.4.9": {
       "angular": "github:angular/bower-angular@1.4.9"
     },
     "github:angular/bower-material@1.0.3": {

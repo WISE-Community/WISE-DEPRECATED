@@ -34,22 +34,22 @@
       },
       "npm:oclazyload@1.0.9": {
         "dependencies": {
-          "angular": "1.4.8"
+          "angular": "1.4.9"
         }
       },
-      "github:angular/bower-angular-animate@1.4.8": {
+      "github:angular/bower-angular-animate@1.4.9": {
         "dependencies": {
-          "angular": "1.4.8"
+          "angular": "1.4.9"
         }
       },
       "github:angular-ui-tree/angular-ui-tree@2.5.0": {
         "dependencies": {
-          "angular": "jspm:angular@1.4.8"
+          "angular": "1.4.9"
         }
       },
       "github:angular/bower-angular-sanitize@1.4.8": {
         "dependencies": {
-          "angular": "1.4.8"
+          "angular": "1.4.9"
         }
       }
     }

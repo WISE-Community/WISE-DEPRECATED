@@ -385,9 +385,6 @@
     "util": "github:jspm/nodelibs-util@^0.1.0",
     "process": "github:jspm/nodelibs-process@^0.1.0"
   },
-  "github:components/jqueryui@1.11.4": {
-    "jquery": "jspm:jquery@2.1.4"
-  },
   "npm:jquery@2.1.4": {},
   "github:angular-ui-tree/angular-ui-tree@2.5.0": {
     "angular": "jspm:angular@1.4.8"
@@ -417,7 +414,10 @@
     "css": "github:systemjs/plugin-css@^0.1.9"
   },
   "github:angular/bower-angular-sanitize@1.4.9": {
-    "angular": "jspm:angular@1.4.8"
+    "angular": "jspm:angular@1.4.9"
   },
-  "github:angular/bower-angular@1.4.9": {}
+  "github:angular/bower-angular@1.4.9": {},
+  "npm:angular@1.4.9": {
+    "process": "github:jspm/nodelibs-process@^0.1.0"
+  }
 }
