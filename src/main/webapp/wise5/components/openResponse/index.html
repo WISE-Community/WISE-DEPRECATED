@@ -8,11 +8,21 @@
                 </style>
 
                 <div ng-if='openResponseController.mode === "authoring"'>
+                    Prompt:
+                    <br/>
                     <textarea ng-model='openResponseController.authoringComponentContent.prompt'
                               ng-change='openResponseController.authoringViewComponentChanged()'
                               ng-model-options='{ debounce: 1000 }'
                               rows='10'
                               cols='100'></textarea>
+                    <br/>
+                    Max Score:
+                    <input type='number'
+                           ng-model='openResponseController.authoringComponentContent.maxScore'
+                           ng-change='openResponseController.authoringViewComponentChanged()'
+                           ng-model-options='{ debounce: 1000 }'
+                           style='width: 3em'/>
+                    <br/>
                     <textarea ng-model='openResponseController.authoringComponentContentJSONString'
                               ng-change='openResponseController.advancedAuthoringViewComponentChanged()'
                               ng-model-options='{ debounce: 1000 }'
@@ -103,6 +113,7 @@
                             toworkgroupid='{{workgroupId}}'
                             componentstateid='{{componentState.id}}'
                             active='true'></annotation>
+                <span ng-if='openResponseController.componentContent.maxScore != null'> / {{openResponseController.componentContent.maxScore}}</span>
                 <br/>
                 <annotation type='comment'
                             mode='{{openResponseController.mode}}'

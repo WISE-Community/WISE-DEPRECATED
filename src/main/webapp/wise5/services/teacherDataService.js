@@ -92,6 +92,26 @@ var TeacherDataService = function () {
             return this.retrieveStudentData(params);
         }
     }, {
+        key: 'retrieveAnnotations',
+
+        /**
+         * Retrieve the annotations for the run
+         * @returns the annotations for the run
+         */
+        value: function retrieveAnnotations() {
+            var params = {};
+            params.runId = this.ConfigService.getRunId();
+            params.periodId = null;
+            params.nodeId = null;
+            params.workgroupId = null;
+            params.toWorkgroupId = null;
+            params.getStudentWork = false;
+            params.getEvents = false;
+            params.getAnnotations = true;
+
+            return this.retrieveStudentData(params);
+        }
+    }, {
         key: 'retrieveStudentData',
 
         /**
@@ -102,9 +122,17 @@ var TeacherDataService = function () {
         value: function retrieveStudentData(params) {
             var studentDataURL = this.ConfigService.getConfigParam('teacherDataURL');
 
-            params.getStudentWork = true;
-            params.getEvents = false;
-            params.getAnnotations = true;
+            if (params.getStudentWork == null) {
+                params.getStudentWork = true;
+            }
+
+            if (params.getEvents == null) {
+                params.getEvents = false;
+            }
+
+            if (params.getAnnotations == null) {
+                params.getAnnotations = true;
+            }
 
             var httpParams = {};
             httpParams.method = 'GET';
@@ -389,6 +417,73 @@ var TeacherDataService = function () {
         key: 'getCurrentPeriod',
         value: function getCurrentPeriod() {
             return this.currentPeriod;
+        }
+    }, {
+        key: 'getTotalScoreByWorkgroupId',
+
+        /**
+         * Get the total score for a workgroup
+         * @param workgroupId the workgroup id
+         * @returns the total score for the workgroup
+         */
+        value: function getTotalScoreByWorkgroupId(workgroupId) {
+
+            var totalScore = null;
+
+            if (this.studentData.annotationsToWorkgroupId != null) {
+
+                // get all the annotations for a workgroup
+                var annotations = this.studentData.annotationsToWorkgroupId[workgroupId];
+
+                var scoresFound = [];
+
+                // loop through all the annotations from newest to oldest
+                for (var a = annotations.length - 1; a >= 0; a--) {
+
+                    // get an annotation
+                    var annotation = annotations[a];
+
+                    if (annotation != null) {
+
+                        // check that the annotation is a score annotation
+                        if (annotation.type === 'score') {
+
+                            var nodeId = annotation.nodeId;
+                            var componentId = annotation.componentId;
+                            var data = annotation.data;
+
+                            var scoreFound = nodeId + '-' + componentId;
+
+                            // check if we have obtained a score from this component already
+                            if (scoresFound.indexOf(scoreFound) == -1) {
+                                // we have not obtained a score from this component yet
+
+                                if (data != null) {
+                                    var value = data.value;
+
+                                    if (!isNaN(value)) {
+
+                                        if (totalScore == null) {
+                                            totalScore = value;
+                                        } else {
+                                            totalScore += value;
+                                        }
+
+                                        /*
+                                         * remember that we have found a score for this component
+                                         * so that we don't double count it if the teacher scored
+                                         * the component more than once
+                                         */
+                                        scoresFound.push(scoreFound);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return totalScore;
         }
     }]);
 

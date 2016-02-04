@@ -320,6 +320,7 @@ public class WISE5AuthorProjectController {
             config.put("previewProjectURL", previewProjectURL);
             config.put("saveProjectURL", saveProjectURL);
             config.put("commitProjectURL", commitProjectURL);
+            config.put("wiseBaseURL", wiseBaseURL);
         } catch (JSONException e) {
             e.printStackTrace();
         }

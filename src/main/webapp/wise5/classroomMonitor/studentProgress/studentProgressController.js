@@ -9,12 +9,13 @@ Object.defineProperty(exports, "__esModule", {
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var StudentProgressController = function () {
-    function StudentProgressController($rootScope, $state, ConfigService, StudentStatusService, TeacherDataService, TeacherWebSocketService) {
+    function StudentProgressController($rootScope, $state, ConfigService, ProjectService, StudentStatusService, TeacherDataService, TeacherWebSocketService) {
         _classCallCheck(this, StudentProgressController);
 
         this.$rootScope = $rootScope;
         this.$state = $state;
         this.ConfigService = ConfigService;
+        this.ProjectService = ProjectService;
         this.StudentStatusService = StudentStatusService;
         this.TeacherDataService = TeacherDataService;
         this.TeacherWebSocketService = TeacherWebSocketService;
@@ -24,6 +25,8 @@ var StudentProgressController = function () {
         this.workgroups = this.ConfigService.getClassmateUserInfos();
 
         this.studentStatuses = this.StudentStatusService.getStudentStatuses();
+
+        this.totalScore = this.ProjectService.getTotalScore();
 
         this.periods = [];
 
@@ -101,12 +104,17 @@ var StudentProgressController = function () {
         value: function getCurrentPeriod() {
             return this.TeacherDataService.getCurrentPeriod();
         }
+    }, {
+        key: 'getStudentTotalScore',
+        value: function getStudentTotalScore(workgroupId) {
+            return this.TeacherDataService.getTotalScoreByWorkgroupId(workgroupId);
+        }
     }]);
 
     return StudentProgressController;
 }();
 
-StudentProgressController.$inject = ['$rootScope', '$state', 'ConfigService', 'StudentStatusService', 'TeacherDataService', 'TeacherWebSocketService'];
+StudentProgressController.$inject = ['$rootScope', '$state', 'ConfigService', 'ProjectService', 'StudentStatusService', 'TeacherDataService', 'TeacherWebSocketService'];
 
 exports.default = StudentProgressController;
 //# sourceMappingURL=studentProgressController.js.map

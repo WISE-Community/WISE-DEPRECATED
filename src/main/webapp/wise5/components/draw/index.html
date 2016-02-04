@@ -6,6 +6,14 @@
                               ng-model-options='{ debounce: 1000 }'
                               rows='10'
                               cols='100'></textarea>
+                    <br/>
+                    Max Score:
+                    <input type='number'
+                           ng-model='drawController.authoringComponentContent.maxScore'
+                           ng-change='drawController.authoringViewComponentChanged()'
+                           ng-model-options='{ debounce: 1000 }'
+                           style='width: 3em'/>
+                    <br/>
                     <textarea ng-model='drawController.authoringComponentContentJSONString'
                               ng-change='drawController.advancedAuthoringViewComponentChanged()'
                               ng-model-options='{ debounce: 1000 }'
@@ -83,6 +91,7 @@
                     toworkgroupid='{{workgroupId}}'
                     componentstateid='{{componentState.id}}'
                     active='true'></annotation>
+        <span ng-if='drawController.componentContent.maxScore != null'> / {{drawController.componentContent.maxScore}}</span>
         <br/>
         <annotation type='comment'
                     mode='{{drawController.mode}}'

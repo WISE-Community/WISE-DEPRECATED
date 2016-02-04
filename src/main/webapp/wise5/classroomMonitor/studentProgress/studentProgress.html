@@ -30,7 +30,8 @@
         <th>Team</th>
         <th>Latest Step</th>
         <th>Time Spent</th>
-        <th>Project Completion</th>     
+        <th>Project Completion</th>
+        <th>Score</th>
     </tr>
     <tr ng-class="{online: studentProgressController.isWorkgroupOnline(workgroup.workgroupId)}"
         ng-repeat="workgroup in studentProgressController.workgroups"
@@ -39,6 +40,8 @@
         <td>{{workgroup.userName}} ({{workgroup.workgroupId}})</td>
         <td>{{studentProgressController.getCurrentNodeForWorkgroupId(workgroup.workgroupId)}}</td>
         <td></td>
+        <td></td>
+        <td><div ng-show='studentProgressController.totalScore != null'>{{studentProgressController.getStudentTotalScore(workgroup.workgroupId)}}/{{studentProgressController.totalScore}}</div></td>
         <!--  
         <td>{{studentProgressController.getStudentProjectCompletion(workgroup.workgroupId)}}</td>
         -->

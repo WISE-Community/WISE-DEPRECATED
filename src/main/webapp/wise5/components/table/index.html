@@ -49,6 +49,14 @@
                             </td>
                         </tr>
                     </table>
+                    <br/>
+                    Max Score:
+                    <input type='number'
+                           ng-model='tableController.authoringComponentContent.maxScore'
+                           ng-change='tableController.authoringViewComponentChanged()'
+                           ng-model-options='{ debounce: 1000 }'
+                           style='width: 3em'/>
+                    <br/>
                     <textarea ng-model='tableController.authoringComponentContentJSONString'
                               ng-change='tableController.advancedAuthoringViewComponentChanged()'
                               ng-model-options='{ debounce: 1000 }'
@@ -109,6 +117,7 @@
                     toworkgroupid='{{workgroupId}}'
                     componentstateid='{{componentState.id}}'
                     active='true'></annotation>
+        <span ng-if='tableController.componentContent.maxScore != null'> / {{tableController.componentContent.maxScore}}</span>
         <br/>
         <annotation type='comment'
                     mode='{{tableController.mode}}'

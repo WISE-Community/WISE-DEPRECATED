@@ -144,6 +144,9 @@ let mainModule = angular.module('classroomMonitor', [
                     controller: 'StudentProgressController',
                     controllerAs: 'studentProgressController',
                     resolve: {
+                        studentData: function($stateParams, TeacherDataService, config) {
+                            return TeacherDataService.retrieveAnnotations();
+                        }
                     }
                 })                
                 .state('root.studentGrading', {

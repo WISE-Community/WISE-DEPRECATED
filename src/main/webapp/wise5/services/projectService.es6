@@ -3237,6 +3237,58 @@ class ProjectService {
             }
         }
     }
+
+    /**
+     * Get the total score for the project
+     * @returns the total score for the project or null if there are no max scores
+     */
+    getTotalScore() {
+
+        var totalScore = null;
+
+        var nodes = this.project.nodes;
+
+        if (nodes != null) {
+
+            // loop through all the nodes
+            for (var n = 0; n < nodes.length; n++) {
+                var node = nodes[n];
+
+                if (node != null) {
+
+                    var components = node.components;
+
+                    if (components != null) {
+
+                        // loop through all the components
+                        for (var c = 0; c < components.length; c++) {
+                            var component = components[c];
+
+                            if (component != null) {
+
+                                var maxScore = component.maxScore;
+
+                                if (maxScore != null) {
+
+                                    // make sure the max score is a valid number
+                                    if (!isNaN(maxScore)) {
+
+                                        if (totalScore == null) {
+                                            totalScore = maxScore;
+                                        } else {
+                                            totalScore += maxScore;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return totalScore;
+    }
 }
 
 ProjectService.$inject = [

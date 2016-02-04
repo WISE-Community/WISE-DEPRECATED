@@ -68,6 +68,14 @@
                         <br/>
                         <button ng-click='labelController.authoringDeleteLabelClicked($index)'>Delete Label</button>
                     </div>
+                    <br/>
+                    Max Score:
+                    <input type='number'
+                           ng-model='labelController.authoringComponentContent.maxScore'
+                           ng-change='labelController.authoringViewComponentChanged()'
+                           ng-model-options='{ debounce: 1000 }'
+                           style='width: 3em'/>
+                    <br/>
                     <textarea ng-model='labelController.authoringComponentContentJSONString'
                               ng-change='labelController.advancedAuthoringViewComponentChanged()'
                               ng-model-options='{ debounce: 1000 }'
@@ -141,6 +149,7 @@
                             toworkgroupid='{{workgroupId}}'
                             componentstateid='{{componentState.id}}'
                             active='true'></annotation>
+                <span ng-if='labelController.componentContent.maxScore != null'> / {{labelController.componentContent.maxScore}}</span>
                 <br/>
                 <annotation type='comment'
                             mode='{{labelController.mode}}'

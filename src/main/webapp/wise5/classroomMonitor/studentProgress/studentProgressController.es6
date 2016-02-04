@@ -2,12 +2,14 @@ class StudentProgressController {
     constructor($rootScope,
                 $state,
                 ConfigService,
+                ProjectService,
                 StudentStatusService,
                 TeacherDataService,
                 TeacherWebSocketService) {
         this.$rootScope = $rootScope;
         this.$state = $state;
         this.ConfigService = ConfigService;
+        this.ProjectService = ProjectService;
         this.StudentStatusService = StudentStatusService;
         this.TeacherDataService = TeacherDataService;
         this.TeacherWebSocketService = TeacherWebSocketService;
@@ -17,6 +19,8 @@ class StudentProgressController {
         this.workgroups = this.ConfigService.getClassmateUserInfos();
 
         this.studentStatuses = this.StudentStatusService.getStudentStatuses();
+
+        this.totalScore = this.ProjectService.getTotalScore();
 
         this.periods = [];
 
@@ -86,8 +90,19 @@ class StudentProgressController {
         return this.TeacherDataService.getCurrentPeriod();
     };
 
+    getStudentTotalScore(workgroupId) {
+        return this.TeacherDataService.getTotalScoreByWorkgroupId(workgroupId);
+    }
 }
 
-StudentProgressController.$inject = ['$rootScope', '$state', 'ConfigService', 'StudentStatusService', 'TeacherDataService','TeacherWebSocketService'];
+StudentProgressController.$inject = [
+    '$rootScope',
+    '$state',
+    'ConfigService',
+    'ProjectService',
+    'StudentStatusService',
+    'TeacherDataService',
+    'TeacherWebSocketService'
+];
 
 export default StudentProgressController;

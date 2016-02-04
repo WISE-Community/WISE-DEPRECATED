@@ -237,7 +237,11 @@ var mainModule = _angular2.default.module('classroomMonitor', ['angularMoment', 
         templateUrl: 'wise5/classroomMonitor/studentProgress/studentProgress.html',
         controller: 'StudentProgressController',
         controllerAs: 'studentProgressController',
-        resolve: {}
+        resolve: {
+            studentData: function studentData($stateParams, TeacherDataService, config) {
+                return TeacherDataService.retrieveAnnotations();
+            }
+        }
     }).state('root.studentGrading', {
         url: '/studentGrading/:workgroupId',
         templateUrl: 'wise5/classroomMonitor/studentGrading/studentGrading.html',

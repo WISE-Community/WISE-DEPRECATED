@@ -9,6 +9,14 @@
                               ng-model-options='{ debounce: 1000 }'
                               rows='10'
                               cols='100'></textarea>
+                    <br/>
+                    Max Score:
+                    <input type='number'
+                           ng-model='discussionController.authoringComponentContent.maxScore'
+                           ng-change='discussionController.authoringViewComponentChanged()'
+                           ng-model-options='{ debounce: 1000 }'
+                           style='width: 3em'/>
+                    <br/>
                     <textarea ng-model='discussionController.authoringComponentContentJSONString'
                               ng-change='discussionController.advancedAuthoringViewComponentChanged()'
                               ng-model-options='{ debounce: 1000 }'
@@ -112,6 +120,7 @@
                             toworkgroupid='{{workgroupId}}'
                             componentstateid='{{componentState.id}}'
                             active='true'></annotation>
+                <span ng-if='discussionController.componentContent.maxScore != null'> / {{discussionController.componentContent.maxScore}}</span>
                 <br/>
                 <annotation type='comment'
                             mode='{{discussionController.mode}}'

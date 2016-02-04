@@ -50,6 +50,13 @@
                 <button ng-click='graphController.authoringDeleteSeriesClicked($index)'>Delete Series</button>
             </div>
             <br/>
+            Max Score:
+            <input type='number'
+                   ng-model='graphController.authoringComponentContent.maxScore'
+                   ng-change='graphController.authoringViewComponentChanged()'
+                   ng-model-options='{ debounce: 1000 }'
+                   style='width: 3em'/>
+            <br/>
             <textarea ng-model='graphController.authoringComponentContentJSONString'
                       ng-change='graphController.advancedAuthoringViewComponentChanged()'
                       ng-model-options='{ debounce: 1000 }'
@@ -110,6 +117,7 @@
                     toworkgroupid='{{workgroupId}}'
                     componentstateid='{{componentState.id}}'
                     active='true'></annotation>
+        <span ng-if='graphController.componentContent.maxScore != null'> / {{graphController.componentContent.maxScore}}</span>
         <br/>
         <annotation type='comment'
                     mode='{{graphController.mode}}'

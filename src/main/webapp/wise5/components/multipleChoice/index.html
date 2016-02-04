@@ -25,6 +25,14 @@
                         <div>Is Correct: <input type='checkbox' ng-model='choice.isCorrect' ng-change='multipleChoiceController.authoringViewComponentChanged()'/></div>
                         <button ng-click='multipleChoiceController.deleteChoice(choice.id)'>Delete</button>
                     </div>
+                    <br/>
+                    Max Score:
+                    <input type='number'
+                           ng-model='multipleChoiceController.authoringComponentContent.maxScore'
+                           ng-change='multipleChoiceController.authoringViewComponentChanged()'
+                           ng-model-options='{ debounce: 1000 }'
+                           style='width: 3em'/>
+                    <br/>
                     <textarea ng-model='multipleChoiceController.authoringComponentContentJSONString'
                               ng-change='multipleChoiceController.advancedAuthoringViewComponentChanged()'
                               ng-model-options='{ debounce: 1000 }'
@@ -101,6 +109,7 @@
                             toworkgroupid='{{workgroupId}}'
                             componentstateid='{{componentState.id}}'
                             active='true'></annotation>
+                <span ng-if='multipleChoiceController.componentContent.maxScore != null'> / {{multipleChoiceController.componentContent.maxScore}}</span>
                 <br/>
                 <annotation type='comment'
                             mode='{{multipleChoiceController.mode}}'
