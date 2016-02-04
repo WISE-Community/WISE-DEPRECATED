@@ -28,7 +28,7 @@ class ProjectService {
             //{'name': 'completed', 'label': 'Completed'},
             {'name': 'bookmark', 'label': 'Bookmarks'} // TODO: Add when bookmarks are active
         ];
-    }
+    };
 
     getProject() {
         return this.project;
@@ -1126,11 +1126,12 @@ class ProjectService {
     };
 
     getThemePath() {
+        var wiseBaseURL = this.ConfigService.getConfigParam('wiseBaseURL');
         var project = this.getProject();
         if (project && project.theme) { // TODO: check if this is a valid theme (using ConfigService) rather than just truthy
-            return 'wise5/vle/themes/' + project.theme;
+            return wiseBaseURL + '/wise5/vle/themes/' + project.theme;
         } else {
-            return "wise5/vle/themes/default"; // TODO: get default theme name from ConfigService
+            return wiseBaseURL + '/wise5/vle/themes/default'; // TODO: get default theme name from ConfigService
         }
     };
 

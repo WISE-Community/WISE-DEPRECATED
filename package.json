@@ -27,6 +27,7 @@
   "scripts": {
     "watch-all": "npm run transpile & npm run watch-sass",
     "transpile": "babel --extensions .es6 --source-maps --presets babel-preset-es2015 --watch src/main/webapp/wise5/ --only wise5/services,wise5/classroomMonitor,wise5/authoringTool,wise5/directives,wise5/components,wise5/vle,wise5/controllers,wise5/node/ --out-dir src/main/webapp/wise5/",
+    "browser-sync": "browser-sync start --config bs-config.js",
     "watch-sass": "gulp",
     "compile-sass": "gulp compile-sass",
     "test": "echo \"Error: no test specified\" && exit 1"

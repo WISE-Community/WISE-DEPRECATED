@@ -991,7 +991,7 @@
 				<sec:intercept-url pattern="/portal/themes/**" access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/projectInfo" access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/projectlibrary" access="ROLE_ANONYMOUS,ROLE_USER" />
-				<sec:intercept-url pattern="/project/*" access="ROLE_ANONYMOUS,ROLE_USER" />
+				<sec:intercept-url pattern="/project/**" access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/vle/**" access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/wise5/**" access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/previewproject*.html" access="ROLE_ANONYMOUS,ROLE_USER" />

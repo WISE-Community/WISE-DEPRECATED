@@ -147,8 +147,8 @@ class NodeService {
             // get the component type in camel case
             componentType = this.toCamelCase(componentType);
         }
-
-        return 'wise5/components/' + componentType + '/index.html';
+        var wiseBaseURL = this.ConfigService.getConfigParam('wiseBaseURL');
+        return wiseBaseURL + '/wise5/components/' + componentType + '/index.html';
     };
 
     /**

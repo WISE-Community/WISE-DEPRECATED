@@ -13,14 +13,20 @@
  |
  */
 
-// run this command on the command-line:
-// browser-sync start --proxy="http://localhost:8080/wise" --files="**/*.css" --logLevel="debug" --ws=true
+/*
+ * WISE developer notes:
+ * 1. You can run
+ *      "npm run browser-sync" or
+ *      "browser-sync start --config bs-config.js"
+ *
+ * 2. You should disable browser cache.
+ *      Chrome: use InCognito mode
+ *      Firefox: get the developer extension, then set disable cache in the setting.
+ */
 
-// current issues:
-// * WISE5 VLE doesn't work properly in proxy mode, related to SPA history issue that other people are having, see below
 
 // required to work with single-page-apps, see here: https://github.com/BrowserSync/browser-sync/issues/204
-var historyApiFallback = require('connect-history-api-fallback');
+//var historyApiFallback = require('connect-history-api-fallback');
 /*
 var corsHandler = function (req, res, next) {
 	console.log('Adding CORS header for ' + req.method + ': ' + req.url);
@@ -29,17 +35,20 @@ var corsHandler = function (req, res, next) {
 };
 */
 
+/*
 var wise5 = function(req, res, next) {
 
-    console.log('Method: ' + req.method + ', URL: : ' + req.url);
-    if (req.url.startsWith("/wise/project")) {
+    //console.log('Method: ' + req.method + ', URL: : ' + req.url);
+    if (req.url.startsWith("/wise/project/2")) {
         console.log("in if case");
-	historyApiFallback();
+	       historyApiFallback({
+           verbose: true,
+           index: '/wise/project/2'
+         });
     }
-
     next();
 }
-
+*/
 module.exports = {
     "ui": false,
     /*
@@ -52,12 +61,11 @@ module.exports = {
     */
     //"files": false,
     "files": "**/*.css, **/*.js, **/*.html, **/*.jsp",
-    "watchOptions": {},
+    "watchOptions": {
+      awaitWriteFinish:true
+    },
     "server": false,
-    //"proxy":"http://localhost:8080/wise",
-    "proxy": {target: "http://localhost:8080/wise", ws:true},
-    //"proxy": {target: "http://localhost:8080/wise", ws:true, middleware:[function(req,res,next) {console.log(req.url); next()}]},
-    //"proxy": {target: "http://localhost:8080/wise/project/1", ws:true, middleware:[ historyApiFallback() ]},
+    "proxy": {target: "http://localhost:8080/wise/", ws:true},
     "port": 3003,
     "middleware": false,
     //"middleware":[ wise5 ],
@@ -110,7 +118,7 @@ module.exports = {
     ],
     "socket": {
         "socketIoOptions": {
-            "log": false
+            "log": true
         },
         "socketIoClientConfig": {
             "reconnectionAttempts": 50

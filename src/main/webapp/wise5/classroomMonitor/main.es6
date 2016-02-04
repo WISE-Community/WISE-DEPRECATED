@@ -102,7 +102,8 @@ let mainModule = angular.module('classroomMonitor', [
     .controller(StudentGradingController.name, StudentGradingController)
     .controller(StudentProgressController.name, StudentProgressController)
     .controller(TableController.name, TableController)
-    .config(['$urlRouterProvider',
+    .config([
+        '$urlRouterProvider',
         '$stateProvider',
         '$controllerProvider',
         '$mdThemingProvider',
@@ -144,7 +145,7 @@ let mainModule = angular.module('classroomMonitor', [
                     controllerAs: 'studentProgressController',
                     resolve: {
                     }
-                })
+                })                
                 .state('root.studentGrading', {
                     url: '/studentGrading/:workgroupId',
                     templateUrl: 'wise5/classroomMonitor/studentGrading/studentGrading.html',

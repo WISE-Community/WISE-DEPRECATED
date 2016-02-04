@@ -1,4 +1,5 @@
 //import theme from './themes/default/theme2.js';
+'use strict';
 
 class VLEController {
     constructor($scope,

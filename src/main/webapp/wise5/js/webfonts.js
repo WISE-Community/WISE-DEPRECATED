@@ -7,7 +7,7 @@ webfontloader.load({
             case 'RobotoDraft':
                 webfontloader.load({
                     custom: {
-                        families: ['RobotoDraft:300,400,500,700,i4'],
+                        families: ['robotoDraft:300,400,500,700,i4'],
                         urls: [ 'wise5/style/fonts/localFonts.css' ]
                     }
                 });
@@ -23,6 +23,6 @@ webfontloader.load({
         }
     },
     google: {
-        families: ['RobotoDraft:300,400,500,700,i4', 'Material Icons']
+        families: ['robotoDraft:300,400,500,700,i4', 'Material Icons']
     }
 });
