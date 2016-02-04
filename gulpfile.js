@@ -12,6 +12,7 @@ var cssnano = require('cssnano');
 var sourcemaps = require('gulp-sourcemaps');
 var newer = require('gulp-newer');
 var gulpif = require('gulp-if');
+var print = require('gulp-print');
 //var rtlscss = require('rtlcss');
 
 // -----------------------------------------------------------------------------
@@ -34,7 +35,10 @@ gulp.task('compile-sass', function() {
         .pipe(postcss([ autoprefixer(autoprefixerOptions), cssnano/*, rtlcss*/ ]) )
         .pipe(sourcemaps.write('.'))
         //.pipe(rename({suffix: ".min"}))
-        .pipe(gulp.dest('./'));
+        .pipe(gulp.dest('./'))
+        .pipe(print(function(filepath) {
+          return "Compiled: " + filepath;
+        }));
         //.pipe(gulp.dest(function(file) {
             //return file.base;
         //}));
@@ -53,7 +57,7 @@ gulp.task('watch-sass', ['set-watch'], function() {
         // and run `compile-sass` task on change
         .watch(paths, ['compile-sass'])
         .on('change', function(event) {
-            console.log('File ' + event.path + ' was ' + event.type + ', compiling...');
+            console.log('File ' + event.path + ' was ' + event.type);
         });
 });
 
