@@ -2,7 +2,7 @@ View.prototype.exportButtonClickedEventListener = function(exportType, fileType)
 	this.setParamsForXLSExport();
 	$('#exportType').val(exportType);
 	$('#fileType').val(fileType);
-	
+
 	if (exportType == 'customLatestStudentWork') {
 		//get all the node ids that were chosen for the custom export
 		var customStepsArrayJSONString = this.getCustomStepsArrayJSONString();
@@ -12,7 +12,7 @@ View.prototype.exportButtonClickedEventListener = function(exportType, fileType)
 		var customStepsArrayJSONString = this.getCustomStepsArrayJSONString();
 		$('#customStepsArray').val(customStepsArrayJSONString);
 	}
-	
+
 	$('#getStudentXLSExport').submit();
 };
 
@@ -23,22 +23,395 @@ View.prototype.exportButtonClickedEventListener = function(exportType, fileType)
 View.prototype.specialExportButtonClickedEventListener = function(nodeId) {
 	this.setParamsForSpecialExport();
 	$('#exportType').val('specialExport');
-	
+
 	//set the node id
 	$('#nodeId').val(nodeId);
-	
+
 	$('#getStudentXLSExport').submit();
 };
+
+/**
+ * Request a special export
+ * @param nodeId the node id for the step we will special export
+ */
+View.prototype.specialExportCSVButtonClickedEventListener = function(nodeId) {
+
+    // retrieve the student work for the node from the server
+	this.specialExportGetWorkForNodeId(nodeId);
+};
+
+/**
+ * Get the work for the step
+ *
+ * @param nodeId the node id
+ */
+View.prototype.specialExportGetWorkForNodeId = function(nodeId) {
+	//get the url for retrieving student data
+	var studentDataURL = this.getConfig().getConfigParam('studentDataURL');
+
+	var runId = this.getConfig().getConfigParam('runId');
+	var grading = true;
+	var getRevisions = false;
+
+	//get the workgroup ids in the run
+	var workgroupIds = this.getUserAndClassInfo().getClassmateWorkgroupIds();
+
+	//join the workgroup ids into a single string delimited by ':'
+	userIds = workgroupIds.join(':');
+
+	//create the GET params for retrieving the student data
+	var studentDataURLWithParams = studentDataURL +
+		"?nodeIds=" + nodeId +
+		"&userId=" + userIds +
+		"&grading=true" +
+		"&runId=" + runId +
+		"&getRevisions=" + getRevisions +
+		"&useCachedWork=false";
+
+	//make the request to retrieve the student data
+	this.connectionManager.request('GET', 1, studentDataURLWithParams, null, this.specialExportGetWorkForNodeIdCallback, [this, nodeId], this.specialExportGetWorkForNodeIdCallbackFail);
+
+};
+
+/**
+ * The success callback when retrieving the student work for a step
+ *
+ * @param text the response text
+ * @param xml
+ * @param args
+ */
+View.prototype.specialExportGetWorkForNodeIdCallback = function(text, xml, args) {
+	var thisView = args[0];
+	var nodeId = args[1];
+
+	//get the student work and then display the grade by step grading page
+	thisView.specialExportGetWorkForNodeIdCallbackHandler(text, nodeId);
+};
+
+/**
+ * Called when we successfully retrieve the student work for a step
+ *
+ * @param text the student work from the step as a string. this will contain
+ * an array of vle states that have node visits only from the specific
+ * step we are looking at
+ * @param nodeId the node id for the step
+ */
+View.prototype.specialExportGetWorkForNodeIdCallbackHandler = function(text, nodeId) {
+	//parse the text into JSON, this will be an object which contains an array of vle states
+	var vleStatesForNodeId = JSON.parse(text);
+
+	if(vleStatesForNodeId != null) {
+		//the array to hold all the vle states
+		var workForNodeId = [];
+
+		//get the vle states array
+		var vleStates = vleStatesForNodeId.vleStates;
+
+		//loop through all the vle states JSON objects
+		for(var x=0; x<vleStates.length; x++) {
+			//get a vle state JSON object
+			var vleStateJSONObj = vleStates[x];
+
+			//create a vle state object
+			var vleState = VLE_STATE.prototype.parseDataJSONObj(vleStateJSONObj);
+
+			//add the vle state object to the array
+			workForNodeId.push(vleState);
+		}
+
+		//set the array of vle states for this step
+		this.model.setWorkByNodeId(nodeId, workForNodeId);
+
+        if (this.getProject().getNodeById(nodeId).type === 'TableNode') {
+            // generate the special export csv
+            this.generateTableSpecialExportCSV(nodeId);
+        }
+	}
+};
+
+/**
+ * The failure callback when trying to retrieve student work
+ */
+View.prototype.specialExportGetWorkForNodeIdCallbackFail = function(text, xml, args) {
+	var thisView = args;
+};
+
+/**
+ * Generate the special export csv for the table step
+ * @param nodeId the node id
+ */
+View.prototype.generateTableSpecialExportCSV = function(nodeId) {
+
+	var rows = [];
+	var runId = this.getConfig().getConfigParam('runId');
+	var stepNumberAndTitle = this.getProject().getStepNumberAndTitle(nodeId);
+    var teacherUserName = this.userAndClassInfo.getTeacherUserInfo().userName;
+    var projectId = this.config.getConfigParam('projectId');
+    var parentProjectId = this.config.getConfigParam('parentProjectId');
+    var projectName = this.getProject().getTitle();
+    var nodeType = this.getProject().getNodeById(nodeId).type;
+
+    /*
+     * remove the Node part of the node type for example
+     * TableNode will be changed to Table
+     */
+    nodeType = nodeType.replace('Node', '');
+
+	var workgroupIds = this.userAndClassInfo.getWorkgroupIdsInClass();
+
+	var maxRows = 0;
+	var maxColumns = 0;
+
+    /*
+     * loop through all the workgroups to find the max number of
+     * rows and columns that any student has used
+     */
+	for (var w = 0; w < workgroupIds.length; w++) {
+
+		var workgroupId = workgroupIds[w];
+
+		var nodeVisits = this.model.getNodeVisitsByNodeIdAndWorkgroupId(nodeId, workgroupId);
+
+		if (nodeVisits != null && nodeVisits.length > 0) {
+
+			// get the latest node visit
+			var nodeVisit = nodeVisits[nodeVisits.length - 1];
+
+			var nodeStates = nodeVisit.nodeStates;
+
+			if (nodeStates != null && nodeStates.length > 0) {
+
+                // get the latest node state
+				var nodeState = nodeStates[nodeStates.length - 1];
+
+				var tableData = nodeState.tableData;
+
+				if (tableData != null) {
+					var numRows = 0;
+
+                    // get the number of columns in this student table
+					var numColumns = tableData.length;
+
+					if (numColumns > 0) {
+                        // get the number of rows in this student table
+						numRows = tableData[0].length;
+					}
+
+                    /*
+                     * update the max values if we have found a larger value
+                     * than what we have previously seen
+                     */
+
+					if (numRows > maxRows) {
+						maxRows = numRows;
+					}
+
+					if (numColumns > maxColumns) {
+						maxColumns = numColumns;
+					}
+				}
+			}
+		}
+	}
+
+    // add the metadata cells in the header row
+	var headerRow = [
+		'Workgroup Id',
+		'WISE Id 1',
+		'WISE Id 2',
+		'WISE Id 3',
+		'Class Period',
+		'Teacher Login',
+		'Project Id',
+		'Parent Project Id',
+		'Project Name',
+        'Run Id',
+        'Step Work Id',
+        'Step Title',
+        'Step Type'
+	];
+
+    // add the table cell labels in the header row
+	for (var y = 0; y < maxRows; y++) {
+		for (var x = 0; x < maxColumns; x++) {
+			headerRow.push('Row ' + (y + 1) + ' Column ' + (x + 1));
+		}
+	}
+
+    // add the header row to our rows
+	rows.push(headerRow);
+
+    // loop through all the workgroups to obtain the student data
+	for (var w = 0; w < workgroupIds.length; w++) {
+
+		var workgroupId = workgroupIds[w];
+		var classmate = this.userAndClassInfo.getClassmateByWorkgroupId(workgroupId);
+
+		if (classmate != null) {
+			var row = [];
+
+            // add the workgroup id cell
+			row.push(workgroupId);
+
+            // add the wise id cells
+            var wiseIds = classmate.userIds;
+			for (var wi = 0; wi < wiseIds.length; wi++) {
+				var wiseId = wiseIds[wi];
+
+				row.push(wiseId);
+			}
+
+            // add any necessary empty cells for wise ids (if the workgroup has less than 3 members)
+			var numEmptyWISEIdColumns = 3 - wiseIds.length;
+            if (numEmptyWISEIdColumns > 0) {
+                for (var e = 0; e < numEmptyWISEIdColumns; e++) {
+                    row.push("");
+                }
+            }
+
+            // add the period name
+			var periodName = classmate.periodName;
+			row.push(periodName);
+
+            // add the teacher name
+			row.push(teacherUserName);
+
+            // add the project id
+			row.push(projectId);
+
+            // add the parent project id
+			row.push(parentProjectId);
+
+            // add the project name
+			row.push(projectName);
+
+            // add the run id
+			row.push(runId);
+
+			//row.push(''); // start date
+			//row.push(''); // end date
+
+            // get all the node visits for this student for the step
+			var nodeVisits = this.model.getNodeVisitsByNodeIdAndWorkgroupId(nodeId, workgroupId);
+
+			if (nodeVisits != null && nodeVisits.length > 0) {
+
+				// get the latest node visit
+				var nodeVisit = nodeVisits[nodeVisits.length - 1];
+
+                // add the step work id
+                var stepWorkId = parseInt(nodeVisit.id);
+                row.push(stepWorkId);
+
+                // add the step number and title
+                row.push(stepNumberAndTitle);
+
+                // add the node type
+                row.push(nodeType);
+
+				var nodeStates = nodeVisit.nodeStates;
+
+				if (nodeStates != null && nodeStates.length > 0) {
+
+                    // get the latest node state
+					var nodeState = nodeStates[nodeStates.length - 1];
+
+                    if (nodeState != null) {
+                        // get the table data
+                        var tableData = nodeState.tableData;
+
+                        // loop through the rows
+                        for (var y = 0; y < maxRows; y++) {
+
+                            // loop through the columns
+                            for (var x = 0; x < maxColumns; x++) {
+                                var value = Table.prototype.getCellValue(x, y, tableData);
+
+                                if (value != null) {
+                                    if (typeof value == 'string' && value.indexOf(',') != -1) {
+                                        // wrap the value in quotes if it contains a comma
+                                        row.push('"' + value + '"');
+                                    } else {
+                                        // add the value into the cell
+                                        row.push(value);
+                                    }
+                                } else {
+                                    //this student does not have a cell for this table position
+                                    row.push('');
+                                }
+                            }
+                        }
+                    }
+				}
+			}
+
+            // add the workgroup's row
+			rows.push(row);
+		}
+	}
+
+    // get the csv string
+    var csvString = this.convertToCSVString(rows);
+
+    // get the file name
+    var fileName = 'Run_' + runId + '_Step_' + stepNumberAndTitle + '.csv';
+
+    // download the csv file
+    this.downloadCSV(fileName, csvString);
+};
+
+/**
+ * Convert the rows into a csv string
+ * @param rows an array of arrays that contain values that represent
+ * the cells that will show up in the csv
+ */
+View.prototype.convertToCSVString = function(rows) {
+	var csvRows = [];
+
+    // loop through all the rows
+	for (var r = 0; r < rows.length; r++) {
+		var row = rows[r];
+
+        // join all the cells in the row with a comma
+		csvRows.push(row.join(","));
+	}
+
+    // joine all the rows with a new line
+	var csvString = csvRows.join("\n");
+
+	return csvString;
+};
+
+/**
+ * Download the csv file
+ * @param fileName the file name
+ * @param csvString the csv string
+ */
+View.prototype.downloadCSV = function(fileName, csvString) {
+
+    // change all spaces in the filename to underscores
+    fileName = fileName.replace(/ /g, '_');
+
+    // create an anchor that will be used to download the csv file
+    var a = document.createElement('a');
+    a.href = 'data:attachment/csv,' + encodeURIComponent(csvString);
+    a.target = '_blank';
+    a.download = fileName;
+
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+}
 
 /**
  * Request the student names export
  */
 View.prototype.getStudentNamesExport = function() {
 	var getStudentListURL = this.getConfig().getConfigParam("getStudentListURL");
-	
+
 	document.getElementById('runId').value = this.getConfig().getConfigParam('runId');
 	document.getElementById('getStudentXLSExport').action = getStudentListURL;
-	
+
 	$('#getStudentXLSExport').submit();
 };
 
@@ -49,11 +422,11 @@ View.prototype.getStudentNamesExport = function() {
 View.prototype.getCustomStepsArrayJSONString = function() {
 	var customStepsJSONString = "";
 	var customStepsArray = this.getCustomStepsArray();
-	
+
 	if (customStepsArray != null) {
 		customStepsJSONString = JSON.stringify(customStepsArray);
 	}
-	
+
 	return customStepsJSONString;
 };
 
@@ -63,25 +436,25 @@ View.prototype.getCustomStepsArrayJSONString = function() {
  */
 View.prototype.getCustomStepsArray = function() {
 	var customStepsArray = [];
-	
+
 	//get all the steps that were checked
 	var customSteps = $("input:checkbox[name='customExportStepCheckbox']:checked");
-	
+
 	//loop through all the steps
 	for (var x=0; x<customSteps.length; x++) {
 		var customStep = customSteps[x];
-		
+
 		if (customStep != null) {
 			//get the node id of the step
 			var nodeId = customStep.value;
-			
+
 			if (nodeId != null) {
 				//add the node id to our array
-				customStepsArray.push(nodeId);			
-			}			
+				customStepsArray.push(nodeId);
+			}
 		}
 	}
-	
+
 	return customStepsArray;
 };
 
@@ -94,10 +467,10 @@ View.prototype.getCustomStepsArray = function() {
  */
 View.prototype.getNodeIdToNodeTitlesMap = function(node) {
 	var displayGradeByStepSelectPageHtml = "";
-	
+
 	if (node.isLeafNode()) {
 		//this node is a leaf/step
-		
+
 		/*
 		 * create the mapping of node id to node title delimited by &##58;
 		 * &#58; is the ascii value of : and we use two #'s in case the
@@ -132,29 +505,29 @@ View.prototype.setParamsForXLSExport = function() {
 
 	/*
 	 * set the run id to an element that will be passed back to the server
-	 * when the export to xls is called 
+	 * when the export to xls is called
 	 */
 	document.getElementById('runId').value = this.getConfig().getConfigParam('runId');
 
 	//set the project id
 	document.getElementById('projectId').value = this.getConfig().getConfigParam('projectId');
-	
+
 	//set the parent project id
 	document.getElementById('parentProjectId').value = this.getConfig().getConfigParam('parentProjectId');
-	
+
 	//set the run name
 	document.getElementById('runName').value = this.getConfig().getConfigParam('runName');
-	
+
 	/*
 	 * set the project title to an element that will be passed back to the server
 	 */
 	document.getElementById('projectName').value = this.getProject().getTitle();
-	
+
 	/*
 	 * set the type for the bridge controller to inspect
 	 */
 	document.getElementById('type').value = "xlsexport";
-	
+
 	/*
 	 * set the url for where to get the xls
 	 */
@@ -168,29 +541,29 @@ View.prototype.setParamsForSpecialExport = function() {
 
 	/*
 	 * set the run id to an element that will be passed back to the server
-	 * when the export to xls is called 
+	 * when the export to xls is called
 	 */
 	document.getElementById('runId').value = this.getConfig().getConfigParam('runId');
 
 	//set the project id
 	document.getElementById('projectId').value = this.getConfig().getConfigParam('projectId');
-	
+
 	//set the parent project id
 	document.getElementById('parentProjectId').value = this.getConfig().getConfigParam('parentProjectId');
-	
+
 	//set the run name
 	document.getElementById('runName').value = this.getConfig().getConfigParam('runName');
-	
+
 	/*
 	 * set the project title to an element that will be passed back to the server
 	 */
 	document.getElementById('projectName').value = this.getProject().getTitle();
-	
+
 	/*
 	 * set the type for the bridge controller to inspect
 	 */
 	document.getElementById('type').value = "specialExport";
-	
+
 	/*
 	 * set the url for where to get the xls
 	 */
@@ -218,7 +591,7 @@ View.prototype.showScores = function() {
  * workgroup fields in the excel exports
  */
 View.prototype.getWorkgroupExportExplanations = function() {
-	
+
 	var workgroupExportExplanations = [
 		{
 			label:"Workgroup Id",
@@ -241,7 +614,7 @@ View.prototype.getWorkgroupExportExplanations = function() {
 			explanation:"the period the workgroup is in"
 		}
 	];
-	
+
 	//generate the tr rows using the array
 	return this.getExplanationTRs(workgroupExportExplanations);
 };
@@ -290,7 +663,7 @@ View.prototype.getRunExportExplanations = function() {
 			explanation:"the date the run was archived (if applicable)"
 		}
 	];
-	
+
 	//generate the tr rows using the array
 	return this.getExplanationTRs(runExportExplanations);
 };
@@ -367,7 +740,7 @@ View.prototype.getLatestStudentWorkExportExplanations = function() {
 			explanation:"for AssessmentList steps, this will display the prompt for each of the separate parts in the AssessmentList step"
 		}
 	];
-	
+
 	//generate the tr rows using the array
 	return this.getExplanationTRs(latestStudentWorkExportExplanations);
 };
@@ -464,7 +837,7 @@ View.prototype.getAllStudentWorkExportExplanations = function() {
 			explanation:"the Nth part of the work the student submitted for this step (only applies to steps that have multiple parts such as AssessmentList)"
 		}
 	];
-	
+
 	//generate the tr rows using the array
 	return this.getExplanationTRs(allStudentWorkExportExplanations);
 };
@@ -561,7 +934,7 @@ View.prototype.getIdeaBasketsExportExplanations = function() {
 			explanation:"whether the idea was placed in the trash in this basket revision (0 if no, 1 if yes)"
 		}
 	];
-	
+
 	//generate the tr rows using the array
 	return this.getExplanationTRs(ideaBasketsExportExplanations);
 };
@@ -630,7 +1003,7 @@ View.prototype.getExplanationBuilderWorkExportExplanations = function() {
 			explanation:"the color the student chose for the idea"
 		}
 	];
-	
+
 	//generate the tr rows using the array
 	return this.getExplanationTRs(explanationBuilderWorkExportExplanations);
 };
@@ -667,7 +1040,7 @@ View.prototype.getStudentNamesExportExplanations = function() {
 			explanation:"the name of the name of the student"
 		}
 	];
-	
+
 	//generate the tr rows using the array
 	return this.getExplanationTRs(studentNamesExportExplanations);
 };
@@ -680,22 +1053,22 @@ View.prototype.getStudentNamesExportExplanations = function() {
  */
 View.prototype.getExplanationTRs = function(explanationArray) {
 	var explanationHtml = "";
-	
+
 	//loop through all the elements in the array
 	for (var x=0; x<explanationArray.length; x++) {
 		//retrieve an object
 		var explanationEntry = explanationArray[x];
-		
+
 		//get the label and explanation
 		var label = explanationEntry.label;
 		var explanation = explanationEntry.explanation;
-		
+
 		//create the tr html
 		explanationHtml += "<tr>";
 		explanationHtml += this.getExplanationTD(label) + this.getExplanationTD(explanation);
 		explanationHtml += "</tr>";
 	}
-	
+
 	return explanationHtml;
 };
 
@@ -706,12 +1079,12 @@ View.prototype.getExplanationTRs = function(explanationArray) {
  */
 View.prototype.getExplanationTD = function(tdText) {
 	var explanationTdHtml = "";
-	
+
 	//wrap the string in td
 	explanationTdHtml += "<td class='exportExplanationTd'>";
 	explanationTdHtml += tdText;
 	explanationTdHtml += "</td>";
-	
+
 	return explanationTdHtml;
 };
 
@@ -720,7 +1093,7 @@ View.prototype.getExplanationTD = function(tdText) {
  * latest data.
  */
 function refresh() {
-	lock();	
+	lock();
 	render(this.contentURL, this.userURL, this.getDataUrl, this.contentBaseUrl, this.annotationsURL, this.annotationsURL, this.runId, this.flagsURL, this.flagsURL);
 }
 
@@ -732,7 +1105,7 @@ function refresh() {
 function exportGrades(exportType) {
 	 //display the popup window that contains the export data
 	 displayExportData(exportType);
-	 
+
 	 //send the export data to the server so it can echo it and we can save it as a file
 	 vle.saveStudentWorkToFile(exportType);
 }

@@ -91,8 +91,10 @@ View.prototype.gradingDispatcher = function(type, args, obj) {
 	} else if(type=='groupClicked') {
 		obj.groupClickedEventListener(args[0], args[1]);
 	} else if(type=='specialExportButtonClicked') {
-		obj.specialExportButtonClickedEventListener(args[0]);
-	} else if(type=='realTimeMonitorSelectWorkgroupIdDropDownClicked') {
+        obj.specialExportButtonClickedEventListener(args[0]);
+    } else if(type=='specialExportCSVButtonClicked') {
+        obj.specialExportCSVButtonClickedEventListener(args[0]);
+    } else if(type=='realTimeMonitorSelectWorkgroupIdDropDownClicked') {
 		obj.realTimeMonitorSelectWorkgroupIdDropDownClicked();
 	} else if(type=='realTimeMonitorSelectStepDropDownClicked') {
 		obj.realTimeMonitorSelectStepDropDownClicked();

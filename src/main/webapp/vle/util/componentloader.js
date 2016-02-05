@@ -1,15 +1,15 @@
 /**
  * The componentloader object manages the loading of the components.
- * This includes loading variables, scripts, events, styling and 
+ * This includes loading variables, scripts, events, styling and
  * methods into the view as well as initializing necessary variables.
- * 
+ *
  * @author Patrick Lawler
  */
 var componentloader = function(em, sl){
 	var eventManager = em;
 	var scriptloader = sl;
 	var componentQueue = [];
-	
+
 	//place components in the order you want them to load
 	var views = {
 		student: ['topMenu','setup', 'core', 'keystroke', 'config', 'user', 'session','studentwork','student','hint','navigation','annotations','uicontrol', 'wise', 'maxscores', 'peerreviewhelper', 'ideabasket','portfolio', 'studentasset', 'studentWebSocket'],
@@ -17,29 +17,29 @@ var componentloader = function(em, sl){
 		authoring: ['ddMenu', 'setup', 'core','keystroke', 'config', 'session','messagemanager','author','authoringcomponents', 'maxscores'],
 		classroomMonitor: ['setup', 'core', 'config', 'studentwork', 'user', 'session', 'annotations', 'maxscores', 'teacherWebSocket', 'ideabasket']
 	};
-	
+
 	//components are comprised of variables, events, methods, and initialization.
 	//Use an empty object {} if none of a particular kind are needed.
 	var components = {
 		core: {
 			variables: {
-				project:undefined, 
-				projectMetadata:undefined, 
-				HTML_CONTENT_TEMPLATES:{}, 
-				isLoadedProjectMinified:false, 
+				project:undefined,
+				projectMetadata:undefined,
+				HTML_CONTENT_TEMPLATES:{},
+				isLoadedProjectMinified:false,
 				nodeClasses:{},
 				nodeIconPaths:{},
 				activeThemes: [],
 				themeNavModes: {}
 			},
 			events: {
-				'loadingProjectStarted': [null, null], 
+				'loadingProjectStarted': [null, null],
 				'loadingProjectCompleted':[null, null],
 				'pageRenderCompleted':[null,null],
-				'contentRenderCompleted':[null,null], 
-				'contentTimedOut':[null,null], 
+				'contentRenderCompleted':[null,null],
+				'contentTimedOut':[null,null],
 				'fatalError':[null,null],
-				'retrieveProjectMetaDataCompleted':[null,null], 
+				'retrieveProjectMetaDataCompleted':[null,null],
 				'retrieveAnnotationsCompleted':[null,null]
 			},
 			methods: {
@@ -62,7 +62,7 @@ var componentloader = function(em, sl){
 		},
 		config: {
 			variables: {config:undefined},
-			events: {				
+			events: {
 				'loadConfigCompleted':[null,null]
 			},
 			methods: {},
@@ -78,7 +78,7 @@ var componentloader = function(em, sl){
 		},
 		session: {
 			variables: {},
-			events: {				
+			events: {
 			},
 			methods: {},
 			initialize: {
@@ -114,15 +114,16 @@ var componentloader = function(em, sl){
 					 'flagCheckboxClicked':[null, null],
 					 'inappropriateFlagCheckboxClicked':[null, null],
 					 'specialExportButtonClicked':[null, null],
+					 'specialExportCSVButtonClicked':[null, null],
 					 'exportExplanationButtonClicked':[null, null],
 					 'maxScoreChanged':[null, null],
 					 'gradeByStepViewSelected':[null, null],
 					 'gradeByTeamViewSelected':[null, null],
 					 'displayStudentUploadedFilesSelected':[null, null],
 					 'checkForNewWorkButtonClicked':[null, null],
-					 'initiateGradingDisplayStarted':[null, null],					 
+					 'initiateGradingDisplayStarted':[null, null],
 					 'projectDataReceived':[null,null],
-					 'initiateClassroomMonitorDisplayStarted':[null,null],					 
+					 'initiateClassroomMonitorDisplayStarted':[null,null],
 					 'classroomMonitorDisplayCompleted':[null,null],
 					 'realTimeMonitorSelectWorkgroupIdDropDownClicked':[null,null],
 					 'realTimeMonitorSelectStepDropDownClicked':[null,null],
@@ -137,7 +138,7 @@ var componentloader = function(em, sl){
 					 'exportButtonClicked':[null, null]},
    		    methods:{
 			  onWindowUnload:function(view){return function(){view.onWindowUnload();};}
-		    },					 
+		    },
 			initialize: {
 				initializeEvents:function(view) {
 					eventManager.subscribe("gradingConfigUrlReceived", view.gradingDispatcher, view);
@@ -151,6 +152,7 @@ var componentloader = function(em, sl){
 					eventManager.subscribe("flagCheckboxClicked", view.gradingDispatcher, view);
 					eventManager.subscribe("inappropriateFlagCheckboxClicked", view.gradingDispatcher, view);
 					eventManager.subscribe("specialExportButtonClicked", view.gradingDispatcher, view);
+					eventManager.subscribe("specialExportCSVButtonClicked", view.gradingDispatcher, view);
 					eventManager.subscribe("exportExplanationButtonClicked", view.gradingDispatcher, view);
 					eventManager.subscribe("retrieveProjectMetaDataCompleted", view.gradingDispatcher, view);
 					eventManager.subscribe("maxScoreChanged", view.gradingDispatcher, view);
@@ -173,7 +175,7 @@ var componentloader = function(em, sl){
 					eventManager.subscribe("realTimeMonitorSelectStepDropDownClicked", view.gradingDispatcher, view);
 					eventManager.subscribe("realTimeMonitorShareWithClassClicked", view.gradingDispatcher, view);
 					eventManager.subscribe("exportButtonClicked", view.gradingDispatcher, view);
-					eventManager.initializeLoading([['gradingConfigUrlReceived','projectDataReceived','Project Data'], 
+					eventManager.initializeLoading([['gradingConfigUrlReceived','projectDataReceived','Project Data'],
 					                                ['initiateGradingDisplayStarted','retrieveStudentWorkCompleted','Student Data'],
 					                                ['initiateClassroomMonitorDisplayStarted','classroomMonitorDisplayCompleted','Classroom Monitor']], false);
 				}
@@ -181,27 +183,27 @@ var componentloader = function(em, sl){
 		},
 		author: {
 			variables: {
-				selectCallback:undefined, 
-				selectArgs:undefined, 
-				selectModeEngaged:undefined, 
+				selectCallback:undefined,
+				selectArgs:undefined,
+				selectModeEngaged:undefined,
 				hasTODO:false,
-				disambiguateMode:false, 
-				selectOrigSeqs:undefined, 
-				selectOrigNodes:undefined, 
+				disambiguateMode:false,
+				selectOrigSeqs:undefined,
+				selectOrigNodes:undefined,
 				simpleProject:true,
-				projectStructureViolation:false, 
-				pathSeparator:undefined, 
+				projectStructureViolation:false,
+				pathSeparator:undefined,
 				selectedType:undefined,
-				projectPaths:'', 
-				primaryPath:'', 
-				portalUrl:undefined, 
-				portalProjectPaths:[], 
-				portalProjectIds:[], 
+				projectPaths:'',
+				primaryPath:'',
+				portalUrl:undefined,
+				portalProjectPaths:[],
+				portalProjectIds:[],
 				portalProjectTitles:[],
-				portalProjectId:undefined, 
-				portalCurriculumBaseDir:undefined, 
-				excludedPrevWorkNodes:['HtmlNode', 'OutsideUrlNode', 'MySystemNode', 'SVGDrawNode', 'MWNode', 'DrawNode','DuplicateNode'], 
-				allowedAssetExtensions:['txt', 'xml', 'jpg', 'jpeg', 'gif', 'png', 'swf', 'flv', 'bmp', 'tif', 'pdf', 'doc', 'ppt', 'xls', 'docx', 'pptx', 'xlsx', 
+				portalProjectId:undefined,
+				portalCurriculumBaseDir:undefined,
+				excludedPrevWorkNodes:['HtmlNode', 'OutsideUrlNode', 'MySystemNode', 'SVGDrawNode', 'MWNode', 'DrawNode','DuplicateNode'],
+				allowedAssetExtensions:['txt', 'xml', 'jpg', 'jpeg', 'gif', 'png', 'swf', 'flv', 'bmp', 'tif', 'pdf', 'doc', 'ppt', 'xls', 'docx', 'pptx', 'xlsx',
 				                        'odt', 'fodt', 'ods', 'fods', 'odp', 'fodp', 'odg', 'fodg', 'nlogo', 'nls', 'jar', 'cml', 'mml', 'otml', 'e2d',
 				                        'mov', 'mp4', 'mp3', 'm4a', 'm4v', 'wav', 'aac', 'avi', 'mpg', 'mpeg', 'webm', 'ogg', 'oga', 'ogv', 'css', 'json', 'zip', 'js', 'html'],
 		        allowedAssetExtensionsByType:{
@@ -214,33 +216,33 @@ var componentloader = function(em, sl){
 					office:['pdf', 'doc', 'ppt', 'xls', 'docx', 'pptx', 'xlsx', 'odt', 'fodt', 'ods', 'fods', 'odp', 'fodp', 'odg', 'fodg'],
 					misc:['txt', 'pdf', 'css', 'json']
 				},
-				MAX_ASSET_SIZE:10485760, 
-				currentStepNum:undefined, 
-				activeNode:undefined, 
+				MAX_ASSET_SIZE:10485760,
+				currentStepNum:undefined,
+				activeNode:undefined,
 				tab:'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
 				defaultSelectModeMessage:'Select a new location for selected item(s).',
 				defaultNodeSelectMessage:'Select a new location for the selected step(s). ' +
 					'If you select an activity, the selected step(s) will be placed at the beginning of the activity.',
 				defaultSequenceSelectMessage:'Select a new location for the selected activity(s).',
-				hasProjectMeta:false, 
+				hasProjectMeta:false,
 				projectMeta:{title:'', subject:'', summary:'', author:'', gradeRange:'', totalTime:'', compTime:'', contact:'', techReqs:'', tools:'', lessonPlan:'', standards:'', keywords:''},
-				timeoutVars:{}, 
-				placeNode:false, 
-				placeNodeId:undefined, 
+				timeoutVars:{},
+				placeNode:false,
+				placeNodeId:undefined,
 				authoringBaseUrl:'filemanager.html?command=retrieveFile&fileName=',
-				easyMode:true, 
-				updateNow:true, 
-				stepSaved:true, 
-				activeContent:undefined, 
-				preservedContent:undefined, 
+				easyMode:true,
+				updateNow:true,
+				stepSaved:true,
+				activeContent:undefined,
+				preservedContent:undefined,
 				createMode:false,
-				cleanMode:false, 
-				versionMasterUrl:undefined, 
+				cleanMode:false,
+				versionMasterUrl:undefined,
 				portalUsername:undefined,
-				EDITING_POLL_TIME:30000, 
-				editingPollInterval:undefined, 
-				currentEditors:undefined, 
-				requestUrl:'filemanager.html', 
+				EDITING_POLL_TIME:30000,
+				editingPollInterval:undefined,
+				currentEditors:undefined,
+				requestUrl:'filemanager.html',
 				assetRequestUrl:'assetmanager.html',
 				tagNameMap:{},
 				tagIdForRequest:undefined,
@@ -248,50 +250,50 @@ var componentloader = function(em, sl){
 			},
 			events: {
 				'projectSelected':[null,null],
-				'checkAndSelect':[null, null], 
-				'checkAndDeselect':[null,null], 
+				'checkAndSelect':[null, null],
+				'checkAndDeselect':[null,null],
 				'selectClick':[null,null],
 				'selectBoxClick':[null,null],
-				'stepLevelChanged':[null,null], 
-				'autoStepChanged':[null,null], 
+				'stepLevelChanged':[null,null],
+				'autoStepChanged':[null,null],
 				'author':[null,null],
-				'nodeIconUpdated':[null,null], 
-				'nodeTitleChanged':[null,null], 
-				'launchPrevWork':[null,null], 
-				'nodeTypeSelected':[null,null], 
-				'uploadAsset':[null,null], 
-				'viewAssets':[null,null], 
+				'nodeIconUpdated':[null,null],
+				'nodeTitleChanged':[null,null],
+				'launchPrevWork':[null,null],
+				'nodeTypeSelected':[null,null],
+				'uploadAsset':[null,null],
+				'viewAssets':[null,null],
 				'disengageSelectMode':[null,null],
-				'processChoice':[null,null], 
-				'saveStep':[null,null], 
+				'processChoice':[null,null],
+				'saveStep':[null,null],
 				'editHints':[null,null],
 				'addHint':[null,null],
 				'deleteHint':[null,null],
 				'saveHint':[null,null],
 				'saveHints':[null,null],
-				'sourceUpdated':[null,null], 
-				'closeOnStepSaved':[null,null], 
+				'sourceUpdated':[null,null],
+				'closeOnStepSaved':[null,null],
 				'maxScoreUpdated':[null,null],
-				'setLastEdited':[null,null], 
+				'setLastEdited':[null,null],
 				'whoIsEditing':[null,null],
-				'startCreateReviewSequence':[null,null], 
-				'cancelReviewSequence':[null,null], 
+				'startCreateReviewSequence':[null,null],
+				'cancelReviewSequence':[null,null],
 				'previewFrameLoaded':[null,null],
 				'cleanClosingProjectStart':[null,null],
-				'cleanClosingProjectComplete':[null,null], 
-				'cleanLoadingProjectFileStart':[null,null], 
+				'cleanClosingProjectComplete':[null,null],
+				'cleanLoadingProjectFileStart':[null,null],
 				'cleanLoadingProjectFileComplete':[null,null],
-				'cleanAnalyzingProjectStart':[null,null], 
-				'cleanAnalyzingProjectComplete':[null,null], 
+				'cleanAnalyzingProjectStart':[null,null],
+				'cleanAnalyzingProjectComplete':[null,null],
 				'cleanSavingProjectFileStart':[null,null],
-				'cleanSavingProjectFileComplete':[null,null], 
-				'cleanSavingProjectStart':[null,null], 
+				'cleanSavingProjectFileComplete':[null,null],
+				'cleanSavingProjectStart':[null,null],
 				'cleanSavingProjectComplete':[null,null],
-				'cleanSave':[null,null], 
-				'cleanCancel':[null,null], 
-				'cleanDisplayingResultsStart':[null,null], 
+				'cleanSave':[null,null],
+				'cleanCancel':[null,null],
+				'cleanDisplayingResultsStart':[null,null],
 				'cleanDisplayingResultsComplete':[null,null],
-				'cleanUpdateProjectMetaFile':[null,null], 
+				'cleanUpdateProjectMetaFile':[null,null],
 				'notifyCleaningComplete':[null,null],
 				'constraintTitleClicked':[null,null],
 				'constraintCreateConstraint':[null,null],
@@ -424,7 +426,7 @@ var componentloader = function(em, sl){
 					view.eventManager.subscribe('importSelectedItems', view.authorDispatcher, view);
 					view.eventManager.subscribe("premadeCommentWindowLoaded", view.authoringToolPremadeCommentsDispatcher, view);
 					view.eventManager.subscribe("premadeCommentLabelClicked", view.authoringToolPremadeCommentsDispatcher, view);
-					
+
 					view.initializeOpenProjectDialog();
 					view.initializeCreateProjectDialog();
 					view.initializeCreateSequenceDialog();
@@ -450,7 +452,7 @@ var componentloader = function(em, sl){
 					view.initializeImportViewDialog();
 					view.initializeIconsViewDialog();
 					view.initializeAnalyzeProjectDialog();
-					
+
 					initializeNotePanelDialog(view);
 					window.onunload = env.onWindowUnload;
 				}
@@ -462,10 +464,10 @@ var componentloader = function(em, sl){
 				allowedStudentAssetExtensions:['jpg', 'jpeg', 'gif', 'png', 'bmp', 'pdf', 'txt', 'doc', 'csv'],
 				userAndClassInfoLoaded:false,
 				viewStateLoaded:false,
-				currentPosition:undefined, 
-				state:undefined, 
+				currentPosition:undefined,
+				state:undefined,
 				activeNote:undefined,
-				MAX_ASSET_SIZE:2097152				
+				MAX_ASSET_SIZE:2097152
 			},
 			events:{
 				'retrieveLocalesCompleted':[null,null],
@@ -512,13 +514,13 @@ var componentloader = function(em, sl){
 						view.eventManager.subscribe('renderNodeBlocked', view.vleDispatcher, view);
 						view.eventManager.subscribe('teacherNotificationUpdated', view.teacherNotificationHandler, view);
 						view.eventManager.initializeLoading([['loadingProjectStarted','loadingProjectCompleted','Project'],
-						                                     ['getUserAndClassInfoStarted','getUserAndClassInfoCompleted', 'Learner Data'], 
+						                                     ['getUserAndClassInfoStarted','getUserAndClassInfoCompleted', 'Learner Data'],
 						                                     ['getUserAndClassInfoStarted', 'renderNodeCompleted', 'Learning Environment']]);
-						
+
 						initializeNotePanelDialog(view);
-						
+
 						$('#feedbackDialog').dialog({autoOpen:false, dialogClass: 'dialogFeed', zIndex: '100009', buttons: [{text: "OK", click: function() {$(this).dialog('close');}}]});
-						
+
 						/* set up saving dialog for when user exits */
 						$('body').append('<div id="onUnloadSaveDiv">Saving data...</div>');
 						$('#onUnloadSaveDiv').dialog({autoOpen:false,width:300,height:100,modal:true,draggable:false,resizable:false,closeText:'',dialogClass:'no-title'});
@@ -706,7 +708,7 @@ var componentloader = function(em, sl){
 			}
 		}
 	};
-	
+
 	/**
 	 * Component loader listener listens for events pertaining to the loading
 	 * of components.
@@ -732,7 +734,7 @@ var componentloader = function(em, sl){
 			}
 		};
 	};
-	
+
 	eventManager.addEvent('loadingComponentStart');
 	eventManager.addEvent('loadingComponentComplete');
 	eventManager.addEvent('loadingViewStart');
@@ -743,7 +745,7 @@ var componentloader = function(em, sl){
 	eventManager.subscribe('loadingViewComplete', listener);
 	eventManager.subscribe('scriptsLoaded', listener);
 	eventManager.subscribe('componentInitializationComplete',listener);
-	
+
 	/**
 	 * Loads the events, variables, methods and styling that comprise the
 	 * component of the given name into the given view.
@@ -751,34 +753,34 @@ var componentloader = function(em, sl){
 	var loadComponent = function(name, env, view, doc, compress){
 		/* signal start of component load */
 		eventManager.fire('loadingComponentStart');
-		
+
 		/* retrieve component of name */
 		var comp = components[name];
 		if(!comp){//return if it does not exist
 			alert('Could not find component with name ' + name + ', unable to load component.');
 			return;
 		};
-		
+
 		/* insert view, doc and environment into component for reference */
 		comp.view = view;
 		comp.env = env;
 		comp.doc = doc;
-		
+
 		/* insert variables into view */
 		for(var a in comp.variables){
 			view[a] = comp.variables[a];
 		};
-		
+
 		/* add events for this view */
 		for(var b in comp.events){
 			eventManager.addEvent(b, comp.events[b][0], comp.events[b][1]);
 		};
-		
+
 		/* load methods for this view */
 		for(var c in comp.methods){
 			env.generateMethod(c, comp.methods[c]);
 		};
-		
+
 		/* load scripts and css for this view and component if not using compressed scripts */
 		if(!compress){
 			scriptloader.loadScripts(name, doc, 'componentloader', eventManager);
@@ -788,7 +790,7 @@ var componentloader = function(em, sl){
 			eventManager.fire('scriptsLoaded', ['componentloader', name]);
 		};
 	};
-	
+
 	/**
 	 * Initializes any variables for the component by running pre-defined
 	 * functions which set variable values and create new objects.
@@ -802,17 +804,17 @@ var componentloader = function(em, sl){
 		};
 		eventManager.fire('componentInitializationComplete', [name]);
 	};
-	
+
 	var initializeNotePanelDialog = function(view){
 		/* set up the notePanel dialog in the view */
 		document.body.appendChild(createElement(document, 'div', {id:'notePanel'}));
 		document.body.appendChild(createElement(document, 'div', {id:'feedbackDialog'}));
-		
+
 		//define the width of the note dialog
 		var noteWidth = 650;
-		
+
 		var maxHeight = $(window).height() - 100;
-		
+
 		$('#notePanel').dialog({
 			autoOpen:false,
 			width:noteWidth,
@@ -825,7 +827,7 @@ var componentloader = function(em, sl){
 			zIndex: '99999',
 			open: function(){
 				$(this).css({'max-height':maxHeight, 'overflow-y':'auto'});
-				
+
 				// add transparent overlay to step content to disable editing of previous step when note is opened
 				var contentOverlay = $(document.createElement('div')).attr('id','contentOverlay').css({'position':'fixed', 'left':0, 'width':'100%', 'top':0, 'height':'100%', 'z-index':99999 });
 				$('body',$('#ifrm')[0].contentWindow.document).append(contentOverlay);
@@ -836,14 +838,14 @@ var componentloader = function(em, sl){
 					if(view.activeNote){
 						view.activeNote.save();
 					}
-					
+
 					//close the note dialog
 					view.utils.closeDialog('notePanel');
 				});
 			}
 		});
 	};
-	
+
 	/**
 	 * Public members visible to all.
 	 */
@@ -858,7 +860,7 @@ var componentloader = function(em, sl){
 			for(var a=0;a<comps.length;a++){
 				componentQueue.push([comps[a], env, view, doc, compress]);
 			};
-			
+
 			if(compress){
 				scriptloader.loadScripts(view.name + '_all', doc, 'componentloader', eventManager);
 			} else if(componentQueue.length>0){
@@ -878,11 +880,11 @@ var componentloader = function(em, sl){
 			} else {
 				return [];
 			};
-			
+
 			return allScripts;
 		},
 		/*
-		 * Add an event to the vle so that it will listen for the event and 
+		 * Add an event to the vle so that it will listen for the event and
 		 * know what to do when the event is fired
 		 * @param eventName the event name as a string
 		 * @param dispatcherName a string containing the name of the function
@@ -891,10 +893,10 @@ var componentloader = function(em, sl){
 		addEvent: function(eventName, dispatcherName) {
 			//get the vle
 			var view = components.core.view;
-			
+
 			//add the event to the vle
 			eventManager.addEvent(eventName);
-			
+
 			//tell the vle to call this dispatcher function when this event is fired
 			eventManager.subscribe(eventName, view[dispatcherName], view);
 		},
