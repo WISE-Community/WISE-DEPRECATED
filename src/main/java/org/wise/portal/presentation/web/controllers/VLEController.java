@@ -96,8 +96,8 @@ public class VLEController {
             @PathVariable Long runId,
             ModelMap modelMap) throws ObjectNotFoundException {
         String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
-        String vleConfigUrl = wiseBaseURL + "/vleconfig?runId=" + runId + "&mode=run";
-        modelMap.put("vleConfigUrl", vleConfigUrl);
+        String configURL = wiseBaseURL + "/vleconfig?runId=" + runId + "&mode=run";
+        modelMap.put("configURL", configURL);
         return "student";
     }
 
@@ -113,10 +113,10 @@ public class VLEController {
 
         // get the vle config url
         String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
-        String vleConfigUrl = wiseBaseURL + "/vleconfig?projectId=" + projectId + "&mode=preview";
+        String configURL = wiseBaseURL + "/vleconfig?projectId=" + projectId + "&mode=preview";
 
         // set the view to the student vle
-        modelMap.put("vleConfigUrl", vleConfigUrl);
+        modelMap.put("configURL", configURL);
         return "student";
     }
 
@@ -205,7 +205,7 @@ public class VLEController {
 
     /**
      * Launches the project in preview mode
-	 *
+	   *
      * @param request the http request
      * @return the view to launch the vle in preview mode
      */
@@ -216,11 +216,11 @@ public class VLEController {
 
         // get the vle config url
         String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
-        String vleConfigUrl = wiseBaseURL + "/vleconfig?projectId=" + projectId + "&mode=preview";
+        String configURL = wiseBaseURL + "/vleconfig?projectId=" + projectId + "&mode=preview";
 
         // set the view to the student vle
         ModelAndView modelAndView = new ModelAndView("student");
-        modelAndView.addObject("vleConfigUrl", vleConfigUrl);
+        modelAndView.addObject("configURL", configURL);
         return modelAndView;
     }
 }

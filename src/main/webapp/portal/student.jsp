@@ -25,7 +25,7 @@
 				<div ui-view></div>
 		</div>
 		<script>
-			var configUrl = '${vleConfigUrl}';
+			var configURL = '${configURL}';
 		</script>
 	</body>
 </html>
