@@ -1,10 +1,10 @@
 'use strict';
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _nodeService = require('../../services/nodeService');
 
@@ -35,6 +35,7 @@ var DrawService = function (_NodeService) {
      * Create a Draw component object
      * @returns a new Draw component object
      */
+
 
     _createClass(DrawService, [{
         key: 'createComponent',
@@ -87,6 +88,7 @@ var DrawService = function (_NodeService) {
     }, {
         key: 'populateComponentState',
 
+
         /**
          * Populate a component state with the data from another component state
          * @param componentStateFromOtherComponent the component state to obtain the data from
@@ -122,6 +124,7 @@ var DrawService = function (_NodeService) {
         }
     }, {
         key: 'isCompleted',
+
 
         /**
          * Check if the component was completed

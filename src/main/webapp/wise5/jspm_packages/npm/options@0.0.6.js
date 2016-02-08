@@ -1,1 +1,0 @@
-module.exports = require("npm:options@0.0.6/lib/options");

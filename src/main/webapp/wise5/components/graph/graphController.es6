@@ -1,6 +1,6 @@
 
 //import $ from 'jquery';
-import Highcharts from 'highcharts';
+//import Highcharts from 'highcharts';
 //import angularHighcharts from 'highcharts-ng';
 import draggablePoints from 'highcharts/draggable-points';
 

@@ -1,19 +1,16 @@
 'use strict';
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-//import $ from 'jquery';
-
-//import angularHighcharts from 'highcharts-ng';
-
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _highcharts = require('highcharts');
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
-var _highcharts2 = _interopRequireDefault(_highcharts);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+//import $ from 'jquery';
+//import Highcharts from 'highcharts';
+//import angularHighcharts from 'highcharts-ng';
+
 
 var _draggablePoints = require('highcharts/draggable-points');
 
@@ -352,6 +349,7 @@ var GraphController = function () {
      * Setup the graph
      */
 
+
     _createClass(GraphController, [{
         key: 'setupGraph',
         value: function setupGraph() {
@@ -623,6 +621,7 @@ var GraphController = function () {
     }, {
         key: 'addPointToSeries0',
 
+
         /**
          * Add a point to a series. The point will be inserted into the series
          * in the appropriate position that will keep the series data sorted.
@@ -676,6 +675,7 @@ var GraphController = function () {
     }, {
         key: 'addPointToSeries',
 
+
         /**
          * Add a point to a series. The point will be inserted at the end of
          * the series.
@@ -696,6 +696,7 @@ var GraphController = function () {
         }
     }, {
         key: 'removePointFromSeries',
+
 
         /**
          * Remove a point from a series. We will remove all points that
@@ -736,6 +737,7 @@ var GraphController = function () {
         }
     }, {
         key: 'addClickToRemovePointEvent',
+
 
         /**
          * Check if we need to add the click to remove event to the series
@@ -824,6 +826,7 @@ var GraphController = function () {
     }, {
         key: 'canEdit',
 
+
         /**
          * Check whether the student is allowed to edit a given series
          * @param series the series to check
@@ -841,6 +844,7 @@ var GraphController = function () {
     }, {
         key: 'setSeries',
 
+
         /**
          * Set all the series
          * @param series an array of series
@@ -850,6 +854,7 @@ var GraphController = function () {
         }
     }, {
         key: 'getSeries',
+
 
         /**
          * Get all the series
@@ -861,6 +866,7 @@ var GraphController = function () {
     }, {
         key: 'setXAxis',
 
+
         /**
          * Set the xAxis object
          * @param xAxis the xAxis object that can be used to render the graph
@@ -870,6 +876,7 @@ var GraphController = function () {
         }
     }, {
         key: 'getXAxis',
+
 
         /**
          * Get the xAxis object
@@ -881,6 +888,7 @@ var GraphController = function () {
     }, {
         key: 'setYAxis',
 
+
         /**
          * Set the yAxis object
          * @param yAxis the yAxis object that can be used to render the graph
@@ -890,6 +898,7 @@ var GraphController = function () {
         }
     }, {
         key: 'getYAxis',
+
 
         /**
          * Get the yAxis object
@@ -901,6 +910,7 @@ var GraphController = function () {
     }, {
         key: 'setActiveSeries',
 
+
         /**
          * Set the active series
          * @param series the series
@@ -910,6 +920,7 @@ var GraphController = function () {
         }
     }, {
         key: 'setActiveSeriesByIndex',
+
 
         /**
          * Set the active series by the index
@@ -933,6 +944,7 @@ var GraphController = function () {
         }
     }, {
         key: 'resetGraph',
+
 
         /**
          * Reset the table data to its initial state from the component content
@@ -961,6 +973,7 @@ var GraphController = function () {
     }, {
         key: 'setStudentWork',
 
+
         /**
          * Populate the student work into the component
          * @param componentState the component state to populate into the component
@@ -984,6 +997,7 @@ var GraphController = function () {
     }, {
         key: 'saveButtonClicked',
 
+
         /**
          * Called when the student clicks the save button
          */
@@ -994,6 +1008,7 @@ var GraphController = function () {
         }
     }, {
         key: 'submitButtonClicked',
+
 
         /**
          * Called when the student clicks the submit button
@@ -1015,6 +1030,7 @@ var GraphController = function () {
     }, {
         key: 'activeSeriesChanged',
 
+
         /**
          * The active series has changed
          */
@@ -1025,6 +1041,7 @@ var GraphController = function () {
         }
     }, {
         key: 'studentDataChanged',
+
 
         /**
          * Called when the student changes their work
@@ -1061,6 +1078,7 @@ var GraphController = function () {
         }
     }, {
         key: 'createComponentState',
+
 
         /**
          * Create a new component state populated with the student data
@@ -1116,6 +1134,7 @@ var GraphController = function () {
     }, {
         key: 'calculateDisabled',
 
+
         /**
          * Check if we need to lock the component
          */
@@ -1150,6 +1169,7 @@ var GraphController = function () {
     }, {
         key: 'showPrompt',
 
+
         /**
          * Check whether we need to show the prompt
          * @return whether to show the prompt
@@ -1165,6 +1185,7 @@ var GraphController = function () {
         }
     }, {
         key: 'showSaveButton',
+
 
         /**
          * Check whether we need to show the save button
@@ -1182,6 +1203,7 @@ var GraphController = function () {
     }, {
         key: 'showSubmitButton',
 
+
         /**
          * Check whether we need to show the submit button
          * @return whether to show the submit button
@@ -1198,6 +1220,7 @@ var GraphController = function () {
     }, {
         key: 'showResetGraphButton',
 
+
         /**
          * Check whether we need to show the reset graph button
          * @return whether to show the reset graph button
@@ -1213,6 +1236,7 @@ var GraphController = function () {
         }
     }, {
         key: 'isLockAfterSubmit',
+
 
         /**
          * Check whether we need to lock the component after the student
@@ -1234,6 +1258,7 @@ var GraphController = function () {
     }, {
         key: 'getPrompt',
 
+
         /**
          * Get the prompt to show to the student
          * @return a string containing the prompt
@@ -1249,6 +1274,7 @@ var GraphController = function () {
         }
     }, {
         key: 'getSeriesIndex',
+
 
         /**
          * Get the index of a series
@@ -1282,6 +1308,7 @@ var GraphController = function () {
         }
     }, {
         key: 'getSeriesByIndex',
+
 
         /**
          * Get a series by the index
@@ -1352,6 +1379,7 @@ var GraphController = function () {
     }, {
         key: 'attachNotebookItemToComponent',
 
+
         /**
          * handle importing notebook item data (we only support csv for now)
          */
@@ -1417,6 +1445,7 @@ var GraphController = function () {
         }
     }, {
         key: 'convertRowDataToSeriesData',
+
 
         /**
          * Convert the table data into series data
@@ -1537,6 +1566,7 @@ var GraphController = function () {
     }, {
         key: 'setSeriesIds',
 
+
         /**
          * Set the series id for each series
          * @param allSeries an array of series
@@ -1564,6 +1594,7 @@ var GraphController = function () {
         }
     }, {
         key: 'getNextSeriesId',
+
 
         /**
          * Get the next available series id
@@ -1600,6 +1631,7 @@ var GraphController = function () {
         }
     }, {
         key: 'roundToNearestTenth',
+
 
         /**
          * Round a number to the nearest tenth
@@ -1678,6 +1710,7 @@ var GraphController = function () {
     }, {
         key: 'getComponentId',
 
+
         /**
          * Get the component id
          * @return the component id
@@ -1689,6 +1722,7 @@ var GraphController = function () {
         }
     }, {
         key: 'authoringViewComponentChanged',
+
 
         /**
          * The component has changed in the regular authoring view so we will save the project
@@ -1703,6 +1737,7 @@ var GraphController = function () {
         }
     }, {
         key: 'advancedAuthoringViewComponentChanged',
+
 
         /**
          * The component has changed in the advanced authoring view so we will update
@@ -1733,6 +1768,7 @@ var GraphController = function () {
     }, {
         key: 'updateAdvancedAuthoringView',
 
+
         /**
          * Update the component JSON string that will be displayed in the advanced authoring view textarea
          */
@@ -1741,6 +1777,7 @@ var GraphController = function () {
         }
     }, {
         key: 'authoringAddSeriesClicked',
+
 
         /**
          * Add a series in the authoring view

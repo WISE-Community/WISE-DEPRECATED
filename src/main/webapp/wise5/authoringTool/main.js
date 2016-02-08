@@ -104,7 +104,7 @@ var _graphService = require('../components/graph/graphService');
 
 var _graphService2 = _interopRequireDefault(_graphService);
 
-var _highcharts = require('highcharts');
+var _highcharts = require('../lib/highcharts@4.2.1');
 
 var _highcharts2 = _interopRequireDefault(_highcharts);
 

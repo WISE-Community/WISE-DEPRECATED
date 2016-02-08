@@ -4,9 +4,11 @@
 build
 node_modules
 target
+src/main/webapp/wise5/jspm_packages
 src/main/resources/wise.properties
 *.bak
 .idea/workspace.xml
 .idea/tasks.xml
 *.sass-cache
 npm-debug.log
+hsqldb

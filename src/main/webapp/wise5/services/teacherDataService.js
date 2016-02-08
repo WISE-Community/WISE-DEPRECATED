@@ -1,10 +1,10 @@
 'use strict';
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -26,6 +26,7 @@ var TeacherDataService = function () {
      * Retrieves the export given the export Type
      * @param exportType
      */
+
 
     _createClass(TeacherDataService, [{
         key: 'getExport',
@@ -51,6 +52,7 @@ var TeacherDataService = function () {
     }, {
         key: 'retrieveStudentDataByNodeId',
 
+
         /**
          * Retrieve the student data for a node id
          * @param nodeId the node id
@@ -75,6 +77,7 @@ var TeacherDataService = function () {
     }, {
         key: 'retrieveStudentDataByWorkgroupId',
 
+
         /**
          * Retrieve the student data for the workgroup id
          * @param workgroupId the workgroup id
@@ -93,6 +96,7 @@ var TeacherDataService = function () {
         }
     }, {
         key: 'retrieveAnnotations',
+
 
         /**
          * Retrieve the annotations for the run
@@ -113,6 +117,7 @@ var TeacherDataService = function () {
         }
     }, {
         key: 'retrieveStudentData',
+
 
         /**
          * Retrieve the student data
@@ -272,6 +277,7 @@ var TeacherDataService = function () {
     }, {
         key: 'getComponentStatesByComponentId',
 
+
         /**
          * Get the component stats for a component id
          * @param componentId the component id
@@ -330,6 +336,7 @@ var TeacherDataService = function () {
         }
     }, {
         key: 'getComponentStatesByWorkgroupIdAndComponentId',
+
 
         /**
          * Get component states for a workgroup id and component id
@@ -420,6 +427,7 @@ var TeacherDataService = function () {
         }
     }, {
         key: 'getTotalScoreByWorkgroupId',
+
 
         /**
          * Get the total score for a workgroup

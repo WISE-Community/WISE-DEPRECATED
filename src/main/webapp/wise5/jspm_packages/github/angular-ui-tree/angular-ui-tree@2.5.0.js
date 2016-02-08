@@ -1,1 +1,0 @@
-module.exports = require("github:angular-ui-tree/angular-ui-tree@2.5.0/angular-ui-tree.min");

@@ -1,10 +1,10 @@
 'use strict';
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -109,6 +109,7 @@ var SessionService = function () {
      * Start the timers, save session initialized event
      */
 
+
     _createClass(SessionService, [{
         key: 'initializeSession',
         value: function initializeSession() {
@@ -142,6 +143,7 @@ var SessionService = function () {
     }, {
         key: 'startTimers',
 
+
         /**
          * Start the warning and auto log out timers
          */
@@ -151,6 +153,7 @@ var SessionService = function () {
         }
     }, {
         key: 'startWarningTimer',
+
 
         /**
          * Start the warning timer
@@ -162,6 +165,7 @@ var SessionService = function () {
     }, {
         key: 'startLogOutTimer',
 
+
         /**
          * Start the auto log out timer
          */
@@ -170,6 +174,7 @@ var SessionService = function () {
         }
     }, {
         key: 'startCheckMouseEventTimer',
+
 
         /**
          * Start the check mouse event timer
@@ -180,6 +185,7 @@ var SessionService = function () {
     }, {
         key: 'showWarning',
 
+
         /**
          * Fire the event that will show the warning message
          */
@@ -188,6 +194,7 @@ var SessionService = function () {
         }
     }, {
         key: 'renewSession',
+
 
         /**
          * Refresh the timers
@@ -209,6 +216,7 @@ var SessionService = function () {
     }, {
         key: 'clearTimers',
 
+
         /**
          * Delete the existing timers
          */
@@ -218,6 +226,7 @@ var SessionService = function () {
         }
     }, {
         key: 'mouseEventOccurred',
+
 
         /**
          * Called when a mouse event occurs
@@ -233,6 +242,7 @@ var SessionService = function () {
         }
     }, {
         key: 'checkMouseEvent',
+
 
         /**
          * Check if there were any mouse events since the last time we checked
@@ -250,6 +260,7 @@ var SessionService = function () {
         }
     }, {
         key: 'convertMinutesToMilliseconds',
+
 
         /**
          * Convert minutes to milliseconds
@@ -272,6 +283,7 @@ var SessionService = function () {
     }, {
         key: 'forceLogOut',
 
+
         /**
          * Log out the user
          */
@@ -281,6 +293,7 @@ var SessionService = function () {
         }
     }, {
         key: 'attemptExit',
+
 
         /**
          * Check if there are components that are not ready to exit
@@ -355,6 +368,7 @@ var SessionService = function () {
 }();
 
 //SessionService.$inject = ['$http','$rootScope','ConfigService','StudentDataService'];
+
 
 SessionService.$inject = ['$http', '$rootScope', 'ConfigService'];
 
