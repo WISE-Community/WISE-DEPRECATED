@@ -1,5 +1,5 @@
 System.config({
-  baseURL: "/wise/wise5",
+  baseURL: "wise5",
   defaultJSExtensions: true,
   transpiler: "babel",
   babelOptions: {
