@@ -13,8 +13,13 @@ then
 else
     if [ $1 == "setup" ]
     then
-  # install npm dependencies
-  npm install
+        # install npm dependencies
+        npm install
+
+        # install jspm dependencies
+        cd src/main/webapp/wise5
+        jspm install
+        cd -
 
 	# clear out curriculum and student uploads directories and any existing properties file
 	find src/main/webapp/curriculum/ ! \( -name README -o -name .gitignore \) -delete
