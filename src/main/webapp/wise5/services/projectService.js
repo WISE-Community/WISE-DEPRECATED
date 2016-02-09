@@ -700,10 +700,11 @@ components.splice(c+1,0,component);break;}}}}}}} /**
 for(var c=0;c<components.length;c++){var component=components[c];if(component.id===componentId){ // we have found the component we want to delete
 // remove the component
 components.splice(c,1);break;}}}}}} /**
-     * Get the total score for the project
-     * @returns the total score for the project or null if there are no max scores
-     */},{key:'getTotalScore',value:function getTotalScore(){var totalScore=null;var nodes=this.project.nodes;if(nodes!=null){ // loop through all the nodes
+     * Get the max score for the project
+     * @returns the max score for the project or null if there are no max scores
+     */},{key:'getMaxScore',value:function getMaxScore(){var maxScore=null;var nodes=this.project.nodes;if(nodes!=null){ // loop through all the nodes
 for(var n=0;n<nodes.length;n++){var node=nodes[n];if(node!=null){var components=node.components;if(components!=null){ // loop through all the components
-for(var c=0;c<components.length;c++){var component=components[c];if(component!=null){var maxScore=component.maxScore;if(maxScore!=null){ // make sure the max score is a valid number
-if(!isNaN(maxScore)){if(totalScore==null){totalScore=maxScore;}else {totalScore+=maxScore;}}}}}}}}}return totalScore;}}]);return ProjectService;}();ProjectService.$inject=['$http','$injector','$rootScope','ConfigService'];exports.default=ProjectService;
+for(var c=0;c<components.length;c++){var component=components[c];if(component!=null){var componentMaxScore=component.maxScore; // check if the component has a max score
+if(componentMaxScore!=null){ // make sure the max score is a valid number
+if(!isNaN(componentMaxScore)){if(maxScore==null){maxScore=componentMaxScore;}else {maxScore+=componentMaxScore;}}}}}}}}}return maxScore;}}]);return ProjectService;}();ProjectService.$inject=['$http','$injector','$rootScope','ConfigService'];exports.default=ProjectService;
 //# sourceMappingURL=projectService.js.map

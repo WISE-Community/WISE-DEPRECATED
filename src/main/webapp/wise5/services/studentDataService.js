@@ -1860,6 +1860,18 @@ var StudentDataService = function () {
             // Return the parsed data.
             return arrData;
         }
+    }, {
+        key: 'getTotalScore',
+
+        /**
+         * Get the total score for the workgroup
+         * @returns the total score for the workgroup
+         */
+        value: function getTotalScore() {
+            var annotations = this.studentData.annotations;
+            var workgroupId = this.ConfigService.getWorkgroupId();
+            return this.AnnotationService.getTotalScore(annotations, workgroupId);
+        }
     }]);
 
     return StudentDataService;

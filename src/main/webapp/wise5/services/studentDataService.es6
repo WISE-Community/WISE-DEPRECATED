@@ -1812,6 +1812,15 @@ class StudentDataService {
         return( arrData );
     };
 
+    /**
+     * Get the total score for the workgroup
+     * @returns the total score for the workgroup
+     */
+    getTotalScore() {
+        var annotations = this.studentData.annotations;
+        var workgroupId = this.ConfigService.getWorkgroupId();
+        return this.AnnotationService.getTotalScore(annotations, workgroupId);
+    }
 }
 
 StudentDataService.$inject = ['$http', '$injector', '$q', '$rootScope', 'AnnotationService', 'ConfigService', 'ProjectService', 'UtilService'];

@@ -227,6 +227,70 @@ var AnnotationService = function () {
         value: function setAnnotations(annotations) {
             this.annotations = annotations;
         }
+    }, {
+        key: 'getTotalScore',
+
+        /**
+         * Get the total score for a workgroup
+         * @param annotations an array of annotations
+         * @param workgroupId the workgroup id
+         */
+        value: function getTotalScore(annotations, workgroupId) {
+
+            var totalScore = null;
+
+            var scoresFound = [];
+
+            if (annotations != null && workgroupId != null) {
+                // loop through all the annotations from newest to oldest
+                for (var a = annotations.length - 1; a >= 0; a--) {
+
+                    // get an annotation
+                    var annotation = annotations[a];
+
+                    // check that the annotation is for the workgroup id we are looking for
+                    if (annotation != null && annotation.toWorkgroupId == workgroupId) {
+
+                        // check that the annotation is a score annotation
+                        if (annotation.type === 'score') {
+
+                            var nodeId = annotation.nodeId;
+                            var componentId = annotation.componentId;
+                            var data = annotation.data;
+
+                            var scoreFound = nodeId + '-' + componentId;
+
+                            // check if we have obtained a score from this component already
+                            if (scoresFound.indexOf(scoreFound) == -1) {
+                                // we have not obtained a score from this component yet
+
+                                if (data != null) {
+                                    var value = data.value;
+
+                                    if (!isNaN(value)) {
+
+                                        if (totalScore == null) {
+                                            totalScore = value;
+                                        } else {
+                                            totalScore += value;
+                                        }
+
+                                        /*
+                                         * remember that we have found a score for this component
+                                         * so that we don't double count it if the teacher scored
+                                         * the component more than once
+                                         */
+                                        scoresFound.push(scoreFound);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return totalScore;
+        }
     }]);
 
     return AnnotationService;

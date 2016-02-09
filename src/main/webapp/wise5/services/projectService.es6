@@ -3239,12 +3239,12 @@ class ProjectService {
     }
 
     /**
-     * Get the total score for the project
-     * @returns the total score for the project or null if there are no max scores
+     * Get the max score for the project
+     * @returns the max score for the project or null if there are no max scores
      */
-    getTotalScore() {
+    getMaxScore() {
 
-        var totalScore = null;
+        var maxScore = null;
 
         var nodes = this.project.nodes;
 
@@ -3266,17 +3266,18 @@ class ProjectService {
 
                             if (component != null) {
 
-                                var maxScore = component.maxScore;
+                                var componentMaxScore = component.maxScore;
 
-                                if (maxScore != null) {
+                                // check if the component has a max score
+                                if (componentMaxScore != null) {
 
                                     // make sure the max score is a valid number
-                                    if (!isNaN(maxScore)) {
+                                    if (!isNaN(componentMaxScore)) {
 
-                                        if (totalScore == null) {
-                                            totalScore = maxScore;
+                                        if (maxScore == null) {
+                                            maxScore = componentMaxScore;
                                         } else {
-                                            totalScore += maxScore;
+                                            maxScore += componentMaxScore;
                                         }
                                     }
                                 }
@@ -3287,7 +3288,7 @@ class ProjectService {
             }
         }
 
-        return totalScore;
+        return maxScore;
     }
 }
 

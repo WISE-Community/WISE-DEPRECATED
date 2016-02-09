@@ -39,6 +39,12 @@ var VLEController = function () {
         this.notebookFilter = this.notebookFilters[0].name;
         this.notebookOpen = false;
 
+        // get the total score for the workgroup
+        this.totalScore = this.StudentDataService.getTotalScore();
+
+        // get the max score for the project
+        this.maxScore = this.ProjectService.getMaxScore();
+
         this.toggleNotebook = function () {
             this.notebookOpen = !this.notebookOpen;
         };

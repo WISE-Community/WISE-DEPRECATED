@@ -20,7 +20,7 @@ class StudentProgressController {
 
         this.studentStatuses = this.StudentStatusService.getStudentStatuses();
 
-        this.totalScore = this.ProjectService.getTotalScore();
+        this.maxScore = this.ProjectService.getMaxScore();
 
         this.periods = [];
 
