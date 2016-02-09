@@ -68,11 +68,13 @@ var ThemeController = function ThemeController($scope, ConfigService, ProjectSer
 
     // alert user when inactive for a long time
     this.$scope.$on('showSessionWarning', angular.bind(this, function () {
+        var _this = this;
+
         var confirm = this.$mdDialog.confirm().parent(angular.element(document.body)).title('Session Timeout').content('You have been inactive for a long time. Do you want to stay logged in?').ariaLabel('Session Timeout').ok('YES').cancel('No');
         this.$mdDialog.show(confirm).then(function () {
-            this.SessionService.renewSession();
+            _this.SessionService.renewSession();
         }, function () {
-            this.SessionService.forceLogOut();
+            _this.SessionService.forceLogOut();
         });
     }));
 
@@ -148,14 +150,14 @@ var ThemeController = function ThemeController($scope, ConfigService, ProjectSer
 
     // capture notebook open/close events
     this.$mdComponentRegistry.when('notebook').then(function (it) {
-        var _this = this;
+        var _this2 = this;
 
         this.$scope.$watch(function () {
             return it.isOpen();
         }, function (isOpenNewValue, isOpenOldValue) {
             if (isOpenNewValue !== isOpenOldValue) {
-                var currentNode = _this.StudentDataService.getCurrentNode();
-                _this.NotebookService.saveNotebookToggleEvent(isOpenNewValue, currentNode);
+                var currentNode = _this2.StudentDataService.getCurrentNode();
+                _this2.NotebookService.saveNotebookToggleEvent(isOpenNewValue, currentNode);
             }
         });
     }.bind(this));

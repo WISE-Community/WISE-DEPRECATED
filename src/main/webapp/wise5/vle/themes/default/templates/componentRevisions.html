@@ -10,7 +10,7 @@
     </md-toolbar>
     <md-dialog-content class="md-dialog-content">
         <div class="component-revision" ng-repeat="item in items" ng-if="$index < 5">
-            <div class="component-revision__content"><componentstatehtml componentstate="{{item}}"></componentstatehtml></div>
+            <div class="component-revision__content"><component componentstate="{{item}}" mode="onlyShowWork"></component></div>
             <div class="component-revision__actions md-body-1" flex layout="row" layout-align="start center">
                 <!--<span ng-if="item.isAutoSave">Auto-saved</span>
                 <span ng-if="!item.isAutoSave && !item.isSubmit">Saved</span>
@@ -21,7 +21,7 @@
             </div>
         </div>
     </md-dialog-content>
-    <div class="md-actions" layout="row">
+    <md-dialog-actions layout="row">
         <md-button ng-click="close()" class="md-primary">Close</md-button>
-    </div>
+    </md-dialog-actions>
 </md-dialog>
