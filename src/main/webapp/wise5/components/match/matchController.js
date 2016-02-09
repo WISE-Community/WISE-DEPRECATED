@@ -1,10 +1,10 @@
 'use strict';
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -249,11 +249,11 @@ var MatchController = function () {
                 if (this.isLockAfterSubmit()) {
                     // disable the component if it was authored to lock after submit
                     this.isDisabled = true;
-
-                    // check if the student answered correctly
-                    this.checkAnswer();
-                    this.numberOfSubmits++;
                 }
+
+                // check if the student answered correctly
+                this.checkAnswer();
+                this.numberOfSubmits++;
             }
         }));
 
@@ -272,11 +272,9 @@ var MatchController = function () {
      * @param componentState the component state to populate into the component
      */
 
-
     _createClass(MatchController, [{
         key: 'setStudentWork',
         value: function setStudentWork(componentState) {
-
             if (componentState != null) {
 
                 // get the student data from the component state
@@ -290,7 +288,45 @@ var MatchController = function () {
 
                     // set the buckets
                     if (componentStateBuckets != null) {
-                        this.buckets = componentStateBuckets;
+                        var bucketIds = this.buckets.map(function (b) {
+                            return b.id;
+                        });
+                        var choiceIds = this.choices.map(function (c) {
+                            return c.id;
+                        });
+
+                        for (var i = 0, l = componentStateBuckets.length; i < l; i++) {
+                            var componentStateBucketId = componentStateBuckets[i].id;
+                            if (componentStateBucketId !== 0) {
+                                // componentState bucket is a valid bucket, so process choices
+                                if (bucketIds.indexOf(componentStateBucketId) > -1) {
+                                    var currentBucket = componentStateBuckets[i];
+                                    var currentChoices = currentBucket.items;
+
+                                    for (var x = 0, len = currentChoices.length; x < len; x++) {
+                                        var currentChoice = currentChoices[x];
+                                        var currentChoiceId = currentChoice.id;
+                                        var currentChoiceLocation = choiceIds.indexOf(currentChoiceId);
+                                        if (currentChoiceLocation > -1) {
+                                            // choice is valid and used by student in a valid bucket, so add it to that bucket
+                                            var bucket = this.getBucketById(componentStateBucketId);
+                                            // content for choice with this id may have change, so get updated content
+                                            var updatedChoice = this.getChoiceById(currentChoiceId);
+                                            bucket.items.push(updatedChoice);
+                                            choiceIds.splice(currentChoiceLocation, 1);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        // add unused choices to default choices bucket
+                        var choicesBucket = this.getBucketById(0);
+                        choicesBucket.items = [];
+                        for (var i = 0, l = choiceIds.length; i < l; i++) {
+                            choicesBucket.items.push(this.getChoiceById(choiceIds[i]));
+                        }
+                        //this.buckets = componentStateBuckets;
                     }
 
                     // set the number of submits
@@ -302,7 +338,6 @@ var MatchController = function () {
         }
     }, {
         key: 'initializeChoices',
-
 
         /**
          * Initialize the available choices from the component content
@@ -318,7 +353,6 @@ var MatchController = function () {
     }, {
         key: 'getChoices',
 
-
         /**
          * Get the choices
          */
@@ -327,7 +361,6 @@ var MatchController = function () {
         }
     }, {
         key: 'initializeBuckets',
-
 
         /**
          * Initialize the available buckets from the component content
@@ -347,7 +380,7 @@ var MatchController = function () {
                  */
                 var originBucket = {};
                 originBucket.id = 0;
-                originBucket.value = 'Choices';
+                originBucket.value = this.componentContent.choicesLabel ? this.componentContent.choicesLabel : 'Choices';
                 originBucket.type = 'bucket';
                 originBucket.items = [];
 
@@ -376,7 +409,6 @@ var MatchController = function () {
     }, {
         key: 'getBuckets',
 
-
         /**
          * Get the buckets
          */
@@ -385,7 +417,6 @@ var MatchController = function () {
         }
     }, {
         key: 'getCopyOfBuckets',
-
 
         /**
          * Create a copy of the buckets for cases when we want to make
@@ -407,7 +438,6 @@ var MatchController = function () {
     }, {
         key: 'saveButtonClicked',
 
-
         /**
          * Called when the student clicks the save button
          */
@@ -418,7 +448,6 @@ var MatchController = function () {
         }
     }, {
         key: 'submitButtonClicked',
-
 
         /**
          * Called when the student clicks the submit button
@@ -440,7 +469,6 @@ var MatchController = function () {
         }
     }, {
         key: 'checkAnswer',
-
 
         /**
          * Check if the student has answered correctly
@@ -580,7 +608,6 @@ var MatchController = function () {
     }, {
         key: 'getFeedbackObject',
 
-
         /**
          * Get the feedback object for the combination of bucket and choice
          * @param bucketId the bucket id
@@ -650,7 +677,6 @@ var MatchController = function () {
     }, {
         key: 'studentDataChanged',
 
-
         /**
          * Called when the student changes their work
          */
@@ -677,7 +703,6 @@ var MatchController = function () {
         }
     }, {
         key: 'createComponentState',
-
 
         /**
          * Create a new component state populated with the student data
@@ -723,7 +748,6 @@ var MatchController = function () {
     }, {
         key: 'calculateDisabled',
 
-
         /**
          * Check if we need to lock the component
          */
@@ -758,7 +782,6 @@ var MatchController = function () {
     }, {
         key: 'showSaveButton',
 
-
         /**
          * Check whether we need to show the save button
          * @return whether to show the save button
@@ -778,7 +801,6 @@ var MatchController = function () {
         }
     }, {
         key: 'showSubmitButton',
-
 
         /**
          * Check whether we need to show the submit button
@@ -800,7 +822,6 @@ var MatchController = function () {
     }, {
         key: 'isLockAfterSubmit',
 
-
         /**
          * Check whether we need to lock the component after the student
          * submits an answer.
@@ -821,7 +842,6 @@ var MatchController = function () {
     }, {
         key: 'getPrompt',
 
-
         /**
          * Get the prompt to show to the student
          */
@@ -836,7 +856,6 @@ var MatchController = function () {
         }
     }, {
         key: 'importWork',
-
 
         /**
          * Import work from another component
@@ -883,7 +902,6 @@ var MatchController = function () {
     }, {
         key: 'getComponentId',
 
-
         /**
          * Get the component id
          * @return the component id
@@ -895,7 +913,6 @@ var MatchController = function () {
         }
     }, {
         key: 'authoringViewComponentChanged',
-
 
         /**
          * The component has changed in the regular authoring view so we will save the project
@@ -910,7 +927,6 @@ var MatchController = function () {
         }
     }, {
         key: 'advancedAuthoringViewComponentChanged',
-
 
         /**
          * The component has changed in the advanced authoring view so we will update
@@ -941,7 +957,6 @@ var MatchController = function () {
     }, {
         key: 'updateAdvancedAuthoringView',
 
-
         /**
          * Update the component JSON string that will be displayed in the advanced authoring view textarea
          */
@@ -950,7 +965,6 @@ var MatchController = function () {
         }
     }, {
         key: 'authoringAddChoice',
-
 
         /**
          * Add a choice
@@ -1110,7 +1124,7 @@ var MatchController = function () {
             var bucket = null;
 
             // get the buckets
-            var buckets = this.authoringComponentContent.buckets;
+            var buckets = this.buckets ? this.buckets : this.authoringComponentContent.buckets;
 
             // loop through the buckets
             for (var b = 0; b < buckets.length; b++) {
@@ -1118,7 +1132,7 @@ var MatchController = function () {
 
                 if (tempBucket != null) {
                     if (id === tempBucket.id) {
-                        // we have found teh bucket we want
+                        // we have found the bucket we want
                         bucket = tempBucket;
                         break;
                     }
