@@ -34,7 +34,7 @@ System.config({
     "core-js": "npm:core-js@1.2.6",
     "highcharts-ng": "npm:highcharts-ng@0.0.11",
     "highcharts/draggable-points": "github:highcharts/draggable-points@master",
-    "jquery": "github:components/jquery@2.1.4",
+    "jquery": "npm:jquery@2.2.0",
     "moment": "npm:moment@2.11.2",
     "ng-file-upload": "npm:ng-file-upload@10.1.14",
     "oclazyload": "npm:oclazyload@1.0.9",
