@@ -18,6 +18,7 @@ else
 
         # install jspm dependencies
         cd src/main/webapp/wise5
+        npm install jspm
         jspm install
         cd -
 
