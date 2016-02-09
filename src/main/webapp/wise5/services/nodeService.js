@@ -1,10 +1,10 @@
 'use strict';
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -66,7 +66,6 @@ var NodeService = function () {
     }, {
         key: 'createNewComponentState',
 
-
         /**
          * Create a new empty node state
          * @return a new empty node state
@@ -82,7 +81,6 @@ var NodeService = function () {
     }, {
         key: 'createNewNodeState',
 
-
         /**
          * Create a new empty node state
          * @return a new empty node state
@@ -97,7 +95,6 @@ var NodeService = function () {
         }
     }, {
         key: 'toCamelCase',
-
 
         /**
          * Get the node type in camel case
@@ -135,7 +132,6 @@ var NodeService = function () {
     }, {
         key: 'isStringUpperCase',
 
-
         /**
          * Check if the string is in all uppercase
          * @param str the string to check
@@ -155,7 +151,6 @@ var NodeService = function () {
         }
     }, {
         key: 'getComponentTemplatePath',
-
 
         /**
          * Get the html template for the component
@@ -181,7 +176,6 @@ var NodeService = function () {
         }
     }, {
         key: 'getComponentContentById',
-
 
         /**
          * Get the component content
@@ -220,7 +214,6 @@ var NodeService = function () {
         }
     }, {
         key: 'isWorkSubmitted',
-
 
         /**
          * Check if any of the component states were submitted
@@ -263,7 +256,6 @@ var NodeService = function () {
         }
     }, {
         key: 'isCompleted',
-
 
         /**
          * Check if the node or component is completed
@@ -344,7 +336,6 @@ var NodeService = function () {
     }, {
         key: 'getNextNodeId',
 
-
         /**
          * Get the next node in the project sequence
          */
@@ -393,7 +384,6 @@ var NodeService = function () {
     }, {
         key: 'goToPrevNode',
 
-
         /**
          * Go to the previous node
          */
@@ -406,7 +396,6 @@ var NodeService = function () {
         }
     }, {
         key: 'getPrevNodeId',
-
 
         /**
          * Get the previous node in the project sequence
@@ -445,7 +434,6 @@ var NodeService = function () {
     }, {
         key: 'closeNode',
 
-
         /**
          * Close the current node (and open the current node's parent group)
          */
@@ -466,7 +454,6 @@ var NodeService = function () {
         }
     }, {
         key: 'chooseTransition',
-
 
         /**
          * Choose the transition the student will take
@@ -695,7 +682,6 @@ var NodeService = function () {
         }
     }, {
         key: 'getLatestBranchNodeState',
-
 
         /**
          * Get the latest branch node state for given nodeId

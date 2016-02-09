@@ -224,7 +224,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 //import CRaterService from '../components/cRater/cRaterService';
 
-
 var mainModule = _angular2.default.module('vle', ['angularMoment', 'angular-toArrayFilter', 'directives', 'filters', 'highcharts-ng',
 //'ngAudio',
 'ngAria', 'ngFileUpload', 'ngMaterial', 'ngSanitize', 'ngWebSocket', 'notebook', 'oc.lazyLoad', 'ui.router',
@@ -433,7 +432,6 @@ var mainModule = _angular2.default.module('vle', ['angularMoment', 'angular-toAr
 //import HTMLService from '../components/html/htmlService';
 
 //import AudioRecorderService from '../components/audioRecorder/audioRecorderService';
-
 
 exports.default = mainModule;
 //# sourceMappingURL=main.js.map

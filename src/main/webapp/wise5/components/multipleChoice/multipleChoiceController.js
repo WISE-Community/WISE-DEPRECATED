@@ -1,10 +1,10 @@
 'use strict';
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -226,7 +226,6 @@ var MultipleChoiceController = function () {
     _createClass(MultipleChoiceController, [{
         key: 'setStudentWork',
 
-
         /**
          * Populate the student work into the component
          * @param componentState the component state to populate into the component
@@ -287,7 +286,6 @@ var MultipleChoiceController = function () {
     }, {
         key: 'isChecked',
 
-
         /**
          * Determine if the choice id has been checked
          * @param the choice id to look at
@@ -321,7 +319,6 @@ var MultipleChoiceController = function () {
         }
     }, {
         key: 'getChoiceIdsFromStudentData',
-
 
         /**
          * Get the choice ids from the student data
@@ -357,7 +354,6 @@ var MultipleChoiceController = function () {
     }, {
         key: 'radioChoiceSelected',
 
-
         /**
          * The student clicked on one of the radio button choices
          * @param choiceId the choice id of the radio button the student clicked
@@ -377,7 +373,6 @@ var MultipleChoiceController = function () {
         }
     }, {
         key: 'toggleSelection',
-
 
         /**
          * The student clicked on one of the check box choices
@@ -429,7 +424,6 @@ var MultipleChoiceController = function () {
     }, {
         key: 'isRadio',
 
-
         /**
          * Check if this multiple choice component is using radio buttons
          * @return whether this multiple choice component is using radio buttons
@@ -440,7 +434,6 @@ var MultipleChoiceController = function () {
     }, {
         key: 'isCheckbox',
 
-
         /**
          * Check if this multiple choice component is using checkboxes
          * @return whether this multiple choice component is using checkboxes
@@ -450,7 +443,6 @@ var MultipleChoiceController = function () {
         }
     }, {
         key: 'isChoiceType',
-
 
         /**
          * Check if the component is authored to use the given choice type
@@ -479,7 +471,6 @@ var MultipleChoiceController = function () {
     }, {
         key: 'saveButtonClicked',
 
-
         /**
          * Called when the student clicks the save button
          */
@@ -490,7 +481,6 @@ var MultipleChoiceController = function () {
         }
     }, {
         key: 'submitButtonClicked',
-
 
         /**
          * Called when the student clicks the submit button
@@ -510,7 +500,6 @@ var MultipleChoiceController = function () {
         }
     }, {
         key: 'hideAllFeedback',
-
 
         /**
          * Hide all the feedback
@@ -533,7 +522,6 @@ var MultipleChoiceController = function () {
     }, {
         key: 'incrementNumberOfAttempts',
 
-
         /**
          * Increment the number of attempts the student has made
          */
@@ -547,7 +535,6 @@ var MultipleChoiceController = function () {
         }
     }, {
         key: 'checkAnswer',
-
 
         /**
          * Check the answer the student has submitted and display feedback
@@ -602,7 +589,6 @@ var MultipleChoiceController = function () {
     }, {
         key: 'getCorrectChoice',
 
-
         /**
          * Get the correct choice for a radio button component
          * @return a choice id string
@@ -619,7 +605,6 @@ var MultipleChoiceController = function () {
     }, {
         key: 'getCorrectChoices',
 
-
         /**
          * Get the correct choices for a checkbox component
          * @return an array of correct choice ids
@@ -635,7 +620,6 @@ var MultipleChoiceController = function () {
         }
     }, {
         key: 'studentDataChanged',
-
 
         /**
          * Called when the student changes their work
@@ -670,7 +654,6 @@ var MultipleChoiceController = function () {
         }
     }, {
         key: 'createComponentState',
-
 
         /**
          * Create a new component state populated with the student data
@@ -728,7 +711,6 @@ var MultipleChoiceController = function () {
     }, {
         key: 'calculateDisabled',
 
-
         /**
          * Check if we need to lock the component
          */
@@ -762,7 +744,6 @@ var MultipleChoiceController = function () {
         }
     }, {
         key: 'getStudentChoiceObjects',
-
 
         /**
          * Get the choices the student has chosen as objects. The objects
@@ -826,7 +807,6 @@ var MultipleChoiceController = function () {
     }, {
         key: 'hasCorrectChoices',
 
-
         /**
          * Check if the component has been authored with a correct choice
          * @return whether the component has been authored with a correct choice
@@ -860,7 +840,6 @@ var MultipleChoiceController = function () {
         }
     }, {
         key: 'getChoiceById',
-
 
         /**
          * Get a choice object by choice id
@@ -907,7 +886,6 @@ var MultipleChoiceController = function () {
     }, {
         key: 'getChoiceType',
 
-
         /**
          * Get the choice type for this component ('radio' or 'checkbox')
          * @return the choice type for this component
@@ -927,7 +905,6 @@ var MultipleChoiceController = function () {
         }
     }, {
         key: 'getChoices',
-
 
         /**
          * Get the available choices from component content
@@ -950,7 +927,6 @@ var MultipleChoiceController = function () {
     }, {
         key: 'getAuthoringChoices',
 
-
         /**
          * Get the available choices from component content
          * @return the available choices from the component content
@@ -972,7 +948,6 @@ var MultipleChoiceController = function () {
     }, {
         key: 'showPrompt',
 
-
         /**
          * Check whether we need to show the prompt
          * @return whether to show the prompt
@@ -988,7 +963,6 @@ var MultipleChoiceController = function () {
         }
     }, {
         key: 'showSaveButton',
-
 
         /**
          * Check whether we need to show the save button
@@ -1006,7 +980,6 @@ var MultipleChoiceController = function () {
         }
     }, {
         key: 'showSubmitButton',
-
 
         /**
          * Check whether we need to show the submit button
@@ -1028,7 +1001,6 @@ var MultipleChoiceController = function () {
     }, {
         key: 'isLockAfterSubmit',
 
-
         /**
          * Check whether we need to lock the component after the student
          * submits an answer.
@@ -1049,7 +1021,6 @@ var MultipleChoiceController = function () {
     }, {
         key: 'getPrompt',
 
-
         /**
          * Get the prompt to show to the student
          */
@@ -1064,7 +1035,6 @@ var MultipleChoiceController = function () {
         }
     }, {
         key: 'importWork',
-
 
         /**
          * Import work from another component
@@ -1111,7 +1081,6 @@ var MultipleChoiceController = function () {
     }, {
         key: 'getComponentId',
 
-
         /**
          * Get the component id
          * @return the component id
@@ -1123,7 +1092,6 @@ var MultipleChoiceController = function () {
         }
     }, {
         key: 'authoringViewComponentChanged',
-
 
         /**
          * The component has changed in the regular authoring view so we will save the project
@@ -1141,7 +1109,6 @@ var MultipleChoiceController = function () {
         }
     }, {
         key: 'advancedAuthoringViewComponentChanged',
-
 
         /**
          * The component has changed in the advanced authoring view so we will update
@@ -1169,7 +1136,6 @@ var MultipleChoiceController = function () {
     }, {
         key: 'updateAdvancedAuthoringView',
 
-
         /**
          * Update the component JSON string that will be displayed in the advanced authoring view textarea
          */
@@ -1178,7 +1144,6 @@ var MultipleChoiceController = function () {
         }
     }, {
         key: 'addChoice',
-
 
         /**
          * Add a choice from within the authoring tool

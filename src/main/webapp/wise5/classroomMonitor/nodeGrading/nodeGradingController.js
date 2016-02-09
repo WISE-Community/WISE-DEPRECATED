@@ -1,10 +1,10 @@
 'use strict';
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -70,7 +70,6 @@ var NodeGradingController = function () {
      * @return the path to the html template for the component
      */
 
-
     _createClass(NodeGradingController, [{
         key: 'getComponentTemplatePath',
         value: function getComponentTemplatePath(componentType) {
@@ -78,7 +77,6 @@ var NodeGradingController = function () {
         }
     }, {
         key: 'getComponents',
-
 
         /**
          * Get the components for this node.
@@ -136,7 +134,6 @@ var NodeGradingController = function () {
     }, {
         key: 'getLatestComponentStateByWorkgroupIdAndComponentId',
 
-
         /**
          * Get the student data for a specific part
          * @param the componentId
@@ -155,7 +152,6 @@ var NodeGradingController = function () {
         }
     }, {
         key: 'getLatestComponentStateByWorkgroupIdAndNodeIdAndComponentId',
-
 
         /**
          * Get the student data for a specific part
@@ -221,7 +217,6 @@ var NodeGradingController = function () {
     }, {
         key: 'getPeriodIdByWorkgroupId',
 
-
         /**
          * Get the period id for a workgroup id
          * @param workgroupId the workgroup id
@@ -232,7 +227,6 @@ var NodeGradingController = function () {
         }
     }, {
         key: 'initializePeriods',
-
 
         /**
          * Initialize the periods
@@ -260,7 +254,6 @@ var NodeGradingController = function () {
     }, {
         key: 'setCurrentPeriod',
 
-
         /**
          * Set the current period
          * @param period the period object
@@ -270,7 +263,6 @@ var NodeGradingController = function () {
         }
     }, {
         key: 'getCurrentPeriod',
-
 
         /**
          * Get the current period

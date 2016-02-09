@@ -1,10 +1,10 @@
 'use strict';
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -448,7 +448,6 @@ var DiscussionController = function () {
      * Get the classmate responses
      */
 
-
     _createClass(DiscussionController, [{
         key: 'getClassmateResponses',
         value: function getClassmateResponses() {
@@ -471,7 +470,6 @@ var DiscussionController = function () {
     }, {
         key: 'setStudentWork',
 
-
         /**
          * Populate the student work into the component
          * @param componentState the component state to populate into the component
@@ -486,7 +484,6 @@ var DiscussionController = function () {
     }, {
         key: 'saveButtonClicked',
 
-
         /**
          * Called when the student clicks the save button
          */
@@ -497,7 +494,6 @@ var DiscussionController = function () {
         }
     }, {
         key: 'submitButtonClicked',
-
 
         /**
          * Called when the student clicks the submit button
@@ -515,7 +511,6 @@ var DiscussionController = function () {
         }
     }, {
         key: 'studentDataChanged',
-
 
         /**
          * Called when the student changes their work
@@ -543,7 +538,6 @@ var DiscussionController = function () {
         }
     }, {
         key: 'createComponentState',
-
 
         /**
          * Create a new component state populated with the student data
@@ -586,7 +580,6 @@ var DiscussionController = function () {
     }, {
         key: 'clearComponentValues',
 
-
         /**
          * Clear the component values so they aren't accidentally used again
          */
@@ -606,7 +599,6 @@ var DiscussionController = function () {
         }
     }, {
         key: 'calculateDisabled',
-
 
         /**
          * Check if we need to lock the component
@@ -642,7 +634,6 @@ var DiscussionController = function () {
     }, {
         key: 'showSaveButton',
 
-
         /**
          * Check whether we need to show the save button
          * @return whether to show the save button
@@ -662,7 +653,6 @@ var DiscussionController = function () {
         }
     }, {
         key: 'showSubmitButton',
-
 
         /**
          * Check whether we need to show the submit button
@@ -684,7 +674,6 @@ var DiscussionController = function () {
     }, {
         key: 'isLockAfterSubmit',
 
-
         /**
          * Check whether we need to lock the component after the student
          * submits an answer.
@@ -705,7 +694,6 @@ var DiscussionController = function () {
         }
     }, {
         key: 'isClassmateResponsesGated',
-
 
         /**
          * Check whether we need to gate the classmate responses
@@ -815,7 +803,6 @@ var DiscussionController = function () {
     }, {
         key: 'getPrompt',
 
-
         /**
          * Get the prompt to show to the student
          */
@@ -831,7 +818,6 @@ var DiscussionController = function () {
     }, {
         key: 'getNumRows',
 
-
         /**
          * Get the number of rows for the textarea
          */
@@ -846,7 +832,6 @@ var DiscussionController = function () {
         }
     }, {
         key: 'importWork',
-
 
         /**
          * Import work from another component
@@ -893,7 +878,6 @@ var DiscussionController = function () {
     }, {
         key: 'getComponentId',
 
-
         /**
          * Get the component id
          * @return the component id
@@ -905,7 +889,6 @@ var DiscussionController = function () {
         }
     }, {
         key: 'setClassResponses',
-
 
         /**
          * Set the class responses into the controller
@@ -957,7 +940,6 @@ var DiscussionController = function () {
         }
     }, {
         key: 'processResponses',
-
 
         /**
          * Process the class responses. This will put responses into the
@@ -1011,7 +993,6 @@ var DiscussionController = function () {
         }
     }, {
         key: 'addClassResponse',
-
 
         /**
          * Add a class response to our model
@@ -1076,7 +1057,6 @@ var DiscussionController = function () {
     }, {
         key: 'getClassResponses',
 
-
         /**
          * Get the class responses
          */
@@ -1085,7 +1065,6 @@ var DiscussionController = function () {
         }
     }, {
         key: 'getLevel1Responses',
-
 
         /**
          * Get the level 1 responses which are posts that are not a
@@ -1127,7 +1106,6 @@ var DiscussionController = function () {
     }, {
         key: 'authoringViewComponentChanged',
 
-
         /**
          * The component has changed in the regular authoring view so we will save the project
          */
@@ -1141,7 +1119,6 @@ var DiscussionController = function () {
         }
     }, {
         key: 'advancedAuthoringViewComponentChanged',
-
 
         /**
          * The component has changed in the advanced authoring view so we will update
@@ -1169,7 +1146,6 @@ var DiscussionController = function () {
     }, {
         key: 'updateAdvancedAuthoringView',
 
-
         /**
          * Update the component JSON string that will be displayed in the advanced authoring view textarea
          */
@@ -1178,7 +1154,6 @@ var DiscussionController = function () {
         }
     }, {
         key: 'registerExitListener',
-
 
         /**
          * Register the the listener that will listen for the exit event
