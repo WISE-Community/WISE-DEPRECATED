@@ -1,5 +1,6 @@
-Web-based Inquiry Science Education (WISE)
+Web-based Inquiry Science Education (WISE) 
 ====
+[![Build Status](https://travis-ci.org/WISE-Community/WISE.svg?branch=master)](https://travis-ci.org/WISE-Community/WISE)
 
 Setup WISE Local Development
 * Develop WISE without IDE (easy and quick, suitable for most): https://github.com/WISE-Community/WISE/wiki/How-to-Setup-WISE:-Local-Development-Environment-without-using-IDE
