@@ -25,7 +25,7 @@ import EmbeddedService from '../components/embedded/embeddedService';
 import Filters from '../filters/filters';
 import GraphController from '../components/graph/graphController';
 import GraphService from '../components/graph/graphService';
-import Highcharts from 'highcharts';
+import Highcharts from '../lib/highcharts@4.2.1';
 import HTMLController from '../components/html/htmlController';
 import HTMLService from '../components/html/htmlService';
 import LabelController from '../components/label/labelController';

@@ -249,11 +249,11 @@ var MatchController = function () {
                 if (this.isLockAfterSubmit()) {
                     // disable the component if it was authored to lock after submit
                     this.isDisabled = true;
-
-                    // check if the student answered correctly
-                    this.checkAnswer();
-                    this.numberOfSubmits++;
                 }
+
+                // check if the student answered correctly
+                this.checkAnswer();
+                this.numberOfSubmits++;
             }
         }));
 
@@ -275,7 +275,6 @@ var MatchController = function () {
     _createClass(MatchController, [{
         key: 'setStudentWork',
         value: function setStudentWork(componentState) {
-
             if (componentState != null) {
 
                 // get the student data from the component state
@@ -289,7 +288,45 @@ var MatchController = function () {
 
                     // set the buckets
                     if (componentStateBuckets != null) {
-                        this.buckets = componentStateBuckets;
+                        var bucketIds = this.buckets.map(function (b) {
+                            return b.id;
+                        });
+                        var choiceIds = this.choices.map(function (c) {
+                            return c.id;
+                        });
+
+                        for (var i = 0, l = componentStateBuckets.length; i < l; i++) {
+                            var componentStateBucketId = componentStateBuckets[i].id;
+                            if (componentStateBucketId !== 0) {
+                                // componentState bucket is a valid bucket, so process choices
+                                if (bucketIds.indexOf(componentStateBucketId) > -1) {
+                                    var currentBucket = componentStateBuckets[i];
+                                    var currentChoices = currentBucket.items;
+
+                                    for (var x = 0, len = currentChoices.length; x < len; x++) {
+                                        var currentChoice = currentChoices[x];
+                                        var currentChoiceId = currentChoice.id;
+                                        var currentChoiceLocation = choiceIds.indexOf(currentChoiceId);
+                                        if (currentChoiceLocation > -1) {
+                                            // choice is valid and used by student in a valid bucket, so add it to that bucket
+                                            var bucket = this.getBucketById(componentStateBucketId);
+                                            // content for choice with this id may have change, so get updated content
+                                            var updatedChoice = this.getChoiceById(currentChoiceId);
+                                            bucket.items.push(updatedChoice);
+                                            choiceIds.splice(currentChoiceLocation, 1);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        // add unused choices to default choices bucket
+                        var choicesBucket = this.getBucketById(0);
+                        choicesBucket.items = [];
+                        for (var i = 0, l = choiceIds.length; i < l; i++) {
+                            choicesBucket.items.push(this.getChoiceById(choiceIds[i]));
+                        }
+                        //this.buckets = componentStateBuckets;
                     }
 
                     // set the number of submits
@@ -343,7 +380,7 @@ var MatchController = function () {
                  */
                 var originBucket = {};
                 originBucket.id = 0;
-                originBucket.value = 'Choices';
+                originBucket.value = this.componentContent.choicesLabel ? this.componentContent.choicesLabel : 'Choices';
                 originBucket.type = 'bucket';
                 originBucket.items = [];
 
@@ -1087,7 +1124,7 @@ var MatchController = function () {
             var bucket = null;
 
             // get the buckets
-            var buckets = this.authoringComponentContent.buckets;
+            var buckets = this.buckets ? this.buckets : this.authoringComponentContent.buckets;
 
             // loop through the buckets
             for (var b = 0; b < buckets.length; b++) {
@@ -1095,7 +1132,7 @@ var MatchController = function () {
 
                 if (tempBucket != null) {
                     if (id === tempBucket.id) {
-                        // we have found teh bucket we want
+                        // we have found the bucket we want
                         bucket = tempBucket;
                         break;
                     }

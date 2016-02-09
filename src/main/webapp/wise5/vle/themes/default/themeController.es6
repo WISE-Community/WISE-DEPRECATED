@@ -86,9 +86,9 @@ class ThemeController {
                 .ariaLabel('Session Timeout')
                 .ok('YES')
                 .cancel('No');
-            this.$mdDialog.show(confirm).then(function() {
+            this.$mdDialog.show(confirm).then(()=> {
                 this.SessionService.renewSession();
-            }, function() {
+            }, ()=> {
                 this.SessionService.forceLogOut();
             });
         }));

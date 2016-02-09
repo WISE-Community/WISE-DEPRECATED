@@ -1,1 +1,0 @@
-module.exports = require("npm:bindings@1.2.1/bindings.js");

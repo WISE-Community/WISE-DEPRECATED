@@ -1,16 +1,18 @@
 {
   "jspm": {
     "dependencies": {
-      "angular": "github:angular/bower-angular@^1.4.9",
-      "angular-animate": "github:angular/bower-angular-animate@^1.4.9",
+      "angular": "github:angular/bower-angular@^1.5.0",
+      "angular-animate": "github:angular/bower-angular-animate@^1.5.0",
       "angular-material": "github:angular/bower-material@^1.0.1",
+      "angular-mocks": "github:angular/bower-angular-mocks@^1.5.0",
       "angular-moment": "npm:angular-moment@^1.0.0-beta.3",
-      "angular-sanitize": "github:angular/bower-angular-sanitize@^1.4.8",
+      "angular-sanitize": "github:angular/bower-angular-sanitize@^1.5.0",
       "angular-ui-router": "github:angular-ui/ui-router@^0.2.15",
       "angular-ui-tree": "github:angular-ui-tree/angular-ui-tree@2.5",
       "angular-websocket": "npm:angular-websocket@^1.0.14",
       "highcharts-ng": "npm:highcharts-ng@^0.0.11",
       "highcharts/draggable-points": "github:highcharts/draggable-points@master",
+      "jquery": "npm:jquery@^2.2.0",
       "moment": "npm:moment@^2.11.1",
       "ng-file-upload": "npm:ng-file-upload@^10.1.11",
       "oclazyload": "npm:oclazyload@^1.0.9",
@@ -23,33 +25,29 @@
     },
     "overrides": {
       "npm:highcharts-ng@0.0.11": {
-        "dependencies": {
-          "highcharts": "4.2.1"
-        }
+        "dependencies": {}
       },
       "github:highcharts/draggable-points@master": {
-        "dependencies": {
-          "highcharts": "4.2.1"
-        }
+        "dependencies": {}
       },
       "npm:oclazyload@1.0.9": {
         "dependencies": {
-          "angular": "1.4.9"
+          "angular": "1.5.0"
         }
       },
-      "github:angular/bower-angular-animate@1.4.9": {
+      "github:angular/bower-angular-animate@1.5.0": {
         "dependencies": {
-          "angular": "1.4.9"
+          "angular": "1.5.0"
         }
       },
       "github:angular-ui-tree/angular-ui-tree@2.5.0": {
         "dependencies": {
-          "angular": "1.4.9"
+          "angular": "jspm:angular@1.5.0"
         }
       },
-      "github:angular/bower-angular-sanitize@1.4.8": {
+      "github:angular/bower-angular-sanitize@1.5.0": {
         "dependencies": {
-          "angular": "1.4.9"
+          "angular": "1.5.0"
         }
       }
     }

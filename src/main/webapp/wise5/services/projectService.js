@@ -56,7 +56,7 @@ var contentBaseURL=this.ConfigService.getConfigParam('projectBaseURL'); // only 
 // the string we're looking for can't start with '/ and "/.
 // note that this also works for \"abc.png and \'abc.png, where the quotes are escaped
 contentString=contentString.replace(new RegExp('(\'|\"|\\\\\'|\\\\\")[^:][^\/][^\/][a-zA-Z0-9@\\._\\/\\s\\-]*\.(png|jpe?g|pdf|gif|mov|mp4|mp3|wav|swf|css|txt|json|xlsx?|doc|html)(\'|\"|\\\\\'|\\\\\")','gi'),function myFunction(matchedString){ // once found, we prepend the contentBaseURL + "assets/" to the string within the quotes and keep everything else the same.
-var delimiter='';var matchedStringWithoutQuotes='';if(matchedString.startsWith('\\')){ // the string has escaped quotes for example \"hello.png\"
+var delimiter='';var matchedStringWithoutQuotes='';if(matchedString.length>2&&matchedString.substr(0,2)=='\\'){ // the string has escaped quotes for example \"hello.png\"
 // get everything between the escaped quotes
 matchedStringWithoutQuotes=matchedString.substr(2,matchedString.length-4); // get the delimiter which will be \' or \"
 delimiter=matchedString.substr(0,2);}else { // the string does not have escaped qoutes for example "hello.png"
