@@ -208,11 +208,13 @@ class AnnotationDirective {
     constructor($compile,
                 AnnotationService,
                 ConfigService,
+                ProjectService,
                 UtilService) {
 
         this.$compile = $compile;
         this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
+        this.ProjectService = ProjectService;
         this.UtilService = UtilService;
 
         this.restrict = 'E';
@@ -222,8 +224,8 @@ class AnnotationDirective {
         this.scope = {};
     }
 
-    static directiveFactory($compile, AnnotationService, ConfigService, UtilService) {
-        AnnotationDirective.instance = new AnnotationDirective($compile, AnnotationService, ConfigService, UtilService);
+    static directiveFactory($compile, AnnotationService, ConfigService, ProjectService, UtilService) {
+        AnnotationDirective.instance = new AnnotationDirective($compile, AnnotationService, ConfigService, ProjectService, UtilService);
         return AnnotationDirective.instance;
     }
 
@@ -239,6 +241,8 @@ class AnnotationDirective {
         var toWorkgroupId = attrs.toworkgroupid;
         var componentStateId = attrs.componentstateid;
         var active = attrs.active;
+        var component = null;
+        var maxScore = null;
 
         if (fromWorkgroupId == '') {
             fromWorkgroupId = null;
@@ -267,6 +271,16 @@ class AnnotationDirective {
             active = false;
         }
 
+        if (nodeId != null && componentId != null) {
+            // get the component
+            component = AnnotationDirective.instance.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
+        }
+
+        if (component != null) {
+            // get the max score
+            maxScore = component.maxScore;
+        }
+
         if (mode === 'student') {
 
             var annotationParams = {};
@@ -291,7 +305,11 @@ class AnnotationDirective {
 
                         if (value != null && value != '') {
                             // display the score to the student
-                            annotationHTML += '<span>Score: ' + value + '</span>';
+                            if (maxScore != null) {
+                                annotationHTML += '<span>Score: ' + value + ' / ' + maxScore + '</span>';
+                            } else {
+                                annotationHTML += '<span>Score: ' + value + '</span>';
+                            }
                         }
                     }
                 }
@@ -386,11 +404,17 @@ class AnnotationDirective {
 
             if (type === 'score') {
                 annotationHTML += 'Score: ';
-                annotationHTML += '<input size="10" ng-model="annotationController.value" ng-disabled="annotationController.isDisabled" ng-change="annotationController.postAnnotation()" ng-model-options="{ debounce: 2000 }"></input>';
+
+                annotationHTML += '<input size="10" ng-model="annotationController.value" ng-disabled="annotationController.isDisabled" ng-change="annotationController.postAnnotation()" ng-model-options="{ debounce: 2000 }"/>';
+
+                if (maxScore != null) {
+                    annotationHTML += ' / ' + maxScore;
+                }
+
             } else if (type === 'comment') {
                 annotationHTML += 'Comment: ';
                 annotationHTML += '<br/>';
-                annotationHTML += '<textarea ng-model="annotationController.value" ng-disabled="annotationController.isDisabled" ng-change="annotationController.postAnnotation()" ng-model-options="{ debounce: 2000 }" rows="5" cols="30"></textarea>';
+                annotationHTML += '<textarea ng-model="annotationController.value" ng-disabled="annotationController.isDisabled" ng-change="annotationController.postAnnotation()" ng-model-options="{ debounce: 2000 }" rows="5" cols="30"/>';
             }
         }
 
@@ -459,7 +483,7 @@ class ConfirmNumberDecrease {
 
 let Directives = angular.module('directives', []);
 
-AnnotationDirective.directiveFactory.$inject = ['$compile', 'AnnotationService', 'ConfigService', 'UtilService'];
+AnnotationDirective.directiveFactory.$inject = ['$compile', 'AnnotationService', 'ConfigService', 'ProjectService', 'UtilService'];
 ClassResponseDirective.directiveFactory.$inject = ['StudentStatusService'];
 CompileDirective.directiveFactory.$inject = ['$compile'];
 ComponentDirective.directiveFactory.$inject = ['$injector', '$compile', 'NodeService', 'ProjectService', 'StudentDataService'];
