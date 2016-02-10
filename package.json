@@ -42,7 +42,7 @@
     "watch-sass": "gulp",
     "compile-sass": "gulp compile-sass",
     "test": "./node_modules/karma/bin/karma start --single-run --browsers PhantomJS",
-    "test-watch": "./node_modules/gulp-helpers/node_modules/karma/bin/karma start --single-run --browsers Firefox"
+    "test-watch": "./node_modules/karma/bin/karma start --browsers PhantomJS"
   },
   "repository": {
     "type": "git",

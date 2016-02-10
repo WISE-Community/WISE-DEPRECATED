@@ -564,7 +564,7 @@ class ProjectService {
                     var delimiter = '';
                     var matchedStringWithoutQuotes = '';
 
-                    if (matchedString.length > 2 && matchedString.substr(0,2) == '\\') {
+                    if (matchedString.length > 2 && matchedString.substr(0,1) == '\\') {
                         // the string has escaped quotes for example \"hello.png\"
 
                         // get everything between the escaped quotes
@@ -897,29 +897,9 @@ class ProjectService {
         }
         var project = this.getProject();
         if (project != null) {
-
-
             transitions = project.transitions;
         }
         return transitionsInGroup;
-    };
-
-    getTransitionsByFromNodeId0(fromNodeId) {
-        var transitionsResults = [];
-        if (fromNodeId != null) {
-            var transitions = this.getTransitions();
-
-            if (transitions != null) {
-                for (var i = 0; i < transitions.length; i++) {
-                    var transition = transitions[i];
-                    if (transition.from === fromNodeId && !transition.disabled) {
-                        transitionsResults.push(transition);
-                    }
-                }
-            }
-        }
-
-        return transitionsResults;
     };
 
     /**
@@ -1048,14 +1028,22 @@ class ProjectService {
         return layoutLogic;
     };
 
+    /**
+     * Retrieves the project JSON from Config.projectURL and returns it.
+     * If Config.projectURL is undefined, returns null.
+     */
     retrieveProject() {
-        var projectFileUrl = this.ConfigService.getConfigParam('projectURL');
+        var projectURL = this.ConfigService.getConfigParam('projectURL');
 
-        return this.$http.get(projectFileUrl).then(function(result) {
-            var projectJSON = result.data;
-            this.setProject(projectJSON);
-            return projectJSON;
-        }.bind(this));
+        if (projectURL != null) {
+            return this.$http.get(projectURL).then((result) => {
+                var projectJSON = result.data;
+                this.setProject(projectJSON);
+                return projectJSON;
+            });
+        } else {
+            return null;
+        }
     };
 
     saveProject(projectJSON, commitMessage) {

@@ -23,8 +23,8 @@ var ConfigService = function () {
         }
     }, {
         key: 'retrieveConfig',
-        value: function retrieveConfig(configUrl) {
-            return this.$http.get(configUrl).then(angular.bind(this, function (result) {
+        value: function retrieveConfig(configURL) {
+            return this.$http.get(configURL).then(angular.bind(this, function (result) {
                 var config = result.data;
 
                 this.config = config;

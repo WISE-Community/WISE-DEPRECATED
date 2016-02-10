@@ -30,9 +30,8 @@ describe('Student VLE Module', function () {
         });
 
         it('should replace asset paths in html component content', function () {
-            let contentString = "style=\"background-image: url('background.jpg')\"";
-            let contentStringReplacedAssetPathExpected = "style=\"background-image: url('" + projectBaseURL + "assets/background.jpg')\"";
-
+            let contentString = "style=\\\"background-image: url(\\\"background.jpg\\\")\\\"";
+            let contentStringReplacedAssetPathExpected = "style=\\\"background-image: url(\\\"" + projectBaseURL + "assets/background.jpg\\\")\\\"";
             let contentStringReplacedAssetPathActual = ProjectService.replaceAssetPaths(contentString);
             expect(ConfigService.getConfigParam).toHaveBeenCalledWith("projectBaseURL");
             expect(contentStringReplacedAssetPathActual).toEqual(contentStringReplacedAssetPathExpected);

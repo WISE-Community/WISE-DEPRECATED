@@ -9,8 +9,8 @@ class ConfigService {
         return this.config;
     };
 
-    retrieveConfig(configUrl) {
-        return this.$http.get(configUrl).then(angular.bind(this, function (result) {
+    retrieveConfig(configURL) {
+        return this.$http.get(configURL).then(angular.bind(this, function (result) {
             var config = result.data;
 
             this.config = config;
