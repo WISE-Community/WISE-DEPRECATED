@@ -2381,7 +2381,8 @@ View.prototype.deleteProject = function() {
 	
 	//params for making the delete project request
 	var requestParams = {
-		projectId:this.portalProjectId
+		projectId:this.portalProjectId,
+		revive: false
 	};
 	
 	if(response) {
