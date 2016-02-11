@@ -1,4 +1,3 @@
-//import theme from './themes/default/theme2.js';
 'use strict';
 
 class VLEController {
@@ -51,7 +50,6 @@ class VLEController {
 
         this.$scope.$on('currentNodeChanged', angular.bind(this, function(event, args) {
             var previousNode = args.previousNode;
-            //var currentNode = args.currentNode;
             var currentNode = this.StudentDataService.getCurrentNode();
             var currentNodeId = currentNode.id;
 
@@ -71,8 +69,9 @@ class VLEController {
                 componentType = null;
                 category = "Navigation";
                 eventName = "nodeExited";
-                eventData = {};
-                eventData.nodeId = previousNode.id;
+                eventData = {
+                    nodeId: previousNode.id
+                };
                 eventNodeId = previousNode.id;
                 this.StudentDataService.saveVLEEvent(eventNodeId, componentId, componentType, category, eventName, eventData);
             }
@@ -83,8 +82,9 @@ class VLEController {
                 componentType = null;
                 category = "Navigation";
                 eventName = "nodeEntered";
-                eventData = {};
-                eventData.nodeId = currentNode.id;
+                eventData = {
+                    nodeId: currentNode.id
+                };
                 eventNodeId = currentNode.id;
                 this.StudentDataService.saveVLEEvent(eventNodeId, componentId, componentType, category, eventName, eventData);
             }
@@ -205,16 +205,6 @@ class VLEController {
 
     loadRoot() {
         this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(this.ProjectService.rootNode.id);
-    };
-
-    layoutLogicStarMap(VLEState) {
-        if (VLEState.state === 'initial') {
-            this.showProjectDiv = true;
-            this.showNodeDiv = false;
-        } else if (VLEState.state === 'showNavigationClicked') {
-            this.showProjectDiv = true;
-            this.showNodeDiv = false;
-        }
     };
 
     chooseTransition(transitions) {

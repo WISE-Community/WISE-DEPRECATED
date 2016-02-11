@@ -2837,7 +2837,6 @@ class ProjectService {
              */
             nodeId = tempNode.id;
         }
-
     }
 
     /**
@@ -3096,7 +3095,6 @@ class ProjectService {
                 this.addComponentToNode(node, component);
             }
         }
-
     }
 
     /**

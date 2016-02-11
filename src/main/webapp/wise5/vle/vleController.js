@@ -1,4 +1,3 @@
-//import theme from './themes/default/theme2.js';
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -51,7 +50,6 @@ var VLEController = function () {
 
         this.$scope.$on('currentNodeChanged', angular.bind(this, function (event, args) {
             var previousNode = args.previousNode;
-            //var currentNode = args.currentNode;
             var currentNode = this.StudentDataService.getCurrentNode();
             var currentNodeId = currentNode.id;
 
@@ -71,8 +69,9 @@ var VLEController = function () {
                 componentType = null;
                 category = "Navigation";
                 eventName = "nodeExited";
-                eventData = {};
-                eventData.nodeId = previousNode.id;
+                eventData = {
+                    nodeId: previousNode.id
+                };
                 eventNodeId = previousNode.id;
                 this.StudentDataService.saveVLEEvent(eventNodeId, componentId, componentType, category, eventName, eventData);
             }
@@ -83,8 +82,9 @@ var VLEController = function () {
                 componentType = null;
                 category = "Navigation";
                 eventName = "nodeEntered";
-                eventData = {};
-                eventData.nodeId = currentNode.id;
+                eventData = {
+                    nodeId: currentNode.id
+                };
                 eventNodeId = currentNode.id;
                 this.StudentDataService.saveVLEEvent(eventNodeId, componentId, componentType, category, eventName, eventData);
             }
@@ -212,17 +212,6 @@ var VLEController = function () {
         key: 'loadRoot',
         value: function loadRoot() {
             this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(this.ProjectService.rootNode.id);
-        }
-    }, {
-        key: 'layoutLogicStarMap',
-        value: function layoutLogicStarMap(VLEState) {
-            if (VLEState.state === 'initial') {
-                this.showProjectDiv = true;
-                this.showNodeDiv = false;
-            } else if (VLEState.state === 'showNavigationClicked') {
-                this.showProjectDiv = true;
-                this.showNodeDiv = false;
-            }
         }
     }, {
         key: 'chooseTransition',

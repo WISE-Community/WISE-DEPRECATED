@@ -16,14 +16,19 @@
 .node-select--node {
     margin-left: 10px
 }
+.active {
+    background-color: yellow;
+}
 </style>
 
 <div>
-    <button ng-repeat='period in nodeProgressController.periods' ng-click='nodeProgressController.setCurrentPeriod(period)'>{{period.periodName}}</button>
-    <p>Current Period: {{nodeProgressController.getCurrentPeriod()}}</p>
+    <button ng-repeat='period in nodeProgressController.periods'
+            ng-click='nodeProgressController.setCurrentPeriod(period)'
+            ng-class="{'active': period.periodName == nodeProgressController.getCurrentPeriod().periodName}">
+        {{period.periodName}}
+    </button>
 </div>
 
-<div>{{nodeProgressController.title}}</div>
 <div ng-repeat='item in nodeProgressController.items | toArray | orderBy : "order"'
      ng-if='item.order!==0'
      ng-class='{"node-select--group": nodeProgressController.isGroupNode(item.$key), "node-select--node": !nodeProgressController.isGroupNode(item.$key)}'

@@ -17,7 +17,6 @@ var NodeProgressController = function () {
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
         this.TeacherDataService = TeacherDataService;
-        this.title = 'Grade By Step';
         this.currentGroup = null;
         this.items = null;
         this.periods = [];
@@ -133,7 +132,6 @@ var NodeProgressController = function () {
     }, {
         key: 'nodeClicked',
         value: function nodeClicked(nodeId) {
-
             this.$state.go('root.nodeGrading', { nodeId: nodeId });
         }
     }]);

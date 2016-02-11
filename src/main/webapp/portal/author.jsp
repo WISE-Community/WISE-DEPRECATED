@@ -10,19 +10,14 @@
     <base href="${contextPath}/" target="_blank">
     <meta name="description" content="WISE Authoring Tool">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
+    <link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
-    <!-- Place favicon.ico in the root directory -->
 
     <script src="${contextPath}/wise5/jspm_packages/system.js"></script>
     <script src="${contextPath}/wise5/config.js"></script>
     <script>
         System.import('${contextPath}/wise5/authoringTool/bootstrap');
     </script>
-<!--
-    <script src="${contextPath}/wise5/lib/modernizr/modernizr.custom.js"></script>
--->
-
 </head>
 <body>
     <div ng-view>

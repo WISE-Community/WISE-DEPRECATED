@@ -1,6 +1,9 @@
 <div>
-    <button ng-repeat='period in nodeGradingController.periods' ng-click='nodeGradingController.setCurrentPeriod(period)'>{{period.periodName}}</button>
-    <p>Current Period: {{nodeGradingController.getCurrentPeriod().periodName}}</p>
+    <button ng-repeat='period in nodeGradingController.periods'
+            ng-click='nodeGradingController.setCurrentPeriod(period)'
+            ng-class="{'active': period.periodName == nodeGradingController.getCurrentPeriod().periodName}">
+        {{period.periodName}}
+    </button>
 </div>
 
 <div style='margin-left: 20px'><h3>{{nodeGradingController.nodeTitle}}</h3></div>

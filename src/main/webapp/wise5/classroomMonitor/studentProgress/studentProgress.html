@@ -14,15 +14,20 @@
     table tr {
         cursor: pointer;
     }
+
+    .active {
+        background-color: yellow;
+    }
 </style>
 
 <div>
-{{ studentProgressController.title }}
-<br>
 
 <div>
-    <button ng-repeat='period in studentProgressController.periods' ng-click='studentProgressController.setCurrentPeriod(period)'>{{period.periodName}}</button>
-    <p>Current Period: {{studentProgressController.getCurrentPeriod()}}</p>
+    <button ng-repeat='period in studentProgressController.periods'
+            ng-click='studentProgressController.setCurrentPeriod(period)'
+            ng-class="{'active': period.periodName == studentProgressController.getCurrentPeriod().periodName}">
+        {{period.periodName}}
+    </button>
 </div>
 
 <table>

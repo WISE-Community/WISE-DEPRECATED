@@ -36,6 +36,9 @@ class ProjectController {
         this.projectAsText = JSON.stringify(this.project, null, 4);
     };
 
+    /**
+     * Launch the project in preview mode
+     */
     previewProject() {
         let previewProjectURL = this.ConfigService.getConfigParam("previewProjectURL");
         window.open(previewProjectURL);
@@ -345,7 +348,7 @@ class ProjectController {
             value.checked = false;
         });
     }
-}
+};
 
 ProjectController.$inject = ['$scope', '$state', '$stateParams', 'ProjectService', 'ConfigService'];
 

@@ -1,9 +1,9 @@
-<button ng-click="nodeController.showNormal()">authorStep</button>
-<button ng-click="nodeController.showPreview()">previewStep</button>
-<button ng-click="nodeController.showAdvanced()">advancedAuthorStep</button>
-<button ng-click="nodeController.close()">close</button>
+<div style="float: right">
+    <button ng-click="nodeController.previewStep()">Preview Step</button>
+    <button ng-click="nodeController.close()">Save & Close</button>
+</div>
 <div>Title: <input ng-model='nodeController.node.title' ng-change='nodeController.authoringViewNodeChanged()' ng-model-options='{ debounce: 1000 }' size='60'></input></div>
-<button ng-click='nodeController.showCreateComponent = !nodeController.showCreateComponent'>Create Component</button>
+<button ng-click='nodeController.showCreateComponent = !nodeController.showCreateComponent'>Add New Component</button>
 <div ng-show='nodeController.showCreateComponent'>
     <select ng-model='nodeController.selectedComponent'>
         <option ng-repeat='componentType in nodeController.componentTypes' value='{{componentType.componentType}}'>
@@ -13,7 +13,7 @@
     <button ng-click='nodeController.createComponent()'>Submit</button>
 </div>
 <div ng-repeat='component in nodeController.components'>
-    <div>
+    <div style="margin-top: 7px; border-top: 2px dotted black">
         {{component.type}}
         <button ng-click='nodeController.moveComponentUp(component.id)'>Move Up</button>
         <button ng-click='nodeController.moveComponentDown(component.id)'>Move Down</button>

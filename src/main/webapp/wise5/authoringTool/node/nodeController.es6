@@ -2,11 +2,13 @@ class NodeController {
     constructor($scope,
                 $state,
                 $stateParams,
-                ProjectService) {
+                ProjectService,
+                ConfigService) {
         this.$scope = $scope;
         this.$state = $state;
         this.$stateParams = $stateParams;
         this.ProjectService = ProjectService;
+        this.ConfigService = ConfigService;
         this.projectId = $stateParams.projectId;
         this.nodeId = $stateParams.nodeId;
         this.showCreateComponent = false;
@@ -36,16 +38,14 @@ class NodeController {
         // get the components in the node
         this.components = this.ProjectService.getComponentsByNodeId(this.nodeId);
     }
-    showNormal() {
-        this.$state.go('root.node.normal', {nodeId: this.nodeId});
-    };
 
-    showPreview() {
-        this.$state.go('root.node.preview', {nodeId: this.nodeId});
-    };
-
-    showAdvanced() {
-        this.$state.go('root.node.advanced', {nodeId: this.nodeId});
+    /**
+     * Launch VLE with this current step as the initial step
+     */
+    previewStep() {
+        let previewProjectURL = this.ConfigService.getConfigParam("previewProjectURL");
+        let previewStepURL  = previewProjectURL + "#/vle/" + this.nodeId;
+        window.open(previewStepURL);
     };
 
     close() {
@@ -112,8 +112,8 @@ class NodeController {
     authoringViewNodeChanged() {
         this.ProjectService.saveProject();
     }
-}
+};
 
-NodeController.$inject = ['$scope', '$state', '$stateParams', 'ProjectService'];
+NodeController.$inject = ['$scope', '$state', '$stateParams', 'ProjectService', 'ConfigService'];
 
 export default NodeController;

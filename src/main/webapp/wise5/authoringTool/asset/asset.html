@@ -14,7 +14,7 @@
         cursor: pointer;
     }
 </style>
-<button ng-click='projectAssetController.exit()'>Close</button>
+<button style="float:right" ng-click='projectAssetController.exit()'>Close</button>
 
 <div ngf-drop ngf-select ngf-change="projectAssetController.uploadAssetItems($files)" class="drop-box"
      drag-over-class="dragover" ngf-multiple="true" allow-dir="false"
@@ -23,8 +23,8 @@ You are using {{projectAssetController.projectAssets.totalFileSize | appropriate
 out of {{projectAssetController.projectAssetTotalSizeMax | appropriateSizeText }}
 ({{projectAssetController.projectAssetUsagePercentage | roundToDecimal:0 }}%)
 <ul>
-<li ng-repeat='assetItem in projectAssetController.projectAssets.files'>
-    {{assetItem.fileName}} ({{assetItem.fileSize | appropriateSizeText}} bytes)
-    <button ng-click='projectAssetController.deleteAsset(assetItem)'>X</button>
-</li>
+    <li ng-repeat='assetItem in projectAssetController.projectAssets.files'>
+        {{assetItem.fileName}} ({{assetItem.fileSize | appropriateSizeText}} bytes)
+        <button ng-click='projectAssetController.deleteAsset(assetItem)'>X</button>
+    </li>
 </ul>

@@ -9,13 +9,14 @@ Object.defineProperty(exports, "__esModule", {
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var NodeController = function () {
-    function NodeController($scope, $state, $stateParams, ProjectService) {
+    function NodeController($scope, $state, $stateParams, ProjectService, ConfigService) {
         _classCallCheck(this, NodeController);
 
         this.$scope = $scope;
         this.$state = $state;
         this.$stateParams = $stateParams;
         this.ProjectService = ProjectService;
+        this.ConfigService = ConfigService;
         this.projectId = $stateParams.projectId;
         this.nodeId = $stateParams.nodeId;
         this.showCreateComponent = false;
@@ -34,20 +35,16 @@ var NodeController = function () {
         this.components = this.ProjectService.getComponentsByNodeId(this.nodeId);
     }
 
+    /**
+     * Launch VLE with this current step as the initial step
+     */
+
     _createClass(NodeController, [{
-        key: 'showNormal',
-        value: function showNormal() {
-            this.$state.go('root.node.normal', { nodeId: this.nodeId });
-        }
-    }, {
-        key: 'showPreview',
-        value: function showPreview() {
-            this.$state.go('root.node.preview', { nodeId: this.nodeId });
-        }
-    }, {
-        key: 'showAdvanced',
-        value: function showAdvanced() {
-            this.$state.go('root.node.advanced', { nodeId: this.nodeId });
+        key: 'previewStep',
+        value: function previewStep() {
+            var previewProjectURL = this.ConfigService.getConfigParam("previewProjectURL");
+            var previewStepURL = previewProjectURL + "#/vle/" + this.nodeId;
+            window.open(previewStepURL);
         }
     }, {
         key: 'close',
@@ -134,7 +131,9 @@ var NodeController = function () {
     return NodeController;
 }();
 
-NodeController.$inject = ['$scope', '$state', '$stateParams', 'ProjectService'];
+;
+
+NodeController.$inject = ['$scope', '$state', '$stateParams', 'ProjectService', 'ConfigService'];
 
 exports.default = NodeController;
 //# sourceMappingURL=nodeController.js.map

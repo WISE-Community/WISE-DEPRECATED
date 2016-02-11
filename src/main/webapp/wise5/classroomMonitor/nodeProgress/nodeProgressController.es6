@@ -5,7 +5,6 @@ class NodeProgressController {
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
         this.TeacherDataService = TeacherDataService;
-        this.title = 'Grade By Step';
         this.currentGroup = null;
         this.items = null;
         this.periods = [];
@@ -111,7 +110,6 @@ class NodeProgressController {
     };
 
     nodeClicked(nodeId) {
-
         this.$state.go('root.nodeGrading', {nodeId:nodeId});
     };
 }

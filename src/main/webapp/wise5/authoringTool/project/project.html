@@ -1,4 +1,4 @@
-<div ng-show="projectController.$state.current.name == 'root.project'">
+<div ng-show="projectController.$state.current.name == 'root.project'">  <!-- show this only when we're in the project view -->
     <style>
         #commitDiv {
             padding: 10px 0px;
@@ -18,9 +18,11 @@
         #projectStylesDiv {
         }
     </style>
-    <button ng-click='projectController.previewProject()'>Preview Project</button>
-    <button ng-click='projectController.viewProjectAssets()'>View Project Assets</button>
-    <div id="commitDiv">
+    <div style="float:right">
+        <button ng-click='projectController.previewProject()'>Preview Project</button>
+        <button ng-click='projectController.viewProjectAssets()'>Manage Assets</button>
+    </div>
+    <div id="commitDiv" style="display:none">
         <label id="editMessageLabel">Edit Message:</label>
         <input id="commitMessageInput" type="text" size="50" placeholder="Write a small message here explaining this change. (Optional)" />
         <button id="saveButton" ng-click='projectController.saveProject()'>Save Project</button>
@@ -53,7 +55,7 @@
     <div id="projectStylesDiv">Project Styles:
         <textarea cols="50" rows="10" ng-model="projectController.project.style" ng-change="projectController.updateProjectAsText()" />
     </div>
-    <div id="commitHistory">
+    <div id="commitHistory" style="display:none">
         <div ng-repeat="commit in projectController.commitHistory">
             <span class="commitTime">{{commit.commitTime | date:'medium' }}</span>
             <span class="commitMessage">{{commit.commitMessage}}</span>
@@ -61,5 +63,6 @@
     </div>
 </div>
 
-<div ui-view></div>
+
+<div ui-view></div>  <!-- this ui-view shows the node authoring view -->
 

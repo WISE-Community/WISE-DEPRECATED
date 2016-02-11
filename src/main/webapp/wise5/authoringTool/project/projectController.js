@@ -51,6 +51,10 @@ var ProjectController = function () {
         }
     }, {
         key: "previewProject",
+
+        /**
+         * Launch the project in preview mode
+         */
         value: function previewProject() {
             var previewProjectURL = this.ConfigService.getConfigParam("previewProjectURL");
             window.open(previewProjectURL);
@@ -399,6 +403,8 @@ var ProjectController = function () {
 
     return ProjectController;
 }();
+
+;
 
 ProjectController.$inject = ['$scope', '$state', '$stateParams', 'ProjectService', 'ConfigService'];
 

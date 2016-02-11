@@ -20,8 +20,6 @@ var StudentProgressController = function () {
         this.TeacherDataService = TeacherDataService;
         this.TeacherWebSocketService = TeacherWebSocketService;
 
-        this.title = 'Grade By Student ';
-
         this.workgroups = this.ConfigService.getClassmateUserInfos();
 
         this.studentStatuses = this.StudentStatusService.getStudentStatuses();
