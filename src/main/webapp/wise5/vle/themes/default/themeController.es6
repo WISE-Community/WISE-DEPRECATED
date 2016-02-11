@@ -36,8 +36,9 @@ class ThemeController {
         this.workgroupUserNames = this.isPreview ? ['Preview User'] : this.ConfigService.getUserNamesByWorkgroupId(this.workgroupId);
 
         // build project status pop-up
-        var statusTemplateUrl = this.themePath + '/templates/projectStatus.html';
-        var scope = this;
+        let statusTemplateUrl = this.themePath + '/templates/projectStatus.html';
+        let scope = this;
+
         this.statusDisplay = this.$mdToast.build({
             locals: {
                 projectStatus: scope.rootNodeStatus,
@@ -48,21 +49,20 @@ class ThemeController {
             templateUrl: statusTemplateUrl,
             hideDelay: 0
         });
-
         this.projectStatusOpen = false;
-        this.showProjectStatus = function($event) {
-            if (this.projectStatusOpen) {
-                this.$mdToast.hide(this.statusDisplay);
-                this.projectStatusOpen = false;
-            } else {
-                this.$mdToast.show(this.statusDisplay);
-                this.projectStatusOpen = true;
-            }
-        };
+
+        // build server disconnect display
+        this.connectionLostDisplay = $mdToast.build({
+            template: '<md-toast>\
+                      <span><md-icon class="warn"> error </md-icon>&nbsp;Server error. Check your internet connection.</span>\
+                      </md-toast>',
+            hideDelay: 0
+        });
+        this.connectionLostShown = false;
 
         // alert user when a locked node has been clicked
         this.$scope.$on('nodeClickLocked', angular.bind(this, function (event, args) {
-            var nodeId = args.nodeId;
+            let nodeId = args.nodeId;
 
             // TODO: customize alert with constraint details, correct node term
             this.$mdDialog.show(
@@ -79,18 +79,30 @@ class ThemeController {
 
         // alert user when inactive for a long time
         this.$scope.$on('showSessionWarning', angular.bind(this, function() {
-            var confirm = this.$mdDialog.confirm()
+            let alert = this.$mdDialog.confirm()
                 .parent(angular.element(document.body))
                 .title('Session Timeout')
                 .content('You have been inactive for a long time. Do you want to stay logged in?')
                 .ariaLabel('Session Timeout')
                 .ok('YES')
                 .cancel('No');
-            this.$mdDialog.show(confirm).then(()=> {
+
+            this.$mdDialog.show(alert).then(()=> {
                 this.SessionService.renewSession();
+                alert = undefined;
             }, ()=> {
                 this.SessionService.forceLogOut();
             });
+        }));
+
+        // alert user when server loses connection
+        this.$scope.$on('serverDisconnected', angular.bind(this, function() {
+            this.handleServerDisconnect();
+        }));
+
+        // remove alert when server regains connection
+        this.$scope.$on('serverConnected', angular.bind(this, function() {
+            this.handleServerReconnect();
         }));
 
         // alert user when attempt to add component state to notebook that already exists in notebook
@@ -109,11 +121,11 @@ class ThemeController {
 
         // show list of revisions in a dialog when user clicks the show revisions link for a component
         this.$scope.$on('showRevisions', angular.bind(this, function (event, args) {
-            var revisions = args.revisions;
-            var componentController = args.componentController;
-            var allowRevert = args.allowRevert;
-            var $event = args.$event;
-            var revisionsTemplateUrl = scope.themePath + '/templates/componentRevisions.html';
+            let revisions = args.revisions;
+            let componentController = args.componentController;
+            let allowRevert = args.allowRevert;
+            let $event = args.$event;
+            let revisionsTemplateUrl = scope.themePath + '/templates/componentRevisions.html';
 
             this.$mdDialog.show({
                 parent: angular.element(document.body),
@@ -143,11 +155,11 @@ class ThemeController {
         }));
 
         this.$scope.$on('showNotebook', angular.bind(this, function (event, args) {
-            var notebookFilters = args.notebookFilters;
-            var componentController = args.componentController;
-            var $event = args.$event;
-            var notebookDialogTemplateUrl = scope.themePath + '/templates/notebookDialog.html';
-            var notebookTemplateUrl = scope.themePath + '/notebook/notebook.html';
+            let notebookFilters = args.notebookFilters;
+            let componentController = args.componentController;
+            let $event = args.$event;
+            let notebookDialogTemplateUrl = scope.themePath + '/templates/notebookDialog.html';
+            let notebookTemplateUrl = scope.themePath + '/notebook/notebook.html';
 
             this.$mdDialog.show({
                 parent: angular.element(document.body),
@@ -178,11 +190,35 @@ class ThemeController {
                 return it.isOpen();
             }, (isOpenNewValue, isOpenOldValue) => {
                 if (isOpenNewValue !== isOpenOldValue) {
-                    var currentNode = this.StudentDataService.getCurrentNode();
+                    let currentNode = this.StudentDataService.getCurrentNode();
                     this.NotebookService.saveNotebookToggleEvent(isOpenNewValue, currentNode);
                 }
             });
         }.bind(this));
+    }
+
+    showProjectStatus($event) {
+        if (this.projectStatusOpen) {
+            this.$mdToast.hide(this.statusDisplay);
+            this.projectStatusOpen = false;
+        } else {
+            this.$mdToast.show(this.statusDisplay);
+            this.projectStatusOpen = true;
+        }
+    }
+
+    // show server error alert when connection is lost
+    handleServerDisconnect() {
+        if (!this.connectionLostShown) {
+          this.$mdToast.show(this.connectionLostDisplay);
+          this.connectionLostShown = true;
+        }
+    }
+
+    // hide server error alert when connection is restored
+    handleServerReconnect() {
+        this.$mdToast.hide(this.connectionLostDisplay);
+        this.connectionLostShown = false;
     }
 }
 
@@ -198,21 +234,5 @@ ThemeController.$inject = [
     '$mdToast',
     '$mdComponentRegistry'
 ];
-
-/*
-angular.module('vle').controller('NavItemController', new NavItemController($scope, $element, ProjectService, StudentDataService));
-angular.module('vle').controller('StepToolsCtrl', new StepToolsCtrl());
-angular.module('vle').controller('NodeStatusIconCtrl', new NodeStatusIconCtrl());
-angular.module('vle').controller('ProjectStatusController', new ProjectStatusController());
-angular.module('vle').controller('ThemeController', new ThemeController());
-*/
-
-//angular.module('vle').controller('NavItemController', NavItemController);
-//angular.module('vle').controller('StepToolsCtrl', StepToolsCtrl);
-//angular.module('vle').controller('NodeStatusIconCtrl', NodeStatusIconCtrl);
-//angular.module('vle').controller('ProjectStatusController', ProjectStatusController);
-//angular.module('vle').controller('ThemeController', ThemeController);
-
-//angular.module('vle').controller('ThemeController', ThemeController);
 
 export default ThemeController;

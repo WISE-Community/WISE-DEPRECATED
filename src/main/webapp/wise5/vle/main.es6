@@ -29,6 +29,7 @@ import GraphService from '../components/graph/graphService';
 import Highcharts from '../lib/highcharts@4.2.1';
 //import HTMLService from '../components/html/htmlService';
 import HTMLController from '../components/html/htmlController';
+import HttpInterceptor from '../services/httpInterceptor';
 import LabelController from '../components/label/labelController';
 import LabelService from '../components/label/labelService';
 import MatchController from '../components/match/matchController';
@@ -88,6 +89,7 @@ let mainModule = angular.module('vle', [
     .service(EmbeddedService.name, EmbeddedService)
     .service(GraphService.name, GraphService)
     //.service(HTMLService.name, HTMLService)
+    .service(HttpInterceptor.name, HttpInterceptor)
     .service(LabelService.name, LabelService)
     .service(MatchService.name, MatchService)
     .service(MultipleChoiceService.name, MultipleChoiceService)
@@ -126,10 +128,14 @@ let mainModule = angular.module('vle', [
         '$stateProvider',
         '$controllerProvider',
         '$mdThemingProvider',
+        '$httpProvider',
+        '$provide',
         function($urlRouterProvider,
                  $stateProvider,
                  $controllerProvider,
-                 $mdThemingProvider) {
+                 $mdThemingProvider,
+                 $httpProvider,
+                 $provide) {
 
             $urlRouterProvider.otherwise('/vle/');
 
@@ -247,6 +253,8 @@ let mainModule = angular.module('vle', [
                         }
                     }
                 });
+
+            $httpProvider.interceptors.push('HttpInterceptor');
 
             // ngMaterial default theme configuration
             // TODO: make dynamic and support alternate themes; allow projects to specify theme parameters and settings

@@ -45,6 +45,9 @@ class ComponentDirective {
             componentState = ComponentDirective.instance.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
         } else {
             componentState = angular.fromJson(componentState);
+            nodeId = componentState.nodeId;
+            componentId = componentState.componentId;
+
         }
 
         var authoringComponentContent = ComponentDirective.instance.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
