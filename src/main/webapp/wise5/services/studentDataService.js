@@ -32,6 +32,7 @@ var StudentDataService = function () {
     _createClass(StudentDataService, [{
         key: 'retrieveStudentData',
         value: function retrieveStudentData() {
+            var _this = this;
 
             // get the mode
             var mode = this.ConfigService.getConfigParam('mode');
@@ -72,47 +73,47 @@ var StudentDataService = function () {
                 httpParams.params = params;
 
                 // make the request for the student data
-                return this.$http(httpParams).then(angular.bind(this, function (result) {
+                return this.$http(httpParams).then(function (result) {
                     var resultData = result.data;
                     if (resultData != null) {
 
-                        this.studentData = {};
+                        _this.studentData = {};
 
                         // get student work
-                        this.studentData.componentStates = [];
-                        this.studentData.nodeStates = [];
+                        _this.studentData.componentStates = [];
+                        _this.studentData.nodeStates = [];
                         var studentWorkList = resultData.studentWorkList;
                         for (var s = 0; s < studentWorkList.length; s++) {
                             var studentWork = studentWorkList[s];
                             if (studentWork.componentId != null) {
-                                this.studentData.componentStates.push(studentWork);
+                                _this.studentData.componentStates.push(studentWork);
                             } else {
-                                this.studentData.nodeStates.push(studentWork);
+                                _this.studentData.nodeStates.push(studentWork);
                             }
                         }
 
                         // get events
-                        this.studentData.events = resultData.events;
+                        _this.studentData.events = resultData.events;
 
                         // get annotations
-                        this.studentData.annotations = resultData.annotations;
+                        _this.studentData.annotations = resultData.annotations;
 
-                        this.AnnotationService.setAnnotations(this.studentData.annotations);
+                        _this.AnnotationService.setAnnotations(_this.studentData.annotations);
 
                         // load the student planning nodes
                         //this.loadStudentNodes();
 
                         // TODO
                         // populate the student history
-                        this.populateHistories(this.studentData.componentStates, this.studentData.events);
+                        _this.populateHistories(_this.studentData.componentStates, _this.studentData.events);
 
                         // TODO
                         // update the node statuses
-
-                        this.updateNodeStatuses();
+                        _this.updateNodeStatuses();
                     }
-                    return this.studentData;
-                }));
+
+                    return _this.studentData;
+                });
             }
         }
     }, {
@@ -847,6 +848,7 @@ var StudentDataService = function () {
     }, {
         key: 'saveToServer',
         value: function saveToServer(componentStates, nodeStates, events, annotations) {
+            var _this2 = this;
 
             // merge componentStates and nodeStates into StudentWork before posting
             var studentWorkList = [];
@@ -921,8 +923,7 @@ var StudentDataService = function () {
             httpParams.data = $.param(params);
 
             // make the request to post the student data
-            return this.$http(httpParams).then(angular.bind(this, function (result) {
-
+            return this.$http(httpParams).then(function (result) {
                 // get the local references to the component states that were posted and set their id and serverSaveTime
                 if (result != null && result.data != null) {
 
@@ -932,7 +933,7 @@ var StudentDataService = function () {
                     if (savedStudentDataResponse.studentWorkList != null) {
                         var savedStudentWorkList = savedStudentDataResponse.studentWorkList;
 
-                        var localStudentWorkList = this.studentData.componentStates.concat(this.studentData.nodeStates);
+                        var localStudentWorkList = _this2.studentData.componentStates.concat(_this2.studentData.nodeStates);
 
                         // set the id and serverSaveTime in the local studentWorkList
                         for (var i = 0; i < savedStudentWorkList.length; i++) {
@@ -949,7 +950,7 @@ var StudentDataService = function () {
                                     localStudentWork.serverSaveTime = savedStudentWork.serverSaveTime;
                                     localStudentWork.requestToken = null; // requestToken is no longer needed.
 
-                                    this.$rootScope.$broadcast('studentWorkSavedToServer', { studentWork: localStudentWork });
+                                    _this2.$rootScope.$broadcast('studentWorkSavedToServer', { studentWork: localStudentWork });
                                     break;
                                 }
                             }
@@ -959,7 +960,7 @@ var StudentDataService = function () {
                     if (savedStudentDataResponse.events != null) {
                         var savedEvents = savedStudentDataResponse.events;
 
-                        var localEvents = this.studentData.events;
+                        var localEvents = _this2.studentData.events;
 
                         // set the id and serverSaveTime in the local event
                         for (var i = 0; i < savedEvents.length; i++) {
@@ -976,7 +977,7 @@ var StudentDataService = function () {
                                     localEvent.serverSaveTime = savedEvent.serverSaveTime;
                                     localEvent.requestToken = null; // requestToken is no longer needed.
 
-                                    this.$rootScope.$broadcast('eventSavedToServer', { event: localEvent });
+                                    _this2.$rootScope.$broadcast('eventSavedToServer', { event: localEvent });
                                     break;
                                 }
                             }
@@ -987,7 +988,7 @@ var StudentDataService = function () {
                     if (savedStudentDataResponse.annotations != null) {
                         var savedAnnotations = savedStudentDataResponse.annotations;
 
-                        var localAnnotations = this.studentData.annotations;
+                        var localAnnotations = _this2.studentData.annotations;
 
                         // set the id and serverSaveTime in the local annotation
                         for (var i = 0; i < savedAnnotations.length; i++) {
@@ -1004,16 +1005,16 @@ var StudentDataService = function () {
                                     localAnnotation.serverSaveTime = savedAnnotation.serverSaveTime;
                                     localAnnotation.requestToken = null; // requestToken is no longer needed.
 
-                                    this.$rootScope.$broadcast('annotationSavedToServer', { annotation: localAnnotation });
+                                    _this2.$rootScope.$broadcast('annotationSavedToServer', { annotation: localAnnotation });
                                     break;
                                 }
                             }
                         }
                     }
-                }
 
-                return savedStudentDataResponse;
-            }));
+                    return savedStudentDataResponse;
+                }
+            });
         }
     }, {
         key: 'retrieveComponentStates',

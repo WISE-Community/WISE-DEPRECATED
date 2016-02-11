@@ -10,15 +10,14 @@ class ConfigService {
     };
 
     retrieveConfig(configURL) {
-        return this.$http.get(configURL).then(angular.bind(this, function (result) {
+        return this.$http.get(configUrl).then((result) => {
             var config = result.data;
 
             this.config = config;
 
             this.sortClassmateUserInfosAlphabeticallyByName();
-
             return config;
-        }));
+        });
     };
 
     getConfigParam(paramName) {

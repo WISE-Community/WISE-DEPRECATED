@@ -193,18 +193,20 @@ var SessionService = function () {
          * Refresh the timers
          */
         value: function renewSession() {
+            var _this = this;
+
             var renewSessionURL = this.ConfigService.getConfigParam('renewSessionURL');
             // make a request to the log out url
-            this.$http.get(renewSessionURL).then(angular.bind(this, function (result) {
+            this.$http.get(renewSessionURL).then(function (result) {
                 var isRenewSessionSuccessful = result.data;
 
                 if (isRenewSessionSuccessful === 'true') {
-                    this.clearTimers();
-                    this.startTimers();
+                    _this.clearTimers();
+                    _this.startTimers();
                 } else {
-                    this.forceLogOut();
+                    _this.forceLogOut();
                 }
-            }));
+            });
         }
     }, {
         key: 'clearTimers',
