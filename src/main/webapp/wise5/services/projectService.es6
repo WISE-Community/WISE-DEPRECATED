@@ -14,7 +14,6 @@ class ProjectService {
         this.idToElement = {};
         this.idToTransition = {};
         this.metadata = {};
-        this.idToContent = {};
         this.activeConstraints = [];
         this.rootNode = null;
         this.idToPosition = {};
@@ -50,7 +49,6 @@ class ProjectService {
         this.idToElement = {};
         this.idToTransition = {};
         this.metadata = {};
-        this.idToContent = {};
         this.activeConstraints = [];
         this.rootNode = null;
         this.idToPosition = {};
@@ -67,7 +65,7 @@ class ProjectService {
         return style;
     };
 
-    getFilters(){
+    getFilters() {
         return this.filters;
     };
 
@@ -356,9 +354,9 @@ class ProjectService {
     setNodeOrder(node) {
         this.idToOrder[node.id] = {'order': this.nodeCount};
         this.nodeCount++;
-        if (this.isGroupNode(node.id)){
+        if (this.isGroupNode(node.id)) {
             var childIds = node.ids;
-            for(var i=0; i<childIds.length; i++){
+            for (var i = 0; i < childIds.length; i++) {
                 var child = this.getNodeById(childIds[i]);
                 this.setNodeOrder(child);
             }
@@ -371,10 +369,10 @@ class ProjectService {
      * @return string position of the given node id in the project
      */
     getPositionById(id) {
-        for (var i=0;i<this.rootNode.ids.length;i++) {
+        for (var i = 0; i < this.rootNode.ids.length; i++) {
             var node = this.getNodeById(this.rootNode.ids[i]);
             var path = this.getPathToNode(node, i+1, id);
-            if (path!=undefined && path!=null) {
+            if (path != undefined && path != null) {
                 return path;
             }
         }
@@ -388,7 +386,7 @@ class ProjectService {
      * @return Number order of the given node id in the project
      */
     getOrderById(id) {
-        if(this.idToOrder[id]) {
+        if (this.idToOrder[id]) {
             return this.idToOrder[id].order;
         }
 
@@ -428,7 +426,7 @@ class ProjectService {
         // TODO: should we localize this? should we support more than 26?
         var integerToAlpha = function(int) {
             var alphabet = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
-            if(int > -1 && int < 26){
+            if (int > -1 && int < 26) {
                 return alphabet[int];
             } else {
                 return int;
@@ -464,7 +462,7 @@ class ProjectService {
     getPathToNode(node, path, id) {
         if (node.id===id) {
             return path + '';
-        } else if (node.type==='group'){
+        } else if (node.type==='group') {
             var num = 0;
             var branches = this.getBranches();
             for (var i=0;i<node.ids.length;i++) {
@@ -584,7 +582,7 @@ class ProjectService {
 
                     //var matchedStringWithoutFirstAndLastQuote = matchedString.substr(1, matchedString.length - 2);  // everything but the beginning and end quote (' or ")
                     // make a new string with the contentBaseURL + assets/ prepended to the path
-                    return  delimiter + contentBaseURL + "assets/" + matchedStringWithoutQuotes + delimiter;
+                    return delimiter + contentBaseURL + "assets/" + matchedStringWithoutQuotes + delimiter;
                 }
             );
         }
@@ -664,10 +662,10 @@ class ProjectService {
     getNodeDepth(nodeId, val) {
         var result = null;
 
-        if(nodeId != null){
+        if (nodeId != null) {
             var depth = (typeof val === "number") ? val : 0;
             var parent = this.getParentGroup(nodeId);
-            if(parent){
+            if (parent) {
                 depth = this.getNodeDepth(parent.id, depth+1);
             }
             result = depth;
@@ -1071,21 +1069,24 @@ class ProjectService {
     };
 
     registerNewProject(projectJSON, commitMessage) {
+        if (!commitMessage) {
+            commitMessage = "";
+        }
+
         var httpParams = {};
         httpParams.method = 'POST';
         httpParams.url = this.ConfigService.getConfigParam('registerNewProjectURL');
         httpParams.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
 
         var params = {};
-        params.projectId = this.ConfigService.getProjectId();
         params.commitMessage = commitMessage;
         params.projectJSONString = projectJSON;
         httpParams.data = $.param(params);
 
-        return this.$http(httpParams).then(angular.bind(this, function(result) {
+        return this.$http(httpParams).then((result) => {
             var projectId = result.data;
             return projectId;
-        }));
+        });
     }
 
     commitChanges(commitMessage) {
