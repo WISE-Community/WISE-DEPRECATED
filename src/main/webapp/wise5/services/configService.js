@@ -26,7 +26,7 @@ var ConfigService = function () {
         value: function retrieveConfig(configURL) {
             var _this = this;
 
-            return this.$http.get(configUrl).then(function (result) {
+            return this.$http.get(configURL).then(function (result) {
                 var config = result.data;
 
                 _this.config = config;
