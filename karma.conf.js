@@ -36,7 +36,7 @@ module.exports = function(config) {
             // Edit this to your needs
             config: 'config.js',
             loadFiles: [
-                'test-unit/**/*.js'
+                'test-unit/**/*.spec.js'
             ],
             serveFiles: [
                 '**/**'
