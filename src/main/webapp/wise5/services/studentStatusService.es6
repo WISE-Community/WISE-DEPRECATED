@@ -18,13 +18,13 @@ class StudentStatusService {
             }
         };
 
-        return this.$http.get(studentStatusURL, requestConfig).then(angular.bind(this, function(result) {
+        return this.$http.get(studentStatusURL, requestConfig).then((result) => {
             var studentStatuses = result.data;
 
             this.studentStatuses = studentStatuses;
 
             return studentStatuses;
-        }));
+        });
     };
 
     getStudentStatuses() {

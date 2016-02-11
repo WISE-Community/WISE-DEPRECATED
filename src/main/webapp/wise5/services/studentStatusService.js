@@ -23,6 +23,8 @@ var StudentStatusService = function () {
     _createClass(StudentStatusService, [{
         key: 'retrieveStudentStatuses',
         value: function retrieveStudentStatuses(config) {
+            var _this = this;
+
             var studentStatusURL = this.ConfigService.getStudentStatusURL();
             var runId = this.ConfigService.getRunId();
 
@@ -32,13 +34,13 @@ var StudentStatusService = function () {
                 }
             };
 
-            return this.$http.get(studentStatusURL, requestConfig).then(angular.bind(this, function (result) {
+            return this.$http.get(studentStatusURL, requestConfig).then(function (result) {
                 var studentStatuses = result.data;
 
-                this.studentStatuses = studentStatuses;
+                _this.studentStatuses = studentStatuses;
 
                 return studentStatuses;
-            }));
+            });
         }
     }, {
         key: 'getStudentStatuses',

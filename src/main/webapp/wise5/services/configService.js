@@ -24,15 +24,16 @@ var ConfigService = function () {
     }, {
         key: 'retrieveConfig',
         value: function retrieveConfig(configURL) {
-            return this.$http.get(configURL).then(angular.bind(this, function (result) {
+            var _this = this;
+
+            return this.$http.get(configUrl).then(function (result) {
                 var config = result.data;
 
-                this.config = config;
+                _this.config = config;
 
-                this.sortClassmateUserInfosAlphabeticallyByName();
-
+                _this.sortClassmateUserInfosAlphabeticallyByName();
                 return config;
-            }));
+            });
         }
     }, {
         key: 'getConfigParam',

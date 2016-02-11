@@ -170,7 +170,7 @@ class SessionService {
     renewSession() {
         var renewSessionURL = this.ConfigService.getConfigParam('renewSessionURL');
         // make a request to the log out url
-        this.$http.get(renewSessionURL).then(angular.bind(this, function(result) {
+        this.$http.get(renewSessionURL).then((result) => {
             var isRenewSessionSuccessful = result.data;
 
             if (isRenewSessionSuccessful === 'true') {
@@ -179,7 +179,7 @@ class SessionService {
             } else {
                 this.forceLogOut();
             }
-        }));
+        });
     };
 
     /**

@@ -59,7 +59,7 @@ class StudentDataService {
             httpParams.params = params;
 
             // make the request for the student data
-            return this.$http(httpParams).then(angular.bind(this, function(result) {
+            return this.$http(httpParams).then((result) => {
                 var resultData = result.data;
                 if (resultData != null) {
 
@@ -95,11 +95,11 @@ class StudentDataService {
 
                     // TODO
                     // update the node statuses
-
                     this.updateNodeStatuses();
                 }
+
                 return this.studentData;
-            }));
+            });
         }
     };
 
@@ -887,8 +887,7 @@ class StudentDataService {
         httpParams.data = $.param(params);
 
         // make the request to post the student data
-        return this.$http(httpParams).then(angular.bind(this, function(result) {
-
+        return this.$http(httpParams).then((result) => {
             // get the local references to the component states that were posted and set their id and serverSaveTime
             if (result != null &&
                 result.data != null) {
@@ -981,11 +980,9 @@ class StudentDataService {
                     }
                 }
 
+                return savedStudentDataResponse;
             }
-
-
-            return savedStudentDataResponse;
-        }));
+        });
     };
 
     retrieveComponentStates(runId, periodId, workgroupId) {
