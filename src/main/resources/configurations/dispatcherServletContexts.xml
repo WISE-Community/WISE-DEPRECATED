@@ -141,6 +141,7 @@
 	<mvc:resources mapping="/vle/**" location="/vle/" order="1" />
 	<mvc:resources mapping="/wise5/**" location="/wise5/" order="1" />
 	<mvc:resources mapping="/curriculum/**" location="/curriculum/" order="1" />
+	<mvc:resources mapping="/studentuploads/**" location="/studentuploads/" order="1" />
 	<mvc:resources mapping="/curriculumWISE5/**" location="/curriculumWISE5/" order="1" />
 
 	<mvc:interceptors>

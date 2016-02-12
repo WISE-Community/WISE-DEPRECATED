@@ -21,6 +21,7 @@ class OpenResponseService extends NodeService {
         component.showSaveButton = false;
         component.showSubmitButton = false;
         component.starterSentence = null;
+        component.isStudentAttachmentEnabled = false;
 
         return component;
     }

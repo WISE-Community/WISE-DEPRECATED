@@ -108,7 +108,7 @@
                         </md-button>
                     </div>
                     <div class="component__attachment" ng-repeat="attachment in labelController.attachments">
-                        <img src="{{attachment.iconURL}}" class="component__attachment__content" />
+                        <img ng-src="{{attachment.iconURL}}" class="component__attachment__content" />
                         <md-button class="component__attachment__delete" ng-click='labelController.removeAttachment(attachment)' title="Remove file"><md-icon>cancel</md-icon></md-button>
                     </div>
                 </div>

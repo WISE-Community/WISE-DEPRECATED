@@ -47,6 +47,7 @@ var OpenResponseService = function (_NodeService) {
             component.showSaveButton = false;
             component.showSubmitButton = false;
             component.starterSentence = null;
+            component.isStudentAttachmentEnabled = false;
 
             return component;
         }

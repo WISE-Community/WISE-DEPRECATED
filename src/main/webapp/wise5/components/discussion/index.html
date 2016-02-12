@@ -56,7 +56,7 @@
                             </md-input-container>
                             <div class="discussion-new__actions" ng-if="!discussionController.isDisabled && discussionController.isStudentAttachmentEnabled && discussionController.newAttachments.length">
                                 <div class="component__attachment discussion-new__attachment" ng-repeat="attachment in discussionController.newAttachments">
-                                    <img src="{{attachment.iconURL}}" alt="{{attachment.iconURL}}" class="discussion-post__attachment discussion-new__attachment__content" />
+                                    <img ng-src="{{attachment.iconURL}}" alt="Image" class="discussion-post__attachment discussion-new__attachment__content" />
                                     <md-button class="component__attachment__delete" ng-click='discussionController.removeAttachment(attachment)' title="Remove file"><md-icon>cancel</md-icon></md-button>
                                 </div>
                             </div>
