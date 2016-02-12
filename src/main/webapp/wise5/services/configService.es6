@@ -10,7 +10,7 @@ class ConfigService {
     };
 
     retrieveConfig(configURL) {
-        return this.$http.get(configUrl).then((result) => {
+        return this.$http.get(configURL).then((result) => {
             var config = result.data;
 
             this.config = config;
