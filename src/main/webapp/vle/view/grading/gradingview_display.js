@@ -237,6 +237,13 @@ View.prototype.displayResearcherToolsPage = function() {
 	getResearcherToolsHtml += "<td><input class='blueButton' type='button' value='"+this.getI18NString("grading_button_explanation")+"' onClick=\"eventManager.fire('exportExplanationButtonClicked', ['special'])\"></input></td>";
 	getResearcherToolsHtml += "</tr>";
 
+   //create row for researcher export
+    getResearcherToolsHtml += "<tr>";
+    getResearcherToolsHtml += "<td>"+"Revisit and Revise Export"+"</td>";
+    getResearcherToolsHtml += "<td colspan='2'><input class='blueButton' type='button' value='Customize' onClick=\"view.displayRevisitAndRevisePage()\"></input></td>";
+    //getResearcherToolsHtml += "<td><input class='blueButton' type='button' value='"+this.getI18NString("grading_button_explanation")+"' onClick=\"eventManager.fire('exportExplanationButtonClicked', ['special'])\"></input></td>";
+    getResearcherToolsHtml += "</tr>";
+    
 	/*
 	//create row for export flash work
 	getResearcherToolsHtml += "<tr>";
@@ -6093,6 +6100,58 @@ View.prototype.getStudentStatusByWorkgroupId = function(workgroupId) {
 	}
 
 	return studentStatus;
+};
+
+/**
+ * Display the revisit and revise export page
+ */
+View.prototype.displayRevisitAndRevisePage = function() {
+    /*
+     * wrap everything in a div with the class 'gradingContent' so
+     * a scroll bar will be created for it
+     */
+    var researcherExportPageHtml = "<div class='gradingContent'>";
+
+    researcherExportPageHtml += "<br>";
+    
+    researcherExportPageHtml += "<h3>Revisit and Revise Export</h3>";
+
+    //the button to go back to the previous page
+    researcherExportPageHtml += "<input class='blueButton' type='button' value='"+"Back To Researcher Tools"+"' onClick=\"view.displayResearcherToolsPage()\"></input>";
+
+    researcherExportPageHtml += "<br>";
+    researcherExportPageHtml += "<br>";
+    
+    // create the input for the initial step numbers
+    researcherExportPageHtml += "Initial Step(s): <input id='initialSteps'/>";
+    researcherExportPageHtml += "<br>";
+    
+    // create the input for the revisit step numbers
+    researcherExportPageHtml += "Revisit Step(s): <input id='revisitSteps'/>";
+    researcherExportPageHtml += "<br>";
+    
+    // create the input for the revise step numbers
+    researcherExportPageHtml += "Revise Step(s): <input id='reviseSteps'/>";
+    researcherExportPageHtml += "<br>";
+    
+    // create the input for the minimum revisit time
+    researcherExportPageHtml += "Minimum Revisit Time (seconds): <input id='minimumRevisitTime'/>";
+    researcherExportPageHtml += "<br>";
+    
+    // create the submit button
+    researcherExportPageHtml += "<input class='blueButton' type='button' value='Submit' onClick='view.generateRevisitAndReviseExport()'/>";
+    researcherExportPageHtml += "<br>";
+    researcherExportPageHtml += "<br>";
+    
+    //the button to go back to the previous page
+    researcherExportPageHtml += "<input class='blueButton' type='button' value='"+"Back To Researcher Tools"+"' onClick=\"view.displayResearcherToolsPage()\"></input>";
+
+    researcherExportPageHtml += "</div>";
+
+    //fix the page height
+    $('#gradeWorkDiv').html(researcherExportPageHtml);
+
+    this.fixGradingDisplayHeight();
 };
 
 /**

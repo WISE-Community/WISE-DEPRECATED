@@ -1089,6 +1089,242 @@ View.prototype.getExplanationTD = function(tdText) {
 };
 
 /**
+ * Make the request for the work to generate the revisit and revise export
+ */
+View.prototype.generateRevisitAndReviseExport = function() {
+    
+    // get all the work for the run
+    this.researcherExportGetAllWork();
+};
+
+/**
+ * Get all the work for the run
+ */
+View.prototype.researcherExportGetAllWork = function() {
+    //get the url for retrieving student data
+    var studentDataURL = this.getConfig().getConfigParam('studentDataURL');
+
+    var runId = this.getConfig().getConfigParam('runId');
+    var grading = true;
+    var getRevisions = true;
+    
+    var nodeIds = this.getProject().getAllNodeIds();
+
+    //get the workgroup ids in the run
+    var workgroupIds = this.getUserAndClassInfo().getClassmateWorkgroupIds();
+
+    //join the workgroup ids into a single string delimited by ':'
+    userIds = workgroupIds.join(':');
+
+    //create the GET params for retrieving the student data
+    var studentDataURLWithParams = studentDataURL +
+        "?nodeIds=" + nodeIds +
+        "&userId=" + userIds +
+        "&grading=true" +
+        "&runId=" + runId +
+        "&getRevisions=" + getRevisions +
+        "&useCachedWork=false";
+
+    //make the request to retrieve the student data
+    this.connectionManager.request('GET', 1, studentDataURLWithParams, null, this.researcherExportGetAllWorkCallback, [this], this.researcherExportGetAllWorkCallbackFail);
+
+};
+
+/**
+ * The success callback for the get all work request
+ * @param text the student work
+ * @param xml
+ * @param args
+ */
+View.prototype.researcherExportGetAllWorkCallback = function(text, xml, args) {
+    
+    var thisView = args[0];
+    
+    thisView.researcherExportGetAllWorkCallbackHandler(text);
+};
+
+/**
+ * Handles the success callback for the get all work request
+ * @param text the student work
+ */
+View.prototype.researcherExportGetAllWorkCallbackHandler = function(text) {
+    
+    // convert the work to JSON
+    var work = JSON.parse(text);
+    
+    // get the vle states array
+    var vleStates = work.vleStates;
+
+    // loop through all the vle state JSON objects
+    for(var x=0; x<vleStates.length; x++) {
+        // get a vle state JSON object
+        var vleStateJSONObj = vleStates[x];
+
+        // create a vle state object
+        var vleState = VLE_STATE.prototype.parseDataJSONObj(vleStateJSONObj);
+        
+        // get the workgroup id
+        var workgroupId = vleState.workgroupId;
+        
+        // set the vle state for the workgroup id into the model
+        this.model.setWorkByWorkgroupId(workgroupId, vleState);
+    }
+
+    // generate the revisit and revise export
+    this.generateRevisitAndReviseCSV();
+};
+
+/**
+ * Generate the revisit and revise export
+ */
+View.prototype.generateRevisitAndReviseCSV = function() {
+    
+    // get the run id
+    var runId = this.getConfig().getConfigParam('runId');
+    
+    // get the step numbers
+    var initialStepsString = $('#initialSteps').val();
+    var revisitStepsString = $('#revisitSteps').val();
+    var reviseStepsString = $('#reviseSteps').val();
+    
+    /*
+     * multiple steps can be specified for each field so we will 
+     * split the steps by commas and remove white space.
+     */
+    var initialSteps = $.map(initialStepsString.split(','), $.trim);
+    var revisitSteps = $.map(revisitStepsString.split(','), $.trim);
+    var reviseSteps = $.map(reviseStepsString.split(','), $.trim);
+    
+    // get the minimum amount of time the student needs to spend on the revisit step(s)
+    var minimumRevisitTime = $('#minimumRevisitTime').val();
+    
+    if (minimumRevisitTime == null || minimumRevisitTime == '') {
+        // default to 0 seconds
+        minimumRevisitTime = 0;
+    } else {
+        // convert the string into a number
+        minimumRevisitTime = parseFloat(minimumRevisitTime);
+    }
+    
+    var rows = [];
+    
+    // add the header row
+    var headerRow = ['Workgroup Id', 'Revisit and Revise'];
+    rows.push(headerRow);
+    
+    // get all the workgroup ids in the run
+    var workgroupIds = this.getUserAndClassInfo().getWorkgroupIdsInClass();
+    
+    // loop through all the workgroup ids
+    for (var w = 0; w < workgroupIds.length; w++) {
+        var workgroupId = workgroupIds[w];
+        
+        if (workgroupId != null) {
+            
+            // get the work for the workgroup id
+            var vleState = this.model.getWorkByWorkgroupId(workgroupId);
+            
+            var workgroupInitial = false;
+            var workgroupRevisit = false;
+            var workgroupRevise = false;
+            
+            if (vleState != null) {
+                var nodeVisits = vleState.visitedNodes;
+                
+                if (nodeVisits != null) {
+                    
+                    // loop through all the node visits
+                    for (var nv = 0; nv < nodeVisits.length; nv++) {
+                        var nodeVisit = nodeVisits[nv];
+                        
+                        var nodeId = nodeVisit.nodeId;
+                        
+                        // get the step number for the node visit
+                        var stepNumber = this.getProject().getVLEPositionById(nodeId);
+                        
+                        if (!workgroupInitial) {
+                            // we have not found work on the initial step(s) yet
+                            
+                            if (initialSteps.indexOf(stepNumber) != -1) {
+                                // this is an initial step
+                                
+                                var nodeVisitLatestWork = nodeVisit.getLatestWork();
+                                
+                                if (nodeVisitLatestWork != null && nodeVisitLatestWork != '') {
+                                    // the student has work for the initial step
+                                    workgroupInitial = true;
+                                }
+                            }
+                        } else if (workgroupInitial && !workgroupRevisit) {
+                            // the student has work on the initial step(s) but has not revisited the necessary step(s)
+                            
+                            if (revisitSteps.indexOf(stepNumber) != -1) {
+                                // this is a revisit step
+                                
+                                // calculate the time the student spent on the step
+                                var startTime = nodeVisit.visitStartTime;
+                                var endTime = nodeVisit.visitEndTime;
+                                var timeSpent = (endTime - startTime) / 1000;
+                                
+                                if (timeSpent >= minimumRevisitTime) {
+                                    // the student spent the necessary time on the revisit step
+                                    workgroupRevisit = true;
+                                }
+                            }
+                        } else if (workgroupInitial && workgroupRevisit && !workgroupRevise) {
+                            /*
+                             * the student has work on the initial step(s) and has revisited the necessary step(s)
+                             * but has not revised their work
+                             */
+                            if (reviseSteps.indexOf(stepNumber) != -1) {
+                                // this is a revise step
+                                
+                                var nodeVisitLatestWork = nodeVisit.getLatestWork();
+                                
+                                if (nodeVisitLatestWork != null && nodeVisitLatestWork != '') {
+                                    // the student has work for the revise step
+                                    workgroupRevise = true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // add the workgroup id to the row
+            var workgroupRow = [workgroupId];
+            
+            if (workgroupInitial && workgroupRevisit && workgroupRevise) {
+                // the student has performed the revisit and revise process
+                workgroupRow.push(1);
+            } else {
+                // the student has not performed the revisit and revise process
+                workgroupRow.push(0);
+            }
+            
+            // add this workgroup's row
+            rows.push(workgroupRow);
+        }
+    }
+    
+    // get the csv string
+    var csvString = this.convertToCSVString(rows);
+
+    // get the file name
+    var fileName = 'Run_' + runId + '_Revisit_and_Revise.csv';
+
+    // download the csv file
+    this.downloadCSV(fileName, csvString);
+};
+
+/**
+ * The failure callback for the get all work request
+ */
+View.prototype.researcherExportGetAllWorkCallbackFail = function() {
+    
+};
+
+/**
  * Obtain the latest student work by calling render again to retrieve the
  * latest data.
  */
