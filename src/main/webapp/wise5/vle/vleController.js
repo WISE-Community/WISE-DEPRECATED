@@ -104,6 +104,7 @@ var VLEController = function () {
             return false;
         });
 
+        this.themePath = this.ProjectService.getThemePath();
         this.setLayoutState();
 
         var nodeId = null;

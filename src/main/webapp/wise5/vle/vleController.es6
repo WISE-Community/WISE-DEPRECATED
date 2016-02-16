@@ -102,7 +102,8 @@ class VLEController {
             e.preventDefault();
             return false;
         });
-
+        
+        this.themePath = this.ProjectService.getThemePath();
         this.setLayoutState();
 
         var nodeId = null;
