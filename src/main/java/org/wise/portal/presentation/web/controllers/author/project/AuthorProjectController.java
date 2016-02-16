@@ -81,7 +81,7 @@ import org.wise.vle.web.AssetManager;
 import org.wise.vle.web.SecurityUtils;
 
 /**
- * Controller for users with author privileges to author projects
+ * Controller for users with author privileges to author WISE4 projects
  * 
  * @author Hiroki Terashima
  * @author Geoffrey Kwan
@@ -1014,19 +1014,19 @@ public class AuthorProjectController {
 
 		if (projectTag == null) {
 			//get all the projects the current user can author
-			projects = getAuthorableProjects(request, response);
+			projects = getAuthorableProjects();
 		} else if (projectTag.equals("library")) {
 			//get all the library projects
-			projects = getLibraryProjects(request, response);
+			projects = getLibraryProjects();
 		} else if (projectTag.equals("authorable")) {
 			//get all the projects the current user can author
-			projects = getAuthorableProjects(request, response);
+			projects = getAuthorableProjects();
 		} else if (projectTag.equals("authorableAndLibrary")) {
 			//get all the projects the current user can author
-			JSONArray authorableProjects = getAuthorableProjects(request, response);
+			JSONArray authorableProjects = getAuthorableProjects();
 
 			//get all the library projects
-			JSONArray libraryProjects = getLibraryProjects(request, response);
+			JSONArray libraryProjects = getLibraryProjects();
 
 			//add the authorable projects to the array
 			for (int x=0; x<authorableProjects.length(); x++) {
@@ -1049,12 +1049,10 @@ public class AuthorProjectController {
 
 	/**
 	 * Get all the projects the current user can author
-	 * @param request
-	 * @param response
 	 * @throws Exception
 	 * @return the JSONArray of authorable projects
 	 */
-	private JSONArray getAuthorableProjects(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	private JSONArray getAuthorableProjects() throws Exception {
 		List<Project> allAuthorableProjects = new ArrayList<Project>();
 		User signedInUser = ControllerUtil.getSignedInUser();
 		List<Project> projects = projectService.getProjectList(signedInUser);
@@ -1070,7 +1068,7 @@ public class AuthorProjectController {
 
 		//loop through all the projects
 		for (Project project : allAuthorableProjects) {
-			if (project.getProjectType()==ProjectType.LD &&
+			if (project.getProjectType() == ProjectType.LD && (project.getWiseVersion() == null || project.getWiseVersion().equals(new Integer(4))) &&
 					projectService.canAuthorProject(project, signedInUser)) {
 				/*
 				 * get the relative project url
@@ -1111,12 +1109,10 @@ public class AuthorProjectController {
 
 	/**
 	 * Get all the library projects
-	 * @param request
-	 * @param response
 	 * @throws Exception
 	 * @return the JSONArray of library projects
 	 */
-	private JSONArray getLibraryProjects(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	private JSONArray getLibraryProjects() throws Exception {
 
 		List<Project> libraryProjects = projectService.getLibraryProjectList();
 
@@ -1124,7 +1120,7 @@ public class AuthorProjectController {
 		JSONArray libraryProjectArray = new JSONArray();
 
 		for (Project libraryProject : libraryProjects) {
-			if (libraryProject.getProjectType()==ProjectType.LD) {
+			if (libraryProject.getProjectType() == ProjectType.LD && (libraryProject.getWiseVersion() == null || libraryProject.getWiseVersion().equals(new Integer(4)))) {
 				/*
 				 * get the relative project url
 				 * e.g.

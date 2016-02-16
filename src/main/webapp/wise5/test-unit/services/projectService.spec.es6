@@ -33,7 +33,7 @@ describe('ProjectService Unit Test', function () {
                     return registerNewProjectURL;
                 }
             });
-        }
+        };
 
         beforeEach(function() {
 
@@ -93,7 +93,8 @@ describe('ProjectService Unit Test', function () {
         // TODO: add test for ProjectService.registerNewProject when Config.saveProjectURL is undefined
         // TODO: add test for ProjectService.registerNewProject when Config.saveProjectURL is set
 
-        // Tests for Node and Group Id functions
+
+        // MARK: Tests for Node and Group Id functions
 
         it('should return the next available node id', function() {
             createNormalSpy();
@@ -121,6 +122,10 @@ describe('ProjectService Unit Test', function () {
             let groupIdsActual = ProjectService.getGroupIds();
             expect(groupIdsActual).toEqual(groupIdsExpected);
         });
+
+        // TODO: add test for ProjectService.getNodeIds()
+        // TODO: add test for ProjectService.moveNodesInside()
+        // TODO: add test for ProjectService.moveNodesAfter()
 
     });
 });
