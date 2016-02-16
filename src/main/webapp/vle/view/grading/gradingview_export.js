@@ -1107,6 +1107,7 @@ View.prototype.researcherExportGetAllWork = function() {
     var runId = this.getConfig().getConfigParam('runId');
     var grading = true;
     var getRevisions = true;
+    var getAllWork = true;
     
     var nodeIds = this.getProject().getAllNodeIds();
 
@@ -1123,6 +1124,7 @@ View.prototype.researcherExportGetAllWork = function() {
         "&grading=true" +
         "&runId=" + runId +
         "&getRevisions=" + getRevisions +
+        "&getAllWork=" + getAllWork + 
         "&useCachedWork=false";
 
     //make the request to retrieve the student data
@@ -1184,6 +1186,7 @@ View.prototype.generateRevisitAndReviseCSV = function() {
     
     // get the step numbers
     var initialStepsString = $('#initialSteps').val();
+    var isInitialStepsSubmit = $('#initialStepsIsSubmit').is(':checked');
     var revisitStepsString = $('#revisitSteps').val();
     var reviseStepsString = $('#reviseSteps').val();
     
@@ -1251,8 +1254,18 @@ View.prototype.generateRevisitAndReviseCSV = function() {
                                 var nodeVisitLatestWork = nodeVisit.getLatestWork();
                                 
                                 if (nodeVisitLatestWork != null && nodeVisitLatestWork != '') {
-                                    // the student has work for the initial step
-                                    workgroupInitial = true;
+                                    
+                                    if (isInitialStepsSubmit) {
+                                        // the student is required to submit the initial step
+                                        
+                                        if (this.isNodeVisitSubmit(nodeVisit)) {
+                                            // the student submitted the initial step
+                                            workgroupInitial = true;
+                                        }
+                                    } else {
+                                        // the student has work for the initial step
+                                        workgroupInitial = true;
+                                    }
                                 }
                             }
                         } else if (workgroupInitial && !workgroupRevisit) {
@@ -1322,6 +1335,35 @@ View.prototype.generateRevisitAndReviseCSV = function() {
  */
 View.prototype.researcherExportGetAllWorkCallbackFail = function() {
     
+};
+
+/**
+ * Check if a node visit contains a submit
+ * @param nodeVisit the node visit
+ * @returns whether the node visit has a node state that is a submit
+ */
+View.prototype.isNodeVisitSubmit = function(nodeVisit) {
+    
+    if (nodeVisit != null) {
+        var nodeStates = nodeVisit.nodeStates;
+        
+        if (nodeStates != null) {
+            
+            // loop through all the node states
+            for (var ns=0; ns<nodeStates.length; ns++) {
+                var nodeState = nodeStates[ns];
+                
+                if (nodeState != null) {
+                    if (nodeState.checkWork || nodeState.isSubmit) {
+                        // the node state was a submit
+                        return true;
+                    }
+                }
+            }
+        }
+    }
+    
+    return false;
 };
 
 /**

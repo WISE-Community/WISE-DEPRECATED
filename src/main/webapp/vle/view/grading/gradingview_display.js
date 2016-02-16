@@ -6123,15 +6123,16 @@ View.prototype.displayRevisitAndRevisePage = function() {
     researcherExportPageHtml += "<br>";
     
     // create the input for the initial step numbers
-    researcherExportPageHtml += "Initial Step(s): <input id='initialSteps'/>";
+    researcherExportPageHtml += "Initial Step(s): <input id='initialSteps' size='30'/> ";
+    researcherExportPageHtml += "Require Submit: <input id='initialStepsIsSubmit' type='checkbox'/>";
     researcherExportPageHtml += "<br>";
     
     // create the input for the revisit step numbers
-    researcherExportPageHtml += "Revisit Step(s): <input id='revisitSteps'/>";
+    researcherExportPageHtml += "Revisit Step(s): <input id='revisitSteps' size='30'/>";
     researcherExportPageHtml += "<br>";
     
     // create the input for the revise step numbers
-    researcherExportPageHtml += "Revise Step(s): <input id='reviseSteps'/>";
+    researcherExportPageHtml += "Revise Step(s): <input id='reviseSteps' size='30'/>";
     researcherExportPageHtml += "<br>";
     
     // create the input for the minimum revisit time
@@ -6139,12 +6140,12 @@ View.prototype.displayRevisitAndRevisePage = function() {
     researcherExportPageHtml += "<br>";
     
     // create the submit button
-    researcherExportPageHtml += "<input class='blueButton' type='button' value='Submit' onClick='view.generateRevisitAndReviseExport()'/>";
+    researcherExportPageHtml += "<input class='blueButton' type='button' value='Generate Export' onClick='view.generateRevisitAndReviseExport()'/>";
     researcherExportPageHtml += "<br>";
     researcherExportPageHtml += "<br>";
     
     //the button to go back to the previous page
-    researcherExportPageHtml += "<input class='blueButton' type='button' value='"+"Back To Researcher Tools"+"' onClick=\"view.displayResearcherToolsPage()\"></input>";
+    //researcherExportPageHtml += "<input class='blueButton' type='button' value='"+"Back To Researcher Tools"+"' onClick=\"view.displayResearcherToolsPage()\"></input>";
 
     researcherExportPageHtml += "</div>";
 
