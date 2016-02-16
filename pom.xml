@@ -230,11 +230,6 @@
 	</build>
 	<repositories>
 		<repository>
-			<id>eclipse-repo</id>
-			<name>oaw-eclipse-repo</name>
-			<url>http://www.openarchitectureware.org/m2</url>
-		</repository>
-		<repository>
 			<id>concord-repo-internal-snapshot</id>
 			<name>concord internal repository snapshot</name>
 			<url>
