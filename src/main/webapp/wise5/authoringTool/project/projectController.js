@@ -84,20 +84,25 @@ var ProjectController = function () {
         }
     }, {
         key: "showCommitHistory",
+
+        /**
+         * Retrieves and displays the commit history for the current project.
+         */
         value: function showCommitHistory() {
-            this.ProjectService.getCommitHistory().then(angular.bind(this, function (commitHistoryArray) {
-                this.commitHistory = commitHistoryArray;
-            }));
+            var _this = this;
+
+            this.ProjectService.getCommitHistory().then(function (commitHistoryArray) {
+                _this.commitHistory = commitHistoryArray;
+            });
         }
+    }, {
+        key: "getNodePositionById",
 
         /**
          * Get the node position
          * @param nodeId the node id
          * @returns the node position
          */
-
-    }, {
-        key: "getNodePositionById",
         value: function getNodePositionById(nodeId) {
             return this.ProjectService.getNodePositionById(nodeId);
         }

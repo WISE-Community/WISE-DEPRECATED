@@ -146,12 +146,11 @@ let mainModule = angular.module('vle', [
                     url: '',
                     abstract: true,
                     templateProvider: ['$http', 'ProjectService', function ($http, ProjectService) {
-                        var vlePath = ProjectService.getThemePath();
-                        return $http.get(vlePath + '/vle.html').then(
-                            function (response) {
+                        var themePath = ProjectService.getThemePath();
+                        return $http.get(themePath + '/vle.html').then(
+                            response => {
                                 return response.data;
-                            }
-                        );
+                            });
                     }],
                     controller: 'VLEController',
                     controllerAs: 'vleController',
@@ -166,11 +165,31 @@ let mainModule = angular.module('vle', [
                         studentData: function (StudentDataService, config, project) {
                             return StudentDataService.retrieveStudentData();
                         },
-                        sessionTimers: function (SessionService, config, project, studentData) {
+                        sessionTimers: function (SessionService, config,   project, studentData) {
                             return SessionService.initializeSession();
                         },
-                        webSocket: function (StudentWebSocketService, config) {
+                        webSocket: function (StudentWebSocketService, config, project) {
                             return StudentWebSocketService.initialize();
+                        },
+                        theme: function (ProjectService, config, project, $ocLazyLoad, $q) {
+                            var theme = ProjectService.getThemePath() + '/theme.js';
+                            var def = $q.defer();
+
+                  					System.import(theme).then(m => {
+                  						var themeModule = m.default;
+                  						if (!m.default.name) {
+                  							var key = Object.keys(m.default);
+                  							themeModule = m.default[key[0]];
+                  						}
+
+                  						$ocLazyLoad.load(themeModule).then(() => {
+                  							def.resolve();
+                  						}, function(err) {
+                  							throw err;
+                  						});
+                  					});
+
+                  					return def.promise;
                         }
                     }
                 })
@@ -181,75 +200,13 @@ let mainModule = angular.module('vle', [
                             templateProvider: ['$http', 'ConfigService', function ($http, ConfigService) {
                                 var wiseBaseURL = ConfigService.getConfigParam('wiseBaseURL');
                                 return $http.get(wiseBaseURL + '/wise5/node/index.html').then(
-                                    function (response) {
+                                    response => {
                                         return response.data;
                                     }
                                 );
                             }],
                             controller: 'NodeController',
-                            controllerAs: 'nodeController',
-                            resolve: {
-                                load: () => {
-                                    /*
-                                    System.import('components/audioRecorder/audioRecorderController').then((AudioRecorderController) => {
-                                        $controllerProvider.register(AudioRecorderController.default.name, AudioRecorderController.default);
-                                    });
-                                    */
-                                    /*
-                                    System.import('components/cRater/cRaterController').then((CRaterController) => {
-                                        $controllerProvider.register(CRaterController.default.name, CRaterController.default);
-                                    });
-                                    */
-                                    /*
-                                    System.import('components/discussion/discussionController').then((DiscussionController) => {
-                                        $controllerProvider.register(DiscussionController.default.name, DiscussionController.default);
-                                    });
-
-                                    System.import('components/draw/drawController').then((DrawController) => {
-                                        $controllerProvider.register(DrawController.default.name, DrawController.default);
-                                    });
-
-                                    System.import('components/embedded/embeddedController').then((EmbeddedController) => {
-                                        $controllerProvider.register(EmbeddedController.default.name, EmbeddedController.default);
-                                    });
-
-                                    System.import('components/graph/graphController').then((GraphController) => {
-                                        $controllerProvider.register(GraphController.default.name, GraphController.default);
-                                    });
-
-                                    System.import('components/html/htmlController').then((HTMLController) => {
-                                        $controllerProvider.register(HTMLController.default.name, HTMLController.default);
-                                    });
-
-                                    System.import('components/label/labelController').then((LabelController) => {
-                                        $controllerProvider.register(LabelController.default.name, LabelController.default);
-                                    });
-
-                                    System.import('components/match/matchController').then((MatchController) => {
-                                        $controllerProvider.register(MatchController.default.name, MatchController.default);
-                                    });
-
-                                    System.import('components/multipleChoice/multipleChoiceController').then((MultipleChoiceController) => {
-                                        $controllerProvider.register(MultipleChoiceController.default.name, MultipleChoiceController.default);
-                                    });
-                                    System.import('components/openResponse/openResponseController').then((OpenResponseController) => {
-                                        $controllerProvider.register(OpenResponseController.default.name, OpenResponseController.default);
-                                    });
-
-                                    System.import('components/outsideURL/outsideURLController').then((OutsideURLController) => {
-                                        $controllerProvider.register(OutsideURLController.default.name, OutsideURLController.default);
-                                    });
-                                     */
-                                    /*
-                                    System.import('components/photoBooth/photoBoothController').then((PhotoBoothController) => {
-                                        $controllerProvider.register(PhotoBoothController.default.name, PhotoBoothController.default);
-                                    });
-                                    System.import('components/table/tableController').then((TableController) => {
-                                        $controllerProvider.register(TableController.default.name, TableController.default);
-                                    });
-                                     */
-                                }
-                            }
+                            controllerAs: 'nodeController'
                         }
                     }
                 });

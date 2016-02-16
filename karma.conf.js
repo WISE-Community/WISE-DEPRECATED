@@ -36,6 +36,7 @@ module.exports = function(config) {
             // Edit this to your needs
             config: 'config.js',
             loadFiles: [
+                'test-unit/curriculum/SelfPropelledVehiclesChallenge/project.json',
                 'test-unit/**/*.spec.js'
             ],
             serveFiles: [
@@ -61,7 +62,8 @@ module.exports = function(config) {
         // preprocess matching files before serving them to the browser
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
         preprocessors: {
-            'test-unit/**/*.js': ['babel']
+            'test-unit/**/*.js': ['babel'],
+            'test-unit/curriculum/**/*.json': ['json_fixtures']
         },
 
         'babelPreprocessor': {
@@ -70,7 +72,21 @@ module.exports = function(config) {
                 sourceMap: 'inline'
                 //modules: 'system'
             }
-        }
+        },
 
+        jsonFixturesPreprocessor: {
+            // strip this from the file path \ fixture name
+            //stripPrefix: 'test/fixtures',
+            // strip this to the file path \ fixture name
+            //prependPrefix: 'mock/',
+            // change the global fixtures variable name
+            variableName: 'mocks',
+            // camelize fixture filenames (e.g 'fixtures/aa-bb_cc.json' becames __fixtures__['fixtures/aaBbCc'])
+            //camelizeFilenames: false,
+            // transform the filename
+            transformPath: function(path) {
+                return path + '.js';
+            }
+        }
     });
 };

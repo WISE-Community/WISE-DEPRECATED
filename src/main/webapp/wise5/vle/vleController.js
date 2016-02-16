@@ -9,7 +9,7 @@ Object.defineProperty(exports, "__esModule", {
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var VLEController = function () {
-    function VLEController($scope, $rootScope, $state, ConfigService, NotebookService, ProjectService, SessionService, StudentDataService, StudentWebSocketService, $ocLazyLoad) {
+    function VLEController($scope, $rootScope, $state, ConfigService, NotebookService, ProjectService, SessionService, StudentDataService, StudentWebSocketService) {
         _classCallCheck(this, VLEController);
 
         this.$scope = $scope;
@@ -21,12 +21,10 @@ var VLEController = function () {
         this.SessionService = SessionService;
         this.StudentDataService = StudentDataService;
         this.StudentWebSocketService = StudentWebSocketService;
-        this.$ocLazyLoad = $ocLazyLoad;
 
         this.mode = 'student';
         this.layoutLogic = this.ConfigService.layoutLogic;
         this.currentNode = null;
-        this.themeLoaded = false;
 
         this.navFilters = this.ProjectService.getFilters();
         this.navFilter = this.navFilters[0].name;
@@ -107,20 +105,7 @@ var VLEController = function () {
         });
 
         this.themePath = this.ProjectService.getThemePath();
-        var scope = this;
-        // load theme module + files
-        /*
-         this.$ocLazyLoad.load([
-         this.themePath + '/theme3.js'
-         ]).then(function(){
-         scope.themeLoaded = true;
-         scope.setLayoutState();
-         scope.updateLayout();
-         });
-         */
-        scope.themeLoaded = true;
-        scope.setLayoutState();
-        scope.updateLayout();
+        this.setLayoutState();
 
         var nodeId = null;
         var stateParams = null;
@@ -167,13 +152,6 @@ var VLEController = function () {
             }
 
             this.layoutState = layoutState;
-        }
-    }, {
-        key: 'updateLayout',
-        value: function updateLayout() {
-            if (this.project != null) {
-                this.ProjectService.getProject();
-            }
         }
     }, {
         key: 'showNavigation',
@@ -236,13 +214,11 @@ var VLEController = function () {
         key: 'mouseMoved',
 
         /**
-         * The user has moved the mouse on the page
+         * The user moved the mouse on the page
          */
         value: function mouseMoved() {
-            /*
-             * tell the session service a mouse event occurred so it
-             * can reset the session timeout timers
-             */
+            // tell the session service a mouse event occurred
+            // so it can reset the session timeout timers
             this.SessionService.mouseEventOccurred();
         }
     }]);
@@ -250,7 +226,7 @@ var VLEController = function () {
     return VLEController;
 }();
 
-VLEController.$inject = ['$scope', '$rootScope', '$state', 'ConfigService', 'NotebookService', 'ProjectService', 'SessionService', 'StudentDataService', 'StudentWebSocketService', '$ocLazyLoad'];
+VLEController.$inject = ['$scope', '$rootScope', '$state', 'ConfigService', 'NotebookService', 'ProjectService', 'SessionService', 'StudentDataService', 'StudentWebSocketService'];
 
 exports.default = VLEController;
 //# sourceMappingURL=vleController.js.map

@@ -9,8 +9,7 @@ class VLEController {
                 ProjectService,
                 SessionService,
                 StudentDataService,
-                StudentWebSocketService,
-                $ocLazyLoad) {
+                StudentWebSocketService) {
 
         this.$scope = $scope;
         this.$rootScope = $rootScope;
@@ -21,12 +20,10 @@ class VLEController {
         this.SessionService = SessionService;
         this.StudentDataService = StudentDataService;
         this.StudentWebSocketService = StudentWebSocketService;
-        this.$ocLazyLoad = $ocLazyLoad;
 
         this.mode = 'student';
         this.layoutLogic = this.ConfigService.layoutLogic;
         this.currentNode = null;
-        this.themeLoaded = false;
 
         this.navFilters = this.ProjectService.getFilters();
         this.navFilter = this.navFilters[0].name;
@@ -105,22 +102,9 @@ class VLEController {
             e.preventDefault();
             return false;
         });
-
+        
         this.themePath = this.ProjectService.getThemePath();
-        var scope = this;
-        // load theme module + files
-        /*
-         this.$ocLazyLoad.load([
-         this.themePath + '/theme3.js'
-         ]).then(function(){
-         scope.themeLoaded = true;
-         scope.setLayoutState();
-         scope.updateLayout();
-         });
-         */
-        scope.themeLoaded = true;
-        scope.setLayoutState();
-        scope.updateLayout();
+        this.setLayoutState();
 
         var nodeId = null;
         var stateParams = null;
@@ -165,12 +149,6 @@ class VLEController {
         }
 
         this.layoutState = layoutState;
-    };
-
-    updateLayout() {
-        if (this.project != null) {
-            this.ProjectService.getProject();
-        }
     };
 
     showNavigation() {
@@ -226,13 +204,11 @@ class VLEController {
     };
 
     /**
-     * The user has moved the mouse on the page
+     * The user moved the mouse on the page
      */
     mouseMoved() {
-        /*
-         * tell the session service a mouse event occurred so it
-         * can reset the session timeout timers
-         */
+        // tell the session service a mouse event occurred
+        // so it can reset the session timeout timers
         this.SessionService.mouseEventOccurred();
     };
 }
@@ -246,8 +222,7 @@ VLEController.$inject = [
     'ProjectService',
     'SessionService',
     'StudentDataService',
-    'StudentWebSocketService',
-    '$ocLazyLoad'
+    'StudentWebSocketService'
 ];
 
 export default VLEController;

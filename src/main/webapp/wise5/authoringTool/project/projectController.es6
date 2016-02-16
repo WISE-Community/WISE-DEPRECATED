@@ -65,11 +65,14 @@ class ProjectController {
         }
     };
 
+    /**
+     * Retrieves and displays the commit history for the current project.
+     */
     showCommitHistory() {
-        this.ProjectService.getCommitHistory().then(angular.bind(this, function (commitHistoryArray) {
+        this.ProjectService.getCommitHistory().then((commitHistoryArray) => {
             this.commitHistory = commitHistoryArray;
-        }));
-    }
+        });
+    };
 
     /**
      * Get the node position

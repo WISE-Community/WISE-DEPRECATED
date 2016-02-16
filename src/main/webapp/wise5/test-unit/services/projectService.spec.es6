@@ -16,131 +16,8 @@ describe('ProjectService Unit Test', function () {
 
     describe('ProjectService', function () {
 
-        var projectJSON = {
-            "nodes": [
-                {
-                    "id": "group0",
-                    "type": "group",
-                    "title": "Master",
-                    "startId": "group1",
-                    "ids": [
-                        "group1",
-                        "group2",
-                        "group3",
-                        "group4",
-                        "group5",
-                        "group6"
-                    ]
-                },
-                {
-                    "id": "group1",
-                    "type": "group",
-                    "title": "Introduction to Newton Scooters",
-                    "startId": "node1",
-                    "ids": [
-                        "node1",
-                        "node2"
-                    ],
-                    "icons": {
-                        "default": {
-                            "color": "#2196F3",
-                            "type": "font",
-                            "fontSet": "material-icons",
-                            "fontName": "info"
-                        }
-                    }
-                },
-                {
-                    "id": "node1",
-                    "type": "node",
-                    "showSaveButton": true,
-                    "showSubmitButton": false,
-                    "constraints": [],
-                    "transitionLogic": {
-                        "transitions": [
-                            {
-                                "to": "node2"
-                            }
-                        ],
-                        "howToChooseAmongAvailablePaths": null,
-                        "whenToChoosePath": null,
-                        "canChangePath": null,
-                        "maxPathsVisitable": null
-                    },
-                    "title": "Introduction to Newton Scooters",
-                    "components": [
-                        {
-                            "id": "ygip12bdtv",
-                            "type": "HTML",
-                            "html": "<!DOCTYPE html>\n<html>\n<head>\n</head>\n<body>\n<div style=\"background-image: url('background.jpg'); border-radius: 10px 10px 10px 10px; padding: 25px; background-size: cover; font-family: Arial, Helvetica, sans-serif; line-height: 150%;\">\n<div style=\"background-color: rgba(255,255,255,0.85); color: #006; border-radius: 30px 30px 30px 30px; padding: 15px; text-align: center;\">\n<h1>Why Study Newton Scooters?</h1>\n</div>\n<br />\n<div style=\"background-color: rgba(255,255,255,0.85); color: #006; border-radius: 20px 20px 20px 20px; padding: 20px;\">\n<p>YOUR GOAL is to build a scooter that can go farther than the Master Scooter pictured below. Your scooter should look exactly like the one below except for ONE change that you think will improve the scooter's performance.</p>\n<br/><p>In this unit, you will design, build, and test a scooter. We will show you how to make a better scooter by thinking about energy, where it comes from and where it goes.</p>\n<br />\n<p><img style=\"display: block; margin-left: auto; margin-right: auto;\" src=\"model_rubberbandcar_cropped.jpg\" alt=\"\" height=\"220\" /></p>\n<p style=\"text-align: center;\">Master Scooter</p>\n</div>\n</div>\n</body>\n</html>"
-                        }
-                    ],
-                    "icons": {
-                        "default": {
-                            "color": "#2196F3",
-                            "type": "font",
-                            "fontSet": "material-icons",
-                            "fontName": "chrome_reader_mode"
-                        }
-                    }
-                },
-                {
-                    "id": "node2",
-                    "type": "node",
-                    "showSaveButton": true,
-                    "showSubmitButton": false,
-                    "constraints": [],
-                    "transitionLogic": {
-                        "transitions": [
-                            {
-                                "to": "node3"
-                            }
-                        ],
-                        "howToChooseAmongAvailablePaths": null,
-                        "whenToChoosePath": null,
-                        "canChangePath": null,
-                        "maxPathsVisitable": null
-                    },
-                    "title": "Initial Ideas",
-                    "components": [
-                        {
-                            "id": "w610e11zej",
-                            "type": "HTML",
-                            "html": "<div style=\"margin: auto; background-image: url('background.jpg'); border-radius: 20px 20px 20px 20px; padding: 8px; background-size: cover;\"><div style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 8px; text-align: center;\"><h2 style=\"text-align: center;\">Your Ideas About How Newton Scooters&nbsp;Work</h2></div></div><p>&nbsp;</p><div style=\"text-align: center;\"><h5>Watch a video of a rubber band car!</h5><object id=\"flashObj\" width=\"480\" height=\"270\" classid=\"clsid:D27CDB6E-AE6D-11cf-96B8-444553540000\" codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,47,0\"><param name=\"movie\" value=\"http://c.brightcove.com/services/viewer/federated_f9?isVid=1&isUI=1\"/><param name=\"bgcolor\" value=\"#FFFFFF\"/><param name=\"flashVars\" value=\"videoId=1785707989001&linkBaseURL=http%3A%2F%2Fvideos.kidspot.com.au%2Fvideos%2Fmsccfimh%2Fhow-to-make-a-rubber-band-cd-car&playerID=1481257918001&playerKey=AQ~~,AAABWOeErfE~,m-zG2cTdbSFPmdIYTvrDXYGmMQGs9zYu&domain=embed&dynamicStreaming=true\"/><param name=\"base\" value=\"http://admin.brightcove.com\"/><param name=\"seamlesstabbing\" value=\"false\"/><param name=\"allowFullScreen\" value=\"true\"/><param name=\"swLiveConnect\" value=\"true\"/><param name=\"allowScriptAccess\" value=\"always\"/><embed src=\"http://c.brightcove.com/services/viewer/federated_f9?isVid=1&isUI=1\" bgcolor=\"#FFFFFF\" flashVars=\"videoId=1785707989001&linkBaseURL=http%3A%2F%2Fvideos.kidspot.com.au%2Fvideos%2Fmsccfimh%2Fhow-to-make-a-rubber-band-cd-car&playerID=1481257918001&playerKey=AQ~~,AAABWOeErfE~,m-zG2cTdbSFPmdIYTvrDXYGmMQGs9zYu&domain=embed&dynamicStreaming=true\" base=\"http://admin.brightcove.com\" name=\"flashObj\" width=\"480\" height=\"270\" seamlesstabbing=\"false\" type=\"application/x-shockwave-flash\" allowFullScreen=\"true\" allowScriptAccess=\"always\" swLiveConnect=\"true\" pluginspage=\"http://www.macromedia.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash\"></embed></object><p>&nbsp;</p><h5>Here are some other examples of Newton Scooters</h5><div><img src=\"rubber band car_lego wheels.JPG\" alt=\"rubber band car lego wheels\" style=\"height: 130px; width: auto; padding: 10px; display: inline-block;\"/><img src=\"balloon car with flare.JPG\" alt=\"ballon car with flare\" style=\"height: 130px; width: auto; padding: 10px; display: inline-block;\"/><img src=\"inflated balloon car_google.jpg\" alt=\"rubber band car inflated\" style=\"height: 130px; width: auto; padding: 10px; display: inline-block;\"/><img src=\"cds as wheels scooter.JPG\" alt=\"cds as wheels scooter\" style=\"height: 130px; width: auto; padding: 10px; display: inline-block;\"/></div><p>&nbsp;</p><h6>A rubber band car is a type of Newton Scooter. With materials right in your own home, you can build a Newton Scooter!</h6><h6>Write down your <span style=\"font-weight: bold;\">best ideas</span> about what might affect how far a Newton Scooter will travel.</h6></div>"
-                        },
-                        {
-                            "id": "mpt65v012s",
-                            "prompt": "What are some factors that are important for a scooter to move?",
-                            "type": "OpenResponse"
-                        }
-                    ],
-                    "icons": {
-                        "default": {
-                            "color": "#2196F3",
-                            "type": "font",
-                            "fontSet": "material-icons",
-                            "fontName": "assignment"
-                        }
-                    }
-                }
-            ],
-            "constraints": [],
-            "startGroupId": "group0",
-            "startNodeId": "node1",
-            "navigationMode": "guided",
-            "navigationApplications": [
-                "wiseMap",
-                "wiseList"
-            ],
-            "layout": {
-                "template": "starmap|leftNav|rightNav",
-                "studentIsOnGroupNode": "layout3",
-                "studentIsOnApplicationNode": "layout4"
-            },
-            "metadata": {
-                "title": "Self-Propelled Vehicles Challenge"
-            }
-        };
+        // Load sample project
+        var projectJSON = window.mocks['test-unit/curriculum/SelfPropelledVehiclesChallenge/project'];
 
         var projectBaseURL = "http://localhost:8080/curriculum/12345/";
         var projectURL = projectBaseURL + "project.json";
@@ -156,7 +33,7 @@ describe('ProjectService Unit Test', function () {
                     return registerNewProjectURL;
                 }
             });
-        }
+        };
 
         beforeEach(function() {
 
@@ -206,10 +83,49 @@ describe('ProjectService Unit Test', function () {
             var newProjectIdExpected = 1;   // Id of new project created on the server
             $httpBackend.when('POST', registerNewProjectURL).respond(newProjectIdExpected);
             let commitMessage = "I moved the mc step to activity 3.";
-            var newProjectIdActual;
             var newProjectIdActualPromise = ProjectService.registerNewProject(projectJSON, commitMessage);
             $httpBackend.flush();
             $httpBackend.expectPOST(registerNewProjectURL);
         });
+
+        // TODO: add test for ProjectService.saveProject when Config.saveProjectURL is undefined or Config.projectId is undefined
+        // TODO: add test for ProjectService.saveProject when Config.saveProjectURL and Config.projectId are set
+        // TODO: add test for ProjectService.registerNewProject when Config.saveProjectURL is undefined
+        // TODO: add test for ProjectService.registerNewProject when Config.saveProjectURL is set
+
+
+        // MARK: Tests for Node and Group Id functions
+
+        it('should return the next available node id', function() {
+            createNormalSpy();
+            ProjectService.project = projectJSON;  // Set the sample project
+            ProjectService.parseProject();         // Parse the project
+            let nextNodeIdExpected = "node8";      // This should be the next available node id.
+            let nextNodeIdActual = ProjectService.getNextAvailableNodeId();
+            expect(nextNodeIdActual).toEqual(nextNodeIdExpected);
+        });
+
+        it('should return the next available group id', function() {
+            createNormalSpy();
+            ProjectService.project = projectJSON;  // Set the sample project
+            ProjectService.parseProject();         // Parse the project
+            let nextGroupIdExpected = "group7";      // This should be the next available group id.
+            let nextGroupIdActual = ProjectService.getNextAvailableGroupId();
+            expect(nextGroupIdActual).toEqual(nextGroupIdExpected);
+        });
+
+        it('should return the group ids in the project', function() {
+            createNormalSpy();
+            ProjectService.project = projectJSON;  // Set the sample project
+            ProjectService.parseProject();         // Parse the project
+            let groupIdsExpected = ["group0","group1","group2","group3","group4","group5","group6"];      // This should be the group ids in the project
+            let groupIdsActual = ProjectService.getGroupIds();
+            expect(groupIdsActual).toEqual(groupIdsExpected);
+        });
+
+        // TODO: add test for ProjectService.getNodeIds()
+        // TODO: add test for ProjectService.moveNodesInside()
+        // TODO: add test for ProjectService.moveNodesAfter()
+
     });
 });
