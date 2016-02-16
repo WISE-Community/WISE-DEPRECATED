@@ -330,7 +330,7 @@ class ProjectService {
 
             while (n--) {
                 id = nodes[n].id;
-                if(id === this.rootNode.id) {
+                if (id === this.rootNode.id) {
                     this.setIdToPosition(id, '0');
                 } else if (this.isNodeIdInABranch(branches, id)) {
                     // node is in a branch, so process later
@@ -1033,49 +1033,70 @@ class ProjectService {
     retrieveProject() {
         var projectURL = this.ConfigService.getConfigParam('projectURL');
 
-        if (projectURL != null) {
-            return this.$http.get(projectURL).then((result) => {
-                var projectJSON = result.data;
-                this.setProject(projectJSON);
-                return projectJSON;
-            });
-        } else {
+        if (projectURL == null) {
             return null;
         }
+
+        return this.$http.get(projectURL).then((result) => {
+            var projectJSON = result.data;
+            this.setProject(projectJSON);
+            return projectJSON;
+        });
     };
 
+    /**
+     * Saves the projectJSON to Config.saveProjectURL and returns commit history promise.
+     * if Config.saveProjectURL or Config.projectId are undefined, does not save and returns null
+     */
     saveProject(projectJSON, commitMessage) {
 
+        var projectId = this.ConfigService.getProjectId();
+        var saveProjectURL = this.ConfigService.getConfigParam('saveProjectURL');
+        if (projectId == null || saveProjectURL == null) {
+            return null;
+        }
+
         if (projectJSON == null) {
-            // get the project from this service
+            // Project wasn't passed in so get the project from this service
             projectJSON = angular.toJson(this.project, 4);
         }
 
         var httpParams = {};
         httpParams.method = 'POST';
-        httpParams.url = this.ConfigService.getConfigParam('saveProjectURL');
+        httpParams.url = saveProjectURL;
         httpParams.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
 
         var params = {};
-        params.projectId = this.ConfigService.getProjectId();
+        params.projectId = projectId;
         params.commitMessage = commitMessage;
         params.projectJSONString = projectJSON;
         httpParams.data = $.param(params);
 
-        return this.$http(httpParams).then(angular.bind(this, function(result) {
+        return this.$http(httpParams).then((result) => {
             var commitHistory = result.data;
             return commitHistory;
-        }));
+        });
     };
 
+    /**
+     * Registers a new project having the projectJSON content with the server.
+=    * Returns a new project Id if the project is successfully registered.
+     * Returns null if Config.registerNewProjectURL is undefined.
+     */
     registerNewProject(projectJSON, commitMessage) {
+        var registerNewProjectURL = this.ConfigService.getConfigParam('registerNewProjectURL');
+
+        if (registerNewProjectURL == null) {
+            return null;
+        }
+
         if (!commitMessage) {
             commitMessage = "";
         }
 
         var httpParams = {};
         httpParams.method = 'POST';
-        httpParams.url = this.ConfigService.getConfigParam('registerNewProjectURL');
+        httpParams.url = registerNewProjectURL;
         httpParams.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
 
         var params = {};
@@ -1087,30 +1108,20 @@ class ProjectService {
             var projectId = result.data;
             return projectId;
         });
-    }
-
-    commitChanges(commitMessage) {
-        var commitProjectURL = this.ConfigService.getConfigParam('commitProjectURL');
-
-        return this.$http({
-            url: commitProjectURL,
-            method: 'POST',
-            params: {commitMessage: commitMessage}
-        }).then(angular.bind(this, function(result) {
-            var commitResult = result.data;
-            return commitResult;
-        }));
     };
 
-    getCommitHistory(projectId) {
+    /**
+     * Retrieves and returns the project's commit history.
+     */
+    getCommitHistory() {
         var commitProjectURL = this.ConfigService.getConfigParam('commitProjectURL');
 
         return this.$http({
             url: commitProjectURL,
             method: 'GET'
-        }).then(angular.bind(this, function(result) {
+        }).then((result) => {
             return result.data;
-        }));
+        });
     };
 
     getThemePath() {
@@ -1131,33 +1142,6 @@ class ProjectService {
         }
 
         return nodeType;
-    };
-
-    getApplicationTypeByNode(node) {
-        var applicationType = null;
-
-        if (node != null) {
-            applicationType = node.applicationType;
-        }
-
-        return applicationType;
-    };
-
-    getNodeSrcByNodeId(nodeId) {
-        var nodeSrc = null;
-
-        var node = this.getNodeById(nodeId);
-
-        if (node != null) {
-            nodeSrc = node.src;
-        }
-
-        if(nodeSrc != null) {
-            var projectBaseURL = this.ConfigService.getConfigParam('projectBaseURL');
-            nodeSrc = projectBaseURL + nodeSrc;
-        }
-
-        return nodeSrc;
     };
 
     getNodeTitleByNodeId(nodeId) {
@@ -1216,13 +1200,13 @@ class ProjectService {
 
             // TODO: check for different statuses
             var icons = node.icons;
-            if (!!icons && !!icons.default){
+            if (!!icons && !!icons.default) {
                 var icon = icons.default;
                 nodeIcon = $.extend(true, nodeIcon, icon);
             }
 
             // check for empty image source
-            if(!nodeIcon.imgSrc){
+            if (!nodeIcon.imgSrc) {
                 // revert to font icon
                 nodeIcon.type = 'font';
             }
@@ -1236,7 +1220,7 @@ class ProjectService {
         var project = this.getProject();
 
         if (project != null) {
-            var layout = project.layout
+            var layout = project.layout;
 
             if (layout != null) {
                 studentIsOnGroupNodeClass = layout.studentIsOnGroupNode;
@@ -1443,7 +1427,7 @@ class ProjectService {
                     var pathsThatContainNodeId = this.getPathsThatContainNodeId(nodeId, paths);
 
                     if (pathsThatContainNodeId != null) {
-                        if(pathsThatContainNodeId.length === 1) {
+                        if (pathsThatContainNodeId.length === 1) {
                             // only the current path we are on has the node id
 
                             // remove the node id from the path
@@ -1887,7 +1871,7 @@ class ProjectService {
          * node ids from the paths as we traverse the paths to find
          * the branches
          */
-        while(!this.arePathsEmpty(paths)) {
+        while (!this.arePathsEmpty(paths)) {
 
             // get the first node id in the first path
             var nodeId = this.getFirstNodeIdInPathAtIndex(paths, 0);
@@ -2439,7 +2423,7 @@ class ProjectService {
         newGroup.ids = [];
 
         return newGroup;
-    }
+    };
 
     /**
      * Create a new node
@@ -2464,7 +2448,7 @@ class ProjectService {
         newNode.components = [];
 
         return newNode;
-    }
+    };
 
     /**
      * Create a node inside the group

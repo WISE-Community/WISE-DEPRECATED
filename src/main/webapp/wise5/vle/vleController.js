@@ -115,12 +115,10 @@ var VLEController = function () {
          ]).then(function(){
          scope.themeLoaded = true;
          scope.setLayoutState();
-         scope.updateLayout();
          });
          */
         scope.themeLoaded = true;
         scope.setLayoutState();
-        scope.updateLayout();
 
         var nodeId = null;
         var stateParams = null;
@@ -167,13 +165,6 @@ var VLEController = function () {
             }
 
             this.layoutState = layoutState;
-        }
-    }, {
-        key: 'updateLayout',
-        value: function updateLayout() {
-            if (this.project != null) {
-                this.ProjectService.getProject();
-            }
         }
     }, {
         key: 'showNavigation',
@@ -236,13 +227,11 @@ var VLEController = function () {
         key: 'mouseMoved',
 
         /**
-         * The user has moved the mouse on the page
+         * The user moved the mouse on the page
          */
         value: function mouseMoved() {
-            /*
-             * tell the session service a mouse event occurred so it
-             * can reset the session timeout timers
-             */
+            // tell the session service a mouse event occurred
+            // so it can reset the session timeout timers
             this.SessionService.mouseEventOccurred();
         }
     }]);

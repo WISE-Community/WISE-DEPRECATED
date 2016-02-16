@@ -29,6 +29,7 @@
     "karma-chrome-launcher": "^0.2.2",
     "karma-firefox-launcher": "^0.1.7",
     "karma-jasmine": "^0.3.7",
+    "karma-json-fixtures-preprocessor": "0.0.6",
     "karma-jspm": "^2.0.2",
     "karma-phantomjs-launcher": "^1.0.0",
     "node-sass": "^3.4.2",

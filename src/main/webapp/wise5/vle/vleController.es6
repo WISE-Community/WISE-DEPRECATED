@@ -115,12 +115,10 @@ class VLEController {
          ]).then(function(){
          scope.themeLoaded = true;
          scope.setLayoutState();
-         scope.updateLayout();
          });
          */
         scope.themeLoaded = true;
         scope.setLayoutState();
-        scope.updateLayout();
 
         var nodeId = null;
         var stateParams = null;
@@ -165,12 +163,6 @@ class VLEController {
         }
 
         this.layoutState = layoutState;
-    };
-
-    updateLayout() {
-        if (this.project != null) {
-            this.ProjectService.getProject();
-        }
     };
 
     showNavigation() {
@@ -226,13 +218,11 @@ class VLEController {
     };
 
     /**
-     * The user has moved the mouse on the page
+     * The user moved the mouse on the page
      */
     mouseMoved() {
-        /*
-         * tell the session service a mouse event occurred so it
-         * can reset the session timeout timers
-         */
+        // tell the session service a mouse event occurred
+        // so it can reset the session timeout timers
         this.SessionService.mouseEventOccurred();
     };
 }
