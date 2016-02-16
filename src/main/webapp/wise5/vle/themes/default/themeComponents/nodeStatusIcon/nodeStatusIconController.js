@@ -23,7 +23,7 @@ var NodeStatusIconCtrl = function () {
     _createClass(NodeStatusIconCtrl, [{
         key: 'getTemplateUrl',
         value: function getTemplateUrl() {
-            return this.ProjectService.getThemePath() + '/templates/nodeStatusIcon.html';
+            return this.ProjectService.getThemePath() + '/themeComponents/nodeStatusIcon/nodeStatusIcon.html';
         }
     }]);
 

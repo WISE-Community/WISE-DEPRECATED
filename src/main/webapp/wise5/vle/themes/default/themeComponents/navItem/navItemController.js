@@ -57,7 +57,7 @@ var NavItemController = function () {
     _createClass(NavItemController, [{
         key: 'getTemplateUrl',
         value: function getTemplateUrl() {
-            return this.ProjectService.getThemePath() + '/navigation/navItem.html';
+            return this.ProjectService.getThemePath() + '/themeComponents/navItem/navItem.html';
         }
     }, {
         key: 'setExpanded',

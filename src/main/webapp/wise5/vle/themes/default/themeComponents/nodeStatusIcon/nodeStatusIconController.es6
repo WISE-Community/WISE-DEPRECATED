@@ -12,7 +12,7 @@ class NodeStatusIconCtrl {
     }
 
     getTemplateUrl(){
-        return this.ProjectService.getThemePath() + '/templates/nodeStatusIcon.html';
+        return this.ProjectService.getThemePath() + '/themeComponents/nodeStatusIcon/nodeStatusIcon.html';
     }
 }
 

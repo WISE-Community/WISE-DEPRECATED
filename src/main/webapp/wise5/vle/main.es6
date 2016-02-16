@@ -156,7 +156,7 @@ let mainModule = angular.module('vle', [
                     controllerAs: 'vleController',
                     resolve: {
                         config: function (ConfigService) {
-                            var configURL = window.configURL;
+                            let configURL = window.configURL;
                             return ConfigService.retrieveConfig(configURL);
                         },
                         project: function (ProjectService, config) {
@@ -172,19 +172,19 @@ let mainModule = angular.module('vle', [
                             return StudentWebSocketService.initialize();
                         },
                         theme: function (ProjectService, config, project, $ocLazyLoad, $q) {
-                            var theme = ProjectService.getThemePath() + '/theme.js';
-                            var def = $q.defer();
+                            let theme = ProjectService.getThemePath() + '/theme.js';
+                            let def = $q.defer();
 
                   					System.import(theme).then(m => {
-                  						var themeModule = m.default;
+                  						let themeModule = m.default;
                   						if (!m.default.name) {
-                  							var key = Object.keys(m.default);
+                  							let key = Object.keys(m.default);
                   							themeModule = m.default[key[0]];
                   						}
 
                   						$ocLazyLoad.load(themeModule).then(() => {
                   							def.resolve();
-                  						}, function(err) {
+                  						}, err => {
                   							throw err;
                   						});
                   					});
@@ -198,7 +198,7 @@ let mainModule = angular.module('vle', [
                     views: {
                         'nodeView': {
                             templateProvider: ['$http', 'ConfigService', function ($http, ConfigService) {
-                                var wiseBaseURL = ConfigService.getConfigParam('wiseBaseURL');
+                                let wiseBaseURL = ConfigService.getConfigParam('wiseBaseURL');
                                 return $http.get(wiseBaseURL + '/wise5/node/index.html').then(
                                     response => {
                                         return response.data;

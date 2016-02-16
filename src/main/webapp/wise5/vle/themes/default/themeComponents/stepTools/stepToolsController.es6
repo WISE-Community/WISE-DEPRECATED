@@ -36,7 +36,7 @@ class StepToolsCtrl {
     }
 
     getTemplateUrl(){
-        return this.ProjectService.getThemePath() + '/node/stepTools.html';
+        return this.ProjectService.getThemePath() + '/themeComponents/stepTools/stepTools.html';
     };
 
     getNodeTitleByNodeId(nodeId) {

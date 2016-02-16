@@ -152,61 +152,6 @@ class CompileDirective {
     }
 }
 
-class navItemDirective {
-    constructor() {
-        this.scope = {
-            nodeId: '=',
-            showPosition: '=',
-            type: '='
-        };
-        this.template = '<ng-include src="navitemCtrl.getTemplateUrl()"></ng-include>';
-        this.controller = 'NavItemController';
-        this.controllerAs = 'navitemCtrl';
-        this.bindToController = true;
-    }
-
-    static directiveFactory() {
-        navItemDirective.instance = new navItemDirective();
-        return navItemDirective.instance;
-    }
-}
-
-class stepToolsDirective {
-    constructor() {
-        this.scope = {
-            nodeId: '=',
-            showPosition: '='
-        };
-        this.template = '<ng-include src="stepToolsCtrl.getTemplateUrl()"></ng-include>';
-        this.controller = 'StepToolsCtrl';
-        this.controllerAs = 'stepToolsCtrl';
-        this.bindToController = true;
-    }
-
-    static directiveFactory() {
-        stepToolsDirective.instance = new stepToolsDirective();
-        return stepToolsDirective.instance;
-    }
-}
-
-class nodeStatusIconDirective {
-    constructor() {
-        this.scope = {
-            nodeId: '=',
-            customClass: '='
-        };
-        this.template = '<ng-include src="nodeStatusIconCtrl.getTemplateUrl()"></ng-include>';
-        this.controller = 'NodeStatusIconCtrl';
-        this.controllerAs = 'nodeStatusIconCtrl';
-        this.bindToController = true;
-    }
-
-    static directiveFactory() {
-        nodeStatusIconDirective.instance = new nodeStatusIconDirective();
-        return nodeStatusIconDirective.instance;
-    }
-}
-
 class AnnotationDirective {
     constructor($compile,
                 AnnotationService,
@@ -498,14 +443,4 @@ Directives.directive('compile', CompileDirective.directiveFactory);
 Directives.directive('component', ComponentDirective.directiveFactory);
 Directives.directive('confirmNumberDecrease', ConfirmNumberDecrease.directiveFactory);
 
-navItemDirective.directiveFactory.$inject = [];
-stepToolsDirective.directiveFactory.$inject = [];
-nodeStatusIconDirective.directiveFactory.$inject = [];
-
-Directives.directive('navItem', navItemDirective.directiveFactory);
-Directives.directive('stepTools', stepToolsDirective.directiveFactory);
-Directives.directive('nodeStatusIcon', nodeStatusIconDirective.directiveFactory);
-
 export default Directives;
-
-

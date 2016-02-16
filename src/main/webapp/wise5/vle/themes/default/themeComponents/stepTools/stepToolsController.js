@@ -43,7 +43,7 @@ var StepToolsCtrl = function () {
     _createClass(StepToolsCtrl, [{
         key: 'getTemplateUrl',
         value: function getTemplateUrl() {
-            return this.ProjectService.getThemePath() + '/node/stepTools.html';
+            return this.ProjectService.getThemePath() + '/themeComponents/stepTools/stepTools.html';
         }
     }, {
         key: 'getNodeTitleByNodeId',

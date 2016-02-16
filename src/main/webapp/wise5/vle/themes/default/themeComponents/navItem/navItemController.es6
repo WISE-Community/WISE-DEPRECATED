@@ -51,7 +51,7 @@ class NavItemController {
     }
 
     getTemplateUrl(){
-        return this.ProjectService.getThemePath() + '/navigation/navItem.html';
+        return this.ProjectService.getThemePath() + '/themeComponents/navItem/navItem.html';
     };
 
     setExpanded() {

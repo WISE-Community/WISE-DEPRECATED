@@ -175,82 +175,6 @@ var CompileDirective = function () {
     return CompileDirective;
 }();
 
-var navItemDirective = function () {
-    function navItemDirective() {
-        _classCallCheck(this, navItemDirective);
-
-        this.scope = {
-            nodeId: '=',
-            showPosition: '=',
-            type: '='
-        };
-        this.template = '<ng-include src="navitemCtrl.getTemplateUrl()"></ng-include>';
-        this.controller = 'NavItemController';
-        this.controllerAs = 'navitemCtrl';
-        this.bindToController = true;
-    }
-
-    _createClass(navItemDirective, null, [{
-        key: 'directiveFactory',
-        value: function directiveFactory() {
-            navItemDirective.instance = new navItemDirective();
-            return navItemDirective.instance;
-        }
-    }]);
-
-    return navItemDirective;
-}();
-
-var stepToolsDirective = function () {
-    function stepToolsDirective() {
-        _classCallCheck(this, stepToolsDirective);
-
-        this.scope = {
-            nodeId: '=',
-            showPosition: '='
-        };
-        this.template = '<ng-include src="stepToolsCtrl.getTemplateUrl()"></ng-include>';
-        this.controller = 'StepToolsCtrl';
-        this.controllerAs = 'stepToolsCtrl';
-        this.bindToController = true;
-    }
-
-    _createClass(stepToolsDirective, null, [{
-        key: 'directiveFactory',
-        value: function directiveFactory() {
-            stepToolsDirective.instance = new stepToolsDirective();
-            return stepToolsDirective.instance;
-        }
-    }]);
-
-    return stepToolsDirective;
-}();
-
-var nodeStatusIconDirective = function () {
-    function nodeStatusIconDirective() {
-        _classCallCheck(this, nodeStatusIconDirective);
-
-        this.scope = {
-            nodeId: '=',
-            customClass: '='
-        };
-        this.template = '<ng-include src="nodeStatusIconCtrl.getTemplateUrl()"></ng-include>';
-        this.controller = 'NodeStatusIconCtrl';
-        this.controllerAs = 'nodeStatusIconCtrl';
-        this.bindToController = true;
-    }
-
-    _createClass(nodeStatusIconDirective, null, [{
-        key: 'directiveFactory',
-        value: function directiveFactory() {
-            nodeStatusIconDirective.instance = new nodeStatusIconDirective();
-            return nodeStatusIconDirective.instance;
-        }
-    }]);
-
-    return nodeStatusIconDirective;
-}();
-
 var AnnotationDirective = function () {
     function AnnotationDirective($compile, AnnotationService, ConfigService, ProjectService, UtilService) {
         _classCallCheck(this, AnnotationDirective);
@@ -552,14 +476,6 @@ Directives.directive('classResponse', ClassResponseDirective.directiveFactory);
 Directives.directive('compile', CompileDirective.directiveFactory);
 Directives.directive('component', ComponentDirective.directiveFactory);
 Directives.directive('confirmNumberDecrease', ConfirmNumberDecrease.directiveFactory);
-
-navItemDirective.directiveFactory.$inject = [];
-stepToolsDirective.directiveFactory.$inject = [];
-nodeStatusIconDirective.directiveFactory.$inject = [];
-
-Directives.directive('navItem', navItemDirective.directiveFactory);
-Directives.directive('stepTools', stepToolsDirective.directiveFactory);
-Directives.directive('nodeStatusIcon', nodeStatusIconDirective.directiveFactory);
 
 exports.default = Directives;
 //# sourceMappingURL=directives.js.map
