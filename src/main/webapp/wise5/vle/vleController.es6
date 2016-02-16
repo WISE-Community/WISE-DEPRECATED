@@ -9,8 +9,7 @@ class VLEController {
                 ProjectService,
                 SessionService,
                 StudentDataService,
-                StudentWebSocketService,
-                $ocLazyLoad) {
+                StudentWebSocketService) {
 
         this.$scope = $scope;
         this.$rootScope = $rootScope;
@@ -21,12 +20,10 @@ class VLEController {
         this.SessionService = SessionService;
         this.StudentDataService = StudentDataService;
         this.StudentWebSocketService = StudentWebSocketService;
-        this.$ocLazyLoad = $ocLazyLoad;
 
         this.mode = 'student';
         this.layoutLogic = this.ConfigService.layoutLogic;
         this.currentNode = null;
-        this.themeLoaded = false;
 
         this.navFilters = this.ProjectService.getFilters();
         this.navFilter = this.navFilters[0].name;
@@ -106,19 +103,7 @@ class VLEController {
             return false;
         });
 
-        this.themePath = this.ProjectService.getThemePath();
-        var scope = this;
-        // load theme module + files
-        /*
-         this.$ocLazyLoad.load([
-         this.themePath + '/theme3.js'
-         ]).then(function(){
-         scope.themeLoaded = true;
-         scope.setLayoutState();
-         });
-         */
-        scope.themeLoaded = true;
-        scope.setLayoutState();
+        this.setLayoutState();
 
         var nodeId = null;
         var stateParams = null;
@@ -236,8 +221,7 @@ VLEController.$inject = [
     'ProjectService',
     'SessionService',
     'StudentDataService',
-    'StudentWebSocketService',
-    '$ocLazyLoad'
+    'StudentWebSocketService'
 ];
 
 export default VLEController;
