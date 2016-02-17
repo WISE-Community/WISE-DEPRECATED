@@ -2,7 +2,7 @@
    "assessments": [],
    "displayAnswerAfterSubmit": true,
    "isLockAfterSubmit": false,
-   "isMustCompleteAllPartsBeforeExit": true,
+   "isMustCompleteAllPartsBeforeExit": false,
    "prompt": "",
    "type": "AssessmentList"
 }
