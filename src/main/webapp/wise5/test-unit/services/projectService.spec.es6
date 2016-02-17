@@ -126,6 +126,16 @@ describe('ProjectService Unit Test', function () {
         // TODO: add test for ProjectService.getNodeIds()
         // TODO: add test for ProjectService.moveNodesInside()
         // TODO: add test for ProjectService.moveNodesAfter()
+        // TODO: add test for ProjectService.deleteNode()
+        // TODO: add test for ProjectService.removeNodeIdFromTransitions()
+        // TODO: add test for ProjectService.removeNodeIdFromGroups()
+        // TODO: add test for ProjectService.removeNodeIdFromNodes()
+        // TODO: add test for ProjectService.createComponent()
+        // TODO: add test for ProjectService.addComponentToNode()
+        // TODO: add test for ProjectService.moveComponentUp()
+        // TODO: add test for ProjectService.moveComponentDown()
+        // TODO: add test for ProjectService.deleteComponent()
+        // TODO: add test for ProjectService.getMaxScore()
 
     });
 });

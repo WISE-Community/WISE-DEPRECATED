@@ -38,8 +38,6 @@ var ProjectController = function () {
                 //Exception handler
             };
         }));
-
-        this.showCommitHistory();
     }
 
     _createClass(ProjectController, [{
@@ -65,35 +63,29 @@ var ProjectController = function () {
             this.$state.go('root.project.asset', { projectId: this.projectId });
         }
     }, {
+        key: "viewProjectHistory",
+        value: function viewProjectHistory() {
+            this.$state.go('root.project.history', { projectId: this.projectId });
+        }
+    }, {
         key: "saveProject",
         value: function saveProject() {
+            var _this = this;
+
             var projectJSONString = JSON.stringify(this.project, null, 4);
             var commitMessage = $("#commitMessageInput").val();
             try {
                 // if projectJSONString is bad json, it will throw an exception and not save.
                 JSON.parse(projectJSONString);
 
-                this.ProjectService.saveProject(projectJSONString, commitMessage).then(angular.bind(this, function (commitHistoryArray) {
-                    this.commitHistory = commitHistoryArray;
+                this.ProjectService.saveProject(projectJSONString, commitMessage).then(function (commitHistoryArray) {
+                    _this.commitHistory = commitHistoryArray;
                     $("#commitMessageInput").val(""); // clear field after commit
-                }));
+                });
             } catch (error) {
                 alert("Invalid JSON. Please check syntax. Aborting save.");
                 return;
             }
-        }
-    }, {
-        key: "showCommitHistory",
-
-        /**
-         * Retrieves and displays the commit history for the current project.
-         */
-        value: function showCommitHistory() {
-            var _this = this;
-
-            this.ProjectService.getCommitHistory().then(function (commitHistoryArray) {
-                _this.commitHistory = commitHistoryArray;
-            });
         }
     }, {
         key: "getNodePositionById",

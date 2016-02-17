@@ -27,8 +27,6 @@ class ProjectController {
                 //Exception handler
             };
         }));
-
-        this.showCommitHistory();
     };
 
     // updates projectAsText field, which is the string representation of the project that we'll show in the textarea
@@ -48,6 +46,10 @@ class ProjectController {
         this.$state.go('root.project.asset', {projectId:this.projectId});
     };
 
+    viewProjectHistory() {
+        this.$state.go('root.project.history', {projectId:this.projectId});
+    };
+
     saveProject() {
         let projectJSONString = JSON.stringify(this.project, null, 4);
         let commitMessage = $("#commitMessageInput").val();
@@ -55,23 +57,14 @@ class ProjectController {
             // if projectJSONString is bad json, it will throw an exception and not save.
             JSON.parse(projectJSONString);
 
-            this.ProjectService.saveProject(projectJSONString, commitMessage).then(angular.bind(this, function(commitHistoryArray) {
+            this.ProjectService.saveProject(projectJSONString, commitMessage).then((commitHistoryArray) => {
                 this.commitHistory = commitHistoryArray;
                 $("#commitMessageInput").val("");  // clear field after commit
-            }));
+            });
         } catch (error) {
             alert("Invalid JSON. Please check syntax. Aborting save.");
             return;
         }
-    };
-
-    /**
-     * Retrieves and displays the commit history for the current project.
-     */
-    showCommitHistory() {
-        this.ProjectService.getCommitHistory().then((commitHistoryArray) => {
-            this.commitHistory = commitHistoryArray;
-        });
     };
 
     /**

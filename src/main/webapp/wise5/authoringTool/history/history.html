@@ -1,0 +1,8 @@
+<button style="float:right" ng-click='projectHistoryController.exit()'>Close</button>
+
+<div id="commitHistory">
+    <div ng-repeat="commit in projectHistoryController.commitHistory">
+        <span class="commitTime">{{commit.commitTime | date:'medium' }}</span>
+        <span class="commitMessage">{{commit.commitMessage}}</span>
+    </div>
+</div>

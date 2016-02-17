@@ -43,6 +43,7 @@ import OutsideURLService from '../components/outsideURL/outsideURLService';
 import ProjectAssetController from './asset/projectAssetController';
 import ProjectAssetService from '../services/projectAssetService';
 import ProjectController from './project/projectController';
+import ProjectHistoryController from './history/projectHistoryController';
 import ProjectService from '../services/projectService';
 import SessionService from '../services/sessionService';
 import StudentAssetService from '../services/studentAssetService';
@@ -105,8 +106,9 @@ let mainModule = angular.module('authoring', [
     .controller(NodeController.name, NodeController)
     .controller(OpenResponseController.name, OpenResponseController)
     .controller(OutsideURLController.name, OutsideURLController)
-    .controller(ProjectController.name, ProjectController)
     .controller(ProjectAssetController.name, ProjectAssetController)
+    .controller(ProjectController.name, ProjectController)
+    .controller(ProjectHistoryController.name, ProjectHistoryController)
     .controller(TableController.name, TableController)
     .config(['$urlRouterProvider',
         '$stateProvider',
@@ -188,6 +190,14 @@ let mainModule = angular.module('authoring', [
                     templateUrl: 'wise5/authoringTool/asset/asset.html',
                     controller: 'ProjectAssetController',
                     controllerAs: 'projectAssetController',
+                    resolve: {
+                    }
+                })
+                .state('root.project.history', {
+                    url: '/history',
+                    templateUrl: 'wise5/authoringTool/history/history.html',
+                    controller: 'ProjectHistoryController',
+                    controllerAs: 'projectHistoryController',
                     resolve: {
                     }
                 })

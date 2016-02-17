@@ -313,6 +313,7 @@ public class WISE5AuthorProjectController {
                 // get the default max project size
                 projectAssetTotalSizeMax = new Long(wiseProperties.getProperty("project_max_total_assets_size", "15728640"));
             }
+            config.put("projectId", projectId);
             config.put("projectURL", projectURL);
             config.put("projectAssetTotalSizeMax", projectAssetTotalSizeMax);
             config.put("projectAssetURL", projectAssetURL);
