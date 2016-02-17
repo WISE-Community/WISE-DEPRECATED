@@ -104,6 +104,9 @@ ANNOTATOR.prototype.loadModules = function(jsonfilename, context) {
 	if (data.labelDefaultFontSize) {
 		context.labelDefaultFontSize = data.labelDefaultFontSize;
 	}
+	if (data.defaultAnchorRadius) {
+		context.defaultAnchorRadius = data.defaultAnchorRadius;
+	}
 	if(data.labels_max){
 		var max = parseInt(data.labels_max,10);
 		context.labelsMax = (max !== 'NaN') ? max : 0;
@@ -419,7 +422,7 @@ ANNOTATOR.prototype.initDisplay = function(data,context) {
 			labelsExt.min(min);
 			labelsExt.color(color);
 			// TODO: set text color automatically or allow authors to specify
-			if(color === 'FFFF00'){
+			if (color === 'FFFF00') {
 				labelsExt.textColor('000000');
 			} else {
 				labelsExt.textColor('FFFFFF')
@@ -440,6 +443,12 @@ ANNOTATOR.prototype.initDisplay = function(data,context) {
 					context.labelContent = {};
 				}
 				context.labelContent.labelDefaultFontSize = context.labelDefaultFontSize;
+			}
+			if (context.defaultAnchorRadius) {
+				if (!context.labelContent) {
+					context.labelContent = {};
+				}
+				context.labelContent.defaultAnchorRadius = context.defaultAnchorRadius;
 			}
 
 			context.toggleInstructions();
