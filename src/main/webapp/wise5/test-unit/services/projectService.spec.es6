@@ -19,9 +19,12 @@ describe('ProjectService Unit Test', function () {
         // Load sample project
         var projectJSON = window.mocks['test-unit/curriculum/SelfPropelledVehiclesChallenge/project'];
 
+        var projectIdDefault = 1;
         var projectBaseURL = "http://localhost:8080/curriculum/12345/";
         var projectURL = projectBaseURL + "project.json";
         var registerNewProjectURL = "http://localhost:8080/wise/project/new";
+        var saveProjectURL = "http://localhost:8080/wise/project/save/" + projectIdDefault;
+        var commitMessageDefault = "Made simple changes";
 
         function createNormalSpy() {
             spyOn(ConfigService, "getConfigParam").and.callFake(function(param) {
@@ -31,6 +34,8 @@ describe('ProjectService Unit Test', function () {
                     return projectURL;
                 } else if (param === "registerNewProjectURL") {
                     return registerNewProjectURL;
+                } else if (param === "saveProjectURL") {
+                    return saveProjectURL;
                 }
             });
         };
@@ -78,28 +83,50 @@ describe('ProjectService Unit Test', function () {
             expect(project).toBeNull();
         });
 
+        // MARK: Register Project
         it('should register new project', function() {
             createNormalSpy();
-            var newProjectIdExpected = 1;   // Id of new project created on the server
+            var newProjectIdExpected = projectIdDefault;   // Id of new project created on the server
             $httpBackend.when('POST', registerNewProjectURL).respond(newProjectIdExpected);
-            let commitMessage = "I moved the mc step to activity 3.";
-            var newProjectIdActualPromise = ProjectService.registerNewProject(projectJSON, commitMessage);
+            var newProjectIdActualPromise = ProjectService.registerNewProject(projectJSON, commitMessageDefault);
             $httpBackend.flush();
             $httpBackend.expectPOST(registerNewProjectURL);
         });
 
-        // TODO: add test for ProjectService.saveProject when Config.saveProjectURL is undefined or Config.projectId is undefined
-        // TODO: add test for ProjectService.saveProject when Config.saveProjectURL and Config.projectId are set
-        // TODO: add test for ProjectService.registerNewProject when Config.saveProjectURL is undefined
-        // TODO: add test for ProjectService.registerNewProject when Config.saveProjectURL is set
+        it('should not register new project when Config.registerNewProjectURL is undefined', function() {
+            spyOn(ConfigService, "getConfigParam").and.returnValue(null);
+            var newProjectIdActualPromise = ProjectService.registerNewProject(projectJSON, commitMessageDefault);
+            expect(ConfigService.getConfigParam).toHaveBeenCalledWith("registerNewProjectURL");
+            expect(newProjectIdActualPromise).toBeNull();
+        });
+
+        // TODO: add test for ProjectService.registerNewProject when projectJSON is invalid JSON
+
+        // MARK: Save Project
+        it('should not save project when Config.saveProjectURL is undefined', function() {
+            spyOn(ConfigService, "getProjectId").and.returnValue(projectIdDefault);
+            spyOn(ConfigService, "getConfigParam").and.returnValue(null);
+            var newProjectIdActualPromise = ProjectService.saveProject(projectJSON, commitMessageDefault);
+            expect(ConfigService.getConfigParam).toHaveBeenCalledWith("saveProjectURL");
+            expect(newProjectIdActualPromise).toBeNull();
+        });
+
+        it('should not save project when Config.projectId is undefined', function() {
+            spyOn(ConfigService, "getProjectId").and.returnValue(null);
+            spyOn(ConfigService, "getConfigParam").and.returnValue(saveProjectURL);
+            var newProjectIdActualPromise = ProjectService.saveProject(projectJSON, commitMessageDefault);
+            expect(ConfigService.getConfigParam).toHaveBeenCalledWith("saveProjectURL");
+            expect(newProjectIdActualPromise).toBeNull();
+        });
+
+        // TODO: add test for ProjectService.saveProject when projectJSON is invalid JSON
+        // TODO: add test for ProjectService.saveProject when Config.saveProjectURL and Config.projectId are set and projectJSON is valid
 
 
         // MARK: Tests for Node and Group Id functions
-
         it('should return the next available node id', function() {
             createNormalSpy();
-            ProjectService.project = projectJSON;  // Set the sample project
-            ProjectService.parseProject();         // Parse the project
+            ProjectService.setProject(projectJSON);  // Set the sample project and parse it
             let nextNodeIdExpected = "node8";      // This should be the next available node id.
             let nextNodeIdActual = ProjectService.getNextAvailableNodeId();
             expect(nextNodeIdActual).toEqual(nextNodeIdExpected);
@@ -107,8 +134,7 @@ describe('ProjectService Unit Test', function () {
 
         it('should return the next available group id', function() {
             createNormalSpy();
-            ProjectService.project = projectJSON;  // Set the sample project
-            ProjectService.parseProject();         // Parse the project
+            ProjectService.setProject(projectJSON);  // Set the sample project and parse it
             let nextGroupIdExpected = "group7";      // This should be the next available group id.
             let nextGroupIdActual = ProjectService.getNextAvailableGroupId();
             expect(nextGroupIdActual).toEqual(nextGroupIdExpected);
@@ -116,8 +142,7 @@ describe('ProjectService Unit Test', function () {
 
         it('should return the group ids in the project', function() {
             createNormalSpy();
-            ProjectService.project = projectJSON;  // Set the sample project
-            ProjectService.parseProject();         // Parse the project
+            ProjectService.setProject(projectJSON);  // Set the sample project and parse it
             let groupIdsExpected = ["group0","group1","group2","group3","group4","group5","group6"];      // This should be the group ids in the project
             let groupIdsActual = ProjectService.getGroupIds();
             expect(groupIdsActual).toEqual(groupIdsExpected);
