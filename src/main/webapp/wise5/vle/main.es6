@@ -27,7 +27,7 @@ import Filters from '../filters/filters';
 import GraphController from '../components/graph/graphController';
 import GraphService from '../components/graph/graphService';
 import Highcharts from '../lib/highcharts@4.2.1';
-//import HTMLService from '../components/html/htmlService';
+import HTMLService from '../components/html/htmlService';
 import HTMLController from '../components/html/htmlController';
 import HttpInterceptor from '../services/httpInterceptor';
 import LabelController from '../components/label/labelController';
@@ -88,7 +88,7 @@ let mainModule = angular.module('vle', [
     .service(DrawService.name, DrawService)
     .service(EmbeddedService.name, EmbeddedService)
     .service(GraphService.name, GraphService)
-    //.service(HTMLService.name, HTMLService)
+    .service(HTMLService.name, HTMLService)
     .service(HttpInterceptor.name, HttpInterceptor)
     .service(LabelService.name, LabelService)
     .service(MatchService.name, MatchService)
