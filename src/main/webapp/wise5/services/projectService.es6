@@ -1045,10 +1045,10 @@ class ProjectService {
     };
 
     /**
-     * Saves the projectJSON to Config.saveProjectURL and returns commit history promise.
+     * Saves the project to Config.saveProjectURL and returns commit history promise.
      * if Config.saveProjectURL or Config.projectId are undefined, does not save and returns null
      */
-    saveProject(projectJSON, commitMessage) {
+    saveProject(commitMessage) {
 
         var projectId = this.ConfigService.getProjectId();
         var saveProjectURL = this.ConfigService.getConfigParam('saveProjectURL');
@@ -1056,10 +1056,8 @@ class ProjectService {
             return null;
         }
 
-        if (projectJSON == null) {
-            // Project wasn't passed in so get the project from this service
-            projectJSON = angular.toJson(this.project, 4);
-        }
+        // Get the project from this service
+        var projectJSONString = angular.toJson(this.project, 4);
 
         var httpParams = {};
         httpParams.method = 'POST';
@@ -1069,7 +1067,7 @@ class ProjectService {
         var params = {};
         params.projectId = projectId;
         params.commitMessage = commitMessage;
-        params.projectJSONString = projectJSON;
+        params.projectJSONString = projectJSONString;
         httpParams.data = $.param(params);
 
         return this.$http(httpParams).then((result) => {
@@ -1080,14 +1078,22 @@ class ProjectService {
 
     /**
      * Registers a new project having the projectJSON content with the server.
-=    * Returns a new project Id if the project is successfully registered.
+     * Returns a new project Id if the project is successfully registered.
      * Returns null if Config.registerNewProjectURL is undefined.
+     * Throws an error if projectJSONString is invalid JSON string
      */
-    registerNewProject(projectJSON, commitMessage) {
+    registerNewProject(projectJSONString, commitMessage) {
         var registerNewProjectURL = this.ConfigService.getConfigParam('registerNewProjectURL');
 
         if (registerNewProjectURL == null) {
             return null;
+        }
+
+        try {
+            // Try parsing the JSON string and throw an error if there's an issue parsing it.
+            JSON.parse(projectJSONString);
+        } catch (e) {
+            throw new Error("Invalid projectJSONString.");
         }
 
         if (!commitMessage) {
@@ -1101,7 +1107,7 @@ class ProjectService {
 
         var params = {};
         params.commitMessage = commitMessage;
-        params.projectJSONString = projectJSON;
+        params.projectJSONString = projectJSONString;
         httpParams.data = $.param(params);
 
         return this.$http(httpParams).then((result) => {

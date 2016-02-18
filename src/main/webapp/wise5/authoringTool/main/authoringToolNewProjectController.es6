@@ -49,9 +49,9 @@ class AuthoringToolNewProjectController {
     }
 
     registerNewProject() {
-        var projectJSON = angular.toJson(this.project, 4);
+        var projectJSONString = angular.toJson(this.project, 4);
         var commitMessage = "Project created on " + new Date().getTime();
-        this.ProjectService.registerNewProject(projectJSON, commitMessage).then((projectId) => {
+        this.ProjectService.registerNewProject(projectJSONString, commitMessage).then((projectId) => {
             this.$state.go('root.project', {projectId: projectId});
         });
     }
