@@ -467,6 +467,7 @@ public class CreateRunController {
 			runParameters.setProject(newProject);
 			Locale userLocale = request.getLocale();
 			runParameters.setLocale(userLocale);
+			runParameters.setPostLevel(5);   // always use the highest post-level (starting WISE5)
 			run = this.runService.createRun(runParameters);
 
 			User owner = runParameters.getOwner();
