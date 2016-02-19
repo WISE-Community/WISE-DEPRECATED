@@ -22,8 +22,6 @@ class NotebookController {
         this.notebook = null;
         this.itemId = null;
         this.item = null;
-        this.itemSource = false;
-        this.applicationNodes = ProjectService.getApplicationNodes();
 
         $scope.$on('notebookUpdated', (event, args) => {
             this.notebook = args.notebook;
@@ -33,7 +31,6 @@ class NotebookController {
             this.logOutListener();
             this.$rootScope.$broadcast('componentDoneUnloading');
         });
-
 
         // retrieve assets when notebook is opened
         if (!this.ConfigService.isPreview()) {

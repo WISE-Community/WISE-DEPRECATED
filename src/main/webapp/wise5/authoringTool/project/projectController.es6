@@ -9,7 +9,7 @@ class ProjectController {
 
         this.title = "project controller";
         this.projectId = this.$stateParams.projectId;
-        this.project = this.ProjectService.getProject();
+        this.project = this.ProjectService.project;
         this.items = this.ProjectService.idToOrder;
         this.nodeIds = this.ProjectService.getFlattenedProjectAsNodeIds();
         this.showCreateGroup = false;

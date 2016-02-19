@@ -91,7 +91,7 @@ a.projectsLink {
     position:relative;
     width:577px; /* Change this to your images width */
     height:240px; /* Change this to your images height */
-    background:url(images/loading.gif) no-repeat 50% 50%;
+    background:url('../images/home/loading.gif') no-repeat 50% 50%;
     margin: 1px 13px 0;
 }
 #showcaseSlider img {

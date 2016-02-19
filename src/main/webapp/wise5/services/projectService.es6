@@ -12,7 +12,6 @@ class ProjectService {
         this.groupNodes = [];
         this.idToNode = {};
         this.idToElement = {};
-        this.idToTransition = {};
         this.metadata = {};
         this.activeConstraints = [];
         this.rootNode = null;
@@ -29,10 +28,6 @@ class ProjectService {
         ];
     };
 
-    getProject() {
-        return this.project;
-    };
-
     setProject(project) {
         this.project = project;
         this.parseProject();
@@ -47,7 +42,6 @@ class ProjectService {
         this.groupNodes = [];
         this.idToNode = {};
         this.idToElement = {};
-        this.idToTransition = {};
         this.metadata = {};
         this.activeConstraints = [];
         this.rootNode = null;
@@ -101,16 +95,8 @@ class ProjectService {
         return childIds;
     };
 
-    getApplicationNodes() {
-        return this.applicationNodes;
-    };
-
     getGroupNodes() {
         return this.groupNodes;
-    };
-
-    getIdToNode() {
-        return this.idToNode;
     };
 
     isNode(id) {
@@ -433,11 +419,10 @@ class ProjectService {
             }
         };
 
-
         while (b--) {
             var branch = branches[b];
             var branchPaths = branch.branchPaths;
-            for (var p=0; p<branchPaths.length; p++) {
+            for (var p = 0; p < branchPaths.length; p++) {
                 var branchPath = branchPaths[p];
                 var nodeIndex = branchPath.indexOf(id);
                 if (nodeIndex > -1) {
@@ -460,12 +445,12 @@ class ProjectService {
      * @return string path of the given node id in the project
      */
     getPathToNode(node, path, id) {
-        if (node.id===id) {
+        if (node.id === id) {
             return path + '';
-        } else if (node.type==='group') {
+        } else if (node.type === 'group') {
             var num = 0;
             var branches = this.getBranches();
-            for (var i=0;i<node.ids.length;i++) {
+            for (var i = 0; i < node.ids.length; i++) {
                 var nodeId = node.ids[i];
                 if (this.isNodeIdInABranch(branches, nodeId)) {
                     this.getBranchNodePositionById(nodeId);
@@ -590,50 +575,93 @@ class ProjectService {
         return contentString;
     };
 
-    getElementById(id) {
+    /**
+     * Returns the node specified by the nodeId
+     * Return null if nodeId param is null or the specified node does not exist in the project.
+     */
+    getNodeById(nodeId) {
         var element = null;
 
-        if (id != null) {
-            element = this.idToElement[id];
+        if (nodeId != null && this.idToNode[nodeId]) {
+            element = this.idToNode[nodeId];
         }
 
         return element;
     };
 
-    getNodeById(id) {
-        var element = null;
+    /**
+     * Returns the title of the node with the nodeId
+     * Return null if nodeId param is null or the specified node does not exist in the project.
+     */
+    getNodeTitleByNodeId(nodeId) {
+        var title = null;
 
-        if (id != null) {
-            element = this.idToNode[id];
+        var node = this.getNodeById(nodeId);
+
+        if (node != null) {
+            title = node.title;
         }
 
-        return element;
+        return title;
     };
 
-    setIdToTransition(id, transition) {
-        if (id != null) {
-            this.idToTransition[id] = transition;
+    /**
+     * Get the node position and title
+     * @param nodeId the node id
+     * @returns the node position and title, e.g. "1.1 Introduction"
+     */
+    getNodePositionAndTitleByNodeId(nodeId) {
+        var title = null;
+
+        var node = this.getNodeById(nodeId);
+
+        if (node != null) {
+
+            var position = this.getNodePositionById(nodeId);
+
+            if (position != null) {
+                title = position + ' ' + node.title;
+            } else {
+                title = node.title;
+            }
         }
+
+        return title;
     };
 
-    getTransitionById(id) {
-        var element = null;
+    getNodeIconByNodeId(nodeId) {
+        var node = this.getNodeById(nodeId);
+        var nodeIcon = null;
 
-        if (id != null) {
-            element = this.idToTransition[id];
+        if (node != null) {
+            var nodeType = node.type;
+
+            // set defaults (TODO: get from configService?)
+            var defaultName = (nodeType === 'group') ? 'explore' : 'school';
+            nodeIcon = {
+                color: 'rgba(0,0,0,0.54)',
+                type: 'font',
+                fontSet: 'material-icons',
+                fontName: defaultName,
+                imgSrc: '',
+                imgAlt: 'node icon'
+            };
+
+            // TODO: check for different statuses
+            var icons = node.icons;
+            if (!!icons && !!icons.default) {
+                var icon = icons.default;
+                nodeIcon = $.extend(true, nodeIcon, icon);
+            }
+
+            // check for empty image source
+            if (!nodeIcon.imgSrc) {
+                // revert to font icon
+                nodeIcon.type = 'font';
+            }
         }
 
-        return element;
-    };
-
-    getConstraintById(id) {
-        var element = null;
-
-        if (id != null) {
-            element = this.idToElement[id];
-        }
-
-        return element;
+        return nodeIcon;
     };
 
     getParentGroup(nodeId) {
@@ -777,23 +805,17 @@ class ProjectService {
 
     getStartNodeId() {
         var startNodeId = null;
-        var project = this.getProject();
+        var project = this.project;
         if (project != null) {
             startNodeId = project.startNodeId;
         }
         return startNodeId;
     };
 
-    getConstraints() {
-        var constraints = this.activeConstraints;
-
-        return constraints;
-    };
-
     getConstraintsForNode(node) {
         var constraints = [];
 
-        var allConstraints = this.getConstraints();
+        var allConstraints = this.activeConstraints;
 
         for (var c = 0; c < allConstraints.length; c++) {
             var constraint = allConstraints[c];
@@ -839,7 +861,7 @@ class ProjectService {
 
     getNavigationMode() {
         var navigationMode = null;
-        var project = this.getProject();
+        var project = this.project;
         if (project != null) {
             navigationMode = project.navigationMode;
         }
@@ -848,7 +870,7 @@ class ProjectService {
 
     getNavigationApplications() {
         var navigationApplications = null;
-        var project = this.getProject();
+        var project = this.project;
         if (project != null) {
             navigationApplications = project.navigationApplications;
         }
@@ -857,47 +879,11 @@ class ProjectService {
 
     getTransitions() {
         var transitions = null;
-        var project = this.getProject();
+        var project = this.project;
         if (project != null) {
             transitions = project.transitions;
         }
         return transitions;
-    };
-
-    getTransitionsByGroupId(groupId) {
-        var transitionsInGroup = [];
-
-        if (groupId != null) {
-            var group = this.getNodeById(groupId);
-
-            if (group != null) {
-                var childIds = group.ids;
-
-                if (childIds != null) {
-                    var allTransitions = this.getTransitions();
-
-                    // loop through all the transitions
-
-                    for (var t = 0; t < allTransitions.length; t++) {
-                        var tempTransition = allTransitions[t];
-
-                        if (tempTransition != null) {
-                            var from = tempTransition.from;
-                            var to = tempTransition.to;
-
-                            if (childIds.indexOf(from) != -1 || childIds.indexOf(to) != -1) {
-                                transitionsInGroup.push(tempTransition);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        var project = this.getProject();
-        if (project != null) {
-            transitions = project.transitions;
-        }
-        return transitionsInGroup;
     };
 
     /**
@@ -938,7 +924,7 @@ class ProjectService {
         }
 
         return transitionsResults;
-    }
+    };
 
     /**
      * Get nodes that have a transition to the given node id
@@ -1019,7 +1005,7 @@ class ProjectService {
 
     getLayoutLogic() {
         var layoutLogic = null;
-        var project = this.getProject();
+        var project = this.project;
         if (project != null) {
             layoutLogic = project.layoutLogic;
         }
@@ -1132,98 +1118,19 @@ class ProjectService {
 
     getThemePath() {
         var wiseBaseURL = this.ConfigService.getConfigParam('wiseBaseURL');
-        var project = this.getProject();
-        if (project && project.theme) { // TODO: check if this is a valid theme (using ConfigService) rather than just truthy
+        var project = this.project;
+        if (project && project.theme) {
+            // TODO: check if this is a valid theme (using ConfigService) rather than just truthy
             return wiseBaseURL + '/wise5/vle/themes/' + project.theme;
         } else {
-            return wiseBaseURL + '/wise5/vle/themes/default'; // TODO: get default theme name from ConfigService
+            // TODO: get default theme name from ConfigService
+            return wiseBaseURL + '/wise5/vle/themes/default';
         }
-    };
-
-    getNodeTypeByNode(node) {
-        var nodeType = null;
-
-        if (node != null) {
-            nodeType = node.type;
-        }
-
-        return nodeType;
-    };
-
-    getNodeTitleByNodeId(nodeId) {
-        var title = null;
-
-        var node = this.getNodeById(nodeId);
-
-        if (node != null) {
-            title = node.title;
-        }
-
-        return title;
-    };
-
-    /**
-     * Get the node position and title
-     * @param nodeId the node id
-     * @returns the node position and title
-     */
-    getNodePositionAndTitleByNodeId(nodeId) {
-        var title = null;
-
-        var node = this.getNodeById(nodeId);
-
-        if (node != null) {
-
-            var position = this.getNodePositionById(nodeId);
-
-            if (position != null) {
-                title = position + ' ' + node.title;
-            } else {
-                title = node.title;
-            }
-        }
-
-        return title;
-    };
-
-    getNodeIconByNodeId(nodeId) {
-        var node = this.getNodeById(nodeId);
-        var nodeIcon = null;
-
-        if (node != null) {
-            var nodeType = this.getNodeTypeByNode(node);
-
-            // set defaults (TODO: get from configService?)
-            var defaultName = (nodeType === 'group') ? 'explore' : 'school';
-            nodeIcon = {
-                color: 'rgba(0,0,0,0.54)',
-                type: 'font',
-                fontSet: 'material-icons',
-                fontName: defaultName,
-                imgSrc: '',
-                imgAlt: 'node icon'
-            };
-
-            // TODO: check for different statuses
-            var icons = node.icons;
-            if (!!icons && !!icons.default) {
-                var icon = icons.default;
-                nodeIcon = $.extend(true, nodeIcon, icon);
-            }
-
-            // check for empty image source
-            if (!nodeIcon.imgSrc) {
-                // revert to font icon
-                nodeIcon.type = 'font';
-            }
-        }
-
-        return nodeIcon;
     };
 
     getStudentIsOnGroupNodeClass() {
         var studentIsOnGroupNodeClass = null;
-        var project = this.getProject();
+        var project = this.project;
 
         if (project != null) {
             var layout = project.layout;
@@ -1238,7 +1145,7 @@ class ProjectService {
 
     getStudentIsOnApplicationNodeClass() {
         var studentIsOnApplicationNodeClass = null;
-        var project = this.getProject();
+        var project = this.project;
 
         if (project != null) {
             var layout = project.layout
@@ -1249,15 +1156,6 @@ class ProjectService {
         }
 
         return studentIsOnApplicationNodeClass;
-    };
-
-    getStartGroupId() {
-        var startGroupId = null;
-        var project = this.getProject();
-        if (project != null) {
-            startGroupId = project.startGroupId;
-        }
-        return startGroupId;
     };
 
     /**
@@ -2117,11 +2015,8 @@ class ProjectService {
                 }
 
                 if (!isPathInUniquePaths) {
-                    /*
-                     * the path is not equal to any paths in the unique
-                     * paths array so we will add it to the unique paths
-                     * array
-                     */
+                    // the path is not equal to any paths in the unique
+                    // paths array so we will add it to the unique paths array
                     uniquePaths.push(path);
                 }
             }
@@ -2156,10 +2051,7 @@ class ProjectService {
 
                     // check if the node ids are the same
                     if (path1NodeId !== path2NodeId) {
-                        /*
-                         * the node ids are not the same to the paths
-                         * are not equal
-                         */
+                        // the node ids are not the same to the paths are not equal
                         result = false;
                         break;
                     }
@@ -2229,7 +2121,7 @@ class ProjectService {
 
         if (branches != null && nodeId != null) {
 
-            // loop throught all the branches
+            // loop through all the branches
             for (var b = 0; b < branches.length; b++) {
 
                 // get a branch
@@ -3216,7 +3108,8 @@ class ProjectService {
 
     /**
      * Get the max score for the project
-     * @returns the max score for the project or null if there are no max scores
+     * @returns the max score for the project or null if none of the components in the project
+     * has max scores.
      */
     getMaxScore() {
 
