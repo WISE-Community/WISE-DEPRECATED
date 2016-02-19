@@ -406,7 +406,7 @@ class DiscussionController {
         }));
 
         var scope = this;
-        var themePath = "/wise/" + this.ProjectService.getThemePath();
+        var themePath = this.ProjectService.getThemePath();
 
         // TODO: make toolbar items and plugins customizable by authors?
         // Rich text editor options

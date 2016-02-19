@@ -27,8 +27,6 @@ var NotebookController = function () {
         this.notebook = null;
         this.itemId = null;
         this.item = null;
-        this.itemSource = false;
-        this.applicationNodes = ProjectService.getApplicationNodes();
 
         $scope.$on('notebookUpdated', function (event, args) {
             _this.notebook = args.notebook;

@@ -1,0 +1,1707 @@
+{
+    "nodes": [
+        {
+            "id": "group0",
+            "type": "group",
+            "title": "Master",
+            "startId": "group1",
+            "ids": [
+                "group1",
+                "group2"
+            ]
+        },
+        {
+            "id": "group1",
+            "type": "group",
+            "title": "Example Steps",
+            "startId": "node1",
+            "ids": [
+                "node1",
+                "node2",
+                "node3",
+                "node4",
+                "node5",
+                "node6",
+                "node7",
+                "node8",
+                "node9",
+                "node10",
+                "node11",
+                "node12",
+                "node13",
+                "node14",
+                "node15",
+                "node16",
+                "node17",
+                "node18",
+                "node19"
+            ]
+        },
+        {
+            "id": "node1",
+            "type": "node",
+            "showSaveButton": false,
+            "showSubmitButton": false,
+            "constraints": [],
+            "transitionLogic": {
+                "transitions": [
+                    {
+                        "to": "node2"
+                    }
+                ],
+                "howToChooseAmongAvailablePaths": null,
+                "whenToChoosePath": null,
+                "canChangePath": null,
+                "maxPathsVisitable": null
+            },
+            "title": "HTML Step",
+            "components": [
+                {
+                    "id": "zh4h1urdys",
+                    "type": "HTML",
+                    "html": "<html>\n<head>\n<title>html</title>\n</head>\n<body>\n<p>This is a step where authors can enter their own html. Authors can also embed images and videos.</p>\n<p><img src=\"nyan_cat.png\" alt=\"\" width=\"400\" height=\"400\" /></p>\n<p><object width=\"320\" height=\"240\" classid=\"clsid:02bf25d5-8c17-4b23-bc80-d3488abddc6b\" codebase=\"http://www.apple.com/qtactivex/qtplugin.cab#version=6,0,2,0\" bgcolor=\"#000000\"><param name=\"src\" value=\"02AcuraTLHSF.3.mov\" /><param name=\"autoplay\" value=\"false\" /><embed width=\"320\" height=\"240\" type=\"video/quicktime\" src=\"02AcuraTLHSF.3.mov\" autoplay=\"false\" bgcolor=\"#000000\" /></object></p>\n</body>\n</html>"
+                }
+            ]
+        },
+        {
+            "id": "node2",
+            "type": "node",
+            "showSaveButton": true,
+            "showSubmitButton": false,
+            "constraints": [],
+            "transitionLogic": {
+                "transitions": [
+                    {
+                        "to": "node3"
+                    }
+                ],
+                "howToChooseAmongAvailablePaths": null,
+                "whenToChoosePath": null,
+                "canChangePath": null,
+                "maxPathsVisitable": null
+            },
+            "title": "Open Response Step",
+            "components": [
+                {
+                    "id": "7edwu1p29b",
+                    "type": "OpenResponse",
+                    "prompt": "<p>This is a step where students enter text.</p>"
+                }
+            ]
+        },
+        {
+            "id": "node3",
+            "type": "node",
+            "showSaveButton": true,
+            "showSubmitButton": false,
+            "constraints": [],
+            "transitionLogic": {
+                "transitions": [
+                    {
+                        "to": "node4"
+                    }
+                ],
+                "howToChooseAmongAvailablePaths": null,
+                "whenToChoosePath": null,
+                "canChangePath": null,
+                "maxPathsVisitable": null
+            },
+            "title": "Open Response Step Auto Graded",
+            "components": [
+                {
+                    "id": "0sef5ya2wj",
+                    "type": "OpenResponse",
+                    "prompt": "<p>This is an auto-graded step that will give the student an automated score and automated text feedback. (Note: the auto graded functionality only works in a run and does not work when simply previewing the project)</p>\n<p>Explain how the sun helps animals survive.</p>"
+                }
+            ]
+        },
+        {
+            "id": "node4",
+            "type": "node",
+            "showSaveButton": true,
+            "showSubmitButton": false,
+            "constraints": [],
+            "transitionLogic": {
+                "transitions": [
+                    {
+                        "to": "node5"
+                    }
+                ],
+                "howToChooseAmongAvailablePaths": null,
+                "whenToChoosePath": null,
+                "canChangePath": null,
+                "maxPathsVisitable": null
+            },
+            "title": "Note Step",
+            "components": [
+                {
+                    "id": "9rfz8yh32s",
+                    "type": "OpenResponse",
+                    "prompt": "<p>This is similar to an open response step but the text entry area opens in a popup so that students can still see the content from the previous step.</p>"
+                }
+            ]
+        },
+        {
+            "id": "node5",
+            "type": "node",
+            "showSaveButton": true,
+            "showSubmitButton": false,
+            "constraints": [],
+            "transitionLogic": {
+                "transitions": [
+                    {
+                        "to": "node6"
+                    }
+                ],
+                "howToChooseAmongAvailablePaths": null,
+                "whenToChoosePath": null,
+                "canChangePath": null,
+                "maxPathsVisitable": null
+            },
+            "title": "Multiple Choice Step Single Answer",
+            "components": [
+                {
+                    "id": "09hahe7wsm",
+                    "type": "MultipleChoice",
+                    "prompt": "<p>This is a multiple choice step where the student is allowed to choose one choice.</p>\n<p>Who lives in a pineapple under the sea?</p>",
+                    "choices": [
+                        {
+                            "id": "y6rvd7eziz",
+                            "text": "Spongebob",
+                            "feedback": "Great Job!",
+                            "isCorrect": true
+                        },
+                        {
+                            "id": "ti5rd0es02",
+                            "text": "Patrick",
+                            "feedback": "Patrick doesn't live in a pineapple, he lives under a rock",
+                            "isCorrect": false
+                        },
+                        {
+                            "id": "gb0cnkaiem",
+                            "text": "Squidward",
+                            "feedback": "Squidward doesn't live in a pineapple, he lives in an Easter island head",
+                            "isCorrect": false
+                        }
+                    ],
+                    "showSaveButton": false,
+                    "showSubmitButton": true,
+                    "choiceType": "radio"
+                }
+            ]
+        },
+        {
+            "id": "node6",
+            "type": "node",
+            "showSaveButton": true,
+            "showSubmitButton": false,
+            "constraints": [],
+            "transitionLogic": {
+                "transitions": [
+                    {
+                        "to": "node7"
+                    }
+                ],
+                "howToChooseAmongAvailablePaths": null,
+                "whenToChoosePath": null,
+                "canChangePath": null,
+                "maxPathsVisitable": null
+            },
+            "title": "Multiple Choice Step Multiple Answer",
+            "components": [
+                {
+                    "id": "ajsdwjugeb",
+                    "type": "MultipleChoice",
+                    "prompt": "<p>This is a multiple choice step where the student is allowed to choose multiple choices.</p>\n<p>Which of these are Ninja Turtles?</p>",
+                    "choices": [
+                        {
+                            "id": "ofjky47v57",
+                            "text": "Leonardo",
+                            "feedback": "Great Job you know your Ninja Turtles",
+                            "isCorrect": true
+                        },
+                        {
+                            "id": "dvsbhlfemx",
+                            "text": "Donatello",
+                            "feedback": "Great Job you know your Ninja Turtles",
+                            "isCorrect": true
+                        },
+                        {
+                            "id": "i8et2px6m3",
+                            "text": "Michelangelo",
+                            "feedback": "Great Job you know your Ninja Turtles",
+                            "isCorrect": true
+                        },
+                        {
+                            "id": "60gxmv4c76",
+                            "text": "Raphael",
+                            "feedback": "Great Job you know your Ninja Turtles",
+                            "isCorrect": true
+                        },
+                        {
+                            "id": "2oxfbn09lk",
+                            "text": "Squirtle",
+                            "feedback": "Squirtle is a Pokemon",
+                            "isCorrect": false
+                        }
+                    ],
+                    "showSaveButton": false,
+                    "showSubmitButton": true,
+                    "choiceType": "checkbox"
+                }
+            ]
+        },
+        {
+            "id": "node7",
+            "type": "node",
+            "showSaveButton": true,
+            "showSubmitButton": false,
+            "constraints": [],
+            "transitionLogic": {
+                "transitions": [
+                    {
+                        "to": "node8"
+                    }
+                ],
+                "howToChooseAmongAvailablePaths": null,
+                "whenToChoosePath": null,
+                "canChangePath": null,
+                "maxPathsVisitable": null
+            },
+            "title": "Challenge Question Step",
+            "components": [
+                {
+                    "id": "ms0ene7xrh",
+                    "type": "MultipleChoice",
+                    "prompt": "<p>This is a multiple choice step that the student must answer correctly before they can move forward in the project. If the student gets the question wrong, they must go back to Step 1.1 in order to attempt the step again. This type of step is used to get students to review content when they get the question wrong.</p>\n<p>Bulbasaur is what type of Pokemon?</p>",
+                    "choices": [
+                        {
+                            "id": "0wxjeaix4n",
+                            "text": "Grass/Poison",
+                            "feedback": "Correct",
+                            "isCorrect": true
+                        },
+                        {
+                            "id": "bwl0aqj90i",
+                            "text": "Fire",
+                            "feedback": "Sorry, Bulbasaur is not a fire type Pokemon.",
+                            "isCorrect": false
+                        },
+                        {
+                            "id": "9yyn6ng60p",
+                            "text": "Water",
+                            "feedback": "Sorry, Bulbasaur is not a water type Pokemon.",
+                            "isCorrect": false
+                        }
+                    ],
+                    "showSaveButton": false,
+                    "showSubmitButton": true,
+                    "choiceType": "radio"
+                }
+            ]
+        },
+        {
+            "id": "node8",
+            "type": "node",
+            "showSaveButton": true,
+            "showSubmitButton": false,
+            "constraints": [],
+            "transitionLogic": {
+                "transitions": [
+                    {
+                        "to": "node9"
+                    }
+                ],
+                "howToChooseAmongAvailablePaths": null,
+                "whenToChoosePath": null,
+                "canChangePath": null,
+                "maxPathsVisitable": null
+            },
+            "title": "Match Sequence Step",
+            "components": [
+                {
+                    "id": "ja98ry0n0e",
+                    "type": "Match",
+                    "prompt": "<p>This is a step where students must drag and drop choices into the appropriate bucket.</p>\n<p>Match the controllers with the appropriate console. Then click the 'Submit Answer' button at the bottom of the page to check your answer.</p>",
+                    "choices": [
+                        {
+                            "id": "w2jmubyq0i",
+                            "value": "<img src='ps4_controller.jpg'/>",
+                            "type": "choice"
+                        },
+                        {
+                            "id": "zxi4ncxv0x",
+                            "value": "<img src='xbone_controller.jpg'/>",
+                            "type": "choice"
+                        }
+                    ],
+                    "buckets": [
+                        {
+                            "id": "rrisawrk19",
+                            "value": "Playstation 4",
+                            "type": "bucket"
+                        },
+                        {
+                            "id": "b04777i4m1",
+                            "value": "Xbox One",
+                            "type": "bucket"
+                        }
+                    ],
+                    "feedback": [
+                        {
+                            "bucketId": "rrisawrk19",
+                            "choices": [
+                                {
+                                    "choiceId": "w2jmubyq0i",
+                                    "feedback": "Correct.",
+                                    "isCorrect": true,
+                                    "position": null,
+                                    "incorrectPositionFeedback": null
+                                },
+                                {
+                                    "choiceId": "zxi4ncxv0x",
+                                    "feedback": "Incorrect",
+                                    "isCorrect": false,
+                                    "position": null,
+                                    "incorrectPositionFeedback": null
+                                }
+                            ]
+                        },
+                        {
+                            "bucketId": "b04777i4m1",
+                            "choices": [
+                                {
+                                    "choiceId": "w2jmubyq0i",
+                                    "feedback": "Incorrect",
+                                    "isCorrect": false,
+                                    "position": null,
+                                    "incorrectPositionFeedback": null
+                                },
+                                {
+                                    "choiceId": "zxi4ncxv0x",
+                                    "feedback": "Correct.",
+                                    "isCorrect": true,
+                                    "position": null,
+                                    "incorrectPositionFeedback": null
+                                }
+                            ]
+                        }
+                    ],
+                    "showSaveButton": false,
+                    "showSubmitButton": true,
+                    "ordered": false
+                }
+            ]
+        },
+        {
+            "id": "node9",
+            "type": "node",
+            "showSaveButton": true,
+            "showSubmitButton": false,
+            "constraints": [],
+            "transitionLogic": {
+                "transitions": [
+                    {
+                        "to": "node10"
+                    }
+                ],
+                "howToChooseAmongAvailablePaths": null,
+                "whenToChoosePath": null,
+                "canChangePath": null,
+                "maxPathsVisitable": null
+            },
+            "title": "Match Sequence Step Ordered",
+            "components": [
+                {
+                    "id": "8h4fxsg2wi",
+                    "type": "Match",
+                    "prompt": "<p>Authors can require the choices to be placed in a specific order within a bucket. Place the Playstation console images into the Playstation History bucket in the order of oldest to newest. Then click the 'Submit Answer' button at the bottom of the page to check your answer.</p>",
+                    "choices": [
+                        {
+                            "id": "87b5i860r9",
+                            "value": "<img src='ps1.jpg'/>",
+                            "type": "choice"
+                        },
+                        {
+                            "id": "zy2uvk0i2k",
+                            "value": "<img src='ps2.jpg'/>",
+                            "type": "choice"
+                        },
+                        {
+                            "id": "py0oik2bdx",
+                            "value": "<img src='ps3.png'/>",
+                            "type": "choice"
+                        },
+                        {
+                            "id": "cxi69s3hqo",
+                            "value": "<img src='ps4.jpg'/>",
+                            "type": "choice"
+                        },
+                        {
+                            "id": "kg0daqbcg4",
+                            "value": "Xbone",
+                            "type": "choice"
+                        },
+                        {
+                            "id": "1gfvbimpj3",
+                            "value": "Xbox 360",
+                            "type": "choice"
+                        },
+                        {
+                            "id": "sxfctzt39y",
+                            "value": "Xbox 1",
+                            "type": "choice"
+                        }
+                    ],
+                    "buckets": [
+                        {
+                            "id": "pf7ym43t9m",
+                            "value": "Playstation History",
+                            "type": "bucket"
+                        },
+                        {
+                            "id": "btvrrgacyr",
+                            "value": "Xbox History",
+                            "type": "bucket"
+                        }
+                    ],
+                    "feedback": [
+                        {
+                            "bucketId": "pf7ym43t9m",
+                            "choices": [
+                                {
+                                    "choiceId": "87b5i860r9",
+                                    "feedback": "Correct.",
+                                    "isCorrect": true,
+                                    "position": 1,
+                                    "incorrectPositionFeedback": null
+                                },
+                                {
+                                    "choiceId": "zy2uvk0i2k",
+                                    "feedback": "Correct.",
+                                    "isCorrect": true,
+                                    "position": 2,
+                                    "incorrectPositionFeedback": null
+                                },
+                                {
+                                    "choiceId": "py0oik2bdx",
+                                    "feedback": "Correct.",
+                                    "isCorrect": true,
+                                    "position": 3,
+                                    "incorrectPositionFeedback": null
+                                },
+                                {
+                                    "choiceId": "cxi69s3hqo",
+                                    "feedback": "Correct.",
+                                    "isCorrect": true,
+                                    "position": 4,
+                                    "incorrectPositionFeedback": null
+                                },
+                                {
+                                    "choiceId": "kg0daqbcg4",
+                                    "feedback": "Incorrect",
+                                    "isCorrect": false,
+                                    "position": null,
+                                    "incorrectPositionFeedback": null
+                                },
+                                {
+                                    "choiceId": "1gfvbimpj3",
+                                    "feedback": "Incorrect",
+                                    "isCorrect": false,
+                                    "position": null,
+                                    "incorrectPositionFeedback": null
+                                },
+                                {
+                                    "choiceId": "sxfctzt39y",
+                                    "feedback": "Incorrect",
+                                    "isCorrect": false,
+                                    "position": null,
+                                    "incorrectPositionFeedback": null
+                                }
+                            ]
+                        },
+                        {
+                            "bucketId": "btvrrgacyr",
+                            "choices": [
+                                {
+                                    "choiceId": "87b5i860r9",
+                                    "feedback": "Incorrect",
+                                    "isCorrect": false,
+                                    "position": null,
+                                    "incorrectPositionFeedback": null
+                                },
+                                {
+                                    "choiceId": "zy2uvk0i2k",
+                                    "feedback": "Incorrect",
+                                    "isCorrect": false,
+                                    "position": null,
+                                    "incorrectPositionFeedback": null
+                                },
+                                {
+                                    "choiceId": "py0oik2bdx",
+                                    "feedback": "Incorrect",
+                                    "isCorrect": false,
+                                    "position": null,
+                                    "incorrectPositionFeedback": null
+                                },
+                                {
+                                    "choiceId": "cxi69s3hqo",
+                                    "feedback": "Incorrect",
+                                    "isCorrect": false,
+                                    "position": null,
+                                    "incorrectPositionFeedback": null
+                                },
+                                {
+                                    "choiceId": "kg0daqbcg4",
+                                    "feedback": "Correct.",
+                                    "isCorrect": true,
+                                    "position": 3,
+                                    "incorrectPositionFeedback": null
+                                },
+                                {
+                                    "choiceId": "1gfvbimpj3",
+                                    "feedback": "Correct.",
+                                    "isCorrect": true,
+                                    "position": 2,
+                                    "incorrectPositionFeedback": null
+                                },
+                                {
+                                    "choiceId": "sxfctzt39y",
+                                    "feedback": "Correct.",
+                                    "isCorrect": true,
+                                    "position": 1,
+                                    "incorrectPositionFeedback": null
+                                }
+                            ]
+                        }
+                    ],
+                    "showSaveButton": false,
+                    "showSubmitButton": true,
+                    "ordered": true
+                }
+            ]
+        },
+        {
+            "id": "node10",
+            "type": "node",
+            "showSaveButton": true,
+            "showSubmitButton": false,
+            "constraints": [],
+            "transitionLogic": {
+                "transitions": [
+                    {
+                        "to": "node11"
+                    }
+                ],
+                "howToChooseAmongAvailablePaths": null,
+                "whenToChoosePath": null,
+                "canChangePath": null,
+                "maxPathsVisitable": null
+            },
+            "title": "Questionnaire Step",
+            "components": [
+                {
+                    "id": "m97kyu4d4v",
+                    "type": "HTML",
+                    "html": "<p>This is a step where students must answer a series of questions that are either text or mulitple choice questions. This step is set up so that the student must answer all the questions before they can move to any other step. Once the student submits their answer, they can no longer change their answer. These restrictions can be turned on or off for this step type.</p>"
+                },
+                {
+                    "id": "yhrumlct2t",
+                    "prompt": "What is your favorite type of food?",
+                    "type": "OpenResponse"
+                },
+                {
+                    "id": "2upmb3om1q",
+                    "prompt": "What is your favorite type of chocolate?",
+                    "type": "MultipleChoice",
+                    "choiceType": "radio",
+                    "choices": [
+                        {
+                            "id": "cri2anfnxg",
+                            "text": "White",
+                            "feedback": ""
+                        },
+                        {
+                            "id": "fzroe37gyx",
+                            "text": "Dark",
+                            "feedback": ""
+                        },
+                        {
+                            "id": "di49m0lc72",
+                            "text": "Milk",
+                            "feedback": ""
+                        }
+                    ],
+                    "correctChoice": "fzroe37gyx"
+                },
+                {
+                    "id": "srof14u22x",
+                    "prompt": "What is your favorite movie?",
+                    "type": "OpenResponse"
+                },
+                {
+                    "id": "cjv5kq5290",
+                    "prompt": "Edit prompt here",
+                    "type": "MultipleChoice",
+                    "choiceType": "checkbox",
+                    "choices": [
+                        {
+                            "id": "y1cdkafo2u",
+                            "text": [
+                                "Enter choice text here"
+                            ],
+                            "feedback": ""
+                        },
+                        {
+                            "id": "lcnhnc2myc",
+                            "text": [
+                                "Enter choice text here"
+                            ],
+                            "feedback": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "node11",
+            "type": "node",
+            "showSaveButton": true,
+            "showSubmitButton": false,
+            "constraints": [],
+            "transitionLogic": {
+                "transitions": [
+                    {
+                        "to": "node12"
+                    }
+                ],
+                "howToChooseAmongAvailablePaths": null,
+                "whenToChoosePath": null,
+                "canChangePath": null,
+                "maxPathsVisitable": null
+            },
+            "title": "Draw Step",
+            "components": [
+                {
+                    "id": "9qwqc5uslq",
+                    "type": "Draw",
+                    "prompt": "<p>This is a draw step where the student can draw a diagram.</p>",
+                    "stamps": {
+                        "Stamps": []
+                    }
+                }
+            ]
+        },
+        {
+            "id": "node12",
+            "type": "node",
+            "showSaveButton": true,
+            "showSubmitButton": false,
+            "constraints": [],
+            "transitionLogic": {
+                "transitions": [
+                    {
+                        "to": "node13"
+                    }
+                ],
+                "howToChooseAmongAvailablePaths": null,
+                "whenToChoosePath": null,
+                "canChangePath": null,
+                "maxPathsVisitable": null
+            },
+            "title": "Draw Step Auto Graded",
+            "components": [
+                {
+                    "id": "nvjkidstry",
+                    "type": "Draw",
+                    "prompt": "<p style=\"text-align: left;\">This is an auto graded draw step. Click the 'Submit' button to have your drawing auto graded.</p>\n<p style=\"text-align: left;\">&nbsp;</p>\n<p style=\"text-align: left;\">(1) Use stamps to create TWO methane molecules (CH<sub>4</sub>).&nbsp;</p>\n<p style=\"text-align: left;\">(2) Create EXACTLY the number of oxygen molecules (O<sub>2</sub>) needed to react with your TWO methane molecules.</p>\n<p style=\"text-align: left;\">(3) Create a new frame.</p>\n<p style=\"text-align: left;\">(4) REARRANGE the atoms in the 2nd frame to make carbon dioxide (CO<sub>2</sub>) and water (H<sub>2</sub>O) molecules. Show clearly which atoms belong to which molecules.</p>",
+                    "stamps": {
+                        "Stamps": [
+                            "carbon.png",
+                            "oxygen.png",
+                            "hydrogen.png"
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "id": "node13",
+            "type": "node",
+            "showSaveButton": true,
+            "showSubmitButton": false,
+            "constraints": [],
+            "transitionLogic": {
+                "transitions": [
+                    {
+                        "to": "node14"
+                    }
+                ],
+                "howToChooseAmongAvailablePaths": null,
+                "whenToChoosePath": null,
+                "canChangePath": null,
+                "maxPathsVisitable": null
+            },
+            "title": "Brainstorm Step",
+            "components": [
+                {
+                    "id": "dnz279bdvc",
+                    "type": "Discussion",
+                    "prompt": "<p>This is a forum discussion type of step where students can post their response and then see their classmates' responses. (Note: the brainstorm step only works in a run and does not work when simply previewing the project)</p>",
+                    "showSaveButton": false,
+                    "showSubmitButton": true,
+                    "gateClassmateResponses": false
+                }
+            ]
+        },
+        {
+            "id": "node14",
+            "type": "node",
+            "showSaveButton": true,
+            "showSubmitButton": false,
+            "constraints": [],
+            "transitionLogic": {
+                "transitions": [
+                    {
+                        "to": "node15"
+                    }
+                ],
+                "howToChooseAmongAvailablePaths": null,
+                "whenToChoosePath": null,
+                "canChangePath": null,
+                "maxPathsVisitable": null
+            },
+            "title": "Table Step",
+            "components": [
+                {
+                    "id": "y45mn2k7yl",
+                    "type": "Table",
+                    "prompt": "This is a table step where students fill out a table. You can make certain cells editable and other cells uneditable so the student can't change them. You can also allow the student to add/delete columns as well as add/delete rows.",
+                    "globalCellSize": 10,
+                    "tableData": [
+                        [
+                            {
+                                "text": "Object",
+                                "editable": false,
+                                "size": null
+                            },
+                            {
+                                "text": "Count",
+                                "editable": false,
+                                "size": null
+                            }
+                        ],
+                        [
+                            {
+                                "text": "Computers",
+                                "editable": true,
+                                "size": null
+                            },
+                            {
+                                "text": "",
+                                "editable": true,
+                                "size": null
+                            }
+                        ],
+                        [
+                            {
+                                "text": "Phones",
+                                "editable": true,
+                                "size": null
+                            },
+                            {
+                                "text": "",
+                                "editable": true,
+                                "size": null
+                            }
+                        ],
+                        [
+                            {
+                                "text": "",
+                                "editable": true,
+                                "size": null
+                            },
+                            {
+                                "text": "",
+                                "editable": true,
+                                "size": null
+                            }
+                        ]
+                    ]
+                },
+                {
+                    "id": "d9ioo01pa1",
+                    "type": "OpenResponse",
+                    "prompt": ""
+                }
+            ]
+        },
+        {
+            "id": "node15",
+            "type": "node",
+            "showSaveButton": true,
+            "showSubmitButton": false,
+            "constraints": [],
+            "transitionLogic": {
+                "transitions": [
+                    {
+                        "to": "node16"
+                    }
+                ],
+                "howToChooseAmongAvailablePaths": null,
+                "whenToChoosePath": null,
+                "canChangePath": null,
+                "maxPathsVisitable": null
+            },
+            "title": "Table Step Line Graph",
+            "components": [
+                {
+                    "id": "wtw3q7peip",
+                    "type": "Table",
+                    "prompt": "The table step can be authored to allow the student to graph the table data. Here is an example of using the table data to create a line graph. I have authored the step to pre-populate the table data so all you need to do is click \"Make Graph\".",
+                    "globalCellSize": 10,
+                    "tableData": [
+                        [
+                            {
+                                "text": "x",
+                                "editable": false,
+                                "size": null
+                            },
+                            {
+                                "text": "y",
+                                "editable": false,
+                                "size": null
+                            }
+                        ],
+                        [
+                            {
+                                "text": "0",
+                                "editable": true,
+                                "size": null
+                            },
+                            {
+                                "text": "0",
+                                "editable": true,
+                                "size": null
+                            }
+                        ],
+                        [
+                            {
+                                "text": "1",
+                                "editable": true,
+                                "size": null
+                            },
+                            {
+                                "text": "1",
+                                "editable": true,
+                                "size": null
+                            }
+                        ],
+                        [
+                            {
+                                "text": "2",
+                                "editable": true,
+                                "size": null
+                            },
+                            {
+                                "text": "2",
+                                "editable": true,
+                                "size": null
+                            }
+                        ],
+                        [
+                            {
+                                "text": "3",
+                                "editable": true,
+                                "size": null
+                            },
+                            {
+                                "text": "6",
+                                "editable": true,
+                                "size": null
+                            }
+                        ],
+                        [
+                            {
+                                "text": "7",
+                                "editable": true,
+                                "size": null
+                            },
+                            {
+                                "text": "4",
+                                "editable": true,
+                                "size": null
+                            }
+                        ],
+                        [
+                            {
+                                "text": "10",
+                                "editable": true,
+                                "size": null
+                            },
+                            {
+                                "text": "4",
+                                "editable": true,
+                                "size": null
+                            }
+                        ]
+                    ]
+                },
+                {
+                    "id": "r2t378mp23",
+                    "type": "OpenResponse",
+                    "prompt": ""
+                }
+            ]
+        },
+        {
+            "id": "node16",
+            "type": "node",
+            "showSaveButton": true,
+            "showSubmitButton": false,
+            "constraints": [],
+            "transitionLogic": {
+                "transitions": [
+                    {
+                        "to": "node17"
+                    }
+                ],
+                "howToChooseAmongAvailablePaths": null,
+                "whenToChoosePath": null,
+                "canChangePath": null,
+                "maxPathsVisitable": null
+            },
+            "title": "Table Step Bar Graph",
+            "components": [
+                {
+                    "id": "xxcdra15fe",
+                    "type": "Table",
+                    "prompt": "Here is an example of a bar graph.",
+                    "globalCellSize": 10,
+                    "tableData": [
+                        [
+                            {
+                                "text": "Color",
+                                "editable": false,
+                                "size": null
+                            },
+                            {
+                                "text": "Count",
+                                "editable": false,
+                                "size": null
+                            }
+                        ],
+                        [
+                            {
+                                "text": "Blue",
+                                "editable": true,
+                                "size": null
+                            },
+                            {
+                                "text": "4",
+                                "editable": true,
+                                "size": null
+                            }
+                        ],
+                        [
+                            {
+                                "text": "Red",
+                                "editable": true,
+                                "size": null
+                            },
+                            {
+                                "text": "2",
+                                "editable": true,
+                                "size": null
+                            }
+                        ],
+                        [
+                            {
+                                "text": "Green",
+                                "editable": true,
+                                "size": null
+                            },
+                            {
+                                "text": "3",
+                                "editable": true,
+                                "size": null
+                            }
+                        ]
+                    ]
+                },
+                {
+                    "id": "cxwpukq3n5",
+                    "type": "OpenResponse",
+                    "prompt": ""
+                }
+            ]
+        },
+        {
+            "id": "node17",
+            "type": "node",
+            "showSaveButton": true,
+            "showSubmitButton": false,
+            "constraints": [],
+            "transitionLogic": {
+                "transitions": [
+                    {
+                        "to": "node18"
+                    }
+                ],
+                "howToChooseAmongAvailablePaths": null,
+                "whenToChoosePath": null,
+                "canChangePath": null,
+                "maxPathsVisitable": null
+            },
+            "title": "Table Step Pie Graph",
+            "components": [
+                {
+                    "id": "ejryyaaf8n",
+                    "type": "Table",
+                    "prompt": "Here is an example of a pie graph.",
+                    "globalCellSize": 10,
+                    "tableData": [
+                        [
+                            {
+                                "text": "Topping",
+                                "editable": false,
+                                "size": null
+                            },
+                            {
+                                "text": "Slices",
+                                "editable": false,
+                                "size": null
+                            }
+                        ],
+                        [
+                            {
+                                "text": "Pepperoni",
+                                "editable": true,
+                                "size": null
+                            },
+                            {
+                                "text": "4",
+                                "editable": true,
+                                "size": null
+                            }
+                        ],
+                        [
+                            {
+                                "text": "Mushroom",
+                                "editable": true,
+                                "size": null
+                            },
+                            {
+                                "text": "4",
+                                "editable": true,
+                                "size": null
+                            }
+                        ],
+                        [
+                            {
+                                "text": "Bell Pepper",
+                                "editable": true,
+                                "size": null
+                            },
+                            {
+                                "text": "2",
+                                "editable": true,
+                                "size": null
+                            }
+                        ]
+                    ]
+                },
+                {
+                    "id": "f1qmd09sw8",
+                    "type": "OpenResponse",
+                    "prompt": ""
+                }
+            ]
+        },
+        {
+            "id": "node18",
+            "type": "node",
+            "showSaveButton": true,
+            "showSubmitButton": true,
+            "constraints": [],
+            "transitionLogic": {
+                "transitions": [
+                    {
+                        "to": "node19"
+                    }
+                ],
+                "howToChooseAmongAvailablePaths": null,
+                "whenToChoosePath": null,
+                "canChangePath": null,
+                "maxPathsVisitable": null
+            },
+            "title": "Outside Url Step",
+            "components": [
+                {
+                    "id": "u48j0eqq2t",
+                    "type": "OutsideURL",
+                    "url": "http://www.berkeley.edu/"
+                }
+            ]
+        },
+        {
+            "id": "node19",
+            "type": "node",
+            "showSaveButton": true,
+            "showSubmitButton": false,
+            "constraints": [],
+            "transitionLogic": {
+                "transitions": [
+                    {
+                        "to": "node20"
+                    }
+                ],
+                "howToChooseAmongAvailablePaths": null,
+                "whenToChoosePath": null,
+                "canChangePath": null,
+                "maxPathsVisitable": null
+            },
+            "title": "Label Step",
+            "components": [
+                {
+                    "id": "x4twq80e2n",
+                    "prompt": "Label the picture.",
+                    "type": "Label",
+                    "backgroundImage": "ballon cars and skateboarder.png",
+                    "canCreateLabels": true,
+                    "canDeleteLabels": true,
+                    "width": 800,
+                    "height": 600,
+                    "labels": [
+                        {
+                            "pointX": 25,
+                            "pointY": 200,
+                            "textX": 100,
+                            "textY": -25,
+                            "text": "more potential energy",
+                            "color": "blue"
+                        },
+                        {
+                            "pointX": 25,
+                            "pointY": 250,
+                            "textX": 100,
+                            "textY": -25,
+                            "text": "more potential energy",
+                            "color": "blue"
+                        },
+                        {
+                            "pointX": 25,
+                            "pointY": 300,
+                            "textX": 100,
+                            "textY": -25,
+                            "text": "more kinetic energy",
+                            "color": "green"
+                        },
+                        {
+                            "pointX": 25,
+                            "pointY": 350,
+                            "textX": 100,
+                            "textY": -25,
+                            "text": "more kinetic energy",
+                            "color": "green"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "group2",
+            "type": "group",
+            "title": "Example Features",
+            "startId": "node20",
+            "ids": [
+                "node20",
+                "node21",
+                "node22",
+                "node23",
+                "node24",
+                "node25",
+                "node26",
+                "node27",
+                "node28",
+                "node29",
+                "node30",
+                "node31",
+                "node32",
+                "node33"
+            ]
+        },
+        {
+            "id": "node20",
+            "type": "node",
+            "showSaveButton": true,
+            "showSubmitButton": false,
+            "constraints": [],
+            "transitionLogic": {
+                "transitions": [
+                    {
+                        "to": "node21"
+                    }
+                ],
+                "howToChooseAmongAvailablePaths": null,
+                "whenToChoosePath": null,
+                "canChangePath": null,
+                "maxPathsVisitable": null
+            },
+            "title": "Show Previous Work 1",
+            "components": [
+                {
+                    "id": "onwwrjuqu1",
+                    "type": "OpenResponse",
+                    "prompt": "<p>The work you enter for this step will be displayed at the top of the next step.</p>"
+                }
+            ]
+        },
+        {
+            "id": "node21",
+            "type": "node",
+            "showSaveButton": true,
+            "showSubmitButton": false,
+            "constraints": [],
+            "transitionLogic": {
+                "transitions": [
+                    {
+                        "to": "node22"
+                    }
+                ],
+                "howToChooseAmongAvailablePaths": null,
+                "whenToChoosePath": null,
+                "canChangePath": null,
+                "maxPathsVisitable": null
+            },
+            "title": "Show Previous Work 2",
+            "components": [
+                {
+                    "id": "8n06hm4kaq",
+                    "type": "OpenResponse",
+                    "prompt": "<p>You should see your work from the previous step at the top of this step. The previous step and this step do not need to be the same type of step.</p>"
+                }
+            ]
+        },
+        {
+            "id": "node22",
+            "type": "node",
+            "showSaveButton": true,
+            "showSubmitButton": false,
+            "constraints": [],
+            "transitionLogic": {
+                "transitions": [
+                    {
+                        "to": "node23"
+                    }
+                ],
+                "howToChooseAmongAvailablePaths": null,
+                "whenToChoosePath": null,
+                "canChangePath": null,
+                "maxPathsVisitable": null
+            },
+            "title": "Import Work 1",
+            "components": [
+                {
+                    "id": "we8ry95yqa",
+                    "type": "OpenResponse",
+                    "prompt": "<p>The work from this step will be imported into the next step.</p>"
+                }
+            ]
+        },
+        {
+            "id": "node23",
+            "type": "node",
+            "showSaveButton": true,
+            "showSubmitButton": false,
+            "constraints": [],
+            "transitionLogic": {
+                "transitions": [
+                    {
+                        "to": "node24"
+                    }
+                ],
+                "howToChooseAmongAvailablePaths": null,
+                "whenToChoosePath": null,
+                "canChangePath": null,
+                "maxPathsVisitable": null
+            },
+            "title": "Import Work 2",
+            "components": [
+                {
+                    "id": "d6sa31zcw8",
+                    "type": "OpenResponse",
+                    "prompt": "<p>Your work from the previous step should be entered into the text area below. This feature works best if the previous step and this step are the same type of step.</p>"
+                }
+            ]
+        },
+        {
+            "id": "node24",
+            "type": "node",
+            "showSaveButton": true,
+            "showSubmitButton": false,
+            "constraints": [],
+            "transitionLogic": {
+                "transitions": [
+                    {
+                        "to": "node25"
+                    }
+                ],
+                "howToChooseAmongAvailablePaths": null,
+                "whenToChoosePath": null,
+                "canChangePath": null,
+                "maxPathsVisitable": null
+            },
+            "title": "Must Complete Before Advancing",
+            "components": [
+                {
+                    "id": "5o5x8tujpg",
+                    "type": "OpenResponse",
+                    "prompt": "<p>Authors can create constraints to control student navigation. For these constraint examples, I will be using open response steps but the constraints can be used with other step types as well. This step has been authored so that the student must complete the step before they can move forward. They are allowed to move backwards though.</p>"
+                }
+            ]
+        },
+        {
+            "id": "node25",
+            "type": "node",
+            "showSaveButton": true,
+            "showSubmitButton": false,
+            "constraints": [],
+            "transitionLogic": {
+                "transitions": [
+                    {
+                        "to": "node26"
+                    }
+                ],
+                "howToChooseAmongAvailablePaths": null,
+                "whenToChoosePath": null,
+                "canChangePath": null,
+                "maxPathsVisitable": null
+            },
+            "title": "Must Complete Before Exiting",
+            "components": [
+                {
+                    "id": "ade7umyd5r",
+                    "type": "OpenResponse",
+                    "prompt": "<p>This step has been authored so that the student can't leave the step until they have completed it.</p>"
+                }
+            ]
+        },
+        {
+            "id": "node26",
+            "type": "node",
+            "showSaveButton": true,
+            "showSubmitButton": false,
+            "constraints": [],
+            "transitionLogic": {
+                "transitions": [
+                    {
+                        "to": "node27"
+                    }
+                ],
+                "howToChooseAmongAvailablePaths": null,
+                "whenToChoosePath": null,
+                "canChangePath": null,
+                "maxPathsVisitable": null
+            },
+            "title": "Must Complete Previous Step 1",
+            "components": [
+                {
+                    "id": "3dvneo5lv3",
+                    "type": "OpenResponse",
+                    "prompt": "<p>Do not enter any work for this step. Try to move to the next step \"Must Complete Previous Step 2\", you should not be able to. Try to move to the step after the next step \"Must Complete Previous Step 3\", you should be able to. This feature is used to make the student complete a specific step before they can work on another specific step. Now enter some work for this step and click save. You should then be able to move to the next step.</p>"
+                }
+            ]
+        },
+        {
+            "id": "node27",
+            "type": "node",
+            "showSaveButton": true,
+            "showSubmitButton": false,
+            "constraints": [],
+            "transitionLogic": {
+                "transitions": [
+                    {
+                        "to": "node28"
+                    }
+                ],
+                "howToChooseAmongAvailablePaths": null,
+                "whenToChoosePath": null,
+                "canChangePath": null,
+                "maxPathsVisitable": null
+            },
+            "title": "Must Complete Previous Step 2",
+            "components": [
+                {
+                    "id": "b7zhe3k6m3",
+                    "type": "OpenResponse",
+                    "prompt": "<p>Good job, you completed \"Must Complete Previous Step 1\".</p>"
+                }
+            ]
+        },
+        {
+            "id": "node28",
+            "type": "node",
+            "showSaveButton": false,
+            "showSubmitButton": false,
+            "constraints": [],
+            "transitionLogic": {
+                "transitions": [
+                    {
+                        "to": "node29"
+                    }
+                ],
+                "howToChooseAmongAvailablePaths": null,
+                "whenToChoosePath": null,
+                "canChangePath": null,
+                "maxPathsVisitable": null
+            },
+            "title": "Must Complete Previous Step 3",
+            "components": [
+                {
+                    "id": "dsre8jvudw",
+                    "type": "HTML",
+                    "html": "<html>\n<head>\n<title>html</title>\n</head>\n<body>\n<p>Now go back to \"Must Complete Previous Step 1\".</p>\n<p><img src=\"spongebob_and_patrick_shell.jpg?w=400&amp;h=300\" alt=\"\" width=\"400\" height=\"300\" /></p>\n</body>\n</html>"
+                }
+            ]
+        },
+        {
+            "id": "node29",
+            "type": "node",
+            "showSaveButton": true,
+            "showSubmitButton": false,
+            "constraints": [],
+            "transitionLogic": {
+                "transitions": [
+                    {
+                        "to": "node30"
+                    }
+                ],
+                "howToChooseAmongAvailablePaths": null,
+                "whenToChoosePath": null,
+                "canChangePath": null,
+                "maxPathsVisitable": null
+            },
+            "title": "Aggregate Step 1",
+            "components": [
+                {
+                    "id": "qo7zqlxoa1",
+                    "type": "MultipleChoice",
+                    "prompt": "<p>The answers for this step will be aggregated for the whole class and displayed in the next step. (Note: the aggregating of class data only works in a run and does not work when simply previewing the project). The answer for this step will also determine which branch path you are assigned to in the Branching Point step.</p>\n<p>What is your favorite type of chocolate?</p>",
+                    "choices": [
+                        {
+                            "id": "isqtxst8ah",
+                            "text": "Dark",
+                            "feedback": "Thanks for submitting your answer",
+                            "isCorrect": false
+                        },
+                        {
+                            "id": "araznpws0b",
+                            "text": "Milk",
+                            "feedback": "Thanks for submitting your answer",
+                            "isCorrect": false
+                        },
+                        {
+                            "id": "fot1t36pcm",
+                            "text": "White",
+                            "feedback": "Thanks for submitting your answer",
+                            "isCorrect": false
+                        }
+                    ],
+                    "showSaveButton": false,
+                    "showSubmitButton": false,
+                    "choiceType": "radio"
+                }
+            ]
+        },
+        {
+            "id": "node30",
+            "type": "node",
+            "showSaveButton": true,
+            "showSubmitButton": false,
+            "constraints": [],
+            "transitionLogic": {
+                "transitions": [
+                    {
+                        "to": "node31"
+                    },
+                    {
+                        "to": "node32"
+                    },
+                    {
+                        "to": "node33"
+                    }
+                ],
+                "howToChooseAmongAvailablePaths": "criteriaMapping",
+                "whenToChoosePath": "enterNode",
+                "canChangePath": false,
+                "maxPathsVisitable": 1
+            },
+            "title": "Aggregate Step 2",
+            "components": [
+                {
+                    "id": "9ppjsfsmzb",
+                    "type": "OpenResponse",
+                    "prompt": "<p>You should see a pie graph with the aggregate student data for the class above.</p>"
+                }
+            ]
+        },
+        {
+            "id": "node31",
+            "type": "node",
+            "showSaveButton": false,
+            "showSubmitButton": false,
+            "constraints": [
+                {
+                    "id": "constraint0",
+                    "action": "makeThisNodeNotVisible",
+                    "targetId": "node31",
+                    "removalCriteria": [
+                        {
+                            "functionName": "branchPathTaken",
+                            "fromNodeId": "node30",
+                            "toNodeId": "node31"
+                        }
+                    ]
+                },
+                {
+                    "id": "constraint1",
+                    "action": "makeThisNodeNotVisitable",
+                    "targetId": "node31",
+                    "removalCriteria": [
+                        {
+                            "functionName": "branchPathTaken",
+                            "fromNodeId": "node30",
+                            "toNodeId": "node31"
+                        }
+                    ]
+                }
+            ],
+            "transitionLogic": {
+                "transitions": [],
+                "howToChooseAmongAvailablePaths": null,
+                "whenToChoosePath": null,
+                "canChangePath": null,
+                "maxPathsVisitable": null
+            },
+            "title": "You chose dark chocolate",
+            "components": [
+                {
+                    "id": "usk4gr3mq1",
+                    "type": "HTML",
+                    "html": "<html>\n<head>\n<title>html</title>\n</head>\n<body>\n<p>You chose \"Dark\" in the multiple choice step. Enjoy your dark chocolate!</p>\n<p><img src=\"dark_chocolate.jpg\" alt=\"\" width=\"262\" height=\"203\" /></p>\n</body>\n</html>"
+                }
+            ]
+        },
+        {
+            "id": "node32",
+            "type": "node",
+            "showSaveButton": false,
+            "showSubmitButton": false,
+            "constraints": [
+                {
+                    "id": "constraint2",
+                    "action": "makeThisNodeNotVisible",
+                    "targetId": "node32",
+                    "removalCriteria": [
+                        {
+                            "functionName": "branchPathTaken",
+                            "fromNodeId": "node30",
+                            "toNodeId": "node32"
+                        }
+                    ]
+                },
+                {
+                    "id": "constraint3",
+                    "action": "makeThisNodeNotVisitable",
+                    "targetId": "node32",
+                    "removalCriteria": [
+                        {
+                            "functionName": "branchPathTaken",
+                            "fromNodeId": "node30",
+                            "toNodeId": "node32"
+                        }
+                    ]
+                }
+            ],
+            "transitionLogic": {
+                "transitions": [],
+                "howToChooseAmongAvailablePaths": null,
+                "whenToChoosePath": null,
+                "canChangePath": null,
+                "maxPathsVisitable": null
+            },
+            "title": "You chose milk chocolate",
+            "components": [
+                {
+                    "id": "6b4xu5mk8y",
+                    "type": "HTML",
+                    "html": "<html>\n<head>\n<title>html</title>\n</head>\n<body>\n<p>You chose \"Milk\" in the multiple choice step. Enjoy your milk chocolate!</p>\n<p><img src=\"milk_chocolate.jpg?w=368&amp;h=285\" alt=\"\" width=\"368\" height=\"285\" /></p>\n</body>\n</html>"
+                }
+            ]
+        },
+        {
+            "id": "node33",
+            "type": "node",
+            "showSaveButton": false,
+            "showSubmitButton": false,
+            "constraints": [
+                {
+                    "id": "constraint4",
+                    "action": "makeThisNodeNotVisible",
+                    "targetId": "node33",
+                    "removalCriteria": [
+                        {
+                            "functionName": "branchPathTaken",
+                            "fromNodeId": "node30",
+                            "toNodeId": "node33"
+                        }
+                    ]
+                },
+                {
+                    "id": "constraint5",
+                    "action": "makeThisNodeNotVisitable",
+                    "targetId": "node33",
+                    "removalCriteria": [
+                        {
+                            "functionName": "branchPathTaken",
+                            "fromNodeId": "node30",
+                            "toNodeId": "node33"
+                        }
+                    ]
+                }
+            ],
+            "transitionLogic": {
+                "transitions": [],
+                "howToChooseAmongAvailablePaths": null,
+                "whenToChoosePath": null,
+                "canChangePath": null,
+                "maxPathsVisitable": null
+            },
+            "title": "You chose white chocolate",
+            "components": [
+                {
+                    "id": "ycqqha8xn2",
+                    "type": "HTML",
+                    "html": "<html>\n<head>\n<title>html</title>\n</head>\n<body>\n<p>You chose \"White\" in the multiple choice step. Enjoy your white chocolate!</p>\n<p><img src=\"white_chocolate.jpg?w=265&amp;h=205\" alt=\"\" width=\"265\" height=\"205\" /></p>\n</body>\n</html>"
+                }
+            ]
+        }
+    ],
+    "constraints": [],
+    "startGroupId": "group0",
+    "startNodeId": "node1",
+    "navigationMode": "guided",
+    "navigationApplications": [
+        "wiseMap",
+        "wiseList"
+    ],
+    "layout": {
+        "template": "starmap|leftNav|rightNav",
+        "studentIsOnGroupNode": "layout3",
+        "studentIsOnApplicationNode": "layout4"
+    },
+    "metadata": {
+        "title": "Demo Project"
+    }
+}

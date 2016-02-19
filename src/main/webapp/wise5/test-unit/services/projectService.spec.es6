@@ -16,9 +16,11 @@ describe('ProjectService Unit Test', function () {
 
     describe('ProjectService', function () {
 
-        // Load sample project
-        var projectJSON = window.mocks['test-unit/curriculum/SelfPropelledVehiclesChallenge/project'];
-        var projectJSONString = JSON.stringify(projectJSON);
+        // Load sample projects
+        var demoProjectJSON = window.mocks['test-unit/curriculum/DemoProject/project'];
+        var demoProjectJSONString = JSON.stringify(demoProjectJSON);
+        var scootersProjectJSON = window.mocks['test-unit/curriculum/SelfPropelledVehiclesChallenge/project'];
+        var scootersProjectJSONString = JSON.stringify(scootersProjectJSON);
         var invalidProjectJSONString = "{'a':1";
 
         var projectIdDefault = 1;
@@ -44,7 +46,6 @@ describe('ProjectService Unit Test', function () {
         };
 
         beforeEach(function() {
-
         });
 
         it('should replace asset paths in non-html component content', function () {
@@ -67,16 +68,16 @@ describe('ProjectService Unit Test', function () {
 
         it('should retrieve project when Config.projectURL is valid', function() {
             createNormalSpy();
-            spyOn(ProjectService, "setProject").and.callThrough();   // actually call through the function
+            spyOn(ProjectService, "setProject").and.callThrough(); // actually call through the function
             spyOn(ProjectService, "parseProject");
-            $httpBackend.when('GET', projectURL).respond(projectJSON);
+            $httpBackend.when('GET', projectURL).respond(scootersProjectJSON);
             $httpBackend.expectGET(projectURL);
             let projectPromise = ProjectService.retrieveProject();
             $httpBackend.flush();
             expect(ConfigService.getConfigParam).toHaveBeenCalledWith("projectURL");
-            expect(ProjectService.setProject).toHaveBeenCalledWith(projectJSON);
+            expect(ProjectService.setProject).toHaveBeenCalledWith(scootersProjectJSON);
             expect(ProjectService.parseProject).toHaveBeenCalled();
-            expect(ProjectService.project).toEqual(projectJSON);
+            expect(ProjectService.project).toEqual(scootersProjectJSON);
         });
 
         it('should not retrieve project when Config.projectURL is undefined', function() {
@@ -89,16 +90,16 @@ describe('ProjectService Unit Test', function () {
         // MARK: Register Project
         it('should register new project', function() {
             createNormalSpy();
-            var newProjectIdExpected = projectIdDefault;   // Id of new project created on the server
+            var newProjectIdExpected = projectIdDefault; // Id of new project created on the server
             $httpBackend.when('POST', registerNewProjectURL).respond(newProjectIdExpected);
-            var newProjectIdActualPromise = ProjectService.registerNewProject(projectJSONString, commitMessageDefault);
+            var newProjectIdActualPromise = ProjectService.registerNewProject(scootersProjectJSONString, commitMessageDefault);
             $httpBackend.flush();
             $httpBackend.expectPOST(registerNewProjectURL);
         });
 
         it('should not register new project when Config.registerNewProjectURL is undefined', function() {
             spyOn(ConfigService, "getConfigParam").and.returnValue(null);
-            var newProjectIdActualPromise = ProjectService.registerNewProject(projectJSONString, commitMessageDefault);
+            var newProjectIdActualPromise = ProjectService.registerNewProject(scootersProjectJSONString, commitMessageDefault);
             expect(ConfigService.getConfigParam).toHaveBeenCalledWith("registerNewProjectURL");
             expect($httpBackend.flush).toThrowError('No pending request to flush !'); // HTTP request should not be made
             expect(newProjectIdActualPromise).toBeNull();
@@ -119,7 +120,7 @@ describe('ProjectService Unit Test', function () {
         it('should save project', function() {
             spyOn(ConfigService, "getProjectId").and.returnValue(projectIdDefault);
             spyOn(ConfigService, "getConfigParam").and.returnValue(saveProjectURL);
-            ProjectService.setProject(projectJSON);  // Set the sample project and parse it
+            ProjectService.setProject(scootersProjectJSON);  // Set the sample project and parse it
             $httpBackend.when('POST', saveProjectURL).respond({data: defaultCommitHistory});
             var newProjectIdActualPromise = ProjectService.saveProject(commitMessageDefault);
             expect(ConfigService.getConfigParam).toHaveBeenCalledWith("saveProjectURL");
@@ -131,7 +132,7 @@ describe('ProjectService Unit Test', function () {
         it('should not save project when Config.saveProjectURL is undefined', function() {
             spyOn(ConfigService, "getProjectId").and.returnValue(projectIdDefault);
             spyOn(ConfigService, "getConfigParam").and.returnValue(null);
-            ProjectService.setProject(projectJSON);  // Set the sample project and parse it
+            ProjectService.setProject(scootersProjectJSON);  // Set the sample project and parse it
             var newProjectIdActualPromise = ProjectService.saveProject(commitMessageDefault);
             expect(ConfigService.getConfigParam).toHaveBeenCalledWith("saveProjectURL");
             expect(ConfigService.getProjectId).toHaveBeenCalled();
@@ -141,7 +142,7 @@ describe('ProjectService Unit Test', function () {
         it('should not save project when Config.projectId is undefined', function() {
             spyOn(ConfigService, "getProjectId").and.returnValue(null);
             spyOn(ConfigService, "getConfigParam").and.returnValue(saveProjectURL);
-            ProjectService.setProject(projectJSON);  // Set the sample project and parse it
+            ProjectService.setProject(scootersProjectJSON);  // Set the sample project and parse it
             var newProjectIdActualPromise = ProjectService.saveProject(commitMessageDefault);
             expect(ConfigService.getConfigParam).toHaveBeenCalledWith("saveProjectURL");
             expect(ConfigService.getProjectId).toHaveBeenCalled();
@@ -149,16 +150,10 @@ describe('ProjectService Unit Test', function () {
         });
 
 
-
         // TODO: add test for ProjectService.getThemePath()
-        // TODO: add test for ProjectService.getNodeTypeByNode()
-        // TODO: add test for ProjectService.getNodeTitleByNodeId()
-        // TODO: add test for ProjectService.getNodePositionAndTitleByNodeId()
 
-        // TODO: add test for ProjectService.getNodeIconByNodeId()
         // TODO: add test for ProjectService.getStudentIsOnGroupNodeClass()
         // TODO: add test for ProjectService.getStudentIsOnApplicationNodeClass()
-        // TODO: add test for ProjectService.getStartGroupId()
         // TODO: add test for ProjectService.getFlattenedProjectAsNodeIds()
         // TODO: add test for ProjectService.getAllPaths()
         // TODO: add test for ProjectService.consolidatePaths()
@@ -173,7 +168,6 @@ describe('ProjectService Unit Test', function () {
         // TODO: add test for ProjectService.getNonEmptyPathIndex()
         // TODO: add test for ProjectService.getBranches()
         // TODO: add test for ProjectService.findBranches()
-
 
         // TODO: add test for ProjectService.createBranchMetaObject()
         // TODO: add test for ProjectService.findNextCommonNodeId()
@@ -190,7 +184,6 @@ describe('ProjectService Unit Test', function () {
         // TODO: add test for ProjectService.getComponentsByNodeId()
         // TODO: add test for ProjectService.getNodeContentByNodeId()
 
-
         // TODO: add test for ProjectService.replaceComponent()
         // TODO: add test for ProjectService.createGroup()
         // TODO: add test for ProjectService.createNode()
@@ -203,10 +196,45 @@ describe('ProjectService Unit Test', function () {
         // TODO: add test for ProjectService.insertNodeInsideInTransitions()
 
         // MARK: Tests for Node and Group Id functions
+        // test ProjectService.getNodeById()
+        it('should return the node by nodeId', function() {
+            ProjectService.setProject(scootersProjectJSON);  // Set the sample project and parse it
+            let node1 = ProjectService.getNodeById("node1");
+            expect(node1.type).toEqual("node");
+            expect(node1.title).toEqual("Introduction to Newton Scooters");
+            expect(node1.components.length).toEqual(1);
+
+            // Call getNodeId with null and expect a null return value
+            let nodeBadArgs = ProjectService.getNodeById();
+            expect(nodeBadArgs).toBeNull();
+
+            // Test node that doesn't exist in project and make sure the function returns null
+            let nodeNE = ProjectService.getNodeById("node999");
+            expect(nodeNE).toBeNull();
+        });
+
+        // test ProjectService.getNodeTitleByNodeId()
+        it('should return the node title by nodeId', function() {
+            ProjectService.setProject(scootersProjectJSON);  // Set the sample project and parse it
+            let node1Title = ProjectService.getNodeTitleByNodeId("node1");
+            expect(node1Title).toEqual("Introduction to Newton Scooters");
+
+            // Call getNodeTitleByNodeId with null and expect a null return value
+            let nodeTitleBadArgs = ProjectService.getNodeTitleByNodeId();
+            expect(nodeTitleBadArgs).toBeNull();
+
+            // Test node that doesn't exist in project and make sure the function returns null
+            let nodeTitleNE = ProjectService.getNodeTitleByNodeId("node999");
+            expect(nodeTitleNE).toBeNull();
+        });
+
+        // TODO: add test for ProjectService.getNodePositionAndTitleByNodeId()
+        // TODO: add test for ProjectService.getNodeIconByNodeId()
+
         // test ProjectService.getNextAvailableNodeId()
         it('should return the next available node id', function() {
             createNormalSpy();
-            ProjectService.setProject(projectJSON);  // Set the sample project and parse it
+            ProjectService.setProject(scootersProjectJSON);  // Set the sample project and parse it
             let nextNodeIdExpected = "node8";      // This should be the next available node id.
             let nextNodeIdActual = ProjectService.getNextAvailableNodeId();
             expect(nextNodeIdActual).toEqual(nextNodeIdExpected);
@@ -215,7 +243,7 @@ describe('ProjectService Unit Test', function () {
         // test ProjectService.getNextAvailableGroupId()
         it('should return the next available group id', function() {
             createNormalSpy();
-            ProjectService.setProject(projectJSON);  // Set the sample project and parse it
+            ProjectService.setProject(scootersProjectJSON);  // Set the sample project and parse it
             let nextGroupIdExpected = "group7";      // This should be the next available group id.
             let nextGroupIdActual = ProjectService.getNextAvailableGroupId();
             expect(nextGroupIdActual).toEqual(nextGroupIdExpected);
@@ -224,7 +252,7 @@ describe('ProjectService Unit Test', function () {
         // test ProjectService.getGroupIds()
         it('should return the group ids in the project', function() {
             createNormalSpy();
-            ProjectService.setProject(projectJSON);  // Set the sample project and parse it
+            ProjectService.setProject(scootersProjectJSON);  // Set the sample project and parse it
             let groupIdsExpected = ["group0","group1","group2","group3","group4","group5","group6"];      // This should be the group ids in the project
             let groupIdsActual = ProjectService.getGroupIds();
             expect(groupIdsActual).toEqual(groupIdsExpected);
@@ -233,7 +261,7 @@ describe('ProjectService Unit Test', function () {
         // test ProjectService.getNodeIds()
         it('should return the node ids in the project', function() {
             createNormalSpy();
-            ProjectService.setProject(projectJSON);  // Set the sample project and parse it
+            ProjectService.setProject(scootersProjectJSON);  // Set the sample project and parse it
             let nodeIdsExpected = ['node1', 'node2', 'node3', 'node4', 'node5', 'node6', 'node7',
                 'node9', 'node12', 'node13', 'node14', 'node18', 'node19', 'node21', 'node22',
                 'node23', 'node24', 'node25', 'node26', 'node27', 'node28', 'node29', 'node30',
@@ -254,7 +282,20 @@ describe('ProjectService Unit Test', function () {
         // TODO: add test for ProjectService.moveComponentUp()
         // TODO: add test for ProjectService.moveComponentDown()
         // TODO: add test for ProjectService.deleteComponent()
-        // TODO: add test for ProjectService.getMaxScore()
+
+        // test ProjectService.getMaxScore()
+        it('should return the max score of the project', function() {
+            // Demo Project doesn't have any max scores, so we expect getMaxScore to return null
+            ProjectService.setProject(demoProjectJSON);  // Set the sample demo project and parse it
+            let demoProjectMaxScoreActual = ProjectService.getMaxScore();
+            expect(demoProjectMaxScoreActual).toBeNull(); // When the project doesn't have any max scores defined, max score should be null
+
+            // Sample Scooter Project's max score is 18.
+            ProjectService.setProject(scootersProjectJSON);  // Set the sample scooter project and parse it
+            let scootersProjectMaxScoreExpected = 18;
+            let scootersProjectMaxScoreActual = ProjectService.getMaxScore();
+            expect(scootersProjectMaxScoreActual).toEqual(scootersProjectMaxScoreExpected);
+        });
 
     });
 });

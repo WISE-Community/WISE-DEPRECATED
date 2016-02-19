@@ -64,7 +64,7 @@ class OpenResponseController {
 
 
         //var scope = this;
-        let themePath = "/wise/" + this.ProjectService.getThemePath();
+        let themePath = this.ProjectService.getThemePath();
 
         // TODO: make toolbar items and plugins customizable by authors
         // Rich text editor options

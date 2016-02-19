@@ -37,7 +37,11 @@ module.exports = function(config) {
             config: 'config.js',
             loadFiles: [
                 'test-unit/curriculum/SelfPropelledVehiclesChallenge/project.json',
-                'test-unit/**/*.spec.js'
+                'test-unit/curriculum/DemoProject/project.json',
+                {
+                    pattern: 'test-unit/**/*.spec.js',
+                    watched: false
+                }
             ],
             serveFiles: [
                 '**/**'
@@ -53,7 +57,10 @@ module.exports = function(config) {
         },
 
         // list of files to exclude
-        exclude: [],
+        exclude: [
+            '**/*.es6',
+            '**/*.js.map'
+        ],
 
         // level of logging
         // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG

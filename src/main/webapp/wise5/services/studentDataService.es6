@@ -104,7 +104,7 @@ class StudentDataService {
     };
 
     loadStudentNodes() {
-        var nodes = this.ProjectService.getApplicationNodes();
+        var nodes = this.ProjectService.applicationNodes;
 
         if (nodes != null) {
             for (var n = 0; n < nodes.length; n++) {
