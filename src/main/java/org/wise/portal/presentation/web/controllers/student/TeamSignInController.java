@@ -23,6 +23,7 @@
  */
 package org.wise.portal.presentation.web.controllers.student;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -62,6 +63,7 @@ import org.wise.portal.presentation.validators.student.TeamSignInFormValidator;
 import org.wise.portal.presentation.web.TeamSignInForm;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.attendance.StudentAttendanceService;
+import org.wise.portal.service.group.GroupService;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.student.StudentService;
@@ -101,6 +103,9 @@ public class TeamSignInController {
 	private StudentAttendanceService studentAttendanceService;
 	
 	@Autowired
+	private GroupService groupService;
+	
+	@Autowired
 	private Properties wiseProperties;
 	
 	@Autowired
@@ -127,70 +132,165 @@ public class TeamSignInController {
 		JSONArray presentUserIds = new JSONArray();
 		JSONArray absentUserIds = new JSONArray();
 		
-		User user1 = userService.retrieveUserByUsername(teamSignInForm.getUsername1());
-		User user2 = userService.retrieveUserByUsername(teamSignInForm.getUsername2());
-		User user3 = userService.retrieveUserByUsername(teamSignInForm.getUsername3());
-		User user4 = userService.retrieveUserByUsername(teamSignInForm.getUsername4());
-		User user5 = userService.retrieveUserByUsername(teamSignInForm.getUsername5());
-		User user6 = userService.retrieveUserByUsername(teamSignInForm.getUsername6());
-		User user7 = userService.retrieveUserByUsername(teamSignInForm.getUsername7());
-		User user8 = userService.retrieveUserByUsername(teamSignInForm.getUsername8());
-		User user9 = userService.retrieveUserByUsername(teamSignInForm.getUsername9());
-		User user10 = userService.retrieveUserByUsername(teamSignInForm.getUsername10());
+		List<User> users = new ArrayList<User>(10);
 		
+		// populate the list of users
+		for (int u = 0; u < 10; u++) {
+		    int userIndex = u + 1;
+		    
+		    // get the username
+		    String username = teamSignInForm.getUsernameByString("username" + userIndex);
+		    
+		    // get the user object
+		    User tempUser = userService.retrieveUserByUsername(username);
+		    
+		    // add the user to the list
+		    users.add(tempUser);
+		}
+		
+		List<Boolean> absent = new ArrayList<Boolean>(10);
+		
+		// populate the list of absent values
+		for (int a = 0; a < 10; a++) {
+		    int absentIndex = a + 1;
+		    
+		    // get whether the user is absent
+		    Boolean isAbsent = teamSignInForm.getIsAbsentByString("absent" + absentIndex);
+		    
+		    // add the absent value to the list
+		    absent.add(isAbsent);
+		}
+		
+		// get the run
 		Run run = runService.retrieveById(teamSignInForm.getRunId());
 		
-		// get projectcode to use to add user2 ... userX to run
-		StudentRunInfo studentRunInfoUser1 = studentService.getStudentRunInfo(user1, run);
-		Projectcode projectcode = new Projectcode(run.getRuncode(), studentRunInfoUser1.getGroup().getName());
+		// get the signed in user
+		User signedInUser = users.get(0);
+		
+		// get the period the signed in user is in
+		Group period = run.getPeriodOfStudent(signedInUser);
+		
+		// get the project run code
+		StudentRunInfo studentRunInfo = studentService.getStudentRunInfo(signedInUser, run);
+		Projectcode projectcode = new Projectcode(run.getRuncode(), studentRunInfo.getGroup().getName());
 
 		// stores the members that are logged in
 		Set<User> membersLoggedIn = new HashSet<User>();
-		String workgroupname = "Workgroup for " + user1.getUserDetails().getUsername();
+		String workgroupname = "Workgroup for " + signedInUser.getUserDetails().getUsername();
 		
 		// add the user that is already logged in
-		membersLoggedIn.add(user1);
+		membersLoggedIn.add(signedInUser);
 		
-		// add user1 to the users that are present
-		presentUserIds.put(user1.getId());
+		// add the signed in user to the users that are present
+		presentUserIds.put(signedInUser.getId());
 		
 		/*
-		 * get the workgroups for this run for user1, they should
-		 * usually only be in 1 workgroup
+		 * get the workgroups for the signed in user for this run there should
+		 * only be one workgroup
 		 */
-		List<Workgroup> workgroups = workgroupService.getWorkgroupListByOfferingAndUser(run, user1);
+		List<Workgroup> workgroups = workgroupService.getWorkgroupListByOfferingAndUser(run, signedInUser);
 
+		Workgroup workgroup = null;
+		
 		// get the members in the workgroup
 		Set<User> membersInWorkgroup = new HashSet<User>();
 		
 		if (workgroups != null && workgroups.size() > 0) {
+		    
+		    // get the workgroup the signed in user is in
+		    workgroup = workgroups.get(0);
+		    
 			// get the members in the workgroup
 			membersInWorkgroup = workgroups.get(0).getMembers();
 		}
 		
-		User[] otherUsers = new User[]{user2, user3, user4, user5, user6, user7, user8, user9, user10};
-		for (User user : otherUsers) {
-			if (user != null) {
-				try {
-					userService.updateUser(user);
-					studentService.addStudentToRun(user, projectcode);
-				} catch (StudentUserAlreadyAssociatedWithRunException e) {
-					// do nothing. it's okay if the student is already associated with this run.
-				}
-				
-				// add user3 to the members logged in
-				membersLoggedIn.add(user);
-				
-				workgroupname += user.getUserDetails().getUsername();
-				workgroups.addAll(workgroupService.getWorkgroupListByOfferingAndUser(run, user));
-				
-				// add user3 to the users that are present
-				presentUserIds.put(user.getId());
+		// loop through the users that are not signed in yet (username2 through username10)
+		for (int uIndex = 1; uIndex < users.size(); uIndex++) {
+		    User user = users.get(uIndex);
+		    Boolean isAbsent = absent.get(uIndex);
+		    
+			if (user != null && !isAbsent) {
+			    
+			    // get the workgroups this user is in for this run
+			    List<Workgroup> workgroupListByOfferingAndUser = workgroupService.getWorkgroupListByOfferingAndUser(run, user);
+			    
+			    boolean userIsInThisWorkgroup = false;
+			    boolean userIsInAnotherWorkgroup = false;
+			    
+			    // loop through all the workgroups the user is in for this run
+			    for (Workgroup tempWorkgroup : workgroupListByOfferingAndUser) {
+			        
+			        if (workgroup.equals(tempWorkgroup)) {
+			            // the user is in this workgroup
+			            userIsInThisWorkgroup = true;
+			        } else if (!workgroup.equals(tempWorkgroup)) {
+                        // the user is in another workgroup
+                        userIsInAnotherWorkgroup = true;
+                    }
+			    }
+			    
+			    if (userIsInThisWorkgroup) {
+			        // the user is already in this workgroup
+			    } else if (userIsInAnotherWorkgroup) {
+			        // the user is in another workgroup for this run and not in this workgroup so we will not add them
+			    } else {
+			        // the user is not in a workgroup for this run so we will add them to the run
+			        
+			        /*
+                     * get the period the student is in. this will only occur if the
+                     * student has registered to the run but hasn't created a workgroup
+                     * yet
+                     */
+                    Group periodOfStudent = run.getPeriodOfStudent(user);
+                    
+                    if (periodOfStudent != null) {
+                        /*
+                         * the student is already in a period for the run.
+                         * this will only occur if the student has registered 
+                         * to the run but hasn't created or joined a workgroup yet
+                         */
+                        
+                        // get the period name the student is in
+                        String userPeriodName = periodOfStudent.getName();
+                        
+                        // get the period name the signed in user is in
+                        String user1PeriodName = projectcode.getRunPeriod();
+
+                        if (!user1PeriodName.equals(userPeriodName)) {
+                            /*
+                             * the periods are different so we will remove the student
+                             * from the period they are in so that we can add them to
+                             * the same period as the signed in user
+                             */
+                            groupService.removeMember(periodOfStudent, user);
+                        }
+                    }
+                    
+                    // add the user to the run
+                    userService.updateUser(user);
+                    
+                    if (!run.isStudentAssociatedToThisRun(user)) {
+                        // the user is not associated with the run so we will add them to the run
+                        studentService.addStudentToRun(user, projectcode);
+                    }
+			    }
+			    
+			    if (!userIsInAnotherWorkgroup) {
+			        // the user is not in another workgroup so we will add them
+			        
+                    // add user to the members logged in
+                    membersLoggedIn.add(user);
+			        
+			        // update the workgroup name
+			        workgroupname += user.getUserDetails().getUsername();
+			        workgroups.addAll(workgroupService.getWorkgroupListByOfferingAndUser(run, user));
+
+			        // add the user to the users that are present
+			        presentUserIds.put(user.getId());
+			    }
 			}
 		}
-		
-		Workgroup workgroup = null;
-		Group period = run.getPeriodOfStudent(user1);
+
 		if (workgroups.size() == 0) {
 			workgroup = workgroupService.createWISEWorkgroup(workgroupname, membersLoggedIn, run, period);
 		} else if (workgroups.size() == 1) {
@@ -351,30 +451,39 @@ public class TeamSignInController {
 						if (currentNumMembers == 2) {
 							// set the username2
 							form.setUsername2(username);
+							form.setExistingMember2(true);
 						} else if (currentNumMembers == 3) {
 							// set the username3
 							form.setUsername3(username);
+							form.setExistingMember3(true);
 						} else if (currentNumMembers == 4) {
 							// set the username4
 							form.setUsername4(username);
+							form.setExistingMember4(true);
 						} else if (currentNumMembers == 5) {
 							// set the username5
 							form.setUsername5(username);
+							form.setExistingMember5(true);
 						} else if (currentNumMembers == 6) {
 							// set the username6
 							form.setUsername6(username);
+							form.setExistingMember6(true);
 						} else if (currentNumMembers == 7) {
 							// set the username7
 							form.setUsername7(username);
+							form.setExistingMember7(true);
 						} else if (currentNumMembers == 8) {
 							// set the username8
 							form.setUsername8(username);
+							form.setExistingMember8(true);
 						} else if (currentNumMembers == 9) {
 							// set the username9
 							form.setUsername9(username);
+							form.setExistingMember9(true);
 						} else if (currentNumMembers == 10) {
 							// set the username10
 							form.setUsername10(username);
+							form.setExistingMember10(true);
 						}
 						currentNumMembers++;
 					}

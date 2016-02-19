@@ -23,6 +23,10 @@
  */
 package org.wise.portal.presentation.validators.student;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.dao.SystemWideSaltSource;
@@ -32,11 +36,16 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
+import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
+import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
+import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.TeamSignInForm;
+import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.user.UserService;
+import org.wise.portal.service.workgroup.WorkgroupService;
 
 /**
  * Validator for the TeamSignIn form
@@ -46,8 +55,14 @@ import org.wise.portal.service.user.UserService;
 @Component
 public class TeamSignInFormValidator implements Validator {
 
+    @Autowired
+    private RunService runService;
+    
 	@Autowired
 	private UserService userService;
+	
+   @Autowired
+    private WorkgroupService workgroupService;
 	
 	@Autowired
 	private SystemWideSaltSource systemSaltSource;
@@ -74,245 +89,126 @@ public class TeamSignInFormValidator implements Validator {
 			return;
 		}
 
-		User user1 = userService.retrieveUserByUsername(teamSignInForm.getUsername1());
-		if (user1 == null) {
+		// get the signed in user
+		User signedInUser = userService.retrieveUserByUsername(teamSignInForm.getUsername1());
+		if (signedInUser == null) {
 			errors.rejectValue("username1", "error.teamsignin-user-does-not-exist");
 			return;
 		}
 		
-		// handle user2 and user3 separately; be able to handle when user3 is filled in
-		// but not user2
-		if (!StringUtils.isEmpty(teamSignInForm.getUsername2())) {
-			if (StringUtils.isEmpty(teamSignInForm.getPassword2())) {
-				//the password field is empty
-				errors.rejectValue("password2", "error.teamsignin-password-not-specified");
-			} else {
-				User user2 = userService.retrieveUserByUsername(teamSignInForm.getUsername2());
-				if (user2 == null) {
-					//the username does not exist
-					errors.rejectValue("username2", "error.teamsignin-user-does-not-exist");
-				} else {
-					//get the user and the hashed password
-					MutableUserDetails userDetails2 = user2.getUserDetails();
-					String hashedPassword2 = encoder.encodePassword(teamSignInForm.getPassword2(), systemSaltSource.getSystemWideSalt());
-
-					if (userDetails2 instanceof TeacherUserDetails) {
-						//username is for a teacher and that is not allowed
-						errors.rejectValue("username2", "error.teamsignin-teacher-username-specified");
-					} else if (!user2.getUserDetails().getPassword().equals(hashedPassword2)) {
-						//password is incorrect
-						errors.rejectValue("password2", "error.teamsignin-incorrect-password");
-					}
-				}
-			}
-		}
+		Run run = null;
 		
-		//handle user3
-		if (!StringUtils.isEmpty(teamSignInForm.getUsername3())) {
-			if (StringUtils.isEmpty(teamSignInForm.getPassword3())) {
-				//the password field is empty
-				errors.rejectValue("password3", "error.teamsignin-password-not-specified");
-			} else {
-				User user3 = userService.retrieveUserByUsername(teamSignInForm.getUsername3());
-				if (user3 == null) {
-					//the username does not exist
-					errors.rejectValue("username3", "error.teamsignin-user-does-not-exist");
-				} else {
-					//get the user and the hashed password
-					MutableUserDetails userDetails3 = user3.getUserDetails();
-					String hashedPassword3 = encoder.encodePassword(teamSignInForm.getPassword3(), systemSaltSource.getSystemWideSalt());
-
-					if (userDetails3 instanceof TeacherUserDetails) {
-						//username is for a teacher and that is not allowed
-						errors.rejectValue("username3", "error.teamsignin-teacher-username-specified");
-					} else if (!user3.getUserDetails().getPassword().equals(hashedPassword3)) {
-						//password is incorrect
-						errors.rejectValue("password3", "error.teamsignin-incorrect-password");
-					}					
-				}
-			}
-		}
+		try {
+		    // get the run
+            run = runService.retrieveById(teamSignInForm.getRunId());
+        } catch (ObjectNotFoundException e) {
+            e.printStackTrace();
+        }
 		
-		//handle user4
-		if (!StringUtils.isEmpty(teamSignInForm.getUsername4())) {
-			if (StringUtils.isEmpty(teamSignInForm.getPassword4())) {
-				//the password field is empty
-				errors.rejectValue("password4", "error.teamsignin-password-not-specified");
-			} else {
-				User user4 = userService.retrieveUserByUsername(teamSignInForm.getUsername4());
-				if (user4 == null) {
-					//the username does not exist
-					errors.rejectValue("username4", "error.teamsignin-user-does-not-exist");
-				} else {
-					//get the user and the hashed password
-					MutableUserDetails userDetails4 = user4.getUserDetails();
-					String hashedPassword4 = encoder.encodePassword(teamSignInForm.getPassword4(), systemSaltSource.getSystemWideSalt());
+		// get the workgroups the signed in user is in for this run
+		List<Workgroup> workgroups = workgroupService.getWorkgroupListByOfferingAndUser(run, signedInUser);
 
-					if (userDetails4 instanceof TeacherUserDetails) {
-						//username is for a teacher and that is not allowed
-						errors.rejectValue("username4", "error.teamsignin-teacher-username-specified");
-					} else if (!user4.getUserDetails().getPassword().equals(hashedPassword4)) {
-						//password is incorrect
-						errors.rejectValue("password4", "error.teamsignin-incorrect-password");
-					}					
-				}
-			}
-		}
-		
-		//handle user5
-		if (!StringUtils.isEmpty(teamSignInForm.getUsername5())) {
-			if (StringUtils.isEmpty(teamSignInForm.getPassword5())) {
-				//the password field is empty
-				errors.rejectValue("password5", "error.teamsignin-password-not-specified");
-			} else {
-				User user5 = userService.retrieveUserByUsername(teamSignInForm.getUsername5());
-				if (user5 == null) {
-					//the username does not exist
-					errors.rejectValue("username5", "error.teamsignin-user-does-not-exist");
-				} else {
-					//get the user and the hashed password
-					MutableUserDetails userDetails5 = user5.getUserDetails();
-					String hashedPassword5 = encoder.encodePassword(teamSignInForm.getPassword5(), systemSaltSource.getSystemWideSalt());
+		Workgroup workgroup = null;
 
-					if (userDetails5 instanceof TeacherUserDetails) {
-						//username is for a teacher and that is not allowed
-						errors.rejectValue("username5", "error.teamsignin-teacher-username-specified");
-					} else if (!user5.getUserDetails().getPassword().equals(hashedPassword5)) {
-						//password is incorrect
-						errors.rejectValue("password5", "error.teamsignin-incorrect-password");
-					}					
-				}
-			}
+		// get the members in the workgroup
+		Set<User> membersInWorkgroup = new HashSet<User>();
+
+		if (workgroups != null && workgroups.size() > 0) {
+
+		    // get the workgroup the signed in user is in
+		    workgroup = workgroups.get(0);
+
+		    // get the members in the workgroup
+		    membersInWorkgroup = workgroups.get(0).getMembers();
 		}
 
-		//handle user6
-		if (!StringUtils.isEmpty(teamSignInForm.getUsername6())) {
-			if (StringUtils.isEmpty(teamSignInForm.getPassword6())) {
-				//the password field is empty
-				errors.rejectValue("password6", "error.teamsignin-password-not-specified");
-			} else {
-				User user6 = userService.retrieveUserByUsername(teamSignInForm.getUsername6());
-				if (user6 == null) {
-					//the username does not exist
-					errors.rejectValue("username6", "error.teamsignin-user-does-not-exist");
-				} else {
-					//get the user and the hashed password
-					MutableUserDetails userDetails6 = user6.getUserDetails();
-					String hashedPassword6 = encoder.encodePassword(teamSignInForm.getPassword6(), systemSaltSource.getSystemWideSalt());
+		// loop through all the users that are not signed in (2 through 10)
+		for (int x = 1; x < 10; x++) {
+		    int userIndex = x + 1;
+		    String usernameField = "username" + userIndex;
+		    String passwordField = "password" + userIndex;
+		    String absentField = "absent" + userIndex;
 
-					if (userDetails6 instanceof TeacherUserDetails) {
-						//username is for a teacher and that is not allowed
-						errors.rejectValue("username6", "error.teamsignin-teacher-username-specified");
-					} else if (!user6.getUserDetails().getPassword().equals(hashedPassword6)) {
-						//password is incorrect
-						errors.rejectValue("password6", "error.teamsignin-incorrect-password");
-					}					
-				}
-			}
-		}
-		
-		//handle user7
-		if (!StringUtils.isEmpty(teamSignInForm.getUsername7())) {
-			if (StringUtils.isEmpty(teamSignInForm.getPassword7())) {
-				//the password field is empty
-				errors.rejectValue("password7", "error.teamsignin-password-not-specified");
-			} else {
-				User user7 = userService.retrieveUserByUsername(teamSignInForm.getUsername7());
-				if (user7 == null) {
-					//the username does not exist
-					errors.rejectValue("username7", "error.teamsignin-user-does-not-exist");
-				} else {
-					//get the user and the hashed password
-					MutableUserDetails userDetails7 = user7.getUserDetails();
-					String hashedPassword7 = encoder.encodePassword(teamSignInForm.getPassword7(), systemSaltSource.getSystemWideSalt());
+		    // get the username, password, and whether the user is absent
+		    String username = teamSignInForm.getUsernameByString(usernameField);
+		    String password = teamSignInForm.getPasswordByString(passwordField);
+		    boolean isAbsent = teamSignInForm.getIsAbsentByString(absentField);
 
-					if (userDetails7 instanceof TeacherUserDetails) {
-						//username is for a teacher and that is not allowed
-						errors.rejectValue("username7", "error.teamsignin-teacher-username-specified");
-					} else if (!user7.getUserDetails().getPassword().equals(hashedPassword7)) {
-						//password is incorrect
-						errors.rejectValue("password7", "error.teamsignin-incorrect-password");
-					}					
-				}
-			}
-		}
-		
-		//handle user8
-		if (!StringUtils.isEmpty(teamSignInForm.getUsername8())) {
-			if (StringUtils.isEmpty(teamSignInForm.getPassword8())) {
-				//the password field is empty
-				errors.rejectValue("password8", "error.teamsignin-password-not-specified");
-			} else {
-				User user8 = userService.retrieveUserByUsername(teamSignInForm.getUsername8());
-				if (user8 == null) {
-					//the username does not exist
-					errors.rejectValue("username8", "error.teamsignin-user-does-not-exist");
-				} else {
-					//get the user and the hashed password
-					MutableUserDetails userDetails8 = user8.getUserDetails();
-					String hashedPassword8 = encoder.encodePassword(teamSignInForm.getPassword8(), systemSaltSource.getSystemWideSalt());
+		    if (!StringUtils.isEmpty(username)) {
+		        /*
+		         * the username field is not empty so we need to check if this user
+		         * is allowed to join the workgroup
+		         */
 
-					if (userDetails8 instanceof TeacherUserDetails) {
-						//username is for a teacher and that is not allowed
-						errors.rejectValue("username8", "error.teamsignin-teacher-username-specified");
-					} else if (!user8.getUserDetails().getPassword().equals(hashedPassword8)) {
-						//password is incorrect
-						errors.rejectValue("password8", "error.teamsignin-incorrect-password");
-					}					
-				}
-			}
-		}
+		        if (!isAbsent) {
+		            // the user is not marked as absent
+		            
+		            // get the user
+                    User user = userService.retrieveUserByUsername(username);
+                    
+                    if (user == null) {
+                        //the username does not exist
+                        errors.rejectValue(usernameField, "error.teamsignin-user-does-not-exist");
+                    } else {
 
-		//handle user9
-		if (!StringUtils.isEmpty(teamSignInForm.getUsername9())) {
-			if (StringUtils.isEmpty(teamSignInForm.getPassword9())) {
-				//the password field is empty
-				errors.rejectValue("password9", "error.teamsignin-password-not-specified");
-			} else {
-				User user9 = userService.retrieveUserByUsername(teamSignInForm.getUsername9());
-				if (user9 == null) {
-					//the username does not exist
-					errors.rejectValue("username9", "error.teamsignin-user-does-not-exist");
-				} else {
-					//get the user and the hashed password
-					MutableUserDetails userDetails9 = user9.getUserDetails();
-					String hashedPassword9 = encoder.encodePassword(teamSignInForm.getPassword9(), systemSaltSource.getSystemWideSalt());
+                        //get the user details
+                        MutableUserDetails userDetails = user.getUserDetails();
 
-					if (userDetails9 instanceof TeacherUserDetails) {
-						//username is for a teacher and that is not allowed
-						errors.rejectValue("username9", "error.teamsignin-teacher-username-specified");
-					} else if (!user9.getUserDetails().getPassword().equals(hashedPassword9)) {
-						//password is incorrect
-						errors.rejectValue("password9", "error.teamsignin-incorrect-password");
-					}					
-				}
-			}
-		}
-		
-		//handle user10
-		if (!StringUtils.isEmpty(teamSignInForm.getUsername10())) {
-			if (StringUtils.isEmpty(teamSignInForm.getPassword10())) {
-				//the password field is empty
-				errors.rejectValue("password10", "error.teamsignin-password-not-specified");
-			} else {
-				User user10 = userService.retrieveUserByUsername(teamSignInForm.getUsername10());
-				if (user10 == null) {
-					//the username does not exist
-					errors.rejectValue("username10", "error.teamsignin-user-does-not-exist");
-				} else {
-					//get the user and the hashed password
-					MutableUserDetails userDetails10 = user10.getUserDetails();
-					String hashedPassword10 = encoder.encodePassword(teamSignInForm.getPassword10(), systemSaltSource.getSystemWideSalt());
+                        if (userDetails instanceof TeacherUserDetails) {
+                            //username is for a teacher and that is not allowed
+                            errors.rejectValue(usernameField, "error.teamsignin-teacher-username-specified");
+                        } else {
+                            
+                            /*
+                             * flag to determine if we need to check the password. we do not need to
+                             * check the password if the user is not allowed to join the workgroup because
+                             * we will display an error message anyway.
+                             */
+                            boolean needToCheckPassword = true;
+                            
+                            if (workgroup == null) {
+                                // the workgroup has not been created
 
-					if (userDetails10 instanceof TeacherUserDetails) {
-						//username is for a teacher and that is not allowed
-						errors.rejectValue("username10", "error.teamsignin-teacher-username-specified");
-					} else if (!user10.getUserDetails().getPassword().equals(hashedPassword10)) {
-						//password is incorrect
-						errors.rejectValue("password10", "error.teamsignin-incorrect-password");
-					}					
-				}
-			}
+                                // check if the user is already in a workgroup
+                                if (workgroupService.isUserInAnyWorkgroupForRun(user, run)) {
+                                    // the user is already in another workgroup in the run so we will display an error message
+                                    errors.rejectValue(passwordField, "error.teamsignin-user-already-in-another-workgroup");
+                                    needToCheckPassword = false;
+                                }
+                            } else {
+                                // the workgroup has already been created
+
+                                // check if the user is in the workgroup and not in another workgroup
+
+                                if (workgroupService.isUserInWorkgroupForRun(user, run, workgroup)) {
+                                    // the user is in the workgroup
+                                } else if (workgroupService.isUserInAnotherWorkgroupForRun(user, run, workgroup)) {
+                                    // the user is already in another workgroup in the run so we will display an error message
+                                    errors.rejectValue(passwordField, "error.teamsignin-user-already-in-another-workgroup");
+                                    needToCheckPassword = false;
+                                } else {
+                                    // the user is not in a workgroup for the run
+                                }
+                            }
+                            
+                            if (needToCheckPassword) {
+                                // the user is allowed to join the workgroup so we will now check the password
+                                
+                                // get the hashed password
+                                String hashedPassword = encoder.encodePassword(password, systemSaltSource.getSystemWideSalt());
+                                
+                                if (StringUtils.isEmpty(password)) {
+                                    //the password field is empty
+                                    errors.rejectValue(passwordField, "error.teamsignin-password-not-specified");
+                                } else if (!user.getUserDetails().getPassword().equals(hashedPassword)) {
+                                    //password is incorrect
+                                    errors.rejectValue(passwordField, "error.teamsignin-incorrect-password");
+                                }
+                            }
+                        }
+                    }
+		        }
+		    }
 		}
 	}
 }

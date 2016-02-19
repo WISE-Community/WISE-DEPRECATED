@@ -32,19 +32,59 @@
 		document.getElementById("username" + teammateAbsentIndex).value = "";
     }
     
+    /**
+     * An absent checkbox was clicked
+     * @param teammateIndex the index of the teammate
+     */
+    function absentClicked(teammateIndex) {
+        
+    	if ($('#absent' + teammateIndex).prop('checked')) {
+    	    // the user is absent
+    	    $('#password' + teammateIndex).prop('disabled', true);
+    	    $('#password' + teammateIndex).css('background-color', 'lightgrey');
+    	    
+            // clear the associated password field
+            $('#password' + teammateIndex).val('');
+    	} else {
+    	    // the user is not absent
+    	    $('#password' + teammateIndex).prop('disabled', false);
+    	    $('#password' + teammateIndex).css('background-color', '');
+    	}
+    }
+    
+    /**
+     * Initialize the form by greying out password fields if a
+     * teammate is specified as absent
+     */
+    function initializeForm() {
+        
+        // loop through all the teammates
+        for (var i = 1; i < 10; i++) {
+            var teammateIndex = i + 1;
+            
+            if ($('#absent' + teammateIndex).prop('checked')) {
+                // the absent checkbox is checked so we will grey out and disable the password field
+                $('#password' + teammateIndex).prop('disabled', true);
+                $('#password' + teammateIndex).css('background-color', 'lightgrey');
+            }
+        }
+    }
+    
     $(document).ready(function() {
     	$("#runproject").click(function() {
-    	// show a loading dialog while the form is being submitted.
-    	if ($("#loadingDialog").length == 0) {
-    		var loadingDialog = $("<div>").attr("id","loadingDialog").attr("title", "<spring:message code='student.teamsignin.loading'/>").html("<spring:message code='student.teamsignin.loading'/>");
-    		$(document).append(loadingDialog);
-    		loadingDialog.dialog({
-                height: 140,
-                modal: true,
-                draggable: false
-            });
-    	}
-    })
+	    	// show a loading dialog while the form is being submitted.
+	    	if ($("#loadingDialog").length == 0) {
+	    		var loadingDialog = $("<div>").attr("id","loadingDialog").attr("title", "<spring:message code='student.teamsignin.loading'/>").html("<spring:message code='student.teamsignin.loading'/>");
+	    		$(document).append(loadingDialog);
+	    		loadingDialog.dialog({
+	                height: 140,
+	                modal: true,
+	                draggable: false
+	            });
+	    	}
+        })
+        
+        initializeForm();
     });
 </script>
 </head>
@@ -61,7 +101,7 @@
 				</tr>
 				<tr>
 		  			<td><label for="username1"><spring:message code="student.teamsignin.username"/> 1:</label></td>
-		     		<td><form:input disabled="true" path="username1" id="username1" /></td>
+		     		<td><form:input disabled="true" path="username1" id="username1" style="background-color:lightgrey"/></td>
 		     		<td id="teamSignMessages"><spring:message code="student.teamsignin.alreadySignedIn"/></td>
 				</tr>
 				<tr id="multiUserSeparatorRow">
@@ -69,16 +109,17 @@
 				</tr>
 		  		<c:forEach var="teammate_index" begin="2" end="${teamSignInForm.maxWorkgroupSize}" step="1">
 			  		<c:set var="thisUsername" value="username${teammate_index}" />
+			  		<c:set var="thisIsExistingMember" value="existingMember${teammate_index}" />
 			  		<tr>
-			    		<td><label for="username${teammate_index}"><spring:message code="student.teamsignin.username"/> ${teammate_index}:</label></td>		    		
-						<c:choose>
-							<c:when test="${empty teamSignInForm[thisUsername]}">
-				    	    	<td><form:input path="username${teammate_index}" id="username${teammate_index}"/></td>
+			    		<td><label for="username${teammate_index}"><spring:message code="student.teamsignin.username"/> ${teammate_index}:</label></td>
+                        <c:choose>
+							<c:when test="${teamSignInForm[thisIsExistingMember]}">
+				    	    	<td><form:input readonly="true" path="username${teammate_index}" id="username${teammate_index}" style="background-color:lightgrey"/></td>
 							</c:when>
 							<c:otherwise>
-				        		<td><form:input readonly="true" path="username${teammate_index}" id="username${teammate_index}"/></td>
+				        		<td><form:input path="username${teammate_index}" id="username${teammate_index}"/></td>
 							</c:otherwise>
-						</c:choose>
+                        </c:choose>
 		        		<td class="errorMsgStyle"><form:errors path="username${teammate_index}" /></td>
 		        	</tr>
 					<tr>
@@ -87,7 +128,14 @@
 		        		<td class="errorMsgStyle"><form:errors path="password${teammate_index}" /></td>
 			        </tr>
 			        <tr class="multiUserAbsentRow">
-			        	<td><a href="#" onclick="teammateAbsent(${teammate_index})"><spring:message code="student.teamsignin.absentToday"/></a></td>
+			            <c:choose>
+                            <c:when test="${teamSignInForm[thisIsExistingMember]}">
+                                <td>Absent: <form:checkbox id="absent${teammate_index}" path="absent${teammate_index}" onclick="absentClicked(${teammate_index})"/></td>
+                            </c:when>
+                            <c:otherwise>
+                                <td></td>
+                            </c:otherwise>
+                        </c:choose>
 		    	    	<td></td>
 		        		<td></td>
 			        </tr>

@@ -115,6 +115,13 @@ public interface GroupService {
     void removeMembers(Group group, Set<User> membersToRemove);
 
     /**
+     * Removes a member from a group
+     * @param group the group
+     * @param memberToRemove the member to remove
+     */
+    void removeMember(Group group, User memberToRemove);
+    
+    /**
      * Gets all the groups available.
      * 
      * @return <code>List</code> of <code>Group</code>

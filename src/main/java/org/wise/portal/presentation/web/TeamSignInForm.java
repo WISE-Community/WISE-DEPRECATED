@@ -42,7 +42,29 @@ public class TeamSignInForm implements Serializable {
 	private String username1="", username2="", username3="", username4="", username5="", username6="", username7="", username8="", username9="", username10="",
 						      password2, password3, password4, password5, password6, password7, password8, password9, password10;
 
-	/**
+    private boolean isExistingMember1 = false;
+    private boolean isExistingMember2 = false;
+    private boolean isExistingMember3 = false;
+    private boolean isExistingMember4 = false;
+    private boolean isExistingMember5 = false;
+    private boolean isExistingMember6 = false;
+    private boolean isExistingMember7 = false;
+    private boolean isExistingMember8 = false;
+    private boolean isExistingMember9 = false;
+    private boolean isExistingMember10 = false;
+    
+    private boolean isAbsent1 = false;
+    private boolean isAbsent2 = false;
+    private boolean isAbsent3 = false;
+    private boolean isAbsent4 = false;
+    private boolean isAbsent5 = false;
+    private boolean isAbsent6 = false;
+    private boolean isAbsent7 = false;
+    private boolean isAbsent8 = false;
+    private boolean isAbsent9 = false;
+    private boolean isAbsent10 = false;
+
+    /**
 	 * @return the runId
 	 */
 	public Long getRunId() {
@@ -334,6 +356,269 @@ public class TeamSignInForm implements Serializable {
 	 */
 	public void setUsername10(String username10) {
 		this.username10 = username10;
+	}
+	
+
+    public boolean isExistingMember1() {
+        return isExistingMember1;
+    }
+
+    public void setExistingMember1(boolean isExistingMember1) {
+        this.isExistingMember1 = isExistingMember1;
+    }
+
+    public boolean isExistingMember2() {
+        return isExistingMember2;
+    }
+
+    public void setExistingMember2(boolean isExistingMember2) {
+        this.isExistingMember2 = isExistingMember2;
+    }
+
+    public boolean isExistingMember3() {
+        return isExistingMember3;
+    }
+
+    public void setExistingMember3(boolean isExistingMember3) {
+        this.isExistingMember3 = isExistingMember3;
+    }
+
+    public boolean isExistingMember4() {
+        return isExistingMember4;
+    }
+
+    public void setExistingMember4(boolean isExistingMember4) {
+        this.isExistingMember4 = isExistingMember4;
+    }
+
+    public boolean isExistingMember5() {
+        return isExistingMember5;
+    }
+
+    public void setExistingMember5(boolean isExistingMember5) {
+        this.isExistingMember5 = isExistingMember5;
+    }
+
+    public boolean isExistingMember6() {
+        return isExistingMember6;
+    }
+
+    public void setExistingMember6(boolean isExistingMember6) {
+        this.isExistingMember6 = isExistingMember6;
+    }
+
+    public boolean isExistingMember7() {
+        return isExistingMember7;
+    }
+
+    public void setExistingMember7(boolean isExistingMember7) {
+        this.isExistingMember7 = isExistingMember7;
+    }
+
+    public boolean isExistingMember8() {
+        return isExistingMember8;
+    }
+
+    public void setExistingMember8(boolean isExistingMember8) {
+        this.isExistingMember8 = isExistingMember8;
+    }
+
+    public boolean isExistingMember9() {
+        return isExistingMember9;
+    }
+
+    public void setExistingMember9(boolean isExistingMember9) {
+        this.isExistingMember9 = isExistingMember9;
+    }
+
+    public boolean isExistingMember10() {
+        return isExistingMember10;
+    }
+
+    public void setExistingMember10(boolean isExistingMember10) {
+        this.isExistingMember10 = isExistingMember10;
+    }
+    
+
+    public boolean isAbsent1() {
+        return isAbsent1;
+    }
+
+    public void setAbsent1(boolean isAbsent1) {
+        this.isAbsent1 = isAbsent1;
+    }
+
+    public boolean isAbsent2() {
+        return isAbsent2;
+    }
+
+    public void setAbsent2(boolean isAbsent2) {
+        this.isAbsent2 = isAbsent2;
+    }
+
+    public boolean isAbsent3() {
+        return isAbsent3;
+    }
+
+    public void setAbsent3(boolean isAbsent3) {
+        this.isAbsent3 = isAbsent3;
+    }
+
+    public boolean isAbsent4() {
+        return isAbsent4;
+    }
+
+    public void setAbsent4(boolean isAbsent4) {
+        this.isAbsent4 = isAbsent4;
+    }
+
+    public boolean isAbsent5() {
+        return isAbsent5;
+    }
+
+    public void setAbsent5(boolean isAbsent5) {
+        this.isAbsent5 = isAbsent5;
+    }
+
+    public boolean isAbsent6() {
+        return isAbsent6;
+    }
+
+    public void setAbsent6(boolean isAbsent6) {
+        this.isAbsent6 = isAbsent6;
+    }
+
+    public boolean isAbsent7() {
+        return isAbsent7;
+    }
+
+    public void setAbsent7(boolean isAbsent7) {
+        this.isAbsent7 = isAbsent7;
+    }
+
+    public boolean isAbsent8() {
+        return isAbsent8;
+    }
+
+    public void setAbsent8(boolean isAbsent8) {
+        this.isAbsent8 = isAbsent8;
+    }
+
+    public boolean isAbsent9() {
+        return isAbsent9;
+    }
+
+    public void setAbsent9(boolean isAbsent9) {
+        this.isAbsent9 = isAbsent9;
+    }
+
+    public boolean isAbsent10() {
+        return isAbsent10;
+    }
+
+    public void setAbsent10(boolean isAbsent10) {
+        this.isAbsent10 = isAbsent10;
+    }
+	
+    /**
+     * Get the username for a specific username field
+     * @param usernameString the username field e.g. "username2"
+     * @return the user name that was typed into the field e.g. "Spongebob Squarepants"
+     */
+	public String getUsernameByString(String usernameString) {
+	    String username = null;
+	    
+	    if (usernameString == null) {
+	        
+	    } else if (usernameString.equals("username1")) {
+            username = this.username1;
+        } else if (usernameString.equals("username2")) {
+            username = this.username2;
+        } else if (usernameString.equals("username3")) {
+            username = this.username3;
+        } else if (usernameString.equals("username4")) {
+            username = this.username4;
+        } else if (usernameString.equals("username5")) {
+            username = this.username5;
+        } else if (usernameString.equals("username6")) {
+            username = this.username6;
+        } else if (usernameString.equals("username7")) {
+            username = this.username7;
+        } else if (usernameString.equals("username8")) {
+            username = this.username8;
+        } else if (usernameString.equals("username9")) {
+            username = this.username9;
+        } else if (usernameString.equals("username10")) {
+            username = this.username10;
+        }
+	    
+	    return username;
+	}
+	
+	/**
+	 * Get the password for a specific password field
+	 * @param usernameString the password field e.g. "password2"
+	 * @return the password that was typed into the field e.g. "frycook123"
+	 */
+	public String getPasswordByString(String usernameString) {
+	    String password = null;
+	    
+       if (usernameString == null) {
+            
+        } else if (usernameString.equals("password2")) {
+            password = this.password2;
+        } else if (usernameString.equals("password3")) {
+            password = this.password3;
+        } else if (usernameString.equals("password4")) {
+            password = this.password4;
+        } else if (usernameString.equals("password5")) {
+            password = this.password5;
+        } else if (usernameString.equals("password6")) {
+            password = this.password6;
+        } else if (usernameString.equals("password7")) {
+            password = this.password7;
+        } else if (usernameString.equals("password8")) {
+            password = this.password8;
+        } else if (usernameString.equals("password9")) {
+            password = this.password9;
+        } else if (usernameString.equals("password10")) {
+            password = this.password10;
+        }
+	    
+	    return password;
+	}
+
+	/**
+	 * Get the absent value for a specific absent field
+	 * @param absentString the name of the absent field e.g. "absent2"
+	 * @return the value of the field
+	 */
+	public boolean getIsAbsentByString(String absentString) {
+	       boolean isAbsent = false;
+	        
+	       if (absentString == null) {
+	            
+	        } else if (absentString.equals("absent2")) {
+	            isAbsent = this.isAbsent2;
+	        } else if (absentString.equals("absent3")) {
+	            isAbsent = this.isAbsent3;
+	        } else if (absentString.equals("absent4")) {
+	            isAbsent = this.isAbsent4;
+	        } else if (absentString.equals("absent5")) {
+	            isAbsent = this.isAbsent5;
+	        } else if (absentString.equals("absent6")) {
+	            isAbsent = this.isAbsent6;
+	        } else if (absentString.equals("absent7")) {
+	            isAbsent = this.isAbsent7;
+	        } else if (absentString.equals("absent8")) {
+	            isAbsent = this.isAbsent8;
+	        } else if (absentString.equals("absent9")) {
+	            isAbsent = this.isAbsent9;
+	        } else if (absentString.equals("absent10")) {
+	            isAbsent = this.isAbsent10;
+	        }
+	        
+	        return isAbsent;
 	}
 
 }

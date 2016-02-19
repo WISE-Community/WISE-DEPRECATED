@@ -185,4 +185,30 @@ public interface WorkgroupService {
 	 *     retrieved for the <code>Run</code>
 	 */
 	WISEWorkgroup createWISEWorkgroup(String name, Set<User> members, Run run, Group period) throws ObjectNotFoundException;
+	
+	/**
+     * Check if a user is in any workgroup for the run
+     * @param user the user
+     * @param run the run
+     * @return whether the user is in a workgroup for the run
+     */
+	boolean isUserInAnyWorkgroupForRun(User user, Run run);
+	
+    /**
+     * Check if a user is in a specific workgroup for the run
+     * @param user the user
+     * @param run the run
+     * @param workgroup the workgroup
+     * @return whether the user is in the workgroup
+     */
+	boolean isUserInWorkgroupForRun(User user, Run run, Workgroup workgroup);
+	
+	/**
+     * Check if a user is in a workgroup besides the one provided for the run
+     * @param user the user
+     * @param run the run
+     * @param workgroup the workgroup
+     * @return 
+     */
+	boolean isUserInAnotherWorkgroupForRun(User user, Run run, Workgroup workgroup);
 }

@@ -301,4 +301,84 @@ public class WorkgroupServiceImpl implements WorkgroupService {
 		this.groupService = groupService;
 	}
 
+	/**
+	 * Check if a user is in any workgroup for the run
+	 * @param user the user
+	 * @param run the run
+	 * @return whether the user is in a workgroup for the run
+	 */
+	public boolean isUserInAnyWorkgroupForRun(User user, Run run) {
+	    
+	    boolean result = false;
+	    
+	    List<Workgroup> workgroupsForUser = getWorkgroupListByOfferingAndUser(run, user);
+	    
+	    if (workgroupsForUser.size() > 0) {
+	        result = true;
+	    }
+	    
+	    return result;
+	}
+	
+	/**
+	 * Check if a user is in a specific workgroup for the run
+	 * @param user the user
+	 * @param run the run
+	 * @param workgroup the workgroup
+	 * @return whether the user is in the workgroup
+	 */
+	public boolean isUserInWorkgroupForRun(User user, Run run, Workgroup workgroup) {
+	    
+	    boolean result = false;
+	    
+	    if (user != null && workgroup != null) {
+	        
+	        // get all the workgroups the user is in
+	        List<Workgroup> workgroupsForUser = getWorkgroupListByOfferingAndUser(run, user);
+	        
+	        // loop through all the workgroups the user is in
+	        for (Workgroup tempWorkgroup : workgroupsForUser) {
+	            
+	            // check if the current workgroup is the one we are looking for
+	            if (workgroup.equals(tempWorkgroup)) {
+	                // the user is in the workgroup we are looking for
+	                result = true;
+	                break;
+	            }
+	        }
+	    }
+	    
+	    return result;
+	}
+	
+	/**
+	 * Check if a user is in a workgroup besides the one provided for the run
+	 * @param user the user
+	 * @param run the run
+	 * @param workgroup check if the user is in another workgroup besides this workgroup
+	 * @return whether the user is in another workgroup for the run
+	 */
+	public boolean isUserInAnotherWorkgroupForRun(User user, Run run, Workgroup workgroup) {
+        
+        boolean result = false;
+        
+        if (user != null && workgroup != null) {
+            
+            // get all the workgroups the user is in
+            List<Workgroup> workgroupsForUser = getWorkgroupListByOfferingAndUser(run, user);
+            
+            // loop through all the workgroups the user is in
+            for (Workgroup tempWorkgroup : workgroupsForUser) {
+                
+                // check if the current workgroup is the one we are looking for
+                if (!workgroup.equals(tempWorkgroup)) {
+                    // the user is in the workgroup we are looking for
+                    result = true;
+                    break;
+                }
+            }
+        }
+        
+        return result;
+	}
 }

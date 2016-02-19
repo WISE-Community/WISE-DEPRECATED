@@ -193,6 +193,17 @@ public class GroupServiceImpl implements GroupService {
     	}
     	this.groupDao.save(group);
 	}
+    
+    /**
+     * Remove a member from a group
+     * @param group the group
+     * @param memberToRemove the member to remove
+     */
+    @Transactional()
+    public void removeMember(Group group, User memberToRemove) {
+        group.removeMember(memberToRemove);
+        this.groupDao.save(group);
+    }
 
     /**
 	 * Checks to see if the given group contains a cycle
