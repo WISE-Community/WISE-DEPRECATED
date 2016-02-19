@@ -23,20 +23,6 @@
 
 </head>
 <body>
-<!-- Support for Spring errors object -->
-<spring:bind path="runParameters.postLevel">
-  <c:forEach var="error" items="${status.errorMessages}">
-    <c:choose>
-      <c:when test="${fn:length(error) > 0}" >
-        <script type="text/javascript">
-          <!--  TODO: IS THIS NECESSARY?
-            alert("${error}");
-          //-->
-        </script>
-      </c:when>
-    </c:choose>
-  </c:forEach>
-</spring:bind>
 <div id="pageWrapper">
 	<%@ include file="../../../headermain.jsp"%>
 		
@@ -62,23 +48,6 @@
 									<spring:message code="teacher.run.create.createrunconfigure.howManyStudentsPerComputer"/><br/>
 									<form:radiobutton path="maxWorkgroupSize" value='1'/><spring:message code="teacher.run.create.createrunconfigure.always1"/><br/>
 									<form:radiobutton path="maxWorkgroupSize" value='${maxWorkgroupSize}'/><spring:message code="teacher.run.create.createrunconfigure.1to"/>${maxWorkgroupSize} <spring:message code="teacher.run.create.createrunconfigure.studentsPerComputer"/>
-								</h5>
-								<h5 style="margin:.5em;">
-									<spring:message code="teacher.run.create.createrunconfigure.selectStorageLevel"/><br/>
-									<c:choose>
-										<c:when test="${minPostLevel==5}">
-											<br/>
-											<spring:message code="teacher.run.create.createrunconfigure.requiresLogStudentDataHighestLevel"/><br/>
-											<spring:message code="teacher.run.create.createrunconfigure.likeToOverrideThisSetting"/> <a href="webapp/contact/contactwisegeneral.html"><spring:message code="teacher.run.create.createrunconfigure.contactWise"/></a><br/>
-										</c:when>
-										<c:otherwise>	
-											<c:forEach var='postLevel' items='${implementedPostLevels}'>
-												<c:if test="${postLevel >= minPostLevel}">
-													<form:radiobutton path='postLevel' value='${postLevel}'/>${postLevelTextMap[postLevel]}<br/>
-												</c:if>
-											</c:forEach>
-										</c:otherwise>
-									</c:choose>
 								</h5>
 								<h5 style="margin:.5em;">
 									<spring:message code="teacher.run.create.createrunconfigure.enableRealTimeStudentMonitoring"/> (<spring:message code="teacher.run.create.createrunconfigure.enableRealTimeStudentMonitoringInformation"/> <a href="${contextPath}/pages/teacherfaq.html#realtime" target="_blank"><spring:message code="teacher.run.create.createrunconfigure.enableRealTimeStudentMonitoringFAQ"/></a>)<br/>

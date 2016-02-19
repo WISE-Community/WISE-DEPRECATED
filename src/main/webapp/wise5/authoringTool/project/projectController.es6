@@ -51,13 +51,13 @@ class ProjectController {
     };
 
     saveProject() {
-        let projectJSONString = JSON.stringify(this.project, null, 4);
+        //let projectJSONString = JSON.stringify(this.project, null, 4);
         let commitMessage = $("#commitMessageInput").val();
         try {
             // if projectJSONString is bad json, it will throw an exception and not save.
-            JSON.parse(projectJSONString);
+            this.ProjectService.project = this.project;
 
-            this.ProjectService.saveProject(projectJSONString, commitMessage).then((commitHistoryArray) => {
+            this.ProjectService.saveProject(commitMessage).then((commitHistoryArray) => {
                 this.commitHistory = commitHistoryArray;
                 $("#commitMessageInput").val("");  // clear field after commit
             });

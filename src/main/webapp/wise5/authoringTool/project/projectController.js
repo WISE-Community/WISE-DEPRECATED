@@ -72,13 +72,13 @@ var ProjectController = function () {
         value: function saveProject() {
             var _this = this;
 
-            var projectJSONString = JSON.stringify(this.project, null, 4);
+            //let projectJSONString = JSON.stringify(this.project, null, 4);
             var commitMessage = $("#commitMessageInput").val();
             try {
                 // if projectJSONString is bad json, it will throw an exception and not save.
-                JSON.parse(projectJSONString);
+                this.ProjectService.project = this.project;
 
-                this.ProjectService.saveProject(projectJSONString, commitMessage).then(function (commitHistoryArray) {
+                this.ProjectService.saveProject(commitMessage).then(function (commitHistoryArray) {
                     _this.commitHistory = commitHistoryArray;
                     $("#commitMessageInput").val(""); // clear field after commit
                 });

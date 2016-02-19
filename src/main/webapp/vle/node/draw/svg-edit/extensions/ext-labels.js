@@ -477,7 +477,12 @@ svgEditor.addExtension('labels', function() {'use strict';
 				y = ay,
 				tx = textx ? textx : (x+50),
 				ty = texty ? texty : (y-50);
-			
+
+			// override aRadius if specified in the content
+			if (content.defaultAnchorRadius) {
+				aRadius = content.defaultAnchorRadius;
+			}
+
 			// create anchor (circle)
 			var anchor = addElem({
 				'element': 'circle',
