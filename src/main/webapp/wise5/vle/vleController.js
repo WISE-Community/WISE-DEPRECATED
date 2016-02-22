@@ -30,7 +30,7 @@ var VLEController = function () {
         this.navFilter = this.navFilters[0].name;
 
         this.projectStyle = this.ProjectService.getStyle();
-        this.projectName = this.ProjectService.getName();
+        this.projectName = this.ProjectService.getProjectTitle();
 
         this.notebookFilters = this.NotebookService.getFilters();
         this.notebookFilter = this.notebookFilters[0].name;

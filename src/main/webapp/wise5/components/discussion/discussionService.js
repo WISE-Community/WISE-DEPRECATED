@@ -57,60 +57,7 @@ var DiscussionService = function (_NodeService) {
     }, {
         key: 'callFunction',
         value: function callFunction(node, component, functionName, functionParams, componentStates, nodeStates, componentEvents, nodeEvents) {
-            var result = null;
-
-            if (functionName === 'wordCountCompare') {
-                result = this.wordCountCompare(functionParams);
-            }
-
-            return result;
-        }
-    }, {
-        key: 'wordCountCompare',
-        value: function wordCountCompare(params) {
-            var result = false;
-
-            if (params != null) {
-                var operator = params.operator;
-                var count = params.count;
-                var nodeVisits = params.nodeVisits;
-
-                var latestNodeState = this.getLatestNodeState(nodeVisits);
-
-                var wordCount = 0;
-
-                if (latestNodeState != null) {
-                    var response = latestNodeState.studentData;
-
-                    if (response != null) {
-                        wordCount = this.getWordCount(response);
-
-                        if (operator === '<') {
-                            if (wordCount < count) {
-                                result = true;
-                            }
-                        } else if (operator === '>=') {
-                            if (wordCount >= count) {
-                                result = true;
-                            }
-                        }
-                    }
-                }
-            }
-
-            return result;
-        }
-    }, {
-        key: 'getWordCount',
-        value: function getWordCount(response) {
-            var wordCount = 0;
-
-            if (response != null) {
-                var regex = /\s+/gi;
-                wordCount = response.trim().replace(regex, ' ').split(' ').length;
-            }
-
-            return wordCount;
+            return null;
         }
     }, {
         key: 'getStudentWorkAsHTML',
