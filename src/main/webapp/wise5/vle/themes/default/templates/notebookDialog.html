@@ -2,7 +2,6 @@
     <md-toolbar class="l-sidebar__header md-whiteframe-z1">
         <div class="md-toolbar-tools">
             <h3>Notebook</h3>
-            <span flex></span>
             <md-select class="md-body-1" md-theme="default" placeholder="Filter" ng-model="notebookFilter">
                 <md-option ng-repeat="filter in notebookFilters" value="{{filter.name}}">{{filter.label}}</md-option>
             </md-select>

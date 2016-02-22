@@ -1,6 +1,7 @@
 import NodeService from '../../services/nodeService';
 
 class LabelService extends NodeService {
+
     constructor(StudentDataService,
                 UtilService) {
         super();
@@ -35,56 +36,9 @@ class LabelService extends NodeService {
 
         if (functionName === 'isCompleted') {
             result = this.isCompleted(component, componentStates, componentEvents, nodeEvents);
-        } else if (functionName === 'wordCountCompare') {
-            result = this.wordCountCompare(functionParams);
         }
 
         return result;
-    };
-
-    wordCountCompare(params) {
-        var result = false;
-
-        if (params != null) {
-            var operator = params.operator;
-            var count = params.count;
-            var nodeVisits = params.nodeVisits;
-
-            var latestNodeState = this.getLatestNodeState(nodeVisits);
-
-            var wordCount = 0;
-
-            if (latestNodeState != null) {
-                var response = latestNodeState.studentData;
-
-                if (response != null) {
-                    wordCount = this.getWordCount(response);
-
-                    if (operator === '<') {
-                        if (wordCount < count) {
-                            result = true;
-                        }
-                    } else if (operator === '>=') {
-                        if (wordCount >= count) {
-                            result = true;
-                        }
-                    }
-                }
-            }
-        }
-
-        return result;
-    };
-
-    getWordCount(response) {
-        var wordCount = 0;
-
-        if (response != null) {
-            var regex = /\s+/gi;
-            wordCount = response.trim().replace(regex, ' ').split(' ').length;
-        }
-
-        return wordCount;
     };
 
     getStudentWorkAsHTML(componentState) {

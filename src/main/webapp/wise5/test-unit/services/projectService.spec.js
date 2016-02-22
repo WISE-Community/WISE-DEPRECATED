@@ -40,6 +40,7 @@ describe('ProjectService Unit Test', function () {
         var saveProjectURL = "http://localhost:8080/wise/project/save/" + projectIdDefault;
         var commitMessageDefault = "Made simple changes";
         var defaultCommitHistory = [{ "id": "abc", "message": "first commit" }, { "id": "def", "message": "second commit" }];
+        var wiseBaseURL = "/wise";
 
         function createNormalSpy() {
             spyOn(ConfigService, "getConfigParam").and.callFake(function (param) {
@@ -51,6 +52,8 @@ describe('ProjectService Unit Test', function () {
                     return registerNewProjectURL;
                 } else if (param === "saveProjectURL") {
                     return saveProjectURL;
+                } else if (param === "wiseBaseURL") {
+                    return wiseBaseURL;
                 }
             });
         };
@@ -158,10 +161,26 @@ describe('ProjectService Unit Test', function () {
             expect(newProjectIdActualPromise).toBeNull();
         });
 
-        // TODO: add test for ProjectService.getThemePath()
+        // MARK: ThemePath
+        it('should get default theme path when theme is not defined in the project', function () {
+            spyOn(ConfigService, "getConfigParam").and.returnValue(wiseBaseURL);
+            ProjectService.setProject(scootersProjectJSON); // Set the sample project and parse it
+            var expectedThemePath = wiseBaseURL + "/wise5/vle/themes/default";
+            var actualThemePath = ProjectService.getThemePath();
+            expect(ConfigService.getConfigParam).toHaveBeenCalledWith("wiseBaseURL");
+            expect(actualThemePath).toEqual(expectedThemePath);
+        });
 
-        // TODO: add test for ProjectService.getStudentIsOnGroupNodeClass()
-        // TODO: add test for ProjectService.getStudentIsOnApplicationNodeClass()
+        it('should get project theme path when theme is defined in the project', function () {
+            spyOn(ConfigService, "getConfigParam").and.returnValue(wiseBaseURL);
+            ProjectService.setProject(demoProjectJSON); // Set the sample project and parse it
+            var demoProjectTheme = demoProjectJSON.theme; // Demo Project has a theme defined
+            var expectedThemePath = wiseBaseURL + "/wise5/vle/themes/" + demoProjectTheme;
+            var actualThemePath = ProjectService.getThemePath();
+            expect(ConfigService.getConfigParam).toHaveBeenCalledWith("wiseBaseURL");
+            expect(actualThemePath).toEqual(expectedThemePath);
+        });
+
         // TODO: add test for ProjectService.getFlattenedProjectAsNodeIds()
         // TODO: add test for ProjectService.getAllPaths()
         // TODO: add test for ProjectService.consolidatePaths()
@@ -204,6 +223,18 @@ describe('ProjectService Unit Test', function () {
         // TODO: add test for ProjectService.insertNodeInsideInTransitions()
 
         // MARK: Tests for Node and Group Id functions
+        // test ProjectService.getStartNodeId()
+        it('should return the start node of the project', function () {
+            ProjectService.setProject(demoProjectJSON); // Set the sample project and parse it
+            var expectedStartNodeId = "node1"; // Demo project's start node id
+            var actualStartNodeId = ProjectService.getStartNodeId();
+            expect(actualStartNodeId).toEqual(expectedStartNodeId);
+
+            ProjectService.setProject(null); // Set a null project
+            var nullProjectStartNodeId = ProjectService.getStartNodeId();
+            expect(nullProjectStartNodeId).toBeNull();
+        });
+
         // test ProjectService.getNodeById()
         it('should return the node by nodeId', function () {
             ProjectService.setProject(scootersProjectJSON); // Set the sample project and parse it

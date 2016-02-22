@@ -1,6 +1,7 @@
 'use strict';
 
 class ProjectService {
+
     constructor($http, $injector, $rootScope, ConfigService) {
         this.$http = $http;
         this.$injector = $injector;
@@ -63,10 +64,12 @@ class ProjectService {
         return this.filters;
     };
 
-    getName() {
+    /**
+     * Returns the name/title of the current project
+     */
+    getProjectTitle() {
         var name = this.getProjectMetadata().title;
-        name = name ? name : 'A WISE Project (No name)';
-        return name;
+        return name ? name : 'A WISE Project (No name)';
     };
 
     getProjectMetadata() {
@@ -694,7 +697,7 @@ class ProjectService {
             var depth = (typeof val === "number") ? val : 0;
             var parent = this.getParentGroup(nodeId);
             if (parent) {
-                depth = this.getNodeDepth(parent.id, depth+1);
+                depth = this.getNodeDepth(parent.id, depth + 1);
             }
             result = depth;
         }
@@ -803,6 +806,9 @@ class ProjectService {
         return result;
     };
 
+    /**
+     * Returns the Project's start node id, or null if it's not defined in the project
+     */
     getStartNodeId() {
         var startNodeId = null;
         var project = this.project;
@@ -1126,36 +1132,6 @@ class ProjectService {
             // TODO: get default theme name from ConfigService
             return wiseBaseURL + '/wise5/vle/themes/default';
         }
-    };
-
-    getStudentIsOnGroupNodeClass() {
-        var studentIsOnGroupNodeClass = null;
-        var project = this.project;
-
-        if (project != null) {
-            var layout = project.layout;
-
-            if (layout != null) {
-                studentIsOnGroupNodeClass = layout.studentIsOnGroupNode;
-            }
-        }
-
-        return studentIsOnGroupNodeClass;
-    };
-
-    getStudentIsOnApplicationNodeClass() {
-        var studentIsOnApplicationNodeClass = null;
-        var project = this.project;
-
-        if (project != null) {
-            var layout = project.layout
-
-            if (layout != null) {
-                studentIsOnApplicationNodeClass = layout.studentIsOnApplicationNode;
-            }
-        }
-
-        return studentIsOnApplicationNodeClass;
     };
 
     /**

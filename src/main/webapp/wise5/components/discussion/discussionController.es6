@@ -693,14 +693,15 @@ class DiscussionController {
         }
     };
 
-    attachNotebookItemToComponent(notebookItem) {
-        if (notebookItem.studentAsset != null) {
-            // we're importing a StudentAssetNotebookItem
-            var studentAsset = notebookItem.studentAsset;
-            this.StudentAssetService.copyAssetForReference(studentAsset).then(angular.bind(this, function(copiedAsset) {
+    /**
+     * Attach student asset to this Component's attachments
+     * @param studentAsset
+     */
+    attachStudentAsset(studentAsset) {
+        if (studentAsset != null) {
+            this.StudentAssetService.copyAssetForReference(studentAsset).then( (copiedAsset) => {
                 if (copiedAsset != null) {
                     var attachment = {
-                        notebookItemId: notebookItem.id,
                         studentAssetId: copiedAsset.id,
                         iconURL: copiedAsset.iconURL
                     };
@@ -708,66 +709,7 @@ class DiscussionController {
                     this.newAttachments.push(attachment);
                     this.studentDataChanged();
                 }
-            }));
-        } else if (notebookItem.studentWork != null) {
-            // we're importing a StudentWorkNotebookItem
-            var studentWork = notebookItem.studentWork;
-
-            var componentType = studentWork.componentType;
-
-            if (componentType != null) {
-                var childService = this.$injector.get(componentType + 'Service');
-
-                if (childService != null) {
-                    var studentWorkHTML = childService.getStudentWorkAsHTML(studentWork);
-
-                    if (studentWorkHTML != null) {
-                        this.studentResponse += studentWorkHTML;
-                        this.studentDataChanged();
-                    }
-                }
-            }
-        }
-    };
-
-    dropCallback_NOLONGER_USED(event, ui, title, $index) {
-        if (this.isDisabled) {
-            // don't import if step is disabled/locked
-            return;
-        }
-
-        var objectType = $(ui.helper.context).data('objectType');
-        if (objectType === 'NotebookItem') {
-            var notebookItem = $(ui.helper.context).data('objectData');
-            if (notebookItem.studentAsset != null) {
-                // we're importing a StudentAssetNotebookItem
-                var studentAsset = notebookItem.studentAsset;
-                this.StudentAssetService.copyAssetForReference(studentAsset).then(angular.bind(this, function (copiedAsset) {
-                    if (copiedAsset != null) {
-                        var copiedAssetImg = '<img notebookItemId="' + notebookItem.id + '" studentAssetId="' + copiedAsset.id + '" id="studentAsset_' + copiedAsset.id + '" class="studentAssetReference" src="' + copiedAsset.iconURL + '"></img>';
-                        this.newResponse += copiedAssetImg;
-                        this.studentDataChanged();
-                    }
-                }));
-            } else if (notebookItem.studentWork != null) {
-                // we're importing a StudentWorkNotebookItem
-                var studentWork = notebookItem.studentWork;
-
-                var componentType = studentWork.componentType;
-
-                if (componentType != null) {
-                    var childService = this.$injector.get(componentType + 'Service');
-
-                    if (childService != null) {
-                        var studentWorkHTML = childService.getStudentWorkAsHTML(studentWork);
-
-                        if (studentWorkHTML != null) {
-                            this.newResponse += studentWorkHTML;
-                            this.studentDataChanged();
-                        }
-                    }
-                }
-            }
+            });
         }
     };
 

@@ -1275,21 +1275,15 @@ class GraphController {
     };
 
     /**
-     * handle importing notebook item data (we only support csv for now)
+     * Handle importing external data (we only support csv for now)
+     * @param studentAsset CSV file student asset
      */
-    attachNotebookItemToComponent(notebookItem) {
-        if (notebookItem.studentAsset != null) {
-            // we're importing a StudentAssetNotebookItem
-            var studentAsset = notebookItem.studentAsset;
-            this.StudentAssetService.copyAssetForReference(studentAsset).then(angular.bind(this, function(copiedAsset) {
+    attachStudentAsset(studentAsset) {
+        if (studentAsset != null) {
+            this.StudentAssetService.copyAssetForReference(studentAsset).then( (copiedAsset) => {
                 if (copiedAsset != null) {
-                    var attachment = {
-                        notebookItemId: notebookItem.id,
-                        studentAssetId: copiedAsset.id,
-                        iconURL: copiedAsset.iconURL
-                    };
 
-                    this.StudentAssetService.getAssetContent(copiedAsset).then(angular.bind(this, function(assetContent) {
+                    this.StudentAssetService.getAssetContent(copiedAsset).then( (assetContent) => {
                         var rowData = this.StudentDataService.CSVToArray(assetContent);
                         var params = {};
                         params.skipFirstRow = true;  // first row contains header, so ignore it
@@ -1329,12 +1323,10 @@ class GraphController {
 
                         // the graph has changed
                         this.isDirty = true;
-                    }));
+                    });
                     this.studentDataChanged();
                 }
-            }));
-        } else if (notebookItem.studentWork != null) {
-            // TODO implement me
+            });
         }
     };
 

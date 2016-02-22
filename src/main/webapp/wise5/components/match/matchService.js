@@ -58,12 +58,6 @@ var MatchService = function (_NodeService) {
         value: function callFunction(node, component, functionName, functionParams, componentStates, nodeStates, componentEvents, nodeEvents) {
             var result = null;
 
-            /*
-             if (functionName === 'wordCountCompare') {
-             result = this.wordCountCompare(functionParams);
-             }
-             */
-
             return result;
         }
     }, {

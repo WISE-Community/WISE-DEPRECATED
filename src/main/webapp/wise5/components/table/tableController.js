@@ -582,17 +582,13 @@ var TableController = function () {
             }
         }
     }, {
-        key: 'attachNotebookItemToComponent',
+        key: 'attachStudentAsset',
 
         /**
          * handle importing notebook item data (we only support csv for now)
          */
-        value: function attachNotebookItemToComponent(notebookItem) {
-            if (notebookItem.studentAsset != null) {
-                // TODO implement me
-            } else if (notebookItem.studentWork != null) {
-                    // TODO implement me
-                }
+        value: function attachStudentAsset(studentAsset) {
+            // TODO: implement me
         }
     }, {
         key: 'setGraphDataIntoTableData',

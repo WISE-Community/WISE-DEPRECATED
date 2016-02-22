@@ -1,6 +1,7 @@
 import NodeService from '../../services/nodeService';
 
 class TableService extends NodeService {
+
     constructor(StudentDataService,
                 UtilService) {
         super();
@@ -80,13 +81,7 @@ class TableService extends NodeService {
     }
 
     callFunction(node, component, functionName, functionParams, componentStates, nodeStates, componentEvents, nodeEvents) {
-        var result = null;
-
-        if (functionName === 'wordCountCompare') {
-            result = this.wordCountCompare(functionParams);
-        }
-
-        return result;
+        return null;
     };
 
     getStudentWorkAsHTML(nodeState) {

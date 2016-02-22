@@ -1,4 +1,5 @@
 'use strict';
+
 import NotebookController from './notebookController';
 
 let notebookModule = angular.module('notebook', [])
@@ -15,6 +16,6 @@ let notebookModule = angular.module('notebook', [])
             bindToController: true
         };
     })
-    .controller('NotebookController', NotebookController)
+    .controller('NotebookController', NotebookController);
 
 export default notebookModule;

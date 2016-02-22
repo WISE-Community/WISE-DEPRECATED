@@ -1,6 +1,7 @@
 'use strict';
 
 class UtilService {
+
     constructor($http) {
         this.$http = $http;
     }

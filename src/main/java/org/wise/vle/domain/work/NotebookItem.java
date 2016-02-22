@@ -77,11 +77,14 @@ public class NotebookItem extends PersistableDomain {
 	@JoinColumn(name = "studentAssetId", nullable = true)
 	private StudentAsset studentAsset;
 
-	@Column(name = "title", nullable = true)
-	private String title;
+	@Column(name = "type", length = 30, nullable = true)
+	private String type;  // ex: [ "note", "bookmark", "question" ]
 
-	@Column(name = "description", columnDefinition = "text", nullable = true)
-	private String description;
+	@Column(name = "title", nullable = true)
+	private String title;  // ex: "my note on step 1.2"
+
+	@Column(name = "content", columnDefinition = "text", nullable = true)
+	private String content; // ex: { note: "my notes with attachments", attachments: [ {studentAssetId: 1, url: "car.png" } ] }
 
 	@Column(name = "clientSaveTime", nullable = false)
 	private Timestamp clientSaveTime;
@@ -155,7 +158,15 @@ public class NotebookItem extends PersistableDomain {
         this.studentAsset = studentAsset;
     }
 
-    public String getTitle() {
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public String getTitle() {
         return title;
     }
 
@@ -163,12 +174,12 @@ public class NotebookItem extends PersistableDomain {
         this.title = title;
     }
 
-    public String getDescription() {
-        return description;
+    public String getContent() {
+        return content;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setContent(String content) {
+        this.content = content;
     }
 
 	public String getComponentId() {
@@ -255,12 +266,16 @@ public class NotebookItem extends PersistableDomain {
                 studentWorkJSONObject.put("studentAssetId", this.studentAsset.getId());
             }
 
+            if (this.type != null) {
+                studentWorkJSONObject.put("type", this.type);
+            }
+
             if (this.title != null) {
                 studentWorkJSONObject.put("title", this.title);
             }
 
-            if (this.description != null) {
-                studentWorkJSONObject.put("description", this.description);
+            if (this.content != null) {
+                studentWorkJSONObject.put("content", this.content);
             }
 
 			if (this.clientSaveTime != null) {

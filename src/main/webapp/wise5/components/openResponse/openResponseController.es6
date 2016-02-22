@@ -1,4 +1,7 @@
+'use strict';
+
 class OpenResponseController {
+
     constructor($injector,
                 $rootScope,
                 $scope,
@@ -464,17 +467,19 @@ class OpenResponseController {
         if (this.attachments.indexOf(attachment) != -1) {
             this.attachments.splice(this.attachments.indexOf(attachment), 1);
             this.studentDataChanged();
+            // YOU ARE NOW FREEEEEEEEE!
         }
     };
 
-    attachNotebookItemToComponent(notebookItem) {
-        if (notebookItem.studentAsset != null) {
-            // we're importing a StudentAssetNotebookItem
-            var studentAsset = notebookItem.studentAsset;
-            this.StudentAssetService.copyAssetForReference(studentAsset).then(angular.bind(this, function(copiedAsset) {
+    /**
+     * Attach student asset to this Component's attachments
+     * @param studentAsset
+     */
+    attachStudentAsset(studentAsset) {
+        if (studentAsset != null) {
+            this.StudentAssetService.copyAssetForReference(studentAsset).then( (copiedAsset) => {
                 if (copiedAsset != null) {
                     var attachment = {
-                        notebookItemId: notebookItem.id,
                         studentAssetId: copiedAsset.id,
                         iconURL: copiedAsset.iconURL
                     };
@@ -482,25 +487,7 @@ class OpenResponseController {
                     this.attachments.push(attachment);
                     this.studentDataChanged();
                 }
-            }));
-        } else if (notebookItem.studentWork != null) {
-            // we're importing a StudentWorkNotebookItem
-            var studentWork = notebookItem.studentWork;
-
-            var componentType = studentWork.componentType;
-
-            if (componentType != null) {
-                var childService = this.$injector.get(componentType + 'Service');
-
-                if (childService != null) {
-                    var studentWorkHTML = childService.getStudentWorkAsHTML(studentWork);
-
-                    if (studentWorkHTML != null) {
-                        this.studentResponse += studentWorkHTML;
-                        this.studentDataChanged();
-                    }
-                }
-            }
+            });
         }
     };
 

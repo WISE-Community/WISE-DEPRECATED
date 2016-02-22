@@ -547,12 +547,8 @@ class TableController {
     /**
      * handle importing notebook item data (we only support csv for now)
      */
-    attachNotebookItemToComponent(notebookItem) {
-        if (notebookItem.studentAsset != null) {
-            // TODO implement me
-        } else if (notebookItem.studentWork != null) {
-            // TODO implement me
-        }
+    attachStudentAsset(studentAsset) {
+        // TODO: implement me
     };
 
     /**

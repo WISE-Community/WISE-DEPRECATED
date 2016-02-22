@@ -664,7 +664,7 @@ public class VLEServiceImpl implements VLEService {
     public NotebookItem saveNotebookItem(Integer id, Integer runId, Integer periodId, Integer workgroupId,
                                          String nodeId, String componentId,
                                          Integer studentWorkId, Integer studentAssetId,
-                                         String title, String description,
+                                         String type, String title, String content,
                                          String clientSaveTime, String clientDeleteTime) {
         NotebookItem notebookItem;
         if (id != null) {
@@ -721,11 +721,14 @@ public class VLEServiceImpl implements VLEService {
                 e.printStackTrace();
             }
         }
+        if (type != null) {
+            notebookItem.setType(type);
+        }
         if (title != null) {
             notebookItem.setTitle(title);
         }
-        if (description != null) {
-            notebookItem.setDescription(description);
+        if (content != null) {
+            notebookItem.setContent(content);
         }
         if (clientSaveTime != null) {
             Timestamp clientSaveTimestamp = new Timestamp(new Long(clientSaveTime));

@@ -48,6 +48,7 @@ import OutsideURLService from '../components/outsideURL/outsideURLService';
 //import PhotoBoothService from '../components/photoBooth/photoBoothService';
 import ProjectService from '../services/projectService';
 import SessionService from '../services/sessionService';
+import StudentAsset from './studentAsset/studentAsset';
 import StudentAssetService from '../services/studentAssetService';
 import StudentDataService from '../services/studentDataService';
 import StudentStatusService from '../services/studentStatusService';
@@ -75,6 +76,7 @@ let mainModule = angular.module('vle', [
     'ngWebSocket',
     'notebook',
     'oc.lazyLoad',
+    'studentAsset',
     'ui.router',
     //'ui.tinymce',
     'ui.tree'

@@ -13,9 +13,9 @@ class NotebookService {
 
         this.filters = [
             {'name': 'all', 'label': 'All'},
-            //{'name': 'work', 'label': 'Work'}, TODO: uncomment me when adding student work to notebook is styled and ready for use in a run
-            {'name': 'files', 'label': 'Files'}
-            //{'name': 'ideas', 'label': 'Ideas'} TODO: Add when Idea Manager is active
+            {'name': 'notes', 'label': 'Notes'},
+            {'name': 'bookmarks', 'label': 'Bookmarks'},
+            {'name': 'questions', 'label': 'Questions'}
         ];
 
         this.notebook = {};
@@ -71,7 +71,6 @@ class NotebookService {
         return this.$http(config).then((response) => {
             // loop through the assets and make them into JSON object with more details
             this.notebook.items = [];  // clear local notebook items array
-            var result = [];
             var allNotebookItems = response.data;
             for (var n = 0; n < allNotebookItems.length; n++) {
                 var notebookItem = allNotebookItems[n];
@@ -81,6 +80,8 @@ class NotebookService {
                 } else if (notebookItem.studentWorkId != null) {
                     // if this notebook item is a StudentWork item, add the association here
                     notebookItem.studentWork = this.StudentDataService.getStudentWorkByStudentWorkId(notebookItem.studentWorkId);
+                } else if (notebookItem.type === "note") {
+                    notebookItem.content = angular.fromJson(notebookItem.content);
                 }
                 if (notebookItem.serverDeleteTime == null) {
                     this.notebook.items.push(notebookItem);
@@ -130,6 +131,35 @@ class NotebookService {
             if (notebookItem != null) {
                 notebookItem.studentWork = studentWork;
                 this.notebook.items.push(notebookItem);
+            }
+            return null;
+        });
+    };
+
+    saveNotebookItem(nodeId, type, title, content) {
+        var config = {};
+        config.method = 'POST';
+        config.url = this.ConfigService.getStudentNotebookURL();
+        config.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
+        var params = {};
+        params.workgroupId = this.ConfigService.getWorkgroupId();
+        params.periodId = this.ConfigService.getPeriodId();
+        params.nodeId = nodeId;
+        params.type = type;
+        params.title = title;
+        params.content = angular.toJson(content);
+        params.clientSaveTime = Date.parse(new Date());
+
+        config.data = $.param(params);
+
+        return this.$http(config).then((result) => {
+            var notebookItem = result.data;
+            if (notebookItem != null) {
+                if (notebookItem.type === "note") {
+                    notebookItem.content = angular.fromJson(notebookItem.content);
+                }
+                this.notebook.items.push(notebookItem);
+                this.$rootScope.$broadcast('notebookUpdated', {notebook: this.notebook});
             }
             return null;
         });

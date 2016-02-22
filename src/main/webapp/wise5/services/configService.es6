@@ -1,9 +1,11 @@
+'use strict';
 
 class ConfigService {
+
     constructor($http) {
         this.$http = $http;
         this.config = null;
-    }
+    };
 
     getConfig() {
         return this.config;

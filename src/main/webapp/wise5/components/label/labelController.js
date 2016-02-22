@@ -721,41 +721,22 @@ var LabelController = function () {
             }
         }
     }, {
-        key: 'attachNotebookItemToComponent',
-        value: function attachNotebookItemToComponent(notebookItem) {
-            if (notebookItem.studentAsset != null) {
-                // we're importing a StudentAssetNotebookItem
-                var studentAsset = notebookItem.studentAsset;
-                this.StudentAssetService.copyAssetForReference(studentAsset).then(angular.bind(this, function (copiedAsset) {
+        key: 'attachStudentAsset',
+        value: function attachStudentAsset(studentAsset) {
+            var _this = this;
+
+            if (studentAsset != null) {
+                this.StudentAssetService.copyAssetForReference(studentAsset).then(function (copiedAsset) {
                     if (copiedAsset != null) {
                         var attachment = {
-                            notebookItemId: notebookItem.id,
                             studentAssetId: copiedAsset.id,
                             iconURL: copiedAsset.iconURL
                         };
 
-                        this.attachments.push(attachment);
-                        this.studentDataChanged();
+                        _this.attachments.push(attachment);
+                        _this.studentDataChanged();
                     }
-                }));
-            } else if (notebookItem.studentWork != null) {
-                // we're importing a StudentWorkNotebookItem
-                var studentWork = notebookItem.studentWork;
-
-                var componentType = studentWork.componentType;
-
-                if (componentType != null) {
-                    var childService = this.$injector.get(componentType + 'Service');
-
-                    if (childService != null) {
-                        var studentWorkHTML = childService.getStudentWorkAsHTML(studentWork);
-
-                        if (studentWorkHTML != null) {
-                            this.studentResponse += studentWorkHTML;
-                            this.studentDataChanged();
-                        }
-                    }
-                }
+                });
             }
         }
     }, {

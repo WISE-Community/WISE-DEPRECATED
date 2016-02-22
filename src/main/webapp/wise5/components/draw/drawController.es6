@@ -475,13 +475,15 @@ class DrawController {
         return result;
     };
 
-    attachNotebookItemToComponent(notebookItem) {
-        if (notebookItem.studentAsset != null) {
-            // we're importing a StudentAssetNotebookItem
-            var studentAsset = notebookItem.studentAsset;
-            this.StudentAssetService.copyAssetForReference(studentAsset).then(angular.bind(this, function(copiedAsset) {
+    /**
+     * Add student asset images as objects in the drawing canvas
+     * @param studentAsset
+     */
+    attachStudentAsset(studentAsset) {
+        if (studentAsset != null) {
+            this.StudentAssetService.copyAssetForReference(studentAsset).then( (copiedAsset) => {
                 if (copiedAsset != null) {
-                    fabric.Image.fromURL(copiedAsset.url, angular.bind(this, function(oImg) {
+                    fabric.Image.fromURL(copiedAsset.url, (oImg) => {
                         oImg.scaleToWidth(200);  // set max width and have height scale proportionally
                         // TODO: center image or put them at mouse position? Wasn't straight-forward, tried below but had issues...
                         //oImg.setLeft((this.drawingTool.canvas.width / 2) - (oImg.width / 2));  // center image vertically and horizontally
@@ -489,27 +491,9 @@ class DrawController {
                         //oImg.center();
                         oImg.studentAssetId = copiedAsset.id;  // keep track of this asset id
                         this.drawingTool.canvas.add(oImg);   // add copied asset image to canvas
-                    }));
+                    });
                 }
-            }));
-        } else if (notebookItem.studentWork != null) {
-            // we're importing a StudentWorkNotebookItem
-            var studentWork = notebookItem.studentWork;
-
-            var componentType = studentWork.componentType;
-
-            if (componentType != null) {
-                var childService = this.$injector.get(componentType + 'Service');
-
-                if (childService != null) {
-                    var studentWorkHTML = childService.getStudentWorkAsHTML(studentWork);
-
-                    if (studentWorkHTML != null) {
-                        this.studentResponse += studentWorkHTML;
-                        this.studentDataChanged();
-                    }
-                }
-            }
+            });
         }
     };
 

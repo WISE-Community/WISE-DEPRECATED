@@ -1703,5 +1703,6 @@
     },
     "metadata": {
         "title": "Demo Project"
-    }
+    },
+    "theme": "MyCustomTheme"
 }
