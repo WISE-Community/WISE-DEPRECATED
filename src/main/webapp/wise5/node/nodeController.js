@@ -280,8 +280,14 @@ var NodeController = function () {
             this.$rootScope.$broadcast('showRevisions', { revisions: revisions, componentController: componentController, allowRevert: allowRevert, $event: $event });
         }
     }, {
-        key: 'showNotebook',
-        value: function showNotebook($event, componentId) {
+        key: 'showStudentAssets',
+
+        /**
+         * Show student assets
+         * @param $event
+         * @param componentId
+         */
+        value: function showStudentAssets($event, componentId) {
 
             // get the scope for the component
             var childScope = this.$scope.componentToScope[componentId];
@@ -301,10 +307,7 @@ var NodeController = function () {
                 componentController = childScope.graphController;
             }
 
-            // TODO: support filtering by notebook item type/filetype
-            var notebookFilters = [{ 'name': 'files', 'label': 'Files' }];
-
-            this.$rootScope.$broadcast('showNotebook', { componentController: componentController, notebookFilters: notebookFilters, $event: $event });
+            this.$rootScope.$broadcast('showStudentAssets', { componentController: componentController, $event: $event });
         }
     }, {
         key: 'saveButtonClicked',

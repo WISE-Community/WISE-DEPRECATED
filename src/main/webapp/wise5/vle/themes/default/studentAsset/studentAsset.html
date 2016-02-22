@@ -1,0 +1,84 @@
+<style>
+    .drop-box {
+        background: #F8F8F8;
+        border: 5px dashed #DDD;
+        width: 90%;
+        height: 100px;
+        text-align: center;
+        padding-top: 50px;
+        margin: 10px;
+        bottom: 0px;
+    }
+
+    .drop-box:hover {
+        cursor: pointer;
+    }
+
+    .dragover {
+        border: 5px dashed blue;
+    }
+
+    .studentAssets {
+        height: auto;
+        width: auto;
+        min-height: 200px;
+        max-height: 200px;
+        max-width: 450px;
+        border: 5px solid #DDD;
+        overflow:auto;
+        list-style-type: none;
+        padding:0px;
+    }
+
+    .studentAsset {
+        width: auto;
+        height: auto;
+        max-width: 100px;
+        max-height: 100px;
+        padding: 10px;
+        margin: 5px;
+        border: 3px solid #DDD;
+        overflow:auto;
+    }
+
+    .studentAsset:hover {
+        cursor: pointer;
+    }
+
+    .studentAssetOverlay {
+        top: 0;
+        left: 0;
+        max-width: 100%;
+    }
+
+    .studentAssetRemoveImage {
+    }
+
+    .studentAssetRemoveImage, .studentAssetOverlay:hover {
+        cursor:pointer;
+    }
+</style>
+<ul class='studentAssets' ng-show="studentAssetController.studentAssets.length" >
+    <li ng-repeat="studentAsset in studentAssetController.studentAssets" class='studentAssetLI'
+        ng-click='studentAssetController.studentAssetSelected($event, studentAsset)'>
+        <img ng-show="studentAsset != null"
+             ng-src='{{studentAsset.iconURL}}'
+             class='studentAsset'
+             title='{{studentAsset.iconURL}}'>
+        </img>
+        <div ng-show="studentAssetController.componentController != null && studentAssetController.selectedStudentAsset === studentAsset">
+            <button ng-click="studentAssetController.attachStudentAssetToComponent($event, studentAsset)">Add to current step</button>
+        </div>
+    </li>
+</ul>
+<div>
+    <div ng-show="studentAssetController.mode != 'preview'" ngf-drop ngf-select ngf-change="studentAssetController.uploadStudentAssets($files)" class="drop-box"
+         drag-over-class="dragover" ngf-multiple="true" allow-dir="false"
+         accept="image/*,application/pdf,text/csv">Drop image or file here or click to upload!</div>
+    <!-- TODO: ask researchers if we should display usage information to students. we'll hide it for now.
+    You are using {{studentAssetController.notebook.totalSize | appropriateSizeText }} out of {{studentAssetController.notebook.totalSizeMax | appropriateSizeText}} ({{studentAssetController.notebook.usagePercentage | roundToDecimal:0 }}%)
+    -->
+</div>
+<div ng-show="studentAssetController.mode == 'preview'">
+    The student assets will appear here once you set up a classroom run.
+</div>

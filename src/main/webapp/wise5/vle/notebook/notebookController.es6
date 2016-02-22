@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 class NotebookController {
     constructor($injector,
@@ -51,12 +51,29 @@ class NotebookController {
         });
     };
 
-    uploadStudentAssetNotebookItems(files) {
+    attachStudentAssetToNewNote(files) {
         if (files != null) {
             for (var f = 0; f < files.length; f++) {
                 var file = files[f];
-                this.NotebookService.uploadStudentAssetNotebookItem(file);
+                this.StudentAssetService.uploadAsset(file).then((studentAsset) => {
+                    this.StudentAssetService.copyAssetForReference(studentAsset).then((copiedAsset) => {
+                        if (copiedAsset != null) {
+                            var attachment = {
+                                studentAssetId: copiedAsset.id,
+                                iconURL: copiedAsset.iconURL
+                            };
+
+                            this.newNote.content.attachments.push(attachment);
+                        }
+                    });
+                });
             }
+        }
+    };
+
+    removeAttachment(attachment) {
+        if (this.newNote.content.attachments.indexOf(attachment) != -1) {
+            this.newNote.content.attachments.splice(this.newNote.content.attachments.indexOf(attachment), 1);
         }
     };
 
@@ -97,13 +114,6 @@ class NotebookController {
         //$(ui.helper.context).data('importWorkNodeType', nodeType);
     };
 
-    log() {
-    };
-
-    getLatestNodeStateByNodeId(nodeId) {
-        return this.StudentDataService.getLatestNodeStateByNodeId(nodeId);
-    };
-
     showStudentWorkByNodeId(nodeId, nodeType) {
         var result = null;
 
@@ -119,6 +129,45 @@ class NotebookController {
         return result;
     };
 
+    showAddNote() {
+        // setting this will show the add note div
+        let currentNodeId = this.StudentDataService.getCurrentNodeId();
+        let currentNodeTitle = this.ProjectService.getNodeTitleByNodeId(currentNodeId);
+        this.newNote = {
+            type: "note",
+            nodeId: currentNodeId, // Id of the node this note was created on
+            title: "Note on " + currentNodeTitle,  // Title of the node this note was created on
+            content: {
+                text: "Type your note here...",
+                attachments: []
+            }
+        };
+    }
+
+    cancelAddNote() {
+        this.newNote = null; // this will hide the add note div
+    }
+
+    addNote() {
+        let newNoteContent = {
+            text: this.newNote.content.text,
+            attachments: this.newNote.content.attachments
+        };
+        this.NotebookService.saveNotebookItem(this.newNote.nodeId, this.newNote.type, this.newNote.title, newNoteContent)
+            .then(() => {
+                this.newNote = null; // this will hide the add note div
+            });
+    }
+
+    addBookmark() {
+        // TODO: implement me
+        this.newNote = null; // this will hide the add note div
+    };
+
+    addQuestion() {
+        // TODO: implement me
+        this.newNote = null; // this will hide the add note div
+    };
 }
 
 NotebookController.$inject = [

@@ -154,8 +154,38 @@ class ThemeController {
             RevisionsController.$inject = ["$scope", "$mdDialog", "items", "componentController", "allowRevert"];
         }));
 
+        this.$scope.$on('showStudentAssets', (event, args) => {
+            let componentController = args.componentController;
+            let $event = args.$event;
+            let studentAssetDialogTemplateUrl = scope.themePath + '/templates/studentAssetDialog.html';
+            let studentAssetTemplateUrl = scope.themePath + '/studentAsset/studentAsset.html';
+
+            this.$mdDialog.show({
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                templateUrl: studentAssetDialogTemplateUrl,
+                locals: {
+                    studentAssetTemplateUrl: studentAssetTemplateUrl,
+                    componentController: componentController
+                },
+                controller: StudentAssetDialogController
+            });
+            function StudentAssetDialogController($scope, $mdDialog, componentController) {
+                $scope.studentAssetTemplateUrl = studentAssetTemplateUrl;
+                $scope.componentController = componentController;
+                $scope.closeDialog = function () {
+                    $mdDialog.hide();
+                }
+            }
+            StudentAssetDialogController.$inject = ["$scope", "$mdDialog", "componentController"];
+        });
+
         this.$scope.$on('showNotebook', angular.bind(this, function (event, args) {
-            let notebookFilters = args.notebookFilters;
+            alert('show notebook not implemented yet!');
+            /*
+             TODO: delete me after confirming that this is no longer used
+
+             let notebookFilters = args.notebookFilters;
             let componentController = args.componentController;
             let $event = args.$event;
             let notebookDialogTemplateUrl = scope.themePath + '/templates/notebookDialog.html';
@@ -182,6 +212,7 @@ class ThemeController {
                 }
             }
             NotebookDialogController.$inject = ["$scope", "$mdDialog", "componentController"];
+             */
         }));
 
         // capture notebook open/close events

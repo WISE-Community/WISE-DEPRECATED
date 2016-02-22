@@ -1,6 +1,7 @@
 'use strict';
 
 class ProjectService {
+
     constructor($http, $injector, $rootScope, ConfigService) {
         this.$http = $http;
         this.$injector = $injector;
@@ -63,10 +64,12 @@ class ProjectService {
         return this.filters;
     };
 
+    /**
+     * Returns the name/title of the current project
+     */
     getName() {
         var name = this.getProjectMetadata().title;
-        name = name ? name : 'A WISE Project (No name)';
-        return name;
+        return name ? name : 'A WISE Project (No name)';
     };
 
     getProjectMetadata() {

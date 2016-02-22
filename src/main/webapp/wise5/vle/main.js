@@ -184,6 +184,10 @@ var _sessionService = require('../services/sessionService');
 
 var _sessionService2 = _interopRequireDefault(_sessionService);
 
+var _studentAsset = require('./studentAsset/studentAsset');
+
+var _studentAsset2 = _interopRequireDefault(_studentAsset);
+
 var _studentAssetService = require('../services/studentAssetService');
 
 var _studentAssetService2 = _interopRequireDefault(_studentAssetService);
@@ -230,11 +234,13 @@ var _moment2 = _interopRequireDefault(_moment);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-//import CRaterService from '../components/cRater/cRaterService';
+//import PhotoBoothService from '../components/photoBooth/photoBoothService';
+
+//import AudioRecorderService from '../components/audioRecorder/audioRecorderService';
 
 var mainModule = _angular2.default.module('vle', ['angularMoment', 'angular-toArrayFilter', 'directives', 'filters', 'highcharts-ng',
 //'ngAudio',
-'ngAria', 'ngFileUpload', 'ngMaterial', 'ngSanitize', 'ngWebSocket', 'notebook', 'oc.lazyLoad', 'ui.router',
+'ngAria', 'ngFileUpload', 'ngMaterial', 'ngSanitize', 'ngWebSocket', 'notebook', 'oc.lazyLoad', 'studentAsset', 'ui.router',
 //'ui.tinymce',
 'ui.tree']).service(_annotationService2.default.name, _annotationService2.default)
 //.service(AudioRecorderService.name, AudioRecorderService)
@@ -401,9 +407,7 @@ var mainModule = _angular2.default.module('vle', ['angularMoment', 'angular-toAr
         }
     });
 }]);
-//import PhotoBoothService from '../components/photoBooth/photoBoothService';
-
-//import AudioRecorderService from '../components/audioRecorder/audioRecorderService';
+//import CRaterService from '../components/cRater/cRaterService';
 
 exports.default = mainModule;
 //# sourceMappingURL=main.js.map

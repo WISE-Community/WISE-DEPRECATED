@@ -1346,52 +1346,48 @@ var GraphController = function () {
             }
         }
     }, {
-        key: 'attachNotebookItemToComponent',
+        key: 'attachStudentAsset',
 
         /**
-         * handle importing notebook item data (we only support csv for now)
+         * Handle importing external data (we only support csv for now)
+         * @param studentAsset CSV file student asset
          */
-        value: function attachNotebookItemToComponent(notebookItem) {
-            if (notebookItem.studentAsset != null) {
-                // we're importing a StudentAssetNotebookItem
-                var studentAsset = notebookItem.studentAsset;
-                this.StudentAssetService.copyAssetForReference(studentAsset).then(angular.bind(this, function (copiedAsset) {
-                    if (copiedAsset != null) {
-                        var attachment = {
-                            notebookItemId: notebookItem.id,
-                            studentAssetId: copiedAsset.id,
-                            iconURL: copiedAsset.iconURL
-                        };
+        value: function attachStudentAsset(studentAsset) {
+            var _this = this;
 
-                        this.StudentAssetService.getAssetContent(copiedAsset).then(angular.bind(this, function (assetContent) {
-                            var rowData = this.StudentDataService.CSVToArray(assetContent);
+            if (studentAsset != null) {
+                this.StudentAssetService.copyAssetForReference(studentAsset).then(function (copiedAsset) {
+                    if (copiedAsset != null) {
+
+                        _this.StudentAssetService.getAssetContent(copiedAsset).then(function (assetContent) {
+                            var rowData = _this.StudentDataService.CSVToArray(assetContent);
                             var params = {};
                             params.skipFirstRow = true; // first row contains header, so ignore it
                             params.xColumn = 0; // assume (for now) x-axis data is in first column
                             params.yColumn = 1; // assume (for now) y-axis data is in second column
 
-                            var seriesData = this.convertRowDataToSeriesData(rowData, params);
+                            var seriesData = _this.convertRowDataToSeriesData(rowData, params);
 
                             // get the index of the series that we will put the data into
-                            var seriesIndex = this.series.length; // we're always appending a new series
+                            var seriesIndex = _this.series.length; // we're always appending a new series
 
                             if (seriesIndex != null) {
 
                                 // get the series
-                                var series = this.series[seriesIndex];
+                                var series = _this.series[seriesIndex];
 
                                 if (series == null) {
                                     // the series is null so we will create a series
                                     series = {};
                                     series.name = copiedAsset.fileName;
-                                    series.color = this.seriesColors[seriesIndex];
+                                    series.color = _this.seriesColors[seriesIndex];
                                     series.marker = {
-                                        "symbol": this.seriesMarkers[seriesIndex]
+                                        "symbol": _this.seriesMarkers[seriesIndex]
                                     };
                                     series.regression = false;
                                     series.regressionSettings = {};
                                     series.canEdit = false;
-                                    this.series[seriesIndex] = series;
+                                    _this.series[seriesIndex] = series;
                                 }
 
                                 // set the data into the series
@@ -1399,16 +1395,14 @@ var GraphController = function () {
                             }
 
                             // render the graph
-                            this.setupGraph();
+                            _this.setupGraph();
 
                             // the graph has changed
-                            this.isDirty = true;
-                        }));
-                        this.studentDataChanged();
+                            _this.isDirty = true;
+                        });
+                        _this.studentDataChanged();
                     }
-                }));
-            } else if (notebookItem.studentWork != null) {
-                // TODO implement me
+                });
             }
         }
     }, {

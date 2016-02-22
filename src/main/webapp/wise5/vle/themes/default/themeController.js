@@ -10,6 +10,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var ThemeController = function () {
     function ThemeController($scope, ConfigService, ProjectService, StudentDataService, NotebookService, SessionService, $mdDialog, $mdToast, $mdComponentRegistry) {
+        var _this2 = this;
+
         _classCallCheck(this, ThemeController);
 
         this.$scope = $scope;
@@ -133,14 +135,42 @@ var ThemeController = function () {
             RevisionsController.$inject = ["$scope", "$mdDialog", "items", "componentController", "allowRevert"];
         }));
 
-        this.$scope.$on('showNotebook', angular.bind(this, function (event, args) {
-            var notebookFilters = args.notebookFilters;
+        this.$scope.$on('showStudentAssets', function (event, args) {
             var componentController = args.componentController;
             var $event = args.$event;
-            var notebookDialogTemplateUrl = scope.themePath + '/templates/notebookDialog.html';
-            var notebookTemplateUrl = scope.themePath + '/notebook/notebook.html';
+            var studentAssetDialogTemplateUrl = scope.themePath + '/templates/studentAssetDialog.html';
+            var studentAssetTemplateUrl = scope.themePath + '/studentAsset/studentAsset.html';
 
-            this.$mdDialog.show({
+            _this2.$mdDialog.show({
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                templateUrl: studentAssetDialogTemplateUrl,
+                locals: {
+                    studentAssetTemplateUrl: studentAssetTemplateUrl,
+                    componentController: componentController
+                },
+                controller: StudentAssetDialogController
+            });
+            function StudentAssetDialogController($scope, $mdDialog, componentController) {
+                $scope.studentAssetTemplateUrl = studentAssetTemplateUrl;
+                $scope.componentController = componentController;
+                $scope.closeDialog = function () {
+                    $mdDialog.hide();
+                };
+            }
+            StudentAssetDialogController.$inject = ["$scope", "$mdDialog", "componentController"];
+        });
+
+        this.$scope.$on('showNotebook', angular.bind(this, function (event, args) {
+            alert('show notebook not implemented yet!');
+            /*
+             TODO: delete me after confirming that this is no longer used
+              let notebookFilters = args.notebookFilters;
+            let componentController = args.componentController;
+            let $event = args.$event;
+            let notebookDialogTemplateUrl = scope.themePath + '/templates/notebookDialog.html';
+            let notebookTemplateUrl = scope.themePath + '/notebook/notebook.html';
+             this.$mdDialog.show({
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 templateUrl: notebookDialogTemplateUrl,
@@ -158,21 +188,22 @@ var ThemeController = function () {
                 $scope.componentController = componentController;
                 $scope.closeDialog = function () {
                     $mdDialog.hide();
-                };
+                }
             }
             NotebookDialogController.$inject = ["$scope", "$mdDialog", "componentController"];
+             */
         }));
 
         // capture notebook open/close events
         this.$mdComponentRegistry.when('notebook').then(function (it) {
-            var _this2 = this;
+            var _this3 = this;
 
             this.$scope.$watch(function () {
                 return it.isOpen();
             }, function (isOpenNewValue, isOpenOldValue) {
                 if (isOpenNewValue !== isOpenOldValue) {
-                    var currentNode = _this2.StudentDataService.getCurrentNode();
-                    _this2.NotebookService.saveNotebookToggleEvent(isOpenNewValue, currentNode);
+                    var currentNode = _this3.StudentDataService.getCurrentNode();
+                    _this3.NotebookService.saveNotebookToggleEvent(isOpenNewValue, currentNode);
                 }
             });
         }.bind(this));

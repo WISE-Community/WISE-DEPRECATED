@@ -11,12 +11,13 @@ import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.authentication.impl.StudentUserDetails;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
+import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.vle.wise5.VLEService;
+import org.wise.portal.service.workgroup.WorkgroupService;
 import org.wise.vle.domain.work.NotebookItem;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
@@ -34,6 +35,9 @@ public class NotebookController {
     @Autowired
     private RunService runService;
 
+    @Autowired
+    private WorkgroupService workgroupService;
+
     @RequestMapping(method = RequestMethod.GET, value = "/student/notebook/{runId}")
     protected void getNotebookItems(
             @PathVariable Integer runId,
@@ -47,9 +51,11 @@ public class NotebookController {
         User signedInUser = ControllerUtil.getSignedInUser();
         try {
             Run run = runService.retrieveById(new Long(runId));
+            Workgroup workgroup = workgroupService.retrieveById(new Long(workgroupId));
             if (signedInUser.getUserDetails() instanceof StudentUserDetails &&
-                    !run.isStudentAssociatedToThisRun(signedInUser)) {
-                // user is student and is not in this run, so deny access
+                    (!run.isStudentAssociatedToThisRun(signedInUser) || !workgroup.getMembers().contains(signedInUser))
+                    ) {
+                // user is student and is not in this run or not in the specified workgroup, so deny access
                 return;
             }
         } catch (ObjectNotFoundException e) {
@@ -77,17 +83,20 @@ public class NotebookController {
             @RequestParam(value = "componentId", required = false) String componentId,
             @RequestParam(value = "studentWorkId", required = false) Integer studentWorkId,
             @RequestParam(value = "studentAssetId", required = false) Integer studentAssetId,
+            @RequestParam(value = "type", required = false) String type,
             @RequestParam(value = "title", required = false) String title,
-            @RequestParam(value = "description", required = false) String description,
+            @RequestParam(value = "content", required = false) String content,
             @RequestParam(value = "clientSaveTime", required = true) String clientSaveTime,
             HttpServletResponse response) throws IOException {
 
         User signedInUser = ControllerUtil.getSignedInUser();
         try {
             Run run = runService.retrieveById(new Long(runId));
+            Workgroup workgroup = workgroupService.retrieveById(new Long(workgroupId));
             if (signedInUser.getUserDetails() instanceof StudentUserDetails &&
-                    !run.isStudentAssociatedToThisRun(signedInUser)) {
-                // user is student and is not in this run, so deny access
+                    (!run.isStudentAssociatedToThisRun(signedInUser) || !workgroup.getMembers().contains(signedInUser))
+                    ) {
+                // user is student and is not in this run or not in the specified workgroup, so deny access
                 return;
             }
         } catch (ObjectNotFoundException e) {
@@ -106,8 +115,9 @@ public class NotebookController {
                 componentId,
                 studentWorkId,
                 studentAssetId,
+                type,
                 title,
-                description,
+                content,
                 clientSaveTime,
                 clientDeleteTime
         );

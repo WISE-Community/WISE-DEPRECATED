@@ -47,7 +47,7 @@ else
         then
             # make sure db tables are not wiped out
             sed -i.bak '/hibernate.hbm2ddl.auto=[none|create]/d' $PROPERTIES_FILE
-            echo "hibernate.hbm2ddl.auto=none" >> $PROPERTIES_FILE
+            echo "hibernate.hbm2ddl.auto=validate" >> $PROPERTIES_FILE
 
             # start embedded tomcat
             mvn tomcat7:run

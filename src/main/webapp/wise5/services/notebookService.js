@@ -18,11 +18,7 @@ var NotebookService = function () {
         this.StudentAssetService = StudentAssetService;
         this.StudentDataService = StudentDataService;
 
-        this.filters = [{ 'name': 'all', 'label': 'All' },
-        //{'name': 'work', 'label': 'Work'}, TODO: uncomment me when adding student work to notebook is styled and ready for use in a run
-        { 'name': 'files', 'label': 'Files' }
-        //{'name': 'ideas', 'label': 'Ideas'} TODO: Add when Idea Manager is active
-        ];
+        this.filters = [{ 'name': 'all', 'label': 'All' }, { 'name': 'notes', 'label': 'Notes' }, { 'name': 'bookmarks', 'label': 'Bookmarks' }, { 'name': 'questions', 'label': 'Questions' }];
 
         this.notebook = {};
         this.notebook.items = [];
@@ -85,7 +81,6 @@ var NotebookService = function () {
             return this.$http(config).then(function (response) {
                 // loop through the assets and make them into JSON object with more details
                 _this.notebook.items = []; // clear local notebook items array
-                var result = [];
                 var allNotebookItems = response.data;
                 for (var n = 0; n < allNotebookItems.length; n++) {
                     var notebookItem = allNotebookItems[n];
@@ -95,6 +90,8 @@ var NotebookService = function () {
                     } else if (notebookItem.studentWorkId != null) {
                         // if this notebook item is a StudentWork item, add the association here
                         notebookItem.studentWork = _this.StudentDataService.getStudentWorkByStudentWorkId(notebookItem.studentWorkId);
+                    } else if (notebookItem.type === "note") {
+                        notebookItem.content = angular.fromJson(notebookItem.content);
                     }
                     if (notebookItem.serverDeleteTime == null) {
                         _this.notebook.items.push(notebookItem);
@@ -153,31 +150,63 @@ var NotebookService = function () {
             });
         }
     }, {
+        key: 'saveNotebookItem',
+        value: function saveNotebookItem(nodeId, type, title, content) {
+            var _this3 = this;
+
+            var config = {};
+            config.method = 'POST';
+            config.url = this.ConfigService.getStudentNotebookURL();
+            config.headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
+            var params = {};
+            params.workgroupId = this.ConfigService.getWorkgroupId();
+            params.periodId = this.ConfigService.getPeriodId();
+            params.nodeId = nodeId;
+            params.type = type;
+            params.title = title;
+            params.content = angular.toJson(content);
+            params.clientSaveTime = Date.parse(new Date());
+
+            config.data = $.param(params);
+
+            return this.$http(config).then(function (result) {
+                var notebookItem = result.data;
+                if (notebookItem != null) {
+                    if (notebookItem.type === "note") {
+                        notebookItem.content = angular.fromJson(notebookItem.content);
+                    }
+                    _this3.notebook.items.push(notebookItem);
+                    _this3.$rootScope.$broadcast('notebookUpdated', { notebook: _this3.notebook });
+                }
+                return null;
+            });
+        }
+    }, {
         key: 'uploadStudentAssetNotebookItem',
         value: function uploadStudentAssetNotebookItem(file) {
-            var _this3 = this;
+            var _this4 = this;
 
             this.StudentAssetService.uploadAsset(file).then(function (studentAsset) {
 
                 var config = {};
                 config.method = 'POST';
-                config.url = _this3.ConfigService.getStudentNotebookURL();
+                config.url = _this4.ConfigService.getStudentNotebookURL();
                 config.headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
                 var params = {};
-                params.workgroupId = _this3.ConfigService.getWorkgroupId();
-                params.periodId = _this3.ConfigService.getPeriodId();
+                params.workgroupId = _this4.ConfigService.getWorkgroupId();
+                params.periodId = _this4.ConfigService.getPeriodId();
                 params.studentAssetId = studentAsset.id;
                 params.clientSaveTime = Date.parse(new Date());
 
                 config.data = $.param(params);
 
-                return _this3.$http(config).then(function (result) {
+                return _this4.$http(config).then(function (result) {
                     var notebookItem = result.data;
                     if (notebookItem != null) {
-                        notebookItem.studentAsset = _this3.StudentAssetService.getAssetById(notebookItem.studentAssetId);
-                        _this3.notebook.items.push(notebookItem);
+                        notebookItem.studentAsset = _this4.StudentAssetService.getAssetById(notebookItem.studentAssetId);
+                        _this4.notebook.items.push(notebookItem);
                     }
-                    _this3.calculateTotalUsage();
+                    _this4.calculateTotalUsage();
                     return notebookItem;
                 });
             });
