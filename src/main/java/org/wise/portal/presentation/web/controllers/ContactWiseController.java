@@ -27,13 +27,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
-import java.util.Set;
 import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
-
-import net.tanesha.recaptcha.ReCaptchaImpl;
-import net.tanesha.recaptcha.ReCaptchaResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -388,59 +384,52 @@ public class ContactWiseController {
 	 * If the user is not logged in, we will check that they answered the reCaptcha correctly.
 	 * This is called after ContactWISEValidator.validate()
 	 */
-	protected void checkRecaptcha(HttpServletRequest request, BindingResult result) {
-		//get the signed in user or null if not signed in
-		User user = ControllerUtil.getSignedInUser();
+    protected void checkRecaptcha(HttpServletRequest request, BindingResult result) {
+        //get the signed in user or null if not signed in
+        User user = ControllerUtil.getSignedInUser();
 
-		if (user == null) {
-			//get the public and private keys from the wise.properties
-			String reCaptchaPublicKey = wiseProperties.getProperty("recaptcha_public_key");
-			String reCaptchaPrivateKey = wiseProperties.getProperty("recaptcha_private_key");
+        if (user == null) {
+            /*
+             * the user is not signed in so we will display a reCaptcha if the server
+             * has been set up with reCaptcha
+             */
 
-			//check if the public key is valid in case the admin entered it wrong
-			boolean reCaptchaKeyValid = WISEAuthenticationProcessingFilter.isReCaptchaKeyValid(reCaptchaPublicKey, reCaptchaPrivateKey);
+            //get the public and private keys from the wise.properties
+            String reCaptchaPublicKey = wiseProperties.getProperty("recaptcha_public_key");
+            String reCaptchaPrivateKey = wiseProperties.getProperty("recaptcha_private_key");
 
-			if (reCaptchaPrivateKey != null && reCaptchaPublicKey != null && reCaptchaKeyValid) {
-				//get the reCaptcha challenge
-				String reCaptchaChallengeField = request.getParameter("recaptcha_challenge_field");
+            //check if the public key is valid in case the admin entered it wrong
+            boolean reCaptchaKeyValid = WISEAuthenticationProcessingFilter.isReCaptchaKeyValid(reCaptchaPublicKey, reCaptchaPrivateKey);
+            
+            if (reCaptchaKeyValid) {
+                
+                // get the google reCaptcha response
+                String gRecaptchaResponse = request.getParameter("g-recaptcha-response");
+                
+                //check if the response is valid
+                boolean isResponseValid = WISEAuthenticationProcessingFilter.checkReCaptchaResponse(reCaptchaPrivateKey, reCaptchaPublicKey, gRecaptchaResponse);
+                
+                if (!isResponseValid) {
+                    // the reCaptcha failed so we will display an error
+                    
+                    String reCaptchaError = "";
 
-				//get what the user typed into the reCaptcha text input
-				String reCaptchaResponseField = request.getParameter("recaptcha_response_field");
+                    if (i18nProperties != null) {
+                        //get the invalid reCaptcha message
+                        reCaptchaError = i18nProperties.getProperty("error.contactwise-recaptcha");
+                    }
 
-				//get the client's IP address
-				String remoteAddr = request.getRemoteAddr();
+                    //if the error.contactwise-recaptcha key is not in the properties, the value will be null
+                    if (reCaptchaError == null) {
+                        reCaptchaError = "";
+                    }
 
-				if (reCaptchaChallengeField != null && reCaptchaResponseField != null && remoteAddr != null) {
-					//the user filled in the captcha
-
-					ReCaptchaImpl reCaptcha = new ReCaptchaImpl();
-					reCaptcha.setPrivateKey(reCaptchaPrivateKey);
-
-					//check if the user answer the reCaptcha correctly
-					ReCaptchaResponse reCaptchaResponse = reCaptcha.checkAnswer(remoteAddr, reCaptchaChallengeField, reCaptchaResponseField);
-
-					if (!reCaptchaResponse.isValid()) {
-						//the user did not answer the reCaptcha correctly so we will throw an error and display a message
-
-						String reCaptchaError = "";
-
-						if (i18nProperties != null) {
-							//get the invalid reCaptcha message
-							reCaptchaError = i18nProperties.getProperty("error.contactwise-recaptcha");
-						}
-
-						//if the error.contactwise-recaptcha key is not in the properties, the value will be null
-						if (reCaptchaError == null) {
-							reCaptchaError = "";
-						}
-
-						//create the error so that the form is not submitted and the message is displayed
-						result.reject("400", reCaptchaError);
-					}
-				}
-			}
-		}
-	}
+                    //create the error so that the form is not submitted and the message is displayed
+                    result.reject("400", reCaptchaError);
+                }
+            }
+        }
+    }
 
 	public String[] getMailRecipients() {
 		String[] recipients = new String[0];

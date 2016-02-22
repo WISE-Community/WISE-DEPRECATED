@@ -1,6 +1,4 @@
 <%@ include file="../include.jsp"%>
-<%@ page import="net.tanesha.recaptcha.ReCaptcha" %>
-<%@ page import="net.tanesha.recaptcha.ReCaptchaFactory" %>
 
 <!DOCTYPE html>
 <html dir="${textDirection}">
@@ -18,6 +16,10 @@
 <script src="${contextPath}/<spring:theme code="jquerysource"/>" type="text/javascript"></script>
 <script src="${contextPath}/<spring:theme code="jqueryuisource"/>" type="text/javascript"></script>
 <script src="${contextPath}/<spring:theme code="superfishsource"/>" type="text/javascript"></script>
+<style>
+.g-recaptcha div { margin-left: auto; margin-right: auto;}
+</style>
+<script src='https://www.google.com/recaptcha/api.js'></script>
 </head>
 <body>
 <script type="text/javascript">
@@ -121,25 +123,8 @@
 					    
 					     <div id="asterixWarning" class="instructions"><spring:message code="contact.contactwisegeneral.itemsWithStarAreRequired"/></div>  
 					    	<c:if test="${user == null && not empty reCaptchaPublicKey && not empty reCaptchaPrivateKey}">
-								<div style="width: 50%; margin:0 auto;">
-								<p><spring:message code='login.recaptcha'/></p>
-								<%
-									//get the captcha public and private key so we can make the captcha
-									String reCaptchaPublicKey = (String) request.getAttribute("reCaptchaPublicKey");
-									String reCaptchaPrivateKey = (String) request.getAttribute("reCaptchaPrivateKey");
-									
-									//create the captcha factory
-									ReCaptcha c = ReCaptchaFactory.newSecureReCaptcha(reCaptchaPublicKey, reCaptchaPrivateKey, false);
-									
-									//make the html that will display the captcha
-									String reCaptchaHtml = c.createRecaptchaHtml(null, null);
-									
-									//output the captcha html to the page
-									out.print(reCaptchaHtml);
-								%>
-								</div>
+                                <div class="g-recaptcha" data-sitekey="${reCaptchaPublicKey}"></div>
 							</c:if>
-							
 					    <div><input type="submit" onclick="detectUserSystem()" id="sendMessageButton" value="<spring:message code="contact.contactwisegeneral.sendMessage"/>"></input></div>
 					                  
 					</form:form>

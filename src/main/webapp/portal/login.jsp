@@ -23,6 +23,7 @@ function validateLoginForm() {
 	return true;
 }
 </script>
+<script src='https://www.google.com/recaptcha/api.js'></script>
 </head>
 <body onload="document.getElementById('username').focus();">
 
@@ -35,9 +36,6 @@ function validateLoginForm() {
 						<div id="signinForm">
 							<div class="errorMsgNoBg">
 								<c:choose>
-                                    <c:when test="${reCaptchaEmpty}">
-                                        <p><spring:message code="login.recaptcha.empty" /></p>
-                                    </c:when>
                                     <c:when test="${reCaptchaFailed}">
                                         <p><spring:message code="login.recaptcha.incorrect" /></p>
                                     </c:when>
@@ -54,21 +52,7 @@ function validateLoginForm() {
 							</div>
 							<c:if test="${requireCaptcha && not empty reCaptchaPublicKey && not empty reCaptchaPrivateKey}">
 								<div style="width: 60%; margin:0 auto">
-								<p><spring:message code='login.recaptcha'/></p>
-								<%
-									//get the captcha public and private key so we can make the captcha
-									String reCaptchaPublicKey = (String) request.getAttribute("reCaptchaPublicKey");
-									String reCaptchaPrivateKey = (String) request.getAttribute("reCaptchaPrivateKey");
-									
-									//create the captcha factory
-									ReCaptcha c = ReCaptchaFactory.newSecureReCaptcha(reCaptchaPublicKey, reCaptchaPrivateKey, false);
-									
-									//make the html that will display the captcha
-									String reCaptchaHtml = c.createRecaptchaHtml(null, null);
-									
-									//output the captcha html to the page
-									out.print(reCaptchaHtml);
-								%>
+								<div class="g-recaptcha" data-sitekey="${reCaptchaPublicKey}"></div>
 								</div>
 							</c:if>
 							<input type='hidden' value='${redirect}' name='redirect'/>

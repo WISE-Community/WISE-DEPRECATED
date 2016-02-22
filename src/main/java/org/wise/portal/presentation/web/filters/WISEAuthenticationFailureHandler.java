@@ -155,13 +155,10 @@ public class WISEAuthenticationFailureHandler extends
 		if(isReCaptchaRequired) {
 		    //the user is required to enter ReCaptcha text
 		    
-		    if(failedMessage.equals("Empty ReCaptcha Text")) {
+		    if(failedMessage.equals("Please verify that you are not a robot.")) {
 		        //the user has left the ReCaptcha field empty
-	            url = authenticationFailureUrl + "&requireCaptcha=true&reCaptchaEmpty=true";
-	        } else if(failedMessage.equals("Incorrect ReCaptcha Text")) {
-	            //the user has entered text into the ReCaptcha field but is incorrect
 	            url = authenticationFailureUrl + "&requireCaptcha=true&reCaptchaFailed=true";
-	        } else {
+	        }  else {
 	            //the user is required to enter ReCaptcha text
 	            url = authenticationFailureUrl + "&requireCaptcha=true";
 	        }

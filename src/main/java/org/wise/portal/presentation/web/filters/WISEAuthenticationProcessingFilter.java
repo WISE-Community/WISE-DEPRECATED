@@ -24,6 +24,7 @@
 package org.wise.portal.presentation.web.filters;
 
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
@@ -35,19 +36,17 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.net.ssl.HttpsURLConnection;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import net.tanesha.recaptcha.ReCaptcha;
-import net.tanesha.recaptcha.ReCaptchaFactory;
-import net.tanesha.recaptcha.ReCaptchaImpl;
-import net.tanesha.recaptcha.ReCaptchaResponse;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -57,6 +56,9 @@ import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.listeners.WISESessionListener;
 import org.wise.portal.service.user.UserService;
+
+import net.tanesha.recaptcha.ReCaptcha;
+import net.tanesha.recaptcha.ReCaptchaFactory;
 
 /**
  * Custom AuthenticationProcessingFilter that subclasses Acegi Security. This
@@ -106,19 +108,16 @@ public class WISEAuthenticationProcessingFilter extends UsernamePasswordAuthenti
             
             String errorMessage = null;
             
-            if (isReCaptchaResponseEmpty(request, response)) {
-                //the user has left the ReCaptcha field empty
-                errorMessage = "Empty ReCaptcha Text";
-            } else if (!isReCaptchaResponseValid(request, response)) {
-                //the user has entered text into the ReCaptcha field but it is incorrect
-                errorMessage = "Incorrect ReCaptcha Text";
+            if (!isReCaptchaResponseValid(request, response)) {
+                //the user has not answered the ReCaptcha correctly
+                errorMessage = "Please verify that you are not a robot.";
             }
             
             if (errorMessage != null) {
                 try {
                     /*
                      * the user has not been authenticated because they did not
-                     * enter the ReCaptcha text correctly
+                     * pass the ReCaptcha
                      */
                     unsuccessfulAuthentication(request, response, new AuthenticationException(errorMessage) {});
                     
@@ -204,26 +203,6 @@ public class WISEAuthenticationProcessingFilter extends UsernamePasswordAuthenti
     }
     
     /**
-     * Check if the user has left the ReCaptcha field empty
-     * @param request
-     * @param response
-     * @return whether the user has left the ReCaptcha field empty
-     */
-    protected boolean isReCaptchaResponseEmpty(HttpServletRequest request, HttpServletResponse response) {
-        Boolean result = true;
-        
-        //get the value of the ReCaptcha field
-        String reCaptchaResponseField = request.getParameter("recaptcha_response_field");
-        
-        if (reCaptchaResponseField != null && !reCaptchaResponseField.equals("")) {
-            //the user has entered something into the ReCaptcha field
-            result = false;
-        }
-        
-        return result;
-    }
-    
-    /**
      * Check if the user has entered the correct text for ReCaptcha
      * @param request
      * @param response
@@ -232,32 +211,15 @@ public class WISEAuthenticationProcessingFilter extends UsernamePasswordAuthenti
     protected boolean isReCaptchaResponseValid(HttpServletRequest request, HttpServletResponse response) {
         Boolean result = false;
         
-      //get the public and private keys from the wise.properties
+        //get the public and private keys from the wise.properties
         String reCaptchaPublicKey = wiseProperties.getProperty("recaptcha_public_key");
         String reCaptchaPrivateKey = wiseProperties.getProperty("recaptcha_private_key");
+        
+        // get the google reCaptcha response
+        String gRecaptchaResponse = request.getParameter("g-recaptcha-response");
 
-        //check if the public key is valid in case the admin entered it wrong
-        boolean reCaptchaKeyValid = isReCaptchaKeyValid(reCaptchaPublicKey, reCaptchaPrivateKey);
-
-        if (reCaptchaKeyValid) {
-            String reCaptchaChallengeField = request.getParameter("recaptcha_challenge_field");
-            String reCaptchaResponseField = request.getParameter("recaptcha_response_field");
-            String remoteAddr = request.getRemoteAddr();
-            
-            if (reCaptchaChallengeField != null && reCaptchaResponseField != null && remoteAddr != null) {
-                //the user filled in the ReCaptcha
-
-                ReCaptchaImpl reCaptcha = new ReCaptchaImpl();
-                reCaptcha.setPrivateKey(reCaptchaPrivateKey);
-                
-                //check if the user entered the correct ReCaptcha text
-                ReCaptchaResponse reCaptchaResponse = reCaptcha.checkAnswer(remoteAddr, reCaptchaChallengeField, reCaptchaResponseField);
-
-                if (reCaptchaResponse.isValid()) {
-                    //the user has entered the correct ReCaptcha text
-                    result = true;
-                }
-            }
+        if (checkReCaptchaResponse(reCaptchaPrivateKey, reCaptchaPublicKey, gRecaptchaResponse)) {
+            result = true;
         }
         
         return result;
@@ -377,5 +339,72 @@ public class WISEAuthenticationProcessingFilter extends UsernamePasswordAuthenti
             HttpServletResponse response, AuthenticationException failed)
                     throws IOException, ServletException {
         super.unsuccessfulAuthentication(request, response, failed);
+    }
+    
+    /**
+     * Check if the response is valid
+     * @param reCaptchaPrivateKey the ReCaptcha private key
+     * @param reCaptchaPublicKey the ReCaptcha public key
+     * @param gRecaptchaResponse the response
+     * @return whether the user answered the ReCaptcha successfully
+     */
+    public static boolean checkReCaptchaResponse(String reCaptchaPrivateKey, String reCaptchaPublicKey, String gRecaptchaResponse) {
+        
+        boolean isValid = false;
+        
+        //check if the public key is valid in case the admin entered it wrong
+        boolean reCaptchaKeyValid = isReCaptchaKeyValid(reCaptchaPublicKey, reCaptchaPrivateKey);
+
+        if (reCaptchaKeyValid &&
+                reCaptchaPrivateKey != null && 
+                reCaptchaPublicKey != null && 
+                gRecaptchaResponse != null &&
+                !gRecaptchaResponse.equals("")) {
+
+            try {
+                
+                // the url to verify the response
+                URL verifyURL = new URL("https://www.google.com/recaptcha/api/siteverify");
+                HttpsURLConnection connection = (HttpsURLConnection) verifyURL.openConnection();
+                connection.setRequestMethod("POST");
+                
+                // set the params
+                String postParams = "secret=" + reCaptchaPrivateKey + "&response=" + gRecaptchaResponse;
+
+                // make the request to verify if the user answered the ReCaptcha successfully
+                connection.setDoOutput(true);
+                DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
+                outputStream.writeBytes(postParams);
+                outputStream.flush();
+                outputStream.close();
+
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                String inputLine = null;
+                StringBuffer responseString = new StringBuffer();
+
+                // read the response from the verify request
+                while((inputLine = bufferedReader.readLine()) != null) {
+                    responseString.append(inputLine);
+                }
+
+                bufferedReader.close();
+
+                try {
+                    // create a JSON object from the response
+                    JSONObject responseObject = new JSONObject(responseString.toString());
+
+                    // get the value of the success field
+                    isValid = responseObject.getBoolean("success");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        
+        return isValid;
     }
 }

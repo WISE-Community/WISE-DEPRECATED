@@ -53,7 +53,6 @@ public class LoginController {
 		String failed = request.getParameter("failed");
 		String redirectUrl = request.getParameter("redirect");
 		String requireCaptcha = request.getParameter("requireCaptcha");
-		String reCaptchaEmpty = request.getParameter("reCaptchaEmpty");
 		String reCaptchaFailed = request.getParameter("reCaptchaFailed");
 
 		// get the user name that we will use to pre-populate the Username field
@@ -90,14 +89,6 @@ public class LoginController {
 		          // the user has entered the ReCaptcha text incorrectly
 		            modelMap.put("reCaptchaFailed", Boolean.TRUE);
 		        }
-		        
-		        if (StringUtils.hasText(reCaptchaEmpty)) {
-		            /*
-		             * the user is required to enter the ReCaptcha text
-		             * but they have left the field empty
-		             */
-                    modelMap.put("reCaptchaEmpty", Boolean.TRUE);
-                }
 			}
 		}
 
