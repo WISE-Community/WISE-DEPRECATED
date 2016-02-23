@@ -44,7 +44,7 @@ var ProjectAssetController = function () {
         value: function uploadAssetItems(files) {
             var _this3 = this;
 
-            this.ProjectAssetService.uploadAssets(files).then(function (newProjectAssets) {
+            this.ProjectAssetService.uploadAssets(files).then(function (uploadAssetsResult) {
                 _this3.projectAssets = _this3.ProjectAssetService.projectAssets;
             });
         }

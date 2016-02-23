@@ -27,7 +27,7 @@ class ProjectAssetController {
     }
 
     uploadAssetItems(files) {
-        this.ProjectAssetService.uploadAssets(files).then((newProjectAssets) => {
+        this.ProjectAssetService.uploadAssets(files).then((uploadAssetsResult) => {
             this.projectAssets = this.ProjectAssetService.projectAssets;
         });
     }
