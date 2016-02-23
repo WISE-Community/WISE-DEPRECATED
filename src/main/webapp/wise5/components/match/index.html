@@ -131,14 +131,14 @@
         <div ui-tree='options'>
             <ol ui-tree-nodes data-type='bucket' ng-model='matchController.buckets'>
                 <li ui-tree-node ng-repeat='bucket in matchController.buckets' class='bucket'>
-                    <div class='group-title angular-ui-tree-handle' data-nodrag>
+                    <div ui-tree-handle class='group-title angular-ui-tree-handle' data-nodrag>
                         <div>{{bucket.value}}</div>
                     </div>
                     <ol ui-tree-nodes data-type='choice' ng-model='bucket.items'>
-                        <li ui-tree-node ng-repeat='item in bucket.items'>
-                            <div class='category-title angular-ui-tree-handle' data-nodrag='{{matchController.isDisabled}}'>
+                        <li ng-repeat='item in bucket.items' ui-tree-node>
+                            <div ui-tree-handle class='category-title angular-ui-tree-handle' data-nodrag='{{matchController.isDisabled}}'>
                                 <div compile='item.value'></div>
-                                <div ng-class='{"correct": item.isCorrect, "incorrectPosition": item.isIncorrectPosition, "incorrect": !item.isCorrect}'>{{item.feedback}}</div>
+                                <div ng-show="item.feedback" ng-class='{"correct": item.isCorrect, "incorrectPosition": item.isIncorrectPosition, "incorrect": !item.isCorrect}'>{{item.feedback}}</div>
                             </div>
                         </li>
                     </ol>
@@ -164,14 +164,16 @@
                         componentstateid='{{componentState.id}}'></annotation>
         </div>
         <div class="component-content__actions" layout="row">
-            <md-button class="md-raised md-primary"
+            <md-button class="md-primary"
+                       ng-class="{'md-raised': !matchController.showSubmitButton()}"
                        ng-click='matchController.saveButtonClicked()'
-                       ng-show='matchController.showSaveButton()'
-                       ng-disabled='matchController.isDisabled'>Save</md-button>
+                       ng-if='matchController.showSaveButton()'
+                       ng-disabled='matchController.isDisabled || (!matchController.isDirty && matchController.isSubmitDirty)'>Save</md-button>
             <md-button class="md-raised md-primary"
                        ng-click='matchController.submitButtonClicked()'
-                       ng-show='matchController.showSubmitButton()'
-                       ng-disabled='matchController.isDisabled'>Submit</md-button>
+                       ng-if='matchController.showSubmitButton()'
+                       ng-disabled='matchController.isDisabled || !matchController.isDirty'>Submit</md-button>
+            <span ng-show="matchController.saveMessage.text" class="node-content__actions__info md-body-1">{{matchController.saveMessage.text}} <span am-time-ago="matchController.saveMessage.time"></span></span>
         </div>
     </div>
     <div ng-if='matchController.mode == "grading"' style='width: 400px'>

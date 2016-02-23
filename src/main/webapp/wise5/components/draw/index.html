@@ -72,7 +72,8 @@
                         componentstateid='{{componentState.id}}'></annotation>
         </div>
         <div class="component-content__actions" layout="row">
-            <md-button class="md-raised md-primary"
+            <md-button class="md-primary"
+                       ng-class="{'md-raised': !drawController.showSubmitButton()}"
                        ng-click='drawController.saveButtonClicked()'
                        ng-disabled='drawController.isDisabled'
                        ng-show='drawController.showSaveButton()'>Save</md-button>

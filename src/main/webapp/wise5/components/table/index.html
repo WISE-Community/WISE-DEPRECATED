@@ -63,7 +63,7 @@
                               rows='10'
                               cols='100'></textarea>
         </div>
-        <div id='prompt' compile='tableController.getPrompt()'></div>
+        <div compile='tableController.getPrompt()'></div>
         <div class="component-content__actions" layout="row">
             <md-button class="md-accent" ng-show="tableController.isStudentAttachmentEnabled"
                        ng-click="nodeController.showStudentAssets($event, component.id, tableController.isDisabled)">
@@ -99,14 +99,15 @@
                         toworkgroupid='{{workgroupId}}'
                         componentstateid='{{componentState.id}}'></annotation>
         </div>
-        <button id='saveButton'
-            ng-click='tableController.saveButtonClicked()'
-            ng-disabled='tableController.isDisabled'
-            ng-show='tableController.showSaveButton()'>Save</button>
-        <button id='submitButton'
-            ng-click='tableController.submitButtonClicked()'
-            ng-disabled='tableController.isDisabled'
-            ng-show='tableController.showSubmitButton()'>Submit</button>
+        <button class="md-primary"
+                ng-class="{'md-raised': !tableController.showSubmitButton()}"
+                ng-click='tableController.saveButtonClicked()'
+                ng-disabled='tableController.isDisabled'
+                ng-show='tableController.showSaveButton()'>Save</button>
+        <button class="md-primary md-raised"
+                ng-click='tableController.submitButtonClicked()'
+                ng-disabled='tableController.isDisabled'
+                ng-show='tableController.showSubmitButton()'>Submit</button>
     </div>
     <div ng-if='tableController.mode == "grading"' style='width: 400px'>
         <annotation type='score'
