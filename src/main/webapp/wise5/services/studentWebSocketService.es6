@@ -1,4 +1,7 @@
+'use strict';
+
 class StudentWebSocketService {
+
     constructor($rootScope,
                 $websocket,
                 ConfigService,
@@ -17,15 +20,10 @@ class StudentWebSocketService {
      */
     initialize() {
 
-        // get the mode
-        var mode = this.ConfigService.getConfigParam('mode');
-
-        if (mode === 'preview') {
-            // we are previewing the project
+        if (this.ConfigService.isPreview()) {
+            // We are previewing the project. Don't initialize websocket.
         } else {
-            // we are in a run
-
-            // get the parameters for initializing the websocket connection
+            // We are in a run. Get the parameters for initializing the websocket connection
             var runId = this.ConfigService.getRunId();
             var periodId = this.ConfigService.getPeriodId();
             var workgroupId = this.ConfigService.getWorkgroupId();
@@ -69,9 +67,7 @@ class StudentWebSocketService {
      */
     sendStudentStatus() {
 
-        var mode = this.ConfigService.getConfigParam('mode');
-
-        if (mode !== 'preview') {
+        if (!this.ConfigService.isPreview()) {
             // we are in a run
 
             // get the current node id
@@ -103,9 +99,8 @@ class StudentWebSocketService {
      * @param data the data to send to the classmates
      */
     sendStudentToClassmatesInPeriodMessage(data) {
-        var mode = this.ConfigService.getConfigParam('mode');
 
-        if (mode !== 'preview') {
+        if (!this.ConfigService.isPreview()) {
             // we are in a run
 
             // get the current node id

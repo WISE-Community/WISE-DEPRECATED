@@ -1123,7 +1123,7 @@ class ProjectService {
     };
 
     getThemePath() {
-        var wiseBaseURL = this.ConfigService.getConfigParam('wiseBaseURL');
+        var wiseBaseURL = this.ConfigService.getWISEBaseURL();
         var project = this.project;
         if (project && project.theme) {
             // TODO: check if this is a valid theme (using ConfigService) rather than just truthy

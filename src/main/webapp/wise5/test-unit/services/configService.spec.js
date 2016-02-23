@@ -71,11 +71,17 @@ describe('ConfigService Unit Test', function () {
         it('should get the teacher workgroup id', function () {
             // If teacher workgroup doesn't exist, it should return null
             ConfigService.setConfig(sampleConfig2);
-            var teacherWorkgroupId = ConfigService.getTeacherWorkgroupId();
-            expect(teacherWorkgroupId).toBeNull();
+            var teacherWorkgroupIdDoesNotExist = ConfigService.getTeacherWorkgroupId();
+            expect(teacherWorkgroupIdDoesNotExist).toBeNull();
 
             // Otherwise it should get the teacher's workgroup id from the config
+            var expectedTeacherWorkgroupId = 1;
+            ConfigService.setConfig(sampleConfig1);
+            var teacherWorkgroupIdExist = ConfigService.getTeacherWorkgroupId();
+            expect(teacherWorkgroupIdExist).toEqual(expectedTeacherWorkgroupId);
         });
+
+        // TODO: test getPeriodIdByWorkgroupId()
     });
 });
 //# sourceMappingURL=configService.spec.js.map

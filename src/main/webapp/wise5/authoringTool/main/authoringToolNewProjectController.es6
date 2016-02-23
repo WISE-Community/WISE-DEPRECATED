@@ -1,4 +1,7 @@
+'use strict';
+
 class AuthoringToolNewProjectController {
+
     constructor($state, ConfigService, ProjectService) {
         this.$state = $state;
         this.ConfigService = ConfigService;
@@ -55,7 +58,7 @@ class AuthoringToolNewProjectController {
             this.$state.go('root.project', {projectId: projectId});
         });
     }
-}
+};
 
 AuthoringToolNewProjectController.$inject = ['$state', 'ConfigService', 'ProjectService'];
 

@@ -289,8 +289,8 @@ class SessionService {
                  * do not log them out
                  */
 
-                //get the context path e.g. /wise
-                var contextPath = this.ConfigService.getConfigParam('contextPath');
+                // Get the wiseBaseURL e.g. /wise
+                var wiseBaseURL = this.ConfigService.getWISEBaseURL();
 
                 var homePageURL = '';
 
@@ -299,10 +299,10 @@ class SessionService {
 
                 if (userType === 'student') {
                     // send the user to the student home page
-                    homePageURL = contextPath + '/student';
+                    homePageURL = wiseBaseURL + '/student';
                 } else if (userType === 'teacher') {
                     // send the user to the teacher home page
-                    homePageURL = contextPath + '/teacher';
+                    homePageURL = wiseBaseURL + '/teacher';
                 } else {
                     // send the user to the main home page
                     homePageURL = mainHomePageURL;

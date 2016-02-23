@@ -20,10 +20,7 @@ class StudentDataService {
 
     retrieveStudentData() {
 
-        // get the mode
-        var mode = this.ConfigService.getConfigParam('mode');
-
-        if (mode === 'preview') {
+        if (this.ConfigService.isPreview()) {
             // we are previewing the project
 
             // initialize dummy student data
@@ -866,8 +863,8 @@ class StudentDataService {
             annotations = [];
         }
 
-        if (this.ConfigService.getConfigParam('mode') === 'preview') {
-            // if we're in preview mode, don't make any request to the server
+        if (this.ConfigService.isPreview()) {
+            // if we're in preview, don't make any request to the server
             return;
         }
 

@@ -17,11 +17,6 @@ var ConfigService = function () {
     }
 
     _createClass(ConfigService, [{
-        key: 'getConfig',
-        value: function getConfig() {
-            return this.config;
-        }
-    }, {
         key: 'setConfig',
         value: function setConfig(config) {
             this.config = config;
@@ -148,6 +143,11 @@ var ConfigService = function () {
         key: 'getWebSocketURL',
         value: function getWebSocketURL() {
             return this.getConfigParam('webSocketURL');
+        }
+    }, {
+        key: 'getWISEBaseURL',
+        value: function getWISEBaseURL() {
+            return this.getConfigParam('wiseBaseURL');
         }
     }, {
         key: 'getMode',

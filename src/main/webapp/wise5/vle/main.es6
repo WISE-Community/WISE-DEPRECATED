@@ -200,7 +200,7 @@ let mainModule = angular.module('vle', [
                     views: {
                         'nodeView': {
                             templateProvider: ['$http', 'ConfigService', function ($http, ConfigService) {
-                                let wiseBaseURL = ConfigService.getConfigParam('wiseBaseURL');
+                                let wiseBaseURL = ConfigService.getWISEBaseURL();
                                 return $http.get(wiseBaseURL + '/wise5/node/index.html').then(
                                     response => {
                                         return response.data;

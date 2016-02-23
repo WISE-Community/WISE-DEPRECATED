@@ -578,7 +578,7 @@ class NodeController {
         var componentEvents = null;
         var nodeStates = null;
 
-        if (this.ConfigService.getConfigParam('mode') === 'preview') {
+        if (this.ConfigService.isPreview()) {
             // we are in preview mode so we will pretend that the data was saved to the server
 
             this.isDirty = false;

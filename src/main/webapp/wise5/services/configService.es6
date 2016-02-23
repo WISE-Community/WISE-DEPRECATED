@@ -7,10 +7,6 @@ class ConfigService {
         this.config = null;
     };
 
-    getConfig() {
-        return this.config;
-    };
-
     setConfig(config) {
         this.config = config;
         this.sortClassmateUserInfosAlphabeticallyByName();
@@ -117,6 +113,10 @@ class ConfigService {
 
     getWebSocketURL() {
         return this.getConfigParam('webSocketURL');
+    };
+
+    getWISEBaseURL() {
+        return this.getConfigParam('wiseBaseURL');
     };
 
     getMode() {

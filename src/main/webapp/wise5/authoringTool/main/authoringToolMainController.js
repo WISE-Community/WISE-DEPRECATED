@@ -14,12 +14,9 @@ var AuthoringToolMainController = function () {
 
         this.ConfigService = ConfigService;
         this.$state = $state;
-        if (this.ConfigService.getConfigParam('projectBaseURL')) {
-            this.$state.go('root.project', { projectId: 15621 }).then(function (result) {});
-        } else {
-            // get list of projects owned by this user
-            this.projects = this.ConfigService.getConfigParam("projects");
-        }
+
+        // get list of projects owned by this user
+        this.projects = this.ConfigService.getConfigParam("projects");
     }
 
     _createClass(AuthoringToolMainController, [{
@@ -36,6 +33,8 @@ var AuthoringToolMainController = function () {
 
     return AuthoringToolMainController;
 }();
+
+;
 
 AuthoringToolMainController.$inject = ['$state', 'ConfigService'];
 

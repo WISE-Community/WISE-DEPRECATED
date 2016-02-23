@@ -1,4 +1,7 @@
+'use strict';
+
 class NodeController {
+
     constructor($scope,
                 $state,
                 $stateParams,
