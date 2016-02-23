@@ -11,7 +11,7 @@
 }
 
 .discussion-posts {
-  padding: 16px 8px 8px;
+  padding: 16px 12px 8px;
 
   @media only screen and (min-width: $layout-breakpoint-xs) {
     padding: 16px 16px 0;
@@ -185,7 +185,7 @@ md-input-container.discussion-new__input-container {
 }
 
 .discussion-new-reply__input-container {
-  padding: 0;
+  padding-top: 0;
   margin: 0;
 }
 

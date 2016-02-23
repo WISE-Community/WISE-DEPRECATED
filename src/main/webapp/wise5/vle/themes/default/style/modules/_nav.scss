@@ -1,3 +1,11 @@
+#nav {
+  transition: all 500ms ease-out;
+
+  &.ng-hide, &.ng-hide-animate {
+    opacity: 0;
+  }
+}
+
 .nav-head {
   color: color('text-secondary');
   font-weight: 500;
@@ -6,57 +14,6 @@
     line-height: 20px;
   }
 }
-
-//.nav-group, .nav-root {
-//}
-
-/*.group-info {
-  padding: 16px;
-  border-bottom-right-radius: 0;
-  border-bottom-left-radius: 0;
-}
-
-.group-info__avatar {
-  &.avatar {
-    height: 48px + $avatar-icon-padding-lg*2;
-    width: 48px + $avatar-icon-padding-lg*2;
-  }
-
-  &.avatar--icon {
-    padding: $avatar-icon-padding-lg;
-    height: 48px;
-    width: 48px;
-
-    md-icon {
-      font-size: 48px;
-    }
-  }
-}
-
-.group-info__details {
-  padding-left: 16px;
-  margin-top: -8px;
-}
-
-.group-info__title {
-  font-weight: bold !important;
-}
-
-.group-info__more {
-  padding: 0;
-  color: $text-color-secondary;
-
-  md-progress-linear {
-    display: inline-block;
-    width: 64px;
-    vertical-align: middle;
-    padding: 0 12px;
-
-    > .md-container {
-      top: 0;
-    }
-  }
-}*/
 
 .nav-contents--group {
   background-color: color('gray-light');

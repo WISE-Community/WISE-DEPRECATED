@@ -22,22 +22,11 @@ p {
 }
 
 // Color
-.primary {
-  color: color('primary');
-}
-
-.accent-1 {
-  color: color('accent-1');
-}
-.accent-2 {
-  color: color('accent-2');
-}
-.warn {
-  color: color('warn');
-}
-
-.success {
-  color: color('success');
+// Set classes for each named color in the $colors map
+@each $key, $value in $colors {
+    .#{$key} {
+      color: $value;
+    }
 }
 
 // Links

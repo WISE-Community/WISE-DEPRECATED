@@ -61,7 +61,7 @@ class ThemeController {
         this.connectionLostShown = false;
 
         // alert user when a locked node has been clicked
-        this.$scope.$on('nodeClickLocked', angular.bind(this, function (event, args) {
+        this.$scope.$on('nodeClickLocked', (event, args) => {
             let nodeId = args.nodeId;
 
             // TODO: customize alert with constraint details, correct node term
@@ -69,43 +69,44 @@ class ThemeController {
                 this.$mdDialog.alert()
                     .parent(angular.element(document.body))
                     .title('Item Locked')
-                    .content('Sorry, you cannot view this item yet.')
+                    .textContent('Sorry, you cannot view this item yet.')
                     .ariaLabel('Item Locked')
-                    .clickOutsideToClose(true)
                     .ok('OK')
                     .targetEvent(event)
             );
-        }));
+        });
 
         // alert user when inactive for a long time
-        this.$scope.$on('showSessionWarning', angular.bind(this, function() {
+        this.$scope.$on('showSessionWarning', (ev) => {
             let alert = this.$mdDialog.confirm()
                 .parent(angular.element(document.body))
                 .title('Session Timeout')
-                .content('You have been inactive for a long time. Do you want to stay logged in?')
+                .textContent('You have been inactive for a long time. Do you want to stay logged in?')
                 .ariaLabel('Session Timeout')
+                .targetEvent(ev)
                 .ok('YES')
                 .cancel('No');
 
-            this.$mdDialog.show(alert).then(()=> {
+            this.$mdDialog.show(alert).then(() => {
                 this.SessionService.renewSession();
                 alert = undefined;
-            }, ()=> {
+            }, () => {
                 this.SessionService.forceLogOut();
             });
-        }));
+        });
 
         // alert user when server loses connection
-        this.$scope.$on('serverDisconnected', angular.bind(this, function() {
+        this.$scope.$on('serverDisconnected', () => {
             this.handleServerDisconnect();
-        }));
+        });
 
         // remove alert when server regains connection
-        this.$scope.$on('serverConnected', angular.bind(this, function() {
+        this.$scope.$on('serverConnected', () => {
             this.handleServerReconnect();
-        }));
+        });
 
         // alert user when attempt to add component state to notebook that already exists in notebook
+        // TODO: remove, deprecated
         this.$scope.$on('notebookAddDuplicateAttempt', angular.bind(this, function (event, args) {
             this.$mdDialog.show(
                 this.$mdDialog.alert()
@@ -120,7 +121,7 @@ class ThemeController {
         }));
 
         // show list of revisions in a dialog when user clicks the show revisions link for a component
-        this.$scope.$on('showRevisions', angular.bind(this, function (event, args) {
+        this.$scope.$on('showRevisions', (event, args) => {
             let revisions = args.revisions;
             let componentController = args.componentController;
             let allowRevert = args.allowRevert;
@@ -142,17 +143,17 @@ class ThemeController {
                 $scope.items = items;
                 $scope.componentController = componentController;
                 $scope.allowRevert = allowRevert;
-                $scope.close = function() {
+                $scope.close = () => {
                     $mdDialog.hide();
                 };
-                $scope.revertWork = function(componentState) {
+                $scope.revertWork = (componentState) => {
                     $scope.componentController.setStudentWork(componentState);
                     $scope.componentController.studentDataChanged();
                     $mdDialog.hide();
                 };
             }
             RevisionsController.$inject = ["$scope", "$mdDialog", "items", "componentController", "allowRevert"];
-        }));
+        });
 
         this.$scope.$on('showStudentAssets', (event, args) => {
             let componentController = args.componentController;
@@ -185,7 +186,7 @@ class ThemeController {
             /*
              TODO: delete me after confirming that this is no longer used
 
-             let notebookFilters = args.notebookFilters;
+            let notebookFilters = args.notebookFilters;
             let componentController = args.componentController;
             let $event = args.$event;
             let notebookDialogTemplateUrl = scope.themePath + '/templates/notebookDialog.html';
@@ -203,21 +204,21 @@ class ThemeController {
                 controller: NotebookDialogController
             });
             function NotebookDialogController($scope, $mdDialog, componentController) {
-                $scope.notebookFilters = notebookFilters;
-                $scope.notebookFilter = notebookFilters[0].name;
-                $scope.notebookTemplateUrl = notebookTemplateUrl;
-                $scope.componentController = componentController;
+                    $scope.notebookFilters = notebookFilters;
+                    $scope.notebookFilter = notebookFilters[0].name;
+                    $scope.notebookTemplateUrl = notebookTemplateUrl;
+                    $scope.componentController = componentController;
                 $scope.closeDialog = function () {
-                    $mdDialog.hide();
+                        $mdDialog.hide();
+                    }
                 }
-            }
             NotebookDialogController.$inject = ["$scope", "$mdDialog", "componentController"];
              */
         }));
 
         // capture notebook open/close events
-        this.$mdComponentRegistry.when('notebook').then(function(it){
-            this.$scope.$watch(function() {
+        this.$mdComponentRegistry.when('notebook').then(it => {
+            this.$scope.$watch(() => {
                 return it.isOpen();
             }, (isOpenNewValue, isOpenOldValue) => {
                 if (isOpenNewValue !== isOpenOldValue) {
@@ -225,7 +226,7 @@ class ThemeController {
                     this.NotebookService.saveNotebookToggleEvent(isOpenNewValue, currentNode);
                 }
             });
-        }.bind(this));
+        });
     }
 
     showProjectStatus($event) {

@@ -3,11 +3,11 @@
 // 2. Base
 .l-node {
   margin-top: $wise-toolbar-height;
-  background-color: color('body-bg') !important;
   padding: 0;
 
   @media only screen and (min-width: $layout-breakpoint-xs) {
     padding: 0 16px;
+    background-color: color('body-bg') !important;
   }
 
   @media only screen and (min-width: $layout-breakpoint-sm) {
