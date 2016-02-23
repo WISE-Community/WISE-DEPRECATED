@@ -22,17 +22,20 @@ var ConfigService = function () {
             return this.config;
         }
     }, {
+        key: 'setConfig',
+        value: function setConfig(config) {
+            this.config = config;
+            this.sortClassmateUserInfosAlphabeticallyByName();
+        }
+    }, {
         key: 'retrieveConfig',
         value: function retrieveConfig(configURL) {
             var _this = this;
 
             return this.$http.get(configURL).then(function (result) {
-                var config = result.data;
-
-                _this.config = config;
-
-                _this.sortClassmateUserInfosAlphabeticallyByName();
-                return config;
+                var configJSON = result.data;
+                _this.setConfig(configJSON);
+                return configJSON;
             });
         }
     }, {
@@ -284,7 +287,6 @@ var ConfigService = function () {
                         userInfo = myUserInfo;
                     }
                 }
-                ;
 
                 if (userInfo == null) {
                     var classmateUserInfos = this.getClassmateUserInfos();
