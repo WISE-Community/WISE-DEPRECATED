@@ -1021,7 +1021,7 @@ var StudentDataService = function () {
         value: function retrieveComponentStates(runId, periodId, workgroupId) {}
     }, {
         key: 'getLatestComponentState',
-        value: function getLatestComponentState() {
+        value: function getLatestComponentState(type) {
             var latestComponentState = null;
 
             var studentData = this.studentData;
@@ -1030,7 +1030,17 @@ var StudentDataService = function () {
                 var componentStates = studentData.componentStates;
 
                 if (componentStates != null) {
-                    latestComponentState = componentStates[componentStates.length - 1];
+                    if (type === 'isSubmit') {
+                        for (var i = componentStates.length - 1; i > -1; i--) {
+                            var state = componentStates[i];
+                            if (state.isSubmit) {
+                                latestComponentState = state;
+                                break;
+                            }
+                        }
+                    } else {
+                        latestComponentState = componentStates[componentStates.length - 1];
+                    }
                 }
             }
 

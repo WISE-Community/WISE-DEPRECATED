@@ -989,7 +989,7 @@ class StudentDataService {
 
     };
 
-    getLatestComponentState() {
+    getLatestComponentState(type) {
         var latestComponentState = null;
 
         var studentData = this.studentData;
@@ -998,7 +998,17 @@ class StudentDataService {
             var componentStates = studentData.componentStates;
 
             if (componentStates != null) {
-                latestComponentState = componentStates[componentStates.length - 1];
+                if (type === 'isSubmit') {
+                    for (let i = componentStates.length-1; i > -1; i--) {
+                        let state = componentStates[i];
+                        if (state.isSubmit) {
+                            latestComponentState = state;
+                            break;
+                        }
+                    }
+                } else {
+                    latestComponentState = componentStates[componentStates.length - 1];
+                }
             }
         }
 

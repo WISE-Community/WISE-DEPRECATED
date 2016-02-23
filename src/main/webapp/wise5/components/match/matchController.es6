@@ -34,6 +34,9 @@ class MatchController {
         // whether the student work is dirty and needs saving
         this.isDirty = false;
 
+        // whether the student work has changed since last submit
+        this.isSubmitDirty = false;
+
         // whether this part is showing previous work
         this.isShowPreviousWork = false;
 
@@ -220,7 +223,7 @@ class MatchController {
 
             var componentState = null;
 
-            if (this.$scope.matchController.isDirty) {
+            if (this.$scope.matchController.isDirty || this.$scope.matchController.isSubmitDirty) {
                 // create a component state populated with the student data
                 componentState = this.$scope.matchController.createComponentState();
 
@@ -241,15 +244,9 @@ class MatchController {
 
             // make sure the node id matches our parent node
             if (this.nodeId === nodeId) {
-
-                if (this.isLockAfterSubmit()) {
-                    // disable the component if it was authored to lock after submit
-                    this.isDisabled = true;
-                }
-
-                // check if the student answered correctly
-                this.checkAnswer();
-                this.numberOfSubmits++;
+                // process submission
+                this.isSubmit = true;
+                this.submit();
             }
         }));
 
@@ -281,10 +278,10 @@ class MatchController {
 
                 // set the buckets
                 if (componentStateBuckets != null) {
-                    let bucketIds = this.buckets.map(function(b) { return b.id; });
-                    let choiceIds = this.choices.map(function(c) { return c.id; });
+                    let bucketIds = this.buckets.map(b => { return b.id; });
+                    let choiceIds = this.choices.map(c => { return c.id; });
 
-                    for (var i=0, l = componentStateBuckets.length; i < l; i++) {
+                    for (let i = 0, l = componentStateBuckets.length; i < l; i++) {
                         let componentStateBucketId = componentStateBuckets[i].id;
                         if (componentStateBucketId !== 0) {
                             // componentState bucket is a valid bucket, so process choices
@@ -292,15 +289,15 @@ class MatchController {
                                 let currentBucket = componentStateBuckets[i];
                                 let currentChoices = currentBucket.items;
 
-                                for (var x=0, len = currentChoices.length; x < len; x++) {
+                                for (let x = 0, len = currentChoices.length; x < len; x++) {
                                     let currentChoice = currentChoices[x];
                                     let currentChoiceId = currentChoice.id;
                                     let currentChoiceLocation = choiceIds.indexOf(currentChoiceId);
                                     if (currentChoiceLocation > -1) {
                                         // choice is valid and used by student in a valid bucket, so add it to that bucket
-                                        var bucket = this.getBucketById(componentStateBucketId);
+                                        let bucket = this.getBucketById(componentStateBucketId);
                                         // content for choice with this id may have change, so get updated content
-                                        var updatedChoice = this.getChoiceById(currentChoiceId);
+                                        let updatedChoice = this.getChoiceById(currentChoiceId);
                                         bucket.items.push(updatedChoice);
                                         choiceIds.splice(currentChoiceLocation, 1);
                                     }
@@ -312,7 +309,7 @@ class MatchController {
                     // add unused choices to default choices bucket
                     let choicesBucket = this.getBucketById(0);
                     choicesBucket.items = [];
-                    for (var i=0, l = choiceIds.length; i < l; i++) {
+                    for (let i = 0, l = choiceIds.length; i < l; i++) {
                         choicesBucket.items.push(this.getChoiceById(choiceIds[i]));
                     }
                     //this.buckets = componentStateBuckets;
@@ -321,8 +318,52 @@ class MatchController {
                 // set the number of submits
                 if (componentStateNumberOfSubmits != null) {
                     this.numberOfSubmits = componentStateNumberOfSubmits;
+
+                    if (this.numberOfSubmits > 0) {
+                        componentState.isSubmit ? this.checkAnswer() : this.processLatestSubmit();
+                    }
                 }
             }
+        }
+    };
+
+    /**
+     * Get the latest submitted componentState and check answer for choices that haven't changed since
+     */
+    processLatestSubmit() {
+        let latestSubmitState = this.StudentDataService.getLatestComponentState('isSubmit');
+        let latestBucketIds = this.buckets.map(b => { return b.id; });
+        let latestChoiceIds = this.choices.map(c => { return c.id; });
+
+        if (latestSubmitState && latestSubmitState.studentData) {
+            let excludeIds = [];
+            let latestSubmitStateBuckets = latestSubmitState.studentData.buckets;
+
+            for (let b = 0, l = latestSubmitStateBuckets.length; b < l; b++) {
+                let submitBucket = latestSubmitStateBuckets[b];
+                let submitBucketId = submitBucket.id;
+
+                if (latestBucketIds.indexOf(submitBucketId) > -1) {
+                    let latestBucket = this.getBucketById(submitBucketId);
+                    if (latestBucket) {
+                        let submitChoiceIds = submitBucket.items.map(c => { return c.id; });
+                        let latestBucketChoiceIds = latestBucket.items.map(c => { return c.id; });
+                        for (let c = 0, len = submitChoiceIds.length; c < len; c++) {
+                            let submitChoiceId = submitChoiceIds[c];
+                            let latestBucketChoiceId = latestBucketChoiceIds[c];
+                            if (submitChoiceId !== latestBucketChoiceId) {
+                                excludeIds.push(submitChoiceId);
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (excludeIds.length) {
+                this.isSubmitDirty = true;
+                this.isDirty = true;
+            }
+            this.checkAnswer(excludeIds);
         }
     };
 
@@ -428,8 +469,20 @@ class MatchController {
      * Called when the student clicks the submit button
      */
     submitButtonClicked() {
+        // TODO: add confirmation dialog if lock after submit is enabled on this component
+
         this.isSubmit = true;
 
+        this.submit();
+
+        // tell the parent node that this component wants to submit
+        this.$scope.$emit('componentSubmitTriggered', {nodeId: this.nodeId, componentId: this.componentId});
+    };
+
+    /**
+    * Called when either the component or node is submitted
+    */
+    submit() {
         // check if we need to lock the component after the student submits
         if (this.isLockAfterSubmit()) {
             this.isDisabled = true;
@@ -438,53 +491,53 @@ class MatchController {
         // check if the student answered correctly
         this.checkAnswer();
         this.numberOfSubmits++;
-
-        // tell the parent node that this component wants to submit
-        this.$scope.$emit('componentSubmitTriggered', {nodeId: this.nodeId, componentId: this.componentId});
-    };
+        this.isSubmitDirty = false;
+    }
 
     /**
      * Check if the student has answered correctly
+     * @param ids array of choice ids to exclude
      */
-    checkAnswer() {
-        var isCorrect = true;
+    checkAnswer(ids) {
+        let isCorrect = true;
 
         // get the buckets
-        var buckets = this.getBuckets();
+        let buckets = this.getBuckets();
+        let excludeIds = ids ? ids : [];
 
         if (buckets != null) {
 
             // loop through all the buckets
-            for(var b = 0; b < buckets.length; b++) {
+            for(let b = 0, l = buckets.length; b < l; b++) {
 
                 // get a bucket
-                var bucket = buckets[b];
+                let bucket = buckets[b];
 
                 if (bucket != null) {
-                    var bucketId = bucket.id;
-                    var items = bucket.items;
+                    let bucketId = bucket.id;
+                    let items = bucket.items;
 
                     if (items != null) {
 
                         // loop through all the items in the bucket
-                        for (var i = 0; i < items.length; i++) {
-                            var item = items[i];
-                            var position = i + 1;
+                        for (let i = 0, len = items.length; i < len; i++) {
+                            let item = items[i];
+                            let position = i + 1;
 
                             if (item != null) {
-                                var choiceId = item.id;
+                                let choiceId = item.id;
 
                                 // get the feedback object for the bucket and choice
-                                var feedbackObject = this.getFeedbackObject(bucketId, choiceId);
+                                let feedbackObject = this.getFeedbackObject(bucketId, choiceId);
 
                                 if (feedbackObject != null) {
-                                    var feedback = feedbackObject.feedback;
+                                    let feedback = feedbackObject.feedback;
 
-                                    var feedbackPosition = feedbackObject.position;
-                                    var feedbackIsCorrect = feedbackObject.isCorrect;
+                                    let feedbackPosition = feedbackObject.position;
+                                    let feedbackIsCorrect = feedbackObject.isCorrect;
 
                                     // set the default feedback if none is authored
-                                    if (feedback == null || feedback == '') {
+                                    if (feedback) {
                                         if (feedbackIsCorrect) {
                                             feedback = 'Correct';
                                         } else {
@@ -543,7 +596,7 @@ class MatchController {
                                              * get the feedback for when the choice is in the correct
                                              * bucket but wrong position
                                              */
-                                            var incorrectPositionFeedback = feedbackObject.incorrectPositionFeedback;
+                                            let incorrectPositionFeedback = feedbackObject.incorrectPositionFeedback;
 
                                             // set the default feedback if none is authored
                                             if (incorrectPositionFeedback == null || incorrectPositionFeedback == '') {
@@ -564,6 +617,11 @@ class MatchController {
                                             isCorrect = false;
                                         }
                                     }
+                                }
+
+                                if (excludeIds.indexOf(choiceId) > -1) {
+                                    // don't show feedback for choices that should be excluded
+                                    item.feedback = null;
                                 }
                             }
                         }
@@ -655,12 +713,16 @@ class MatchController {
          * student work later
          */
         this.isDirty = true;
+        this.isSubmitDirty = true;
 
         // get this part id
         var componentId = this.getComponentId();
 
         // create a component state populated with the student data
         var componentState = this.createComponentState();
+        this.buckets = componentState.studentData.buckets;
+
+        this.processLatestSubmit();
 
         /*
          * the student work in this component has changed so we will tell
@@ -1027,7 +1089,7 @@ class MatchController {
         var choice = null;
 
         // get the choices
-        var choices = this.authoringComponentContent.choices;
+        var choices = this.componentContent.choices;
 
         // loop through all the choices
         for (var c = 0; c < choices.length; c++) {
