@@ -8,6 +8,8 @@ Setup WISE Local Development
  
 Setup WISE on a Server: https://github.com/WISE-Community/WISE/wiki/How-to-Setup-WISE-on-a-Server
 
+Design Doc and Notes: https://github.com/WISE-Community/WISE/wiki/WISE5-Design-Documentation-and-Notes
+
 Other documentation: https://github.com/WISE-Community/WISE/wiki
 
 Developer mailinglist: https://groups.google.com/forum/#!forum/wise-dev
