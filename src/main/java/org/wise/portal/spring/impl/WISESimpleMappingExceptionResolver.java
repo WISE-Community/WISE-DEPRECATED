@@ -80,7 +80,7 @@ public class WISESimpleMappingExceptionResolver extends
 			String[] recipients = wiseProperties.getProperty(HANDLE_EXCEPTION_PROPERTY_KEY).split(",");
 			String subject = HANDLE_EXCEPTION_MAIL_SUBJECT + ": (" + portalName + ")";
 			String fromEmail = wiseProperties.getProperty("mail.from");
-			String message = getHandleExceptionMessage(request, response, handler, exception);
+			String message = getHandleExceptionMessage(request, exception);
 
 			ExceptionEmailSender emailSender = 
 				new ExceptionEmailSender(recipients,subject,fromEmail,message);
@@ -92,7 +92,6 @@ public class WISESimpleMappingExceptionResolver extends
 	
 	/**
 	 * Sends exception email in a new thread.
-	 * @author Hiroki Terashima
 	 */
 	class ExceptionEmailSender implements Runnable {
 		String[] recipients;
@@ -129,7 +128,7 @@ public class WISESimpleMappingExceptionResolver extends
 	 *     - user information
 	 */
 	private String getHandleExceptionMessage(
-			HttpServletRequest request, HttpServletResponse response, Object handler, Exception exception) {
+			HttpServletRequest request, Exception exception) {
 		Date time = Calendar.getInstance().getTime();
 
 		User user = ControllerUtil.getSignedInUser();
@@ -144,7 +143,7 @@ public class WISESimpleMappingExceptionResolver extends
 		PrintWriter printWriter = new PrintWriter(result);
 		exception.printStackTrace(printWriter);
 		String stackTrace = result.toString();
-		String username = null;
+		String username = "";
 		
 		if (user != null) {
 			 username = user.getUserDetails().getUsername();
@@ -153,7 +152,7 @@ public class WISESimpleMappingExceptionResolver extends
 	    }
 		
 		String message = 
-			"The following exception was thrown in the WISE 4.0 Portal on " +
+			"The following WISE exception was thrown on " +
 			time.toString() + "\n\n" +
 			"username: " + username + "\n" +
 			"url: " + fullUrl + "\n\n" +
@@ -161,21 +160,5 @@ public class WISESimpleMappingExceptionResolver extends
 			"stacktrace:\n" + stackTrace;
 		
 		return message;
-	}
-
-	/**
-	 * @param mailService is the object that contains the functionality to send
-	 * an email. This mailService is set by the contactWiseController bean 
-	 * in controllers.xml.
-	 */
-	public void setMailService(IMailFacade mailService) {
-		this.mailService = mailService;
-	}
-	
-	/**
-	 * @param wiseProperties the wiseProperties to set
-	 */
-	public void setWiseProperties(Properties wiseProperties) {
-		this.wiseProperties = wiseProperties;
 	}
 }

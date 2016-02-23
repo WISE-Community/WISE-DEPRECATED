@@ -23,6 +23,10 @@ function validateForm() {
 		alert("Please specify a project zip file to import.");
 		return false;
 	}
+	if ($("#projectVersionSelect").val() == "none") {
+		alert("Please specify a WISE version.");
+		return false;
+	}
 	return true;
 }
 </script>    
@@ -88,7 +92,8 @@ unzipped:
 	commandName="projectZipFile" id="editproject" enctype="multipart/form-data" autocomplete='off' onsubmit="return validateForm();">
 
 	Which WISE version is this project?<br/>
-	<select name="projectVersion">
+	<select id="projectVersionSelect" name="projectVersion">
+		<option value="none">Choose...</option>
 		<option value="wise4">WISE 4</option>
 		<option value="wise5">WISE 5</option>
 	</select>
