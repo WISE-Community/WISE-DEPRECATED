@@ -64,6 +64,11 @@ var AuthoringToolNewProjectController = function () {
                 _this.$state.go('root.project', { projectId: projectId });
             });
         }
+    }, {
+        key: "cancelRegisterNewProject",
+        value: function cancelRegisterNewProject() {
+            this.$state.go('root.main');
+        }
     }]);
 
     return AuthoringToolNewProjectController;

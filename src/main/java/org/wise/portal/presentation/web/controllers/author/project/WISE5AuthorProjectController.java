@@ -258,9 +258,6 @@ public class WISE5AuthorProjectController {
 
     /**
      * Handles request to get a config object for authoring tool without any specific project
-     * @param request
-     * @param response
-     * @throws IOException
      */
     @RequestMapping(value = "/authorConfig", method = RequestMethod.GET)
     protected void getAuthorProjectConfigChooser(
@@ -275,10 +272,6 @@ public class WISE5AuthorProjectController {
 
     /**
      * Handles request to get a config object for a specific project
-     * @param request
-     * @param response
-     * @param projectId
-     * @throws IOException
      */
     @RequestMapping(value = "/authorConfig/{projectId}", method = RequestMethod.GET)
     protected void getAuthorProjectConfig(
@@ -322,7 +315,6 @@ public class WISE5AuthorProjectController {
             config.put("previewProjectURL", previewProjectURL);
             config.put("saveProjectURL", saveProjectURL);
             config.put("commitProjectURL", commitProjectURL);
-            config.put("wiseBaseURL", wiseBaseURL);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -333,8 +325,6 @@ public class WISE5AuthorProjectController {
 
     /**
      * Creates and returns a default Authoring config object that is the same for all projects
-     * @param request
-     * @return
      */
     private JSONObject getDefaultAuthoringConfigJsonObject(HttpServletRequest request) {
         // create a JSONObject to contain the config params
@@ -348,6 +338,7 @@ public class WISE5AuthorProjectController {
             config.put("renewSessionURL", wiseBaseURL + "/session/renew");
             config.put("sessionLogOutURL", wiseBaseURL + "/logout");
             config.put("registerNewProjectURL", wiseBaseURL + "/project/new");
+            config.put("wiseBaseURL", wiseBaseURL);
 
             // get a list of projects this user owns
             List<Project> allProjectsOwnedByUser = projectService.getProjectList(user);
