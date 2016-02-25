@@ -7,9 +7,9 @@
 //the default requirements
 var defaultRequirements = {
 	requiredFirefoxVersion:'6.0',
-	requiredInternetExplorerVersion:'9.0',
-	requiredChromeVersion:'5.0',
-	requiredSafariVersion:'3.0',
+	requiredInternetExplorerVersion:'11.0',
+	requiredChromeVersion:'10.0',
+	requiredSafariVersion:'5.0',
 	requiredFlashVersion:'10.0',
 	requiredJavaVersion:'1.6'
 }
@@ -79,13 +79,27 @@ function checkCompatibility(specificRequirements) {
 	var requiredResources = true;
 	var recommendedResources = true;
 	
-	//check required resources
-	requiredResources = checkJavascript() && requiredResources;
-	requiredResources = checkBrowser(combinedRequirements) && requiredResources;
+	// get the project id if it was provided as a GET parameter
+	var projectId = getProjectId();
 	
-	//check recommended resources
-	recommendedResources = checkFlash(combinedRequirements.requiredFlashVersion) && recommendedResources;
-	recommendedResources = checkJava(combinedRequirements.requiredJavaVersion) && recommendedResources;
+	if (projectId != null) {
+	    // show the project specific requirements div
+	    $('#projectSpecificRequirementsDiv').show();
+	    
+	    // set the project id
+	    $('#projectId').html(projectId);
+	    
+	    // set the preview project link
+	    populatePreviewProjectLink(projectId);
+	}
+	
+	// get the config to obtain the project to obtain the project name
+	getConfig(projectId);
+	
+	// get the metadata to obtain the specific requirements
+	getProjectMetaData(projectId);
+	
+	requiredResources = checkBrowser(combinedRequirements) && requiredResources;
 	
 	if(requiredResources) {
 		$('#browserPass').show();
@@ -193,16 +207,10 @@ function checkBrowser(requirements) {
 	//document.getElementById('browserAdditionalInfo').innerHTML = getBrowserAdditionalInfo();
 	
 	if(browserPassed) {
+		// the browser meets the requirements
 		return true;
 	} else {
-		//browser version is too old so we will display a warning message about the browser
-		
-		var browserName = getBrowserName();
-		if(browserName == ('Firefox' || 'Chrome')) {
-			$('#browserFailMsg').show();
-		} else {
-			$('#browserFailMsgUnsupported').show();
-		}
+		// the browser does not meet the requirements
 		
 		return false;
 	}
@@ -230,7 +238,7 @@ function checkBrowserVersion(requirements) {
 	
 	//get the version of the browser the user is currently using
 	var yourVersion = getBrowserVersion();
-	
+	//yourVersion = 1;
 	//check if the client browser version meets the requirement
 	return requiredVersionSatisfied(yourVersion, requiredVersion);
 }
@@ -409,13 +417,10 @@ function checkJava(requiredJavaVersion) {
 	var requirementSatisfiedIcon = getRequirementSatisfiedIcon(javaPassed);
 	
 	document.getElementById('javaRequirementSatisfied').innerHTML = requirementSatisfiedIcon;
-
+	
 	if(javaPassed) {
 		return true;
 	} else {
-		//java version is too old so we will display a warning message about java
-		$('#javaMsg').show();
-		
 		return false;
 	}
 }
@@ -491,9 +496,6 @@ function checkFlash(requiredFlashVersion) {
 	if(flashPassed) {
 		return true;
 	} else {
-		//flash version is too old so we will display a warning message about flash
-		$('#flashMsg').show();
-		
 		return false;
 	}
 }
@@ -675,4 +677,213 @@ function alertBrowserCompatibility() {
 				"the latest version of Chrome, Firefox, or Safari.";
 		alert(useFirefoxMsg);
 	};
+}
+
+/**
+ * Get the project id
+ * @returns the project id
+ */
+function getProjectId() {
+    var projectId = null;
+    
+    // get the url of the page
+    var locationSearch = location.search;
+    
+    // remove the ?
+    locationSearch = locationSearch.replace('?', '');
+    
+    // use the & as the delimiter to split the params
+    var params = locationSearch.split('&');
+    
+    if (params != null) {
+        
+        // loop through all the params
+        for (var p = 0; p < params.length; p++) {
+            var param = params[p];
+            
+            // split the param name and param value with the = delimiter
+            var paramNameAndValue = param.split('=');
+            
+            if (paramNameAndValue != null) {
+                // get the param name and value
+                var paramName = paramNameAndValue[0];
+                var paramValue = paramNameAndValue[1];
+                
+                if (paramName == 'projectId' || paramName == 'projectid') {
+                    // we have found the project id param
+                    projectId = parseInt(paramValue);
+                }
+            }
+        }
+    }
+    
+    return projectId;
+}
+
+/**
+ * Get the project metadata to obtain the tech requirements
+ */
+function getProjectMetaData(projectId) {
+    
+    // get the meta data url
+    var metaDataURL = location.origin + '/wise/metadata.html?command=getProjectMetaData&projectId=' + projectId;
+    
+    $.ajax({
+        url: metaDataURL,
+        dataType: 'json'
+    }).done(function(data, textStatus, xml) {
+        if (data != null) {
+            
+            var techReqs = data.techReqs;
+            
+            checkProjectSpecificRequirements(techReqs);
+        }
+    });
+};
+
+/**
+ * Get the config to obtain the project title
+ */
+function getConfig(projectId) {
+    
+    // get the config URL
+    var configURL = location.origin + '/wise/vleconfig?projectId=' + projectId;
+    
+    // get the project config
+    $.ajax({
+        url: configURL,
+        dataType: 'json'
+    }).done(function(data, textStatus, xml) {
+        
+        if (data != null) {
+            
+            // get the project URL
+            var projectURL = data.projectURL;
+            
+            // get the project file
+            $.ajax({
+                url: projectURL
+            }).done(function(project, textStatus, xml) {
+                
+                if (project != null) {
+                    
+                    // get the project name
+                    var title = project.title;
+                    
+                    if (title != null) {
+                        $('#projectName').html(title);
+                    }
+                    
+                    // in WISE5 the project metadata is in the project file
+                    var metadata = project.metadata;
+                    
+                    if (metadata != null) {
+                        title = metadata.title;
+                        
+                        if (title != null) {
+                            // set the project name
+                            $('#projectName').html(title);
+                        }
+                        
+                        var techReqs = metadata.techReqs;
+                        
+                        if (techReqs != null) {
+                            // check if the project specific requirements are satisfied
+                            checkProjectSpecificRequirements(techReqs);
+                        }
+                    }
+                }
+            });
+        }
+    });
+}
+
+/**
+ * Check the project specific requirements
+ * @param techReqs the project specific requirements objet
+ */
+function checkProjectSpecificRequirements(techReqs) {
+    
+    var requiresFlash = null;
+    var requiresJava = null;
+    
+    if (techReqs == null) {
+        // there are no specific requirements for this project
+        $('#projectNoSpecificRequirements').show();
+    } else {
+        // there are tech requirements
+        requiresFlash = techReqs.flash;
+        requiresJava = techReqs.java;
+    }
+    
+    if (requiresFlash || requiresJava) {
+        // there are specific requirements for this project
+        
+        // show the project specific requirements table
+        $('#projectSpecificRequirementsTable').show();
+        
+        var flashSatisfied = false;
+        var javaSatisfied = false;
+        
+        if (requiresFlash) {
+            // the project requires flash so we will check if the requirement is satisfied
+            flashSatisfied = checkFlash(defaultRequirements.requiredFlashVersion);
+            
+            // show the flash row in the specific requirements table
+            $('#flashRow').show();
+            
+            if (!flashSatisfied) {
+                // show the warning about not satisfying the specific requirements for the project
+                $('#projectFail').show();
+                
+                // show the warning that the flash requirement was not satisfied
+                $('#flashMsg').show();
+            }
+        }
+        
+        if (requiresJava) {
+            // the project requires java so we will check if the requirement is satisfied 
+            javaSatisfied = checkJava(defaultRequirements.requiredJavaVersion);
+            
+            // show the java row in the specific requirements table
+            $('#javaRow').show();
+            
+            if (!javaSatisfied) {
+                // show the warning about not satisfying the specific requirements
+                $('#projectFail').show();
+                
+                // get the browser name
+                var browserName = getBrowserName();
+                
+                if (browserName == 'Chrome') {
+                    // the user is using Chrome which does not support java
+                    $('#javaMsgUsingChrome').show();
+                } else {
+                    // show the warning message that the java requirement was not satisfied
+                    $('#javaMsg').show();
+                }
+            }
+        }
+        
+        if (flashSatisfied && javaSatisfied) {
+            // the specific requirements have been satisfied
+            $('#projectPass').show();
+        }
+    } else {
+        // there are no specific requirements for this project
+        $('#projectNoSpecificRequirements').show();
+    }
+}
+
+/**
+ * Populate the preview project href
+ * @param projectId the project id
+ */
+function populatePreviewProjectLink(projectId) {
+    
+    // get the preview project URL
+    var previewProjectURL = location.origin + '/wise/previewproject.html?projectId=' + projectId;
+    
+    // set the href for the preview project link
+    $('#previewProjectLink').attr('href', previewProjectURL);
 }
