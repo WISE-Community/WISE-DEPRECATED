@@ -97,15 +97,16 @@
                         toworkgroupid='{{workgroupId}}'
                         componentstateid='{{componentState.id}}'></annotation>
         </div>
-        <button id='saveButton'
+        <button class="md-primary"
+                ng-class="{'md-raised': !graphController.showSubmitButton()}"
                 ng-click='graphController.saveButtonClicked()'
                 ng-disabled='graphController.isDisabled'
-                ng-show='graphController.showSaveButton()'>Save
+                ng-if='graphController.showSaveButton()'>Save
         </button>
-        <button id='submitButton'
+        <button class="md-primary md-raised"
                 ng-click='graphController.submitButtonClicked()'
                 ng-disabled='graphController.isDisabled'
-                ng-show='graphController.showSubmitButton()'>Submit
+                ng-if='graphController.showSubmitButton()'>Submit
         </button>
     </div>
     <div ng-if='graphController.mode == "grading"' style='width: 400px'>

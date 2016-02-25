@@ -38,6 +38,9 @@ var MatchController = function () {
         // whether the student work is dirty and needs saving
         this.isDirty = false;
 
+        // whether the student work has changed since last submit
+        this.isSubmitDirty = false;
+
         // whether this part is showing previous work
         this.isShowPreviousWork = false;
 
@@ -224,7 +227,7 @@ var MatchController = function () {
 
             var componentState = null;
 
-            if (this.$scope.matchController.isDirty) {
+            if (this.$scope.matchController.isDirty || this.$scope.matchController.isSubmitDirty) {
                 // create a component state populated with the student data
                 componentState = this.$scope.matchController.createComponentState();
 
@@ -245,15 +248,9 @@ var MatchController = function () {
 
             // make sure the node id matches our parent node
             if (this.nodeId === nodeId) {
-
-                if (this.isLockAfterSubmit()) {
-                    // disable the component if it was authored to lock after submit
-                    this.isDisabled = true;
-                }
-
-                // check if the student answered correctly
-                this.checkAnswer();
-                this.numberOfSubmits++;
+                // process submission
+                this.isSubmit = true;
+                this.submit();
             }
         }));
 
@@ -332,8 +329,62 @@ var MatchController = function () {
                     // set the number of submits
                     if (componentStateNumberOfSubmits != null) {
                         this.numberOfSubmits = componentStateNumberOfSubmits;
+
+                        if (this.numberOfSubmits > 0) {
+                            componentState.isSubmit ? this.checkAnswer() : this.processLatestSubmit();
+                        }
                     }
                 }
+            }
+        }
+    }, {
+        key: 'processLatestSubmit',
+
+        /**
+         * Get the latest submitted componentState and check answer for choices that haven't changed since
+         */
+        value: function processLatestSubmit() {
+            var latestSubmitState = this.StudentDataService.getLatestComponentState('isSubmit');
+            var latestBucketIds = this.buckets.map(function (b) {
+                return b.id;
+            });
+            var latestChoiceIds = this.choices.map(function (c) {
+                return c.id;
+            });
+
+            if (latestSubmitState && latestSubmitState.studentData) {
+                var excludeIds = [];
+                var latestSubmitStateBuckets = latestSubmitState.studentData.buckets;
+
+                for (var b = 0, l = latestSubmitStateBuckets.length; b < l; b++) {
+                    var submitBucket = latestSubmitStateBuckets[b];
+                    var submitBucketId = submitBucket.id;
+
+                    if (latestBucketIds.indexOf(submitBucketId) > -1) {
+                        var latestBucket = this.getBucketById(submitBucketId);
+                        if (latestBucket) {
+                            var submitChoiceIds = submitBucket.items.map(function (c) {
+                                return c.id;
+                            });
+                            var latestBucketChoiceIds = latestBucket.items.map(function (c) {
+                                return c.id;
+                            });
+                            for (var c = 0, len = submitChoiceIds.length; c < len; c++) {
+                                var submitChoiceId = submitChoiceIds[c];
+                                var latestBucketChoiceId = latestBucketChoiceIds[c];
+                                if (submitChoiceId !== latestBucketChoiceId) {
+                                    excludeIds.push(submitChoiceId);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (excludeIds.length) {
+                    this.isSubmitDirty = true;
+                    this.isDirty = true;
+                }
+                this.checkAnswer(excludeIds);
             }
         }
     }, {
@@ -453,8 +504,22 @@ var MatchController = function () {
          * Called when the student clicks the submit button
          */
         value: function submitButtonClicked() {
+            // TODO: add confirmation dialog if lock after submit is enabled on this component
+
             this.isSubmit = true;
 
+            this.submit();
+
+            // tell the parent node that this component wants to submit
+            this.$scope.$emit('componentSubmitTriggered', { nodeId: this.nodeId, componentId: this.componentId });
+        }
+    }, {
+        key: 'submit',
+
+        /**
+        * Called when either the component or node is submitted
+        */
+        value: function submit() {
             // check if we need to lock the component after the student submits
             if (this.isLockAfterSubmit()) {
                 this.isDisabled = true;
@@ -463,26 +528,27 @@ var MatchController = function () {
             // check if the student answered correctly
             this.checkAnswer();
             this.numberOfSubmits++;
-
-            // tell the parent node that this component wants to submit
-            this.$scope.$emit('componentSubmitTriggered', { nodeId: this.nodeId, componentId: this.componentId });
+            this.isSubmitDirty = false;
         }
-    }, {
-        key: 'checkAnswer',
 
         /**
          * Check if the student has answered correctly
+         * @param ids array of choice ids to exclude
          */
-        value: function checkAnswer() {
+
+    }, {
+        key: 'checkAnswer',
+        value: function checkAnswer(ids) {
             var isCorrect = true;
 
             // get the buckets
             var buckets = this.getBuckets();
+            var excludeIds = ids ? ids : [];
 
             if (buckets != null) {
 
                 // loop through all the buckets
-                for (var b = 0; b < buckets.length; b++) {
+                for (var b = 0, l = buckets.length; b < l; b++) {
 
                     // get a bucket
                     var bucket = buckets[b];
@@ -494,7 +560,7 @@ var MatchController = function () {
                         if (items != null) {
 
                             // loop through all the items in the bucket
-                            for (var i = 0; i < items.length; i++) {
+                            for (var i = 0, len = items.length; i < len; i++) {
                                 var item = items[i];
                                 var position = i + 1;
 
@@ -511,7 +577,7 @@ var MatchController = function () {
                                         var feedbackIsCorrect = feedbackObject.isCorrect;
 
                                         // set the default feedback if none is authored
-                                        if (feedback == null || feedback == '') {
+                                        if (feedback) {
                                             if (feedbackIsCorrect) {
                                                 feedback = 'Correct';
                                             } else {
@@ -591,6 +657,11 @@ var MatchController = function () {
                                                 isCorrect = false;
                                             }
                                         }
+                                    }
+
+                                    if (excludeIds.indexOf(choiceId) > -1) {
+                                        // don't show feedback for choices that should be excluded
+                                        item.feedback = null;
                                     }
                                 }
                             }
@@ -686,12 +757,16 @@ var MatchController = function () {
              * student work later
              */
             this.isDirty = true;
+            this.isSubmitDirty = true;
 
             // get this part id
             var componentId = this.getComponentId();
 
             // create a component state populated with the student data
             var componentState = this.createComponentState();
+            this.buckets = componentState.studentData.buckets;
+
+            this.processLatestSubmit();
 
             /*
              * the student work in this component has changed so we will tell
@@ -1092,7 +1167,7 @@ var MatchController = function () {
             var choice = null;
 
             // get the choices
-            var choices = this.authoringComponentContent.choices;
+            var choices = this.componentContent.choices;
 
             // loop through all the choices
             for (var c = 0; c < choices.length; c++) {

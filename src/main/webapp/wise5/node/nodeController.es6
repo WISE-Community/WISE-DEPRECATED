@@ -33,6 +33,9 @@ class NodeController {
         // whether the student work is dirty and needs saving
         this.isDirty = false;
 
+        // whether the student work has changed since last submit
+        this.isSubmitDirty = false;
+
         this.workgroupId = this.ConfigService.getWorkgroupId();
 
         this.teacherWorkgroupId = this.ConfigService.getTeacherWorkgroupId();
@@ -80,6 +83,9 @@ class NodeController {
 
             // register this controller to listen for the exit event
             this.registerExitListener();
+
+            // set whether submit button should be enabled or not
+            this.isSubmitDirty = this.getSubmitDirty();
 
             if (this.NodeService.hasTransitionLogic() && this.NodeService.evaluateTransitionLogicOn('enterNode')) {
                 this.NodeService.evaluateTransitionLogic();
@@ -171,6 +177,7 @@ class NodeController {
              * we will need to save
              */
             this.isDirty = true;
+            this.isSubmitDirty = true;
             this.setSaveMessage('');
 
             if (args != null) {
@@ -571,10 +578,11 @@ class NodeController {
         var componentEvents = null;
         var nodeStates = null;
 
-        if (this.ConfigService.getConfigParam('mode') === 'preview') {
+        if (this.ConfigService.isPreview()) {
             // we are in preview mode so we will pretend that the data was saved to the server
 
             this.isDirty = false;
+            this.isSubmitDirty = this.getSubmitDirty();
 
             if (isAutoSave) {
                 this.setSaveMessage('Auto-Saved');
@@ -587,24 +595,27 @@ class NodeController {
             (componentAnnotations != null && componentAnnotations.length > 0) ||
             (componentEvents != null && componentEvents.length > 0)) {
             // save the component states to the server
-            return this.StudentDataService.saveToServer(componentStates, nodeStates, componentEvents, componentAnnotations).then(angular.bind(this, function(savedStudentDataResponse) {
-                // check if this node has transition logic that should be run when the student data changes
-                if (this.NodeService.hasTransitionLogic() && this.NodeService.evaluateTransitionLogicOn('studentDataChanged')) {
-                    // this node has transition logic
-                    this.NodeService.evaluateTransitionLogic();
-                }
+            return this.StudentDataService.saveToServer(componentStates, nodeStates, componentEvents, componentAnnotations).then((savedStudentDataResponse) => {
 
-                // TODO: handle error response from server if POST fails
-                this.isDirty = false;
+                if (savedStudentDataResponse) {
+                    // check if this node has transition logic that should be run when the student data changes
+                    if (this.NodeService.hasTransitionLogic() && this.NodeService.evaluateTransitionLogicOn('studentDataChanged')) {
+                        // this node has transition logic
+                        this.NodeService.evaluateTransitionLogic();
+                    }
 
-                if (isAutoSave) {
-                    this.setSaveMessage('Auto-Saved');
-                } else {
-                    this.setSaveMessage('Saved');
+                    this.isDirty = false;
+                    this.isSubmitDirty = this.getSubmitDirty();
+
+                    if (isAutoSave) {
+                        this.setSaveMessage('Auto-Saved');
+                    } else {
+                        this.setSaveMessage('Saved');
+                    }
                 }
 
                 return savedStudentDataResponse;
-            }));
+            });
         }
     };
 
@@ -873,6 +884,7 @@ class NodeController {
     };
 
     // saves current work and adds to notebook as needed
+    // TODO: remove, deprecated
     addStudentWorkItemToNotebook(componentId) {
         var currentNode = this.StudentDataService.getCurrentNode();
         if (currentNode != null) {
@@ -899,6 +911,27 @@ class NodeController {
                 }
             }
         }
+    };
+
+    /**
+     * Checks whether any of the node's components have unsubmitted work
+     * @return boolean whether or not there is unsubmitted work
+     */
+    getSubmitDirty() {
+        let submitDirty = false;
+        let components = this.getComponents();
+
+        for (let c = 0, l = components.length; c < l; c++) {
+            let id = components[c].id;
+            let latestState = this.getComponentStateByComponentId(id);
+
+            if (latestState && !latestState.isSubmit) {
+                submitDirty = true;
+                break;
+            }
+        }
+
+        return submitDirty;
     };
 
     /**

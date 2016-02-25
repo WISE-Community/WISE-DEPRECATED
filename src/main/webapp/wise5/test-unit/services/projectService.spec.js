@@ -27,9 +27,9 @@ describe('ProjectService Unit Test', function () {
     describe('ProjectService', function () {
 
         // Load sample projects
-        var demoProjectJSON = window.mocks['test-unit/curriculum/DemoProject/project'];
+        var demoProjectJSON = window.mocks['test-unit/sampleData/curriculum/DemoProject/project'];
         var demoProjectJSONString = JSON.stringify(demoProjectJSON);
-        var scootersProjectJSON = window.mocks['test-unit/curriculum/SelfPropelledVehiclesChallenge/project'];
+        var scootersProjectJSON = window.mocks['test-unit/sampleData/curriculum/SelfPropelledVehiclesChallenge/project'];
         var scootersProjectJSONString = JSON.stringify(scootersProjectJSON);
         var invalidProjectJSONString = "{'a':1";
 

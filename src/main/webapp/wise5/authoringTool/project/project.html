@@ -53,8 +53,10 @@
     <button ng-show='projectController.insertMode' ng-click='projectController.insertAfter(item.$key)'>Insert After</button>
 </div>
 
-    <textarea id="project" rows="40" cols="150" ng-model="projectController.projectAsText"></textarea>
-    <div id="projectStylesDiv">Project Styles:
+    <div id="projectJSONStringDiv" style="display:none">Project JSON:
+        <textarea id="project" rows="40" cols="150" ng-model="projectController.projectAsText"></textarea>
+    </div>
+    <div id="projectStylesDiv" style="display:none">Project Styles:
         <textarea cols="50" rows="10" ng-model="projectController.project.style" ng-change="projectController.updateProjectAsText()" />
     </div>
 </div>

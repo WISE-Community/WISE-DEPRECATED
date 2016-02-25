@@ -1,5 +1,6 @@
 package org.wise.portal.presentation.web.controllers.author.project;
 
+import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -257,9 +258,6 @@ public class WISE5AuthorProjectController {
 
     /**
      * Handles request to get a config object for authoring tool without any specific project
-     * @param request
-     * @param response
-     * @throws IOException
      */
     @RequestMapping(value = "/authorConfig", method = RequestMethod.GET)
     protected void getAuthorProjectConfigChooser(
@@ -274,10 +272,6 @@ public class WISE5AuthorProjectController {
 
     /**
      * Handles request to get a config object for a specific project
-     * @param request
-     * @param response
-     * @param projectId
-     * @throws IOException
      */
     @RequestMapping(value = "/authorConfig/{projectId}", method = RequestMethod.GET)
     protected void getAuthorProjectConfig(
@@ -321,7 +315,6 @@ public class WISE5AuthorProjectController {
             config.put("previewProjectURL", previewProjectURL);
             config.put("saveProjectURL", saveProjectURL);
             config.put("commitProjectURL", commitProjectURL);
-            config.put("wiseBaseURL", wiseBaseURL);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -332,8 +325,6 @@ public class WISE5AuthorProjectController {
 
     /**
      * Creates and returns a default Authoring config object that is the same for all projects
-     * @param request
-     * @return
      */
     private JSONObject getDefaultAuthoringConfigJsonObject(HttpServletRequest request) {
         // create a JSONObject to contain the config params
@@ -347,6 +338,7 @@ public class WISE5AuthorProjectController {
             config.put("renewSessionURL", wiseBaseURL + "/session/renew");
             config.put("sessionLogOutURL", wiseBaseURL + "/logout");
             config.put("registerNewProjectURL", wiseBaseURL + "/project/new");
+            config.put("wiseBaseURL", wiseBaseURL);
 
             // get a list of projects this user owns
             List<Project> allProjectsOwnedByUser = projectService.getProjectList(user);
@@ -481,6 +473,13 @@ public class WISE5AuthorProjectController {
                     }
                 } else {
                     // user wants to add a new asset
+                    Long projectMaxTotalAssetsSize = project.getMaxTotalAssetsSize();
+                    if (projectMaxTotalAssetsSize == null) {
+                        // get the default max project size
+                        projectMaxTotalAssetsSize = new Long(wiseProperties.getProperty("project_max_total_assets_size", "15728640"));
+                    }
+                    // get the size of the assets directory
+                    long sizeOfAssetsDirectory = FileUtils.sizeOfDirectory(projectAssetsDir);
 
                     DefaultMultipartHttpServletRequest multiRequest = (DefaultMultipartHttpServletRequest) request;
                     Map<String, MultipartFile> fileMap = multiRequest.getFileMap();
@@ -491,17 +490,25 @@ public class WISE5AuthorProjectController {
                             String key = iter.next();
                             MultipartFile file = fileMap.get(key);
 
-                            // TODO add file size checking
-                            String filename = file.getOriginalFilename();
-                            File asset = new File(projectAssetsDir, filename);
-                            if (!asset.exists()) {
-                                asset.createNewFile();
+                            if (sizeOfAssetsDirectory + file.getSize() > projectMaxTotalAssetsSize) {
+                                // Adding this asset will exceed the maximum allowed for the project, so don't add it
+                                // Show a message to the user
+                                PrintWriter writer = response.getWriter();
+                                writer.write("Error: Exceeded project max asset size.\nPlease delete unused assets.\n\nContact WISE if your project needs more disk space.");
+                                writer.close();
+                                return;
+                            } else {
+                                String filename = file.getOriginalFilename();
+                                File asset = new File(projectAssetsDir, filename);
+                                if (!asset.exists()) {
+                                    asset.createNewFile();
+                                }
+                                byte[] fileContent = file.getBytes();
+                                FileOutputStream fos = new FileOutputStream(asset);
+                                fos.write(fileContent);
+                                fos.flush();
+                                fos.close();
                             }
-                            byte[] fileContent = file.getBytes();
-                            FileOutputStream fos = new FileOutputStream(asset);
-                            fos.write(fileContent);
-                            fos.flush();
-                            fos.close();
                         }
                     }
                 }

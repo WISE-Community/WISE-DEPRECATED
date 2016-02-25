@@ -12,28 +12,42 @@ class StepToolsCtrl {
         this.StudentDataService = StudentDataService;
 
         this.nodeStatuses = this.StudentDataService.nodeStatuses;
-        this.nodeStatus = this.nodeStatuses[this.nodeId];
-
-        this.prevId = this.NodeService.getPrevNodeId();
-        this.nextId = this.NodeService.getNextNodeId();
 
         // service objects and utility functions
         this.idToOrder = this.ProjectService.idToOrder;
 
-        // model variable for selected node id
-        this.toNodeId = this.nodeId;
+        this.updateModel();
 
         var scope = this;
         this.$scope.$watch(
-            function () { return scope.toNodeId; }.bind(this),
-            function (newId, oldId) {
+            () => {
+                return scope.toNodeId; },
+            (newId, oldId) => {
                 if (newId !== oldId) {
                     // selected node id has changed, so open new node
                     this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(newId);
                 }
-            }.bind(this)
+            }
         );
+
+        this.$scope.$on('currentNodeChanged', (event, args) => {
+            this.updateModel();
+        });
     }
+
+    updateModel() {
+        var nodeId = this.StudentDataService.getCurrentNodeId();
+        if (!this.ProjectService.isGroupNode(nodeId)) {
+            this.nodeId = nodeId;
+            this.nodeStatus = this.nodeStatuses[this.nodeId];
+
+            this.prevId = this.NodeService.getPrevNodeId();
+            this.nextId = this.NodeService.getNextNodeId();
+
+            // model variable for selected node id
+            this.toNodeId = this.nodeId;
+        }
+    };
 
     getTemplateUrl(){
         return this.ProjectService.getThemePath() + '/themeComponents/stepTools/stepTools.html';

@@ -30,12 +30,13 @@
         </div>
     </md-toolbar>
     <md-content id="content" flex role="main" ng-class="{'l-nav': vleController.layoutState == 'nav', 'l-node': vleController.layoutState == 'node'}" layout="column">
-        <div ng-include="vleController.themePath + '/navigation/navigation.html'" ng-show="vleController.layoutState == 'nav'"></div>
-        <div ng-cloak ui-view="nodeView" ng-show="vleController.layoutState == 'node'"
+        <step-tools id="step-tools" show-position="themeCtrl.numberProject"
+                    ng-show="vleController.layoutState == 'node'"></step-tools>
+        <div id="nav" ng-include="vleController.themePath + '/navigation/navigation.html'" ng-show="vleController.layoutState == 'nav'"></div>
+        <div id="node" ng-cloak ui-view="nodeView" ng-show="vleController.layoutState == 'node'"
              data-drop="true"
              jqyoui-droppable="{onDrop: 'vleController.notebookDropCallback()'}"
-             ng-mousemove='vleController.mouseMoved()'
-             layout="column"></div>
+             ng-mousemove='vleController.mouseMoved()'></div>
     </md-content>
 </div>
 <md-sidenav class="md-sidenav-right md-whiteframe-z2" md-component-id="notebook" layout="column" flex

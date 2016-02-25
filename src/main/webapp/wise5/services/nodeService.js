@@ -171,7 +171,7 @@ var NodeService = function () {
                     // get the component type in camel case
                     componentType = this.toCamelCase(componentType);
                 }
-            var wiseBaseURL = this.ConfigService.getConfigParam('wiseBaseURL');
+            var wiseBaseURL = this.ConfigService.getWISEBaseURL();
             return wiseBaseURL + '/wise5/components/' + componentType + '/index.html';
         }
     }, {

@@ -25,18 +25,13 @@ var StudentWebSocketService = function () {
      */
 
     _createClass(StudentWebSocketService, [{
-        key: 'initialize',
+        key: "initialize",
         value: function initialize() {
 
-            // get the mode
-            var mode = this.ConfigService.getConfigParam('mode');
-
-            if (mode === 'preview') {
-                // we are previewing the project
+            if (this.ConfigService.isPreview()) {
+                // We are previewing the project. Don't initialize websocket.
             } else {
-                    // we are in a run
-
-                    // get the parameters for initializing the websocket connection
+                    // We are in a run. Get the parameters for initializing the websocket connection
                     var runId = this.ConfigService.getRunId();
                     var periodId = this.ConfigService.getPeriodId();
                     var workgroupId = this.ConfigService.getWorkgroupId();
@@ -63,7 +58,7 @@ var StudentWebSocketService = function () {
                 }
         }
     }, {
-        key: 'handleWebSocketMessageReceived',
+        key: "handleWebSocketMessageReceived",
 
         /**
          * Handle the message we have received
@@ -75,16 +70,14 @@ var StudentWebSocketService = function () {
             this.$rootScope.$broadcast('webSocketMessageRecieved', { data: data });
         }
     }, {
-        key: 'sendStudentStatus',
+        key: "sendStudentStatus",
 
         /**
          * Send the student status to the server through websockets
          */
         value: function sendStudentStatus() {
 
-            var mode = this.ConfigService.getConfigParam('mode');
-
-            if (mode !== 'preview') {
+            if (!this.ConfigService.isPreview()) {
                 // we are in a run
 
                 // get the current node id
@@ -111,16 +104,15 @@ var StudentWebSocketService = function () {
             }
         }
     }, {
-        key: 'sendStudentToClassmatesInPeriodMessage',
+        key: "sendStudentToClassmatesInPeriodMessage",
 
         /**
          * Send a message to classmates in the period
          * @param data the data to send to the classmates
          */
         value: function sendStudentToClassmatesInPeriodMessage(data) {
-            var mode = this.ConfigService.getConfigParam('mode');
 
-            if (mode !== 'preview') {
+            if (!this.ConfigService.isPreview()) {
                 // we are in a run
 
                 // get the current node id

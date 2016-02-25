@@ -92,6 +92,17 @@
 				$('#runId\\=' + runId + '\\&gradingType\\=monitor', window.parent.document).show();
 			}
 		});
+
+		// Don't allow teachers to type spaces in the new period name
+		$("#editRunPeriodsInput").on({
+			keydown: function(e) {
+				if (e.which === 32)
+					return false;
+			},
+			change: function() {
+				this.value = this.value.replace(/\s/g, "");
+			}
+		});
 	});
 </script>
 </head>

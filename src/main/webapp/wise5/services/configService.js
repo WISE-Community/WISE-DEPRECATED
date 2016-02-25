@@ -17,9 +17,10 @@ var ConfigService = function () {
     }
 
     _createClass(ConfigService, [{
-        key: 'getConfig',
-        value: function getConfig() {
-            return this.config;
+        key: 'setConfig',
+        value: function setConfig(config) {
+            this.config = config;
+            this.sortClassmateUserInfosAlphabeticallyByName();
         }
     }, {
         key: 'retrieveConfig',
@@ -27,12 +28,9 @@ var ConfigService = function () {
             var _this = this;
 
             return this.$http.get(configURL).then(function (result) {
-                var config = result.data;
-
-                _this.config = config;
-
-                _this.sortClassmateUserInfosAlphabeticallyByName();
-                return config;
+                var configJSON = result.data;
+                _this.setConfig(configJSON);
+                return configJSON;
             });
         }
     }, {
@@ -145,6 +143,11 @@ var ConfigService = function () {
         key: 'getWebSocketURL',
         value: function getWebSocketURL() {
             return this.getConfigParam('webSocketURL');
+        }
+    }, {
+        key: 'getWISEBaseURL',
+        value: function getWISEBaseURL() {
+            return this.getConfigParam('wiseBaseURL');
         }
     }, {
         key: 'getMode',
@@ -284,7 +287,6 @@ var ConfigService = function () {
                         userInfo = myUserInfo;
                     }
                 }
-                ;
 
                 if (userInfo == null) {
                     var classmateUserInfos = this.getClassmateUserInfos();

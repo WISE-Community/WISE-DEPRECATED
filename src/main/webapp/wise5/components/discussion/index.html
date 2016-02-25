@@ -67,7 +67,8 @@
                                            title="Add picture">
                                     <md-icon>image</md-icon>
                                 </md-button>
-                                <md-button class="md-raised md-primary"
+                                <md-button class="md-primary"
+                                           ng-class="{'md-raised': !discussionController.showSubmitButton()}"
                                            ng-click="discussionController.saveButtonClicked()"
                                            ng-disabled="discussionController.isDisabled || !discussionController.newResponse"
                                            ng-if="discussionController.showSaveButton()">Save Draft</md-button>

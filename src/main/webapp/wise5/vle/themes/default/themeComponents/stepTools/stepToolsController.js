@@ -10,6 +10,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var StepToolsCtrl = function () {
     function StepToolsCtrl($scope, NodeService, ProjectService, StudentDataService) {
+        var _this = this;
+
         _classCallCheck(this, StepToolsCtrl);
 
         this.$scope = $scope;
@@ -18,29 +20,43 @@ var StepToolsCtrl = function () {
         this.StudentDataService = StudentDataService;
 
         this.nodeStatuses = this.StudentDataService.nodeStatuses;
-        this.nodeStatus = this.nodeStatuses[this.nodeId];
-
-        this.prevId = this.NodeService.getPrevNodeId();
-        this.nextId = this.NodeService.getNextNodeId();
 
         // service objects and utility functions
         this.idToOrder = this.ProjectService.idToOrder;
 
-        // model variable for selected node id
-        this.toNodeId = this.nodeId;
+        this.updateModel();
 
         var scope = this;
         this.$scope.$watch(function () {
             return scope.toNodeId;
-        }.bind(this), function (newId, oldId) {
+        }, function (newId, oldId) {
             if (newId !== oldId) {
                 // selected node id has changed, so open new node
-                this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(newId);
+                _this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(newId);
             }
-        }.bind(this));
+        });
+
+        this.$scope.$on('currentNodeChanged', function (event, args) {
+            _this.updateModel();
+        });
     }
 
     _createClass(StepToolsCtrl, [{
+        key: 'updateModel',
+        value: function updateModel() {
+            var nodeId = this.StudentDataService.getCurrentNodeId();
+            if (!this.ProjectService.isGroupNode(nodeId)) {
+                this.nodeId = nodeId;
+                this.nodeStatus = this.nodeStatuses[this.nodeId];
+
+                this.prevId = this.NodeService.getPrevNodeId();
+                this.nextId = this.NodeService.getNextNodeId();
+
+                // model variable for selected node id
+                this.toNodeId = this.nodeId;
+            }
+        }
+    }, {
         key: 'getTemplateUrl',
         value: function getTemplateUrl() {
             return this.ProjectService.getThemePath() + '/themeComponents/stepTools/stepTools.html';

@@ -308,7 +308,7 @@ var mainModule = _angular2.default.module('vle', ['angularMoment', 'angular-toAr
         views: {
             'nodeView': {
                 templateProvider: ['$http', 'ConfigService', function ($http, ConfigService) {
-                    var wiseBaseURL = ConfigService.getConfigParam('wiseBaseURL');
+                    var wiseBaseURL = ConfigService.getWISEBaseURL();
                     return $http.get(wiseBaseURL + '/wise5/node/index.html').then(function (response) {
                         return response.data;
                     });

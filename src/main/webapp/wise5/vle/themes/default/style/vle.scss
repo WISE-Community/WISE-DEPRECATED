@@ -18,15 +18,15 @@
         "layouts/l-header",
         "layouts/l-main",
         "layouts/l-nav",
-        "layouts/l-node",
+        "layouts/l-node", 
         "layouts/l-sidebar";
 
 // 3. Modules
-@import "modules/component",
-        "modules/inputs",
+@import "modules/inputs",
         "modules/nav",
         "modules/node",
         "modules/toolbar",
-        "modules/project-status",
+        "modules/account-menu",
+        "modules/component",
         "modules/component--discussion",
-        "modules/account-menu";
+        "modules/component--match";

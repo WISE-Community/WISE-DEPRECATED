@@ -36,8 +36,10 @@ module.exports = function(config) {
             // Edit this to your needs
             config: 'config.js',
             loadFiles: [
-                'test-unit/curriculum/SelfPropelledVehiclesChallenge/project.json',
-                'test-unit/curriculum/DemoProject/project.json',
+                'test-unit/sampleData/curriculum/SelfPropelledVehiclesChallenge/project.json',
+                'test-unit/sampleData/curriculum/DemoProject/project.json',
+                'test-unit/sampleData/config/config1.json',
+                'test-unit/sampleData/config/config2.json',
                 {
                     pattern: 'test-unit/**/*.spec.js',
                     watched: false
@@ -70,7 +72,7 @@ module.exports = function(config) {
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
         preprocessors: {
             'test-unit/**/*.js': ['babel'],
-            'test-unit/curriculum/**/*.json': ['json_fixtures']
+            'test-unit/sampleData/**/*.json': ['json_fixtures']
         },
 
         'babelPreprocessor': {

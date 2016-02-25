@@ -20,10 +20,7 @@ class StudentDataService {
 
     retrieveStudentData() {
 
-        // get the mode
-        var mode = this.ConfigService.getConfigParam('mode');
-
-        if (mode === 'preview') {
+        if (this.ConfigService.isPreview()) {
             // we are previewing the project
 
             // initialize dummy student data
@@ -866,8 +863,8 @@ class StudentDataService {
             annotations = [];
         }
 
-        if (this.ConfigService.getConfigParam('mode') === 'preview') {
-            // if we're in preview mode, don't make any request to the server
+        if (this.ConfigService.isPreview()) {
+            // if we're in preview, don't make any request to the server
             return;
         }
 
@@ -989,7 +986,7 @@ class StudentDataService {
 
     };
 
-    getLatestComponentState() {
+    getLatestComponentState(type) {
         var latestComponentState = null;
 
         var studentData = this.studentData;
@@ -998,7 +995,17 @@ class StudentDataService {
             var componentStates = studentData.componentStates;
 
             if (componentStates != null) {
-                latestComponentState = componentStates[componentStates.length - 1];
+                if (type === 'isSubmit') {
+                    for (let i = componentStates.length-1; i > -1; i--) {
+                        let state = componentStates[i];
+                        if (state.isSubmit) {
+                            latestComponentState = state;
+                            break;
+                        }
+                    }
+                } else {
+                    latestComponentState = componentStates[componentStates.length - 1];
+                }
             }
         }
 

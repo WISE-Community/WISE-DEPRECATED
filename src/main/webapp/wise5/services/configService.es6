@@ -7,18 +7,16 @@ class ConfigService {
         this.config = null;
     };
 
-    getConfig() {
-        return this.config;
+    setConfig(config) {
+        this.config = config;
+        this.sortClassmateUserInfosAlphabeticallyByName();
     };
 
     retrieveConfig(configURL) {
         return this.$http.get(configURL).then((result) => {
-            var config = result.data;
-
-            this.config = config;
-
-            this.sortClassmateUserInfosAlphabeticallyByName();
-            return config;
+            var configJSON = result.data;
+            this.setConfig(configJSON);
+            return configJSON;
         });
     };
 
@@ -115,6 +113,10 @@ class ConfigService {
 
     getWebSocketURL() {
         return this.getConfigParam('webSocketURL');
+    };
+
+    getWISEBaseURL() {
+        return this.getConfigParam('wiseBaseURL');
     };
 
     getMode() {
@@ -244,7 +246,6 @@ class ConfigService {
                     userInfo = myUserInfo;
                 }
             }
-            ;
 
             if (userInfo == null) {
                 var classmateUserInfos = this.getClassmateUserInfos();

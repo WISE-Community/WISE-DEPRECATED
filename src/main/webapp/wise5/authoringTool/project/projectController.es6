@@ -1,3 +1,5 @@
+'use strict';
+
 class ProjectController {
 
     constructor($scope, $state, $stateParams, ProjectService, ConfigService) {

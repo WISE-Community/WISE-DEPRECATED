@@ -130,7 +130,8 @@
                                 componentstateid='{{componentState.id}}'></annotation>
                 </div>
                 <div class="component-content__actions" layout="row">
-                    <md-button class="md-raised md-primary"
+                    <md-button class="md-primary"
+                               ng-class="{'md-raised': !labelController.showSubmitButton()}"
                                ng-click="labelController.saveButtonClicked()"
                                ng-disabled="labelController.isDisabled"
                                ng-if="labelController.showSaveButton()">Save</md-button>

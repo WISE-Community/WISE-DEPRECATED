@@ -118,10 +118,9 @@
 		class="org.wise.portal.spring.impl.WISESimpleMappingExceptionResolver">
 		<property name="exceptionMappings">
 			<props>
+				<prop key="org.springframework.web.multipart.MaxUploadSizeExceededException">errors/maxUploadSizeExceededError</prop>
 				<prop key="java.lang.Exception">errors/friendlyError</prop>
-				<prop key="org.acegisecurity.AccessDeniedException">
-					errors/securityFriendlyError
-				</prop>
+				<prop key="org.acegisecurity.AccessDeniedException">errors/securityFriendlyError</prop>
 				<prop key="org.wise.portal.presentation.web.exception.NotAuthorizedException">accessdenied</prop>
 			</props>
 		</property>

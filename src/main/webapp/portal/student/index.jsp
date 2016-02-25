@@ -150,31 +150,6 @@ $(document).ready(function() {
 });
 </script>
 
-<!--NOTE: the following scripts has CONDITIONAL items that only apply to IE (MattFish)-->
-<!--[if lt IE 7]>
-<script defer type="text/javascript" src=".././javascript/iefixes.js"></script>
-<![endif]-->
-
-<!--[if IE 5]>
-<style>
-#studentActionList a:link, #studentActionList a:visited {
-	float: left;
-	clear: both;
-	width: 100%;
-	font-family: "Gill Sans", Helvetica, Arial, "Lucida Grande", "Lucida San Unicode";
-			}
-</style>
-<![endif]-->
-
-<!--[if lte IE 6]>
-<style>
-#studentActionList a:link, #studentActionList a:visited {
-	height: 1%;
-	font-family: "Gill Sans", Helvetica, Arial, "Lucida Grande", "Lucida San Unicode";
-		}
-</style>
-<![endif]-->
-
 </head>
 <body>
 <div id="pageWrapper">

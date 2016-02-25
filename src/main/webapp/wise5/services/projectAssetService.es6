@@ -49,8 +49,15 @@ class ProjectAssetService {
                 var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
                 //console.log('progress: ' + progressPercentage + '% ' + evt.config.file.name);
             }).success((result, status, headers, config) => {
-                //console.log('file ' + config.file.name + 'uploaded. Response: ' + JSON.stringify(result));
-                this.projectAssets = result;
+                // Only set the projectAssets if the result is an object.
+                // Sometimes it's an error message string.
+                if (typeof result === 'object') {
+                    this.projectAssets = result;
+                } else if (typeof result === 'string') {
+                    // This is an error and should be displayed to the user.
+                    alert(result);
+                }
+
                 return result;
             });
         });

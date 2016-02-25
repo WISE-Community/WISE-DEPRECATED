@@ -8,7 +8,7 @@
       "angular-moment": "npm:angular-moment@^1.0.0-beta.3",
       "angular-sanitize": "github:angular/bower-angular-sanitize@^1.5.0",
       "angular-ui-router": "github:angular-ui/ui-router@^0.2.15",
-      "angular-ui-tree": "github:angular-ui-tree/angular-ui-tree@2.5",
+      "angular-ui-tree": "github:angular-ui-tree/angular-ui-tree@^2.5",
       "angular-websocket": "npm:angular-websocket@^1.0.14",
       "highcharts-ng": "npm:highcharts-ng@^0.0.11",
       "highcharts/draggable-points": "github:highcharts/draggable-points@master",

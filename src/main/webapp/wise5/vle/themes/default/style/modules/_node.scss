@@ -4,6 +4,28 @@ $input-action-vertical-offset: 0;
 $input-action-vertical-offset-richtext: -7px;
 
 // Base
+#step-tools {
+  &.ng-hide-add, &.ng-hide-remove {
+    transition: 250ms linear all;
+    transition-delay: 250ms;
+      .node-toolbar {
+          transition: 250ms linear all;
+          transition-delay: 250ms;
+      }
+  }
+
+  &.ng-hide {
+    .node-toolbar {
+      height: 0;
+      min-height: 0;
+
+      .md-toolbar-tools {
+        opacity: 0;
+      }
+    }
+  }
+}
+
 .node-toolbar {
   position: fixed;
   left: 0;
@@ -11,24 +33,44 @@ $input-action-vertical-offset-richtext: -7px;
   top: $toolbar-height;
 }
 
-.node-container {
-  margin: 0;
-  width: 100%;
+#node {
+  margin: 0 auto;
+  transition: all 400ms;
+  position: absolute;
+  left: 0;
+  right: 0;
 
   @media only screen and (min-width: $layout-breakpoint-xs) {
-    margin: 16px auto;
+    padding: 24px 16px;
   }
 
   @media only screen and (min-width: $layout-breakpoint-sm) {
-    margin: 32px auto;
+    padding: 32px;
+  }
+
+  &.ng-enter {
+    opacity: 0;
+  }
+
+  .ng-enter-active {
+    opacity: 1;
+  }
+
+  &.ng-leave {
+    opacity: 1;
+  }
+
+  &.ng-leave-active, &.ng-hide {
+    opacity: 0;
   }
 }
 
 .node-content {
-  padding: 0;
+  padding: 0 0 24px;
 
   @media only screen and (min-width: $layout-breakpoint-xs) {
     border: 1px solid color('gray');
+    padding: 0;
   }
 }
 
@@ -103,7 +145,15 @@ $input-action-vertical-offset-richtext: -7px;
 }
 
 .node-content__actions {
-  padding: 0 16px 16px 16px;
+  padding: 0 16px 16px;
+
+  @media only screen and (min-width: $layout-breakpoint-sm) {
+    padding: 0 24px 24px;
+  }
+
+  @media only screen and (min-width: $layout-breakpoint-md) {
+    padding: 0 32px 32px;
+  }
 
   .md-button:first-child {
     margin-left: 0;
@@ -112,6 +162,13 @@ $input-action-vertical-offset-richtext: -7px;
   .md-button:last-child {
     margin-right: 0;
   }
+}
+
+.node-content__actions__info {
+  font-style: italic;
+  margin-left: 8px;
+  opacity: 0.8;
+  color: lighten(color('accent-2'), 5%);
 }
 
 .md-button.md-icon-button.node-nav {

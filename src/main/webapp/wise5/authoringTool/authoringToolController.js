@@ -29,11 +29,10 @@ var AuthoringToolController = function () {
     _createClass(AuthoringToolController, [{
         key: 'exit',
         value: function exit() {
-            //get the context path e.g. /wise
-            var contextPath = this.ConfigService.getConfigParam('contextPath');
-            // send the user to the teacher home page
-            var homePageURL = contextPath + '/teacher';
-            window.location = homePageURL;
+            // Send the user to the teacher home page
+            var wiseBaseURL = this.ConfigService.getWISEBaseURL();
+            var teacherHomePageURL = wiseBaseURL + '/teacher';
+            window.location = teacherHomePageURL;
         }
     }]);
 

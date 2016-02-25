@@ -20,11 +20,6 @@
 <script type="text/javascript" src="${contextPath}/<spring:theme code="generalsource"/>"></script>
 <script type="text/javascript" src="${contextPath}/<spring:theme code="browserdetectsource"/>"></script>
 
-<!--NOTE: the following scripts has CONDITIONAL items that only apply to IE (MattFish)-->
-<!--[if lt IE 7]>
-<script defer type="text/javascript" src="../javascript/iefixes.js"></script>
-<![endif]-->
-
 <script type='text/javascript'>
 var isTeacherIndex = true; //global var used by spawned pages (i.e. archive run)
 

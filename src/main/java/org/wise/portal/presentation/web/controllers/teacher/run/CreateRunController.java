@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2007-2016 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -159,7 +159,7 @@ public class CreateRunController {
 		RunParameters runParameters = new RunParameters();
 		runParameters.setOwner(user);	// add the current user as an owner of the run
 		runParameters.setProject(project);
-		runParameters.setName(project.getProjectInfo().getName());
+		runParameters.setName(project.getName());
 
 		// get the owners and add their usernames to the model
 		String ownerUsernames = "";
@@ -607,7 +607,7 @@ public class CreateRunController {
 					schoolLocation,
 					schoolPeriods,
 					projectcodes.toString(),
-					run.getProject().getProjectInfo().getName(),
+					run.getProject().getName(),
 					projectID,
 					runID,
 					sdf.format(date),
@@ -625,7 +625,7 @@ public class CreateRunController {
 					schoolLocation,
 					schoolPeriods,
 					projectcodes.toString(),
-					run.getProject().getProjectInfo().getName(),
+					run.getProject().getName(),
 					projectID,
 					runID,
 					sdf.format(date),
@@ -648,10 +648,10 @@ public class CreateRunController {
 			String[] teacherRecipient = new String[]{teacherEmail};
 
 			String defaultTeacherSubject = messageSource.getMessage("presentation.web.controllers.teacher.run.CreateRunController.setupRunConfirmationTeacherEmailSubject", 
-					new Object[]{run.getProject().getProjectInfo().getName()}, Locale.US);
+					new Object[]{run.getProject().getName()}, Locale.US);
 
 			String teacherSubject = messageSource.getMessage("presentation.web.controllers.teacher.run.CreateRunController.setupRunConfirmationTeacherEmailSubject", 
-					new Object[]{run.getProject().getProjectInfo().getName()},defaultTeacherSubject, this.locale);
+					new Object[]{run.getProject().getName()},defaultTeacherSubject, this.locale);
 
 			String defaultRunCodeDescription = messageSource.getMessage("teacher.run.create.createrunfinish.everyRunHasUniqueAccessCode", null, Locale.US);
 
@@ -660,7 +660,7 @@ public class CreateRunController {
 			String defaultTeacherMessage = messageSource.getMessage("presentation.web.controllers.teacher.run.CreateRunController.setupRunConfirmationTeacherEmailMessage", 
 					new Object[]{
 					teacherUserDetails.getUsername(),
-					run.getProject().getProjectInfo().getName(),
+					run.getProject().getName(),
 					sdf.format(date),
 					runcode,
 					defaultRunCodeDescription
@@ -670,7 +670,7 @@ public class CreateRunController {
 			String teacherMessage = messageSource.getMessage("presentation.web.controllers.teacher.run.CreateRunController.setupRunConfirmationTeacherEmailMessage", 
 					new Object[]{
 					teacherUserDetails.getUsername(),
-					run.getProject().getProjectInfo().getName(),
+					run.getProject().getName(),
 					sdf.format(date),
 					runcode,
 					runCodeDescription

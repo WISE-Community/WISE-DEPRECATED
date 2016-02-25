@@ -1,5 +1,5 @@
 import mainModule from './main';
 
 angular.element(document).ready(() => {
-    angular.bootstrap(document, [mainModule.name], { strictDi: true});
+    angular.bootstrap(document.getElementsByTagName('body')[0], [mainModule.name], { strictDi: true});
 });

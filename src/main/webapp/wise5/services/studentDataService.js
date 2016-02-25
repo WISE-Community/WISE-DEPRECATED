@@ -34,10 +34,7 @@ var StudentDataService = function () {
         value: function retrieveStudentData() {
             var _this = this;
 
-            // get the mode
-            var mode = this.ConfigService.getConfigParam('mode');
-
-            if (mode === 'preview') {
+            if (this.ConfigService.isPreview()) {
                 // we are previewing the project
 
                 // initialize dummy student data
@@ -902,8 +899,8 @@ var StudentDataService = function () {
                 annotations = [];
             }
 
-            if (this.ConfigService.getConfigParam('mode') === 'preview') {
-                // if we're in preview mode, don't make any request to the server
+            if (this.ConfigService.isPreview()) {
+                // if we're in preview, don't make any request to the server
                 return;
             }
 
@@ -1021,7 +1018,7 @@ var StudentDataService = function () {
         value: function retrieveComponentStates(runId, periodId, workgroupId) {}
     }, {
         key: 'getLatestComponentState',
-        value: function getLatestComponentState() {
+        value: function getLatestComponentState(type) {
             var latestComponentState = null;
 
             var studentData = this.studentData;
@@ -1030,7 +1027,17 @@ var StudentDataService = function () {
                 var componentStates = studentData.componentStates;
 
                 if (componentStates != null) {
-                    latestComponentState = componentStates[componentStates.length - 1];
+                    if (type === 'isSubmit') {
+                        for (var i = componentStates.length - 1; i > -1; i--) {
+                            var state = componentStates[i];
+                            if (state.isSubmit) {
+                                latestComponentState = state;
+                                break;
+                            }
+                        }
+                    } else {
+                        latestComponentState = componentStates[componentStates.length - 1];
+                    }
                 }
             }
 

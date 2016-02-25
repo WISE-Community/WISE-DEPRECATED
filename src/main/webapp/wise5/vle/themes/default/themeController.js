@@ -10,7 +10,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var ThemeController = function () {
     function ThemeController($scope, ConfigService, ProjectService, StudentDataService, NotebookService, SessionService, $mdDialog, $mdToast, $mdComponentRegistry) {
-        var _this2 = this;
+        var _this = this;
 
         _classCallCheck(this, ThemeController);
 
@@ -64,51 +64,50 @@ var ThemeController = function () {
         this.connectionLostShown = false;
 
         // alert user when a locked node has been clicked
-        this.$scope.$on('nodeClickLocked', angular.bind(this, function (event, args) {
+        this.$scope.$on('nodeClickLocked', function (event, args) {
             var nodeId = args.nodeId;
 
             // TODO: customize alert with constraint details, correct node term
-            this.$mdDialog.show(this.$mdDialog.alert().parent(angular.element(document.body)).title('Item Locked').content('Sorry, you cannot view this item yet.').ariaLabel('Item Locked').clickOutsideToClose(true).ok('OK').targetEvent(event));
-        }));
+            _this.$mdDialog.show(_this.$mdDialog.alert().parent(angular.element(document.body)).title('Item Locked').textContent('Sorry, you cannot view this item yet.').ariaLabel('Item Locked').ok('OK').targetEvent(event));
+        });
 
         // alert user when inactive for a long time
-        this.$scope.$on('showSessionWarning', angular.bind(this, function () {
-            var _this = this;
+        this.$scope.$on('showSessionWarning', function (ev) {
+            var alert = _this.$mdDialog.confirm().parent(angular.element(document.body)).title('Session Timeout').textContent('You have been inactive for a long time. Do you want to stay logged in?').ariaLabel('Session Timeout').targetEvent(ev).ok('YES').cancel('No');
 
-            var alert = this.$mdDialog.confirm().parent(angular.element(document.body)).title('Session Timeout').content('You have been inactive for a long time. Do you want to stay logged in?').ariaLabel('Session Timeout').ok('YES').cancel('No');
-
-            this.$mdDialog.show(alert).then(function () {
+            _this.$mdDialog.show(alert).then(function () {
                 _this.SessionService.renewSession();
                 alert = undefined;
             }, function () {
                 _this.SessionService.forceLogOut();
             });
-        }));
+        });
 
         // alert user when server loses connection
-        this.$scope.$on('serverDisconnected', angular.bind(this, function () {
-            this.handleServerDisconnect();
-        }));
+        this.$scope.$on('serverDisconnected', function () {
+            _this.handleServerDisconnect();
+        });
 
         // remove alert when server regains connection
-        this.$scope.$on('serverConnected', angular.bind(this, function () {
-            this.handleServerReconnect();
-        }));
+        this.$scope.$on('serverConnected', function () {
+            _this.handleServerReconnect();
+        });
 
         // alert user when attempt to add component state to notebook that already exists in notebook
+        // TODO: remove, deprecated
         this.$scope.$on('notebookAddDuplicateAttempt', angular.bind(this, function (event, args) {
             this.$mdDialog.show(this.$mdDialog.alert().parent(angular.element(document.body)).title('Item already exists in Notebook').content('You can add another version of the item by making changes and then adding it again.').ariaLabel('Notebook Duplicate').clickOutsideToClose(true).ok('OK').targetEvent(event));
         }));
 
         // show list of revisions in a dialog when user clicks the show revisions link for a component
-        this.$scope.$on('showRevisions', angular.bind(this, function (event, args) {
+        this.$scope.$on('showRevisions', function (event, args) {
             var revisions = args.revisions;
             var componentController = args.componentController;
             var allowRevert = args.allowRevert;
             var $event = args.$event;
             var revisionsTemplateUrl = scope.themePath + '/templates/componentRevisions.html';
 
-            this.$mdDialog.show({
+            _this.$mdDialog.show({
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 templateUrl: revisionsTemplateUrl,
@@ -133,7 +132,7 @@ var ThemeController = function () {
                 };
             }
             RevisionsController.$inject = ["$scope", "$mdDialog", "items", "componentController", "allowRevert"];
-        }));
+        });
 
         this.$scope.$on('showStudentAssets', function (event, args) {
             var componentController = args.componentController;
@@ -141,7 +140,7 @@ var ThemeController = function () {
             var studentAssetDialogTemplateUrl = scope.themePath + '/templates/studentAssetDialog.html';
             var studentAssetTemplateUrl = scope.themePath + '/studentAsset/studentAsset.html';
 
-            _this2.$mdDialog.show({
+            _this.$mdDialog.show({
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 templateUrl: studentAssetDialogTemplateUrl,
@@ -165,7 +164,7 @@ var ThemeController = function () {
             alert('show notebook not implemented yet!');
             /*
              TODO: delete me after confirming that this is no longer used
-              let notebookFilters = args.notebookFilters;
+             let notebookFilters = args.notebookFilters;
             let componentController = args.componentController;
             let $event = args.$event;
             let notebookDialogTemplateUrl = scope.themePath + '/templates/notebookDialog.html';
@@ -182,31 +181,29 @@ var ThemeController = function () {
                 controller: NotebookDialogController
             });
             function NotebookDialogController($scope, $mdDialog, componentController) {
-                $scope.notebookFilters = notebookFilters;
-                $scope.notebookFilter = notebookFilters[0].name;
-                $scope.notebookTemplateUrl = notebookTemplateUrl;
-                $scope.componentController = componentController;
+                    $scope.notebookFilters = notebookFilters;
+                    $scope.notebookFilter = notebookFilters[0].name;
+                    $scope.notebookTemplateUrl = notebookTemplateUrl;
+                    $scope.componentController = componentController;
                 $scope.closeDialog = function () {
-                    $mdDialog.hide();
+                        $mdDialog.hide();
+                    }
                 }
-            }
             NotebookDialogController.$inject = ["$scope", "$mdDialog", "componentController"];
              */
         }));
 
         // capture notebook open/close events
         this.$mdComponentRegistry.when('notebook').then(function (it) {
-            var _this3 = this;
-
-            this.$scope.$watch(function () {
+            _this.$scope.$watch(function () {
                 return it.isOpen();
             }, function (isOpenNewValue, isOpenOldValue) {
                 if (isOpenNewValue !== isOpenOldValue) {
-                    var currentNode = _this3.StudentDataService.getCurrentNode();
-                    _this3.NotebookService.saveNotebookToggleEvent(isOpenNewValue, currentNode);
+                    var currentNode = _this.StudentDataService.getCurrentNode();
+                    _this.NotebookService.saveNotebookToggleEvent(isOpenNewValue, currentNode);
                 }
             });
-        }.bind(this));
+        });
     }
 
     _createClass(ThemeController, [{

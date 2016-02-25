@@ -27,11 +27,10 @@ class AuthoringToolController {
     }
 
     exit() {
-        //get the context path e.g. /wise
-        let contextPath = this.ConfigService.getConfigParam('contextPath');
-        // send the user to the teacher home page
-        let homePageURL = contextPath + '/teacher';
-        window.location = homePageURL;
+        // Send the user to the teacher home page
+        let wiseBaseURL = this.ConfigService.getWISEBaseURL();
+        let teacherHomePageURL = wiseBaseURL + '/teacher';
+        window.location = teacherHomePageURL;
     }
 }
 

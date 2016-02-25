@@ -24,7 +24,6 @@ var NodeStatusIcon = {
 
 var StepTools = {
     bindings: {
-        nodeId: '=',
         showPosition: '='
     },
     template: '<ng-include src="stepToolsCtrl.getTemplateUrl()"></ng-include>',
