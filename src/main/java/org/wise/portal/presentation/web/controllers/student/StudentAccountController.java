@@ -238,7 +238,7 @@ public class StudentAccountController {
 		String registerUrl = contextPath + "/student/join";
 		String updateAccountInfoUrl = contextPath + "/student/updatestudentaccount.html";
 		
-		if(referrer != null && 
+		if (referrer != null &&
 				(referrer.contains(domain + registerUrl) || 
 				 referrer.contains(domainWithPort + registerUrl))) {
 			// if student was on register page, have them re-fill out the form.
