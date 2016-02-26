@@ -734,6 +734,15 @@ function getProjectMetaData(projectId) {
     }).done(function(data, textStatus, xml) {
         if (data != null) {
             
+            /*
+             * set the project name. the project name may be overridden later when 
+             * we obtain the project title from the project file.
+             */
+            if ($('#projectName').html() == '' && data.title != null && data.title != '') {
+                var title = data.title;
+                $('#projectName').html(title)
+            }
+            
             var techReqs = data.techReqs;
             
             checkProjectSpecificRequirements(techReqs);
@@ -822,6 +831,7 @@ function checkProjectSpecificRequirements(techReqs) {
         // show the project specific requirements table
         $('#projectSpecificRequirementsTable').show();
         
+        var allSatisfied = true;
         var flashSatisfied = false;
         var javaSatisfied = false;
         
@@ -833,11 +843,11 @@ function checkProjectSpecificRequirements(techReqs) {
             $('#flashRow').show();
             
             if (!flashSatisfied) {
-                // show the warning about not satisfying the specific requirements for the project
-                $('#projectFail').show();
                 
                 // show the warning that the flash requirement was not satisfied
                 $('#flashMsg').show();
+                
+                allSatisfied = false;
             }
         }
         
@@ -849,8 +859,6 @@ function checkProjectSpecificRequirements(techReqs) {
             $('#javaRow').show();
             
             if (!javaSatisfied) {
-                // show the warning about not satisfying the specific requirements
-                $('#projectFail').show();
                 
                 // get the browser name
                 var browserName = getBrowserName();
@@ -862,12 +870,17 @@ function checkProjectSpecificRequirements(techReqs) {
                     // show the warning message that the java requirement was not satisfied
                     $('#javaMsg').show();
                 }
+                
+                allSatisfied = false;
             }
         }
         
-        if (flashSatisfied && javaSatisfied) {
+        if (allSatisfied) {
             // the specific requirements have been satisfied
             $('#projectPass').show();
+        } else {
+            // show the warning about not satisfying all the specific requirements
+            $('#projectFail').show();
         }
     } else {
         // there are no specific requirements for this project
