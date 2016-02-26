@@ -198,9 +198,8 @@ describe('ProjectService Unit Test', function () {
 
         // TODO: add test for ProjectService.isNodeIdInABranch()
         // TODO: add test for ProjectService.getBranchPathsByNodeId()
-        // TODO: add test for ProjectService.getComponentByNodeIdAndComponentId()
-        // TODO: add test for ProjectService.getComponentPositionByNodeIdAndComponentId()
-        // TODO: add test for ProjectService.getComponentsByNodeId()
+
+
         // TODO: add test for ProjectService.getNodeContentByNodeId()
 
         // TODO: add test for ProjectService.replaceComponent()
@@ -300,6 +299,91 @@ describe('ProjectService Unit Test', function () {
                 'node38', 'node39'];      // This should be the node ids in the project
             let nodeIdsActual = ProjectService.getNodeIds();
             expect(nodeIdsActual).toEqual(nodeIdsExpected);
+        });
+
+        // test ProjectService.getComponentByNodeIdAndComponentId()
+        it('should get the component by node id and comonent id', function() {
+            ProjectService.setProject(scootersProjectJSON);  // Set the sample project and parse it
+            // nodeId is null
+            let nullNodeIdResult = ProjectService.getComponentByNodeIdAndComponentId(null, "57lxhwfp5r");
+            expect(nullNodeIdResult).toBeNull();
+
+            // componentId is null
+            let nullComponentIdResult = ProjectService.getComponentByNodeIdAndComponentId("node13", null);
+            expect(nullComponentIdResult).toBeNull();
+
+            // nodeId doesn't exist
+            let nodeIdDNEResult = ProjectService.getComponentByNodeIdAndComponentId("badNodeId", "57lxhwfp5r");
+            expect(nodeIdDNEResult).toBeNull();
+
+            // componentId doesn't exist
+            let componentIdDNEResult = ProjectService.getComponentByNodeIdAndComponentId("node13", "badComponentId");
+            expect(componentIdDNEResult).toBeNull();
+
+            // nodeId and componentId are valid and the component exists in the project
+            let componentExists = ProjectService.getComponentByNodeIdAndComponentId("node13", "57lxhwfp5r");
+            expect(componentExists).not.toBe(null);
+            expect(componentExists.type).toEqual("HTML");
+
+            let componentExists2 = ProjectService.getComponentByNodeIdAndComponentId("node9", "mnzx68ix8h");
+            expect(componentExists2).not.toBe(null);
+            expect(componentExists2.type).toEqual("embedded");
+            expect(componentExists2.url).toEqual("NewtonScooters-potential-kinetic.html");
+        });
+
+        // test ProjectService.getComponentPositionByNodeIdAndComponentId()
+        it('should get the component position by node id and comonent id', function() {
+            ProjectService.setProject(scootersProjectJSON);  // Set the sample project and parse it
+            // nodeId is null
+            let nullNodeIdResult = ProjectService.getComponentPositionByNodeIdAndComponentId(null, "57lxhwfp5r");
+            expect(nullNodeIdResult).toEqual(-1);
+
+            // componentId is null
+            let nullComponentIdResult = ProjectService.getComponentPositionByNodeIdAndComponentId("node13", null);
+            expect(nullComponentIdResult).toEqual(-1);
+
+            // nodeId doesn't exist
+            let nodeIdDNEResult = ProjectService.getComponentPositionByNodeIdAndComponentId("badNodeId", "57lxhwfp5r");
+            expect(nodeIdDNEResult).toEqual(-1);
+
+            // componentId doesn't exist
+            let componentIdDNEResult = ProjectService.getComponentPositionByNodeIdAndComponentId("node13", "badComponentId");
+            expect(componentIdDNEResult).toEqual(-1);
+
+            // nodeId and componentId are valid and the component exists in the project
+            let componentExists = ProjectService.getComponentPositionByNodeIdAndComponentId("node13", "57lxhwfp5r");
+            expect(componentExists).toEqual(0);
+
+            let componentExists2 = ProjectService.getComponentPositionByNodeIdAndComponentId("node9", "mnzx68ix8h");
+            expect(componentExists2).toEqual(1);
+        });
+
+        // test ProjectService.getComponentsByNodeId()
+        it('should get the components by node id', function() {
+            ProjectService.setProject(scootersProjectJSON);  // Set the sample project and parse it
+            // nodeId is null
+            let nullNodeIdResult = ProjectService.getComponentsByNodeId(null);
+            expect(nullNodeIdResult).toEqual([]);
+
+            // nodeId doesn't exist
+            let nodeIdDNEResult = ProjectService.getComponentsByNodeId("badNodeId");
+            expect(nodeIdDNEResult).toEqual([]);
+
+            // nodeId exists but the node.components is null
+            let nodeWithNullComponentResult = ProjectService.getComponentsByNodeId("nodeWithNoComponents");
+            expect(nodeWithNullComponentResult).toEqual([]);
+
+            // nodeId is are valid and the node exists in the project
+            let nodeExistsResult = ProjectService.getComponentsByNodeId("node13");
+            expect(nodeExistsResult).not.toBe(null);
+            expect(nodeExistsResult.length).toEqual(1);
+            expect(nodeExistsResult[0].id).toEqual("57lxhwfp5r");
+
+            let nodeExistsResult2 = ProjectService.getComponentsByNodeId("node9");
+            expect(nodeExistsResult2).not.toBe(null);
+            expect(nodeExistsResult2.length).toEqual(7);
+            expect(nodeExistsResult2[2].id).toEqual("nm080ntk8e");
+            expect(nodeExistsResult2[2].type).toEqual("Table");
         });
 
         // TODO: add test for ProjectService.moveNodesInside()

@@ -2999,6 +2999,25 @@
                     "fontName": "create"
                 }
             }
+        },
+        {
+            "id": "nodeWithNoComponents",
+            "type": "node",
+            "showSaveButton": true,
+            "showSubmitButton": false,
+            "constraints": [],
+            "transitionLogic": {
+                "transitions": [
+                    {
+                        "to": "node39"
+                    }
+                ],
+                "howToChooseAmongAvailablePaths": null,
+                "whenToChoosePath": null,
+                "canChangePath": null,
+                "maxPathsVisitable": null
+            },
+            "title": "Improvements"
         }
     ],
     "constraints": [],

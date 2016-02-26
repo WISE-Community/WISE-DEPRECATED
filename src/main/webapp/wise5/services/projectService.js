@@ -479,23 +479,24 @@ var index=branchPath.indexOf(nodeId);if(index!=-1){ /*
      * Get the component by node id and component id
      * @param nodeId the node id
      * @param componentId the component id
-     * @returns the component
-     */},{key:'getComponentByNodeIdAndComponentId',value:function getComponentByNodeIdAndComponentId(nodeId,componentId){var component=null;if(nodeId!=null&&componentId!=null){var components=this.getComponentsByNodeId(nodeId);if(components!=null){ // loop through all the components
+     * @returns the component or null if the nodeId or componentId are null or does not exist in the project.
+     */},{key:'getComponentByNodeIdAndComponentId',value:function getComponentByNodeIdAndComponentId(nodeId,componentId){var component=null;if(nodeId!=null&&componentId!=null){var components=this.getComponentsByNodeId(nodeId); // loop through all the components
 for(var c=0;c<components.length;c++){var tempComponent=components[c];if(tempComponent!=null){var tempComponentId=tempComponent.id;if(componentId===tempComponentId){ // we have found the component we want
-component=tempComponent;break;}}}}}return component;}},{key:'getComponentPositionByNodeIdAndComponentId', /**
+component=tempComponent;break;}}}}return component;}},{key:'getComponentPositionByNodeIdAndComponentId', /**
      * Returns the position of the component in the node by node id and component id, 0-indexed.
      * @param nodeId the node id
      * @param componentId the component id
-     * @returns the component's position
-     */value:function getComponentPositionByNodeIdAndComponentId(nodeId,componentId){var componentPosition=-1;if(nodeId!=null&&componentId!=null){var components=this.getComponentsByNodeId(nodeId);if(components!=null){ // loop through all the components
+     * @returns the component's position or -1 if nodeId or componentId are null or doesn't exist in the project.
+     */value:function getComponentPositionByNodeIdAndComponentId(nodeId,componentId){var componentPosition=-1;if(nodeId!=null&&componentId!=null){var components=this.getComponentsByNodeId(nodeId); // loop through all the components
 for(var c=0;c<components.length;c++){var tempComponent=components[c];if(tempComponent!=null){var tempComponentId=tempComponent.id;if(componentId===tempComponentId){ // we have found the component we want
-componentPosition=c;break;}}}}}return componentPosition;}},{key:'getComponentsByNodeId', /**
+componentPosition=c;break;}}}}return componentPosition;}},{key:'getComponentsByNodeId', /**
      * Get the components in a node
      * @param nodeId the node id
-     * @returns an array of components
+     * @returns an array of components or empty array if nodeId is null or doesn't exist in the project.
+     * if the node exists but doesn't have any components, returns an empty array.
      */value:function getComponentsByNodeId(nodeId){var components=[];if(nodeId!=null){ // get the node
 var node=this.getNodeById(nodeId);if(node!=null){ // get the components
-components=node.components;}}return components;}},{key:'getNodeContentByNodeId',value:function getNodeContentByNodeId(nodeId){var nodeContent=null;if(nodeId!=null){var node=this.getNodeById(nodeId);if(node!=null){nodeContent=node.content;}}return nodeContent;}},{key:'replaceComponent', /**
+if(node.components!=null){components=node.components;}}}return components;}},{key:'getNodeContentByNodeId',value:function getNodeContentByNodeId(nodeId){var nodeContent=null;if(nodeId!=null){var node=this.getNodeById(nodeId);if(node!=null){nodeContent=node.content;}}return nodeContent;}},{key:'replaceComponent', /**
      * Replace a component
      * @param nodeId the node id
      * @param componentId the component id
