@@ -4,7 +4,7 @@
             var embeddedController = embeddedController;
         </script>
         <div ng-if='embeddedController.mode === "authoring"'>
-            <input ng-model='embeddedController.authoringComponentContent.url'
+            Model File Name: <input ng-model='embeddedController.authoringComponentContent.url'
                    ng-change='embeddedController.authoringViewComponentChanged()'
                    ng-model-options='{ debounce: 1000 }'
                    size='50'/>

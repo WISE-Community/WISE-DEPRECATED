@@ -1,10 +1,10 @@
 'use strict';
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -39,6 +39,7 @@ var NodeController = function () {
      * Launch VLE with this current step as the initial step
      */
 
+
     _createClass(NodeController, [{
         key: 'previewStep',
         value: function previewStep() {
@@ -53,6 +54,7 @@ var NodeController = function () {
         }
     }, {
         key: 'createComponent',
+
 
         /**
          * Create a component in this node
@@ -110,11 +112,18 @@ var NodeController = function () {
         key: 'deleteComponent',
         value: function deleteComponent(componentId) {
 
-            // delete the component from the node
-            this.ProjectService.deleteComponent(this.nodeId, componentId);
+            // ask the user to confirm the delete
+            var answer = confirm('Are you sure you want to delete this component?');
 
-            // save the project
-            this.ProjectService.saveProject();
+            if (answer) {
+                // the user confirmed yes
+
+                // delete the component from the node
+                this.ProjectService.deleteComponent(this.nodeId, componentId);
+
+                // save the project
+                this.ProjectService.saveProject();
+            }
         }
 
         /**

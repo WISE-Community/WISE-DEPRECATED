@@ -293,7 +293,7 @@ class ProjectController {
     delete() {
 
         // ask the user to confirm the delete
-        var answer = confirm('Are you sure you want to delete?');
+        var answer = confirm('Are you sure you want to delete the selected item(s)?');
 
         if (answer) {
             // the user confirmed yes
@@ -345,6 +345,40 @@ class ProjectController {
         angular.forEach(this.items, function(value, key) {
             value.checked = false;
         });
+    }
+    
+    /**
+     * Toggle the create group input
+     */
+    toggleCreateGroup() {
+        this.hideCreateNode();
+        this.showCreateGroup = !this.showCreateGroup;
+        this.createGroupTitle = '';
+    }
+    
+    /**
+     * Hide the create group input
+     */
+    hideCreateGroup() {
+        this.showCreateGroup = false;
+        this.createGroupTitle = '';
+    }
+    
+    /**
+     * Toggle the create node input
+     */
+    toggleCreateNode() {
+        this.hideCreateGroup();
+        this.showCreateNode = !this.showCreateNode;
+        this.createNodeTitle = '';
+    }
+    
+    /**
+     * Hide the create group input
+     */
+    hideCreateNode() {
+        this.showCreateNode = false;
+        this.createNodeTitle = '';
     }
 };
 

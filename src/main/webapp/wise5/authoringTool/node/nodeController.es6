@@ -101,12 +101,19 @@ class NodeController {
      * @param componentId the component id
      */
     deleteComponent(componentId) {
+    
+        // ask the user to confirm the delete
+        var answer = confirm('Are you sure you want to delete this component?');
+        
+        if (answer) {
+            // the user confirmed yes
+            
+            // delete the component from the node
+            this.ProjectService.deleteComponent(this.nodeId, componentId);
 
-        // delete the component from the node
-        this.ProjectService.deleteComponent(this.nodeId, componentId);
-
-        // save the project
-        this.ProjectService.saveProject();
+            // save the project
+            this.ProjectService.saveProject();
+        }
     }
 
     /**
