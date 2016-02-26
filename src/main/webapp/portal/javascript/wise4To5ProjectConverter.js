@@ -469,10 +469,6 @@ function createWISE5Project() {
     wise5Project.startNodeId = 'node1';
 
     wise5Project.navigationMode = 'guided';
-    wise5Project.navigationApplications = [
-        'wiseMap',
-        'wiseList'
-    ];
 
     wise5Project.layout = {
         'template': 'starmap|leftNav|rightNav',
