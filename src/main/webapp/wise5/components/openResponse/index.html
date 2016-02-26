@@ -59,11 +59,12 @@
                 <div class="component-content__actions" ng-show="openResponseController.isStudentAttachmentEnabled" layout="row" layout-wrap="true">
                     <div class="component__add-attachment">
                         <md-button class="md-accent"
+                                   ng-show="!openResponseController.isDisabled"
                                    ng-click="nodeController.showStudentAssets($event, component.id, openResponseController.isDisabled)">
                             <md-icon>image</md-icon> <span>Add File</span>
                         </md-button>
                     </div>
-                    <div class="component__attachment" ng-repeat="attachment in openResponseController.attachments">
+                    <div class="component__attachment" ng-repeat="attachment in openResponseController.attachments track by attachment.iconURL">
                         <img ng-src="{{attachment.iconURL}}" class="component__attachment__content" />
                         <md-button ng-show="!openResponseController.isDisabled" class="component__attachment__delete" ng-click='openResponseController.removeAttachment(attachment)' title="Remove file"><md-icon>cancel</md-icon></md-button>
                     </div>

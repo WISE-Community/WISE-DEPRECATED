@@ -1587,9 +1587,7 @@ class GraphController {
      * @return the component id
      */
     getComponentId() {
-        var componentId = this.componentContent.id;
-
-        return componentId;
+        return this.componentContent.id;
     };
 
 

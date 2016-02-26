@@ -736,9 +736,7 @@ var TableController = function () {
          * @return the component id
          */
         value: function getComponentId() {
-            var componentId = this.componentContent.id;
-
-            return componentId;
+            return this.componentContent.id;
         }
     }, {
         key: 'authoringViewComponentChanged',
