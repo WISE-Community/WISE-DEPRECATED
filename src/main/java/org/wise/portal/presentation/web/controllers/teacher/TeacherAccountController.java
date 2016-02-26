@@ -36,11 +36,11 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.HttpSessionRequiredException;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
+import org.springframework.web.servlet.view.RedirectView;
 import org.wise.portal.domain.authentication.Curriculumsubjects;
 import org.wise.portal.domain.authentication.Schoollevel;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
@@ -106,7 +106,7 @@ public class TeacherAccountController {
 	 * Called before the page is loaded to initialize values.
 	 * Adds the TeacherAccountForm object to the model so that the form
 	 * can be populated.
-	 * @param model the model object that contains values for the page to use when rendering the view
+	 * @param modelMap the model object that contains values for the page to use when rendering the view
 	 * @return the path of the view to display
 	 */
 	@RequestMapping(value={"/teacher/management/updatemyaccountinfo.html"},method=RequestMethod.GET)
@@ -273,6 +273,40 @@ public class TeacherAccountController {
 			return "teacher/join";
 		}
 	}
+
+    /**
+     * When the session is expired, send teacher back to form page.
+     */
+    @ExceptionHandler(HttpSessionRequiredException.class)
+    public ModelAndView handleRegisterTeacherSessionExpired(HttpServletRequest request
+                                                            ) {
+        ModelAndView mav = new ModelAndView();
+        String domain = ControllerUtil.getBaseUrlString(request);
+        String domainWithPort = domain + ":" + request.getLocalPort();
+        String referrer = request.getHeader("referer");
+
+        //get the context path e.g. /wise
+        String contextPath = request.getContextPath();
+
+        String registerUrl = contextPath + "/teacher/join";
+        String updateAccountInfoUrl = contextPath + "/teacher/management/updatemyaccountinfo.html";
+
+        if (referrer != null &&
+                (referrer.contains(domain + registerUrl) ||
+                        referrer.contains(domainWithPort + registerUrl))) {
+            // if teacher was on register page, have them re-fill out the form.
+            mav.setView(new RedirectView(registerUrl));
+        } else if (referrer != null &&
+                (referrer.contains(domain + updateAccountInfoUrl) ||
+                        referrer.contains(domainWithPort + updateAccountInfoUrl))) {
+            // if teacher was on update account page, redirect them back to home page
+            mav.setView(new RedirectView(contextPath + "/index.html"));
+        } else {
+            // if teacher was on any other page, redirect them back to home page
+            mav.setView(new RedirectView(contextPath + "/index.html"));
+        }
+        return mav;
+    }
 
 	// new thread that sends email to new teacher
 	class NewAccountEmailService implements Runnable {

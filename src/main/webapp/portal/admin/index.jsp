@@ -89,7 +89,7 @@
 								code='student_cap' /></a>
 						</h5>
 						<h5>
-							<a href="${contextPath}/admin/account/enableDisableUser"><spring:message
+							<a href="${contextPath}/admin/account/enabledisableuser"><spring:message
 									code='admin.index.enableDisableUser' /></a>
 						</h5>
 						<c:if test="${isBatchCreateUserAccountsEnabled}">

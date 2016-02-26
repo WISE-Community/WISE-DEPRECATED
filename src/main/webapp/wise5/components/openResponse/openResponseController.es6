@@ -372,7 +372,7 @@ class OpenResponseController {
         // set the response into the component state
         var studentData = {};
         studentData.response = response;
-        studentData.attachments = this.attachments;
+        studentData.attachments = angular.copy(this.attachments);  // create a copy without reference to original array
 
         if (this.isSubmit) {
             // the student submitted this work
@@ -591,9 +591,7 @@ class OpenResponseController {
      * @return the component id
      */
     getComponentId() {
-        var componentId = this.componentContent.id;
-
-        return componentId;
+        return this.componentContent.id;
     };
 
     /**

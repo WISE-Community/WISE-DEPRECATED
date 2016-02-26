@@ -2125,7 +2125,7 @@ class ProjectService {
      * Get the component by node id and component id
      * @param nodeId the node id
      * @param componentId the component id
-     * @returns the component
+     * @returns the component or null if the nodeId or componentId are null or does not exist in the project.
      */
     getComponentByNodeIdAndComponentId(nodeId, componentId) {
         var component = null;
@@ -2134,23 +2134,21 @@ class ProjectService {
 
             var components = this.getComponentsByNodeId(nodeId);
 
-            if (components != null) {
+            // loop through all the components
+            for (var c = 0; c < components.length; c++) {
+                var tempComponent = components[c];
 
-                // loop through all the components
-                for (var c = 0; c < components.length; c++) {
-                    var tempComponent = components[c];
+                if (tempComponent != null) {
+                    var tempComponentId = tempComponent.id;
 
-                    if (tempComponent != null) {
-                        var tempComponentId = tempComponent.id;
-
-                        if (componentId === tempComponentId) {
-                            // we have found the component we want
-                            component = tempComponent;
-                            break;
-                        }
+                    if (componentId === tempComponentId) {
+                        // we have found the component we want
+                        component = tempComponent;
+                        break;
                     }
                 }
             }
+
         }
 
         return component;
@@ -2160,7 +2158,7 @@ class ProjectService {
      * Returns the position of the component in the node by node id and component id, 0-indexed.
      * @param nodeId the node id
      * @param componentId the component id
-     * @returns the component's position
+     * @returns the component's position or -1 if nodeId or componentId are null or doesn't exist in the project.
      */
     getComponentPositionByNodeIdAndComponentId(nodeId, componentId) {
         var componentPosition = -1;
@@ -2169,20 +2167,17 @@ class ProjectService {
 
             var components = this.getComponentsByNodeId(nodeId);
 
-            if (components != null) {
+            // loop through all the components
+            for (var c = 0; c < components.length; c++) {
+                var tempComponent = components[c];
 
-                // loop through all the components
-                for (var c = 0; c < components.length; c++) {
-                    var tempComponent = components[c];
+                if (tempComponent != null) {
+                    var tempComponentId = tempComponent.id;
 
-                    if (tempComponent != null) {
-                        var tempComponentId = tempComponent.id;
-
-                        if (componentId === tempComponentId) {
-                            // we have found the component we want
-                            componentPosition = c;
-                            break;
-                        }
+                    if (componentId === tempComponentId) {
+                        // we have found the component we want
+                        componentPosition = c;
+                        break;
                     }
                 }
             }
@@ -2194,7 +2189,8 @@ class ProjectService {
     /**
      * Get the components in a node
      * @param nodeId the node id
-     * @returns an array of components
+     * @returns an array of components or empty array if nodeId is null or doesn't exist in the project.
+     * if the node exists but doesn't have any components, returns an empty array.
      */
     getComponentsByNodeId(nodeId) {
         var components = [];
@@ -2207,7 +2203,9 @@ class ProjectService {
             if (node != null) {
 
                 // get the components
-                components = node.components;
+                if (node.components != null) {
+                    components = node.components;
+                }
             }
         }
 
