@@ -1692,10 +1692,6 @@
     "startGroupId": "group0",
     "startNodeId": "node1",
     "navigationMode": "guided",
-    "navigationApplications": [
-        "wiseMap",
-        "wiseList"
-    ],
     "layout": {
         "template": "starmap|leftNav|rightNav",
         "studentIsOnGroupNode": "layout3",

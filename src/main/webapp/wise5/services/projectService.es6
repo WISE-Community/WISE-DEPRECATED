@@ -874,15 +874,6 @@ class ProjectService {
         return navigationMode;
     };
 
-    getNavigationApplications() {
-        var navigationApplications = null;
-        var project = this.project;
-        if (project != null) {
-            navigationApplications = project.navigationApplications;
-        }
-        return navigationApplications;
-    };
-
     getTransitions() {
         var transitions = null;
         var project = this.project;
@@ -1007,15 +998,6 @@ class ProjectService {
         }
 
         return transitionsResults;
-    };
-
-    getLayoutLogic() {
-        var layoutLogic = null;
-        var project = this.project;
-        if (project != null) {
-            layoutLogic = project.layoutLogic;
-        }
-        return layoutLogic;
     };
 
     /**

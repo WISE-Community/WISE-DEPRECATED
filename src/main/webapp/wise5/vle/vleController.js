@@ -23,7 +23,6 @@ var VLEController = function () {
         this.StudentWebSocketService = StudentWebSocketService;
 
         this.mode = 'student';
-        this.layoutLogic = this.ConfigService.layoutLogic;
         this.currentNode = null;
 
         this.navFilters = this.ProjectService.getFilters();
@@ -154,11 +153,6 @@ var VLEController = function () {
             this.layoutState = layoutState;
         }
     }, {
-        key: 'showNavigation',
-        value: function showNavigation() {
-            this.layoutState = 'nav';
-        }
-    }, {
         key: 'goHome',
         value: function goHome() {
             // save goHome event
@@ -190,25 +184,6 @@ var VLEController = function () {
         key: 'loadRoot',
         value: function loadRoot() {
             this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(this.ProjectService.rootNode.id);
-        }
-    }, {
-        key: 'chooseTransition',
-        value: function chooseTransition(transitions) {
-            var transitionResult = null;
-            if (transitions != null) {
-                for (var t = 0; t < transitions.length; t++) {
-                    var transition = transitions[t];
-                    var toNodeId = transition.to;
-                    if (toNodeId != null) {
-                        var toNodeNodeStatus = this.StudentDataService.getNodeStatusByNodeId(toNodeId);
-                        if (toNodeNodeStatus != null && toNodeNodeStatus.isVisitable) {
-                            transitionResult = transition;
-                            break;
-                        }
-                    }
-                }
-            }
-            return transitionResult;
         }
     }, {
         key: 'mouseMoved',

@@ -22,7 +22,6 @@ class VLEController {
         this.StudentWebSocketService = StudentWebSocketService;
 
         this.mode = 'student';
-        this.layoutLogic = this.ConfigService.layoutLogic;
         this.currentNode = null;
 
         this.navFilters = this.ProjectService.getFilters();
@@ -151,10 +150,6 @@ class VLEController {
         this.layoutState = layoutState;
     };
 
-    showNavigation() {
-        this.layoutState = 'nav';
-    };
-
     goHome() {
         // save goHome event
         var nodeId = null;
@@ -183,24 +178,6 @@ class VLEController {
 
     loadRoot() {
         this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(this.ProjectService.rootNode.id);
-    };
-
-    chooseTransition(transitions) {
-        var transitionResult = null;
-        if (transitions != null) {
-            for (var t = 0; t < transitions.length; t++) {
-                var transition = transitions[t];
-                var toNodeId = transition.to;
-                if (toNodeId != null) {
-                    var toNodeNodeStatus = this.StudentDataService.getNodeStatusByNodeId(toNodeId);
-                    if (toNodeNodeStatus != null && toNodeNodeStatus.isVisitable) {
-                        transitionResult = transition;
-                        break;
-                    }
-                }
-            }
-        }
-        return transitionResult;
     };
 
     /**
