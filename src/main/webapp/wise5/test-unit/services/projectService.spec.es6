@@ -296,7 +296,7 @@ describe('ProjectService Unit Test', function () {
                 'node9', 'node12', 'node13', 'node14', 'node18', 'node19', 'node21', 'node22',
                 'node23', 'node24', 'node25', 'node26', 'node27', 'node28', 'node29', 'node30',
                 'node31', 'node40', 'node32', 'node33', 'node34', 'node35', 'node36', 'node37',
-                'node38', 'node39'];      // This should be the node ids in the project
+                'node38', 'node39', 'nodeWithNoComponents'];      // This should be the node ids in the project
             let nodeIdsActual = ProjectService.getNodeIds();
             expect(nodeIdsActual).toEqual(nodeIdsExpected);
         });
