@@ -126,7 +126,7 @@ class ProjectController {
         this.createGroupTitle = '';
 
         // turn on insert mode
-        this.insertMode = true;
+        this.insertGroupMode = true;
 
         // turn on create mode
         this.createMode = true;
@@ -154,7 +154,7 @@ class ProjectController {
         this.createNodeTitle = '';
 
         // turn on insert mode
-        this.insertMode = true;
+        this.insertNodeMode = true;
 
         // turn on create mode
         this.createMode = true;
@@ -188,7 +188,8 @@ class ProjectController {
             this.createMode = false;
 
             // turn off insert mode
-            this.insertMode = false;
+            this.insertGroupMode = false;
+            this.insertNodeMode = false;
 
             // refresh the project
             this.ProjectService.parseProject();
@@ -199,23 +200,36 @@ class ProjectController {
             // get the nodes that were selected
             var selectedNodeIds = this.getSelectedItems();
 
-            // move the nodes into the group
-            this.ProjectService.moveNodesInside(selectedNodeIds, nodeId);
-
-            // save the project
-            this.ProjectService.saveProject();
-
-            // turn off move mode
-            this.moveMode = false;
-
-            // turn off insert mode
-            this.insertMode = false;
-
-            // refresh the project
-            this.ProjectService.parseProject();
-            this.items = this.ProjectService.idToOrder;
-
-            this.unselectAllItems();
+            if (selectedNodeIds != null && selectedNodeIds.indexOf(nodeId) != -1) {
+                /*
+                 * the user is trying to insert the selected node ids into
+                 * itself so we will not allow that
+                 */
+                if (selectedNodeIds.length == 1) {
+                    alert('You are not allowed to insert the selected item into itself.');
+                } else if (selectedNodeIds.length > 1) {
+                    alert('You are not allowed to insert the selected items into itself.');
+                }
+            } else {
+                // move the nodes into the group
+                this.ProjectService.moveNodesInside(selectedNodeIds, nodeId);
+    
+                // save the project
+                this.ProjectService.saveProject();
+    
+                // turn off move mode
+                this.moveMode = false;
+    
+                // turn off insert mode
+                this.insertGroupMode = false;
+                this.insertNodeMode = false;
+    
+                // refresh the project
+                this.ProjectService.parseProject();
+                this.items = this.ProjectService.idToOrder;
+    
+                this.unselectAllItems();
+            }
         }
     }
 
@@ -245,7 +259,8 @@ class ProjectController {
             this.createMode = false;
 
             // turn off insert mode
-            this.insertMode = false;
+            this.insertGroupMode = false;
+            this.insertNodeMode = false;
 
             // refresh the project
             this.ProjectService.parseProject();
@@ -256,23 +271,36 @@ class ProjectController {
             // get the selected nodes
             var selectedNodeIds = this.getSelectedItems();
 
-            // move the nodes after the node id
-            this.ProjectService.moveNodesAfter(selectedNodeIds, nodeId);
-
-            // save the project
-            this.ProjectService.saveProject();
-
-            // turn off move mode
-            this.moveMode = false;
-
-            // turn off insert mode
-            this.insertMode = false;
-
-            // refresh the project
-            this.ProjectService.parseProject();
-            this.items = this.ProjectService.idToOrder;
-
-            this.unselectAllItems();
+            if (selectedNodeIds != null && selectedNodeIds.indexOf(nodeId) != -1) {
+                /*
+                 * the user is trying to insert the selected node ids after
+                 * itself so we will not allow that
+                 */
+                 if (selectedNodeIds.length == 1) {
+                    alert('You are not allowed to insert the selected item after itself.');
+                 } else if (selectedNodeIds.length > 1) {
+                    alert('You are not allowed to insert the selected items after itself.');
+                 }
+            } else {
+                // move the nodes after the node id
+                this.ProjectService.moveNodesAfter(selectedNodeIds, nodeId);
+    
+                // save the project
+                this.ProjectService.saveProject();
+    
+                // turn off move mode
+                this.moveMode = false;
+    
+                // turn off insert mode
+                this.insertGroupMode = false;
+                this.insertNodeMode = false;
+    
+                // refresh the project
+                this.ProjectService.parseProject();
+                this.items = this.ProjectService.idToOrder;
+    
+                this.unselectAllItems();
+            }
         }
     }
 
@@ -280,11 +308,41 @@ class ProjectController {
      * Turn on move mode
      */
     move() {
-        // turn on insert mode
-        this.insertMode = true;
-
-        // turn on move mode
-        this.moveMode = true;
+    
+        // get the nodes that were selected
+        var selectedItemTypes = this.getSelectedItemTypes();
+        
+        if (selectedItemTypes != null && selectedItemTypes.length > 0) {
+        
+            if (selectedItemTypes.length == 0) {
+                // there are no selected items
+                alert('Please select an item to move.');
+            } else if (selectedItemTypes.length == 1) {
+                // all the items the user selected are the same type
+                
+                if (selectedItemTypes[0] === 'group') {
+                    // turn on insert mode
+                    this.insertGroupMode = true;
+        
+                    // turn on move mode
+                    this.moveMode = true;
+                } else if (selectedItemTypes[0] === 'node') {
+                    // turn on insert mode
+                    this.insertNodeMode = true;
+        
+                    // turn on move mode
+                    this.moveMode = true;
+                }
+            } else if (selectedItemTypes.length > 1) {
+                /*
+                 * the items the user selected are different types but
+                 * we do not allow moving different types of items at
+                 * the same time
+                 */
+                
+                alert('If you want to move multiple items at once, they must be of the same type. Please select only activities or only steps.');
+            }
+        }
     }
 
     /**
@@ -336,6 +394,37 @@ class ProjectController {
         }, selectedNodeIds);
 
         return selectedNodeIds;
+    }
+    
+    /**
+     * Get the types of the selected items
+     * @returns an array of item types. possible items are group or node.
+     */
+    getSelectedItemTypes() {
+
+        var selectedItemTypes = [];
+
+        // loop through all the node checkboxes
+        angular.forEach(this.items, function(value, key) {
+            if (value.checked) {
+                
+                // this node is checked
+                var node = this.ProjectService.getNodeById(key);
+                
+                if (node != null) {
+                
+                    // get the node type
+                    var nodeType = node.type;
+                    
+                    if (selectedItemTypes.indexOf(nodeType) == -1) {
+                        // we have not seen this node type yet so we will add it
+                        selectedItemTypes.push(nodeType);
+                    }
+                }
+            }
+        }, this);
+
+        return selectedItemTypes;
     }
 
     /**

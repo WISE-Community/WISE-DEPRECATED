@@ -43,18 +43,26 @@
     Step Title: <input ng-model='projectController.createNodeTitle' size='50'/> <button ng-click='projectController.createNode()'>Submit</button> <button ng-click='projectController.hideCreateNode()'>Cancel</button>
 </div>
 <div ng-repeat='item in projectController.items | toArray | orderBy : "order"'
-     ng-if='item.order!==0'
-     ng-class='{"node-select--group": projectController.isGroupNode(item.$key), "node-select--node": !projectController.isGroupNode(item.$key)}'
-     style='cursor: pointer'>
+     ng-class='{"node-select--group": projectController.isGroupNode(item.$key), "node-select--node": !projectController.isGroupNode(item.$key)}'>
     <input type='checkbox'
-           ng-model='item.checked'/>
+           ng-model='item.checked'
+           ng-if='item.order!==0'/>
     <h6 ng-click='projectController.nodeClicked(item.$key)'
-        style='display:inline'
-        ng-class='{"groupHeader": projectController.isGroupNode(item.$key), "stepHeader": !projectController.isGroupNode(item.$key)}'>
+        style='display:inline; cursor:pointer'
+        ng-class='{"groupHeader": projectController.isGroupNode(item.$key), "stepHeader": !projectController.isGroupNode(item.$key)}'
+        ng-if='item.order!==0'>
         {{projectController.getNodePositionById(item.$key)}} {{projectController.getNodeTitleByNodeId(item.$key)}}
     </h6>
-    <button ng-show='projectController.insertMode' ng-if='projectController.isGroupNode(item.$key)' ng-click='projectController.insertInside(item.$key)'>Insert Inside</button>
-    <button ng-show='projectController.insertMode' ng-click='projectController.insertAfter(item.$key)'>Insert After</button>
+    <h6 ng-if='item.order==0'
+        style='display:inline'>
+        Project
+    </h6>
+    <button ng-show='(projectController.insertNodeMode && item.order!==0) || (projectController.insertGroupMode && item.order==0)' 
+            ng-if='projectController.isGroupNode(item.$key)' 
+            ng-click='projectController.insertInside(item.$key)'>Insert Inside</button>
+    <button ng-show='(projectController.insertNodeMode && !projectController.isGroupNode(item.$key)) || (projectController.insertGroupMode && projectController.isGroupNode(item.$key))' 
+            ng-if='item.order!==0' 
+            ng-click='projectController.insertAfter(item.$key)'>Insert After</button>
 </div>
 
     <div id="projectJSONStringDiv" style="display:none">Project JSON:
