@@ -13,11 +13,13 @@ class ProjectAssetController {
         this.projectAssetUsagePercentage = ProjectAssetService.projectAssetUsagePercentage;
 
         this.$scope.$watch(
-            () => { return this.projectAssets },
-            angular.bind(this, function() {
+            () => {
+                return this.projectAssets
+            },
+            () => {
               this.projectAssetUsagePercentage = this.projectAssets.totalFileSize / this.projectAssetTotalSizeMax * 100;
             }
-        ));
+        );
     }
 
     deleteAsset(assetItem) {
@@ -39,4 +41,4 @@ class ProjectAssetController {
 
 ProjectAssetController.$inject = ['$state', '$stateParams', '$scope', 'ProjectAssetService'];
 
-export default ProjectAssetController
+export default ProjectAssetController;

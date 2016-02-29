@@ -3,6 +3,6 @@
 <div id="commitHistory">
     <div ng-repeat="commit in projectHistoryController.commitHistory">
         <span class="commitTime">{{commit.commitTime | date:'medium' }}</span>
-        <span class="commitMessage">{{commit.commitMessage}}</span>
+        <span class="commitMessage">{{commit.commitMessage}} <span style="font-weight:bold">{{commit.commitAuthor}}</span></span>
     </div>
 </div>

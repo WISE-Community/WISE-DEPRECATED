@@ -27,6 +27,7 @@ class UtilService {
         }
 
         /* return the generated key */
+        // TODO: check that the new key is unique
         return key;
     };
 

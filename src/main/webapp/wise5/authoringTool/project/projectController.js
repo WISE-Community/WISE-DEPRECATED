@@ -1,15 +1,17 @@
 'use strict';
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var ProjectController = function () {
     function ProjectController($scope, $state, $stateParams, ProjectService, ConfigService) {
+        var _this = this;
+
         _classCallCheck(this, ProjectController);
 
         this.$scope = $scope;
@@ -29,20 +31,19 @@ var ProjectController = function () {
 
         this.updateProjectAsText();
 
-        $scope.$watch(angular.bind(this, function () {
-            return this.projectAsText;
-        }), angular.bind(this, function () {
+        $scope.$watch(function () {
+            return _this.projectAsText;
+        }, function () {
             try {
-                this.project = JSON.parse(this.projectAsText);
+                _this.project = JSON.parse(_this.projectAsText);
             } catch (exp) {
                 //Exception handler
             };
-        }));
+        });
     }
 
     _createClass(ProjectController, [{
         key: "updateProjectAsText",
-
 
         // updates projectAsText field, which is the string representation of the project that we'll show in the textarea
         value: function updateProjectAsText() {
@@ -50,7 +51,6 @@ var ProjectController = function () {
         }
     }, {
         key: "previewProject",
-
 
         /**
          * Launch the project in preview mode
@@ -72,7 +72,7 @@ var ProjectController = function () {
     }, {
         key: "saveProject",
         value: function saveProject() {
-            var _this = this;
+            var _this2 = this;
 
             //let projectJSONString = JSON.stringify(this.project, null, 4);
             var commitMessage = $("#commitMessageInput").val();
@@ -81,7 +81,7 @@ var ProjectController = function () {
                 this.ProjectService.project = this.project;
 
                 this.ProjectService.saveProject(commitMessage).then(function (commitHistoryArray) {
-                    _this.commitHistory = commitHistoryArray;
+                    _this2.commitHistory = commitHistoryArray;
                     $("#commitMessageInput").val(""); // clear field after commit
                 });
             } catch (error) {
@@ -90,8 +90,16 @@ var ProjectController = function () {
             }
         }
     }, {
-        key: "getNodePositionById",
+        key: "closeProject",
 
+        /**
+         * Close authoring for the current project and bring user back to main AT page
+         */
+        value: function closeProject() {
+            this.$state.go('root.main');
+        }
+    }, {
+        key: "getNodePositionById",
 
         /**
          * Get the node position
@@ -104,7 +112,6 @@ var ProjectController = function () {
     }, {
         key: "getNodeTitleByNodeId",
 
-
         /**
          * Get the node title for a node
          * @param nodeId the node id
@@ -115,7 +122,6 @@ var ProjectController = function () {
         }
     }, {
         key: "isGroupNode",
-
 
         /**
          * Check if a node id is for a group
@@ -128,7 +134,6 @@ var ProjectController = function () {
     }, {
         key: "nodeClicked",
 
-
         /**
          * A node was clicked so we will go to the node authoring view
          * @param nodeId
@@ -138,7 +143,6 @@ var ProjectController = function () {
         }
     }, {
         key: "createGroup",
-
 
         /**
          * Create a new group (activity)

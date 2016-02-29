@@ -129,12 +129,12 @@ let mainModule = angular.module('authoring', [
                     controller: 'AuthoringToolController',
                     controllerAs: 'authoringToolController',
                     resolve: {
-                        config: function(ConfigService) {
+                        config: (ConfigService) => {
                             var configURL = window.configURL;
 
                             return ConfigService.retrieveConfig(configURL);
                         },
-                        sessionTimers: function (SessionService, config) {
+                        sessionTimers: (SessionService, config) => {
                             return SessionService.initializeSession();
                         }
                     }
@@ -161,15 +161,15 @@ let mainModule = angular.module('authoring', [
                     controller: 'ProjectController',
                     controllerAs: 'projectController',
                     resolve: {
-                        projectConfig: function(ConfigService, $stateParams) {
+                        projectConfig: (ConfigService, $stateParams) => {
                             var configURL = window.configURL + '/' + $stateParams.projectId;
 
                             return ConfigService.retrieveConfig(configURL);
                         },
-                        project: function(ProjectService, projectConfig) {
+                        project: (ProjectService, projectConfig) => {
                             return ProjectService.retrieveProject();
                         },
-                        projectAssets: function(ProjectAssetService, projectConfig) {
+                        projectAssets: (ProjectAssetService, projectConfig) => {
                             return ProjectAssetService.retrieveProjectAssets();
                         }
                     }

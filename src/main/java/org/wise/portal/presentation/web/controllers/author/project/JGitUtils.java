@@ -84,11 +84,12 @@ public class JGitUtils {
      * with the specified commit message
      *
      * @param directoryPath
+     * @param author author username
      * @param commitMessage
      * @throws IOException
      * @throws GitAPIException
      */
-    public static void commitAllChangesToCurriculumHistory(String directoryPath, String commitMessage)
+    public static void commitAllChangesToCurriculumHistory(String directoryPath, String author, String commitMessage)
             throws IOException, GitAPIException {
 
         boolean doCreate = true;
@@ -98,9 +99,12 @@ public class JGitUtils {
         // add all changes in directory
         git.add().addFilepattern(".").call();
 
+        String email = "";  // don't save any emails for now.
+
         // commit all changes
         git.commit()
                 .setAll(true)
+                .setAuthor(author, email)
                 .setMessage(commitMessage)
                 .call();
         gitRepository.close();

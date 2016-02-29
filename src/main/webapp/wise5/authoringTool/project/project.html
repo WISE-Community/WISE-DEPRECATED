@@ -23,7 +23,7 @@
     </style>
     <div style="float:right">
         <button ng-click='projectController.previewProject()'>Preview Project</button>
-        <button ng-click='projectController.viewProjectAssets()'>Manage Assets</button>
+        <button ng-click='projectController.viewProjectAssets()'>View Assets</button>
         <button ng-click='projectController.viewProjectHistory()'>View History</button>
     </div>
     <div id="commitDiv" style="display:none">
@@ -36,6 +36,7 @@
 <button ng-click='projectController.move()'>Move</button>
 <button ng-click='projectController.delete()'>Delete</button>
 <button ng-click='projectController.saveProject()'>Save Project</button>
+<button ng-click='projectController.closeProject()'>Close Project</button>
 <div ng-show='projectController.showCreateGroup'>
     Activity Title: <input ng-model='projectController.createGroupTitle' size='50'/> <button ng-click='projectController.createGroup()'>Submit</button> <button ng-click='projectController.hideCreateGroup()'>Cancel</button>
 </div>
