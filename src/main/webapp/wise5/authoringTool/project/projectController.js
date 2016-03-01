@@ -1,10 +1,10 @@
 'use strict';
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -27,7 +27,6 @@ var ProjectController = function () {
         this.nodeIds = this.ProjectService.getFlattenedProjectAsNodeIds();
         this.showCreateGroup = false;
         this.showCreateNode = false;
-        this.insertMode = false;
 
         this.updateProjectAsText();
 
@@ -45,12 +44,14 @@ var ProjectController = function () {
     _createClass(ProjectController, [{
         key: "updateProjectAsText",
 
+
         // updates projectAsText field, which is the string representation of the project that we'll show in the textarea
         value: function updateProjectAsText() {
             this.projectAsText = JSON.stringify(this.project, null, 4);
         }
     }, {
         key: "previewProject",
+
 
         /**
          * Launch the project in preview mode
@@ -92,6 +93,7 @@ var ProjectController = function () {
     }, {
         key: "closeProject",
 
+
         /**
          * Close authoring for the current project and bring user back to main AT page
          */
@@ -100,6 +102,7 @@ var ProjectController = function () {
         }
     }, {
         key: "getNodePositionById",
+
 
         /**
          * Get the node position
@@ -112,6 +115,7 @@ var ProjectController = function () {
     }, {
         key: "getNodeTitleByNodeId",
 
+
         /**
          * Get the node title for a node
          * @param nodeId the node id
@@ -122,6 +126,7 @@ var ProjectController = function () {
         }
     }, {
         key: "isGroupNode",
+
 
         /**
          * Check if a node id is for a group
@@ -134,6 +139,7 @@ var ProjectController = function () {
     }, {
         key: "nodeClicked",
 
+
         /**
          * A node was clicked so we will go to the node authoring view
          * @param nodeId
@@ -143,6 +149,7 @@ var ProjectController = function () {
         }
     }, {
         key: "createGroup",
+
 
         /**
          * Create a new group (activity)
@@ -361,39 +368,49 @@ var ProjectController = function () {
         key: "move",
         value: function move() {
 
-            // get the nodes that were selected
-            var selectedItemTypes = this.getSelectedItemTypes();
+            // make sure there is at least one item selected
+            var selectedNodeIds = this.getSelectedItems();
 
-            if (selectedItemTypes != null && selectedItemTypes.length > 0) {
+            if (selectedNodeIds != null && selectedNodeIds.length > 0) {
+                // get the nodes that were selected
+                var selectedItemTypes = this.getSelectedItemTypes();
 
-                if (selectedItemTypes.length == 0) {
-                    // there are no selected items
-                    alert('Please select an item to move.');
-                } else if (selectedItemTypes.length == 1) {
-                    // all the items the user selected are the same type
+                if (selectedItemTypes != null && selectedItemTypes.length > 0) {
 
-                    if (selectedItemTypes[0] === 'group') {
-                        // turn on insert mode
-                        this.insertGroupMode = true;
+                    this.showMove = true;
 
-                        // turn on move mode
-                        this.moveMode = true;
-                    } else if (selectedItemTypes[0] === 'node') {
-                        // turn on insert mode
-                        this.insertNodeMode = true;
+                    if (selectedItemTypes.length == 0) {
+                        // there are no selected items
+                        alert('Please select an item to move.');
+                    } else if (selectedItemTypes.length == 1) {
+                        // all the items the user selected are the same type
 
-                        // turn on move mode
-                        this.moveMode = true;
+                        if (selectedItemTypes[0] === 'group') {
+                            // turn on insert mode
+                            this.insertGroupMode = true;
+
+                            // turn on move mode
+                            this.moveMode = true;
+                        } else if (selectedItemTypes[0] === 'node') {
+                            // turn on insert mode
+                            this.insertNodeMode = true;
+
+                            // turn on move mode
+                            this.moveMode = true;
+                        }
+                    } else if (selectedItemTypes.length > 1) {
+                        /*
+                         * the items the user selected are different types but
+                         * we do not allow moving different types of items at
+                         * the same time
+                         */
+
+                        alert('If you want to move multiple items at once, they must be of the same type. Please select only activities or only steps.');
                     }
-                } else if (selectedItemTypes.length > 1) {
-                    /*
-                     * the items the user selected are different types but
-                     * we do not allow moving different types of items at
-                     * the same time
-                     */
-
-                    alert('If you want to move multiple items at once, they must be of the same type. Please select only activities or only steps.');
                 }
+            } else {
+                // the user did not select any items so we will display an error message
+                alert('You must first select an activity or step to move.');
             }
         }
 
@@ -405,29 +422,50 @@ var ProjectController = function () {
         key: "delete",
         value: function _delete() {
 
-            // ask the user to confirm the delete
-            var answer = confirm('Are you sure you want to delete the selected item(s)?');
+            // get the selected items
+            var selectedNodeIds = this.getSelectedItems();
 
-            if (answer) {
-                // the user confirmed yes
+            if (selectedNodeIds != null) {
 
-                // get the selected node ids
-                var selectedNodeIds = this.getSelectedItems();
+                var confirmMessage = null;
 
-                // loop through each node id
-                for (var n = 0; n < selectedNodeIds.length; n++) {
-                    var nodeId = selectedNodeIds[n];
-
-                    // delete the node
-                    this.ProjectService.deleteNode(nodeId);
+                if (selectedNodeIds.length == 0) {
+                    // the user did not select any items so we will display an error message
+                    alert('You must first select and activity or step to delete.');
+                } else if (selectedNodeIds.length == 1) {
+                    // the user selected one item
+                    confirmMessage = 'Are you sure you want to delete the selected item?';
+                } else if (selectedNodeIds.length > 1) {
+                    // the user selected multiple items
+                    confirmMessage = 'Are you sure you want to delete the selected items?';
                 }
 
-                // save the project
-                this.ProjectService.saveProject();
+                if (confirmMessage != null) {
+                    // ask the user to confirm the delete
+                    var answer = confirm(confirmMessage);
 
-                // refresh the project
-                this.ProjectService.parseProject();
-                this.items = this.ProjectService.idToOrder;
+                    if (answer) {
+                        // the user confirmed yes
+
+                        // get the selected node ids
+                        var selectedNodeIds = this.getSelectedItems();
+
+                        // loop through each node id
+                        for (var n = 0; n < selectedNodeIds.length; n++) {
+                            var nodeId = selectedNodeIds[n];
+
+                            // delete the node
+                            this.ProjectService.deleteNode(nodeId);
+                        }
+
+                        // save the project
+                        this.ProjectService.saveProject();
+
+                        // refresh the project
+                        this.ProjectService.parseProject();
+                        this.items = this.ProjectService.idToOrder;
+                    }
+                }
             }
         }
 
@@ -544,6 +582,17 @@ var ProjectController = function () {
         value: function hideCreateNode() {
             this.showCreateNode = false;
             this.createNodeTitle = '';
+        }
+
+        /**
+         * Cancel the move mode
+         */
+
+    }, {
+        key: "cancelMove",
+        value: function cancelMove() {
+            this.insertGroupMode = false;
+            this.insertNodeMode = false;
         }
     }]);
 

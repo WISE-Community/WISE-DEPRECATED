@@ -16,7 +16,6 @@ class ProjectController {
         this.nodeIds = this.ProjectService.getFlattenedProjectAsNodeIds();
         this.showCreateGroup = false;
         this.showCreateNode = false;
-        this.insertMode = false;
 
         this.updateProjectAsText();
 
@@ -318,39 +317,49 @@ class ProjectController {
      */
     move() {
     
-        // get the nodes that were selected
-        var selectedItemTypes = this.getSelectedItemTypes();
+        // make sure there is at least one item selected
+        var selectedNodeIds = this.getSelectedItems();
         
-        if (selectedItemTypes != null && selectedItemTypes.length > 0) {
-        
-            if (selectedItemTypes.length == 0) {
-                // there are no selected items
-                alert('Please select an item to move.');
-            } else if (selectedItemTypes.length == 1) {
-                // all the items the user selected are the same type
-                
-                if (selectedItemTypes[0] === 'group') {
-                    // turn on insert mode
-                    this.insertGroupMode = true;
-        
-                    // turn on move mode
-                    this.moveMode = true;
-                } else if (selectedItemTypes[0] === 'node') {
-                    // turn on insert mode
-                    this.insertNodeMode = true;
-        
-                    // turn on move mode
-                    this.moveMode = true;
+        if (selectedNodeIds != null && selectedNodeIds.length > 0) {
+            // get the nodes that were selected
+            var selectedItemTypes = this.getSelectedItemTypes();
+            
+            if (selectedItemTypes != null && selectedItemTypes.length > 0) {
+            
+                this.showMove = true;
+            
+                if (selectedItemTypes.length == 0) {
+                    // there are no selected items
+                    alert('Please select an item to move.');
+                } else if (selectedItemTypes.length == 1) {
+                    // all the items the user selected are the same type
+                    
+                    if (selectedItemTypes[0] === 'group') {
+                        // turn on insert mode
+                        this.insertGroupMode = true;
+            
+                        // turn on move mode
+                        this.moveMode = true;
+                    } else if (selectedItemTypes[0] === 'node') {
+                        // turn on insert mode
+                        this.insertNodeMode = true;
+            
+                        // turn on move mode
+                        this.moveMode = true;
+                    }
+                } else if (selectedItemTypes.length > 1) {
+                    /*
+                     * the items the user selected are different types but
+                     * we do not allow moving different types of items at
+                     * the same time
+                     */
+                    
+                    alert('If you want to move multiple items at once, they must be of the same type. Please select only activities or only steps.');
                 }
-            } else if (selectedItemTypes.length > 1) {
-                /*
-                 * the items the user selected are different types but
-                 * we do not allow moving different types of items at
-                 * the same time
-                 */
-                
-                alert('If you want to move multiple items at once, they must be of the same type. Please select only activities or only steps.');
             }
+        } else {
+            // the user did not select any items so we will display an error message
+            alert('You must first select an activity or step to move.');
         }
     }
 
@@ -358,30 +367,51 @@ class ProjectController {
      * Delete the selected nodes
      */
     delete() {
+    
+        // get the selected items
+        var selectedNodeIds = this.getSelectedItems();
 
-        // ask the user to confirm the delete
-        var answer = confirm('Are you sure you want to delete the selected item(s)?');
-
-        if (answer) {
-            // the user confirmed yes
-
-            // get the selected node ids
-            var selectedNodeIds = this.getSelectedItems();
-
-            // loop through each node id
-            for (var n = 0; n < selectedNodeIds.length; n++) {
-                var nodeId = selectedNodeIds[n];
-
-                // delete the node
-                this.ProjectService.deleteNode(nodeId);
+        if (selectedNodeIds != null) {
+        
+            var confirmMessage = null;
+        
+            if (selectedNodeIds.length == 0) {
+                // the user did not select any items so we will display an error message
+                alert('You must first select and activity or step to delete.');
+            } else if (selectedNodeIds.length == 1) {
+                // the user selected one item
+                confirmMessage = 'Are you sure you want to delete the selected item?';
+            } else if (selectedNodeIds.length > 1) {
+                // the user selected multiple items
+                confirmMessage = 'Are you sure you want to delete the selected items?';
             }
-
-            // save the project
-            this.ProjectService.saveProject();
-
-            // refresh the project
-            this.ProjectService.parseProject();
-            this.items = this.ProjectService.idToOrder;
+            
+            if (confirmMessage != null) {
+                // ask the user to confirm the delete
+                var answer = confirm(confirmMessage);
+        
+                if (answer) {
+                    // the user confirmed yes
+        
+                    // get the selected node ids
+                    var selectedNodeIds = this.getSelectedItems();
+        
+                    // loop through each node id
+                    for (var n = 0; n < selectedNodeIds.length; n++) {
+                        var nodeId = selectedNodeIds[n];
+        
+                        // delete the node
+                        this.ProjectService.deleteNode(nodeId);
+                    }
+        
+                    // save the project
+                    this.ProjectService.saveProject();
+        
+                    // refresh the project
+                    this.ProjectService.parseProject();
+                    this.items = this.ProjectService.idToOrder;
+                }
+            }
         }
     }
 
@@ -477,6 +507,14 @@ class ProjectController {
     hideCreateNode() {
         this.showCreateNode = false;
         this.createNodeTitle = '';
+    }
+    
+    /**
+     * Cancel the move mode
+     */
+    cancelMove() {
+        this.insertGroupMode = false;
+        this.insertNodeMode = false;
     }
 };
 

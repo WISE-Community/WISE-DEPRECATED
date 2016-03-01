@@ -43,6 +43,9 @@
 <div ng-show='projectController.showCreateNode'>
     Step Title: <input ng-model='projectController.createNodeTitle' size='50'/> <button ng-click='projectController.createNode()'>Submit</button> <button ng-click='projectController.hideCreateNode()'>Cancel</button>
 </div>
+<div ng-show='projectController.insertGroupMode || projectController.insertNodeMode'>
+    Choose the new location <button ng-click='projectController.cancelMove()'>Cancel</button>
+</div>
 <div ng-repeat='item in projectController.items | toArray | orderBy : "order"'
      ng-class='{"node-select--group": projectController.isGroupNode(item.$key), "node-select--node": !projectController.isGroupNode(item.$key)}'>
     <input type='checkbox'
