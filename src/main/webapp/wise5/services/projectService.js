@@ -1,4 +1,4 @@
-'use strict';var _typeof=typeof Symbol==="function"&&typeof Symbol.iterator==="symbol"?function(obj){return typeof obj;}:function(obj){return obj&&typeof Symbol==="function"&&obj.constructor===Symbol?"symbol":typeof obj;};var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if("value" in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();Object.defineProperty(exports,"__esModule",{value:true});function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError("Cannot call a class as a function");}}var ProjectService=function(){function ProjectService($http,$injector,$rootScope,ConfigService){_classCallCheck(this,ProjectService);this.$http=$http;this.$injector=$injector;this.$rootScope=$rootScope;this.ConfigService=ConfigService;this.project=null;this.transitions=[];this.applicationNodes=[];this.groupNodes=[];this.idToNode={};this.idToElement={};this.metadata={};this.activeConstraints=[];this.rootNode=null;this.idToPosition={};this.idToOrder={};this.nodeCount=0; // filtering options for navigation displays
+'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _typeof=typeof Symbol==="function"&&typeof Symbol.iterator==="symbol"?function(obj){return typeof obj;}:function(obj){return obj&&typeof Symbol==="function"&&obj.constructor===Symbol?"symbol":typeof obj;};var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if("value" in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError("Cannot call a class as a function");}}var ProjectService=function(){function ProjectService($http,$injector,$rootScope,ConfigService){_classCallCheck(this,ProjectService);this.$http=$http;this.$injector=$injector;this.$rootScope=$rootScope;this.ConfigService=ConfigService;this.project=null;this.transitions=[];this.applicationNodes=[];this.groupNodes=[];this.idToNode={};this.idToElement={};this.metadata={};this.activeConstraints=[];this.rootNode=null;this.idToPosition={};this.idToOrder={};this.nodeCount=0; // filtering options for navigation displays
 this.filters=[{'name':'all','label':'All'}, //{'name': 'todo', 'label': 'Todo'},
 //{'name': 'completed', 'label': 'Completed'},
 {'name':'bookmark','label':'Bookmarks'} // TODO: Add when bookmarks are active
@@ -526,8 +526,8 @@ this.setIdToNode(node.id,node); // get the group node
 var groupNode=this.getNodeById(nodeId);if(groupNode!=null){var ids=groupNode.ids;if(ids!=null){ // add the node id to the beginning of the array of children ids
 ids.splice(0,0,node.id);}} // get the start node id
 var previousStartId=groupNode.startId; // set the new node as the start node
-groupNode.startId=node.id;if(node.transitionLogic==null){node.transitionLogic={};}if(node.transitionLogic.transitions==null){node.transitionLogic.transitions=[];} // have the new node point to the previous start id
-var transitionObject={};transitionObject.to=previousStartId;node.transitionLogic.transitions.push(transitionObject);} /**
+groupNode.startId=node.id;if(node.transitionLogic==null){node.transitionLogic={};}if(node.transitionLogic.transitions==null){node.transitionLogic.transitions=[];}if(previousStartId!=null&&previousStartId!=''){ // have the new node point to the previous start id
+var transitionObject={};transitionObject.to=previousStartId;node.transitionLogic.transitions.push(transitionObject);}} /**
      * Create a node after the given node id
      * @param node the new node
      * @param nodeId the node to add after
@@ -569,17 +569,19 @@ group.startId=nodeIdToInsert;}}} /**
      */},{key:'insertNodeInsideInTransitions',value:function insertNodeInsideInTransitions(nodeIdToInsert,nodeIdToInsertInside){ // get the node we are inserting
 var nodeToInsert=this.getNodeById(nodeIdToInsert); // get the group we are inserting into
 var group=this.getNodeById(nodeIdToInsertInside);if(nodeToInsert!=null&&group!=null){ // get the start node
-var startId=group.startId;var startNode=this.getNodeById(startId);if(nodeToInsert.transitionLogic==null){nodeToInsert.transitionLogic={};}if(nodeToInsert.transitionLogic.transitions==null){nodeToInsert.transitionLogic.transitions=[];} /*
-             * make the inserted node transition to the previous start node
-             */var transitionObject={};transitionObject.to=startId;nodeToInsert.transitionLogic.transitions.push(transitionObject);}} /**
+var startId=group.startId;var startNode=this.getNodeById(startId);if(startNode!=null){ // the group has a start node which will become the transition to node
+if(nodeToInsert.transitionLogic==null){nodeToInsert.transitionLogic={};}if(nodeToInsert.transitionLogic.transitions==null){nodeToInsert.transitionLogic.transitions=[];} /*
+                 * make the inserted node transition to the previous start node
+                 */var transitionObject={};transitionObject.to=startId;nodeToInsert.transitionLogic.transitions.push(transitionObject);}}} /**
      * Get the next available group id
      * @returns the next available group id
      */},{key:'getNextAvailableGroupId',value:function getNextAvailableGroupId(){ // get all the group ids
-var groupIds=this.getGroupIds();var foundAvailableGroupId=false;var groupIdCounter=1; // loop until we have found an unused group id
-while(!foundAvailableGroupId){ // create a potential group id
-var tempGroupId='group'+groupIdCounter; // check if the potential group id is already used
-if(groupIds.indexOf(tempGroupId)==-1){ // the potential group id is not used so we can use it
-return tempGroupId;}groupIdCounter++;}} /**
+var groupIds=this.getGroupIds();var largestGroupIdNumber=null; // loop through all the existing group ids
+for(var g=0;g<groupIds.length;g++){var groupId=groupIds[g]; // get the number from the group id e.g. the number of 'group2' would be 2
+var groupIdNumber=groupId.replace('group',''); // make sure the number is an actual number
+if(!isNaN(groupIdNumber)){groupIdNumber=parseInt(groupIdNumber); // update the largest group id number if necessary
+if(largestGroupIdNumber==null){largestGroupIdNumber=groupIdNumber;}else if(groupIdNumber>largestGroupIdNumber){largestGroupIdNumber=groupIdNumber;}}} // create the next available group id
+var nextAvailableGroupId='group'+(largestGroupIdNumber+1);return nextAvailableGroupId;} /**
      * Get all the group ids
      * @returns an array with all the group ids
      */},{key:'getGroupIds',value:function getGroupIds(){var groupIds=[];var groupNodes=this.groupNodes; // loop through all the group nodes
@@ -588,11 +590,12 @@ groupIds.push(groupId);}}}return groupIds;} /**
      * Get the next available node id
      * @returns the next available node id
      */},{key:'getNextAvailableNodeId',value:function getNextAvailableNodeId(){ // get all the node ids
-var nodeIds=this.getNodeIds();var foundAvailableNodeId=false;var nodeIdCounter=1; // loop until we have found an unused node id
-while(!foundAvailableNodeId){ // create a potential node id
-var tempNodeId='node'+nodeIdCounter; // check if the potential node id is already used
-if(nodeIds.indexOf(tempNodeId)==-1){ // the potential group id is not used so we can use it
-return tempNodeId;}nodeIdCounter++;}} /**
+var nodeIds=this.getNodeIds();var largestNodeIdNumber=null; // loop through all the existing node ids
+for(var n=0;n<nodeIds.length;n++){var nodeId=nodeIds[n]; // get the number from the node id e.g. the number of 'node2' would be 2
+var nodeIdNumber=nodeId.replace('node',''); // make sure the number is an actual number
+if(!isNaN(nodeIdNumber)){nodeIdNumber=parseInt(nodeIdNumber); // update the largest node id number if necessary
+if(largestNodeIdNumber==null){largestNodeIdNumber=nodeIdNumber;}else if(nodeIdNumber>largestNodeIdNumber){largestNodeIdNumber=nodeIdNumber;}}} // create the next available node id
+var nextAvailableNodeId='node'+(largestNodeIdNumber+1);return nextAvailableNodeId;} /**
      * Get all the node ids from steps (not groups)
      * @returns an array with all the node ids
      */},{key:'getNodeIds',value:function getNodeIds(){var nodeIds=[];var nodes=this.applicationNodes; // loop through all the nodes
@@ -602,9 +605,9 @@ for(var n=0;n<nodes.length;n++){var node=nodes[n];if(node!=null){var nodeId=node
      * @param nodeId the node id of the group we are moving the nodes inside
      */},{key:'moveNodesInside',value:function moveNodesInside(nodeIds,nodeId){ // loop thorugh all the nodes we are moving
 for(var n=0;n<nodeIds.length;n++){ // get the node we are moving
-var tempNodeId=nodeIds[n];var tempNode=this.getNodeById(tempNodeId); // remove the node from the transitions
-this.removeNodeIdFromTransitions(tempNodeId); // remove the node from the group
-this.removeNodeIdFromGroups(tempNodeId);if(n==0){ /*
+var tempNodeId=nodeIds[n];var tempNode=this.getNodeById(tempNodeId); // remove the node from the group
+this.removeNodeIdFromGroups(tempNodeId); // remove the node from the transitions
+this.removeNodeIdFromTransitions(tempNodeId);if(n==0){ /*
                  * this is the first node we are moving so we will insert it
                  * into the beginning of the group
                  */this.insertNodeInsideInTransitions(tempNodeId,nodeId);this.insertNodeInsideInGroups(tempNodeId,nodeId);}else { /*
@@ -619,9 +622,9 @@ this.removeNodeIdFromGroups(tempNodeId);if(n==0){ /*
      * @param nodeId the node id we will put the moved nodes after
      */},{key:'moveNodesAfter',value:function moveNodesAfter(nodeIds,nodeId){ // loop through all the nodes we are moving
 for(var n=0;n<nodeIds.length;n++){ // get the node we are moving
-var tempNodeId=nodeIds[n];var node=this.getNodeById(tempNodeId);if(!this.isGroupNode(node.id)){ // this is not a group node so we will remove it from transitions
-this.removeNodeIdFromTransitions(tempNodeId);} // remove the node from the groups
-this.removeNodeIdFromGroups(tempNodeId); // insert the node into the parent group
+var tempNodeId=nodeIds[n];var node=this.getNodeById(tempNodeId); // remove the node from the groups
+this.removeNodeIdFromGroups(tempNodeId);if(!this.isGroupNode(node.id)){ // this is not a group node so we will remove it from transitions
+this.removeNodeIdFromTransitions(tempNodeId);} // insert the node into the parent group
 this.insertNodeAfterInGroups(tempNodeId,nodeId);if(!this.isGroupNode(node.id)){ // this is not a group node so we will insert it into transitions
 this.insertNodeAfterInTransitions(node,nodeId);} /*
              * remember the node id so we can put the next node (if any)
@@ -633,13 +636,20 @@ this.insertNodeAfterInTransitions(node,nodeId);} /*
 var group=this.getNodeById(nodeId); // TODO check if the child is in another group, if so do not remove
 if(group!=null){var ids=group.ids; // loop through all the children
 for(var i=0;i<ids.length;i++){var id=ids[i]; // remove the child
-this.removeNodeIdFromTransitions(id);this.removeNodeIdFromGroups(id);this.removeNodeIdFromNodes(id); /*
+this.removeNodeIdFromGroups(id);this.removeNodeIdFromTransitions(id);this.removeNodeIdFromNodes(id); /*
                      * move the counter back because we have removed a child
                      * from the parent group's array of child ids so all of
                      * the child ids were shifted back one and the next child
                      * we want will be at i--
-                     */i--;}}} // remove the node
-this.removeNodeIdFromTransitions(nodeId);this.removeNodeIdFromGroups(nodeId);this.removeNodeIdFromNodes(nodeId);} /**
+                     */i--;}}}var parentGroup=this.getParentGroup(nodeId); // check if we need to update the start id of the parent group
+if(parentGroup!=null){ /*
+             * the node is the start node of the parent group so we need
+             * to update the start id of the parent group to point to
+             * the next node
+             */if(nodeId===parentGroup.startId){var hasSetNewStartId=false; // get the node
+var node=this.getNodeById(nodeId);if(node!=null){var transitionLogic=node.transitionLogic;if(transitionLogic!=null){var transitions=transitionLogic.transitions;if(transitions!=null&&transitions.length>0){var transition=transitions[0];if(transition!=null){var toNodeId=transition.to;if(toNodeId!=null){ // update the parent group start id
+parentGroup.startId=toNodeId;hasSetNewStartId=true;}}}}}if(!hasSetNewStartId){parentGroup.startId='';}}} // remove the node
+this.removeNodeIdFromGroups(nodeId);this.removeNodeIdFromTransitions(nodeId);this.removeNodeIdFromNodes(nodeId);} /**
      * Update the transitions to handle removing a node
      * @param nodeId the node id to remove
      */},{key:'removeNodeIdFromTransitions',value:function removeNodeIdFromTransitions(nodeId){ // get the node we are removing
@@ -665,12 +675,15 @@ for(var i=0;i<ids.length;i++){var id=ids[i];if(nodeId===id){ // we have found th
 ids.splice(i,1);if(nodeId===startId){ /*
                                  * the node id is also the start id so we will get the
                                  * next node id and set it as the new start id
-                                 */ // get the node we are removing
+                                 */var hasSetNewStartId=false; // get the node we are removing
 var node=this.getNodeById(id);if(node!=null){var transitionLogic=node.transitionLogic;if(transitionLogic!=null){var transitions=transitionLogic.transitions;if(transitions!=null&&transitions.length>0){ // get the first transition
 // TODO handle the case when the node we are removing is a branch point
 var transition=transitions[0];if(transition!=null){ // get the node that this node transitions to
 var to=transition.to;if(to!=null){ // set the to node as the start id
-group.startId=to;}}}}}}}}}}}} /**
+group.startId=to;hasSetNewStartId=true;}}}}}if(!hasSetNewStartId){ /*
+                                     * the node we are removing did not have a transition
+                                     * so there will be no start id
+                                     */group.startId='';}}}}}}}} /**
      * Remove the node from the array of nodes
      * @param nodeId the node id to remove
      */},{key:'removeNodeIdFromNodes',value:function removeNodeIdFromNodes(nodeId){ // get all the nodes in the project

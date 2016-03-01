@@ -2343,10 +2343,12 @@ class ProjectService {
             node.transitionLogic.transitions = [];
         }
 
-        // have the new node point to the previous start id
-        var transitionObject = {};
-        transitionObject.to = previousStartId;
-        node.transitionLogic.transitions.push(transitionObject);
+        if (previousStartId != null && previousStartId != '') {
+            // have the new node point to the previous start id
+            var transitionObject = {};
+            transitionObject.to = previousStartId;
+            node.transitionLogic.transitions.push(transitionObject);
+        }
     }
 
     /**
@@ -2504,21 +2506,25 @@ class ProjectService {
             // get the start node
             var startId = group.startId;
             var startNode = this.getNodeById(startId);
-
-            if (nodeToInsert.transitionLogic == null) {
-                nodeToInsert.transitionLogic = {};
+            
+            if (startNode != null) {
+                // the group has a start node which will become the transition to node
+                
+                if (nodeToInsert.transitionLogic == null) {
+                    nodeToInsert.transitionLogic = {};
+                }
+    
+                if (nodeToInsert.transitionLogic.transitions == null) {
+                    nodeToInsert.transitionLogic.transitions = [];
+                }
+    
+                /*
+                 * make the inserted node transition to the previous start node
+                 */
+                var transitionObject = {};
+                transitionObject.to = startId;
+                nodeToInsert.transitionLogic.transitions.push(transitionObject);
             }
-
-            if (nodeToInsert.transitionLogic.transitions == null) {
-                nodeToInsert.transitionLogic.transitions = [];
-            }
-
-            /*
-             * make the inserted node transition to the previous start node
-             */
-            var transitionObject = {};
-            transitionObject.to = startId;
-            nodeToInsert.transitionLogic.transitions.push(transitionObject);
         }
     }
 
@@ -2530,25 +2536,34 @@ class ProjectService {
 
         // get all the group ids
         var groupIds = this.getGroupIds();
-
-        var foundAvailableGroupId = false;
-
-        var groupIdCounter = 1;
-
-        // loop until we have found an unused group id
-        while (!foundAvailableGroupId) {
-
-            // create a potential group id
-            var tempGroupId = 'group' + groupIdCounter;
-
-            // check if the potential group id is already used
-            if (groupIds.indexOf(tempGroupId) == -1) {
-                // the potential group id is not used so we can use it
-                return tempGroupId;
+        
+        var largestGroupIdNumber = null;
+        
+        // loop through all the existing group ids
+        for (var g = 0; g < groupIds.length; g++) {
+            var groupId = groupIds[g];
+            
+            // get the number from the group id e.g. the number of 'group2' would be 2
+            var groupIdNumber = groupId.replace('group', '');
+            
+            // make sure the number is an actual number
+            if (!isNaN(groupIdNumber)) {
+            
+                groupIdNumber = parseInt(groupIdNumber);
+                
+                // update the largest group id number if necessary
+                if (largestGroupIdNumber == null) {
+                    largestGroupIdNumber = groupIdNumber;
+                } else if (groupIdNumber > largestGroupIdNumber) {
+                    largestGroupIdNumber = groupIdNumber;
+                }
             }
-
-            groupIdCounter++;
         }
+        
+        // create the next available group id
+        var nextAvailableGroupId = 'group' + (largestGroupIdNumber + 1);
+        
+        return nextAvailableGroupId;
     }
 
     /**
@@ -2586,25 +2601,33 @@ class ProjectService {
 
         // get all the node ids
         var nodeIds = this.getNodeIds();
-
-        var foundAvailableNodeId = false;
-
-        var nodeIdCounter = 1;
-
-        // loop until we have found an unused node id
-        while (!foundAvailableNodeId) {
-
-            // create a potential node id
-            var tempNodeId = 'node' + nodeIdCounter;
-
-            // check if the potential node id is already used
-            if (nodeIds.indexOf(tempNodeId) == -1) {
-                // the potential group id is not used so we can use it
-                return tempNodeId;
+        
+        var largestNodeIdNumber = null;
+        
+        // loop through all the existing node ids
+        for (var n = 0; n < nodeIds.length; n++) {
+            var nodeId = nodeIds[n];
+            
+            // get the number from the node id e.g. the number of 'node2' would be 2
+            var nodeIdNumber = nodeId.replace('node', '');
+            
+            // make sure the number is an actual number
+            if (!isNaN(nodeIdNumber)) {
+                nodeIdNumber = parseInt(nodeIdNumber);
+                
+                // update the largest node id number if necessary
+                if (largestNodeIdNumber == null) {
+                    largestNodeIdNumber = nodeIdNumber;
+                } else if (nodeIdNumber > largestNodeIdNumber) {
+                    largestNodeIdNumber = nodeIdNumber;
+                }
             }
-
-            nodeIdCounter++;
         }
+        
+        // create the next available node id
+        var nextAvailableNodeId = 'node' + (largestNodeIdNumber + 1);
+        
+        return nextAvailableNodeId;
     }
 
     /**
@@ -2647,11 +2670,11 @@ class ProjectService {
             var tempNodeId = nodeIds[n];
             var tempNode = this.getNodeById(tempNodeId);
 
-            // remove the node from the transitions
-            this.removeNodeIdFromTransitions(tempNodeId);
-
             // remove the node from the group
             this.removeNodeIdFromGroups(tempNodeId);
+            
+            // remove the node from the transitions
+            this.removeNodeIdFromTransitions(tempNodeId);
 
             if (n == 0) {
                 /*
@@ -2691,13 +2714,13 @@ class ProjectService {
             var tempNodeId = nodeIds[n];
             var node = this.getNodeById(tempNodeId);
 
+            // remove the node from the groups
+            this.removeNodeIdFromGroups(tempNodeId);
+            
             if (!this.isGroupNode(node.id)) {
                 // this is not a group node so we will remove it from transitions
                 this.removeNodeIdFromTransitions(tempNodeId);
             }
-
-            // remove the node from the groups
-            this.removeNodeIdFromGroups(tempNodeId);
 
             // insert the node into the parent group
             this.insertNodeAfterInGroups(tempNodeId, nodeId);
@@ -2735,8 +2758,8 @@ class ProjectService {
                     var id = ids[i];
 
                     // remove the child
-                    this.removeNodeIdFromTransitions(id);
                     this.removeNodeIdFromGroups(id);
+                    this.removeNodeIdFromTransitions(id);
                     this.removeNodeIdFromNodes(id);
 
                     /*
@@ -2749,10 +2772,55 @@ class ProjectService {
                 }
             }
         }
+        
+        var parentGroup = this.getParentGroup(nodeId);
+        
+        // check if we need to update the start id of the parent group
+        if (parentGroup != null) {
+        
+            /*
+             * the node is the start node of the parent group so we need
+             * to update the start id of the parent group to point to
+             * the next node
+             */
+            if (nodeId === parentGroup.startId) {
+            
+                var hasSetNewStartId = false;
+
+                // get the node
+                var node = this.getNodeById(nodeId);
+                
+                if (node != null) {
+                    var transitionLogic = node.transitionLogic;
+                    
+                    if (transitionLogic != null) {
+                        var transitions = transitionLogic.transitions;
+                        
+                        if (transitions != null && transitions.length > 0) {
+                            var transition = transitions[0];
+                            
+                            if (transition != null) {
+                                var toNodeId = transition.to;
+                                
+                                if (toNodeId != null) {
+                                    // update the parent group start id
+                                    parentGroup.startId = toNodeId;
+                                    hasSetNewStartId = true;
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                if (!hasSetNewStartId) {
+                    parentGroup.startId = '';
+                }
+            }
+        }
 
         // remove the node
-        this.removeNodeIdFromTransitions(nodeId);
         this.removeNodeIdFromGroups(nodeId);
+        this.removeNodeIdFromTransitions(nodeId);
         this.removeNodeIdFromNodes(nodeId);
     }
 
@@ -2852,6 +2920,8 @@ class ProjectService {
                                  * the node id is also the start id so we will get the
                                  * next node id and set it as the new start id
                                  */
+                                
+                                var hasSetNewStartId = false;
 
                                 // get the node we are removing
                                 var node = this.getNodeById(id);
@@ -2875,10 +2945,19 @@ class ProjectService {
                                                 if (to != null) {
                                                     // set the to node as the start id
                                                     group.startId = to;
+                                                    hasSetNewStartId = true;
                                                 }
                                             }
                                         }
                                     }
+                                }
+                                
+                                if (!hasSetNewStartId) {
+                                    /*
+                                     * the node we are removing did not have a transition
+                                     * so there will be no start id
+                                     */
+                                    group.startId = '';
                                 }
                             }
                         }
