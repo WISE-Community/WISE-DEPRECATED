@@ -1,8 +1,8 @@
 const NavItem = {
     bindings: {
-        nodeId: '=',
-        showPosition: '=',
-        type: '='
+        nodeId: '<',
+        showPosition: '<',
+        type: '<'
     },
     template: '<ng-include src="navitemCtrl.getTemplateUrl()"></ng-include>',
     controller: 'NavItemController as navitemCtrl'
@@ -10,8 +10,8 @@ const NavItem = {
 
 const NodeStatusIcon = {
     bindings: {
-        nodeId: '=',
-        customClass: '='
+        nodeId: '<',
+        customClass: '<'
     },
     template: '<ng-include src="nodeStatusIconCtrl.getTemplateUrl()"></ng-include>',
     controller: 'NodeStatusIconCtrl as nodeStatusIconCtrl'
@@ -19,7 +19,7 @@ const NodeStatusIcon = {
 
 const StepTools = {
     bindings: {
-        showPosition: '='
+        showPosition: '<'
     },
     template: '<ng-include src="stepToolsCtrl.getTemplateUrl()"></ng-include>',
     controller: 'StepToolsCtrl as stepToolsCtrl'
