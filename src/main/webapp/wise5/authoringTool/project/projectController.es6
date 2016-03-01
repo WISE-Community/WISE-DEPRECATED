@@ -20,15 +20,17 @@ class ProjectController {
 
         this.updateProjectAsText();
 
-        $scope.$watch(angular.bind(this, function() {
-            return this.projectAsText;
-        }), angular.bind(this, function () {
-            try {
-                this.project = JSON.parse(this.projectAsText);
-            } catch(exp) {
-                //Exception handler
-            };
-        }));
+        $scope.$watch(
+            () => {
+                return this.projectAsText;
+            },
+            () => {
+                try {
+                    this.project = JSON.parse(this.projectAsText);
+                } catch(exp) {
+                    //Exception handler
+                };
+        });
     };
 
     // updates projectAsText field, which is the string representation of the project that we'll show in the textarea
@@ -67,6 +69,13 @@ class ProjectController {
             alert("Invalid JSON. Please check syntax. Aborting save.");
             return;
         }
+    };
+
+    /**
+     * Close authoring for the current project and bring user back to main AT page
+     */
+    closeProject() {
+        this.$state.go('root.main');
     };
 
     /**

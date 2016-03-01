@@ -79,6 +79,8 @@ class EmbeddedController {
                 // tell the parent node that this component wants to save
                 this.$scope.$emit('componentSaveTriggered', {nodeId: this.nodeId, componentId: this.componentId});
 
+            } else if (messageEventData.messageType === "applicationInitialized") {
+                this.sendLatestWorkToEmbeddedApplication();
             }
         });
 
@@ -105,6 +107,9 @@ class EmbeddedController {
 
             // get the component id
             this.componentId = this.componentContent.id;
+
+            // id of the iframe that embeds the application
+            this.embeddedApplicationIFrameId = "component_" + this.componentId;
 
             this.componentType = this.componentContent.type;
 
@@ -207,6 +212,22 @@ class EmbeddedController {
         }
     };
 
+    sendLatestWorkToEmbeddedApplication() {
+        // get the latest component state
+        // get the component state from the scope
+        var message = {
+            messageType: "componentState",
+            componentState: this.$scope.componentState
+        };
+
+        // send the latest component state to embedded application
+        this.sendMessageToApplication(message);
+    };
+
+    sendMessageToApplication(message) {
+        // send the message to embedded application via postMessage
+        window.document.getElementById(this.embeddedApplicationIFrameId).contentWindow.postMessage(message, "*")
+    };
 
     /**
      * The component has changed in the regular authoring view so we will save the project

@@ -149,7 +149,8 @@ public class WISE5AuthorProjectController {
 
             try {
                 // now commit changes
-                JGitUtils.commitAllChangesToCurriculumHistory(newProjectPath.getAbsolutePath(), commitMessage);
+                String author = user.getUserDetails().getUsername();
+                JGitUtils.commitAllChangesToCurriculumHistory(newProjectPath.getAbsolutePath(), author, commitMessage);
 
                 Iterable<RevCommit> commitHistory = JGitUtils.getCommitHistory(newProjectPath.getAbsolutePath());
                 JSONArray commitHistoryJSONArray = new JSONArray();
@@ -163,6 +164,8 @@ public class WISE5AuthorProjectController {
                             commitHistoryJSONObject.put("commitName", commitName);
                             String commitMsg = commit.getFullMessage();
                             commitHistoryJSONObject.put("commitMessage", commitMsg);
+                            String commitAuthor = commit.getAuthorIdent().getName();
+                            commitHistoryJSONObject.put("commitAuthor", commitAuthor);
                             long commitTime = commit.getCommitTime() * 1000l; // x1000 to make into milliseconds since epoch
                             commitHistoryJSONObject.put("commitTime", commitTime);
                             commitHistoryJSONArray.put(commitHistoryJSONObject);
@@ -225,7 +228,8 @@ public class WISE5AuthorProjectController {
 
             try {
                 // now commit changes
-                JGitUtils.commitAllChangesToCurriculumHistory(fullProjectDir, commitMessage);
+                String author = user.getUserDetails().getUsername();
+                JGitUtils.commitAllChangesToCurriculumHistory(fullProjectDir, author, commitMessage);
 
                 Iterable<RevCommit> commitHistory = JGitUtils.getCommitHistory(fullProjectDir);
                 JSONArray commitHistoryJSONArray = new JSONArray();
@@ -239,6 +243,8 @@ public class WISE5AuthorProjectController {
                             commitHistoryJSONObject.put("commitName", commitName);
                             String commitMsg = commit.getFullMessage();
                             commitHistoryJSONObject.put("commitMessage", commitMsg);
+                            String commitAuthor = commit.getAuthorIdent().getName();
+                            commitHistoryJSONObject.put("commitAuthor", commitAuthor);
                             long commitTime = commit.getCommitTime() * 1000l; // x1000 to make into milliseconds since epoch
                             commitHistoryJSONObject.put("commitTime", commitTime);
                             commitHistoryJSONArray.put(commitHistoryJSONObject);
@@ -340,6 +346,13 @@ public class WISE5AuthorProjectController {
             config.put("registerNewProjectURL", wiseBaseURL + "/project/new");
             config.put("wiseBaseURL", wiseBaseURL);
 
+            // add this teachers's info in config.userInfo.myUserInfo object
+            JSONObject myUserInfo = new JSONObject();
+            myUserInfo.put("userName", user.getUserDetails().getUsername());
+            JSONObject userInfo = new JSONObject();
+            userInfo.put("myUserInfo", myUserInfo);
+            config.put("userInfo", userInfo);
+
             // get a list of projects this user owns
             List<Project> allProjectsOwnedByUser = projectService.getProjectList(user);
             List<JSONObject> wise5ProjectsOwnedByUser = new ArrayList<JSONObject>();
@@ -402,6 +415,8 @@ public class WISE5AuthorProjectController {
                 commitHistoryJSONObject.put("commitName", commitName);
                 String commitMessage = commit.getFullMessage();
                 commitHistoryJSONObject.put("commitMessage", commitMessage);
+                String commitAuthor = commit.getAuthorIdent().getName();
+                commitHistoryJSONObject.put("commitAuthor", commitAuthor);
                 long commitTime = commit.getCommitTime() * 1000l; // x1000 to make into milliseconds since epoch
                 commitHistoryJSONObject.put("commitTime", commitTime);
                 commitHistoryJSONArray.put(commitHistoryJSONObject);

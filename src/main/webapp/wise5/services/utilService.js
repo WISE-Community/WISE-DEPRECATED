@@ -38,6 +38,7 @@ var UtilService = function () {
             }
 
             /* return the generated key */
+            // TODO: check that the new key is unique
             return key;
         }
     }, {

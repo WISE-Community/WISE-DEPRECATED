@@ -167,7 +167,7 @@ let mainModule = angular.module('vle', [
                         studentData: function (StudentDataService, config, project) {
                             return StudentDataService.retrieveStudentData();
                         },
-                        sessionTimers: function (SessionService, config,   project, studentData) {
+                        sessionTimers: function (SessionService, config, project, studentData) {
                             return SessionService.initializeSession();
                         },
                         webSocket: function (StudentWebSocketService, config, project) {

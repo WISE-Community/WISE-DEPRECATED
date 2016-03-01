@@ -1022,7 +1022,7 @@ class ProjectService {
      * Saves the project to Config.saveProjectURL and returns commit history promise.
      * if Config.saveProjectURL or Config.projectId are undefined, does not save and returns null
      */
-    saveProject(commitMessage) {
+    saveProject(commitMessage = "Made changes via WISE5 Authoring Tool") {
 
         var projectId = this.ConfigService.getProjectId();
         var saveProjectURL = this.ConfigService.getConfigParam('saveProjectURL');

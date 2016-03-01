@@ -25,9 +25,9 @@ var ProjectAssetController = function () {
 
         this.$scope.$watch(function () {
             return _this.projectAssets;
-        }, angular.bind(this, function () {
-            this.projectAssetUsagePercentage = this.projectAssets.totalFileSize / this.projectAssetTotalSizeMax * 100;
-        }));
+        }, function () {
+            _this.projectAssetUsagePercentage = _this.projectAssets.totalFileSize / _this.projectAssetTotalSizeMax * 100;
+        });
     }
 
     _createClass(ProjectAssetController, [{
