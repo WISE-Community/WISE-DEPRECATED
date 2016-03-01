@@ -9,6 +9,16 @@ class NodeStatusIconCtrl {
 
         this.nodeStatuses = this.StudentDataService.nodeStatuses;
         this.nodeStatus = this.nodeStatuses[this.nodeId];
+
+        this.$scope.$watch(
+            () => { return this.nodeId; },
+            (newId, oldId) => {
+                if (newId !== oldId) {
+                    // selected node id has changed, so update node status
+                    this.nodeStatus = this.nodeStatuses[this.nodeId];
+                }
+            }
+        );
     }
 
     getTemplateUrl(){

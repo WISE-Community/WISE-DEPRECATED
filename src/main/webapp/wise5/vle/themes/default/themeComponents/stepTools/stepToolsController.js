@@ -26,9 +26,8 @@ var StepToolsCtrl = function () {
 
         this.updateModel();
 
-        var scope = this;
         this.$scope.$watch(function () {
-            return scope.toNodeId;
+            return _this.toNodeId;
         }, function (newId, oldId) {
             if (newId !== oldId) {
                 // selected node id has changed, so open new node
