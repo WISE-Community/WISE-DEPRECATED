@@ -668,14 +668,18 @@ MC.prototype.processTeacherNotifications = function() {
                         if (numberOfAttempts == attemptNumber) {
                             // the attempt number matches the one we are looking for
 
-                            /*
-                             * create a new notification annotation and associate it
-                             * with the current node visit
-                             */
-                            var newTeacherNotification = this.view.createTeacherNotificationAnnotationValue(teacherNotification, latestNodeState);
-                            newTeacherNotification.attemptNumber = numberOfAttempts;
-                            newTeacherNotification.isCorrect = latestNodeState.isCorrect;
-                            this.view.addNotificationAnnotation(latestNodeVisit, newTeacherNotification);
+                            if (!latestNodeState.isCorrect) {
+                                // the student answered incorrectly
+
+                                /*
+                                 * create a new notification annotation and associate it
+                                 * with the current node visit
+                                 */
+                                var newTeacherNotification = this.view.createTeacherNotificationAnnotationValue(teacherNotification, latestNodeState);
+                                newTeacherNotification.attemptNumber = numberOfAttempts;
+                                newTeacherNotification.isCorrect = latestNodeState.isCorrect;
+                                this.view.addNotificationAnnotation(latestNodeVisit, newTeacherNotification);
+                            }
                         }
                     }
                 }
