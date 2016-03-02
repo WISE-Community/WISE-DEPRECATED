@@ -10,6 +10,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var NodeStatusIconCtrl = function () {
     function NodeStatusIconCtrl($scope, ProjectService, StudentDataService) {
+        var _this = this;
+
         _classCallCheck(this, NodeStatusIconCtrl);
 
         this.$scope = $scope;
@@ -18,6 +20,15 @@ var NodeStatusIconCtrl = function () {
 
         this.nodeStatuses = this.StudentDataService.nodeStatuses;
         this.nodeStatus = this.nodeStatuses[this.nodeId];
+
+        this.$scope.$watch(function () {
+            return _this.nodeId;
+        }, function (newId, oldId) {
+            if (newId !== oldId) {
+                // selected node id has changed, so update node status
+                _this.nodeStatus = _this.nodeStatuses[_this.nodeId];
+            }
+        });
     }
 
     _createClass(NodeStatusIconCtrl, [{

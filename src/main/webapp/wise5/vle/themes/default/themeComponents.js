@@ -5,9 +5,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 var NavItem = {
     bindings: {
-        nodeId: '=',
-        showPosition: '=',
-        type: '='
+        nodeId: '<',
+        showPosition: '<',
+        type: '<'
     },
     template: '<ng-include src="navitemCtrl.getTemplateUrl()"></ng-include>',
     controller: 'NavItemController as navitemCtrl'
@@ -15,8 +15,8 @@ var NavItem = {
 
 var NodeStatusIcon = {
     bindings: {
-        nodeId: '=',
-        customClass: '='
+        nodeId: '<',
+        customClass: '<'
     },
     template: '<ng-include src="nodeStatusIconCtrl.getTemplateUrl()"></ng-include>',
     controller: 'NodeStatusIconCtrl as nodeStatusIconCtrl'
@@ -24,7 +24,7 @@ var NodeStatusIcon = {
 
 var StepTools = {
     bindings: {
-        showPosition: '='
+        showPosition: '<'
     },
     template: '<ng-include src="stepToolsCtrl.getTemplateUrl()"></ng-include>',
     controller: 'StepToolsCtrl as stepToolsCtrl'

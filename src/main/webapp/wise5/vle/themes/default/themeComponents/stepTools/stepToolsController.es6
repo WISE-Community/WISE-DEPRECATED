@@ -18,10 +18,8 @@ class StepToolsCtrl {
 
         this.updateModel();
 
-        var scope = this;
         this.$scope.$watch(
-            () => {
-                return scope.toNodeId; },
+            () => { return this.toNodeId; },
             (newId, oldId) => {
                 if (newId !== oldId) {
                     // selected node id has changed, so open new node
