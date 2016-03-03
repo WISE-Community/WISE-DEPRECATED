@@ -113,8 +113,10 @@ MC.prototype.getChoiceByIdentifier = function(identifier) {
 
 /**
  * Render the MC
+ * @param skipRenderPrompt whether to skip rendering the prompt which is used
+ * when tryAgain() is called
  */
-MC.prototype.render = function() {
+MC.prototype.render = function(skipRenderPrompt) {
 	var enableStep = true;
 	var message = '';
 	var workToImport = [];
@@ -170,8 +172,10 @@ MC.prototype.render = function() {
 		}
 	}
 
-	/* render the prompt */
-	$('#promptDiv').html(this.content.assessmentItem.interaction.prompt);
+    if (skipRenderPrompt == null || !skipRenderPrompt) {
+        /* render the prompt */
+    	$('#promptDiv').html(this.content.assessmentItem.interaction.prompt);
+    }
 
 	/* remove buttons */
 	var radiobuttondiv = document.getElementById('radiobuttondiv');
@@ -598,7 +602,8 @@ MC.prototype.checkAnswer = function() {
 	}
 
 	//fire the event to push this state to the global view.states object
-	this.view.pushStudentWork(this.node.id, mcState);
+	//this.view.pushStudentWork(this.node.id, mcState);
+    this.node.save(mcState);
 
 	//push the state object into this mc object's own copy of states
 	this.states.push(mcState);

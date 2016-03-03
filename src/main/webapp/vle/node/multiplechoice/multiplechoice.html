@@ -2,7 +2,7 @@
     <head>
         <script type="text/javascript">
         var mc; // global variable so it can be accessed by other functions
-        
+
         function loadContentAfterScriptsLoad(node){
         	mc = new MC(node);
         	mc.render();
@@ -11,7 +11,7 @@
 		function loadContent(node){
 			scriptloader.loadScripts('multiplechoice', node.contentPanel.window.document, node.id, eventManager);
 		};
-        
+
         function checkAnswer(){
         	mc.checkAnswer();
         };
@@ -19,12 +19,13 @@
         function tryAgain(){
         	//var isTryAgainDisabled = hasClass("tryAgainButton", "disabledLink");
         	var isTryAgainDisabled = $('#tryAgainButton').parent().hasClass('ui-state-disabled');
-                       
+
         	if (isTryAgainDisabled) {
         		return;
         	}
-                   
-        	mc.render();
+
+            var skipRenderPrompt = true;
+        	mc.render(skipRenderPrompt);
         };
 
         var newWin = null;
@@ -65,7 +66,7 @@
             <div id='previousWorkDiv'></div>
             <div id="questionTable">
                 <div id="questionType">
-                    
+
                 </div>
             </div>
         </div>
@@ -76,7 +77,7 @@
                     question
                 </div>
                 <div id="promptDiv">
-                    
+
                 </div>
                 <div id="answersLabelDiv" class="itemLabel color1" data-i18n="answers">
                     answers
