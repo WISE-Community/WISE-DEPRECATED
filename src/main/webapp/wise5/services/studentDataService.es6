@@ -864,16 +864,18 @@ class StudentDataService {
         }
 
         if (this.ConfigService.isPreview()) {
-            // if we're in preview, don't make any request to the server
-            return;
-        }
+            var savedStudentDataResponse = {
+                studentWorkList: studentWorkList,
+                events: events,
+                annotations: annotations
+            };
 
-        // get the url to POST the student data
-        var httpParams = {};
-        httpParams.method = 'POST';
-        httpParams.url = this.ConfigService.getConfigParam('studentDataURL');
-        httpParams.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
-
+            // if we're in preview, don't make any request to the server but pretend we did
+            this.saveToServerSuccess(savedStudentDataResponse);
+            let deferred = this.$q.defer();
+            deferred.resolve(savedStudentDataResponse);
+            return deferred.promise;
+        } else {
         // set the workgroup id and run id
         var params = {};
         params.runId = this.ConfigService.getRunId();
@@ -881,21 +883,44 @@ class StudentDataService {
         params.studentWorkList = angular.toJson(studentWorkList);
         params.events = angular.toJson(events);
         params.annotations = angular.toJson(annotations);
+
+            // get the url to POST the student data
+            var httpParams = {};
+            httpParams.method = 'POST';
+            httpParams.url = this.ConfigService.getConfigParam('studentDataURL');
+            httpParams.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
         httpParams.data = $.param(params);
 
         // make the request to post the student data
-        return this.$http(httpParams).then((result) => {
+            return this.$http(httpParams).then(
+                result => {
             // get the local references to the component states that were posted and set their id and serverSaveTime
-            if (result != null &&
-                result.data != null) {
-
+                    if (result != null && result.data != null) {
                 var savedStudentDataResponse = result.data;
 
-                // handle saved studentWork
-                if (savedStudentDataResponse.studentWorkList != null) {
-                    var savedStudentWorkList = savedStudentDataResponse.studentWorkList;
+                        this.saveToServerSuccess(savedStudentDataResponse);
 
-                    var localStudentWorkList = this.studentData.componentStates.concat(this.studentData.nodeStates);
+                        return savedStudentDataResponse;
+                    }
+                }, result => {
+                    // a server error occured
+                    return null;
+                }
+            );
+        }
+    };
+
+    saveToServerSuccess(savedStudentDataResponse) {
+        // set dummy serverSaveTime for use if we're in preview mode
+        let serverSaveTime = new Date();
+
+        // handle saved studentWork
+        if (savedStudentDataResponse.studentWorkList) {
+            let savedStudentWorkList = savedStudentDataResponse.studentWorkList;
+            let localStudentWorkList = this.studentData.componentStates
+            if (this.studentData.nodeStates) {
+                localStudentWorkList = localStudentWorkList.concat(this.studentData.nodeStates);
+            }
 
                     // set the id and serverSaveTime in the local studentWorkList
                     for (var i = 0; i < savedStudentWorkList.length; i++) {
@@ -907,10 +932,10 @@ class StudentDataService {
                          */
                         for (var l = localStudentWorkList.length - 1; l >= 0; l--) {
                             var localStudentWork = localStudentWorkList[l];
-                            if (localStudentWork.requestToken != null &&
+                    if (localStudentWork.requestToken &&
                                 localStudentWork.requestToken === savedStudentWork.requestToken) {
                                 localStudentWork.id = savedStudentWork.id;
-                                localStudentWork.serverSaveTime = savedStudentWork.serverSaveTime;
+                        localStudentWork.serverSaveTime = savedStudentWork.serverSaveTime ? savedStudentWork.serverSaveTime : serverSaveTime;
                                 localStudentWork.requestToken = null; // requestToken is no longer needed.
 
                                 this.$rootScope.$broadcast('studentWorkSavedToServer', {studentWork: localStudentWork});
@@ -920,7 +945,7 @@ class StudentDataService {
                     }
                 }
                 // handle saved events
-                if (savedStudentDataResponse.events != null) {
+        if (savedStudentDataResponse.events) {
                     var savedEvents = savedStudentDataResponse.events;
 
                     var localEvents = this.studentData.events;
@@ -935,10 +960,10 @@ class StudentDataService {
                          */
                         for (var l = localEvents.length - 1; l >= 0; l--) {
                             var localEvent = localEvents[l];
-                            if (localEvent.requestToken != null &&
+                    if (localEvent.requestToken &&
                                 localEvent.requestToken === savedEvent.requestToken) {
                                 localEvent.id = savedEvent.id;
-                                localEvent.serverSaveTime = savedEvent.serverSaveTime;
+                        localEvent.serverSaveTime = savedEvent.serverSaveTime ? savedEvent.serverSaveTime : serverSaveTime;
                                 localEvent.requestToken = null; // requestToken is no longer needed.
 
                                 this.$rootScope.$broadcast('eventSavedToServer', {event: localEvent});
@@ -949,7 +974,7 @@ class StudentDataService {
                 }
 
                 // handle saved annotations
-                if (savedStudentDataResponse.annotations != null) {
+        if (savedStudentDataResponse.annotations) {
                     var savedAnnotations = savedStudentDataResponse.annotations;
 
                     var localAnnotations = this.studentData.annotations;
@@ -964,10 +989,10 @@ class StudentDataService {
                          */
                         for (var l = localAnnotations.length - 1; l >= 0; l--) {
                             var localAnnotation = localAnnotations[l];
-                            if (localAnnotation.requestToken != null &&
+                    if (localAnnotation.requestToken &&
                                 localAnnotation.requestToken === savedAnnotation.requestToken) {
                                 localAnnotation.id = savedAnnotation.id;
-                                localAnnotation.serverSaveTime = savedAnnotation.serverSaveTime;
+                        localAnnotation.serverSaveTime = savedAnnotation.serverSaveTime ? savedAnnotation.serverSaveTime : serverSaveTime;
                                 localAnnotation.requestToken = null; // requestToken is no longer needed.
 
                                 this.$rootScope.$broadcast('annotationSavedToServer', {annotation: localAnnotation});
@@ -976,10 +1001,6 @@ class StudentDataService {
                         }
                     }
                 }
-
-                return savedStudentDataResponse;
-            }
-        });
     };
 
     retrieveComponentStates(runId, periodId, workgroupId) {
