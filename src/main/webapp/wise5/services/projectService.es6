@@ -805,7 +805,7 @@ class ProjectService {
 
         return result;
     };
-
+    
     /**
      * Returns the Project's start node id, or null if it's not defined in the project
      */
@@ -817,6 +817,56 @@ class ProjectService {
         }
         return startNodeId;
     };
+
+    /**
+     * Set the start node id
+     * @param nodeId the new start node id
+     */
+    setStartNodeId(nodeId) {
+        
+        if (nodeId != null) {
+            var project = this.project;
+            if (project != null) {
+                project.startNodeId = nodeId;
+            }
+        }
+    }
+    
+    /**
+     * Get the start group id
+     * @return the start group id
+     */
+    getStartGroupId() {
+        var startGroupId = null;
+        
+        var project = this.project;
+        if (project != null) {
+            startGroupId = project.startGroupId;
+        }
+        
+        return startGroupId;
+    }
+    
+    /**
+     * Check if the given node id is the start node id
+     * @return whether the node id is the start node id
+     */
+    isStartNodeId(nodeId) {
+        
+        var result = false;
+        
+        var project = this.project;
+        
+        if (project != null) {
+            var startNodeId = project.startNodeId;
+            
+            if (nodeId === startNodeId) {
+                result = true;
+            }
+        }
+        
+        return result;
+    }
 
     getConstraintsForNode(node) {
         var constraints = [];
@@ -3193,6 +3243,64 @@ class ProjectService {
         }
 
         return maxScore;
+    }
+    
+    /**
+     * Determine if a node id is a direct child of a group
+     * @param nodeId the node id
+     * @param groupId the group id
+     */
+    isNodeInGroup(nodeId, groupId) {
+    
+        var result = false;
+        
+        var group = this.getNodeById(groupId);
+        
+        var childIds = group.ids;
+        
+        if (childIds != null) {
+            if (childIds.indexOf(nodeId) != -1) {
+                result = true;
+            }
+        }
+        
+        return result;
+    }
+    
+    /**
+     * Get the first leaf node by traversing all the start ids
+     * until a leaf node id is found
+     */
+    getFirstLeafNodeId() {
+        
+        var firstLeafNodeId = null;
+        
+        // get the start group id
+        var startGroupId = this.project.startGroupId;
+        
+        // get the start group node
+        var node = this.getNodeById(startGroupId);
+        
+        var done = false;
+        
+        // loop until we have found a leaf node id or something went wrong
+        while(!done) {
+            
+            if (node == null) {
+                done = true;
+            } else if (this.isGroupNode(node.id)) {
+                // the current node is a group
+                node = this.getNodeById(node.startId);
+            } else if (this.isApplicationNode(node.id)) {
+                // the current node is a leaf
+                firstLeafNodeId = node.id;
+                done = true;
+            } else {
+                done = true;
+            }
+        }
+        
+        return firstLeafNodeId;
     }
 }
 

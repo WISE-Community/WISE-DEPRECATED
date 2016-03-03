@@ -189,19 +189,12 @@ class ProjectController {
              */
             this.nodeToAdd = null;
 
-            // save the project
-            this.ProjectService.saveProject();
-
             // turn off create mode
             this.createMode = false;
 
             // turn off insert mode
             this.insertGroupMode = false;
             this.insertNodeMode = false;
-
-            // refresh the project
-            this.ProjectService.parseProject();
-            this.items = this.ProjectService.idToOrder;
         } else if (this.moveMode) {
             // we are in move mode
 
@@ -221,24 +214,27 @@ class ProjectController {
             } else {
                 // move the nodes into the group
                 this.ProjectService.moveNodesInside(selectedNodeIds, nodeId);
-    
-                // save the project
-                this.ProjectService.saveProject();
-    
+
                 // turn off move mode
                 this.moveMode = false;
     
                 // turn off insert mode
                 this.insertGroupMode = false;
                 this.insertNodeMode = false;
-    
-                // refresh the project
-                this.ProjectService.parseProject();
-                this.items = this.ProjectService.idToOrder;
-    
-                this.unselectAllItems();
             }
         }
+        
+        // check if the project start node id should be changed
+        this.checkPotentialStartNodeIdChange();
+        
+        // save the project
+        this.ProjectService.saveProject();
+        
+        // refresh the project
+        this.ProjectService.parseProject();
+        this.items = this.ProjectService.idToOrder;
+        
+        this.unselectAllItems();
     }
 
     /**
@@ -396,12 +392,25 @@ class ProjectController {
                     // get the selected node ids
                     var selectedNodeIds = this.getSelectedItems();
         
+                    // flag that will be set if we have deleted the start node id
+                    var deletedStartNodeId = false;
+        
                     // loop through each node id
                     for (var n = 0; n < selectedNodeIds.length; n++) {
                         var nodeId = selectedNodeIds[n];
         
+                        if (this.ProjectService.isStartNodeId(nodeId)) {
+                            // we have deleted the start node id
+                            deletedStartNodeId = true;
+                        }
+        
                         // delete the node
                         this.ProjectService.deleteNode(nodeId);
+                    }
+                    
+                    // update start node id if necesary
+                    if (deletedStartNodeId) {
+                        this.updateStartNodeId();
                     }
         
                     // save the project
@@ -515,6 +524,86 @@ class ProjectController {
     cancelMove() {
         this.insertGroupMode = false;
         this.insertNodeMode = false;
+    }
+    
+    /**
+     * Update the start node id by traversing start ids until a
+     * node id is found.
+     */
+    updateStartNodeId() {
+        
+        var newStartNodeId = null;
+        
+        // get the start group id
+        var startGroupId = this.ProjectService.getStartGroupId();
+        var node = this.ProjectService.getNodeById(startGroupId);
+        
+        var done = false;
+        
+        // recursively traverse the start ids
+        while(!done) {
+            
+            if (node == null) {
+                // base case in case something went wrong
+                done = true;
+            } else if (this.ProjectService.isGroupNode(node.id)) {
+                // the node is a group node so we will get its start node
+                node = this.ProjectService.getNodeById(node.startId);
+            } else if (this.ProjectService.isApplicationNode(node.id)) {
+                // the node is a step node so we have found the new start node id
+                newStartNodeId = node.id;
+                done = true;
+            } else {
+                // base case in case something went wrong
+                done = true;
+            }
+        }
+        
+        if (newStartNodeId) {
+            // set the new start node id
+            this.ProjectService.setStartNodeId(newStartNodeId);
+        }
+    }
+    
+    /**
+     * Check if the start node id for the project could potentially
+     * change.
+     */
+    checkPotentialStartNodeIdChange() {
+        
+        var potentialChange = false;
+    
+        // get the current start node id
+        var currentStartNodeId = this.ProjectService.getStartNodeId();
+        
+        // get the first leaf node id
+        var firstLeafNodeId = this.ProjectService.getFirstLeafNodeId();
+        
+        if (currentStartNodeId != firstLeafNodeId) {
+            /*
+             * the node ids are different which means the first leaf node
+             * id is different than the current start node id and that
+             * the author may want to use the first leaf node id as the
+             * new start node id
+             */
+            potentialChange = true;
+            
+            var firstLeafNode = this.ProjectService.getNodeById(firstLeafNodeId);
+            
+            if (firstLeafNode != null) {
+                var firstChildTitle = firstLeafNode.title;
+                
+                // ask the user if they would like to change the start step to the step that is now the first child in the group
+                var answer = confirm("Would you like to update the project start step to '" + firstChildTitle + "'?");
+                
+                if (answer) {
+                    // change the project start node id
+                    this.ProjectService.setStartNodeId(firstLeafNodeId);
+                }
+            }
+        }
+        
+        return potentialChange;
     }
 };
 
