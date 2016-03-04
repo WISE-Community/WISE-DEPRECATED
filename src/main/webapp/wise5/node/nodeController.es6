@@ -372,7 +372,7 @@ class NodeController {
 
     /**
      * Get the components for this node.
-     * @return an array that contains the content for the components
+     * @return an array that contains the content for the components.
      */
     getComponents() {
         var components = null;
@@ -921,13 +921,15 @@ class NodeController {
         let submitDirty = false;
         let components = this.getComponents();
 
-        for (let c = 0, l = components.length; c < l; c++) {
-            let id = components[c].id;
-            let latestState = this.getComponentStateByComponentId(id);
+        if (components != null) {
+            for (let c = 0, l = components.length; c < l; c++) {
+                let id = components[c].id;
+                let latestState = this.getComponentStateByComponentId(id);
 
-            if (latestState && !latestState.isSubmit) {
-                submitDirty = true;
-                break;
+                if (latestState && !latestState.isSubmit) {
+                    submitDirty = true;
+                    break;
+                }
             }
         }
 

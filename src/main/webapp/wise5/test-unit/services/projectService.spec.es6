@@ -265,7 +265,7 @@ describe('ProjectService Unit Test', function () {
         it('should return the next available node id', function() {
             createNormalSpy();
             ProjectService.setProject(scootersProjectJSON);  // Set the sample project and parse it
-            let nextNodeIdExpected = "node8";      // This should be the next available node id.
+            let nextNodeIdExpected = "node41";      // This should be the next available node id.
             let nextNodeIdActual = ProjectService.getNextAvailableNodeId();
             expect(nextNodeIdActual).toEqual(nextNodeIdExpected);
         });

@@ -442,18 +442,23 @@ public class InformationController {
         if (mode == null) {
             mode = "preview";
         }
-        
-        if (projectIdString != null) {
-            projectId = Long.parseLong(projectIdString);
-        }
 
-        String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
+		String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
 		String studentUploadsBaseWWW = wiseProperties.getProperty("studentuploads_base_www");
 		String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
-    	String cRaterRequestURL = wiseBaseURL + "/cRater";  // the url to make CRater requests
+		String cRaterRequestURL = wiseBaseURL + "/cRater";  // the url to make CRater requests
 
 		String rawProjectUrl = null;
 		JSONObject config = new JSONObject();
+
+
+		if (projectIdString != null) {
+			if ("demo".equals(projectIdString)) {
+				rawProjectUrl = "/demo/project.json";
+			} else {
+				projectId = Long.parseLong(projectIdString);
+			}
+        }
 
 		// if projectId provided, this is a request for preview
 		if (projectId != null) {

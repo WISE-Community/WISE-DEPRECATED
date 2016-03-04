@@ -1,10 +1,10 @@
 'use strict';
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -44,14 +44,12 @@ var ProjectController = function () {
     _createClass(ProjectController, [{
         key: "updateProjectAsText",
 
-
         // updates projectAsText field, which is the string representation of the project that we'll show in the textarea
         value: function updateProjectAsText() {
             this.projectAsText = JSON.stringify(this.project, null, 4);
         }
     }, {
         key: "previewProject",
-
 
         /**
          * Launch the project in preview mode
@@ -93,7 +91,6 @@ var ProjectController = function () {
     }, {
         key: "closeProject",
 
-
         /**
          * Close authoring for the current project and bring user back to main AT page
          */
@@ -102,7 +99,6 @@ var ProjectController = function () {
         }
     }, {
         key: "getNodePositionById",
-
 
         /**
          * Get the node position
@@ -115,7 +111,6 @@ var ProjectController = function () {
     }, {
         key: "getNodeTitleByNodeId",
 
-
         /**
          * Get the node title for a node
          * @param nodeId the node id
@@ -126,7 +121,6 @@ var ProjectController = function () {
         }
     }, {
         key: "isGroupNode",
-
 
         /**
          * Check if a node id is for a group
@@ -139,7 +133,6 @@ var ProjectController = function () {
     }, {
         key: "nodeClicked",
 
-
         /**
          * A node was clicked so we will go to the node authoring view
          * @param nodeId
@@ -149,7 +142,6 @@ var ProjectController = function () {
         }
     }, {
         key: "createGroup",
-
 
         /**
          * Create a new group (activity)
