@@ -716,7 +716,7 @@
         "description": "the text 'not available'"
     },
     "grading_no_work_warning": {
-        "value": "התלמיד אן התלמידה לא הגישו עבודה בשלב זה, ולכן לא ניתן לתת ציון או משוב.",
+        "value": "התלמיד או התלמידה לא הגישו עבודה בשלב זה, ולכן לא ניתן לתת ציון או משוב.",
         "description": "text to show in grading cells that do not have students' work to display"
     },
     "grading_no_revisions": {
@@ -1228,7 +1228,7 @@
         "description": "Placeholder text for the search input in grade by step and grade by student tables of classroom monitor"
     },
     "classroomMonitor_grading_noResponse": {
-        "value": "אף צוות לא הגיש עדיין עבודה בשלב זה.",
+        "value": "הצוות לא הגיש עדיין עבודה בשלב זה.",
         "description": "Text to display when workgroup has not submitted any work for a step in the grading view of the classroom monitor"
     },
     "classroomMonitor_grading_latestWork": {
