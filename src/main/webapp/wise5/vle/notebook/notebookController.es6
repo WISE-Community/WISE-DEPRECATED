@@ -114,21 +114,6 @@ class NotebookController {
         //$(ui.helper.context).data('importWorkNodeType', nodeType);
     };
 
-    showStudentWorkByNodeId(nodeId, nodeType) {
-        var result = null;
-
-        if (nodeId != null && nodeType != null) {
-            var childService = this.$injector.get(nodeType + 'Service');
-
-            if (childService != null) {
-                var latestNodeState = this.StudentDataService.getLatestNodeStateByNodeId(nodeId);
-                var studentWorkHTML = this.childService.getStudentWorkAsHTML(latestNodeState);
-                result = studentWorkHTML;
-            }
-        }
-        return result;
-    };
-
     showAddNote() {
         // setting this will show the add note div
         let currentNodeId = this.StudentDataService.getCurrentNodeId();

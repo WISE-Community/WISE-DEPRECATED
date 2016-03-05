@@ -28,53 +28,6 @@ class MatchService extends NodeService {
         return component;
     }
 
-    callFunction(node, component, functionName, functionParams, componentStates, nodeStates, componentEvents, nodeEvents) {
-        var result = null;
-
-        return result;
-    };
-
-    getStudentWorkAsHTML(nodeState) {
-        var studentWorkAsHTML = '';
-
-        if (nodeState != null) {
-            var studentData = nodeState.studentData;
-
-            if (studentData != null) {
-                var buckets = studentData.buckets;
-
-                if (buckets != null) {
-                    for (var b = 0; b < buckets.length; b++) {
-                        var bucket = buckets[b];
-
-                        if (bucket != null) {
-                            var bucketValue = bucket.value;
-                            var items = bucket.items;
-
-                            studentWorkAsHTML += bucketValue;
-                            studentWorkAsHTML += '<br/>';
-
-                            if (items != null) {
-                                for (var i = 0; i < items.length; i++) {
-                                    var item = items[i];
-
-                                    if (item != null) {
-                                        var itemValue = item.value;
-
-                                        studentWorkAsHTML += itemValue;
-                                        studentWorkAsHTML += '<br/>';
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        return studentWorkAsHTML;
-    };
-
     /**
      * Populate a component state with the data from another component state
      * @param componentStateFromOtherComponent the component state to obtain the data from

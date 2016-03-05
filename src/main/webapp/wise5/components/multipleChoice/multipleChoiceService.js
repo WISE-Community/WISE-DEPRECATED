@@ -53,36 +53,14 @@ var MultipleChoiceService = function (_NodeService) {
         }
 
         /**
-         * Determine if the student has fulfilled the function requirements
-         * @param component the component content
-         * @param functionName the function name to call
-         * @param functionParams the parameters for the function
-         * @param componentStates the component states for the component
-         * @param componentEvents the component events for the component
-         * @param nodeEvents the node events for the parent of the component
-         * @returns whether the student has fulfilled the function requirements
-         */
-
-    }, {
-        key: 'callFunction',
-        value: function callFunction(node, component, functionName, functionParams, componentStates, nodeStates, componentEvents, nodeEvents) {
-            var result = null;
-
-            if (functionName === 'choiceChosen') {
-                result = this.choiceChosen(node, component, functionName, functionParams, componentStates, nodeStates, componentEvents, nodeEvents);
-            }
-
-            return result;
-        }
-    }, {
-        key: 'choiceChosen',
-
-        /**
          * Check if the student chose a specific choice
          * @param criteria the criteria object
          * @returns a boolean value whether the student chose the choice specified in the
          * criteria object
          */
+
+    }, {
+        key: 'choiceChosen',
         value: function choiceChosen(criteria) {
 
             var result = false;
@@ -189,35 +167,6 @@ var MultipleChoiceService = function (_NodeService) {
             }
 
             return choiceIds;
-        }
-    }, {
-        key: 'getStudentWorkAsHTML',
-        value: function getStudentWorkAsHTML(nodeState) {
-            var studentWorkAsHTML = null;
-
-            if (nodeState != null) {
-                var response = nodeState.response;
-
-                if (response != null) {
-                    studentWorkAsHTML = '';
-
-                    for (var x = 0; x < response.length; x++) {
-                        var choice = response[x];
-
-                        if (choice != null) {
-                            var text = choice.text;
-
-                            if (studentWorkAsHTML != '') {
-                                studentWorkAsHTML += '<br/>';
-                            }
-
-                            studentWorkAsHTML += text;
-                        }
-                    }
-                }
-            }
-
-            return studentWorkAsHTML;
         }
     }, {
         key: 'populateComponentState',

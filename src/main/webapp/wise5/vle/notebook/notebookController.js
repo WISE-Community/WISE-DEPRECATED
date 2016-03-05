@@ -134,22 +134,6 @@ var NotebookController = function () {
             //$(ui.helper.context).data('importWorkNodeType', nodeType);
         }
     }, {
-        key: 'showStudentWorkByNodeId',
-        value: function showStudentWorkByNodeId(nodeId, nodeType) {
-            var result = null;
-
-            if (nodeId != null && nodeType != null) {
-                var childService = this.$injector.get(nodeType + 'Service');
-
-                if (childService != null) {
-                    var latestNodeState = this.StudentDataService.getLatestNodeStateByNodeId(nodeId);
-                    var studentWorkHTML = this.childService.getStudentWorkAsHTML(latestNodeState);
-                    result = studentWorkHTML;
-                }
-            }
-            return result;
-        }
-    }, {
         key: 'showAddNote',
         value: function showAddNote() {
             // setting this will show the add note div

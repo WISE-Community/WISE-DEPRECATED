@@ -2,8 +2,7 @@
 
 class UtilService {
 
-    constructor($http) {
-        this.$http = $http;
+    constructor() {
     }
 
     /**
@@ -49,6 +48,6 @@ class UtilService {
 
 }
 
-UtilService.$inject = ['$http'];
+UtilService.$inject = [];
 
 export default UtilService;

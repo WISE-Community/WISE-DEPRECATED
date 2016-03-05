@@ -13,6 +13,7 @@ require('angular-mocks');
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 describe('ConfigService Unit Test', function () {
+
     beforeEach(_angular2.default.mock.module(_main2.default.name));
 
     var ConfigService, $httpBackend;
@@ -28,11 +29,13 @@ describe('ConfigService Unit Test', function () {
         var sampleConfig1 = window.mocks['test-unit/sampleData/config/config1'];
         var sampleConfig2 = window.mocks['test-unit/sampleData/config/config2'];
 
-        it('should sort the classmates alphabetically by name', function () {
+        it('should sort the classmates alphabetically by name when setting config', function () {
+            spyOn(ConfigService, "sortClassmateUserInfosAlphabeticallyByNameHelper").and.callThrough(); // actually call through the function
             var classmateUserInfosBefore = sampleConfig1.userInfo.myUserInfo.myClassInfo.classmateUserInfos;
             expect(classmateUserInfosBefore[0].workgroupId).toEqual(3);
             expect(classmateUserInfosBefore[1].workgroupId).toEqual(8);
             ConfigService.setConfig(sampleConfig1); // setting the config should sort the classmates alphabetically by name
+            expect(ConfigService.sortClassmateUserInfosAlphabeticallyByNameHelper).toHaveBeenCalled();
             var classmateUserInfosAfter = ConfigService.getClassmateUserInfos();
             expect(classmateUserInfosAfter[0].workgroupId).toEqual(8);
             expect(classmateUserInfosAfter[1].workgroupId).toEqual(3);
@@ -81,7 +84,28 @@ describe('ConfigService Unit Test', function () {
             expect(teacherWorkgroupIdExist).toEqual(expectedTeacherWorkgroupId);
         });
 
-        // TODO: test getPeriodIdByWorkgroupId()
+        // Test getPeriodIdByWorkgroupId()
+        it('should get the period id given the workgroup id', function () {
+
+            ConfigService.setConfig(sampleConfig1);
+            spyOn(ConfigService, "getUserInfoByWorkgroupId").and.callThrough(); // actually call through the function
+
+            // If workgroupId is null, period should be null
+            var nullWorkgroupPeriodId = ConfigService.getPeriodIdByWorkgroupId(null);
+            expect(nullWorkgroupPeriodId).toBeNull();
+
+            // If specified workgroup doesn't exist, it should null
+            var nonExistingWorkgroupId = 9999;
+            var nonExistingWorkgroupPeriodId = ConfigService.getPeriodIdByWorkgroupId(nonExistingWorkgroupId);
+            expect(ConfigService.getUserInfoByWorkgroupId).toHaveBeenCalledWith(nonExistingWorkgroupId);
+            expect(nonExistingWorkgroupPeriodId).toBeNull();
+
+            // Otherwise it should get workgroup's period id
+            var existingWorkgroupId = 8;
+            var existingWorkgroupPeriodId = ConfigService.getPeriodIdByWorkgroupId(existingWorkgroupId);
+            expect(ConfigService.getUserInfoByWorkgroupId).toHaveBeenCalledWith(existingWorkgroupId);
+            expect(existingWorkgroupPeriodId).toEqual(1);
+        });
     });
 });
 //# sourceMappingURL=configService.spec.js.map

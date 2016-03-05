@@ -88,28 +88,6 @@ var TableService = function (_NodeService) {
 
             return component;
         }
-    }, {
-        key: 'callFunction',
-        value: function callFunction(node, component, functionName, functionParams, componentStates, nodeStates, componentEvents, nodeEvents) {
-            return null;
-        }
-    }, {
-        key: 'getStudentWorkAsHTML',
-        value: function getStudentWorkAsHTML(nodeState) {
-            var studentWorkAsHTML = null;
-
-            if (nodeState != null) {
-                var response = nodeState.studentData;
-
-                if (response != null) {
-                    studentWorkAsHTML = '<p>' + response + '</p>';
-                }
-            }
-
-            return studentWorkAsHTML;
-        }
-    }, {
-        key: 'populateComponentState',
 
         /**
          * Populate a component state with the data from another component state
@@ -117,6 +95,9 @@ var TableService = function (_NodeService) {
          * @return a new component state that contains the student data from the other
          * component state
          */
+
+    }, {
+        key: 'populateComponentState',
         value: function populateComponentState(componentStateFromOtherComponent) {
             var componentState = null;
 

@@ -80,24 +80,6 @@ class TableService extends NodeService {
         return component;
     }
 
-    callFunction(node, component, functionName, functionParams, componentStates, nodeStates, componentEvents, nodeEvents) {
-        return null;
-    };
-
-    getStudentWorkAsHTML(nodeState) {
-        var studentWorkAsHTML = null;
-
-        if (nodeState != null) {
-            var response = nodeState.studentData;
-
-            if (response != null) {
-                studentWorkAsHTML = '<p>' + response + '</p>';
-            }
-        }
-
-        return studentWorkAsHTML;
-    };
-
     /**
      * Populate a component state with the data from another component state
      * @param componentStateFromOtherComponent the component state to obtain the data from

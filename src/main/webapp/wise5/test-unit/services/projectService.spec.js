@@ -13,6 +13,7 @@ require('angular-mocks');
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 describe('ProjectService Unit Test', function () {
+
     beforeEach(_angular2.default.mock.module(_main2.default.name));
 
     var ConfigService, ProjectService, $rootScope, $httpBackend;
@@ -57,8 +58,6 @@ describe('ProjectService Unit Test', function () {
                 }
             });
         };
-
-        beforeEach(function () {});
 
         it('should replace asset paths in non-html component content', function () {
             createNormalSpy();

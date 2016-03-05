@@ -31,44 +31,6 @@ class LabelService extends NodeService {
         return component;
     }
 
-    callFunction(node, component, functionName, functionParams, componentStates, nodeStates, componentEvents, nodeEvents) {
-        var result = null;
-
-        if (functionName === 'isCompleted') {
-            result = this.isCompleted(component, componentStates, componentEvents, nodeEvents);
-        }
-
-        return result;
-    };
-
-    getStudentWorkAsHTML(componentState) {
-        var studentWorkAsHTML = null;
-
-        if (componentState != null && componentState.studentData != null) {
-            var response = componentState.studentData.response;
-
-            if (response != null) {
-                studentWorkAsHTML = '<p>' + response + '</p>';
-            }
-
-            var attachments = componentState.studentData.attachments;
-
-            // TODO: make into directive and use in component displays as well
-            if (attachments && attachments.length) {
-                studentWorkAsHTML += '<div class="component-content__actions" layout="row" layout-wrap="true">';
-                for (var a = 0; a < attachments.length; a++) {
-                    var attachment = attachments[a];
-                    studentWorkAsHTML += '<div class="component__attachment">' +
-                        '<img src="' + attachment.iconURL + '" alt="' + attachment.iconURL + '" class="component__attachment__content" />' +
-                        '</div>';
-                }
-                studentWorkAsHTML += '</div>';
-            }
-        }
-
-        return studentWorkAsHTML;
-    };
-
     /**
      * Populate a component state with the data from another component state
      * @param componentStateFromOtherComponent the component state to obtain the data from

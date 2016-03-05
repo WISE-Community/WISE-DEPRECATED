@@ -48,30 +48,6 @@ class GraphService extends NodeService {
         return component;
     }
 
-    callFunction(node, component, functionName, functionParams, componentStates, nodeStates, componentEvents, nodeEvents) {
-        var result = null;
-
-        return result;
-    };
-
-    /**
-     * Get the student work as html
-     * @param nodeState the node state
-     */
-    getStudentWorkAsHTML(nodeState) {
-        var studentWorkAsHTML = null;
-
-        if (nodeState != null) {
-            var response = nodeState.studentData;
-
-            if (response != null) {
-                studentWorkAsHTML = '<p>' + response + '</p>';
-            }
-        }
-
-        return studentWorkAsHTML;
-    };
-
     /**
      * Populate a component state with the data from another component state
      * @param componentStateFromOtherComponent the component state to obtain the data from

@@ -21,7 +21,6 @@ class VLEController {
         this.StudentDataService = StudentDataService;
         this.StudentWebSocketService = StudentWebSocketService;
 
-        this.mode = 'student';
         this.currentNode = null;
 
         this.navFilters = this.ProjectService.getFilters();

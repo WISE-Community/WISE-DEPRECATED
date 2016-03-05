@@ -3284,7 +3284,7 @@ class ProjectService {
         var done = false;
         
         // loop until we have found a leaf node id or something went wrong
-        while(!done) {
+        while (!done) {
             
             if (node == null) {
                 done = true;

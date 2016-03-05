@@ -51,19 +51,6 @@ var NodeService = function () {
             return result;
         }
     }, {
-        key: 'getStudentWorkAsHTML',
-        value: function getStudentWorkAsHTML(nodeState) {
-            var studentWorkAsHTML = null;
-
-            if (nodeState != null) {
-                var response = nodeState.response;
-
-                studentWorkAsHTML = '<p>' + response + '</p>';
-            }
-
-            return studentWorkAsHTML;
-        }
-    }, {
         key: 'createNewComponentState',
 
         /**
@@ -237,19 +224,6 @@ var NodeService = function () {
                         }
                     }
                 }
-            }
-
-            return result;
-        }
-    }, {
-        key: 'callFunction',
-        value: function callFunction(node, component, functionName, functionParams, componentStates, nodeStates, componentEvents, nodeEvents) {
-            var result = null;
-
-            if (functionName === 'isCompleted') {
-                result = this.isCompleted(functionParams);
-            } else if (functionName === 'branchPathTaken') {
-                result = this.branchPathTaken(node, component, functionName, functionParams, componentStates, nodeStates, componentEvents, nodeEvents);
             }
 
             return result;

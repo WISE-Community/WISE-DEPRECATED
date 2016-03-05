@@ -1,4 +1,7 @@
+'use strict';
+
 class NodeGradingController {
+
     constructor($state, $stateParams, AnnotationService, ConfigService, NodeService, ProjectService, TeacherDataService) {
 
         this.$state = $state;
@@ -161,14 +164,7 @@ class NodeGradingController {
     };
 
     getUserNameByWorkgroupId(workgroupId) {
-        var userName = null;
-        var userInfo = this.ConfigService.getUserInfoByWorkgroupId(workgroupId);
-
-        if (userInfo != null) {
-            userName = userInfo.userName;
-        }
-
-        return userName;
+        return this.ConfigService.getUserNameByWorkgroupId(workgroupId);
     };
 
     getAnnotationByStepWorkIdAndType(stepWorkId, type) {

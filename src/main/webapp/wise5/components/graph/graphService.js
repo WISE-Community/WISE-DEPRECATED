@@ -71,35 +71,6 @@ var GraphService = function (_NodeService) {
 
             return component;
         }
-    }, {
-        key: 'callFunction',
-        value: function callFunction(node, component, functionName, functionParams, componentStates, nodeStates, componentEvents, nodeEvents) {
-            var result = null;
-
-            return result;
-        }
-    }, {
-        key: 'getStudentWorkAsHTML',
-
-        /**
-         * Get the student work as html
-         * @param nodeState the node state
-         */
-        value: function getStudentWorkAsHTML(nodeState) {
-            var studentWorkAsHTML = null;
-
-            if (nodeState != null) {
-                var response = nodeState.studentData;
-
-                if (response != null) {
-                    studentWorkAsHTML = '<p>' + response + '</p>';
-                }
-            }
-
-            return studentWorkAsHTML;
-        }
-    }, {
-        key: 'populateComponentState',
 
         /**
          * Populate a component state with the data from another component state
@@ -107,6 +78,9 @@ var GraphService = function (_NodeService) {
          * @return a new component state that contains the student data from the other
          * component state
          */
+
+    }, {
+        key: 'populateComponentState',
         value: function populateComponentState(componentStateFromOtherComponent) {
             var componentState = null;
 

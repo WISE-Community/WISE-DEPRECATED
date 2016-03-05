@@ -55,46 +55,6 @@ var LabelService = function (_NodeService) {
 
             return component;
         }
-    }, {
-        key: 'callFunction',
-        value: function callFunction(node, component, functionName, functionParams, componentStates, nodeStates, componentEvents, nodeEvents) {
-            var result = null;
-
-            if (functionName === 'isCompleted') {
-                result = this.isCompleted(component, componentStates, componentEvents, nodeEvents);
-            }
-
-            return result;
-        }
-    }, {
-        key: 'getStudentWorkAsHTML',
-        value: function getStudentWorkAsHTML(componentState) {
-            var studentWorkAsHTML = null;
-
-            if (componentState != null && componentState.studentData != null) {
-                var response = componentState.studentData.response;
-
-                if (response != null) {
-                    studentWorkAsHTML = '<p>' + response + '</p>';
-                }
-
-                var attachments = componentState.studentData.attachments;
-
-                // TODO: make into directive and use in component displays as well
-                if (attachments && attachments.length) {
-                    studentWorkAsHTML += '<div class="component-content__actions" layout="row" layout-wrap="true">';
-                    for (var a = 0; a < attachments.length; a++) {
-                        var attachment = attachments[a];
-                        studentWorkAsHTML += '<div class="component__attachment">' + '<img src="' + attachment.iconURL + '" alt="' + attachment.iconURL + '" class="component__attachment__content" />' + '</div>';
-                    }
-                    studentWorkAsHTML += '</div>';
-                }
-            }
-
-            return studentWorkAsHTML;
-        }
-    }, {
-        key: 'populateComponentState',
 
         /**
          * Populate a component state with the data from another component state
@@ -102,6 +62,9 @@ var LabelService = function (_NodeService) {
          * @return a new component state that contains the student data from the other
          * component state
          */
+
+    }, {
+        key: 'populateComponentState',
         value: function populateComponentState(componentStateFromOtherComponent) {
             var componentState = null;
 

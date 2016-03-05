@@ -9,10 +9,8 @@ Object.defineProperty(exports, "__esModule", {
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var UtilService = function () {
-    function UtilService($http) {
+    function UtilService() {
         _classCallCheck(this, UtilService);
-
-        this.$http = $http;
     }
 
     /**
@@ -64,7 +62,7 @@ var UtilService = function () {
     return UtilService;
 }();
 
-UtilService.$inject = ['$http'];
+UtilService.$inject = [];
 
 exports.default = UtilService;
 //# sourceMappingURL=utilService.js.map

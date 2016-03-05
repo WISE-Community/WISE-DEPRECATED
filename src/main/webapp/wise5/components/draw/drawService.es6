@@ -40,23 +40,6 @@ class DrawService extends NodeService {
         return null;
     };
 
-    getStudentWorkAsHTML(componentState) {
-        var studentWorkAsHTML = '<p>Your drawing</p>';
-
-        if (componentState != null) {
-            var studentData = componentState.studentData;
-
-            if (studentData != null && studentData.drawData != null) {
-                var drawData = JSON.parse(studentData.drawData);
-                if (drawData != null && drawData.jpeg != null && drawData.jpeg != "") {
-                    studentWorkAsHTML = '<img src=\"' + drawData.jpeg + '\"></img>';
-                }
-            }
-        }
-
-        return studentWorkAsHTML;
-    };
-
     /**
      * Populate a component state with the data from another component state
      * @param componentStateFromOtherComponent the component state to obtain the data from

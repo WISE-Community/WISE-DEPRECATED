@@ -682,25 +682,6 @@ var StudentDataService = function () {
             return result;
         }
     }, {
-        key: 'getLatestStudentWorkForNodeAsHTML',
-        value: function getLatestStudentWorkForNodeAsHTML(nodeId) {
-            var studentWorkAsHTML = null;
-
-            var node = this.ProjectService.getNodeById(nodeId);
-
-            if (node != null) {
-                //var nodeType = node.type;
-                //var latestNodeState = this.getLatestNodeStateByNodeId(nodeId);
-
-                // TODO: make this dynamically call the correct {{nodeType}}Service
-                if (nodeType === 'OpenResponse') {
-                    //studentWorkAsHTML = OpenResponseService.getStudentWorkAsHTML(latestNodeState);
-                }
-            }
-
-            return studentWorkAsHTML;
-        }
-    }, {
         key: 'createComponentState',
         value: function createComponentState() {
             var componentState = {};

@@ -182,14 +182,7 @@ var NodeGradingController = function () {
     }, {
         key: 'getUserNameByWorkgroupId',
         value: function getUserNameByWorkgroupId(workgroupId) {
-            var userName = null;
-            var userInfo = this.ConfigService.getUserInfoByWorkgroupId(workgroupId);
-
-            if (userInfo != null) {
-                userName = userInfo.userName;
-            }
-
-            return userName;
+            return this.ConfigService.getUserNameByWorkgroupId(workgroupId);
         }
     }, {
         key: 'getAnnotationByStepWorkIdAndType',

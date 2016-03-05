@@ -38,18 +38,6 @@ class NodeService {
         return result;
     };
 
-    getStudentWorkAsHTML(nodeState) {
-        var studentWorkAsHTML = null;
-
-        if (nodeState != null) {
-            var response = nodeState.response;
-
-            studentWorkAsHTML = '<p>' + response + '</p>';
-        }
-
-        return studentWorkAsHTML;
-    };
-
     /**
      * Create a new empty node state
      * @return a new empty node state
@@ -209,18 +197,6 @@ class NodeService {
                     }
                 }
             }
-        }
-
-        return result;
-    };
-
-    callFunction(node, component, functionName, functionParams, componentStates, nodeStates, componentEvents, nodeEvents) {
-        var result = null;
-
-        if (functionName === 'isCompleted') {
-            result = this.isCompleted(functionParams);
-        } else if (functionName === 'branchPathTaken') {
-            result = this.branchPathTaken(node, component, functionName, functionParams, componentStates, nodeStates, componentEvents, nodeEvents);
         }
 
         return result;
