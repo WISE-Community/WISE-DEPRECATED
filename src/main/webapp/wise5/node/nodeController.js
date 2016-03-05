@@ -391,7 +391,7 @@ var NodeController = function () {
 
         /**
          * Get the components for this node.
-         * @return an array that contains the content for the components
+         * @return an array that contains the content for the components.
          */
         value: function getComponents() {
             var components = null;
@@ -975,13 +975,15 @@ var NodeController = function () {
             var submitDirty = false;
             var components = this.getComponents();
 
-            for (var c = 0, l = components.length; c < l; c++) {
-                var id = components[c].id;
-                var latestState = this.getComponentStateByComponentId(id);
+            if (components != null) {
+                for (var c = 0, l = components.length; c < l; c++) {
+                    var id = components[c].id;
+                    var latestState = this.getComponentStateByComponentId(id);
 
-                if (latestState && !latestState.isSubmit) {
-                    submitDirty = true;
-                    break;
+                    if (latestState && !latestState.isSubmit) {
+                        submitDirty = true;
+                        break;
+                    }
                 }
             }
 

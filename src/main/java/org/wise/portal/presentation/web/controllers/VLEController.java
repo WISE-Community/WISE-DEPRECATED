@@ -108,7 +108,7 @@ public class VLEController {
      */
     @RequestMapping(value = "/project/{projectId}", method = RequestMethod.GET)
     protected String launchVLEWISE5Preview(
-            @PathVariable Long projectId,
+            @PathVariable String projectId,
             ModelMap modelMap) {
 
         // get the vle config url
