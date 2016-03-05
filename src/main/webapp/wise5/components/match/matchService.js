@@ -99,12 +99,14 @@ var MatchService = function (_NodeService) {
          * @param componentStates the component states for the specific component
          * @param componentEvents the events for the specific component
          * @param nodeEvents the events for the parent node of the component
+         * @param node parent node of the component
          * @returns whether the component was completed
          */
-        value: function isCompleted(component, componentStates, componentEvents, nodeEvents) {
+        value: function isCompleted(component, componentStates, componentEvents, nodeEvents, node) {
             var result = false;
 
-            if (componentStates != null) {
+            if (componentStates && componentStates.length) {
+                var submitRequired = node.showSubmitButton || component.showSubmitButton && !node.showSaveButton;
 
                 // loop through all the component states
                 for (var c = 0; c < componentStates.length; c++) {
@@ -118,10 +120,18 @@ var MatchService = function (_NodeService) {
                     if (studentData != null) {
                         var buckets = studentData.buckets;
 
-                        if (buckets != null) {
-                            // there is a bucket so the component is completed
-                            result = true;
-                            break;
+                        if (buckets && buckets.length) {
+                            // there is a bucket, so the student has saved work
+                            if (submitRequired) {
+                                // completion requires a submission, so check for isSubmit
+                                if (componentState.isSubmit) {
+                                    result = true;
+                                    break;
+                                }
+                            } else {
+                                result = true;
+                                break;
+                            }
                         }
                     }
                 }

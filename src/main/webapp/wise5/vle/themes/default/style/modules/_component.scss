@@ -2,16 +2,16 @@
 
 .component-content {
   padding: 0 16px;
-  margin: 16px 0;
+  margin: 24px 0;
 
   @media only screen and (min-width: $layout-breakpoint-sm) {
     padding: 0 24px;
-    margin: 24px 0;
+    margin: 32px 0;
   }
 
   @media only screen and (min-width: $layout-breakpoint-md) {
     padding: 0 32px;
-    margin: 32px 0;
+    margin: 48px 0;
   }
 }
 
@@ -23,6 +23,17 @@
   .md-button:last-child {
     margin-right: 0;
   }
+}
+
+.component-content__actions__info {
+  font-style: italic;
+  margin-left: 8px;
+  opacity: 0.8;
+  color: lighten(color('accent-2'), 5%);
+}
+
+.component-content__actions__more {
+  border-bottom: 1px dotted;
 }
 
 .component__attachment {

@@ -676,30 +676,65 @@ class GraphService extends NodeService {
      * @param componentStates the component states for the specific component
      * @param componentEvents the events for the specific component
      * @param nodeEvents the events for the parent node of the component
+     * @param node parent node of the component
      * @returns whether the component was completed
      */
-    isCompleted(component, componentStates, componentEvents, nodeEvents) {
-        var result = false;
+    isCompleted(component, componentStates, componentEvents, nodeEvents, node) {
+        let result = false;
 
-        if (componentStates != null) {
+        if (componentStates && componentStates.length) {
+            let submitRequired = node.showSubmitButton || (component.showSubmitButton && !node.showSaveButton);
 
-            // loop through all the component states
-            for (var c = 0; c < componentStates.length; c++) {
-
-                // the component state
-                var componentState = componentStates[c];
-
-                // get the student data from the component state
-                var studentData = componentState.studentData;
-
-                if (studentData != null) {
-                    var series = studentData.series;
-
-                    if (series != null) {
-                        // there is a series so the component is completed
-                        result = true;
-                        break;
+            if (submitRequired) {
+                // completion requires a submission, so check for isSubmit in any component states
+                for (let i = 0, l = componentStates.length; i < l; i++) {
+                    let state = componentStates[i];
+                    if (state.isSubmit && state.studentData) {
+                        // component state is a submission
+                        if (this.hasSeriesData(studentData)) {
+                            // there is series data so the component is completed
+                            result = true;
+                            break;
+                        }
                     }
+                }
+            } else {
+                // get the last component state
+                let l = componentStates.length - 1;
+                let componentState = componentStates[l];
+
+                let studentData = componentState.studentData;
+
+                if (studentData) {
+                    if (this.hasSeriesData(studentData)) {
+                        // there is series data so the component is completed
+                        result = true;
+                    }
+                }
+            }
+        }
+
+        return result;
+    };
+
+    /**
+     * Check if student data contains any graph series with dataType
+     * @param studentData an object of student data from a component state
+     * @returns result boolean
+     */
+    hasSeriesData(studentData) {
+        let result = false;
+
+        let series = studentData.series;
+        if (series && series.length) {
+            // check for any data in any series
+            for (let i = 0, l = series.length; i < l; i++) {
+                let data = series[i].data;
+
+                if (data && data.length) {
+                    // there is series data so the component is completed
+                    result = true;
+                    break;
                 }
             }
         }

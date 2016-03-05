@@ -1,5 +1,5 @@
 <div ng-controller='EmbeddedController as embeddedController' style="display: flex">
-    <div style='flex: 1'>
+    <div class="embedded-content" flex>
         <script>
             var embeddedController = embeddedController;
         </script>
@@ -22,8 +22,9 @@
                       rows='10'
                       cols='100'></textarea>
         </div>
-        <iframe id="component_{{embeddedController.componentId}}" ng-src='{{embeddedController.url}}'
-                style="text-align: center; height: 100%; width:100%; max-width: {{embeddedController.maxWidth}}; max-height: {{embeddedController.maxHeight}};"></iframe>
+        <iframe id="componentApp_{{embeddedController.componentId}}" ng-src='{{embeddedController.url}}'
+                class="embedded-content__iframe"
+                style="max-width: {{embeddedController.maxWidth}}; max-height: {{embeddedController.maxHeight}};"></iframe>
         <div ng-if='embeddedController.mode == "student"' style='text-align: left'>
             <annotation type='score'
                         mode='{{embeddedController.mode}}'

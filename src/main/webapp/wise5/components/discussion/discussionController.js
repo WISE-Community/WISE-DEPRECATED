@@ -331,7 +331,8 @@ var DiscussionController = function () {
 
             var componentState = args.studentWork;
 
-            if (componentState != null) {
+            // check that the component state is for this component
+            if (componentState && this.nodeId === componentState.nodeId && this.componentId === componentState.componentId) {
 
                 // check if the classmate responses are gated
                 if (this.isClassmateResponsesGated() && !this.retrievedClassmateResponses) {
@@ -348,15 +349,9 @@ var DiscussionController = function () {
                      * which means they are already being displayed. we just need to add the
                      * new response in this case.
                      */
-                    var nodeId = componentState.nodeId;
-                    var componentId = componentState.componentId;
 
-                    // check that the component state is for this component
-                    if (this.nodeId === nodeId && this.componentId === componentId) {
-
-                        // add the component state to our collection of class responses
-                        this.addClassResponse(componentState);
-                    }
+                    // add the component state to our collection of class responses
+                    this.addClassResponse(componentState);
                 }
 
                 // send the student post to web sockets so all the classmates receive it in real time

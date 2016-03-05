@@ -5,13 +5,12 @@ $input-action-vertical-offset-richtext: -7px;
 
 // Base
 #step-tools {
-  &.ng-hide-add, &.ng-hide-remove {
-    transition: 250ms linear all;
-    transition-delay: 250ms;
-      .node-toolbar {
-          transition: 250ms linear all;
-          transition-delay: 250ms;
-      }
+  transition: 250ms linear all;
+  transition-delay: 250ms;
+
+  .node-toolbar {
+      transition: 250ms linear all;
+      transition-delay: 250ms;
   }
 
   &.ng-hide {
@@ -35,10 +34,10 @@ $input-action-vertical-offset-richtext: -7px;
 
 #node {
   margin: 0 auto;
-  transition: all 400ms;
   position: absolute;
   left: 0;
   right: 0;
+  transition: opacity 300ms;
 
   @media only screen and (min-width: $layout-breakpoint-xs) {
     padding: 24px 16px;
@@ -62,6 +61,7 @@ $input-action-vertical-offset-richtext: -7px;
 
   &.ng-leave-active, &.ng-hide {
     opacity: 0;
+    transition: 1ms;
   }
 }
 
@@ -169,6 +169,10 @@ $input-action-vertical-offset-richtext: -7px;
   margin-left: 8px;
   opacity: 0.8;
   color: lighten(color('accent-2'), 5%);
+}
+
+.node-content__actions__more {
+  border-bottom: 1px dotted;
 }
 
 .md-button.md-icon-button.node-nav {

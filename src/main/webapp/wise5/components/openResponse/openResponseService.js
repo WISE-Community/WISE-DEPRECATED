@@ -99,25 +99,40 @@ var OpenResponseService = function (_NodeService) {
          * @param componentStates the component states for the specific component
          * @param componentEvents the events for the specific component
          * @param nodeEvents the events for the parent node of the component
+         * @param node parent node of the component
          * @returns whether the component was completed
          */
-        value: function isCompleted(component, componentStates, componentEvents, nodeEvents) {
+        value: function isCompleted(component, componentStates, componentEvents, nodeEvents, node) {
             var result = false;
 
-            if (componentStates != null && componentStates.length) {
+            if (componentStates && componentStates.length) {
+                var submitRequired = node.showSubmitButton || component.showSubmitButton && !node.showSaveButton;
 
-                // get the last component state
-                var l = componentStates.length - 1;
-                var componentState = componentStates[l];
+                if (submitRequired) {
+                    // completion requires a submission, so check for isSubmit in any component states
+                    for (var i = 0, l = componentStates.length; i < l; i++) {
+                        var state = componentStates[i];
+                        if (state.isSubmit && state.studentData) {
+                            // component state is a submission
+                            if (state.studentData.response) {
+                                // there is a response so the component is completed
+                                result = true;
+                                break;
+                            }
+                        }
+                    }
+                } else {
+                    // get the last component state
+                    var l = componentStates.length - 1;
+                    var componentState = componentStates[l];
 
-                var studentData = componentState.studentData;
+                    var studentData = componentState.studentData;
 
-                if (studentData != null) {
-                    var response = studentData.response;
-
-                    if (response) {
-                        // there is a response so the component is completed
-                        result = true;
+                    if (studentData != null) {
+                        if (studentData.response) {
+                            // there is a response so the component is completed
+                            result = true;
+                        }
                     }
                 }
             }

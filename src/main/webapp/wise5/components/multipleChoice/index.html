@@ -89,17 +89,21 @@
                                 componentstateid='{{componentState.id}}'></annotation>
                 </div>
 
-                <div class="component-content__actions" layout="row">
+                <div class="component-content__actions" layout="row" layout-align="start center">
+                    <md-button class="md-raised md-primary"
+                               ng-click='multipleChoiceController.submitButtonClicked()'
+                               ng-disabled='multipleChoiceController.isDisabled || !multipleChoiceController.isSubmitDirty'
+                               ng-show='multipleChoiceController.showSubmitButton()'>Submit</md-button>
                     <md-button class="md-primary"
                                ng-class="{'md-raised': !multipleChoiceController.showSubmitButton()}"
                                ng-click='multipleChoiceController.saveButtonClicked()'
-                               ng-disabled='multipleChoiceController.isDisabled'
+                               ng-disabled='multipleChoiceController.isDisabled || !multipleChoiceController.isDirty'
                                ng-show='multipleChoiceController.showSaveButton()'>Save</md-button>
-                    <md-button class="md-raised md-primary"
-                               ng-click='multipleChoiceController.submitButtonClicked()'
-                               ng-disabled='multipleChoiceController.isDisabled'
-                               ng-show='multipleChoiceController.showSubmitButton()'>Submit</md-button>
-                </div>
+                    <span ng-if="multipleChoiceController.showSaveButton() || multipleChoiceController.showSubmitButton()"
+                          ng-show="multipleChoiceController.saveMessage.text"
+                          class="component-content__actions__info md-caption">
+                          {{multipleChoiceController.saveMessage.text}} <span class="component-content__actions__more"><md-tooltip md-direction="top">{{ multipleChoiceController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="multipleChoiceController.saveMessage.time"></span></span>
+                    </span>
             </div>
             <div ng-if='multipleChoiceController.mode == "grading"' style='width: 400px'>
                 <annotation type='score'

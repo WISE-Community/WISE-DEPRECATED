@@ -111,29 +111,41 @@ var DrawService = function (_NodeService) {
          * @param componentStates the component states for the specific component
          * @param componentEvents the events for the specific component
          * @param nodeEvents the events for the parent node of the component
+         * @param node parent node of the component
          * @returns whether the component was completed
          */
-        value: function isCompleted(component, componentStates, componentEvents, nodeEvents) {
+        value: function isCompleted(component, componentStates, componentEvents, nodeEvents, node) {
             var result = false;
 
-            if (componentStates != null) {
+            if (componentStates && componentStates.length) {
+                var submitRequired = node.showSubmitButton || component.showSubmitButton && !node.showSaveButton;
 
-                // loop through all the component states
-                for (var c = 0; c < componentStates.length; c++) {
+                if (submitRequired) {
+                    // completion requires a submission, so check for isSubmit in any component states
+                    for (var i = 0, l = componentStates.length; i < l; i++) {
+                        var state = componentStates[i];
+                        if (state.isSubmit && state.studentData) {
+                            // component state is a submission
+                            if (state.studentData.drawData) {
+                                // there is draw data so the component is completed
+                                // TODO: check for empty drawing or drawing same as initial state
+                                result = true;
+                                break;
+                            }
+                        }
+                    }
+                } else {
+                    // get the last component state
+                    var l = componentStates.length - 1;
+                    var componentState = componentStates[l];
 
-                    // the component state
-                    var componentState = componentStates[c];
-
-                    // get the student data from the component state
                     var studentData = componentState.studentData;
 
-                    if (studentData != null) {
-                        var drawData = studentData.drawData;
-
-                        if (drawData != null) {
+                    if (studentData) {
+                        if (studentData.drawData) {
                             // there is draw data so the component is completed
+                            // TODO: check for empty drawing or drawing same as initial state
                             result = true;
-                            break;
                         }
                     }
                 }

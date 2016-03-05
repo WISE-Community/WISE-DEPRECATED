@@ -858,27 +858,27 @@ class StudentDataService {
             deferred.resolve(savedStudentDataResponse);
             return deferred.promise;
         } else {
-        // set the workgroup id and run id
-        var params = {};
-        params.runId = this.ConfigService.getRunId();
-        params.workgroupId = this.ConfigService.getWorkgroupId();
-        params.studentWorkList = angular.toJson(studentWorkList);
-        params.events = angular.toJson(events);
-        params.annotations = angular.toJson(annotations);
+            // set the workgroup id and run id
+            var params = {};
+            params.runId = this.ConfigService.getRunId();
+            params.workgroupId = this.ConfigService.getWorkgroupId();
+            params.studentWorkList = angular.toJson(studentWorkList);
+            params.events = angular.toJson(events);
+            params.annotations = angular.toJson(annotations);
 
             // get the url to POST the student data
             var httpParams = {};
             httpParams.method = 'POST';
             httpParams.url = this.ConfigService.getConfigParam('studentDataURL');
             httpParams.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
-        httpParams.data = $.param(params);
+            httpParams.data = $.param(params);
 
-        // make the request to post the student data
+            // make the request to post the student data
             return this.$http(httpParams).then(
                 result => {
-            // get the local references to the component states that were posted and set their id and serverSaveTime
+                    // get the local references to the component states that were posted and set their id and serverSaveTime
                     if (result != null && result.data != null) {
-                var savedStudentDataResponse = result.data;
+                        var savedStudentDataResponse = result.data;
 
                         this.saveToServerSuccess(savedStudentDataResponse);
 
@@ -894,7 +894,7 @@ class StudentDataService {
 
     saveToServerSuccess(savedStudentDataResponse) {
         // set dummy serverSaveTime for use if we're in preview mode
-        let serverSaveTime = new Date();
+        let serverSaveTime = Date.parse(new Date());
 
         // handle saved studentWork
         if (savedStudentDataResponse.studentWorkList) {
@@ -904,92 +904,92 @@ class StudentDataService {
                 localStudentWorkList = localStudentWorkList.concat(this.studentData.nodeStates);
             }
 
-                    // set the id and serverSaveTime in the local studentWorkList
-                    for (var i = 0; i < savedStudentWorkList.length; i++) {
-                        var savedStudentWork = savedStudentWorkList[i];
+            // set the id and serverSaveTime in the local studentWorkList
+            for (var i = 0; i < savedStudentWorkList.length; i++) {
+                var savedStudentWork = savedStudentWorkList[i];
 
-                        /*
-                         * loop through all the student work that were posted
-                         * to find the one with the matching request token
-                         */
-                        for (var l = localStudentWorkList.length - 1; l >= 0; l--) {
-                            var localStudentWork = localStudentWorkList[l];
+                /*
+                 * loop through all the student work that were posted
+                 * to find the one with the matching request token
+                 */
+                for (var l = localStudentWorkList.length - 1; l >= 0; l--) {
+                    var localStudentWork = localStudentWorkList[l];
                     if (localStudentWork.requestToken &&
-                                localStudentWork.requestToken === savedStudentWork.requestToken) {
-                                localStudentWork.id = savedStudentWork.id;
+                        localStudentWork.requestToken === savedStudentWork.requestToken) {
+                        localStudentWork.id = savedStudentWork.id;
                         localStudentWork.serverSaveTime = savedStudentWork.serverSaveTime ? savedStudentWork.serverSaveTime : serverSaveTime;
-                                localStudentWork.requestToken = null; // requestToken is no longer needed.
+                        localStudentWork.requestToken = null; // requestToken is no longer needed.
 
-                                this.$rootScope.$broadcast('studentWorkSavedToServer', {studentWork: localStudentWork});
-                                break;
-                            }
-                        }
+                        this.$rootScope.$broadcast('studentWorkSavedToServer', {studentWork: localStudentWork});
+                        break;
                     }
                 }
-                // handle saved events
+            }
+        }
+        // handle saved events
         if (savedStudentDataResponse.events) {
-                    var savedEvents = savedStudentDataResponse.events;
+            var savedEvents = savedStudentDataResponse.events;
 
-                    var localEvents = this.studentData.events;
+            var localEvents = this.studentData.events;
 
-                    // set the id and serverSaveTime in the local event
-                    for (var i = 0; i < savedEvents.length; i++) {
-                        var savedEvent = savedEvents[i];
+            // set the id and serverSaveTime in the local event
+            for (var i = 0; i < savedEvents.length; i++) {
+                var savedEvent = savedEvents[i];
 
-                        /*
-                         * loop through all the events that were posted
-                         * to find the one with the matching request token
-                         */
-                        for (var l = localEvents.length - 1; l >= 0; l--) {
-                            var localEvent = localEvents[l];
+                /*
+                 * loop through all the events that were posted
+                 * to find the one with the matching request token
+                 */
+                for (var l = localEvents.length - 1; l >= 0; l--) {
+                    var localEvent = localEvents[l];
                     if (localEvent.requestToken &&
-                                localEvent.requestToken === savedEvent.requestToken) {
-                                localEvent.id = savedEvent.id;
+                        localEvent.requestToken === savedEvent.requestToken) {
+                        localEvent.id = savedEvent.id;
                         localEvent.serverSaveTime = savedEvent.serverSaveTime ? savedEvent.serverSaveTime : serverSaveTime;
-                                localEvent.requestToken = null; // requestToken is no longer needed.
+                        localEvent.requestToken = null; // requestToken is no longer needed.
 
-                                this.$rootScope.$broadcast('eventSavedToServer', {event: localEvent});
-                                break;
-                            }
-                        }
+                        this.$rootScope.$broadcast('eventSavedToServer', {event: localEvent});
+                        break;
                     }
                 }
+            }
+        }
 
-                // handle saved annotations
+        // handle saved annotations
         if (savedStudentDataResponse.annotations) {
-                    var savedAnnotations = savedStudentDataResponse.annotations;
+            var savedAnnotations = savedStudentDataResponse.annotations;
 
-                    var localAnnotations = this.studentData.annotations;
+            var localAnnotations = this.studentData.annotations;
 
-                    // set the id and serverSaveTime in the local annotation
-                    for (var i = 0; i < savedAnnotations.length; i++) {
-                        var savedAnnotation = savedAnnotations[i];
+            // set the id and serverSaveTime in the local annotation
+            for (var i = 0; i < savedAnnotations.length; i++) {
+                var savedAnnotation = savedAnnotations[i];
 
-                        /*
-                         * loop through all the events that were posted
-                         * to find the one with the matching request token
-                         */
-                        for (var l = localAnnotations.length - 1; l >= 0; l--) {
-                            var localAnnotation = localAnnotations[l];
+                /*
+                 * loop through all the events that were posted
+                 * to find the one with the matching request token
+                 */
+                for (var l = localAnnotations.length - 1; l >= 0; l--) {
+                    var localAnnotation = localAnnotations[l];
                     if (localAnnotation.requestToken &&
-                                localAnnotation.requestToken === savedAnnotation.requestToken) {
-                                localAnnotation.id = savedAnnotation.id;
+                        localAnnotation.requestToken === savedAnnotation.requestToken) {
+                        localAnnotation.id = savedAnnotation.id;
                         localAnnotation.serverSaveTime = savedAnnotation.serverSaveTime ? savedAnnotation.serverSaveTime : serverSaveTime;
-                                localAnnotation.requestToken = null; // requestToken is no longer needed.
+                        localAnnotation.requestToken = null; // requestToken is no longer needed.
 
-                                this.$rootScope.$broadcast('annotationSavedToServer', {annotation: localAnnotation});
-                                break;
-                            }
-                        }
+                        this.$rootScope.$broadcast('annotationSavedToServer', {annotation: localAnnotation});
+                        break;
                     }
                 }
+            }
+        }
     };
 
     retrieveComponentStates(runId, periodId, workgroupId) {
 
     };
 
-    getLatestComponentState(type) {
+    getLatestComponentState() {
         var latestComponentState = null;
 
         var studentData = this.studentData;
@@ -998,17 +998,7 @@ class StudentDataService {
             var componentStates = studentData.componentStates;
 
             if (componentStates != null) {
-                if (type === 'isSubmit') {
-                    for (let i = componentStates.length-1; i > -1; i--) {
-                        let state = componentStates[i];
-                        if (state.isSubmit) {
-                            latestComponentState = state;
-                            break;
-                        }
-                    }
-                } else {
-                    latestComponentState = componentStates[componentStates.length - 1];
-                }
+                latestComponentState = componentStates[componentStates.length - 1];
             }
         }
 
@@ -1016,39 +1006,58 @@ class StudentDataService {
     };
 
     /**
+     * Check whether the component has unsubmitted work
+     * @return boolean whether or not there is unsubmitted work
+     */
+    isComponentSubmitDirty() {
+        let submitDirty = false;
+
+        let latestComponentState = this.getLatestComponentState();
+        if (latestComponentState && !latestComponentState.isSubmit) {
+            submitDirty = true;
+        }
+
+        return submitDirty;
+    };
+
+    /**
      * Get the latest component state for the given node id and component
      * id.
      * @param nodeId the node id
-     * @param componentId the component id
+     * @param componentId the component id (optional)
      * @return the latest component state with the matching node id and
      * component id or null if none are found
      */
     getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId) {
         var latestComponentState = null;
 
-        if (nodeId != null && componentId != null) {
+        if (nodeId) {
             var studentData = this.studentData;
 
-            if (studentData != null) {
-
+            if (studentData) {
                 // get the component states
                 var componentStates = studentData.componentStates;
 
-                if (componentStates != null) {
-
+                if (componentStates) {
                     // loop through all the component states from newest to oldest
                     for (var c = componentStates.length - 1; c >= 0; c--) {
                         var componentState = componentStates[c];
 
-                        if (componentState != null) {
+                        if (componentState) {
                             var componentStateNodeId = componentState.nodeId;
-                            var componentStateComponentId = componentState.componentId;
 
                             // compare the node id and component id
-                            if (nodeId == componentStateNodeId &&
-                                componentId == componentStateComponentId) {
-                                latestComponentState = componentState;
-                                break;
+                            if (nodeId === componentStateNodeId) {
+                                if (componentId) {
+                                    var componentStateComponentId = componentState.componentId;
+                                    if (componentId === componentStateComponentId) {
+                                        latestComponentState = componentState;
+                                        break;
+                                    }
+                                } else {
+                                    latestComponentState = componentState;
+                                    break;
+                                }
                             }
                         }
                     }
@@ -1377,6 +1386,8 @@ class StudentDataService {
             // get the component object
             var component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
 
+            var node = this.ProjectService.getNodeById(nodeId);
+
             if (component != null) {
 
                 // get the component type
@@ -1388,7 +1399,7 @@ class StudentDataService {
                     var service = this.$injector.get(componentType + 'Service');
 
                     // check if the component is completed
-                    if (service.isCompleted(component, componentStates, componentEvents, nodeEvents)) {
+                    if (service.isCompleted(component, componentStates, componentEvents, nodeEvents, node)) {
                         result = true;
                     }
                 }
@@ -1396,6 +1407,8 @@ class StudentDataService {
         } else if (nodeId) {
             // check if node is a group
             var isGroup = this.ProjectService.isGroupNode(nodeId);
+
+            var node = this.ProjectService.getNodeById(nodeId);
 
             if (isGroup) {
                 // node is a group
@@ -1470,7 +1483,7 @@ class StudentDataService {
                                     var nodeEvents = this.getEventsByNodeId(tempNodeId);
 
                                     // check if the component is completed
-                                    var isComponentCompleted = service.isCompleted(tempComponent, componentStates, componentEvents, nodeEvents);
+                                    var isComponentCompleted = service.isCompleted(tempComponent, componentStates, componentEvents, nodeEvents, node);
 
                                     if (firstResult) {
                                         // this is the first component we have looked at
@@ -1482,7 +1495,7 @@ class StudentDataService {
                                     }
                                 }
                             } catch (e) {
-                                console.log('Error: Could not calculate isCompleted() for a component');
+                                console.log('Error: Could not calculate isCompleted() for component with id ' + tempComponentId);
                             }
                         }
                     }

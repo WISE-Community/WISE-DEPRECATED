@@ -129,16 +129,21 @@
                                 toworkgroupid='{{workgroupId}}'
                                 componentstateid='{{componentState.id}}'></annotation>
                 </div>
-                <div class="component-content__actions" layout="row">
+                <div class="component-content__actions" layout="row" layout-align="start center">
+                    <md-button class="md-raised md-primary"
+                               ng-click='labelController.submitButtonClicked()'
+                               ng-if='labelController.showSubmitButton()'
+                               ng-disabled='labelController.isDisabled || !labelController.isSubmitDirty'>Submit</md-button>
                     <md-button class="md-primary"
                                ng-class="{'md-raised': !labelController.showSubmitButton()}"
-                               ng-click="labelController.saveButtonClicked()"
-                               ng-disabled="labelController.isDisabled"
-                               ng-if="labelController.showSaveButton()">Save</md-button>
-                    <md-button class="md-raised md-primary"
-                               ng-click="labelController.submitButtonClicked()"
-                               ng-disabled="labelController.isDisabled"
-                               ng-if="labelController.showSubmitButton()">Submit</md-button>
+                               ng-click='labelController.saveButtonClicked()'
+                               ng-if='labelController.showSaveButton()'
+                               ng-disabled='labelController.isDisabled || !labelController.isDirty'>Save</md-button>
+                    <span ng-if="labelController.showSaveButton() || labelController.showSubmitButton()"
+                             ng-show="labelController.saveMessage.text"
+                             class="component-content__actions__info md-caption">
+                             {{labelController.saveMessage.text}} <span class="component-content__actions__more"><md-tooltip md-direction="top">{{ labelController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="labelController.saveMessage.time"></span></span>
+                    </span>
                 </div>
             </div>
             <div ng-if='labelController.mode == "grading"' style='width: 400px'>

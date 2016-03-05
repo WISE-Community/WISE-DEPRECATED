@@ -55,6 +55,12 @@ class MatchController {
         // whether the student has correctly placed the choices
         this.isCorrect = null;
 
+        // message to show next to save/submit buttons
+        this.saveMessage = {
+            text: '',
+            time: ''
+        };
+
         // get the current node and node id
         var currentNode = this.StudentDataService.getCurrentNode();
         if (currentNode != null) {
@@ -184,7 +190,7 @@ class MatchController {
         }
 
         this.$scope.options = {
-            accept: function(sourceNode, destNodes, destIndex) {
+            accept: (sourceNode, destNodes, destIndex) => {
                 var result = false;
 
                 // get the value of the source node
@@ -203,32 +209,41 @@ class MatchController {
                 }
 
                 return result;
-            }.bind(this),
-            dropped: function(event) {
-                var sourceNode = event.source.nodeScope;
-                var destNodes = event.dest.nodesScope;
-
-                // tell the controller that the student data has changed
-                this.$scope.matchController.studentDataChanged();
-            }.bind(this)
+            },
+            dropped: event => {
+                if (event.source.nodesScope.$id !== event.dest.nodesScope.$id || event.source.index !== event.dest.index) {
+                    // TODO: not sure why this check is necessary, as angular-ui-tree is not supposed to fire the dropped event unless position has changed
+                    // tell the controller that the student data has changed
+                    this.$scope.matchController.studentDataChanged();
+                }
+            }
         };
 
         /**
          * Get the component state from this component. The parent node will
          * call this function to obtain the component state when it needs to
          * save student data.
+         * @param isSubmit boolean whether the request is coming from a submit
+         * action (optional; default is false)
          * @return a component state containing the student data
          */
-        this.$scope.getComponentState = function() {
+        this.$scope.getComponentState = function(isSubmit) {
+            let componentState = null;
+            let getState = false;
 
-            var componentState = null;
+            if (isSubmit) {
+                if (this.$scope.matchController.isSubmitDirty) {
+                    getState = true;
+                }
+            } else {
+                if (this.$scope.matchController.isDirty) {
+                    getState = true;
+                }
+            }
 
-            if (this.$scope.matchController.isDirty || this.$scope.matchController.isSubmitDirty) {
+            if (getState) {
                 // create a component state populated with the student data
                 componentState = this.$scope.matchController.createComponentState();
-
-                // set isDirty to false since this student work is about to be saved
-                this.$scope.matchController.isDirty = false;
             }
 
             return componentState;
@@ -244,9 +259,47 @@ class MatchController {
 
             // make sure the node id matches our parent node
             if (this.nodeId === nodeId) {
-                // process submission
                 this.isSubmit = true;
-                this.submit();
+                this.incrementNumberOfSubmits();
+
+                // set saveFailed to true; will be set to false on save success response from server
+                this.saveFailed = true;
+            }
+        }));
+
+        /**
+         * Listen for the 'studentWorkSavedToServer' event which is fired when
+         * we receive the response from saving a component state to the server
+         */
+        this.$scope.$on('studentWorkSavedToServer', angular.bind(this, function(event, args) {
+
+            let componentState = args.studentWork;
+
+            // check that the component state is for this component
+            if (componentState && this.nodeId === componentState.nodeId
+                && this.componentId === componentState.componentId) {
+
+                // set isDirty to false because the component state was just saved
+                this.isDirty = false;
+                this.$scope.$emit('componentDirty', {componentId: this.componentId, isDirty: false});
+
+                // set saveFailed to false because the save was successful
+                this.saveFailed = false;
+
+                let isAutoSave = componentState.isAutoSave;
+                let isSubmit = componentState.isSubmit;
+                let serverSaveTime = componentState.serverSaveTime;
+
+                // set save message
+                if (isSubmit) {
+                    this.setSaveMessage('Submitted', serverSaveTime);
+
+                    this.submit();
+                } else if (isAutoSave) {
+                    this.setSaveMessage('Auto-saved', serverSaveTime);
+                } else {
+                    this.setSaveMessage('Saved', serverSaveTime);
+                }
             }
         }));
 
@@ -312,16 +365,17 @@ class MatchController {
                     for (let i = 0, l = choiceIds.length; i < l; i++) {
                         choicesBucket.items.push(this.getChoiceById(choiceIds[i]));
                     }
-                    //this.buckets = componentStateBuckets;
                 }
 
                 // set the number of submits
-                if (componentStateNumberOfSubmits != null) {
+                if (componentStateNumberOfSubmits) {
                     this.numberOfSubmits = componentStateNumberOfSubmits;
+                }
 
-                    if (this.numberOfSubmits > 0) {
-                        componentState.isSubmit ? this.checkAnswer() : this.processLatestSubmit();
-                    }
+                if (this.numberOfSubmits > 0) {
+                    componentState.isSubmit ? this.checkAnswer() : this.processLatestSubmit(true);
+                } else {
+                    this.processLatestSubmit(true);
                 }
             }
         }
@@ -329,13 +383,24 @@ class MatchController {
 
     /**
      * Get the latest submitted componentState and check answer for choices that haven't changed since
+     * @param onload boolean whether this function is being executed on the initial component load or not
      */
-    processLatestSubmit() {
-        let latestSubmitState = this.StudentDataService.getLatestComponentState('isSubmit');
-        let latestBucketIds = this.buckets.map(b => { return b.id; });
-        let latestChoiceIds = this.choices.map(c => { return c.id; });
+    processLatestSubmit(onload) {
+        let componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
+        let numStates = componentStates.length
+        let latestSubmitState = null;
+
+        for (let l = numStates-1; l > -1; l--) {
+            let componentState = componentStates[l];
+            if (componentState.isSubmit) {
+                latestSubmitState = componentState;
+                break;
+            }
+        }
 
         if (latestSubmitState && latestSubmitState.studentData) {
+            let latestBucketIds = this.buckets.map(b => { return b.id; });
+            let latestChoiceIds = this.choices.map(c => { return c.id; });
             let excludeIds = [];
             let latestSubmitStateBuckets = latestSubmitState.studentData.buckets;
 
@@ -360,10 +425,36 @@ class MatchController {
             }
 
             if (excludeIds.length) {
+                // state has changed since last submit, so set isSubmitDirty to true and notify node
                 this.isSubmitDirty = true;
-                this.isDirty = true;
+                this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: true});
+            } else {
+                // state has not changed since last submit, so set isSubmitDirty to false and notify node
+                this.isSubmitDirty = false;
+                this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: false});
             }
             this.checkAnswer(excludeIds);
+        } else {
+            this.isSubmitDirty = true;
+            this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: true});
+        }
+
+        if (onload && numStates) {
+            let latestState = componentStates[numStates-1];
+
+            if (latestState.isSubmit) {
+                // latest state is a submission, so set isSubmitDirty to false and notify node
+                this.isSubmitDirty = false;
+                this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: false});
+                // set save message
+                this.setSaveMessage('Last submitted', latestState.serverSaveTime);
+            } else {
+                // latest state is not a submission, so set isSubmitDirty to true and notify node
+                this.isSubmitDirty = true;
+                this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: true});
+                // set save message
+                this.setSaveMessage('Last saved', latestState.serverSaveTime);
+            }
         }
     };
 
@@ -460,6 +551,7 @@ class MatchController {
      * Called when the student clicks the save button
      */
     saveButtonClicked() {
+        this.isSubmit = false;
 
         // tell the parent node that this component wants to save
         this.$scope.$emit('componentSaveTriggered', {nodeId: this.nodeId, componentId: this.componentId});
@@ -470,10 +562,11 @@ class MatchController {
      */
     submitButtonClicked() {
         // TODO: add confirmation dialog if lock after submit is enabled on this component
-
         this.isSubmit = true;
+        this.incrementNumberOfSubmits();
 
-        this.submit();
+        // set saveFailed to true; will be set to false on save success response from server
+        this.saveFailed = true;
 
         // tell the parent node that this component wants to submit
         this.$scope.$emit('componentSubmitTriggered', {nodeId: this.nodeId, componentId: this.componentId});
@@ -489,10 +582,21 @@ class MatchController {
         }
 
         // check if the student answered correctly
-        this.checkAnswer();
-        this.numberOfSubmits++;
-        this.isSubmitDirty = false;
+        this.processLatestSubmit();
     }
+
+    /**
+     * Increment the number of attempts the student has made
+     */
+    incrementNumberOfSubmits() {
+        if (!this.saveFailed) {
+            if (this.numberOfSubmits == null) {
+                this.numberOfSubmits = 0;
+            }
+
+            this.numberOfSubmits++;
+        }
+    };
 
     /**
      * Check if the student has answered correctly
@@ -713,7 +817,10 @@ class MatchController {
          * student work later
          */
         this.isDirty = true;
-        this.isSubmitDirty = true;
+        this.$scope.$emit('componentDirty', {componentId: this.componentId, isDirty: true});
+
+        // clear out the save message
+        this.setSaveMessage('', null);
 
         // get this part id
         var componentId = this.getComponentId();
@@ -1344,6 +1451,16 @@ class MatchController {
             }
         }
     }
+
+    /**
+     * Set the message next to the save button
+     * @param message the message to display
+     * @param time the time to display
+     */
+    setSaveMessage(message, time) {
+        this.saveMessage.text = message;
+        this.saveMessage.time = time;
+    };
 
     /**
      * Register the the listener that will listen for the exit event

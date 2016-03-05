@@ -928,7 +928,7 @@ var StudentDataService = function () {
         key: 'saveToServerSuccess',
         value: function saveToServerSuccess(savedStudentDataResponse) {
             // set dummy serverSaveTime for use if we're in preview mode
-            var serverSaveTime = new Date();
+            var serverSaveTime = Date.parse(new Date());
 
             // handle saved studentWork
             if (savedStudentDataResponse.studentWorkList) {
@@ -1020,7 +1020,7 @@ var StudentDataService = function () {
         value: function retrieveComponentStates(runId, periodId, workgroupId) {}
     }, {
         key: 'getLatestComponentState',
-        value: function getLatestComponentState(type) {
+        value: function getLatestComponentState() {
             var latestComponentState = null;
 
             var studentData = this.studentData;
@@ -1029,21 +1029,28 @@ var StudentDataService = function () {
                 var componentStates = studentData.componentStates;
 
                 if (componentStates != null) {
-                    if (type === 'isSubmit') {
-                        for (var i = componentStates.length - 1; i > -1; i--) {
-                            var state = componentStates[i];
-                            if (state.isSubmit) {
-                                latestComponentState = state;
-                                break;
-                            }
-                        }
-                    } else {
-                        latestComponentState = componentStates[componentStates.length - 1];
-                    }
+                    latestComponentState = componentStates[componentStates.length - 1];
                 }
             }
 
             return latestComponentState;
+        }
+    }, {
+        key: 'isComponentSubmitDirty',
+
+        /**
+         * Check whether the component has unsubmitted work
+         * @return boolean whether or not there is unsubmitted work
+         */
+        value: function isComponentSubmitDirty() {
+            var submitDirty = false;
+
+            var latestComponentState = this.getLatestComponentState();
+            if (latestComponentState && !latestComponentState.isSubmit) {
+                submitDirty = true;
+            }
+
+            return submitDirty;
         }
     }, {
         key: 'getLatestComponentStateByNodeIdAndComponentId',
@@ -1052,35 +1059,40 @@ var StudentDataService = function () {
          * Get the latest component state for the given node id and component
          * id.
          * @param nodeId the node id
-         * @param componentId the component id
+         * @param componentId the component id (optional)
          * @return the latest component state with the matching node id and
          * component id or null if none are found
          */
         value: function getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId) {
             var latestComponentState = null;
 
-            if (nodeId != null && componentId != null) {
+            if (nodeId) {
                 var studentData = this.studentData;
 
-                if (studentData != null) {
-
+                if (studentData) {
                     // get the component states
                     var componentStates = studentData.componentStates;
 
-                    if (componentStates != null) {
-
+                    if (componentStates) {
                         // loop through all the component states from newest to oldest
                         for (var c = componentStates.length - 1; c >= 0; c--) {
                             var componentState = componentStates[c];
 
-                            if (componentState != null) {
+                            if (componentState) {
                                 var componentStateNodeId = componentState.nodeId;
-                                var componentStateComponentId = componentState.componentId;
 
                                 // compare the node id and component id
-                                if (nodeId == componentStateNodeId && componentId == componentStateComponentId) {
-                                    latestComponentState = componentState;
-                                    break;
+                                if (nodeId === componentStateNodeId) {
+                                    if (componentId) {
+                                        var componentStateComponentId = componentState.componentId;
+                                        if (componentId === componentStateComponentId) {
+                                            latestComponentState = componentState;
+                                            break;
+                                        }
+                                    } else {
+                                        latestComponentState = componentState;
+                                        break;
+                                    }
                                 }
                             }
                         }
@@ -1426,6 +1438,8 @@ var StudentDataService = function () {
                 // get the component object
                 var component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
 
+                var node = this.ProjectService.getNodeById(nodeId);
+
                 if (component != null) {
 
                     // get the component type
@@ -1437,7 +1451,7 @@ var StudentDataService = function () {
                         var service = this.$injector.get(componentType + 'Service');
 
                         // check if the component is completed
-                        if (service.isCompleted(component, componentStates, componentEvents, nodeEvents)) {
+                        if (service.isCompleted(component, componentStates, componentEvents, nodeEvents, node)) {
                             result = true;
                         }
                     }
@@ -1445,6 +1459,8 @@ var StudentDataService = function () {
             } else if (nodeId) {
                 // check if node is a group
                 var isGroup = this.ProjectService.isGroupNode(nodeId);
+
+                var node = this.ProjectService.getNodeById(nodeId);
 
                 if (isGroup) {
                     // node is a group
@@ -1519,7 +1535,7 @@ var StudentDataService = function () {
                                         var nodeEvents = this.getEventsByNodeId(tempNodeId);
 
                                         // check if the component is completed
-                                        var isComponentCompleted = service.isCompleted(tempComponent, componentStates, componentEvents, nodeEvents);
+                                        var isComponentCompleted = service.isCompleted(tempComponent, componentStates, componentEvents, nodeEvents, node);
 
                                         if (firstResult) {
                                             // this is the first component we have looked at
@@ -1531,7 +1547,7 @@ var StudentDataService = function () {
                                         }
                                     }
                                 } catch (e) {
-                                    console.log('Error: Could not calculate isCompleted() for a component');
+                                    console.log('Error: Could not calculate isCompleted() for component with id ' + tempComponentId);
                                 }
                             }
                         }

@@ -45,6 +45,15 @@ var OpenResponseController = function () {
         // whether the student work is dirty and needs saving
         this.isDirty = false;
 
+        // whether the student work has changed since last submit
+        this.isSubmitDirty = false;
+
+        // message to show next to save/submit buttons
+        this.saveMessage = {
+            text: '',
+            time: ''
+        };
+
         // whether this component is showing previous work
         this.isShowPreviousWork = false;
 
@@ -229,18 +238,27 @@ var OpenResponseController = function () {
          * Get the component state from this component. The parent node will
          * call this function to obtain the component state when it needs to
          * save student data.
+         * @param isSubmit boolean whether the request is coming from a submit
+         * action (optional; default is false)
          * @return a component state containing the student data
          */
-        this.$scope.getComponentState = function () {
-
+        this.$scope.getComponentState = function (isSubmit) {
             var componentState = null;
+            var getState = false;
 
-            if (this.$scope.openResponseController.isDirty) {
+            if (isSubmit) {
+                if (this.$scope.openResponseController.isSubmitDirty) {
+                    getState = true;
+                }
+            } else {
+                if (this.$scope.openResponseController.isDirty) {
+                    getState = true;
+                }
+            }
+
+            if (getState) {
                 // create a component state populated with the student data
                 componentState = this.$scope.openResponseController.createComponentState();
-
-                // set isDirty to false since this student work is about to be saved
-                this.$scope.openResponseController.isDirty = false;
             }
 
             return componentState;
@@ -256,13 +274,45 @@ var OpenResponseController = function () {
 
             // make sure the node id matches our parent node
             if (this.nodeId === nodeId) {
-
-                if (this.isLockAfterSubmit()) {
-                    // disable the component if it was authored to lock after submit
-                    this.isDisabled = true;
-                }
+                this.isSubmit = true;
             }
         }.bind(this));
+
+        /**
+         * Listen for the 'studentWorkSavedToServer' event which is fired when
+         * we receive the response from saving a component state to the server
+         */
+        this.$scope.$on('studentWorkSavedToServer', angular.bind(this, function (event, args) {
+
+            var componentState = args.studentWork;
+
+            // check that the component state is for this component
+            if (componentState && this.nodeId === componentState.nodeId && this.componentId === componentState.componentId) {
+
+                // set isDirty to false because the component state was just saved and notify node
+                this.isDirty = false;
+                this.$scope.$emit('componentDirty', { componentId: this.componentId, isDirty: false });
+
+                var isAutoSave = componentState.isAutoSave;
+                var isSubmit = componentState.isSubmit;
+                var serverSaveTime = componentState.serverSaveTime;
+
+                // set save message
+                if (isSubmit) {
+                    this.setSaveMessage('Submitted', serverSaveTime);
+
+                    this.submit();
+
+                    // set isSubmitDirty to false because the component state was just submitted and notify node
+                    this.isSubmitDirty = false;
+                    this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: false });
+                } else if (isAutoSave) {
+                    this.setSaveMessage('Auto-saved', serverSaveTime);
+                } else {
+                    this.setSaveMessage('Saved', serverSaveTime);
+                }
+            }
+        }));
 
         /**
          * Listen for the 'exitNode' event which is fired when the student
@@ -297,6 +347,33 @@ var OpenResponseController = function () {
                     if (attachments != null) {
                         this.attachments = attachments;
                     }
+
+                    this.processLatestSubmit();
+                }
+            }
+        }
+    }, {
+        key: 'processLatestSubmit',
+
+        /**
+         * Check if latest component state is a submission and set isSubmitDirty accordingly
+         */
+        value: function processLatestSubmit() {
+            var latestState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
+
+            if (latestState) {
+                if (latestState.isSubmit) {
+                    // latest state is a submission, so set isSubmitDirty to false and notify node
+                    this.isSubmitDirty = false;
+                    this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: false });
+                    // set save message
+                    this.setSaveMessage('Last submitted', latestState.serverSaveTime);
+                } else {
+                    // latest state is not a submission, so set isSubmitDirty to true and notify node
+                    this.isSubmitDirty = true;
+                    this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: true });
+                    // set save message
+                    this.setSaveMessage('Last saved', latestState.serverSaveTime);
                 }
             }
         }
@@ -307,6 +384,7 @@ var OpenResponseController = function () {
          * Called when the student clicks the save button
          */
         value: function saveButtonClicked() {
+            this.isSubmit = false;
 
             // tell the parent node that this component wants to save
             this.$scope.$emit('componentSaveTriggered', { nodeId: this.nodeId, componentId: this.componentId });
@@ -320,13 +398,16 @@ var OpenResponseController = function () {
         value: function submitButtonClicked() {
             this.isSubmit = true;
 
+            // tell the parent node that this component wants to submit
+            this.$scope.$emit('componentSubmitTriggered', { nodeId: this.nodeId, componentId: this.componentId });
+        }
+    }, {
+        key: 'submit',
+        value: function submit() {
             // check if we need to lock the component after the student submits
             if (this.isLockAfterSubmit()) {
                 this.isDisabled = true;
             }
-
-            // tell the parent node that this component wants to submit
-            this.$scope.$emit('componentSubmitTriggered', { nodeId: this.nodeId, componentId: this.componentId });
         }
     }, {
         key: 'studentDataChanged',
@@ -336,10 +417,17 @@ var OpenResponseController = function () {
          */
         value: function studentDataChanged() {
             /*
-             * set the dirty flag so we will know we need to save the
+             * set the dirty flags so we will know we need to save or submit the
              * student work later
              */
             this.isDirty = true;
+            this.$scope.$emit('componentDirty', { componentId: this.componentId, isDirty: true });
+
+            this.isSubmitDirty = true;
+            this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: true });
+
+            // clear out the save message
+            this.setSaveMessage('', null);
 
             // get this part id
             var componentId = this.getComponentId();
@@ -678,6 +766,18 @@ var OpenResponseController = function () {
          */
         value: function updateAdvancedAuthoringView() {
             this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
+        }
+    }, {
+        key: 'setSaveMessage',
+
+        /**
+         * Set the message next to the save button
+         * @param message the message to display
+         * @param time the time to display
+         */
+        value: function setSaveMessage(message, time) {
+            this.saveMessage.text = message;
+            this.saveMessage.time = time;
         }
     }, {
         key: 'registerExitListener',

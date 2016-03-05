@@ -14,7 +14,7 @@ class MultipleChoiceService extends NodeService {
      */
     createComponent() {
 
-        var component = {};
+        let component = {};
         component.id = this.UtilService.generateKey();
         component.type = 'MultipleChoice';
         component.prompt = 'Enter prompt here';
@@ -34,35 +34,35 @@ class MultipleChoiceService extends NodeService {
      */
     choiceChosen(criteria) {
 
-        var result = false;
+        let result = false;
 
         if (criteria != null) {
-            var nodeId = criteria.nodeId;
-            var componentId = criteria.componentId;
-            var functionName = criteria.functionName;
-            var functionParams = criteria.functionParams;
+            let nodeId = criteria.nodeId;
+            let componentId = criteria.componentId;
+            let functionName = criteria.functionName;
+            let functionParams = criteria.functionParams;
 
             if (nodeId != null && componentId != null) {
 
                 // get the component states
-                var componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(nodeId, componentId);
+                let componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(nodeId, componentId);
 
                 if (componentStates != null && componentStates.length > 0) {
 
                     // get the choice ids that we expect the student to have chose
-                    var choiceIds = functionParams.choiceIds;
+                    let choiceIds = functionParams.choiceIds;
 
                     if (choiceIds != null) {
                         // get the latest component state
-                        var componentState = componentStates[componentStates.length - 1];
+                        let componentState = componentStates[componentStates.length - 1];
 
                         // get the student data
-                        var studentData = componentState.studentData;
+                        let studentData = componentState.studentData;
 
                         if (studentData != null) {
 
                             // get the choice(s) the student chose
-                            var studentChoices = studentData.studentChoices;
+                            let studentChoices = studentData.studentChoices;
 
                             if (studentChoices != null) {
 
@@ -73,10 +73,10 @@ class MultipleChoiceService extends NodeService {
                                      * choice ids to make sure the student chose the ones that are required
                                      */
 
-                                    var studentChoiceIds = this.getStudentChoiceIdsFromStudentChoiceObjects(studentChoices);
+                                    let studentChoiceIds = this.getStudentChoiceIdsFromStudentChoiceObjects(studentChoices);
 
-                                    for (var c = 0; c < choiceIds.length; c++) {
-                                        var choiceId = choiceIds[c];
+                                    for (let c = 0; c < choiceIds.length; c++) {
+                                        let choiceId = choiceIds[c];
 
                                         if (studentChoiceIds.indexOf(choiceId) === -1) {
                                             /*
@@ -116,20 +116,20 @@ class MultipleChoiceService extends NodeService {
      * @returns an array of choice id strings
      */
     getStudentChoiceIdsFromStudentChoiceObjects(studentChoices) {
-        var choiceIds = [];
+        let choiceIds = [];
 
         if (studentChoices != null) {
 
             // loop through all the student choice objects
-            for (var c = 0; c < studentChoices.length; c++) {
+            for (let c = 0; c < studentChoices.length; c++) {
 
                 // get a student choice object
-                var studentChoice = studentChoices[c];
+                let studentChoice = studentChoices[c];
 
                 if (studentChoice != null) {
 
                     // get the student choice id
-                    var studentChoiceId = studentChoice.id;
+                    let studentChoiceId = studentChoice.id;
 
                     choiceIds.push(studentChoiceId);
                 }
@@ -146,7 +146,7 @@ class MultipleChoiceService extends NodeService {
      * component state
      */
     populateComponentState(componentStateFromOtherComponent) {
-        var componentState = null;
+        let componentState = null;
 
         if (componentStateFromOtherComponent != null) {
 
@@ -154,16 +154,16 @@ class MultipleChoiceService extends NodeService {
             componentState = this.StudentDataService.createComponentState();
 
             // get the component type of the other component state
-            var otherComponentType = componentStateFromOtherComponent.componentType;
+            let otherComponentType = componentStateFromOtherComponent.componentType;
 
             if (otherComponentType === 'MultipleChoice') {
                 // the other component is an MultipleChoice component
 
                 // get the student data from the other component state
-                var studentData = componentStateFromOtherComponent.studentData;
+                let studentData = componentStateFromOtherComponent.studentData;
 
                 // create a copy of the student data
-                var studentDataCopy = this.StudentDataService.makeCopyOfJSONObject(studentData);
+                let studentDataCopy = this.StudentDataService.makeCopyOfJSONObject(studentData);
 
                 // set the student data into the new component state
                 componentState.studentData = studentDataCopy;
@@ -179,29 +179,39 @@ class MultipleChoiceService extends NodeService {
      * @param componentStates the component states for the specific component
      * @param componentEvents the events for the specific component
      * @param nodeEvents the events for the parent node of the component
+     * @param node parent node of the component
      * @returns whether the component was completed
      */
-    isCompleted(component, componentStates, componentEvents, nodeEvents) {
-        var result = false;
+    isCompleted(component, componentStates, componentEvents, nodeEvents, node) {
+        let result = false;
 
-        if (componentStates != null) {
+        if (componentStates && componentStates.length) {
+            let submitRequired = node.showSubmitButton || (component.showSubmitButton && !node.showSaveButton);
 
             // loop through all the component states
-            for (var c = 0; c < componentStates.length; c++) {
+            for (let c = 0, l = componentStates.length; c < l; c++) {
 
                 // the component state
-                var componentState = componentStates[c];
+                let componentState = componentStates[c];
 
                 // get the student data from the component state
-                var studentData = componentState.studentData;
+                let studentData = componentState.studentData;
 
                 if (studentData != null) {
-                    var studentChoices = studentData.studentChoices;
+                    let studentChoices = studentData.studentChoices;
 
                     if (studentChoices != null) {
-                        // there is a student choice so the component is completed
-                        result = true;
-                        break;
+                        // there is a student choice so the component has saved work
+                        if (submitRequired) {
+                            // completion requires a submission, so check for isSubmit
+                            if (componentState.isSubmit) {
+                                result = true;
+                                break;
+                            }
+                        } else {
+                            result = true;
+                            break;
+                        }
                     }
                 }
             }

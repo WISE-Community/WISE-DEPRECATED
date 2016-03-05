@@ -120,29 +120,40 @@ class TableService extends NodeService {
      * @param componentStates the component states for the specific component
      * @param componentEvents the events for the specific component
      * @param nodeEvents the events for the parent node of the component
+     * @param node parent node of the component
      * @returns whether the component was completed
      */
-    isCompleted(component, componentStates, componentEvents, nodeEvents) {
-        var result = false;
+    isCompleted(component, componentStates, componentEvents, nodeEvents, node) {
+        let result = false;
 
-        if (componentStates != null) {
+        if (componentStates && componentStates.length) {
+            let submitRequired = node.showSubmitButton || (component.showSubmitButton && !node.showSaveButton);
 
             // loop through all the component states
-            for (var c = 0; c < componentStates.length; c++) {
+            for (let c = 0, l = componentStates.length; c < l; c++) {
 
                 // the component state
-                var componentState = componentStates[c];
+                let componentState = componentStates[c];
 
                 // get the student data from the component state
-                var studentData = componentState.studentData;
+                let studentData = componentState.studentData;
 
                 if (studentData != null) {
-                    var tableData = studentData.tableData;
+                    let tableData = studentData.tableData;
 
                     if (tableData != null) {
-                        // there is table data so the component is completed
-                        result = true;
-                        break;
+                        // there is a table data so the component has saved work
+                        // TODO: check for actual student data from the table (compare to starting state)
+                        if (submitRequired) {
+                            // completion requires a submission, so check for isSubmit
+                            if (componentState.isSubmit) {
+                                result = true;
+                                break;
+                            }
+                        } else {
+                            result = true;
+                            break;
+                        }
                     }
                 }
             }

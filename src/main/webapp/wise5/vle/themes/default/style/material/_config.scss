@@ -1,3 +1,9 @@
+// Helpers
+@function rem($multiplier) {
+  $font-size: 10px;
+  @return $multiplier * $font-size;
+}
+
 // Angular Material variables for use and !default overrides
 $toolbar-tools-height: 52px;
 $toolbar-height: 52px;
@@ -6,6 +12,8 @@ $toolbar-tall-height: 104px;
 $toolbar-indent-margin: 52px;
 $toolbar-height-mobile-portrait: 52px;
 $toolbar-height-mobile-landscape: 52px;
+
+$caption-font-size-base:   rem(1.300) !default;
 
 //$list-item-height: 56px;
 
@@ -16,4 +24,6 @@ $layout-breakpoint-sm:     960px;
 $layout-breakpoint-md:     1280px;
 $layout-breakpoint-lg:     1920px;
 
-$button-border-radius: 3px
+$button-border-radius: 3px;
+
+$tooltip-fontsize-sm: rem(1);

@@ -97,17 +97,22 @@
                         toworkgroupid='{{workgroupId}}'
                         componentstateid='{{componentState.id}}'></annotation>
         </div>
-        <button class="md-primary"
-                ng-class="{'md-raised': !graphController.showSubmitButton()}"
-                ng-click='graphController.saveButtonClicked()'
-                ng-disabled='graphController.isDisabled'
-                ng-if='graphController.showSaveButton()'>Save
-        </button>
-        <button class="md-primary md-raised"
-                ng-click='graphController.submitButtonClicked()'
-                ng-disabled='graphController.isDisabled'
-                ng-if='graphController.showSubmitButton()'>Submit
-        </button>
+        <div class="component-content__actions" layout="row" layout-align="start center">
+            <md-button class="md-raised md-primary"
+                       ng-click='graphController.submitButtonClicked()'
+                       ng-if='graphController.showSubmitButton()'
+                       ng-disabled='graphController.isDisabled || !graphController.isSubmitDirty'>Submit</md-button>
+            <md-button class="md-primary"
+                       ng-class="{'md-raised': !graphController.showSubmitButton()}"
+                       ng-click='graphController.saveButtonClicked()'
+                       ng-if='graphController.showSaveButton()'
+                       ng-disabled='graphController.isDisabled || !graphController.isDirty'>Save</md-button>
+            <span ng-if="graphController.showSaveButton() || graphController.showSubmitButton()"
+                      ng-show="graphController.saveMessage.text"
+                      class="component-content__actions__info md-caption">
+                      {{graphController.saveMessage.text}} <span class="component-content__actions__more"><md-tooltip md-direction="top">{{ graphController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="graphController.saveMessage.time"></span></span>
+            </span>
+        </div>
     </div>
     <div ng-if='graphController.mode == "grading"' style='width: 400px'>
         <annotation type='score'

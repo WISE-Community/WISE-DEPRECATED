@@ -59,12 +59,11 @@
                 <div class="component-content__actions" ng-show="openResponseController.isStudentAttachmentEnabled" layout="row" layout-wrap="true">
                     <div class="component__add-attachment">
                         <md-button class="md-accent"
-                                   ng-show="!openResponseController.isDisabled"
                                    ng-click="nodeController.showStudentAssets($event, component.id, openResponseController.isDisabled)">
                             <md-icon>image</md-icon> <span>Add File</span>
                         </md-button>
                     </div>
-                    <div class="component__attachment" ng-repeat="attachment in openResponseController.attachments track by attachment.iconURL">
+                    <div class="component__attachment" ng-repeat="attachment in openResponseController.attachments">
                         <img ng-src="{{attachment.iconURL}}" class="component__attachment__content" />
                         <md-button ng-show="!openResponseController.isDisabled" class="component__attachment__delete" ng-click='openResponseController.removeAttachment(attachment)' title="Remove file"><md-icon>cancel</md-icon></md-button>
                     </div>
@@ -85,16 +84,21 @@
                                 toworkgroupid='{{workgroupId}}'
                                 componentstateid='{{componentState.id}}'></annotation>
                 </div>
-                <div class="component-content__actions" layout="row">
+                <div class="component-content__actions" layout="row" layout-align="start center">
+                    <md-button class="md-raised md-primary"
+                               ng-click="openResponseController.submitButtonClicked()"
+                               ng-disabled="openResponseController.isDisabled || !openResponseController.isSubmitDirty"
+                               ng-if="openResponseController.showSubmitButton()">Submit</md-button>
                     <md-button class="md-primary"
                                ng-class="{'md-raised': !openResponseController.showSubmitButton()}"
                                ng-click="openResponseController.saveButtonClicked()"
-                               ng-disabled="openResponseController.isDisabled"
+                               ng-disabled="openResponseController.isDisabled || !openResponseController.isDirty"
                                ng-if="openResponseController.showSaveButton()">Save</md-button>
-                    <md-button class="md-raised md-primary"
-                               ng-click="openResponseController.submitButtonClicked()"
-                               ng-disabled="openResponseController.isDisabled"
-                               ng-if="openResponseController.showSubmitButton()">Submit</md-button>
+                    <span ng-if="openResponseController.showSaveButton() || openResponseController.showSubmitButton()"
+                          ng-show="openResponseController.saveMessage.text"
+                          class="component-content__actions__info md-caption">
+                          {{openResponseController.saveMessage.text}} <span class="component-content__actions__more"><md-tooltip md-direction="top">{{ openResponseController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="openResponseController.saveMessage.time"></span></span>
+                    </span>
                 </div>
             </div>
             <div ng-if='openResponseController.mode == "grading"' style='width: 400px'>

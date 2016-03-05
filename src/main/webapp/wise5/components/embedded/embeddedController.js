@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -47,6 +47,18 @@ var EmbeddedController = function () {
         // whether we have data to save
         this.isDirty = false;
 
+        // whether the student work has changed since last submit
+        this.isSubmitDirty = false;
+
+        // message to show next to save/submit buttons
+        this.saveMessage = {
+            text: '',
+            time: ''
+        };
+
+        // variable to store component states (from application)
+        this.componentState = null;
+
         this.messageEventListener = angular.bind(this, function (messageEvent) {
             // handle messages received from iframe
             var messageEventData = messageEvent.data;
@@ -64,7 +76,7 @@ var EmbeddedController = function () {
             } else if (messageEventData.messageType === "studentWork") {
                 // save student work to WISE
                 // create a new component state
-                this.componentState = this.NodeService.createNewComponentState();
+                this.componentState = this.NodeService.createNewComponentState(data);
 
                 // set the student data into the component state
                 this.componentState.studentData = messageEventData.studentData;
@@ -84,7 +96,23 @@ var EmbeddedController = function () {
                 // tell the parent node that this component wants to save
                 this.$scope.$emit('componentSaveTriggered', { nodeId: this.nodeId, componentId: this.componentId });
             } else if (messageEventData.messageType === "applicationInitialized") {
-                this.sendLatestWorkToEmbeddedApplication();
+                // application has finished loading, so send latest component state to application
+                this.sendLatestWorkToApplication();
+                this.processLatestSubmit();
+            } else if (messageEventData.messageType === "componentDirty") {
+                var _isDirty = messageEventData.isDirty;
+
+                // set component dirty to true/false and notify node
+                this.isDirty = _isDirty;
+                this.$scope.$emit('componentDirty', { componentId: this.componentId, isDirty: _isDirty });
+            } else if (messageEventData.messageType === "componentSubmitDirty") {
+                var isSubmitDirty = messageEventData.isDirty;
+
+                // set component submit dirty to true/false and notify node
+                this.isSubmitDirty = isSubmitDirty;
+                this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: isDirty });
+            } else if (messageEventData.messageType === "studentDataChanged") {
+                this.studentDataChanged(messageEventData.studentData);
             }
         });
 
@@ -113,7 +141,7 @@ var EmbeddedController = function () {
             this.componentId = this.componentContent.id;
 
             // id of the iframe that embeds the application
-            this.embeddedApplicationIFrameId = "component_" + this.componentId;
+            this.embeddedApplicationIFrameId = "componentApp_" + this.componentId;
 
             this.componentType = this.componentContent.type;
 
@@ -173,21 +201,97 @@ var EmbeddedController = function () {
         }
 
         /**
+         * The parent node submit button was clicked
+         */
+        this.$scope.$on('nodeSubmitClicked', function (event, args) {
+
+            // get the node id of the node
+            var nodeId = args.nodeId;
+
+            // make sure the node id matches our parent node
+            if (this.nodeId === nodeId) {
+                this.isSubmit = true;
+            }
+        }.bind(this));
+
+        /**
+         * Listen for saveComponentStateSuccess event from node controller, set dirty and save message accordingly
+         */
+        this.$scope.$on('saveComponentStateSuccess', angular.bind(this, function (event, args) {
+
+            // get the component states that were saved
+            var componentStates = args.componentStates;
+            for (var i = 0, l = componentStates.length; i < l; i++) {
+                var currentState = componentStates[i];
+                if (currentState.componentId === this.componentId) {
+                    // a component state for this component was saved
+
+                    // set isDirty to false because the component state was just saved and notify node
+                    this.isDirty = false;
+                    this.$scope.$emit('componentDirty', { componentId: this.componentId, isDirty: false });
+
+                    // clear out current componentState
+                    this.$scope.embeddedController.componentState = null;
+
+                    var isAutoSave = currentState.isAutoSave;
+                    var isSubmit = currentState.isSubmit;
+                    var serverSaveTime = componentState.serverSaveTime;
+
+                    // set save message
+                    if (isSubmit) {
+                        this.setSaveMessage('Submitted', serverSaveTime);
+
+                        this.submit();
+
+                        // set isSubmitDirty to false because the component state was just submitted and notify node
+                        this.isSubmitDirty = false;
+                        this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: false });
+                    } else if (isAutoSave) {
+                        this.setSaveMessage('Auto-saved', serverSaveTime);
+                    } else {
+                        this.setSaveMessage('Saved', serverSaveTime);
+                    }
+
+                    // Tell application that this componentState was successfully saved to server;
+                    // include saved state and updated save message
+                    var successMessage = {
+                        messageType: "componentStateSaved",
+                        componentState: currentState,
+                        saveMessage: this.saveMessage
+                    };
+                    this.sendMessageToApplication(successMessage);
+
+                    // clear out componentState
+                    this.componentState = {};
+                }
+            }
+        }));
+
+        /**
          * Get the component state from this component. The parent node will
          * call this function to obtain the component state when it needs to
          * save student data.
+         * @param isSubmit boolean whether the request is coming from a submit
+         * action (optional; default is false)
          * @return a component state containing the student data
          */
-        this.$scope.getComponentState = function () {
+        this.$scope.getComponentState = function (isSubmit) {
             var componentState = null;
+            var getState = false;
 
-            if (this.$scope.embeddedController.isDirty) {
+            if (isSubmit) {
+                if (this.$scope.embeddedController.isSubmitDirty) {
+                    getState = true;
+                }
+            } else {
+                if (this.$scope.embeddedController.isDirty) {
+                    getState = true;
+                }
+            }
+
+            if (getState) {
                 // create a component state populated with the student data
                 componentState = this.$scope.embeddedController.componentState;
-
-                // set isDirty to false since this student work is about to be saved
-                this.$scope.embeddedController.isDirty = false;
-                this.$scope.embeddedController.componentState = null;
             }
 
             return componentState;
@@ -205,12 +309,37 @@ var EmbeddedController = function () {
     }
 
     /**
-     * Set the url
-     * @param url the url
+     * Check if latest component state is a submission and if not, set isSubmitDirty to true
      */
 
     _createClass(EmbeddedController, [{
-        key: "setURL",
+        key: 'processLatestSubmit',
+        value: function processLatestSubmit() {
+            var latestState = this.$scope.componentState;
+
+            if (latestState) {
+                if (latestState.isSubmit) {
+                    // latest state is a submission, so set isSubmitDirty to false and notify node
+                    this.isSubmitDirty = false;
+                    this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: false });
+                    // set save message
+                    this.setSaveMessage('Last submitted', latestState.serverSaveTime);
+                } else {
+                    // latest state is not a submission, so set isSubmitDirty to true and notify node
+                    this.isSubmitDirty = true;
+                    this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: true });
+                    // set save message
+                    this.setSaveMessage('Last saved', latestState.serverSaveTime);
+                }
+            }
+        }
+    }, {
+        key: 'setURL',
+
+        /**
+         * Set the url
+         * @param url the url
+         */
         value: function setURL(url) {
             if (url != null) {
                 var trustedURL = this.$sce.trustAsResourceUrl(url);
@@ -218,10 +347,83 @@ var EmbeddedController = function () {
             }
         }
     }, {
-        key: "sendLatestWorkToEmbeddedApplication",
-        value: function sendLatestWorkToEmbeddedApplication() {
-            // get the latest component state
-            // get the component state from the scope
+        key: 'submit',
+        value: function submit() {
+            // check if we need to lock the component after the student submits
+            if (this.isLockAfterSubmit()) {
+                this.isDisabled = true;
+            }
+        }
+    }, {
+        key: 'studentDataChanged',
+
+        /**
+         * Called when the student changes their work
+         */
+        value: function studentDataChanged(data) {
+
+            /*
+             * set the dirty flags so we will know we need to save or submit the
+             * student work later
+             */
+            this.isDirty = true;
+            this.$scope.$emit('componentDirty', { componentId: this.componentId, isDirty: true });
+
+            this.isSubmitDirty = true;
+            this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: true });
+
+            // clear out the save message
+            this.setSaveMessage('', null);
+
+            // get this part id
+            var componentId = this.getComponentId();
+
+            // create a new component state
+            this.componentState = this.createComponentState();
+
+            // set the student data into the component state
+            this.componentState.studentData = data;
+
+            /*
+             * the student work in this component has changed so we will tell
+             * the parent node that the student data will need to be saved.
+             * this will also notify connected parts that this component's student
+             * data has changed.
+             */
+            this.$scope.$emit('componentStudentDataChanged', { componentId: componentId, componentState: this.componentState });
+        }
+    }, {
+        key: 'createComponentState',
+
+        /**
+         * Create a new component state populated with the student data
+         * @return the componentState after it has been populated
+         */
+        value: function createComponentState() {
+
+            // create a new component state
+            var componentState = this.NodeService.createNewComponentState();
+
+            if (this.isSubmit) {
+                // the student submitted this work
+                componentState.isSubmit = this.isSubmit;
+
+                /*
+                 * reset the isSubmit value so that the next component state
+                 * doesn't maintain the same value
+                 */
+                this.isSubmit = false;
+            }
+
+            // set the student data into the component state
+            componentState.studentData = this.studentData;
+
+            return componentState;
+        }
+    }, {
+        key: 'sendLatestWorkToApplication',
+        value: function sendLatestWorkToApplication() {
+            // get the latest component state from the scope
             var message = {
                 messageType: "componentState",
                 componentState: this.$scope.componentState
@@ -231,13 +433,35 @@ var EmbeddedController = function () {
             this.sendMessageToApplication(message);
         }
     }, {
-        key: "sendMessageToApplication",
+        key: 'sendMessageToApplication',
         value: function sendMessageToApplication(message) {
             // send the message to embedded application via postMessage
             window.document.getElementById(this.embeddedApplicationIFrameId).contentWindow.postMessage(message, "*");
         }
     }, {
-        key: "authoringViewComponentChanged",
+        key: 'setSaveMessage',
+
+        /**
+         * Set the message next to the save button
+         * @param message the message to display
+         * @param time the time to display
+         */
+        value: function setSaveMessage(message, time) {
+            this.saveMessage.text = message;
+            this.saveMessage.time = time;
+        }
+    }, {
+        key: 'getComponentId',
+
+        /**
+         * Get the component id
+         * @return the component id
+         */
+        value: function getComponentId() {
+            return this.componentContent.id;
+        }
+    }, {
+        key: 'authoringViewComponentChanged',
 
         /**
          * The component has changed in the regular authoring view so we will save the project
@@ -251,7 +475,7 @@ var EmbeddedController = function () {
             this.ProjectService.saveProject();
         }
     }, {
-        key: "advancedAuthoringViewComponentChanged",
+        key: 'advancedAuthoringViewComponentChanged',
 
         /**
          * The component has changed in the advanced authoring view so we will update
@@ -277,7 +501,7 @@ var EmbeddedController = function () {
             } catch (e) {}
         }
     }, {
-        key: "updateAdvancedAuthoringView",
+        key: 'updateAdvancedAuthoringView',
 
         /**
          * Update the component JSON string that will be displayed in the advanced authoring view textarea
@@ -286,7 +510,7 @@ var EmbeddedController = function () {
             this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
         }
     }, {
-        key: "registerExitListener",
+        key: 'registerExitListener',
 
         /**
          * Register the the listener that will listen for the exit event

@@ -71,16 +71,21 @@
                         toworkgroupid='{{workgroupId}}'
                         componentstateid='{{componentState.id}}'></annotation>
         </div>
-        <div class="component-content__actions" layout="row">
-            <md-button class="md-primary"
-                       ng-class="{'md-raised': !drawController.showSubmitButton()}"
-                       ng-click='drawController.saveButtonClicked()'
-                       ng-disabled='drawController.isDisabled'
-                       ng-show='drawController.showSaveButton()'>Save</md-button>
-            <button class="md-raised md-primary"
-                    ng-click='drawController.submitButtonClicked()'
-                    ng-disabled='drawController.isDisabled'
-                    ng-show='drawController.showSubmitButton()'>Submit</button>
+        <div class="component-content__actions" layout="row" layout-align="start center">
+          <md-button class="md-raised md-primary"
+                  ng-click='drawController.submitButtonClicked()'
+                  ng-disabled='drawController.isDisabled || !drawController.isSubmitDirty'
+                  ng-show='drawController.showSubmitButton()'>Submit</md-button>
+          <md-button class="md-primary"
+               ng-class="{'md-raised': !drawController.showSubmitButton()}"
+               ng-click='drawController.saveButtonClicked()'
+               ng-disabled='drawController.isDisabled || !drawController.isDirty'
+               ng-show='drawController.showSaveButton()'>Save</md-button>
+               <span ng-if="drawController.showSaveButton() || drawController.showSubmitButton()"
+                     ng-show="drawController.saveMessage.text"
+                     class="component-content__actions__info md-caption">
+                     {{drawController.saveMessage.text}} <span class="component-content__actions__more"><md-tooltip md-direction="top">{{ drawController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="drawController.saveMessage.time"></span></span>
+               </span>
         </div>
     </div>
     <div ng-if='drawController.mode == "grading"' style='width: 400px'>

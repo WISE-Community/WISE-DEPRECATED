@@ -99,15 +99,22 @@
                         toworkgroupid='{{workgroupId}}'
                         componentstateid='{{componentState.id}}'></annotation>
         </div>
-        <button class="md-primary"
-                ng-class="{'md-raised': !tableController.showSubmitButton()}"
-                ng-click='tableController.saveButtonClicked()'
-                ng-disabled='tableController.isDisabled'
-                ng-show='tableController.showSaveButton()'>Save</button>
-        <button class="md-primary md-raised"
-                ng-click='tableController.submitButtonClicked()'
-                ng-disabled='tableController.isDisabled'
-                ng-show='tableController.showSubmitButton()'>Submit</button>
+        <div class="component-content__actions" layout="row" layout-align="start center">
+            <md-button class="md-raised md-primary"
+                       ng-click='tableController.submitButtonClicked()'
+                       ng-disabled='tableController.isDisabled || !tableController.isSubmitDirty'
+                       ng-show='tableController.showSubmitButton()'>Submit</md-button>
+            <md-button class="md-primary"
+                       ng-class="{'md-raised': !tableController.showSubmitButton()}"
+                       ng-click='tableController.saveButtonClicked()'
+                       ng-disabled='tableController.isDisabled || !tableController.isDirty'
+                       ng-show='tableController.showSaveButton()'>Save</md-button>
+            <span ng-if="tableController.showSaveButton() || tableController.showSubmitButton()"
+                  ng-show="tableController.saveMessage.text"
+                  class="component-content__actions__info md-caption">
+                  {{tableController.saveMessage.text}} <span class="component-content__actions__more"><md-tooltip md-direction="top">{{ tableController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="tableController.saveMessage.time"></span></span>
+            </span>
+        </div>
     </div>
     <div ng-if='tableController.mode == "grading"' style='width: 400px'>
         <annotation type='score'

@@ -4,15 +4,19 @@
        <component ng-if='component.showPreviousWorkNodeId == null || component.showPreviousWorkComponentId == null' nodeid='{{nodeController.nodeId}}' componentid='{{component.id}}' componentstate='{{nodeController.getComponentStateByComponentId(component.id)}}' workgroupid='{{nodeController.workgroupId}}' teacherworkgroupid='{{nodeController.teacherWorkgroupId}}' mode='student'></component>
    </div>
    <div class="node-content__actions" layout="row" layout-align="start center">
-     <md-button class="md-raised md-primary"
+        <md-button class="md-raised md-primary"
              ng-click='nodeController.submitButtonClicked()'
-             ng-disabled='nodeController.isDisabled || (!nodeController.isSubmitDirty && !nodeController.isDirty)'
+             ng-disabled='nodeController.isDisabled || !nodeController.dirtySubmitComponentIds.length'
              ng-if='nodeController.showSubmitButton()'>Submit</md-button>
-     <md-button class="md-primary"
+        <md-button class="md-primary"
                ng-class="{'md-raised': !nodeController.showSubmitButton()}"
                ng-click='nodeController.saveButtonClicked()'
-               ng-disabled='nodeController.isDisabled || !nodeController.isDirty'
+               ng-disabled='nodeController.isDisabled || !nodeController.dirtyComponentIds.length'
                ng-if='nodeController.showSaveButton()'>Save</md-button>
-       <span ng-show="nodeController.saveMessage.text" class="node-content__actions__info md-body-1">{{nodeController.saveMessage.text}} <span am-time-ago="nodeController.saveMessage.time"></span></span>
+       <span ng-if="nodeController.showSaveButton() || nodeController.showSubmitButton()"
+             ng-show="nodeController.saveMessage.text"
+             class="node-content__actions__info md-caption">
+             {{nodeController.saveMessage.text}} <span class="node-content__actions__more"><md-tooltip md-direction="top">{{ nodeController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="nodeController.saveMessage.time"></span></span>
+       </span>
    </div>
 </md-content>

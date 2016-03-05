@@ -163,17 +163,21 @@
                         toworkgroupid='{{workgroupId}}'
                         componentstateid='{{componentState.id}}'></annotation>
         </div>
-        <div class="component-content__actions" layout="row">
+        <div class="component-content__actions" layout="row" layout-align="start center">
+            <md-button class="md-raised md-primary"
+                       ng-click='matchController.submitButtonClicked()'
+                       ng-if='matchController.showSubmitButton()'
+                       ng-disabled='matchController.isDisabled || !matchController.isSubmitDirty'>Submit</md-button>
             <md-button class="md-primary"
                        ng-class="{'md-raised': !matchController.showSubmitButton()}"
                        ng-click='matchController.saveButtonClicked()'
                        ng-if='matchController.showSaveButton()'
-                       ng-disabled='matchController.isDisabled || (!matchController.isDirty && matchController.isSubmitDirty)'>Save</md-button>
-            <md-button class="md-raised md-primary"
-                       ng-click='matchController.submitButtonClicked()'
-                       ng-if='matchController.showSubmitButton()'
-                       ng-disabled='matchController.isDisabled || !matchController.isDirty'>Submit</md-button>
-            <span ng-show="matchController.saveMessage.text" class="node-content__actions__info md-body-1">{{matchController.saveMessage.text}} <span am-time-ago="matchController.saveMessage.time"></span></span>
+                       ng-disabled='matchController.isDisabled || !matchController.isDirty'>Save</md-button>
+            <span ng-if="matchController.showSaveButton() || matchController.showSubmitButton()"
+                     ng-show="matchController.saveMessage.text"
+                     class="component-content__actions__info md-caption">
+                     {{matchController.saveMessage.text}} <span class="component-content__actions__more"><md-tooltip md-direction="top">{{ matchController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="matchController.saveMessage.time"></span></span>
+            </span>
         </div>
     </div>
     <div ng-if='matchController.mode == "grading"' style='width: 400px'>

@@ -37,6 +37,15 @@ var MultipleChoiceController = function () {
         // whether the student work is dirty and needs saving
         this.isDirty = false;
 
+        // whether the student work has changed since last submit
+        this.isSubmitDirty = false;
+
+        // message to show next to save/submit buttons
+        this.saveMessage = {
+            text: '',
+            time: ''
+        };
+
         // holds the ids of the choices the student has chosen
         this.studentChoices = [];
 
@@ -180,18 +189,27 @@ var MultipleChoiceController = function () {
          * Get the component state from this component. The parent node will
          * call this function to obtain the component state when it needs to
          * save student data.
+         * @param isSubmit boolean whether the request is coming from a submit
+         * action (optional; default is false)
          * @return a component state containing the student data
          */
-        this.$scope.getComponentState = function () {
-
+        this.$scope.getComponentState = function (isSubmit) {
             var componentState = null;
+            var getState = false;
 
-            if (this.$scope.multipleChoiceController.isDirty || this.$scope.multipleChoiceController.isSubmit) {
+            if (isSubmit) {
+                if (this.$scope.multipleChoiceController.isSubmitDirty) {
+                    getState = true;
+                }
+            } else {
+                if (this.$scope.multipleChoiceController.isDirty) {
+                    getState = true;
+                }
+            }
+
+            if (getState) {
                 // create a component state populated with the student data
                 componentState = this.$scope.multipleChoiceController.createComponentState();
-
-                // set isDirty to false since this student work is about to be saved
-                this.$scope.multipleChoiceController.isDirty = false;
             }
 
             return componentState;
@@ -207,10 +225,49 @@ var MultipleChoiceController = function () {
 
             // make sure the node id matches our parent node
             if (this.nodeId === nodeId) {
+                this.isSubmit = true;
+                this.incrementNumberOfAttempts();
 
-                if (this.isLockAfterSubmit()) {
-                    // disable the component if it was authored to lock after submit
-                    this.isDisabled = true;
+                // set saveFailed to true; will be set to false on save success response from server
+                this.saveFailed = true;
+            }
+        }));
+
+        /**
+         * Listen for the 'studentWorkSavedToServer' event which is fired when
+         * we receive the response from saving a component state to the server
+         */
+        this.$scope.$on('studentWorkSavedToServer', angular.bind(this, function (event, args) {
+
+            var componentState = args.studentWork;
+
+            // check that the component state is for this component
+            if (componentState && this.nodeId === componentState.nodeId && this.componentId === componentState.componentId) {
+
+                // set isDirty to false because the component state was just saved and notify node
+                this.isDirty = false;
+                this.$scope.$emit('componentDirty', { componentId: this.componentId, isDirty: false });
+
+                // set saveFailed to false because the save was successful
+                this.saveFailed = false;
+
+                var isAutoSave = componentState.isAutoSave;
+                var isSubmit = componentState.isSubmit;
+                var serverSaveTime = componentState.serverSaveTime;
+
+                // set save message
+                if (isSubmit) {
+                    this.setSaveMessage('Submitted', serverSaveTime);
+
+                    this.submit();
+
+                    // set isSubmitDirty to false because the component state was just submitted and notify node
+                    this.isSubmitDirty = false;
+                    this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: false });
+                } else if (isAutoSave) {
+                    this.setSaveMessage('Auto-saved', serverSaveTime);
+                } else {
+                    this.setSaveMessage('Saved', serverSaveTime);
                 }
             }
         }));
@@ -263,6 +320,33 @@ var MultipleChoiceController = function () {
                         // show the number of attempts
                         this.numberOfAttempts = numberOfAttempts;
                     }
+
+                    this.processLatestSubmit();
+                }
+            }
+        }
+    }, {
+        key: 'processLatestSubmit',
+
+        /**
+         * Check if latest component state is a submission and set isSubmitDirty accordingly
+         */
+        value: function processLatestSubmit() {
+            var latestState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
+
+            if (latestState) {
+                if (latestState.isSubmit) {
+                    // latest state is a submission, so set isSubmitDirty to false and notify node
+                    this.isSubmitDirty = false;
+                    this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: false });
+                    // set save message
+                    this.setSaveMessage('Last submitted', latestState.serverSaveTime);
+                } else {
+                    // latest state is not a submission, so set isSubmitDirty to true and notify node
+                    this.isSubmitDirty = true;
+                    this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: true });
+                    // set save message
+                    this.setSaveMessage('Last saved', latestState.serverSaveTime);
                 }
             }
         }
@@ -475,6 +559,7 @@ var MultipleChoiceController = function () {
          * Called when the student clicks the save button
          */
         value: function saveButtonClicked() {
+            this.isSubmit = false;
 
             // tell the parent node that this component wants to save
             this.$scope.$emit('componentSaveTriggered', { nodeId: this.nodeId, componentId: this.componentId });
@@ -486,14 +571,12 @@ var MultipleChoiceController = function () {
          * Called when the student clicks the submit button
          */
         value: function submitButtonClicked() {
+            // TODO: add confirmation dialog if lock after submit is enabled on this component
             this.isSubmit = true;
+            this.incrementNumberOfAttempts();
 
-            // check if we need to lock the component after the student submits
-            if (this.isLockAfterSubmit()) {
-                this.isDisabled = true;
-            }
-
-            this.checkAnswer();
+            // set saveFailed to true; will be set to false on save success response from server
+            this.saveFailed = true;
 
             // tell the parent node that this component wants to submit
             this.$scope.$emit('componentSubmitTriggered', { nodeId: this.nodeId, componentId: this.componentId });
@@ -526,12 +609,13 @@ var MultipleChoiceController = function () {
          * Increment the number of attempts the student has made
          */
         value: function incrementNumberOfAttempts() {
+            if (!this.saveFailed) {
+                if (this.numberOfAttempts == null) {
+                    this.numberOfAttempts = 0;
+                }
 
-            if (this.numberOfAttempts == null) {
-                this.numberOfAttempts = 0;
+                this.numberOfAttempts++;
             }
-
-            this.numberOfAttempts++;
         }
     }, {
         key: 'checkAnswer',
@@ -543,7 +627,6 @@ var MultipleChoiceController = function () {
         value: function checkAnswer() {
             var isCorrect = false;
 
-            this.incrementNumberOfAttempts();
             this.hideAllFeedback();
 
             // check if any correct choices have been authored
@@ -619,6 +702,16 @@ var MultipleChoiceController = function () {
             return correctChoices;
         }
     }, {
+        key: 'submit',
+        value: function submit() {
+            // check if we need to lock the component after the student submits
+            if (this.isLockAfterSubmit()) {
+                this.isDisabled = true;
+            }
+
+            this.checkAnswer();
+        }
+    }, {
         key: 'studentDataChanged',
 
         /**
@@ -630,13 +723,13 @@ var MultipleChoiceController = function () {
              * student work later
              */
             this.isDirty = true;
+            this.$scope.$emit('componentDirty', { componentId: this.componentId, isDirty: true });
 
-            /*
-             * reset these values so that they don't accidentally persist
-             * between component states
-             */
-            this.isSubmit = null;
-            this.isCorrect = null;
+            this.isSubmitDirty = true;
+            this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: true });
+
+            // clear out the save message
+            this.setSaveMessage('', null);
 
             // get this component id
             var componentId = this.getComponentId();
@@ -1227,12 +1320,24 @@ var MultipleChoiceController = function () {
         }
 
         /**
-         * Register the the listener that will listen for the exit event
-         * so that we can perform saving before exiting.
+         * Set the message next to the save button
+         * @param message the message to display
+         * @param time the time to display
          */
 
     }, {
+        key: 'setSaveMessage',
+        value: function setSaveMessage(message, time) {
+            this.saveMessage.text = message;
+            this.saveMessage.time = time;
+        }
+    }, {
         key: 'registerExitListener',
+
+        /**
+         * Register the the listener that will listen for the exit event
+         * so that we can perform saving before exiting.
+         */
         value: function registerExitListener() {
 
             /*
