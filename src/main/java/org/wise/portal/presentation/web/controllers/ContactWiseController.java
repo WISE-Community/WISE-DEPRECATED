@@ -23,6 +23,9 @@
  */
 package org.wise.portal.presentation.web.controllers;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -31,6 +34,15 @@ import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -93,6 +105,9 @@ public class ContactWiseController {
 
 	//set this to your email
 	private static final String DEBUG_EMAIL = "youremail@gmail.com";
+	
+	// the url to the user agent parse site
+	private static final String userAgentParseURL = "http://api.whatismybrowser.com/api/v1/user_agent_parse";
 
 	@RequestMapping(method=RequestMethod.POST)
 	public String onSubmit(
@@ -106,6 +121,73 @@ public class ContactWiseController {
 
 		if (result.hasErrors()) {
 			return "contact/contactwise";
+		}
+		
+		// get our user key for the user agent parse site
+		String userKey = wiseProperties.getProperty("userAgentParseKey");
+		
+		if (userKey != null && !userKey.equals("")) {
+
+		    // get the user agent from the request
+		    String userAgent = request.getParameter("usersystem");
+
+	        HttpClient client = new DefaultHttpClient();
+	        HttpPost post = new HttpPost(userAgentParseURL);
+	        
+	        // add the user_key and user_agent parameters to the POST request
+	        List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+	        urlParameters.add(new BasicNameValuePair("user_key", userKey));
+	        urlParameters.add(new BasicNameValuePair("user_agent", userAgent));
+	        
+	        post.setEntity(new UrlEncodedFormEntity(urlParameters));
+	        
+	        try {
+	            
+	            // execute the POST
+	            HttpResponse response = client.execute(post);
+
+	            // read the response
+	            BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+	            StringBuffer userAgentParseResult = new StringBuffer();
+	            String line = "";
+	            while ((line = rd.readLine()) != null) {
+	                userAgentParseResult.append(line);
+	            }
+
+	            String parseResultString = userAgentParseResult.toString();
+	            
+	            try {
+	                
+	                // get the response as a JSON object
+	                JSONObject parseResultJSONObject = new JSONObject(parseResultString);
+	                
+	                // get whether the request succeeded
+	                String parseResult = parseResultJSONObject.getString("result");
+	                
+	                if (parseResult != null && parseResult.equals("success")) {
+	                    // the request succeeded so we will get the data
+	                    JSONObject parse = parseResultJSONObject.getJSONObject("parse");
+	                    
+	                    // get the operating system and browser values
+	                    String operatingSystemName = parse.getString("operating_system_name");
+	                    String operatingSystemVersion = parse.getString("operating_system_version_full");
+	                    String browserName = parse.getString("browser_name");
+	                    String browserVersion = parse.getString("browser_version_full");
+	                    
+	                    // set the values into the form so that we can use them later when creating the email message
+	                    contactWISEForm.setOperatingSystemName(operatingSystemName);
+	                    contactWISEForm.setOperatingSystemVersion(operatingSystemVersion);
+	                    contactWISEForm.setBrowserName(browserName);
+	                    contactWISEForm.setBrowserVersion(browserVersion);
+	                }
+	            } catch(JSONException e) {
+	                e.printStackTrace();
+	            }
+	        } catch(IOException e) {
+	            e.printStackTrace();
+	        } catch(Exception e) {
+	            e.printStackTrace();
+	        }
 		}
 
 		//retrieves the contents of the email to be sent

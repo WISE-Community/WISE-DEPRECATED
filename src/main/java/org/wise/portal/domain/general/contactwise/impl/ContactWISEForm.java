@@ -68,7 +68,15 @@ public class ContactWISEForm implements Serializable {
 	
 	private Long runId;
 	
-	/**
+	private String operatingSystemName;
+	
+	private String operatingSystemVersion;
+	
+	private String browserName;
+	
+	private String browserVersion;
+	
+    /**
 	 * @see org.wise.portal.domain.general.contactwise.ContactWISE#getDescription()
 	 */
 	public String getDescription() {
@@ -205,6 +213,39 @@ public class ContactWISEForm implements Serializable {
 		message.append("Issue Type: " + issuetype + "\n");
 		message.append("Summary: " + summary + "\n");
 		message.append("Description: " + description + "\n");
+		
+		// get the operating system name and version
+		
+		String operatingSystem = "";
+		
+		if (this.operatingSystemName != null) {
+		    operatingSystem = this.operatingSystemName;
+		}
+		
+		if (this.operatingSystemVersion != null) {
+		    operatingSystem += " " + this.operatingSystemVersion;
+		}
+		
+		if (operatingSystem != null && !operatingSystem.equals("")) {
+		    message.append("Operating System: " + operatingSystem + "\n");
+		}
+		
+		// get the browser name and version
+		
+		String browser = "";
+		
+		if (this.browserName != null) {
+		    browser = this.browserName;
+		}
+		
+		if (this.browserVersion != null) {
+		    browser += " " + this.browserVersion;
+		}
+
+		if (browser != null && !browser.equals("")) {
+		    message.append("Browser: " + browser + "\n");
+		}
+		
 		message.append("User System: " + usersystem + "\n");
 		
 		if(getIsStudent()) {
@@ -284,5 +325,37 @@ public class ContactWISEForm implements Serializable {
 	 */
 	public void setRunId(Long runId) {
 		this.runId = runId;
+	}
+
+	public String getOperatingSystemName() {
+	    return operatingSystemName;
+	}
+
+	public void setOperatingSystemName(String operatingSystemName) {
+	    this.operatingSystemName = operatingSystemName;
+	}
+
+	public String getOperatingSystemVersion() {
+	    return operatingSystemVersion;
+	}
+
+	public void setOperatingSystemVersion(String operatingSystemVersion) {
+	    this.operatingSystemVersion = operatingSystemVersion;
+	}
+
+	public String getBrowserName() {
+	    return browserName;
+	}
+
+	public void setBrowserName(String browserName) {
+	    this.browserName = browserName;
+	}
+
+	public String getBrowserVersion() {
+	    return browserVersion;
+	}
+
+	public void setBrowserVersion(String browserVersion) {
+	    this.browserVersion = browserVersion;
 	}
 }
