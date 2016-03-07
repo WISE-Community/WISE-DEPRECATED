@@ -238,6 +238,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 //import AudioRecorderService from '../components/audioRecorder/audioRecorderService';
 
+
 var mainModule = _angular2.default.module('vle', ['angularMoment', 'angular-toArrayFilter', 'directives', 'filters', 'highcharts-ng',
 //'ngAudio',
 'ngAria', 'ngFileUpload', 'ngMaterial', 'ngSanitize', 'ngWebSocket', 'notebook', 'oc.lazyLoad', 'studentAsset', 'ui.router',
@@ -408,6 +409,7 @@ var mainModule = _angular2.default.module('vle', ['angularMoment', 'angular-toAr
     });
 }]);
 //import CRaterService from '../components/cRater/cRaterService';
+
 
 exports.default = mainModule;
 //# sourceMappingURL=main.js.map

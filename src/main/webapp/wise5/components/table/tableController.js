@@ -1,10 +1,10 @@
 'use strict';
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -313,6 +313,7 @@ var TableController = function () {
      * @return a copy of the table data
      */
 
+
     _createClass(TableController, [{
         key: 'getCopyOfTableData',
         value: function getCopyOfTableData(tableData) {
@@ -333,6 +334,7 @@ var TableController = function () {
     }, {
         key: 'setupTable',
 
+
         /**
          * Setup the table
          */
@@ -349,6 +351,7 @@ var TableController = function () {
     }, {
         key: 'resetTable',
 
+
         /**
          * Reset the table data to its initial state from the component content
          */
@@ -362,6 +365,7 @@ var TableController = function () {
     }, {
         key: 'getTableDataRows',
 
+
         /**
          * Get the rows of the table data
          */
@@ -370,6 +374,7 @@ var TableController = function () {
         }
     }, {
         key: 'setStudentWork',
+
 
         /**
          * Populate the student work into the component
@@ -392,6 +397,7 @@ var TableController = function () {
         }
     }, {
         key: 'processLatestSubmit',
+
 
         /**
          * Check if latest component state is a submission and set isSubmitDirty accordingly
@@ -418,6 +424,7 @@ var TableController = function () {
     }, {
         key: 'saveButtonClicked',
 
+
         /**
          * Called when the student clicks the save button
          */
@@ -429,6 +436,7 @@ var TableController = function () {
         }
     }, {
         key: 'submitButtonClicked',
+
 
         /**
          * Called when the student clicks the submit button
@@ -449,6 +457,7 @@ var TableController = function () {
         }
     }, {
         key: 'studentDataChanged',
+
 
         /**
          * Called when the student changes their work
@@ -483,6 +492,7 @@ var TableController = function () {
         }
     }, {
         key: 'createComponentState',
+
 
         /**
          * Create a new component state populated with the student data
@@ -519,6 +529,7 @@ var TableController = function () {
     }, {
         key: 'calculateDisabled',
 
+
         /**
          * Check if we need to lock the component
          */
@@ -553,6 +564,7 @@ var TableController = function () {
     }, {
         key: 'showPrompt',
 
+
         /**
          * Check whether we need to show the prompt
          * @return whether to show the prompt
@@ -562,6 +574,7 @@ var TableController = function () {
         }
     }, {
         key: 'showSaveButton',
+
 
         /**
          * Check whether we need to show the save button
@@ -573,6 +586,7 @@ var TableController = function () {
     }, {
         key: 'showSubmitButton',
 
+
         /**
          * Check whether we need to show the submit button
          * @return whether to show the submit button
@@ -583,6 +597,7 @@ var TableController = function () {
     }, {
         key: 'showResetTableButton',
 
+
         /**
          * Check whether we need to show the reset table button
          * @return whether to show the reset table button
@@ -592,6 +607,7 @@ var TableController = function () {
         }
     }, {
         key: 'isLockAfterSubmit',
+
 
         /**
          * Check whether we need to lock the component after the student
@@ -613,6 +629,7 @@ var TableController = function () {
     }, {
         key: 'getPrompt',
 
+
         /**
          * Get the prompt to show to the student
          */
@@ -627,6 +644,7 @@ var TableController = function () {
         }
     }, {
         key: 'importWork',
+
 
         /**
          * Import work from another component
@@ -673,6 +691,7 @@ var TableController = function () {
     }, {
         key: 'attachStudentAsset',
 
+
         /**
          * handle importing notebook item data (we only support csv for now)
          */
@@ -681,6 +700,7 @@ var TableController = function () {
         }
     }, {
         key: 'setGraphDataIntoTableData',
+
 
         /**
          * Set the graph data into the table data
@@ -788,6 +808,7 @@ var TableController = function () {
     }, {
         key: 'setTableDataCellValue',
 
+
         /**
          * Set the table data cell value
          * @param x the x index (0 indexed)
@@ -820,6 +841,7 @@ var TableController = function () {
     }, {
         key: 'getComponentId',
 
+
         /**
          * Get the component id
          * @return the component id
@@ -829,6 +851,7 @@ var TableController = function () {
         }
     }, {
         key: 'authoringViewComponentChanged',
+
 
         /**
          * The component has changed in the regular authoring view so we will save the project
@@ -842,6 +865,7 @@ var TableController = function () {
         }
     }, {
         key: 'advancedAuthoringViewComponentChanged',
+
 
         /**
          * The component has changed in the advanced authoring view so we will update
@@ -871,6 +895,7 @@ var TableController = function () {
     }, {
         key: 'updateAdvancedAuthoringView',
 
+
         /**
          * Update the component JSON string that will be displayed in the advanced authoring view textarea
          */
@@ -879,6 +904,7 @@ var TableController = function () {
         }
     }, {
         key: 'authoringViewTableSizeChanged',
+
 
         /**
          * The table size has changed in the authoring view so we will update it
@@ -1145,6 +1171,7 @@ var TableController = function () {
         }
     }, {
         key: 'registerExitListener',
+
 
         /**
          * Register the the listener that will listen for the exit event

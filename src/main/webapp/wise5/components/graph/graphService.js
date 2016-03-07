@@ -1,10 +1,10 @@
 'use strict';
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _nodeService = require('../../services/nodeService');
 
@@ -35,6 +35,7 @@ var GraphService = function (_NodeService) {
      * Create a Graph component object
      * @returns a new Graph component object
      */
+
 
     _createClass(GraphService, [{
         key: 'createComponent',
@@ -111,6 +112,7 @@ var GraphService = function (_NodeService) {
     }, {
         key: 'generateRegressionSeries',
 
+
         /**
          * Code extracted from https://github.com/streamlinesocial/highcharts-regression
          * Loop through all the series that are passed in and find the ones that we
@@ -181,6 +183,7 @@ var GraphService = function (_NodeService) {
         }
     }, {
         key: '_exponential',
+
 
         /**
          * Code extracted from https://github.com/Tom-Alexander/regression-js/
@@ -784,8 +787,8 @@ var GraphService = function (_NodeService) {
                     }
                 } else {
                     // get the last component state
-                    var l = componentStates.length - 1;
-                    var componentState = componentStates[l];
+                    var _l = componentStates.length - 1;
+                    var componentState = componentStates[_l];
 
                     var _studentData = componentState.studentData;
 
@@ -802,6 +805,7 @@ var GraphService = function (_NodeService) {
         }
     }, {
         key: 'hasSeriesData',
+
 
         /**
          * Check if student data contains any graph series with dataType

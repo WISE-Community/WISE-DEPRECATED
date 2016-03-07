@@ -1,3 +1,5 @@
+'use strict';
+
 class StudentAssetService {
     constructor($http, $q, Upload, $rootScope, ConfigService) {
         this.$http = $http;
@@ -25,7 +27,7 @@ class StudentAssetService {
         config.url = this.ConfigService.getStudentAssetsURL();
         config.params = {};
         config.params.workgroupId = this.ConfigService.getWorkgroupId();
-        return this.$http(config).then(angular.bind(this, function(response) {
+        return this.$http(config).then((response) => {
             // loop through the assets and make them into JSON object with more details
             var result = [];
             var assets = response.data;
@@ -49,7 +51,7 @@ class StudentAssetService {
             }
             this.allAssets = result;
             return result;
-        }));
+        });
     };
 
     getAssetContent(asset) {
@@ -59,9 +61,9 @@ class StudentAssetService {
         var config = {};
         config.method = 'GET';
         config.url = assetContentURL;
-        return this.$http(config).then(angular.bind(this, function(response) {
+        return this.$http(config).then((response) => {
             return response.data;
-        }));
+        });
     };
 
     isImage(asset) {
@@ -107,7 +109,7 @@ class StudentAssetService {
                 'clientSaveTime': Date.parse(new Date())
             },
             file: file
-        }).success(angular.bind(this, function (asset, status, headers, config) {
+        }).success((asset, status, headers, config) => {
             if (asset === "error") {
                 alert("There was an error uploading.");
             } else {
@@ -127,16 +129,16 @@ class StudentAssetService {
                 this.$rootScope.$broadcast('studentAssetsUpdated');
                 deferred.resolve(asset);
             }
-        })).error(angular.bind(this, function(asset, status, headers, config) {
+        }).error((asset, status, headers, config) => {
             alert("There was an error uploading. You might have reached your file upload limit or the file you tried to upload was too large. Please ask your teacher for help.");
-        }));
+        });
 
         return deferred.promise;
     };
 
     uploadAssets(files) {
         var studentAssetsURL = this.ConfigService.getStudentAssetsURL();
-        var promises = files.map(function(file) {
+        var promises = files.map((file) => {
             return this.Upload.upload({
                 url: studentAssetsURL,
                 fields: {
@@ -146,10 +148,10 @@ class StudentAssetService {
                     'clientSaveTime': Date.parse(new Date())
                 },
                 file: file
-            }).progress(function (evt) {
+            }).progress((evt) => {
                 var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
                 //console.log('progress: ' + progressPercentage + '% ' + evt.config.file.name);
-            }).success(function (data, status, headers, config) {
+            }).success((data, status, headers, config) => {
                 //console.log('file ' + config.file.name + 'uploaded. Response: ' + JSON.stringify(data));
             });
         });
@@ -170,7 +172,7 @@ class StudentAssetService {
 
         config.data = $.param(params);
 
-        return this.$http(config).then(angular.bind(this, function(result) {
+        return this.$http(config).then((result) => {
             var copiedAsset = result.data;
             if (copiedAsset != null) {
                 var studentUploadsBaseURL = this.ConfigService.getStudentUploadsBaseURL();
@@ -191,7 +193,7 @@ class StudentAssetService {
                 }
             }
             return null;
-        }));
+        });
     };
 
     deleteAsset(studentAsset) {
@@ -206,13 +208,13 @@ class StudentAssetService {
         params.clientDeleteTime = Date.parse(new Date());
         config.data = $.param(params);
 
-        return this.$http(config).then(angular.bind(this, function(result) {
+        return this.$http(config).then((result) => {
             //var deletedAsset = result.data;
             // also remove from local copy of all assets
             this.allAssets = this.allAssets.splice(this.allAssets.indexOf(studentAsset), 1);
             this.$rootScope.$broadcast('studentAssetsUpdated');
             return studentAsset;
-        }));
+        });
     };
 }
 

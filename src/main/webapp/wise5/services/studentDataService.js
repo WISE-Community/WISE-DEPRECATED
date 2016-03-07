@@ -1,10 +1,10 @@
 'use strict';
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -327,6 +327,7 @@ var StudentDataService = function () {
     }, {
         key: 'evaluateConstraint',
 
+
         /**
          * Evaluate the constraint
          * @param node the node
@@ -349,6 +350,7 @@ var StudentDataService = function () {
         }
     }, {
         key: 'evaluateGuidedNavigationConstraint',
+
 
         /**
          * Evaluate the guided navigation constraint
@@ -417,6 +419,7 @@ var StudentDataService = function () {
     }, {
         key: 'evaluateNodeConstraint',
 
+
         /**
          * Evaluate the node constraint
          * @param node the node
@@ -462,6 +465,7 @@ var StudentDataService = function () {
         }
     }, {
         key: 'evaluateCriteria',
+
 
         /**
          * Evaluate the criteria
@@ -558,6 +562,7 @@ var StudentDataService = function () {
     }, {
         key: 'evaluateChoiceChosenCriteria',
 
+
         /**
          * Evaluate the choice chosen criteria
          * @param criteria the criteria to evaluate
@@ -582,6 +587,7 @@ var StudentDataService = function () {
         }
     }, {
         key: 'populateHistories',
+
 
         /**
          * Populate the stack history and visited nodes history
@@ -792,6 +798,7 @@ var StudentDataService = function () {
         }
     }, {
         key: 'createNewEvent',
+
 
         /**
          * Create a new empty event
@@ -1038,6 +1045,7 @@ var StudentDataService = function () {
     }, {
         key: 'isComponentSubmitDirty',
 
+
         /**
          * Check whether the component has unsubmitted work
          * @return boolean whether or not there is unsubmitted work
@@ -1054,6 +1062,7 @@ var StudentDataService = function () {
         }
     }, {
         key: 'getLatestComponentStateByNodeIdAndComponentId',
+
 
         /**
          * Get the latest component state for the given node id and component
@@ -1105,6 +1114,7 @@ var StudentDataService = function () {
     }, {
         key: 'getStudentWorkByStudentWorkId',
 
+
         /**
          * Get the student work by specified student work id, which can be a ComponentState or NodeState
          * @param studentWorkId the student work id
@@ -1146,6 +1156,7 @@ var StudentDataService = function () {
     }, {
         key: 'getComponentStatesByNodeId',
 
+
         /**
          * Get the component states for the given node id
          * @param nodeId the node id
@@ -1186,6 +1197,7 @@ var StudentDataService = function () {
         }
     }, {
         key: 'getComponentStatesByNodeIdAndComponentId',
+
 
         /**
          * Get the component states for the given node id and component id
@@ -1231,6 +1243,7 @@ var StudentDataService = function () {
     }, {
         key: 'getEventsByNodeId',
 
+
         /**
          * Get the events for a node id
          * @param nodeId the node id
@@ -1266,6 +1279,7 @@ var StudentDataService = function () {
         }
     }, {
         key: 'getEventsByNodeIdAndComponentId',
+
 
         /**
          * Get the events for a component id
@@ -1305,6 +1319,7 @@ var StudentDataService = function () {
     }, {
         key: 'makeCopyOfJSONObject',
 
+
         /**
          * Create a copy of a JSON object
          * @param jsonObject the JSON object to get a copy of
@@ -1325,6 +1340,7 @@ var StudentDataService = function () {
         }
     }, {
         key: 'canVisitNode',
+
 
         /**
          * Check if the student can visit the node
@@ -1352,6 +1368,7 @@ var StudentDataService = function () {
     }, {
         key: 'getNodeStatusByNodeId',
 
+
         /**
          * Get the node status by node id
          * @param nodeId the node id
@@ -1369,6 +1386,7 @@ var StudentDataService = function () {
         }
     }, {
         key: 'getNodeProgressById',
+
 
         /**
          * Get completed items, total number of visible items, completion % for a node
@@ -1412,6 +1430,7 @@ var StudentDataService = function () {
         }
     }, {
         key: 'isCompleted',
+
 
         /**
          * Check if the given node or component is completed
@@ -1562,6 +1581,7 @@ var StudentDataService = function () {
     }, {
         key: 'getCurrentNode',
 
+
         /**
          * Get the current node
          * @returns the current node object
@@ -1571,6 +1591,7 @@ var StudentDataService = function () {
         }
     }, {
         key: 'getCurrentNodeId',
+
 
         /**
          * Get the current node id
@@ -1588,6 +1609,7 @@ var StudentDataService = function () {
     }, {
         key: 'setCurrentNodeByNodeId',
 
+
         /**
          * Set the current node
          * @param nodeId the node id
@@ -1601,6 +1623,7 @@ var StudentDataService = function () {
         }
     }, {
         key: 'setCurrentNode',
+
 
         /**
          * Set the current node
@@ -1627,6 +1650,7 @@ var StudentDataService = function () {
     }, {
         key: 'endCurrentNode',
 
+
         /**
          * End the current node
          */
@@ -1643,6 +1667,7 @@ var StudentDataService = function () {
         }
     }, {
         key: 'endCurrentNodeAndSetCurrentNodeByNodeId',
+
 
         /**
          * End the current node and set the current node
@@ -1666,6 +1691,7 @@ var StudentDataService = function () {
     }, {
         key: 'nodeClickLocked',
 
+
         /**
          * Broadcast a listenable event that a locked node has been clicked (attempted to be opened)
          * @param nodeId
@@ -1675,6 +1701,7 @@ var StudentDataService = function () {
         }
     }, {
         key: 'CSVToArray',
+
 
         /**
          * This will parse a delimited string into an array of
@@ -1753,6 +1780,7 @@ var StudentDataService = function () {
         }
     }, {
         key: 'getTotalScore',
+
 
         /**
          * Get the total score for the workgroup

@@ -1,10 +1,10 @@
 'use strict';
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -312,6 +312,7 @@ var EmbeddedController = function () {
      * Check if latest component state is a submission and if not, set isSubmitDirty to true
      */
 
+
     _createClass(EmbeddedController, [{
         key: 'processLatestSubmit',
         value: function processLatestSubmit() {
@@ -336,6 +337,7 @@ var EmbeddedController = function () {
     }, {
         key: 'setURL',
 
+
         /**
          * Set the url
          * @param url the url
@@ -356,6 +358,7 @@ var EmbeddedController = function () {
         }
     }, {
         key: 'studentDataChanged',
+
 
         /**
          * Called when the student changes their work
@@ -394,6 +397,7 @@ var EmbeddedController = function () {
         }
     }, {
         key: 'createComponentState',
+
 
         /**
          * Create a new component state populated with the student data
@@ -441,6 +445,7 @@ var EmbeddedController = function () {
     }, {
         key: 'setSaveMessage',
 
+
         /**
          * Set the message next to the save button
          * @param message the message to display
@@ -453,6 +458,7 @@ var EmbeddedController = function () {
     }, {
         key: 'getComponentId',
 
+
         /**
          * Get the component id
          * @return the component id
@@ -462,6 +468,7 @@ var EmbeddedController = function () {
         }
     }, {
         key: 'authoringViewComponentChanged',
+
 
         /**
          * The component has changed in the regular authoring view so we will save the project
@@ -476,6 +483,7 @@ var EmbeddedController = function () {
         }
     }, {
         key: 'advancedAuthoringViewComponentChanged',
+
 
         /**
          * The component has changed in the advanced authoring view so we will update
@@ -503,6 +511,7 @@ var EmbeddedController = function () {
     }, {
         key: 'updateAdvancedAuthoringView',
 
+
         /**
          * Update the component JSON string that will be displayed in the advanced authoring view textarea
          */
@@ -511,6 +520,7 @@ var EmbeddedController = function () {
         }
     }, {
         key: 'registerExitListener',
+
 
         /**
          * Register the the listener that will listen for the exit event

@@ -1,10 +1,10 @@
 'use strict';
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -417,6 +417,7 @@ var LabelController = function () {
     }, {
         key: 'processLatestSubmit',
 
+
         /**
          * Check if latest component state is a submission and set isSubmitDirty accordingly
          */
@@ -441,6 +442,7 @@ var LabelController = function () {
         }
     }, {
         key: 'addLabelsToCanvas',
+
 
         /**
          * Add labels ot the canvas
@@ -477,6 +479,7 @@ var LabelController = function () {
     }, {
         key: 'saveButtonClicked',
 
+
         /**
          * Called when the student clicks the save button
          */
@@ -488,6 +491,7 @@ var LabelController = function () {
         }
     }, {
         key: 'submitButtonClicked',
+
 
         /**
          * Called when the student clicks the submit button
@@ -501,6 +505,7 @@ var LabelController = function () {
     }, {
         key: 'newLabelButtonClicked',
 
+
         /**
          * Called when the student clicks on the new label button to enter
          * create label mode
@@ -511,6 +516,7 @@ var LabelController = function () {
         }
     }, {
         key: 'cancelButtonClicked',
+
 
         /**
          * Called when the student clicks on the cancel button to exit
@@ -530,6 +536,7 @@ var LabelController = function () {
         }
     }, {
         key: 'studentDataChanged',
+
 
         /**
          * Called when the student changes their work
@@ -564,6 +571,7 @@ var LabelController = function () {
         }
     }, {
         key: 'getLabels',
+
 
         /**
          * Get the label objects from the canvas
@@ -608,6 +616,7 @@ var LabelController = function () {
         }
     }, {
         key: 'getLabelJSONObjectFromCircle',
+
 
         /**
          * Get the simple JSON object that represents the label
@@ -661,6 +670,7 @@ var LabelController = function () {
     }, {
         key: 'createComponentState',
 
+
         /**
          * Create a new component state populated with the student data
          * @return the componentState after it has been populated
@@ -701,6 +711,7 @@ var LabelController = function () {
     }, {
         key: 'calculateDisabled',
 
+
         /**
          * Check if we need to lock the component
          */
@@ -733,6 +744,7 @@ var LabelController = function () {
     }, {
         key: 'showPrompt',
 
+
         /**
          * Check whether we need to show the prompt
          * @return whether to show the prompt
@@ -742,6 +754,7 @@ var LabelController = function () {
         }
     }, {
         key: 'showSaveButton',
+
 
         /**
          * Check whether we need to show the save button
@@ -753,6 +766,7 @@ var LabelController = function () {
     }, {
         key: 'showSubmitButton',
 
+
         /**
          * Check whether we need to show the submit button
          * @return whether to show the submit button
@@ -762,6 +776,7 @@ var LabelController = function () {
         }
     }, {
         key: 'showNewLabelButton',
+
 
         /**
          * Check whether we need to show the new label button
@@ -773,6 +788,7 @@ var LabelController = function () {
     }, {
         key: 'showCancelButton',
 
+
         /**
          * Check whether we need to show the cancel button
          * @returns whether to show the cancel button
@@ -782,6 +798,7 @@ var LabelController = function () {
         }
     }, {
         key: 'isLockAfterSubmit',
+
 
         /**
          * Check whether we need to lock the component after the student
@@ -830,6 +847,7 @@ var LabelController = function () {
     }, {
         key: 'getPrompt',
 
+
         /**
          * Get the prompt to show to the student
          */
@@ -844,6 +862,7 @@ var LabelController = function () {
         }
     }, {
         key: 'importWork',
+
 
         /**
          * Import work from another component
@@ -890,6 +909,7 @@ var LabelController = function () {
     }, {
         key: 'getComponentId',
 
+
         /**
          * Get the component id
          * @return the component id
@@ -899,6 +919,7 @@ var LabelController = function () {
         }
     }, {
         key: 'initializeCanvas',
+
 
         /**
          * Initialize the canvas
@@ -1095,6 +1116,7 @@ var LabelController = function () {
     }, {
         key: 'setBackgroundImage',
 
+
         /**
          * Set the background image
          * @param backgroundImagePath the url path to an image
@@ -1109,6 +1131,7 @@ var LabelController = function () {
     }, {
         key: 'getBackgroundImage',
 
+
         /**
          * Get the background image
          * @returns the background image path
@@ -1119,6 +1142,7 @@ var LabelController = function () {
     }, {
         key: 'createKeydownListener',
 
+
         /**
          * Create the keydown listener that we will use for deleting labels
          */
@@ -1127,6 +1151,7 @@ var LabelController = function () {
         }
     }, {
         key: 'keyPressed',
+
 
         /**
          * The callback handler for the keydown event
@@ -1159,6 +1184,7 @@ var LabelController = function () {
         }
     }, {
         key: 'createLabel',
+
 
         /**
          * Create a label object. The label object is represented by a circle
@@ -1241,6 +1267,7 @@ var LabelController = function () {
     }, {
         key: 'addLabelToCanvas',
 
+
         /**
          * Add a label to canvas
          * @param canvas the canvas
@@ -1274,6 +1301,7 @@ var LabelController = function () {
     }, {
         key: 'removeLabelFromCanvas',
 
+
         /**
          * Remove a label from the canvas
          * @param canvas the canvas
@@ -1303,6 +1331,7 @@ var LabelController = function () {
     }, {
         key: 'authoringViewComponentChanged',
 
+
         /**
          * The component has changed in the regular authoring view so we will save the project
          */
@@ -1316,6 +1345,7 @@ var LabelController = function () {
         }
     }, {
         key: 'advancedAuthoringViewComponentChanged',
+
 
         /**
          * The component has changed in the advanced authoring view so we will update
@@ -1346,6 +1376,7 @@ var LabelController = function () {
     }, {
         key: 'updateAdvancedAuthoringView',
 
+
         /**
          * Update the component JSON string that will be displayed in the advanced authoring view textarea
          */
@@ -1354,6 +1385,7 @@ var LabelController = function () {
         }
     }, {
         key: 'authoringAddLabelClicked',
+
 
         /**
          * Add a label in the authoring view
@@ -1406,6 +1438,7 @@ var LabelController = function () {
         }
     }, {
         key: 'registerExitListener',
+
 
         /**
          * Register the the listener that will listen for the exit event

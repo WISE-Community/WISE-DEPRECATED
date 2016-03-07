@@ -1,10 +1,10 @@
 'use strict';
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -35,24 +35,26 @@ var StudentAssetService = function () {
     }, {
         key: 'retrieveAssets',
         value: function retrieveAssets() {
+            var _this = this;
+
             var config = {};
             config.method = 'GET';
             config.url = this.ConfigService.getStudentAssetsURL();
             config.params = {};
             config.params.workgroupId = this.ConfigService.getWorkgroupId();
-            return this.$http(config).then(angular.bind(this, function (response) {
+            return this.$http(config).then(function (response) {
                 // loop through the assets and make them into JSON object with more details
                 var result = [];
                 var assets = response.data;
-                var studentUploadsBaseURL = this.ConfigService.getStudentUploadsBaseURL();
+                var studentUploadsBaseURL = _this.ConfigService.getStudentUploadsBaseURL();
                 for (var a = 0; a < assets.length; a++) {
                     var asset = assets[a];
                     if (!asset.isReferenced && asset.serverDeleteTime == null && asset.fileName !== '.DS_Store') {
                         asset.url = studentUploadsBaseURL + asset.filePath;
-                        if (this.isImage(asset)) {
+                        if (_this.isImage(asset)) {
                             asset.type = 'image';
                             asset.iconURL = asset.url;
-                        } else if (this.isAudio(asset)) {
+                        } else if (_this.isAudio(asset)) {
                             asset.type = 'audio';
                             asset.iconURL = 'wise5/vle/notebook/audio.png';
                         } else {
@@ -62,9 +64,9 @@ var StudentAssetService = function () {
                         result.push(asset);
                     }
                 }
-                this.allAssets = result;
+                _this.allAssets = result;
                 return result;
-            }));
+            });
         }
     }, {
         key: 'getAssetContent',
@@ -75,9 +77,9 @@ var StudentAssetService = function () {
             var config = {};
             config.method = 'GET';
             config.url = assetContentURL;
-            return this.$http(config).then(angular.bind(this, function (response) {
+            return this.$http(config).then(function (response) {
                 return response.data;
-            }));
+            });
         }
     }, {
         key: 'isImage',
@@ -114,6 +116,8 @@ var StudentAssetService = function () {
     }, {
         key: 'uploadAsset',
         value: function uploadAsset(file) {
+            var _this2 = this;
+
             var studentAssetsURL = this.ConfigService.getStudentAssetsURL();
             var deferred = this.$q.defer();
 
@@ -126,43 +130,45 @@ var StudentAssetService = function () {
                     'clientSaveTime': Date.parse(new Date())
                 },
                 file: file
-            }).success(angular.bind(this, function (asset, status, headers, config) {
+            }).success(function (asset, status, headers, config) {
                 if (asset === "error") {
                     alert("There was an error uploading.");
                 } else {
-                    var studentUploadsBaseURL = this.ConfigService.getStudentUploadsBaseURL();
+                    var studentUploadsBaseURL = _this2.ConfigService.getStudentUploadsBaseURL();
                     asset.url = studentUploadsBaseURL + asset.filePath;
-                    if (this.isImage(asset)) {
+                    if (_this2.isImage(asset)) {
                         asset.type = 'image';
                         asset.iconURL = asset.url;
-                    } else if (this.isAudio(asset)) {
+                    } else if (_this2.isAudio(asset)) {
                         asset.type = 'audio';
                         asset.iconURL = 'wise5/vle/notebook/audio.png';
                     } else {
                         asset.type = 'file';
                         asset.iconURL = 'wise5/vle/notebook/file.png';
                     }
-                    this.allAssets.push(asset);
-                    this.$rootScope.$broadcast('studentAssetsUpdated');
+                    _this2.allAssets.push(asset);
+                    _this2.$rootScope.$broadcast('studentAssetsUpdated');
                     deferred.resolve(asset);
                 }
-            })).error(angular.bind(this, function (asset, status, headers, config) {
+            }).error(function (asset, status, headers, config) {
                 alert("There was an error uploading. You might have reached your file upload limit or the file you tried to upload was too large. Please ask your teacher for help.");
-            }));
+            });
 
             return deferred.promise;
         }
     }, {
         key: 'uploadAssets',
         value: function uploadAssets(files) {
+            var _this3 = this;
+
             var studentAssetsURL = this.ConfigService.getStudentAssetsURL();
             var promises = files.map(function (file) {
-                return this.Upload.upload({
+                return _this3.Upload.upload({
                     url: studentAssetsURL,
                     fields: {
-                        'runId': this.ConfigService.getRunId(),
-                        'workgroupId': this.ConfigService.getWorkgroupId(),
-                        'periodId': this.ConfigService.getPeriodId(),
+                        'runId': _this3.ConfigService.getRunId(),
+                        'workgroupId': _this3.ConfigService.getWorkgroupId(),
+                        'periodId': _this3.ConfigService.getPeriodId(),
                         'clientSaveTime': Date.parse(new Date())
                     },
                     file: file
@@ -178,8 +184,11 @@ var StudentAssetService = function () {
     }, {
         key: 'copyAssetForReference',
 
+
         // given asset, makes a copy of it so steps can use for reference. Returns newly-copied asset.
         value: function copyAssetForReference(studentAsset) {
+            var _this4 = this;
+
             var config = {};
             config.method = 'POST';
             config.url = this.ConfigService.getStudentAssetsURL() + '/copy';
@@ -192,16 +201,16 @@ var StudentAssetService = function () {
 
             config.data = $.param(params);
 
-            return this.$http(config).then(angular.bind(this, function (result) {
+            return this.$http(config).then(function (result) {
                 var copiedAsset = result.data;
                 if (copiedAsset != null) {
-                    var studentUploadsBaseURL = this.ConfigService.getStudentUploadsBaseURL();
+                    var studentUploadsBaseURL = _this4.ConfigService.getStudentUploadsBaseURL();
                     if (copiedAsset.isReferenced && copiedAsset.fileName !== '.DS_Store') {
                         copiedAsset.url = studentUploadsBaseURL + copiedAsset.filePath;
-                        if (this.isImage(copiedAsset)) {
+                        if (_this4.isImage(copiedAsset)) {
                             copiedAsset.type = 'image';
                             copiedAsset.iconURL = copiedAsset.url;
-                        } else if (this.isAudio(copiedAsset)) {
+                        } else if (_this4.isAudio(copiedAsset)) {
                             copiedAsset.type = 'audio';
                             copiedAsset.iconURL = 'wise5/vle/notebook/audio.png';
                         } else {
@@ -213,11 +222,13 @@ var StudentAssetService = function () {
                     }
                 }
                 return null;
-            }));
+            });
         }
     }, {
         key: 'deleteAsset',
         value: function deleteAsset(studentAsset) {
+            var _this5 = this;
+
             var config = {};
             config.method = 'POST';
             config.url = this.ConfigService.getStudentAssetsURL() + '/remove';
@@ -229,13 +240,13 @@ var StudentAssetService = function () {
             params.clientDeleteTime = Date.parse(new Date());
             config.data = $.param(params);
 
-            return this.$http(config).then(angular.bind(this, function (result) {
+            return this.$http(config).then(function (result) {
                 //var deletedAsset = result.data;
                 // also remove from local copy of all assets
-                this.allAssets = this.allAssets.splice(this.allAssets.indexOf(studentAsset), 1);
-                this.$rootScope.$broadcast('studentAssetsUpdated');
+                _this5.allAssets = _this5.allAssets.splice(_this5.allAssets.indexOf(studentAsset), 1);
+                _this5.$rootScope.$broadcast('studentAssetsUpdated');
                 return studentAsset;
-            }));
+            });
         }
     }]);
 
