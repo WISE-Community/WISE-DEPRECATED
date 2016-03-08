@@ -17,13 +17,38 @@ var ConfigService = function () {
     }
 
     _createClass(ConfigService, [{
-        key: 'setConfig',
+        key: "setConfig",
         value: function setConfig(config) {
             this.config = config;
             this.sortClassmateUserInfosAlphabeticallyByName();
+
+            if (this.isPreview()) {
+                // set dummy userInfo if we're in preview mode
+                this.config.userInfo = {
+                    "myUserInfo": {
+                        "periodId": 1,
+                        "workgroupId": 1,
+                        "myClassInfo": {
+                            "classmateUserInfos": [],
+                            "sharedTeacherUserInfos": [],
+                            "periods": [{
+                                "periodId": 1,
+                                "periodName": "1"
+                            }],
+                            "teacherUserInfo": {
+                                "workgroupId": 1,
+                                "userName": "Preview Teacher"
+                            }
+                        },
+                        "userIds": [1],
+                        "periodName": "1",
+                        "userName": "Preview Team"
+                    }
+                };
+            }
         }
     }, {
-        key: 'retrieveConfig',
+        key: "retrieveConfig",
         value: function retrieveConfig(configURL) {
             var _this = this;
 
@@ -34,7 +59,7 @@ var ConfigService = function () {
             });
         }
     }, {
-        key: 'getConfigParam',
+        key: "getConfigParam",
         value: function getConfigParam(paramName) {
             if (this.config !== null) {
                 return this.config[paramName];
@@ -43,17 +68,17 @@ var ConfigService = function () {
             }
         }
     }, {
-        key: 'getCRaterRequestURL',
+        key: "getCRaterRequestURL",
         value: function getCRaterRequestURL() {
             return this.getConfigParam('cRaterRequestURL');
         }
     }, {
-        key: 'getMainHomePageURL',
+        key: "getMainHomePageURL",
         value: function getMainHomePageURL() {
             return this.getConfigParam('mainHomePageURL');
         }
     }, {
-        key: 'getPeriodId',
+        key: "getPeriodId",
         value: function getPeriodId() {
             var periodId = null;
             var userInfo = this.getConfigParam('userInfo');
@@ -66,7 +91,7 @@ var ConfigService = function () {
             return periodId;
         }
     }, {
-        key: 'getPeriods',
+        key: "getPeriods",
 
 
         /**
@@ -96,67 +121,67 @@ var ConfigService = function () {
             return periods;
         }
     }, {
-        key: 'getRunId',
+        key: "getRunId",
         value: function getRunId() {
             return this.getConfigParam('runId');
         }
     }, {
-        key: 'getProjectId',
+        key: "getProjectId",
         value: function getProjectId() {
             return this.getConfigParam('projectId');
         }
     }, {
-        key: 'getOpenCPUURL',
+        key: "getOpenCPUURL",
         value: function getOpenCPUURL() {
             return this.getConfigParam('openCPUURL');
         }
     }, {
-        key: 'getSessionLogOutURL',
+        key: "getSessionLogOutURL",
         value: function getSessionLogOutURL() {
             return this.getConfigParam('sessionLogOutURL');
         }
     }, {
-        key: 'getStudentAssetsURL',
+        key: "getStudentAssetsURL",
         value: function getStudentAssetsURL() {
             return this.getConfigParam('studentAssetsURL');
         }
     }, {
-        key: 'getStudentStatusURL',
+        key: "getStudentStatusURL",
         value: function getStudentStatusURL() {
             return this.getConfigParam('studentStatusURL');
         }
     }, {
-        key: 'getStudentMaxTotalAssetsSize',
+        key: "getStudentMaxTotalAssetsSize",
         value: function getStudentMaxTotalAssetsSize() {
             return this.getConfigParam('studentMaxTotalAssetsSize');
         }
     }, {
-        key: 'getStudentNotebookURL',
+        key: "getStudentNotebookURL",
         value: function getStudentNotebookURL() {
             return this.getConfigParam('studentNotebookURL');
         }
     }, {
-        key: 'getStudentUploadsBaseURL',
+        key: "getStudentUploadsBaseURL",
         value: function getStudentUploadsBaseURL() {
             return this.getConfigParam('studentUploadsBaseURL');
         }
     }, {
-        key: 'getWebSocketURL',
+        key: "getWebSocketURL",
         value: function getWebSocketURL() {
             return this.getConfigParam('webSocketURL');
         }
     }, {
-        key: 'getWISEBaseURL',
+        key: "getWISEBaseURL",
         value: function getWISEBaseURL() {
             return this.getConfigParam('wiseBaseURL');
         }
     }, {
-        key: 'getMode',
+        key: "getMode",
         value: function getMode() {
             return this.getConfigParam('mode');
         }
     }, {
-        key: 'getWorkgroupId',
+        key: "getWorkgroupId",
         value: function getWorkgroupId() {
             var workgroupId = null;
             var userInfo = this.getConfigParam('userInfo');
@@ -169,7 +194,7 @@ var ConfigService = function () {
             return workgroupId;
         }
     }, {
-        key: 'getMyUserInfo',
+        key: "getMyUserInfo",
         value: function getMyUserInfo() {
             var myUserInfo = null;
 
@@ -181,7 +206,7 @@ var ConfigService = function () {
             return myUserInfo;
         }
     }, {
-        key: 'getClassmateUserInfos',
+        key: "getClassmateUserInfos",
         value: function getClassmateUserInfos() {
             var classmateUserInfos = null;
             var userInfo = this.getConfigParam('userInfo');
@@ -197,7 +222,7 @@ var ConfigService = function () {
             return classmateUserInfos;
         }
     }, {
-        key: 'getTeacherWorkgroupId',
+        key: "getTeacherWorkgroupId",
         value: function getTeacherWorkgroupId() {
             var teacherWorkgroupId = null;
             var teacherUserInfo = this.getTeacherUserInfo();
@@ -207,7 +232,7 @@ var ConfigService = function () {
             return teacherWorkgroupId;
         }
     }, {
-        key: 'getTeacherUserInfo',
+        key: "getTeacherUserInfo",
         value: function getTeacherUserInfo() {
             var teacherUserInfo = null;
             var myUserInfo = this.getMyUserInfo();
@@ -220,7 +245,7 @@ var ConfigService = function () {
             return teacherUserInfo;
         }
     }, {
-        key: 'getClassmateWorkgroupIds',
+        key: "getClassmateWorkgroupIds",
         value: function getClassmateWorkgroupIds(includeSelf) {
             var workgroupIds = [];
 
@@ -247,7 +272,7 @@ var ConfigService = function () {
             return workgroupIds;
         }
     }, {
-        key: 'sortClassmateUserInfosAlphabeticallyByName',
+        key: "sortClassmateUserInfosAlphabeticallyByName",
         value: function sortClassmateUserInfosAlphabeticallyByName() {
             var classmateUserInfos = this.getClassmateUserInfos();
 
@@ -258,7 +283,7 @@ var ConfigService = function () {
             return classmateUserInfos;
         }
     }, {
-        key: 'sortClassmateUserInfosAlphabeticallyByNameHelper',
+        key: "sortClassmateUserInfosAlphabeticallyByNameHelper",
         value: function sortClassmateUserInfosAlphabeticallyByNameHelper(a, b) {
             var aUserName = a.userName;
             var bUserName = b.userName;
@@ -273,7 +298,7 @@ var ConfigService = function () {
             return result;
         }
     }, {
-        key: 'getUserInfoByWorkgroupId',
+        key: "getUserInfoByWorkgroupId",
         value: function getUserInfoByWorkgroupId(workgroupId) {
             var userInfo = null;
 
@@ -312,7 +337,7 @@ var ConfigService = function () {
             return userInfo;
         }
     }, {
-        key: 'getPeriodIdByWorkgroupId',
+        key: "getPeriodIdByWorkgroupId",
 
 
         /**
@@ -334,7 +359,7 @@ var ConfigService = function () {
             return periodId;
         }
     }, {
-        key: 'getStudentFirstNamesByWorkgroupId',
+        key: "getStudentFirstNamesByWorkgroupId",
 
 
         /**
@@ -373,7 +398,7 @@ var ConfigService = function () {
             return studentNames;
         }
     }, {
-        key: 'getUserNameByWorkgroupId',
+        key: "getUserNameByWorkgroupId",
         value: function getUserNameByWorkgroupId(workgroupId) {
             var userName = null;
 
@@ -388,7 +413,7 @@ var ConfigService = function () {
             return userName;
         }
     }, {
-        key: 'getUserNamesByWorkgroupId',
+        key: "getUserNamesByWorkgroupId",
         value: function getUserNamesByWorkgroupId(workgroupId, noUserIds) {
             var userNames = [];
 
@@ -409,7 +434,7 @@ var ConfigService = function () {
             return userNames;
         }
     }, {
-        key: 'isPreview',
+        key: "isPreview",
         value: function isPreview() {
             var result = false;
 

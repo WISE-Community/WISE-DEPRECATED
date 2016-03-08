@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var DiscussionController = function () {
-    function DiscussionController($injector, $rootScope, $scope, ConfigService, DiscussionService, NodeService, ProjectService, StudentAssetService, StudentDataService, StudentWebSocketService, $mdMedia) {
+    function DiscussionController($injector, $rootScope, $scope, ConfigService, DiscussionService, NodeService, ProjectService, StudentAssetService, StudentDataService, StudentWebSocketService, UtilService, $mdMedia) {
         _classCallCheck(this, DiscussionController);
 
         this.$injector = $injector;
@@ -22,6 +22,7 @@ var DiscussionController = function () {
         this.StudentAssetService = StudentAssetService;
         this.StudentDataService = StudentDataService;
         this.StudentWebSocketService = StudentWebSocketService;
+        this.UtilService = UtilService;
         this.$mdMedia = $mdMedia;
 
         // the node id of the current node
@@ -141,31 +142,34 @@ var DiscussionController = function () {
 
                 if (this.mode === 'student') {
                     if (this.ConfigService.isPreview()) {
-                        // we are in preview mode
+                        // we are in preview mode, so get all posts
+                        var componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
+
+                        this.setClassResponses(componentStates);
                     } else {
-                            // we are in regular student run mode
+                        // we are in regular student run mode
 
-                            if (this.isClassmateResponsesGated()) {
+                        if (this.isClassmateResponsesGated()) {
+                            /*
+                             * classmate responses are gated so we will not show them if the student
+                             * has not submitted a response
+                             */
+
+                            // get the component state from the scope
+                            var componentState = this.$scope.componentState;
+
+                            if (componentState != null) {
                                 /*
-                                 * classmate responses are gated so we will not show them if the student
-                                 * has not submitted a response
+                                 * the student has already submitted a response so we will
+                                 * display the classmate responses
                                  */
-
-                                // get the component state from the scope
-                                var componentState = this.$scope.componentState;
-
-                                if (componentState != null) {
-                                    /*
-                                     * the student has already submitted a response so we will
-                                     * display the classmate responses
-                                     */
-                                    this.getClassmateResponses();
-                                }
-                            } else {
-                                // classmate responses are not gated so we will show them
                                 this.getClassmateResponses();
                             }
+                        } else {
+                            // classmate responses are not gated so we will show them
+                            this.getClassmateResponses();
                         }
+                    }
 
                     // check if we need to lock this component
                     this.calculateDisabled();
@@ -205,23 +209,6 @@ var DiscussionController = function () {
                 this.$scope.$parent.registerComponentController(this.$scope, this.componentContent);
             }
         }
-
-        /**
-         * The reply button was clicked so we will show or hide the textarea
-         * used to reply to the specific component state
-         * @param componentState the component state that the student wants to reply to
-         */
-        this.$scope.replybuttonclicked = function (componentState) {
-
-            /*
-             * get the value for whether the textarea is currently shown
-             * or not
-             */
-            var previousValue = componentState.showReplyTextarea;
-
-            // change the value to the opposite of what it was previously
-            componentState.showReplyTextarea = !previousValue;
-        }.bind(this);
 
         /**
          * The submit button was clicked
@@ -305,11 +292,7 @@ var DiscussionController = function () {
 
             // make sure the node id matches our parent node
             if (this.nodeId === nodeId) {
-
-                if (this.isLockAfterSubmit()) {
-                    // disable the component if it was authored to lock after submit
-                    this.isDisabled = true;
-                }
+                this.isSubmit = true;
             }
         }));
 
@@ -353,6 +336,8 @@ var DiscussionController = function () {
                     // add the component state to our collection of class responses
                     this.addClassResponse(componentState);
                 }
+
+                this.submit();
 
                 // send the student post to web sockets so all the classmates receive it in real time
                 this.StudentWebSocketService.sendStudentToClassmatesInPeriodMessage(componentState);
@@ -509,6 +494,14 @@ var DiscussionController = function () {
             this.$scope.submitbuttonclicked();
         }
     }, {
+        key: 'submit',
+        value: function submit() {
+            if (this.isLockAfterSubmit()) {
+                // disable the component if it was authored to lock after submit
+                this.isDisabled = true;
+            }
+        }
+    }, {
         key: 'studentDataChanged',
 
 
@@ -563,6 +556,11 @@ var DiscussionController = function () {
                 }
 
                 componentState.studentData = studentData;
+
+                if (this.ConfigService.isPreview() && !this.componentStateIdReplyingTo) {
+                    // create a dummy component state id if we're in preview mode and posting a new response
+                    componentState.id = this.UtilService.generateKey();
+                }
 
                 if (this.isSubmit) {
                     // the student submitted this work
@@ -1139,7 +1137,7 @@ var DiscussionController = function () {
     return DiscussionController;
 }();
 
-DiscussionController.$inject = ['$injector', '$rootScope', '$scope', 'ConfigService', 'DiscussionService', 'NodeService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'StudentWebSocketService', '$mdMedia'];
+DiscussionController.$inject = ['$injector', '$rootScope', '$scope', 'ConfigService', 'DiscussionService', 'NodeService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'StudentWebSocketService', 'UtilService', '$mdMedia'];
 
 exports.default = DiscussionController;
 //# sourceMappingURL=discussionController.js.map

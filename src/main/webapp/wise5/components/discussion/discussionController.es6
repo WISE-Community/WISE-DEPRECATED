@@ -9,6 +9,7 @@ class DiscussionController {
                 StudentAssetService,
                 StudentDataService,
                 StudentWebSocketService,
+                UtilService,
                 $mdMedia) {
 
         this.$injector = $injector;
@@ -21,6 +22,7 @@ class DiscussionController {
         this.StudentAssetService = StudentAssetService;
         this.StudentDataService = StudentDataService;
         this.StudentWebSocketService = StudentWebSocketService;
+        this.UtilService = UtilService;
         this.$mdMedia = $mdMedia;
 
         // the node id of the current node
@@ -140,7 +142,10 @@ class DiscussionController {
 
                 if (this.mode === 'student') {
                     if (this.ConfigService.isPreview()) {
-                        // we are in preview mode
+                        // we are in preview mode, so get all posts
+                        var componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
+
+                        this.setClassResponses(componentStates);
                     } else {
                         // we are in regular student run mode
 
@@ -204,23 +209,6 @@ class DiscussionController {
                 this.$scope.$parent.registerComponentController(this.$scope, this.componentContent);
             }
         }
-
-        /**
-         * The reply button was clicked so we will show or hide the textarea
-         * used to reply to the specific component state
-         * @param componentState the component state that the student wants to reply to
-         */
-        this.$scope.replybuttonclicked = function(componentState) {
-
-            /*
-             * get the value for whether the textarea is currently shown
-             * or not
-             */
-            var previousValue = componentState.showReplyTextarea;
-
-            // change the value to the opposite of what it was previously
-            componentState.showReplyTextarea = !previousValue;
-        }.bind(this);
 
         /**
          * The submit button was clicked
@@ -304,11 +292,7 @@ class DiscussionController {
 
             // make sure the node id matches our parent node
             if (this.nodeId === nodeId) {
-
-                if (this.isLockAfterSubmit()) {
-                    // disable the component if it was authored to lock after submit
-                    this.isDisabled = true;
-                }
+                this.isSubmit = true;
             }
         }));
 
@@ -353,6 +337,8 @@ class DiscussionController {
                     // add the component state to our collection of class responses
                     this.addClassResponse(componentState);
                 }
+
+                this.submit();
 
                 // send the student post to web sockets so all the classmates receive it in real time
                 this.StudentWebSocketService.sendStudentToClassmatesInPeriodMessage(componentState);
@@ -495,6 +481,13 @@ class DiscussionController {
         this.$scope.submitbuttonclicked();
     };
 
+    submit() {
+        if (this.isLockAfterSubmit()) {
+            // disable the component if it was authored to lock after submit
+            this.isDisabled = true;
+        }
+    };
+
     /**
      * Called when the student changes their work
      */
@@ -543,6 +536,11 @@ class DiscussionController {
             }
 
             componentState.studentData = studentData;
+
+            if (this.ConfigService.isPreview() && !this.componentStateIdReplyingTo) {
+                // create a dummy component state id if we're in preview mode and posting a new response
+                componentState.id = this.UtilService.generateKey();
+            }
 
             if (this.isSubmit) {
                 // the student submitted this work
@@ -1068,6 +1066,7 @@ DiscussionController.$inject = [
     'StudentAssetService',
     'StudentDataService',
     'StudentWebSocketService',
+    'UtilService',
     '$mdMedia'
 ];
 

@@ -10,6 +10,31 @@ class ConfigService {
     setConfig(config) {
         this.config = config;
         this.sortClassmateUserInfosAlphabeticallyByName();
+
+        if (this.isPreview()) {
+            // set dummy userInfo if we're in preview mode
+            this.config.userInfo = {
+        		"myUserInfo": {
+        			"periodId": 1,
+        			"workgroupId": 1,
+        			"myClassInfo": {
+        				"classmateUserInfos": [],
+        				"sharedTeacherUserInfos": [],
+        				"periods": [{
+        					"periodId": 1,
+        					"periodName": "1"
+        				}],
+        				"teacherUserInfo": {
+        					"workgroupId": 1,
+        					"userName": "Preview Teacher"
+        				}
+        			},
+        			"userIds": [1],
+        			"periodName": "1",
+        			"userName": "Preview Team"
+        		}
+	        };
+        }
     };
 
     retrieveConfig(configURL) {
