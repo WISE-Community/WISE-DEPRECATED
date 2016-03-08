@@ -34,11 +34,7 @@ var ConfigService = function () {
                             "periods": [{
                                 "periodId": 1,
                                 "periodName": "1"
-                            }],
-                            "teacherUserInfo": {
-                                "workgroupId": 1,
-                                "userName": "Preview Teacher"
-                            }
+                            }]
                         },
                         "userIds": [1],
                         "periodName": "1",
@@ -92,7 +88,6 @@ var ConfigService = function () {
         }
     }, {
         key: "getPeriods",
-
 
         /**
          * Get the periods
@@ -339,7 +334,6 @@ var ConfigService = function () {
     }, {
         key: "getPeriodIdByWorkgroupId",
 
-
         /**
          * Get the period id for a workgroup id
          * @param workgroupId the workgroup id
@@ -360,7 +354,6 @@ var ConfigService = function () {
         }
     }, {
         key: "getStudentFirstNamesByWorkgroupId",
-
 
         /**
          * Get the student names

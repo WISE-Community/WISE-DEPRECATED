@@ -23,11 +23,7 @@ class ConfigService {
         				"periods": [{
         					"periodId": 1,
         					"periodName": "1"
-        				}],
-        				"teacherUserInfo": {
-        					"workgroupId": 1,
-        					"userName": "Preview Teacher"
-        				}
+        				}]
         			},
         			"userIds": [1],
         			"periodName": "1",
