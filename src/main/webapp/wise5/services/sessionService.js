@@ -12,6 +12,8 @@ var SessionService = function () {
     function SessionService($http, $rootScope, ConfigService
     //StudentDataService) {
     ) {
+        var _this = this;
+
         _classCallCheck(this, SessionService);
 
         this.$http = $http;
@@ -57,12 +59,12 @@ var SessionService = function () {
          * for this event and when there are no more components left to wait
          * for, we will then log out.
          */
-        this.$rootScope.$on('doneExiting', angular.bind(this, function () {
+        this.$rootScope.$on('doneExiting', function () {
 
             // check if all components are done unloading so we can exit
             // no longer needed.
             //this.attemptExit();
-        }));
+        });
 
         /**
          * Listen for the 'goHome' event. We will attempt to go home when
@@ -72,14 +74,14 @@ var SessionService = function () {
          * will wait for those components to fire the 'componentDoneUnloading'
          * event and then try to go home again.
          */
-        this.$rootScope.$on('goHome', angular.bind(this, function () {
+        this.$rootScope.$on('goHome', function () {
 
             // let other components know that we are exiting
-            this.$rootScope.$broadcast('exit');
+            _this.$rootScope.$broadcast('exit');
 
             // check if all components are done unloading so we can exit
-            this.attemptExit();
-        }));
+            _this.attemptExit();
+        });
 
         /**
          * Listen for the 'logOut' event. We will attempt to log out when
@@ -89,20 +91,20 @@ var SessionService = function () {
          * will wait for those components to fire the 'componentDoneUnloading'
          * event and then try to log out again.
          */
-        this.$rootScope.$on('logOut', angular.bind(this, function () {
+        this.$rootScope.$on('logOut', function () {
 
             /*
              * set the perform log out boolean to true so that we know to
              * log out the user later
              */
-            this.performLogOut = true;
+            _this.performLogOut = true;
 
             // let other components know that we are exiting
-            this.$rootScope.$broadcast('exit');
+            _this.$rootScope.$broadcast('exit');
 
             // check if all components are done unloading so we can exit
-            this.attemptExit();
-        }));
+            _this.attemptExit();
+        });
     }
 
     /**
@@ -200,7 +202,7 @@ var SessionService = function () {
          * Refresh the timers
          */
         value: function renewSession() {
-            var _this = this;
+            var _this2 = this;
 
             var renewSessionURL = this.ConfigService.getConfigParam('renewSessionURL');
             // make a request to the log out url
@@ -208,10 +210,10 @@ var SessionService = function () {
                 var isRenewSessionSuccessful = result.data;
 
                 if (isRenewSessionSuccessful === 'true') {
-                    _this.clearTimers();
-                    _this.startTimers();
+                    _this2.clearTimers();
+                    _this2.startTimers();
                 } else {
-                    _this.forceLogOut();
+                    _this2.forceLogOut();
                 }
             });
         }

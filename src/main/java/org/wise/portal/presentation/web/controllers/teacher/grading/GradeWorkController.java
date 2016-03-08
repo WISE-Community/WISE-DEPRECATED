@@ -92,7 +92,7 @@ public class GradeWorkController {
 
 			String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
 
-			String getClassroomMonitorConfigUrl = wiseBaseURL + "/vleconfig?runId=" + run.getId().toString();
+			String getClassroomMonitorConfigUrl = wiseBaseURL + "/vleconfig?runId=" + run.getId().toString() + "&mode=classroomMonitor";
 
 			ModelAndView modelAndView = new ModelAndView("classroomMonitor");
 			modelAndView.addObject("configURL", getClassroomMonitorConfigUrl);

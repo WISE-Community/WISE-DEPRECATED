@@ -230,6 +230,9 @@ var mainModule = _angular2.default.module('classroomMonitor', ['angularMoment', 
             },
             webSocket: function webSocket(TeacherWebSocketService, config) {
                 return TeacherWebSocketService.initialize();
+            },
+            sessionTimers: function sessionTimers(SessionService, config) {
+                return SessionService.initializeSession();
             }
         }
     }).state('root.studentProgress', {

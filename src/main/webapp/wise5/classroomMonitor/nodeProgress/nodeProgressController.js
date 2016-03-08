@@ -10,6 +10,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var NodeProgressController = function () {
     function NodeProgressController($scope, $state, ConfigService, ProjectService, TeacherDataService) {
+        var _this = this;
+
         _classCallCheck(this, NodeProgressController);
 
         this.$scope = $scope;
@@ -26,7 +28,7 @@ var NodeProgressController = function () {
 
         this.items = this.ProjectService.idToOrder;
 
-        this.$scope.$on('currentNodeChanged', angular.bind(this, function (event, args) {
+        this.$scope.$on('currentNodeChanged', function (event, args) {
             var previousNode = args.previousNode;
             var currentNode = args.currentNode;
             if (previousNode != null && previousNode.type === 'group') {
@@ -37,21 +39,21 @@ var NodeProgressController = function () {
 
                 var currentNodeId = currentNode.id;
 
-                if (this.ProjectService.isGroupNode(currentNodeId)) {
+                if (_this.ProjectService.isGroupNode(currentNodeId)) {
                     // current node is a group
 
-                    this.currentGroup = currentNode;
-                    this.currentGroupId = this.currentGroup.id;
-                    this.$scope.currentgroupid = this.currentGroupId;
-                } else if (this.ProjectService.isApplicationNode(currentNodeId)) {
+                    _this.currentGroup = currentNode;
+                    _this.currentGroupId = _this.currentGroup.id;
+                    _this.$scope.currentgroupid = _this.currentGroupId;
+                } else if (_this.ProjectService.isApplicationNode(currentNodeId)) {
                     // current node is an application node
                     // load the step grading view
-                    this.$state.go('root.nodeGrading', { nodeId: currentNodeId });
+                    _this.$state.go('root.nodeGrading', { nodeId: currentNodeId });
                 }
             }
 
-            this.$scope.$apply();
-        }));
+            _this.$scope.$apply();
+        });
 
         var startNodeId = this.ProjectService.getStartNodeId();
         var rootNode = this.ProjectService.getRootNode(startNodeId);

@@ -11,20 +11,33 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var ClassroomMonitorController = function () {
-    function ClassroomMonitorController($scope, $rootScope, $state, $stateParams, ConfigService, ProjectService, TeacherDataService) {
+    function ClassroomMonitorController($mdDialog, $rootScope, $scope, $state, $stateParams, ConfigService, ProjectService, SessionService, TeacherDataService) {
+        var _this = this;
+
         _classCallCheck(this, ClassroomMonitorController);
 
-        this.$scope = $scope;
         this.$rootScope = $rootScope;
+        this.$scope = $scope;
         this.$state = $state;
         this.$stateParams = $stateParams;
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
+        this.SessionService = SessionService;
         this.TeacherDataService = TeacherDataService;
+
+        $scope.$on('showSessionWarning', function () {
+            // Appending dialog to document.body
+            var confirm = $mdDialog.confirm().parent(angular.element(document.body)).title('Session Timeout').content('You have been inactive for a long time. Do you want to stay logged in?').ariaLabel('Session Timeout').ok('YES').cancel('No');
+            $mdDialog.show(confirm).then(function () {
+                _this.SessionService.renewSession();
+            }, function () {
+                _this.SessionService.forceLogOut();
+            });
+        });
     }
 
     _createClass(ClassroomMonitorController, [{
-        key: "hello",
+        key: 'hello',
         value: function hello() {
             ocpu.seturl("//128.32.189.240:81/ocpu/user/wiser/library/wiser/R");
             // perform the request
@@ -49,9 +62,9 @@ var ClassroomMonitorController = function () {
             });
         }
     }, {
-        key: "export",
+        key: 'export',
         value: function _export(exportType) {
-            var _this = this;
+            var _this2 = this;
 
             this.TeacherDataService.getExport(exportType).then(function (result) {
                 var COLUMN_INDEX_NODE_ID = 1;
@@ -81,9 +94,9 @@ var ClassroomMonitorController = function () {
                         // for all non-header rows, fill in step numbers, titles, and component part numbers.
                         var nodeId = row[COLUMN_INDEX_NODE_ID];
                         var componentId = row[COLUMN_INDEX_COMPONENT_ID];
-                        row[COLUMN_INDEX_STEP_NUMBER] = _this.ProjectService.getNodePositionById(nodeId);
-                        row[COLUMN_INDEX_STEP_TITLE] = _this.ProjectService.getNodeTitleByNodeId(nodeId);
-                        row[COLUMN_INDEX_COMPONENT_PART_NUMBER] = _this.ProjectService.getComponentPositionByNodeIdAndComponentId(nodeId, componentId) + 1; // make it 1-indexed for researchers
+                        row[COLUMN_INDEX_STEP_NUMBER] = _this2.ProjectService.getNodePositionById(nodeId);
+                        row[COLUMN_INDEX_STEP_TITLE] = _this2.ProjectService.getNodeTitleByNodeId(nodeId);
+                        row[COLUMN_INDEX_COMPONENT_PART_NUMBER] = _this2.ProjectService.getComponentPositionByNodeIdAndComponentId(nodeId, componentId) + 1; // make it 1-indexed for researchers
                         var wiseIDs = row[COLUMN_INDEX_WISE_IDS];
                         var wiseIDsArray = wiseIDs.split(",");
                         row[COLUMN_INDEX_WISE_ID_1] = wiseIDsArray[0];
@@ -98,7 +111,7 @@ var ClassroomMonitorController = function () {
                     // append row to cvsString
                     for (var cellIndex = 0; cellIndex < row.length; cellIndex++) {
                         var cell = row[cellIndex];
-                        if ((typeof cell === "undefined" ? "undefined" : _typeof(cell)) === "object") {
+                        if ((typeof cell === 'undefined' ? 'undefined' : _typeof(cell)) === "object") {
                             cell = "\"" + JSON.stringify(cell).replace(/"/g, '""') + "\"";
                         } else if (typeof cell === "string") {
                             cell = "\"" + cell + "\"";
@@ -107,7 +120,7 @@ var ClassroomMonitorController = function () {
                     }
                     csvString += "\r\n";
                 }
-                var runId = _this.ConfigService.getRunId();
+                var runId = _this2.ConfigService.getRunId();
                 var csvBlob = new Blob([csvString], { type: 'text/csv' });
                 var csvFile = new File([csvBlob], "export_" + runId + ".csv");
 
@@ -146,7 +159,7 @@ var ClassroomMonitorController = function () {
     return ClassroomMonitorController;
 }();
 
-ClassroomMonitorController.$inject = ['$scope', '$rootScope', '$state', '$stateParams', 'ConfigService', 'ProjectService', 'TeacherDataService'];
+ClassroomMonitorController.$inject = ['$mdDialog', '$rootScope', '$scope', '$state', '$stateParams', 'ConfigService', 'ProjectService', 'SessionService', 'TeacherDataService'];
 
 exports.default = ClassroomMonitorController;
 //# sourceMappingURL=classroomMonitorController.js.map

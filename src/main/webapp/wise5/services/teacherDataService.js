@@ -18,7 +18,6 @@ var TeacherDataService = function () {
         this.ConfigService = ConfigService;
 
         this.studentData = {};
-
         this.currentPeriod = null;
     }
 
@@ -45,9 +44,9 @@ var TeacherDataService = function () {
             httpParams.url = exportURL;
             httpParams.params = params;
 
-            return this.$http(httpParams).then(angular.bind(this, function (result) {
+            return this.$http(httpParams).then(function (result) {
                 return result.data;
-            }));
+            });
         }
     }, {
         key: 'retrieveStudentDataByNodeId',
@@ -125,6 +124,8 @@ var TeacherDataService = function () {
          * @returns a promise
          */
         value: function retrieveStudentData(params) {
+            var _this = this;
+
             var studentDataURL = this.ConfigService.getConfigParam('teacherDataURL');
 
             if (params.getStudentWork == null) {
@@ -144,115 +145,89 @@ var TeacherDataService = function () {
             httpParams.url = studentDataURL;
             httpParams.params = params;
 
-            return this.$http(httpParams).then(angular.bind(this, function (result) {
+            return this.$http(httpParams).then(function (result) {
                 var resultData = result.data;
                 if (resultData != null) {
 
-                    this.studentData = {};
+                    _this.studentData = {};
 
                     if (resultData.studentWorkList != null) {
                         var componentStates = resultData.studentWorkList;
 
                         // populate allComponentStates, componentStatesByWorkgroupId and componentStatesByNodeId arrays
-                        this.studentData.componentStates = componentStates;
-                        this.studentData.componentStatesByWorkgroupId = {};
-                        this.studentData.componentStatesByNodeId = {};
-                        this.studentData.componentStatesByComponentId = {};
+                        _this.studentData.componentStates = componentStates;
+                        _this.studentData.componentStatesByWorkgroupId = {};
+                        _this.studentData.componentStatesByNodeId = {};
+                        _this.studentData.componentStatesByComponentId = {};
 
                         for (var i = 0; i < componentStates.length; i++) {
                             var componentState = componentStates[i];
 
                             var componentStateWorkgroupId = componentState.workgroupId;
-                            if (this.studentData.componentStatesByWorkgroupId[componentStateWorkgroupId] == null) {
-                                this.studentData.componentStatesByWorkgroupId[componentStateWorkgroupId] = new Array();
+                            if (_this.studentData.componentStatesByWorkgroupId[componentStateWorkgroupId] == null) {
+                                _this.studentData.componentStatesByWorkgroupId[componentStateWorkgroupId] = new Array();
                             }
-                            this.studentData.componentStatesByWorkgroupId[componentStateWorkgroupId].push(componentState);
+                            _this.studentData.componentStatesByWorkgroupId[componentStateWorkgroupId].push(componentState);
 
                             var componentStateNodeId = componentState.nodeId;
-                            if (this.studentData.componentStatesByNodeId[componentStateNodeId] == null) {
-                                this.studentData.componentStatesByNodeId[componentStateNodeId] = new Array();
+                            if (_this.studentData.componentStatesByNodeId[componentStateNodeId] == null) {
+                                _this.studentData.componentStatesByNodeId[componentStateNodeId] = new Array();
                             }
-                            this.studentData.componentStatesByNodeId[componentStateNodeId].push(componentState);
+                            _this.studentData.componentStatesByNodeId[componentStateNodeId].push(componentState);
 
                             var componentId = componentState.componentId;
-                            if (this.studentData.componentStatesByComponentId[componentId] == null) {
-                                this.studentData.componentStatesByComponentId[componentId] = new Array();
+                            if (_this.studentData.componentStatesByComponentId[componentId] == null) {
+                                _this.studentData.componentStatesByComponentId[componentId] = new Array();
                             }
-                            this.studentData.componentStatesByComponentId[componentId].push(componentState);
+                            _this.studentData.componentStatesByComponentId[componentId].push(componentState);
                         }
                     }
 
                     if (resultData.events != null) {
                         // populate allEvents, eventsByWorkgroupId, and eventsByNodeId arrays
-                        this.studentData.allEvents = resultData.events;
-                        this.studentData.eventsByWorkgroupId = {};
-                        this.studentData.eventsByNodeId = {};
+                        _this.studentData.allEvents = resultData.events;
+                        _this.studentData.eventsByWorkgroupId = {};
+                        _this.studentData.eventsByNodeId = {};
                         for (var i = 0; i < resultData.events.length; i++) {
                             var event = resultData.events[i];
                             var eventWorkgroupId = event.workgroupId;
-                            if (this.studentData.eventsByWorkgroupId[eventWorkgroupId] == null) {
-                                this.studentData.eventsByWorkgroupId[eventWorkgroupId] = new Array();
+                            if (_this.studentData.eventsByWorkgroupId[eventWorkgroupId] == null) {
+                                _this.studentData.eventsByWorkgroupId[eventWorkgroupId] = new Array();
                             }
-                            this.studentData.eventsByWorkgroupId[eventWorkgroupId].push(event);
+                            _this.studentData.eventsByWorkgroupId[eventWorkgroupId].push(event);
 
                             var eventNodeId = event.nodeId;
-                            if (this.studentData.eventsByNodeId[eventNodeId] == null) {
-                                this.studentData.eventsByNodeId[eventNodeId] = new Array();
+                            if (_this.studentData.eventsByNodeId[eventNodeId] == null) {
+                                _this.studentData.eventsByNodeId[eventNodeId] = new Array();
                             }
-                            this.studentData.eventsByNodeId[eventNodeId].push(event);
+                            _this.studentData.eventsByNodeId[eventNodeId].push(event);
                         }
                     }
 
                     if (resultData.annotations != null) {
                         // populate annotations, annotationsByWorkgroupId, and annotationsByNodeId arrays
-                        this.studentData.annotations = resultData.annotations;
-                        this.studentData.annotationsToWorkgroupId = {};
-                        this.studentData.annotationsByNodeId = {};
+                        _this.studentData.annotations = resultData.annotations;
+                        _this.studentData.annotationsToWorkgroupId = {};
+                        _this.studentData.annotationsByNodeId = {};
                         for (var i = 0; i < resultData.annotations.length; i++) {
                             var annotation = resultData.annotations[i];
                             var annotationWorkgroupId = annotation.toWorkgroupId;
-                            if (this.studentData.annotationsToWorkgroupId[annotationWorkgroupId] == null) {
-                                this.studentData.annotationsToWorkgroupId[annotationWorkgroupId] = new Array();
+                            if (_this.studentData.annotationsToWorkgroupId[annotationWorkgroupId] == null) {
+                                _this.studentData.annotationsToWorkgroupId[annotationWorkgroupId] = new Array();
                             }
-                            this.studentData.annotationsToWorkgroupId[annotationWorkgroupId].push(annotation);
+                            _this.studentData.annotationsToWorkgroupId[annotationWorkgroupId].push(annotation);
 
                             var annotationNodeId = annotation.nodeId;
-                            if (this.studentData.annotationsByNodeId[annotationNodeId] == null) {
-                                this.studentData.annotationsByNodeId[annotationNodeId] = new Array();
+                            if (_this.studentData.annotationsByNodeId[annotationNodeId] == null) {
+                                _this.studentData.annotationsByNodeId[annotationNodeId] = new Array();
                             }
-                            this.studentData.annotationsByNodeId[annotationNodeId].push(annotation);
+                            _this.studentData.annotationsByNodeId[annotationNodeId].push(annotation);
                         }
                     }
 
-                    this.AnnotationService.setAnnotations(this.studentData.annotations);
+                    _this.AnnotationService.setAnnotations(_this.studentData.annotations);
                 }
-            }));
-        }
-    }, {
-        key: 'sortVLEStatesAlphabeticallyByUserName',
-        value: function sortVLEStatesAlphabeticallyByUserName() {
-            var vleStates = this.vleStates;
-
-            if (vleStates != null) {
-                vleStates.sort(this.sortVLEStatesAlphabeticallyByUserNameHelper);
-            }
-
-            return vleStates;
-        }
-    }, {
-        key: 'sortVLEStatesAlphabeticallyByUserNameHelper',
-        value: function sortVLEStatesAlphabeticallyByUserNameHelper(a, b) {
-            var aUserId = a.userId;
-            var bUserId = b.userId;
-            var result = 0;
-
-            if (aUserId < bUserId) {
-                result = -1;
-            } else if (aUserId > bUserId) {
-                result = 1;
-            }
-
-            return result;
+            });
         }
     }, {
         key: 'getComponentStatesByWorkgroupId',

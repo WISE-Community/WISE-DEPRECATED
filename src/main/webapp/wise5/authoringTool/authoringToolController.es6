@@ -9,7 +9,7 @@ class AuthoringToolController {
         this.ConfigService = ConfigService;
         this.SessionService = SessionService;
 
-        $scope.$on('showSessionWarning', angular.bind(this, function() {
+        $scope.$on('showSessionWarning', () => {
             // Appending dialog to document.body
             let confirm = $mdDialog.confirm()
                 .parent(angular.element(document.body))
@@ -18,12 +18,12 @@ class AuthoringToolController {
                 .ariaLabel('Session Timeout')
                 .ok('YES')
                 .cancel('No');
-            $mdDialog.show(confirm).then(function() {
+            $mdDialog.show(confirm).then(() => {
                 this.SessionService.renewSession();
-            }.bind(this), function() {
+            }, () => {
                 this.SessionService.forceLogOut();
-            }.bind(this));
-        }));
+            });
+        });
     }
 
     exit() {
