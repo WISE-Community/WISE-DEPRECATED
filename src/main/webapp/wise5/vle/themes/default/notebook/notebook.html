@@ -42,33 +42,38 @@
         cursor: pointer;
     }
 
-    .notebookItem componentstatehtml img {
-        max-height:100px;
+    #newNoteTextArea {
+        width: 250px;
+        height: 80px;
     }
 </style>
 <div class="md-toolbar-tools">
-    <md-button ng-show="(notebookController.filter == 'all' || notebookController.filter == 'notes')" ng-click="notebookController.showAddNote()" class="md-primary">+Note</md-button>
+    <md-button id="addNoteButton" ng-show="(notebookController.filter == 'all' || notebookController.filter == 'notes') && notebookController.newNote == null" ng-click="notebookController.showAddNote()" class="md-primary">+Note</md-button>
     <!--
     TODO: implement bookmarks and questions
     <md-button ng-show="(notebookController.filter == 'all' || notebookController.filter == 'bookmarks')" ng-click="notebookController.addBookmark()" class="md-primary">+BM</md-button>
     <md-button ng-show="(notebookController.filter == 'all' || notebookController.filter == 'questions')" ng-click="notebookController.addQuestion()" class="md-primary">+Q</md-button>
     -->
 </div>
-<div ng-show="notebookController.newNote != null">
-    Notes:<br/>
-    <textarea ng-model="notebookController.newNote.content.text" ng-model-options='{ debounce: 100 }' />
-    <br/>
+<div id="newNote" ng-show="notebookController.newNote != null">
+    <h5>Add New Note</h5>
+    <textarea id="newNoteTextArea" placeholder="{{notebookController.newNotePlaceholderText}}" ng-model="notebookController.newNote.content.text" ng-model-options='{ debounce: 100 }' />
     <div class="component__attachment" ng-repeat="attachment in notebookController.newNote.content.attachments">
         <img ng-src="{{attachment.iconURL}}" class="component__attachment__content" />
         <md-button class="component__attachment__delete" ng-click='notebookController.removeAttachment(attachment)' title="Remove file"><md-icon>cancel</md-icon></md-button>
     </div>
     <br/>
-    Attachments:<br/>
-    <div ng-show="notebookController.mode != 'preview'" ngf-drop ngf-select ngf-change="notebookController.attachStudentAssetToNewNote($files)" class="drop-box"
-         drag-over-class="dragover" ngf-multiple="true" allow-dir="false"
-         accept="image/*,application/pdf,text/csv">Drop image or file here or click to upload!</div>
-    <md-button ng-click='notebookController.addNote()'>Save</md-button>
-    <md-button ng-click='notebookController.cancelAddNote()'>Cancel</md-button>
+    <div ng-show="notebookController.mode != 'preview'">Attachments:<br/>
+        <div ngf-drop ngf-select ngf-change="notebookController.attachStudentAssetToNewNote($files)" class="drop-box"
+             drag-over-class="dragover" ngf-multiple="true" allow-dir="false"
+             accept="image/*,application/pdf,text/csv">Drop image or file here or click to upload!</div>
+        <!--
+            TODO: ask researchers if we should display usage information to students. we'll hide it for now.
+            You are using {{notebookController.notebook.totalSize | appropriateSizeText }} out of {{notebookController.notebook.totalSizeMax | appropriateSizeText}} ({{notebookController.notebook.usagePercentage | roundToDecimal:0 }}%)
+         -->
+    </div>
+    <md-button id='saveNewNoteButton' ng-disabled='notebookController.newNote.content.text === ""' ng-click='notebookController.addNote()'>Save</md-button>
+    <md-button id='cancelNewNoteButton' ng-click='notebookController.cancelAddNote()'>Cancel</md-button>
 </div>
 <ul class='notebookItems' ng-show="notebookController.newNote == null" >
     <li ng-repeat="notebookItem in notebookController.notebook.items"
@@ -96,17 +101,3 @@
         <!-- <span class='studentAssetname'>{{studentAsset.name}}</span> -->
     </li>
 </ul>
-<!--
-<div>
-    <div ng-show="notebookController.mode != 'preview'" ngf-drop ngf-select ngf-change="notebookController.uploadStudentAssetNotebookItems($files)" class="drop-box"
-         drag-over-class="dragover" ngf-multiple="true" allow-dir="false"
-         accept="image/*,application/pdf,text/csv">Drop image or file here or click to upload!</div>
-
-    TODO: ask researchers if we should display usage information to students. we'll hide it for now.
-    You are using {{notebookController.notebook.totalSize | appropriateSizeText }} out of {{notebookController.notebook.totalSizeMax | appropriateSizeText}} ({{notebookController.notebook.usagePercentage | roundToDecimal:0 }}%)
-
-</div>
--->
-<div ng-show="notebookController.mode == 'preview'">
-    The notebook items will appear here once you set up a classroom run.
-</div>

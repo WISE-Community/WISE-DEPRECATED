@@ -9,16 +9,22 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var NotebookService = function () {
-    function NotebookService($http, $rootScope, ConfigService, StudentAssetService, StudentDataService) {
+    function NotebookService($http, $q, $rootScope, ConfigService, StudentAssetService, StudentDataService) {
         _classCallCheck(this, NotebookService);
 
         this.$http = $http;
+        this.$q = $q;
         this.$rootScope = $rootScope;
         this.ConfigService = ConfigService;
         this.StudentAssetService = StudentAssetService;
         this.StudentDataService = StudentDataService;
 
-        this.filters = [{ 'name': 'all', 'label': 'All' }, { 'name': 'notes', 'label': 'Notes' }, { 'name': 'bookmarks', 'label': 'Bookmarks' }, { 'name': 'questions', 'label': 'Questions' }];
+        this.filters = [{ 'name': 'all', 'label': 'All' }, { 'name': 'notes', 'label': 'Notes' }
+        /*,
+        {'name': 'bookmarks', 'label': 'Bookmarks'},
+        {'name': 'questions', 'label': 'Questions'}
+        */
+        ];
 
         this.notebook = {};
         this.notebook.items = [];
@@ -26,11 +32,6 @@ var NotebookService = function () {
     }
 
     _createClass(NotebookService, [{
-        key: 'getFilters',
-        value: function getFilters() {
-            return this.filters;
-        }
-    }, {
         key: 'addItem',
         value: function addItem(notebookItem) {
             this.notebook.items.push(notebookItem);
@@ -154,32 +155,43 @@ var NotebookService = function () {
         value: function saveNotebookItem(nodeId, type, title, content) {
             var _this3 = this;
 
-            var config = {};
-            config.method = 'POST';
-            config.url = this.ConfigService.getStudentNotebookURL();
-            config.headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
-            var params = {};
-            params.workgroupId = this.ConfigService.getWorkgroupId();
-            params.periodId = this.ConfigService.getPeriodId();
-            params.nodeId = nodeId;
-            params.type = type;
-            params.title = title;
-            params.content = angular.toJson(content);
-            params.clientSaveTime = Date.parse(new Date());
-
-            config.data = $.param(params);
-
-            return this.$http(config).then(function (result) {
-                var notebookItem = result.data;
-                if (notebookItem != null) {
-                    if (notebookItem.type === "note") {
-                        notebookItem.content = angular.fromJson(notebookItem.content);
-                    }
+            if (this.ConfigService.isPreview()) {
+                return this.$q(function (resolve, reject) {
+                    var notebookItem = {
+                        type: type,
+                        content: content
+                    };
                     _this3.notebook.items.push(notebookItem);
                     _this3.$rootScope.$broadcast('notebookUpdated', { notebook: _this3.notebook });
-                }
-                return null;
-            });
+                    resolve();
+                });
+            } else {
+                var config = {};
+                config.method = 'POST';
+                config.url = this.ConfigService.getStudentNotebookURL();
+                config.headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
+                var params = {};
+                params.workgroupId = this.ConfigService.getWorkgroupId();
+                params.periodId = this.ConfigService.getPeriodId();
+                params.nodeId = nodeId;
+                params.type = type;
+                params.title = title;
+                params.content = angular.toJson(content);
+                params.clientSaveTime = Date.parse(new Date());
+                config.data = $.param(params);
+
+                return this.$http(config).then(function (result) {
+                    var notebookItem = result.data;
+                    if (notebookItem != null) {
+                        if (notebookItem.type === "note") {
+                            notebookItem.content = angular.fromJson(notebookItem.content);
+                        }
+                        _this3.notebook.items.push(notebookItem);
+                        _this3.$rootScope.$broadcast('notebookUpdated', { notebook: _this3.notebook });
+                    }
+                    return null;
+                });
+            }
         }
     }, {
         key: 'uploadStudentAssetNotebookItem',
@@ -231,7 +243,7 @@ var NotebookService = function () {
     return NotebookService;
 }();
 
-NotebookService.$inject = ['$http', '$rootScope', 'ConfigService', 'StudentAssetService', 'StudentDataService'];
+NotebookService.$inject = ['$http', '$q', '$rootScope', 'ConfigService', 'StudentAssetService', 'StudentDataService'];
 
 exports.default = NotebookService;
 //# sourceMappingURL=notebookService.js.map

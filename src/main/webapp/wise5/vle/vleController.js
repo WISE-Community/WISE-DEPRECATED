@@ -30,8 +30,8 @@ var VLEController = function () {
         this.projectStyle = this.ProjectService.getStyle();
         this.projectName = this.ProjectService.getProjectTitle();
 
-        this.notebookFilters = this.NotebookService.getFilters();
-        this.notebookFilter = this.notebookFilters[0].name;
+        this.notebookFilters = this.NotebookService.filters;
+        this.notebookFilter = this.notebookFilters[0].name; // show All note book items on load
         this.notebookOpen = false;
 
         // get the total score for the workgroup

@@ -105,7 +105,7 @@ class ClassroomMonitorController {
                     row[COLUMN_INDEX_STUDENT_RESPONSE] = studentDataJSONCell.response || "";
                 }
 
-                // append row to cvsString
+                // append row to csvString
                 for (var cellIndex = 0; cellIndex < row.length; cellIndex++) {
                     var cell = row[cellIndex];
                     if (typeof cell === "object") {
