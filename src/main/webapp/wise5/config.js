@@ -23,7 +23,7 @@ System.config({
   map: {
     "angular": "github:angular/bower-angular@1.5.0",
     "angular-animate": "github:angular/bower-angular-animate@1.5.0",
-    "angular-material": "github:angular/bower-material@1.0.5",
+    "angular-material": "github:angular/bower-material@1.0.6",
     "angular-mocks": "github:angular/bower-angular-mocks@1.5.0",
     "angular-moment": "npm:angular-moment@1.0.0-beta.4",
     "angular-sanitize": "github:angular/bower-angular-sanitize@1.5.0",
@@ -58,7 +58,7 @@ System.config({
     "github:angular/bower-angular-sanitize@1.5.0": {
       "angular": "github:angular/bower-angular@1.5.0"
     },
-    "github:angular/bower-material@1.0.5": {
+    "github:angular/bower-material@1.0.6": {
       "angular": "github:angular/bower-angular@1.5.0",
       "angular-animate": "github:angular/bower-angular-animate@1.5.0",
       "angular-aria": "github:angular/bower-angular-aria@1.5.0",
