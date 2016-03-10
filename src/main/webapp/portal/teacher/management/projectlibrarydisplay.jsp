@@ -2287,9 +2287,7 @@
 			if(filtered){
 				var numResults = $items.length;
 				$info.html('<spring:message code="datatable_info_showing"/> ' +
-						numResults + ' <spring:message code="project_plural"/> ' +
-						'<spring:message code="datatable_info_filtered_pre"/> ' +
-						totalProjects + ' <spring:message code="datatable_info_filtered_post"/>');
+						numResults + ' <spring:message code="project_plural"/> ');
 			} else {
 				$info.html(totalProjects + ' <spring:message code="project_plural"/>');
 			}
