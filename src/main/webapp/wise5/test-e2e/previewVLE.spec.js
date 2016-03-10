@@ -52,48 +52,100 @@ describe('WISE5 Student VLE Preview', function () {
         expect(element(by.model("stepToolsCtrl.toNodeId")).getText()).toBe('1.2: Initial Ideas');
     });
 
+    it('should allow user to jump to a step using the navigation drop-down menu', function () {
+        var stepSelectMenu = element(by.xpath('//md-select[@id="stepSelectMenu"]'));
+        stepSelectMenu.click();
+        element.all(by.repeater("item in stepToolsCtrl.idToOrder | toArray | orderBy : 'order'")).then(function (stepSelectOptions) {
+            expect(stepSelectOptions[1].element(by.css('.node-select__text')).getText()).toBe("1.1: Introduction to Newton Scooters");
+            expect(stepSelectOptions[7].element(by.css('.node-select__text')).getText()).toBe("2.4: What is potential energy?");
+            stepSelectOptions[7].element(by.css('.node-select__text')).click(); // Click on step 2.4 in the step select menu
+            expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/project/demo#/vle/node6');
+        });
+    });
+
     it('should display the group view and allow user to collapse/expand views', function () {
         // Click on the close button and expect to go to the group view
         closeButton.click();
-        expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/project/demo#/vle/group1');
+        browser.waitForAngular(); // wait for Angular to load
+        expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/project/demo#/vle/group2');
 
-        // Clicking on Activity 1 should collapse the group1 view and
-        // Clicking on Activity 2 should expand the group 2 view and display the steps inside
         element.all(by.repeater('id in navCtrl.rootNode.ids')).then(function (groupNavItems) {
             var activity1 = groupNavItems[0];
             var activity2 = groupNavItems[1];
-            var titleElementGroup1 = activity1.element(by.className('md-title'));
-            expect(titleElementGroup1.getText()).toEqual('1: Introduction to Newton Scooters');
+            var activity3 = groupNavItems[2];
 
-            var titleElementGroup2 = activity2.element(by.className('md-title'));
-            expect(titleElementGroup2.getText()).toEqual('2: Powering Your Newton Scooter');
+            expect(activity1.element(by.className('md-title')).getText()).toEqual('1: Introduction to Newton Scooters');
+            expect(activity2.element(by.className('md-title')).getText()).toEqual('2: Powering Your Newton Scooter');
+            expect(activity3.element(by.className('md-title')).getText()).toEqual('3: Planning Your Newton Scooter');
 
-            expect(hasClass(activity1, 'expanded')).toBe(true);
-            activity1.element(by.className('nav-item--card__content')).click();
+            // Click on activity 1 to expand it
             expect(hasClass(activity1, 'expanded')).toBe(false);
+            activity1.element(by.className('nav-item--card__content')).click();
+            expect(hasClass(activity1, 'expanded')).toBe(true);
+            expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/project/demo#/vle/group1');
 
-            expect(hasClass(activity2, 'expanded')).toBe(false);
-            activity2.element(by.className('nav-item--card__content')).click();
+            // Check for completion icons for steps in Activity 1
+            activity1.all(by.repeater('childId in navitemCtrl.item.ids')).then(function (stepNavItems) {
+
+                // step 1.1 should be completed because it's an HTML step and we visited it
+                expect(stepNavItems[0].element(by.css('.md-button')).getText()).toBe('chrome_reader_mode\n1.1: Introduction to Newton Scooters check_circle');
+                expect(stepNavItems[0].element(by.cssContainingText('.material-icons', 'check_circle')).isPresent()).toBeTruthy();
+
+                // step 1.2 should not be completed yet
+                expect(stepNavItems[1].element(by.css('.md-button')).getText()).toBe('assignment\n1.2: Initial Ideas');
+                expect(stepNavItems[1].element(by.cssContainingText('.material-icons', 'check_circle')).isPresent()).toBeFalsy();
+            });
+
+            // Activity 2 should be expanded because we came to the group view from step 2.4
             expect(hasClass(activity2, 'expanded')).toBe(true);
-            expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/project/demo#/vle/group2');
 
-            // Check that step 2.3 has title "Explore the concepts" and has the gamepad icon
+            // Check that steps in activity 2 displays the step title and icon
             activity2.all(by.repeater('childId in navitemCtrl.item.ids')).then(function (stepNavItems) {
+                // step 2.1 should be completed because it's an HTML step and we visited it
+                expect(stepNavItems[0].element(by.css('.md-button')).getText()).toBe('chrome_reader_mode\n2.1: Newton Scooter Concepts check_circle');
+                expect(stepNavItems[0].element(by.cssContainingText('.material-icons', 'check_circle')).isPresent()).toBeTruthy();
+
                 expect(stepNavItems[2].element(by.css('.md-button')).getText()).toBe('gamepad\n2.3: Explore the concepts');
-                stepNavItems[2].element(by.tagName('button')).click();
+                stepNavItems[2].element(by.tagName('button')).click(); // Go to step 2.3.
                 expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/project/demo#/vle/node5');
             });
         });
+    });
+
+    it('should allow user to jump to a step by changing the URL path', function () {
+        browser.get('http://localhost:8080/wise/project/demo#/vle/node24'); // User changes the URL
+        browser.waitForAngular(); // wait for Angular to load
+        expect(element(by.model("stepToolsCtrl.toNodeId")).getText()).toBe('3.4: Feature Selection');
+
+        // Click on the next button and expect to go to the next step
+        nextButton.click();
+        expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/project/demo#/vle/node25');
+        expect(element(by.model("stepToolsCtrl.toNodeId")).getText()).toBe('4.1: Sketch Your Design');
+
+        nextButton.click();
+        expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/project/demo#/vle/node26');
+        expect(element(by.model("stepToolsCtrl.toNodeId")).getText()).toBe('4.2: Scooter Materials List');
+
+        // Click on the previous button and expect to go back to the previous step
+        previousButton.click();
+        expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/project/demo#/vle/node25');
+        expect(element(by.model("stepToolsCtrl.toNodeId")).getText()).toBe('4.1: Sketch Your Design');
     });
 
     it('should allow preview user to view the account menu', function () {
         accountButton.click(); // Open the Account Menu by clicking on the account button
         expect(accountMenu.getAttribute('aria-hidden')).toEqual("false"); // Account Menu should be displayed
 
-        // The account menu should have the exit and sign out buttons
+        // The account menu should have the preview user account icon and the exit and sign out buttons
+        element.all(by.repeater('name in themeCtrl.workgroupUserNames')).then(function (workgroupNames) {
+            expect(workgroupNames[0].element(by.binding('name')).getText()).toBe('Preview User');
+        });
+
         var exitButton = element(by.xpath('//button[@id="exitButton"]'));
+        expect(exitButton.isPresent()).toBeTruthy();
         expect(exitButton.getText()).toEqual("EXIT");
         var logOutButton = element(by.xpath('//button[@id="logOutButton"]'));
+        expect(logOutButton.isPresent()).toBeTruthy();
         expect(logOutButton.getText()).toEqual("SIGN OUT");
 
         // Hitting the escape key should dismiss the account menu
