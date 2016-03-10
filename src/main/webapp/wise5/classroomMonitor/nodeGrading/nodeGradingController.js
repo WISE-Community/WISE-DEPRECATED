@@ -46,12 +46,6 @@ var NodeGradingController = function () {
             this.nodeContent = node;
         }
 
-        // render components in show student work only mode
-        //this.mode = "showStudentWorkOnly";
-
-        //var vleStates = this.TeacherDataService.getVLEStates();
-        var vleStates = null;
-
         this.workgroupIds = this.ConfigService.getClassmateWorkgroupIds();
 
         this.annotationMappings = {};
@@ -191,8 +185,7 @@ var NodeGradingController = function () {
     }, {
         key: 'getAnnotationByStepWorkIdAndType',
         value: function getAnnotationByStepWorkIdAndType(stepWorkId, type) {
-            var annotation = this.AnnotationService.getAnnotationByStepWorkIdAndType(stepWorkId, type);
-            return annotation;
+            return this.AnnotationService.getAnnotationByStepWorkIdAndType(stepWorkId, type);
         }
     }, {
         key: 'scoreChanged',

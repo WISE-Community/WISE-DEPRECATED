@@ -10,6 +10,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var StudentProgressController = function () {
     function StudentProgressController($rootScope, $state, ConfigService, ProjectService, StudentStatusService, TeacherDataService, TeacherWebSocketService) {
+        var _this = this;
+
         _classCallCheck(this, StudentProgressController);
 
         this.$rootScope = $rootScope;
@@ -51,9 +53,9 @@ var StudentProgressController = function () {
         /**
          * Listen for the studentsOnlineReceived event
          */
-        $rootScope.$on('studentsOnlineReceived', angular.bind(this, function (event, args) {
-            this.studentsOnline = args.studentsOnline;
-        }));
+        $rootScope.$on('studentsOnlineReceived', function (event, args) {
+            _this.studentsOnline = args.studentsOnline;
+        });
     }
 
     _createClass(StudentProgressController, [{

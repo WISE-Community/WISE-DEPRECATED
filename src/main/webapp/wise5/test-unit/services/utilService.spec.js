@@ -48,10 +48,10 @@ describe('UtilService Unit Test', function () {
 
         // Test UtilService.convertStringToNumber()
         it('should convert a string to a number', function () {
-            // Calling it a number string should return the number
+            // Calling it with a number string should return the number
             expect(UtilService.convertStringToNumber("5")).toEqual(5);
 
-            // Calling it a number string should return the number
+            // Calling it with a number string should return the number
             expect(UtilService.convertStringToNumber("-100")).toEqual(-100);
 
             // Calling it with null should return null

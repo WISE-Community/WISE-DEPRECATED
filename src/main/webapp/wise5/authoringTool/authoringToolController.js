@@ -10,20 +10,22 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var AuthoringToolController = function () {
     function AuthoringToolController($scope, ConfigService, SessionService, $mdDialog) {
+        var _this = this;
+
         _classCallCheck(this, AuthoringToolController);
 
         this.ConfigService = ConfigService;
         this.SessionService = SessionService;
 
-        $scope.$on('showSessionWarning', angular.bind(this, function () {
+        $scope.$on('showSessionWarning', function () {
             // Appending dialog to document.body
             var confirm = $mdDialog.confirm().parent(angular.element(document.body)).title('Session Timeout').content('You have been inactive for a long time. Do you want to stay logged in?').ariaLabel('Session Timeout').ok('YES').cancel('No');
             $mdDialog.show(confirm).then(function () {
-                this.SessionService.renewSession();
-            }.bind(this), function () {
-                this.SessionService.forceLogOut();
-            }.bind(this));
-        }));
+                _this.SessionService.renewSession();
+            }, function () {
+                _this.SessionService.forceLogOut();
+            });
+        });
     }
 
     _createClass(AuthoringToolController, [{

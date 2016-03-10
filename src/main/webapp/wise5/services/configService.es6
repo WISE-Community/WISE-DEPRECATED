@@ -10,27 +10,6 @@ class ConfigService {
     setConfig(config) {
         this.config = config;
         this.sortClassmateUserInfosAlphabeticallyByName();
-
-        if (this.isPreview()) {
-            // set dummy userInfo if we're in preview mode
-            this.config.userInfo = {
-        		"myUserInfo": {
-        			"periodId": 1,
-        			"workgroupId": 1,
-        			"myClassInfo": {
-        				"classmateUserInfos": [],
-        				"sharedTeacherUserInfos": [],
-        				"periods": [{
-        					"periodId": 1,
-        					"periodName": "1"
-        				}]
-        			},
-        			"userIds": [1],
-        			"periodName": "1",
-        			"userName": "Preview Team"
-        		}
-	        };
-        }
     };
 
     retrieveConfig(configURL) {
@@ -55,45 +34,6 @@ class ConfigService {
 
     getMainHomePageURL() {
         return this.getConfigParam('mainHomePageURL');
-    };
-
-    getPeriodId() {
-        var periodId = null;
-        var userInfo = this.getConfigParam('userInfo');
-        if (userInfo != null) {
-            var myUserInfo = userInfo.myUserInfo;
-            if (myUserInfo != null) {
-                periodId = myUserInfo.periodId;
-            }
-        }
-        return periodId;
-    };
-
-    /**
-     * Get the periods
-     * @returns an array of period objects
-     */
-    getPeriods() {
-        var periods = [];
-
-        var userInfo = this.getConfigParam('userInfo');
-
-        if (userInfo != null) {
-
-            var myUserInfo = userInfo.myUserInfo;
-            if (myUserInfo != null) {
-
-                var myClassInfo = myUserInfo.myClassInfo;
-                if (myClassInfo != null) {
-
-                    if (myClassInfo.periods != null) {
-                        periods = myClassInfo.periods;
-                    }
-                }
-            }
-        }
-
-        return periods;
     };
 
     getRunId() {
@@ -132,6 +72,10 @@ class ConfigService {
         return this.getConfigParam('studentUploadsBaseURL');
     };
 
+    getUserInfo() {
+        return this.getConfigParam('userInfo');
+    };
+
     getWebSocketURL() {
         return this.getConfigParam('webSocketURL');
     };
@@ -144,22 +88,55 @@ class ConfigService {
         return this.getConfigParam('mode');
     };
 
-    getWorkgroupId() {
-        var workgroupId = null;
-        var userInfo = this.getConfigParam('userInfo');
-        if (userInfo != null) {
-            var myUserInfo = userInfo.myUserInfo;
-            if (myUserInfo != null) {
-                workgroupId = myUserInfo.workgroupId;
+    /**
+     * Returns the period id of the logged-in user.
+     */
+    getPeriodId() {
+        var periodId = null;
+        var myUserInfo = this.getMyUserInfo();
+        if (myUserInfo != null) {
+            periodId = myUserInfo.periodId;
+        }
+        return periodId;
+    };
+
+    /**
+     * Get the periods
+     * @returns an array of period objects
+     */
+    getPeriods() {
+        var periods = [];
+
+        var myUserInfo = this.getMyUserInfo();
+        if (myUserInfo != null) {
+
+            var myClassInfo = myUserInfo.myClassInfo;
+            if (myClassInfo != null) {
+
+                if (myClassInfo.periods != null) {
+                    periods = myClassInfo.periods;
+                }
             }
         }
+
+        return periods;
+    };
+
+    getWorkgroupId() {
+        var workgroupId = null;
+
+        var myUserInfo = this.getMyUserInfo();
+        if (myUserInfo != null) {
+            workgroupId = myUserInfo.workgroupId;
+        }
+
         return workgroupId;
     };
 
     getMyUserInfo() {
         var myUserInfo = null;
 
-        var userInfo = this.getConfigParam('userInfo');
+        var userInfo = this.getUserInfo();
         if (userInfo != null) {
             myUserInfo = userInfo.myUserInfo;
         }
@@ -169,16 +146,14 @@ class ConfigService {
 
     getClassmateUserInfos() {
         var classmateUserInfos = null;
-        var userInfo = this.getConfigParam('userInfo');
-        if (userInfo != null) {
-            var myUserInfo = userInfo.myUserInfo;
-            if (myUserInfo != null) {
-                var myClassInfo = myUserInfo.myClassInfo;
-                if (myClassInfo != null) {
-                    classmateUserInfos = myClassInfo.classmateUserInfos;
-                }
+        var myUserInfo = this.getMyUserInfo();
+        if (myUserInfo != null) {
+            var myClassInfo = myUserInfo.myClassInfo;
+            if (myClassInfo != null) {
+                classmateUserInfos = myClassInfo.classmateUserInfos;
             }
         }
+
         return classmateUserInfos;
     };
 

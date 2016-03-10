@@ -25,9 +25,24 @@ describe('ConfigService Unit Test', function () {
 
     describe('ConfigService', function () {
 
+        var configURL = "http://localhost:8080/wise/config/1";
+
         // Load sample configs
         var sampleConfig1 = window.mocks['test-unit/sampleData/config/config1'];
         var sampleConfig2 = window.mocks['test-unit/sampleData/config/config2'];
+
+        it('should retrieve config', function () {
+            spyOn(ConfigService, "setConfig").and.callThrough();
+            spyOn(ConfigService, "sortClassmateUserInfosAlphabeticallyByName");
+            $httpBackend.when('GET', configURL).respond(sampleConfig1);
+            $httpBackend.expectGET(configURL);
+            var configPromise = ConfigService.retrieveConfig(configURL);
+            $httpBackend.flush();
+            // TODO: when replacing this line below with expect(ConfigService.setConfig).toHaveBeenCalled(sampleConfig1);, it fails.
+            // it shouldn't fail, so find out why.
+            expect(ConfigService.setConfig).toHaveBeenCalled();
+            expect(ConfigService.sortClassmateUserInfosAlphabeticallyByName).toHaveBeenCalled();
+        });
 
         it('should sort the classmates alphabetically by name when setting config', function () {
             spyOn(ConfigService, "sortClassmateUserInfosAlphabeticallyByNameHelper").and.callThrough(); // actually call through the function
@@ -54,6 +69,28 @@ describe('ConfigService Unit Test', function () {
             var isPreview2 = ConfigService.isPreview();
             expect(mode2).toEqual("preview");
             expect(isPreview2).toEqual(true);
+        });
+
+        // Test getPeriodId()
+        it('should get the period id of the student', function () {
+            ConfigService.setConfig(sampleConfig1);
+            var config1PeriodId = ConfigService.getPeriodId();
+            expect(config1PeriodId).toEqual(1);
+
+            ConfigService.setConfig(sampleConfig2);
+            var config2PeriodId = ConfigService.getPeriodId();
+            expect(config2PeriodId).toEqual(2);
+        });
+
+        // Test getPeriods()
+        it('should get the periods in the run', function () {
+            ConfigService.setConfig(sampleConfig1);
+            var config1Periods = ConfigService.getPeriods();
+            expect(config1Periods).toEqual([{ periodId: 1, periodName: '1' }, { periodId: 2, periodName: '2' }, { periodId: 3, periodName: 'newperiod' }]);
+
+            ConfigService.setConfig(sampleConfig2);
+            var config2Periods = ConfigService.getPeriods();
+            expect(config2Periods).toEqual([{ periodId: 1, periodName: 'one' }, { periodId: 2, periodName: 'two' }]);
         });
 
         // Test getStudentFirstNamesByWorkgroupId()

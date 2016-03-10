@@ -1,7 +1,7 @@
 {
   "userInfo": {
     "myUserInfo": {
-      "periodId": 1,
+      "periodId": 2,
       "workgroupId": 2,
       "myClassInfo": {
         "classmateUserInfos": [{
@@ -20,13 +20,10 @@
         "sharedTeacherUserInfos": [],
         "periods": [{
           "periodId": 1,
-          "periodName": "1"
+          "periodName": "one"
         }, {
           "periodId": 2,
-          "periodName": "2"
-        }, {
-          "periodId": 5,
-          "periodName": "newperiod"
+          "periodName": "two"
         }]
       },
       "userIds": [4],

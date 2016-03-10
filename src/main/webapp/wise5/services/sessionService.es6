@@ -47,12 +47,12 @@ class SessionService {
          * for this event and when there are no more components left to wait
          * for, we will then log out.
          */
-        this.$rootScope.$on('doneExiting', angular.bind(this, function() {
+        this.$rootScope.$on('doneExiting', () => {
 
             // check if all components are done unloading so we can exit
             // no longer needed.
             //this.attemptExit();
-        }));
+        });
 
         /**
          * Listen for the 'goHome' event. We will attempt to go home when
@@ -62,14 +62,14 @@ class SessionService {
          * will wait for those components to fire the 'componentDoneUnloading'
          * event and then try to go home again.
          */
-        this.$rootScope.$on('goHome', angular.bind(this, function() {
+        this.$rootScope.$on('goHome', () => {
 
             // let other components know that we are exiting
             this.$rootScope.$broadcast('exit');
 
             // check if all components are done unloading so we can exit
             this.attemptExit();
-        }));
+        });
 
         /**
          * Listen for the 'logOut' event. We will attempt to log out when
@@ -79,7 +79,7 @@ class SessionService {
          * will wait for those components to fire the 'componentDoneUnloading'
          * event and then try to log out again.
          */
-        this.$rootScope.$on('logOut', angular.bind(this, function() {
+        this.$rootScope.$on('logOut', () => {
 
             /*
              * set the perform log out boolean to true so that we know to
@@ -92,7 +92,7 @@ class SessionService {
 
             // check if all components are done unloading so we can exit
             this.attemptExit();
-        }));
+        });
     }
 
     /**

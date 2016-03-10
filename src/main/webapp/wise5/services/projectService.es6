@@ -545,7 +545,7 @@ class ProjectService {
             // note that this also works for \"abc.png and \'abc.png, where the quotes are escaped
             contentString = contentString.replace(
                 new RegExp('(\'|\"|\\\\\'|\\\\\")[^:][^\/][^\/][a-zA-Z0-9@\\._\\/\\s\\-]*\.(png|jpe?g|pdf|gif|mov|mp4|mp3|wav|swf|css|txt|json|xlsx?|doc|html)(\'|\"|\\\\\'|\\\\\")', 'gi'),
-                function myFunction(matchedString) {
+                (matchedString) => {
                     // once found, we prepend the contentBaseURL + "assets/" to the string within the quotes and keep everything else the same.
                     var delimiter = '';
                     var matchedStringWithoutQuotes = '';

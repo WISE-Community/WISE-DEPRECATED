@@ -7,27 +7,30 @@ describe('WISE5 Student VLE Preview', () => {
         });
     };
 
-    var previousButton;
-    var nextButton;
-    var closeButton;
+    browser.get('http://localhost:8080/wise/project/demo');
+    var previousButton = element(by.xpath('//button[@aria-label="Previous Item"]'));
+    var nextButton = element(by.xpath('//button[@aria-label="Next Item"]'));
+    var closeButton = element(by.xpath('//button[@aria-label="Close Step"]'));
+    var notebookButton = element(by.xpath('//button[@id="notebookButton"]'));
+    var notebookSideNav = element(by.xpath('//md-sidenav'));  // side navigation bar for the notebook
+    var accountButton = element(by.xpath('//button[@id="accountButton"]'));
+    var accountMenu = element(by.css('.md-open-menu-container'));
 
     it('should load the vle and go to node 1', () => {
-        browser.get('http://localhost:8080/wise/project/demo');
-
         expect(browser.getTitle()).toEqual('WISE');
         expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/project/demo#/vle/node1');
-
         expect(element(by.model("stepToolsCtrl.toNodeId")).getText()).toBe('1.1: Introduction to Newton Scooters');
     });
 
     it('should have UI elements on the page', () => {
-        // Check that previous, next and close buttons are on the page
-        previousButton = element(by.xpath('//button[@aria-label="Previous Item"]'));
+        // Check that previous, next, close, notebook, and account buttons are on the page and have the right md-icons
         expect(previousButton.getText()).toBe('arrow_back');
-        nextButton = element(by.xpath('//button[@aria-label="Next Item"]'));
         expect(nextButton.getText()).toBe('arrow_forward');
-        closeButton = element(by.xpath('//button[@aria-label="Close Step"]'));
         expect(closeButton.getText()).toBe('close');
+        expect(notebookButton.getText()).toBe('book');
+        expect(accountButton.getText()).toBe('account_circle');
+        expect(hasClass(notebookSideNav, 'md-closed')).toBe(true);        // Notebook side nav should be hidden
+        expect(accountMenu.getAttribute('aria-hidden')).toEqual("true");  // Account menu should be hidden
     });
 
     it('should navigate next and previous steps using the buttons', () => {
@@ -79,7 +82,27 @@ describe('WISE5 Student VLE Preview', () => {
                 expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/project/demo#/vle/node5');
             });
         });
+    });
 
+    it('should allow preview user to view the account menu', () => {
+        accountButton.click();   // Open the Account Menu by clicking on the account button
+        expect(accountMenu.getAttribute('aria-hidden')).toEqual("false");  // Account Menu should be displayed
 
+        // The account menu should have the exit and sign out buttons
+        var exitButton = element(by.xpath('//button[@id="exitButton"]'));
+        expect(exitButton.getText()).toEqual("EXIT");
+        var logOutButton = element(by.xpath('//button[@id="logOutButton"]'));
+        expect(logOutButton.getText()).toEqual("SIGN OUT");
+
+        // Hitting the escape key should dismiss the account menu
+        browser.actions().sendKeys(protractor.Key.ESCAPE).perform();
+        expect(accountMenu.getAttribute('aria-hidden')).toEqual("true");  // Account Menu should be hidden
+
+        accountButton.click();  // Open the Account Menu by clicking on the account button
+        expect(accountMenu.getAttribute('aria-hidden')).toEqual("false");  // Account Menu should be displayed
+
+        // Clicking outside of the Account Menu should dismiss the Account Menu
+        element(by.xpath('//body')).click();
+        expect(accountMenu.getAttribute('aria-hidden')).toEqual("true");  // Account Menu should be hidden
     });
 });

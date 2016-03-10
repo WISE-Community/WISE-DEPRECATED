@@ -1,6 +1,7 @@
 'use strict';
 
 class TeacherDataService {
+
     constructor($http,
                 $rootScope,
                 AnnotationService,
@@ -11,7 +12,6 @@ class TeacherDataService {
         this.ConfigService = ConfigService;
 
         this.studentData = {};
-
         this.currentPeriod = null;
     }
 
@@ -34,12 +34,10 @@ class TeacherDataService {
         httpParams.url = exportURL;
         httpParams.params = params;
 
-        return this.$http(httpParams).then(angular.bind(this, function(result) {
+        return this.$http(httpParams).then((result) => {
             return result.data;
-        }));
+        });
     };
-
-
 
     /**
      * Retrieve the student data for a node id
@@ -123,7 +121,7 @@ class TeacherDataService {
         httpParams.url = studentDataURL;
         httpParams.params = params;
 
-        return this.$http(httpParams).then(angular.bind(this, function(result) {
+        return this.$http(httpParams).then((result) => {
             var resultData = result.data;
             if (resultData != null) {
 
@@ -205,31 +203,7 @@ class TeacherDataService {
 
                 this.AnnotationService.setAnnotations(this.studentData.annotations);
             }
-        }));
-    };
-
-    sortVLEStatesAlphabeticallyByUserName() {
-        var vleStates = this.vleStates;
-
-        if (vleStates != null) {
-            vleStates.sort(this.sortVLEStatesAlphabeticallyByUserNameHelper);
-        }
-
-        return vleStates;
-    };
-
-    sortVLEStatesAlphabeticallyByUserNameHelper(a, b) {
-        var aUserId = a.userId;
-        var bUserId = b.userId;
-        var result = 0;
-
-        if (aUserId < bUserId) {
-            result = -1;
-        } else if (aUserId > bUserId) {
-            result = 1;
-        }
-
-        return result;
+        });
     };
 
     getComponentStatesByWorkgroupId(workgroupId) {
@@ -301,7 +275,7 @@ class TeacherDataService {
         var componentStatesByNodeId = this.getComponentStatesByNodeId(nodeId);
 
         // find the intersect and return it
-        return componentStatesByWorkgroupId.filter(function(n) {
+        return componentStatesByWorkgroupId.filter((n) => {
             return componentStatesByNodeId.indexOf(n) != -1;
         });
     };
@@ -317,7 +291,7 @@ class TeacherDataService {
         var componentStatesByComponentId = this.getComponentStatesByComponentId(componentId);
 
         // find the intersect and return it
-        return componentStatesByWorkgroupId.filter(function(n) {
+        return componentStatesByWorkgroupId.filter((n) => {
             return componentStatesByComponentId.indexOf(n) != -1;
         });
     }
@@ -345,7 +319,7 @@ class TeacherDataService {
         var eventsByNodeId = this.getEventsByNodeId(nodeId);
 
         // find the intersect and return it
-        return eventsByWorkgroupId.filter(function(n) {
+        return eventsByWorkgroupId.filter((n) => {
             return eventsByNodeId.indexOf(n) != -1;
         });
     };
@@ -373,7 +347,7 @@ class TeacherDataService {
         var annotationsByNodeId = this.getAnnotationsByNodeId(nodeId);
 
         // find the intersect and return it
-        return annotationsToWorkgroupId.filter(function(n) {
+        return annotationsToWorkgroupId.filter((n) => {
             return annotationsByNodeId.indexOf(n) != -1;
         });
     };

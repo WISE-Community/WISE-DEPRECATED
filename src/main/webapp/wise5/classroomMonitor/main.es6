@@ -135,6 +135,9 @@ let mainModule = angular.module('classroomMonitor', [
                         },
                         webSocket: function(TeacherWebSocketService, config) {
                             return TeacherWebSocketService.initialize();
+                        },
+                        sessionTimers: (SessionService, config) => {
+                            return SessionService.initializeSession();
                         }
                     }
                 })

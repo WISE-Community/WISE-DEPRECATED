@@ -23,6 +23,7 @@ var NotebookController = function () {
         this.ProjectService = ProjectService;
         this.StudentAssetService = StudentAssetService;
         this.StudentDataService = StudentDataService;
+        this.newNotePlaceholderText = 'Type your note here...';
 
         this.notebook = null;
         this.itemId = null;
@@ -144,7 +145,7 @@ var NotebookController = function () {
                 nodeId: currentNodeId, // Id of the node this note was created on
                 title: "Note on " + currentNodeTitle, // Title of the node this note was created on
                 content: {
-                    text: "Type your note here...",
+                    text: "",
                     attachments: []
                 }
             };

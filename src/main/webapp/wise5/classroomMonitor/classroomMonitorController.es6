@@ -2,14 +2,40 @@
 
 class ClassroomMonitorController {
 
-    constructor($scope, $rootScope, $state, $stateParams, ConfigService, ProjectService, TeacherDataService) {
-        this.$scope = $scope;
+    constructor($mdDialog,
+                $rootScope,
+                $scope,
+                $state,
+                $stateParams,
+                ConfigService,
+                ProjectService,
+                SessionService,
+                TeacherDataService) {
         this.$rootScope = $rootScope;
+        this.$scope = $scope;
         this.$state = $state;
         this.$stateParams = $stateParams;
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
+        this.SessionService = SessionService;
         this.TeacherDataService = TeacherDataService;
+
+        $scope.$on('showSessionWarning', () => {
+            // Appending dialog to document.body
+            let confirm = $mdDialog.confirm()
+                .parent(angular.element(document.body))
+                .title('Session Timeout')
+                .content('You have been inactive for a long time. Do you want to stay logged in?')
+                .ariaLabel('Session Timeout')
+                .ok('YES')
+                .cancel('No');
+            $mdDialog.show(confirm).then(() => {
+                this.SessionService.renewSession();
+            }, () => {
+                this.SessionService.forceLogOut();
+            });
+        });
+
     };
 
     hello() {
@@ -17,8 +43,8 @@ class ClassroomMonitorController {
         // perform the request
         var req = ocpu.call("hello", {
             "name": "Hiroki"
-        }, function (session) {
-            session.getStdout(function (returnedCSVString) {
+        }, (session) => {
+            session.getStdout((returnedCSVString) => {
                 var csvBlob = new Blob([returnedCSVString], {type: 'text/csv'});
                 var csvUrl = URL.createObjectURL(csvBlob);
                 var a = document.createElement("a");
@@ -29,7 +55,7 @@ class ClassroomMonitorController {
                 a.click();
 
                 // timeout is required for FF.
-                window.setTimeout(function () {
+                window.setTimeout(() => {
                     URL.revokeObjectURL(csvUrl);  // tell browser to release URL reference
                 }, 3000);
             });
@@ -79,7 +105,7 @@ class ClassroomMonitorController {
                     row[COLUMN_INDEX_STUDENT_RESPONSE] = studentDataJSONCell.response || "";
                 }
 
-                // append row to cvsString
+                // append row to csvString
                 for (var cellIndex = 0; cellIndex < row.length; cellIndex++) {
                     var cell = row[cellIndex];
                     if (typeof cell === "object") {
@@ -100,8 +126,8 @@ class ClassroomMonitorController {
             //perform the request
             var request = ocpu.call("extractchoices", {
                 "csvFile": csvFile
-            }, function (session) {
-                session.getStdout(function (returnedCSVString) {
+            }, (session) => {
+                session.getStdout((returnedCSVString) => {
                     var csvBlob = new Blob([returnedCSVString], {type: 'text/csv'});
                     var csvUrl = URL.createObjectURL(csvBlob);
                     var a = document.createElement("a");
@@ -111,7 +137,7 @@ class ClassroomMonitorController {
                     a.click();
 
                     // timeout is required for FF.
-                    window.setTimeout(function () {
+                    window.setTimeout(() => {
                         URL.revokeObjectURL(csvUrl);  // tell browser to release URL reference
                     }, 3000);
 
@@ -120,14 +146,14 @@ class ClassroomMonitorController {
             });
 
             //if R returns an error, alert the error message
-            request.fail(function () {
+            request.fail(() => {
                 alert("Server error: " + request.responseText);
             });
         });
     }
 }
 
-ClassroomMonitorController.$inject = ['$scope', '$rootScope', '$state', '$stateParams', 'ConfigService',
-    'ProjectService', 'TeacherDataService'];
+ClassroomMonitorController.$inject = ['$mdDialog', '$rootScope', '$scope', '$state', '$stateParams',
+    'ConfigService','ProjectService', 'SessionService', 'TeacherDataService'];
 
 export default ClassroomMonitorController;

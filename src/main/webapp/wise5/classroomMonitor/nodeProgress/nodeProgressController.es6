@@ -1,4 +1,7 @@
+'use strict';
+
 class NodeProgressController {
+
     constructor($scope, $state, ConfigService, ProjectService, TeacherDataService) {
         this.$scope = $scope;
         this.$state = $state;
@@ -14,7 +17,7 @@ class NodeProgressController {
 
         this.items = this.ProjectService.idToOrder;
 
-        this.$scope.$on('currentNodeChanged', angular.bind(this, function(event, args) {
+        this.$scope.$on('currentNodeChanged', (event, args) => {
             var previousNode = args.previousNode;
             var currentNode = args.currentNode;
             if (previousNode != null && previousNode.type === 'group') {
@@ -39,7 +42,7 @@ class NodeProgressController {
             }
 
             this.$scope.$apply();
-        }));
+        });
 
         var startNodeId = this.ProjectService.getStartNodeId();
         var rootNode = this.ProjectService.getRootNode(startNodeId);
@@ -113,6 +116,7 @@ class NodeProgressController {
         this.$state.go('root.nodeGrading', {nodeId:nodeId});
     };
 }
+
 NodeProgressController.$inject = ['$scope', '$state', 'ConfigService', 'ProjectService', 'TeacherDataService'];
 
 export default NodeProgressController;

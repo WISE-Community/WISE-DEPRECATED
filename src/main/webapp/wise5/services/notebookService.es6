@@ -1,11 +1,13 @@
 class NotebookService {
     constructor($http,
+                $q,
                 $rootScope,
                 ConfigService,
                 StudentAssetService,
                 StudentDataService) {
 
         this.$http = $http;
+        this.$q = $q;
         this.$rootScope = $rootScope;
         this.ConfigService = ConfigService;
         this.StudentAssetService = StudentAssetService;
@@ -13,19 +15,17 @@ class NotebookService {
 
         this.filters = [
             {'name': 'all', 'label': 'All'},
-            {'name': 'notes', 'label': 'Notes'},
+            {'name': 'notes', 'label': 'Notes'}
+            /*,
             {'name': 'bookmarks', 'label': 'Bookmarks'},
             {'name': 'questions', 'label': 'Questions'}
+            */
         ];
 
         this.notebook = {};
         this.notebook.items = [];
         this.notebook.deletedItems = [];
     }
-
-    getFilters(){
-        return this.filters;
-    };
 
     addItem(notebookItem) {
         this.notebook.items.push(notebookItem);
@@ -137,32 +137,43 @@ class NotebookService {
     };
 
     saveNotebookItem(nodeId, type, title, content) {
-        var config = {};
-        config.method = 'POST';
-        config.url = this.ConfigService.getStudentNotebookURL();
-        config.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
-        var params = {};
-        params.workgroupId = this.ConfigService.getWorkgroupId();
-        params.periodId = this.ConfigService.getPeriodId();
-        params.nodeId = nodeId;
-        params.type = type;
-        params.title = title;
-        params.content = angular.toJson(content);
-        params.clientSaveTime = Date.parse(new Date());
-
-        config.data = $.param(params);
-
-        return this.$http(config).then((result) => {
-            var notebookItem = result.data;
-            if (notebookItem != null) {
-                if (notebookItem.type === "note") {
-                    notebookItem.content = angular.fromJson(notebookItem.content);
-                }
+        if (this.ConfigService.isPreview()) {
+            return this.$q((resolve, reject) => {
+                let notebookItem = {
+                    type: type,
+                    content: content
+                };
                 this.notebook.items.push(notebookItem);
                 this.$rootScope.$broadcast('notebookUpdated', {notebook: this.notebook});
-            }
-            return null;
-        });
+                resolve();
+            });
+        } else {
+            var config = {};
+            config.method = 'POST';
+            config.url = this.ConfigService.getStudentNotebookURL();
+            config.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
+            var params = {};
+            params.workgroupId = this.ConfigService.getWorkgroupId();
+            params.periodId = this.ConfigService.getPeriodId();
+            params.nodeId = nodeId;
+            params.type = type;
+            params.title = title;
+            params.content = angular.toJson(content);
+            params.clientSaveTime = Date.parse(new Date());
+            config.data = $.param(params);
+
+            return this.$http(config).then((result) => {
+                var notebookItem = result.data;
+                if (notebookItem != null) {
+                    if (notebookItem.type === "note") {
+                        notebookItem.content = angular.fromJson(notebookItem.content);
+                    }
+                    this.notebook.items.push(notebookItem);
+                    this.$rootScope.$broadcast('notebookUpdated', {notebook: this.notebook});
+                }
+                return null;
+            });
+        }
     };
 
     uploadStudentAssetNotebookItem(file) {
@@ -209,6 +220,7 @@ class NotebookService {
 
 NotebookService.$inject = [
     '$http',
+    '$q',
     '$rootScope',
     'ConfigService',
     'StudentAssetService',

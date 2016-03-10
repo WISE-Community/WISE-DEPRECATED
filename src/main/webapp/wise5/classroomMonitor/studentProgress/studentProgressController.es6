@@ -1,4 +1,7 @@
+'use strict';
+
 class StudentProgressController {
+
     constructor($rootScope,
                 $state,
                 ConfigService,
@@ -45,9 +48,9 @@ class StudentProgressController {
         /**
          * Listen for the studentsOnlineReceived event
          */
-        $rootScope.$on('studentsOnlineReceived', angular.bind(this, function (event, args) {
+        $rootScope.$on('studentsOnlineReceived', (event, args) => {
             this.studentsOnline = args.studentsOnline;
-        }));
+        });
 
     }
 

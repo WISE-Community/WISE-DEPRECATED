@@ -1,6 +1,7 @@
 'use strict';
 
 class NotebookController {
+
     constructor($injector,
                 $rootScope,
                 $scope,
@@ -18,6 +19,7 @@ class NotebookController {
         this.ProjectService = ProjectService;
         this.StudentAssetService = StudentAssetService;
         this.StudentDataService = StudentDataService;
+        this.newNotePlaceholderText = 'Type your note here...';
 
         this.notebook = null;
         this.itemId = null;
@@ -40,7 +42,7 @@ class NotebookController {
 
     getTemplateUrl() {
         return this.templateUrl;
-    };
+    }
 
     retrieveNotebookItems() {
         // fetch all assets first because a subset of it will be referenced by a notebook item
@@ -49,7 +51,7 @@ class NotebookController {
                 this.notebook = notebook;
             });
         });
-    };
+    }
 
     attachStudentAssetToNewNote(files) {
         if (files != null) {
@@ -69,13 +71,13 @@ class NotebookController {
                 });
             }
         }
-    };
+    }
 
     removeAttachment(attachment) {
         if (this.newNote.content.attachments.indexOf(attachment) != -1) {
             this.newNote.content.attachments.splice(this.newNote.content.attachments.indexOf(attachment), 1);
         }
-    };
+    }
 
     deleteStudentAsset(studentAsset) {
         alert('delete student asset from note book not implemented yet');
@@ -86,33 +88,33 @@ class NotebookController {
          this.calculateTotalUsage();
          }));
          */
-    };
+    }
 
     deleteItem(item) {
         this.NotebookService.deleteItem(item);
-    };
+    }
 
     notebookItemSelected($event, notebookItem) {
         this.selectedNotebookItem = notebookItem;
-    };
+    }
 
     attachNotebookItemToComponent($event, notebookItem) {
         this.componentController.attachNotebookItemToComponent(notebookItem);
         this.selectedNotebookItem = null;  // reset selected notebook item
         // TODO: add some kind of unobtrusive confirmation to let student know that the notebook item has been added to current component
         $event.stopPropagation();  // prevents parent notebook list item from getting the onclick event so this item won't be re-selected.
-    };
+    }
 
     notebookItemDragStartCallback(event, ui, notebookItem) {
         //$(ui.helper.context).data('objectType', 'NotebookItem');
         //$(ui.helper.context).data('objectData', notebookItem);
-    };
+    }
 
     myWorkDragStartCallback(event, ui, nodeId, nodeType) {
         //$(ui.helper.context).data('importType', 'NodeState');
         //$(ui.helper.context).data('importWorkNodeState', StudentDataService.getLatestNodeStateByNodeId(nodeId));
         //$(ui.helper.context).data('importWorkNodeType', nodeType);
-    };
+    }
 
     showAddNote() {
         // setting this will show the add note div
@@ -123,7 +125,7 @@ class NotebookController {
             nodeId: currentNodeId, // Id of the node this note was created on
             title: "Note on " + currentNodeTitle,  // Title of the node this note was created on
             content: {
-                text: "Type your note here...",
+                text: "",
                 attachments: []
             }
         };
@@ -147,12 +149,12 @@ class NotebookController {
     addBookmark() {
         // TODO: implement me
         this.newNote = null; // this will hide the add note div
-    };
+    }
 
     addQuestion() {
         // TODO: implement me
         this.newNote = null; // this will hide the add note div
-    };
+    }
 }
 
 NotebookController.$inject = [

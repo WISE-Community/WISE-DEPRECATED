@@ -428,7 +428,7 @@ public class InformationController {
     @RequestMapping("/vleconfig")
 	private void handleGetConfig(HttpServletRequest request, HttpServletResponse response)
 	        throws ObjectNotFoundException, IOException {
-        String contextPath = request.getContextPath(); //get the context path e.g. /wise
+		String contextPath = request.getContextPath(); //get the context path e.g. /wise
 		User signedInUser = ControllerUtil.getSignedInUser();
 		String projectIdString = request.getParameter("projectId");
 		Long projectId = null;
@@ -439,9 +439,9 @@ public class InformationController {
 		Long parentProjectId = null;
 		String runName = "";
 
-        if (mode == null) {
-            mode = "preview";
-        }
+		if (mode == null) {
+			mode = "preview";
+		}
 
 		String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
 		String studentUploadsBaseWWW = wiseProperties.getProperty("studentuploads_base_www");
@@ -458,7 +458,7 @@ public class InformationController {
 			} else {
 				projectId = Long.parseLong(projectIdString);
 			}
-        }
+		}
 
 		// if projectId provided, this is a request for preview
 		if (projectId != null) {
@@ -467,11 +467,45 @@ public class InformationController {
 			parentProjectId = project.getParentProjectId(); // get the parent project id as a string
 
 			rawProjectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
+
 			try {
 				config.put("runId", "");
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
+
+			// if we're previewing a WISE5 project, add a dummy user info
+			Integer wiseVersion = project.getWiseVersion();
+			if (wiseVersion != null && wiseVersion == 5) {
+				try {
+					String dummyUserInfoJSONString = 
+							"{\"myUserInfo\": {"+
+								"\"periodId\": 1,"+
+								"\"workgroupId\": 1,"+
+								"\"myClassInfo\": {"+
+									"\"classmateUserInfos\": [],"+
+									"\"sharedTeacherUserInfos\": [],"+
+									"\"periods\": [{"+
+										"\"periodId\": 1,"+
+										"\"periodName\": \"1\""+
+									"}],"+
+									"\"teacherUserInfo\": {"+
+										"\"workgroupId\": 1,"+
+										"\"userName\": \"Preview Teacher\""+
+									"}"+
+								"},"+
+								"\"userIds\": [1],"+
+								"\"periodName\": \"1\","+
+								"\"userName\": \"Preview Team\""+ 
+								"}"+
+							"}";
+					JSONObject userInfoJSONObject = new JSONObject(dummyUserInfoJSONString);
+					config.put("userInfo", userInfoJSONObject);
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+			}
+
 		} else if (runId != null) {
 			/* if no projectId String provided, try getting project url from run also add gradework
 			 * specific config to the config */

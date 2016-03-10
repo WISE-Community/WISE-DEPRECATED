@@ -1,4 +1,7 @@
+'use strict';
+
 class StudentGradingController {
+
     constructor($stateParams,
                 AnnotationService,
                 ConfigService,
