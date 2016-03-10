@@ -418,8 +418,8 @@ class DiscussionController {
             }
         };
 
-        this.$scope.$watch(function() { return $mdMedia('gt-md'); }, function(lg) {
-            $scope.lgScreen = lg;
+        this.$scope.$watch(function() { return $mdMedia('gt-sm'); }, function(md) {
+            $scope.mdScreen = md;
         });
 
     }
@@ -814,7 +814,8 @@ class DiscussionController {
                         if (componentState.studentData.isSubmit) {
 
                             // add the user names to the component state so we can display next to the response
-                            componentState.userNames = this.ConfigService.getUserNamesByWorkgroupId(workgroupId, true).join(', ');
+                            let userNames = this.ConfigService.getUserNamesByWorkgroupId(workgroupId);
+                            componentState.userNames = userNames.map(function(obj) { return obj.name; }).join(', ');
 
                             // add a replies array to the component state that we will fill with component state replies later
                             componentState.replies = [];
@@ -910,7 +911,8 @@ class DiscussionController {
                         var workgroupId = componentState.workgroupId;
 
                         // add the user names to the component state so we can display next to the response
-                        componentState.userNames = this.ConfigService.getUserNamesByWorkgroupId(workgroupId, true).join(', ');
+                        let userNames = this.ConfigService.getUserNamesByWorkgroupId(workgroupId);
+                        componentState.userNames = userNames.map(function(obj) { return obj.name; }).join(', ');
 
                         // add a replies array to the component state that we will fill with component state replies later
                         componentState.replies = [];

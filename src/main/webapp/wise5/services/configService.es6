@@ -335,24 +335,33 @@ class ConfigService {
         return userName;
     };
 
-    getUserNamesByWorkgroupId(workgroupId, noUserIds) {
-        var userNames = [];
+    getUserNamesByWorkgroupId(workgroupId) {
+        let userNamesObjects = [];
 
         if (workgroupId != null) {
-            var userInfo = this.getUserInfoByWorkgroupId(workgroupId);
+            let userInfo = this.getUserInfoByWorkgroupId(workgroupId);
 
             if (userInfo != null) {
-                userNames = userInfo.userName.split(':');
+                let userNames = userInfo.userName.split(':');
 
-                if (noUserIds) {
-                    for (var i = 0; i < userNames.length; i++) {
-                        userNames[i] = userNames[i].replace(/ \(.*\)$/g, '');
+                for (let i = 0; i < userNames.length; i++) {
+                    let name = userNames[i];
+                    let id = "";
+                    let regex = /(.+) \((.+)\)/g;
+                    let matches = regex.exec(name);
+                    if (matches) {
+                        name = matches[1];
+                        id = matches[2];
                     }
+                    userNamesObjects.push({
+                        name: name,
+                        id: id
+                    });
                 }
             }
         }
 
-        return userNames;
+        return userNamesObjects;
     };
 
     isPreview() {
