@@ -85,7 +85,7 @@
             <md-input-container class="input-container md-block input-container--open-response input-container--component md-no-float">
                 <label class="input-label md-no-float" ng-disabled="labelController.isDisabled"
                        compile="labelController.getPrompt()" ng-if="labelController.showPrompt()"></label>
-                <div class="input-wrapper" ng-class="{'input-wrapper--richtext': labelController.isRichTextEnabled}">
+                <div class="input-wrapper">
                     <md-button class="md-raised md-primary"
                                ng-click="labelController.newLabelButtonClicked()"
                                ng-disabled="labelController.isDisabled"
