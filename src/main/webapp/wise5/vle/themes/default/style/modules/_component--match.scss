@@ -1,0 +1,22 @@
+// Variables
+
+// Base
+.match-content {
+    background-color: color('gray-light');
+}
+
+.match-feedback {
+    transition: all 400ms;
+    /*padding-left: 8px;
+    border-left: 4px solid;*/
+    margin-top: 8px;
+    font-size: rem(1.6);
+
+    &.ng-hide {
+        opacity: 0;
+    }
+
+    md-icon {
+        font-size: 1.35rem;
+    }
+}

@@ -22,10 +22,12 @@
         "layouts/l-sidebar";
 
 // 3. Modules
-@import "modules/inputs",
+@import "modules/ui-tree",
+        "modules/inputs",
         "modules/nav",
         "modules/node",
         "modules/toolbar",
+        "modules/menu",
         "modules/account-menu",
         "modules/component",
         "modules/component--discussion",

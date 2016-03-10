@@ -5,6 +5,7 @@ class ThemeController {
                 ConfigService,
                 ProjectService,
                 StudentDataService,
+                StudentStatusService,
                 NotebookService,
                 SessionService,
                 $mdDialog,
@@ -17,6 +18,7 @@ class ThemeController {
         this.StudentDataService = StudentDataService;
         this.NotebookService = NotebookService;
         this.SessionService = SessionService;
+        this.StudentStatusService = StudentStatusService;
         this.$mdDialog = $mdDialog;
         this.$mdToast = $mdToast;
         this.$mdComponentRegistry = $mdComponentRegistry;
@@ -33,7 +35,7 @@ class ThemeController {
         this.rootNodeStatus = this.nodeStatuses[this.rootNode.id];
 
         this.workgroupId = this.ConfigService.getWorkgroupId();
-        this.workgroupUserNames = this.ConfigService.isPreview() ? ['Preview User'] : this.ConfigService.getUserNamesByWorkgroupId(this.workgroupId);
+        this.workgroupUserNames = this.ConfigService.getUserNamesByWorkgroupId(this.workgroupId);
 
         // build project status pop-up
         let statusTemplateUrl = this.themePath + '/templates/projectStatus.html';
@@ -252,6 +254,10 @@ class ThemeController {
         this.$mdToast.hide(this.connectionLostDisplay);
         this.connectionLostShown = false;
     }
+
+    getAvatarColorForWorkgroupId (workgroupId) {
+        return this.StudentStatusService.getAvatarColorForWorkgroupId(workgroupId);
+    }
 }
 
 
@@ -260,6 +266,7 @@ ThemeController.$inject = [
     'ConfigService',
     'ProjectService',
     'StudentDataService',
+    'StudentStatusService',
     'NotebookService',
     'SessionService',
     '$mdDialog',
