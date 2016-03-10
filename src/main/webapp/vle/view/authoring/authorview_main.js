@@ -2134,31 +2134,36 @@ View.prototype.retrieveProjectListFailure = function(t,o){
  * @param t
  * @return
  */
-View.prototype.populatePortalProjects = function(t){
+View.prototype.populatePortalProjects = function(t) {
 	this.portalProjectPaths = [];
 	this.portalProjectIds = [];
 	this.portalProjectTitles = [];
 
-	//parse the JSON string into a JSONArray
+	// parse the JSON string into a JSONArray
 	var projectsArray = JSON.parse(t);
 	
-	//sort the array by id
+	// sort the array by id
 	projectsArray.sort(this.sortProjectsById);
 	
-	//loop through all the projects
-	for(var x=0; x<projectsArray.length; x++) {
-		//get a project and obtain the id, path, and title
+	// loop through all the projects
+	for (var x = 0; x < projectsArray.length; x++) {
+		// get a project and obtain the id, path, and title
 		var project = projectsArray[x];
+		var projectIsDeleted = project.isDeleted;
+		if (projectIsDeleted) {
+			continue;
+		}
+
 		var projectId = project.id;
 		var projectPath = project.path;
 		var projectTitle = project.title;
 		
-		//add the fields to the appropriate arrays
+		// add the fields to the appropriate arrays
 		this.portalProjectPaths.push(projectPath);
 		this.portalProjectIds.push(projectId);
 		this.portalProjectTitles.push(projectTitle);
 		
-		//create an entry in the drop down box
+		// create an entry in the drop down box
 		$('#selectProject').append('<option name="projectOption" value="' + projectId + '">' +  projectId + ': ' + projectTitle +'</option>');
 	}
 	

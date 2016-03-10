@@ -1096,6 +1096,7 @@ public class AuthorProjectController {
 					projectDetails.put("id", project.getId());
 					projectDetails.put("path", projectFileName);
 					projectDetails.put("title", title);
+					projectDetails.put("isDeleted", project.isDeleted());
 
 					//add the JSONObject to our array
 					projectArray.put(projectDetails);
