@@ -111,7 +111,11 @@ for(var t=0;t<transitions.length;t++){var transition=transitions[t];if(transitio
 nodesByToNodeId.push(node);}}}}}}}return nodesByToNodeId;}},{key:'getTransitionsByFromAndToNodeId',value:function getTransitionsByFromAndToNodeId(fromNodeId,toNodeId){var transitionsResults=[];if(fromNodeId!=null&&toNodeId!=null){var node=this.getNodeById(fromNodeId);if(node!=null){var transitionLogic=node.transitionLogic;if(transitionLogic!=null){var transitions=transitionLogic.transitions;if(transitions!=null){for(var t=0;t<transitions.length;t++){var transition=transitions[t];if(transition!=null){var to=transition.to;if(toNodeId===to){transitionsResults.push(transition);}}}}}}}return transitionsResults;}},{key:'retrieveProject', /**
      * Retrieves the project JSON from Config.projectURL and returns it.
      * If Config.projectURL is undefined, returns null.
-     */value:function retrieveProject(){var _this=this;var projectURL=this.ConfigService.getConfigParam('projectURL');if(projectURL==null){return null;}return this.$http.get(projectURL).then(function(result){var projectJSON=result.data;_this.setProject(projectJSON);return projectJSON;});}},{key:'saveProject', /**
+     */value:function retrieveProject(){var _this=this;var projectURL=this.ConfigService.getConfigParam('projectURL');if(projectURL==null){return null;}else { /*
+             * add a unique GET parameter value so that it always retrieves the
+             * latest version of the project file from the server and never
+             * retrieves the project from cache.
+             */projectURL+='?noCache='+new Date().getTime();}return this.$http.get(projectURL).then(function(result){var projectJSON=result.data;_this.setProject(projectJSON);return projectJSON;});}},{key:'saveProject', /**
      * Saves the project to Config.saveProjectURL and returns commit history promise.
      * if Config.saveProjectURL or Config.projectId are undefined, does not save and returns null
      */value:function saveProject(){var commitMessage=arguments.length<=0||arguments[0]===undefined?"Made changes via WISE5 Authoring Tool":arguments[0];var projectId=this.ConfigService.getProjectId();var saveProjectURL=this.ConfigService.getConfigParam('saveProjectURL');if(projectId==null||saveProjectURL==null){return null;} // Get the project from this service

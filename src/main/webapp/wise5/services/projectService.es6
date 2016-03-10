@@ -805,7 +805,7 @@ class ProjectService {
 
         return result;
     };
-    
+
     /**
      * Returns the Project's start node id, or null if it's not defined in the project
      */
@@ -823,7 +823,7 @@ class ProjectService {
      * @param nodeId the new start node id
      */
     setStartNodeId(nodeId) {
-        
+
         if (nodeId != null) {
             var project = this.project;
             if (project != null) {
@@ -831,40 +831,40 @@ class ProjectService {
             }
         }
     }
-    
+
     /**
      * Get the start group id
      * @return the start group id
      */
     getStartGroupId() {
         var startGroupId = null;
-        
+
         var project = this.project;
         if (project != null) {
             startGroupId = project.startGroupId;
         }
-        
+
         return startGroupId;
     }
-    
+
     /**
      * Check if the given node id is the start node id
      * @return whether the node id is the start node id
      */
     isStartNodeId(nodeId) {
-        
+
         var result = false;
-        
+
         var project = this.project;
-        
+
         if (project != null) {
             var startNodeId = project.startNodeId;
-            
+
             if (nodeId === startNodeId) {
                 result = true;
             }
         }
-        
+
         return result;
     }
 
@@ -1059,6 +1059,13 @@ class ProjectService {
 
         if (projectURL == null) {
             return null;
+        } else {
+            /*
+             * add a unique GET parameter value so that it always retrieves the
+             * latest version of the project file from the server and never
+             * retrieves the project from cache.
+             */
+            projectURL += '?noCache=' + (new Date()).getTime();
         }
 
         return this.$http.get(projectURL).then((result) => {
@@ -2556,18 +2563,18 @@ class ProjectService {
             // get the start node
             var startId = group.startId;
             var startNode = this.getNodeById(startId);
-            
+
             if (startNode != null) {
                 // the group has a start node which will become the transition to node
-                
+
                 if (nodeToInsert.transitionLogic == null) {
                     nodeToInsert.transitionLogic = {};
                 }
-    
+
                 if (nodeToInsert.transitionLogic.transitions == null) {
                     nodeToInsert.transitionLogic.transitions = [];
                 }
-    
+
                 /*
                  * make the inserted node transition to the previous start node
                  */
@@ -2586,21 +2593,21 @@ class ProjectService {
 
         // get all the group ids
         var groupIds = this.getGroupIds();
-        
+
         var largestGroupIdNumber = null;
-        
+
         // loop through all the existing group ids
         for (var g = 0; g < groupIds.length; g++) {
             var groupId = groupIds[g];
-            
+
             // get the number from the group id e.g. the number of 'group2' would be 2
             var groupIdNumber = groupId.replace('group', '');
-            
+
             // make sure the number is an actual number
             if (!isNaN(groupIdNumber)) {
-            
+
                 groupIdNumber = parseInt(groupIdNumber);
-                
+
                 // update the largest group id number if necessary
                 if (largestGroupIdNumber == null) {
                     largestGroupIdNumber = groupIdNumber;
@@ -2609,10 +2616,10 @@ class ProjectService {
                 }
             }
         }
-        
+
         // create the next available group id
         var nextAvailableGroupId = 'group' + (largestGroupIdNumber + 1);
-        
+
         return nextAvailableGroupId;
     }
 
@@ -2651,20 +2658,20 @@ class ProjectService {
 
         // get all the node ids
         var nodeIds = this.getNodeIds();
-        
+
         var largestNodeIdNumber = null;
-        
+
         // loop through all the existing node ids
         for (var n = 0; n < nodeIds.length; n++) {
             var nodeId = nodeIds[n];
-            
+
             // get the number from the node id e.g. the number of 'node2' would be 2
             var nodeIdNumber = nodeId.replace('node', '');
-            
+
             // make sure the number is an actual number
             if (!isNaN(nodeIdNumber)) {
                 nodeIdNumber = parseInt(nodeIdNumber);
-                
+
                 // update the largest node id number if necessary
                 if (largestNodeIdNumber == null) {
                     largestNodeIdNumber = nodeIdNumber;
@@ -2673,10 +2680,10 @@ class ProjectService {
                 }
             }
         }
-        
+
         // create the next available node id
         var nextAvailableNodeId = 'node' + (largestNodeIdNumber + 1);
-        
+
         return nextAvailableNodeId;
     }
 
@@ -2722,7 +2729,7 @@ class ProjectService {
 
             // remove the node from the group
             this.removeNodeIdFromGroups(tempNodeId);
-            
+
             // remove the node from the transitions
             this.removeNodeIdFromTransitions(tempNodeId);
 
@@ -2766,7 +2773,7 @@ class ProjectService {
 
             // remove the node from the groups
             this.removeNodeIdFromGroups(tempNodeId);
-            
+
             if (!this.isGroupNode(node.id)) {
                 // this is not a group node so we will remove it from transitions
                 this.removeNodeIdFromTransitions(tempNodeId);
@@ -2822,36 +2829,36 @@ class ProjectService {
                 }
             }
         }
-        
+
         var parentGroup = this.getParentGroup(nodeId);
-        
+
         // check if we need to update the start id of the parent group
         if (parentGroup != null) {
-        
+
             /*
              * the node is the start node of the parent group so we need
              * to update the start id of the parent group to point to
              * the next node
              */
             if (nodeId === parentGroup.startId) {
-            
+
                 var hasSetNewStartId = false;
 
                 // get the node
                 var node = this.getNodeById(nodeId);
-                
+
                 if (node != null) {
                     var transitionLogic = node.transitionLogic;
-                    
+
                     if (transitionLogic != null) {
                         var transitions = transitionLogic.transitions;
-                        
+
                         if (transitions != null && transitions.length > 0) {
                             var transition = transitions[0];
-                            
+
                             if (transition != null) {
                                 var toNodeId = transition.to;
-                                
+
                                 if (toNodeId != null) {
                                     // update the parent group start id
                                     parentGroup.startId = toNodeId;
@@ -2861,7 +2868,7 @@ class ProjectService {
                         }
                     }
                 }
-                
+
                 if (!hasSetNewStartId) {
                     parentGroup.startId = '';
                 }
@@ -2970,7 +2977,7 @@ class ProjectService {
                                  * the node id is also the start id so we will get the
                                  * next node id and set it as the new start id
                                  */
-                                
+
                                 var hasSetNewStartId = false;
 
                                 // get the node we are removing
@@ -3001,7 +3008,7 @@ class ProjectService {
                                         }
                                     }
                                 }
-                                
+
                                 if (!hasSetNewStartId) {
                                     /*
                                      * the node we are removing did not have a transition
@@ -3244,48 +3251,48 @@ class ProjectService {
 
         return maxScore;
     }
-    
+
     /**
      * Determine if a node id is a direct child of a group
      * @param nodeId the node id
      * @param groupId the group id
      */
     isNodeInGroup(nodeId, groupId) {
-    
+
         var result = false;
-        
+
         var group = this.getNodeById(groupId);
-        
+
         var childIds = group.ids;
-        
+
         if (childIds != null) {
             if (childIds.indexOf(nodeId) != -1) {
                 result = true;
             }
         }
-        
+
         return result;
     }
-    
+
     /**
      * Get the first leaf node by traversing all the start ids
      * until a leaf node id is found
      */
     getFirstLeafNodeId() {
-        
+
         var firstLeafNodeId = null;
-        
+
         // get the start group id
         var startGroupId = this.project.startGroupId;
-        
+
         // get the start group node
         var node = this.getNodeById(startGroupId);
-        
+
         var done = false;
-        
+
         // loop until we have found a leaf node id or something went wrong
         while (!done) {
-            
+
             if (node == null) {
                 done = true;
             } else if (this.isGroupNode(node.id)) {
@@ -3299,7 +3306,7 @@ class ProjectService {
                 done = true;
             }
         }
-        
+
         return firstLeafNodeId;
     }
 }
