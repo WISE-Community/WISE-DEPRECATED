@@ -71,8 +71,8 @@ describe('ProjectService Unit Test', () => {
             createNormalSpy();
             spyOn(ProjectService, "setProject").and.callThrough(); // actually call through the function
             spyOn(ProjectService, "parseProject");
-            $httpBackend.when('GET', projectURL).respond(scootersProjectJSON);
-            $httpBackend.expectGET(projectURL);
+            $httpBackend.when('GET', new RegExp(projectURL)).respond(scootersProjectJSON);
+            $httpBackend.expectGET(new RegExp(projectURL));
             let projectPromise = ProjectService.retrieveProject();
             $httpBackend.flush();
             expect(ConfigService.getConfigParam).toHaveBeenCalledWith("projectURL");
