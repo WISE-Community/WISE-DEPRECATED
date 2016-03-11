@@ -751,7 +751,7 @@ for(var c=0;c<components.length;c++){var component=components[c];if(component.id
 // remove the component
 components.splice(c,1);break;}}}}}} /**
      * Get the max score for the project
-     * @returns the max score for the project or null if none of the components in the project
+     * @returns the max score for the project or 0 if none of the components in the project
      * has max scores.
      */},{key:'getMaxScore',value:function getMaxScore(){var maxScore=0;var nodes=this.project.nodes;if(nodes!=null){ // loop through all the nodes
 for(var n=0;n<nodes.length;n++){var node=nodes[n];if(node!=null){var components=node.components;if(components!=null){ // loop through all the components
