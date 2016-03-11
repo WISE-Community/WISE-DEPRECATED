@@ -7,14 +7,15 @@ TODO: implement me. Allow authors to view assets while authoring node conent. Pe
     <button ng-click="nodeController.close()">Save & Close</button>
 </div>
 <div>Title: <input ng-model='nodeController.node.title' ng-change='nodeController.authoringViewNodeChanged()' ng-model-options='{ debounce: 1000 }' size='60' /></div>
-<button ng-click='nodeController.showCreateComponent = !nodeController.showCreateComponent'>Add New Component</button>
+<button ng-click='nodeController.showCreateComponent = true' ng-show='!nodeController.showCreateComponent'>Add New Component</button>
 <div ng-show='nodeController.showCreateComponent'>
     <select ng-model='nodeController.selectedComponent'>
         <option ng-repeat='componentType in nodeController.componentTypes' value='{{componentType.componentType}}'>
             {{componentType.componentName}}
         </option>
     </select>
-    <button ng-click='nodeController.createComponent()'>Submit</button>
+    <button ng-click='nodeController.createComponent()'>Add Component</button>
+    <button ng-click='nodeController.showCreateComponent = false'>Cancel</button>
 </div>
 <div ng-repeat='component in nodeController.components'>
     <div style="margin-top: 7px; border-top: 2px dotted black">
@@ -25,3 +26,4 @@ TODO: implement me. Allow authors to view assets while authoring node conent. Pe
     </div>
     <component nodeid='{{nodeController.nodeId}}' componentid='{{component.id}}' mode='authoring'></component>
 </div>
+<a id="bottom"></a>  <!-- used to scroll to the bottom when a new component is added -->
