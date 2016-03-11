@@ -230,7 +230,7 @@ class AnnotationService {
      */
     getTotalScore(annotations, workgroupId) {
 
-        var totalScore = null;
+        var totalScore = 0;
 
         var scoresFound = [];
 

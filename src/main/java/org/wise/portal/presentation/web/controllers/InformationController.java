@@ -455,6 +455,7 @@ public class InformationController {
 		if (projectIdString != null) {
 			if ("demo".equals(projectIdString)) {
 				rawProjectUrl = "/demo/project.json";
+				addDummyUserInfoToConfig(config);
 			} else {
 				projectId = Long.parseLong(projectIdString);
 			}
@@ -477,33 +478,7 @@ public class InformationController {
 			// if we're previewing a WISE5 project, add a dummy user info
 			Integer wiseVersion = project.getWiseVersion();
 			if (wiseVersion != null && wiseVersion == 5) {
-				try {
-					String dummyUserInfoJSONString = 
-							"{\"myUserInfo\": {"+
-								"\"periodId\": 1,"+
-								"\"workgroupId\": 1,"+
-								"\"myClassInfo\": {"+
-									"\"classmateUserInfos\": [],"+
-									"\"sharedTeacherUserInfos\": [],"+
-									"\"periods\": [{"+
-										"\"periodId\": 1,"+
-										"\"periodName\": \"1\""+
-									"}],"+
-									"\"teacherUserInfo\": {"+
-										"\"workgroupId\": 1,"+
-										"\"userName\": \"Preview Teacher\""+
-									"}"+
-								"},"+
-								"\"userIds\": [1],"+
-								"\"periodName\": \"1\","+
-								"\"userName\": \"Preview Team\""+ 
-								"}"+
-							"}";
-					JSONObject userInfoJSONObject = new JSONObject(dummyUserInfoJSONString);
-					config.put("userInfo", userInfoJSONObject);
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
+				addDummyUserInfoToConfig(config);
 			}
 
 		} else if (runId != null) {
@@ -785,7 +760,41 @@ public class InformationController {
 		response.setContentType("application/json");
 		response.getWriter().write(config.toString());
 	}
-	
+
+	/**
+	 * Adds a dummy user info to the config object, used in previewing WISE5 projects
+	 * @param config
+     */
+	private void addDummyUserInfoToConfig(JSONObject config) {
+		try {
+            String dummyUserInfoJSONString =
+                    "{\"myUserInfo\": {"+
+                        "\"periodId\": 1,"+
+                        "\"workgroupId\": 1,"+
+                        "\"myClassInfo\": {"+
+                            "\"classmateUserInfos\": [],"+
+                            "\"sharedTeacherUserInfos\": [],"+
+                            "\"periods\": [{"+
+                                "\"periodId\": 1,"+
+                                "\"periodName\": \"1\""+
+                            "}],"+
+                            "\"teacherUserInfo\": {"+
+                                "\"workgroupId\": 1,"+
+                                "\"userName\": \"Preview Teacher\""+
+                            "}"+
+                        "},"+
+                        "\"userIds\": [1],"+
+                        "\"periodName\": \"1\","+
+                        "\"userName\": \"Preview Team\""+
+                        "}"+
+                    "}";
+            JSONObject userInfoJSONObject = new JSONObject(dummyUserInfoJSONString);
+            config.put("userInfo", userInfoJSONObject);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+	}
+
 	/**
 	 * Gets the workgroup for the currently-logged in user so that she may
 	 * view the VLE.

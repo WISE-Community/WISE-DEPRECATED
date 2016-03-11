@@ -127,9 +127,13 @@ var projectJSONString=angular.toJson(this.project,4);var httpParams={};httpParam
      */value:function registerNewProject(projectJSONString,commitMessage){var registerNewProjectURL=this.ConfigService.getConfigParam('registerNewProjectURL');if(registerNewProjectURL==null){return null;}try{ // Try parsing the JSON string and throw an error if there's an issue parsing it.
 JSON.parse(projectJSONString);}catch(e){throw new Error("Invalid projectJSONString.");}if(!commitMessage){commitMessage="";}var httpParams={};httpParams.method='POST';httpParams.url=registerNewProjectURL;httpParams.headers={'Content-Type':'application/x-www-form-urlencoded'};var params={};params.commitMessage=commitMessage;params.projectJSONString=projectJSONString;httpParams.data=$.param(params);return this.$http(httpParams).then(function(result){var projectId=result.data;return projectId;});}},{key:'getCommitHistory', /**
      * Retrieves and returns the project's commit history.
-     */value:function getCommitHistory(){var commitProjectURL=this.ConfigService.getConfigParam('commitProjectURL');return this.$http({url:commitProjectURL,method:'GET'}).then(function(result){return result.data;});}},{key:'getThemePath',value:function getThemePath(){var wiseBaseURL=this.ConfigService.getWISEBaseURL();var project=this.project;if(project&&project.theme){ // TODO: check if this is a valid theme (using ConfigService) rather than just truthy
+     */value:function getCommitHistory(){var commitProjectURL=this.ConfigService.getConfigParam('commitProjectURL');return this.$http({url:commitProjectURL,method:'GET'}).then(function(result){return result.data;});}},{key:'getThemePath', /**
+     * Returns the theme path for the current project
+     */value:function getThemePath(){var wiseBaseURL=this.ConfigService.getWISEBaseURL();var project=this.project;if(project&&project.theme){ // TODO: check if this is a valid theme (using ConfigService) rather than just truthy
 return wiseBaseURL+'/wise5/vle/themes/'+project.theme;}else { // TODO: get default theme name from ConfigService
-return wiseBaseURL+'/wise5/vle/themes/default';}}},{key:'getFlattenedProjectAsNodeIds', /**
+return wiseBaseURL+'/wise5/vle/themes/default';}}},{key:'getThemeSettings', /**
+     * Returns the theme settings for the current project
+     */value:function getThemeSettings(){var themeSettings={};var project=this.project;if(project&&project.themeSettings){themeSettings=project.themeSettings;}return themeSettings;}},{key:'getFlattenedProjectAsNodeIds', /**
      * Flatten the project to obtain a list of node ids
      */value:function getFlattenedProjectAsNodeIds(){var nodeIds=[]; // get the start node id
 var startNodeId=this.getStartNodeId(); /*

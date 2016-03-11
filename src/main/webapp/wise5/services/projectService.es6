@@ -1161,6 +1161,9 @@ class ProjectService {
         });
     };
 
+    /**
+     * Returns the theme path for the current project
+     */
     getThemePath() {
         var wiseBaseURL = this.ConfigService.getWISEBaseURL();
         var project = this.project;
@@ -1171,6 +1174,20 @@ class ProjectService {
             // TODO: get default theme name from ConfigService
             return wiseBaseURL + '/wise5/vle/themes/default';
         }
+    };
+
+    /**
+     * Returns the theme settings for the current project
+     */
+    getThemeSettings() {
+        let themeSettings = {};
+        let project = this.project;
+
+        if (project && project.themeSettings) {
+            themeSettings = project.themeSettings;
+        }
+
+        return themeSettings;
     };
 
     /**
