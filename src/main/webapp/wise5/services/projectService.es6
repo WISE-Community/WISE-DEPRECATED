@@ -3309,6 +3309,62 @@ class ProjectService {
 
         return firstLeafNodeId;
     }
+
+    /**
+     * Replace a node. This is used when we want to revert a node back to a
+     * previous version in the authoring tool.
+     * @param nodeId the node id
+     * @param node the node object
+     */
+    replaceNode(nodeId, node) {
+
+        if (nodeId != null && node != null) {
+
+            // set the id to node mapping
+            this.setIdToNode(nodeId, node);
+
+            // set the id to element mapping
+            this.setIdToElement(nodeId, node);
+
+            // update the nodes array
+            var nodes = this.getNodes();
+
+            if (nodes != null) {
+
+                for (var n = 0; n < nodes.length; n++) {
+                    var tempNode = nodes[n];
+
+                    if (tempNode != null) {
+                        var tempNodeId = tempNode.id;
+
+                        if (nodeId === tempNodeId) {
+                            // we have found the node we want to replace
+                            nodes.splice(n, 1, node);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // update the application nodes array
+            var applicationNodes = this.applicationNodes;
+
+            if (applicationNodes != null) {
+                for (var a = 0; a < applicationNodes.length; a++) {
+                    var tempApplicationNode = applicationNodes[a];
+
+                    if (tempApplicationNode != null) {
+                        var tempApplicationNodeId = tempApplicationNode.id;
+
+                        if (nodeId === tempApplicationNodeId) {
+                            // we have found the node we want to replace
+                            applicationNodes.splice(a, 1, node);
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 ProjectService.$inject = [

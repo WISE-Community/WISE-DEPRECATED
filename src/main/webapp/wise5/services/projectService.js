@@ -765,5 +765,16 @@ var startGroupId=this.project.startGroupId; // get the start group node
 var node=this.getNodeById(startGroupId);var done=false; // loop until we have found a leaf node id or something went wrong
 while(!done){if(node==null){done=true;}else if(this.isGroupNode(node.id)){ // the current node is a group
 node=this.getNodeById(node.startId);}else if(this.isApplicationNode(node.id)){ // the current node is a leaf
-firstLeafNodeId=node.id;done=true;}else {done=true;}}return firstLeafNodeId;}}]);return ProjectService;}();ProjectService.$inject=['$http','$injector','$rootScope','ConfigService'];exports.default=ProjectService;
+firstLeafNodeId=node.id;done=true;}else {done=true;}}return firstLeafNodeId;} /**
+     * Replace a node. This is used when we want to revert a node back to a
+     * previous version in the authoring tool.
+     * @param nodeId the node id
+     * @param node the node object
+     */},{key:'replaceNode',value:function replaceNode(nodeId,node){if(nodeId!=null&&node!=null){ // set the id to node mapping
+this.setIdToNode(nodeId,node); // set the id to element mapping
+this.setIdToElement(nodeId,node); // update the nodes array
+var nodes=this.getNodes();if(nodes!=null){for(var n=0;n<nodes.length;n++){var tempNode=nodes[n];if(tempNode!=null){var tempNodeId=tempNode.id;if(nodeId===tempNodeId){ // we have found the node we want to replace
+nodes.splice(n,1,node);break;}}}} // update the application nodes array
+var applicationNodes=this.applicationNodes;if(applicationNodes!=null){for(var a=0;a<applicationNodes.length;a++){var tempApplicationNode=applicationNodes[a];if(tempApplicationNode!=null){var tempApplicationNodeId=tempApplicationNode.id;if(nodeId===tempApplicationNodeId){ // we have found the node we want to replace
+applicationNodes.splice(a,1,node);}}}}}}}]);return ProjectService;}();ProjectService.$inject=['$http','$injector','$rootScope','ConfigService'];exports.default=ProjectService;
 //# sourceMappingURL=projectService.js.map

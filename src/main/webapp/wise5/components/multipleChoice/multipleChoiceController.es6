@@ -1124,8 +1124,11 @@ class MultipleChoiceController {
         // update the JSON string in the advanced authoring view textarea
         this.updateAdvancedAuthoringView();
 
-        // save the project to the server
-        this.ProjectService.saveProject();
+        /*
+         * notify the parent node that the content has changed which will save
+         * the project to the server
+         */
+        this.$scope.$parent.nodeController.authoringViewNodeChanged();
     };
 
     /**
@@ -1147,8 +1150,11 @@ class MultipleChoiceController {
             // set the new component into the controller
             this.componentContent = editedComponentContent;
 
-            // save the project to the server
-            this.ProjectService.saveProject();
+            /*
+             * notify the parent node that the content has changed which will save
+             * the project to the server
+             */
+            this.$scope.$parent.nodeController.authoringViewNodeChanged();
         } catch(e) {
 
         }

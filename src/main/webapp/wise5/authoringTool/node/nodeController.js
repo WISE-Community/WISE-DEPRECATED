@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var NodeController = function () {
-    function NodeController($anchorScroll, $location, $scope, $state, $stateParams, $timeout, ProjectService, ConfigService) {
+    function NodeController($anchorScroll, $location, $scope, $state, $stateParams, $timeout, ConfigService, ProjectService, UtilService) {
         _classCallCheck(this, NodeController);
 
         this.$anchorScroll = $anchorScroll;
@@ -18,12 +18,15 @@ var NodeController = function () {
         this.$state = $state;
         this.$stateParams = $stateParams;
         this.$timeout = $timeout;
-        this.ProjectService = ProjectService;
         this.ConfigService = ConfigService;
+        this.ProjectService = ProjectService;
+        this.UtilService = UtilService;
         this.projectId = $stateParams.projectId;
         this.nodeId = $stateParams.nodeId;
         this.showCreateComponent = false;
         this.selectedComponent = null;
+        this.nodeCopy = null;
+        this.undoStack = [];
 
         // the array of component types that can be created
         this.componentTypes = [{ componentType: 'Discussion', componentName: 'Discussion' }, { componentType: 'Draw', componentName: 'Draw' }, { componentType: 'Embedded', componentName: 'Embedded' }, { componentType: 'Graph', componentName: 'Graph' }, { componentType: 'HTML', componentName: 'HTML' }, { componentType: 'Label', componentName: 'Label' }, { componentType: 'Match', componentName: 'Match' }, { componentType: 'MultipleChoice', componentName: 'Multiple Choice' }, { componentType: 'OpenResponse', componentName: 'Open Response' }, { componentType: 'OutsideURL', componentName: 'Outside URL' }, { componentType: 'Table', componentName: 'Table' }];
@@ -36,6 +39,19 @@ var NodeController = function () {
 
         // get the components in the node
         this.components = this.ProjectService.getComponentsByNodeId(this.nodeId);
+
+        /*
+         * remember a copy of the node at the beginning of this node authoring
+         * session in case we need to roll back if the user decides to
+         * cancel/revert all the changes.
+         */
+        this.originalNodeCopy = this.UtilService.makeCopyOfJSONObject(this.node);
+
+        /*
+         * remember the current version of the node. this will be updated each
+         * time the user makes a change.
+         */
+        this.currentNodeCopy = this.UtilService.makeCopyOfJSONObject(this.node);
     }
 
     /**
@@ -52,16 +68,54 @@ var NodeController = function () {
         }
     }, {
         key: 'close',
+
+
+        /**
+         * Close the node authoring view
+         */
         value: function close() {
             this.$state.go('root.project', { projectId: this.projectId });
         }
     }, {
-        key: 'createComponent',
+        key: 'cancel',
 
+
+        /**
+         * The author has clicked the cancel button which will revert all
+         * the recent changes since they opened the node.
+         */
+        value: function cancel() {
+
+            // check if the user has made any changes
+            if (!angular.equals(this.node, this.originalNodeCopy)) {
+                // the user has made changes
+
+                var result = confirm('Are you sure you want to undo all the recent changes?');
+
+                if (result) {
+                    // revert the node back to the previous version
+                    this.ProjectService.replaceNode(this.nodeId, this.originalNodeCopy);
+
+                    // save the project
+                    this.ProjectService.saveProject();
+
+                    // close the node authoring view
+                    this.close();
+                }
+            } else {
+                // the user has not made any changes
+
+                //close the node authoring view
+                this.close();
+            }
+        }
 
         /**
          * Create a component in this node
          */
+
+    }, {
+        key: 'createComponent',
         value: function createComponent() {
             var _this = this;
 
@@ -143,7 +197,49 @@ var NodeController = function () {
     }, {
         key: 'authoringViewNodeChanged',
         value: function authoringViewNodeChanged() {
+            // put the previous version of the node on to the undo stack
+            this.undoStack.push(this.currentNodeCopy);
+
+            // save the project
             this.ProjectService.saveProject();
+
+            // update the current node copy
+            this.currentNodeCopy = this.UtilService.makeCopyOfJSONObject(this.node);
+        }
+
+        /**
+         * Undo the last change by reverting the node to the previous version
+         */
+
+    }, {
+        key: 'undo',
+        value: function undo() {
+
+            if (this.undoStack.length === 0) {
+                // the undo stack is empty so there are no changes to undo
+                alert('There are no changes to undo.');
+            } else if (this.undoStack.length > 0) {
+                // the undo stack has elements
+
+                var result = confirm('Are you sure you want to undo the last change?');
+
+                if (result) {
+                    // get the previous version of the node
+                    var nodeCopy = this.undoStack.pop();
+
+                    // revert the node back to the previous version
+                    this.ProjectService.replaceNode(this.nodeId, nodeCopy);
+
+                    // get the node
+                    this.node = this.ProjectService.getNodeById(this.nodeId);
+
+                    // get the components in the node
+                    this.components = this.ProjectService.getComponentsByNodeId(this.nodeId);
+
+                    // save the project
+                    this.ProjectService.saveProject();
+                }
+            }
         }
     }]);
 
@@ -152,7 +248,7 @@ var NodeController = function () {
 
 ;
 
-NodeController.$inject = ['$anchorScroll', '$location', '$scope', '$state', '$stateParams', '$timeout', 'ProjectService', 'ConfigService'];
+NodeController.$inject = ['$anchorScroll', '$location', '$scope', '$state', '$stateParams', '$timeout', 'ConfigService', 'ProjectService', 'UtilService'];
 
 exports.default = NodeController;
 //# sourceMappingURL=nodeController.js.map
