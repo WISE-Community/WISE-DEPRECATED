@@ -1317,28 +1317,6 @@ var StudentDataService = function () {
             return eventsByNodeId;
         }
     }, {
-        key: 'makeCopyOfJSONObject',
-
-
-        /**
-         * Create a copy of a JSON object
-         * @param jsonObject the JSON object to get a copy of
-         * @return a copy of the JSON object that was passed in
-         */
-        value: function makeCopyOfJSONObject(jsonObject) {
-            var copyOfJSONObject = null;
-
-            if (jsonObject != null) {
-                // create a JSON string from the JSON object
-                var jsonObjectString = angular.toJson(jsonObject);
-
-                // create a JSON object from the JSON string
-                copyOfJSONObject = angular.fromJson(jsonObjectString);
-            }
-
-            return copyOfJSONObject;
-        }
-    }, {
         key: 'canVisitNode',
 
 

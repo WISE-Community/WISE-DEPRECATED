@@ -163,7 +163,7 @@ class MultipleChoiceService extends NodeService {
                 let studentData = componentStateFromOtherComponent.studentData;
 
                 // create a copy of the student data
-                let studentDataCopy = this.StudentDataService.makeCopyOfJSONObject(studentData);
+                let studentDataCopy = this.UtilService.makeCopyOfJSONObject(studentData);
 
                 // set the student data into the new component state
                 componentState.studentData = studentDataCopy;

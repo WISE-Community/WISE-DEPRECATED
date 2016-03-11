@@ -82,7 +82,7 @@ var MatchService = function (_NodeService) {
                     var studentData = componentStateFromOtherComponent.studentData;
 
                     // create a copy of the student data
-                    var studentDataCopy = this.StudentDataService.makeCopyOfJSONObject(studentData);
+                    var studentDataCopy = this.UtilService.makeCopyOfJSONObject(studentData);
 
                     // set the student data into the new component state
                     componentState.studentData = studentDataCopy;

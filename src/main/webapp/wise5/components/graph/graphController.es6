@@ -11,7 +11,8 @@ class GraphController {
                 NodeService,
                 ProjectService,
                 StudentAssetService,
-                StudentDataService) {
+                StudentDataService,
+                UtilService) {
 
         this.$rootScope = $rootScope;
         this.$scope = $scope;
@@ -20,6 +21,7 @@ class GraphController {
         this.ProjectService = ProjectService;
         this.StudentAssetService = StudentAssetService;
         this.StudentDataService = StudentDataService;
+        this.UtilService = UtilService;
 
         // the node id of the current node
         this.nodeId = null;
@@ -438,7 +440,7 @@ class GraphController {
              * use the series from the component content if the student does not
              * have any series data
              */
-            series = this.StudentDataService.makeCopyOfJSONObject(this.componentContent.series);
+            series = this.UtilService.makeCopyOfJSONObject(this.componentContent.series);
             this.setSeries(series);
         }
 
@@ -945,7 +947,7 @@ class GraphController {
      */
     resetGraph() {
         // get the original series from the component content
-        this.setSeries(this.StudentDataService.makeCopyOfJSONObject(this.componentContent.series));
+        this.setSeries(this.UtilService.makeCopyOfJSONObject(this.componentContent.series));
 
         if (this.componentContent.xAxis != null) {
             this.setXAxis(this.componentContent.xAxis);
@@ -978,7 +980,7 @@ class GraphController {
 
             if (studentData != null) {
                 // populate the student data into the component
-                this.setSeries(this.StudentDataService.makeCopyOfJSONObject(studentData.series));
+                this.setSeries(this.UtilService.makeCopyOfJSONObject(studentData.series));
                 this.setXAxis(studentData.xAxis);
                 this.setYAxis(studentData.yAxis);
                 this.setActiveSeriesByIndex(studentData.activeSeriesIndex);
@@ -1101,7 +1103,7 @@ class GraphController {
             var studentData = {};
 
             // insert the series data
-            studentData.series = this.StudentDataService.makeCopyOfJSONObject(this.getSeries());
+            studentData.series = this.UtilService.makeCopyOfJSONObject(this.getSeries());
 
             // remove high-charts assigned id's from each series before saving
             for (var s = 0; s < studentData.series.length; s++) {
@@ -1810,7 +1812,8 @@ GraphController.$inject = [
     'NodeService',
     'ProjectService',
     'StudentAssetService',
-    'StudentDataService'
+    'StudentDataService',
+    'UtilService'
 ];
 
 export default GraphController;

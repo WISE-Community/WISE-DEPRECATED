@@ -21,7 +21,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var GraphController = function () {
-    function GraphController($rootScope, $scope, GraphService, NodeService, ProjectService, StudentAssetService, StudentDataService) {
+    function GraphController($rootScope, $scope, GraphService, NodeService, ProjectService, StudentAssetService, StudentDataService, UtilService) {
         _classCallCheck(this, GraphController);
 
         this.$rootScope = $rootScope;
@@ -31,6 +31,7 @@ var GraphController = function () {
         this.ProjectService = ProjectService;
         this.StudentAssetService = StudentAssetService;
         this.StudentDataService = StudentDataService;
+        this.UtilService = UtilService;
 
         // the node id of the current node
         this.nodeId = null;
@@ -450,7 +451,7 @@ var GraphController = function () {
                  * use the series from the component content if the student does not
                  * have any series data
                  */
-                series = this.StudentDataService.makeCopyOfJSONObject(this.componentContent.series);
+                series = this.UtilService.makeCopyOfJSONObject(this.componentContent.series);
                 this.setSeries(series);
             }
 
@@ -999,7 +1000,7 @@ var GraphController = function () {
          */
         value: function resetGraph() {
             // get the original series from the component content
-            this.setSeries(this.StudentDataService.makeCopyOfJSONObject(this.componentContent.series));
+            this.setSeries(this.UtilService.makeCopyOfJSONObject(this.componentContent.series));
 
             if (this.componentContent.xAxis != null) {
                 this.setXAxis(this.componentContent.xAxis);
@@ -1035,7 +1036,7 @@ var GraphController = function () {
 
                 if (studentData != null) {
                     // populate the student data into the component
-                    this.setSeries(this.StudentDataService.makeCopyOfJSONObject(studentData.series));
+                    this.setSeries(this.UtilService.makeCopyOfJSONObject(studentData.series));
                     this.setXAxis(studentData.xAxis);
                     this.setYAxis(studentData.yAxis);
                     this.setActiveSeriesByIndex(studentData.activeSeriesIndex);
@@ -1177,7 +1178,7 @@ var GraphController = function () {
                 var studentData = {};
 
                 // insert the series data
-                studentData.series = this.StudentDataService.makeCopyOfJSONObject(this.getSeries());
+                studentData.series = this.UtilService.makeCopyOfJSONObject(this.getSeries());
 
                 // remove high-charts assigned id's from each series before saving
                 for (var s = 0; s < studentData.series.length; s++) {
@@ -1952,7 +1953,7 @@ var GraphController = function () {
     return GraphController;
 }();
 
-GraphController.$inject = ['$rootScope', '$scope', 'GraphService', 'NodeService', 'ProjectService', 'StudentAssetService', 'StudentDataService'];
+GraphController.$inject = ['$rootScope', '$scope', 'GraphService', 'NodeService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'UtilService'];
 
 exports.default = GraphController;
 //# sourceMappingURL=graphController.js.map
