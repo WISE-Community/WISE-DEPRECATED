@@ -117,10 +117,22 @@ class ClassroomMonitorController {
                 }
                 csvString += "\r\n";
             }
+
             var runId = this.ConfigService.getRunId();
             var csvBlob = new Blob([csvString], {type: 'text/csv'});
-            var csvFile = new File([csvBlob], "export_" + runId + ".csv");
+            var csvUrl = URL.createObjectURL(csvBlob);
+            var a = document.createElement("a");
+            document.body.appendChild(a);
+            a.href = csvUrl;
+            a.download = "export_" + runId + ".csv";
+            a.click();
 
+            // timeout is required for FF.
+            window.setTimeout(() => {
+                URL.revokeObjectURL(csvUrl);  // tell browser to release URL reference
+            }, 3000);
+
+            /* TODO: get OCPU working again
             //ocpu.seturl("//localhost:1234/ocpu/library/wise/R");
             ocpu.seturl("http://128.32.189.240:81/ocpu/user/wiser/library/wiser/R");
             //perform the request
@@ -149,6 +161,7 @@ class ClassroomMonitorController {
             request.fail(() => {
                 alert("Server error: " + request.responseText);
             });
+            */
         });
     }
 }
