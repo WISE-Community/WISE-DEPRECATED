@@ -3222,7 +3222,7 @@ class ProjectService {
      */
     getMaxScore() {
 
-        var maxScore = null;
+        var maxScore = 0;
 
         var nodes = this.project.nodes;
 
