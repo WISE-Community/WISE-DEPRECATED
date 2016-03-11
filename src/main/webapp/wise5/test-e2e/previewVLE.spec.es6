@@ -136,7 +136,7 @@ describe('WISE5 Student VLE Preview', () => {
 
         // The account menu should have the preview user account icon and the exit and sign out buttons
         element.all(by.repeater('userName in themeCtrl.workgroupUserNames')).then((workgroupNames) => {
-            expect(workgroupNames[0].getText()).toBe('Preview User');
+            expect(workgroupNames[0].getText()).toBe('Preview Team');
         });
 
         var exitButton = element(by.xpath('//button[@id="exitButton"]'));
