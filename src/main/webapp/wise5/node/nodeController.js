@@ -102,11 +102,11 @@ var NodeController = function () {
             // TODO: use node states once we implement node state saving
             var latestComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId);
             if (latestComponentState) {
-                var latestServerSaveTime = latestComponentState.serverSaveTime;
+                var latestClientSaveTime = latestComponentState.clientSaveTime;
                 if (latestComponentState.isSubmit) {
-                    this.setSaveMessage('Last submitted', latestServerSaveTime);
+                    this.setSaveMessage('Last submitted', latestClientSaveTime);
                 } else {
-                    this.setSaveMessage('Last saved', latestServerSaveTime);
+                    this.setSaveMessage('Last saved', latestClientSaveTime);
                 }
             }
 
@@ -710,14 +710,14 @@ var NodeController = function () {
                         if (!componentId && studentWorkList && studentWorkList.length) {
                             // this was a step save or submission and student work was saved, so set save message
                             var latestStudentWork = studentWorkList[studentWorkList.length - 1];
-                            var serverSaveTime = latestStudentWork.serverSaveTime;
+                            var clientSaveTime = latestStudentWork.clientSaveTime;
 
                             if (isAutoSave) {
-                                this.setSaveMessage('Auto-Saved', serverSaveTime);
+                                this.setSaveMessage('Auto-Saved', clientSaveTime);
                             } else if (isSubmit) {
-                                this.setSaveMessage('Submitted', serverSaveTime);
+                                this.setSaveMessage('Submitted', clientSaveTime);
                             } else {
-                                this.setSaveMessage('Saved', serverSaveTime);
+                                this.setSaveMessage('Saved', clientSaveTime);
                             }
                         } else {
                             this.setSaveMessage('', null);
