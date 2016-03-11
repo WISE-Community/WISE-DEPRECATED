@@ -37,7 +37,7 @@ var ThemeController = function () {
         this.rootNodeStatus = this.nodeStatuses[this.rootNode.id];
 
         this.workgroupId = this.ConfigService.getWorkgroupId();
-        this.workgroupUserNames = this.ConfigService.isPreview() ? [{ name: 'Preview User' }] : this.ConfigService.getUserNamesByWorkgroupId(this.workgroupId);
+        this.workgroupUserNames = this.ConfigService.getUserNamesByWorkgroupId(this.workgroupId);
 
         // build project status pop-up
         var statusTemplateUrl = this.themePath + '/templates/projectStatus.html';

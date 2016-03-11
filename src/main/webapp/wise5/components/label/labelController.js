@@ -295,11 +295,11 @@ var LabelController = function () {
 
                 var isAutoSave = componentState.isAutoSave;
                 var isSubmit = componentState.isSubmit;
-                var serverSaveTime = componentState.serverSaveTime;
+                var clientSaveTime = componentState.clientSaveTime;
 
                 // set save message
                 if (isSubmit) {
-                    this.setSaveMessage('Submitted', serverSaveTime);
+                    this.setSaveMessage('Submitted', clientSaveTime);
 
                     this.submit();
 
@@ -307,9 +307,9 @@ var LabelController = function () {
                     this.isSubmitDirty = false;
                     this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: false });
                 } else if (isAutoSave) {
-                    this.setSaveMessage('Auto-saved', serverSaveTime);
+                    this.setSaveMessage('Auto-saved', clientSaveTime);
                 } else {
-                    this.setSaveMessage('Saved', serverSaveTime);
+                    this.setSaveMessage('Saved', clientSaveTime);
                 }
             }
         }));
@@ -430,13 +430,13 @@ var LabelController = function () {
                     this.isSubmitDirty = false;
                     this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: false });
                     // set save message
-                    this.setSaveMessage('Last submitted', latestState.serverSaveTime);
+                    this.setSaveMessage('Last submitted', latestState.clientSaveTime);
                 } else {
                     // latest state is not a submission, so set isSubmitDirty to true and notify node
                     this.isSubmitDirty = true;
                     this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: true });
                     // set save message
-                    this.setSaveMessage('Last saved', latestState.serverSaveTime);
+                    this.setSaveMessage('Last saved', latestState.clientSaveTime);
                 }
             }
         }
