@@ -9,12 +9,15 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var NodeController = function () {
-    function NodeController($scope, $state, $stateParams, ProjectService, ConfigService) {
+    function NodeController($anchorScroll, $location, $scope, $state, $stateParams, $timeout, ProjectService, ConfigService) {
         _classCallCheck(this, NodeController);
 
+        this.$anchorScroll = $anchorScroll;
+        this.$location = $location;
         this.$scope = $scope;
         this.$state = $state;
         this.$stateParams = $stateParams;
+        this.$timeout = $timeout;
         this.ProjectService = ProjectService;
         this.ConfigService = ConfigService;
         this.projectId = $stateParams.projectId;
@@ -60,6 +63,7 @@ var NodeController = function () {
          * Create a component in this node
          */
         value: function createComponent() {
+            var _this = this;
 
             // create a component and add it to this node
             this.ProjectService.createComponent(this.nodeId, this.selectedComponent);
@@ -69,6 +73,12 @@ var NodeController = function () {
 
             // hide the create component elements
             this.showCreateComponent = false;
+
+            // Scroll to the bottom of the page where the new component was added
+            this.$timeout(function () {
+                _this.$location.hash('bottom');
+                _this.$anchorScroll();
+            });
         }
 
         /**
@@ -142,7 +152,7 @@ var NodeController = function () {
 
 ;
 
-NodeController.$inject = ['$scope', '$state', '$stateParams', 'ProjectService', 'ConfigService'];
+NodeController.$inject = ['$anchorScroll', '$location', '$scope', '$state', '$stateParams', '$timeout', 'ProjectService', 'ConfigService'];
 
 exports.default = NodeController;
 //# sourceMappingURL=nodeController.js.map

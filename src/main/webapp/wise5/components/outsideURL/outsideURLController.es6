@@ -38,6 +38,8 @@ class OutsideURLController {
         var currentNode = this.StudentDataService.getCurrentNode();
         if (currentNode != null) {
             this.nodeId = currentNode.id;
+        } else {
+            this.nodeId = this.$scope.nodeId;
         }
 
         // get the component content from the scope
@@ -56,14 +58,14 @@ class OutsideURLController {
             if (this.mode === 'authoring') {
                 this.updateAdvancedAuthoringView();
 
-                $scope.$watch(function() {
+                $scope.$watch(() => {
                     return this.authoringComponentContent;
-                }.bind(this), function(newValue, oldValue) {
+                }, (newValue, oldValue) => {
                     this.componentContent = this.ProjectService.injectAssetPaths(newValue);
 
                     // set the url
                     this.setURL(this.authoringComponentContent.url);
-                }.bind(this), true);
+                }, true);
             }
 
             // get the show previous work node id if it is provided
@@ -174,7 +176,7 @@ class OutsideURLController {
             // save the project to the server
             this.ProjectService.saveProject();
         } catch(e) {
-
+            console.error(e.toString());
         }
     };
 
@@ -195,9 +197,9 @@ class OutsideURLController {
          * Listen for the 'exit' event which is fired when the student exits
          * the VLE. This will perform saving before the VLE exits.
          */
-        this.exitListener = this.$scope.$on('exit', angular.bind(this, function(event, args) {
+        this.exitListener = this.$scope.$on('exit', (event, args) => {
 
-        }));
+        });
     };
 }
 

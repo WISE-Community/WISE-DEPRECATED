@@ -10,6 +10,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var OutsideURLController = function () {
     function OutsideURLController($scope, $sce, NodeService, OutsideURLService, ProjectService, StudentDataService) {
+        var _this = this;
+
         _classCallCheck(this, OutsideURLController);
 
         this.$scope = $scope;
@@ -44,6 +46,8 @@ var OutsideURLController = function () {
         var currentNode = this.StudentDataService.getCurrentNode();
         if (currentNode != null) {
             this.nodeId = currentNode.id;
+        } else {
+            this.nodeId = this.$scope.nodeId;
         }
 
         // get the component content from the scope
@@ -63,13 +67,13 @@ var OutsideURLController = function () {
                 this.updateAdvancedAuthoringView();
 
                 $scope.$watch(function () {
-                    return this.authoringComponentContent;
-                }.bind(this), function (newValue, oldValue) {
-                    this.componentContent = this.ProjectService.injectAssetPaths(newValue);
+                    return _this.authoringComponentContent;
+                }, function (newValue, oldValue) {
+                    _this.componentContent = _this.ProjectService.injectAssetPaths(newValue);
 
                     // set the url
-                    this.setURL(this.authoringComponentContent.url);
-                }.bind(this), true);
+                    _this.setURL(_this.authoringComponentContent.url);
+                }, true);
             }
 
             // get the show previous work node id if it is provided
@@ -189,7 +193,9 @@ var OutsideURLController = function () {
 
                 // save the project to the server
                 this.ProjectService.saveProject();
-            } catch (e) {}
+            } catch (e) {
+                console.error(e.toString());
+            }
         }
     }, {
         key: "updateAdvancedAuthoringView",
@@ -215,7 +221,7 @@ var OutsideURLController = function () {
              * Listen for the 'exit' event which is fired when the student exits
              * the VLE. This will perform saving before the VLE exits.
              */
-            this.exitListener = this.$scope.$on('exit', angular.bind(this, function (event, args) {}));
+            this.exitListener = this.$scope.$on('exit', function (event, args) {});
         }
     }]);
 

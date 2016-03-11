@@ -2,14 +2,20 @@
 
 class NodeController {
 
-    constructor($scope,
+    constructor($anchorScroll,
+                $location,
+                $scope,
                 $state,
                 $stateParams,
+                $timeout,
                 ProjectService,
                 ConfigService) {
+        this.$anchorScroll = $anchorScroll;
+        this.$location = $location;
         this.$scope = $scope;
         this.$state = $state;
         this.$stateParams = $stateParams;
+        this.$timeout = $timeout;
         this.ProjectService = ProjectService;
         this.ConfigService = ConfigService;
         this.projectId = $stateParams.projectId;
@@ -68,6 +74,12 @@ class NodeController {
 
         // hide the create component elements
         this.showCreateComponent = false;
+
+        // Scroll to the bottom of the page where the new component was added
+        this.$timeout(() => {
+            this.$location.hash('bottom');
+            this.$anchorScroll();
+        });
     }
 
     /**
@@ -124,6 +136,6 @@ class NodeController {
     }
 };
 
-NodeController.$inject = ['$scope', '$state', '$stateParams', 'ProjectService', 'ConfigService'];
+NodeController.$inject = ['$anchorScroll', '$location', '$scope', '$state', '$stateParams', '$timeout', 'ProjectService', 'ConfigService'];
 
 export default NodeController;

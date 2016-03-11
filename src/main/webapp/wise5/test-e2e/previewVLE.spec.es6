@@ -13,7 +13,7 @@ describe('WISE5 Student VLE Preview', () => {
     var closeButton = element(by.xpath('//button[@aria-label="Close Step"]'));
     var notebookButton = element(by.xpath('//button[@id="notebookButton"]'));
     var notebookSideNav = element(by.xpath('//md-sidenav'));  // side navigation bar for the notebook
-    var accountButton = element(by.xpath('//button[@id="accountButton"]'));
+    var accountButton = element(by.xpath('//button[@aria-label="Open user menu"]'));
     var accountMenu = element(by.css('.md-open-menu-container'));
 
     it('should load the vle and go to node 1', () => {
@@ -135,8 +135,8 @@ describe('WISE5 Student VLE Preview', () => {
         expect(accountMenu.getAttribute('aria-hidden')).toEqual("false");  // Account Menu should be displayed
 
         // The account menu should have the preview user account icon and the exit and sign out buttons
-        element.all(by.repeater('name in themeCtrl.workgroupUserNames')).then((workgroupNames) => {
-            expect(workgroupNames[0].element(by.binding('name')).getText()).toBe('Preview User');
+        element.all(by.repeater('userName in themeCtrl.workgroupUserNames')).then((workgroupNames) => {
+            expect(workgroupNames[0].getText()).toBe('Preview User');
         });
 
         var exitButton = element(by.xpath('//button[@id="exitButton"]'));
