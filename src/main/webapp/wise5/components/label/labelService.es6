@@ -88,8 +88,8 @@ class LabelService extends NodeService {
                     let state = componentStates[i];
                     if (state.isSubmit && state.studentData) {
                         // component state is a submission
-                        if (state.studentData.response) {
-                            // there is a response so the component is completed
+                        if (state.studentData.labels && state.studentData.labels.length) {
+                            // there are labels so the component is completed
                             result = true;
                             break;
                         }
@@ -103,8 +103,8 @@ class LabelService extends NodeService {
                 let studentData = componentState.studentData;
 
                 if (studentData != null) {
-                    if (studentData.response) {
-                        // there is a response so the component is completed
+                    if (studentData.labels && studentData.labels.length) {
+                        // there are labels so the component is completed
                         result = true;
                     }
                 }

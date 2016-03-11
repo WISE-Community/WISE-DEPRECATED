@@ -23,7 +23,7 @@
                               rows='10'
                               cols='100'></textarea>
             </div>
-            <div class="md-padding" compile="discussionController.getPrompt()" ng-if="discussionController.getPrompt()"></div>
+            <div class="component__prompt" compile="discussionController.getPrompt()" ng-if="discussionController.getPrompt()"></div>
             <div class="md-padding discussion-content">
                 <div layout="row">
                     <div class="discussion-posts" flex>
@@ -79,12 +79,12 @@
                         </md-card>
 
                         <class-response ng-repeat="componentState in discussionController.topLevelResponses.slice().reverse()"
-                                        ng-if="lgScreen ? $odd : true"
+                                        ng-if="mdScreen ? $odd : true"
                                         response="componentState" submitbuttonclicked="submitbuttonclicked(r)"
                                         studentdatachanged="studentdatachanged()"
                                         class="post animate-repeat"></class-response>
                     </div>
-                    <div class="discussion-posts" ng-if="lgScreen && discussionController.topLevelResponses.length" flex>
+                    <div class="discussion-posts" ng-if="mdScreen && discussionController.topLevelResponses.length" flex>
                         <class-response ng-repeat="componentState in discussionController.topLevelResponses.slice().reverse()"
                                         ng-if="$even"
                                         response="componentState" submitbuttonclicked="submitbuttonclicked(r)"

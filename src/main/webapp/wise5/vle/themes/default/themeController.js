@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var ThemeController = function () {
-    function ThemeController($scope, ConfigService, ProjectService, StudentDataService, NotebookService, SessionService, $mdDialog, $mdToast, $mdComponentRegistry) {
+    function ThemeController($scope, ConfigService, ProjectService, StudentDataService, StudentStatusService, NotebookService, SessionService, $mdDialog, $mdToast, $mdComponentRegistry) {
         var _this = this;
 
         _classCallCheck(this, ThemeController);
@@ -20,6 +20,7 @@ var ThemeController = function () {
         this.StudentDataService = StudentDataService;
         this.NotebookService = NotebookService;
         this.SessionService = SessionService;
+        this.StudentStatusService = StudentStatusService;
         this.$mdDialog = $mdDialog;
         this.$mdToast = $mdToast;
         this.$mdComponentRegistry = $mdComponentRegistry;
@@ -36,7 +37,7 @@ var ThemeController = function () {
         this.rootNodeStatus = this.nodeStatuses[this.rootNode.id];
 
         this.workgroupId = this.ConfigService.getWorkgroupId();
-        this.workgroupUserNames = this.isPreview ? ['Preview User'] : this.ConfigService.getUserNamesByWorkgroupId(this.workgroupId);
+        this.workgroupUserNames = this.ConfigService.getUserNamesByWorkgroupId(this.workgroupId);
 
         // build project status pop-up
         var statusTemplateUrl = this.themePath + '/templates/projectStatus.html';
@@ -237,12 +238,17 @@ var ThemeController = function () {
             this.$mdToast.hide(this.connectionLostDisplay);
             this.connectionLostShown = false;
         }
+    }, {
+        key: 'getAvatarColorForWorkgroupId',
+        value: function getAvatarColorForWorkgroupId(workgroupId) {
+            return this.StudentStatusService.getAvatarColorForWorkgroupId(workgroupId);
+        }
     }]);
 
     return ThemeController;
 }();
 
-ThemeController.$inject = ['$scope', 'ConfigService', 'ProjectService', 'StudentDataService', 'NotebookService', 'SessionService', '$mdDialog', '$mdToast', '$mdComponentRegistry'];
+ThemeController.$inject = ['$scope', 'ConfigService', 'ProjectService', 'StudentDataService', 'StudentStatusService', 'NotebookService', 'SessionService', '$mdDialog', '$mdToast', '$mdComponentRegistry'];
 
 exports.default = ThemeController;
 //# sourceMappingURL=themeController.js.map

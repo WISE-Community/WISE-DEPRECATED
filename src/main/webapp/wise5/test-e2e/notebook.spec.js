@@ -1,24 +1,13 @@
 'use strict';
 
 // E2E test for working with the notebook in preview mode
-describe('WISE5 Student VLE Preview', function () {
+describe('WISE5 Notebook in Preview Mode', function () {
 
     var hasClass = function hasClass(element, cls) {
         return element.getAttribute('class').then(function (classes) {
             return classes.split(' ').indexOf(cls) !== -1;
         });
     };
-
-    browser.get('http://localhost:8080/wise/project/demo');
-    var notebookButton = element(by.xpath('//button[@id="notebookButton"]'));
-    var notebookSideNav = element(by.xpath('//md-sidenav')); // side navigation bar for the notebook
-    var addNoteButton = element(by.xpath('//button[@id="addNoteButton"]'));
-    var newNoteDiv = element(by.xpath('//div[@id="newNote"]'));
-    var newNoteTextArea = element(by.xpath('//textarea[@id="newNoteTextArea"]'));
-    var saveNewNoteButton = element(by.xpath('//button[@id="saveNewNoteButton"]'));
-    var cancelNewNoteButton = element(by.xpath('//button[@id="cancelNewNoteButton"]'));
-
-    // MARK: Notebook tests
 
     // Returns true iff new note text area and buttons are displayed
     var verifyAddNewNoteDisplayed = function verifyAddNewNoteDisplayed(isDisplayed) {
@@ -31,6 +20,21 @@ describe('WISE5 Student VLE Preview', function () {
                 expect(newNoteDiv.getAttribute("aria-hidden")).toEqual('true'); // The new note div should be hidden
             }
     };
+
+    it('should load the vle and go to node 1', function () {
+        browser.get('http://localhost:8080/wise/project/demo');
+        expect(browser.getTitle()).toEqual('WISE');
+        expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/project/demo#/vle/node1');
+        expect(element(by.model("stepToolsCtrl.toNodeId")).getText()).toBe('1.1: Introduction to Newton Scooters');
+    });
+
+    var notebookButton = element(by.xpath('//button[@id="notebookButton"]'));
+    var notebookSideNav = element(by.xpath('//md-sidenav')); // side navigation bar for the notebook
+    var addNoteButton = element(by.xpath('//button[@id="addNoteButton"]'));
+    var newNoteDiv = element(by.xpath('//div[@id="newNote"]'));
+    var newNoteTextArea = element(by.xpath('//textarea[@id="newNoteTextArea"]'));
+    var saveNewNoteButton = element(by.xpath('//button[@id="saveNewNoteButton"]'));
+    var cancelNewNoteButton = element(by.xpath('//button[@id="cancelNewNoteButton"]'));
 
     it('should open and close the notebook', function () {
         // Click on the notebook icon to open the notebook

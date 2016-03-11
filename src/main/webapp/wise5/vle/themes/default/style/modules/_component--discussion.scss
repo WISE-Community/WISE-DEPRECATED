@@ -11,9 +11,9 @@
 }
 
 .discussion-posts {
-  padding: 16px 12px 8px;
+  padding: 12px 12px 8px;
 
-  @media only screen and (min-width: $layout-breakpoint-xs) {
+  @media only screen and (min-width: $layout-breakpoint-md) {
     padding: 16px 16px 0;
   }
 }
@@ -23,6 +23,10 @@
   max-width: $layout-breakpoint-xs;
 
   @media only screen and (min-width: $layout-breakpoint-xs) {
+    margin-bottom: 24px;
+  }
+
+  @media only screen and (min-width: $layout-breakpoint-md) {
     margin-bottom: 32px;
   }
 }

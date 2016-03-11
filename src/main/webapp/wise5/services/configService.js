@@ -388,24 +388,33 @@ var ConfigService = function () {
         }
     }, {
         key: 'getUserNamesByWorkgroupId',
-        value: function getUserNamesByWorkgroupId(workgroupId, noUserIds) {
-            var userNames = [];
+        value: function getUserNamesByWorkgroupId(workgroupId) {
+            var userNamesObjects = [];
 
             if (workgroupId != null) {
                 var userInfo = this.getUserInfoByWorkgroupId(workgroupId);
 
                 if (userInfo != null) {
-                    userNames = userInfo.userName.split(':');
+                    var userNames = userInfo.userName.split(':');
 
-                    if (noUserIds) {
-                        for (var i = 0; i < userNames.length; i++) {
-                            userNames[i] = userNames[i].replace(/ \(.*\)$/g, '');
+                    for (var i = 0; i < userNames.length; i++) {
+                        var name = userNames[i];
+                        var id = "";
+                        var regex = /(.+) \((.+)\)/g;
+                        var matches = regex.exec(name);
+                        if (matches) {
+                            name = matches[1];
+                            id = matches[2];
                         }
+                        userNamesObjects.push({
+                            name: name,
+                            id: id
+                        });
                     }
                 }
             }
 
-            return userNames;
+            return userNamesObjects;
         }
     }, {
         key: 'isPreview',

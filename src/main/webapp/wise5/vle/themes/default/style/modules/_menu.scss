@@ -1,0 +1,28 @@
+#menu-progress {
+    width: 26px;
+    height: 26px;
+    position: absolute;
+    top: 12px;
+    right: 15px;
+    z-index: 0;
+
+    .md-left, .md-right {
+        .md-half-circle {
+            border-color: rgba(255,255,255,0.4);
+        }
+    }
+
+    .md-left {
+        .md-half-circle {
+            border-left-color: color('accent-3');
+            border-top-color: color('accent-3');
+        }
+    }
+
+    .md-right {
+        .md-half-circle {
+            border-right-color: color('accent-3');
+            border-top-color: color('accent-3');
+        }
+    }
+}

@@ -418,9 +418,9 @@ var DiscussionController = function () {
         };
 
         this.$scope.$watch(function () {
-            return $mdMedia('gt-md');
-        }, function (lg) {
-            $scope.lgScreen = lg;
+            return $mdMedia('gt-sm');
+        }, function (md) {
+            $scope.mdScreen = md;
         });
     }
 
@@ -873,7 +873,10 @@ var DiscussionController = function () {
                             if (componentState.studentData.isSubmit) {
 
                                 // add the user names to the component state so we can display next to the response
-                                componentState.userNames = this.ConfigService.getUserNamesByWorkgroupId(workgroupId, true).join(', ');
+                                var userNames = this.ConfigService.getUserNamesByWorkgroupId(workgroupId);
+                                componentState.userNames = userNames.map(function (obj) {
+                                    return obj.name;
+                                }).join(', ');
 
                                 // add a replies array to the component state that we will fill with component state replies later
                                 componentState.replies = [];
@@ -974,7 +977,10 @@ var DiscussionController = function () {
                             var workgroupId = componentState.workgroupId;
 
                             // add the user names to the component state so we can display next to the response
-                            componentState.userNames = this.ConfigService.getUserNamesByWorkgroupId(workgroupId, true).join(', ');
+                            var userNames = this.ConfigService.getUserNamesByWorkgroupId(workgroupId);
+                            componentState.userNames = userNames.map(function (obj) {
+                                return obj.name;
+                            }).join(', ');
 
                             // add a replies array to the component state that we will fill with component state replies later
                             componentState.replies = [];

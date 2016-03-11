@@ -1,11 +1,12 @@
 <div class="account-menu__caret" tabindex="0"></div>
 <md-list class="account-menu__users">
-    <md-subheader>Project Team</md-subheader>
-    <md-list-item ng-repeat="name in themeCtrl.workgroupUserNames">
+    <md-list-item>
         <div class="md-avatar">
-            <md-icon> account_circle </md-icon>
+            <md-icon class="md-48" style="color: {{themeCtrl.getAvatarColorForWorkgroupId(themeCtrl.workgroupId)}};"> account_circle </md-icon>
         </div>
-        <span>{{ name }}</span>
+        <div class="md-list-item-text">
+            <span ng-repeat="userName in themeCtrl.workgroupUserNames">{{ userName.name }}<span ng-if="!$last">,&nbsp;</span></span>
+        </div>
     </md-list-item>
 </md-list>
 <md-divider></md-divider>

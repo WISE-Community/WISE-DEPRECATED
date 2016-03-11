@@ -5,7 +5,7 @@
             <md-icon md-font-set="{{stepToolsCtrl.nodeStatus.icon.fontSet}}" class="md-18 md-light node-icon" md-theme="default">{{stepToolsCtrl.nodeStatus.icon.fontName}}</md-icon>
         </div>
 
-        <md-select md-theme="default" class="node-select md-subhead" ng-model="stepToolsCtrl.toNodeId" aria-label="Project item select">
+        <md-select id="stepSelectMenu" md-theme="default" class="node-select md-subhead" ng-model="stepToolsCtrl.toNodeId" aria-label="Project item select">
             <md-option ng-repeat="item in stepToolsCtrl.idToOrder | toArray | orderBy : 'order'"
                        ng-if="stepToolsCtrl.nodeStatuses[item.$key].isVisible && item.order!==0"
                        value="{{ item.$key }}"
