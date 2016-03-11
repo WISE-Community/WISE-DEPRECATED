@@ -402,10 +402,10 @@ describe('ProjectService Unit Test', function () {
 
         // test ProjectService.getMaxScore()
         it('should return the max score of the project', function () {
-            // Demo Project doesn't have any max scores, so we expect getMaxScore to return 0
+            // Demo Project doesn't have any max scores, so we expect getMaxScore to return null
             ProjectService.setProject(demoProjectJSON); // Set the sample demo project and parse it
             var demoProjectMaxScoreActual = ProjectService.getMaxScore();
-            expect(demoProjectMaxScoreActual).toEqual(0); // When the project doesn't have any max scores defined, max score should be 0
+            expect(demoProjectMaxScoreActual).toBeNull(); // When the project doesn't have any max scores defined, max score should be null
 
             // Sample Scooter Project's max score is 18.
             ProjectService.setProject(scootersProjectJSON); // Set the sample scooter project and parse it

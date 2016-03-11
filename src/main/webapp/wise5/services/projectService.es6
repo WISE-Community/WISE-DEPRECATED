@@ -3217,12 +3217,12 @@ class ProjectService {
 
     /**
      * Get the max score for the project
-     * @returns the max score for the project or 0 if none of the components in the project
+     * @returns the max score for the project or null if none of the components in the project
      * has max scores.
      */
     getMaxScore() {
 
-        var maxScore = 0;
+        var maxScore = null;
 
         var nodes = this.project.nodes;
 
