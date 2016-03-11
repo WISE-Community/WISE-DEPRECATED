@@ -1,43 +1,71 @@
 .account-menu {
-  border-radius: 4px;
-  padding: 0;
-  font-size: $body-font-size-base;
-}
-
-.account-menu__users {
-  padding: 8px;
-  font-weight: 700;
-
-  md-list-item {
+    border-radius: 4px;
     padding: 0;
+    font-size: $body-font-size-base;
+    max-width: 380px;
 
-    .md-avatar {
-      margin: 0 8px 0 0;
-      height: 48px;
-      width: 48px;
+    @media (min-width: $layout-breakpoint-md) {
+        min-width: 380px !important;
     }
-  }
 
-  .md-subheader .md-subheader-inner {
-    padding: 12px 0;
-    //font-size: $subhead-font-size-base;
-  }
+    h3 {
+        margin: 0;
+        font-weight: 300;
+    }
 }
 
 .account-menu__caret {
-  position: absolute;
-  right: 28px;
-  top: -8px;
-  outline: none;
-
-  &:before {
-    content: '';
     position: absolute;
-    border-bottom: 8px solid #fff;
-    border-left: 8px solid transparent;
-    border-right: 8px solid transparent;
-  }
+    right: 28px;
+    top: -8px;
+    outline: none;
+
+    &:before {
+        content: '';
+        position: absolute;
+        border-bottom: 8px solid #fff;
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+    }
 }
+
+.account-menu__info {
+    padding: 0 8px;
+}
+
+.account-menu__users {
+    font-weight: 700;
+    padding: 8px 0;
+
+    md-list-item {
+        padding: 0;
+
+        .md-avatar {
+            margin: 0 8px 0 0;
+            height: 48px;
+            width: 48px;
+        }
+    }
+}
+
+.account-menu__progress {
+    md-progress-linear {
+        transform: rotate(270deg);
+        width: 26px;
+    }
+
+    padding: 8px 4px;
+}
+
+.account-menu__score {
+    padding: 8px 4px;
+}
+
+.account-menu__grade {
+    color: #FFC107;
+    margin-right: 4px;
+}
+
 .account-menu__actions {
-  background-color: color('gray-lightest');
+    background-color: color('gray-lightest');
 }

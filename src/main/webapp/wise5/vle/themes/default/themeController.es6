@@ -28,6 +28,8 @@ class ThemeController {
         this.numberProject = true;
 
         this.themePath = this.ProjectService.getThemePath();
+        this.themeSettings = this.ProjectService.getThemeSettings();
+        this.hideTotalScores = this.themeSettings.hideTotalScores;
 
         this.nodeStatuses = this.StudentDataService.nodeStatuses;
 

@@ -243,7 +243,7 @@ var AnnotationService = function () {
          */
         value: function getTotalScore(annotations, workgroupId) {
 
-            var totalScore = null;
+            var totalScore = 0;
 
             var scoresFound = [];
 
