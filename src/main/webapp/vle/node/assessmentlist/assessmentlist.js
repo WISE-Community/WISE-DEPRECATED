@@ -10,25 +10,25 @@ function ASSESSMENTLIST(node, view) {
 	this.view = view;
 	this.content = node.getContent().getContentJSON();
 	if(node.studentWork != null) {
-		this.states = node.studentWork; 
+		this.states = node.studentWork;
 	} else {
-		this.states = [];  
+		this.states = [];
 	};
-	
+
 	//check if there is an associated node whose work we might display in this step
 	if(this.node.associatedStartNode != null) {
 		//get the node id for the associated node that the student will be reviewing work for
 		this.associatedStartNodeId = this.node.associatedStartNode;
-		
+
 		//get the associated node object
 		this.associatedStartNode = this.view.getProject().getNodeById(this.associatedStartNodeId);
-		
+
 		if(this.associatedStartNode != null) {
 			//get the content for the associated node
-			this.associatedStartNodeContent = this.associatedStartNode.getContent().getContentJSON();			
+			this.associatedStartNodeContent = this.associatedStartNode.getContent().getContentJSON();
 		}
 	}
-	
+
 	//check if this step is being used for a peer review
 	if(this.node.peerReview != null) {
 		//values to be set after we retrieve the other student work that this student will be reviewing
@@ -38,19 +38,19 @@ function ASSESSMENTLIST(node, view) {
 		this.showAuthorContent = false;
 
 		//this will store the peer review as an annotation
-		this.annotation = null;	
-		
+		this.annotation = null;
+
 		if(this.node.peerReview == 'annotate') {
 			this.openPercentageTrigger = this.content.openPercentageTrigger;
 			this.openNumberTrigger = this.content.openNumberTrigger;
 			this.openLogicTrigger = this.content.openLogicTrigger;
 		}
 	}
-	
+
 	if(this.node.peerReview != null || this.node.teacherReview != null) {
 		//tell the node that it is part of a review sequence
 		this.node.setIsPartOfReviewSequence();
-		
+
 		//get the custom message to display to the student when the step is not open to work on
 		this.stepNotOpenCustomMessage = this.content.stepNotOpenCustomMessage;
 	}
@@ -59,16 +59,16 @@ function ASSESSMENTLIST(node, view) {
 	if(this.view != null && this.view.isLatestNodeStateLocked && this.view.isLatestNodeStateLocked(this.node.id)) {
 		//set this flag for future look up
 		this.locked = true;
-		
+
 		//tell the node that the student has completed it
 		this.node.setCompleted();
 	}
-	
+
 	if (this.isSubmitted()) {
 		//tell the node that the student has completed it
 		this.node.setCompleted();
 	}
-	
+
 	this.workToImport = [];
 
 	this.stateChanged = false;
@@ -76,7 +76,7 @@ function ASSESSMENTLIST(node, view) {
 
 
 /**
- * Hide all the divs in the assessmentlist html 
+ * Hide all the divs in the assessmentlist html
  */
 ASSESSMENTLIST.prototype.hideAll = function() {
 	$('#promptDisplayDiv').hide();
@@ -98,16 +98,16 @@ ASSESSMENTLIST.prototype.hideAll = function() {
 ASSESSMENTLIST.prototype.onlyDisplayMessage = function(message) {
 	//set the node closed because the student can't work on it yet
 	this.node.setStepClosed();
-	
+
 	//hide all the divs
 	this.hideAll();
-	
+
 	//display the prompt div
 	$('#promptDisplayDiv').show();
-	
+
 	//remove the text in this label div
 	$('#promptLabelDiv').html("");
-	
+
 	//set the prompt div to this message
 	$('#promptDiv').html(message);
 };
@@ -118,7 +118,7 @@ ASSESSMENTLIST.prototype.onlyDisplayMessage = function(message) {
 ASSESSMENTLIST.prototype.retrieveOtherStudentWork = function() {
 	//get the url
 	var peerReviewURL = this.view.getConfig().getConfigParam('peerReviewURL');
-	
+
 	//get the parameters to retrieve the other student work
 	var action = "studentRequest";
 	var runId = this.view.getConfig().getConfigParam('runId');
@@ -130,7 +130,7 @@ ASSESSMENTLIST.prototype.retrieveOtherStudentWork = function() {
 	var openLogicTrigger = this.openLogicTrigger;
 	var peerReviewAction = "annotate";
 	var classmateWorkgroupIds = this.view.getUserAndClassInfo().getWorkgroupIdsInClass().toString();
-	
+
 	//compile the parameters into an object for cleanliness
 	var peerReviewURLArgs = {
 			action:action,
@@ -144,7 +144,7 @@ ASSESSMENTLIST.prototype.retrieveOtherStudentWork = function() {
 			peerReviewAction:peerReviewAction,
 			classmateWorkgroupIds:classmateWorkgroupIds
 	};
-	
+
 	//make the request
 	this.view.connectionManager.request('GET', 1, peerReviewURL, peerReviewURLArgs, this.retrieveOtherStudentWorkCallback, [this]);
 };
@@ -160,17 +160,17 @@ ASSESSMENTLIST.prototype.retrieveOtherStudentWork = function() {
 ASSESSMENTLIST.prototype.retrieveOtherStudentWorkCallback = function(text, xml, args) {
 	//get the or object
 	var thisAl = args[0];
-	
+
 	//clear this variable to make sure we don't use old data
 	thisAl.otherStudentNodeVisit = null;
-	
+
 	//check if there was any text response
 	if(text != null && text != "") {
 		//there was text returned so we will parse it, the text should be a NodeVisit in JSON form
 		var peerWorkToReview = $.parseJSON(text);
-		
+
 		var peerWorkText = "";
-		
+
 		//handle error cases
 		if(peerWorkToReview.error) {
 			if(peerWorkToReview.error == 'peerReviewUserHasNotSubmittedOwnWork') {
@@ -179,10 +179,10 @@ ASSESSMENTLIST.prototype.retrieveOtherStudentWorkCallback = function(text, xml, 
 				 * they can work on this step
 				 */
 				var to_start_this_step_you_must = thisAl.view.getI18NString("to_start_this_step_you_must", "AssessmentListNode");
-				
+
 				//the word link
 				var link = thisAl.view.getI18NString("link", "AssessmentListNode");
-				
+
 				//the user has not submitted work for the original step
 				thisAl.onlyDisplayMessage('<p>' + to_start_this_step_you_must + ' <b><a style=\"color:blue\" onclick=\"eventManager.fire(\'nodeLinkClicked\', [\'' + thisAl.view.getProject().getPositionById(thisAl.associatedStartNode.id) + '\']) \">' + thisAl.view.getProject().getStepNumberAndTitle(thisAl.associatedStartNode.id) + '</a></b> (' + link + ').</p>');
 			} else if(peerWorkToReview.error == 'peerReviewNotAbleToAssignWork' || peerWorkToReview.error == 'peerReviewNotOpen') {
@@ -191,13 +191,13 @@ ASSESSMENTLIST.prototype.retrieveOtherStudentWorkCallback = function(text, xml, 
 				 * or
 				 * the peer review has not opened yet
 				 */
-				
+
 				var startNodeTitle = "";
 				if(thisAl.associatedStartNode != null) {
 					//get the step number and node title for the start node
 					startNodeTitle = thisAl.view.getProject().getStepNumberAndTitle(thisAl.associatedStartNode.id);
 				}
-				
+
 				if(thisAl.stepNotOpenCustomMessage != null && thisAl.stepNotOpenCustomMessage != "") {
 					//use the custom authored message
 					thisAl.onlyDisplayMessage(thisAl.stepNotOpenCustomMessage.replace(/associatedStartNode.title/g, startNodeTitle));
@@ -212,12 +212,12 @@ ASSESSMENTLIST.prototype.retrieveOtherStudentWorkCallback = function(text, xml, 
 					var more_of_your_peers_need_to_submit = thisAl.view.getI18NString("more_of_your_peers_need_to_submit", "AssessmentListNode");
 					var you_will_then_be_assigned_a_response = thisAl.view.getI18NString("you_will_then_be_assigned_a_response", "AssessmentListNode");
 					var please_return_to_this_step_again = thisAl.view.getI18NString("please_return_to_this_step_again", "AssessmentListNode");
-					
+
 					//use the default message
-					thisAl.onlyDisplayMessage('<p>' + this_step_is_not_available_yet + '</p></p><p>' + more_of_your_peers_need_to_submit + ' <b>"' + startNodeTitle + '"</b>. <br/>' + you_will_then_be_assigned_a_response + '</p><p>' + please_return_to_this_step_again + '</p>');					
+					thisAl.onlyDisplayMessage('<p>' + this_step_is_not_available_yet + '</p></p><p>' + more_of_your_peers_need_to_submit + ' <b>"' + startNodeTitle + '"</b>. <br/>' + you_will_then_be_assigned_a_response + '</p><p>' + please_return_to_this_step_again + '</p>');
 				}
 			}
-			
+
 			//check if we should show the authored work
 			if(peerWorkToReview.error == 'peerReviewShowAuthoredWork') {
 				//show the authored work for the student to review
@@ -231,17 +231,17 @@ ASSESSMENTLIST.prototype.retrieveOtherStudentWorkCallback = function(text, xml, 
 			thisAl.otherStudentWorkgroupId = peerWorkToReview.workgroupId;
 			thisAl.otherStudentStepWorkId = peerWorkToReview.stepWorkId;
 			thisAl.otherStudentNodeVisit = peerWorkToReview.nodeVisit;
-			
+
 			peerWorkText = thisAl.associatedStartNode.getPeerReviewOtherStudentWork(thisAl.otherStudentNodeVisit);
 		}
-		
+
 		//reaplce \n with <br>
 		peerWorkText = thisAl.replaceSlashNWithBR(peerWorkText);
-		
+
 		//show regular divs such as prompt, starter, and response and populate them
 		thisAl.showDefaultDivs();
 		//thisAl.showDefaultValues();
-		
+
 		/*
 		 * the labels for the instructions and the work from another group and the
 		 * feedback that the student needs to give to that other group
@@ -250,28 +250,28 @@ ASSESSMENTLIST.prototype.retrieveOtherStudentWorkCallback = function(text, xml, 
 		var your_feedback_for = thisAl.view.getI18NString('your_feedback_for', 'AssessmentListNode');
 		var work_submitted_by = thisAl.view.getI18NString('work_submitted_by', 'AssessmentListNode');
 		var team_anonymous = thisAl.view.getI18NString('team_anonymous', 'AssessmentListNode');
-		
-		
+
+
 		//set more informative labels
 		$('#promptLabelDiv').html(instructions);
 		$('#responseLabelDiv').html(your_feedback_for + ' <i>' + team_anonymous + '</i>:');
-		
+
 		//display the prompt
 		$('#originalPromptTextDiv').html(thisAl.associatedStartNode.getPeerReviewPrompt());
 		$('#originalPromptDisplayDiv').show();
-		
+
 		/*
 		 * display the other student's work or a message saying there is no other student work
 		 * available yet
 		 */
-		$('#associatedWorkLabelDiv').html(work_submitted_by + ' <i>' + team_anonymous + '</i>:');		
+		$('#associatedWorkLabelDiv').html(work_submitted_by + ' <i>' + team_anonymous + '</i>:');
 		$('#associatedWorkTextDiv').html(peerWorkText);
 		$('#associatedWorkDisplayDiv').show();
-		
-		//set the response if there were previous revisions 
+
+		//set the response if there were previous revisions
 		//thisAl.setResponse();
 	}
-	
+
 	/*
 	 * perform any final tasks after we have finished retrieving
 	 * any other work and have displayed it to the student
@@ -286,34 +286,34 @@ ASSESSMENTLIST.prototype.retrieveOtherStudentWorkCallback = function(text, xml, 
 ASSESSMENTLIST.prototype.displayTeacherWork = function() {
 	//check that the original node is locked
 	var isOriginalNodeLocked = this.view.isLatestNodeStateLocked(this.associatedStartNode.id);
-	
+
 	if(!isOriginalNodeLocked) {
 		//original step is not locked
-		
+
 		/*
 		 * the message that tells the user they must complete a previous step before
 		 * they can work on this step
 		 */
 		var to_start_this_step_you_must = thisAl.view.getI18NString("to_start_this_step_you_must", "AssessmentListNode");
-		
+
 		//the word link
 		var link = thisAl.view.getI18NString("link", "AssessmentListNode");
-		
+
 		//display message telling student to go back and submit that original step
 		this.onlyDisplayMessage('<p>' + to_start_this_step_you_must + ' <b><a style=\"color:blue\" onclick=\"view.goToNodePosition(' + this.view.getProject().getPositionById(this.associatedStartNode.id) + ')\">' + this.view.getProject().getStepNumberAndTitle(this.associatedStartNode.id) + '</a></b> (' + link + ').</p>');
 	} else {
 		//original step is locked
-		
+
 		//get the authored work
 		var teacherWorkText = this.content.authoredWork;
-		
+
 		//replace \n with <br>
 		teacherWorkText = this.replaceSlashNWithBR(teacherWorkText);
-		
+
 		//show regular divs such as prompt, starter, and response and populate them
 		this.showDefaultDivs();
 		this.showDefaultValues();
-		
+
 		/*
 		 * the labels for the instructions and the work from another group and the
 		 * feedback that the student needs to give to that other group
@@ -326,20 +326,20 @@ ASSESSMENTLIST.prototype.displayTeacherWork = function() {
 		//set more informative labels
 		document.getElementById('promptLabelDiv').innerHTML = instructions;
 		document.getElementById('responseLabelDiv').innerHTML = your_feedback_for + ' <i>' + team_anonymous + '</i>:';
-		
+
 		//display the original prompt
 		document.getElementById('originalPromptTextDiv').innerHTML = this.associatedStartNode.getPeerReviewPrompt();
 		document.getElementById('originalPromptDisplayDiv').style.display = 'block';
-		
+
 		//display the authored work for the student to review
-		document.getElementB$('#iv').innerHTML = work_submitted_by + ' <i>' + team_anonymous + '</i>:' ;		
+		document.getElementB$('#iv').innerHTML = work_submitted_by + ' <i>' + team_anonymous + '</i>:' ;
 		document.getElementById('associatedWorkTextDiv').innerHTML = teacherWorkText;
 		document.getElementById('associatedWorkDisplayDiv').style.display = 'block';
-		
+
 		//set the response if there were previous revisions
 		//this.setResponse();
 	}
-	
+
 	/*
 	 * perform any final tasks after we have finished retrieving
 	 * any other work and have displayed it to the student
@@ -353,18 +353,18 @@ ASSESSMENTLIST.prototype.displayTeacherWork = function() {
 ASSESSMENTLIST.prototype.render = function() {
 	var enableStep = true;
 	var message = '';
-	
+
 	//process the tag maps if we are not in authoring mode
 	if(this.view.authoringMode == null || !this.view.authoringMode) {
 		//get the tag map results
 		var tagMapResults = this.processTagMaps();
-		
+
 		//get the result values
 		enableStep = tagMapResults.enableStep;
 		message = tagMapResults.message;
 		this.workToImport = tagMapResults.workToImport;
 	}
-	
+
 	if(this.content.isMustCompleteAllPartsBeforeExit) {
 		//the student must complete all parts before leaving the step
 		if(this.states.length == 0) {
@@ -381,14 +381,14 @@ ASSESSMENTLIST.prototype.render = function() {
 				 * existence of any work and we don't have to specifically check
 				 * for all parts.
 				 */
-				this.view.addActiveTagMapConstraint(this.node.id, null, 'mustCompleteBeforeExiting', null, null);				
+				this.view.addActiveTagMapConstraint(this.node.id, null, 'mustCompleteBeforeExiting', null, null);
 			}
 		}
 	}
-	
+
 	//create the submit button
 	$("#submitButtonDiv").html('<input id="submitButton" type="button" onclick="submit()" data-i18n="submit" value="Submit the Questionnaire"></input>');
-	
+
 	if(this.node.peerReview == 'annotate' || this.node.teacherReview == 'annotate') {
 		/*
 		 * this is a peer or teacher review annotate node (part 2 of a review sequence)
@@ -396,16 +396,16 @@ ASSESSMENTLIST.prototype.render = function() {
 		 */
 		if ($("#saveDraftButton").size() == 0) {
 			$("#submitButtonDiv").before('<div class="buttonDiv"><input type="button" id="saveDraftButton" data-i18n="save_draft" value="SAVE DRAFT" onclick="javascript:save();" /></div>&nbsp;');
-			
+
 			/*
 			 * disable the save draft button initially. the save
-			 * draft button will be enabled once the student 
+			 * draft button will be enabled once the student
 			 * modifies any of the assessment parts
 			 */
 			this.setSaveDraftUnavailable();
 		}
 	}
-	
+
 	/* if student has already done this step
 	 * && isLockAfterSubmit is true
 	 * && is displayAnswerSubmit is false,
@@ -415,14 +415,14 @@ ASSESSMENTLIST.prototype.render = function() {
 	if (this.content.isLockAfterSubmit
 			&& !this.content.displayAnswerAfterSubmit
 			&& this.isSubmitted()) {
-		
+
 		/* if this is part 2 of peer-review sequence and the student has completed it */
 		if((this.node.peerReview == 'annotate' || this.node.teacherReview == 'annotate') && this.isSubmitted()) {
 			//the message to tell the student they have successfully reviewed another groups work
 			var you_have_successfully_reviewed = this.view.getI18NString('you_have_successfully_reviewed', 'AssessmentListNode');
 			var team_anonymous = this.view.getI18NString('team_anonymous', 'AssessmentListNode');
 			var well_done = this.view.getI18NString('well_done', 'AssessmentListNode');
-			
+
 			//display this message in the step frame
 			this.onlyDisplayMessage('<p>' + you_have_successfully_reviewed + ' <i>' + team_anonymous + '</i>.</p><p>' + well_done + '</p>');
 		} else {
@@ -431,60 +431,60 @@ ASSESSMENTLIST.prototype.render = function() {
 		}
 		return;
 	};
-	
+
 	if((this.node.peerReview == 'annotate' || this.node.teacherReview == 'annotate') && this.content.isLockAfterSubmit) {
 		//this is a peer or teacher review annotate step (part 2 of a review sequence)
 		if(this.associatedStartNode != null) {
 			if(this.node.peerReview != null) {
 				//this is a peer review
-				
+
 				if(this.view.authoringMode) {
 					/*
 					 * we are in authoring mode so we will just display default values
 					 * so the author can get an idea of how it will look to the students
 					 */
-					
+
 					var instructions = this.view.getI18NString('instructions', 'AssessmentListNode');
-					
+
 					//set more informative labels
 					$('#promptLabelDiv').html(instructions);
-					
+
 					var prompt_from_first_peer_review = this.view.getI18NString('prompt_from_first_peer_review', 'AssessmentListNode');
-					
+
 					//display the prompt
 					$('#originalPromptTextDiv').html('[' + prompt_from_first_peer_review + ']');
 					$('#originalPromptDisplayDiv').show();
-					
+
 					/*
 					 * the label for the work from another group
 					 */
 					var work_submitted_by = this.view.getI18NString('work_submitted_by', 'AssessmentListNode');
 					var team_anonymous = this.view.getI18NString('team_anonymous', 'AssessmentListNode');
 					var work_from_a_random_classmate = this.view.getI18NString('work_from_a_random_classmate', 'AssessmentListNode');
-					
+
 					/*
 					 * display the other student's work or a message saying there is no other student work
 					 * available yet
 					 */
-					$('#associatedWorkLabelDiv').html(work_submitted_by + ' <i>' + team_anonymous + '</i>:');		
+					$('#associatedWorkLabelDiv').html(work_submitted_by + ' <i>' + team_anonymous + '</i>:');
 					$('#associatedWorkTextDiv').html('[' + work_from_a_random_classmate + ']');
 					$('#associatedWorkDisplayDiv').show();
 				} else {
 					//this is the step where the student writes comments on their classmates work
-					this.retrieveOtherStudentWork();					
+					this.retrieveOtherStudentWork();
 				}
 			} else if(this.node.teacherReview != null) {
 				//this is a teacher review
-				
+
 				//this is the step where the student annotates the authored work
 				this.displayTeacherWork();
 			}
 		}
 	}
-	
+
 	/* render the overall prompt for the whole step. if prompt is null, hide the entire prompt div */
 	if (this.content.prompt) {
-		$("#promptDiv").html(this.content.prompt);	
+		$("#promptDiv").html(this.content.prompt);
 		$("#promptLabelDiv").show();
 		$("#promptDiv").show();
 	} else {
@@ -499,7 +499,7 @@ ASSESSMENTLIST.prototype.render = function() {
 		assessmentHTML += this.getHTML(assessment,i);
 	};
 	$("#assessmentsDiv").html(assessmentHTML);
-	
+
 	/* if student has already done this step, don't show the step, just display
 	 * the fact that they've already completed it.
 	 */
@@ -507,7 +507,7 @@ ASSESSMENTLIST.prototype.render = function() {
 		this.lockScreen();
 		return;
 	};
-	
+
 	/*
 	 * if this step does not lock, we will set submit button to be unavailable.
 	 * when the student changes any of their answers in any field, the submit
@@ -516,29 +516,29 @@ ASSESSMENTLIST.prototype.render = function() {
 	if(!this.content.isLockAfterSubmit) {
 		this.setSaveUnavailable();
 	}
-	
+
 	this.node.view.eventManager.fire('contentRenderCompleted', this.node.id, this.node);
-	
+
    //load the external script if this step has one set
     this.view.loadExternalScript(this);
 };
 
 ASSESSMENTLIST.prototype.submit = function() {
 	var allCompleted = this.isAllPartsCompleted();
-	
+
 	if (allCompleted) {
 		if (this.content.isLockAfterSubmit) {
 			var click_ok_to_save = this.view.getI18NString('click_ok_to_save', 'AssessmentListNode');
-			
+
 			doLockStep=confirm(click_ok_to_save);
-			if (doLockStep==true) { 
+			if (doLockStep==true) {
 				//disable the submit and save draft buttons
 				this.setSaveUnavailable();
 				this.setSaveDraftUnavailable();
 				var isSubmit = true;
 				this.save(isSubmit);
 				this.lockScreen();
-				
+
 				// if this is a peer review 'annotate' part, also post the answer as annotation.
 				if(this.node.peerReview != null) {
 					//this is a peer review of a previous step
@@ -549,7 +549,7 @@ ASSESSMENTLIST.prototype.submit = function() {
 						this.postAnnotation(response);
 					}
 				}
-			} 
+			}
 		} else {
 			//disable the submit and save draft buttons
 			this.setSaveUnavailable();
@@ -560,7 +560,7 @@ ASSESSMENTLIST.prototype.submit = function() {
 	} else {
 		//the message that tells the student that they need to answer all the questions
 		var please_answer_all_the_questions = this.view.getI18NString('please_answer_all_the_questions', 'AssessmentListNode');
-		
+
 		/* all not completed yet, notify user and have them finish */
 		alert(please_answer_all_the_questions);
 	};
@@ -599,7 +599,7 @@ ASSESSMENTLIST.prototype.getChoiceText = function(assessmentJSON,choiceId) {
 };
 
 /**
- * Send the response back as an annotation. Used for Peer Review. 
+ * Send the response back as an annotation. Used for Peer Review.
  * @param response
  */
 ASSESSMENTLIST.prototype.postAnnotation = function(response) {
@@ -613,10 +613,10 @@ ASSESSMENTLIST.prototype.postAnnotation = function(response) {
 	var stepWorkId = this.otherStudentStepWorkId;
 	var action = "peerReviewAnnotate";
 	var periodId = this.view.getUserAndClassInfo().getPeriodId();
-	
+
 	//get the url
 	var annotationsURL = this.view.getConfig().getConfigParam('annotationsURL');
-	
+
 	//compile the args into an object for cleanliness
 	var annotationsURLArgs = {runId:runId,
 								  nodeId: nodeId,
@@ -627,27 +627,27 @@ ASSESSMENTLIST.prototype.postAnnotation = function(response) {
 								  stepWorkId: stepWorkId,
 								  action:action,
 								  periodId:periodId};
-	
+
 	//create the view's annotations object if it does not exist
 	if(this.view.getAnnotations() == null) {
 		this.view.setAnnotations(new Annotations());
 	}
-	
+
 	//create the annotation locally to keep our local copy up to date
 	var annotation = new Annotation(runId, nodeId, toWorkgroup, fromWorkgroup, type, value, stepWorkId);
-	
+
 	//add the annotation to the view's annotations
 	this.view.getAnnotations().updateOrAddAnnotation(annotation);
-	
+
 	//a callback function that does nothing
 	var postAnnotationsCallback = function(text, xml, args) {};
-	
+
 	//post the annotation to the server
 	this.view.connectionManager.request('POST', 1, annotationsURL, annotationsURLArgs, postAnnotationsCallback);
 };
 
 /**
- * Returns true iff all parts have been completed 
+ * Returns true iff all parts have been completed
  */
 ASSESSMENTLIST.prototype.isAllPartsCompleted = function() {
 	var totalRadioCount = $('.choicesDiv').length; /* total number of radio assessments, including follow-ups */
@@ -663,11 +663,11 @@ ASSESSMENTLIST.prototype.isAllPartsCompleted = function() {
 
 	var textBoxesAllComplete = true;
 	/* check that all textboxes have been populated */
-	$(".textboxTextArea").each(function() { 
+	$(".textboxTextArea").each(function() {
 		if ($(this).val() == null || $(this).val() == "") {
 			textBoxesAllComplete = false;
 	    }
-	}); 
+	});
 	return textBoxesAllComplete;
 };
 
@@ -682,13 +682,13 @@ ASSESSMENTLIST.prototype.save = function(isSubmit) {
 	if(this.stateChanged || isSubmit) {
 		var alState = new ASSESSMENTLISTSTATE();
 		alState.isSubmit = isSubmit;
-		
+
 		if(isSubmit) {
-			alState.locked = true;			
-			// denote that this step is completed.		
+			alState.locked = true;
+			// denote that this step is completed.
 			this.node.setCompleted();
 		}
-		
+
 		for (var i=0; i<this.content.assessments.length; i++) {
 			var assessment = this.content.assessments[i];
 			var assessmentState = {};
@@ -697,25 +697,25 @@ ASSESSMENTLIST.prototype.save = function(isSubmit) {
 			assessmentState.response = this.getResponse(assessment);
 			alState.assessments.push(assessmentState);
 		};
-		
+
 		//fire the event to push this state to the global view.states object
 		//this.view.pushStudentWork(this.node.id, alState);
-		
+
 		this.states.push(alState);
-		
+
 		this.node.save(alState);
-		
+
 		//disable the save draft button
-		this.setSaveDraftUnavailable();	
-		
+		this.setSaveDraftUnavailable();
+
 		//the message that says their work has been saved or submitted
 		var your_work_has_been_saved = this.view.getI18NString('your_work_has_been_saved', 'AssessmentListNode');
 		var your_work_has_been_submitted = this.view.getI18NString('your_work_has_been_submitted', 'AssessmentListNode');
-		
+
 		// show "saved" or "submitted" message
 		var confMSG = your_work_has_been_saved;
 		if (isSubmit) {
-			confMSG = your_work_has_been_submitted;				
+			confMSG = your_work_has_been_submitted;
 		}
 		if ($("#saveConfirmation").size() == 0) {
 			$("#submitButtonDiv").after('<br/><span style=\'font-size:.8em\' id="saveConfirmation">'+confMSG+'</span>&nbsp;');
@@ -724,13 +724,13 @@ ASSESSMENTLIST.prototype.save = function(isSubmit) {
 		}
 		$('#saveConfirmation').html(confMSG).delay(5000).fadeOut('medium');
 
-		
+
 		// get the current node visit
 		var nodeVisit = this.view.getState().getCurrentNodeVisit();
-		
+
 		// process any teacher notifications if necessary
 		this.processTeacherNotifications(nodeVisit, alState);
-		
+
 		this.stateChanged = false;
 	}
 };
@@ -738,7 +738,7 @@ ASSESSMENTLIST.prototype.save = function(isSubmit) {
 /**
  * Returns student's current response to be saved for the specified assessment object.
  * @param assessmentJSON JSON obj of assessment item.
- *   Currently, we only support assessments of type 
+ *   Currently, we only support assessments of type
  *   - "radio" (for multiple choice)
  *   - "text" (for open response)
  * @return html string
@@ -757,7 +757,7 @@ ASSESSMENTLIST.prototype.getResponse = function(assessmentJSON) {
 		var maxScoreSoFar = 0;
 		if (assessmentJSON.isAutoScoreEnabled) {
 			// compute total possible score for this item by summing its choice scores
-			for (var x=0; x < assessmentJSON.choices.length; x++) {				
+			for (var x=0; x < assessmentJSON.choices.length; x++) {
 				if (assessmentJSON.choices[x].choiceScore && maxScoreSoFar < assessmentJSON.choices[x].choiceScore) {
 					maxScoreSoFar = assessmentJSON.choices[x].choiceScore;
 				}
@@ -782,7 +782,7 @@ ASSESSMENTLIST.prototype.getResponse = function(assessmentJSON) {
 					}
 				}
 			}
-			return response; 
+			return response;
 		} else {
 			return null;
 		}
@@ -804,7 +804,7 @@ ASSESSMENTLIST.prototype.getResponse = function(assessmentJSON) {
 					}
 				}
 				responses.push(response);
-			}			
+			}
 		}
 		return responses;
 	};
@@ -814,7 +814,7 @@ ASSESSMENTLIST.prototype.getResponse = function(assessmentJSON) {
 /**
  * Returns HTML string to display in the assessmentlist page for the specified assessment
  * @param assessmentJSON JSON obj of assessment item.
- *   Currently, we only support assessments of type 
+ *   Currently, we only support assessments of type
  *   - "radio" (for multiple choice)
  *   - "text" (for open response)
  *   @index: 0-based index of this assessment in the whole step.
@@ -822,7 +822,20 @@ ASSESSMENTLIST.prototype.getResponse = function(assessmentJSON) {
  */
 ASSESSMENTLIST.prototype.getHTML = function(assessmentJSON,index) {
 	var html = "<div id='"+assessmentJSON.id+"Div' class='"+assessmentJSON.type+" assessment'>" +
-	    "<div id='"+assessmentJSON.id+"PromptDiv' class='promptDiv'><span class='partSpan'>" + (index+1) + ".&nbsp;&nbsp;</span>"+assessmentJSON.prompt+"</div>";
+	    "<div id='"+assessmentJSON.id+"PromptDiv' class='promptDiv'><span class='partSpan'>" + (index+1) + ".&nbsp;&nbsp;</span>"+assessmentJSON.prompt;
+
+	if (assessmentJSON.type == "text" && assessmentJSON.starter != null && assessmentJSON.starter.text != null) {
+		if (assessmentJSON.starter.display == 1 || assessmentJSON.starter.display == 2) {
+			/*
+			 * this assessment item has the starter sentence set to
+			 * 'available upon request' or 'shows immediately'
+			 */
+			html += "<div id='starterSentenceDiv' class='starterSentence'><a onclick='showStarter(\"" + assessmentJSON.id + "\")' data-i18n='show_starter_sentence'>Show Starter Sentence</a></div>";
+		};
+	};
+
+	html += "</div>";
+
 	if (assessmentJSON.type == "text") {
 		html += this.getHTMLText(assessmentJSON);
 	} else if  (assessmentJSON.type == "radio") {
@@ -842,7 +855,7 @@ ASSESSMENTLIST.prototype.getHTML = function(assessmentJSON,index) {
  */
 ASSESSMENTLIST.prototype.getHTMLRadio = function(radioJSON) {
 	var html = "";
-	
+
 	if(radioJSON.choices.length > 0) {
 		html = "<div id='"+radioJSON.id+"choicesDiv' class='choicesDiv'>";
 		var lastChosenChoiceId = this.getLastSavedResponse(radioJSON);
@@ -871,7 +884,7 @@ ASSESSMENTLIST.prototype.getHTMLRadio = function(radioJSON) {
  */
 ASSESSMENTLIST.prototype.getHTMLCheckbox = function(checkboxJSON) {
 	var html = "";
-	
+
 	if(checkboxJSON.choices.length > 0) {
 		html = "<div id='"+checkboxJSON.id+"checkboxChoicesDiv' class='checkboxChoicesDiv'>";
 		var lastChosenChoices = this.getLastSavedResponse(checkboxJSON);
@@ -887,7 +900,7 @@ ASSESSMENTLIST.prototype.getHTMLCheckbox = function(checkboxJSON) {
 					}
 				}
 				if (checked) {
-				    html += "<input class='interactable' type='checkbox' name='"+checkboxJSON.id+"' value='"+choice.id+"' onchange='javascript:assessmentListChanged()' checked>";						
+				    html += "<input class='interactable' type='checkbox' name='"+checkboxJSON.id+"' value='"+choice.id+"' onchange='javascript:assessmentListChanged()' checked>";
 				} else {
 				    html += "<input class='interactable' type='checkbox' name='"+checkboxJSON.id+"' value='"+choice.id+"' onchange='javascript:assessmentListChanged()'>";
 				}
@@ -913,7 +926,7 @@ ASSESSMENTLIST.prototype.getHTMLText = function(textJSON) {
 	var starterprompt = "";
 	/* display starter prompt if specified */
 	if (textJSON.starter != null && textJSON.starter.text != null) {
-		if (textJSON.starter.display == 1 || textJSON.starter.display == 2) {
+		if (textJSON.starter.display == 2) {
 			starterprompt = textJSON.starter.text;
 		};
 	};
@@ -926,12 +939,12 @@ ASSESSMENTLIST.prototype.getHTMLText = function(textJSON) {
 		html += starterprompt;
 	}
 	html += "</textarea>";
-	html += "</div>";	
+	html += "</div>";
 	return html;
 };
 
 /**
- * Returns true iff student has "submitted" (ie locked) 
+ * Returns true iff student has "submitted" (ie locked)
  * this step, so no more editing can be done.
  * @param assessmentJSON
  * @return
@@ -952,7 +965,7 @@ ASSESSMENTLIST.prototype.isSubmitted = function() {
  */
 ASSESSMENTLIST.prototype.getLastSavedResponse = function(assessmentJSON) {
 	var latestState = null;
-	
+
 	if (this.states && this.states.length > 0) {
 		latestState = this.states[this.states.length-1];
 	} else {
@@ -961,7 +974,7 @@ ASSESSMENTLIST.prototype.getLastSavedResponse = function(assessmentJSON) {
 			latestState = this.workToImport[this.workToImport.length - 1];
 		}
 	}
-	
+
 	if(latestState != null) {
 		for (var i=0; i<latestState.assessments.length; i++) {
 			if (latestState.assessments[i].id == assessmentJSON.id) {
@@ -982,7 +995,7 @@ ASSESSMENTLIST.prototype.getLastSavedResponse = function(assessmentJSON) {
 			};
 		};
 	}
-	
+
 	return null;
 };
 
@@ -992,10 +1005,10 @@ ASSESSMENTLIST.prototype.getLastSavedResponse = function(assessmentJSON) {
 ASSESSMENTLIST.prototype.lockScreen = function() {
 	this.setSaveUnavailable();
 	$(".interactable").attr("disabled",true);
-	
+
 	//the message that says the student has completed this step
 	var you_have_completed_this_step = this.view.getI18NString('you_have_completed_this_step', 'AssessmentListNode');
-	
+
 	$(".stepAlreadyCompleteDiv").html(you_have_completed_this_step);
 };
 
@@ -1023,7 +1036,7 @@ ASSESSMENTLIST.prototype.setSaveUnavailable = function() {
  */
 ASSESSMENTLIST.prototype.setSaveDraftAvailable = function() {
 	$("#saveDraftButton").parent().removeClass("ui-state-disabled");
-	$("#saveDraftButton").attr("disabled", false);	
+	$("#saveDraftButton").attr("disabled", false);
 };
 
 /**
@@ -1031,7 +1044,7 @@ ASSESSMENTLIST.prototype.setSaveDraftAvailable = function() {
  */
 ASSESSMENTLIST.prototype.setSaveDraftUnavailable = function() {
 	$("#saveDraftButton").parent().addClass("ui-state-disabled");
-	$("#saveDraftButton").attr("disabled", true);	
+	$("#saveDraftButton").attr("disabled", true);
 };
 
 /**
@@ -1050,7 +1063,7 @@ ASSESSMENTLIST.prototype.isSaveAvailable = function() {
 ASSESSMENTLIST.prototype.assessmentListChanged = function() {
 	//set this flag to true so we know that we will need to save a new state
 	this.stateChanged = true;
-	
+
 	//enable the submit and save draft buttons
 	this.setSaveAvailable();
 	this.setSaveDraftAvailable();
@@ -1071,15 +1084,15 @@ ASSESSMENTLIST.prototype.showDefaultDivs = function() {
  * Set the prompt, starter, and response values
  */
 ASSESSMENTLIST.prototype.showDefaultValues = function() {
-	
+
 	/* set html prompt element values */
 	$('#promptDiv').html(this.content.prompt);
-	
+
 	//the question label
 	var question = this.view.getI18NString('question', 'AssessmentListNode');
-	
+
 	$('#promptLabelDiv').html(question);
-	
+
 	/* set text area size: set row based on expectedLines */
 	$('#responseBox').attr('rows', this.content.assessmentItem.interaction.expectedLines);
 };
@@ -1102,7 +1115,7 @@ ASSESSMENTLIST.prototype.doneRendering = function() {
  */
 ASSESSMENTLIST.prototype.replaceSlashNWithBR = function(response) {
 	var responseString = '';
-	
+
 	//check if the response is an array
 	if(response.constructor.toString().indexOf('Array') != -1) {
 		//the response is an array so we will obtain the string that is in it
@@ -1111,7 +1124,7 @@ ASSESSMENTLIST.prototype.replaceSlashNWithBR = function(response) {
 		//the response is a string
 		responseString = response;
 	}
-	
+
 	//replace \n with <br>
 	return responseString.replace(/\n/g, '<br>');
 };
@@ -1128,25 +1141,25 @@ ASSESSMENTLIST.prototype.processTagMaps = function() {
 	var enableStep = true;
 	var message = '';
 	var workToImport = [];
-	
+
 	//the tag maps
 	var tagMaps = this.node.tagMaps;
-	
+
 	//check if there are any tag maps
 	if(tagMaps != null) {
-		
+
 		//loop through all the tag maps
 		for(var x=0; x<tagMaps.length; x++) {
-			
+
 			//get a tag map
 			var tagMapObject = tagMaps[x];
-			
+
 			if(tagMapObject != null) {
 				//get the variables for the tag map
 				var tagName = tagMapObject.tagName;
 				var functionName = tagMapObject.functionName;
 				var functionArgs = tagMapObject.functionArgs;
-				
+
 				if(functionName == "importWork") {
 					//get the work to import
 					workToImport = this.node.getWorkToImport(tagName, functionArgs);
@@ -1155,11 +1168,11 @@ ASSESSMENTLIST.prototype.processTagMaps = function() {
 					this.node.showPreviousWork($('#previousWorkDiv'), tagName, functionArgs);
 				} else if(functionName == "checkCompleted") {
 					//we will check that all the steps that are tagged have been completed
-					
+
 					//get the result of the check
 					var result = this.node.checkCompleted(tagName, functionArgs);
 					enableStep = enableStep && result.pass;
-					
+
 					if(message == '') {
 						message += result.message;
 					} else {
@@ -1170,19 +1183,19 @@ ASSESSMENTLIST.prototype.processTagMaps = function() {
 			}
 		}
 	}
-	
+
 	if(message != '') {
 		//message is not an empty string so we will add a new line for formatting
 		message += '<br>';
 	}
-	
+
 	//put the variables in an object so we can return multiple variables
 	var returnObject = {
 		enableStep:enableStep,
 		message:message,
 		workToImport:workToImport
 	};
-	
+
 	return returnObject;
 };
 
@@ -1192,20 +1205,20 @@ ASSESSMENTLIST.prototype.processTagMaps = function() {
  * @param state the node state
  */
 ASSESSMENTLIST.prototype.processTeacherNotifications = function(nodeVisit, nodeState) {
-    
+
     if (nodeVisit != null && nodeState != null) {
-        
+
         if (nodeState.isSubmit) {
             // the student is submitting their work
-            
+
             // get the step content
             var stepContent = this.node.content.getContentJSON()
-            
+
             // get teacher notifications from the step content
             var teacherNotifications = stepContent.teacherNotifications;
-                
+
             if (teacherNotifications != null) {
-                
+
                 /*
                  * loop through all the teacher notifications for this step
                  * and check if we need to activate any of them
@@ -1213,26 +1226,83 @@ ASSESSMENTLIST.prototype.processTeacherNotifications = function(nodeVisit, nodeS
                 for (var t = 0; t < teacherNotifications.length; t++) {
                     // get a teacher notification
                     var teacherNotification = teacherNotifications[t];
-                    
+
                     if (teacherNotification != null) {
                         var teacherNotificationType = teacherNotification.type;
-                        
+
                         if (teacherNotificationType === 'minTotalTimeSpentOnStep') {
-                            
+
                             this.view.handleMinTotalTimeSpentOnStepTeacherNotification(
                                     this.node.id, teacherNotification, nodeVisit, nodeState);
-                            
+
                         } else if (teacherNotificationType === 'maxTotalTimeSpentOnStep') {
-                            
+
                             this.view.handleMaxTotalTimeSpentOnStepTeacherNotification(
                                     this.node.id, teacherNotification, nodeVisit, nodeState);
-                            
+
                         }
                     }
                 }
             }
         }
     }
+};
+
+/**
+ * Show the starter sentence for the given assessment item
+ * @param assessmentItemId the id of the assessment item we want to show the
+ * starter sentence for
+ */
+ASSESSMENTLIST.prototype.showStarter = function(assessmentItemId) {
+
+	// get the assessment items
+	var assessments = this.content.assessments;
+
+	if (assessments != null) {
+
+		// loop through all the assessment items
+		for (var a = 0; a < assessments.length; a++) {
+			var assessment = assessments[a];
+
+			if (assessment != null) {
+
+				if (assessmentItemId === assessment.id) {
+					// we have found the assessment item we are looking for
+
+					if (assessment.starter != null) {
+						// get the starter sentence
+						var starterSentence = assessment.starter.text;
+
+						if (starterSentence != null && starterSentence != '') {
+
+							// get the text that is currently in the textarea
+							var currentVal = $('#' + assessmentItemId + 'textbox').val();
+
+							var newVal = '';
+
+							if (currentVal == null || currentVal == '') {
+								/*
+								 * the current value is empty so we will set the
+								 * new value to the starter sentence
+								 */
+								newVal = starterSentence;
+							} else {
+								/*
+								 * the student already has text in the textarea
+								 * so we will append the starter sentence to the
+								 * end of the text
+								 */
+								newVal = currentVal + '\n' + starterSentence;
+							}
+
+							// set the new value into the textarea
+							$('#' + assessmentItemId + 'textbox').val(newVal);
+						}
+					}
+				}
+			}
+		}
+	}
 };
 
 

@@ -114,5 +114,9 @@
 	"grading_item_part_number": {
 		"value":"Part {0}:",
 		"description":"'Part X:' to show in the grading view for each item part"
+	},
+	"show_starter_sentence": {
+		"value":"Show Starter Sentence",
+		"description":"The text for the show starter sentence button"
 	}
 }
