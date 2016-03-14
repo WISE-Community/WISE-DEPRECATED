@@ -1,5 +1,5 @@
 
-<button style="font-weight: bold; padding: 10px" ng-click="authoringToolMainController.createNewProject()">Create A New Project</button>
+<button id="createNewProjectButton" style="font-weight: bold; padding: 10px" ng-click="authoringToolMainController.createNewProject()">Create A New Project</button>
 
 <h3>My Projects (click to open)</h3>
 <div ng-repeat='project in authoringToolMainController.projects' ng-click="authoringToolMainController.openProject(project.id)">
