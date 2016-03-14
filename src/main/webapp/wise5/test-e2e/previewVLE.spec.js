@@ -13,7 +13,7 @@ describe('WISE5 Student VLE Preview', function () {
     var previousButton = element(by.xpath('//button[@aria-label="Previous Item"]'));
     var nextButton = element(by.xpath('//button[@aria-label="Next Item"]'));
     var closeButton = element(by.xpath('//button[@aria-label="Close Step"]'));
-    var notebookButton = element(by.xpath('//button[@id="notebookButton"]'));
+    var notebookButton = element(by.id("notebookButton"));
     var notebookSideNav = element(by.xpath('//md-sidenav')); // side navigation bar for the notebook
     var accountButton = element(by.xpath('//button[@aria-label="Open user menu"]'));
     var accountMenu = element(by.css('.md-open-menu-container'));
@@ -53,7 +53,7 @@ describe('WISE5 Student VLE Preview', function () {
     });
 
     it('should allow user to jump to a step using the navigation drop-down menu', function () {
-        var stepSelectMenu = element(by.xpath('//md-select[@id="stepSelectMenu"]'));
+        var stepSelectMenu = element(by.id("stepSelectMenu"));
         stepSelectMenu.click();
         element.all(by.repeater("item in stepToolsCtrl.idToOrder | toArray | orderBy : 'order'")).then(function (stepSelectOptions) {
             expect(stepSelectOptions[1].element(by.css('.node-select__text')).getText()).toBe("1.1: Introduction to Newton Scooters");
@@ -141,10 +141,10 @@ describe('WISE5 Student VLE Preview', function () {
             expect(workgroupNames[0].getText()).toBe('Preview Team');
         });
 
-        var exitButton = element(by.xpath('//button[@id="exitButton"]'));
+        var exitButton = element(by.id("exitButton"));
         expect(exitButton.isPresent()).toBeTruthy();
         expect(exitButton.getText()).toEqual("EXIT");
-        var logOutButton = element(by.xpath('//button[@id="logOutButton"]'));
+        var logOutButton = element(by.id("logOutButton"));
         expect(logOutButton.isPresent()).toBeTruthy();
         expect(logOutButton.getText()).toEqual("SIGN OUT");
 

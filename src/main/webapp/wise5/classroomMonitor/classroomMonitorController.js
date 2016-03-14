@@ -120,38 +120,48 @@ var ClassroomMonitorController = function () {
                     }
                     csvString += "\r\n";
                 }
+
                 var runId = _this2.ConfigService.getRunId();
                 var csvBlob = new Blob([csvString], { type: 'text/csv' });
-                var csvFile = new File([csvBlob], "export_" + runId + ".csv");
+                var csvUrl = URL.createObjectURL(csvBlob);
+                var a = document.createElement("a");
+                document.body.appendChild(a);
+                a.href = csvUrl;
+                a.download = "export_" + runId + ".csv";
+                a.click();
 
+                // timeout is required for FF.
+                window.setTimeout(function () {
+                    URL.revokeObjectURL(csvUrl); // tell browser to release URL reference
+                }, 3000);
+
+                /* TODO: get OCPU working again
                 //ocpu.seturl("//localhost:1234/ocpu/library/wise/R");
                 ocpu.seturl("http://128.32.189.240:81/ocpu/user/wiser/library/wiser/R");
                 //perform the request
                 var request = ocpu.call("extractchoices", {
                     "csvFile": csvFile
-                }, function (session) {
-                    session.getStdout(function (returnedCSVString) {
-                        var csvBlob = new Blob([returnedCSVString], { type: 'text/csv' });
+                }, (session) => {
+                    session.getStdout((returnedCSVString) => {
+                        var csvBlob = new Blob([returnedCSVString], {type: 'text/csv'});
                         var csvUrl = URL.createObjectURL(csvBlob);
                         var a = document.createElement("a");
                         document.body.appendChild(a);
                         a.href = csvUrl;
                         a.download = "export_" + runId + ".csv";
                         a.click();
-
-                        // timeout is required for FF.
-                        window.setTimeout(function () {
-                            URL.revokeObjectURL(csvUrl); // tell browser to release URL reference
+                         // timeout is required for FF.
+                        window.setTimeout(() => {
+                            URL.revokeObjectURL(csvUrl);  // tell browser to release URL reference
                         }, 3000);
-
-                        //return returnedCSVString;
+                         //return returnedCSVString;
                     });
                 });
-
-                //if R returns an error, alert the error message
-                request.fail(function () {
+                 //if R returns an error, alert the error message
+                request.fail(() => {
                     alert("Server error: " + request.responseText);
                 });
+                */
             });
         }
     }]);

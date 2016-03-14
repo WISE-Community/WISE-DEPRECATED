@@ -13,9 +13,11 @@
 
 <button ui-sref-active="active" ui-sref='root.studentProgress'>Grade By Student</button>
 <button ui-sref-active="active" ui-sref='root.nodeProgress'>Grade By Step</button>
+<div style="float:right">
+<button ng-click='classroomMonitorController.export("allStudentWork")'>Download All Student Work</button>
+</div>
 <!--
 <script src="http://cdn.opencpu.org/opencpu-0.5.js"></script>
-<button ng-click='classroomMonitorController.export("allStudentWork")'>Download All Student Work</button>
 <button ng-click='classroomMonitorController.export("allStudentEvents")'>Download All Student Events</button>
 <button ng-click='classroomMonitorController.hello()'>Test WISE-OpenCPU Connectivity</button>
 -->
