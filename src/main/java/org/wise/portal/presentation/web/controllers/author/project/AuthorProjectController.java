@@ -1,21 +1,21 @@
 /**
  * Copyright (c) 2008-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
- * 
+ *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
- * 
+ *
  * Permission is hereby granted, without written agreement and without license
  * or royalty fees, to use, copy, modify, and distribute this software and its
  * documentation for any purpose, provided that the above copyright notice and
  * the following two paragraphs appear in all copies of this software.
- * 
+ *
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
  * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
- * 
+ *
  * IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
  * SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
  * ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
@@ -23,6 +23,7 @@
  */
 package org.wise.portal.presentation.web.controllers.author.project;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -82,7 +83,7 @@ import org.wise.vle.web.SecurityUtils;
 
 /**
  * Controller for users with author privileges to author WISE4 projects
- * 
+ *
  * @author Hiroki Terashima
  * @author Geoffrey Kwan
  * @author Patrick Lawler
@@ -96,22 +97,22 @@ public class AuthorProjectController {
 
 	private static final String COMMAND = "command";
 
-	@Autowired 
+	@Autowired
 	private ProjectService projectService;
 
-	@Autowired 
+	@Autowired
 	private Properties wiseProperties = null;
 
-	@Autowired 
+	@Autowired
 	private CurnitService curnitService;
 
-	@Autowired 
+	@Autowired
 	private TaggerController taggerController;
-	
-	@Autowired 
+
+	@Autowired
 	private AclService<Project> aclService;
-	
-	@Autowired 
+
+	@Autowired
 	private ServletContext servletContext;
 
 	private final static List<String> filemanagerProjectlessRequests;
@@ -159,38 +160,38 @@ public class AuthorProjectController {
 						return new ModelAndView(new RedirectView("accessdenied.html"));
 					}
 
-					if ("copyProject".equals(command) && 
-							(project == null || 
+					if ("copyProject".equals(command) &&
+							(project == null ||
 							(!project.getFamilytag().equals(FamilyTag.TELS) && !this.projectService.canAuthorProject(project, user)))) {
 						return new ModelAndView(new RedirectView("accessdenied.html"));
 					}
 
 					CredentialManager.setRequestCredentials(request, user);
-					
+
 					if (forward.equals("filemanager")) {
 						if (command!=null) {
 							String pathAllowedToAccess = CredentialManager.getAllowedPathAccess(request);
-							
+
 							if (command.equals("createProject")) {
 								String projectName = request.getParameter("projectName");
 								String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
-								
+
 								String result = "";
-								
+
 								if (SecurityUtils.isAllowedAccess(pathAllowedToAccess, curriculumBaseDir)) {
 									result = FileManager.createProject(curriculumBaseDir, projectName);
 								} else {
 									response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
 									result = "unauthorized";
 								}
-								
+
 								response.getWriter().write(result);
 							} else if (command.equals("projectList")) {
 								String projectPaths = request.getParameter("projectPaths");
 								String projectExt = ".project.json";
-								
+
 								String result = FileManager.getProjectList(projectPaths, projectExt);
-								
+
 								response.getWriter().write(result);
 							} else if (command.equals("retrieveFile")) {
 								//get the file name
@@ -198,16 +199,16 @@ public class AuthorProjectController {
 
 								//get the full file path
 								String filePath = FileManager.getFilePath(project, fileName);
-								
+
 								String result = "";
-								
+
 								if (SecurityUtils.isAllowedAccess(pathAllowedToAccess, filePath)) {
 									result = FileManager.retrieveFile(filePath);
 								} else {
 									response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
 									result = "unauthorized";
 								}
-								
+
 								response.getWriter().write(result);
 							} else if (command.equals("updateFile")) {
 								/*
@@ -216,22 +217,22 @@ public class AuthorProjectController {
 								 * /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/667
 								 */
 								String projectFolderPath = FileManager.getProjectFolderPath(project);
-								
+
 								//get the file name
 								String fileName = request.getParameter("fileName");
-								
+
 								//get the content to save to the file
 								String data = request.getParameter("data");
-								
+
 								String result = "";
-								
+
 								if (SecurityUtils.isAllowedAccess(pathAllowedToAccess, projectFolderPath)) {
-									result = FileManager.updateFile(projectFolderPath, fileName, data);									
+									result = FileManager.updateFile(projectFolderPath, fileName, data);
 								} else {
 									response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
 									result = "unauthorized";
 								}
-								
+
 								response.getWriter().write(result);
 							} else if (command.equals("createNode")) {
 								/*
@@ -243,19 +244,19 @@ public class AuthorProjectController {
 								String nodeClass = request.getParameter("nodeClass");
 								String title = request.getParameter("title");
 								String type = request.getParameter("type");
-								
+
 								//get the string that contains an array of node template params
 								String nodeTemplateParams = request.getParameter("nodeTemplateParams");
-								
+
 								String result = "";
-								
+
 								if (SecurityUtils.isAllowedAccess(pathAllowedToAccess, projectPath)) {
 									result = FileManager.createNode(projectPath, nodeClass, title, type, nodeTemplateParams);
 								} else {
 									response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
 									result = "not authorized";
 								}
-								
+
 								response.getWriter().write(result);
 							} else if (command.equals("createSequence")) {
 								/*
@@ -266,23 +267,23 @@ public class AuthorProjectController {
 								String projectFileName = request.getParameter("projectFileName");
 								String name = request.getParameter("name");
 								String id = request.getParameter("id");
-								
+
 								/*
 								 * get the project folder path
 								 * e.g.
 								 * /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/667
 								 */
 								String projectFolderPath = FileManager.getProjectFolderPath(project);
-								
+
 								String result = "";
-								
+
 								if (SecurityUtils.isAllowedAccess(pathAllowedToAccess, projectFolderPath)) {
 									result = FileManager.createSequence(projectFileName, name, id, projectFolderPath);
 								} else {
 									response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
 									result = "not authorized";
 								}
-								
+
 								response.getWriter().write(result);
 							} else if (command.equals("removeFile")) {
 								/*
@@ -291,13 +292,13 @@ public class AuthorProjectController {
 								 * /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/667
 								 */
 								String projectFolderPath = FileManager.getProjectFolderPath(project);
-								
+
 								/*
 								 * get the file name
 								 * node_1.or
 								 */
 								String fileName = request.getParameter("fileName");
-								
+
 								String result = "";
 
 								if (SecurityUtils.isAllowedAccess(pathAllowedToAccess, projectFolderPath)) {
@@ -306,7 +307,7 @@ public class AuthorProjectController {
 									response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
 									result = "unauthorized";
 								}
-								
+
 								response.getWriter().write(result);
 							} else if (command.equals("copyNode")) {
 								//get the parameters for the node
@@ -315,29 +316,29 @@ public class AuthorProjectController {
 								String title = request.getParameter("title");
 								String nodeClass = request.getParameter("nodeClass");
 								String contentFile = request.getParameter("contentFile");
-								
+
 								/*
 								 * get the file name
 								 * e.g.
 								 * /node_1.or
 								 */
 								String projectFileName = request.getParameter("projectFileName");
-								
+
 								/*
 								 * get the project folder path
 								 * e.g.
 								 * /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/667
 								 */
 								String projectFolderPath = FileManager.getProjectFolderPath(project);
-								
+
 								String result = "";
-								
+
 								if (SecurityUtils.isAllowedAccess(pathAllowedToAccess, projectFolderPath)) {
-									result = FileManager.copyNode(projectFolderPath, projectFileName, data, type, title, nodeClass, contentFile);									
+									result = FileManager.copyNode(projectFolderPath, projectFileName, data, type, title, nodeClass, contentFile);
 								} else {
 									response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
 								}
-								
+
 								response.getWriter().write(result);
 							} else if (command.equals("createSequenceFromJSON")) {
 								/*
@@ -346,31 +347,31 @@ public class AuthorProjectController {
 								 * /wise4.project.json
 								 */
 								String projectFileName = request.getParameter("projectFileName");
-								
+
 								//get the json for the new sequence we are going to add to the project
 								String data = request.getParameter("data");
-								
+
 								/*
 								 * get the project folder path
 								 * e.g.
 								 * /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/667
 								 */
 								String projectFolderPath = FileManager.getProjectFolderPath(project);
-								
+
 								String result = "";
-								
+
 								if (SecurityUtils.isAllowedAccess(pathAllowedToAccess, projectFolderPath)) {
 									result = FileManager.createSequenceFromJSON(projectFolderPath, projectFileName, data);
 								} else {
 									response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
 								}
-								
+
 								response.getWriter().write(result);
 							} else if (command.equals("getScripts")) {
 								String data = request.getParameter("param1");
-								
+
 								String result = FileManager.getScripts(servletContext, data);
-								
+
 								response.getWriter().write(result);
 							} else if (command.equals("copyProject")) {
 								/*
@@ -379,23 +380,23 @@ public class AuthorProjectController {
 								 * /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/667
 								 */
 								String projectFolderPath = FileManager.getProjectFolderPath(project);
-								
+
 								/*
 								 * get the curriculum base
 								 * e.g.
 								 * /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum
 								 */
 								String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
-								
+
 								String result = "";
-								
+
 								if (SecurityUtils.isAllowedAccess(pathAllowedToAccess, projectFolderPath)) {
-									result = FileManager.copyProject(curriculumBaseDir, projectFolderPath);									
+									result = FileManager.copyProject(curriculumBaseDir, projectFolderPath);
 								} else {
 									response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
 									result = "unauthorized";
 								}
-								
+
 								response.getWriter().write(result);
 							} else if (command.equals("createFile")) {
 								/*
@@ -405,78 +406,78 @@ public class AuthorProjectController {
 								 */
 								String fileName = request.getParameter("path");
 								String data = request.getParameter("data");
-								
+
 								/*
 								 * get the project folder path
 								 * e.g.
 								 * /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/667
 								 */
 								String projectFolderPath = FileManager.getProjectFolderPath(project);
-								
+
 								String result = "";
-								
+
 								if (SecurityUtils.isAllowedAccess(pathAllowedToAccess, projectFolderPath)) {
 									result = FileManager.createFile(projectFolderPath, fileName, data);
 								} else {
 									response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
 								}
-								
+
 								response.getWriter().write(result);
 							} else if (command.equals("reviewUpdateProject")) {
 								//get the curriculum base directory e.g. /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum
 								String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
-								
+
 								//get the relative child project url e.g. /236/wise4.project.json
 								String projectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
-								
+
 								//get the parent project id
 								Long parentProjectId = project.getParentProjectId();
 
 								//get the parent project
 								Project parentProject = projectService.getById(parentProjectId);
-								
+
 								//get the relative parent project url e.g. /235/wise4.project.json
 								String parentProjectUrl = (String) parentProject.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
-								
+
 								String result = FileManager.reviewUpdateProject(curriculumBaseDir, parentProjectUrl, projectUrl);
-								
+
 								response.getWriter().write(result);
 							} else if (command.equals("updateProject")) {
 								//get the curriculum base directory e.g. /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum
 								String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
-								
+
 								//get the relative child project url e.g. /236/wise4.project.json
 								String childProjectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
-								
+
 								//get the child project folder path
 								String childProjectFolderPath = FileManager.getProjectFolderPath(project);
-								
+
 								//get the parent project id
 								Long parentProjectId = project.getParentProjectId();
 
 								//get the parent project
 								Project parentProject = projectService.getById(parentProjectId);
-								
+
 								//get the relative parent project url e.g. /235/wise4.project.json
 								String parentProjectUrl = (String) parentProject.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
-								
+
 								String result = "";
-								
+
 								if (SecurityUtils.isAllowedAccess(pathAllowedToAccess, childProjectFolderPath)) {
-									result = FileManager.updateProject(curriculumBaseDir, parentProjectUrl, childProjectUrl);									
+									result = FileManager.updateProject(curriculumBaseDir, parentProjectUrl, childProjectUrl);
 								} else {
 									response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
 									result = "unauthorized";
 								}
-								
+
 								response.getWriter().write(result);
 							} else if (command.equals("importSteps")) {
 								//get the curriculum base directory e.g. /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum
 								String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
-								
+
 								//get the relative child project url e.g. /172/wise4.project.json
 								String fromProjectUrl = "";
-								
+
 								//get the from project id string
 								String fromProjectIdStr = request.getParameter("fromProjectId");
 
@@ -494,35 +495,35 @@ public class AuthorProjectController {
 										e.printStackTrace();
 									}
 								}
-								
+
 								//get the relative child project url e.g. /236/wise4.project.json
 								String toProjectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
-								
+
 								//get the child project folder path
 								String toProjectFolderPath = FileManager.getProjectFolderPath(project);
-								
+
 								//get all the files we need to import
 								String nodeIds = (String) request.getParameter("nodeIds");
-								
+
 								String result = "";
-								
+
 								if (SecurityUtils.isAllowedAccess(pathAllowedToAccess, toProjectFolderPath)) {
-									result = FileManager.importSteps(curriculumBaseDir, fromProjectUrl, toProjectUrl, nodeIds);									
+									result = FileManager.importSteps(curriculumBaseDir, fromProjectUrl, toProjectUrl, nodeIds);
 								} else {
 									response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
 									result = "unauthorized";
 								}
-								
+
 								response.getWriter().write(result);
 							} else if (command.equals("getProjectUsageAndMax")) {
 								//get the path to the folder
 								String path = FileManager.getProjectFolderPath(project);
-								
+
 								//get the max project size for this project if it was separately specified for this project
 								Long projectMaxTotalAssetsSizeLong = project.getMaxTotalAssetsSize();
-								
+
 								String result = FileManager.getProjectUsageAndMax(path, projectMaxTotalAssetsSizeLong);
-								
+
 								response.getWriter().write(result);
 							} else {
 								/* we don't understand this command */
@@ -536,7 +537,7 @@ public class AuthorProjectController {
 
 						if (command == null && ServletFileUpload.isMultipartContent(request)) {
 							//user is uploading a file
-							
+
 							ServletFileUpload uploader = new ServletFileUpload(new DiskFileItemFactory());
 							List<?> fileList = null;
 							try {
@@ -545,22 +546,22 @@ public class AuthorProjectController {
 							} catch (FileUploadException e) {
 								e.printStackTrace();
 							}
-							
+
 							//get the project folder path
 							String projectFolderPath = FileManager.getProjectFolderPath(project);
-							
+
 							//get the folder name that will contain the assets
 							String dirName = "assets";
 							String pathToCheckSize = projectFolderPath;
-							
+
 							//get the max disk space size this project can use
 							Long projectMaxTotalAssetsSize = project.getMaxTotalAssetsSize();
-							
+
 							if (projectMaxTotalAssetsSize == null) {
 								//get the default max project size
 								projectMaxTotalAssetsSize = new Long(wiseProperties.getProperty("project_max_total_assets_size", "15728640"));
 							}
-							
+
 							String allowedProjectAssetContentTypesStr = wiseProperties.getProperty("normalAuthorAllowedProjectAssetContentTypes");
 							if (user.isTrustedAuthor()) {
 								allowedProjectAssetContentTypesStr += "," + wiseProperties.getProperty("trustedAuthorAllowedProjectAssetContentTypes");
@@ -568,7 +569,7 @@ public class AuthorProjectController {
 
 							DefaultMultipartHttpServletRequest multiRequest = (DefaultMultipartHttpServletRequest) request;
 							Map<String,MultipartFile> fileMap = multiRequest.getFileMap();
-							
+
 							//get all the file names and files to be uploaded
 							Iterator<String> iter = multiRequest.getFileNames();
 							while (iter.hasNext()) {
@@ -578,47 +579,47 @@ public class AuthorProjectController {
 								if (!allowedProjectAssetContentTypesStr.contains(contentType)) {
 									if (contentType.equals("application/octet-stream") && (filename.endsWith(".mml") || filename.endsWith(".cml") || filename.endsWith(".json"))) {
 										// .mml and .cml files are acceptable. Their content-type is not well-known, so it will show up at application/octet-stream
-									} else { 
+									} else {
 										response.getWriter().write("Uploading this file type is not allowed. Operation aborted.");
 										return null;
 									}
 								}
 								fileMap.put(filename, oneFile);
 							}
-							
+
 							//tell the asset manager to handle the file upload
 							String result = AssetManager.uploadAsset(fileList, fileMap, projectFolderPath, dirName, pathToCheckSize, projectMaxTotalAssetsSize);
 							response.getWriter().write(result);
 						} else if (command.equals("remove")) {
 							//get the project folder path
 							String path = FileManager.getProjectFolderPath(project);
-							
+
 							//get the assets folder name
 							String dirName = "assets";
-							
+
 							//get the file name that we are going to remove
 							String assetFileName = request.getParameter("asset");
-							
+
 							//tell the asset manager to remove the file
 							String result = AssetManager.removeAsset(path, dirName, assetFileName);
 							response.getWriter().write(result);
 						} else if (command.equals("getSize")) {
 							//get the project folder path
 							String path = FileManager.getProjectFolderPath(project);
-							
+
 							//get the assets folder name
 							String dirName = "assets";
-							
+
 							//tell the asset manager to get the size of the assets folder
 							String result = AssetManager.getSize(path, dirName);
 							response.getWriter().write(result);
 						} else if (command.equals("assetList")) {
 							//get the project folder path
 							String path = FileManager.getProjectFolderPath(project);
-							
+
 							//get the assets folder name
 							String dirName = "assets";
-							
+
 							//get the file names for all the assets in the assets folder
 							JSONArray assetList = AssetManager.getAssetList(path, dirName);
 							response.getWriter().write(assetList.toString());
@@ -633,13 +634,13 @@ public class AuthorProjectController {
 						//we have updated a file in a project so we will update the project edited timestamp
 
 						/*
-						 * set the project into the request so the handleProjectEdited 
+						 * set the project into the request so the handleProjectEdited
 						 * function doesn't have to retrieve it again
 						 */
 						request.setAttribute("project", project);
 
 						//update the project edited timestamp
-						handleProjectEdited(request, response);						
+						handleProjectEdited(request, response);
 					}
 
 					return null;
@@ -650,7 +651,7 @@ public class AuthorProjectController {
 				//get the current timestamp on the server and write it to the response
 				response.getWriter().write(String.valueOf(new Date().getTime()));
 				return null;
-			} 
+			}
 		}
 
 		String command = request.getParameter(COMMAND);
@@ -689,7 +690,7 @@ public class AuthorProjectController {
 				previewParams.setHttpServletRequest(request);
 
 				return (ModelAndView) this.projectService.previewProject(previewParams);
-			} else if (command.equals("createTag") || command.equals("updateTag") || 
+			} else if (command.equals("createTag") || command.equals("updateTag") ||
 					command.equals("removeTag") || command.equals("retrieveProjectTags")) {
 				return this.taggerController.handleRequestInternal(request, response);
 			} else if (command.equals("getMetadata")) {
@@ -709,7 +710,108 @@ public class AuthorProjectController {
 
 		return handleLaunchAuthoring(request);
 	}
-	
+
+	/**
+	 * Convert a WISE4 project into a WISE5 project. The WISE5 project will
+	 * get a new project id and a new project folder. The WISE4 assets folder
+	 * will be copied over to the WISE5 project folder. The WISE4 project will
+	 * not be changed in any way and will still exist after the conversion.
+	 */
+	@RequestMapping("/author/convert.html")
+	protected ModelAndView handleConvertRequestInternal(
+			HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+
+		User user = ControllerUtil.getSignedInUser();
+		if (this.hasAuthorPermissions(user)) {
+
+			// get the curriculum folder path
+			String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
+
+			// get the WISE4 project id that we are converting
+			String wise4ProjectId = request.getParameter("wise4ProjectId");
+
+			// get the WISE5 project JSON string
+			String wise5ProjectString = request.getParameter("wise5Project");
+
+			// get the WISE5 project JSON object
+			JSONObject wise5ProjectJSON = new JSONObject(wise5ProjectString);
+
+			// get the WISE5 project name
+			JSONObject metadataJSON = wise5ProjectJSON.getJSONObject("metadata");
+			String wise5ProjectName = metadataJSON.getString("title");
+
+			// get the WISE4 project
+			Project wise4Project = projectService.getById(Long.parseLong(wise4ProjectId));
+
+			// get the WISE4 project folder path e.g. /tomcat/curriculum/12344
+			String wise4ProjectFolderPath = FileManager.getProjectFolderPath(wise4Project);
+
+			// get the WISE4 assets folder path e.g. /tomcat/curriculum/12344/assets
+			String wise4AssetsFolderPath = wise4ProjectFolderPath + "/assets";
+
+			/*
+			 * create the WISE5 project folder and obtain the relative path to
+			 * the project file
+			 * e.g.
+			 * /12345/project.json
+			 */
+			String relativeWISE5ProjectFilePath = FileManager.createWISE5Project(curriculumBaseDir);
+
+			// get the WISE5 project file path e.g. /tomcat/curriculum/12345/project.json
+			String wise5ProjectFilePath = curriculumBaseDir + relativeWISE5ProjectFilePath;
+
+			// get the WISE5 project folder path e.g. /tomcat/curriculum/12345
+			String wise5ProjectFolderPath = wise5ProjectFilePath.substring(0, wise5ProjectFilePath.indexOf("/project.json"));
+
+			// get the WISE5 assets folder path e.g. /tomcat/curriculum/12345/assets
+			String wise5AssetsFolderPath = wise5ProjectFolderPath + "/assets";
+
+			// write the WISE5 project file
+			boolean overwrite = true;
+			FileManager.writeFile(wise5ProjectFilePath, wise5ProjectString, overwrite);
+
+			// copy the WISE4 assets folder to the WISE5 assets folder
+			File wise4AssetsFolder = new File(wise4AssetsFolderPath);
+			File wise5AssetsFolder = new File(wise5AssetsFolderPath);
+			FileManager.copy(wise4AssetsFolder, wise5AssetsFolder);
+
+			// set the module parameters
+			ModuleParameters mParams = new ModuleParameters();
+			mParams.setUrl(relativeWISE5ProjectFilePath);
+			Curnit curnit = curnitService.createCurnit(mParams);
+
+			// set the project parameters
+			ProjectParameters pParams = new ProjectParameters();
+			pParams.setCurnitId(curnit.getId());
+			pParams.setOwner(user);
+			pParams.setProjectname(wise5ProjectName);
+			pParams.setProjectType(ProjectType.LD);
+			pParams.setWiseVersion(5);
+
+			if (wise4Project != null) {
+				pParams.setParentProjectId(Long.valueOf(wise4ProjectId));
+				// get the project's metadata from the parent
+				ProjectMetadata parentProjectMetadata = wise4Project.getMetadata();
+				if (parentProjectMetadata != null) {
+					// copy into new metadata object
+					ProjectMetadata newProjectMetadata = new ProjectMetadataImpl(parentProjectMetadata.toJSONString());
+					pParams.setMetadata(newProjectMetadata);
+				}
+			} else {
+				// if this is new original project, set a new fresh metadata object
+				ProjectMetadata metadata = new ProjectMetadataImpl();
+				metadata.setTitle(wise5ProjectName);
+				pParams.setMetadata(metadata);
+			}
+			Project project = projectService.createProject(pParams);
+			response.getWriter().write(project.getId().toString());
+			return null;
+		} else {
+			return new ModelAndView(new RedirectView("accessdenied.html"));
+		}
+	}
+
 	/**
 	 * Launch the authoring tool
 	 * @param request
@@ -718,11 +820,11 @@ public class AuthorProjectController {
 	private ModelAndView handleLaunchAuthoring(HttpServletRequest request) {
 		User author = ControllerUtil.getSignedInUser();
 		String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
-		
+
 		String vleUrl = wiseBaseURL + "/vle/author.html";
 		String portalAuthorUrl = wiseBaseURL + "/author/authorproject.html";
 		String command = request.getParameter("param1");
-		
+
 		String projectIdStr = request.getParameter(PROJECT_ID_PARAM_NAME);
 		Project project = null;
 		if (projectIdStr != null && !projectIdStr.equals("") && !projectIdStr.equals("none")) {
@@ -736,15 +838,15 @@ public class AuthorProjectController {
 		} else {
 			project = null;
 		}
-		
+
 		ModelAndView mav = new ModelAndView("vle");
 		mav.addObject("portalAuthorUrl", portalAuthorUrl);
 		mav.addObject("vleurl", vleUrl);
-		
+
 		if (command != null && command != "") {
 			mav.addObject("command", command);
 		}
-		
+
 		/*
 		 * this value will be set to "true" only if the user is opening the premade comments
 		 * from the teacher home page. this value is used to tell the authoring tool
@@ -755,7 +857,7 @@ public class AuthorProjectController {
 		 */
 		String editPremadeComments = request.getParameter("editPremadeComments");
 		mav.addObject("editPremadeComments", editPremadeComments);
-		
+
 		if (project != null) {
 			if (author.isAdmin() || aclService.hasPermission(project, BasePermission.WRITE, author) ||
 					aclService.hasPermission(project, BasePermission.ADMINISTRATION, author)) {
@@ -765,28 +867,28 @@ public class AuthorProjectController {
 				} else {
 					title = project.getName();
 				}
-				
+
 				if (title != null) {
 					/*
 					 * replace " with \" because if we don't escape it, the " may
 					 * short circuit the parent string that we put the title in
 					 */
-					title = title.replaceAll("\"", "\\\\\"");					
+					title = title.replaceAll("\"", "\\\\\"");
 				}
-				
+
 				if (command == null) {
 					mav.addObject("command", "editProject");
 				}
-				
+
 				String rawProjectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
 				String polishedProjectUrl = null;
 				polishedProjectUrl = rawProjectUrl;
-				
+
 				//get the project attributes
 				String relativeProjectUrl = polishedProjectUrl;
 				String projectId = project.getId().toString();
 				String projectTitle = title;
-				
+
 				//put the project attributes into the model so it can be accessed in the .jsp page
 				mav.addObject("relativeProjectUrl", relativeProjectUrl);
 				mav.addObject("projectId", projectId);
@@ -800,7 +902,7 @@ public class AuthorProjectController {
 
 	/**
 	 * Handles creating a project.
-	 * 
+	 *
 	 * @param request
 	 * @param response
 	 * @return
@@ -872,11 +974,11 @@ public class AuthorProjectController {
 			String projectId = request.getParameter("projectId");
 
 			HttpSession currentUserSession = request.getSession();
-			HashMap<String, ArrayList<String>> openedProjectsToSessions = 
+			HashMap<String, ArrayList<String>> openedProjectsToSessions =
 					(HashMap<String, ArrayList<String>>) servletContext.getAttribute("openedProjectsToSessions");
 
 			if (openedProjectsToSessions == null) {
-				openedProjectsToSessions = new HashMap<String, ArrayList<String>>(); 
+				openedProjectsToSessions = new HashMap<String, ArrayList<String>>();
 				servletContext.setAttribute("openedProjectsToSessions", openedProjectsToSessions);
 			}
 
@@ -914,7 +1016,7 @@ public class AuthorProjectController {
 
 	/**
 	 * Handles notifications of closed projects
-	 * 
+	 *
 	 * @param request
 	 * @param response
 	 * @return
@@ -957,7 +1059,7 @@ public class AuthorProjectController {
 	 * @return
 	 * @throws Exception
 	 */
-	@SuppressWarnings("unchecked")	
+	@SuppressWarnings("unchecked")
 	private ModelAndView handleGetEditors(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		String projectPath = request.getParameter("param1");
 
@@ -965,7 +1067,7 @@ public class AuthorProjectController {
 		HttpSession currentUserSession = request.getSession();
 
 		// get all sessions of people editing a project.
-		HashMap<String, ArrayList<String>> openedProjectsToSessions = 
+		HashMap<String, ArrayList<String>> openedProjectsToSessions =
 				(HashMap<String, ArrayList<String>>) servletContext.getAttribute("openedProjectsToSessions");
 
 		if (openedProjectsToSessions != null) {
@@ -1161,12 +1263,12 @@ public class AuthorProjectController {
 
 	/**
 	 * Handles the publish metadata request from the authoring tool
-	 * 
+	 *
 	 * @param request
 	 * @param response
 	 * @return
-	 * @throws ObjectNotFoundException 
-	 * @throws IOException 
+	 * @throws ObjectNotFoundException
+	 * @throws IOException
 	 */
 	private ModelAndView handlePublishMetadata(HttpServletRequest request, HttpServletResponse response) throws ObjectNotFoundException, IOException{
 		Long projectId = Long.parseLong(request.getParameter("projectId"));
@@ -1248,7 +1350,7 @@ public class AuthorProjectController {
 			Object totaltime = this.getJSONFieldValue(metadata, "totaltime");
 			if (totaltime != null && !((String) totaltime).equals("")) {
 				pMeta.setTotalTime((String) totaltime);
-			} 
+			}
 
 			Object comptime = this.getJSONFieldValue(metadata, "comptime");
 			if (comptime != null && !((String) comptime).equals("")) {
@@ -1288,7 +1390,7 @@ public class AuthorProjectController {
 	 * <code>JSONObject</code> if it exists, returns null otherwise. This function
 	 * is provided as a means to catch the JSON error that is associated with retrieving
 	 * fields in JSONObjects without the caller having to catch it.
-	 * 
+	 *
 	 * @param obj
 	 * @param fieldName
 	 * @return
@@ -1306,7 +1408,7 @@ public class AuthorProjectController {
 	 * Checks the request command for the given <code>String</code> servlet and returns
 	 * <code>boolean</code> true if the request's command parameter value is listed as
 	 * projectless, returns false otherwise.
-	 * 
+	 *
 	 * @param request
 	 * @param servlet
 	 * @return boolean
@@ -1322,18 +1424,18 @@ public class AuthorProjectController {
 	/**
 	 * Returns <code>boolean</code> true if the given <code>User</code> user has sufficient permissions
 	 * to create a project, returns false otherwise.
-	 * 
+	 *
 	 * @param user
 	 * @return boolean
 	 */
 	private boolean hasAuthorPermissions(User user) {
-		return user.getUserDetails().hasGrantedAuthority(UserDetailsService.AUTHOR_ROLE) || 
+		return user.getUserDetails().hasGrantedAuthority(UserDetailsService.AUTHOR_ROLE) ||
 				user.getUserDetails().hasGrantedAuthority(UserDetailsService.TEACHER_ROLE);
 	}
 
 	/**
 	 * Writes the current user's username to the response
-	 * 
+	 *
 	 * @param request
 	 * @param response
 	 * @return
@@ -1369,10 +1471,10 @@ public class AuthorProjectController {
 	 * @param response
 	 * @return
 	 * @throws IOException
-	 * @throws ObjectNotFoundException 
+	 * @throws ObjectNotFoundException
 	 */
 	private ModelAndView handleGetConfig(HttpServletRequest request, HttpServletResponse response) throws IOException, ObjectNotFoundException{
-		
+
 		//get the user
 		User user = (User) request.getSession().getAttribute(User.CURRENT_USER_SESSION_KEY);
 
@@ -1381,10 +1483,10 @@ public class AuthorProjectController {
 
 		//get the wise base url
 		String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
-		
+
 		//get the context path e.g. /wise
 		String contextPath = request.getContextPath();
-		
+
 		//get the url to get and post metadata
 		String projectMetadataURL = wiseBaseURL + "/metadata.html";
 
@@ -1431,32 +1533,32 @@ public class AuthorProjectController {
 			config.put("premadeCommentsURL", premadeCommentsURL);
 			config.put("wiseBaseURL", wiseBaseURL);
 			config.put("contextPath", contextPath);
-			
+
 			// if projectId provided, this is a request for preview
 			String projectIdStr = request.getParameter("projectId");
 			if (projectIdStr != null) {
 				Project project = projectService.getById(projectIdStr);
 				String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
 				String rawProjectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
-				// set the content url 
+				// set the content url
 				String projectURL = curriculumBaseWWW + rawProjectUrl;
-				
-				// get location of last separator in url 
+
+				// get location of last separator in url
 				int lastIndexOfSlash = projectURL.lastIndexOf("/");
-				if (lastIndexOfSlash==-1) { 
+				if (lastIndexOfSlash==-1) {
 					lastIndexOfSlash = projectURL.lastIndexOf("\\");
 				}
-				
+
 				// set the projectBaseURL based on the projectURL
 				String projectBaseURL = projectURL.substring(0, lastIndexOfSlash) + "/";
 				config.put("projectBaseURL", projectBaseURL);
-			}			
+			}
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		
-		
-		
+
+
+
 
 		//set the string value of the JSON object in the response
 		response.getWriter().write(config.toString());
@@ -1510,7 +1612,7 @@ public class AuthorProjectController {
 					project.setName(title);
 				}
 			} catch (JSONException e) {
-			}	
+			}
 		}
 
 
@@ -1546,7 +1648,7 @@ public class AuthorProjectController {
 			Date lastEdited = new Date();
 
 			//set the last edited time
-			metadata.setLastEdited(lastEdited);	
+			metadata.setLastEdited(lastEdited);
 
 			try {
 				//update the project in the db
@@ -1574,7 +1676,7 @@ public class AuthorProjectController {
 	}
 
 	/**
-	 * Handle the review update project or update project 
+	 * Handle the review update project or update project
 	 */
 	private ModelAndView handleReviewOrUpdateProject(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		try {

@@ -2,14 +2,14 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="chrome=1" /> 
+<meta http-equiv="X-UA-Compatible" content="chrome=1" />
 <link rel="shortcut icon" href="images/favicon.ico" type="image/png"></link>
 <script src='util/eventmanager.js' type='text/javascript'></script>
 <script src="util/scriptloader.js" type="text/javascript"></script>
 
 <script type='text/javascript'>
 /*
- * Loads scripts when body is loaded 
+ * Loads scripts when body is loaded
  */
 function loaded(){
 	scriptloader.bootstrap(this, bootstrapListener);
@@ -50,7 +50,7 @@ function checkTextAreaLength(textAreaName, textAreaId, maxLength) {
     //check if the length of the text is over the limit
 	if(textAreaValue.length > maxLength) {
 		//the length is over the limit
-		
+
 		//display an alert message
 		alert(textAreaName + " is limited to " + maxLength + " characters\n\nCharacters will be deleted from the end");
 
@@ -73,8 +73,8 @@ var view;
 	<div id="authorToolHeader"><div>WISE &nbsp;<img src="images/favicon_panda.ico" alt="WISE Panda" border="0" /></div>
 		<div>Authoring Tool</div>
 		<div><span id="authorToolLinks"><a href="authorToolInstructions.html" title="Author Tool Instructions" target="_blank">Instructions</a></span></div>
-	</div>  
-	
+	</div>
+
 	<div id="authorButtons">
 		<div>
 			<button onclick="view.gotoDashboard();" id="gotoDashboard" title='Exit to Teacher Dashboard'><img src="images/go-home.png" alt="goto Teacher Dashboard icon" /><br />
@@ -108,11 +108,13 @@ var view;
 	        </dt>
 	        <dd id="one-ddcontent" onmouseover="cancelHide('one');" onmouseout="ddMenu('one',-1);" onmouseup="ddMenu('one',-1);">
 	            <ul>
-	     
+
+			<li><a onclick="view.convert()" ><img src="images/number_5.png" alt="Convert To WISE5" width="22px" />Convert To WISE5</a></li>
+
 			<li><a onclick="view.openPremadeComments()"><img src="images/Premade_comment.png" alt="find broken links in project" />Open Premade Comments for Project</a></li>
-			
+
 			<li><a onclick="view.exportProject()" ><img src="images/copyProject.png" alt="Download Project as Zip File"  />Download Project</a></li>
-			
+
 			<div id="listTitle">Advanced Users Only</div>
 
 			 <li><a onclick="view.editProjectFile()"><img src="images/document-properties.png" alt="edit project file icon" />Edit Project Data File</a></li>
@@ -120,33 +122,33 @@ var view;
 			 <li><a onclick="view.editProjectCSS()"><img src="images/document-properties.png" alt="edit project css icon" />Edit Look and Feel of WISE</a></li>
 
 			<li><a onclick="view.deleteProject()"><img src="images/Trash.png" alt="delete project" />Delete Project</a></li>
-	
+
 			<li><a onclick="eventManager.fire('startCreateReviewSequence', 'Peer')"><img src="images/manageArt.png" alt="Create Peer Review Sequence" />Create Peer Review Sequence</a></li>
-				
+
 			<li><a onclick="eventManager.fire('startCreateReviewSequence', 'Teacher')"><img src="images/manageArt.png" alt="Create Teacher Review Sequence" />Create Teacher Review Sequence</a></li>
-				
+
 
 			<li><a onclick="view.analyzeProject('findBrokenLinksInProject')"><img src="images/broken_link.png" alt="find broken links in project" />Find Broken Links in Project</a></li>
-			
+
 			<li><a onclick="view.analyzeProject('findUnusedAssetsInProject')"><img src="images/Search_black.png" alt="find unused assets in project" />Find Unused Assets in Project</a></li>
-						
-<!--  			
+
+<!--
 			<li><a onclick="view.cleaner.initializeCleaning(view);"><img src="images/edit-clear.png" alt="clean project" />Clean Project</a></li>
 
 			<li><a onclick="view.Constraint.initializeConstraintAuthoring(view);"><img src="images/constraint.png" alt="author constraints icon"/>Author Student Navigation Constraints</a></li>
-		-->	
-            			
+		-->
+
 			<li><a class='last' onclick="view.reviewUpdateProject()" ><img src="images/update_project.png" alt="Update Project"  />Update Project</a></li>
 	            </ul>
 	        </dd>
 	    </dl>
 	</div>
-                
+
 </div>   <!--end of div  authorHeader-->
 
 <div id="currentProjectContainer">
 <div id="currentProjectContent">
-	<div id='projectTitle'>Project Title: 
+	<div id='projectTitle'>Project Title:
 		<input type="text" id='projectTitleInput' title='Click to Edit Project Title' size='40' onchange='view.handleProjectTitleChanged();'/>
 		<div id='projectID'>ID:&nbsp;<span id='projectIdDisplay'></span></div>
 		<div id='projectModeDiv'>Authoring Mode:
@@ -157,7 +159,7 @@ var view;
 		</div>
 	</div>
 	<div id="authorOptions">
-		<div class='authorOption'>Number Steps By: 
+		<div class='authorOption'>Number Steps By:
 			<select id='numberStepSelect' onchange='view.stepNumberChanged()'>
 				<option value='0'>Project</option>
 				<option value='1'>Activity</option>
@@ -265,8 +267,8 @@ var view;
 	<div id='createNodeDiv'>
 		<label for='createNodeTitle'>Create Step Title:</label>
 		<input type='text' size='40' id='createNodeTitle'/><br/>
-		
-		<label for='createNodeType'>Select Step Type:</label> 
+
+		<label for='createNodeType'>Select Step Type:</label>
 		<select id='createNodeType' onchange='eventManager.fire("nodeTypeSelected");'>
 			<option value=""></option>
 		</select>
@@ -279,7 +281,7 @@ var view;
 <div id="editProjectFileDialog" style="display: none;">
 <div class='hd'>Edit Project File</div>
 <div class='bd'>
-	 <div id='editProjectDiv'> 
+	 <div id='editProjectDiv'>
 	 	<textarea id='projectText' cols='110' rows='32' wrap='hard' name='param3' /></textarea>
 	 </div><br/>
 </div>
@@ -288,7 +290,7 @@ var view;
 <div id="editProjectCSSDialog" style="display: none;">
 <div class='hd'>Edit Project CSS</div>
 <div class='bd'>
-	 <div id='editProjectCSSDiv'> 
+	 <div id='editProjectCSSDiv'>
 	 	<textarea id='projectCSS' cols='110' rows='32' wrap='hard' name='param3' /></textarea>
 	 </div><br/>
 </div>
@@ -329,15 +331,15 @@ var view;
 		<tr><td id="col1">Project Title:</td><td class="col2"><input id='projectMetadataTitle' type="text"/></input></td></tr>
 		<tr><td>Author:</td><td> <div id='projectMetadataAuthor'/>[Name of original author (non-editable) shown here]</div></td></tr>
 		<tr><td>Contact Name/Email:</td><td>  <input type='text' id='projectMetadataContact'/></td></tr>
-		
+
 		<!-- TODO: Perhaps load metadata options programmatically based on vle config? -->
 		<tr><td>Theme:</td>
 			<td >
 				<select name="theme" id="projectMetadataTheme"></select>
-				<select name="navMode" id="projectMetadataNavigation"></select> 
+				<select name="navMode" id="projectMetadataNavigation"></select>
 			</td>
 		</tr>
-		
+
 		<!-- TODO: Perhaps load metadata options programmatically based on vle config? -->
 		<tr><td>Subject:</td>
 			<td >
@@ -351,10 +353,10 @@ var view;
 					<option id='subjectPhysics'  value='Physics'>Physics</option>
 					<option id='subjectWISEResearch'  value='WISE Research'>WISE Research</option>
 					<option selected id='subjectAll' disabled="disabled" value=''>select an option</option>
-				</select> 
+				</select>
 			</td>
 		</tr>
-			
+
 		<tr><td>Grade Level:</td>
 			<td>
 				<select name="studentGrades" id="projectMetadataGradeRange">
@@ -363,9 +365,9 @@ var view;
 					<option id='grade3' value='9-12'>Grades 9-12</option>
 					<option id='grade4' value='6-12'>Grades 6-12</option>
 					<option selected id='gradeAll' disabled="disabled" value=""'>select an option</option>
-				</select>	
+				</select>
 			</td></tr>
-		
+
 		<tr><td>Total Time (hrs):</td>
 			<td>
 				<select name="totalTime" id="projectMetadataTotalTime">
@@ -378,7 +380,7 @@ var view;
 							<option selected id='totalTime' disabled="disabled" value=""'>select an option</option>
 				</select>
 			</td></tr>
-			
+
 		<tr><td>Computer Time (hrs):</td>
 			<td>
 				<select name="totalTime" id="projectMetadataCompTime">
@@ -390,7 +392,7 @@ var view;
 							<option id='total6' value='Over 12 hours'>Over 12 hours</option>
 							<option selected id='computerTime' disabled="disabled" value=""'>select an option</option>
 				</select>
-			</td></tr>	
+			</td></tr>
 
 		<tr><td>Language:</td>
 			<td>
@@ -404,7 +406,7 @@ var view;
 							<option id='dutch' value='Dutch'>Dutch</option>
 							<option selected id='languageAll'   disabled="disabled">select an option</option>
 				</select>
-			</td></tr>	
+			</td></tr>
 
 		<tr><td>Project Summary:<br>(limit 255 characters)</br></td><td><textarea class="size1" id='projectMetadataSummary' onkeyup='checkTextAreaLength("Project Summary", "projectMetadataSummary", 255)'></textarea></td></tr>
 		<tr><td>Keywords:<br/>(comma separated)</td><td><textarea class="size2" id='projectMetadataKeywords'></textarea></td></tr>
@@ -414,7 +416,7 @@ var view;
 				<input type="checkbox" name="flash" value="flash" id="flash"/>&nbsp;<label for="Flash">Flash</label>&nbsp;&nbsp;
 				<input type="checkbox" name="java" value="java" id="java"/>&nbsp;<label for="Java">Java</label>&nbsp;&nbsp;
 				<input type="checkbox" name="quickTime" value="quickTime" id="quickTime"/>&nbsp;<label for="quickTime">QuickTime</label>&nbsp;&nbsp;
-			</td></tr>		
+			</td></tr>
 		<tr><td>Tech Details:</td><td><textarea class="size2" id='projectMetadataTechDetails'></textarea></td></tr>
 		<tr><td>Project settings:</td>
 			<td>
@@ -517,7 +519,7 @@ var view;
 					<input type='button' id='refreshButt' onclick='view.refreshNow()' value='Refresh Now'></input>
 					<input type='button' id='hintsButt' onclick='eventManager.fire("editHints",[0])' value='Edit Hints'></input>
 	</span>
-	
+
 		<div id="authorNavButtons" style='float:right'>
 			<input type='button' value='Save' onclick='eventManager.fire("saveStep")'/>
 			<input type='button' value='Save & Close' onclick='view.saveStep(true);'/>
@@ -540,7 +542,7 @@ var view;
 <div class='hd'></div>
 <div class='bd'>
 	<div id='nodeSelectorInstructionsDiv'>
-		Select a step from the list of steps below that you want to link to, then select a color for that link and then click 'Select Step'. The steps in the step list appear in the order that they do in the project. 
+		Select a step from the list of steps below that you want to link to, then select a color for that link and then click 'Select Step'. The steps in the step list appear in the order that they do in the project.
 	</div>
 	<div id='nodeSelectDiv'>
 	</div>
@@ -637,7 +639,7 @@ var view;
 			</tr>
 		</tbody>
 	</table>
-	
+
 	<div id='constraintProjectLayout'></div>
 </div>
 

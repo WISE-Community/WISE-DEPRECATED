@@ -55,7 +55,7 @@ var scriptloader = function(){
 	var jqueryUISrc_interactions = 'vle/lib/jquery/js/jquery-ui-1.10.4.interactions.min.js';
 	var bootstrapSrc = 'vle/lib/bootstrap/bootstrap.min.js';
 	var bootstrapCss = 'vle/css/bootstrap/bootstrap-custom.css';
-	
+
 	/**
 	 * scriptLoader listener listens for all scriptLoaded events and
 	 * fires scriptsLoaded when all scripts for a given load request
@@ -68,7 +68,7 @@ var scriptloader = function(){
 			if(ndx!=-1){
 				//add to loaded
 				loaded.push(name);
-				
+
 				//remove from queue
 				queue.splice(ndx, 1);
 
@@ -81,7 +81,7 @@ var scriptloader = function(){
 						loadScript(url);
 					}
 				}
-				
+
 				//check to see if this batch of scripts is done, do
 				//cleanup and fire scriptsLoaded event if it is
 				if(queue.length<1){
@@ -91,15 +91,15 @@ var scriptloader = function(){
 			}
 		}
 	};
-	
+
 	/**
 	 * resets the timer
 	 */
-	var resetTimer = function(){		
+	var resetTimer = function(){
 		clearTimeout(timer);
 		timer = null;
 	};
-	
+
 	/**
 	 * Verifies and loads the css and javascripts into the
 	 * currentDoc.
@@ -107,7 +107,7 @@ var scriptloader = function(){
 	var loadScripts = function(){
 		var s = scripts[currentName];
 		var c = [];
-		
+
 		var executeScriptsLoad = function(){
 			//load each css specified
 			if(c){
@@ -115,7 +115,7 @@ var scriptloader = function(){
 					loadCss(c[d]);
 				}
 			}
-			
+
 			//load each script specified, if none specified fire scriptsLoaded event
 			if(s && s.length>0){
 				/* because of ie, we need to stick all of the scripts into the queue before
@@ -124,7 +124,7 @@ var scriptloader = function(){
 				for(var a=0;a<s.length;a++){
 					queue.push(s[a]);
 				}
-				
+
 				/* now load any scripts without dependencies or those whose dependencies
 				 * have already been loaded or stick them in the waiting queue */
 				for(var a=0;a<s.length;a++){
@@ -139,7 +139,7 @@ var scriptloader = function(){
 				eventManager.fire('scriptsLoaded', [callerId, currentName]);
 			}
 		};
-		
+
 		// if loading theme scripts, generate theme + navigation css and js paths to load
 		// TODO: make alert texts i18n
 		if(callerId == 'theme'){
@@ -153,13 +153,13 @@ var scriptloader = function(){
 					if (typeof s == 'undefined'){
 						s = [];
 					}
-					
+
 					// check if i18n is enabled for theme, add theme_i18n.js to scripts if enabled
 					//if(data.i18n_enabled){
 						//var i18n_js = 'vle/' + themepath + 'i18n/theme_i18n.js';
 						//s.push(i18n_js);
 					//}
-					
+
 					// set navMode (either based on project config or theme default)
 					var navModeName = null,
 						navMode = null,
@@ -181,7 +181,7 @@ var scriptloader = function(){
 					} else {
 						alert('Selected VLE theme "' + themeName + '" is broken: Navigation modes not set.');
 					}
-					
+
 					// add theme css to load
 					if(data.css && $.isArray(data.css)){
 						var themecss = data.css;
@@ -190,7 +190,7 @@ var scriptloader = function(){
 							c.push(csspath);
 						}
 					}
-					
+
 					// add theme js to load
 					if(data.js && $.isArray(data.js)){
 						var themejs = data.js;
@@ -199,18 +199,18 @@ var scriptloader = function(){
 							s.push(jspath);
 						}
 					}
-					
+
 					// add navigation css and js to load
 					if(navMode){
 						var navpath = 'vle/' + themepath + 'navigation/' + navModeName + '/';
 						// add navMode's main css file to load
 						var navcsspath = navpath + 'nav.css';
 						c.push(navcsspath);
-						
+
 						// add navMode's setup file to load
 						var naveventspath = navpath + 'nav.js';
 						s.push(naveventspath);
-						
+
 						// add any additional navMode js files to load
 						if(navMode.js && $.isArray(navMode.js)){
 							var navjs = navMode.js;
@@ -219,7 +219,7 @@ var scriptloader = function(){
 								s.push(jspath);
 							}
 						}
-						
+
 						// add any additional navMode css files to load
 						if(navMode.css && $.isArray(navMode.css)){
 							var navcss = navMode.css;
@@ -229,7 +229,7 @@ var scriptloader = function(){
 							}
 						}
 					}
-					
+
 					// add jqueryui css (either from theme or WISE default)
 					if(data.jqueryui_css && typeof data.jqueryui_css == 'string'){
 						var csspath = 'vle/' + themepath + data.jqueryui_css;
@@ -238,13 +238,13 @@ var scriptloader = function(){
 					} else {
 						c.push(jqueryUICss);
 					}
-					
+
 					// set theme logo in vle html
 					if(data.logo && typeof data.logo == 'string'){
 						var logopath = themepath + data.logo;
 						$('#logo').html('<img src="' + logopath + '" alt="logo" />');
 					}
-					
+
 					// load scripts
 					executeScriptsLoad();
 				},
@@ -262,14 +262,14 @@ var scriptloader = function(){
 			executeScriptsLoad();
 		}
 	};
-	
+
 	/**
 	 * Only loads the css of the currentName into the current document. Used
 	 * when using compressed scripts.
 	 */
 	var loadCssOnly = function(){
 		var c = css[currentName];
-		
+
 		//load each css specified
 		if(c){
 			for(var d=0;d<c.length;d++){
@@ -277,7 +277,7 @@ var scriptloader = function(){
 			}
 		}
 	};
-	
+
 	/**
 	 * Returns true if the given url has been loaded into
 	 * the currentDoc, false otherwise.
@@ -285,21 +285,21 @@ var scriptloader = function(){
 	var isLoaded = function(url){
 		return loaded.indexOf(url) != -1;
 	};
-	
+
 	/**
 	 * Loads the script at the given url into the doc
 	 */
 	var loadScript = function(url){
 		currentDoc.getElementsByTagName('head')[0].appendChild(createElement(currentDoc, 'script', {type: 'text/javascript', src: baseUrl + url}));
 	};
-	
+
 	/**
 	 * Loads the css at the given url into the doc
 	 */
 	var loadCss = function(url){
 		currentDoc.getElementsByTagName('head')[0].appendChild(createElement(currentDoc, 'link', {rel: 'stylesheet', type: 'text/css', href: baseUrl + url}));
 	};
-	
+
 	/**
 	 * Returns true if the given script url has any dependencies,
 	 * false otherwise.
@@ -307,7 +307,7 @@ var scriptloader = function(){
 	var hasDependency = function(url){
 		return dependencies[url];
 	};
-	
+
 	/**
 	 * Returns true if the given script url has no dependencies or
 	 * if all listed dependencies have been loaded, false otherwise.
@@ -325,7 +325,7 @@ var scriptloader = function(){
 			return true;
 		}
 	};
-	
+
 	/**
 	 * Script urls specified for all components and javascripts
 	 */
@@ -346,7 +346,7 @@ var scriptloader = function(){
         core: ['vle/view/i18n/view_i18n.js',
                'vle/util/helperfunctions.js',
                'vle/view/coreview.js',
-               'vle/view/view_utils.js',               
+               'vle/view/view_utils.js',
                "vle/util/ConnectionManager.js",
                "vle/util/SessionManager.js",
                "vle/util/NotificationManager.js",
@@ -399,7 +399,8 @@ var scriptloader = function(){
 		         'vle/model/MaxScore.js',
 		         'vle/view/grading/gradingview_premadecomments.js',
 		         'vle/lib/jquery/js/jquery.editinplace.js',
-		         'vle/view/authoring/authorview_model.js'],
+		         'vle/view/authoring/authorview_model.js',
+                 'vle/view/authoring/authorview_convert.js'],
 		grading: [jqueryUISrc,
     		      'vle/lib/jquery/js/jquery.ui.touch-punch.min.js',
     		      'vle/view/grading/gradingview_annotations.js',
@@ -435,7 +436,7 @@ var scriptloader = function(){
 	                       'vle/lib/DataTables/extensions/TableTools/js/dataTables.tableTools.min.js',
 	                       'vle/lib/DataTables/plugins/fnFilterOnReturn.js',
 	                       'vle/util/swfobject/swfobject.js'],
-	    user: ['vle/model/userandclassinfo.js'],	    
+	    user: ['vle/model/userandclassinfo.js'],
 	    config: ['vle/model/config.js'],
 		keystroke: ['vle/util/keystrokemanager.js'],
         outsideurl: [],
@@ -465,7 +466,7 @@ var scriptloader = function(){
 		vle_all:['vle/all/vle_all-min.js'],
 		grading_all:['vle/all/grading_all-min.js'],
 		authoring_all:['vle/all/authoring_all-min.js'],
-		summary_all:['vle/all/summary_all-min.js'],         
+		summary_all:['vle/all/summary_all-min.js'],
 		peerreviewhelper: [],
 		authoringcomponents:['vle/view/authoring/components/authorview_prompt.js',
                 'vle/view/authoring/components/authorview_linkto.js',
@@ -480,7 +481,7 @@ var scriptloader = function(){
         ideabasket:['vle/ideaBasket/basket.js'],
         portfolio:['vle/model/portfolio.js']
 	};
-	
+
 	/**
 	 * Css urls specified for all component css
 	 */
@@ -512,7 +513,7 @@ var scriptloader = function(){
  		                 'vle/lib/DataTables/extensions/FixedHeader/css/dataTables.fixedHeader.min.css',
  		                 'vle/lib/DataTables/extensions/TableTools/css/dataTables.tableTools.min.css']
 	};
-	
+
 	/**
 	 * Known dependencies for a script
 	 */
@@ -557,14 +558,14 @@ var scriptloader = function(){
         'vle/navigation/tagmapconstraints/XMustHaveStatusYConstraint.js':['vle/navigation/tagmapconstraints/TagMapConstraint.js'],
         'vle/navigation/tagmapconstraints/MustCreateXIdeaBasketIdeasOnThisStepBeforeAdvancingConstraint.js':['vle/navigation/tagmapconstraints/TagMapConstraint.js']
     };
-	
+
 	// add jQuery UI/jQuery core dependency
 	dependencies[jqueryUISrc] = [jquerySrc];
 	dependencies[jqueryUISrc_interactions] = [jquerySrc];
-	
+
 	// add bootstrap/jQuery dependency
 	dependencies[bootstrapSrc] = [jquerySrc];
-	
+
 	return {
 		jquerySrc:jquerySrc,
 		jqueryUISrc:jqueryUISrc,
@@ -579,7 +580,7 @@ var scriptloader = function(){
 			callerId = cid;
 			eventManager = em;
 			baseUrl = currentDoc.location.toString().substring(0, currentDoc.location.toString().lastIndexOf('/vle/') + 1);
-			
+
 			timer = setTimeout(function(){
 					/*
 					 * check if there are any scripts that have not been loaded
@@ -588,18 +589,18 @@ var scriptloader = function(){
 					 * "previewFrameLoaded" event gets fired multiple times for
 					 * the same preview step so it tries to load the scripts for
 					 * the page multiple times but after the scripts are returned
-					 * the first time, only one of these setTimeout calls are 
+					 * the first time, only one of these setTimeout calls are
 					 * disabled. the rest of the setTimeout calls eventually run
 					 * even though we have already retrieved all the files we need
 					 * and the queue is empty. this will check the queue before
 					 * displaying the message to avoid unnecessary popup alerts
-					 * which can get annoying to authors. 
+					 * which can get annoying to authors.
 					 */
 					if(queue.length > 0) {
-						alert(scriptloader.getTimeoutMessage());						
+						alert(scriptloader.getTimeoutMessage());
 					}
 				}, scriptLoaderWait);
-				
+
 			loadScripts();
 		},
 		bootstrap:function(win, fun, isMinifiedEnabled){
@@ -608,7 +609,7 @@ var scriptloader = function(){
 			win.eventManager.addEvent('scriptsLoaded');
 			win.eventManager.subscribe('scriptLoaded', listener);
 			win.eventManager.subscribe('scriptsLoaded', fun);
-			
+
 			if (isMinifiedEnabled) {
 				scriptloader.loadScripts('bootstrap_min', win.document, 'bootstrap_min', win.eventManager);
 			} else {
@@ -647,11 +648,11 @@ var scriptloader = function(){
 					//it does not exist so we will create an array for it
 					scripts[componentName] = [];
 				}
-				
+
 				//check if the scriptPath is an array or a string
 				if(scriptPath.constructor.toString().indexOf("Array") != -1) {
 					//scriptPath is an Array
-					
+
 					//loop through all the elements in the array
 					for(var x=0; x<scriptPath.length; x++) {
 						//check if the script path is already in the component array
@@ -682,11 +683,11 @@ var scriptloader = function(){
 					//it does not exist so we will create an array for it
 					css[componentName] = [];
 				}
-				
+
 				//check if the cssPath is an array or a string
 				if(cssPath.constructor.toString().indexOf("Array") != -1) {
 					//cssPath is an Array
-					
+
 					//loop through all the elements in the array
 					for(var x=0; x<cssPath.length; x++) {
 						//add an element to the component array
@@ -708,18 +709,18 @@ var scriptloader = function(){
 		 * be loaded before the child script path can be loaded.
 		 */
 		addDependencies:function(dependenciesToAdd) {
-			
+
 			//loop through all the dependency objects
 			for(var x=0; x<dependenciesToAdd.length; x++) {
 				//get a dependency object
 				var dependency = dependenciesToAdd[x];
-				
+
 				//the path of the script that depends on other scripts
 				var child = dependency.child;
-				
+
 				//an array of scripts that the child depends on
 				var parent = dependency.parent;
-				
+
 				//add the dependency to our dependencies object
 				dependencies[child] = parent;
 			}
@@ -728,13 +729,13 @@ var scriptloader = function(){
 		 * Determines which step types are used in the project and
 		 * tells the scriptloader to only retrieve the files for those
 		 * step types
-		 * 
+		 *
 		 * @param setupFiles an array of objects, each object contains
 		 * two fields, nodeName and nodeSetupPath. the array that is
 		 * passed into this function can be found in setupNodes.js
 		 */
 		insertSetupPaths:function(setupFiles) {
-			if(document.location.pathname.indexOf('vle.html') != -1 || 
+			if(document.location.pathname.indexOf('vle.html') != -1 ||
 					document.location.pathname.indexOf('gradework.html') != -1 ||
 					document.location.pathname.indexOf('classroomMonitor') != -1) {
 				/*
@@ -759,7 +760,7 @@ var scriptloader = function(){
 						 * by the .jsp file
 						 */
 						xmlhttp.open("GET", parent.window.contentUrl, false);
-						
+
 						//perform the request
 						xmlhttp.send(null);
 					}
@@ -767,14 +768,14 @@ var scriptloader = function(){
 					if(xmlhttp.responseText != null && xmlhttp.responseText != "") {
 						var projectJSONObj = null;
 						var nodeTypes = [];
-						
-						//parse the project json string into a json object						
+
+						//parse the project json string into a json object
 						if(typeof JSON != 'undefined') {
 							projectJSONObj = JSON.parse(xmlhttp.responseText);
 						} else if(typeof $.parseJSON != 'undefined') {
 							projectJSONObj = $.parseJSON(xmlhttp.responseText);
 						}
-						
+
 
 						//loop through the sequences in the project and get all node ids that are used
 						var allRefs = [];
@@ -793,33 +794,33 @@ var scriptloader = function(){
 						for (var i=0; i < jsonNodes.length; i++) {
 							//get a node
 							var currNode = jsonNodes[i];
-							
+
 							//get node id
 							var nodeId = currNode.identifier;
-							
+
 							// check to see if node is referenced in the sequence
 							if (allRefs.indexOf(nodeId) != -1) {
 								//get the node type
 								var nodeType = currNode.type;
-							
+
 								if(nodeTypes.indexOf(nodeType) == -1) {
 									//add it to our array of node types if it is not already in the array
 									nodeTypes.push(nodeType);
 								}
 							}
 						}
-						
+
 						//loop through all the setup files
 						for(var x=0; x<setupFiles.length; x++) {
 							var setupFile = setupFiles[x];
-							
+
 							//get the name of the node type
 							var nodeName = setupFile.nodeName;
-							
+
 							//check if the node type is in the array of node types we want
 							if(nodeTypes.indexOf(nodeName) != -1) {
 								//this node is in the array of node types we want
-								
+
 								//get the path to the setup file for this node type
 								var nodeSetupPath = setupFile.nodeSetupPath;
 
@@ -845,7 +846,7 @@ var scriptloader = function(){
 		},
 		/**
 		 * Tells the scriptloader to retrieve the files for all the step types
-		 * 
+		 *
 		 * @param setupFiles an array of objects, each object contains
 		 * two fields, nodeName and nodeSetupPath. the array that is
 		 * passed into this function can be found in setupNodes.js
@@ -855,15 +856,15 @@ var scriptloader = function(){
 			 * we are loading the authoring tool or anything else not specified
 			 * so we will load all step types
 			 */
-			
+
 			//loop through all the setup objects
 			for(var x=0; x<setupFiles.length; x++) {
 				//get a setup object
 				var setupFile = setupFiles[x];
-				
+
 				//get the path
 				var nodeSetupPath = setupFile.nodeSetupPath;
-				
+
 				//add the path into the setup component
 				scriptloader.addScriptToComponent('setup', nodeSetupPath);
 			}
