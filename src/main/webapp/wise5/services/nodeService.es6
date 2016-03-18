@@ -520,7 +520,7 @@ class NodeService {
                     alreadyBranched = true;
                 }
 
-                var transition, fromeNodeId, toNodeId;
+                var transition, fromNodeId, toNodeId;
 
                 if (alreadyBranched) {
                     // student has previously branched
