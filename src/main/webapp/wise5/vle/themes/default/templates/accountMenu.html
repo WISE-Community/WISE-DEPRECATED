@@ -35,7 +35,10 @@
             </span>
         </div>
         <span flex></span>
-        <md-icon class="account-menu__grade md-36"> grade </md-icon>
+        <div class="account-menu__grade">
+            <md-icon class="md-36"> grade </md-icon>
+            <div class="account-menu__grade__overlay" ng-if="vleController.maxScore > 0" style="height: {{(1-vleController.totalScore/vleController.maxScore)*100 | number : 2}}%;"></div>
+        </div>
         <h3 class="accent-2" ng-if="vleController.maxScore > 0">{{vleController.totalScore/vleController.maxScore*100 | number : 0}}%</h3>
     </div>
 </div>

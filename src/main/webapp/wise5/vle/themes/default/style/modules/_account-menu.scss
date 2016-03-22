@@ -59,8 +59,19 @@
 }
 
 .account-menu__grade {
-    color: #FFC107;
+    position: relative;
     margin-right: 4px;
+
+    md-icon {
+        color: #FFC107;
+    }
+}
+
+.account-menu__grade__overlay {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.6);
 }
 
 .account-menu__actions {
