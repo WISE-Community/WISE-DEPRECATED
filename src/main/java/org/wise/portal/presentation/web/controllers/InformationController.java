@@ -1,21 +1,21 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents). 
+ * Copyright (c) 2008-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
- * 
+ *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
- * 
+ *
  * Permission is hereby granted, without written agreement and without license
  * or royalty fees, to use, copy, modify, and distribute this software and its
  * documentation for any purpose, provided that the above copyright notice and
  * the following two paragraphs appear in all copies of this software.
- * 
+ *
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
  * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
- * 
+ *
  * IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
  * SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
  * ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
@@ -24,6 +24,7 @@
 package org.wise.portal.presentation.web.controllers;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -73,16 +74,16 @@ public class InformationController {
 
 	@Autowired
 	Properties wiseProperties;
-	
+
 	@Autowired
 	ProjectService projectService;
-	
+
 	@Autowired
 	RunService runService;
-	
+
 	@Autowired
 	UserService userService;
-	
+
 	@Autowired
 	WorkgroupService workgroupService;
 
@@ -92,19 +93,19 @@ public class InformationController {
 	 * @param request
 	 * @param response
 	 * @throws IOException
-	 * @throws ObjectNotFoundException 
-	 * @throws NumberFormatException 
+	 * @throws ObjectNotFoundException
+	 * @throws NumberFormatException
 	 */
     @RequestMapping("/userInfo")
 	private void handleGetUserInfo(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, NumberFormatException, ObjectNotFoundException{
 
 		JSONObject userInfo = getUserInfo(request);
-		
+
 		if (userInfo == null) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		}
-		
+
 		response.setHeader("Cache-Control", "no-cache");
 		response.setHeader("Pragma", "no-cache");
 		response.setDateHeader ("Expires", 0);
@@ -154,7 +155,7 @@ public class InformationController {
 		String runIdString = request.getParameter("runId");
 		Long runId = Long.parseLong(runIdString);
 		Run run = this.runService.retrieveById(runId);
-		
+
 		Workgroup workgroup;
 		String workgroupIdStr = request.getParameter("workgroupId");
 		if (workgroupIdStr != null && workgroupIdStr != "") {
@@ -166,16 +167,16 @@ public class InformationController {
 		} else {
             workgroup = getWorkgroup(request, run);
         }
-		
+
 		/*
 		 * the group id of the period, this is the id in the db which is not
 		 * the same as the period number
 		 */
 		String periodId = "";
-		
+
 		//the period number that you would regularly think of as a period
 		String periodName = "";
-		
+
 		User loggedInUser = ControllerUtil.getSignedInUser();
 
 		JSONArray userIds = new JSONArray();
@@ -196,44 +197,44 @@ public class InformationController {
 				// if teacher, include workgroupId
 				workgroupId = workgroup.getId();
 			}
-			
+
 			// string buffers to maintain : delimited values
 			StringBuffer periodIds = new StringBuffer();
 			StringBuffer periodNames = new StringBuffer();
-			
+
 			// get the periods
 			Set<Group> periods = run.getPeriods();
 			Iterator<Group> periodIter = periods.iterator();
-			
+
 			// loop through all the periods
 			while (periodIter.hasNext()) {
 				Group next = periodIter.next();
-				
+
 				//if this is not the first period add a :
 				if (periodIds.length() != 0) {
 					periodIds.append(":");
 				}
-				
+
 				//if this is not the first period add a :
 				if (periodNames.length() != 0) {
 					periodNames.append(":");
 				}
-				
+
 				//append the values
-				periodIds.append(next.getId());	
+				periodIds.append(next.getId());
 				periodNames.append(next.getName());
 			}
-			
+
 			//get the string values
 			periodId = periodIds.toString();
 			periodName = periodNames.toString();
 		}
-		
+
 		//obtain the user name in the format like "Geoffrey Kwan (GeoffreyKwan)"
 		String userNames = "";
 		if (workgroup != null) {
 			userNames = getUserNamesFromWorkgroup(workgroup);
-			
+
 			//get the user ids for the students in the workgroup
 			userIds = getStudentIdsFromWorkgroup(workgroup);
 		} else if (workgroup == null && loggedInUser.isAdmin()) {
@@ -242,30 +243,30 @@ public class InformationController {
 			//get the user id of the admin
 			userIds.put(loggedInUser.getId());
 		}
-		
+
 		JSONArray periods = new JSONArray();
-		
+
 		//get all the periods in the run
 		Set<Group> periodsSet = run.getPeriods();
-		
+
 		if (periodsSet != null) {
 			Iterator<Group> periodsIterator = periodsSet.iterator();
-			
+
 			//loop through all the periods in the run
 			while (periodsIterator.hasNext()) {
 				//get a period
 				Group period = periodsIterator.next();
-				
+
 				//get the period id and period name
 				Long tempPeriodId = period.getId();
 				String tempPeriodName = period.getName();
-				
+
 				try {
 					//put the period id and period name in a JSONObject
 					JSONObject periodObject = new JSONObject();
 					periodObject.put("periodId", tempPeriodId);
 					periodObject.put("periodName", tempPeriodName);
-					
+
 					//add the JSONObject into our array of periods
 					periods.put(periodObject);
 				} catch (JSONException e) {
@@ -273,7 +274,7 @@ public class InformationController {
 				}
 			}
 		}
-		
+
 		// add this user's info
 		JSONObject myUserInfo = new JSONObject();
 		try {
@@ -291,21 +292,21 @@ public class InformationController {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		
+
 		// add the class info:
 		JSONObject myClassInfo = new JSONObject();
 		JSONArray classmateUserInfos = new JSONArray();
-		
+
 		// now add classmates
 		Set<Workgroup> workgroups = runService.getWorkgroups(run.getId());
-			
+
 		String requestedWorkgroupIdsStr = request.getParameter("workgroupIds");
 		if (requestedWorkgroupIdsStr != null) {
 			// specific workgroups are requested
 			String[] requestedWorkgroupIds = requestedWorkgroupIdsStr.split(",");
 			for (Workgroup classmateWorkgroup : workgroups) {
-				if (classmateWorkgroup.getMembers().size() > 0 && 
-						classmateWorkgroup.getId() != workgroup.getId() 
+				if (classmateWorkgroup.getMembers().size() > 0 &&
+						classmateWorkgroup.getId() != workgroup.getId()
 						&& !((WISEWorkgroup) classmateWorkgroup).isTeacherWorkgroup()
 						&& ((WISEWorkgroup) classmateWorkgroup).getPeriod() != null) {
 					// only include non-teacher, non-detached classmates, excluding yourself.
@@ -320,7 +321,7 @@ public class InformationController {
 		} else {
 			// otherwise get all classmates (excluding teacher)
 			for (Workgroup classmateWorkgroup : workgroups) {
-				if (classmateWorkgroup.getMembers().size() > 0 
+				if (classmateWorkgroup.getMembers().size() > 0
 						&& (workgroup == null || classmateWorkgroup.getId() != workgroup.getId())  // workgroup==null check is in case the logged in user is an admin, then the admin would not be in a workgroup for this run.
 						&& !((WISEWorkgroup) classmateWorkgroup).isTeacherWorkgroup()
 						&& ((WISEWorkgroup) classmateWorkgroup).getPeriod() != null) {   // only include classmates, not yourself.
@@ -329,40 +330,40 @@ public class InformationController {
 				}
 			}
 		}
-		
+
 		JSONObject teacherUserInfo = new JSONObject();
-		
+
 		//get the owners of the run (there should only be one owner)
 		User runOwner = run.getOwner();
-		
+
 		try {
 			//get the workgroup for the owner in the run
 			List<Workgroup> workgroupsForRunOwner = workgroupService.getWorkgroupListByOfferingAndUser(run, runOwner);
-			
+
 			//get the workgroup since the owner should only have one workgroup in the run
 			Workgroup runOwnerWorkgroup = workgroupsForRunOwner.get(0);
-			
+
 			//set the workgroupid and username into the teacher user info
 			teacherUserInfo.put("workgroupId", runOwnerWorkgroup.getId());
 			teacherUserInfo.put("userName", runOwner.getUserDetails().getUsername());
 		} catch (JSONException e1) {
 			e1.printStackTrace();
 		}
-		
+
 		//the JSONArray that will hold the shared teacher user infos
 		JSONArray sharedTeacherUserInfos = new JSONArray();
-		
+
 		//get the shared owners
 		Iterator<User> sharedOwnersIterator = run.getSharedowners().iterator();
-		
+
 		//loop through the shared owners
 		while (sharedOwnersIterator.hasNext()) {
 			//get a shared owner
 			User sharedOwner = sharedOwnersIterator.next();
-			
+
 			//get the workgroups
 			List<Workgroup> sharedTeacherWorkgroups = workgroupService.getWorkgroupListByOfferingAndUser(run, sharedOwner);
-			
+
 			/*
 			 * loop through all the shared teacher workgroups in case a shared
 			 * owner has multiple workgroups for this run due to a bug which
@@ -371,12 +372,12 @@ public class InformationController {
 			for (Workgroup sharedTeacherWorkgroup: sharedTeacherWorkgroups) {
 				//make a JSONObject for this shared owner
 				JSONObject sharedTeacherUserInfo = new JSONObject();
-				
+
 				try {
 					//set the values into the shared owner JSONObject
 					sharedTeacherUserInfo.put("workgroupId", sharedTeacherWorkgroup.getId());
 					sharedTeacherUserInfo.put("userName", sharedTeacherWorkgroup.generateWorkgroupName());
-					
+
 					//get the shared teacher role
 					String sharedTeacherRole = runService.getSharedTeacherRole(run, sharedOwner);
 
@@ -393,12 +394,12 @@ public class InformationController {
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
-				
+
 				//add the shared owner to the array
 				sharedTeacherUserInfos.put(sharedTeacherUserInfo);
 			}
 		}
-		
+
 		try {
 			userInfo.put("myUserInfo", myUserInfo);
 			myUserInfo.put("myClassInfo", myClassInfo);
@@ -411,7 +412,7 @@ public class InformationController {
 		}
         return userInfo;
     }
-	
+
 	/**
 	 * Handles the get config request from three possible modes: grading, preview and run.
 	 * The run and grading requests are almost identical, the preview request is largely handled
@@ -528,7 +529,7 @@ public class InformationController {
 
 			//get the boolean whether to get revisions
 			String getRevisions = request.getParameter("getRevisions");
-			
+
 			// the url to get/post student data
 			String studentDataURL = wiseBaseURL + "/studentData.html";
 
@@ -560,7 +561,7 @@ public class InformationController {
 
 			//get the websocket base url e.g. ws://wise4.berkeley.edu:8080
 			String webSocketBaseURL = wiseProperties.getProperty("webSocketBaseUrl");
-			
+
 			if (webSocketBaseURL == null) {
 				/*
 				 * if the websocket base url was not provided in the portal properties
@@ -575,13 +576,13 @@ public class InformationController {
 					webSocketBaseURL = portalContextPath.replace("http", "ws");
 				}
 			}
-			
+
 			//get the url for websocket connections
 			String webSocketURL = webSocketBaseURL + "/websocket";
-			
+
 			//get the url for sending and receiving student statuses
 			String studentStatusURL = wiseBaseURL + "/studentStatus";
-			
+
 			//get the url for sending and receiving run statuses
 			String runStatusURL = wiseBaseURL + "/runStatus";
 
@@ -629,7 +630,7 @@ public class InformationController {
 						config.put("runDataExportURL", wiseBaseURL + "/teacher/export");
 					}
 				}
-				
+
 				// add the config fields specific to the teacher grading
 				if ("grading".equals(mode)) {
                     // URL for get/post premade comments
@@ -651,13 +652,13 @@ public class InformationController {
 				e.printStackTrace();
 			}
 		}
-		
-		// set the content url 
+
+		// set the content url
 		String projectURL = curriculumBaseWWW + rawProjectUrl;
 
-		// get location of last separator in url 
+		// get location of last separator in url
 		int lastIndexOfSlash = projectURL.lastIndexOf("/");
-		if (lastIndexOfSlash == -1) { 
+		if (lastIndexOfSlash == -1) {
 			lastIndexOfSlash = projectURL.lastIndexOf("\\");
 		}
 
@@ -703,11 +704,11 @@ public class InformationController {
 			        if (userLanguage.contains("_")) {
 		        		String language = userLanguage.substring(0, userLanguage.indexOf("_"));
 		        		String country = userLanguage.substring(userLanguage.indexOf("_") + 1);
-		            	locale = new Locale(language, country); 	
+		            	locale = new Locale(language, country);
 		        	} else {
 		        		locale = new Locale(userLanguage);
 		        	}
-	        	} 
+	        	}
 	        }
 	        // if user specified lang=XX in the url, it will be used instead
             if (userSpecifiedLang != null) {
@@ -716,12 +717,12 @@ public class InformationController {
 
 			config.put("locale", locale);
 			config.put("wiseBaseURL", wiseBaseURL);
-			
+
 			if (step != null) {
 				//this is set if the request is to preview the project and load a specific step such as 1.2
 				config.put("step", step);
 			}
-			
+
 			int maxInactiveInterval = request.getSession().getMaxInactiveInterval() * 1000;
 			config.put("sessionTimeoutInterval", maxInactiveInterval);			// add sessiontimeout interval, in milleseconds
 			int sessionTimeoutCheckInterval = maxInactiveInterval / 20;         // check 20 times during the session.
@@ -729,8 +730,8 @@ public class InformationController {
 				// session should be checked at least every 60 seconds.
 				sessionTimeoutCheckInterval = 60000;
 			}
-			config.put("sessionTimeoutCheckInterval", sessionTimeoutCheckInterval); // how often session should be checked...check every minute (1 min=60sec=60000 milliseconds)			
-			
+			config.put("sessionTimeoutCheckInterval", sessionTimeoutCheckInterval); // how often session should be checked...check every minute (1 min=60sec=60000 milliseconds)
+
 			// max size for all assets combined uploaded by student, in bytes
             Long studentMaxTotalAssetsSize = new Long(wiseProperties.getProperty("student_max_total_assets_size", "5242880"));
             config.put("studentMaxTotalAssetsSize", studentMaxTotalAssetsSize);
@@ -741,7 +742,7 @@ public class InformationController {
 		        if (userDetails instanceof StudentUserDetails) {
 		        	config.put("userType", "student");
 					config.put("indexURL", ControllerUtil.getPortalUrlString(request) + WISEAuthenticationProcessingFilter.STUDENT_DEFAULT_TARGET_PATH);
-		        	
+
 		        } else if (userDetails instanceof TeacherUserDetails) {
 		        	config.put("userType", "teacher");
 					config.put("indexURL", ControllerUtil.getPortalUrlString(request) + WISEAuthenticationProcessingFilter.TEACHER_DEFAULT_TARGET_PATH);
@@ -749,11 +750,13 @@ public class InformationController {
 			} else {
 	        	config.put("userType", "none");
 			}
-			
+
+			Calendar now = Calendar.getInstance();
+			config.put("retrievalTimestamp", now.getTimeInMillis());
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		
+
 		response.setHeader("Cache-Control", "no-cache");
 		response.setHeader("Pragma", "no-cache");
 		response.setDateHeader ("Expires", 0);
@@ -807,12 +810,12 @@ public class InformationController {
 	throws ObjectNotFoundException {
 		Workgroup workgroup = null;
 		SecurityContext context = SecurityContextHolder.getContext();
-		
+
 		if (context.getAuthentication().getPrincipal() instanceof UserDetails) {
 			UserDetails userDetails = (UserDetails) context.getAuthentication().getPrincipal();
 			User user = userService.retrieveUser(userDetails);
-			
-			List<Workgroup> workgroupListByOfferingAndUser 
+
+			List<Workgroup> workgroupListByOfferingAndUser
 				= workgroupService.getWorkgroupListByOfferingAndUser(run, user);
 
 			if (workgroupListByOfferingAndUser.size() == 1) {
@@ -836,7 +839,7 @@ public class InformationController {
 
 		return workgroup;
 	}
-	
+
 	/**
 	 * Obtain the user names for this workgroup
 	 * @param workgroup a Workgroup that we want the names from
@@ -855,20 +858,20 @@ public class InformationController {
 
 			//get the first name last name and login as a string like Geoffrey Kwan (GeoffreyKwan)
 			String firstNameLastNameLogin = getFirstNameLastNameLogin(user);
-			
+
 			//separate the names with a :
 			if (userNames.length() != 0) {
 				userNames.append(":");
 			}
-			
+
 			//add the first name last name and login for this user
 			userNames.append(firstNameLastNameLogin);
 		}
-		
+
 		//return the : delimited user names that are in this workgroup
 		return userNames.toString();
 	}
-	
+
 	/**
 	 * Obtain the first name, last name, and login for the user
 	 * @param user the User we want to obtain the first, last, login for
@@ -879,7 +882,7 @@ public class InformationController {
 		String firstName = "";
 		String lastName = "";
 		String userName = "";
-		
+
 		//get the user details, we need to cast to our own MutableUserDetails class
 		MutableUserDetails userDetails = (org.wise.portal.domain.authentication.MutableUserDetails) user.getUserDetails();
 
@@ -889,11 +892,11 @@ public class InformationController {
 			firstName = userDetails.getFirstname();
 			lastName = userDetails.getLastname();
 		}
-		
+
 		//append the user's name and login so it looks like Jennifer Chiu (JenniferC829)
 		return firstName + " " + lastName + " (" + userName + ")";
 	}
-	
+
 	/**
 	 * Get the student ids from the workgroup
 	 * @param workgroup the workgroup to get student ids from
@@ -901,11 +904,11 @@ public class InformationController {
 	 */
 	private JSONArray getStudentIdsFromWorkgroup(Workgroup workgroup) {
 		JSONArray studentIds = new JSONArray();
-		
+
 		//get all the members of the workgroup
 		Set<User> members = workgroup.getMembers();
 		Iterator<User> iterator = members.iterator();
-		
+
 		//loop through all the members in the workgroup
 		while (iterator.hasNext()) {
 			//get a student in the workgroup
@@ -913,14 +916,14 @@ public class InformationController {
 
 			//get the student id
 			Long studentId = user.getId();
-			
+
 			//add the student id to the accumulation of student ids for this workgroup
 			studentIds.put(studentId);
 		}
-		
+
 		return studentIds;
 	}
-	
+
 	/**
 	 * Get the classmate user info
 	 * @param classmateWorkgroup the workgroup of the classmate
@@ -928,13 +931,13 @@ public class InformationController {
 	 */
 	private JSONObject getClassmateUserInfoJSON(Workgroup classmateWorkgroup) {
 		JSONObject classmateUserInfo = new JSONObject();
-		
-		try {			
+
+		try {
 			classmateUserInfo.put("workgroupId", classmateWorkgroup.getId());
 			String userNames = getUserNamesFromWorkgroup(classmateWorkgroup);
-			
+
 			classmateUserInfo.put("userName", userNames);
-			
+
 			//get user name
 			if (classmateWorkgroup instanceof WISEWorkgroup) {
 				//check that there is a period
@@ -950,7 +953,7 @@ public class InformationController {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		
+
 		return classmateUserInfo;
 	}
 }

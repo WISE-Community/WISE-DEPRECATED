@@ -51,47 +51,11 @@ class TeacherWebSocketService {
     handleStudentStatusReceived(studentStatus) {
         var workgroupId = studentStatus.workgroupId;
 
+        // update the student status for the workgroup
         this.StudentStatusService.setStudentStatusForWorkgroupId(workgroupId, studentStatus);
 
-        var latestCompletedNodeVisit = studentStatus.previousNodeVisit;
-        if (latestCompletedNodeVisit != null) {
-            var nodeStates = latestCompletedNodeVisit.nodeStates;
-            if (nodeStates != null && nodeStates.length > 0) {
-                // there's new work. notify the teacher
-                this.StudentStatusService.addNewNodeVisit(latestCompletedNodeVisit);
-            }
-        }
-        /*
-         var runId = data.runId;
-         var periodId = data.periodId;
-         var workgroupId = data.workgroupId;
-         var currentNodeId = data.currentNodeId;
-         var previousNodeVisit = data.previousNodeVisit;
-         var nodeStatuses = data.nodeStatuses;
-
-         //we will reset the time spent value to 0 since the student has just moved to a new step
-         var timeSpent = '0:00';
-
-         //update our local copy of the student status object for the workgroup id
-         var studentStatusObject = this.updateStudentStatusObject(data);
-         */
-
-        //get the annotation if any
-        //var annotation = data.annotation;
-
-        //update the student progress row for the workgroup id
-        //this.updateStudentProgress(runId, periodId, workgroupId, currentNodeId, previousNodeVisit, nodeStatuses, timeSpent);
-
-        //update the step progress for all steps and periods
-        //this.updateStepProgress();
-
-        //check if we need to notify the teacher that there's new work for the screen they are viewing
-        //this.checkIfNeedToDisplayNewWorkNotification(data);
-
-        //if (annotation != null) {
-        //analyze the annotation to see if we need to do anything special
-        //this.analyzeAnnotation(annotation, previousNodeVisit, workgroupId);
-        //}
+        // fire the student status received event
+        this.$rootScope.$emit('studentStatusReceived', {studentStatus: studentStatus});
     };
 }
 

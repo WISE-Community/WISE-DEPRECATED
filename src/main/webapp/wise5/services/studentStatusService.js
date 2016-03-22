@@ -119,6 +119,38 @@ var StudentStatusService = function () {
             var modulo = workgroupId % 10;
             return avatarColors[modulo];
         }
+    }, {
+        key: 'getStudentProjectCompletion',
+
+
+        /**
+         * Get the student project completion by workgroup id
+         * @param workgroupId the workgroup id
+         * @returns the project completion percentage for the given workgroup
+         */
+        value: function getStudentProjectCompletion(workgroupId) {
+
+            var completionPercentage = null;
+
+            // get the student status for the workgroup
+            var studentStatus = this.getStudentStatusForWorkgroupId(workgroupId);
+
+            if (studentStatus != null) {
+
+                if (studentStatus != null) {
+
+                    // get the project completion object
+                    var projectCompletion = studentStatus.projectCompletion;
+
+                    if (projectCompletion != null) {
+                        // get the project completion percentage
+                        completionPercentage = projectCompletion.completionPct;
+                    }
+                }
+            }
+
+            return completionPercentage;
+        }
     }]);
 
     return StudentStatusService;

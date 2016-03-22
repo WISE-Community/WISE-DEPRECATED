@@ -29,6 +29,21 @@ var ConfigService = function () {
 
             return this.$http.get(configURL).then(function (result) {
                 var configJSON = result.data;
+
+                if (configJSON.retrievalTimestamp != null) {
+                    // get the client timestamp
+                    var clientTimestamp = new Date().getTime();
+
+                    // get the server timestamp
+                    var serverTimestamp = configJSON.retrievalTimestamp;
+
+                    // get the difference between the client and server time
+                    var timestampDiff = clientTimestamp - serverTimestamp;
+
+                    // add the timestamp diff to the config object
+                    configJSON.timestampDiff = timestampDiff;
+                }
+
                 _this.setConfig(configJSON);
                 return configJSON;
             });
@@ -428,6 +443,25 @@ var ConfigService = function () {
             }
 
             return result;
+        }
+    }, {
+        key: 'convertToServerTimestamp',
+
+
+        /**
+         * Convert a client timestamp to a server timestamp. This is required
+         * in case the client and server clocks are not synchronized.
+         * @param clientTimestamp the client timestamp
+         */
+        value: function convertToServerTimestamp(clientTimestamp) {
+
+            // get the difference between the client time and server time
+            var timestampDiff = this.getConfigParam('timestampDiff');
+
+            // convert the client timestamp to a server timestamp
+            var serverTimestamp = clientTimestamp - timestampDiff;
+
+            return serverTimestamp;
         }
     }]);
 

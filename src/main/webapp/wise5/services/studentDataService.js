@@ -1769,6 +1769,24 @@ var StudentDataService = function () {
             var workgroupId = this.ConfigService.getWorkgroupId();
             return this.AnnotationService.getTotalScore(annotations, workgroupId);
         }
+
+        /**
+         * Get the project completion for the signed in student
+         * @returns the project completion percentage for the signed in student
+         */
+
+    }, {
+        key: 'getProjectCompletion',
+        value: function getProjectCompletion() {
+
+            // group0 is always the root node of the whole project
+            var nodeId = 'group0';
+
+            // get the progress including all of the children nodes
+            var progress = this.getNodeProgressById(nodeId);
+
+            return progress;
+        }
     }]);
 
     return StudentDataService;

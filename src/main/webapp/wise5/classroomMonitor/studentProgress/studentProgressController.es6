@@ -3,6 +3,7 @@
 class StudentProgressController {
 
     constructor($rootScope,
+                $scope,
                 $state,
                 ConfigService,
                 ProjectService,
@@ -10,6 +11,7 @@ class StudentProgressController {
                 TeacherDataService,
                 TeacherWebSocketService) {
         this.$rootScope = $rootScope;
+        this.$scope = $scope;
         this.$state = $state;
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
@@ -45,13 +47,42 @@ class StudentProgressController {
 
         this.studentsOnline = this.TeacherWebSocketService.getStudentsOnline();
 
-        /**
-         * Listen for the studentsOnlineReceived event
-         */
-        $rootScope.$on('studentsOnlineReceived', (event, args) => {
+        // listen for the studentsOnlineReceived event
+        this.$rootScope.$on('studentsOnlineReceived', (event, args) => {
             this.studentsOnline = args.studentsOnline;
         });
 
+        // listen for the studentStatusReceived event
+        this.$rootScope.$on('studentStatusReceived', angular.bind(this, function(event, args) {
+
+            // get the workgroup id
+            var studentStatus = args.studentStatus;
+            var workgroupId = studentStatus.workgroupId;
+
+            // update the time spent for the workgroup
+            this.updateTimeSpentForWorkgroupId(workgroupId);
+
+            // refresh the view
+            this.$scope.$apply();
+        }));
+
+        // how often to update the time spent values in the view
+        this.updateTimeSpentInterval = 10000;
+
+        // mapping of workgroup id to time spent
+        this.studentTimeSpent = {};
+
+        // update the time spent values in the view
+        this.updateTimeSpent();
+
+        // update the time spent values every x seconds
+        this.updateTimeSpentIntervalId = setInterval(angular.bind(this, function() {
+            // update the time spent values in the view
+            this.updateTimeSpent();
+
+            // refresh the view
+            this.$scope.$apply();
+        }), this.updateTimeSpentInterval);
     }
 
     getNewNodeVisits() {
@@ -94,10 +125,127 @@ class StudentProgressController {
     getStudentTotalScore(workgroupId) {
         return this.TeacherDataService.getTotalScoreByWorkgroupId(workgroupId);
     }
+
+    /**
+     * Get the time spent for a workgroup
+     */
+    getStudentTimeSpent(workgroupId) {
+        var timeSpent = this.studentTimeSpent[workgroupId];
+        return timeSpent;
+    }
+
+    /**
+     * Update the time spent values in the view
+     */
+    updateTimeSpent() {
+        var studentsOnline = this.studentsOnline;
+
+        if (studentsOnline != null) {
+
+            // loop through all the workgroups that are online
+            for (var s = 0; s < studentsOnline.length; s++) {
+                var workgroupId = studentsOnline[s];
+
+                if (workgroupId != null) {
+                    // update the time spent for the workgroup
+                    this.updateTimeSpentForWorkgroupId(workgroupId);
+                }
+            }
+        }
+    }
+
+    /**
+     * Update the time spent for the workgroup
+     * @workgroupId the workgroup id
+     */
+    updateTimeSpentForWorkgroupId(workgroupId) {
+
+        if (workgroupId != null) {
+            // get the current client timestamp
+            var currentClientTimestamp = new Date().getTime();
+
+            // get the student status
+            var studentStatus = this.StudentStatusService.getStudentStatusForWorkgroupId(workgroupId);
+
+            if (studentStatus != null) {
+
+                // get the time the student status was posted to the server
+                var postTimestamp = studentStatus.postTimestamp;
+
+                /*
+                 * convert the current client timestamp to a server timestamp
+                 * this is requied in cases where the client and server clocks
+                 * are not synchronized
+                 */
+                var currentServerTimestamp = this.ConfigService.convertToServerTimestamp(currentClientTimestamp);
+
+                // get the amount of time the student has been on the step
+                var timeSpent = currentServerTimestamp - postTimestamp;
+
+                // get the total amount of seconds the student has been on the step
+                var totalSeconds = Math.floor(timeSpent / 1000);
+
+                // get the hours, minutes, and seconds
+                var hours = Math.floor((totalSeconds % 86400) / 3600);
+                var minutes = Math.floor(((totalSeconds % 86400) % 3600) / 60);
+                var seconds = totalSeconds % 60;
+
+                if (hours < 0) {
+                    hours = 0;
+                }
+
+                if (minutes < 0) {
+                    minutes = 0;
+                }
+
+                if (seconds < 0) {
+                    seconds = 0;
+                }
+
+                var timeSpentText = '';
+
+                if (hours > 0) {
+                    timeSpentText += (hours + ':');
+                }
+
+                if (hours > 0) {
+                    // there are hours
+
+                    if (minutes == 0) {
+                        // fill with zeroes
+                        timeSpentText += '00:';
+                    } else if (minutes > 0 && minutes < 10) {
+                        // add a leading zero
+                        timeSpentText += '0' + minutes + ':';
+                    } else {
+                        timeSpentText += minutes + ':';
+                    }
+                } else {
+                    // there are no hours
+
+                    timeSpentText += minutes + ':';
+                }
+
+                if (seconds == 0) {
+                    // fill with zeroes
+                    timeSpentText += '00';
+                } else if (seconds > 0 && seconds < 10) {
+                    // add a leading zero
+                    timeSpentText += ('0' + seconds);
+                } else {
+                    timeSpentText += seconds;
+                }
+
+                // update the mapping of workgroup id to time spent
+                this.studentTimeSpent[workgroupId] = timeSpentText;
+            }
+        }
+    }
 }
 
 StudentProgressController.$inject = [
     '$rootScope',
+    '$scope',
     '$state',
     'ConfigService',
     'ProjectService',

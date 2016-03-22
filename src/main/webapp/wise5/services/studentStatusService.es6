@@ -97,6 +97,34 @@ class StudentStatusService {
         return avatarColors[modulo];
     };
 
+    /**
+     * Get the student project completion by workgroup id
+     * @param workgroupId the workgroup id
+     * @returns the project completion percentage for the given workgroup
+     */
+    getStudentProjectCompletion(workgroupId) {
+
+        var completionPercentage = null;
+
+        // get the student status for the workgroup
+        var studentStatus = this.getStudentStatusForWorkgroupId(workgroupId);
+
+        if (studentStatus != null) {
+
+            if (studentStatus != null) {
+
+                // get the project completion object
+                var projectCompletion = studentStatus.projectCompletion;
+
+                if (projectCompletion != null) {
+                    // get the project completion percentage
+                    completionPercentage = projectCompletion.completionPct;
+                }
+            }
+        }
+
+        return completionPercentage;
+    }
 }
 
 StudentStatusService.$inject = ['$http', 'ConfigService', 'ProjectService'];

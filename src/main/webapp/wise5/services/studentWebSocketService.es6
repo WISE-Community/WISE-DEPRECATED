@@ -76,18 +76,20 @@ class StudentWebSocketService {
             // get the node statuses
             var nodeStatuses = this.StudentDataService.getNodeStatuses();
 
-            // get the latest node visit
-            //var latestCompletedNodeVisit = this.StudentDataService.getLatestCompletedNodeVisit();
+            // get the latest component state
             var latestComponentState = this.StudentDataService.getLatestComponentState();
+
+            // get the project completion percentage
+            var projectCompletion = this.StudentDataService.getProjectCompletion();
 
             // make the websocket message
             var messageJSON = {};
             messageJSON.messageType = 'studentStatus';
             messageJSON.messageParticipants = 'studentToTeachers';
             messageJSON.currentNodeId = currentNodeId;
-            //messageJSON.previousNodeVisit = latestCompletedNodeVisit;
             messageJSON.previousComponentState = latestComponentState;
             messageJSON.nodeStatuses = nodeStatuses;
+            messageJSON.projectCompletion = projectCompletion;
 
             // send the websocket message
             this.dataStream.send(messageJSON);
