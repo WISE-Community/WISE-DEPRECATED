@@ -15,26 +15,28 @@
 <div class="account-menu__info">
     <div class="account-menu__progress" layout="row" layout-align="start center">
         <div layout="column">
-            <span class="md-body-2">Project Completion:</span>
+            <span class="md-body-2">Project Completion</span>
             <span class="md-body-1 gray-dark">
-                {{themeCtrl.rootNodeStatus.progress.completedItems}}/{{themeCtrl.rootNodeStatus.progress.totalItems}} items
+                {{themeCtrl.rootNodeStatus.progress.completedItems}}/{{themeCtrl.rootNodeStatus.progress.totalItems | number : 0}} items
             </span>
         </div>
         <span flex></span>
         <md-progress-linear md-mode="determinate" value="{{themeCtrl.rootNodeStatus.progress.completionPct}}"></md-progress-linear>
         <h3 class="accent-2">{{themeCtrl.rootNodeStatus.progress.completionPct}}%</h3>
     </div>
-    <md-divider ng-if="!themeCtrl.hideTotalScores && vleController.maxScore != null"></md-divider>
-    <div ng-if="!themeCtrl.hideTotalScores && vleController.maxScore != null" class="account-menu__score" layout="row" layout-align="start center">
+</div>
+<md-divider ng-if="!themeCtrl.hideTotalScores && vleController.maxScore != null"></md-divider>
+<div class="account-menu__info" ng-if="!themeCtrl.hideTotalScores && vleController.maxScore != null">
+    <div class="account-menu__score" layout="row" layout-align="start center">
         <div layout="column">
-            <span class="md-body-2">Total Score:</span>
+            <span class="md-body-2">Total Score</span>
             <span class="md-body-1 gray-dark">
                 {{vleController.totalScore}}/{{vleController.maxScore}} points
             </span>
         </div>
         <span flex></span>
         <md-icon class="account-menu__grade md-36"> grade </md-icon>
-        <h3 class="accent-2">{{vleController.maxScore > 0 ? vleController.totalScore/vleController.maxScore*100 + '%' : ''}}</h3>
+        <h3 class="accent-2" ng-if="vleController.maxScore > 0">{{vleController.totalScore/vleController.maxScore*100 | number : 0}}%</h3>
     </div>
 </div>
 <md-divider></md-divider>
