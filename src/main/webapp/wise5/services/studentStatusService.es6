@@ -31,17 +31,23 @@ class StudentStatusService {
         return this.studentStatuses;
     };
 
-    getCurrentNodeTitleForWorkgroupId(workgroupId) {
-        var nodeTitle = null;
+    /**
+     * Get the current node position and title for a workgroup
+     * e.g. 2.2: Newton Scooter Concepts
+     * @param workgroupId the workgroup id
+     * @returns the node position and title
+     */
+    getCurrentNodePositionAndNodeTitleForWorkgroupId(workgroupId) {
+        var nodePositionAndTitle = null;
 
         var studentStatus = this.getStudentStatusForWorkgroupId(workgroupId);
 
         if(studentStatus != null) {
             var currentNodeId = studentStatus.currentNodeId;
-            nodeTitle = this.ProjectService.getNodeTitleByNodeId(currentNodeId);
+            nodePositionAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(currentNodeId);
         }
 
-        return nodeTitle;
+        return nodePositionAndTitle;
     };
 
     getNewNodeVisits() {

@@ -623,7 +623,7 @@ class ProjectService {
             var position = this.getNodePositionById(nodeId);
 
             if (position != null) {
-                title = position + ' ' + node.title;
+                title = position + ': ' + node.title;
             } else {
                 title = node.title;
             }

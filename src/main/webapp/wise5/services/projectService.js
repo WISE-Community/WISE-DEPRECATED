@@ -76,7 +76,7 @@ return delimiter+contentBaseURL+"assets/"+matchedStringWithoutQuotes+delimiter;}
      * Get the node position and title
      * @param nodeId the node id
      * @returns the node position and title, e.g. "1.1 Introduction"
-     */value:function getNodePositionAndTitleByNodeId(nodeId){var title=null;var node=this.getNodeById(nodeId);if(node!=null){var position=this.getNodePositionById(nodeId);if(position!=null){title=position+' '+node.title;}else {title=node.title;}}return title;}},{key:'getNodeIconByNodeId',value:function getNodeIconByNodeId(nodeId){var node=this.getNodeById(nodeId);var nodeIcon=null;if(node!=null){var nodeType=node.type; // set defaults (TODO: get from configService?)
+     */value:function getNodePositionAndTitleByNodeId(nodeId){var title=null;var node=this.getNodeById(nodeId);if(node!=null){var position=this.getNodePositionById(nodeId);if(position!=null){title=position+': '+node.title;}else {title=node.title;}}return title;}},{key:'getNodeIconByNodeId',value:function getNodeIconByNodeId(nodeId){var node=this.getNodeById(nodeId);var nodeIcon=null;if(node!=null){var nodeType=node.type; // set defaults (TODO: get from configService?)
 var defaultName=nodeType==='group'?'explore':'school';nodeIcon={color:'rgba(0,0,0,0.54)',type:'font',fontSet:'material-icons',fontName:defaultName,imgSrc:'',imgAlt:'node icon'}; // TODO: check for different statuses
 var icons=node.icons;if(!!icons&&!!icons.default){var icon=icons.default;nodeIcon=$.extend(true,nodeIcon,icon);} // check for empty image source
 if(!nodeIcon.imgSrc){ // revert to font icon

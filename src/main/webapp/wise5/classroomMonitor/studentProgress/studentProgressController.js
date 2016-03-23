@@ -123,7 +123,7 @@ var StudentProgressController = function () {
     }, {
         key: 'getCurrentNodeForWorkgroupId',
         value: function getCurrentNodeForWorkgroupId(workgroupId) {
-            return this.StudentStatusService.getCurrentNodeTitleForWorkgroupId(workgroupId);
+            return this.StudentStatusService.getCurrentNodePositionAndNodeTitleForWorkgroupId(workgroupId);
         }
     }, {
         key: 'getStudentProjectCompletion',

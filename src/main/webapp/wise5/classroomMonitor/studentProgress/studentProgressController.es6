@@ -116,7 +116,7 @@ class StudentProgressController {
     };
 
     getCurrentNodeForWorkgroupId(workgroupId) {
-        return this.StudentStatusService.getCurrentNodeTitleForWorkgroupId(workgroupId);
+        return this.StudentStatusService.getCurrentNodePositionAndNodeTitleForWorkgroupId(workgroupId);
     };
 
     getStudentProjectCompletion(workgroupId) {
