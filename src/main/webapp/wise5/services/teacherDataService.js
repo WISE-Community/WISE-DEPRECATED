@@ -149,7 +149,9 @@ var TeacherDataService = function () {
                 var resultData = result.data;
                 if (resultData != null) {
 
-                    _this.studentData = {};
+                    if (_this.studentData == null) {
+                        _this.studentData = {};
+                    }
 
                     if (resultData.studentWorkList != null) {
                         var componentStates = resultData.studentWorkList;
@@ -232,6 +234,9 @@ var TeacherDataService = function () {
     }, {
         key: 'getComponentStatesByWorkgroupId',
         value: function getComponentStatesByWorkgroupId(workgroupId) {
+            if (this.studentData.componentStatesByWorkgroupId == null) {
+                debugger;
+            }
             var componentStatesByWorkgroupId = this.studentData.componentStatesByWorkgroupId[workgroupId];
             if (componentStatesByWorkgroupId != null) {
                 return componentStatesByWorkgroupId;

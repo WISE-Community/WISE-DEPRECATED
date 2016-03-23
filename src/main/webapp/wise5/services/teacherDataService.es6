@@ -125,7 +125,9 @@ class TeacherDataService {
             var resultData = result.data;
             if (resultData != null) {
 
-                this.studentData = {};
+                if (this.studentData == null) {
+                    this.studentData = {};
+                }
 
                 if (resultData.studentWorkList != null) {
                     var componentStates = resultData.studentWorkList;
@@ -207,6 +209,9 @@ class TeacherDataService {
     };
 
     getComponentStatesByWorkgroupId(workgroupId) {
+        if (this.studentData.componentStatesByWorkgroupId == null) {
+            debugger;
+        }
         var componentStatesByWorkgroupId = this.studentData.componentStatesByWorkgroupId[workgroupId];
         if (componentStatesByWorkgroupId != null) {
             return componentStatesByWorkgroupId;
