@@ -23,7 +23,9 @@ var StudentProgressController = function () {
         this.TeacherDataService = TeacherDataService;
         this.TeacherWebSocketService = TeacherWebSocketService;
 
-        this.workgroups = this.ConfigService.getClassmateUserInfos();
+        this.studentsOnline = this.TeacherWebSocketService.getStudentsOnline();
+
+        this.workgroups = this.sortWorkgroupsByOnline();
 
         this.studentStatuses = this.StudentStatusService.getStudentStatuses();
 
@@ -49,26 +51,50 @@ var StudentProgressController = function () {
             }
         }
 
-        this.studentsOnline = this.TeacherWebSocketService.getStudentsOnline();
-
         // listen for the studentsOnlineReceived event
         this.$rootScope.$on('studentsOnlineReceived', function (event, args) {
             _this.studentsOnline = args.studentsOnline;
+
+            // update the workgroup order
+            _this.workgroups = _this.sortWorkgroupsByOnline();
+
+            // refresh the view
+            _this.$scope.$apply();
         });
 
         // listen for the studentStatusReceived event
-        this.$rootScope.$on('studentStatusReceived', angular.bind(this, function (event, args) {
-
+        this.$rootScope.$on('studentStatusReceived', function (event, args) {
             // get the workgroup id
             var studentStatus = args.studentStatus;
             var workgroupId = studentStatus.workgroupId;
 
             // update the time spent for the workgroup
-            this.updateTimeSpentForWorkgroupId(workgroupId);
+            _this.updateTimeSpentForWorkgroupId(workgroupId);
 
             // refresh the view
-            this.$scope.$apply();
-        }));
+            _this.$scope.$apply();
+        });
+
+        // listen for the studentDisconnected event
+        this.$rootScope.$on('studentDisconnected', function (event, args) {
+            var data = args.data;
+            var workgroupId = data.workgroupId;
+
+            var studentsOnline = _this.studentsOnline;
+
+            var indexOfWorkgroupId = studentsOnline.indexOf(workgroupId);
+
+            if (indexOfWorkgroupId != -1) {
+                // remove the workgroup from the students online list
+                studentsOnline.splice(indexOfWorkgroupId, 1);
+
+                // update the workgroup order
+                _this.workgroups = _this.sortWorkgroupsByOnline();
+
+                // refresh the view
+                _this.$scope.$apply();
+            }
+        });
 
         // how often to update the time spent values in the view
         this.updateTimeSpentInterval = 10000;
@@ -266,6 +292,44 @@ var StudentProgressController = function () {
                     this.studentTimeSpent[workgroupId] = timeSpentText;
                 }
             }
+        }
+
+        /**
+         * Sort the workgroups. Place the online workgroups sorted alphabetically at
+         * the top and the offline workgroups sorted alphabetically at the bottom.
+         * @returns a list of workgroup objects with the online workgroups first
+         * and the offline workgroups after
+         */
+
+    }, {
+        key: 'sortWorkgroupsByOnline',
+        value: function sortWorkgroupsByOnline() {
+
+            var workgroupsOnline = [];
+            var workgroupsOffline = [];
+
+            // get the workgroups sorted alphabetically
+            var workgroups = this.ConfigService.getClassmateUserInfos();
+
+            // loop through all the workgroups
+            for (var x = 0; x < workgroups.length; x++) {
+                var workgroup = workgroups[x];
+
+                if (workgroup != null) {
+                    if (this.isWorkgroupOnline(workgroup.workgroupId)) {
+                        // the workroup is online
+                        workgroupsOnline.push(workgroup);
+                    } else {
+                        // the workgroup is offline
+                        workgroupsOffline.push(workgroup);
+                    }
+                }
+            }
+
+            // join the workgroup arrays together
+            var workgroupsSorted = workgroupsOnline.concat(workgroupsOffline);
+
+            return workgroupsSorted;
         }
     }]);
 

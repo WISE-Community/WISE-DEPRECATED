@@ -23,10 +23,15 @@ class TeacherWebSocketService {
     handleMessage(message) {
         var data = JSON.parse(message.data);
         var messageType = data.messageType;
+
         if (messageType === 'studentStatus') {
             this.handleStudentStatusReceived(data);
         } else if (messageType === 'studentsOnlineList') {
             this.handleStudentsOnlineReceived(data);
+        } else if (messageType === 'studentConnected') {
+            
+        } else if (messageType === 'studentDisconnected') {
+            this.handleStudentDisconnected(data);
         }
     };
 
@@ -57,6 +62,15 @@ class TeacherWebSocketService {
         // fire the student status received event
         this.$rootScope.$emit('studentStatusReceived', {studentStatus: studentStatus});
     };
+
+    /**
+     * Handle the student disconnected message
+     */
+    handleStudentDisconnected(studentDisconnectedMessage) {
+
+        // fire the student disconnected event
+        this.$rootScope.$broadcast('studentDisconnected', {data: studentDisconnectedMessage});
+    }
 }
 
 TeacherWebSocketService.$inject = ['$rootScope', '$websocket', 'ConfigService', 'StudentStatusService'];
