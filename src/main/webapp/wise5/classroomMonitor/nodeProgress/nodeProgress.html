@@ -19,6 +19,22 @@
 .active {
     background-color: yellow;
 }
+
+.online {
+    background-color: lightgreen;
+}
+
+table {
+    border-collapse: collapse;
+    border: 1px solid black;
+}
+table td, table th {
+    border: 1px solid black;
+}
+
+table tr {
+    cursor: pointer;
+}
 </style>
 
 <div>
@@ -28,13 +44,23 @@
         {{period.periodName}}
     </button>
 </div>
+<table>
+    <tr>
+        <th>Step</th>
+        <th>On Step</th>
+        <th>Completion</th>
+        <th>Average Score</th>
+    </tr>
+    <tr ng-repeat='item in nodeProgressController.items | toArray | orderBy : "order"'
+         ng-class='{online: nodeProgressController.isWorkgroupOnlineOnNode(item.$key)}'
+        ng-if='item.order!==0'
+        ng-click='nodeProgressController.nodeClicked(item.$key)'
+        style='cursor: pointer'>
+        <td>{{nodeProgressController.getNodePositionById(item.$key)}} {{nodeProgressController.getNodeTitleByNodeId(item.$key)}}</td>
+        <td align='right'>{{nodeProgressController.getNumberOfStudentsOnNode(item.$key)}}</td>
+        <td align='right'>{{nodeProgressController.getNodeCompletion(item.$key)}}%</td>
+        <td align='right'>{{nodeProgressController.getNodeAverageScore(item.$key)}}</td>
+    </tr>
+</table>
 
-<div ng-repeat='item in nodeProgressController.items | toArray | orderBy : "order"'
-     ng-if='item.order!==0'
-     ng-class='{"node-select--group": nodeProgressController.isGroupNode(item.$key), "node-select--node": !nodeProgressController.isGroupNode(item.$key)}'
-     ng-click='nodeProgressController.nodeClicked(item.$key)'
-     style='cursor: pointer'>
-    <h6>{{nodeProgressController.getNodePositionById(item.$key)}} {{nodeProgressController.getNodeTitleByNodeId(item.$key)}}</h6>
-</div>
-    
 </group>

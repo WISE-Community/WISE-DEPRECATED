@@ -3233,31 +3233,58 @@ class ProjectService {
                 var node = nodes[n];
 
                 if (node != null) {
+                    var nodeMaxScore = this.getMaxScoreForNode(node.id);
 
-                    var components = node.components;
+                    if (nodeMaxScore != null) {
+                        if (maxScore == null) {
+                            maxScore = nodeMaxScore;
+                        } else {
+                            maxScore += nodeMaxScore;
+                        }
+                    }
+                }
+            }
+        }
 
-                    if (components != null) {
+        return maxScore;
+    }
 
-                        // loop through all the components
-                        for (var c = 0; c < components.length; c++) {
-                            var component = components[c];
+    /**
+     * Get the max score for the node
+     * @param nodeId the node id
+     * @returns the max score for the node
+     */
+    getMaxScoreForNode(nodeId) {
+        var maxScore = null;
 
-                            if (component != null) {
+        // get the node
+        var node = this.getNodeById(nodeId);
 
-                                var componentMaxScore = component.maxScore;
+        if (node != null) {
+            var components = node.components;
 
-                                // check if the component has a max score
-                                if (componentMaxScore != null) {
+            if (components != null) {
 
-                                    // make sure the max score is a valid number
-                                    if (!isNaN(componentMaxScore)) {
+                // loop through all the components
+                for (var c = 0; c < components.length; c++) {
+                    var component = components[c];
 
-                                        if (maxScore == null) {
-                                            maxScore = componentMaxScore;
-                                        } else {
-                                            maxScore += componentMaxScore;
-                                        }
-                                    }
+                    if (component != null) {
+
+                        // get the max score for the component
+                        var componentMaxScore = component.maxScore;
+
+                        // check if the component has a max score
+                        if (componentMaxScore != null) {
+
+                            // make sure the max score is a valid number
+                            if (!isNaN(componentMaxScore)) {
+
+                                if (maxScore == null) {
+                                    maxScore = componentMaxScore;
+                                } else {
+                                    // accumulate the max score
+                                    maxScore += componentMaxScore;
                                 }
                             }
                         }

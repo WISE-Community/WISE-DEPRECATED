@@ -260,7 +260,11 @@ var mainModule = _angular2.default.module('classroomMonitor', ['angularMoment', 
         templateUrl: 'wise5/classroomMonitor/nodeProgress/nodeProgress.html',
         controller: 'NodeProgressController',
         controllerAs: 'nodeProgressController',
-        resolve: {}
+        resolve: {
+            studentData: function studentData($stateParams, TeacherDataService, config) {
+                return TeacherDataService.retrieveAnnotations();
+            }
+        }
     }).state('root.nodeGrading', {
         url: '/nodeGrading/:nodeId',
         templateUrl: 'wise5/classroomMonitor/nodeGrading/nodeGrading.html',

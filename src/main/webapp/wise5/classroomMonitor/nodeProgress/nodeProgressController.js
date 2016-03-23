@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var NodeProgressController = function () {
-    function NodeProgressController($scope, $state, ConfigService, ProjectService, TeacherDataService) {
+    function NodeProgressController($scope, $state, ConfigService, ProjectService, StudentStatusService, TeacherDataService, TeacherWebSocketService) {
         var _this = this;
 
         _classCallCheck(this, NodeProgressController);
@@ -18,7 +18,9 @@ var NodeProgressController = function () {
         this.$state = $state;
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
+        this.StudentStatusService = StudentStatusService;
         this.TeacherDataService = TeacherDataService;
+        this.TeacherWebSocketService = TeacherWebSocketService;
         this.currentGroup = null;
         this.items = null;
         this.periods = [];
@@ -139,12 +141,101 @@ var NodeProgressController = function () {
         value: function nodeClicked(nodeId) {
             this.$state.go('root.nodeGrading', { nodeId: nodeId });
         }
+    }, {
+        key: 'getNumberOfStudentsOnNode',
+
+
+        /**
+         * Get the number of students on the node
+         * @param nodeId the node id
+         * @returns the number of students that are on the node
+         */
+        value: function getNumberOfStudentsOnNode(nodeId) {
+            // get the currently selected period
+            var currentPeriod = this.getCurrentPeriod();
+            var periodId = currentPeriod.periodId;
+
+            // get the number of students that are on the node in the period
+            var count = this.StudentStatusService.getNumberOfStudentsOnNode(nodeId, periodId);
+
+            return count;
+        }
+
+        /**
+         * Get the percentage of the class or period that has completed the node
+         * @param nodeId the node id
+         * @returns the percentage of the class or period that has completed the node
+         */
+
+    }, {
+        key: 'getNodeCompletion',
+        value: function getNodeCompletion(nodeId) {
+            // get the currently selected period
+            var currentPeriod = this.getCurrentPeriod();
+            var periodId = currentPeriod.periodId;
+
+            // get the percentage of the class or period that has completed the node
+            var completionPercentage = this.StudentStatusService.getNodeCompletion(nodeId, periodId);
+
+            return completionPercentage;
+        }
+
+        /**
+         * Check if there are any online students on the node
+         * @param nodeId the node id
+         * @returns whether there are any online students on the node
+         */
+
+    }, {
+        key: 'isWorkgroupOnlineOnNode',
+        value: function isWorkgroupOnlineOnNode(nodeId) {
+            // get the currently selected period
+            var currentPeriod = this.getCurrentPeriod();
+            var periodId = currentPeriod.periodId;
+
+            // get the workgroup ids that are online
+            var studentsOnline = this.TeacherWebSocketService.getStudentsOnline();
+
+            // check if there are any online students on the node in the period
+            var isOnline = this.StudentStatusService.isWorkgroupOnlineOnNode(studentsOnline, nodeId, periodId);
+
+            return isOnline;
+        }
+
+        /**
+         * Get the average score for the node
+         * @param nodeId the node id
+         * @returns the average score for the node
+         */
+
+    }, {
+        key: 'getNodeAverageScore',
+        value: function getNodeAverageScore(nodeId) {
+            // get the currently selected period
+            var currentPeriod = this.getCurrentPeriod();
+            var periodId = currentPeriod.periodId;
+
+            // get the max score for the node
+            var nodeMaxScore = this.ProjectService.getMaxScoreForNode(nodeId);
+
+            // get the average score for the node
+            var averageScore = this.StudentStatusService.getNodeAverageScore(nodeId, periodId);
+
+            var averageScoreDisplay = null;
+
+            if (averageScore != null && nodeMaxScore != null) {
+                // create the average score display e.g. 8/10
+                averageScoreDisplay = averageScore + '/' + nodeMaxScore;
+            }
+
+            return averageScoreDisplay;
+        }
     }]);
 
     return NodeProgressController;
 }();
 
-NodeProgressController.$inject = ['$scope', '$state', 'ConfigService', 'ProjectService', 'TeacherDataService'];
+NodeProgressController.$inject = ['$scope', '$state', 'ConfigService', 'ProjectService', 'StudentStatusService', 'TeacherDataService', 'TeacherWebSocketService'];
 
 exports.default = NodeProgressController;
 //# sourceMappingURL=nodeProgressController.js.map

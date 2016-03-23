@@ -151,7 +151,7 @@ let mainModule = angular.module('classroomMonitor', [
                             return TeacherDataService.retrieveAnnotations();
                         }
                     }
-                })                
+                })
                 .state('root.studentGrading', {
                     url: '/studentGrading/:workgroupId',
                     templateUrl: 'wise5/classroomMonitor/studentGrading/studentGrading.html',
@@ -169,6 +169,9 @@ let mainModule = angular.module('classroomMonitor', [
                     controller: 'NodeProgressController',
                     controllerAs: 'nodeProgressController',
                     resolve: {
+                        studentData: function($stateParams, TeacherDataService, config) {
+                            return TeacherDataService.retrieveAnnotations();
+                        }
                     }
                 })
                 .state('root.nodeGrading', {

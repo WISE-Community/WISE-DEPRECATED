@@ -2,12 +2,21 @@
 
 class NodeProgressController {
 
-    constructor($scope, $state, ConfigService, ProjectService, TeacherDataService) {
+    constructor($scope,
+                $state,
+                ConfigService,
+                ProjectService,
+                StudentStatusService,
+                TeacherDataService,
+                TeacherWebSocketService) {
+
         this.$scope = $scope;
         this.$state = $state;
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
+        this.StudentStatusService = StudentStatusService;
         this.TeacherDataService = TeacherDataService;
+        this.TeacherWebSocketService = TeacherWebSocketService;
         this.currentGroup = null;
         this.items = null;
         this.periods = [];
@@ -115,8 +124,93 @@ class NodeProgressController {
     nodeClicked(nodeId) {
         this.$state.go('root.nodeGrading', {nodeId:nodeId});
     };
+
+    /**
+     * Get the number of students on the node
+     * @param nodeId the node id
+     * @returns the number of students that are on the node
+     */
+    getNumberOfStudentsOnNode(nodeId) {
+        // get the currently selected period
+        var currentPeriod = this.getCurrentPeriod();
+        var periodId = currentPeriod.periodId;
+
+        // get the number of students that are on the node in the period
+        var count = this.StudentStatusService.getNumberOfStudentsOnNode(nodeId, periodId);
+
+        return count;
+    }
+
+    /**
+     * Get the percentage of the class or period that has completed the node
+     * @param nodeId the node id
+     * @returns the percentage of the class or period that has completed the node
+     */
+    getNodeCompletion(nodeId) {
+        // get the currently selected period
+        var currentPeriod = this.getCurrentPeriod();
+        var periodId = currentPeriod.periodId;
+
+        // get the percentage of the class or period that has completed the node
+        var completionPercentage = this.StudentStatusService.getNodeCompletion(nodeId, periodId);
+
+        return completionPercentage;
+    }
+
+    /**
+     * Check if there are any online students on the node
+     * @param nodeId the node id
+     * @returns whether there are any online students on the node
+     */
+    isWorkgroupOnlineOnNode(nodeId) {
+        // get the currently selected period
+        var currentPeriod = this.getCurrentPeriod();
+        var periodId = currentPeriod.periodId;
+
+        // get the workgroup ids that are online
+        var studentsOnline = this.TeacherWebSocketService.getStudentsOnline();
+
+        // check if there are any online students on the node in the period
+        var isOnline = this.StudentStatusService.isWorkgroupOnlineOnNode(studentsOnline, nodeId, periodId);
+
+        return isOnline;
+    }
+
+    /**
+     * Get the average score for the node
+     * @param nodeId the node id
+     * @returns the average score for the node
+     */
+    getNodeAverageScore(nodeId) {
+        // get the currently selected period
+        var currentPeriod = this.getCurrentPeriod();
+        var periodId = currentPeriod.periodId;
+
+        // get the max score for the node
+        var nodeMaxScore = this.ProjectService.getMaxScoreForNode(nodeId);
+
+        // get the average score for the node
+        var averageScore = this.StudentStatusService.getNodeAverageScore(nodeId, periodId);
+
+        var averageScoreDisplay = null;
+
+        if (averageScore != null && nodeMaxScore != null) {
+            // create the average score display e.g. 8/10
+            averageScoreDisplay = averageScore + '/' + nodeMaxScore;
+        }
+
+        return averageScoreDisplay;
+    }
 }
 
-NodeProgressController.$inject = ['$scope', '$state', 'ConfigService', 'ProjectService', 'TeacherDataService'];
+NodeProgressController.$inject = [
+    '$scope',
+    '$state',
+    'ConfigService',
+    'ProjectService',
+    'StudentStatusService',
+    'TeacherDataService',
+    'TeacherWebSocketService'
+];
 
 export default NodeProgressController;

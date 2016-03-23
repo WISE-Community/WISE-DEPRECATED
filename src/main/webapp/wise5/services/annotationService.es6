@@ -284,6 +284,81 @@ class AnnotationService {
 
         return totalScore;
     }
+
+    /**
+     * Get the score for a workgroup for a node
+     * @param workgroupId the workgroup id
+     * @param nodeId the node id
+     * @returns the score for a workgroup for a node
+     */
+    getScore(workgroupId, nodeId) {
+
+        var score = null;
+
+        /*
+         * an array to keep track of the components that we have obtained a
+         * score for. we do not want to double count components if the student
+         * has received a score multiple times for a node from the teacher.
+         */
+        var scoresFound = [];
+
+        // get all the annotations
+        var annotations = this.annotations;
+
+        if (workgroupId != null && nodeId != null) {
+            // loop through all the annotations from newest to oldest
+            for (var a = annotations.length - 1; a >= 0; a--) {
+
+                // get an annotation
+                var annotation = annotations[a];
+
+                // check that the annotation is for the workgroup id we are looking for
+                if (annotation != null && annotation.toWorkgroupId == workgroupId) {
+
+                    // check that the annotation is a score annotation
+                    if (annotation.type === 'score') {
+
+                        var tempNodeId = annotation.nodeId;
+
+                        // check that the annotation is for the node we are looking for
+                        if (nodeId == tempNodeId) {
+                            var componentId = annotation.componentId;
+                            var data = annotation.data;
+
+                            var scoreFound = tempNodeId + '-' + componentId;
+
+                            // check if we have obtained a score from this component already
+                            if (scoresFound.indexOf(scoreFound) == -1) {
+                                // we have not obtained a score from this component yet
+
+                                if (data != null) {
+                                    var value = data.value;
+
+                                    if (!isNaN(value)) {
+
+                                        if (score == null) {
+                                            score = value;
+                                        } else {
+                                            score += value;
+                                        }
+
+                                        /*
+                                         * remember that we have found a score for this component
+                                         * so that we don't double count it if the teacher scored
+                                         * the component more than once
+                                         */
+                                        scoresFound.push(scoreFound);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return score;
+    }
 }
 
 AnnotationService.$inject = ['$http', '$rootScope', 'ConfigService', 'UtilService'];

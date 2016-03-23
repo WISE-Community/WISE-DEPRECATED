@@ -754,10 +754,17 @@ components.splice(c,1);break;}}}}}} /**
      * @returns the max score for the project or null if none of the components in the project
      * has max scores.
      */},{key:'getMaxScore',value:function getMaxScore(){var maxScore=null;var nodes=this.project.nodes;if(nodes!=null){ // loop through all the nodes
-for(var n=0;n<nodes.length;n++){var node=nodes[n];if(node!=null){var components=node.components;if(components!=null){ // loop through all the components
-for(var c=0;c<components.length;c++){var component=components[c];if(component!=null){var componentMaxScore=component.maxScore; // check if the component has a max score
+for(var n=0;n<nodes.length;n++){var node=nodes[n];if(node!=null){var nodeMaxScore=this.getMaxScoreForNode(node.id);if(nodeMaxScore!=null){if(maxScore==null){maxScore=nodeMaxScore;}else {maxScore+=nodeMaxScore;}}}}}return maxScore;} /**
+     * Get the max score for the node
+     * @param nodeId the node id
+     * @returns the max score for the node
+     */},{key:'getMaxScoreForNode',value:function getMaxScoreForNode(nodeId){var maxScore=null; // get the node
+var node=this.getNodeById(nodeId);if(node!=null){var components=node.components;if(components!=null){ // loop through all the components
+for(var c=0;c<components.length;c++){var component=components[c];if(component!=null){ // get the max score for the component
+var componentMaxScore=component.maxScore; // check if the component has a max score
 if(componentMaxScore!=null){ // make sure the max score is a valid number
-if(!isNaN(componentMaxScore)){if(maxScore==null){maxScore=componentMaxScore;}else {maxScore+=componentMaxScore;}}}}}}}}}return maxScore;} /**
+if(!isNaN(componentMaxScore)){if(maxScore==null){maxScore=componentMaxScore;}else { // accumulate the max score
+maxScore+=componentMaxScore;}}}}}}}return maxScore;} /**
      * Determine if a node id is a direct child of a group
      * @param nodeId the node id
      * @param groupId the group id
