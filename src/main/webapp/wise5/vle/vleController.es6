@@ -3,6 +3,7 @@
 class VLEController {
     constructor($scope,
                 $rootScope,
+                $mdDialog,
                 $state,
                 ConfigService,
                 NotebookService,
@@ -13,6 +14,7 @@ class VLEController {
 
         this.$scope = $scope;
         this.$rootScope = $rootScope;
+        this.$mdDialog = $mdDialog;
         this.$state = $state;
         this.ConfigService = ConfigService;
         this.NotebookService = NotebookService;
@@ -22,6 +24,7 @@ class VLEController {
         this.StudentWebSocketService = StudentWebSocketService;
 
         this.currentNode = null;
+        this.pauseDialog = null;
 
         this.navFilters = this.ProjectService.getFilters();
         this.navFilter = this.navFilters[0].name;
@@ -89,6 +92,16 @@ class VLEController {
             this.StudentDataService.updateNodeStatuses();
         }));
 
+        // listen for the pause screen event
+        this.$scope.$on('pauseScreen', (event, args) => {
+            this.pauseScreen();
+        });
+
+        // listen for the unpause screen event
+        this.$scope.$on('unPauseScreen', (event, args) => {
+            this.unPauseScreen();
+        });
+
         // Make sure if we drop something on the page we don't navigate away
         // https://developer.mozilla.org/En/DragDrop/Drag_Operations#drop
         $(document.body).on('dragover', function(e) {
@@ -131,6 +144,43 @@ class VLEController {
         }
 
         this.StudentDataService.setCurrentNodeByNodeId(nodeId);
+
+        // get the run status to see if the period is currently paused
+        var runStatus = this.StudentDataService.getRunStatus();
+
+        if (runStatus != null) {
+            var pause = false;
+            if (runStatus.allPeriodsPaused) {
+                pause = true;
+            } else {
+                // get the signed in user's period id
+                var periodId = this.ConfigService.getPeriodId();
+
+                if (periodId != null) {
+                    var periods = runStatus.periods;
+
+                    if (periods != null) {
+
+                        // loop through all the periods in the run status
+                        for (var p = 0; p < periods.length; p++) {
+                            var tempPeriod = periods[p];
+
+                            if (periodId === tempPeriod.periodId) {
+                                if (tempPeriod.paused) {
+                                    // our period is paused so we will pause the screen
+                                    pause = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (pause) {
+                this.pauseScreen();
+            }
+        }
     }
 
     setLayoutState() {
@@ -187,11 +237,30 @@ class VLEController {
         // so it can reset the session timeout timers
         this.SessionService.mouseEventOccurred();
     };
+
+    /**
+     * Pause the screen
+     */
+    pauseScreen() {
+        this.pauseDialog = this.$mdDialog.show({
+            template: '<md-dialog aria-label="Screen Paused"><md-toolbar><div class="md-toolbar-tools"><h2>Screen Paused</h2></div></md-toolbar><md-dialog-content><div class="md-dialog-content">Your teacher has paused all the screens in the class.</div></md-dialog-content></md-dialog>',
+            fullscreen: true,
+            escapeToClose: false
+        });
+    }
+
+    /**
+     * Unpause the screen
+     */
+    unPauseScreen() {
+        this.$mdDialog.hide();
+    }
 }
 
 VLEController.$inject = [
     '$scope',
     '$rootScope',
+    '$mdDialog',
     '$state',
     'ConfigService',
     'NotebookService',

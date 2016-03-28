@@ -225,6 +225,9 @@ var mainModule = _angular2.default.module('classroomMonitor', ['angularMoment', 
             project: function project(ProjectService, config) {
                 return ProjectService.retrieveProject();
             },
+            runStatus: function runStatus(TeacherDataService, config) {
+                return TeacherDataService.retrieveRunStatus();
+            },
             studentStatuses: function studentStatuses(StudentStatusService, config) {
                 return StudentStatusService.retrieveStudentStatuses();
             },

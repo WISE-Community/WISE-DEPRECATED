@@ -16,6 +16,7 @@ class StudentDataService {
         this.stackHistory = [];  // array of node id's
         this.visitedNodesHistory = [];
         this.nodeStatuses = {};
+        this.runStatus = null;
     }
 
     retrieveStudentData() {
@@ -99,6 +100,36 @@ class StudentDataService {
             });
         }
     };
+
+    /**
+     * Retrieve the run status
+     */
+    retrieveRunStatus() {
+        var runStatusURL = this.ConfigService.getConfigParam('runStatusURL');
+        var runId = this.ConfigService.getConfigParam('runId');
+
+        //create the params for the request
+        var params = {
+            runId:runId
+        }
+
+        var httpParams = {};
+        httpParams.method = 'GET';
+        httpParams.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
+        httpParams.url = runStatusURL;
+        httpParams.params = params;
+
+        // make the request for the run status
+        return this.$http(httpParams).then((result) => {
+            if (result != null) {
+                var data = result.data;
+                if (data != null) {
+                    // remember the run status
+                    this.runStatus = data;
+                }
+            }
+        });
+    }
 
     loadStudentNodes() {
         var nodes = this.ProjectService.applicationNodes;
@@ -1700,6 +1731,13 @@ class StudentDataService {
         var progress = this.getNodeProgressById(nodeId);
 
         return progress;
+    }
+
+    /**
+     * Get the run status
+     */
+    getRunStatus() {
+        return this.runStatus;
     }
 }
 

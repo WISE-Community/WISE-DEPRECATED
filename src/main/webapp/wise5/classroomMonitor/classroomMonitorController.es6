@@ -10,7 +10,8 @@ class ClassroomMonitorController {
                 ConfigService,
                 ProjectService,
                 SessionService,
-                TeacherDataService) {
+                TeacherDataService,
+                TeacherWebSocketService) {
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$state = $state;
@@ -19,6 +20,8 @@ class ClassroomMonitorController {
         this.ProjectService = ProjectService;
         this.SessionService = SessionService;
         this.TeacherDataService = TeacherDataService;
+        this.TeacherWebSocketService = TeacherWebSocketService;
+        this.pauseScreenButtonText = 'Pause Screen';
 
         $scope.$on('showSessionWarning', () => {
             // Appending dialog to document.body
@@ -36,6 +39,14 @@ class ClassroomMonitorController {
             });
         });
 
+        // listen for the periodChanged event
+        $scope.$on('periodChanged', (event, args) => {
+            // the period has changed so we will update the paused/unpaused button
+            this.updatePauseButton();
+        });
+
+        // update the text of the pause/unpause button
+        this.updatePauseButton();
     };
 
     hello() {
@@ -164,9 +175,92 @@ class ClassroomMonitorController {
             */
         });
     }
+
+    /**
+     * The pause screen button was clicked. This button is used to toggle
+     * pause screen on and off.
+     */
+    pauseScreenButtonClicked() {
+
+        // get the currently selected period
+        var currentPeriod = this.TeacherDataService.getCurrentPeriod();
+        var periodId = currentPeriod.periodId;
+
+        // get the previous value of whether the period was paused or unpaused
+        var isPaused = this.TeacherDataService.isPeriodPaused(periodId);
+
+        // toggle the value
+        var newIsPausedValue = !isPaused;
+
+        // update the run status
+        this.TeacherDataService.updatePausedRunStatusValue(periodId, newIsPausedValue);
+
+        // update the pause/unpause button text
+        this.updatePauseButton();
+
+        if (newIsPausedValue) {
+            // pause the student screens
+            this.TeacherWebSocketService.pauseScreens(periodId);
+        } else {
+            // unpause the student screens
+            this.TeacherWebSocketService.unPauseScreens(periodId);
+        }
+
+        // save the run status to the server
+        this.TeacherDataService.sendRunStatus();
+    }
+
+    /**
+     * Update the pause button to reflect the pause/unpaused state of the period
+     */
+    updatePauseButton() {
+        // get the currently selected period
+        var currentPeriod = this.TeacherDataService.getCurrentPeriod();
+
+        // default to all periods
+        var periodId = -1;
+
+        if (currentPeriod != null) {
+            periodId = currentPeriod.periodId;
+        }
+
+        // whether the period is paused or unpaused
+        var isPaused = this.TeacherDataService.isPeriodPaused(periodId);
+
+        // update the paused/unpaused button text
+        if (isPaused) {
+            this.displayUnPauseButton();
+        } else if (!isPaused) {
+            this.displayPauseButton();
+        }
+    }
+
+    /**
+     * Change the text of the button to display 'Pause Screens'
+     */
+    displayPauseButton() {
+        this.pauseScreenButtonText = 'Pause Screens';
+    }
+
+    /**
+     * Change the text of the button to display 'Unpause Screens'
+     */
+    displayUnPauseButton() {
+        this.pauseScreenButtonText = 'Unpause Screens';
+    }
 }
 
-ClassroomMonitorController.$inject = ['$mdDialog', '$rootScope', '$scope', '$state', '$stateParams',
-    'ConfigService','ProjectService', 'SessionService', 'TeacherDataService'];
+ClassroomMonitorController.$inject = [
+    '$mdDialog',
+    '$rootScope',
+    '$scope',
+    '$state',
+    '$stateParams',
+    'ConfigService',
+    'ProjectService',
+    'SessionService',
+    'TeacherDataService',
+    'TeacherWebSocketService'
+];
 
 export default ClassroomMonitorController;

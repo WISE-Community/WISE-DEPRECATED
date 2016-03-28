@@ -277,6 +277,9 @@ var mainModule = _angular2.default.module('vle', ['angularMoment', 'angular-toAr
             studentData: function studentData(StudentDataService, config, project) {
                 return StudentDataService.retrieveStudentData();
             },
+            runStatus: function runStatus(StudentDataService, config) {
+                return StudentDataService.retrieveRunStatus();
+            },
             sessionTimers: function sessionTimers(SessionService, config, project, studentData) {
                 return SessionService.initializeSession();
             },

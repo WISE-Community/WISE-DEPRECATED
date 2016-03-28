@@ -13,6 +13,7 @@ class TeacherDataService {
 
         this.studentData = {};
         this.currentPeriod = null;
+        this.runStatus == null;
     }
 
     /**
@@ -208,6 +209,36 @@ class TeacherDataService {
         });
     };
 
+    /**
+     * Retrieve the run status from the server
+     */
+    retrieveRunStatus() {
+        var runStatusURL = this.ConfigService.getConfigParam('runStatusURL');
+        var runId = this.ConfigService.getConfigParam('runId');
+
+        //create the params for the request
+        var params = {
+            runId:runId
+        }
+
+        var httpParams = {};
+        httpParams.method = 'GET';
+        httpParams.url = runStatusURL;
+        httpParams.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
+        httpParams.params = params;
+
+        // make the request
+        return this.$http(httpParams).then((result) => {
+            if (result != null) {
+                var data = result.data;
+                if (data != null) {
+                    // save the run status
+                    this.runStatus = data;
+                }
+            }
+        });
+    }
+
     getComponentStatesByWorkgroupId(workgroupId) {
         if (this.studentData.componentStatesByWorkgroupId == null) {
             debugger;
@@ -385,6 +416,167 @@ class TeacherDataService {
 
         return totalScore;
     }
+
+    /**
+     * Get the run status
+     * @returns the run status object
+     */
+    getRunStatus() {
+        return this.runStatus;
+    }
+
+    /**
+     * Check if a period is paused
+     * @returns whether the period is paused or not
+     */
+    isPeriodPaused(periodId) {
+
+        var isPaused = false;
+
+        // get the run status
+        var runStatus = this.runStatus;
+
+        if (runStatus != null) {
+            if (periodId == -1) {
+                // -1 represents all periods
+                isPaused = runStatus.allPeriodsPaused;
+            } else {
+                var periods = runStatus.periods;
+
+                // loop through all the periods
+                for (var p = 0; p < periods.length; p++) {
+                    var period = periods[p];
+
+                    if (period != null) {
+                        if (periodId == period.periodId) {
+                            // we have found the period we are looking for
+                            isPaused = period.paused;
+                        }
+                    }
+                }
+            }
+        }
+
+        return isPaused;
+    }
+
+    /**
+     * Create a local run status object to keep track of the run status
+     * @returns the run status object
+     */
+    createRunStatus() {
+        var runStatus = {};
+
+        //get the run id
+        runStatus.runId = this.ConfigService.getConfigParam('runId');
+
+        //set this to default to not paused
+        runStatus.allPeriodsPaused = false;
+
+        //get all the periods objects
+        var periods = this.ConfigService.getPeriods();
+
+        //loop through all the periods
+        for(var x = 0; x < periods.length; x++) {
+            //get a period
+            var period = periods[x];
+
+            //set this to default to not paused
+            period.paused = false;
+        }
+
+        //set the periods into the run status
+        runStatus.periods = periods;
+
+        //set the run status into the view so we can access it later
+        this.runStatus = runStatus;
+
+        return this.runStatus;
+    }
+
+    /**
+     * Update the paused value for a period in our run status
+     * @param periodId the period id
+     * @param value whether the period is paused or not
+     */
+    updatePausedRunStatusValue(periodId, value) {
+        //create the local run status object if necessary
+        if(this.runStatus == null) {
+            this.createRunStatus();
+        }
+
+        //get the local run status object
+        var runStatus = this.runStatus;
+
+        if(periodId == null || periodId == -1) {
+            //we are updating the all periods value
+            runStatus.allPeriodsPaused = value;
+
+            //set all the periods to the value as well
+            //this.setAllPeriodsPaused(value);
+        } else {
+            //we are updating a specific period
+
+            //get all the periods
+            var periods = runStatus.periods;
+
+            if(periods != null) {
+                //loop through all the periods
+                for(var x = 0; x < periods.length; x++) {
+                    //get a period
+                    var tempPeriod = periods[x];
+
+                    //get the period id
+                    var tempPeriodId = tempPeriod.periodId;
+
+                    //check if the period id matches the one we need to update
+                    if(periodId == tempPeriodId) {
+                        //we have found the period we want to update
+                        tempPeriod.paused = value;
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Send the run status back to the server to be saved in the db
+     * @param customPauseMessage the custom pause message text to send to the students
+     */
+    sendRunStatus(customPauseMessage) {
+        //get the run status url we will use to make the request
+        var runStatusURL = this.ConfigService.getConfigParam('runStatusURL');
+
+        if(runStatusURL != null) {
+            //make the request to the server for the student statuses
+
+            //get the run id
+            var runId = this.ConfigService.getConfigParam('runId');
+
+            if(customPauseMessage != null) {
+                //set the pause message if one was provided
+                this.runStatus.pauseMessage = customPauseMessage;
+            }
+
+            //get the run status as a string
+            var runStatus = angular.toJson(this.runStatus);
+
+            //create the params for the request
+            var runStatusParams = {
+                runId:runId,
+                status:runStatus
+            }
+
+            var httpParams = {};
+            httpParams.method = 'POST';
+            httpParams.url = runStatusURL;
+            httpParams.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
+            httpParams.data = $.param(runStatusParams);
+
+            // make the request
+            this.$http(httpParams);
+        }
+    };
 }
 
 TeacherDataService.$inject = ['$http',

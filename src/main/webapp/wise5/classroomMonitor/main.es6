@@ -130,6 +130,9 @@ let mainModule = angular.module('classroomMonitor', [
                         project: function(ProjectService, config) {
                             return ProjectService.retrieveProject();
                         },
+                        runStatus: function(TeacherDataService, config) {
+                            return TeacherDataService.retrieveRunStatus();
+                        },
                         studentStatuses: function(StudentStatusService, config) {
                             return StudentStatusService.retrieveStudentStatuses();
                         },

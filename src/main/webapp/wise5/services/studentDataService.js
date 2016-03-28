@@ -27,6 +27,7 @@ var StudentDataService = function () {
         this.stackHistory = []; // array of node id's
         this.visitedNodesHistory = [];
         this.nodeStatuses = {};
+        this.runStatus = null;
     }
 
     _createClass(StudentDataService, [{
@@ -112,6 +113,41 @@ var StudentDataService = function () {
                     return _this.studentData;
                 });
             }
+        }
+    }, {
+        key: 'retrieveRunStatus',
+
+
+        /**
+         * Retrieve the run status
+         */
+        value: function retrieveRunStatus() {
+            var _this2 = this;
+
+            var runStatusURL = this.ConfigService.getConfigParam('runStatusURL');
+            var runId = this.ConfigService.getConfigParam('runId');
+
+            //create the params for the request
+            var params = {
+                runId: runId
+            };
+
+            var httpParams = {};
+            httpParams.method = 'GET';
+            httpParams.headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
+            httpParams.url = runStatusURL;
+            httpParams.params = params;
+
+            // make the request for the run status
+            return this.$http(httpParams).then(function (result) {
+                if (result != null) {
+                    var data = result.data;
+                    if (data != null) {
+                        // remember the run status
+                        _this2.runStatus = data;
+                    }
+                }
+            });
         }
     }, {
         key: 'loadStudentNodes',
@@ -833,7 +869,7 @@ var StudentDataService = function () {
     }, {
         key: 'saveToServer',
         value: function saveToServer(componentStates, nodeStates, events, annotations) {
-            var _this2 = this;
+            var _this3 = this;
 
             // merge componentStates and nodeStates into StudentWork before posting
             var studentWorkList = [];
@@ -921,7 +957,7 @@ var StudentDataService = function () {
                     if (result != null && result.data != null) {
                         var savedStudentDataResponse = result.data;
 
-                        _this2.saveToServerSuccess(savedStudentDataResponse);
+                        _this3.saveToServerSuccess(savedStudentDataResponse);
 
                         return savedStudentDataResponse;
                     }
@@ -1786,6 +1822,16 @@ var StudentDataService = function () {
             var progress = this.getNodeProgressById(nodeId);
 
             return progress;
+        }
+
+        /**
+         * Get the run status
+         */
+
+    }, {
+        key: 'getRunStatus',
+        value: function getRunStatus() {
+            return this.runStatus;
         }
     }]);
 

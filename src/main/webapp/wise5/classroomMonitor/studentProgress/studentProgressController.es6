@@ -139,6 +139,7 @@ class StudentProgressController {
      */
     setCurrentPeriod(period) {
         this.TeacherDataService.setCurrentPeriod(period);
+        this.$rootScope.$broadcast('periodChanged', {period: period});
     };
 
     /**

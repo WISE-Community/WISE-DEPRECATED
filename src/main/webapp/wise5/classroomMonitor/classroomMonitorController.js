@@ -11,7 +11,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var ClassroomMonitorController = function () {
-    function ClassroomMonitorController($mdDialog, $rootScope, $scope, $state, $stateParams, ConfigService, ProjectService, SessionService, TeacherDataService) {
+    function ClassroomMonitorController($mdDialog, $rootScope, $scope, $state, $stateParams, ConfigService, ProjectService, SessionService, TeacherDataService, TeacherWebSocketService) {
         var _this = this;
 
         _classCallCheck(this, ClassroomMonitorController);
@@ -24,6 +24,8 @@ var ClassroomMonitorController = function () {
         this.ProjectService = ProjectService;
         this.SessionService = SessionService;
         this.TeacherDataService = TeacherDataService;
+        this.TeacherWebSocketService = TeacherWebSocketService;
+        this.pauseScreenButtonText = 'Pause Screen';
 
         $scope.$on('showSessionWarning', function () {
             // Appending dialog to document.body
@@ -34,6 +36,15 @@ var ClassroomMonitorController = function () {
                 _this.SessionService.forceLogOut();
             });
         });
+
+        // listen for the periodChanged event
+        $scope.$on('periodChanged', function (event, args) {
+            // the period has changed so we will update the paused/unpaused button
+            _this.updatePauseButton();
+        });
+
+        // update the text of the pause/unpause button
+        this.updatePauseButton();
     }
 
     _createClass(ClassroomMonitorController, [{
@@ -164,12 +175,97 @@ var ClassroomMonitorController = function () {
                 */
             });
         }
+
+        /**
+         * The pause screen button was clicked. This button is used to toggle
+         * pause screen on and off.
+         */
+
+    }, {
+        key: 'pauseScreenButtonClicked',
+        value: function pauseScreenButtonClicked() {
+
+            // get the currently selected period
+            var currentPeriod = this.TeacherDataService.getCurrentPeriod();
+            var periodId = currentPeriod.periodId;
+
+            // get the previous value of whether the period was paused or unpaused
+            var isPaused = this.TeacherDataService.isPeriodPaused(periodId);
+
+            // toggle the value
+            var newIsPausedValue = !isPaused;
+
+            // update the run status
+            this.TeacherDataService.updatePausedRunStatusValue(periodId, newIsPausedValue);
+
+            // update the pause/unpause button text
+            this.updatePauseButton();
+
+            if (newIsPausedValue) {
+                // pause the student screens
+                this.TeacherWebSocketService.pauseScreens(periodId);
+            } else {
+                // unpause the student screens
+                this.TeacherWebSocketService.unPauseScreens(periodId);
+            }
+
+            // save the run status to the server
+            this.TeacherDataService.sendRunStatus();
+        }
+
+        /**
+         * Update the pause button to reflect the pause/unpaused state of the period
+         */
+
+    }, {
+        key: 'updatePauseButton',
+        value: function updatePauseButton() {
+            // get the currently selected period
+            var currentPeriod = this.TeacherDataService.getCurrentPeriod();
+
+            // default to all periods
+            var periodId = -1;
+
+            if (currentPeriod != null) {
+                periodId = currentPeriod.periodId;
+            }
+
+            // whether the period is paused or unpaused
+            var isPaused = this.TeacherDataService.isPeriodPaused(periodId);
+
+            // update the paused/unpaused button text
+            if (isPaused) {
+                this.displayUnPauseButton();
+            } else if (!isPaused) {
+                this.displayPauseButton();
+            }
+        }
+
+        /**
+         * Change the text of the button to display 'Pause Screens'
+         */
+
+    }, {
+        key: 'displayPauseButton',
+        value: function displayPauseButton() {
+            this.pauseScreenButtonText = 'Pause Screens';
+        }
+
+        /**
+         * Change the text of the button to display 'Unpause Screens'
+         */
+
+    }, {
+        key: 'displayUnPauseButton',
+        value: function displayUnPauseButton() {
+            this.pauseScreenButtonText = 'Unpause Screens';
+        }
     }]);
 
     return ClassroomMonitorController;
 }();
 
-ClassroomMonitorController.$inject = ['$mdDialog', '$rootScope', '$scope', '$state', '$stateParams', 'ConfigService', 'ProjectService', 'SessionService', 'TeacherDataService'];
+ClassroomMonitorController.$inject = ['$mdDialog', '$rootScope', '$scope', '$state', '$stateParams', 'ConfigService', 'ProjectService', 'SessionService', 'TeacherDataService', 'TeacherWebSocketService'];
 
 exports.default = ClassroomMonitorController;
 //# sourceMappingURL=classroomMonitorController.js.map

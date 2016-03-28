@@ -152,6 +152,7 @@ var StudentProgressController = function () {
          */
         value: function setCurrentPeriod(period) {
             this.TeacherDataService.setCurrentPeriod(period);
+            this.$rootScope.$broadcast('periodChanged', { period: period });
         }
     }, {
         key: 'getCurrentPeriod',

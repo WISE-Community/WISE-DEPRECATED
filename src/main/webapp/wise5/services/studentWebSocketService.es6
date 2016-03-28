@@ -35,19 +35,7 @@ class StudentWebSocketService {
 
             // this is the function that handles messages we receive from web sockets
             this.dataStream.onMessage(angular.bind(this, function(message) {
-
-                if (message != null && message.data != null) {
-
-                    var data = message.data;
-
-                    try {
-                        data = angular.fromJson(data);
-
-                        this.handleWebSocketMessageReceived(data);
-                    } catch(e) {
-
-                    }
-                }
+                this.handleMessage(message);
             }));
         }
     };
@@ -61,6 +49,23 @@ class StudentWebSocketService {
         // broadcast the data to all listeners
         this.$rootScope.$broadcast('webSocketMessageRecieved', {data: data});
     };
+
+    /**
+     * Handle receiving a websocket message
+     * @param message the websocket message
+     */
+    handleMessage(message) {
+        var data = JSON.parse(message.data);
+        var messageType = data.messageType;
+
+        if (messageType === 'pauseScreen') {
+            this.$rootScope.$broadcast('pauseScreen', {data: data});
+        } else if (messageType === 'unPauseScreen') {
+            this.$rootScope.$broadcast('unPauseScreen', {data: data});
+        }
+
+        this.handleWebSocketMessageReceived(data);
+    }
 
     /**
      * Send the student status to the server through websockets
