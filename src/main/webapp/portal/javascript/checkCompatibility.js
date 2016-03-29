@@ -3,7 +3,6 @@
  * the necessary resource requirements to run wise4 projects.
  */
 
-
 //the default requirements
 var defaultRequirements = {
 	requiredFirefoxVersion:'6.0',
@@ -17,24 +16,24 @@ var defaultRequirements = {
 /**
  * Combines the specific requirements with the default requirements
  * and then checks each of the requirements.
- * 
+ *
  * Note: if javascript is disabled, all the checks will not be run and
  * the contents in the <noscript> tag in the check.jsp will be the only
  * row displayed in the compatibility check table. The row in the
  * <noscript> tag will show the user that javascript is disabled and
  * that they will need to enable it.
- * 
+ *
  * @param requirements a JSON object that is used to override any
  * or all of the default requirements
- * 
+ *
  * if a specific project has its own specific requirements it can just specify
  * the requirement for the resource that has a different requirement than
  * the default and for all other resources it will fallback to the default.
- * 
+ *
  * e.g. this specificRequirements will override the required versions of flash and java
- * 
+ *
  * specificRequirements = {requiredFlashVersion:6.0,requiredJavaVersion:1.5}
- * 
+ *
  * the compatibility check will look for a flash version 6.0 or greater
  * and a Java version 1.5 or greater and for all other resources it
  * will just use the default from defaultRequirements
@@ -42,78 +41,78 @@ var defaultRequirements = {
 function checkCompatibility(specificRequirements) {
 	//get the default requirements
 	var combinedRequirements = defaultRequirements;
-	
+
 	//if there are any specific requirements we will obtain them
 	if(specificRequirements != null) {
 		if(specificRequirements.requiredFirefoxVersion != null) {
 			//override the firefox version requirement
 			combinedRequirements.requiredFirefoxVersion = specificRequirements.requiredFirefoxVersion;
 		}
-		
+
 		if(specificRequirements.requiredInternetExplorerVersion != null) {
 			//override the ie version requirement
 			combinedRequirements.requiredInternetExplorerVersion = specificRequirements.requiredInternetExplorerVersion;
 		}
-		
+
 		if(specificRequirements.requiredChromeVersion != null) {
 			//override the chrome version requirement
 			combinedRequirements.requiredChromeVersion = specificRequirements.requiredChromeVersion;
 		}
-		
+
 		if(specificRequirements.requiredSafariVersion != null) {
 			//override the safari version requirement
 			combinedRequirements.requiredSafariVersion = specificRequirements.requiredSafariVersion;
 		}
-		
+
 		if(specificRequirements.requiredFlashVersion != null) {
 			//override the flash version requirement
 			combinedRequirements.requiredFlashVersion = specificRequirements.requiredFlashVersion;
 		}
-		
+
 		if(specificRequirements.requiredJavaVersion != null) {
 			//override the java version requirement
 			combinedRequirements.requiredJavaVersion = specificRequirements.requiredJavaVersion;
 		}
 	}
-	
+
 	var requiredResources = true;
 	var recommendedResources = true;
-	
+
 	// get the project id if it was provided as a GET parameter
 	var projectId = getProjectId();
-	
+
 	if (projectId != null) {
 	    // show the project specific requirements div
 	    $('#projectSpecificRequirementsDiv').show();
-	    
+
 	    // set the project id
 	    $('#projectId').html(projectId);
-	    
+
 	    // set the preview project link
 	    populatePreviewProjectLink(projectId);
 	}
-	
+
 	// get the config to obtain the project to obtain the project name
 	getConfig(projectId);
-	
+
 	// get the metadata to obtain the specific requirements
 	getProjectMetaData(projectId);
-	
+
 	requiredResources = checkBrowser(combinedRequirements) && requiredResources;
-	
+
 	if(requiredResources) {
 		$('#browserPass').show();
 	} else {
 		$('#browserFail').show();
 	}
-	
+
 	checkContentFiltering();
 }
 
 /**
  * Checks whether the client version satisfies the required version.
- * This function is a generic function that all the checks will use. 
- * 
+ * This function is a generic function that all the checks will use.
+ *
  * @param yourVersion the client version (can be string, int, or float)
  * @param requiredVersion the required version (can be string, int, or float)
  * @return whether the client has the necessary version
@@ -121,10 +120,10 @@ function checkCompatibility(specificRequirements) {
 function requiredVersionSatisfied(yourVersion, requiredVersion) {
 	//get the client version
 	yourVersion = parseFloat(yourVersion);
-	
+
 	//get the required version
 	requiredVersion = parseFloat(requiredVersion);
-	
+
 	//check that the client version is greater or equal to the required version
 	if(yourVersion >= requiredVersion) {
 		return true;
@@ -136,15 +135,15 @@ function requiredVersionSatisfied(yourVersion, requiredVersion) {
 /**
  * Obtains the img html that will notify the user whether their client
  * satisfies the required version for a resource.
- * This function is a generic function that all the checks will use. 
- * 
+ * This function is a generic function that all the checks will use.
+ *
  * @param satisfied boolean true or false
  * @return a string containing the img html that will display a
  * green check (for pass) or a red x (for fail)
  */
 function getRequirementSatisfiedIcon(satisfied) {
 	var iconImg = "";
-	
+
 	if(satisfied) {
 		//the client satisfies the requirement
 		iconImg = "<img alt='check' src='../portal/themes/default/images/check_16.gif' />";
@@ -152,7 +151,7 @@ function getRequirementSatisfiedIcon(satisfied) {
 		//the client does not satisfy the requirement
 		iconImg = "<img alt='error' src='../portal/themes/default/images/error_16.gif' />";
 	}
-	
+
 	return iconImg;
 }
 
@@ -165,7 +164,7 @@ function getOS() {
 }
 
 /**
- * Check that javascript is enabled and fill in the values in the 
+ * Check that javascript is enabled and fill in the values in the
  * compatibility check table. We do not have to actually check
  * if javascript is enabled. If it is enabled these values will
  * be filled into the table. If it is not, the <noscript> tag
@@ -183,7 +182,7 @@ function checkJavascript() {
  * or surpasses the required version of that browser. It will
  * fill in the values in the compatibility check table for
  * the browser row.
- * 
+ *
  * @param requirements a JSON object containing the fields below
  * requiredFirefoxVersion
  * requiredInternetExplorerVersion
@@ -195,23 +194,23 @@ function checkBrowser(requirements) {
 	document.getElementById('browserResource').innerHTML = getBrowserName();
 	document.getElementById('browserRequiredVersion').innerHTML = getBrowserRequiredVersion(requirements);
 	document.getElementById('browserYourVersion').innerHTML = getBrowserVersion();
-	
+
 	//get whether the browser meets the requirement
 	var browserPassed = checkBrowserVersion(requirements);
-	
+
 	//check if the browser version is satisfied and then get the icon to be displayed (pass or fail)
 	var requirementSatisfiedIcon = getRequirementSatisfiedIcon(browserPassed);
-	
+
 	document.getElementById('browserRequirementSatisfied').innerHTML = requirementSatisfiedIcon;
 	showBrowserAdditionalInfo();
 	//document.getElementById('browserAdditionalInfo').innerHTML = getBrowserAdditionalInfo();
-	
+
 	if(browserPassed) {
 		// the browser meets the requirements
 		return true;
 	} else {
 		// the browser does not meet the requirements
-		
+
 		return false;
 	}
 }
@@ -224,7 +223,7 @@ function checkBrowser(requirements) {
  * requiredChromeVersion
  * requiredSafariVersion
  * the value of each field can be a string, int or float
- * 
+ *
  * @return whether the version of the browser they are currently using
  * meets or surpasses the required version for that browser
  */
@@ -235,7 +234,7 @@ function checkBrowserVersion(requirements) {
 	 * and return the required version for that specific browser
 	 */
 	var requiredVersion = getBrowserRequiredVersion(requirements);
-	
+
 	//get the version of the browser the user is currently using
 	var yourVersion = getBrowserVersion();
 	//yourVersion = 1;
@@ -267,23 +266,23 @@ function getBrowserLanguage() {
 /**
  * Get the required version for the browser the client is
  * currently using
- * 
+ *
  * @param requirements a JSON object containing the fields below
  * requiredFirefoxVersion
  * requiredInternetExplorerVersion
  * requiredChromeVersion
  * requiredSafariVersion
  * the value of each field can be a string, int or float
- * 
+ *
  * @return the required version of the browser the client
  * is currently using
  */
 function getBrowserRequiredVersion(requirements) {
 	//get the name of the browser the client is currently using
 	var browserName = getBrowserName();
-	
+
 	var requiredVersion = '';
-	
+
 	//get the required version for the browser the client is using
 	if(browserName == 'Firefox') {
 		requiredVersion = requirements.requiredFirefoxVersion;
@@ -294,7 +293,7 @@ function getBrowserRequiredVersion(requirements) {
 	} else if(browserName == 'Safari') {
 		requiredVersion = requirements.requiredSafariVersion;
 	}
-	
+
 	return requiredVersion;
 }
 
@@ -312,7 +311,7 @@ function getBrowserVersion() {
  */
 function showBrowserAdditionalInfo() {
 	var browserName = getBrowserName();
-	
+
 	//show the correct link for the browser user is running (show Firefox link by default)
 	if(browserName == 'Internet Explorer') {
 		$('#upgradeIE').show();
@@ -330,27 +329,27 @@ function showBrowserAdditionalInfo() {
  * or surpasses the required version of quicktime. It will
  * fill in the values in the compatibility check table for
  * the quicktime row.
- * 
+ *
  * @param requiredQuickTimeVersion the required version of quicktime
  */
 function checkQuickTime(requiredQuickTimeVersion) {
 	document.getElementById('quickTimeRequiredVersion').innerHTML = requiredQuickTimeVersion;
 	document.getElementById('quickTimeYourVersion').innerHTML = getQuickTimeVersion();
-	
+
 	//get whether quicktime meets the requirement
 	var quickTimePassed = checkQuickTimeVersion(requiredQuickTimeVersion);
-	
+
 	//check if the quicktime version is satisfied and then get the icon to be displayed (pass or fail)
 	var requirementSatisfiedIcon = getRequirementSatisfiedIcon(quickTimePassed);
-	
+
 	document.getElementById('quickTimeRequirementSatisfied').innerHTML = requirementSatisfiedIcon;
-	
+
 	if(quickTimePassed) {
 		return true;
 	} else {
 		//quicktime version is too old so we will display a warning message about quicktime
 		$('#qtMsg').show();
-		
+
 		return false;
 	}
 }
@@ -364,7 +363,7 @@ function checkQuickTime(requiredQuickTimeVersion) {
 function checkQuickTimeVersion(requiredQuickTimeVersion) {
 	//get the required version of quicktime
 	var requiredVersion = requiredQuickTimeVersion;
-	
+
 	//get the version of quicktime the user is currently using
 	var yourVersion = getQuickTimeVersion();
 
@@ -377,7 +376,7 @@ function checkQuickTimeVersion(requiredQuickTimeVersion) {
  */
 function getQuickTimeVersion() {
 	var qtVersion = '-';
-	
+
 	if (navigator.plugins) {
 		//loop through all the browser plugins
 		for (i=0; i < navigator.plugins.length; i++ ) {
@@ -409,15 +408,15 @@ function getQuickTimeVersion() {
 function checkJava(requiredJavaVersion) {
 	document.getElementById('javaRequiredVersion').innerHTML = requiredJavaVersion;
 	document.getElementById('javaYourVersion').innerHTML = getJavaVersion();
-	
+
 	//get whether java meets the requirement
 	var javaPassed = checkJavaVersion(requiredJavaVersion);
-	
+
 	//check if the java version is satisfied and then get the icon to be displayed (pass or fail)
 	var requirementSatisfiedIcon = getRequirementSatisfiedIcon(javaPassed);
-	
+
 	document.getElementById('javaRequirementSatisfied').innerHTML = requirementSatisfiedIcon;
-	
+
 	if(javaPassed) {
 		return true;
 	} else {
@@ -432,10 +431,10 @@ function checkJava(requiredJavaVersion) {
  */
 function getJavaVersion() {
 	var javaVersion = '';
-	
+
 	//obtain an array of the JREs that are installed on the client
 	var jres = deployJava.getJREs();
-	
+
 	//loop through all the jre versions
 	for(var x=0; x<jres.length; x++) {
 		//get a jre version
@@ -443,19 +442,19 @@ function getJavaVersion() {
 
 		/*
 		 * set the java version to the current jre if this is the
-		 * first jre or if the jre version is greater than the 
+		 * first jre or if the jre version is greater than the
 		 * java version we currently have stored
 		 */
 		if(javaVersion == '' || parseFloat(jre) >= parseFloat(javaVersion)) {
 			javaVersion = jre;
 		}
 	}
-	
+
 	if(javaVersion == '') {
 		//set the java version to 'Not Installed' if we did not find any jres
 		javaVersion = '-';
 	}
-	
+
 	return javaVersion;
 }
 
@@ -468,10 +467,10 @@ function getJavaVersion() {
 function checkJavaVersion(requiredJavaVersion) {
 	//get the required version of java
 	var requiredVersion = requiredJavaVersion;
-	
+
 	//get the version of java the user is currently using
 	var yourVersion = getJavaVersion();
-	
+
 	return requiredVersionSatisfied(yourVersion, requiredVersion);
 }
 
@@ -484,15 +483,15 @@ function checkJavaVersion(requiredJavaVersion) {
 function checkFlash(requiredFlashVersion) {
 	document.getElementById('flashRequiredVersion').innerHTML = requiredFlashVersion;
 	document.getElementById('flashYourVersion').innerHTML = getFlashVersion();
-	
+
 	//get whether flash meets the requirement
 	var flashPassed = checkFlashVersion(requiredFlashVersion);
-	
+
 	//check if the flash version is satisfied and then get the icon to be displayed (pass or fail)
 	var requirementSatisfiedIcon = getRequirementSatisfiedIcon(flashPassed);
-	
+
 	document.getElementById('flashRequirementSatisfied').innerHTML = requirementSatisfiedIcon;
-	
+
 	if(flashPassed) {
 		return true;
 	} else {
@@ -506,13 +505,13 @@ function checkFlash(requiredFlashVersion) {
  */
 function getFlashVersion() {
 	var flashVersion = '-';
-	
+
 	var getFlashVersion = JSGetSwfVer();
-	
+
 	if(getFlashVersion != -1) {
 		flashVersion = getFlashVersion;
 	}
-	
+
 	return flashVersion;
 }
 
@@ -525,10 +524,10 @@ function getFlashVersion() {
 function checkFlashVersion(requiredFlashVersion) {
 	//get the required version of flash
 	var requiredVersion = requiredFlashVersion;
-	
+
 	//get the version of flash the user is currently using
 	var yourVersion = getFlashVersion();
-	
+
 	return requiredVersionSatisfied(yourVersion, requiredVersion);
 }
 
@@ -569,96 +568,96 @@ function JSGetSwfVer(i){
 	else if (navigator.userAgent.toLowerCase().indexOf("webtv") != -1) flashVer = 2;
 	// Can't detect in all other cases
 	else {
-		
+
 		flashVer = -1;
 	}
 	return flashVer;
-} 
+}
 
 
 //When called with reqMajorVer, reqMinorVer, reqRevision returns true if that version or greater is available
-function DetectFlashVer(reqMajorVer, reqMinorVer, reqRevision) 
+function DetectFlashVer(reqMajorVer, reqMinorVer, reqRevision)
 {
 	reqVer = parseFloat(reqMajorVer + "." + reqRevision);
-	// loop backwards through the versions until we find the newest version	
-	for (i=25;i>0;i--) {	
+	// loop backwards through the versions until we find the newest version
+	for (i=25;i>0;i--) {
 		if (isIE && isWin && !isOpera) {
 			versionStr = VBGetSwfVer(i);
 		} else {
-			versionStr = JSGetSwfVer(i);		
+			versionStr = JSGetSwfVer(i);
 		}
-		if (versionStr == -1 ) { 
+		if (versionStr == -1 ) {
 			return false;
 		} else if (versionStr != 0) {
 			if(isIE && isWin && !isOpera) {
 				tempArray         = versionStr.split(" ");
 				tempString        = tempArray[1];
-				versionArray      = tempString .split(",");				
+				versionArray      = tempString .split(",");
 			} else {
 				versionArray      = versionStr.split(".");
 			}
 			versionMajor      = versionArray[0];
 			versionMinor      = versionArray[1];
 			versionRevision   = versionArray[2];
-			
+
 			versionString     = versionMajor + "." + versionRevision;   // 7.0r24 == 7.24
 			versionNum        = parseFloat(versionString);
      	// is the major.revision >= requested major.revision AND the minor version >= requested minor
 			if ( (versionMajor > reqMajorVer) && (versionNum >= reqVer) ) {
 				return true;
 			} else {
-				return ((versionNum >= reqVer && versionMinor >= reqMinorVer) ? true : false );	
+				return ((versionNum >= reqVer && versionMinor >= reqMinorVer) ? true : false );
 			}
 		}
-	}	
+	}
 };
 
 /**
  * Check if user is behind a firewall that prevents them from viewing certain resources
- * like .swf, .jar, etc. 
- * Note: Chrome and Safari seems to add extra to the response length so we need to 
+ * like .swf, .jar, etc.
+ * Note: Chrome and Safari seems to add extra to the response length so we need to
  * check for >=.
  */
 function checkContentFiltering() {
 	// test loading of swf file
-	$.ajax({ 
+	$.ajax({
 		url: "../pages/resources/convection-intro.swf",
 		context: document.body})
 		.success(function(data, textStatus, jqXHR) {
 			var contentFilterSwfRequirementSatisfied=false;
-			if (jqXHR.status == '200' 
+			if (jqXHR.status == '200'
 					&& jqXHR.responseText != ''
 					&& jqXHR.responseText.length > 0) {
 				contentFilterSwfRequirementSatisfied = true;
 			} else {
 				contentFilterSwfRequirementSatisfied = false;
 			}
-			var requirementSatisfiedIcon = getRequirementSatisfiedIcon(contentFilterSwfRequirementSatisfied);				
-			document.getElementById('contentFilterSwfRequirementSatisfied').innerHTML = requirementSatisfiedIcon;		
+			var requirementSatisfiedIcon = getRequirementSatisfiedIcon(contentFilterSwfRequirementSatisfied);
+			document.getElementById('contentFilterSwfRequirementSatisfied').innerHTML = requirementSatisfiedIcon;
 		})
 		.error(function(jqXHR,textStatus,exception) {
-			var requirementSatisfiedIcon = getRequirementSatisfiedIcon(false);				
+			var requirementSatisfiedIcon = getRequirementSatisfiedIcon(false);
 			document.getElementById('contentFilterSwfRequirementSatisfied').innerHTML = requirementSatisfiedIcon;
-		});	
+		});
 
 	// test loading of jar file
-	var jqxhr = $.ajax({ 
+	var jqxhr = $.ajax({
 		url: "../pages/resources/commons-logging-1.1.jar",
 		context: document.body})
-		.success(function(data, textStatus, jqXHR) {			
+		.success(function(data, textStatus, jqXHR) {
 			var contentFilterRequirementSatisfied=false;
-			if (jqXHR.status == '200' 
+			if (jqXHR.status == '200'
 					&& jqXHR.responseText != ''
 					&& jqXHR.responseText.length >= 49828) {
 				contentFilterRequirementSatisfied = true;
 			} else {
 				contentFilterRequirementSatisfied = false;
 			}
-			var requirementSatisfiedIcon = getRequirementSatisfiedIcon(contentFilterRequirementSatisfied);				
-			document.getElementById('contentFilterJarRequirementSatisfied').innerHTML = requirementSatisfiedIcon;		
+			var requirementSatisfiedIcon = getRequirementSatisfiedIcon(contentFilterRequirementSatisfied);
+			document.getElementById('contentFilterJarRequirementSatisfied').innerHTML = requirementSatisfiedIcon;
 		})
 		.error(function(jqXHR,textStatus,exception) {
-			var requirementSatisfiedIcon = getRequirementSatisfiedIcon(false);				
+			var requirementSatisfiedIcon = getRequirementSatisfiedIcon(false);
 			document.getElementById('contentFilterJarRequirementSatisfied').innerHTML = requirementSatisfiedIcon;
 		});
 
@@ -685,30 +684,30 @@ function alertBrowserCompatibility() {
  */
 function getProjectId() {
     var projectId = null;
-    
+
     // get the url of the page
     var locationSearch = location.search;
-    
+
     // remove the ?
     locationSearch = locationSearch.replace('?', '');
-    
+
     // use the & as the delimiter to split the params
     var params = locationSearch.split('&');
-    
+
     if (params != null) {
-        
+
         // loop through all the params
         for (var p = 0; p < params.length; p++) {
             var param = params[p];
-            
+
             // split the param name and param value with the = delimiter
             var paramNameAndValue = param.split('=');
-            
+
             if (paramNameAndValue != null) {
                 // get the param name and value
                 var paramName = paramNameAndValue[0];
                 var paramValue = paramNameAndValue[1];
-                
+
                 if (paramName == 'projectId' || paramName == 'projectid') {
                     // we have found the project id param
                     projectId = parseInt(paramValue);
@@ -716,7 +715,7 @@ function getProjectId() {
             }
         }
     }
-    
+
     return projectId;
 }
 
@@ -724,27 +723,27 @@ function getProjectId() {
  * Get the project metadata to obtain the tech requirements
  */
 function getProjectMetaData(projectId) {
-    
+
     // get the meta data url
-    var metaDataURL = location.origin + '/wise/metadata.html?command=getProjectMetaData&projectId=' + projectId;
-    
+    var metaDataURL = '/wise/metadata.html?command=getProjectMetaData&projectId=' + projectId;
+
     $.ajax({
         url: metaDataURL,
         dataType: 'json'
     }).done(function(data, textStatus, xml) {
         if (data != null) {
-            
+
             /*
-             * set the project name. the project name may be overridden later when 
+             * set the project name. the project name may be overridden later when
              * we obtain the project title from the project file.
              */
             if ($('#projectName').html() == '' && data.title != null && data.title != '') {
                 var title = data.title;
                 $('#projectName').html(title)
             }
-            
+
             var techReqs = data.techReqs;
-            
+
             checkProjectSpecificRequirements(techReqs);
         }
     });
@@ -754,48 +753,48 @@ function getProjectMetaData(projectId) {
  * Get the config to obtain the project title
  */
 function getConfig(projectId) {
-    
+
     // get the config URL
-    var configURL = location.origin + '/wise/vleconfig?projectId=' + projectId;
-    
+    var configURL = '/wise/vleconfig?projectId=' + projectId;
+
     // get the project config
     $.ajax({
         url: configURL,
         dataType: 'json'
     }).done(function(data, textStatus, xml) {
-        
+
         if (data != null) {
-            
+
             // get the project URL
             var projectURL = data.projectURL;
-            
+
             // get the project file
             $.ajax({
                 url: projectURL
             }).done(function(project, textStatus, xml) {
-                
+
                 if (project != null) {
-                    
+
                     // get the project name
                     var title = project.title;
-                    
+
                     if (title != null) {
                         $('#projectName').html(title);
                     }
-                    
+
                     // in WISE5 the project metadata is in the project file
                     var metadata = project.metadata;
-                    
+
                     if (metadata != null) {
                         title = metadata.title;
-                        
+
                         if (title != null) {
                             // set the project name
                             $('#projectName').html(title);
                         }
-                        
+
                         var techReqs = metadata.techReqs;
-                        
+
                         if (techReqs != null) {
                             // check if the project specific requirements are satisfied
                             checkProjectSpecificRequirements(techReqs);
@@ -812,10 +811,10 @@ function getConfig(projectId) {
  * @param techReqs the project specific requirements objet
  */
 function checkProjectSpecificRequirements(techReqs) {
-    
+
     var requiresFlash = null;
     var requiresJava = null;
-    
+
     if (techReqs == null) {
         // there are no specific requirements for this project
         $('#projectNoSpecificRequirements').show();
@@ -824,45 +823,45 @@ function checkProjectSpecificRequirements(techReqs) {
         requiresFlash = techReqs.flash;
         requiresJava = techReqs.java;
     }
-    
+
     if (requiresFlash || requiresJava) {
         // there are specific requirements for this project
-        
+
         // show the project specific requirements table
         $('#projectSpecificRequirementsTable').show();
-        
+
         var allSatisfied = true;
         var flashSatisfied = false;
         var javaSatisfied = false;
-        
+
         if (requiresFlash) {
             // the project requires flash so we will check if the requirement is satisfied
             flashSatisfied = checkFlash(defaultRequirements.requiredFlashVersion);
-            
+
             // show the flash row in the specific requirements table
             $('#flashRow').show();
-            
+
             if (!flashSatisfied) {
-                
+
                 // show the warning that the flash requirement was not satisfied
                 $('#flashMsg').show();
-                
+
                 allSatisfied = false;
             }
         }
-        
+
         if (requiresJava) {
-            // the project requires java so we will check if the requirement is satisfied 
+            // the project requires java so we will check if the requirement is satisfied
             javaSatisfied = checkJava(defaultRequirements.requiredJavaVersion);
-            
+
             // show the java row in the specific requirements table
             $('#javaRow').show();
-            
+
             if (!javaSatisfied) {
-                
+
                 // get the browser name
                 var browserName = getBrowserName();
-                
+
                 if (browserName == 'Chrome') {
                     // the user is using Chrome which does not support java
                     $('#javaMsgUsingChrome').show();
@@ -870,11 +869,11 @@ function checkProjectSpecificRequirements(techReqs) {
                     // show the warning message that the java requirement was not satisfied
                     $('#javaMsg').show();
                 }
-                
+
                 allSatisfied = false;
             }
         }
-        
+
         if (allSatisfied) {
             // the specific requirements have been satisfied
             $('#projectPass').show();
@@ -893,10 +892,10 @@ function checkProjectSpecificRequirements(techReqs) {
  * @param projectId the project id
  */
 function populatePreviewProjectLink(projectId) {
-    
+
     // get the preview project URL
-    var previewProjectURL = location.origin + '/wise/previewproject.html?projectId=' + projectId;
-    
+    var previewProjectURL = '/wise/previewproject.html?projectId=' + projectId;
+
     // set the href for the preview project link
     $('#previewProjectLink').attr('href', previewProjectURL);
 }

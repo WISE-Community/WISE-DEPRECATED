@@ -14,7 +14,7 @@
 <c:if test="${textDirection == 'rtl' }">
     <link href="${contextPath}/<spring:theme code="rtlstylesheet"/>" rel="stylesheet" type="text/css" >
 </c:if>
-    
+
 <script src="${contextPath}/<spring:theme code="jquerysource"/>" type="text/javascript"></script>
 <script src="${contextPath}/<spring:theme code="superfishsource"/>" type="text/javascript"></script>
 <script src="${contextPath}/<spring:theme code="browserdetectsource"/>" type="text/javascript"></script>
@@ -47,17 +47,17 @@ table.compatibility {
 <div id="pageWrapper">
 
 	<%@ include file="../headermain.jsp"%>
-	
+
 	<div id="page">
-			
+
 		<div id="pageContent">
-			
+
 			<div class="contentPanel">
 				<div class="panelHeader"><spring:message code="pages.check.header" /></div>
 				<div class="panelContent">
 
 					<div class="sectionHead"><spring:message code="pages.check.browser" /></div>
-					<div class="sectionContent"> 
+					<div class="sectionContent">
 						<div>
 							<table class="compatibility">
 								<tr>
@@ -84,10 +84,10 @@ table.compatibility {
 						<div id='browserFail' style="font-weight:bold; display:none;"><spring:message code="pages.check.browser_result" />: <font color="red"><spring:message code="pages.check.browser_fail" /></font></div>
 						<div id='browserPass' style="font-weight:bold; display:none;"><spring:message code="pages.check.browser_result" />: <font color="green"><spring:message code="pages.check.browser_pass" /></font></div>
 					</div>
-					
+
 					<div id='projectSpecificRequirementsDiv' style='display:none'>
 					<div class="sectionHead"><spring:message code="pages.check.project" /></div>
-                    <div class="sectionContent"> 
+                    <div class="sectionContent">
                         <div>Project ID: <span id='projectId'></span></div>
                         <div>Project Name: <span id='projectName'></span></div>
                         <div id='projectSpecificRequirementsTable' style='display:none'>
@@ -121,12 +121,12 @@ table.compatibility {
                         <div id='flashMsg' style="font-weight:bold; display:none;"><font color="red"><spring:message code="pages.check.project_specific_requirements_flash_not_satisfied" /></font></div>
                         <div id='javaMsg' style="font-weight:bold; display:none;"><font color="red"><spring:message code="pages.check.project_specific_requirements_java_not_satisfied" /></font></div>
                         <div id='javaMsgUsingChrome' style="font-weight:bold; display:none;"><font color="red"><spring:message code="pages.check.project_specific_requirements_java_not_satisfied_using_chrome" /></font></div>
-                        <div><a id='previewProjectLink' href='' target='_blank'><img class="icon" alt="preview" src="/wise/portal/themes/default/images/icons/teal/screen.png"> <spring:message code="pages.check.project_specific_preview_project" /></a> (<spring:message code="pages.check.project_specific_preview_project_message" />)</div>
+                        <div><a id='previewProjectLink' href='' target='_blank'><img class="icon" alt="preview" src="${contextPath}/portal/themes/default/images/icons/teal/screen.png"> <spring:message code="pages.check.project_specific_preview_project" /></a> (<spring:message code="pages.check.project_specific_preview_project_message" />)</div>
                     </div>
                     </div>
-					
+
 					<div id='contentFilter' class="sectionHead"><spring:message code="pages.check.browserRecs" /></div>
-					<div class="sectionContent"> 
+					<div class="sectionContent">
 						<div><spring:message code="pages.check.browserRecs_info" /></div>
 						<div>
 							<table class="compatibility">
@@ -167,7 +167,7 @@ table.compatibility {
 						</div>
 					</div>
                     <div id='contentFilter' class="sectionHead" style="padding-top:0;"><spring:message code="pages.check.network" /></div>
-                    <div class="sectionContent"> 
+                    <div class="sectionContent">
                         <div><spring:message code="pages.check.network_info" /></div>
                         <div id='contentFilterMessageSwf'>
                             <span><spring:message code="pages.check.network_flash" /></span><span id='contentFilterSwfRequirementSatisfied'><spring:message code="pages.check.processing" /></span><br/><br/>
@@ -180,7 +180,7 @@ table.compatibility {
 		</div>
 		<div style="clear: both;"></div>
 	</div>   <!-- End of page-->
-	
+
 	<%@ include file="../footer.jsp"%>
 </div>
 </body>
