@@ -358,6 +358,7 @@ var scriptloader = function(){
                'vle/model/hintstate.js',
                'vle/model/StudentStatus.js'],
 		student: [jqueryUISrc,
+				  bootstrapSrc,
     		      'vle/lib/jquery/js/jquery.ui.touch-punch.min.js',
 			      'vle/lib/jquery/jquery-validation/jquery.validate.min.js',
 			      'vle/view/student/studentview_core.js',
@@ -366,7 +367,8 @@ var scriptloader = function(){
 			      'vle/view/student/studentview_model.js',
 			      'vle/view/student/studentview_globaltagmaps.js',
 			      'vle/navigation/GlobalTagMap.js',
-	              'vle/util/swfobject/swfobject.js'],
+	              'vle/util/swfobject/swfobject.js',
+			      'vle/lib/bootstrap/bootstrap-dialog/dist/js/bootstrap-dialog.min.js'],
 	    studentWebSocket: ['vle/webSocket/studentWebSocket.js'],
         author: [
 			     bootstrapSrc,
@@ -418,7 +420,7 @@ var scriptloader = function(){
 	              'vle/view/grading/gradingview_model.js',
 	              'vle/util/swfobject/swfobject.js',
 	              bootstrapSrc,
-	              'vle/lib/bootstrap/bootstrap-dialog/dist/js/bootstrap-dialog.min.js',],
+	              'vle/lib/bootstrap/bootstrap-dialog/dist/js/bootstrap-dialog.min.js'],
 	    teacherWebSocket: [jqueryUISrc_interactions,
 	         		       'vle/lib/jquery/js/jquery.ui.touch-punch.min.js',
 	         		       bootstrapSrc, // TODO: move to vle bootstrap sources when using globally
