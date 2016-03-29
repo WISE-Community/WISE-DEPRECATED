@@ -67,6 +67,25 @@ StudentModel.prototype.getAnnotations = function() {
  * @param annotations the annotations
  */
 StudentModel.prototype.setAnnotations = function(annotations) {
+
+	function sortAnnotationsByPostTime(a, b) {
+		var aPostTime = a.postTime;
+		var bPostTime = b.postTime;
+
+		if (aPostTime < bPostTime) {
+			return -1;
+		} else if (aPostTime > bPostTime) {
+			return 1;
+		}
+
+		return 0;
+	}
+
+	if (annotations != null && annotations.annotationsArray != null) {
+		// sort the annotations from oldest to newest postTime
+		annotations.annotationsArray.sort(sortAnnotationsByPostTime);
+	}
+
 	this.annotations = annotations;
 };
 
@@ -78,26 +97,26 @@ StudentModel.prototype.setAnnotations = function(annotations) {
  */
 StudentModel.prototype.pushStudentWorkToLatestNodeVisit = function(nodeId, nodeState) {
 	var nodeVisit = this.getState().getCurrentNodeVisit();
-	
+
 	if(nodeVisit != null) {
 		var nodeVisitNodeId = nodeVisit.nodeId;
-		
+
 		if(nodeId == nodeVisitNodeId) {
 			if(nodeState != null) {
 				//check that the nodeState is an object
 				if(typeof nodeState == 'object') {
 					//the nodeState is an object
 					nodeVisit.nodeStates.push(nodeState);
-					
+
 					//get the node
 					var node = this.getProject().getNodeById(nodeId);
-					
+
 					//get all the node visits for the node
 					var nodeVisits = this.getState().getNodeVisitsByNodeId(nodeId);
-					
+
 					//process the student work in case we need to change the node's status
 					node.processStudentWork(nodeVisits);
-					
+
 					/*
 					 * fire the studentWorkUpdated event and pass in the node id and node visit
 					 * so listeners will know which step the student work was updated for
@@ -107,14 +126,14 @@ StudentModel.prototype.pushStudentWorkToLatestNodeVisit = function(nodeId, nodeS
 					//the nodeState is not an object so we will not save the nodeState
 					if(notificationManager != null) {
 						//display the error message that we failed to save the student work
-						notificationManager.notify("Error: Failed to save student work, student work is not an object", 3);						
+						notificationManager.notify("Error: Failed to save student work, student work is not an object", 3);
 					}
 				}
 			}
 		} else {
 			//node state node id does not match the node visit node id
 			if(notificationManager != null) {
-				notificationManager.notify("Error: Failed to save student work, student work node id does not match node visit node id", 3);				
+				notificationManager.notify("Error: Failed to save student work, student work node id does not match node visit node id", 3);
 			}
 		}
 	}
@@ -129,46 +148,46 @@ StudentModel.prototype.pushStudentWorkToLatestNodeVisit = function(nodeId, nodeS
 StudentModel.prototype.overwriteNodeStatesInCurrentNodeVisit = function(nodeId, nodeStates) {
 	//get the current node visit
 	var nodeVisit = this.getState().getCurrentNodeVisit();
-	
+
 	if(nodeVisit != null) {
 		//get the node id from the node visit
 		var nodeVisitNodeId = nodeVisit.nodeId;
-		
+
 		//make sure the node id matches
 		if(nodeId == nodeVisitNodeId) {
-			
+
 			if(nodeStates != null) {
 				//make sure the node states array is really an array
 				if($.isArray(nodeStates)) {
 					//overwrite the node states array
 					nodeVisit.nodeStates = nodeStates;
-					
+
 					//get the node
 					var node = this.getProject().getNodeById(nodeId);
-					
+
 					//get all the node visits for the node
 					var nodeVisits = this.getState().getNodeVisitsByNodeId(nodeId);
-					
+
 					//process the student work in case we need to change the node's status
 					node.processStudentWork(nodeVisits);
-					
+
 					/*
 					 * fire the studentWorkUpdated event and pass in the node id and node visit
 					 * so listeners will know which step the student work was updated for
 					 */
-					eventManager.fire('studentWorkUpdated', [nodeId, nodeVisit]);					
+					eventManager.fire('studentWorkUpdated', [nodeId, nodeVisit]);
 				} else {
 					//the nodeState is not an object so we will not save the nodeStatesArray
 					if(notificationManager != null) {
 						//display the error message that we failed to save the student work
-						notificationManager.notify("Error: Failed to save student work, node states is not an array", 3);						
+						notificationManager.notify("Error: Failed to save student work, node states is not an array", 3);
 					}
 				}
 			}
 		} else {
 			//node state node id does not match the node visit node id
 			if(notificationManager != null) {
-				notificationManager.notify("Error: Failed to save student work, student work node id does not match node visit node id", 3);				
+				notificationManager.notify("Error: Failed to save student work, student work node id does not match node visit node id", 3);
 			}
 		}
 	}
@@ -184,20 +203,20 @@ StudentModel.prototype.overwriteNodeStatesInCurrentNodeVisit = function(nodeId, 
 StudentModel.prototype.overwriteLatestNodeStateInCurrentNodeVisit = function(nodeId, nodeState) {
 	//get the current node visit
 	var nodeVisit = this.getState().getCurrentNodeVisit();
-	
+
 	if(nodeVisit != null) {
 		//get the node id from the node visit
 		var nodeVisitNodeId = nodeVisit.nodeId;
-		
+
 		//make sure the node id matches
 		if(nodeId == nodeVisitNodeId) {
 			//get the node states from the node visit
 			var nodeStates = nodeVisit.nodeStates;
-			
+
 			if(nodeStates != null) {
 				//make sure the node states array is really an array
 				if($.isArray(nodeStates)) {
-					
+
 					if(nodeStates.length == 0) {
 						//the node states are empty so we will just add the new node state
 						nodeStates.push(nodeState);
@@ -208,33 +227,33 @@ StudentModel.prototype.overwriteLatestNodeStateInCurrentNodeVisit = function(nod
 						 */
 						nodeStates[nodeStates.length - 1] = nodeState;
 					}
-					
+
 					//get the node
 					var node = this.getProject().getNodeById(nodeId);
-					
+
 					//get all the node visits for the node
 					var nodeVisits = this.getState().getNodeVisitsByNodeId(nodeId);
-					
+
 					//process the student work in case we need to change the node's status
 					node.processStudentWork(nodeVisits);
-					
+
 					/*
 					 * fire the studentWorkUpdated event and pass in the node id and node visit
 					 * so listeners will know which step the student work was updated for
 					 */
-					eventManager.fire('studentWorkUpdated', [nodeId, nodeVisit]);					
+					eventManager.fire('studentWorkUpdated', [nodeId, nodeVisit]);
 				} else {
 					//the nodeState is not an object so we will not save the nodeStatesArray
 					if(notificationManager != null) {
 						//display the error message that we failed to save the student work
-						notificationManager.notify("Error: Failed to save student work, node states is not an array", 3);						
+						notificationManager.notify("Error: Failed to save student work, node states is not an array", 3);
 					}
 				}
 			}
 		} else {
 			//node state node id does not match the node visit node id
 			if(notificationManager != null) {
-				notificationManager.notify("Error: Failed to save student work, student work node id does not match node visit node id", 3);				
+				notificationManager.notify("Error: Failed to save student work, student work node id does not match node visit node id", 3);
 			}
 		}
 	}
@@ -266,15 +285,15 @@ StudentModel.prototype.setCurrentNodePosition = function(currentNodePosition) {
  */
 StudentModel.prototype.getNodeVisitsByNodeIdAndWorkgroupId = function(nodeId, workgroupId) {
 	var nodeVisits = null;
-	
+
 	if(nodeId != null) {
 		//get the work for this student
 		var vleState = this.getState();
-		
+
 		//get all the node visits for the node id
 		nodeVisits = vleState.getNodeVisitsByNodeId(nodeId);
 	}
-	
+
 	return nodeVisits;
 };
 

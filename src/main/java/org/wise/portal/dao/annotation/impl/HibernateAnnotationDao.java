@@ -591,6 +591,7 @@ public class HibernateAnnotationDao extends AbstractHibernateDao<Annotation> imp
         		.add( Restrictions.in("fromUser", fromUsers))
         		.add( Restrictions.eq("toUser", toUser))
         		.add( Restrictions.in("type", annotationTypes))
+        		.add( Restrictions.isNull("stepWork"))
         		.list();
         return results;
 	}
