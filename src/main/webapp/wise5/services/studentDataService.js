@@ -124,30 +124,36 @@ var StudentDataService = function () {
         value: function retrieveRunStatus() {
             var _this2 = this;
 
-            var runStatusURL = this.ConfigService.getConfigParam('runStatusURL');
-            var runId = this.ConfigService.getConfigParam('runId');
+            if (this.ConfigService.isPreview()) {
+                // we are previewing the project
+                this.runStatus = {};
+            } else {
+                // we are in a run
+                var runStatusURL = this.ConfigService.getConfigParam('runStatusURL');
+                var runId = this.ConfigService.getConfigParam('runId');
 
-            //create the params for the request
-            var params = {
-                runId: runId
-            };
+                //create the params for the request
+                var params = {
+                    runId: runId
+                };
 
-            var httpParams = {};
-            httpParams.method = 'GET';
-            httpParams.headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
-            httpParams.url = runStatusURL;
-            httpParams.params = params;
+                var httpParams = {};
+                httpParams.method = 'GET';
+                httpParams.headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
+                httpParams.url = runStatusURL;
+                httpParams.params = params;
 
-            // make the request for the run status
-            return this.$http(httpParams).then(function (result) {
-                if (result != null) {
-                    var data = result.data;
-                    if (data != null) {
-                        // remember the run status
-                        _this2.runStatus = data;
+                // make the request for the run status
+                return this.$http(httpParams).then(function (result) {
+                    if (result != null) {
+                        var data = result.data;
+                        if (data != null) {
+                            // remember the run status
+                            _this2.runStatus = data;
+                        }
                     }
-                }
-            });
+                });
+            }
         }
     }, {
         key: 'loadStudentNodes',

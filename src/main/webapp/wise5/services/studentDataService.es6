@@ -105,30 +105,37 @@ class StudentDataService {
      * Retrieve the run status
      */
     retrieveRunStatus() {
-        var runStatusURL = this.ConfigService.getConfigParam('runStatusURL');
-        var runId = this.ConfigService.getConfigParam('runId');
+        
+        if (this.ConfigService.isPreview()) {
+            // we are previewing the project
+            this.runStatus = {};
+        } else {
+            // we are in a run
+            var runStatusURL = this.ConfigService.getConfigParam('runStatusURL');
+            var runId = this.ConfigService.getConfigParam('runId');
 
-        //create the params for the request
-        var params = {
-            runId:runId
-        }
-
-        var httpParams = {};
-        httpParams.method = 'GET';
-        httpParams.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
-        httpParams.url = runStatusURL;
-        httpParams.params = params;
-
-        // make the request for the run status
-        return this.$http(httpParams).then((result) => {
-            if (result != null) {
-                var data = result.data;
-                if (data != null) {
-                    // remember the run status
-                    this.runStatus = data;
-                }
+            //create the params for the request
+            var params = {
+                runId:runId
             }
-        });
+
+            var httpParams = {};
+            httpParams.method = 'GET';
+            httpParams.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
+            httpParams.url = runStatusURL;
+            httpParams.params = params;
+
+            // make the request for the run status
+            return this.$http(httpParams).then((result) => {
+                if (result != null) {
+                    var data = result.data;
+                    if (data != null) {
+                        // remember the run status
+                        this.runStatus = data;
+                    }
+                }
+            });
+        }
     }
 
     loadStudentNodes() {
