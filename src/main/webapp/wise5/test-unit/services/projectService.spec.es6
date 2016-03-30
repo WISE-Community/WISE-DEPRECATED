@@ -67,6 +67,15 @@ describe('ProjectService Unit Test', () => {
             expect(contentStringReplacedAssetPathActual).toEqual(contentStringReplacedAssetPathExpected);
         });
 
+        it('should not replace asset paths in html component content', () => {
+            createNormalSpy();
+            let contentString = "<source type=\"video/mp4\">";
+            let contentStringReplacedAssetPathExpected = "<source type=\"video/mp4\">";
+            let contentStringReplacedAssetPathActual = ProjectService.replaceAssetPaths(contentString);
+            expect(ConfigService.getConfigParam).toHaveBeenCalledWith("projectBaseURL");
+            expect(contentStringReplacedAssetPathActual).toEqual(contentStringReplacedAssetPathExpected);
+        });
+
         it('should retrieve project when Config.projectURL is valid', () => {
             createNormalSpy();
             spyOn(ProjectService, "setProject").and.callThrough(); // actually call through the function
