@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var NodeController = function () {
-    function NodeController($anchorScroll, $location, $scope, $state, $stateParams, $timeout, ConfigService, ProjectService, UtilService) {
+    function NodeController($anchorScroll, $location, $scope, $state, $stateParams, $timeout, $translate, ConfigService, ProjectService, UtilService) {
         _classCallCheck(this, NodeController);
 
         this.$anchorScroll = $anchorScroll;
@@ -18,6 +18,7 @@ var NodeController = function () {
         this.$state = $state;
         this.$stateParams = $stateParams;
         this.$timeout = $timeout;
+        this.$translate = $translate;
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
         this.UtilService = UtilService;
@@ -85,23 +86,26 @@ var NodeController = function () {
          * the recent changes since they opened the node.
          */
         value: function cancel() {
+            var _this = this;
 
             // check if the user has made any changes
             if (!angular.equals(this.node, this.originalNodeCopy)) {
                 // the user has made changes
 
-                var result = confirm('Are you sure you want to undo all the recent changes?');
+                this.$translate('confirmUndo').then(function (confirmUndo) {
+                    var result = confirm(confirmUndo);
 
-                if (result) {
-                    // revert the node back to the previous version
-                    this.ProjectService.replaceNode(this.nodeId, this.originalNodeCopy);
+                    if (result) {
+                        // revert the node back to the previous version
+                        _this.ProjectService.replaceNode(_this.nodeId, _this.originalNodeCopy);
 
-                    // save the project
-                    this.ProjectService.saveProject();
+                        // save the project
+                        _this.ProjectService.saveProject();
 
-                    // close the node authoring view
-                    this.close();
-                }
+                        // close the node authoring view
+                        _this.close();
+                    }
+                });
             } else {
                 // the user has not made any changes
 
@@ -117,7 +121,7 @@ var NodeController = function () {
     }, {
         key: 'createComponent',
         value: function createComponent() {
-            var _this = this;
+            var _this2 = this;
 
             // create a component and add it to this node
             this.ProjectService.createComponent(this.nodeId, this.selectedComponent);
@@ -130,8 +134,8 @@ var NodeController = function () {
 
             // Scroll to the bottom of the page where the new component was added
             this.$timeout(function () {
-                _this.$location.hash('bottom');
-                _this.$anchorScroll();
+                _this2.$location.hash('bottom');
+                _this2.$anchorScroll();
             });
         }
 
@@ -175,19 +179,23 @@ var NodeController = function () {
     }, {
         key: 'deleteComponent',
         value: function deleteComponent(componentId) {
+            var _this3 = this;
 
-            // ask the user to confirm the delete
-            var answer = confirm('Are you sure you want to delete this component?');
+            this.$translate('confirmDeleteComponent').then(function (confirmDeleteComponent) {
 
-            if (answer) {
-                // the user confirmed yes
+                // ask the user to confirm the delete
+                var answer = confirm(confirmDeleteComponent);
 
-                // delete the component from the node
-                this.ProjectService.deleteComponent(this.nodeId, componentId);
+                if (answer) {
+                    // the user confirmed yes
 
-                // save the project
-                this.ProjectService.saveProject();
-            }
+                    // delete the component from the node
+                    _this3.ProjectService.deleteComponent(_this3.nodeId, componentId);
+
+                    // save the project
+                    _this3.ProjectService.saveProject();
+                }
+            });
         }
 
         /**
@@ -214,31 +222,38 @@ var NodeController = function () {
     }, {
         key: 'undo',
         value: function undo() {
+            var _this4 = this;
 
             if (this.undoStack.length === 0) {
                 // the undo stack is empty so there are no changes to undo
-                alert('There are no changes to undo.');
+                this.$translate('noUndoAvailable').then(function (noUndoAvailable) {
+                    alert(noUndoAvailable);
+                });
             } else if (this.undoStack.length > 0) {
                 // the undo stack has elements
 
-                var result = confirm('Are you sure you want to undo the last change?');
+                this.$translate('confirmUndoLastChange').then(function (confirmUndoLastChange) {
 
-                if (result) {
-                    // get the previous version of the node
-                    var nodeCopy = this.undoStack.pop();
+                    // ask the user to confirm the delete
+                    var result = confirm(confirmUndoLastChange);
 
-                    // revert the node back to the previous version
-                    this.ProjectService.replaceNode(this.nodeId, nodeCopy);
+                    if (result) {
+                        // get the previous version of the node
+                        var nodeCopy = _this4.undoStack.pop();
 
-                    // get the node
-                    this.node = this.ProjectService.getNodeById(this.nodeId);
+                        // revert the node back to the previous version
+                        _this4.ProjectService.replaceNode(_this4.nodeId, nodeCopy);
 
-                    // get the components in the node
-                    this.components = this.ProjectService.getComponentsByNodeId(this.nodeId);
+                        // get the node
+                        _this4.node = _this4.ProjectService.getNodeById(_this4.nodeId);
 
-                    // save the project
-                    this.ProjectService.saveProject();
-                }
+                        // get the components in the node
+                        _this4.components = _this4.ProjectService.getComponentsByNodeId(_this4.nodeId);
+
+                        // save the project
+                        _this4.ProjectService.saveProject();
+                    }
+                });
             }
         }
     }]);
@@ -248,7 +263,7 @@ var NodeController = function () {
 
 ;
 
-NodeController.$inject = ['$anchorScroll', '$location', '$scope', '$state', '$stateParams', '$timeout', 'ConfigService', 'ProjectService', 'UtilService'];
+NodeController.$inject = ['$anchorScroll', '$location', '$scope', '$state', '$stateParams', '$timeout', '$translate', 'ConfigService', 'ProjectService', 'UtilService'];
 
 exports.default = NodeController;
 //# sourceMappingURL=nodeController.js.map

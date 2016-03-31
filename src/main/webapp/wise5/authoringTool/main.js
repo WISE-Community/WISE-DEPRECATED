@@ -36,9 +36,21 @@ var _angularMoment = require('angular-moment');
 
 var _angularMoment2 = _interopRequireDefault(_angularMoment);
 
+var _angularSanitize = require('angular-sanitize');
+
+var _angularSanitize2 = _interopRequireDefault(_angularSanitize);
+
 var _toArrayFilter = require('lib/angular-toArrayFilter/toArrayFilter');
 
 var _toArrayFilter2 = _interopRequireDefault(_toArrayFilter);
+
+var _angularTranslate = require('angular-translate');
+
+var _angularTranslate2 = _interopRequireDefault(_angularTranslate);
+
+var _angularTranslateLoaderPartial = require('angular-translate-loader-partial');
+
+var _angularTranslateLoaderPartial2 = _interopRequireDefault(_angularTranslateLoaderPartial);
 
 var _angularWebsocket = require('angular-websocket');
 
@@ -222,7 +234,7 @@ var _utilService2 = _interopRequireDefault(_utilService);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var mainModule = _angular2.default.module('authoring', ['angularMoment', 'angular-toArrayFilter', 'directives', 'filters', 'highcharts-ng', 'ngAnimate', 'ngAria', 'ngFileUpload', 'ngMaterial', 'ngWebSocket', 'ui.router', 'ui.tree']).service(_annotationService2.default.name, _annotationService2.default).service(_configService2.default.name, _configService2.default).service(_discussionService2.default.name, _discussionService2.default).service(_drawService2.default.name, _drawService2.default).service(_embeddedService2.default.name, _embeddedService2.default).service(_graphService2.default.name, _graphService2.default).service(_htmlService2.default.name, _htmlService2.default).service(_labelService2.default.name, _labelService2.default).service(_matchService2.default.name, _matchService2.default).service(_multipleChoiceService2.default.name, _multipleChoiceService2.default).service(_nodeService2.default.name, _nodeService2.default).service(_openResponseService2.default.name, _openResponseService2.default).service(_outsideURLService2.default.name, _outsideURLService2.default).service(_projectService2.default.name, _projectService2.default).service(_projectAssetService2.default.name, _projectAssetService2.default).service(_sessionService2.default.name, _sessionService2.default).service(_studentAssetService2.default.name, _studentAssetService2.default).service(_studentDataService2.default.name, _studentDataService2.default).service(_studentStatusService2.default.name, _studentStatusService2.default).service(_studentWebSocketService2.default.name, _studentWebSocketService2.default).service(_tableService2.default.name, _tableService2.default).service(_teacherDataService2.default.name, _teacherDataService2.default).service(_utilService2.default.name, _utilService2.default).controller(_authoringToolController2.default.name, _authoringToolController2.default).controller(_authoringToolMainController2.default.name, _authoringToolMainController2.default).controller(_authoringToolNewProjectController2.default.name, _authoringToolNewProjectController2.default).controller(_discussionController2.default.name, _discussionController2.default).controller(_drawController2.default.name, _drawController2.default).controller(_embeddedController2.default.name, _embeddedController2.default).controller(_graphController2.default.name, _graphController2.default).controller(_htmlController2.default.name, _htmlController2.default).controller(_labelController2.default.name, _labelController2.default).controller(_matchController2.default.name, _matchController2.default).controller(_multipleChoiceController2.default.name, _multipleChoiceController2.default).controller(_nodeController2.default.name, _nodeController2.default).controller(_openResponseController2.default.name, _openResponseController2.default).controller(_outsideURLController2.default.name, _outsideURLController2.default).controller(_projectAssetController2.default.name, _projectAssetController2.default).controller(_projectController2.default.name, _projectController2.default).controller(_projectHistoryController2.default.name, _projectHistoryController2.default).controller(_tableController2.default.name, _tableController2.default).config(['$urlRouterProvider', '$stateProvider', '$controllerProvider', '$mdThemingProvider', function ($urlRouterProvider, $stateProvider, $controllerProvider, $mdThemingProvider) {
+var mainModule = _angular2.default.module('authoring', ['angularMoment', 'angular-toArrayFilter', 'directives', 'filters', 'highcharts-ng', 'ngAnimate', 'ngAria', 'ngFileUpload', 'ngMaterial', 'ngSanitize', 'ngWebSocket', 'pascalprecht.translate', 'ui.router', 'ui.tree']).service(_annotationService2.default.name, _annotationService2.default).service(_configService2.default.name, _configService2.default).service(_discussionService2.default.name, _discussionService2.default).service(_drawService2.default.name, _drawService2.default).service(_embeddedService2.default.name, _embeddedService2.default).service(_graphService2.default.name, _graphService2.default).service(_htmlService2.default.name, _htmlService2.default).service(_labelService2.default.name, _labelService2.default).service(_matchService2.default.name, _matchService2.default).service(_multipleChoiceService2.default.name, _multipleChoiceService2.default).service(_nodeService2.default.name, _nodeService2.default).service(_openResponseService2.default.name, _openResponseService2.default).service(_outsideURLService2.default.name, _outsideURLService2.default).service(_projectService2.default.name, _projectService2.default).service(_projectAssetService2.default.name, _projectAssetService2.default).service(_sessionService2.default.name, _sessionService2.default).service(_studentAssetService2.default.name, _studentAssetService2.default).service(_studentDataService2.default.name, _studentDataService2.default).service(_studentStatusService2.default.name, _studentStatusService2.default).service(_studentWebSocketService2.default.name, _studentWebSocketService2.default).service(_tableService2.default.name, _tableService2.default).service(_teacherDataService2.default.name, _teacherDataService2.default).service(_utilService2.default.name, _utilService2.default).controller(_authoringToolController2.default.name, _authoringToolController2.default).controller(_authoringToolMainController2.default.name, _authoringToolMainController2.default).controller(_authoringToolNewProjectController2.default.name, _authoringToolNewProjectController2.default).controller(_discussionController2.default.name, _discussionController2.default).controller(_drawController2.default.name, _drawController2.default).controller(_embeddedController2.default.name, _embeddedController2.default).controller(_graphController2.default.name, _graphController2.default).controller(_htmlController2.default.name, _htmlController2.default).controller(_labelController2.default.name, _labelController2.default).controller(_matchController2.default.name, _matchController2.default).controller(_multipleChoiceController2.default.name, _multipleChoiceController2.default).controller(_nodeController2.default.name, _nodeController2.default).controller(_openResponseController2.default.name, _openResponseController2.default).controller(_outsideURLController2.default.name, _outsideURLController2.default).controller(_projectAssetController2.default.name, _projectAssetController2.default).controller(_projectController2.default.name, _projectController2.default).controller(_projectHistoryController2.default.name, _projectHistoryController2.default).controller(_tableController2.default.name, _tableController2.default).config(['$urlRouterProvider', '$stateProvider', '$translateProvider', '$translatePartialLoaderProvider', '$controllerProvider', '$mdThemingProvider', function ($urlRouterProvider, $stateProvider, $translateProvider, $translatePartialLoaderProvider, $controllerProvider, $mdThemingProvider) {
 
     $urlRouterProvider.otherwise('/');
 
@@ -237,6 +249,10 @@ var mainModule = _angular2.default.module('authoring', ['angularMoment', 'angula
                 var configURL = window.configURL;
 
                 return ConfigService.retrieveConfig(configURL);
+            },
+            language: function language($translate, ConfigService, config) {
+                var locale = ConfigService.getLocale(); // defaults to "en"
+                $translate.use(locale);
             },
             sessionTimers: function sessionTimers(SessionService, config) {
                 return SessionService.initializeSession();
@@ -293,6 +309,20 @@ var mainModule = _angular2.default.module('authoring', ['angularMoment', 'angula
         controllerAs: 'projectHistoryController',
         resolve: {}
     });
+
+    // Set up Translations
+    $translatePartialLoaderProvider.addPart('common');
+    $translatePartialLoaderProvider.addPart('authoringTool');
+    $translateProvider.useLoader('$translatePartialLoader', {
+        urlTemplate: 'wise5/i18n/{part}/i18n_{lang}.json'
+    });
+    $translateProvider.fallbackLanguage(['en']);
+    $translateProvider.registerAvailableLanguageKeys(['en', 'ja'], {
+        'en_US': 'en',
+        'en_UK': 'en'
+    });
+    $translateProvider.useSanitizeValueStrategy('escape');
+
     // ngMaterial default theme configuration
     // TODO: make dynamic and support alternate themes; allow projects to specify theme parameters and settings
     $mdThemingProvider.definePalette('primaryPaletteWise', {

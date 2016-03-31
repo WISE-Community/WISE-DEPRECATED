@@ -3,29 +3,29 @@
 TODO: implement me. Allow authors to view assets while authoring node conent. Perhaps make ProjectAssets into a directive.
     <button ng-click='nodeController.viewProjectAssets()'>View Assets</button>
     -->
-    <button ng-click="nodeController.previewStep()">Preview Step</button>
+    <button ng-click="nodeController.previewStep()" translate="previewStep"></button>
     <button ng-click="nodeController.undo()"
-            ng-disabled="nodeController.undoStack.length == 0">Undo</button>
-    <button ng-click="nodeController.close()">Save & Close</button>
-    <button ng-click="nodeController.cancel()">Cancel</button>
+            ng-disabled="nodeController.undoStack.length == 0" translate="undo"></button>
+    <button ng-click="nodeController.close()" translate="saveAndClose"></button>
+    <button ng-click="nodeController.cancel()" translate="close"></button>
 </div>
-<div>Title: <input ng-model='nodeController.node.title' ng-change='nodeController.authoringViewNodeChanged()' ng-model-options='{ debounce: 1000 }' size='60' /></div>
-<button ng-click='nodeController.showCreateComponent = true' ng-show='!nodeController.showCreateComponent'>Add New Component</button>
+<div><span translate="stepTitle"></span>: <input ng-model='nodeController.node.title' ng-change='nodeController.authoringViewNodeChanged()' ng-model-options='{ debounce: 1000 }' size='60' /></div>
+<button ng-click='nodeController.showCreateComponent = true' ng-show='!nodeController.showCreateComponent' translate="addNewComponent"></button>
 <div ng-show='nodeController.showCreateComponent'>
     <select ng-model='nodeController.selectedComponent'>
         <option ng-repeat='componentType in nodeController.componentTypes' value='{{componentType.componentType}}'>
             {{componentType.componentName}}
         </option>
     </select>
-    <button ng-click='nodeController.createComponent()'>Add Component</button>
-    <button ng-click='nodeController.showCreateComponent = false'>Cancel</button>
+    <button ng-click='nodeController.createComponent()' translate="add"></button>
+    <button ng-click='nodeController.showCreateComponent = false' translate="cancel"></button>
 </div>
 <div ng-repeat='component in nodeController.components'>
     <div style="margin-top: 7px; border-top: 2px dotted black">
         {{component.type}}
-        <button ng-click='nodeController.moveComponentUp(component.id)' ng-disabled='nodeController.components.length <= 1'>Move Up</button>
-        <button ng-click='nodeController.moveComponentDown(component.id)' ng-disabled='nodeController.components.length <= 1'>Move Down</button>
-        <button ng-click='nodeController.deleteComponent(component.id)'>Delete</button>
+        <button ng-click='nodeController.moveComponentUp(component.id)' ng-disabled='nodeController.components.length <= 1' translate="moveUp"></button>
+        <button ng-click='nodeController.moveComponentDown(component.id)' ng-disabled='nodeController.components.length <= 1' translate="moveDown"></button>
+        <button ng-click='nodeController.deleteComponent(component.id)' translate="delete"></button>
     </div>
     <component nodeid='{{nodeController.nodeId}}' componentid='{{component.id}}' mode='authoring'></component>
 </div>

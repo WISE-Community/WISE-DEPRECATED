@@ -46,7 +46,6 @@
   "sessionTimeoutCheckInterval": 60000,
   "indexURL": "http://localhost:8080/wise/student",
   "studentStatusURL": "/wise/studentStatus",
-  "locale": "ja",
   "mode": "run",
   "sessionTimeoutInterval": 1200000,
   "isRealTimeEnabled": true,

@@ -2,26 +2,36 @@
 
 class AuthoringToolController {
 
-    constructor($scope,
+    constructor($mdDialog,
+                $scope,
+                $translate,
                 ConfigService,
-                SessionService,
-                $mdDialog) {
+                SessionService
+                ) {
+
+        this.$mdDialog = $mdDialog;
+        this.$scope = $scope;
+        this.$translate = $translate;
         this.ConfigService = ConfigService;
         this.SessionService = SessionService;
 
         $scope.$on('showSessionWarning', () => {
-            // Appending dialog to document.body
-            let confirm = $mdDialog.confirm()
-                .parent(angular.element(document.body))
-                .title('Session Timeout')
-                .content('You have been inactive for a long time. Do you want to stay logged in?')
-                .ariaLabel('Session Timeout')
-                .ok('YES')
-                .cancel('No');
-            $mdDialog.show(confirm).then(() => {
-                this.SessionService.renewSession();
-            }, () => {
-                this.SessionService.forceLogOut();
+
+            this.$translate('autoLogoutMessage').then((autoLogoutMessage) => {
+                // Appending dialog to document.body
+                let confirm = this.$mdDialog.confirm()
+                    .parent(angular.element(document.body))
+                    .title('Session Timeout')
+                    .content(autoLogoutMessage)
+                    .ariaLabel('Session Timeout')
+                    .ok('YES')
+                    .cancel('No');
+                this.$mdDialog.show(confirm).then(() => {
+                    this.SessionService.renewSession();
+                }, () => {
+                    this.SessionService.forceLogOut();
+                });
+
             });
         });
     }
@@ -34,6 +44,6 @@ class AuthoringToolController {
     }
 }
 
-AuthoringToolController.$inject = ['$scope', 'ConfigService', 'SessionService', '$mdDialog'];
+AuthoringToolController.$inject = ['$mdDialog', '$scope', '$translate', 'ConfigService', 'SessionService'];
 
 export default AuthoringToolController;

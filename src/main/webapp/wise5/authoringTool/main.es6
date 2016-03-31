@@ -8,7 +8,10 @@ import angularUIRouter from 'angular-ui-router';
 import angularUITree from 'angular-ui-tree';
 import ngMaterial from 'angular-material';
 import angularMoment from 'angular-moment';
+import angularSanitize from 'angular-sanitize';
 import angularToArrayFilter from 'lib/angular-toArrayFilter/toArrayFilter';
+import angularTranslate from 'angular-translate';
+import angularTranslateLoaderPartial from 'angular-translate-loader-partial';
 import angularWebSocket from 'angular-websocket';
 import AnnotationService from '../services/annotationService';
 import AuthoringToolController from './authoringToolController';
@@ -65,7 +68,9 @@ let mainModule = angular.module('authoring', [
     'ngAria',
     'ngFileUpload',
     'ngMaterial',
+    'ngSanitize',
     'ngWebSocket',
+    'pascalprecht.translate',
     'ui.router',
     'ui.tree'
 ])
@@ -112,10 +117,14 @@ let mainModule = angular.module('authoring', [
     .controller(TableController.name, TableController)
     .config(['$urlRouterProvider',
         '$stateProvider',
+        '$translateProvider',
+        '$translatePartialLoaderProvider',
         '$controllerProvider',
         '$mdThemingProvider',
         function($urlRouterProvider,
                  $stateProvider,
+                 $translateProvider,
+                 $translatePartialLoaderProvider,
                  $controllerProvider,
                  $mdThemingProvider) {
 
@@ -133,6 +142,10 @@ let mainModule = angular.module('authoring', [
                             var configURL = window.configURL;
 
                             return ConfigService.retrieveConfig(configURL);
+                        },
+                        language: ($translate, ConfigService, config) => {
+                            let locale = ConfigService.getLocale();  // defaults to "en"
+                            $translate.use(locale);
                         },
                         sessionTimers: (SessionService, config) => {
                             return SessionService.initializeSession();
@@ -200,7 +213,21 @@ let mainModule = angular.module('authoring', [
                     controllerAs: 'projectHistoryController',
                     resolve: {
                     }
-                })
+                });
+
+            // Set up Translations
+            $translatePartialLoaderProvider.addPart('common');
+            $translatePartialLoaderProvider.addPart('authoringTool');
+            $translateProvider.useLoader('$translatePartialLoader', {
+                urlTemplate: 'wise5/i18n/{part}/i18n_{lang}.json'
+            });
+            $translateProvider.fallbackLanguage(['en']);
+            $translateProvider.registerAvailableLanguageKeys(['en','ja'], {
+                'en_US': 'en',
+                'en_UK': 'en'
+            });
+            $translateProvider.useSanitizeValueStrategy('escape');
+
             // ngMaterial default theme configuration
             // TODO: make dynamic and support alternate themes; allow projects to specify theme parameters and settings
             $mdThemingProvider.definePalette('primaryPaletteWise', {

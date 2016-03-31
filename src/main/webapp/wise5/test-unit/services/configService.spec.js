@@ -56,6 +56,19 @@ describe('ConfigService Unit Test', function () {
             expect(classmateUserInfosAfter[1].workgroupId).toEqual(3);
         });
 
+        // Test getLocale()
+        it('should get the locale', function () {
+            // Sample config 1 doesn't have locale set, so it should default to "en"
+            ConfigService.setConfig(sampleConfig1);
+            var locale = ConfigService.getLocale();
+            expect(locale).toEqual("en");
+
+            // Sample config 2 should have "ja" locale.
+            ConfigService.setConfig(sampleConfig2);
+            var locale2 = ConfigService.getLocale();
+            expect(locale2).toEqual("ja");
+        });
+
         // Test getMode and isPreview()
         it('should get the modes', function () {
             ConfigService.setConfig(sampleConfig1);

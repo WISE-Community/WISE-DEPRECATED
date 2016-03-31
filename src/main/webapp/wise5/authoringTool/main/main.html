@@ -1,8 +1,13 @@
+<style>
+    .projectItem:hover {
+        cursor:pointer;
+        background-color: lightgrey;
+    }
+</style>
+<button id="createNewProjectButton" style="font-weight: bold; padding: 10px" ng-click="authoringToolMainController.createNewProject()" translate="createNewProject"></button>
 
-<button id="createNewProjectButton" style="font-weight: bold; padding: 10px" ng-click="authoringToolMainController.createNewProject()">Create A New Project</button>
-
-<h3>My Projects (click to open)</h3>
-<div ng-repeat='project in authoringToolMainController.projects' ng-click="authoringToolMainController.openProject(project.id)">
+<h3 translate="myProjectsHeading"></h3>
+<div class="projectItem" ng-repeat='project in authoringToolMainController.projects' ng-click="authoringToolMainController.openProject(project.id)">
     {{project.id}}
     {{project.name}}
 </div>

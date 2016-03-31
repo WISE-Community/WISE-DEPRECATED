@@ -99,6 +99,10 @@ class ConfigService {
         return this.getConfigParam('wiseBaseURL');
     };
 
+    getLocale() {
+        return this.getConfigParam('locale') || 'en';
+    };
+
     getMode() {
         return this.getConfigParam('mode');
     };
