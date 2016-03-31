@@ -1,11 +1,13 @@
-'use strict';
-
 exports.config = {
     sauceSeleniumAddress: 'localhost:4445/wd/hub',
     sauceUser: process.env.SAUCE_USERNAME,
     sauceKey: process.env.SAUCE_ACCESS_KEY,
     //seleniumAddress: 'http://localhost:4444/wd/hub',
-    specs: ['previewVLE.spec.js', 'notebook.spec.js', 'authoringTool.spec.js']
+    specs: [
+        'previewVLE.spec.js',
+        'notebook.spec.js',
+        'authoringTool.spec.js'
+    ]
 };
 
 // This won’t affect local tests, it will only activate when running on Travis CI:
@@ -20,4 +22,3 @@ if (process.env.TRAVIS) {
 }
 
 module.exports.config = exports.config;
-//# sourceMappingURL=conf.js.map
