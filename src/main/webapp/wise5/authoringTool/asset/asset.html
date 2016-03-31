@@ -14,14 +14,15 @@
         cursor: pointer;
     }
 </style>
-<button style="float:right" ng-click='projectAssetController.exit()'>Close</button>
+<button style="float:right" ng-click='projectAssetController.exit()' translate="close"></button>
 
 <div ngf-drop ngf-select ngf-change="projectAssetController.uploadAssetItems($files)" class="drop-box"
      drag-over-class="dragover" ngf-multiple="true" allow-dir="false"
-     accept="image/*,application/pdf,text/csv">Drop image or file here or click to upload!</div>
-You are using {{projectAssetController.projectAssets.totalFileSize | appropriateSizeText }}
-out of {{projectAssetController.projectAssetTotalSizeMax | appropriateSizeText }}
-({{projectAssetController.projectAssetUsagePercentage | roundToDecimal:0 }}%)
+     accept="image/*,application/pdf,text/csv" translate="dropAssetMessage"></div>
+<span translate="assetUsageMessage"
+      translate-value-usage="{{projectAssetController.projectAssets.totalFileSize | appropriateSizeText }}"
+      translate-value-max="{{projectAssetController.projectAssetTotalSizeMax | appropriateSizeText }}"
+      translate-value-percentage="{{projectAssetController.projectAssetUsagePercentage | roundToDecimal:0 }}"></span>
 <ul>
     <li ng-repeat='assetItem in projectAssetController.projectAssets.files'>
         {{assetItem.fileName}} ({{assetItem.fileSize | appropriateSizeText}} bytes)

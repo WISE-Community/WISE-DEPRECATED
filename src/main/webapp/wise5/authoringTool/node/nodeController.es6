@@ -8,15 +8,18 @@ class NodeController {
                 $state,
                 $stateParams,
                 $timeout,
+                $translate,
                 ConfigService,
                 ProjectService,
                 UtilService) {
+
         this.$anchorScroll = $anchorScroll;
         this.$location = $location;
         this.$scope = $scope;
         this.$state = $state;
         this.$stateParams = $stateParams;
         this.$timeout = $timeout;
+        this.$translate = $translate;
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
         this.UtilService = UtilService;
@@ -91,18 +94,20 @@ class NodeController {
         if (!angular.equals(this.node, this.originalNodeCopy)) {
             // the user has made changes
 
-            var result = confirm('Are you sure you want to undo all the recent changes?');
+            this.$translate('confirmUndo').then((confirmUndo) => {
+                var result = confirm(confirmUndo);
 
-            if (result) {
-                // revert the node back to the previous version
-                this.ProjectService.replaceNode(this.nodeId, this.originalNodeCopy);
+                if (result) {
+                    // revert the node back to the previous version
+                    this.ProjectService.replaceNode(this.nodeId, this.originalNodeCopy);
 
-                // save the project
-                this.ProjectService.saveProject();
+                    // save the project
+                    this.ProjectService.saveProject();
 
-                // close the node authoring view
-                this.close();
-            }
+                    // close the node authoring view
+                    this.close();
+                }
+            });
         } else {
             // the user has not made any changes
 
@@ -164,18 +169,21 @@ class NodeController {
      */
     deleteComponent(componentId) {
 
-        // ask the user to confirm the delete
-        var answer = confirm('Are you sure you want to delete this component?');
+        this.$translate('confirmDeleteComponent').then((confirmDeleteComponent) => {
 
-        if (answer) {
-            // the user confirmed yes
+            // ask the user to confirm the delete
+            var answer = confirm(confirmDeleteComponent);
 
-            // delete the component from the node
-            this.ProjectService.deleteComponent(this.nodeId, componentId);
+            if (answer) {
+                // the user confirmed yes
 
-            // save the project
-            this.ProjectService.saveProject();
-        }
+                // delete the component from the node
+                this.ProjectService.deleteComponent(this.nodeId, componentId);
+
+                // save the project
+                this.ProjectService.saveProject();
+            }
+        });
     }
 
     /**
@@ -199,32 +207,39 @@ class NodeController {
 
         if (this.undoStack.length === 0) {
             // the undo stack is empty so there are no changes to undo
-            alert('There are no changes to undo.');
+            this.$translate('noUndoAvailable').then((noUndoAvailable) => {
+                alert(noUndoAvailable);
+            });
+
         } else if (this.undoStack.length > 0) {
             // the undo stack has elements
 
-            var result = confirm('Are you sure you want to undo the last change?');
+            this.$translate('confirmUndoLastChange').then((confirmUndoLastChange) => {
 
-            if (result) {
-                // get the previous version of the node
-                var nodeCopy = this.undoStack.pop();
+                // ask the user to confirm the delete
+                var result = confirm(confirmUndoLastChange);
 
-                // revert the node back to the previous version
-                this.ProjectService.replaceNode(this.nodeId, nodeCopy);
+                if (result) {
+                    // get the previous version of the node
+                    var nodeCopy = this.undoStack.pop();
 
-                // get the node
-                this.node = this.ProjectService.getNodeById(this.nodeId);
+                    // revert the node back to the previous version
+                    this.ProjectService.replaceNode(this.nodeId, nodeCopy);
 
-                // get the components in the node
-                this.components = this.ProjectService.getComponentsByNodeId(this.nodeId);
+                    // get the node
+                    this.node = this.ProjectService.getNodeById(this.nodeId);
 
-                // save the project
-                this.ProjectService.saveProject();
-            }
+                    // get the components in the node
+                    this.components = this.ProjectService.getComponentsByNodeId(this.nodeId);
+
+                    // save the project
+                    this.ProjectService.saveProject();
+                }
+            });
         }
     }
 };
 
-NodeController.$inject = ['$anchorScroll', '$location', '$scope', '$state', '$stateParams', '$timeout', 'ConfigService', 'ProjectService', 'UtilService'];
+NodeController.$inject = ['$anchorScroll', '$location', '$scope', '$state', '$stateParams', '$timeout', '$translate', 'ConfigService', 'ProjectService', 'UtilService'];
 
 export default NodeController;

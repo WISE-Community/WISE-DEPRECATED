@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var ProjectController = function () {
-    function ProjectController($scope, $state, $stateParams, ProjectService, ConfigService) {
+    function ProjectController($scope, $state, $stateParams, $translate, ProjectService, ConfigService) {
         var _this = this;
 
         _classCallCheck(this, ProjectController);
@@ -17,10 +17,10 @@ var ProjectController = function () {
         this.$scope = $scope;
         this.$state = $state;
         this.$stateParams = $stateParams;
+        this.$translate = $translate;
         this.ProjectService = ProjectService;
         this.ConfigService = ConfigService;
 
-        this.title = "project controller";
         this.projectId = this.$stateParams.projectId;
         this.project = this.ProjectService.project;
         this.items = this.ProjectService.idToOrder;
@@ -42,7 +42,7 @@ var ProjectController = function () {
     }
 
     _createClass(ProjectController, [{
-        key: "updateProjectAsText",
+        key: 'updateProjectAsText',
 
 
         // updates projectAsText field, which is the string representation of the project that we'll show in the textarea
@@ -50,7 +50,7 @@ var ProjectController = function () {
             this.projectAsText = JSON.stringify(this.project, null, 4);
         }
     }, {
-        key: "previewProject",
+        key: 'previewProject',
 
 
         /**
@@ -61,17 +61,17 @@ var ProjectController = function () {
             window.open(previewProjectURL);
         }
     }, {
-        key: "viewProjectAssets",
+        key: 'viewProjectAssets',
         value: function viewProjectAssets() {
             this.$state.go('root.project.asset', { projectId: this.projectId });
         }
     }, {
-        key: "viewProjectHistory",
+        key: 'viewProjectHistory',
         value: function viewProjectHistory() {
             this.$state.go('root.project.history', { projectId: this.projectId });
         }
     }, {
-        key: "saveProject",
+        key: 'saveProject',
         value: function saveProject() {
             var _this2 = this;
 
@@ -91,7 +91,7 @@ var ProjectController = function () {
             }
         }
     }, {
-        key: "closeProject",
+        key: 'closeProject',
 
 
         /**
@@ -101,7 +101,7 @@ var ProjectController = function () {
             this.$state.go('root.main');
         }
     }, {
-        key: "getNodePositionById",
+        key: 'getNodePositionById',
 
 
         /**
@@ -113,7 +113,7 @@ var ProjectController = function () {
             return this.ProjectService.getNodePositionById(nodeId);
         }
     }, {
-        key: "getNodeTitleByNodeId",
+        key: 'getNodeTitleByNodeId',
 
 
         /**
@@ -125,7 +125,7 @@ var ProjectController = function () {
             return this.ProjectService.getNodeTitleByNodeId(nodeId);
         }
     }, {
-        key: "isGroupNode",
+        key: 'isGroupNode',
 
 
         /**
@@ -137,7 +137,7 @@ var ProjectController = function () {
             return this.ProjectService.isGroupNode(nodeId);
         }
     }, {
-        key: "nodeClicked",
+        key: 'nodeClicked',
 
 
         /**
@@ -148,7 +148,7 @@ var ProjectController = function () {
             this.$state.go('root.project.node', { projectId: this.projectId, nodeId: nodeId });
         }
     }, {
-        key: "createGroup",
+        key: 'createGroup',
 
 
         /**
@@ -184,7 +184,7 @@ var ProjectController = function () {
          */
 
     }, {
-        key: "createNode",
+        key: 'createNode',
         value: function createNode() {
 
             // create a new node
@@ -216,7 +216,7 @@ var ProjectController = function () {
          */
 
     }, {
-        key: "insertInside",
+        key: 'insertInside',
         value: function insertInside(nodeId) {
 
             // TODO check that we are inserting into a group
@@ -288,7 +288,7 @@ var ProjectController = function () {
          */
 
     }, {
-        key: "insertAfter",
+        key: 'insertAfter',
         value: function insertAfter(nodeId) {
 
             if (this.createMode) {
@@ -361,7 +361,7 @@ var ProjectController = function () {
          */
 
     }, {
-        key: "move",
+        key: 'move',
         value: function move() {
 
             // make sure there is at least one item selected
@@ -415,7 +415,7 @@ var ProjectController = function () {
          */
 
     }, {
-        key: "delete",
+        key: 'delete',
         value: function _delete() {
 
             // get the selected items
@@ -484,7 +484,7 @@ var ProjectController = function () {
          */
 
     }, {
-        key: "getSelectedItems",
+        key: 'getSelectedItems',
         value: function getSelectedItems() {
 
             // an array to hold the node ids of the nodes that are selected
@@ -507,7 +507,7 @@ var ProjectController = function () {
          */
 
     }, {
-        key: "getSelectedItemTypes",
+        key: 'getSelectedItemTypes',
         value: function getSelectedItemTypes() {
 
             var selectedItemTypes = [];
@@ -540,7 +540,7 @@ var ProjectController = function () {
          */
 
     }, {
-        key: "unselectAllItems",
+        key: 'unselectAllItems',
         value: function unselectAllItems() {
             angular.forEach(this.items, function (value, key) {
                 value.checked = false;
@@ -552,7 +552,7 @@ var ProjectController = function () {
          */
 
     }, {
-        key: "toggleCreateGroup",
+        key: 'toggleCreateGroup',
         value: function toggleCreateGroup() {
             this.hideCreateNode();
             this.showCreateGroup = !this.showCreateGroup;
@@ -564,7 +564,7 @@ var ProjectController = function () {
          */
 
     }, {
-        key: "hideCreateGroup",
+        key: 'hideCreateGroup',
         value: function hideCreateGroup() {
             this.showCreateGroup = false;
             this.createGroupTitle = '';
@@ -575,7 +575,7 @@ var ProjectController = function () {
          */
 
     }, {
-        key: "toggleCreateNode",
+        key: 'toggleCreateNode',
         value: function toggleCreateNode() {
             this.hideCreateGroup();
             this.showCreateNode = !this.showCreateNode;
@@ -587,7 +587,7 @@ var ProjectController = function () {
          */
 
     }, {
-        key: "hideCreateNode",
+        key: 'hideCreateNode',
         value: function hideCreateNode() {
             this.showCreateNode = false;
             this.createNodeTitle = '';
@@ -598,7 +598,7 @@ var ProjectController = function () {
          */
 
     }, {
-        key: "cancelMove",
+        key: 'cancelMove',
         value: function cancelMove() {
             this.insertGroupMode = false;
             this.insertNodeMode = false;
@@ -610,7 +610,7 @@ var ProjectController = function () {
          */
 
     }, {
-        key: "updateStartNodeId",
+        key: 'updateStartNodeId',
         value: function updateStartNodeId() {
 
             var newStartNodeId = null;
@@ -652,8 +652,9 @@ var ProjectController = function () {
          */
 
     }, {
-        key: "checkPotentialStartNodeIdChange",
+        key: 'checkPotentialStartNodeIdChange',
         value: function checkPotentialStartNodeIdChange() {
+            var _this3 = this;
 
             var potentialChange = false;
 
@@ -678,12 +679,14 @@ var ProjectController = function () {
                     var firstChildTitle = firstLeafNode.title;
 
                     // ask the user if they would like to change the start step to the step that is now the first child in the group
-                    var answer = confirm("Would you like to update the project start step to '" + firstChildTitle + "'?");
+                    this.$translate('confirmUpdateStartStep', { startStepTitle: firstChildTitle }).then(function (confirmUpdateStartStep) {
+                        var answer = confirm(confirmUpdateStartStep);
 
-                    if (answer) {
-                        // change the project start node id
-                        this.ProjectService.setStartNodeId(firstLeafNodeId);
-                    }
+                        if (answer) {
+                            // change the project start node id
+                            _this3.ProjectService.setStartNodeId(firstLeafNodeId);
+                        }
+                    });
                 }
             }
 
@@ -696,7 +699,7 @@ var ProjectController = function () {
 
 ;
 
-ProjectController.$inject = ['$scope', '$state', '$stateParams', 'ProjectService', 'ConfigService'];
+ProjectController.$inject = ['$scope', '$state', '$stateParams', '$translate', 'ProjectService', 'ConfigService'];
 
 exports.default = ProjectController;
 //# sourceMappingURL=projectController.js.map

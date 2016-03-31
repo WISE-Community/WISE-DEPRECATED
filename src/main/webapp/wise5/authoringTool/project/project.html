@@ -22,29 +22,33 @@
         }
     </style>
     <div style="float:right">
-        <button ng-click='projectController.previewProject()'>Preview Project</button>
-        <button ng-click='projectController.viewProjectAssets()'>View Assets</button>
-        <button ng-click='projectController.viewProjectHistory()'>View History</button>
+        <button ng-click='projectController.previewProject()' translate="previewProject"></button>
+        <button ng-click='projectController.viewProjectAssets()' translate="manageAssets"></button>
+        <button ng-click='projectController.viewProjectHistory()' translate="viewHistory"></button>
     </div>
     <div id="commitDiv" style="display:none">
         <label id="editMessageLabel">Edit Message:</label>
         <input id="commitMessageInput" type="text" size="50" placeholder="Write a small message here explaining this change. (Optional)" />
-        <button id="saveButton" ng-click='projectController.saveProject()'>Save Project</button>
+        <button id="saveButton" ng-click='projectController.saveProject()' translate="save"></button>
     </div>
-<button ng-click='projectController.toggleCreateGroup()'>Create Activity</button>
-<button ng-click='projectController.toggleCreateNode()'>Create Step</button>
-<button ng-click='projectController.move()'>Move</button>
-<button ng-click='projectController.delete()'>Delete</button>
-<button ng-click='projectController.saveProject()'>Save Project</button>
-<button ng-click='projectController.closeProject()'>Close Project</button>
+<button ng-click='projectController.toggleCreateGroup()' translate="createNewActivity"></button>
+<button ng-click='projectController.toggleCreateNode()' translate="createNewStep"></button>
+<button ng-click='projectController.move()' translate="move"></button>
+<button ng-click='projectController.delete()' translate="delete"></button>
+<button ng-click='projectController.saveProject()' translate="save"></button>
+<button ng-click='projectController.closeProject()' translate="close"></button>
 <div ng-show='projectController.showCreateGroup'>
-    Activity Title: <input ng-model='projectController.createGroupTitle' size='50'/> <button ng-click='projectController.createGroup()'>Submit</button> <button ng-click='projectController.hideCreateGroup()'>Cancel</button>
+    <label translate="activityTitle"></label>: <input ng-model='projectController.createGroupTitle' size='50'/>
+    <button ng-click='projectController.createGroup()' translate="create"></button>
+    <button ng-click='projectController.hideCreateGroup()'translate="cancel"></button>
 </div>
 <div ng-show='projectController.showCreateNode'>
-    Step Title: <input ng-model='projectController.createNodeTitle' size='50'/> <button ng-click='projectController.createNode()'>Submit</button> <button ng-click='projectController.hideCreateNode()'>Cancel</button>
+    <label translate="stepTitle"></label>: <input ng-model='projectController.createNodeTitle' size='50'/>
+    <button ng-click='projectController.createNode()' translate="create"></button>
+    <button ng-click='projectController.hideCreateNode()' translate="cancel"></button>
 </div>
 <div ng-show='projectController.insertGroupMode || projectController.insertNodeMode'>
-    Choose the new location <button ng-click='projectController.cancelMove()'>Cancel</button>
+    <span translate="chooseNewLocation"></span><button ng-click='projectController.cancelMove()' translate="cancel"></button>
 </div>
 <div ng-repeat='item in projectController.items | toArray | orderBy : "order"'
      ng-class='{"node-select--group": projectController.isGroupNode(item.$key), "node-select--node": !projectController.isGroupNode(item.$key)}'>
@@ -59,14 +63,14 @@
     </h6>
     <h6 ng-if='item.order==0'
         style='display:inline'>
-        Project
+        <label translate="projectTitle"></label>: <span>{{projectController.project.metadata.title}}</span>
     </h6>
     <button ng-show='(projectController.insertNodeMode && item.order!==0) || (projectController.insertGroupMode && item.order==0)' 
             ng-if='projectController.isGroupNode(item.$key)' 
-            ng-click='projectController.insertInside(item.$key)'>Insert Inside</button>
+            ng-click='projectController.insertInside(item.$key)' translate="insertInside"></button>
     <button ng-show='(projectController.insertNodeMode && !projectController.isGroupNode(item.$key)) || (projectController.insertGroupMode && projectController.isGroupNode(item.$key))' 
             ng-if='item.order!==0' 
-            ng-click='projectController.insertAfter(item.$key)'>Insert After</button>
+            ng-click='projectController.insertAfter(item.$key)' translate="insertAfter"></button>
 </div>
 
     <div id="projectJSONStringDiv" style="display:none">Project JSON:

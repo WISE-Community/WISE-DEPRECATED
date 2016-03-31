@@ -128,6 +128,11 @@ var ConfigService = function () {
             return this.getConfigParam('wiseBaseURL');
         }
     }, {
+        key: 'getLocale',
+        value: function getLocale() {
+            return this.getConfigParam('locale') || 'en';
+        }
+    }, {
         key: 'getMode',
         value: function getMode() {
             return this.getConfigParam('mode');

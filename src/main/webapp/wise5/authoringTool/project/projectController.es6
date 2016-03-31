@@ -2,14 +2,14 @@
 
 class ProjectController {
 
-    constructor($scope, $state, $stateParams, ProjectService, ConfigService) {
+    constructor($scope, $state, $stateParams, $translate, ProjectService, ConfigService) {
         this.$scope = $scope;
         this.$state = $state;
         this.$stateParams = $stateParams;
+        this.$translate = $translate;
         this.ProjectService = ProjectService;
         this.ConfigService = ConfigService;
 
-        this.title = "project controller";
         this.projectId = this.$stateParams.projectId;
         this.project = this.ProjectService.project;
         this.items = this.ProjectService.idToOrder;
@@ -592,14 +592,16 @@ class ProjectController {
             
             if (firstLeafNode != null) {
                 var firstChildTitle = firstLeafNode.title;
-                
+
                 // ask the user if they would like to change the start step to the step that is now the first child in the group
-                var answer = confirm("Would you like to update the project start step to '" + firstChildTitle + "'?");
-                
-                if (answer) {
-                    // change the project start node id
-                    this.ProjectService.setStartNodeId(firstLeafNodeId);
-                }
+                this.$translate('confirmUpdateStartStep', { startStepTitle: firstChildTitle }).then((confirmUpdateStartStep) => {
+                    var answer = confirm(confirmUpdateStartStep);
+
+                    if (answer) {
+                        // change the project start node id
+                        this.ProjectService.setStartNodeId(firstLeafNodeId);
+                    }
+                });
             }
         }
         
@@ -607,6 +609,6 @@ class ProjectController {
     }
 };
 
-ProjectController.$inject = ['$scope', '$state', '$stateParams', 'ProjectService', 'ConfigService'];
+ProjectController.$inject = ['$scope', '$state', '$stateParams', '$translate', 'ProjectService', 'ConfigService'];
 
 export default ProjectController;
