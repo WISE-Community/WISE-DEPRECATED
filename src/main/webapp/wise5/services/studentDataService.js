@@ -215,27 +215,17 @@ var StudentDataService = function () {
     }, {
         key: 'updateNodeStatuses',
         value: function updateNodeStatuses() {
-            //this.nodeStatuses = [];
-
             var nodes = this.ProjectService.getNodes();
             var groups = this.ProjectService.getGroups();
 
             if (nodes != null) {
-
-                //var nodeStatuses = [];
 
                 for (var n = 0; n < nodes.length; n++) {
                     var node = nodes[n];
                     if (!this.ProjectService.isGroupNode(node.id)) {
                         this.updateNodeStatusByNode(node);
                     }
-
-                    //var nodeStatusesByNode = this.updateNodeStatusByNode(node);
-                    //nodeStatuses.push(nodeStatusesByNode);
-                    //console.log(nodeStatusesByNode);
                 }
-
-                //this.nodeStatuses = nodeStatuses;
             }
 
             var group;
@@ -294,17 +284,6 @@ var StudentDataService = function () {
                             // evaluate the constraint to see if the node can be visited
                             var tempResult = this.evaluateConstraint(node, constraintForNode);
 
-                            /*
-                             if (firstResult) {
-                             // this is the first constraint in this for loop
-                             result = tempResult;
-                             firstResult = false;
-                             } else {
-                             // this is not the first constraint in this for loop so we will && the result
-                             result = result && tempResult;
-                             }
-                             */
-
                             var action = constraintForNode.action;
 
                             if (action != null) {
@@ -360,8 +339,6 @@ var StudentDataService = function () {
 
                 this.nodeStatuses[nodeId].progress = this.getNodeProgressById(nodeId);
                 this.nodeStatuses[nodeId].icon = this.ProjectService.getNodeIconByNodeId(nodeId);
-
-                //console.log(angular.toJson(tempNodeStatus));
             }
 
             //return nodeStatus;
@@ -534,34 +511,41 @@ var StudentDataService = function () {
         }
     }, {
         key: 'evaluateBranchPathTakenCriteria',
+
+
+        /**
+         * Check if this branchPathTaken criteria was satisfied
+         * @param criteria a branchPathTaken criteria
+         * @returns whether the branchPathTaken criteria was satisfied
+         */
         value: function evaluateBranchPathTakenCriteria(criteria) {
             var result = false;
 
             if (criteria != null) {
+                // get the expected from and to node ids
                 var expectedFromNodeId = criteria.fromNodeId;
                 var expectedToNodeId = criteria.toNodeId;
 
-                // get the node states
-                var nodeStates = this.getBranchPathTakenNodeStates(expectedFromNodeId);
+                // get all the branchPathTaken events from the from node id
+                var branchPathTakenEvents = this.getBranchPathTakenEventsByNodeId(expectedFromNodeId);
 
-                if (nodeStates != null) {
-                    for (var n = 0; n < nodeStates.length; n++) {
-                        var nodeState = nodeStates[n];
+                if (branchPathTakenEvents != null) {
 
-                        if (nodeState != null) {
-                            var studentData = nodeState.studentData;
+                    // loop through all the branchPathTaken events
+                    for (var b = 0; b < branchPathTakenEvents.length; b++) {
+                        var branchPathTakenEvent = branchPathTakenEvents[b];
 
-                            if (studentData != null) {
-                                var dataType = studentData.dataType;
+                        if (branchPathTakenEvent != null) {
+                            var data = branchPathTakenEvent.data;
 
-                                if (dataType != null && dataType === 'branchPathTaken') {
+                            if (data != null) {
+                                // get the from and to node ids of the event
+                                var fromNodeId = data.fromNodeId;
+                                var toNodeId = data.toNodeId;
 
-                                    var tempFromNodeId = studentData.fromNodeId;
-                                    var tempToNodeId = studentData.toNodeId;
-
-                                    if (expectedFromNodeId === tempFromNodeId && expectedToNodeId === tempToNodeId) {
-                                        result = true;
-                                    }
+                                if (expectedFromNodeId === fromNodeId && expectedToNodeId === toNodeId) {
+                                    // the from and to node ids match the ones we are looking for
+                                    result = true;
                                 }
                             }
                         }
@@ -570,6 +554,37 @@ var StudentDataService = function () {
             }
 
             return result;
+        }
+    }, {
+        key: 'getBranchPathTakenEventsByNodeId',
+
+
+        /**
+         * Get all the branchPathTaken events by node id
+         * @params fromNodeId the from node id
+         * @returns all the branchPathTaken events from the given node id
+         */
+        value: function getBranchPathTakenEventsByNodeId(fromNodeId) {
+
+            var branchPathTakenEvents = [];
+            var events = this.studentData.events;
+
+            if (events != null) {
+
+                // loop through all the events
+                for (var e = 0; e < events.length; e++) {
+                    var event = events[e];
+
+                    if (event != null) {
+                        if (fromNodeId === event.nodeId && 'branchPathTaken' === event.event) {
+                            // we have found a branchPathTaken event from the from node id
+                            branchPathTakenEvents.push(event);
+                        }
+                    }
+                }
+            }
+
+            return branchPathTakenEvents;
         }
     }, {
         key: 'getBranchPathTakenNodeStates',
@@ -640,21 +655,6 @@ var StudentDataService = function () {
             this.stackHistory = [];
             this.visitedNodesHistory = [];
 
-            if (componentStates != null) {
-
-                // loop through all the component state
-                for (var i = 0; i < componentStates.length; i++) {
-
-                    var componentState = componentStates[i];
-
-                    if (componentState != null) {
-                        var componentStateNodeId = componentState.nodeId;
-                        this.updateStackHistory(componentStateNodeId);
-                        this.updateVisitedNodesHistory(componentStateNodeId);
-                    }
-                }
-            }
-
             if (events != null) {
 
                 // loop through all the events
@@ -667,6 +667,7 @@ var StudentDataService = function () {
                         if (event.event === 'nodeEntered') {
 
                             // the student has visited this node id before
+                            this.updateStackHistory(event.nodeId);
                             this.updateVisitedNodesHistory(event.nodeId);
                         }
                     }
@@ -1063,6 +1064,8 @@ var StudentDataService = function () {
                     }
                 }
             }
+
+            this.updateNodeStatuses();
         }
     }, {
         key: 'retrieveComponentStates',

@@ -192,27 +192,17 @@ class StudentDataService {
     };
 
     updateNodeStatuses() {
-        //this.nodeStatuses = [];
-
         var nodes = this.ProjectService.getNodes();
         var groups = this.ProjectService.getGroups();
 
         if (nodes != null) {
-
-            //var nodeStatuses = [];
 
             for (var n = 0; n < nodes.length; n++) {
                 var node = nodes[n];
                 if (!this.ProjectService.isGroupNode(node.id)) {
                     this.updateNodeStatusByNode(node);
                 }
-
-                //var nodeStatusesByNode = this.updateNodeStatusByNode(node);
-                //nodeStatuses.push(nodeStatusesByNode);
-                //console.log(nodeStatusesByNode);
             }
-
-            //this.nodeStatuses = nodeStatuses;
         }
 
         var group;
@@ -246,7 +236,6 @@ class StudentDataService {
             tempNodeStatus.isVisitable = true;
             tempNodeStatus.isCompleted = true;
 
-
             // get the constraints that affect this node
             var constraintsForNode = this.ProjectService.getConstraintsForNode(node);
 
@@ -270,17 +259,6 @@ class StudentDataService {
 
                         // evaluate the constraint to see if the node can be visited
                         var tempResult = this.evaluateConstraint(node, constraintForNode);
-
-                        /*
-                         if (firstResult) {
-                         // this is the first constraint in this for loop
-                         result = tempResult;
-                         firstResult = false;
-                         } else {
-                         // this is not the first constraint in this for loop so we will && the result
-                         result = result && tempResult;
-                         }
-                         */
 
                         var action = constraintForNode.action;
 
@@ -337,8 +315,6 @@ class StudentDataService {
 
             this.nodeStatuses[nodeId].progress = this.getNodeProgressById(nodeId);
             this.nodeStatuses[nodeId].icon = this.ProjectService.getNodeIconByNodeId(nodeId);
-
-            //console.log(angular.toJson(tempNodeStatus));
         }
 
         //return nodeStatus;
@@ -513,35 +489,39 @@ class StudentDataService {
         return result;
     };
 
+    /**
+     * Check if this branchPathTaken criteria was satisfied
+     * @param criteria a branchPathTaken criteria
+     * @returns whether the branchPathTaken criteria was satisfied
+     */
     evaluateBranchPathTakenCriteria(criteria) {
         var result = false;
 
         if (criteria != null) {
+            // get the expected from and to node ids
             var expectedFromNodeId = criteria.fromNodeId;
             var expectedToNodeId = criteria.toNodeId;
 
-            // get the node states
-            var nodeStates = this.getBranchPathTakenNodeStates(expectedFromNodeId);
+            // get all the branchPathTaken events from the from node id
+            var branchPathTakenEvents = this.getBranchPathTakenEventsByNodeId(expectedFromNodeId);
 
-            if (nodeStates != null) {
-                for (var n = 0; n < nodeStates.length; n++) {
-                    var nodeState = nodeStates[n];
-
-                    if (nodeState != null) {
-                        var studentData = nodeState.studentData;
-
-                        if (studentData != null) {
-                            var dataType = studentData.dataType;
-
-                            if (dataType != null && dataType === 'branchPathTaken') {
-
-                                var tempFromNodeId = studentData.fromNodeId;
-                                var tempToNodeId = studentData.toNodeId;
-
-                                if (expectedFromNodeId === tempFromNodeId &&
-                                    expectedToNodeId === tempToNodeId) {
-                                    result = true;
-                                }
+            if (branchPathTakenEvents != null) {
+                
+                // loop through all the branchPathTaken events
+                for (var b = 0; b < branchPathTakenEvents.length; b++) {
+                    var branchPathTakenEvent = branchPathTakenEvents[b];
+                    
+                    if (branchPathTakenEvent != null) {
+                        var data = branchPathTakenEvent.data;
+                        
+                        if (data != null) {
+                            // get the from and to node ids of the event
+                            var fromNodeId = data.fromNodeId;
+                            var toNodeId = data.toNodeId;
+                            
+                            if (expectedFromNodeId === fromNodeId && expectedToNodeId === toNodeId) {
+                                // the from and to node ids match the ones we are looking for
+                                result = true;
                             }
                         }
                     }
@@ -551,6 +531,34 @@ class StudentDataService {
 
         return result;
     };
+    
+    /**
+     * Get all the branchPathTaken events by node id
+     * @params fromNodeId the from node id
+     * @returns all the branchPathTaken events from the given node id
+     */
+    getBranchPathTakenEventsByNodeId(fromNodeId) {
+        
+        var branchPathTakenEvents = [];
+        var events = this.studentData.events;
+        
+        if (events != null) {
+            
+            // loop through all the events
+            for (var e = 0; e < events.length; e++) {
+                var event = events[e];
+                
+                if (event != null) {
+                    if (fromNodeId === event.nodeId && 'branchPathTaken' === event.event) {
+                        // we have found a branchPathTaken event from the from node id
+                        branchPathTakenEvents.push(event);
+                    }
+                }
+            }
+        }
+        
+        return branchPathTakenEvents;
+    }
 
     getBranchPathTakenNodeStates(fromNodeId) {
 
@@ -613,22 +621,6 @@ class StudentDataService {
         this.stackHistory = [];
         this.visitedNodesHistory = [];
 
-        if (componentStates != null) {
-
-            // loop through all the component state
-            for (var i = 0; i < componentStates.length; i++) {
-
-
-                var componentState = componentStates[i];
-
-                if (componentState != null) {
-                    var componentStateNodeId = componentState.nodeId;
-                    this.updateStackHistory(componentStateNodeId);
-                    this.updateVisitedNodesHistory(componentStateNodeId);
-                }
-            }
-        }
-
         if (events != null) {
 
             // loop through all the events
@@ -641,6 +633,7 @@ class StudentDataService {
                     if (event.event === 'nodeEntered') {
 
                         // the student has visited this node id before
+                        this.updateStackHistory(event.nodeId);
                         this.updateVisitedNodesHistory(event.nodeId);
                     }
                 }
@@ -1021,6 +1014,9 @@ class StudentDataService {
                 }
             }
         }
+        
+        this.updateNodeStatuses();
+        
     };
 
     retrieveComponentStates(runId, periodId, workgroupId) {

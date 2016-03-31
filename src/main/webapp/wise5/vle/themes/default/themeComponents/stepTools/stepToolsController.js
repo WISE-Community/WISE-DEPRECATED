@@ -38,6 +38,10 @@ var StepToolsCtrl = function () {
         this.$scope.$on('currentNodeChanged', function (event, args) {
             _this.updateModel();
         });
+
+        this.$scope.$on('nodeStatusesChanged', function (event, arge) {
+            _this.updateModel();
+        });
     }
 
     _createClass(StepToolsCtrl, [{

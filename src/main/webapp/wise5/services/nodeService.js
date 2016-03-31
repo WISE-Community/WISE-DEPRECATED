@@ -332,23 +332,32 @@ var NodeService = function () {
             if (currentNode != null) {
                 var currentNodeId = currentNode.id;
 
-                // get the branch path node states
-                var branchPathNodeStates = this.StudentDataService.getBranchPathTakenNodeStates(currentNodeId);
+                // get all the branchPathTaken events for the current node
+                var branchPathTakenEvents = this.StudentDataService.getBranchPathTakenEventsByNodeId(currentNodeId);
 
-                if (branchPathNodeStates != null && branchPathNodeStates.length > 0) {
+                if (branchPathTakenEvents != null && branchPathTakenEvents.length > 0) {
+                    // the student has branched on this node before
 
-                    // loop through the branch path node states from newest to oldest
-                    for (var b = branchPathNodeStates.length - 1; b >= 0; b--) {
-                        var nodeState = branchPathNodeStates[b];
+                    // loop through all the branchPathTaken events from newest to oldest
+                    for (var b = branchPathTakenEvents.length - 1; b >= 0; b--) {
+                        var branchPathTakenEvent = branchPathTakenEvents[b];
 
-                        var studentData = nodeState.studentData;
+                        if (branchPathTakenEvent != null) {
 
-                        if (studentData != null) {
-                            // get the to node id for the node state
-                            nextNodeId = studentData.toNodeId;
+                            // get the data from the event
+                            var data = branchPathTakenEvent.data;
+
+                            if (data != null) {
+                                // get the to node id
+                                var toNodeId = data.toNodeId;
+                                nextNodeId = toNodeId;
+                                break;
+                            }
                         }
                     }
                 } else {
+                    // the student has not branched on this node before
+
                     // get the transition logic from the current node
                     var transitions = this.ProjectService.getTransitionLogicByFromNodeId(currentNodeId);
 
@@ -396,20 +405,27 @@ var NodeService = function () {
 
                 var currentNodeId = currentNode.id;
 
-                var transitions = this.ProjectService.getTransitionsByToNodeId(currentNodeId);
+                // get all the nodes that transition to the current node
+                var nodeIdsByToNodeId = this.ProjectService.getNodeIdsByToNodeId(currentNodeId);
 
-                if (transitions != null && transitions.length === 1) {
-                    // TODO: remove this if case, as transition.from has been deprecated
-                    var transition = transitions[0];
+                if (nodeIdsByToNodeId == null) {} else if (nodeIdsByToNodeId.length === 1) {
+                    // there is only one node that transitions to the current node
+                    prevNodeId = nodeIdsByToNodeId[0];
+                } else if (nodeIdsByToNodeId.length > 1) {
+                    // there are multiple nodes that transition to the current node
 
-                    if (transition != null) {
-                        prevNodeId = transition.from;
-                    }
-                } else {
-                    var currentNodePos = this.ProjectService.getOrderById(currentNode.id);
-                    var previousPos = currentNodePos - 1;
-                    if (previousPos > 0) {
-                        prevNodeId = this.ProjectService.getIdByOrder(previousPos);
+                    // get the visited nodes history
+                    var visitedNodesHistory = this.StudentDataService.getVisitedNodesHistory();
+
+                    // loop through the visited node ids from newest to oldest
+                    for (var v = visitedNodesHistory.length - 1; v >= 0; v--) {
+                        var visitedNodesHistoryNodeId = visitedNodesHistory[v];
+
+                        if (nodeIdsByToNodeId.indexOf(visitedNodesHistoryNodeId) != -1) {
+                            // we have found a node that we previously visited that transitions to the current node
+                            prevNodeId = visitedNodesHistoryNodeId;
+                            break;
+                        }
                     }
                 }
             }
@@ -515,7 +531,7 @@ var NodeService = function () {
 
                         var howToChooseAmongAvailablePaths = transitionLogic.howToChooseAmongAvailablePaths;
 
-                        if (howToChooseAmongAvailablePaths == null || howToChooseAmongAvailablePaths === 'random') {
+                        if (howToChooseAmongAvailablePaths == null || howToChooseAmongAvailablePaths === '' || howToChooseAmongAvailablePaths === 'random') {
                             // choose a random transition
 
                             var randomIndex = Math.floor(Math.random() * availableTransitions.length);
@@ -554,7 +570,6 @@ var NodeService = function () {
     }, {
         key: 'evaluateTransitionLogic',
         value: function evaluateTransitionLogic() {
-
             // get the current node
             var currentNode = this.StudentDataService.getCurrentNode();
 
@@ -563,17 +578,17 @@ var NodeService = function () {
                 var transitionLogic = currentNode.transitionLogic;
 
                 if (transitionLogic != null) {
-                    //var whenToChoosePath = transitionLogic.whenToChoosePath;
 
-                    //var nodeStates = this.StudentDataService.getNodeStatesByNodeId(currentNode.id);
-
+                    // get all the transitions from the current node
                     var transitions = transitionLogic.transitions;
                     var canChangePath = transitionLogic.canChangePath;
-
                     var alreadyBranched = false;
-                    var latestBranchNodeState = this.getLatestBranchNodeState(currentNode.id);
 
-                    if (latestBranchNodeState != null) {
+                    // get all the branchPathTaken events for the current node
+                    var events = this.StudentDataService.getBranchPathTakenEventsByNodeId(currentNode.id);
+
+                    if (events.length > 0) {
+                        // the student has branched from this node before
                         alreadyBranched = true;
                     }
 
@@ -592,7 +607,8 @@ var NodeService = function () {
                                 fromNodeId = currentNode.id;
                                 toNodeId = transition.to;
 
-                                this.createBranchNodeState(fromNodeId, toNodeId);
+                                // create a branchPathTaken event to signify taking the branch path
+                                this.createBranchPathTakenEvent(fromNodeId, toNodeId);
                             }
                         } else {
                             // student can't change path
@@ -608,11 +624,32 @@ var NodeService = function () {
                                 fromNodeId = currentNode.id;
                                 toNodeId = transition.to;
 
-                                this.createBranchNodeState(fromNodeId, toNodeId);
+                                // create a branchPathTaken event to signify taking the branch path
+                                this.createBranchPathTakenEvent(fromNodeId, toNodeId);
                             }
                         }
                 }
             }
+        }
+    }, {
+        key: 'createBranchPathTakenEvent',
+
+
+        /**
+         * Create a branchPathTaken event
+         * @param fromNodeId the from node id
+         * @param toNodeid the to node id
+         */
+        value: function createBranchPathTakenEvent(fromNodeId, toNodeId) {
+            var nodeId = fromNodeId;
+            var componentId = null;
+            var componentType = null;
+            var category = "Navigation";
+            var event = "branchPathTaken";
+            var eventData = {};
+            eventData.fromNodeId = fromNodeId;
+            eventData.toNodeId = toNodeId;
+            this.StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
         }
     }, {
         key: 'getBranchNodeStates',
@@ -703,7 +740,6 @@ var NodeService = function () {
     }, {
         key: 'evaluateTransitionLogicOn',
         value: function evaluateTransitionLogicOn(event) {
-
             var result = false;
 
             // get the current node
