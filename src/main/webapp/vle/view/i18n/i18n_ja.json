@@ -570,5 +570,225 @@
     "error_msg_with_reason": {
         "value": "エラーが生じました。WISEスタッフに連絡してください。理由：{0}",
         "description": "An error message a reason"
+    },
+    "menu_signOut": {
+        "value": "サインアウト",
+        "description": "Text for link to sign out"
+    },
+    "on": {
+        "value": "オン",
+        "description": "Text for the word 'on' (uppercase)"
+    },
+    "off": {
+        "value": "オフ",
+        "description": "Text for the word 'off' (uppercase)"
+    },
+    "ON": {
+        "value": "オン",
+        "description": "Text for the word 'ON' (uppercase)"
+    },
+    "OFF": {
+        "value": "オフ",
+        "description": "Text for the word 'OFF' (uppercase)"
+    },
+    "stepTermPlural": {
+        "value": "ステップ",
+        "description": "Plural form of the default term for a 'Step' in a WISE project"
+    },
+    "ideaBasket_public_privateLabel": {
+        "value": "プライベート",
+        "description": "Label designating a private idea in the Idea Basket"
+    },
+    "new_text": {
+        "value": "新規",
+        "description": "The text 'New' used to label new feedback"
+    },
+    "choose_a_step": {
+        "value": "ステップを選ぶ",
+        "description": "The label that tells the student to choose a step to view flagged work for in the flagged work window"
+    },
+    "anonymous": {
+        "value": "匿名",
+        "description": "The label to specify that the team is anonymous"
+    },
+    "mywork_preview_mode": {
+        "value": "マイワークはプレビューモードでは使えません。ランで使われる時は、ここに自分のワークと成績が表示されます。",
+        "description": "Text to display when user clicks on review work button in preview mode"
+    },
+    "flagged_preview_mode": {
+        "value": "フラグはプレビューモードでは使えません。ランで使われる時は、ここに先生がフラグされたアイテムが表示されます。",
+        "description": "Text to display when user clicks on flagged work button in preview mode"
+    },
+    "menu_teacherHome": {
+        "value": "ホーム",
+        "description": "Text for link teacher home page"
+    },
+    "menu_projectLibrary": {
+        "value": "プロジェクトライブラリ",
+        "description": "Text for link to project library"
+    },
+    "student_assets_preview_mode": {
+        "value": "アセットはプレビューモードでは使えません。ランで使われる時は、ここに自分がアップロードしたアセットが表示されます。",
+        "description": "Message to show users when they click on student assets button in preview mode"
+    },
+    "activityTerm": {
+        "value": "アクティビティ",
+        "description": "Default term for an 'Activity' in a WISE project (singular)"
+    },
+    "activityTermPlural": {
+        "value": "アクティビティ",
+        "description": "Plural form of the default term for a 'Activity' in a WISE project"
+    },
+    "idea_basket_private": {
+        "value": "アイデアバスケット（非公開）",
+        "description": "The text for the private idea basket"
+    },
+    "idea_basket_public": {
+        "value": "アイデアバスケット（公開）",
+        "description": "The text for the public idea basket"
+    },
+    "ideaBasket_clickToSort": {
+        "value": "クリックしてソート",
+        "description": "Title/tooltip for sortable rows in a table"
+    },
+    "ideaBasket_empty": {
+        "value": "{0}が空です。{1}をクリックして{2}を足してください。",
+        "description": "Text to display when idea basket is empty"
+    },
+    "ideaBasket_deletedTableHeader": {
+        "value": "削除された{0}",
+        "description": "Header text for the deleted ideas table in the Idea Basket"
+    },
+    "ideaBasket_ideaTableHeader": {
+        "value": "自分の{0}",
+        "description": "Header text for the ideas table in the Idea Basket"
+    },
+    "ideaBasket_deletedEmpty": {
+        "value": "ゴミ箱が空です。",
+        "description": "Text to display when the Idea Basket trash is empty"
+    },
+    "ideaBasket_trashLabel": {
+        "value": "ゴミ箱",
+        "description": "Label the for deleted ideas table in the Idea Basket"
+    },
+    "ideaBasket_deleteHeader": {
+        "value": "削除",
+        "description": "Header text for the delete idea column in the Idea Basket"
+    },
+    "ideaBasket_restoreHeader": {
+        "value": "リストア",
+        "description": "Header text for the restore idea column in the Idea Basket"
+    },
+    "ideaBasket_showDeleted": {
+        "value": "（クリックして表示）",
+        "description": "Text for the link to show the contents of the Deleted Ideas table in the Idea Basket"
+    },
+    "ideaBasket_hideDeleted": {
+        "value": "（クリックして非表示）",
+        "description": "Text for the link to hide the contents of the Deleted Ideas table in the Idea Basket"
+    },
+    "ideaBasket_ideaTitle": {
+        "value": "クリック＋ドラグでソート、ダブルクリックで編集",
+        "description": "Title/tooltip for an idea in the Idea Basket"
+    },
+    "ideaBasket_deletedIdeaTitle": {
+        "value": "『＋』をクリックして{0}をゴミ箱から出す",
+        "description": "Title/tooltip for a deleted idea in the Idea Basket"
+    },
+    "ideaBasket_editLinkText": {
+        "value": "編集",
+        "description": "Text for link to edit an idea in the Idea Basket"
+    },
+    "ideaBasket_editLinkTitle": {
+        "value": "{0}を編集",
+        "description": "Title/tooltip for link to edit an idea in the Idea Basket"
+    },
+    "ideaBasket_deleteLinkTitle": {
+        "value": "{0}を削除",
+        "description": "Title/tooltip for link to delete an idea in the Idea Basket"
+    },
+    "ideaBasket_customAttributeLabel": {
+        "value": "他",
+        "description": "Label text for a student-generated (custom) value for an idea attribute in the Idea Basket"
+    },
+    "ideaBasket_public_copyLinkText": {
+        "value": "コピー",
+        "description": "Text for link or button to copy an idea from the Public Idea Basket"
+    },
+    "ideaBasket_public_header": {
+        "value": "公開された{0}",
+        "description": "Header text for the Public Idea Basket"
+    },
+    "ideaBasket_public_publicLabel": {
+        "value": "公開",
+        "description": "Label designating a public idea in the Idea Basket"
+    },
+    "ideaBasket_public_empty": {
+        "value": "{0}が空です。",
+        "description": "Text to display when public Idea Basket is empty"
+    },
+    "ideaBasket_public_publicRowLabel": {
+        "value": "（公開）",
+        "description": "Label designating a public idea row in the Idea Basket"
+    },
+    "ideaBasket_public_origin": {
+        "value": "起源",
+        "description": "Header text for the column identifying the origin (source) of an idea (public or private) in the Idea Basket"
+    },
+    "ideaBasket_public_timesCopied": {
+        "value": "コピー数",
+        "description": "Header text for the column identifying how many times an idea has been copied from the Public Idea Basket"
+    },
+    "ideaBasket_public_makePublic": {
+        "value": "公開する",
+        "description": "Text for button or link to make an idea public (add to the Public Idea Basket)"
+    },
+    "ideaBasket_public_makePrivate": {
+        "value": "非公開する",
+        "description": "Text for button or link to remove an idea from the Public Idea Basket"
+    },
+    "ideaBasket_public_copiedIdea": {
+        "value": "コピー",
+        "description": "Text identifying an idea that originated as a copy from the Public Idea Basket"
+    },
+    "ideaBasket_public_orignalIdea": {
+        "value": "自分",
+        "description": "Text identifying an idea that was did not originate as a copy from the Public Idea Basket"
+    },
+    "ideaBasket_public_copySuccess": {
+        "value": "{1}から{0}がコピーされました。",
+        "description": "Message to display when successfully copying an idea from the pubic Idea Basket"
+    },
+    "ideaBasket_public_loadFailure": {
+        "value": "エラーが生じました：{0}にアクセスできませんでした。",
+        "description": "Message to display when loading public Idea Basket fails"
+    },
+    "ideaBasket_public_copyOwnIdeaError": {
+        "value": "エラーが生じました：自分の{0}をコピーすることはできません。",
+        "description": "Error text to display when workgroup attempts to copy their own idea from the public Idea Basket."
+    },
+    "ideaBasket_public_alreadyCopiedError": {
+        "value": "エラーが生じました：{0}はすでにコピーされています。",
+        "description": "Error text to display when workgroup attempts to copy an idea from the public Idea Basket they have already copied."
+    },
+    "ideaBasket_saveError": {
+        "value": "エラーが生じました：{0}を保存することができませんでした。",
+        "description": "Error message to display when Idea Basket fails to save on the server"
+    },
+    "ideaBasket_loadError": {
+        "value": "エラーが生じました：{0}にアクセスできませんでした。ブラウザをリフレッシュするか、別のステップに行き、もう一度試してください。",
+        "description": "Error message to display when Idea Basket fails to load"
+    },
+    "ideaManager_attributeSelectMultiple": {
+        "value": "（該当するもの全てを選ぶ）",
+        "description": "Instructions text for idea attributes that permit multiple selections in the Idea Basket"
+    },
+    "ideaManager_attributeSelectOne": {
+        "value": "（一つだけを選ぶ）",
+        "description": "Instructions text for idea attributes that permit a single selection in the Idea Basket"
+    },
+    "ideaManager_attributeSelectOneLabel": {
+        "value": "一つ選ぶ：",
+        "description": "Label text for idea attribute selectors that permit a single selection in the Idea Basket"
     }
 }
