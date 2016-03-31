@@ -1,10 +1,19 @@
 language: node_js
 node_js:
-  - "5.0"
+- '5.0'
 before_script:
-  - npm install -g jspm
+- npm install -g jspm
+script:
+- npm test
+- npm run test-e2e
 notifications:
   email:
-    - honchikun@gmail.com
-    - geoffreykwan@gmail.com
-    - breity10@gmail.com
+  - honchikun@gmail.com
+  - geoffreykwan@gmail.com
+  - breity10@gmail.com
+env:
+  global:
+  - secure: God9fsnKx0rLFxhUt4hadhi8U/WvpCxp5tDg9cx8UpZdDE1cvpNQores2RUo1IULK4G7wUOD4P8eiqXbQelBvn1qbt0+ZgaLWiYsVfS3VlrBmcws1KUdCFqgPEk4Iv6m7ixqlBx4/b9vJ6URJg7RVFkF1GAbgitouGRYpLl0rRqjNJuz0/9gQs395fVc5n9UA9K9SMThxbRiExlDKHo2nfptR+Qtdbn/TP4EjmEGEq5CqBK8rvGi3gpprAXguCLPRItIL7hCaMaxPOeX8K9s07W6ueXlMUemUywAFWH2auwVT+4B5KYYPhooXTf9jNPJ6BwpYKZAGErF8dkgld60S11Df0aHKNx34FX77qdPDKvFspRTJRz18xzh9cLB0RhpNoQHVnVGpA7q54SkETO3yhFZK3Q1R0nCB4qLb85mq4uvC4AVFMimqF0CKAgu/0uk1aeg1b+9DaJkqimjxSgPRJgfPtGJrit5eaaSYK/4/t0qbdaRBCtQND2CWfkqysf60B0+JSeBQAivVcOaE93Rqq6r9TbSI68UgHRNB7JtOUc68gfJqHpPhWwBb7+aP4/gWuulqSLXg9nMm3dlecMsi+oWpF9xnvKjeht11Izzgvnsia7vrNt1PZ4wpAgmL+mFeU1YWCQnaOBNa3rkyTmXvCs/WGImlybWD47b42ms6zI=
+  - secure: u2dKmevonrZURg68ILxXOk+aobyzIB33SuDShKSrBdjChIbgK94l8pzGBBXBRnCOmh0D1MNEamcwxbdpGc7tVM92KkK2QotNGm8otHD5ennOmwnnZBgdMDLGKUoN0rZ5PzR6/lw87djf8dlLfuW3CLDVCArlEhBnvrlp1rRASgwzZ3Y2ABVBYX+WYSn7FjH3g7HQoepirdDI2edXplr61DEA2pWXbfI1T7wcyY14hETyXE4UWtH55ISNr63JnaVFb4F25OPmoUEewgO/13ZYa12LfuY8GIOaQEXsA0Mf1dBMCiLpkh3hG6G6N/iuXmrjtySSIpC1rog/ErLQZ2lB6Vkfb6Wcjvm5ug4r/x5muKYgzSE5zmuebl/1+oeeraQY70z4DnDmwUOhC6cMw5rKTCAl7q5iVJz+W7BzRnKncC3KodXUKR+PNU9djUigPImkaS8UzwYDzVv6qNBxYEjVO3KuG0U3Zw5vqXdzxJuiMmCRyun3pl4BjY+jhBCQ0a5pNPHvvPuMVOArG4wu0peesoiUZo941aJNGGxCZhvgvh2sKJvIqtxEwgIb3aDw2Sn6Lwiv6pNBw6M6R1WzPiMUnY2YiuMrx2uME6Dh2VUs6WQYDQubxFz9UQ/VlYKaSeoS2b+BrztNzP9uJ/gi9k+HFbH8kA//b7cjoeXeW8qbCa8=
+addons:
+  sauce_connect: true
