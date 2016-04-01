@@ -3,8 +3,8 @@ node_js:
 - '5.0'
 before_script:
 - npm install -g jspm
-- ./wise.sh setup
-- sleep 20
+- ./wise.sh setup &
+- sleep 30
 script:
 - npm test
 - npm run test-e2e
