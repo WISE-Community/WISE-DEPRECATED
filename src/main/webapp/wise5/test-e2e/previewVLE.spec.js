@@ -19,6 +19,7 @@ describe('WISE5 Student VLE Preview', function () {
     var accountMenu = element(by.css('.md-open-menu-container'));
 
     it('should load the vle and go to node 1', function () {
+        browser.waitForAngular(); // wait for Angular to load
         expect(browser.getTitle()).toEqual('WISE');
         expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/project/demo#/vle/node1');
         expect(element(by.model("stepToolsCtrl.toNodeId")).getText()).toBe('1.1: Introduction to Newton Scooters');
