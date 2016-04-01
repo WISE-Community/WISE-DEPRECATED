@@ -10,26 +10,23 @@ describe('WISE Authoring Tool', function () {
     };
 
     /**
-     * @name waitForUrlToChange
+     * @name waitForUrlToChangeTo
      * @description Wait until the URL changes to match a provided regex
      * @param {RegExp} urlRegex wait until the URL changes to match this regex
      * @returns {!webdriver.promise.Promise} Promise
      */
-    function waitForUrlToChange(expectedUrl, timeout) {
-        var loaded = false;
+    function waitForUrlToChangeTo(urlRegex) {
+        var currentUrl;
 
-        browser.wait(function () {
-            browser.executeScript(function () {
-                return {
-                    url: window.location.href,
-                    haveAngular: !!window.angular
-                };
-            }).then(function (obj) {
-                loaded = obj.url == expectedUrl && obj.haveAngular;
+        return browser.getCurrentUrl().then(function storeCurrentUrl(url) {
+            currentUrl = url;
+        }).then(function waitForUrlToChangeTo() {
+            return browser.wait(function waitForUrlToChangeTo() {
+                return browser.getCurrentUrl().then(function compareCurrentUrl(url) {
+                    return urlRegex.test(url);
+                });
             });
-
-            return loaded;
-        }, timeout);
+        });
     };
 
     var exitAuthoringToolButton;
@@ -37,7 +34,7 @@ describe('WISE Authoring Tool', function () {
 
     it('should require user to log in to use the authoring tool', function () {
         browser.ignoreSynchronization = true; // doesn't use Angular
-        browser.get('http://localhost:8080/wise/author');
+        browser.get('http://localhost:8080/wise/login');
 
         expect(browser.getTitle()).toEqual('Sign In');
     });
@@ -48,9 +45,11 @@ describe('WISE Authoring Tool', function () {
         element(by.id('password')).sendKeys('wise');
         element(by.id('signInButton')).click();
 
-        waitForUrlToChange('http://localhost:8080/wise/author#/', 3000);
-
         browser.ignoreSynchronization = false; // uses Angular
+        browser.get('http://localhost:8080/wise/author');
+        browser.refresh(); // needed for this issue https://github.com/angular/protractor/issues/2643
+        waitForUrlToChangeTo(new RegExp('http://localhost:8080/wise/author#/', 'gi'));
+
         // check that the exitAuthoringTool button and create new project buttons are displayed
         expect(browser.getTitle()).toEqual('WISE Authoring');
         expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/author#/');

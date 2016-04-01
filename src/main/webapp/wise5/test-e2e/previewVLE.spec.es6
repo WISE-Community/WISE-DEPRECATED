@@ -8,26 +8,25 @@ describe('WISE5 Student VLE Preview', () => {
     };
 
     /**
-     * @name waitForUrlToChange
+     * @name waitForUrlToChangeTo
      * @description Wait until the URL changes to match a provided regex
      * @param {RegExp} urlRegex wait until the URL changes to match this regex
      * @returns {!webdriver.promise.Promise} Promise
      */
-    function waitForUrlToChange(expectedUrl, timeout) {
-        var loaded = false;
+    function waitForUrlToChangeTo(urlRegex) {
+        var currentUrl;
 
-        browser.wait(function () {
-            browser.executeScript(function () {
-                return {
-                    url: window.location.href,
-                    haveAngular: !!window.angular
-                };
-            }).then(function (obj) {
-                loaded = (obj.url == expectedUrl && obj.haveAngular);
-            });
-
-            return loaded;
-        }, timeout);
+        return browser.getCurrentUrl().then(function storeCurrentUrl(url) {
+                currentUrl = url;
+            }
+        ).then(function waitForUrlToChangeTo() {
+                return browser.wait(function waitForUrlToChangeTo() {
+                    return browser.getCurrentUrl().then(function compareCurrentUrl(url) {
+                        return urlRegex.test(url);
+                    });
+                });
+            }
+        );
     };
 
     browser.get('http://localhost:8080/wise/project/demo');
@@ -40,7 +39,7 @@ describe('WISE5 Student VLE Preview', () => {
     var accountMenu = element(by.css('.md-open-menu-container'));
 
     it('should load the vle and go to node 1', () => {
-        waitForUrlToChange('http://localhost:8080/wise/project/demo#/vle/node1', 2000);
+        waitForUrlToChangeTo(new RegExp('http://localhost:8080/wise/project/demo#/vle/node1', 'gi'));
         expect(browser.getTitle()).toEqual('WISE');
         expect(element(by.model("stepToolsCtrl.toNodeId")).getText()).toBe('1.1: Introduction to Newton Scooters');
     });
