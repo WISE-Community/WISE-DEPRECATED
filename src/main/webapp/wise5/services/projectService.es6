@@ -955,24 +955,6 @@ class ProjectService {
         return transitionLogic;
     };
 
-    getTransitionsByToNodeId(toNodeId) {
-        var transitionsResults = [];
-        if (toNodeId != null) {
-            var transitions = this.getTransitions();
-
-            if (transitions != null) {
-                for (var i = 0; i < transitions.length; i++) {
-                    var transition = transitions[i];
-                    if (transition.to === toNodeId) {
-                        transitionsResults.push(transition);
-                    }
-                }
-            }
-        }
-
-        return transitionsResults;
-    };
-
     /**
      * Get nodes that have a transition to the given node id
      * @param toNodeId the node id
@@ -1016,6 +998,32 @@ class ProjectService {
 
         return nodesByToNodeId;
     };
+    
+    /**
+     * Get node ids of all the nodes that have a to transition to the given node id
+     * @param toNodeId
+     * @returns all the node ids that have a transition to the given node id
+     */
+    getNodeIdsByToNodeId(toNodeId) {
+        var nodeIds = [];
+        
+        // get all the nodes that transition to the toNodeId
+        var nodes = this.getNodesByToNodeId(toNodeId);
+        
+        if (nodes != null) {
+            
+            // loop through all the nodes to get the node ids
+            for (var n = 0; n < nodes.length; n++) {
+                var node = nodes[n];
+                
+                if (node != null) {
+                    nodeIds.push(node.id);
+                }
+            }
+        }
+        
+        return nodeIds;
+    }
 
     getTransitionsByFromAndToNodeId(fromNodeId, toNodeId) {
         var transitionsResults = [];

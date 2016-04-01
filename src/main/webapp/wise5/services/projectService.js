@@ -99,7 +99,7 @@ if(this.isNodeDescendentOfGroup(node,targetNode)){result=true;}}}}return result;
      * @returns the transition logic object
      */value:function getTransitionLogicByFromNodeId(fromNodeId){var transitionLogic=null;if(fromNodeId!=null){ // get the node
 var node=this.getNodeById(fromNodeId);if(node!=null){ // get the transition logic
-transitionLogic=node.transitionLogic;}}return transitionLogic;}},{key:'getTransitionsByToNodeId',value:function getTransitionsByToNodeId(toNodeId){var transitionsResults=[];if(toNodeId!=null){var transitions=this.getTransitions();if(transitions!=null){for(var i=0;i<transitions.length;i++){var transition=transitions[i];if(transition.to===toNodeId){transitionsResults.push(transition);}}}}return transitionsResults;}},{key:'getNodesByToNodeId', /**
+transitionLogic=node.transitionLogic;}}return transitionLogic;}},{key:'getNodesByToNodeId', /**
      * Get nodes that have a transition to the given node id
      * @param toNodeId the node id
      * @returns an array of node objects that transition to the
@@ -108,7 +108,13 @@ transitionLogic=node.transitionLogic;}}return transitionLogic;}},{key:'getTransi
 var nodes=this.project.nodes; // loop through all the nodes
 for(var n=0;n<nodes.length;n++){var node=nodes[n];var transitionLogic=node.transitionLogic;if(transitionLogic!=null){var transitions=transitionLogic.transitions;if(transitions!=null){ // loop through all the transitions for the node
 for(var t=0;t<transitions.length;t++){var transition=transitions[t];if(transition!=null){if(toNodeId===transition.to){ // this node has a transition to the node id
-nodesByToNodeId.push(node);}}}}}}}return nodesByToNodeId;}},{key:'getTransitionsByFromAndToNodeId',value:function getTransitionsByFromAndToNodeId(fromNodeId,toNodeId){var transitionsResults=[];if(fromNodeId!=null&&toNodeId!=null){var node=this.getNodeById(fromNodeId);if(node!=null){var transitionLogic=node.transitionLogic;if(transitionLogic!=null){var transitions=transitionLogic.transitions;if(transitions!=null){for(var t=0;t<transitions.length;t++){var transition=transitions[t];if(transition!=null){var to=transition.to;if(toNodeId===to){transitionsResults.push(transition);}}}}}}}return transitionsResults;}},{key:'retrieveProject', /**
+nodesByToNodeId.push(node);}}}}}}}return nodesByToNodeId;}},{key:'getNodeIdsByToNodeId', /**
+     * Get node ids of all the nodes that have a to transition to the given node id
+     * @param toNodeId
+     * @returns all the node ids that have a transition to the given node id
+     */value:function getNodeIdsByToNodeId(toNodeId){var nodeIds=[]; // get all the nodes that transition to the toNodeId
+var nodes=this.getNodesByToNodeId(toNodeId);if(nodes!=null){ // loop through all the nodes to get the node ids
+for(var n=0;n<nodes.length;n++){var node=nodes[n];if(node!=null){nodeIds.push(node.id);}}}return nodeIds;}},{key:'getTransitionsByFromAndToNodeId',value:function getTransitionsByFromAndToNodeId(fromNodeId,toNodeId){var transitionsResults=[];if(fromNodeId!=null&&toNodeId!=null){var node=this.getNodeById(fromNodeId);if(node!=null){var transitionLogic=node.transitionLogic;if(transitionLogic!=null){var transitions=transitionLogic.transitions;if(transitions!=null){for(var t=0;t<transitions.length;t++){var transition=transitions[t];if(transition!=null){var to=transition.to;if(toNodeId===to){transitionsResults.push(transition);}}}}}}}return transitionsResults;}},{key:'retrieveProject', /**
      * Retrieves the project JSON from Config.projectURL and returns it.
      * If Config.projectURL is undefined, returns null.
      */value:function retrieveProject(){var _this=this;var projectURL=this.ConfigService.getConfigParam('projectURL');if(projectURL==null){return null;}else { /*
