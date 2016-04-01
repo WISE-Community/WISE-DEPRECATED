@@ -34,7 +34,7 @@ describe('WISE Authoring Tool', function () {
 
     it('should require user to log in to use the authoring tool', function () {
         browser.ignoreSynchronization = true; // doesn't use Angular
-        browser.get('http://localhost:8080/wise/author');
+        browser.get('http://localhost:8080/wise/login');
 
         expect(browser.getTitle()).toEqual('Sign In');
     });
@@ -45,9 +45,11 @@ describe('WISE Authoring Tool', function () {
         element(by.id('password')).sendKeys('wise');
         element(by.id('signInButton')).click();
 
+        browser.ignoreSynchronization = false; // uses Angular
+        browser.get('http://localhost:8080/wise/author');
+        browser.refresh(); // needed for this issue https://github.com/angular/protractor/issues/2643
         waitForUrlToChangeTo(new RegExp('http://localhost:8080/wise/author#/', 'gi'));
 
-        browser.ignoreSynchronization = false; // uses Angular
         // check that the exitAuthoringTool button and create new project buttons are displayed
         expect(browser.getTitle()).toEqual('WISE Authoring');
         expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/author#/');
