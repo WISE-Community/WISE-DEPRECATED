@@ -474,7 +474,7 @@ class StudentDataService {
             } else if (functionName === 'isVisitable') {
 
             } else if (functionName === 'isVisited') {
-
+                result = this.evaluateIsVisitedCriteria(criteria);
             } else if (functionName === 'isComplete') {
 
             } else if (functionName === 'isCorrect') {
@@ -531,6 +531,42 @@ class StudentDataService {
 
         return result;
     };
+    
+    /**
+     * Check if the isVisited criteria was satisfied
+     * @param criteria the isVisited criteria
+     * @returns whether the node id is visited
+     */
+    evaluateIsVisitedCriteria(criteria) {
+        
+        var isVisited = false;
+        
+        if (criteria != null) {
+            
+            // get the node id we want to check if was visited
+            var nodeId = criteria.nodeId;
+            
+            // get all the events
+            var events = this.studentData.events;
+            
+            if (events != null) {
+                
+                // loop through all the events
+                for (var e = 0; e < events.length; e++) {
+                    var event = events[e];
+                    
+                    if (event != null) {
+                        if (nodeId == event.nodeId && 'nodeEntered' === event.event) {
+                            // the student has entered the node before
+                            isVisited = true;
+                        }
+                    }
+                }
+            }
+        }
+        
+        return isVisited;
+    }
     
     /**
      * Get all the branchPathTaken events by node id

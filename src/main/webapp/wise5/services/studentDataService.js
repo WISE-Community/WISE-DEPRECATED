@@ -502,7 +502,9 @@ var StudentDataService = function () {
 
                 if (functionName == null) {} else if (functionName === 'branchPathTaken') {
                     result = this.evaluateBranchPathTakenCriteria(criteria);
-                } else if (functionName === 'isVisible') {} else if (functionName === 'isVisitable') {} else if (functionName === 'isVisited') {} else if (functionName === 'isComplete') {} else if (functionName === 'isCorrect') {} else if (functionName === 'choiceChosen') {
+                } else if (functionName === 'isVisible') {} else if (functionName === 'isVisitable') {} else if (functionName === 'isVisited') {
+                    result = this.evaluateIsVisitedCriteria(criteria);
+                } else if (functionName === 'isComplete') {} else if (functionName === 'isCorrect') {} else if (functionName === 'choiceChosen') {
                     result = this.evaluateChoiceChosenCriteria(criteria);
                 } else if (functionName === '') {}
             }
@@ -556,14 +558,53 @@ var StudentDataService = function () {
             return result;
         }
     }, {
-        key: 'getBranchPathTakenEventsByNodeId',
+        key: 'evaluateIsVisitedCriteria',
 
+
+        /**
+         * Check if the isVisited criteria was satisfied
+         * @param criteria the isVisited criteria
+         * @returns whether the node id is visited
+         */
+        value: function evaluateIsVisitedCriteria(criteria) {
+
+            var isVisited = false;
+
+            if (criteria != null) {
+
+                // get the node id we want to check if was visited
+                var nodeId = criteria.nodeId;
+
+                // get all the events
+                var events = this.studentData.events;
+
+                if (events != null) {
+
+                    // loop through all the events
+                    for (var e = 0; e < events.length; e++) {
+                        var event = events[e];
+
+                        if (event != null) {
+                            if (nodeId == event.nodeId && 'nodeEntered' === event.event) {
+                                // the student has entered the node before
+                                isVisited = true;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return isVisited;
+        }
 
         /**
          * Get all the branchPathTaken events by node id
          * @params fromNodeId the from node id
          * @returns all the branchPathTaken events from the given node id
          */
+
+    }, {
+        key: 'getBranchPathTakenEventsByNodeId',
         value: function getBranchPathTakenEventsByNodeId(fromNodeId) {
 
             var branchPathTakenEvents = [];

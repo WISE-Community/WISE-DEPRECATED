@@ -91,9 +91,22 @@ nodeIcon.type='font';}}return nodeIcon;}},{key:'getParentGroup',value:function g
      */},{key:'getStartGroupId',value:function getStartGroupId(){var startGroupId=null;var project=this.project;if(project!=null){startGroupId=project.startGroupId;}return startGroupId;} /**
      * Check if the given node id is the start node id
      * @return whether the node id is the start node id
-     */},{key:'isStartNodeId',value:function isStartNodeId(nodeId){var result=false;var project=this.project;if(project!=null){var startNodeId=project.startNodeId;if(nodeId===startNodeId){result=true;}}return result;}},{key:'getConstraintsForNode',value:function getConstraintsForNode(node){var constraints=[];var allConstraints=this.activeConstraints;for(var c=0;c<allConstraints.length;c++){var constraint=allConstraints[c];if(this.isNodeAffectedByConstraint(node,constraint)){constraints.push(constraint);}}return constraints;}},{key:'isNodeAffectedByConstraint',value:function isNodeAffectedByConstraint(node,constraint){var result=false;if(node!=null&&constraint!=null){var nodeId=node.id;var targetId=constraint.targetId;var targetNode=this.getNodeById(targetId);if(targetNode!=null){var nodeType=targetNode.type;if(nodeType==='node'){ // the target is an application
+     */},{key:'isStartNodeId',value:function isStartNodeId(nodeId){var result=false;var project=this.project;if(project!=null){var startNodeId=project.startNodeId;if(nodeId===startNodeId){result=true;}}return result;}},{key:'getConstraintsForNode',value:function getConstraintsForNode(node){var constraints=[];var allConstraints=this.activeConstraints;for(var c=0;c<allConstraints.length;c++){var constraint=allConstraints[c];if(this.isNodeAffectedByConstraint(node,constraint)){constraints.push(constraint);}}return constraints;}},{key:'isNodeAffectedByConstraint', /**
+     * Check if a node is affected by the constraint
+     * @param node check if the node is affected
+     * @param constraint the constraint that might affect the node
+     * @returns whether the node is affected by the constraint
+     */value:function isNodeAffectedByConstraint(node,constraint){var result=false;if(node!=null&&constraint!=null){var nodeId=node.id;var targetId=constraint.targetId;var action=constraint.action;if(action==='makeAllNodesAfterThisNotVisible'){if(this.isNodeIdAfter(targetId,node.id)){result=true;}}else if(action==='makeAllNodesAfterThisNotVisitable'){if(this.isNodeIdAfter(targetId,node.id)){result=true;}}else {var targetNode=this.getNodeById(targetId);if(targetNode!=null){var nodeType=targetNode.type;if(nodeType==='node'){ // the target is an application
 if(nodeId===targetId){result=true;}}else if(nodeType==='group'){ // the target is a group
-if(this.isNodeDescendentOfGroup(node,targetNode)){result=true;}}}}return result;}},{key:'getNavigationMode',value:function getNavigationMode(){var navigationMode=null;var project=this.project;if(project!=null){navigationMode=project.navigationMode;}return navigationMode;}},{key:'getTransitions',value:function getTransitions(){var transitions=null;var project=this.project;if(project!=null){transitions=project.transitions;}return transitions;}},{key:'getTransitionLogicByFromNodeId', /**
+if(this.isNodeDescendentOfGroup(node,targetNode)){result=true;}}}}}return result;}},{key:'isNodeIdAfter', /**
+     * Check if a node id comes after another node id in the project
+     * @param nodeIdBefore the node id before
+     * @param nodeIdAfter the node id after
+     */value:function isNodeIdAfter(nodeIdBefore,nodeIdAfter){var result=false;if(nodeIdBefore!=null&&nodeIdAfter!=null){ // get all the paths from the beforeNodeId to the end of the project
+var pathsToEnd=this.getAllPaths([],nodeIdBefore);if(pathsToEnd!=null){ // loop through all the paths
+for(var p=0;p<pathsToEnd.length;p++){var pathToEnd=pathsToEnd[p];if(pathToEnd!=null){ // remove the first node id because that will be the beforeNodeId
+pathToEnd.shift();if(pathToEnd.indexOf(nodeIdAfter)!=-1){ // we have found the nodeIdAfter in the path to the end of the project
+result=true;}}}}}return result;}},{key:'getNavigationMode',value:function getNavigationMode(){var navigationMode=null;var project=this.project;if(project!=null){navigationMode=project.navigationMode;}return navigationMode;}},{key:'getTransitions',value:function getTransitions(){var transitions=null;var project=this.project;if(project!=null){transitions=project.transitions;}return transitions;}},{key:'getTransitionLogicByFromNodeId', /**
      * Get the transition logic for a node
      * @param fromNodeId the from node id
      * @returns the transition logic object
