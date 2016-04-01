@@ -536,6 +536,16 @@ var NodeService = function () {
 
                             var randomIndex = Math.floor(Math.random() * availableTransitions.length);
                             transitionResult = availableTransitions[randomIndex];
+                        } else if (howToChooseAmongAvailablePaths === 'workgroupId') {
+                            // use the workgroup id to choose the transition
+
+                            // get the workgroup id
+                            var workgroupId = this.ConfigService.getWorkgroupId();
+
+                            // choose the transition index
+                            var index = workgroupId % availableTransitions.length;
+
+                            transitionResult = availableTransitions[index];
                         } else if (howToChooseAmongAvailablePaths === 'firstAvailable') {
                             // choose the first available transition
 
