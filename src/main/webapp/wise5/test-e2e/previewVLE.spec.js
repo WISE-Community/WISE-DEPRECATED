@@ -9,6 +9,29 @@ describe('WISE5 Student VLE Preview', function () {
         });
     };
 
+    /**
+     * @name waitForUrlToChange
+     * @description Wait until the URL changes to match a provided regex
+     * @param {RegExp} urlRegex wait until the URL changes to match this regex
+     * @returns {!webdriver.promise.Promise} Promise
+     */
+    function waitForUrlToChange(expectedUrl, timeout) {
+        var loaded = false;
+
+        browser.wait(function () {
+            browser.executeScript(function () {
+                return {
+                    url: window.location.href,
+                    haveAngular: !!window.angular
+                };
+            }).then(function (obj) {
+                loaded = obj.url == expectedUrl && obj.haveAngular;
+            });
+
+            return loaded;
+        }, timeout);
+    };
+
     browser.get('http://localhost:8080/wise/project/demo');
     var previousButton = element(by.xpath('//button[@aria-label="Previous Item"]'));
     var nextButton = element(by.xpath('//button[@aria-label="Next Item"]'));
@@ -19,9 +42,8 @@ describe('WISE5 Student VLE Preview', function () {
     var accountMenu = element(by.css('.md-open-menu-container'));
 
     it('should load the vle and go to node 1', function () {
-        browser.waitForAngular(); // wait for Angular to load
+        waitForUrlToChange('http://localhost:8080/wise/project/demo#/vle/node1', 2000);
         expect(browser.getTitle()).toEqual('WISE');
-        expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/project/demo#/vle/node1');
         expect(element(by.model("stepToolsCtrl.toNodeId")).getText()).toBe('1.1: Introduction to Newton Scooters');
     });
 

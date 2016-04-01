@@ -48,7 +48,7 @@ describe('WISE Authoring Tool', function () {
         element(by.id('password')).sendKeys('wise');
         element(by.id('signInButton')).click();
 
-        waitForUrlToChange('http://localhost:8080/wise/author#/', 2000);
+        waitForUrlToChange('http://localhost:8080/wise/author#/', 3000);
 
         browser.ignoreSynchronization = false; // uses Angular
         // check that the exitAuthoringTool button and create new project buttons are displayed
