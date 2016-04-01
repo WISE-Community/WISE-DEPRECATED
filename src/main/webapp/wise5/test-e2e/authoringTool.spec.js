@@ -1,7 +1,7 @@
 'use strict';
 
-// E2E test for VLE running preview mode
-describe('WISE Classroom Monitor Tool', function () {
+// E2E test for Authoring Tool
+describe('WISE Authoring Tool', function () {
 
     function hasClass(element, cls) {
         return element.getAttribute('class').then(function (classes) {
@@ -44,11 +44,11 @@ describe('WISE Classroom Monitor Tool', function () {
 
     it('should log in using preview username and password and open the authoring tool', function () {
         browser.ignoreSynchronization = true; // doesn't use Angular
-        element(by.id('username')).sendKeys('previewuser');
-        element(by.id('password')).sendKeys('pass');
+        element(by.id('username')).sendKeys('preview');
+        element(by.id('password')).sendKeys('wise');
         element(by.id('signInButton')).click();
 
-        waitForUrlToChange('http://localhost:8080/wise/author#/', 2000);
+        waitForUrlToChange('http://localhost:8080/wise/author#/', 3000);
 
         browser.ignoreSynchronization = false; // uses Angular
         // check that the exitAuthoringTool button and create new project buttons are displayed

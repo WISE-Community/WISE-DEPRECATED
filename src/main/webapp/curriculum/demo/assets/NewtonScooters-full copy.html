@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Compare gravity and buoyancy</title>
+<link rel="stylesheet" href="jquery-ui.min.css" />
+<script src="jquery.min.js" type="text/javascript"> </script>
+<script src="jquery-ui.min.js" type="text/javascript"> </script>
+<script src="easeljs.min.js" type="text/javascript"> </script>
+<script src="Box2dWeb-2.1.a.3.min.js" type="text/javascript"> </script>
+<script src="highcharts.js" type="text/javascript"> </script>
+<script src="WISE4_box2dModel.js" type="text/javascript"> </script>
+<script type="text/javascript">
+	var b2Vec2 = Box2D.Common.Math.b2Vec2, b2BodyDef = Box2D.Dynamics.b2BodyDef
+    , b2Body = Box2D.Dynamics.b2Body
+    , b2FixtureDef = Box2D.Dynamics.b2FixtureDef
+    , b2Fixture = Box2D.Dynamics.b2Fixture
+    , b2World = Box2D.Dynamics.b2World
+    , b2MassData = Box2D.Collision.Shapes.b2MassData
+    , b2PolygonShape = Box2D.Collision.Shapes.b2PolygonShape
+    , b2CircleShape = Box2D.Collision.Shapes.b2CircleShape
+        , b2DebugDraw = Box2D.Dynamics.b2DebugDraw
+        , b2RevoluteJointDef = Box2D.Dynamics.Joints.b2RevoluteJointDef
+        , b2DistanceJointDef = Box2D.Dynamics.Joints.b2DistanceJointDef
+        , b2PrismaticJointDef = Box2D.Dynamics.Joints.b2PrismaticJointDef
+        , b2FrictionJointDef = Box2D.Dynamics.Joints.b2FrictionJointDef
+        , b2MouseJointDef = Box2D.Dynamics.Joints.b2MouseJointDef
+        , b2ContactListener = Box2D.Dynamics.b2ContactListener
+        , b2BuoyancyController = Box2D.Dynamics.Controllers.b2BuoyancyController;
+     
+	// all the box2d objects
+	var world;
+	// all the easel js objects
+	var stage;
+	var forceSlider;
+	var debug = true, edebug=false;
+
+	var worldSpecs_clean;
+	var worldSpecs = {
+		objects:[
+			{class:"ramp", id:"ramp", initial_setup:false, width:7, exponent:1.5, coefficient:0.25, resolution:10, b2FixtureDef:{density:100.0, restitution:0.1}, b2BodyDef:{type:b2Body.b2_staticBody,position:new b2Vec2(7.25, 11.25),fixedRotation:true}, easel:{fill_colors:["rgba(90, 90, 50, 1.0)","rgba(120, 120, 80, 1.0)","rgba(230, 230, 200, 1.0)","rgba(230, 230, 200, 1.0)"],fill_ratios:[0, 0.9, 0.95, 1], stroke_colors:["rgba(0, 0, 0, 1.0)","rgba(40, 40, 40, 1.0)","rgba(100, 100, 100, 1.0)","rgba(100, 100, 100, 1.0)"],stroke_ratios:[0,0.9,0.95,1]}},
+			{class:"rect", id:"starting-block", initial_setup:true, width:3.5, height:3, b2FixtureDef:{density:40.0, restitution:0.1}, b2BodyDef:{type:b2Body.b2_staticBody,position:new b2Vec2(2, 10)}, easel:{fill_colors:["rgba(90, 90, 50, 1.0)","rgba(120, 120, 80, 1.0)","rgba(150, 150, 100, 1.0)","rgba(150, 150, 100, 1.0)","rgba(120, 120, 80, 1.0)","rgba(90, 90, 50, 1.0)"],fill_ratios:[0, 0.25, 0.4, 0.6, 0.75, 1], stroke_colors:["rgba(0, 0, 0, 1.0)","rgba(40, 40, 40, 1.0)","rgba(100, 100, 100, 1.0)","rgba(100, 100, 100, 1.0)"],stroke_ratios:[0,0.9,0.95,1],direction:new b2Vec2(0,1)}},
+			
+			{class:"composite", id:"spring-cart", position:new b2Vec2(10, 10.5), data:["position","distance", "kinetic_energy", "elastic_potential_energy","energy_lost"],objects:[
+				{class:"wheel", id:"spring-cart-backwheel", radius: 1.0,  b2FixtureDef:{density:10.0, restitution:0.2, friction:0.5}, b2BodyDef:{relative_position:new b2Vec2(-1.5, 0), angularDamping:0.0, linearDamping:0.5}, easel:{axle_ratio:0.5, fill_colors:["rgba(50, 50, 50, 1.0)","rgba(120, 120, 120, 1.0)","rgba(50, 50, 50, 1.0)"],fill_ratios:[0, 0.5, 1], stroke_colors:["rgba(25, 25, 25, 1.0)","rgba(50, 50, 50, 1.0)","rgba(25, 25, 25, 1.0)"],stroke_ratios:[0,0.5,1]}},			
+				{class:"wheel", id:"spring-cart-frontwheel", radius: 1.0,  b2FixtureDef:{density:10.0, restitution:0.2, friction:0.5}, b2BodyDef:{relative_position:new b2Vec2(1.5, 0), angularDamping:0.0, linearDamping:0.5}, easel:{axle_ratio:0.5, fill_colors:["rgba(50, 50, 50, 1.0)","rgba(120, 120, 120, 1.0)","rgba(50, 50, 50, 1.0)"],fill_ratios:[0, 0.5, 1], stroke_colors:["rgba(25, 25, 25, 1.0)","rgba(50, 50, 50, 1.0)","rgba(25, 25, 25, 1.0)"],stroke_ratios:[0,0.5,1]}},		
+				{class:"roundRect", id:"spring-cart-base", width:6, height:0.6, b2FixtureDef:{density:33.34, restitution:1}, b2BodyDef:{relative_position:new b2Vec2(0, 0)}, easel:{fill_colors:["rgba(180, 180, 180, 1.0)","rgba(120, 120, 120, 1.0)","rgba(120, 120, 120, 1.0)","rgba(50, 50, 50, 1.0)"],fill_ratios:[0, 0.2, 0.8, 1], stroke_colors:["rgba(100, 100, 100, 1.0)","rgba(50, 50, 50, 1.0)","rgba(50, 50, 50, 1.0)","rgba(25, 25, 25, 1.0)"],stroke_ratios:[0,0.2,0.8,1],direction:new b2Vec2(0, 1), radius:4}},				
+				{class:"revoluteJoint", id:"spring-cart-backwheel-joint", b2JointDef:{bodyA:"spring-cart-backwheel", bodyB:"spring-cart-base", localAnchorA:new b2Vec2(0,0), localAnchorB:new b2Vec2(-1.5,0)}},
+				{class:"revoluteJoint", id:"spring-cart-frontwheel-joint", b2JointDef:{bodyA:"spring-cart-frontwheel", bodyB:"spring-cart-base", localAnchorA:new b2Vec2(0,0), localAnchorB:new b2Vec2(1.5,0)}},
+				
+				{class:"rect", id:"spring-cart-spring-back", width:0.25, height:1.8, b2FixtureDef:{density:40.0, restitution:0.1}, b2BodyDef:{relative_position:new b2Vec2(-6, 0)}, easel:{fill_colors:["rgba(50, 50, 50, 1.0)","rgba(120, 120, 120, 1.0)","rgba(50, 50, 50, 1.0)"],fill_ratios:[0, 0.5, 1], stroke_colors:["rgba(25, 25, 25, 1.0)","rgba(50, 50, 50, 1.0)","rgba(25, 25, 25, 1.0)"],stroke_ratios:[0,0.5,1],direction:new b2Vec2(1, 0)}},		
+				{class:"distanceJoint", id:"spring-cart-spring-djoint", force_id:"force_lever",b2JointDef:{bodyA:"spring-cart-spring-back", bodyB:"spring-cart-base", localAnchorA:new b2Vec2(0,0), localAnchorB:new b2Vec2(-3, 0), collideConnected:false, frequencyHz:1.0, dampingRatio:0.01}, easel:{style:"spiral"}},
+				{class:"prismaticJoint", id:"spring-cart-spring-pjoint", b2JointDef:{bodyA:"spring-cart-spring-back", bodyB:"spring-cart-base",localAnchorA:new b2Vec2(0,0), localAnchorB:new b2Vec2(-3, 0)}}
+				]
+			},
+
+			{class:"composite", id:"ramp-cart", initial_setup:false, position:new b2Vec2(10, 10.5), data:["position","distance","kinetic_energy", "gravitational_potential_energy","energy_lost"],objects:[
+				{class:"wheel", id:"ramp-cart-backwheel", radius: 1.0,  b2FixtureDef:{density:10.0, restitution:0.2, friction:0.5}, b2BodyDef:{relative_position:new b2Vec2(-1.5, 0), angularDamping:0.0, linearDamping:0.5}, easel:{axle_ratio:0.5, fill_colors:["rgba(50, 50, 50, 1.0)","rgba(120, 120, 120, 1.0)","rgba(50, 50, 50, 1.0)"],fill_ratios:[0, 0.5, 1], stroke_colors:["rgba(25, 25, 25, 1.0)","rgba(50, 50, 50, 1.0)","rgba(25, 25, 25, 1.0)"],stroke_ratios:[0,0.5,1]}},			
+				{class:"wheel", id:"ramp-cart-frontwheel", radius: 1.0,  b2FixtureDef:{density:10.0, restitution:0.2, friction:0.5}, b2BodyDef:{relative_position:new b2Vec2(1.5, 0), angularDamping:0.0, linearDamping:0.5}, easel:{axle_ratio:0.5, fill_colors:["rgba(50, 50, 50, 1.0)","rgba(120, 120, 120, 1.0)","rgba(50, 50, 50, 1.0)"],fill_ratios:[0, 0.5, 1], stroke_colors:["rgba(25, 25, 25, 1.0)","rgba(50, 50, 50, 1.0)","rgba(25, 25, 25, 1.0)"],stroke_ratios:[0,0.5,1]}},	
+				{class:"roundRect", id:"ramp-cart-base", width:6, height:0.6, b2FixtureDef:{density:33.34, restitution:1}, b2BodyDef:{relative_position:new b2Vec2(0, 0)}, easel:{fill_colors:["rgba(180, 180, 180, 1.0)","rgba(120, 120, 120, 1.0)","rgba(120, 120, 120, 1.0)","rgba(50, 50, 50, 1.0)"],fill_ratios:[0, 0.2, 0.8, 1], stroke_colors:["rgba(100, 100, 100, 1.0)","rgba(50, 50, 50, 1.0)","rgba(50, 50, 50, 1.0)","rgba(25, 25, 25, 1.0)"],stroke_ratios:[0,0.2,0.8,1],direction:new b2Vec2(0, 1), radius:4}},	
+				{class:"revoluteJoint", id:"ramp-cart-backwheel-joint", b2JointDef:{bodyA:"ramp-cart-backwheel", bodyB:"ramp-cart-base", localAnchorA:new b2Vec2(0,0), localAnchorB:new b2Vec2(-1.5,0)}},
+				{class:"revoluteJoint", id:"ramp-cart-frontwheel-joint", b2JointDef:{bodyA:"ramp-cart-frontwheel", bodyB:"ramp-cart-base", localAnchorA:new b2Vec2(0,0), localAnchorB:new b2Vec2(1.5,0)}},
+				{class:"rect", id:"ramp-cart-spring-back", width:0.25, height:0.9, b2FixtureDef:{density:80.0, restitution:0.1}, b2BodyDef:{relative_position:new b2Vec2(-3, 0)}, easel:{fill_colors:["rgba(50, 50, 50, 1.0)","rgba(120, 120, 120, 1.0)","rgba(50, 50, 50, 1.0)"],fill_ratios:[0, 0.5, 1], stroke_colors:["rgba(25, 25, 25, 1.0)","rgba(50, 50, 50, 1.0)","rgba(25, 25, 25, 1.0)"],stroke_ratios:[0,0.5,1],direction:new b2Vec2(1, 0)}},		
+				{class:"distanceJoint", id:"ramp-cart-spring-djoint", force_id:"force_lever",b2JointDef:{bodyA:"ramp-cart-spring-back", bodyB:"ramp-cart-base", localAnchorA:new b2Vec2(0,0), localAnchorB:new b2Vec2(-3, 0), collideConnected:false, frequencyHz:0},easel:{fill_colors:["rgba(50, 50, 50, 1.0)","rgba(120, 120, 120, 1.0)","rgba(50, 50, 50, 1.0)"],fill_ratios:[0, 0.5, 1], stroke_colors:["rgba(25, 25, 25, 1.0)","rgba(50, 50, 50, 1.0)","rgba(25, 25, 25, 1.0)"],stroke_ratios:[0,0.5,1],direction:new b2Vec2(1, 0)}},
+				{class:"prismaticJoint", id:"ramp-cart-spring-pjoint", b2JointDef:{bodyA:"ramp-cart-spring-back", bodyB:"ramp-cart-base",localAnchorA:new b2Vec2(0,0), localAnchorB:new b2Vec2(-3, 0)}}
+				]
+			},			
+			{class:"rect", id:"lever", width:0.25, height:3, b2FixtureDef:{density:100.0, restitution:0.1}, b2BodyDef:{position:new b2Vec2(13, 10), fixedRotation:true}, easel:{fill_colors:["rgba(150, 50, 50, 1.0)","rgba(220, 120, 120, 1.0)","rgba(150, 50, 50, 1.0)"],fill_ratios:[0, 0.5, 1], stroke_colors:["rgba(125, 25, 25, 1.0)","rgba(150, 50, 50, 1.0)","rgba(125, 25, 25, 1.0)"],stroke_ratios:[0,0.5,1],direction:new b2Vec2(1, 0)}}
+		],
+		forces:[
+			{"impulse":false, id:"force_lever", id_body:"lever", force:new b2Vec2(0, 0), max_force:1400, max_force_change:10, pointRelativeBody:new b2Vec2(0,0), direction:new b2Vec2(-1, 0)}
+		],
+		settings:{
+			draw_shelf:false,
+			draw_right_wall:false,
+			draw_left_wall:true,
+			mouseEnabled:false,
+			SCALE: 30
+		},
+		uivars:{
+			// in ui, maybe tabled or graphed
+			switch_cart:{value:"Use Ramp", in_ui:true, alt_value:"Use Spring", cssPairs:{"margin-bottom":"10px"}},
+			body_shape:{value:1/10, in_table:true, table_value:'worldSpecs.uivars["body_shape"].value_trial_start.toFixed(0)', in_ui:true, name:"Body Shape", min:1/10, max:1/6, step:1/15},
+			//body_mass:{value:200, in_table:true, table_value:'worldSpecs.uivars["body_mass"].value_trial_start.toFixed(0)', in_ui:true, name:"Body Mass", min:10, max:400, step:10},
+			wheel_friction:{value:0.5, in_table:true, table_value:'worldSpecs.uivars["wheel_friction"].value_trial_start.toFixed(2)', in_ui:true, name:"Body-Axle Friction", min:0, max:1},
+			force_lever:{value:1, table_value:'(1500*(1-worldSpecs.uivars["force_lever"].value_trial_start)).toFixed(0)', in_table:true, in_ui:true, table_name:"Push Force (N)", name:"&#8592 Push Lever", min:0, max:1, label_cssPairs:{"margin-top":"10px","font":"20px Arial", "left":"50px","color":"#AA0000"}, cssPairs:{"margin-top":"10px"}},		
+			release_lever:{value:"Release", in_ui:true, alt_value:"New Trial"},
+			// in table, not ui
+			cart_total_distance:{value:0, table_name:"Total Distance (m)", table_value:"world.cart.data.distance.reduce(function(pv, cv) { return pv + cv; }, 0).toFixed(2)"},
+			//cart_max_speed:{value:0, table_name:"Max Speed (m/s)", table_value:"Math.max.apply(null, world.cart.data.velocity.map(Math.abs)).toFixed(2)"},
+			//cart_max_speed_to_wall:{value:0, table_name:"Max Speed to Wall (m/s)", table_value:"Math.max.apply(null, world.cart.data.velocity.slice(0,world.cart.data.direction_change_count.lastIndexOf(0)).map(Math.abs)).toFixed(2)"},
+			//cart_max_speed_after_wall:{value:0, table_name:"Max Speed after Wall (m/s)", table_value:"world.cart.data.direction_change_count.indexOf(1) > -1 ? Math.max.apply(null, world.cart.data.velocity.slice(world.cart.data.direction_change_count.indexOf(1),world.cart.data.direction_change_count.lastIndexOf(1)).map(Math.abs)).toFixed(2):''"},
+			//cart_max_acceleration:{value:0, table_name:"Max Acceleration (m/s^2)", table_value:"Math.max.apply(null, world.cart.data.acceleration.map(Math.abs)).toFixed(2)"},
+			// in plot, not ui
+			time_spring:{value:"world.trial_ticks/createjs.Ticker.getFPS()", plot_id:"plot1", axis:"x"},
+			time_ramp:{value:"world.trial_ticks/createjs.Ticker.getFPS()", plot_id:"plot2", axis:"x"},
+			potential_spring:{value:"world.composites['spring-cart'] ? world.composites['spring-cart'].data.elastic_potential_energy.slice(-1)[0] : null", plot_id:"plot1", axis:"y", seriesIndex:0},
+			potential_ramp:{value:"world.composites['ramp-cart'] ? world.composites['ramp-cart'].data.gravitational_potential_energy.slice(-1)[0] : null", plot_id:"plot2", axis:"y", seriesIndex:0},
+			kinetic_spring:{value:"world.composites['spring-cart'] ? world.composites['spring-cart'].data.kinetic_energy.slice(-1)[0] : null", plot_id:"plot1", axis:"y", seriesIndex:1},
+			kinetic_ramp:{value:"world.composites['ramp-cart'] ? world.composites['ramp-cart'].data.kinetic_energy.slice(-1)[0] : null", plot_id:"plot2", axis:"y", seriesIndex:1},
+			energy_lost_spring:{value:"world.composites['spring-cart'] ? world.composites['spring-cart'].data.energy_lost.slice(-1)[0] : null", plot_id:"plot1", axis:"y", seriesIndex:2},
+			energy_lost_ramp:{value:"world.composites['ramp-cart'] ? world.composites['ramp-cart'].data.energy_lost.slice(-1)[0] : null", plot_id:"plot2", axis:"y", seriesIndex:2},
+			// not in ui, plotted, or tabled
+			ground_friction:{value:0.5},
+			max_trial_time:{value:20}
+		},
+		plots:{
+			"plot1":{
+				chart:{
+		        	type: 'line',
+		        	zoomType: 'xy',
+		        	height: 350,
+		        	width: 400,
+		        	marginRight: 100
+		        },
+		        title: {text: "Cart with Spring"},
+				legend:{enabled:true},
+				xAxis: {
+					title: {
+						enabled: true, text: "Time (seconds)"},
+					min: 0,
+					max: null,
+					minRange:20,
+					ceiling:60
+				},
+				yAxis: {
+					title: {text: "Energy (joules)"},
+					showLastLabel: true,
+					min: 0,
+					max: 1500
+				},
+				tooltip: {pointFormat:"Time: <b>{point.x:.2f} </b>seconds<br/>Energy:   <b>{point.y:.2f} </b>joules<br/>"},
+				series: [
+					{id:"spring-potential", name:"Potential", color:"#8888FF",lineWidth:4, data:[]},
+					{id:"spring-kinetic", name:"Kinetic", color:"#88FF88",data:[]},
+					{id:"spring-lost", name:"Thermal", color:"#FF8888",data:[]}
+				],
+				showPreviousCount:0
+			},
+			"plot2":{
+				chart:{
+		        	type: 'line',
+		        	zoomType: 'xy',
+		        	height: 350,
+		        	width: 400,
+		        	marginRight: 100
+		        },
+		        title: {text: "Cart with Ramp"},
+				legend:{enabled:true},
+				xAxis: {
+					title: {
+						enabled: true, text: "Time (seconds)"},
+					min: 0,
+					max: null,
+					minRange:20,
+					ceiling:60
+				},
+				yAxis: {
+					title: {text: "Energy (joules)"},
+					showLastLabel: true,
+					min: 0,
+					max: 1500
+				},
+				tooltip: {pointFormat:"Time: <b>{point.x:.2f} </b>seconds<br/>Energy:   <b>{point.y:.2f} </b>joules<br/>"},
+				series: [
+					{id:"spring-potential", name:"Potential", color:"#8888FF",lineWidth:4, data:[]},
+					{id:"spring-kinetic", name:"Kinetic", color:"#88FF88",data:[]},
+					{id:"spring-lost", name:"Thermal", color:"#FF8888",data:[]}
+				],
+				showPreviousCount:0
+			}
+		}
+	}
+
+	function init(){
+		var alreadyVisited = false;
+		if (stage != null) alreadyVisited = true;
+		
+		if (!debug) $("#debugcanvas").remove();
+		var canvas = document.getElementById("b2canvas");
+
+		
+		stage = new createjs.Stage(canvas);
+		stage.mouseEventsEnabled = true;
+		stage.enableMouseOver();
+		stage.needs_to_update = false;
+	
+		var uiWidth = 200;
+
+		// create a clean copy of the specs
+		worldSpecs_clean = JSON.parse(JSON.stringify(worldSpecs));
+
+		// initialize world
+		world = new World($("#b2canvas").width() - uiWidth, $("#b2canvas").height());
+		world.x = uiWidth;
+		stage.addChild(world);
+		world.renderPlot("plot1");
+		world.renderPlot("plot2");
+		//world.renderTable("table1"); // do we want an empty table to show up?
+  		
+  		// create ui elems
+  		var ui = new createjs.Container();
+  		stage.addChild(ui);
+ 
+		var cur_y = 10;
+		// iterate through each of the uivars and set up ui if relevenat
+		for (var uikey in worldSpecs.uivars){
+			uivar = worldSpecs.uivars[uikey];		
+			// are we displaying this in the ui area?
+			if ((typeof uivar.in_ui !== "undefined" && uivar.in_ui) || (typeof uivar.type !== "undefined" && uivar.type.length > 0)){
+				// what type of element is it, can be set explicitly or inferred
+				uivar.type = typeof uivar.type !== "undefined" ? uivar.type : (typeof uivar.max !== "undefined" ? "slider" : "button");
+				
+				if (!alreadyVisited){
+					if (uivar.type == "slider"){
+						var w = uiWidth-40;
+						if (Math.abs(uivar.max - (uivar.min + uivar.step)) < 0.01){
+							w = 40;
+						}
+						var html = '<div id="' + uivar.type + '-' + uikey + '" style="width:' + w + 'px;"></div>';
+						$("#uielems").append(html);
+						// label
+						var html = '<div id="slabel-' + uikey + '" style="font:16px Arial;color:#444444;">'+ (typeof uivar.name !== "undefined"? uivar.name : uikey) + '</div>';
+						$("#uielems").append(html);
+					} else if (uivar.type == "button"){
+						var html = '<input type="submit" id="' + uivar.type + '-' + uikey + '" value="' + uivar.value + '"/>';
+						$("#uielems").append(html);
+					}
+					
+					
+				}
+
+				if (uivar.type == "slider"){
+					var uimin = typeof uivar.min !== "undefined"?uivar.min:0;
+					var uimax = typeof uivar.max !== "undefined"?uivar.max:1;
+					var slider = $("#slider-"+uikey).slider({
+						orientation: typeof uivar.orientation !== "undefined"?uivar.orientation:"horizontal",
+						range: typeof uivar.range !== "undefined"?uivar.range:"min",
+						min: uimin,
+						max: uimax,
+						value: typeof uivar.value !== "undefined"?uivar.value:0,
+						step: typeof uivar.step !== "undefined"?uivar.step:(uimax-uimin)/20,
+						slide: function(event, ui){							
+							var key = event.target.id.replace("slider-","");
+							worldSpecs.uivars[key].value = ui.value;
+							world['handle_'+key+'_change'](event, ui);
+						},
+						change: function (event, ui){
+							if (typeof simulation_store !== "undefined") simulation_store("slider change", event.target.id, ui.value);
+						}
+					});
+					if (uivar.cssPairs != null){
+						for (var cssKey in uivar.cssPairs){
+							slider.css(cssKey,uivar.cssPairs[cssKey]);
+						}
+					}
+					
+					if (uivar.label_cssPairs != null){
+						var slabel = $("#slabel-"+uikey);
+						for (var cssKey in uivar.label_cssPairs){
+							slabel.css(cssKey,uivar.label_cssPairs[cssKey]);
+						}
+					}
+
+					//element = new createjs.Text(typeof uivar.name !== "undefined"?uivar.name:uikey, "20px Arial", "#444444");
+					element =  new createjs.DOMElement($("#slabel-"+uikey)[0]);
+					element.x = 20; 
+					element.y = cur_y;
+					ui.addChild(element);
+					cur_y = element.y + 30;
+
+					element =  new createjs.DOMElement($("#slider-"+uikey)[0]);
+					element.x = 20;
+					element.y = cur_y;
+					ui.addChild(element);
+					cur_y = element.y + 40;
+				} else if (uivar.type == "button"){
+					var button = $("#button-"+uikey).button().click(function(event) {
+						event.preventDefault();						
+						var id = event.target.id;
+						var val = event.target.value;
+						var key = id.replace("button-","");						
+						var completed = world['handle_'+key+'_change'](event);  
+						if (completed == null || completed){
+							if (typeof simulation_store !== "undefined") simulation_store("button click", id, val);
+							// switch between value and alt_value
+							this.value = worldSpecs.uivars[key].alt_value;
+							worldSpecs.uivars[key].value = worldSpecs.uivars[key].alt_value;
+							worldSpecs.uivars[key].alt_value = val;	
+						}					        
+					});
+					if (uivar.cssPairs != null){
+						for (var cssKey in uivar.cssPairs){
+							button.css(cssKey,uivar.cssPairs[cssKey]);
+						}
+					}
+					element =  new createjs.DOMElement($("#button-"+uikey)[0]);
+					element.x = 20;
+					element.y = cur_y;
+					ui.addChild(element);
+					cur_y = element.y + 40;
+				}
+			}
+
+			// create shortcut to current cart
+	  		var cart_name = $("#button-switch_cart").attr("value") == "Use Ramp"  ? "spring-cart" : "ramp-cart";
+	  		world.cart = world.composites[cart_name];
+  		
+		}
+
+		////////////////////////////// CUSTOM UI HANDLERS ////////////////////////////
+		// On initial setup of UI Vars (worldSpecs.uivars), if the variable is set as in_table:true
+		// then the variable will displayed in the ui area. Additionally the handlers will
+		// automatically be made to call these functions by calling "handle_" + var_name + "_change". 
+		// So make sure that the name of these handlers matches the name of the variables.
+		// Put them in the html file
+
+		world.handle_switch_cart_change = function(event, ui){
+			var val = event.target.value;
+			var prev_cart_name = val == "Use Ramp" ? "spring-cart" : "ramp-cart";
+			var new_cart_name = val == "Use Ramp" ? "ramp-cart" : "spring-cart";
+			
+			var endTrial = this.trial_ticks == -1 ? false : true; 
+			if (endTrial){
+				$("#slider-force_lever").slider("value", 1);
+		    	$("#button-release_lever").prop("value", "Release");
+		    	worldSpecs.uivars['release_lever'].value = "Release";
+				worldSpecs.uivars['release_lever'].alt_value = "New Trial";
+		    	this.handle_force_lever_change({target:{id:"slider-force_lever"}}, {value:1});
+		    	this.completeTrial();
+			} else {
+				this.removeObjectById("lever");
+			}
+
+			this.removeObjectById(prev_cart_name);
+			// are we adding or removing a cart?
+			if (prev_cart_name == "ramp-cart"){
+				this.removeObjectById("ramp");	
+				this.createObjectById("starting-block");					
+			} else {
+				this.removeObjectById("starting-block");		
+				this.createObjectById("ramp");
+			}
+			this.createObjectById(new_cart_name);
+			this.createObjectById("lever");
+			this.cart = this.composites[new_cart_name]; //update shortcut
+		    this.newTrial(!endTrial);
+			return true;
+		}
+
+		world.handle_body_mass_change = function(event, ui){
+			var cart_name = $("#button-switch_cart").attr("value") == "Use Ramp" ? "spring-cart" : "ramp-cart";
+			var mass = ui.value;
+			var cart_base_specs = world.getObjectSpecsById(cart_name +'-base');
+			if (cart_base_specs != null){
+				var endTrial = this.trial_ticks == -1 ? false : true; 
+				if (endTrial){
+					$("#slider-force_lever").slider("value", 1);
+			    	$("#button-release_lever").prop("value", "Release");
+			    	worldSpecs.uivars['release_lever'].value = "Release";
+					worldSpecs.uivars['release_lever'].alt_value = "New Trial";
+			    	this.handle_force_lever_change({target:{id:"slider-force_lever"}}, {value:1});
+			    	this.completeTrial();
+				} else {
+					this.removeObjectById("lever");
+				}
+				this.removeObjectById(cart_name); 
+				width = cart_base_specs.width;
+				var height = cart_base_specs.height;
+				var density = mass / (width * height);
+				
+				cart_base_specs.b2FixtureDef.density = density;
+				// change color to reflect density
+				var max = $("#slider-body_mass").slider("option", "max");
+				//var min = $("#slider-body_mass").slider("option", "min");
+				var d = mass / max;
+				var x = Math.floor(240 - 120 * d);
+				var y = Math.floor(190 - 100 * d);
+				var z = Math.floor(65 - 80 * d);
+				var rx = "rgba(" + x + "," + x + "," + x + ",1.0)";
+				var ry = "rgba(" + y + "," + y + "," + y + ",1.0)";
+				var rz = "rgba(" + z + "," + z + "," + z + ",1.0)";
+				cart_base_specs.easel.fill_colors = [rx, ry, ry, rz];
+				//console.log(world.getObjectSpecsById('cart'));
+				
+		    	this.createObjectById(cart_name);
+		    	this.cart = this.composites[cart_name]; //update shortcut
+		    	this.createObjectById("lever");
+		    	this.newTrial(!endTrial);
+			}
+			return true;
+		}
+
+		world.handle_body_shape_change = function(event, ui){
+			var cart_name = $("#button-switch_cart").attr("value") == "Use Ramp" ? "spring-cart" : "ramp-cart";
+			var ratio = ui.value;
+			var cart_base_specs = world.getObjectSpecsById(cart_name +'-base');
+			if (cart_base_specs != null){
+				var endTrial = this.trial_ticks == -1 ? false : true; 
+				if (endTrial){
+					$("#slider-force_lever").slider("value", 1);
+			    	$("#button-release_lever").prop("value", "Release");
+			    	worldSpecs.uivars['release_lever'].value = "Release";
+					worldSpecs.uivars['release_lever'].alt_value = "New Trial";
+			    	this.handle_force_lever_change({target:{id:"slider-force_lever"}}, {value:1});
+			    	this.completeTrial();
+				} else {
+					this.removeObjectById("lever");
+				}
+				this.removeObjectById(cart_name); 
+				var volume = cart_base_specs.width * cart_base_specs.height;
+				var width =  Math.sqrt(volume/ratio);
+				
+				//var width 
+				world.getObjectSpecsById('spring-cart-base').width = width;
+				world.getObjectSpecsById('spring-cart-base').height = volume/width;
+				world.getObjectSpecsById('ramp-cart-base').width = width;
+				world.getObjectSpecsById('ramp-cart-base').height = volume/width;
+				//console.log("w x h = v", cart_base_specs.width, cart_base_specs.height, volume)
+				world.getObjectSpecsById('spring-cart-backwheel').b2BodyDef.relative_position = new b2Vec2(-cart_base_specs.width/4, 0);
+				world.getObjectSpecsById('spring-cart-frontwheel').b2BodyDef.relative_position = new b2Vec2(cart_base_specs.width/4, 0);
+				world.getObjectSpecsById('spring-cart-backwheel-joint').b2JointDef.localAnchorB = new b2Vec2(-cart_base_specs.width/4, 0);
+				world.getObjectSpecsById('spring-cart-frontwheel-joint').b2JointDef.localAnchorB = new b2Vec2(cart_base_specs.width/4, 0);
+				world.getObjectSpecsById('spring-cart-spring-back').b2BodyDef.relative_position = new b2Vec2(-cart_base_specs.width/2 - 3, 0);
+				world.getObjectSpecsById('spring-cart-spring-djoint').b2JointDef.localAnchorB = new b2Vec2(-cart_base_specs.width/2, 0);
+				world.getObjectSpecsById('spring-cart-spring-pjoint').b2JointDef.localAnchorB = new b2Vec2(-cart_base_specs.width/2, 0);
+				world.getObjectSpecsById('ramp-cart-backwheel').b2BodyDef.relative_position = new b2Vec2(-cart_base_specs.width/4, 0);
+				world.getObjectSpecsById('ramp-cart-frontwheel').b2BodyDef.relative_position = new b2Vec2(cart_base_specs.width/4, 0);
+				world.getObjectSpecsById('ramp-cart-backwheel-joint').b2JointDef.localAnchorB = new b2Vec2(-cart_base_specs.width/4, 0);
+				world.getObjectSpecsById('ramp-cart-frontwheel-joint').b2JointDef.localAnchorB = new b2Vec2(cart_base_specs.width/4, 0);
+				world.getObjectSpecsById('ramp-cart-spring-back').b2BodyDef.relative_position = new b2Vec2(-cart_base_specs.width/2, 0);
+				
+				world.getObjectSpecsById(cart_name).position = new b2Vec2(7+width/2, 10.5)
+		    	this.createObjectById(cart_name);
+		    	world.getObjectSpecsById('lever').b2BodyDef.position = new b2Vec2(7+width, 10);
+		    	
+		    	this.createObjectById("lever");
+				this.cart = this.composites[cart_name]; //update shortcut
+		    	this.newTrial(!endTrial);
+			}
+			return true;
+		}
+
+
+		world.handle_wheel_friction_change = function(event, ui){
+			var friction = ui.value;
+			for (var key in this.activeBodies){
+				if (this.activeBodies[key].specs.class == "wheel"){
+					this.activeBodies[key].body.SetLinearDamping(friction);
+					//this.activeBodies[key].specs.easel.axle_ratio = friction;
+					//this.activeBodies[key].initialized = false;
+				}
+			}
+			stage.needs_to_update = true;	
+			return true;
+		}		
+
+		/** Find the appropriate force and change the amount of force in the given direction */
+		world.handle_force_lever_change = function(event, ui){
+			var val = 1 - ui.value;
+			var id = event.target.id.replace("slider-","");
+			var f = this.activeForces[id];
+			if (f != null){
+				//f.prev_force = new b2Vec2(f.force.x, f.force.y);
+				//console.log("handle", f.prev_force.x);
+				f.spillover_force = new b2Vec2(0, 0);
+				var angle = Math.atan(f.direction.y / f.direction.x);
+				f.force.x = Math.cos(angle) * val * f.max_force;
+				if (f.direction.x != 0) f.force.x = f.direction.x / Math.abs(f.direction.x) * Math.abs(f.force.x);
+				f.force.y = Math.sin(angle) * val * f.max_force;
+				if (f.direction.y != 0) f.force.y = f.direction.y / Math.abs(f.direction.y) * Math.abs(f.force.y);
+			}
+			stage.needs_to_update = true;
+			return true;
+		}
+
+		world.handle_release_lever_change = function(event){
+			var val = event.target.value;
+	        if (val == "Release"){
+		        var prevVal = $("#slider-force_lever").slider("value");
+		        $("#slider-force_lever").slider("value", 1);
+		        // render a clean chart and start running a trial
+		        if (prevVal != $("#slider-force_lever").slider("value")){
+		        	this.handle_force_lever_change({target:{id:"slider-force_lever"}}, {value:1});
+		        	this.removeBodyById("lever");		        	
+		            this.startTrial();
+		        } else {
+		        	return false;
+		        }		              
+		    } else if (val == "New Trial"){
+		    	this.endTrial();
+		    } else {
+		    	console.log("Not a valid value for", event);
+		    }
+		    stage.needs_to_update = true;
+		    return true;
+		}
+
+		world.endTrial = function(){
+			var cart_name = $("#button-switch_cart").attr("value") == "Use Ramp" ? "spring-cart" : "ramp-cart";
+			$("#slider-force_lever").slider("value", 1);
+	    	$("#button-release_lever").prop("value", "Release");
+	    	worldSpecs.uivars['release_lever'].value = "Release";
+			worldSpecs.uivars['release_lever'].alt_value = "New Trial";
+	    	this.handle_force_lever_change({target:{id:"slider-force_lever"}}, {value:1});
+
+	    	this.completeTrial();
+	    	this.removeObjectById(cart_name); // remove so we can position back at originally spot
+	    	this.createObjectById(cart_name);
+	    	this.cart = this.composites[cart_name]; //update shortcut
+		    	
+	    	this.createObjectById("lever");
+	    	this.newTrial();
+
+		}
+
+		world.newTrial();
+  		
+		stage.update();
+		createjs.Ticker.addEventListener("tick", tick);
+	}
+
+	
+	
+	function tick() { 
+		if (world != null) world._tick();
+		if (stage != null && stage.needs_to_update){
+			stage.update();
+			stage.needs_to_update = false;
+		}
+	}
+
+	/////////////////////// INTERACTION WITH WISE ///////////////////////
+	(function (window){
+	  //debugger;
+	  if (parent != null && parent.node != null && (parent.al != null || parent.webApp != null)){
+	    var history = [{eventType: "load", eventId:null, newValue:"", timestamp: Date.parse(new Date())}];
+		var node = parent.node;
+		var wiseObject = parent.al != null ? parent.al : (parent.webApp != null ? parent.webApp : null);
+		node.history = history;
+		   
+	    /** Called when leaving the table Node step */
+	    node.finalize = function(callback) {
+		      var h = {eventType: "exit", eventId:null, newValue:"", timestamp:Date.parse(new Date())};
+		      history.push(h);
+		      if (world)
+		      if (typeof wiseObject !== "undefined") wiseObject.stateChanged = true;
+		      callback();
+		    };
+
+		/** Logs button press and calls appropriate function */
+		simulation_store = function (eventType, eventId, newValue){
+		    console.log(eventType, eventId, newValue);
+		    // attach world's data table to node if not done already
+		    if (node.tableData == null && world.tableData != null){
+		    	node.tableData = world.tableData;
+		    }
+		    var h = {eventType: eventType, eventId:eventId, newValue:newValue, timestamp:Date.parse(new Date())};
+		    node.history.push(h);
+		    if (typeof wiseObject !== "undefined") wiseObject.stateChanged = true;
+		    if (parent != null && parent.eventManager != null) parent.eventManager.fire('renewSession');
+		}
+
+		function cloneHistory(obj) {
+		    if (obj == null || typeof obj !== "object") return obj;
+		    var copy = obj.constructor();
+
+		    for (var i = 0; i < obj.length; i++){
+		      var cell = {};
+		      for (var attr in obj[i]){
+		        cell[attr] = obj[i][attr];
+		      }
+		      copy.push(cell);
+		    }
+		    return copy;
+		  }
+
+		  function cloneTable(obj) {
+		    if (obj == null || typeof obj !== "object") return obj;
+		    var copy = obj.constructor();
+
+		    for (var i = 0; i < obj.length; i++){
+		    	var column = [];
+		    	for (var j = 0; j < obj[i].length; j++){
+			      var cell = {};
+			      for (var attr in obj[i][j]){
+				     cell[attr] = obj[i][j][attr];
+				  }
+				  column.push(cell);
+				}
+			   copy.push(column); 
+		    }
+		    return copy;
+		  }
+	  } else {
+	    // node is not loaded
+	    console.log("WILL NOT LOG, NODE IS NOT LOADED");
+	  }
+	})(window);
+
+</script>
+</head>
+  
+ <body onload="init()"></body>
+ <div id="uielems"></div>
+ <canvas id="b2canvas" width=1060 height=350 style="background-color:#eeeeef"></canvas>
+ <table><tbody><tr>
+ <td>
+ <div id="plot1"></div>
+ </td>
+ <td>
+ <div id="plot2"></div>
+ </td>
+ <td style="vertical-align:top;">
+ <div id="table1"></div>
+ </td></tr></tbody></table>
+ <br/>
+ <canvas id="debugcanvas" width=820 height=400 style="background-color:#eeeeef"></canvas>
+</html>
