@@ -1,5 +1,13 @@
-# Ignore everything in this directory
+# Ignore everything else in this directory
 *
-# Except this file
+
+# don't ignore file and the demo folder
 !.gitignore
-README
+
+!demo/
+demo/*
+!demo/assets/
+demo/assets/*
+!demo/assets/*
+!demo/project.json
+

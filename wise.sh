@@ -11,7 +11,7 @@ if [ $# -eq 0 ]
 then
     echo "Usage: ./wise.sh {setup|run}"
 else
-    if [ $1 == "setup" ]
+    if [ $1 = "setup" ]
     then
         # install npm dependencies
         npm install
@@ -23,7 +23,7 @@ else
         cd -
 
 	# clear out curriculum and student uploads directories and any existing properties file
-	find src/main/webapp/curriculum/ ! \( -name README -o -name .gitignore \) -delete
+	find src/main/webapp/curriculum/ ! \( -name README -o -name .gitignore \) -type d \( -path demo \) -delete
 	find src/main/webapp/studentuploads/ ! \( -name README -o -name .gitignore \) -delete
 	rm $PROPERTIES_FILE
 
@@ -43,7 +43,7 @@ else
         # start embedded tomcat
         mvn tomcat7:run
     else
-        if [ $1 == "run" ]
+        if [ $1 = "run" ]
         then
             # make sure db tables are not wiped out
             sed -i.bak '/hibernate.hbm2ddl.auto=[none|create]/d' $PROPERTIES_FILE
