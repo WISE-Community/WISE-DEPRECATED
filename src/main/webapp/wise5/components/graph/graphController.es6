@@ -1108,7 +1108,7 @@ class GraphController {
             // remove high-charts assigned id's from each series before saving
             for (var s = 0; s < studentData.series.length; s++) {
                 var series = studentData.series[s];
-                series.id = null;
+                //series.id = null;
             }
 
             // insert the x axis data

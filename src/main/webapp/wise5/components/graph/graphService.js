@@ -739,7 +739,10 @@ var GraphService = function (_NodeService) {
         key: 'coefficientOfDetermination',
         value: function coefficientOfDetermination(data, pred) {
 
-            var i = SSE = SSYY = mean = 0;
+            var i = 0;
+            var SSE = 0;
+            var SSYY = 0;
+            var mean = 0;
 
             // Calc the mean
             for (i = 0; i < data.length; i++) {
