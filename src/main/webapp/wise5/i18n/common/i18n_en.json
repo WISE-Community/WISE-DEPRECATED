@@ -1,5 +1,6 @@
 {
   "add": "Add",
+  "assetUploadSuccessful": "Successfully uploaded: {{assetFilenames}}",
   "assetUsageMessage": "You are using {{usage}} out of {{max}} ({{percentage}}%)",
   "autoLogoutMessage": "You have been inactive for a long time. Do you want to stay logged in?",
   "cancel": "Cancel",

@@ -13,6 +13,10 @@
     .drop-box:hover {
         cursor: pointer;
     }
+
+    #assetMessage {
+        background-color: lightpink;
+    }
 </style>
 <button style="float:right" ng-click='projectAssetController.exit()' translate="close"></button>
 
@@ -23,6 +27,8 @@
       translate-value-usage="{{projectAssetController.projectAssets.totalFileSize | appropriateSizeText }}"
       translate-value-max="{{projectAssetController.projectAssetTotalSizeMax | appropriateSizeText }}"
       translate-value-percentage="{{projectAssetController.projectAssetUsagePercentage | roundToDecimal:0 }}"></span>
+<br/>
+<span id="assetMessage">{{projectAssetController.assetMessage}}</span>
 <ul>
     <li ng-repeat='assetItem in projectAssetController.projectAssets.files'>
         {{assetItem.fileName}} ({{assetItem.fileSize | appropriateSizeText}} bytes)
