@@ -29,6 +29,11 @@
       translate-value-percentage="{{projectAssetController.projectAssetUsagePercentage | roundToDecimal:0 }}"></span>
 <br/>
 <span id="assetMessage">{{projectAssetController.assetMessage}}</span>
+<span translate="sortAssets" />:
+<input type="radio" ng-model="projectAssetController.assetSortBy" value="aToZ"><span translate="fileNameAToZ" />
+<input type="radio" ng-model="projectAssetController.assetSortBy" value="zToA"><span translate="fileNameZToA" />
+<input type="radio" ng-model="projectAssetController.assetSortBy" value="smallToLarge"><span translate="fileSizeSmallToLarge" />
+<input type="radio" ng-model="projectAssetController.assetSortBy" value="largeToSmall"><span translate="fileSizeLargeToSmall" />
 <ul>
     <li ng-repeat='assetItem in projectAssetController.projectAssets.files'>
         {{assetItem.fileName}} ({{assetItem.fileSize | appropriateSizeText}} bytes)

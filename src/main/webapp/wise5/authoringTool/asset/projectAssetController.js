@@ -24,6 +24,7 @@ var ProjectAssetController = function () {
         this.projectAssets = ProjectAssetService.projectAssets;
         this.projectAssetTotalSizeMax = ProjectAssetService.projectAssetTotalSizeMax;
         this.projectAssetUsagePercentage = ProjectAssetService.projectAssetUsagePercentage;
+        this.assetSortBy = "aToZ"; // initially sort assets alphabetically
         this.assetMessage = "";
 
         this.$scope.$watch(function () {
@@ -31,10 +32,60 @@ var ProjectAssetController = function () {
         }, function () {
             _this.projectAssetUsagePercentage = _this.projectAssets.totalFileSize / _this.projectAssetTotalSizeMax * 100;
         });
+
+        // When user changes sort assets by
+        this.$scope.$watch(function () {
+            return _this.assetSortBy;
+        }, function () {
+            _this.sortAssets(_this.assetSortBy);
+        });
     }
 
     _createClass(ProjectAssetController, [{
-        key: 'deleteAsset',
+        key: "sortAssets",
+        value: function sortAssets(sortBy) {
+            if (sortBy === "aToZ") {
+                this.projectAssets.files.sort(this.sortAssetsAToZ);
+            } else if (sortBy === "zToA") {
+                var files = this.projectAssets.files;
+                this.projectAssets.files = files.sort(this.sortAssetsAToZ).reverse();
+            } else if (sortBy === "smallToLarge") {
+                this.projectAssets.files.sort(this.sortAssetsSmallToLarge);
+            } else if (sortBy === "largeToSmall") {
+                var _files = this.projectAssets.files;
+                this.projectAssets.files = _files.sort(this.sortAssetsSmallToLarge).reverse();
+            }
+        }
+    }, {
+        key: "sortAssetsAToZ",
+        value: function sortAssetsAToZ(a, b) {
+            var aFileName = a.fileName.toLowerCase();
+            var bFileName = b.fileName.toLowerCase();
+            var result = 0;
+
+            if (aFileName < bFileName) {
+                result = -1;
+            } else if (aFileName > bFileName) {
+                result = 1;
+            }
+            return result;
+        }
+    }, {
+        key: "sortAssetsSmallToLarge",
+        value: function sortAssetsSmallToLarge(a, b) {
+            var aFileSize = a.fileSize;
+            var bFileSize = b.fileSize;
+            var result = 0;
+
+            if (aFileSize < bFileSize) {
+                result = -1;
+            } else if (aFileSize > bFileSize) {
+                result = 1;
+            }
+            return result;
+        }
+    }, {
+        key: "deleteAsset",
         value: function deleteAsset(assetItem) {
             var _this2 = this;
 
@@ -43,7 +94,7 @@ var ProjectAssetController = function () {
             });
         }
     }, {
-        key: 'uploadAssetItems',
+        key: "uploadAssetItems",
         value: function uploadAssetItems(files) {
             var _this3 = this;
 
@@ -66,7 +117,7 @@ var ProjectAssetController = function () {
             });
         }
     }, {
-        key: 'exit',
+        key: "exit",
         value: function exit() {
             this.$state.go('root.project', { projectId: this.projectId });
         }

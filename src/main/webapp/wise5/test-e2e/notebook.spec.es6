@@ -54,7 +54,7 @@ describe('WISE5 Notebook in Preview Mode', () => {
         expect(hasClass(notebookSideNav, 'md-closed')).toBe(true);  // side nav should disappear
     });
 
-    it('should allow user to add a new note in the notebook', () => {
+    it('should allow user to cancel adding a new note in the notebook', () => {
         // Click on the notebook icon to open the notebook again
         notebookButton.click();
         expect(hasClass(notebookSideNav, 'md-closed')).toBe(false);  // side nav should appear on the page with the notebook
@@ -68,6 +68,9 @@ describe('WISE5 Notebook in Preview Mode', () => {
         // Canceling should hide the add note view without saving
         cancelNewNoteButton.click();
         verifyAddNewNoteDisplayed(false);
+    });
+
+    it('should allow user to add a new note in the notebook', () => {
 
         // Add my first note
         addNoteButton.click();
@@ -80,6 +83,9 @@ describe('WISE5 Notebook in Preview Mode', () => {
         element.all(by.repeater('notebookItem in notebookController.notebook.items')).then((notebookItems) => {
             expect(notebookItems[0].getText()).toEqual('my note #1');
         });
+    });
+
+    it('should allow user to add a second new note in the notebook', () => {
 
         // Add my second note
         addNoteButton.click();
@@ -97,5 +103,5 @@ describe('WISE5 Notebook in Preview Mode', () => {
         // Clicking outside of the notebook should dismiss the notebook
         element(by.xpath('//body')).click();
         expect(hasClass(notebookSideNav, 'md-closed')).toBe(true);  // side nav should disappear
-    })
+    });
 });

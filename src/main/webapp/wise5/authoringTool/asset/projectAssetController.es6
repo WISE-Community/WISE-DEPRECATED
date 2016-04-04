@@ -13,17 +13,68 @@ class ProjectAssetController {
         this.projectAssets = ProjectAssetService.projectAssets;
         this.projectAssetTotalSizeMax = ProjectAssetService.projectAssetTotalSizeMax;
         this.projectAssetUsagePercentage = ProjectAssetService.projectAssetUsagePercentage;
+        this.assetSortBy = "aToZ";  // initially sort assets alphabetically
         this.assetMessage = "";
 
         this.$scope.$watch(
             () => {
-                return this.projectAssets
+                return this.projectAssets;
             },
             () => {
               this.projectAssetUsagePercentage = this.projectAssets.totalFileSize / this.projectAssetTotalSizeMax * 100;
             }
         );
+
+        // When user changes sort assets by
+        this.$scope.$watch(
+            () => {
+                return this.assetSortBy;
+            },
+            () => {
+                this.sortAssets(this.assetSortBy);
+            }
+        );
     }
+
+    sortAssets(sortBy) {
+        if (sortBy === "aToZ") {
+            this.projectAssets.files.sort(this.sortAssetsAToZ);
+        } else if (sortBy === "zToA") {
+            let files = this.projectAssets.files;
+            this.projectAssets.files = files.sort(this.sortAssetsAToZ).reverse();
+        } else if (sortBy === "smallToLarge") {
+            this.projectAssets.files.sort(this.sortAssetsSmallToLarge);
+        } else if (sortBy === "largeToSmall") {
+            let files = this.projectAssets.files;
+            this.projectAssets.files = files.sort(this.sortAssetsSmallToLarge).reverse();
+        }
+    };
+
+    sortAssetsAToZ(a, b) {
+        var aFileName = a.fileName.toLowerCase();
+        var bFileName = b.fileName.toLowerCase();
+        var result = 0;
+
+        if (aFileName < bFileName) {
+            result = -1;
+        } else if (aFileName > bFileName) {
+            result = 1;
+        }
+        return result;
+    };
+
+    sortAssetsSmallToLarge(a, b) {
+        var aFileSize = a.fileSize;
+        var bFileSize = b.fileSize;
+        var result = 0;
+
+        if (aFileSize < bFileSize) {
+            result = -1;
+        } else if (aFileSize > bFileSize) {
+            result = 1;
+        }
+        return result;
+    };
 
     deleteAsset(assetItem) {
         this.ProjectAssetService.deleteAssetItem(assetItem).then((newProjectAssets) => {

@@ -38,9 +38,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.module.impl.CurnitGetCurnitUrlVisitor;
-import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.service.offering.RunService;
+import org.wise.portal.service.project.ProjectService;
 
 /**
  * Controller for handling student VLE-portal interactions.
@@ -54,6 +54,9 @@ public class VLEController {
 
 	@Autowired
 	private RunService runService;
+
+	@Autowired
+	private ProjectService projectService;
 
 	@Autowired
 	Properties wiseProperties;
@@ -111,13 +114,23 @@ public class VLEController {
             @PathVariable String projectId,
             ModelMap modelMap) {
 
-        // get the vle config url
-        String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
-        String configURL = wiseBaseURL + "/vleconfig?projectId=" + projectId + "&mode=preview";
+		try {
+			// check if the requested project id exists.
+			if (!"demo".equals(projectId)) {
+				projectService.getById(Long.parseLong(projectId));
+			}
+			// get the vle config url
+			String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
+			String configURL = wiseBaseURL + "/vleconfig?projectId=" + projectId + "&mode=preview";
 
-        // set the view to the student vle
-        modelMap.put("configURL", configURL);
-        return "student";
+			// set the view to the student vle
+			modelMap.put("configURL", configURL);
+			return "student";
+		} catch (ObjectNotFoundException onfe) {
+			// If project does not exist, show error page
+			onfe.printStackTrace();
+			return "errors/friendlyError";
+		}
     }
 
     /**
