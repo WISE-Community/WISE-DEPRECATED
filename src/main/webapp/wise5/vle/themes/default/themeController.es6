@@ -58,7 +58,7 @@ class ThemeController {
         // build server disconnect display
         this.connectionLostDisplay = $mdToast.build({
             template: '<md-toast>\
-                      <span><md-icon class="warn"> error </md-icon>&nbsp;Server error. Check your internet connection.</span>\
+                      <span>Server error. Check your internet connection.</span>\
                       </md-toast>',
             hideDelay: 0
         });
