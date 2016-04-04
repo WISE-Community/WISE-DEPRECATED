@@ -1,3 +1,10 @@
+'use strict';
+
+import NavItemController from './themeComponents/navItem/navItemController';
+import StepToolsCtrl from './themeComponents/stepTools/stepToolsController';
+import NodeStatusIconCtrl from './themeComponents/nodeStatusIcon/nodeStatusIconController';
+import ProjectStatusController from './themeComponents/projectStatus/projectStatusController';
+
 const NavItem = {
     bindings: {
         nodeId: '<',
@@ -27,8 +34,11 @@ const StepTools = {
 
 let ThemeComponents = angular.module('theme.components', []);
 
-ThemeComponents.component('navItem', NavItem);
-ThemeComponents.component('nodeStatusIcon', NodeStatusIcon);
-ThemeComponents.component('stepTools', StepTools);
+ThemeComponents.controller(NavItemController.name, NavItemController)
+               .controller(StepToolsCtrl.name, StepToolsCtrl)
+               .controller(NodeStatusIconCtrl.name, NodeStatusIconCtrl)
+               .component('navItem', NavItem)
+               .component('nodeStatusIcon', NodeStatusIcon)
+               .component('stepTools', StepTools);
 
 export default ThemeComponents;
