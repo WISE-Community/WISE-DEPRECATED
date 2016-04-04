@@ -115,8 +115,10 @@ public class VLEController {
             ModelMap modelMap) {
 
 		try {
-			projectService.getById(Long.parseLong(projectId));
-
+			// check if the requested project id exists.
+			if (!"demo".equals(projectId)) {
+				projectService.getById(Long.parseLong(projectId));
+			}
 			// get the vle config url
 			String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
 			String configURL = wiseBaseURL + "/vleconfig?projectId=" + projectId + "&mode=preview";
