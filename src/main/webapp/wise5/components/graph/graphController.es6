@@ -448,6 +448,11 @@ class GraphController {
         // add the event that will remove a point when clicked
         //this.addClickToRemovePointEvent(series);
 
+        if (this.activeSeries == null && series.length > 0) {
+            // the active series has not been set so we will set the active series to the first series
+            this.setActiveSeriesByIndex(0);
+        }
+        
         // loop through all the series and
         for (var s = 0; s < series.length; s++) {
             var tempSeries = series[s];
@@ -474,11 +479,15 @@ class GraphController {
                     // disable dragging
                     tempSeries.draggableX = false;
                     tempSeries.draggableY = false;
-                } else if (tempSeries.canEdit) {
+                } else if (tempSeries.canEdit && this.isActiveSeriesIndex(s)) {
                     // set the fields to allow points to be draggable
                     tempSeries.draggableX = true;
                     tempSeries.draggableY = true;
                     tempSeries.cursor = 'move';
+                } else {
+                    // make the series uneditable
+                    tempSeries.draggableX = false;
+                    tempSeries.draggableY = false;
                 }
             }
         }
@@ -504,11 +513,6 @@ class GraphController {
         allSeries = allSeries.concat(regressionSeries);
 
         //this.setSeriesIds(allSeries);
-
-        if (this.activeSeries == null && series.length > 0) {
-            // the active series has not been set so we will set the active series to the first series
-            this.setActiveSeriesByIndex(0);
-        }
 
         this.chartConfig = {
             options: {
@@ -539,7 +543,6 @@ class GraphController {
 
                                 // check if the last drop event was not within the last 100 milliseconds
                                 if ((currentTime - thisGraphController.lastDropTime) < 100) {
-
                                     /*
                                      * the last drope event was within the last 100 milliseconds so we
                                      * will not register this click. we need to do this because when
@@ -551,17 +554,14 @@ class GraphController {
                                 }
                             }
 
-                            /*
-                             * check if the student can click to add data
-                             * on the graph
-                             */
+                            //check if the student can change the graph
                             if (!thisGraphController.isDisabled) {
 
                                 // get the active series
-                                var series = thisGraphController.activeSeries;
+                                var activeSeries = thisGraphController.activeSeries;
 
                                 // check if the student is allowed to edit the active series
-                                if (series != null && thisGraphController.canEdit(series)) {
+                                if (activeSeries != null && thisGraphController.canEdit(activeSeries)) {
 
                                     /*
                                      * get the x and y positions that were clicked and round
@@ -571,7 +571,7 @@ class GraphController {
                                     var y = thisGraphController.roundToNearestTenth(e.yAxis[0].value);
 
                                     // add the point to the series
-                                    thisGraphController.addPointToSeries(series, x, y);
+                                    thisGraphController.addPointToSeries(activeSeries, x, y);
 
                                     // notify the controller that the student data has changed
                                     thisGraphController.studentDataChanged();
@@ -587,27 +587,32 @@ class GraphController {
                             events: {
                                 drag: function (e) {
                                     // the student has started dragging a point
-
-                                    // get the active series
-                                    var series = thisGraphController.activeSeries;
-
-                                    // check if the student is allowed to edit the active series
-                                    if (series != null && thisGraphController.canEdit(series)) {
-                                        // set a flag to note that the student is dragging a point
-                                        thisGraphController.dragging = true;
+                                    
+                                    //check if the student can change the graph
+                                    if (!thisGraphController.isDisabled) {
+                                            
+                                        // get the active series
+                                        var activeSeries = thisGraphController.activeSeries;
+                                        
+                                        if (activeSeries != null) {
+                                            // check if the student is allowed to edit the active series
+                                            if (activeSeries != null && thisGraphController.canEdit(activeSeries)) {
+                                                // set a flag to note that the student is dragging a point
+                                                thisGraphController.dragging = true;
+                                            }
+                                        }
                                     }
                                 },
                                 drop: function (e) {
                                     // the student has stopped dragging the point and dropped the point
 
-                                    // get the active series
-                                    var series = thisGraphController.activeSeries;
+                                    //check if the student can change the graph and that they were previously dragging a point
+                                    if (!thisGraphController.isDisabled && thisGraphController.dragging) {
+                                        
+                                        // get the active series
+                                        var activeSeries = thisGraphController.activeSeries;
 
-                                    // check if the student is allowed to edit the active series
-                                    if (series != null && thisGraphController.canEdit(series)) {
-
-                                        if (thisGraphController.dragging) {
-
+                                        if (activeSeries != null) {
                                             // set the dragging flag off
                                             thisGraphController.dragging = false;
 
@@ -630,7 +635,7 @@ class GraphController {
                                                 var index = target.index;
 
                                                 // get the series data
-                                                var data = series.data;
+                                                var data = activeSeries.data;
 
                                                 if (data != null) {
                                                     // update the point
@@ -1803,6 +1808,40 @@ class GraphController {
             this.$rootScope.$broadcast('doneExiting');
         }));
     };
+    
+    /**
+     * Check if a series is the active series. There can only be on active series.
+     * @param series the series
+     * @returns whether the series is the active series
+     */
+    isActiveSeries(series) {
+        
+        // get the series index
+        var seriesIndex = this.getSeriesIndex(series);
+        
+        // check if the series is the active series 
+        var result = this.isActiveSeriesIndex(seriesIndex);
+        
+        return result;
+    }
+    
+    /**
+     * Check if a series index is the active series index. There can only be
+     * one active series.
+     * @param seriesIndex the series index
+     * @returns whether the series is the active series
+     */
+    isActiveSeriesIndex(seriesIndex) {
+        
+        var result = false;
+        
+        if (this.series.indexOf(this.activeSeries) === seriesIndex) {
+            // the series is the active series
+            result = true;
+        }
+        
+        return result;
+    }
 }
 
 
