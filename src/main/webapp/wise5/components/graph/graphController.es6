@@ -2,7 +2,8 @@
 //import $ from 'jquery';
 //import Highcharts from 'highcharts';
 //import angularHighcharts from 'highcharts-ng';
-import draggablePoints from 'highcharts/draggable-points';
+//import Highcharts from '../../lib/highcharts@4.2.1';
+//import draggablePoints from 'highcharts/draggable-points';
 
 class GraphController {
     constructor($rootScope,
@@ -614,19 +615,19 @@ class GraphController {
                                             thisGraphController.lastDropTime = new Date().getTime();
 
                                             // get the current target
-                                            var currentTarget = e.currentTarget;
+                                            var target = e.target;
 
-                                            if (currentTarget != null) {
+                                            if (target != null) {
 
                                                 /*
                                                  * get the x and y positions where the point was dropped and round
                                                  * them to the nearest tenth
                                                  */
-                                                var x = thisGraphController.roundToNearestTenth(currentTarget.x);
-                                                var y = thisGraphController.roundToNearestTenth(currentTarget.y);
+                                                var x = thisGraphController.roundToNearestTenth(target.x);
+                                                var y = thisGraphController.roundToNearestTenth(target.y);
 
                                                 // get the index of the point
-                                                var index = currentTarget.index;
+                                                var index = target.index;
 
                                                 // get the series data
                                                 var data = series.data;

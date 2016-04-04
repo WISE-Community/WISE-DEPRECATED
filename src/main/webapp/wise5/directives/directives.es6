@@ -429,6 +429,95 @@ class ConfirmNumberDecrease {
     }
 }
 
+/**
+ * Disable the backspace key so that it does not navigate the user back
+ * in their browser history.
+ */
+class DisableDeleteKeypress {
+    constructor($document) {
+        this.restrict = 'A';
+        this.$document = $document;
+    }
+
+    static directiveFactory($document) {
+        DisableDeleteKeypress.instance = new DisableDeleteKeypress($document);
+        return DisableDeleteKeypress.instance;
+    }
+
+    link($document) {
+        DisableDeleteKeypress.instance.$document.bind('keydown', function(e) {
+
+            // check for the delete key press
+            if (e.keyCode === 8) {
+                // the delete key was pressed
+
+                // get the name of the node e.g. body, input, div, etc.
+                var nodeName = e.target.nodeName;
+
+                // get the type if applicable e.g. text, password, file, etc.
+                var targetType = e.target.type;
+
+                if (nodeName != null) {
+                    nodeName = nodeName.toLowerCase();
+                }
+
+                if (targetType != null) {
+                    targetType = targetType.toLowerCase();
+                }
+
+                if ((nodeName === 'input' && targetType === 'text') ||
+                    (nodeName === 'input' && targetType === 'password') ||
+                    (nodeName === 'input' && targetType === 'file') ||
+                    (nodeName === 'input' && targetType === 'search') ||
+                    (nodeName === 'input' && targetType === 'email') ||
+                    (nodeName === 'input' && targetType === 'number') ||
+                    (nodeName === 'input' && targetType === 'date') ||
+                    nodeName === 'textarea') {
+                    /*
+                     * the user is typing in a valid input element so we will
+                     * allow the delete key press
+                     */
+                } else {
+                    /*
+                     * the user is not typing in an input element so we will
+                     * not allow the delete key press
+                     */
+                    e.preventDefault();
+                }
+            }
+        });
+    }
+}
+
+/**
+ * Listen for the backspace key press so we can perform special processing
+ * specific for components such as deleting a point in a graph component.
+ */
+class ListenForDeleteKeypress {
+    constructor($document) {
+        this.restrict = 'A';
+        this.$document = $document;
+    }
+
+    static directiveFactory($document) {
+        ListenForDeleteKeypress.instance = new ListenForDeleteKeypress($document);
+        return ListenForDeleteKeypress.instance;
+    }
+
+    link($scope) {
+        ListenForDeleteKeypress.instance.$document.bind('keydown', function(e) {
+
+            // check for the delete key press
+            if (e.keyCode === 8) {
+                // the delete key was pressed
+
+                // handle the delete key press in the scope
+                $scope.handleDeleteKeyPressed();
+            }
+        })
+    }
+}
+
 let Directives = angular.module('directives', []);
 
 AnnotationDirective.directiveFactory.$inject = ['$compile', 'AnnotationService', 'ConfigService', 'ProjectService', 'UtilService'];
@@ -436,11 +525,15 @@ ClassResponseDirective.directiveFactory.$inject = ['StudentStatusService'];
 CompileDirective.directiveFactory.$inject = ['$compile'];
 ComponentDirective.directiveFactory.$inject = ['$injector', '$compile', 'NodeService', 'ProjectService', 'StudentDataService'];
 ConfirmNumberDecrease.directiveFactory.$inject = [];
+DisableDeleteKeypress.directiveFactory.$inject = ['$document'];
+ListenForDeleteKeypress.directiveFactory.$inject = ['$document'];
 
 Directives.directive('annotation', AnnotationDirective.directiveFactory);
 Directives.directive('classResponse', ClassResponseDirective.directiveFactory);
 Directives.directive('compile', CompileDirective.directiveFactory);
 Directives.directive('component', ComponentDirective.directiveFactory);
 Directives.directive('confirmNumberDecrease', ConfirmNumberDecrease.directiveFactory);
+Directives.directive('disableDeleteKeypress', DisableDeleteKeypress.directiveFactory);
+Directives.directive('listenForDeleteKeypress', ListenForDeleteKeypress.directiveFactory);
 
 export default Directives;

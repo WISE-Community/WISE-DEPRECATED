@@ -92,6 +92,14 @@ var _filters = require('../filters/filters');
 
 var _filters2 = _interopRequireDefault(_filters);
 
+var _highcharts = require('../lib/highcharts@4.2.1');
+
+var _highcharts2 = _interopRequireDefault(_highcharts);
+
+var _draggablePoints = require('../vendor/draggable-points/draggable-points');
+
+var _draggablePoints2 = _interopRequireDefault(_draggablePoints);
+
 var _graphController = require('../components/graph/graphController');
 
 var _graphController2 = _interopRequireDefault(_graphController);
@@ -99,10 +107,6 @@ var _graphController2 = _interopRequireDefault(_graphController);
 var _graphService = require('../components/graph/graphService');
 
 var _graphService2 = _interopRequireDefault(_graphService);
-
-var _highcharts = require('../lib/highcharts@4.2.1');
-
-var _highcharts2 = _interopRequireDefault(_highcharts);
 
 var _htmlService = require('../components/html/htmlService');
 
@@ -236,7 +240,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 //import PhotoBoothService from '../components/photoBooth/photoBoothService';
 
-//import AudioRecorderService from '../components/audioRecorder/audioRecorderService';
+//import CRaterService from '../components/cRater/cRaterService';
 
 
 var mainModule = _angular2.default.module('vle', ['angularMoment', 'angular-toArrayFilter', 'directives', 'filters', 'highcharts-ng',
@@ -411,7 +415,7 @@ var mainModule = _angular2.default.module('vle', ['angularMoment', 'angular-toAr
         }
     });
 }]);
-//import CRaterService from '../components/cRater/cRaterService';
+//import AudioRecorderService from '../components/audioRecorder/audioRecorderService';
 
 
 exports.default = mainModule;

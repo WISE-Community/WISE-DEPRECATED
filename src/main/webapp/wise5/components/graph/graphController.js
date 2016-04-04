@@ -7,18 +7,14 @@ Object.defineProperty(exports, "__esModule", {
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 //import $ from 'jquery';
 //import Highcharts from 'highcharts';
 //import angularHighcharts from 'highcharts-ng';
-
-
-var _draggablePoints = require('highcharts/draggable-points');
-
-var _draggablePoints2 = _interopRequireDefault(_draggablePoints);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+//import Highcharts from '../../lib/highcharts@4.2.1';
+//import draggablePoints from 'highcharts/draggable-points';
 
 var GraphController = function () {
     function GraphController($rootScope, $scope, GraphService, NodeService, ProjectService, StudentAssetService, StudentDataService, UtilService) {
@@ -625,19 +621,19 @@ var GraphController = function () {
                                                 thisGraphController.lastDropTime = new Date().getTime();
 
                                                 // get the current target
-                                                var currentTarget = e.currentTarget;
+                                                var target = e.target;
 
-                                                if (currentTarget != null) {
+                                                if (target != null) {
 
                                                     /*
                                                      * get the x and y positions where the point was dropped and round
                                                      * them to the nearest tenth
                                                      */
-                                                    var x = thisGraphController.roundToNearestTenth(currentTarget.x);
-                                                    var y = thisGraphController.roundToNearestTenth(currentTarget.y);
+                                                    var x = thisGraphController.roundToNearestTenth(target.x);
+                                                    var y = thisGraphController.roundToNearestTenth(target.y);
 
                                                     // get the index of the point
-                                                    var index = currentTarget.index;
+                                                    var index = target.index;
 
                                                     // get the series data
                                                     var data = series.data;
