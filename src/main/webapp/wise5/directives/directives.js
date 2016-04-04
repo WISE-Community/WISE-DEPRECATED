@@ -464,6 +464,12 @@ var ConfirmNumberDecrease = function () {
     return ConfirmNumberDecrease;
 }();
 
+/**
+ * Disable the backspace key so that it does not navigate the user back
+ * in their browser history.
+ */
+
+
 var DisableDeleteKeypress = function () {
     function DisableDeleteKeypress($document) {
         _classCallCheck(this, DisableDeleteKeypress);
@@ -520,6 +526,12 @@ var DisableDeleteKeypress = function () {
 
     return DisableDeleteKeypress;
 }();
+
+/**
+ * Listen for the backspace key press so we can perform special processing
+ * specific for components such as deleting a point in a graph component.
+ */
+
 
 var ListenForDeleteKeypress = function () {
     function ListenForDeleteKeypress($document) {

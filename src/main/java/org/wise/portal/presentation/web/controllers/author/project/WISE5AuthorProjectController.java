@@ -593,7 +593,7 @@ public class WISE5AuthorProjectController {
     /**
      * Get the file names in the directory. Permission checks should be done before calling this method.
      * @param directory the directory containing the files
-     * @return the JSONArray containing information of files in the specified directory
+     * @return an array of files in the directory
      */
     public static File[] getFilesInDirectory(File directory) {
         if (directory.exists() && directory.isDirectory()) {

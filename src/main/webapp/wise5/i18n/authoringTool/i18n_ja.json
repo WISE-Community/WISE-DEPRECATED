@@ -10,6 +10,10 @@
   "createNewActivity": "アクティビティを作成",
   "createNewProject": "プロジェクトを作成",
   "createNewStep": "ステップを作成",
+  "fileNameAToZ": "ファイル名 A->Z",
+  "fileNameZToA": "ファイル名 Z->A",
+  "fileSizeSmallToLarge": "ファイルサイズ 小->大",
+  "fileSizeLargeToSmall": "ファイルサイズ 大->小",
   "insertAfter": "この後に置く",
   "insertInside": "この中に置く",
   "manageAssets": "アセットをマネージ",
@@ -18,6 +22,7 @@
   "myProjectsHeading": "プロジェクトリスト （クリックして開く）",
   "noUndoAvailable": "取り消す変更がありません。",
   "previewStep": "ステップをプレビュー",
+  "sortAssets": "ソート",
   "stepTitle": "ステップ名",
   "undo": "取り消し",
   "viewHistory": "履歴の閲覧"

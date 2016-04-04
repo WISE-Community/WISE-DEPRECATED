@@ -10,6 +10,10 @@
   "createNewActivity": "Create New Activity",
   "createNewProject": "Create a New Project",
   "createNewStep": "Create New Step",
+  "fileNameAToZ": "File Name A->Z",
+  "fileNameZToA": "File Name Z->A",
+  "fileSizeSmallToLarge": "File Size Small -> Large",
+  "fileSizeLargeToSmall": "File Size Large -> Small",
   "insertAfter": "Insert After",
   "insertInside": "Insert Inside",
   "manageAssets": "Manage Assets",
@@ -18,6 +22,7 @@
   "myProjectsHeading": "My Projects (click to open)",
   "noUndoAvailable": "There are no changes to undo",
   "previewStep": "Preview Step",
+  "sortAssets": "Sort Assets",
   "stepTitle": "Step Title",
   "undo": "Undo",
   "viewHistory": "View History"
