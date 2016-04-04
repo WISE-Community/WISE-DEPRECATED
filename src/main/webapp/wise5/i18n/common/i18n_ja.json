@@ -1,5 +1,6 @@
 {
   "add": "追加",
+  "assetUploadSuccessful": "{{assetFilenames}} がアップロードされました。",
   "assetUsageMessage": "{{max}} の中 {{usage}} を使用しています。({{percentage}}%)",
   "autoLogoutMessage": "長い間使用されていないようです。ログイン状態を保持しますか？",
   "cancel": "キャンセル",

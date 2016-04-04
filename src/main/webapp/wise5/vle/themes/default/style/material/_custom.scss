@@ -130,13 +130,9 @@ md-input-container {
       padding-left: 0;
     }
 
-    md-radio-button {
+    md-radio-button, md-checkbox {
       margin: 16px;
-    }
-
-    md-checkbox {
-      top: 16px;
-      margin-left: 16px;
+      display: block;
     }
   }
 

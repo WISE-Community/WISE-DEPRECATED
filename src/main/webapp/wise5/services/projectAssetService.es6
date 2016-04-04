@@ -52,7 +52,10 @@ class ProjectAssetService {
                 // Only set the projectAssets if the result is an object.
                 // Sometimes it's an error message string.
                 if (typeof result === 'object') {
+                    // upload was successful.
                     this.projectAssets = result;
+                    let uploadedFilename = config.file.name;
+                    return uploadedFilename;
                 } else if (typeof result === 'string') {
                     // This is an error and should be displayed to the user.
                     alert(result);

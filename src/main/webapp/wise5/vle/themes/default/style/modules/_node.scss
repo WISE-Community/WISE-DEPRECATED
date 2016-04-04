@@ -69,8 +69,10 @@ $input-action-vertical-offset-richtext: -7px;
   padding: 0 0 24px;
 
   @media only screen and (min-width: $layout-breakpoint-xs) {
-    border: 1px solid color('gray');
     padding: 0;
+    box-shadow: 0 1px 3px 0 rgba(0,0,0,.2),0 1px 1px 0 rgba(0,0,0,.14),0 2px 1px -1px rgba(0,0,0,.12);
+    border-top: 2px solid;
+    border-bottom: 2px solid;
   }
 }
 

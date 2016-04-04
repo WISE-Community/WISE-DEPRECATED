@@ -73,7 +73,10 @@ var ProjectAssetService = function () {
                     // Only set the projectAssets if the result is an object.
                     // Sometimes it's an error message string.
                     if ((typeof result === 'undefined' ? 'undefined' : _typeof(result)) === 'object') {
+                        // upload was successful.
                         _this3.projectAssets = result;
+                        var uploadedFilename = config.file.name;
+                        return uploadedFilename;
                     } else if (typeof result === 'string') {
                         // This is an error and should be displayed to the user.
                         alert(result);

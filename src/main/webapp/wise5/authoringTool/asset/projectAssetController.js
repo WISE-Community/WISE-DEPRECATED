@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var ProjectAssetController = function () {
-    function ProjectAssetController($state, $stateParams, $scope, ProjectAssetService) {
+    function ProjectAssetController($state, $stateParams, $scope, $timeout, $translate, ProjectAssetService) {
         var _this = this;
 
         _classCallCheck(this, ProjectAssetController);
@@ -17,11 +17,14 @@ var ProjectAssetController = function () {
         this.$state = $state;
         this.$stateParams = $stateParams;
         this.$scope = $scope;
+        this.$timeout = $timeout;
+        this.$translate = $translate;
         this.projectId = this.$stateParams.projectId;
         this.ProjectAssetService = ProjectAssetService;
         this.projectAssets = ProjectAssetService.projectAssets;
         this.projectAssetTotalSizeMax = ProjectAssetService.projectAssetTotalSizeMax;
         this.projectAssetUsagePercentage = ProjectAssetService.projectAssetUsagePercentage;
+        this.assetMessage = "";
 
         this.$scope.$watch(function () {
             return _this.projectAssets;
@@ -44,7 +47,21 @@ var ProjectAssetController = function () {
         value: function uploadAssetItems(files) {
             var _this3 = this;
 
-            this.ProjectAssetService.uploadAssets(files).then(function (uploadAssetsResult) {
+            this.ProjectAssetService.uploadAssets(files).then(function (uploadAssetsResults) {
+                if (uploadAssetsResults && uploadAssetsResults.length > 0) {
+                    var uploadedAssetsFilenames = [];
+                    for (var r = 0; r < uploadAssetsResults.length; r++) {
+                        var uploadAssetsResult = uploadAssetsResults[r];
+                        uploadedAssetsFilenames.push(uploadAssetsResult.config.file.name);
+                    }
+                    _this3.$translate('assetUploadSuccessful', { assetFilenames: uploadedAssetsFilenames.join(", ") }).then(function (assetUploadSuccessful) {
+                        // show a confirmation message for 7 seconds
+                        _this3.assetMessage = assetUploadSuccessful;
+                        _this3.$timeout(function () {
+                            _this3.assetMessage = "";
+                        }, 7000);
+                    });
+                }
                 _this3.projectAssets = _this3.ProjectAssetService.projectAssets;
             });
         }
@@ -58,7 +75,7 @@ var ProjectAssetController = function () {
     return ProjectAssetController;
 }();
 
-ProjectAssetController.$inject = ['$state', '$stateParams', '$scope', 'ProjectAssetService'];
+ProjectAssetController.$inject = ['$state', '$stateParams', '$scope', '$timeout', '$translate', 'ProjectAssetService'];
 
 exports.default = ProjectAssetController;
 //# sourceMappingURL=projectAssetController.js.map
