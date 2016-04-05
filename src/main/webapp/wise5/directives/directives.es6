@@ -19,6 +19,8 @@ class ComponentDirective {
         var componentState = attrs.componentstate;
         var workgroupId = null;
         var teacherWorkgroupId = null;
+        var originalNodeId = attrs.originalnodeid;
+        var originalComponentId = attrs.originalcomponentid;
 
         $scope.mode = "student";
         if (attrs.mode) {
@@ -60,6 +62,19 @@ class ComponentDirective {
         $scope.nodeId = nodeId;
         $scope.workgroupId = workgroupId;
         $scope.teacherWorkgroupId = teacherWorkgroupId;
+        
+        if (originalNodeId != null && originalComponentId != null) {
+            /*
+             * set the original node id and component id. this is used
+             * when we are showing previous work from another component.
+             */
+            $scope.originalNodeId = originalNodeId;
+            $scope.originalComponentId = originalComponentId;
+            
+            // get the original component
+            var originalComponentContent = ComponentDirective.instance.ProjectService.getComponentByNodeIdAndComponentId(originalNodeId, originalComponentId);
+            $scope.originalComponentContent = originalComponentContent;
+        }
 
         var componentHTML = "<div id=\"{{component.id}}\" class=\"component-content\" >" +
             "<div ng-include=\"componentTemplatePath\" style=\"overflow-x: auto;\"></div></div>";

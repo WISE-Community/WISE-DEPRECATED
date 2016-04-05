@@ -94,6 +94,9 @@ var GraphController = function () {
         // whether the reset graph button is shown or not
         this.isResetGraphButtonVisible = true;
 
+        // whether the select series input is shown or not
+        this.isSelectSeriesVisible = true;
+
         // the id of the chart element
         this.chartId = 'chart1';
 
@@ -111,6 +114,12 @@ var GraphController = function () {
         // get the authoring component content
         this.authoringComponentContent = this.$scope.authoringComponentContent;
 
+        /*
+         * get the original component content. this is used when showing 
+         * previous work from another component.
+         */
+        this.originalComponentContent = this.$scope.originalComponentContent;
+
         this.mode = this.$scope.mode;
 
         if (this.componentContent != null) {
@@ -126,17 +135,20 @@ var GraphController = function () {
                 this.isSaveButtonVisible = this.componentContent.showSaveButton;
                 this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
                 this.isResetGraphButtonVisible = true;
+                this.isSelectSeriesVisible = true;
             } else if (this.mode === 'grading') {
                 this.isPromptVisible = true;
                 this.isSaveButtonVisible = false;
                 this.isSubmitButtonVisible = false;
                 this.isResetGraphButtonVisible = false;
+                this.isSelectSeriesVisible = false;
                 this.isDisabled = true;
             } else if (this.mode === 'onlyShowWork') {
-                this.isPromptVisible = false;
+                this.isPromptVisible = true;
                 this.isSaveButtonVisible = false;
                 this.isSubmitButtonVisible = false;
                 this.isResetGraphButtonVisible = false;
+                this.isSelectSeriesVisible = false;
                 this.isDisabled = true;
             } else if (this.mode === 'authoring') {
                 this.updateAdvancedAuthoringView();
@@ -1364,7 +1376,9 @@ var GraphController = function () {
         value: function getPrompt() {
             var prompt = null;
 
-            if (this.componentContent != null) {
+            if (this.originalComponentContent != null) {
+                prompt = this.originalComponentContent.prompt;
+            } else if (this.componentContent != null) {
                 prompt = this.componentContent.prompt;
             }
 
@@ -2000,6 +2014,27 @@ var GraphController = function () {
             }
 
             return result;
+        }
+
+        /**
+         * Whether to show the select series input
+         * @returns whether to show the select series input
+         */
+
+    }, {
+        key: 'showSelectSeries',
+        value: function showSelectSeries() {
+            var show = false;
+
+            if (this.isSelectSeriesVisible && this.series.length > 1) {
+                /*
+                 * we are in a mode the shows the select series input and there is 
+                 * more than one series
+                 */
+                show = true;
+            }
+
+            return show;
         }
     }]);
 

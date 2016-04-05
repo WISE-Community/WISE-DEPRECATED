@@ -77,7 +77,7 @@
         <select ng-model='graphController.activeSeries'
                 ng-options='series as series.name for series in graphController.series'
                 ng-change='graphController.activeSeriesChanged()'
-                ng-show='graphController.series.length > 1'>
+                ng-show='graphController.showSelectSeries()'>
         </select>
         <highchart id="{{graphController.chartId}}" config="graphController.chartConfig" class="span10" style="width:80%"></highchart>
         <div ng-if='graphController.mode == "student"'>

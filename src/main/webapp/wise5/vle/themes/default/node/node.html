@@ -1,7 +1,21 @@
 <md-content class="l-constrained node-content md-padding" style="border-color: {{nodeController.nodeStatus.icon.color}}">
    <div id="{{component.id}}" ng-repeat='component in nodeController.getComponents()'>
-       <component ng-if='component.showPreviousWorkNodeId != null && component.showPreviousWorkComponentId != null' nodeid='{{component.showPreviousWorkNodeId}}' componentid='{{component.showPreviousWorkComponentId}}' componentstate='{{nodeController.getComponentStateByNodeIdAndComponentId(component.showPreviousWorkNodeId, component.showPreviousWorkComponentId)}}' workgroupid='{{nodeController.workgroupId}}' teacherworkgroupid='{{nodeController.teacherWorkgroupId}}' mode='onlyShowWork'></component>
-       <component ng-if='component.showPreviousWorkNodeId == null || component.showPreviousWorkComponentId == null' nodeid='{{nodeController.nodeId}}' componentid='{{component.id}}' componentstate='{{nodeController.getComponentStateByComponentId(component.id)}}' workgroupid='{{nodeController.workgroupId}}' teacherworkgroupid='{{nodeController.teacherWorkgroupId}}' mode='student'></component>
+       <component ng-if='component.showPreviousWorkNodeId != null && component.showPreviousWorkComponentId != null' 
+                    nodeid='{{component.showPreviousWorkNodeId}}' 
+                    componentid='{{component.showPreviousWorkComponentId}}' 
+                    componentstate='{{nodeController.getComponentStateByNodeIdAndComponentId(component.showPreviousWorkNodeId, component.showPreviousWorkComponentId)}}' 
+                    workgroupid='{{nodeController.workgroupId}}' 
+                    teacherworkgroupid='{{nodeController.teacherWorkgroupId}}'
+                    originalnodeid={{nodeController.nodeId}} 
+                    originalcomponentid={{component.id}} 
+                    mode='onlyShowWork'></component>
+       <component ng-if='component.showPreviousWorkNodeId == null || component.showPreviousWorkComponentId == null' 
+                    nodeid='{{nodeController.nodeId}}' 
+                    componentid='{{component.id}}' 
+                    componentstate='{{nodeController.getComponentStateByComponentId(component.id)}}' 
+                    workgroupid='{{nodeController.workgroupId}}' 
+                    teacherworkgroupid='{{nodeController.teacherWorkgroupId}}' 
+                    mode='student'></component>
    </div>
    <div class="node-content__actions" layout="row" layout-align="start center">
         <md-button class="md-raised md-primary"
