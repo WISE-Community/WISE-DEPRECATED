@@ -970,5 +970,377 @@
     "classroomMonitor_run": {
         "value": "#{0}",
         "description": "Text displaying the ID of the current run in the classroom monitor ({0} will be replaced by ID number)"
+    },
+    "authoring_imsettings_text_required": {
+        "value": "『テキスト』はデフォルトなので削除することはできません。",
+        "description": "The help text in the Idea Manager settings for the lock icon on the 'text' idea attribute."
+    },
+    "preview_project_constraint_enabled_message": {
+        "value": "ナビゲーション制約が使用されています。オフにしてプレビューするには、",
+        "description": "The message shown in preview project mode when student navigation constraints are enabled."
+    },
+    "preview_project_constraint_disabled_message": {
+        "value": "ナビゲーション制約が解除されています。オンにしてプレビューするには、",
+        "description": "The message shown in preview project mode when student navigation constraints are enabled."
+    },
+    "out_of": {
+        "value": "中",
+        "description": "The text to display the score in the feedback popup"
+    },
+    "you_got_a_score_of": {
+        "value": "スコア",
+        "description": "The text to display the score in the feedback popup"
+    },
+    "hints_viewAll": {
+        "value": "閉じる前に{0}を全部見てください。",
+        "description": "The message in the hints popup that says the student must view all hints before closing the hints popup"
+    },
+    "constraint_dialog_title": {
+        "value": "アイテムはロックされています。",
+        "description": "Title text for dialog alerting users about locked steps or activities (unable to visit because of navigation constraints)"
+    },
+    "constraint_allItems": {
+        "value": "（全てのアイテム）",
+        "description": "Text to add after activity name when a constraint requires user to satisfy a requirement for all items in an activity"
+    },
+    "constraint_message_mustCompleteStepBeforeAdvancing": {
+        "value": "次に進む前に{0}を完成してください。",
+        "description": "The message shown to students telling them to complete work on the current step before moving on"
+    },
+    "constraint_message_mustCompleteActivityBeforeAdvancing": {
+        "value": "次に進む前に{0}を完成してください。",
+        "description": "The message shown to students telling them to complete work on the current activity before moving on"
+    },
+    "constraint_message_mustCompleteStepBeforeExiting": {
+        "value": "他のステップに進む前に{0}を完成してください。",
+        "description": "The message shown to students telling them to complete work on the current step before exiting"
+    },
+    "constraint_message_mustCompleteActivityBeforeExiting": {
+        "value": "他のステップに進む前に{0}を完成してください。",
+        "description": "The message shown to students telling them to complete work on the current activity before exiting"
+    },
+    "constraint_message_mustCompleteXBeforeVisiting": {
+        "value": "このアイテムを見る前にこちらを完成してください。",
+        "description": "The message shown to students telling them to complete work on previous items before working on the selected step or activity"
+    },
+    "constraint_message_mustVisitXBeforeVisiting": {
+        "value": "このアイテムを見る前にこちらを完成してください。",
+        "description": "The message shown to students telling them to visit items before working on the selected step or activity"
+    },
+    "constraint_message_mustUnlockXBeforeVisiting": {
+        "value": "このアイテムを見る前にこちらをアンロックしてください。",
+        "description": "The message shown to students telling them to unlock (make visitable) previous items before working on the selected step or activity"
+    },
+    "constraint_message_xMustHaveStatusY": {
+        "value": "{0}を{1}にしないとこのアイテムを見ることができません。",
+        "description": "The message shown to students telling them that the steps shown below must have 'statusType' set to 'statusValue' before they can work on the selected step"
+    },
+    "session_timeout_warning": {
+        "value": "長い間使用されていないようです。セッションを更新しなければWISEからサインアウトされます。",
+        "description": "Warning text to display to users in the session timeout alert."
+    },
+    "session_timeout_confirm": {
+        "value": "ログイン状態を保持する。",
+        "description": "Text to display on button in the session timeout alert that users can press to renew session."
+    },
+    "session_timeout_message": {
+        "value": "長い間使用されていなかったのでサインアウトされました。もう一度ログインしてください。",
+        "description": "Text to display to display to users when there session timed out and they have been logged out of WISE."
+    },
+    "session_timeout_title": {
+        "value": "セッションタイムアウト",
+        "description": "Title text for the session timeout alert."
+    },
+    "classroomMonitor_workgroupsOnline": {
+        "value": "オンラインのグループ: {0}",
+        "description": "Text displaying number of workgroups currently online ({0} will be replaced with actual number)"
+    },
+    "classroomMonitor_progress": {
+        "value": "プロジェクト",
+        "description": "Text for step progress link in classroom monitor"
+    },
+    "classroomMonitor_monitor": {
+        "value": "学生",
+        "description": "Text for student progress link in classroom monitor"
+    },
+    "classroomMonitor_studentProgress_title": {
+        "value": "学生モニター",
+        "description": "Title text for student progress link and section in classroom monitor"
+    },
+    "classroomMonitor_stepProgress_title": {
+        "value": "ステッププログレス",
+        "description": "Title text for step progress link and section in classroom monitor"
+    },
+    "classroomMonitor_gradebook": {
+        "value": "グレードブック",
+        "description": "Text for grade book link in classroom monitor"
+    },
+    "classroomMonitor_gradebook_title": {
+        "value": "学生グレードブック",
+        "description": "Title text for grade book link in classroom monitor"
+    },
+    "classroomMonitor_manage": {
+        "value": "管理",
+        "description": "Text for manage students link in classroom monitor"
+    },
+    "classroomMonitor_manage_title": {
+        "value": "生徒管理",
+        "description": "Title text for manage students link in classroom monitor"
+    },
+    "classroomMonitor_tools": {
+        "value": "ツール",
+        "description": "Text for tools button in classroom monitor"
+    },
+    "classroomMonitor_announcements": {
+        "value": "アナウンス",
+        "description": "Text for announcements link in classroom monitor"
+    },
+    "classroomMonitor_notes": {
+        "value": "ノート",
+        "description": "Text for run notes link in classroom monitor"
+    },
+    "classroomMonitor_exportWork": {
+        "value": "ワークをエクスポート",
+        "description": "Text for export work link in classroom monitor"
+    },
+    "classroomMonitor_runSettings": {
+        "value": "ラン設定",
+        "description": "Text for run settings link in classroom monitor"
+    },
+    "classroomMonitor_showClassroom": {
+        "value": "クラスを表示",
+        "description": "Text for show classroom link in classroom monitor"
+    },
+    "classroomMonitor_allPeriods": {
+        "value": "全ての組",
+        "description": "Text for select all periods option in a period select dropdown in the classroom monitor"
+    },
+    "classroomMonitor_periodLabel": {
+        "value": "{0}組",
+        "description": "Text for period options ({0} will be replaced by period name) in a select dropdown in the classroom monitor"
+    },
+    "classroomMonitor_pause": {
+        "value": "画面",
+        "description": "Text for pause screens tool button in classroom monitor (will be preceded by 'pause' icon)"
+    },
+    "classroomMonitor_pause_on": {
+        "value": "画面：ON",
+        "description": "Text for pause screens tool button (when pause is on) in classroom monitor (will be preceded by 'pause' icon)"
+    },
+    "classroomMonitor_pause_off": {
+        "value": "画面：OFF",
+        "description": "Text for pause screens tool button (when pause is off) in classroom monitor (will be preceded by 'pause' icon)"
+    },
+    "classroomMonitor_pause_title": {
+        "value": "生徒の画面をポーズする",
+        "description": "Title text for pause screens tool button in classroom monitor"
+    },
+    "classroomMonitor_pause_selectPeriods": {
+        "value": "組を選ぶ",
+        "description": "Label text for pause screens select period control in classroom monitor"
+    },
+    "classroomMonitor_pause_message_label": {
+        "value": "表示するメッセージ：",
+        "description": "Label text for pause screens message to show students input field in classroom monitor"
+    },
+    "classroomMonitor_pause_message_default": {
+        "value": "先生が画面をロックしました。",
+        "description": "Default message to show students when teacher pauses their screens using the classroom monitor"
+    },
+    "classroomMonitor_pause_noneSelected": {
+        "value": "何もセレクトされていません。",
+        "description": "Text to show when no periods are selected in the pause screens tool the classroom monitor"
+    },
+    "classroomMonitor_pause_periods": {
+        "value": "組",
+        "description": "Plural for the word 'periods' (will be preceded by number of select periods in the pause screens tool in the classroom monitor)"
+    },
+    "classroomMonitor_studentProgress_totalCompletion": {
+        "value": "完成度：",
+        "description": "Label text for the total student completion display in the classroom monitor"
+    },
+    "classroomMonitor_studentProgress_workgroupOnline": {
+        "value": "チームがオンラインです。",
+        "description": "Text indicating that workgroup is online in the classroom monitor (only shown to screen readers)"
+    },
+    "classroomMonitor_studentProgress_workgroupOffline": {
+        "value": "チームがオフラインです。",
+        "description": "Text indicating that workgroup is offline in the classroom monitor (only shown to screen readers)"
+    },
+    "classroomMonitor_studentProgress_viewStudentWork": {
+        "value": "生徒のワークを見る",
+        "description": "Title text to show on links to view student work in the classroom monitor"
+    },
+    "classroomMonitor_studentProgress_headers_online": {
+        "value": "オンライン",
+        "description": "Header text for the table column showing whether workgroup is online in the student progress table of classroom monitor"
+    },
+    "classroomMonitor_studentProgress_headers_period": {
+        "value": "組",
+        "description": "Header text for the period table column in the student progress table of classroom monitor"
+    },
+    "classroomMonitor_studentProgress_headers_workgroup": {
+        "value": "チーム",
+        "description": "Header text for the workgroup column in the student progress table of classroom monitor"
+    },
+    "classroomMonitor_studentProgress_headers_currentStep": {
+        "value": "最近のステップ",
+        "description": "Header text for the column showing current step a workgroup is on in the student progress table of classroom monitor"
+    },
+    "classroomMonitor_studentProgress_headers_timeSpent": {
+        "value": "時間",
+        "description": "Header text for the column showing time spent on the current step in the student progress table of classroom monitor"
+    },
+    "classroomMonitor_studentProgress_headers_projectCompletion": {
+        "value": "プロジェクト完成度",
+        "description": "Header text for the project completion column in the student progress table of classroom monitor"
+    },
+    "classroomMonitor_stepProgress_headers_nodeTitle": {
+        "value": "ステップ名",
+        "description": "Header text for the step title column in the step progress table of classroom monitor"
+    },
+    "classroomMonitor_stepProgress_headers_studentsOnStep": {
+        "value": "現在のステップ",
+        "description": "Header text for the column column showing current number of students in the step progress table of classroom monitor"
+    },
+    "classroomMonitor_stepProgress_headers_stepCompletion": {
+        "value": "ステップ完成度",
+        "description": "Header text for the step completion column in the step progress table of classroom monitor"
+    },
+    "classroomMonitor_stepProgress_totalCompletion": {
+        "value": "完成度：",
+        "description": "Label text for the total step completion display in the classroom monitor"
+    },
+    "classroomMonitor_stepProgress_completionUnavaiable": {
+        "value": "ステップ完成度は今表示できません。",
+        "description": "Tooltip text to show when step completion percentage is not available for a step that can't be graded in the classroom monitor"
+    },
+    "classroomMonitor_stepProgress_completionUnavaiable_gradable": {
+        "value": "ステップ完成度は今表示できません。",
+        "description": "Tooltip text to show when step completion percentage is not available for a step that can be graded in the classroom monitor"
+    },
+    "classroomMonitor_stepProgress_viewStepWork": {
+        "value": "ステップのワークを見る",
+        "description": "Title text to show on links to view step work in the classroom monitor"
+    },
+    "classroomMonitor_tableInfoText": {
+        "value": "{0}個のエントリー",
+        "description": "Text for the information display at the bottom of classroom monitor tables ({0} will be replaced with number of items currently being shown)"
+    },
+    "classroomMonitor_grading_search": {
+        "value": "生徒のワークから検索",
+        "description": "Placeholder text for the search input in grade by step and grade by student tables of classroom monitor"
+    },
+    "classroomMonitor_grading_noResponse": {
+        "value": "このチームはまだこのステップに答えていません。",
+        "description": "Text to display when workgroup has not submitted any work for a step in the grading view of the classroom monitor"
+    },
+    "classroomMonitor_grading_latestWork": {
+        "value": "最新の答え",
+        "description": "Header text for student work that is the most recent revision in the classroom monitor"
+    },
+    "classroomMonitor_grading_workRevision": {
+        "value": "レビジョン #{0}",
+        "description": "Header text for student work that is not that most recent revision in the classroom monitor ({0} will be replaced with revision number)"
+    },
+    "classroomMonitor_grading_flag": {
+        "value": "フラッグ：",
+        "description": "Label for flag checkboxes in grading views of classroom monitor"
+    },
+    "classroomMonitor_grading_teacherComment": {
+        "value": "コメント：",
+        "description": "Label for teacher comment inputs in grading views of classroom monitor"
+    },
+    "classroomMonitor_grading_teacherScore": {
+        "value": "点数：",
+        "description": "Label for teacher score inputs in grading views of classroom monitor"
+    },
+    "classroomMonitor_grading_addPremadeComments": {
+        "value": "+プリメイドコメント",
+        "description": "Text for link to add premade comments to teacher feedback inputs in grading views of classroom monitor"
+    },
+    "classroomMonitor_grading_revisionsCount": {
+        "value": "レビジョン数{0}",
+        "description": "Text for the number of revisions in the grade by student and grade by step tables of classroom monitor ({0} will be replaced with number of student work submissions for a step)"
+    },
+    "classroomMonitor_grading_revisionDate": {
+        "value": "提出時間：{0}",
+        "description": "Text for student work timestamp displays in grading views of classroom monitor ({0} will be replaced by date/time)"
+    },
+    "classroomMonitor_grading_lastAnnotation": {
+        "value": "最新のフィードバック：{0}",
+        "description": "Text for the latest teacher feedback (grade or comment) timestamp display in grading views of classroom monitor ({0} will be replaced by date/time)"
+    },
+    "classroomMonitor_grading_lastAnnotation_none": {
+        "value": "最新のフィードバック：N/A",
+        "description": "Text for when there is no feedback (grade or comment) in grading views of classroom monitor"
+    },
+    "classroomMonitor_grading_flagOnly": {
+        "value": "フラッグされたアイテムのみ",
+        "description": "Text for option to only display flagged items in grading views of classroom monitor"
+    },
+    "classroomMonitor_grading_itemsToReview": {
+        "value": "レビューするアイテム：{0}",
+        "description": "Text for display showing number of new student work items to review in grading views of classroom monitor ({0} will be replaced with number of new items)"
+    },
+    "classroomMonitor_grading_options_select": {
+        "value": "選ぶ",
+        "description": "Text for grading display options dropdown when no options are selected in classroom monitor"
+    },
+    "classroomMonitor_grading_options_label": {
+        "value": "表示オプション：",
+        "description": "Label text for grading display options dropdown in classroom monitor"
+    },
+    "classroomMonitor_grading_invalidScore": {
+        "value": "{0}は不当な点数です。",
+        "description": "Text to display when user tries to enter an invalid score in grading views of the  classroom monitor ({0} will be replaced with the user's input)"
+    },
+    "classroomMonitor_gradeByStudent_title": {
+        "value": "チームごとに採点",
+        "description": "Title text for grade by student section in classroom monitor"
+    },
+    "classroomMonitor_gradeByStudent_headers_studentWork": {
+        "value": "ステップ",
+        "description": "Header text for the student work column in the grade by student table of classroom monitor"
+    },
+    "classroomMonitor_gradeByStudent_headers_score": {
+        "value": "点数",
+        "description": "Header text for the score column in the grade by student table of classroom monitor"
+    },
+    "classroomMonitor_gradeByStudent_headers_feedback": {
+        "value": "点数とフィードバック",
+        "description": "Header text for the teacher feedback column in the grade by student table of classroom monitor"
+    },
+    "classroomMonitor_gradeByStep_title": {
+        "value": "ステップごとに採点",
+        "description": "Title text for grade by step section in classroom monitor"
+    },
+    "classroomMonitor_gradeByStep_headers_studentWork": {
+        "value": "チーム",
+        "description": "Header text for the student work column in the grade by step table of classroom monitor"
+    },
+    "classroomMonitor_gradeByStep_headers_score": {
+        "value": "点数",
+        "description": "Header text for the score column in the grade by step table of classroom monitor"
+    },
+    "classroomMonitor_gradeByStep_headers_feedback": {
+        "value": "点数とフィードバック",
+        "description": "Header text for the teacher feedback column in the grade by step table of classroom monitor"
+    },
+    "classroomMonitor_hidePersonalInfo": {
+        "value": "個人情報を隠す",
+        "description": "Text for option to hide personal info in classroom monitor"
+    },
+    "classroomMonitor_newItemsOnly": {
+        "value": "最新のワークのみ",
+        "description": "Text for option to only show new work in classroom monitor"
+    },
+    "classroomMonitor_saveConfirmation": {
+        "value": "セーブ完了",
+        "description": "Notification to display when teacher changes (scores, feedback, etc.) have been saved in the classroom monitor"
+    },
+    "classroomMonitor_saving": {
+        "value": "セーブ中。。。",
+        "description": "Notification to display when saving changes (scores, feedback, etc.) in the classroom monitor"
     }
 }
