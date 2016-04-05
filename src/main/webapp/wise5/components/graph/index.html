@@ -79,7 +79,7 @@
                 ng-change='graphController.activeSeriesChanged()'
                 ng-show='graphController.series.length > 1'>
         </select>
-        <highchart id="chart1" config="graphController.chartConfig" class="span10"></highchart>
+        <highchart id="{{graphController.chartId}}" config="graphController.chartConfig" class="span10" style="width:80%"></highchart>
         <div ng-if='graphController.mode == "student"'>
             <annotation type='score'
                         mode='{{graphController.mode}}'

@@ -92,6 +92,9 @@ var GraphController = function () {
         // whether the reset graph button is shown or not
         this.isResetGraphButtonVisible = true;
 
+        // the id of the chart element
+        this.chartId = 'chart1';
+
         // get the current node and node id
         var currentNode = this.StudentDataService.getCurrentNode();
         if (currentNode != null) {
@@ -112,6 +115,9 @@ var GraphController = function () {
 
             // get the component id
             this.componentId = this.componentContent.id;
+
+            // set the chart id
+            this.chartId = 'chart' + this.componentId;
 
             if (this.mode === 'student') {
                 this.isPromptVisible = true;
@@ -485,15 +491,18 @@ var GraphController = function () {
                         // disable dragging
                         tempSeries.draggableX = false;
                         tempSeries.draggableY = false;
+                        tempSeries.allowPointSelect = false;
                     } else if (tempSeries.canEdit && this.isActiveSeriesIndex(s)) {
                         // set the fields to allow points to be draggable
                         tempSeries.draggableX = true;
                         tempSeries.draggableY = true;
+                        tempSeries.allowPointSelect = true;
                         tempSeries.cursor = 'move';
                     } else {
                         // make the series uneditable
                         tempSeries.draggableX = false;
                         tempSeries.draggableY = false;
+                        tempSeries.allowPointSelect = false;
                     }
                 }
             }
@@ -588,7 +597,6 @@ var GraphController = function () {
                     },
                     plotOptions: {
                         series: {
-                            allowPointSelect: true,
                             point: {
                                 events: {
                                     drag: function drag(e) {
@@ -1742,7 +1750,7 @@ var GraphController = function () {
             if (series != null && this.canEdit(series)) {
 
                 // get the chart
-                var chart = $('#chart1').highcharts();
+                var chart = $('#' + this.chartId).highcharts();
 
                 // get the selected points
                 var selectedPoints = chart.getSelectedPoints();
@@ -1751,39 +1759,56 @@ var GraphController = function () {
 
                 if (selectedPoints != null) {
 
-                    // an array to hold the indexes of the selected points
-                    var indexes = [];
+                    var allSelectedPointsAreInActiveSeries = true;
 
-                    // loop through all the selected points
-                    for (var x = 0; x < selectedPoints.length; x++) {
+                    // make sure the selected points are in the active series
+                    for (var s = 0; s < selectedPoints.length; s++) {
+                        var selectedPoint = selectedPoints[s];
 
-                        // get a selected point
-                        var selectedPoint = selectedPoints[x];
-
-                        // get the index of the selected point
-                        index = selectedPoint.index;
-
-                        // add the index to our array
-                        indexes.push(index);
-                    }
-
-                    // order the array from largest to smallest
-                    indexes.sort().reverse();
-
-                    // get the series data
-                    var data = series.data;
-
-                    // loop through all the indexes and remove them from the series data
-                    for (var i = 0; i < indexes.length; i++) {
-
-                        index = indexes[i];
-
-                        if (data != null) {
-                            data.splice(index, 1);
+                        if (!this.isActiveSeriesIndex(selectedPoint.series.index)) {
+                            // the selected point is in the active series
+                            allSelectedPointsAreInActiveSeries = false;
                         }
                     }
 
-                    this.studentDataChanged();
+                    if (allSelectedPointsAreInActiveSeries) {
+
+                        // an array to hold the indexes of the selected points
+                        var indexes = [];
+
+                        // loop through all the selected points
+                        for (var x = 0; x < selectedPoints.length; x++) {
+
+                            // get a selected point
+                            var selectedPoint = selectedPoints[x];
+
+                            // get the index of the selected point
+                            index = selectedPoint.index;
+
+                            // add the index to our array
+                            indexes.push(index);
+                        }
+
+                        // order the array from largest to smallest
+                        indexes.sort().reverse();
+
+                        // get the series data
+                        var data = series.data;
+
+                        // loop through all the indexes and remove them from the series data
+                        for (var i = 0; i < indexes.length; i++) {
+
+                            index = indexes[i];
+
+                            if (data != null) {
+                                data.splice(index, 1);
+                            }
+                        }
+
+                        this.studentDataChanged();
+                    } else {
+                        alert('You are only allowed to delete points in the active series.');
+                    }
                 }
             }
         }
