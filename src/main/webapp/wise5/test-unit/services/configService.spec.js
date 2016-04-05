@@ -31,10 +31,18 @@ describe('ConfigService Unit Test', function () {
         var sampleConfig1 = window.mocks['test-unit/sampleData/config/config1'];
         var sampleConfig2 = window.mocks['test-unit/sampleData/config/config2'];
 
+        // i18n
+        var sampleI18N_common_en = window.mocks['test-unit/sampleData/i18n/common/i18n_en'];
+        var sampleI18N_vle_en = window.mocks['test-unit/sampleData/i18n/vle/i18n_en'];
+        var i18nURL_common_en = "wise5/i18n/common/i18n_en.json";
+        var i18nURL_vle_en = "wise5/i18n/vle/i18n_en.json";
+
         it('should retrieve config', function () {
             spyOn(ConfigService, "setConfig").and.callThrough();
             spyOn(ConfigService, "sortClassmateUserInfosAlphabeticallyByName");
             $httpBackend.when('GET', configURL).respond(sampleConfig1);
+            $httpBackend.when('GET', i18nURL_common_en).respond(sampleI18N_common_en);
+            $httpBackend.when('GET', i18nURL_vle_en).respond(sampleI18N_vle_en);
             $httpBackend.expectGET(configURL);
             var configPromise = ConfigService.retrieveConfig(configURL);
             $httpBackend.flush();
