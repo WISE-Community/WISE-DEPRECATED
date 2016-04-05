@@ -18,6 +18,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var GraphController = function () {
     function GraphController($rootScope, $scope, GraphService, NodeService, ProjectService, StudentAssetService, StudentDataService, UtilService) {
+        var _this = this;
+
         _classCallCheck(this, GraphController);
 
         this.$rootScope = $rootScope;
@@ -304,13 +306,6 @@ var GraphController = function () {
         }.bind(this);
 
         /**
-         * Handle the delete key press
-         */
-        this.$scope.handleDeleteKeyPressed = function () {
-            this.$scope.graphController.handleDeleteKeyPressed();
-        }.bind(this);
-
-        /**
          * Get the component state from this component. The parent node will
          * call this function to obtain the component state when it needs to
          * save student data.
@@ -394,12 +389,22 @@ var GraphController = function () {
             }
         }));
 
+        /*
+         * Handle the delete key pressed event
+         */
+        this.deleteKeyPressedListenerDestroyer = this.$scope.$on('deleteKeyPressed', function () {
+            _this.handleDeleteKeyPressed();
+        });
+
         /**
          * Listen for the 'exitNode' event which is fired when the student
          * exits the parent node. This will perform any necessary cleanup
          * when the student exits the parent node.
          */
-        this.$scope.$on('exitNode', angular.bind(this, function (event, args) {}));
+        this.$scope.$on('exitNode', angular.bind(this, function (event, args) {
+            // destroy the delete key pressed listener
+            this.deleteKeyPressedListenerDestroyer();
+        }));
     }
 
     /**
@@ -1114,7 +1119,6 @@ var GraphController = function () {
          * The active series has changed
          */
         value: function activeSeriesChanged() {
-
             // the student data has changed
             this.studentDataChanged();
         }
@@ -1479,41 +1483,41 @@ var GraphController = function () {
          * @param studentAsset CSV file student asset
          */
         value: function attachStudentAsset(studentAsset) {
-            var _this = this;
+            var _this2 = this;
 
             if (studentAsset != null) {
                 this.StudentAssetService.copyAssetForReference(studentAsset).then(function (copiedAsset) {
                     if (copiedAsset != null) {
 
-                        _this.StudentAssetService.getAssetContent(copiedAsset).then(function (assetContent) {
-                            var rowData = _this.StudentDataService.CSVToArray(assetContent);
+                        _this2.StudentAssetService.getAssetContent(copiedAsset).then(function (assetContent) {
+                            var rowData = _this2.StudentDataService.CSVToArray(assetContent);
                             var params = {};
                             params.skipFirstRow = true; // first row contains header, so ignore it
                             params.xColumn = 0; // assume (for now) x-axis data is in first column
                             params.yColumn = 1; // assume (for now) y-axis data is in second column
 
-                            var seriesData = _this.convertRowDataToSeriesData(rowData, params);
+                            var seriesData = _this2.convertRowDataToSeriesData(rowData, params);
 
                             // get the index of the series that we will put the data into
-                            var seriesIndex = _this.series.length; // we're always appending a new series
+                            var seriesIndex = _this2.series.length; // we're always appending a new series
 
                             if (seriesIndex != null) {
 
                                 // get the series
-                                var series = _this.series[seriesIndex];
+                                var series = _this2.series[seriesIndex];
 
                                 if (series == null) {
                                     // the series is null so we will create a series
                                     series = {};
                                     series.name = copiedAsset.fileName;
-                                    series.color = _this.seriesColors[seriesIndex];
+                                    series.color = _this2.seriesColors[seriesIndex];
                                     series.marker = {
-                                        "symbol": _this.seriesMarkers[seriesIndex]
+                                        "symbol": _this2.seriesMarkers[seriesIndex]
                                     };
                                     series.regression = false;
                                     series.regressionSettings = {};
                                     series.canEdit = false;
-                                    _this.series[seriesIndex] = series;
+                                    _this2.series[seriesIndex] = series;
                                 }
 
                                 // set the data into the series
@@ -1521,12 +1525,12 @@ var GraphController = function () {
                             }
 
                             // render the graph
-                            _this.setupGraph();
+                            _this2.setupGraph();
 
                             // the graph has changed
-                            _this.isDirty = true;
+                            _this2.isDirty = true;
                         });
-                        _this.studentDataChanged();
+                        _this2.studentDataChanged();
                     }
                 });
             }
@@ -1759,56 +1763,39 @@ var GraphController = function () {
 
                 if (selectedPoints != null) {
 
-                    var allSelectedPointsAreInActiveSeries = true;
+                    // an array to hold the indexes of the selected points
+                    var indexes = [];
 
-                    // make sure the selected points are in the active series
-                    for (var s = 0; s < selectedPoints.length; s++) {
-                        var selectedPoint = selectedPoints[s];
+                    // loop through all the selected points
+                    for (var x = 0; x < selectedPoints.length; x++) {
 
-                        if (!this.isActiveSeriesIndex(selectedPoint.series.index)) {
-                            // the selected point is in the active series
-                            allSelectedPointsAreInActiveSeries = false;
+                        // get a selected point
+                        var selectedPoint = selectedPoints[x];
+
+                        // get the index of the selected point
+                        index = selectedPoint.index;
+
+                        // add the index to our array
+                        indexes.push(index);
+                    }
+
+                    // order the array from largest to smallest
+                    indexes.sort().reverse();
+
+                    // get the series data
+                    var data = series.data;
+
+                    // loop through all the indexes and remove them from the series data
+                    for (var i = 0; i < indexes.length; i++) {
+
+                        index = indexes[i];
+
+                        if (data != null) {
+                            data.splice(index, 1);
                         }
                     }
 
-                    if (allSelectedPointsAreInActiveSeries) {
-
-                        // an array to hold the indexes of the selected points
-                        var indexes = [];
-
-                        // loop through all the selected points
-                        for (var x = 0; x < selectedPoints.length; x++) {
-
-                            // get a selected point
-                            var selectedPoint = selectedPoints[x];
-
-                            // get the index of the selected point
-                            index = selectedPoint.index;
-
-                            // add the index to our array
-                            indexes.push(index);
-                        }
-
-                        // order the array from largest to smallest
-                        indexes.sort().reverse();
-
-                        // get the series data
-                        var data = series.data;
-
-                        // loop through all the indexes and remove them from the series data
-                        for (var i = 0; i < indexes.length; i++) {
-
-                            index = indexes[i];
-
-                            if (data != null) {
-                                data.splice(index, 1);
-                            }
-                        }
-
-                        this.studentDataChanged();
-                    } else {
-                        alert('You are only allowed to delete points in the active series.');
-                    }
+                    this.studentDataChanged();
                 }
             }
         }

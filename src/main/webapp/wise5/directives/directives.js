@@ -550,8 +550,8 @@ var ListenForDeleteKeypress = function () {
                 if (e.keyCode === 8) {
                     // the delete key was pressed
 
-                    // handle the delete key press in the scope
-                    $scope.handleDeleteKeyPressed();
+                    // fire the deleteKeyPressed event
+                    $scope.$broadcast('deleteKeyPressed');
                 }
             });
         }

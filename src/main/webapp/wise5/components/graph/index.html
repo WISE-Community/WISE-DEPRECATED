@@ -75,7 +75,7 @@
                 ng-show='graphController.showResetGraphButton()'>Reset Graph</button>
 
         <select ng-model='graphController.activeSeries'
-                ng-options='series.name for series in graphController.series'
+                ng-options='series as series.name for series in graphController.series'
                 ng-change='graphController.activeSeriesChanged()'
                 ng-show='graphController.series.length > 1'>
         </select>

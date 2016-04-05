@@ -299,13 +299,6 @@ class GraphController {
         }.bind(this);
 
         /**
-         * Handle the delete key press
-         */
-        this.$scope.handleDeleteKeyPressed = function() {
-            this.$scope.graphController.handleDeleteKeyPressed();
-        }.bind(this);
-
-        /**
          * Get the component state from this component. The parent node will
          * call this function to obtain the component state when it needs to
          * save student data.
@@ -389,6 +382,13 @@ class GraphController {
                 this.setupGraph();
             }
         }));
+        
+        /*
+         * Handle the delete key pressed event
+         */
+        this.deleteKeyPressedListenerDestroyer = this.$scope.$on('deleteKeyPressed', () => {
+            this.handleDeleteKeyPressed();
+        });
 
         /**
          * Listen for the 'exitNode' event which is fired when the student
@@ -396,7 +396,8 @@ class GraphController {
          * when the student exits the parent node.
          */
         this.$scope.$on('exitNode', angular.bind(this, function(event, args) {
-
+            // destroy the delete key pressed listener
+            this.deleteKeyPressedListenerDestroyer();
         }));
     }
 
@@ -1051,7 +1052,6 @@ class GraphController {
      * The active series has changed
      */
     activeSeriesChanged() {
-
         // the student data has changed
         this.studentDataChanged();
     };
@@ -1625,7 +1625,7 @@ class GraphController {
      * Handle the delete key press
      */
     handleDeleteKeyPressed() {
-
+        
         // get the active series
         var series = this.activeSeries;
 
@@ -1642,56 +1642,39 @@ class GraphController {
 
             if (selectedPoints != null) {
                 
-                var allSelectedPointsAreInActiveSeries = true;
-                
-                // make sure the selected points are in the active series
-                for (var s = 0; s < selectedPoints.length; s++) {
-                    var selectedPoint = selectedPoints[s];
-                    
-                    if (!this.isActiveSeriesIndex(selectedPoint.series.index)) {
-                        // the selected point is in the active series
-                        allSelectedPointsAreInActiveSeries = false;
+                // an array to hold the indexes of the selected points
+                var indexes = [];
+
+                // loop through all the selected points
+                for (var x = 0; x < selectedPoints.length; x++) {
+
+                    // get a selected point
+                    var selectedPoint = selectedPoints[x];
+
+                    // get the index of the selected point
+                    index = selectedPoint.index;
+
+                    // add the index to our array
+                    indexes.push(index);
+                }
+
+                // order the array from largest to smallest
+                indexes.sort().reverse();
+
+                // get the series data
+                var data = series.data;
+
+                // loop through all the indexes and remove them from the series data
+                for (var i = 0; i < indexes.length; i++) {
+
+                    index = indexes[i];
+
+                    if (data != null) {
+                        data.splice(index, 1);
                     }
                 }
 
-                if (allSelectedPointsAreInActiveSeries) {
-                    
-                    // an array to hold the indexes of the selected points
-                    var indexes = [];
-
-                    // loop through all the selected points
-                    for (var x = 0; x < selectedPoints.length; x++) {
-
-                        // get a selected point
-                        var selectedPoint = selectedPoints[x];
-
-                        // get the index of the selected point
-                        index = selectedPoint.index;
-
-                        // add the index to our array
-                        indexes.push(index);
-                    }
-
-                    // order the array from largest to smallest
-                    indexes.sort().reverse();
-
-                    // get the series data
-                    var data = series.data;
-
-                    // loop through all the indexes and remove them from the series data
-                    for (var i = 0; i < indexes.length; i++) {
-
-                        index = indexes[i];
-
-                        if (data != null) {
-                            data.splice(index, 1);
-                        }
-                    }
-
-                    this.studentDataChanged();
-                } else {
-                    alert('You are only allowed to delete points in the active series.')
-                }
+                this.studentDataChanged();
             }
         }
     };
