@@ -9,12 +9,13 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var ThemeController = function () {
-    function ThemeController($scope, ConfigService, ProjectService, StudentDataService, StudentStatusService, NotebookService, SessionService, $mdDialog, $mdToast, $mdComponentRegistry) {
+    function ThemeController($scope, $translate, ConfigService, ProjectService, StudentDataService, StudentStatusService, NotebookService, SessionService, $mdDialog, $mdToast, $mdComponentRegistry) {
         var _this = this;
 
         _classCallCheck(this, ThemeController);
 
         this.$scope = $scope;
+        this.$translate = $translate;
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
         this.StudentDataService = StudentDataService;
@@ -76,13 +77,16 @@ var ThemeController = function () {
 
         // alert user when inactive for a long time
         this.$scope.$on('showSessionWarning', function (ev) {
-            var alert = _this.$mdDialog.confirm().parent(angular.element(document.body)).title('Session Timeout').textContent('You have been inactive for a long time. Do you want to stay logged in?').ariaLabel('Session Timeout').targetEvent(ev).ok('YES').cancel('No');
+            _this.$translate(["sessionTimeout", "autoLogoutMessage", "yes", "no"]).then(function (translations) {
 
-            _this.$mdDialog.show(alert).then(function () {
-                _this.SessionService.renewSession();
-                alert = undefined;
-            }, function () {
-                _this.SessionService.forceLogOut();
+                var alert = _this.$mdDialog.confirm().parent(angular.element(document.body)).title(translations.sessionTimeout).textContent(translations.autoLogoutMessage).ariaLabel(translations.sessionTimeout).targetEvent(ev).ok(translations.yes).cancel(translations.no);
+
+                _this.$mdDialog.show(alert).then(function () {
+                    _this.SessionService.renewSession();
+                    alert = undefined;
+                }, function () {
+                    _this.SessionService.forceLogOut();
+                });
             });
         });
 
@@ -250,7 +254,7 @@ var ThemeController = function () {
     return ThemeController;
 }();
 
-ThemeController.$inject = ['$scope', 'ConfigService', 'ProjectService', 'StudentDataService', 'StudentStatusService', 'NotebookService', 'SessionService', '$mdDialog', '$mdToast', '$mdComponentRegistry'];
+ThemeController.$inject = ['$scope', '$translate', 'ConfigService', 'ProjectService', 'StudentDataService', 'StudentStatusService', 'NotebookService', 'SessionService', '$mdDialog', '$mdToast', '$mdComponentRegistry'];
 
 exports.default = ThemeController;
 //# sourceMappingURL=themeController.js.map

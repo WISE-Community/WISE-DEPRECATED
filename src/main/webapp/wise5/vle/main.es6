@@ -8,6 +8,8 @@ import angularMaterial from 'angular-material';
 import angularMoment from 'angular-moment';
 import angularSanitize from 'angular-sanitize';
 import angularToArrayFilter from 'lib/angular-toArrayFilter/toArrayFilter';
+import angularTranslate from 'angular-translate';
+import angularTranslateLoaderPartial from 'angular-translate-loader-partial';
 import angularUIRouter from 'angular-ui-router';
 import angularUITree from 'angular-ui-tree';
 import angularWebSocket from 'angular-websocket';
@@ -77,6 +79,7 @@ let mainModule = angular.module('vle', [
     'ngWebSocket',
     'notebook',
     'oc.lazyLoad',
+    'pascalprecht.translate',
     'studentAsset',
     'ui.router',
     //'ui.tinymce',
@@ -129,12 +132,16 @@ let mainModule = angular.module('vle', [
     .config([
         '$urlRouterProvider',
         '$stateProvider',
+        '$translateProvider',
+        '$translatePartialLoaderProvider',
         '$controllerProvider',
         '$mdThemingProvider',
         '$httpProvider',
         '$provide',
         function($urlRouterProvider,
                  $stateProvider,
+                 $translateProvider,
+                 $translatePartialLoaderProvider,
                  $controllerProvider,
                  $mdThemingProvider,
                  $httpProvider,
@@ -177,6 +184,10 @@ let mainModule = angular.module('vle', [
                         webSocket: function (StudentWebSocketService, config, project) {
                             return StudentWebSocketService.initialize();
                         },
+                        language: ($translate, ConfigService, config) => {
+                            let locale = ConfigService.getLocale();  // defaults to "en"
+                            $translate.use(locale);
+                        },
                         theme: function (ProjectService, config, project, $ocLazyLoad, $q) {
                             let theme = ProjectService.getThemePath() + '/theme.js';
                             let def = $q.defer();
@@ -218,6 +229,19 @@ let mainModule = angular.module('vle', [
                 });
 
             $httpProvider.interceptors.push('HttpInterceptor');
+
+            // Set up Translations
+            $translatePartialLoaderProvider.addPart('common');
+            $translatePartialLoaderProvider.addPart('vle');
+            $translateProvider.useLoader('$translatePartialLoader', {
+                urlTemplate: 'wise5/i18n/{part}/i18n_{lang}.json'
+            });
+            $translateProvider.fallbackLanguage(['en']);
+            $translateProvider.registerAvailableLanguageKeys(['en','ja'], {
+                'en_US': 'en',
+                'en_UK': 'en'
+            });
+            $translateProvider.useSanitizeValueStrategy('escape');
 
             // ngMaterial default theme configuration
             // TODO: make dynamic and support alternate themes; allow projects to specify theme parameters and settings

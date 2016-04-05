@@ -26,7 +26,7 @@
                     <md-progress-linear class="nav-item__progress" ng-if="navitemCtrl.isGroup" md-mode="determinate" value="{{navitemCtrl.nodeStatus.progress.completionPct}}"></md-progress-linear>
                     <md-tooltip>{{navitemCtrl.nodeStatus.progress.completionPct}}% completed</md-tooltip>
                 </div>
-                <span ng-if="navitemCtrl.isGroup" class="nav-item__info md-body-1">{{navitemCtrl.nodeStatus.progress.completedItems}}/{{navitemCtrl.nodeStatus.progress.totalItems}} items</span>
+                <span ng-if="navitemCtrl.isGroup" class="nav-item__info md-body-1" translate="accountMenuItems" translate-value-item="{{navitemCtrl.nodeStatus.progress.completedItems}}/{{navitemCtrl.nodeStatus.progress.totalItems}}" />
                 <span flex></span>
                 <node-status-icon node-id="navitemCtrl.nodeId"></node-status-icon>
                 <md-icon ng-if="!navitemCtrl.nodeStatus.isVisitable" aria-label="Item is locked"> lock </md-icon>

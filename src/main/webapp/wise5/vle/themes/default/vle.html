@@ -17,7 +17,7 @@
             <span flex></span>
             <md-button id="notebookButton" aria-label="Toggle Notebook" class="md-icon-button" ng-click="vleController.toggleNotebook()">
                 <md-icon md-menu-origin> book </md-icon>
-                <md-tooltip md-direction="left">Notebook</md-tooltip>
+                <md-tooltip md-direction="left"><span translate="notebook" /></md-tooltip>
             </md-button>
             <md-progress-circular id="menu-progress" md-mode="determinate" md-diameter="26" value="{{ themeCtrl.rootNodeStatus.progress.completionPct }}"></md-progress-circular>
             <md-menu md-position-mode="target-right target" md-offset="8 26">
@@ -44,7 +44,7 @@
         md-is-open="vleController.notebookOpen"> <!--md-is-locked-open="vleController.notebookOpen && $mdMedia('gt-lg')"-->
     <md-toolbar class="l-sidebar__header md-whiteframe-z1">
         <div class="md-toolbar-tools">
-            <h3>Notebook</h3>
+            <h3 translate="notebook"></h3>
             <span flex></span>
             <md-select class="md-body-1" placeholder="Filter" ng-model="vleController.notebookFilter">
                 <md-option ng-repeat="filter in vleController.notebookFilters" value="{{filter.name}}">{{filter.label}}</md-option>

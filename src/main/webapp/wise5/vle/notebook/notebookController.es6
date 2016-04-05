@@ -5,6 +5,7 @@ class NotebookController {
     constructor($injector,
                 $rootScope,
                 $scope,
+                $translate,
                 ConfigService,
                 NotebookService,
                 ProjectService,
@@ -13,13 +14,16 @@ class NotebookController {
         this.$injector = $injector;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
+        this.$translate = $translate;
         this.ConfigService = ConfigService;
         this.mode = this.ConfigService.getMode();
         this.NotebookService = NotebookService;
         this.ProjectService = ProjectService;
         this.StudentAssetService = StudentAssetService;
         this.StudentDataService = StudentDataService;
-        this.newNotePlaceholderText = 'Type your note here...';
+        this.$translate('typeYourNoteHere').then((typeYourNoteHere) => {
+            this.newNotePlaceholderText = typeYourNoteHere;
+        });
 
         this.notebook = null;
         this.itemId = null;
@@ -161,6 +165,7 @@ NotebookController.$inject = [
     "$injector",
     "$rootScope",
     "$scope",
+    "$translate",
     "ConfigService",
     "NotebookService",
     "ProjectService",

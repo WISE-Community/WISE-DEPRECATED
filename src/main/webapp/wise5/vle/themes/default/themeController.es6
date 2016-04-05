@@ -2,6 +2,7 @@
 
 class ThemeController {
     constructor($scope,
+                $translate,
                 ConfigService,
                 ProjectService,
                 StudentDataService,
@@ -13,6 +14,7 @@ class ThemeController {
                 $mdComponentRegistry) {
 
         this.$scope = $scope;
+        this.$translate = $translate;
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
         this.StudentDataService = StudentDataService;
@@ -82,20 +84,24 @@ class ThemeController {
 
         // alert user when inactive for a long time
         this.$scope.$on('showSessionWarning', (ev) => {
-            let alert = this.$mdDialog.confirm()
-                .parent(angular.element(document.body))
-                .title('Session Timeout')
-                .textContent('You have been inactive for a long time. Do you want to stay logged in?')
-                .ariaLabel('Session Timeout')
-                .targetEvent(ev)
-                .ok('YES')
-                .cancel('No');
+            this.$translate(["sessionTimeout", "autoLogoutMessage", "yes", "no"]).then((translations) => {
 
-            this.$mdDialog.show(alert).then(() => {
-                this.SessionService.renewSession();
-                alert = undefined;
-            }, () => {
-                this.SessionService.forceLogOut();
+                let alert = this.$mdDialog.confirm()
+                    .parent(angular.element(document.body))
+                    .title(translations.sessionTimeout)
+                    .textContent(translations.autoLogoutMessage)
+                    .ariaLabel(translations.sessionTimeout)
+                    .targetEvent(ev)
+                    .ok(translations.yes)
+                    .cancel(translations.no);
+
+                this.$mdDialog.show(alert).then(() => {
+                    this.SessionService.renewSession();
+                    alert = undefined;
+                }, () => {
+                    this.SessionService.forceLogOut();
+                });
+
             });
         });
 
@@ -265,6 +271,7 @@ class ThemeController {
 
 ThemeController.$inject = [
     '$scope',
+    '$translate',
     'ConfigService',
     'ProjectService',
     'StudentDataService',

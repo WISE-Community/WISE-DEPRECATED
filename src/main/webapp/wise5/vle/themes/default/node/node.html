@@ -7,12 +7,12 @@
         <md-button class="md-raised md-primary"
              ng-click='nodeController.submitButtonClicked()'
              ng-disabled='nodeController.isDisabled || !nodeController.dirtySubmitComponentIds.length'
-             ng-if='nodeController.showSubmitButton()'>Submit</md-button>
+             ng-if='nodeController.showSubmitButton()'><span translate="submit"></span></md-button>
         <md-button class="md-primary"
                ng-class="{'md-raised': !nodeController.showSubmitButton()}"
                ng-click='nodeController.saveButtonClicked()'
                ng-disabled='nodeController.isDisabled || !nodeController.dirtyComponentIds.length'
-               ng-if='nodeController.showSaveButton()'>Save</md-button>
+               ng-if='nodeController.showSaveButton()'><span translate="save"></span></md-button>
        <span ng-if="nodeController.showSaveButton() || nodeController.showSubmitButton()"
              ng-show="nodeController.saveMessage.text"
              class="node-content__actions__info md-caption">
