@@ -32,11 +32,11 @@
 
 <table>
     <tr>
-        <th>Team</th>
-        <th>Latest Step</th>
-        <th>Time Spent</th>
-        <th>Project Completion</th>
-        <th>Score</th>
+        <th translate="team" />
+        <th translate="currentLocation" />
+        <th translate="timeSpent" />
+        <th translate="projectCompletion" />
+        <th translate="score" />
     </tr>
     <tr ng-class="{online: studentProgressController.isWorkgroupOnline(workgroup.workgroupId)}"
         ng-repeat="workgroup in studentProgressController.workgroups"
@@ -53,5 +53,6 @@
     </tr>
 </table>
 
-<div>new work counter: {{studentProgressController.getNewNodeVisits().length}}</div>
+<div translate="newWorkCounter"
+     translate-value-count="{{studentProgressController.getNewNodeVisits().length}}"></div>
 </div>

@@ -1,0 +1,10 @@
+{
+  "averageScore": "Average Score",
+  "downloadStudentWork": "Download Student Work",
+  "gradeByStep": "Grade By Step",
+  "gradeByWorkgroup": "Grade By Workgroup",
+  "newWorkCounter": "New Work Count: {{count}}",
+  "numberOfStudentOnStep": "# of Students on Step",
+  "pauseStudentScreens": "Pause Student Screens",
+  "unPauseStudentScreens": "Unpause Student Screens"
+}

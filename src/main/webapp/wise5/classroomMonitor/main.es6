@@ -7,6 +7,8 @@ import angularToArrayFilter from 'lib/angular-toArrayFilter/toArrayFilter';
 import angularUIRouter from 'angular-ui-router';
 import ngFileUpload from 'ng-file-upload';
 import ngMaterial from 'angular-material';
+import angularTranslate from 'angular-translate';
+import angularTranslateLoaderPartial from 'angular-translate-loader-partial';
 import ngWebSocket from 'angular-websocket';
 import AnnotationController from '../controllers/annotationController';
 import AnnotationService from '../services/annotationService';
@@ -61,6 +63,7 @@ let mainModule = angular.module('classroomMonitor', [
         'ngFileUpload',
         'ngMaterial',
         'ngWebSocket',
+        'pascalprecht.translate',
         'ui.router'
     ])
     .service(AnnotationService.name, AnnotationService)
@@ -105,10 +108,14 @@ let mainModule = angular.module('classroomMonitor', [
     .config([
         '$urlRouterProvider',
         '$stateProvider',
+        '$translateProvider',
+        '$translatePartialLoaderProvider',
         '$controllerProvider',
         '$mdThemingProvider',
         function($urlRouterProvider,
                  $stateProvider,
+                 $translateProvider,
+                 $translatePartialLoaderProvider,
                  $controllerProvider,
                  $mdThemingProvider) {
 
@@ -138,6 +145,10 @@ let mainModule = angular.module('classroomMonitor', [
                         },
                         webSocket: function(TeacherWebSocketService, config) {
                             return TeacherWebSocketService.initialize();
+                        },
+                        language: ($translate, ConfigService, config) => {
+                            let locale = ConfigService.getLocale();  // defaults to "en"
+                            $translate.use(locale);
                         },
                         sessionTimers: (SessionService, config) => {
                             return SessionService.initializeSession();
@@ -187,7 +198,21 @@ let mainModule = angular.module('classroomMonitor', [
                             return TeacherDataService.retrieveStudentDataByNodeId($stateParams.nodeId);
                         }
                     }
-                })
+                });
+
+            // Set up Translations
+            $translatePartialLoaderProvider.addPart('common');
+            $translatePartialLoaderProvider.addPart('classroomMonitor');
+            $translateProvider.useLoader('$translatePartialLoader', {
+                urlTemplate: 'wise5/i18n/{part}/i18n_{lang}.json'
+            });
+            $translateProvider.fallbackLanguage(['en']);
+            $translateProvider.registerAvailableLanguageKeys(['en','ja'], {
+                'en_US': 'en',
+                'en_UK': 'en'
+            });
+            $translateProvider.useSanitizeValueStrategy('escape');
+
             // ngMaterial default theme configuration
             // TODO: make dynamic and support alternate themes; allow projects to specify theme parameters and settings
             $mdThemingProvider.definePalette('primaryPaletteWise', {
