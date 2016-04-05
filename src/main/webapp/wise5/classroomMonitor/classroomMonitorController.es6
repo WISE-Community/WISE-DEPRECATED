@@ -7,6 +7,7 @@ class ClassroomMonitorController {
                 $scope,
                 $state,
                 $stateParams,
+                $translate,
                 ConfigService,
                 ProjectService,
                 SessionService,
@@ -16,12 +17,15 @@ class ClassroomMonitorController {
         this.$scope = $scope;
         this.$state = $state;
         this.$stateParams = $stateParams;
+        this.$translate = $translate;
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
         this.SessionService = SessionService;
         this.TeacherDataService = TeacherDataService;
         this.TeacherWebSocketService = TeacherWebSocketService;
-        this.pauseScreenButtonText = 'Pause Screen';
+        this.$translate('pauseStudentScreens').then((pauseStudentScreens) => {
+            this.pauseScreenButtonText = pauseStudentScreens;
+        });
 
         $scope.$on('showSessionWarning', () => {
             // Appending dialog to document.body
@@ -239,14 +243,18 @@ class ClassroomMonitorController {
      * Change the text of the button to display 'Pause Screens'
      */
     displayPauseButton() {
-        this.pauseScreenButtonText = 'Pause Screens';
+        this.$translate('pauseStudentScreens').then((pauseStudentScreens) => {
+            this.pauseScreenButtonText = pauseStudentScreens;
+        });
     }
 
     /**
      * Change the text of the button to display 'Unpause Screens'
      */
     displayUnPauseButton() {
-        this.pauseScreenButtonText = 'Unpause Screens';
+        this.$translate('unPauseStudentScreens').then((unPauseStudentScreens) => {
+            this.pauseScreenButtonText = unPauseStudentScreens;
+        });
     }
 }
 
@@ -256,6 +264,7 @@ ClassroomMonitorController.$inject = [
     '$scope',
     '$state',
     '$stateParams',
+    '$translate',
     'ConfigService',
     'ProjectService',
     'SessionService',

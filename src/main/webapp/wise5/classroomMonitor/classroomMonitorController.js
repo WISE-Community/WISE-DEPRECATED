@@ -11,7 +11,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var ClassroomMonitorController = function () {
-    function ClassroomMonitorController($mdDialog, $rootScope, $scope, $state, $stateParams, ConfigService, ProjectService, SessionService, TeacherDataService, TeacherWebSocketService) {
+    function ClassroomMonitorController($mdDialog, $rootScope, $scope, $state, $stateParams, $translate, ConfigService, ProjectService, SessionService, TeacherDataService, TeacherWebSocketService) {
         var _this = this;
 
         _classCallCheck(this, ClassroomMonitorController);
@@ -20,12 +20,15 @@ var ClassroomMonitorController = function () {
         this.$scope = $scope;
         this.$state = $state;
         this.$stateParams = $stateParams;
+        this.$translate = $translate;
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
         this.SessionService = SessionService;
         this.TeacherDataService = TeacherDataService;
         this.TeacherWebSocketService = TeacherWebSocketService;
-        this.pauseScreenButtonText = 'Pause Screen';
+        this.$translate('pauseStudentScreens').then(function (pauseStudentScreens) {
+            _this.pauseScreenButtonText = pauseStudentScreens;
+        });
 
         $scope.$on('showSessionWarning', function () {
             // Appending dialog to document.body
@@ -248,7 +251,11 @@ var ClassroomMonitorController = function () {
     }, {
         key: 'displayPauseButton',
         value: function displayPauseButton() {
-            this.pauseScreenButtonText = 'Pause Screens';
+            var _this3 = this;
+
+            this.$translate('pauseStudentScreens').then(function (pauseStudentScreens) {
+                _this3.pauseScreenButtonText = pauseStudentScreens;
+            });
         }
 
         /**
@@ -258,14 +265,18 @@ var ClassroomMonitorController = function () {
     }, {
         key: 'displayUnPauseButton',
         value: function displayUnPauseButton() {
-            this.pauseScreenButtonText = 'Unpause Screens';
+            var _this4 = this;
+
+            this.$translate('unPauseStudentScreens').then(function (unPauseStudentScreens) {
+                _this4.pauseScreenButtonText = unPauseStudentScreens;
+            });
         }
     }]);
 
     return ClassroomMonitorController;
 }();
 
-ClassroomMonitorController.$inject = ['$mdDialog', '$rootScope', '$scope', '$state', '$stateParams', 'ConfigService', 'ProjectService', 'SessionService', 'TeacherDataService', 'TeacherWebSocketService'];
+ClassroomMonitorController.$inject = ['$mdDialog', '$rootScope', '$scope', '$state', '$stateParams', '$translate', 'ConfigService', 'ProjectService', 'SessionService', 'TeacherDataService', 'TeacherWebSocketService'];
 
 exports.default = ClassroomMonitorController;
 //# sourceMappingURL=classroomMonitorController.js.map

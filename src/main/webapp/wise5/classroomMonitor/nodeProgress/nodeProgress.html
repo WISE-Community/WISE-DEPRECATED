@@ -46,10 +46,10 @@ table tr {
 </div>
 <table>
     <tr>
-        <th>Step</th>
-        <th>On Step</th>
-        <th>Completion</th>
-        <th>Average Score</th>
+        <th translate="step" />
+        <th translate="numberOfStudentOnStep" />
+        <th translate="completion" />
+        <th translate="averageScore " />
     </tr>
     <tr ng-repeat='item in nodeProgressController.items | toArray | orderBy : "order"'
          ng-class='{online: nodeProgressController.isWorkgroupOnlineOnNode(item.$key)}'

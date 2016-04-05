@@ -4,14 +4,21 @@
   "assetUsageMessage": "{{max}} の中 {{usage}} を使用しています。({{percentage}}%)",
   "autoLogoutMessage": "長い間使用されていないようです。ログイン状態を保持しますか？",
   "cancel": "キャンセル",
-  "create": "作成",
   "close": "閉じる",
+  "completion": "完成率",
+  "create": "作成",
   "delete": "削除",
   "dropAssetMessage": "アセットをアップロードするには、ここにアセットをドロップするか、ここをクリックしてください。",
+  "currentLocation": "現在位置",
   "move": "移動",
+  "projectCompletion": "プロジェクト完成度",
   "projectTitle": "プロジェクト名",
   "previewProject": "プロジェクトをプレビュー",
   "save": "保存",
   "saveAndClose": "保存して閉じる",
-  "submit": "提出"
+  "score": "スコア",
+  "step": "ステップ",
+  "submit": "提出",
+  "team": "チーム",
+  "timeSpent": "滞在時間"
 }

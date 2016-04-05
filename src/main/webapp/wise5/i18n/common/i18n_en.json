@@ -5,13 +5,20 @@
   "autoLogoutMessage": "You have been inactive for a long time. Do you want to stay logged in?",
   "cancel": "Cancel",
   "close": "Close",
+  "completion": "Completion",
   "create": "Create",
   "delete": "Delete",
   "dropAssetMessage": "Drop image or file here or click to upload!",
+  "currentLocation": "Current Location",
   "move": "Move",
+  "projectCompletion": "Project Completion",
   "projectTitle": "Project Title",
   "previewProject": "Preview Project",
   "save": "Save",
   "saveAndClose": "Save & Close",
-  "submit": "Submit"
+  "score": "Score",
+  "step": "Step",
+  "submit": "Submit",
+  "team": "Team",
+  "timeSpent": "Time Spent"
 }
