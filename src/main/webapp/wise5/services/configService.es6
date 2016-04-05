@@ -31,6 +31,16 @@ class ConfigService {
             }
 
             this.setConfig(configJSON);
+            
+            if (this.isPreview()) {
+                // assign a random workgroup id
+                var myUserInfo = this.getMyUserInfo();
+                if (myUserInfo != null) {
+                    // set the workgroup id to a random integer between 1 and 100
+                    myUserInfo.workgroupId = Math.floor(100 * Math.random()) + 1;
+                }
+            }
+            
             return configJSON;
         });
     };
@@ -412,6 +422,8 @@ class ConfigService {
     }
 };
 
-ConfigService.$inject = ['$http'];
+ConfigService.$inject = [
+    '$http'
+];
 
 export default ConfigService;

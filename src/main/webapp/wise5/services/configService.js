@@ -45,6 +45,16 @@ var ConfigService = function () {
                 }
 
                 _this.setConfig(configJSON);
+
+                if (_this.isPreview()) {
+                    // assign a random workgroup id
+                    var myUserInfo = _this.getMyUserInfo();
+                    if (myUserInfo != null) {
+                        // set the workgroup id to a random integer between 1 and 100
+                        myUserInfo.workgroupId = Math.floor(100 * Math.random()) + 1;
+                    }
+                }
+
                 return configJSON;
             });
         }
