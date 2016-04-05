@@ -103,7 +103,7 @@ class SessionService {
             // no session management for previewers
             return;
         }
-        var minutes = 1;
+        var minutes = 20;
         var seconds = minutes * 60;
         var milliseconds = seconds * 1000;
         this.sessionTimeoutInterval = milliseconds;

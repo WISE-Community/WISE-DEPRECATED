@@ -43,6 +43,12 @@ describe('ProjectService Unit Test', function () {
         var defaultCommitHistory = [{ "id": "abc", "message": "first commit" }, { "id": "def", "message": "second commit" }];
         var wiseBaseURL = "/wise";
 
+        // i18n
+        var i18nURL_common_en = "wise5/i18n/common/i18n_en.json";
+        var i18nURL_vle_en = "wise5/i18n/vle/i18n_en.json";
+        var sampleI18N_common_en = window.mocks['test-unit/sampleData/i18n/common/i18n_en'];
+        var sampleI18N_vle_en = window.mocks['test-unit/sampleData/i18n/vle/i18n_en'];
+
         function createNormalSpy() {
             spyOn(ConfigService, "getConfigParam").and.callFake(function (param) {
                 if (param === "projectBaseURL") {
@@ -92,6 +98,8 @@ describe('ProjectService Unit Test', function () {
             spyOn(ProjectService, "parseProject");
             $httpBackend.when('GET', new RegExp(projectURL)).respond(scootersProjectJSON);
             $httpBackend.expectGET(new RegExp(projectURL));
+            $httpBackend.when('GET', i18nURL_common_en).respond(sampleI18N_common_en);
+            $httpBackend.when('GET', i18nURL_vle_en).respond(sampleI18N_vle_en);
             var projectPromise = ProjectService.retrieveProject();
             $httpBackend.flush();
             expect(ConfigService.getConfigParam).toHaveBeenCalledWith("projectURL");
@@ -112,6 +120,8 @@ describe('ProjectService Unit Test', function () {
             createNormalSpy();
             var newProjectIdExpected = projectIdDefault; // Id of new project created on the server
             $httpBackend.when('POST', registerNewProjectURL).respond(newProjectIdExpected);
+            $httpBackend.when('GET', i18nURL_common_en).respond(sampleI18N_common_en);
+            $httpBackend.when('GET', i18nURL_vle_en).respond(sampleI18N_vle_en);
             var newProjectIdActualPromise = ProjectService.registerNewProject(scootersProjectJSONString, commitMessageDefault);
             $httpBackend.flush();
             $httpBackend.expectPOST(registerNewProjectURL);
@@ -119,9 +129,10 @@ describe('ProjectService Unit Test', function () {
 
         it('should not register new project when Config.registerNewProjectURL is undefined', function () {
             spyOn(ConfigService, "getConfigParam").and.returnValue(null);
+            $httpBackend.when('GET', i18nURL_common_en).respond(sampleI18N_common_en);
+            $httpBackend.when('GET', i18nURL_vle_en).respond(sampleI18N_vle_en);
             var newProjectIdActualPromise = ProjectService.registerNewProject(scootersProjectJSONString, commitMessageDefault);
             expect(ConfigService.getConfigParam).toHaveBeenCalledWith("registerNewProjectURL");
-            expect($httpBackend.flush).toThrowError('No pending request to flush !'); // HTTP request should not be made
             expect(newProjectIdActualPromise).toBeNull();
         });
 
@@ -142,6 +153,8 @@ describe('ProjectService Unit Test', function () {
             spyOn(ConfigService, "getConfigParam").and.returnValue(saveProjectURL);
             ProjectService.setProject(scootersProjectJSON); // Set the sample project and parse it
             $httpBackend.when('POST', saveProjectURL).respond({ data: defaultCommitHistory });
+            $httpBackend.when('GET', i18nURL_common_en).respond(sampleI18N_common_en);
+            $httpBackend.when('GET', i18nURL_vle_en).respond(sampleI18N_vle_en);
             var newProjectIdActualPromise = ProjectService.saveProject(commitMessageDefault);
             expect(ConfigService.getConfigParam).toHaveBeenCalledWith("saveProjectURL");
             expect(ConfigService.getProjectId).toHaveBeenCalled();
