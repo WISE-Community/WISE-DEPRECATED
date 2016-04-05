@@ -63,7 +63,7 @@
     </h6>
     <h6 ng-if='item.order==0'
         style='display:inline'>
-        <label translate="projectTitle"></label>: <span>{{projectController.project.metadata.title}}</span>
+        <label translate="projectTitle"></label>: <span id="projectTitle">{{projectController.project.metadata.title}}</span>
     </h6>
     <button ng-show='(projectController.insertNodeMode && item.order!==0) || (projectController.insertGroupMode && item.order==0)' 
             ng-if='projectController.isGroupNode(item.$key)' 
