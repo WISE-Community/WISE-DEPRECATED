@@ -536,6 +536,10 @@ View.prototype.displaySpecialExportPageHelper = function(node) {
             if (node.type === 'TableNode') {
                 displayCustomExportPageHelperHtml += "<input id='stepButton_" + nodeId + "_CSV' type='button' value='Latest CSV' style='margin-left:20px' onClick=\"eventManager.fire('specialExportCSVButtonClicked', '" + nodeId + "')\"/>";
             }
+			
+            if (node.type === 'MatchSequenceNode') {
+                displayCustomExportPageHelperHtml += "<input id='stepButton_" + nodeId + "_CSV' type='button' value='Latest CSV' style='margin-left:20px' onClick=\"eventManager.fire('specialExportCSVButtonClicked', '" + nodeId + "')\"/>";
+            }
 
             displayCustomExportPageHelperHtml += "</td></tr>";
 		} else {

@@ -300,10 +300,438 @@ MatchSequenceNode.prototype.getStudentWorkHtmlView = function(work) {
 	return html;
 };
 
+/**
+ * Returns whether this step type can be special exported
+ * @return a boolean value
+ */
+MatchSequenceNode.prototype.canSpecialExport = function() {
+	return true;
+};
+
 MatchSequenceNode.prototype.getHTMLContentTemplate = function() {
 	return createContent('node/matchsequence/matchsequence.html');
 };
 
+/**
+ * Get the bucket the given choice is in
+ * @param nodeState the student work
+ * @param choiceId we want to determine which bucket this choice is in
+ * @returns the bucket name the choice is in
+ */
+MatchSequenceNode.prototype.getBucketChoiceIsIn = function(nodeState, choiceId) {
+	
+	var bucketName = null;
+	
+	// get the source bucket
+	var sourceBucket = nodeState.sourceBucket;
+	
+	if (sourceBucket != null) {
+		
+		if (this.isChoiceInBucket(choiceId, sourceBucket)) {
+			// the choice is in the source bucket
+			bucketName = sourceBucket.text;
+		}
+	}
+	
+	var buckets = nodeState.buckets;
+	
+	if (buckets != null) {
+		
+		// loop through all the buckets
+		for (var b = 0; b < buckets.length; b++) {
+			var tempBucket = buckets[b];
+			
+			if (this.isChoiceInBucket(choiceId, tempBucket)) {
+				// the choice is in the bucket
+				bucketName = tempBucket.text;
+			}
+		}
+	}
+	
+	return bucketName;
+};
+
+/**
+ * Check if a choice is in a given bucket
+ * @param choiceId the choice
+ * @param bucket the bucket
+ * @returns whether the choice is in the bucket or not
+ */
+MatchSequenceNode.prototype.isChoiceInBucket = function(choiceId, bucket) {
+	
+	var result = false;
+	
+	if (choiceId != null && bucket != null) {
+		
+		// get all the choices that were put in the bucket
+		var bucketChoices = bucket.choices;
+		
+		if (bucketChoices != null) {
+			
+			// loop through all the choices that were put in the bucket
+			for (var c = 0; c < bucketChoices.length; c++) {
+				var tempChoice = bucketChoices[c];
+				
+				if (tempChoice != null) {
+					if (choiceId === tempChoice.identifier) {
+						/*
+						 * we have found the choice we are looking for which
+						 * means it is in the bucket
+						 */
+						result = true;
+					}
+				}
+			}
+		}
+	}
+	
+	return result;
+};
+
+/**
+ * Get the buckets that the choices are in
+ * e.g.
+ * choiceIds = ['choice1', 'choice2', 'choice3']
+ * and there are buckets named 'Source', 'Bucket1', 'Bucket2'
+ * and the student placed
+ * 'choice1' in 'Source'
+ * 'choice2' in 'Bucket1'
+ * 'choice3' in 'Bucket2'
+ * the bucketNames array will be
+ * bucketNames = ['Source', 'Bucket1', 'Bucket1']
+ *
+ * @param nodeState the student work
+ * @param choiceIds the choice ids
+ * @return an array of bucket names. the length of the bucket array will be
+ * the same length as the choiceIds array.
+ * bucketName[0] is the name of the bucket that choiceIds[0] is in
+ * bucketName[1] is the name of the bucket that choiceIds[1] is in
+ * etc.
+ */
+MatchSequenceNode.prototype.getBucketsChoicesAreIn = function(nodeState, choiceIds) {
+	
+	var bucketNames = [];
+	
+	if (nodeState != null && choiceIds != null) {
+		
+		// loop through all the choice ids
+		for (var c = 0; c < choiceIds.length; c++) {
+			var choiceId = choiceIds[c];
+			
+			// get the bucket name the choice is in
+			var bucketName = this.getBucketChoiceIsIn(nodeState, choiceId);
+			
+			if (bucketName == null) {
+				// it should never enter this case
+				bucketNames.push('?');
+			} else if (typeof bucketName == 'string' && bucketName.indexOf(',') != -1) {
+				// wrap the value in quotes if it contains a comma
+				bucketNames.push('"' + bucketName + '"');
+			} else {
+				// add the value into the cell
+				bucketNames.push(bucketName);
+			}
+		}
+	}
+	
+	return bucketNames;
+};
+
+/**
+ * Get the choice object by choice id
+ * @param choiceId the choice id
+ * @param choices an array of choice objects
+ * @returns the choice object with the given choiceId
+ */
+MatchSequenceNode.prototype.getChoiceById = function(choiceId, choices) {
+	var choice = null;
+	
+	if (choiceId != null && choices != null) {
+		
+		// loop through all the choices
+		for (var c = 0; c < choices.length; c++) {
+			var tempChoice = choices[c];
+			
+			if (tempChoice != null && choiceId === tempChoice.identifier) {
+				// we have found the choice we are looking for
+				choice = tempChoice;
+				break;
+			}
+		}
+	}
+	
+	return choice;
+};
+
+/**
+ * Get the value of the choice
+ * @param choiceId the choice id
+ * @param choices an array of choice objects
+ * @returns get the value of the choice
+ */
+MatchSequenceNode.prototype.getChoiceValueById = function(choiceId, choices) {
+	
+	var choiceValue = null;
+	
+	// get the choice
+	var choice = this.getChoiceById(choiceId);
+	
+	if (choice != null) {
+		// get the choice value
+		choiceValue = choice.value;
+	}
+	
+	return choiceValue;
+};
+
+/**
+ * Get the bucket by id
+ * @param bucketId the bucket id
+ * @param buckets an array of bucket objects
+ * @returns the bucket object with the given bucketId
+ */
+MatchSequenceNode.prototype.getBucketById = function(bucketId, buckets) {
+	var bucket = null;
+	
+	if (bucketId != null && buckets != null) {
+		
+		// loop througha all the buckets
+		for (var b = 0; b < buckets.length; b++) {
+			var tempBucket = buckets[b];
+			
+			if (tempBucket != null && bucketId === tempBucket.identifier) {
+				// we have found the bucket we are looking for
+				bucket = tempBucket;
+				break;
+			}
+		}
+	}
+	
+	return bucket;
+};
+
+/**
+ * Get the bucket name
+ * @param bucketId the bucket id
+ * @param buckets an array of bucket objects
+ * @returns the bucket name with the given bucketId
+ */
+MatchSequenceNode.prototype.getBucketNameById = function(bucketId, buckets) {
+	
+	var bucketName = null;
+	
+	// get the bucket
+	var bucket = this.getBucketById(bucketId);
+	
+	if (bucket != null) {
+		// get the bucket name
+		bucketName = bucket.name;
+	}
+	
+	return bucketName;
+};
+
+/**
+ * Generate the special export. Each row represents the latest work for a 
+ * student. Each student data column represents a choice. The cell value is
+ * the name of the bucket that the student placed the choice in.
+ * @param nodeId the node id to generate the export for
+ */
+MatchSequenceNode.prototype.generateMatchSequenceSpecialExportCSV = function(nodeId) {
+	
+	var rows = [];
+	
+	var project = view.getProject();	
+	var node = project.getNodeById(nodeId);
+	var runId = view.getConfig().getConfigParam('runId');
+	var stepNumberAndTitle = project.getStepNumberAndTitle(nodeId);
+	var teacherUserName = view.userAndClassInfo.getTeacherUserInfo().userName;
+	var projectId = view.config.getConfigParam('projectId');
+	var parentProjectId = view.config.getConfigParam('parentProjectId');
+	var projectName = project.getTitle();
+	var nodeType = project.getNodeById(nodeId).type;
+
+	/*
+	 * remove the Node part of the node type for example
+	 * TableNode will be changed to Table
+	 */
+	nodeType = nodeType.replace('Node', '');
+
+	var workgroupIds = view.userAndClassInfo.getWorkgroupIdsInClass();
+	
+	// add the metadata cells in the header row
+	var headerRow = [
+		'Workgroup Id',
+		'WISE Id 1',
+		'WISE Id 2',
+		'WISE Id 3',
+		'Class Period',
+		'Teacher Login',
+		'Project Id',
+		'Parent Project Id',
+		'Project Name',
+        'Run Id',
+        'Step Work Id',
+        'Step Title',
+        'Step Type'
+	];
+	
+	var choiceIds = [];
+	var bucketIds = [];
+	
+	var choices = [];
+	var buckets = [];
+	
+	if (node != null) {
+		// get the step content
+		var contentJSON = node.content.getContentJSON();
+		
+		// get the source bucket name
+		var sourceBucketName = contentJSON.sourceBucketName;
+		
+		var assessmentItem = contentJSON.assessmentItem;
+		
+		if (assessmentItem != null) {
+			var interaction = assessmentItem.interaction;
+			
+			if (interaction != null) {
+				// get the choices
+				choices = interaction.choices;
+				
+				// get the buckets
+				buckets = interaction.fields;
+				
+				if (choices != null) {
+					
+					// loop through all the choices
+					for (var c = 0; c < choices.length; c++) {
+						var tempChoice = choices[c];
+						
+						if (tempChoice != null) {
+							var tempIdentifier = tempChoice.identifier;
+							var tempText = tempChoice.value;
+							
+							// accumulate the choice ids so we can use them later
+							choiceIds.push(tempIdentifier);
+							
+							// add the choice value to the header row
+							if (typeof tempText == 'string' && tempText.indexOf(',') != -1) {
+								// wrap the value in quotes if it contains a comma
+								headerRow.push('"' + tempText + '"');
+							} else {
+								// add the value into the cell
+								headerRow.push(tempText);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	// add the header row to our rows
+	rows.push(headerRow);
+	
+	// loop through all the workgroups to obtain the student data
+	for (var w = 0; w < workgroupIds.length; w++) {
+
+		var workgroupId = workgroupIds[w];
+		var classmate = view.userAndClassInfo.getClassmateByWorkgroupId(workgroupId);
+
+		if (classmate != null) {
+			var row = [];
+
+			// add the workgroup id cell
+			row.push(workgroupId);
+
+			// add the wise id cells
+			var wiseIds = classmate.userIds;
+			for (var wi = 0; wi < wiseIds.length; wi++) {
+				var wiseId = wiseIds[wi];
+
+				row.push(wiseId);
+			}
+
+			// add any necessary empty cells for wise ids (if the workgroup has less than 3 members)
+			var numEmptyWISEIdColumns = 3 - wiseIds.length;
+			if (numEmptyWISEIdColumns > 0) {
+				for (var e = 0; e < numEmptyWISEIdColumns; e++) {
+					row.push("");
+				}
+			}
+
+			// add the period name
+			var periodName = classmate.periodName;
+			row.push(periodName);
+
+			// add the teacher name
+			row.push(teacherUserName);
+
+			// add the project id
+			row.push(projectId);
+
+			// add the parent project id
+			row.push(parentProjectId);
+
+			// add the project name
+			row.push(projectName);
+
+			// add the run id
+			row.push(runId);
+
+			//row.push(''); // start date
+			//row.push(''); // end date
+
+			// get all the node visits for view student for the step
+			var nodeVisits = view.model.getNodeVisitsByNodeIdAndWorkgroupId(nodeId, workgroupId);
+
+			if (nodeVisits != null && nodeVisits.length > 0) {
+
+				// get the latest node visit
+				var nodeVisit = nodeVisits[nodeVisits.length - 1];
+
+				// add the step work id
+				var stepWorkId = parseInt(nodeVisit.id);
+				row.push(stepWorkId);
+
+				// add the step number and title
+				row.push(stepNumberAndTitle);
+
+				// add the node type
+				row.push(nodeType);
+
+				var nodeStates = nodeVisit.nodeStates;
+
+				if (nodeStates != null && nodeStates.length > 0) {
+
+					// get the latest node state
+					var nodeState = nodeStates[nodeStates.length - 1];
+
+					if (nodeState != null) {
+						
+						// get the bucket names for this row
+						var bucketNames = this.getBucketsChoicesAreIn(nodeState, choiceIds);
+						
+						// add the bucket names to the row
+						row = row.concat(bucketNames);
+					}
+				}
+			}
+
+			// add the workgroup's row
+			rows.push(row);
+		}
+	}
+
+	// get the csv string
+	var csvString = view.convertToCSVString(rows);
+
+	// get the file name
+	var fileName = 'Run_' + runId + '_Step_' + stepNumberAndTitle + '.csv';
+
+	// download the csv file
+	view.downloadCSV(fileName, csvString);
+};
 
 NodeFactory.addNode('MatchSequenceNode', MatchSequenceNode);
 

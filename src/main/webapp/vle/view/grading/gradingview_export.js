@@ -123,9 +123,12 @@ View.prototype.specialExportGetWorkForNodeIdCallbackHandler = function(text, nod
 		this.model.setWorkByNodeId(nodeId, workForNodeId);
 
         if (this.getProject().getNodeById(nodeId).type === 'TableNode') {
-            // generate the special export csv
+            // generate the table special export csv
             this.generateTableSpecialExportCSV(nodeId);
-        }
+        } else if (this.getProject().getNodeById(nodeId).type === 'MatchSequenceNode') {
+			// generate the match special export csv
+			MatchSequenceNode.prototype.generateMatchSequenceSpecialExportCSV(nodeId);
+		}
 	}
 };
 
