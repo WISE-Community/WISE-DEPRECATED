@@ -13,6 +13,8 @@ class ProjectAssetController {
         this.projectAssets = ProjectAssetService.projectAssets;
         this.projectAssetTotalSizeMax = ProjectAssetService.projectAssetTotalSizeMax;
         this.projectAssetUsagePercentage = ProjectAssetService.projectAssetUsagePercentage;
+
+
         this.assetSortBy = "aToZ";  // initially sort assets alphabetically
         this.assetMessage = "";
 

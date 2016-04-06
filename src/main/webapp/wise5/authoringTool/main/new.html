@@ -1,6 +1,6 @@
 
-<label translate="projectTitle"></label>: <input size=50 ng-model="authoringToolNewProjectController.project.metadata.title" />
+<label translate="projectTitle"></label>: <input size=50 id="newProjectTitle" ng-model="authoringToolNewProjectController.project.metadata.title" />
 <br/>
-<button ng-click="authoringToolNewProjectController.registerNewProject()" translate="create"></button>
-<button ng-click="authoringToolNewProjectController.cancelRegisterNewProject()" translate="cancel"></button>
+<button id="createProjectButton" ng-click="authoringToolNewProjectController.registerNewProject()" translate="create"></button>
+<button id="cancelCreateProjectButton" ng-click="authoringToolNewProjectController.cancelRegisterNewProject()" translate="cancel"></button>
 
