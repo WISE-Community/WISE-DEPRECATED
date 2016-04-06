@@ -11,7 +11,6 @@ var studentVLEScripts = [
 	'vle/lib/jquery/slick/slick.min.js',
 	'vle/node/common/nodehelpers.js',
 	'vle/lib/jquery/js/jsonplugin.js',
-	'vle/lib/jquery/js/jquery.ui.touch-punch.min.js',
 	'vle/node/matchsequence/matchsequencedragdrop.js',
 	'vle/node/matchsequence/matchsequencebucket.js',
 	'vle/node/matchsequence/matchsequencechoice.js',
@@ -34,7 +33,6 @@ var gradingScripts = [
 
 var dependencies = [
 	{child:"vle/node/matchsequence/MatchSequenceNode.js", parent:["vle/node/Node.js"]},
-	{child:"vle/lib/jquery/js/jquery.ui.touch-punch.min.js", parent:[scriptloader.jqueryUISrc_interactions]},
 	{child:scriptloader.bootstrapSrc, parent:[scriptloader.jquerySrc]},
 	{child:'vle/lib/bootstrap/bootstrap-dialog/dist/js/bootstrap-dialog.min.js', parent:[scriptloader.bootstrapSrc]},
 	{child:'vle/lib/jquery/slick/slick.min.js', parent:[scriptloader.jquerySrc]}
