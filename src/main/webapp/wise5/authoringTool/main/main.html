@@ -7,7 +7,10 @@
 <button id="createNewProjectButton" style="font-weight: bold; padding: 10px" ng-click="authoringToolMainController.createNewProject()" translate="createNewProject"></button>
 
 <h3 translate="myProjectsHeading"></h3>
-<div class="projectItem" ng-repeat='project in authoringToolMainController.projects' ng-click="authoringToolMainController.openProject(project.id)">
+<div class="projectItem" style="padding:2px" ng-repeat='project in authoringToolMainController.projects'>
     {{project.id}}
     {{project.name}}
+    <button ng-click="authoringToolMainController.openProject(project.id)" translate="open"></button>
+    <button ng-click="authoringToolMainController.previewProject(project.id)" translate="preview"></button>
+    <button ng-click="authoringToolMainController.copyProject(project.id)" translate="copy"></button>
 </div>

@@ -4,8 +4,8 @@ exports.config = {
     sauceKey: process.env.SAUCE_ACCESS_KEY,
     //seleniumAddress: 'http://localhost:4444/wd/hub',
     specs: [
-        'notebook.spec.js',
         'previewVLE.spec.js',
+        'notebook.spec.js',
         'authoringTool.spec.js'
     ]
 };

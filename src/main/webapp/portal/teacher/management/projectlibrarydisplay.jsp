@@ -121,7 +121,7 @@
 																<sec:accesscontrollist domainObject="${project}" hasPermission="16">
 																	<li><a title="<spring:message code="share_tip" />" data-id="${project.id}" class="shareProject tooltip" dialog-title="<spring:message code="share_permissionsTitle" /> ${project.name} (<spring:message code="id" /> ${project.id})"><img class="icon" alt="share" src="${contextPath}/<spring:theme code="agent"/>" /><span><spring:message code="share" /></span></a>&nbsp;|</li>
 																</sec:accesscontrollist>
-																<li><a class="tooltip" title="<spring:message code="teacher.management.projectlibrarydisplay.copy_tip" />" onclick="copy('${project.id}','${project.projectType}','${projectNameEscaped}','${filenameMap[project.id]}','${urlMap[project.id]}')" ><img class="icon" alt="copy" src="${contextPath}/<spring:theme code="copy"/>" /><span><spring:message code="copy" /></span></a>&nbsp;|</li>
+																<li><a class="tooltip" title="<spring:message code="teacher.management.projectlibrarydisplay.copy_tip" />" onclick="copy('${project.wiseVersion}','${project.id}','${project.projectType}','${projectNameEscaped}','${filenameMap[project.id]}','${urlMap[project.id]}')" ><img class="icon" alt="copy" src="${contextPath}/<spring:theme code="copy"/>" /><span><spring:message code="copy" /></span></a>&nbsp;|</li>
 																<sec:accesscontrollist domainObject="${project}" hasPermission="2">
 																	<li><a class="tooltip" title="<spring:message code="teacher.management.projectlibrarydisplay.edit_tip" />" href="${contextPath}/author/authorproject.html?projectId=${project.id}"><img class="icon" alt="edit" src="${contextPath}/<spring:theme code="edit"/>" /><span><spring:message code="edit" /></span></a>&nbsp;|</li>
 																</sec:accesscontrollist>
@@ -359,7 +359,7 @@
 																<sec:accesscontrollist domainObject="${project}" hasPermission="16">
 																	<li><a title="<spring:message code="share_tip" />" data-id="${project.id}" class="shareProject tooltip" dialog-title="<spring:message code="share_permissionsTitle" /> ${project.name} (<spring:message code="id" /> ${project.id})"><img class="icon" alt="share" src="${contextPath}/<spring:theme code="agent"/>" /><span><spring:message code="share" /></span></a>&nbsp;|</li>
 																</sec:accesscontrollist>
-																<li><a class="tooltip" title="<spring:message code="teacher.management.projectlibrarydisplay.copy_tip" />" onclick="copy('${project.id}','${project.projectType}','${projectNameEscaped}','${filenameMap[project.id]}','${urlMap[project.id]}')" ><img class="icon" alt="copy" src="${contextPath}/<spring:theme code="copy"/>" /><span><spring:message code="copy" /></span></a>&nbsp;|</li>
+																<li><a class="tooltip" title="<spring:message code="teacher.management.projectlibrarydisplay.copy_tip" />" onclick="copy('${project.wiseVersion}','${project.id}','${project.projectType}','${projectNameEscaped}','${filenameMap[project.id]}','${urlMap[project.id]}')" ><img class="icon" alt="copy" src="${contextPath}/<spring:theme code="copy"/>" /><span><spring:message code="copy" /></span></a>&nbsp;|</li>
 																<sec:accesscontrollist domainObject="${project}" hasPermission="2">
 																	<li><a class="tooltip" title="<spring:message code="teacher.management.projectlibrarydisplay.edit_tip" />" href="${contextPath}/author/authorproject.html?projectId=${project.id}"><img class="icon" alt="edit" src="${contextPath}/<spring:theme code="edit"/>" /><span><spring:message code="edit" /></span></a>&nbsp;|</li>
 																</sec:accesscontrollist>
@@ -567,7 +567,7 @@
 																<sec:accesscontrollist domainObject="${project}" hasPermission="16">
 																	<li><a title="<spring:message code="share_tip" />" data-id="${project.id}" class="shareProject tooltip" dialog-title="<spring:message code="share_permissionsTitle" /> ${project.name} (<spring:message code="id" /> ${project.id})"><img class="icon" alt="share" src="${contextPath}/<spring:theme code="agent"/>" /><span><spring:message code="share" /></span></a>&nbsp;|</li>
 																</sec:accesscontrollist>
-																<li><a class="tooltip" title="<spring:message code="teacher.management.projectlibrarydisplay.copy_tip" />" onclick="copy('${project.id}','${project.projectType}','${projectNameEscaped}','${filenameMap[project.id]}','${urlMap[project.id]}')" ><img class="icon" alt="copy" src="${contextPath}/<spring:theme code="copy"/>" /><span><spring:message code="copy" /></span></a>&nbsp;|</li>
+																<li><a class="tooltip" title="<spring:message code="teacher.management.projectlibrarydisplay.copy_tip" />" onclick="copy('${project.wiseVersion}','${project.id}','${project.projectType}','${projectNameEscaped}','${filenameMap[project.id]}','${urlMap[project.id]}')" ><img class="icon" alt="copy" src="${contextPath}/<spring:theme code="copy"/>" /><span><spring:message code="copy" /></span></a>&nbsp;|</li>
 																<sec:accesscontrollist domainObject="${project}" hasPermission="2">
 																	<li><a class="tooltip" title="<spring:message code="teacher.management.projectlibrarydisplay.edit_tip" />" href="${contextPath}/author/authorproject.html?projectId=${project.id}"><img class="icon" alt="edit" src="${contextPath}/<spring:theme code="edit"/>" /><span><spring:message code="edit" /></span></a>&nbsp;|</li>
 																</sec:accesscontrollist>
@@ -797,7 +797,7 @@
 																		<li><a class="tooltip" href="<c:url value="/previewproject.html"><c:param name="projectId" value="${project.id}"/></c:url>" title="<spring:message code="preview_tip" />" target="_blank"><img class="icon" alt="preview" src="${contextPath}/<spring:theme code="screen"/>" />
 																			<span<c:if test="${!isChild && !isChildNoRoot}"> style="font-weight:bold;"</c:if>><spring:message code="preview" /></span></a>&nbsp;|
 																		</li>
-																		<li><a class="tooltip" title="<spring:message code="teacher.management.projectlibrarydisplay.copy_tip" />" onclick="copy('${project.id}','${project.projectType}','${projectNameEscaped}','${filenameMap[project.id]}','${urlMap[project.id]}')" ><img class="icon" alt="copy" src="${contextPath}/<spring:theme code="copy"/>" /><span><spring:message code="copy" /></span></a>&nbsp;|</li>
+																		<li><a class="tooltip" title="<spring:message code="teacher.management.projectlibrarydisplay.copy_tip" />" onclick="copy('${project.wiseVersion}','${project.id}','${project.projectType}','${projectNameEscaped}','${filenameMap[project.id]}','${urlMap[project.id]}')" ><img class="icon" alt="copy" src="${contextPath}/<spring:theme code="copy"/>" /><span><spring:message code="copy" /></span></a>&nbsp;|</li>
 																		<c:set var="isOwner" value="false" />
 																		<c:if test="${project.owner.id == user.id}">
 																			<c:set var="isOwner" value="true"/>
@@ -1024,7 +1024,7 @@
 																		<li><a class="tooltip" href="<c:url value="/previewproject.html"><c:param name="projectId" value="${project.id}"/></c:url>" title="<spring:message code="preview_tip" />" target="_blank"><img class="icon" alt="preview" src="${contextPath}/<spring:theme code="screen"/>" />
 																			<span<c:if test="${!isChild && !isChildNoRoot}"> style="font-weight:bold;"</c:if>><spring:message code="preview" /></span></a>&nbsp;|
 																		</li>
-																		<li><a class="tooltip" title="<spring:message code="teacher.management.projectlibrarydisplay.copy_tip" />" onclick="copy('${project.id}','${project.projectType}','${projectNameEscaped}','${filenameMap[project.id]}','${urlMap[project.id]}')" ><img class="icon" alt="copy" src="${contextPath}/<spring:theme code="copy"/>" /><span><spring:message code="copy" /></span></a></li>
+																		<li><a class="tooltip" title="<spring:message code="teacher.management.projectlibrarydisplay.copy_tip" />" onclick="copy('${project.wiseVersion}','${project.id}','${project.projectType}','${projectNameEscaped}','${filenameMap[project.id]}','${urlMap[project.id]}')" ><img class="icon" alt="copy" src="${contextPath}/<spring:theme code="copy"/>" /><span><spring:message code="copy" /></span></a></li>
 																	</ul>
 																</div>
 																<div style="clear:both;"></div>
@@ -1220,7 +1220,7 @@
 																		<li><a class="tooltip" href="<c:url value="/previewproject.html"><c:param name="projectId" value="${project.id}"/></c:url>" title="<spring:message code="preview_tip" />" target="_blank"><img class="icon" alt="preview" src="${contextPath}/<spring:theme code="screen"/>" />
 																			<span style="font-weight:bold;"><spring:message code="preview" /></span></a>&nbsp;|
 																		</li>
-																		<li><a class="tooltip" title="<spring:message code="teacher.management.projectlibrarydisplay.copy_tip" />" onclick="copy('${project.id}','${project.projectType}','${projectNameEscaped}','${filenameMap[project.id]}','${urlMap[project.id]}')" ><img class="icon" alt="copy" src="${contextPath}/<spring:theme code="copy"/>" /><span><spring:message code="copy" /></span></a>&nbsp;|</li>
+																		<li><a class="tooltip" title="<spring:message code="teacher.management.projectlibrarydisplay.copy_tip" />" onclick="copy('${project.wiseVersion}','${project.id}','${project.projectType}','${projectNameEscaped}','${filenameMap[project.id]}','${urlMap[project.id]}')" ><img class="icon" alt="copy" src="${contextPath}/<spring:theme code="copy"/>" /><span><spring:message code="copy" /></span></a>&nbsp;|</li>
 																		<c:set var="isOwner" value="false" />
 																		<c:if test="${project.owner.id == user.id}">
 																			<c:set var="isOwner" value="true"/>
@@ -1417,14 +1417,14 @@
 	};
 
 	/**
-	 *
+	 * @param wiseVersion 4 or 5
 	 * @param pId project id
 	 * @param type the project type e.g. "LD"
 	 * @param name the project name
 	 * @param fileName the project file name e.g. "/wise4.project.json"
 	 * @param relativeProjectFilePathUrl the relative project file path e.g. "/513/wise4.project.json"
 	 */
-	function copy(pID, type, name, fileName, relativeProjectFilePathUrl){
+	function copy(wiseVersion, pID, type, name, fileName, relativeProjectFilePathUrl){
 		if (typeof(isTeacher) == "undefined") {
 			window.location.href = "${contextPath}/login";
 			return;
@@ -1452,7 +1452,18 @@
 					$('ui-dialog-titlebar-close',$(this).parent()).hide();
 					$('button',$(this).parent()).hide().unbind();
 					var escapedName = escape(name);
-					if(type=='LD'){
+					if (wiseVersion === '5') {
+						$.ajax({
+							type: 'post',
+							url: '${contextPath}/project/copy/' + pID,
+							dataType:'text',
+							success: function(response) {
+								var successText = '<p><spring:message code="teacher.management.projectlibrarydisplay.copy_success" /></p><p><spring:message code="teacher.management.projectlibrarydisplay.copy_click" /></p>';
+								processCopyResult(this,successText,true);
+							},
+							context: this
+						});
+					} else if(type=='LD'){
 						$.ajax({
 							type: 'post',
 							url: '${contextPath}/author/authorproject.html',

@@ -1171,6 +1171,31 @@ class ProjectService {
     };
 
     /**
+     * Copies the project with the specified id and returns a new project id if the project is
+     * successfully copied
+     */
+    copyProject(projectId) {
+        var copyProjectURL = this.ConfigService.getConfigParam('copyProjectURL');
+
+        if (copyProjectURL == null) {
+            return null;
+        }
+
+        var httpParams = {};
+        httpParams.method = 'POST';
+        httpParams.url = copyProjectURL + "/" + projectId;
+        httpParams.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
+
+        var params = {};
+        httpParams.data = $.param(params);
+
+        return this.$http(httpParams).then((result) => {
+            var projectId = result.data;
+            return projectId;
+        });
+    };
+
+    /**
      * Registers a new project having the projectJSON content with the server.
      * Returns a new project Id if the project is successfully registered.
      * Returns null if Config.registerNewProjectURL is undefined.
