@@ -125,24 +125,11 @@ public class WISE5AuthorProjectController {
             pParams.setProjectname(projectName);
             pParams.setProjectType(ProjectType.LD);
             pParams.setWiseVersion(new Integer(5));
-            if (parentProjectId != null) {
-                Project parentProject = projectService.getById(parentProjectId);
-                if (parentProject != null) {
-                    pParams.setParentProjectId(Long.valueOf(parentProjectId));
-                    // get the project's metadata from the parent
-                    ProjectMetadata parentProjectMetadata = parentProject.getMetadata();
-                    if (parentProjectMetadata != null) {
-                        // copy into new metadata object
-                        ProjectMetadata newProjectMetadata = new ProjectMetadataImpl(parentProjectMetadata.toJSONString());
-                        pParams.setMetadata(newProjectMetadata);
-                    }
-                }
-            } else {
-                // if this is new original project, set a new fresh metadata object
-                ProjectMetadata metadata = new ProjectMetadataImpl();
-                metadata.setTitle(projectName);
-                pParams.setMetadata(metadata);
-            }
+
+            // if this is new original project, set a new fresh metadata object
+            ProjectMetadata metadata = new ProjectMetadataImpl();
+            metadata.setTitle(projectName);
+            pParams.setMetadata(metadata);
 
             Project project = projectService.createProject(pParams);
             response.getWriter().write(project.getId().toString());
@@ -183,6 +170,74 @@ public class WISE5AuthorProjectController {
             e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * Handle user's request to register a new WISE5 project.
+     * Registers the new project in DB and returns the new project ID
+     * If the parentProjectId is specified, the user is requesting to copy that project
+     * @return
+     */
+    @RequestMapping(value = "/project/copy/{projectId}", method = RequestMethod.POST)
+    protected void copyProject(
+            @PathVariable Long projectId,
+            HttpServletResponse response) {
+        User user = ControllerUtil.getSignedInUser();
+        if (!this.hasAuthorPermissions(user)) {
+            return;
+        }
+
+        if (projectId != null) {
+            try {
+                Project parentProject = projectService.getById(projectId);
+                Set<String> tagNames = new TreeSet<String>();
+                tagNames.add("library");
+                if (parentProject != null && (this.projectService.canAuthorProject(parentProject, user) || parentProject.hasTags(tagNames))) {
+                    // upload the zipfile to curriculum_base_dir
+                    String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
+                    String parentProjectJSONAbsolutePath = curriculumBaseDir + (String) parentProject.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
+                    File parentProjectJSONFile = new File(parentProjectJSONAbsolutePath);
+                    File parentProjectDir = parentProjectJSONFile.getParentFile();
+
+                    String newProjectDirectoryPath = copyProjectDirectory(parentProjectDir);
+                    ModuleParameters mParams = new ModuleParameters();
+                    mParams.setUrl("/" + newProjectDirectoryPath + "/project.json");
+                    Curnit curnit = curnitService.createCurnit(mParams);
+
+                    ProjectParameters pParams = new ProjectParameters();
+                    pParams.setCurnitId(curnit.getId());
+                    pParams.setOwner(user);
+                    pParams.setProjectname(parentProject.getName());
+                    pParams.setProjectType(ProjectType.LD);
+                    pParams.setWiseVersion(new Integer(5));
+
+                    // if this is new original project, set a new fresh metadata object
+                    ProjectMetadata metadata = new ProjectMetadataImpl();
+                    metadata.setTitle(parentProject.getName());
+                    pParams.setMetadata(metadata);
+                    pParams.setParentProjectId(Long.valueOf(projectId));
+                    // get the project's metadata from the parent
+                    ProjectMetadata parentProjectMetadata = parentProject.getMetadata();
+                    if (parentProjectMetadata != null) {
+                        // copy into new metadata object
+                        ProjectMetadata newProjectMetadata = new ProjectMetadataImpl(parentProjectMetadata.toJSONString());
+                        pParams.setMetadata(newProjectMetadata);
+                    }
+                    Project project = projectService.createProject(pParams);
+                    response.getWriter().write(project.getId().toString());
+
+                }
+            } catch (ObjectNotFoundException onfe) {
+                onfe.printStackTrace();
+                return;
+            } catch (IOException ie) {
+                ie.printStackTrace();
+                return;
+            } catch (JSONException je) {
+                je.printStackTrace();
+                return;
+            }
         }
     }
 
@@ -340,6 +395,7 @@ public class WISE5AuthorProjectController {
             String contextPath = request.getContextPath(); //get the context path e.g. /wise
             String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
             config.put("contextPath", contextPath);
+            config.put("copyProjectURL", wiseBaseURL + "/project/copy");
             config.put("mainHomePageURL", wiseBaseURL);
             config.put("renewSessionURL", wiseBaseURL + "/session/renew");
             config.put("sessionLogOutURL", wiseBaseURL + "/logout");
@@ -612,5 +668,80 @@ public class WISE5AuthorProjectController {
     private boolean hasAuthorPermissions(User user) {
         return user.getUserDetails().hasGrantedAuthority(UserDetailsService.AUTHOR_ROLE) ||
                 user.getUserDetails().hasGrantedAuthority(UserDetailsService.TEACHER_ROLE);
+    }
+
+    /**
+     * Given a path to curriculum base directory and the path to the project directory that we want to copy,
+     * copies the directory and returns <code>String</code> the path to the freshly copied directory.
+     *
+     * @param srcDir the directory of the project we are copying, e.g. "/tomcat/webapps/curriculum/5"
+     * @return the path to the new project
+     * @throws IOException
+     */
+    public static String copyProjectDirectory(File srcDir) throws IOException {
+        String result = "";
+
+        if (srcDir.exists() && srcDir.isDirectory()) {
+            File destDir = createNewprojectPath(srcDir.getParentFile());
+            copy(srcDir, destDir);
+            result = destDir.getName();
+        } else {
+            throw new IOException("Provided path is not found or is not a directory. Path: " + srcDir.getPath());
+        }
+
+        return result;
+    }
+
+    /**
+     * Given a parent directory, attempts to generate and return
+     * a unique project directory.
+     *
+     * @param parent
+     * @return
+     */
+    public static File createNewprojectPath(File parent){
+        Integer counter = 1;
+
+        while (true) {
+            File tryMe = new File(parent, String.valueOf(counter));
+            if (!tryMe.exists()) {
+                tryMe.mkdir();
+                return tryMe;
+            }
+            counter++;
+        }
+    }
+
+    /**
+     * Copies the given <code>File</code> src to the given <code>File</code> dest. If the src is
+     * a directories, recursively copies the contents of the directory into dest.
+     *
+     * @param src directory to copy from
+     * @param dest directory to copy to
+     * @throws IOException
+     */
+    public static void copy(File src, File dest) throws IOException {
+        if (src.isDirectory()) {
+            if (!dest.exists()) {
+                dest.mkdir();
+            }
+
+            String[] files = src.list();
+            for (int a = 0; a < files.length; a++) {
+                copy(new File(src, files[a]), new File(dest, files[a]));
+            }
+        } else {
+            InputStream in = new FileInputStream(src);
+            FileOutputStream out = new FileOutputStream(dest);
+
+            byte[] buffer = new byte[2048];
+            int len;
+            while ((len = in.read(buffer)) > 0) {
+                out.write(buffer, 0, len);
+            }
+
+            in.close();
+            out.close();
+        }
     }
 }
