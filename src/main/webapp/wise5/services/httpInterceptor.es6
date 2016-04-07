@@ -29,8 +29,10 @@ class HttpInterceptor {
 
     // intercept response error
     responseError(rejection) {
-        // response error, broadcast disconnection alert
-        self.$rootScope.$broadcast('serverDisconnected');
+        if (rejection.status === -1 || rejection.status === 500 || rejection.status === 503 || rejection.status === 504 ) {
+            // response error, broadcast disconnection alert
+            self.$rootScope.$broadcast('serverDisconnected');
+        }
 
         return self.$q.reject(rejection);
     }
