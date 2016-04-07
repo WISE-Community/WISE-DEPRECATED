@@ -353,9 +353,6 @@ class ProjectController {
                     alert('If you want to move multiple items at once, they must be of the same type. Please select only activities or only steps.');
                 }
             }
-        } else {
-            // the user did not select any items so we will display an error message
-            alert('You must first select an activity or step to move.');
         }
     }
 
@@ -371,10 +368,7 @@ class ProjectController {
         
             var confirmMessage = null;
         
-            if (selectedNodeIds.length == 0) {
-                // the user did not select any items so we will display an error message
-                alert('You must first select and activity or step to delete.');
-            } else if (selectedNodeIds.length == 1) {
+            if (selectedNodeIds.length == 1) {
                 // the user selected one item
                 confirmMessage = 'Are you sure you want to delete the selected item?';
             } else if (selectedNodeIds.length > 1) {

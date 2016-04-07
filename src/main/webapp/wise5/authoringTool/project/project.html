@@ -22,21 +22,21 @@
         }
     </style>
     <div style="float:right">
-        <button ng-click='projectController.previewProject()' translate="previewProject"></button>
-        <button ng-click='projectController.viewProjectAssets()' translate="manageAssets"></button>
-        <button ng-click='projectController.viewProjectHistory()' translate="viewHistory"></button>
+        <button id="previewProjectButton" ng-click='projectController.previewProject()' translate="previewProject"></button>
+        <button id="manageAssetsButton" ng-click='projectController.viewProjectAssets()' translate="manageAssets"></button>
+        <button id="viewHistoryButton" ng-click='projectController.viewProjectHistory()' translate="viewHistory"></button>
     </div>
     <div id="commitDiv" style="display:none">
         <label id="editMessageLabel">Edit Message:</label>
         <input id="commitMessageInput" type="text" size="50" placeholder="Write a small message here explaining this change. (Optional)" />
-        <button id="saveButton" ng-click='projectController.saveProject()' translate="save"></button>
+        <button id="saveHistoryButton" ng-click='projectController.saveProject()' translate="save"></button>
     </div>
-<button ng-click='projectController.toggleCreateGroup()' translate="createNewActivity"></button>
-<button ng-click='projectController.toggleCreateNode()' translate="createNewStep"></button>
-<button ng-click='projectController.move()' translate="move"></button>
-<button ng-click='projectController.delete()' translate="delete"></button>
-<button ng-click='projectController.saveProject()' translate="save"></button>
-<button ng-click='projectController.closeProject()' translate="close"></button>
+<button id="createNewActivityButton" ng-click='projectController.toggleCreateGroup()' translate="createNewActivity"></button>
+<button id="createNewStepButton" ng-click='projectController.toggleCreateNode()' translate="createNewStep"></button>
+<button id="moveButton" ng-click='projectController.move()' translate="move" ng-disabled="projectController.getSelectedItems().length == 0"></button>
+<button id="deleteButton" ng-click='projectController.delete()' translate="delete" ng-disabled="projectController.getSelectedItems().length == 0"></button>
+<button id="saveProjectButton" ng-click='projectController.saveProject()' translate="save"></button>
+<button id="closeProjectButton" ng-click='projectController.closeProject()' translate="close"></button>
 <div ng-show='projectController.showCreateGroup'>
     <label translate="activityTitle"></label>: <input ng-model='projectController.createGroupTitle' size='50'/>
     <button ng-click='projectController.createGroup()' translate="create"></button>
@@ -54,7 +54,9 @@
      ng-class='{"node-select--group": projectController.isGroupNode(item.$key), "node-select--node": !projectController.isGroupNode(item.$key)}'>
     <input type='checkbox'
            ng-model='item.checked'
-           ng-if='item.order!==0'/>
+           ng-if='item.order!==0'
+           ng-show='!(projectController.showCreateGroup || projectController.showCreateNode || projectController.insertNodeMode || projectController.insertGroupMode)'
+    />
     <h6 ng-click='projectController.nodeClicked(item.$key)'
         style='display:inline; cursor:pointer'
         ng-class='{"groupHeader": projectController.isGroupNode(item.$key), "stepHeader": !projectController.isGroupNode(item.$key)}'

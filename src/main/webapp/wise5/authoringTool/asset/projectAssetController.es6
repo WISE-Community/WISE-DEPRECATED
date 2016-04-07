@@ -23,7 +23,8 @@ class ProjectAssetController {
                 return this.projectAssets;
             },
             () => {
-              this.projectAssetUsagePercentage = this.projectAssets.totalFileSize / this.projectAssetTotalSizeMax * 100;
+                this.projectAssetUsagePercentage = this.projectAssets.totalFileSize / this.projectAssetTotalSizeMax * 100;
+                this.sortAssets(this.assetSortBy);  // make sure the assets are sorted by current sort field
             }
         );
 
