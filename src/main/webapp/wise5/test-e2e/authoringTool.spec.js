@@ -77,6 +77,19 @@ describe('WISE Authoring Tool', function () {
         expect(element(by.id("projectTitle")).getText()).toEqual("My Science Project");
     });
 
+    it('should have elements on the page in project view', function () {
+        // check that move, delete buttons are disabled and other buttons are enabled.
+        expect(element(by.id("moveButton")).isEnabled()).toBe(false);
+        expect(element(by.id("deleteButton")).isEnabled()).toBe(false);
+        expect(element(by.id("saveProjectButton")).isEnabled()).toBe(true);
+        expect(element(by.id("closeProjectButton")).isEnabled()).toBe(true);
+        expect(element(by.id("createNewActivityButton")).isEnabled()).toBe(true);
+        expect(element(by.id("createNewStepButton")).isEnabled()).toBe(true);
+        expect(element(by.id("previewProjectButton")).isEnabled()).toBe(true);
+        expect(element(by.id("manageAssetsButton")).isEnabled()).toBe(true);
+        expect(element(by.id("viewHistoryButton")).isEnabled()).toBe(true);
+    });
+
     // TODO: add test for opening newly-created project
 
     it('should exit the authoring tool and then sign out', function () {
