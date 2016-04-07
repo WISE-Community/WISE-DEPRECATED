@@ -54,7 +54,9 @@
      ng-class='{"node-select--group": projectController.isGroupNode(item.$key), "node-select--node": !projectController.isGroupNode(item.$key)}'>
     <input type='checkbox'
            ng-model='item.checked'
-           ng-if='item.order!==0'/>
+           ng-if='item.order!==0'
+           ng-show='!(projectController.showCreateGroup || projectController.showCreateNode || projectController.insertNodeMode || projectController.insertGroupMode)'
+    />
     <h6 ng-click='projectController.nodeClicked(item.$key)'
         style='display:inline; cursor:pointer'
         ng-class='{"groupHeader": projectController.isGroupNode(item.$key), "stepHeader": !projectController.isGroupNode(item.$key)}'
