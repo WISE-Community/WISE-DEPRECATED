@@ -606,6 +606,12 @@ public class AssetManager {
 							if ("application/zip".equals(file.getContentType()) ||
 								"application/x-zip".equals(file.getContentType()) ||
 								"application/x-zip-compressed".equals(file.getContentType())) {
+								// check if unzipped folder already exists. If so, delete it first.
+								String unzippedFolderName = filename.substring(0, filename.lastIndexOf(".zip"));
+								File unzippedFolder = new File(assetsDir, unzippedFolderName);
+								if (unzippedFolder.exists()) {
+									FileUtils.deleteDirectory(unzippedFolder);
+								}
 								// if user uploaded a zip file, unzip it
 								ZipFile zipFile = new ZipFile(asset);
 								Enumeration<? extends ZipEntry> entries = zipFile.entries();
