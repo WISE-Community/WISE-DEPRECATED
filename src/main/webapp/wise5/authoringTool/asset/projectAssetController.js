@@ -32,6 +32,7 @@ var ProjectAssetController = function () {
             return _this.projectAssets;
         }, function () {
             _this.projectAssetUsagePercentage = _this.projectAssets.totalFileSize / _this.projectAssetTotalSizeMax * 100;
+            _this.sortAssets(_this.assetSortBy); // make sure the assets are sorted by current sort field
         });
 
         // When user changes sort assets by
