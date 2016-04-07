@@ -2297,6 +2297,32 @@ View.prototype.isSignedInUserSharedTeacherWithRole = function(role) {
     return result;
 };
 
+/**
+ * If the string contains a comma, we will escape double quotes and 
+ * wrap the string in quotes for CSV
+ * @param str the string that will be a cell in the CSV
+ * @returns a string that represents a cell in the CSV
+ */
+View.prototype.wrapInQuotesForCSVIfNecessary = function(str) {
+	
+	var fixedStr = str;
+	
+	if (typeof str == 'string' && str.indexOf(',') != -1) {
+		// the string contains a comma so we need to wrap the string in qoutes
+		
+		// regex to match double quotes
+		var doubleQuoteRegEx = new RegExp(/"/, 'g');
+			
+		// escape all double quotes with a double quote
+		str = str.replace(doubleQuoteRegEx, '""');
+		
+		// wrap the value in quotes
+		fixedStr = '"' + str + '"';
+	}
+	
+	return fixedStr;
+};
+
 /* used to notify scriptloader that this script has finished loading */
 if(typeof eventManager != 'undefined'){
 	eventManager.fire('scriptLoaded', 'vle/view/view_utils.js');

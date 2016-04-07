@@ -424,12 +424,9 @@ MatchSequenceNode.prototype.getBucketsChoicesAreIn = function(nodeState, choiceI
 			if (bucketName == null) {
 				// it should never enter this case
 				bucketNames.push('?');
-			} else if (typeof bucketName == 'string' && bucketName.indexOf(',') != -1) {
-				// wrap the value in quotes if it contains a comma
-				bucketNames.push('"' + bucketName + '"');
 			} else {
 				// add the value into the cell
-				bucketNames.push(bucketName);
+				bucketNames.push(view.wrapInQuotesForCSVIfNecessary(bucketName));
 			}
 		}
 	}
@@ -614,14 +611,8 @@ MatchSequenceNode.prototype.generateMatchSequenceSpecialExportCSV = function(nod
 							// accumulate the choice ids so we can use them later
 							choiceIds.push(tempIdentifier);
 							
-							// add the choice value to the header row
-							if (typeof tempText == 'string' && tempText.indexOf(',') != -1) {
-								// wrap the value in quotes if it contains a comma
-								headerRow.push('"' + tempText + '"');
-							} else {
-								// add the value into the cell
-								headerRow.push(tempText);
-							}
+							// add the value to the row
+							headerRow.push(view.wrapInQuotesForCSVIfNecessary(tempText));
 						}
 					}
 				}
@@ -662,10 +653,10 @@ MatchSequenceNode.prototype.generateMatchSequenceSpecialExportCSV = function(nod
 
 			// add the period name
 			var periodName = classmate.periodName;
-			row.push(periodName);
+			row.push(view.wrapInQuotesForCSVIfNecessary(periodName));
 
 			// add the teacher name
-			row.push(teacherUserName);
+			row.push(view.wrapInQuotesForCSVIfNecessary(teacherUserName));
 
 			// add the project id
 			row.push(projectId);
@@ -674,7 +665,7 @@ MatchSequenceNode.prototype.generateMatchSequenceSpecialExportCSV = function(nod
 			row.push(parentProjectId);
 
 			// add the project name
-			row.push(projectName);
+			row.push(view.wrapInQuotesForCSVIfNecessary(projectName));
 
 			// add the run id
 			row.push(runId);
@@ -695,7 +686,7 @@ MatchSequenceNode.prototype.generateMatchSequenceSpecialExportCSV = function(nod
 				row.push(stepWorkId);
 
 				// add the step number and title
-				row.push(stepNumberAndTitle);
+				row.push(view.wrapInQuotesForCSVIfNecessary(stepNumberAndTitle));
 
 				// add the node type
 				row.push(nodeType);

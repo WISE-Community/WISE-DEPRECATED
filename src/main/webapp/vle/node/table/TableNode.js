@@ -1142,6 +1142,226 @@ TableNode.prototype.isCompleted = function(nodeVisits) {
 	return result;
 };
 
+/**
+ * Generate the special export csv for the table step
+ * @param nodeId the node id
+ */
+TableNode.prototype.generateTableSpecialExportCSV = function(nodeId) {
+
+	var rows = [];
+	var project = view.getProject();
+	var runId = view.getConfig().getConfigParam('runId');
+	var stepNumberAndTitle = project.getStepNumberAndTitle(nodeId);
+    var teacherUserName = view.userAndClassInfo.getTeacherUserInfo().userName;
+    var projectId = view.config.getConfigParam('projectId');
+    var parentProjectId = view.config.getConfigParam('parentProjectId');
+    var projectName = project.getTitle();
+    var nodeType = project.getNodeById(nodeId).type;
+
+    /*
+     * remove the Node part of the node type for example
+     * TableNode will be changed to Table
+     */
+    nodeType = nodeType.replace('Node', '');
+
+	var workgroupIds = view.userAndClassInfo.getWorkgroupIdsInClass();
+
+	var maxRows = 0;
+	var maxColumns = 0;
+
+    /*
+     * loop through all the workgroups to find the max number of
+     * rows and columns that any student has used
+     */
+	for (var w = 0; w < workgroupIds.length; w++) {
+
+		var workgroupId = workgroupIds[w];
+
+		var nodeVisits = view.model.getNodeVisitsByNodeIdAndWorkgroupId(nodeId, workgroupId);
+
+		if (nodeVisits != null && nodeVisits.length > 0) {
+
+			// get the latest node visit
+			var nodeVisit = nodeVisits[nodeVisits.length - 1];
+
+			var nodeStates = nodeVisit.nodeStates;
+
+			if (nodeStates != null && nodeStates.length > 0) {
+
+                // get the latest node state
+				var nodeState = nodeStates[nodeStates.length - 1];
+
+				var tableData = nodeState.tableData;
+
+				if (tableData != null) {
+					var numRows = 0;
+
+                    // get the number of columns in this student table
+					var numColumns = tableData.length;
+
+					if (numColumns > 0) {
+                        // get the number of rows in this student table
+						numRows = tableData[0].length;
+					}
+
+                    /*
+                     * update the max values if we have found a larger value
+                     * than what we have previously seen
+                     */
+
+					if (numRows > maxRows) {
+						maxRows = numRows;
+					}
+
+					if (numColumns > maxColumns) {
+						maxColumns = numColumns;
+					}
+				}
+			}
+		}
+	}
+
+    // add the metadata cells in the header row
+	var headerRow = [
+		'Workgroup Id',
+		'WISE Id 1',
+		'WISE Id 2',
+		'WISE Id 3',
+		'Class Period',
+		'Teacher Login',
+		'Project Id',
+		'Parent Project Id',
+		'Project Name',
+        'Run Id',
+        'Step Work Id',
+        'Step Title',
+        'Step Type'
+	];
+
+    // add the table cell labels in the header row
+	for (var y = 0; y < maxRows; y++) {
+		for (var x = 0; x < maxColumns; x++) {
+			headerRow.push('Row ' + (y + 1) + ' Column ' + (x + 1));
+		}
+	}
+
+    // add the header row to our rows
+	rows.push(headerRow);
+
+    // loop through all the workgroups to obtain the student data
+	for (var w = 0; w < workgroupIds.length; w++) {
+
+		var workgroupId = workgroupIds[w];
+		var classmate = view.userAndClassInfo.getClassmateByWorkgroupId(workgroupId);
+
+		if (classmate != null) {
+			var row = [];
+
+            // add the workgroup id cell
+			row.push(workgroupId);
+
+            // add the wise id cells
+            var wiseIds = classmate.userIds;
+			for (var wi = 0; wi < wiseIds.length; wi++) {
+				var wiseId = wiseIds[wi];
+
+				row.push(wiseId);
+			}
+
+            // add any necessary empty cells for wise ids (if the workgroup has less than 3 members)
+			var numEmptyWISEIdColumns = 3 - wiseIds.length;
+            if (numEmptyWISEIdColumns > 0) {
+                for (var e = 0; e < numEmptyWISEIdColumns; e++) {
+                    row.push("");
+                }
+            }
+
+            // add the period name
+			var periodName = classmate.periodName;
+			row.push(view.wrapInQuotesForCSVIfNecessary(periodName));
+
+            // add the teacher name
+			row.push(view.wrapInQuotesForCSVIfNecessary(teacherUserName));
+
+            // add the project id
+			row.push(projectId);
+
+            // add the parent project id
+			row.push(parentProjectId);
+
+            // add the project name
+			row.push(view.wrapInQuotesForCSVIfNecessary(projectName));
+
+            // add the run id
+			row.push(runId);
+
+			//row.push(''); // start date
+			//row.push(''); // end date
+
+            // get all the node visits for this student for the step
+			var nodeVisits = view.model.getNodeVisitsByNodeIdAndWorkgroupId(nodeId, workgroupId);
+
+			if (nodeVisits != null && nodeVisits.length > 0) {
+
+				// get the latest node visit
+				var nodeVisit = nodeVisits[nodeVisits.length - 1];
+
+                // add the step work id
+                var stepWorkId = parseInt(nodeVisit.id);
+                row.push(stepWorkId);
+
+                // add the step number and title
+                row.push(view.wrapInQuotesForCSVIfNecessary(stepNumberAndTitle));
+
+                // add the node type
+                row.push(nodeType);
+
+				var nodeStates = nodeVisit.nodeStates;
+
+				if (nodeStates != null && nodeStates.length > 0) {
+
+                    // get the latest node state
+					var nodeState = nodeStates[nodeStates.length - 1];
+
+                    if (nodeState != null) {
+                        // get the table data
+                        var tableData = nodeState.tableData;
+
+                        // loop through the rows
+                        for (var y = 0; y < maxRows; y++) {
+
+                            // loop through the columns
+                            for (var x = 0; x < maxColumns; x++) {
+                                var value = Table.prototype.getCellValue(x, y, tableData);
+
+                                if (value != null) {
+									// add the value to the row
+									row.push(view.wrapInQuotesForCSVIfNecessary(value));
+                                } else {
+                                    //this student does not have a cell for this table position
+                                    row.push('');
+                                }
+                            }
+                        }
+                    }
+				}
+			}
+
+            // add the workgroup's row
+			rows.push(row);
+		}
+	}
+
+    // get the csv string
+    var csvString = view.convertToCSVString(rows);
+
+    // get the file name
+    var fileName = 'Run_' + runId + '_Step_' + stepNumberAndTitle + '.csv';
+
+    // download the csv file
+    view.downloadCSV(fileName, csvString);
+};
+
 /*
  * Add this node to the node factory so the vle knows it exists.
  * TODO: rename both occurrences of TemplateNode
