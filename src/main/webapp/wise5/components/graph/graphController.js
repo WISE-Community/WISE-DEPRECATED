@@ -614,6 +614,7 @@ var GraphController = function () {
                     },
                     plotOptions: {
                         series: {
+                            stickyTracking: false,
                             point: {
                                 events: {
                                     drag: function drag(e) {
