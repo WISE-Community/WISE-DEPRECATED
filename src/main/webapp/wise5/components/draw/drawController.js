@@ -53,6 +53,12 @@ var DrawController = function () {
         // whether the student work has changed since last submit
         this.isSubmitDirty = false;
 
+        // whether the save button is shown or not
+        this.isSaveButtonVisible = false;
+
+        // whether the submit button is shown or not
+        this.isSubmitButtonVisible = false;
+
         // message to show next to save/submit buttons
         this.saveMessage = {
             text: '',
@@ -77,16 +83,11 @@ var DrawController = function () {
         // whether students can attach files to their work
         this.isStudentAttachmentEnabled = false;
 
-        // ["normal", "showStudentWorkOnly"]
-        // whether this component is to be rendered normally or as part of show student work.
-        // If showStudentWorkOnly, usually this means that this component is not editable and nothing will be saved
-        this.mode = "normal";
+        // the mode to load the component in e.g. 'student', 'grading', 'onlyShowWork'
+        this.mode = this.$scope.mode;
 
-        // setup
-        // set mode if it's passed in through the scope.
-        if (this.$scope.mode) {
-            this.mode = this.$scope.mode;
-        }
+        this.workgroupId = this.$scope.workgroupId;
+        this.teacherWorkgroupId = this.$scope.teacherWorkgroupId;
 
         // get the current node and node id
         var currentNode = this.StudentDataService.getCurrentNode();
@@ -105,7 +106,14 @@ var DrawController = function () {
             this.componentType = this.componentContent.type;
 
             if (this.mode === "student") {
+                this.isSaveButtonVisible = this.componentContent.showSaveButton;
+                this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+
                 this.drawingToolId = "drawingtool_" + this.nodeId + "_" + this.componentId;
+
+                // get the latest annotations
+                // TODO: watch for new annotations and update accordingly
+                this.latestAnnotations = this.$scope.$parent.nodeController.getLatestComponentAnnotations(this.componentId);
             } else if (this.mode === 'grading' || this.mode === "onlyShowWork") {
                 // get the component state from the scope
                 var componentState = this.$scope.componentState;

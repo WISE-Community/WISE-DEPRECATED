@@ -84,12 +84,15 @@ class GraphController {
         // whether the submit button is shown or not
         this.isSubmitButtonVisible = false;
 
+        // the latest annotations
+        this.latestAnnotations = null;
+
         // whether the reset graph button is shown or not
         this.isResetGraphButtonVisible = true;
-        
+
         // whether the select series input is shown or not
         this.isSelectSeriesVisible = true;
-        
+
         // the id of the chart element
         this.chartId = 'chart1';
 
@@ -106,20 +109,24 @@ class GraphController {
 
         // get the authoring component content
         this.authoringComponentContent = this.$scope.authoringComponentContent;
-        
+
         /*
-         * get the original component content. this is used when showing 
+         * get the original component content. this is used when showing
          * previous work from another component.
          */
         this.originalComponentContent = this.$scope.originalComponentContent;
 
+        // the mode to load the component in e.g. 'student', 'grading', 'onlyShowWork'
         this.mode = this.$scope.mode;
+
+        this.workgroupId = this.$scope.workgroupId;
+        this.teacherWorkgroupId = this.$scope.teacherWorkgroupId;
 
         if (this.componentContent != null) {
 
             // get the component id
             this.componentId = this.componentContent.id;
-            
+
             // set the chart id
             this.chartId = 'chart' + this.componentId;
 
@@ -129,6 +136,10 @@ class GraphController {
                 this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
                 this.isResetGraphButtonVisible = true;
                 this.isSelectSeriesVisible = true;
+
+                // get the latest annotations
+                // TODO: watch for new annotations and update accordingly
+                this.latestAnnotations = this.$scope.$parent.nodeController.getLatestComponentAnnotations(this.componentId);
             } else if (this.mode === 'grading') {
                 this.isPromptVisible = true;
                 this.isSaveButtonVisible = false;
@@ -394,7 +405,7 @@ class GraphController {
                 this.setupGraph();
             }
         }));
-        
+
         /*
          * Handle the delete key pressed event
          */
@@ -471,7 +482,7 @@ class GraphController {
             // the active series has not been set so we will set the active series to the first series
             this.setActiveSeriesByIndex(0);
         }
-        
+
         // loop through all the series and
         for (var s = 0; s < series.length; s++) {
             var tempSeries = series[s];
@@ -609,13 +620,13 @@ class GraphController {
                             events: {
                                 drag: function (e) {
                                     // the student has started dragging a point
-                                    
+
                                     //check if the student can change the graph
                                     if (!thisGraphController.isDisabled) {
-                                            
+
                                         // get the active series
                                         var activeSeries = thisGraphController.activeSeries;
-                                        
+
                                         if (activeSeries != null) {
                                             // check if the student is allowed to edit the active series
                                             if (activeSeries != null && thisGraphController.canEdit(activeSeries)) {
@@ -630,7 +641,7 @@ class GraphController {
 
                                     //check if the student can change the graph and that they were previously dragging a point
                                     if (!thisGraphController.isDisabled && thisGraphController.dragging) {
-                                        
+
                                         // get the active series
                                         var activeSeries = thisGraphController.activeSeries;
 
@@ -1640,7 +1651,7 @@ class GraphController {
      * Handle the delete key press
      */
     handleDeleteKeyPressed() {
-        
+
         // get the active series
         var series = this.activeSeries;
 
@@ -1656,7 +1667,7 @@ class GraphController {
             var index = null;
 
             if (selectedPoints != null) {
-                
+
                 // an array to hold the indexes of the selected points
                 var indexes = [];
 
@@ -1831,23 +1842,23 @@ class GraphController {
             this.$rootScope.$broadcast('doneExiting');
         }));
     };
-    
+
     /**
      * Check if a series is the active series. There can only be on active series.
      * @param series the series
      * @returns whether the series is the active series
      */
     isActiveSeries(series) {
-        
+
         // get the series index
         var seriesIndex = this.getSeriesIndex(series);
-        
-        // check if the series is the active series 
+
+        // check if the series is the active series
         var result = this.isActiveSeriesIndex(seriesIndex);
-        
+
         return result;
     }
-    
+
     /**
      * Check if a series index is the active series index. There can only be
      * one active series.
@@ -1855,27 +1866,27 @@ class GraphController {
      * @returns whether the series is the active series
      */
     isActiveSeriesIndex(seriesIndex) {
-        
+
         var result = false;
-        
+
         if (this.series.indexOf(this.activeSeries) === seriesIndex) {
             // the series is the active series
             result = true;
         }
-        
+
         return result;
     }
-    
+
     /**
      * Whether to show the select series input
      * @returns whether to show the select series input
      */
     showSelectSeries() {
         var show = false;
-        
+
         if (this.isSelectSeriesVisible && this.series.length > 1) {
             /*
-             * we are in a mode the shows the select series input and there is 
+             * we are in a mode the shows the select series input and there is
              * more than one series
              */
             show = true;

@@ -1272,10 +1272,14 @@ class ProjectService {
         let project = this.project;
 
         if (project && project.themeSettings) {
-            themeSettings = project.themeSettings;
+            if (project.theme) {
+                themeSettings = project.themeSettings[project.theme];
+            } else {
+                themeSettings = project.themeSettings["default"];
+            }
         }
 
-        return themeSettings;
+        return themeSettings ? themeSettings : {};
     };
 
     /**

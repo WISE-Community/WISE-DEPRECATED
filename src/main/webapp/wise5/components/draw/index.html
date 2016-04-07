@@ -1,110 +1,99 @@
-<div ng-controller='DrawController as drawController' style='display: flex'>
-    <div style='flex: 1'>
-        <div ng-if='drawController.mode === "authoring"'>
-                    <textarea ng-model='drawController.authoringComponentContent.prompt'
-                              ng-change='drawController.authoringViewComponentChanged()'
-                              ng-model-options='{ debounce: 1000 }'
-                              rows='10'
-                              cols='100'></textarea>
-                    <br/>
-                    Max Score:
-                    <input type='number'
-                           ng-model='drawController.authoringComponentContent.maxScore'
-                           ng-change='drawController.authoringViewComponentChanged()'
-                           ng-model-options='{ debounce: 1000 }'
-                           style='width: 3em'/>
-                    <br/>
-                    <textarea ng-model='drawController.authoringComponentContentJSONString'
-                              ng-change='drawController.advancedAuthoringViewComponentChanged()'
-                              ng-model-options='{ debounce: 1000 }'
-                              rows='10'
-                              cols='100'></textarea>
-        </div>
-        <div id='prompt' compile='drawController.getPrompt()'></div>
-        <meta charset="utf-8">
-        <link rel="stylesheet" type="text/css" href="wise5/lib/drawingTool/drawing-tool.css">
-        <div class="component-content__actions" layout="row">
-            <md-button class="md-accent" ng-show="drawController.isStudentAttachmentEnabled"
-                       ng-click="nodeController.showStudentAssets($event, component.id, drawController.isDisabled)">
-                <md-icon>image</md-icon> Insert file
-            </md-button>
-        </div>
-            <div class="container"
-             data-drop="true"
-             jqyoui-droppable="{onDrop: 'drawController.dropCallback(item, $index)'}">
-            <div id="{{drawController.drawingToolId}}"></div>
-            <!--
-            <h2>API examples:</h2>
-            <div>
-              <button id="set-background">Set background</button>
-              <input type="text" id="background-src" value="https://ccshutterbugtest.s3.amazonaws.com/7a72684bb7e.png" size="70" />
-              <button id="resize-background">Resize background to canvas</button>
-              <button id="resize-canvas">Resize cavas to background</button>
-              <button id="shrink-background">Shrink background to cavas</button>
-            </div>
-            <div>
-              <button id="clear">Clear</button>
-              <button id="save">Save</button>
-              <button id="load" disabled>Load</button>
-            </div>
-            -->
-        </div>
-        <md-button class="revision md-icon-button" ng-click='nodeController.showRevisions($event, component.id)'
-                   ng-if="nodeController.getRevisions(component.id).length > 1">
-            <md-icon> history </md-icon>
-            <md-tooltip md-direction="top">{{nodeController.getRevisions(component.id).length}} Versions</md-tooltip>
-        </md-button>
-        <div ng-if='drawController.mode == "student"'>
-            <annotation type='score'
-                        mode='{{drawController.mode}}'
-                        nodeid='{{drawController.nodeId}}'
-                        componentid='{{drawController.componentId}}'
-                        fromworkgroupid='{{teacherWorkgroupId}}'
-                        toworkgroupid='{{workgroupId}}'
-                        componentstateid='{{componentState.id}}'></annotation>
-            <br/>
-            <annotation type='comment'
-                        mode='{{drawController.mode}}'
-                        nodeid='{{drawController.nodeId}}'
-                        componentid='{{drawController.componentId}}'
-                        fromworkgroupid='{{teacherWorkgroupId}}'
-                        toworkgroupid='{{workgroupId}}'
-                        componentstateid='{{componentState.id}}'></annotation>
-        </div>
-        <div class="component-content__actions" layout="row" layout-align="start center">
-          <md-button class="md-raised md-primary"
-                  ng-click='drawController.submitButtonClicked()'
-                  ng-disabled='drawController.isDisabled || !drawController.isSubmitDirty'
-                  ng-show='drawController.showSubmitButton()'>Submit</md-button>
-          <md-button class="md-primary"
-               ng-class="{'md-raised': !drawController.showSubmitButton()}"
-               ng-click='drawController.saveButtonClicked()'
-               ng-disabled='drawController.isDisabled || !drawController.isDirty'
-               ng-show='drawController.showSaveButton()'>Save</md-button>
-               <span ng-if="drawController.showSaveButton() || drawController.showSubmitButton()"
-                     ng-show="drawController.saveMessage.text"
-                     class="component-content__actions__info md-caption">
-                     {{drawController.saveMessage.text}} <span class="component-content__actions__more"><md-tooltip md-direction="top">{{ drawController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="drawController.saveMessage.time"></span></span>
-               </span>
-        </div>
+<link rel="stylesheet" type="text/css" href="wise5/lib/drawingTool/drawing-tool.css">
+
+<div ng-controller='DrawController as drawController' flex>
+    <div ng-if='drawController.mode === "authoring"'>
+                <textarea ng-model='drawController.authoringComponentContent.prompt'
+                          ng-change='drawController.authoringViewComponentChanged()'
+                          ng-model-options='{ debounce: 1000 }'
+                          rows='10'
+                          cols='100'></textarea>
+                <br/>
+                Max Score:
+                <input type='number'
+                       ng-model='drawController.authoringComponentContent.maxScore'
+                       ng-change='drawController.authoringViewComponentChanged()'
+                       ng-model-options='{ debounce: 1000 }'
+                       style='width: 3em'/>
+                <br/>
+                <textarea ng-model='drawController.authoringComponentContentJSONString'
+                          ng-change='drawController.advancedAuthoringViewComponentChanged()'
+                          ng-model-options='{ debounce: 1000 }'
+                          rows='10'
+                          cols='100'></textarea>
     </div>
-    <div ng-if='drawController.mode == "grading"' style='width: 400px'>
+    <div class="component__prompt">
+        <div class="component__prompt__content" compile='drawController.getPrompt()'></div>
+        <possible-score max-score="drawController.componentContent.maxScore"
+                        ng-if="drawController.mode === 'student' && !drawController.latestAnnotations.score"></possible-score>
+    </div>
+    <div class="component__actions" layout="row">
+        <md-button class="md-accent" ng-show="drawController.isStudentAttachmentEnabled"
+                   ng-click="nodeController.showStudentAssets($event, component.id, drawController.isDisabled)">
+            <md-icon>image</md-icon> Insert file
+        </md-button>
+    </div>
+    <div class="container"
+         data-drop="true"
+         jqyoui-droppable="{onDrop: 'drawController.dropCallback(item, $index)'}">
+        <div id="{{drawController.drawingToolId}}"></div>
+        <!--
+        <h2>API examples:</h2>
+        <div>
+          <button id="set-background">Set background</button>
+          <input type="text" id="background-src" value="https://ccshutterbugtest.s3.amazonaws.com/7a72684bb7e.png" size="70" />
+          <button id="resize-background">Resize background to canvas</button>
+          <button id="resize-canvas">Resize cavas to background</button>
+          <button id="shrink-background">Shrink background to cavas</button>
+        </div>
+        <div>
+          <button id="clear">Clear</button>
+          <button id="save">Save</button>
+          <button id="load" disabled>Load</button>
+        </div>
+        -->
+    </div>
+    <component-annotations ng-if="drawController.mode === 'student'"
+                           score-annotation='drawController.latestAnnotations.score'
+                           comment-annotation='drawController.latestAnnotations.comment'
+                           max-score="drawController.componentContent.maxScore"></component-annotations>
+    <md-button class="revision md-icon-button" ng-click='nodeController.showRevisions($event, component.id)'
+               ng-if="nodeController.getRevisions(component.id).length > 1">
+        <md-icon> history </md-icon>
+        <md-tooltip md-direction="top">{{nodeController.getRevisions(component.id).length}} Versions</md-tooltip>
+    </md-button>
+    <div class="component__actions" layout="row" layout-align="start center">
+      <md-button class="md-raised md-primary"
+              ng-click='drawController.submitButtonClicked()'
+              ng-disabled='drawController.isDisabled || !drawController.isSubmitDirty'
+              ng-show='drawController.showSubmitButton()'>Submit</md-button>
+      <md-button class="md-primary"
+           ng-class="{'md-raised': !drawController.showSubmitButton()}"
+           ng-click='drawController.saveButtonClicked()'
+           ng-disabled='drawController.isDisabled || !drawController.isDirty'
+           ng-show='drawController.showSaveButton()'>Save</md-button>
+           <span ng-if="drawController.showSaveButton() || drawController.showSubmitButton()"
+                 ng-show="drawController.saveMessage.text"
+                 class="component__actions__info md-caption">
+                 {{drawController.saveMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ drawController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="drawController.saveMessage.time"></span></span>
+           </span>
+    </div>
+    <div ng-if='drawController.mode === "grading" && drawController.componentContent.maxScore > -1'>
         <annotation type='score'
-                    mode='{{drawController.mode}}'
-                    nodeid='{{drawController.nodeId}}'
-                    componentid='{{drawController.componentId}}'
-                    fromworkgroupid='{{teacherWorkgroupId}}'
-                    toworkgroupid='{{workgroupId}}'
-                    componentstateid='{{componentState.id}}'
+                    mode='drawController.mode'
+                    node-id='drawController.nodeId'
+                    component-id='drawController.componentId'
+                    from-workgroup-id='teacherWorkgroupId'
+                    to-workgroup-id='workgroupId'
+                    component-state-id='componentState.id'
                     active='true'></annotation>
         <br/>
         <annotation type='comment'
-                    mode='{{drawController.mode}}'
-                    nodeid='{{drawController.nodeId}}'
-                    componentid='{{drawController.componentId}}'
-                    fromworkgroupid='{{teacherWorkgroupId}}'
-                    toworkgroupid='{{workgroupId}}'
-                    componentstateid='{{componentState.id}}'
+                    mode='drawController.mode'
+                    node-id='drawController.nodeId'
+                    component-id='drawController.componentId'
+                    from-workgroup-id='teacherWorkgroupId'
+                    to-workgroup-id='workgroupId'
+                    component-state-id='componentState.id'
                     active='true'></annotation>
     </div>
 </div>

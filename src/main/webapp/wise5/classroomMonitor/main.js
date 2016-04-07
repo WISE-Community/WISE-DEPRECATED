@@ -44,10 +44,6 @@ var _angularWebsocket = require('angular-websocket');
 
 var _angularWebsocket2 = _interopRequireDefault(_angularWebsocket);
 
-var _annotationController = require('../controllers/annotationController');
-
-var _annotationController2 = _interopRequireDefault(_annotationController);
-
 var _annotationService = require('../services/annotationService');
 
 var _annotationService2 = _interopRequireDefault(_annotationService);
@@ -214,7 +210,7 @@ var _utilService2 = _interopRequireDefault(_utilService);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var mainModule = _angular2.default.module('classroomMonitor', ['angularMoment', 'angular-toArrayFilter', 'directives', 'highcharts-ng', 'ngAnimate', 'ngAria', 'ngFileUpload', 'ngMaterial', 'ngWebSocket', 'pascalprecht.translate', 'ui.router']).service(_annotationService2.default.name, _annotationService2.default).service(_configService2.default.name, _configService2.default).service(_discussionService2.default.name, _discussionService2.default).service(_drawService2.default.name, _drawService2.default).service(_embeddedService2.default.name, _embeddedService2.default).service(_graphService2.default.name, _graphService2.default).service(_labelService2.default.name, _labelService2.default).service(_matchService2.default.name, _matchService2.default).service(_multipleChoiceService2.default.name, _multipleChoiceService2.default).service(_nodeService2.default.name, _nodeService2.default).service(_openResponseService2.default.name, _openResponseService2.default).service(_outsideURLService2.default.name, _outsideURLService2.default).service(_projectService2.default.name, _projectService2.default).service(_sessionService2.default.name, _sessionService2.default).service(_studentAssetService2.default.name, _studentAssetService2.default).service(_studentDataService2.default.name, _studentDataService2.default).service(_studentStatusService2.default.name, _studentStatusService2.default).service(_studentWebSocketService2.default.name, _studentWebSocketService2.default).service(_tableService2.default.name, _tableService2.default).service(_teacherDataService2.default.name, _teacherDataService2.default).service(_teacherWebSocketService2.default.name, _teacherWebSocketService2.default).service(_utilService2.default.name, _utilService2.default).controller(_annotationController2.default.name, _annotationController2.default).controller(_classroomMonitorController2.default.name, _classroomMonitorController2.default).controller(_discussionController2.default.name, _discussionController2.default).controller(_drawController2.default.name, _drawController2.default).controller(_embeddedController2.default.name, _embeddedController2.default).controller(_graphController2.default.name, _graphController2.default).controller(_htmlController2.default.name, _htmlController2.default).controller(_labelController2.default.name, _labelController2.default).controller(_matchController2.default.name, _matchController2.default).controller(_multipleChoiceController2.default.name, _multipleChoiceController2.default).controller(_nodeGradingController2.default.name, _nodeGradingController2.default).controller(_nodeProgressController2.default.name, _nodeProgressController2.default).controller(_openResponseController2.default.name, _openResponseController2.default).controller(_outsideURLController2.default.name, _outsideURLController2.default).controller(_studentGradingController2.default.name, _studentGradingController2.default).controller(_studentProgressController2.default.name, _studentProgressController2.default).controller(_tableController2.default.name, _tableController2.default).config(['$urlRouterProvider', '$stateProvider', '$translateProvider', '$translatePartialLoaderProvider', '$controllerProvider', '$mdThemingProvider', function ($urlRouterProvider, $stateProvider, $translateProvider, $translatePartialLoaderProvider, $controllerProvider, $mdThemingProvider) {
+var mainModule = _angular2.default.module('classroomMonitor', ['angularMoment', 'angular-toArrayFilter', 'directives', 'highcharts-ng', 'ngAnimate', 'ngAria', 'ngFileUpload', 'ngMaterial', 'ngWebSocket', 'pascalprecht.translate', 'ui.router']).service(_annotationService2.default.name, _annotationService2.default).service(_configService2.default.name, _configService2.default).service(_discussionService2.default.name, _discussionService2.default).service(_drawService2.default.name, _drawService2.default).service(_embeddedService2.default.name, _embeddedService2.default).service(_graphService2.default.name, _graphService2.default).service(_labelService2.default.name, _labelService2.default).service(_matchService2.default.name, _matchService2.default).service(_multipleChoiceService2.default.name, _multipleChoiceService2.default).service(_nodeService2.default.name, _nodeService2.default).service(_openResponseService2.default.name, _openResponseService2.default).service(_outsideURLService2.default.name, _outsideURLService2.default).service(_projectService2.default.name, _projectService2.default).service(_sessionService2.default.name, _sessionService2.default).service(_studentAssetService2.default.name, _studentAssetService2.default).service(_studentDataService2.default.name, _studentDataService2.default).service(_studentStatusService2.default.name, _studentStatusService2.default).service(_studentWebSocketService2.default.name, _studentWebSocketService2.default).service(_tableService2.default.name, _tableService2.default).service(_teacherDataService2.default.name, _teacherDataService2.default).service(_teacherWebSocketService2.default.name, _teacherWebSocketService2.default).service(_utilService2.default.name, _utilService2.default).controller(_classroomMonitorController2.default.name, _classroomMonitorController2.default).controller(_discussionController2.default.name, _discussionController2.default).controller(_drawController2.default.name, _drawController2.default).controller(_embeddedController2.default.name, _embeddedController2.default).controller(_graphController2.default.name, _graphController2.default).controller(_htmlController2.default.name, _htmlController2.default).controller(_labelController2.default.name, _labelController2.default).controller(_matchController2.default.name, _matchController2.default).controller(_multipleChoiceController2.default.name, _multipleChoiceController2.default).controller(_nodeGradingController2.default.name, _nodeGradingController2.default).controller(_nodeProgressController2.default.name, _nodeProgressController2.default).controller(_openResponseController2.default.name, _openResponseController2.default).controller(_outsideURLController2.default.name, _outsideURLController2.default).controller(_studentGradingController2.default.name, _studentGradingController2.default).controller(_studentProgressController2.default.name, _studentProgressController2.default).controller(_tableController2.default.name, _tableController2.default).config(['$urlRouterProvider', '$stateProvider', '$translateProvider', '$translatePartialLoaderProvider', '$controllerProvider', '$mdThemingProvider', function ($urlRouterProvider, $stateProvider, $translateProvider, $translatePartialLoaderProvider, $controllerProvider, $mdThemingProvider) {
 
     $urlRouterProvider.otherwise('/studentProgress');
 
@@ -307,7 +303,7 @@ var mainModule = _angular2.default.module('classroomMonitor', ['angularMoment', 
 
     // ngMaterial default theme configuration
     // TODO: make dynamic and support alternate themes; allow projects to specify theme parameters and settings
-    $mdThemingProvider.definePalette('primaryPaletteWise', {
+    $mdThemingProvider.definePalette('primary', {
         '50': 'e1f0f4',
         '100': 'b8dbe4',
         '200': '8ec6d4',
@@ -329,7 +325,7 @@ var mainModule = _angular2.default.module('classroomMonitor', ['angularMoment', 
         'contrastLightColors': undefined // could also specify this if default was 'dark'
     });
 
-    $mdThemingProvider.definePalette('accentPaletteWise', {
+    $mdThemingProvider.definePalette('accent', {
         '50': 'fde9e6',
         '100': 'fbcbc4',
         '200': 'f8aca1',
@@ -344,14 +340,27 @@ var mainModule = _angular2.default.module('classroomMonitor', ['angularMoment', 
         'A200': 'ff7061',
         'A400': 'ff3829',
         'A700': 'cc1705',
-        'contrastDefaultColor': 'light', // whether, by default, text (contrast)
-        // on this palette should be dark or light
-        'contrastDarkColors': ['50', '100', //hues which contrast should be 'dark' by default
-        '200', '300', 'A100'],
-        'contrastLightColors': undefined // could also specify this if default was 'dark'
+        'contrastDefaultColor': 'light',
+        'contrastDarkColors': ['50', '100', '200', '300', 'A100'],
+        'contrastLightColors': undefined
     });
 
-    $mdThemingProvider.theme('default').primaryPalette('primaryPaletteWise').accentPalette('accentPaletteWise');
+    $mdThemingProvider.theme('default').primaryPalette('primary').accentPalette('accent', {
+        'default': '500'
+    }).warnPalette('red', {
+        'default': 'A700'
+    });
+
+    var lightMap = $mdThemingProvider.extendPalette('grey', {
+        'A100': 'ffffff'
+    });
+    $mdThemingProvider.definePalette('light', lightMap);
+
+    $mdThemingProvider.theme('light').primaryPalette('light', {
+        'default': 'A100'
+    }).accentPalette('primary');
+
+    $mdThemingProvider.setDefaultTheme('default');
 }]);
 
 exports.default = mainModule;

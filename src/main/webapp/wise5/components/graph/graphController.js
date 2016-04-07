@@ -91,6 +91,9 @@ var GraphController = function () {
         // whether the submit button is shown or not
         this.isSubmitButtonVisible = false;
 
+        // the latest annotations
+        this.latestAnnotations = null;
+
         // whether the reset graph button is shown or not
         this.isResetGraphButtonVisible = true;
 
@@ -115,12 +118,16 @@ var GraphController = function () {
         this.authoringComponentContent = this.$scope.authoringComponentContent;
 
         /*
-         * get the original component content. this is used when showing 
+         * get the original component content. this is used when showing
          * previous work from another component.
          */
         this.originalComponentContent = this.$scope.originalComponentContent;
 
+        // the mode to load the component in e.g. 'student', 'grading', 'onlyShowWork'
         this.mode = this.$scope.mode;
+
+        this.workgroupId = this.$scope.workgroupId;
+        this.teacherWorkgroupId = this.$scope.teacherWorkgroupId;
 
         if (this.componentContent != null) {
 
@@ -136,6 +143,10 @@ var GraphController = function () {
                 this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
                 this.isResetGraphButtonVisible = true;
                 this.isSelectSeriesVisible = true;
+
+                // get the latest annotations
+                // TODO: watch for new annotations and update accordingly
+                this.latestAnnotations = this.$scope.$parent.nodeController.getLatestComponentAnnotations(this.componentId);
             } else if (this.mode === 'grading') {
                 this.isPromptVisible = true;
                 this.isSaveButtonVisible = false;
@@ -2029,7 +2040,7 @@ var GraphController = function () {
 
             if (this.isSelectSeriesVisible && this.series.length > 1) {
                 /*
-                 * we are in a mode the shows the select series input and there is 
+                 * we are in a mode the shows the select series input and there is
                  * more than one series
                  */
                 show = true;

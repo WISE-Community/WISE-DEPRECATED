@@ -1,6 +1,7 @@
-.component-content {
+.component {
     padding: 0 16px;
     margin: 24px 0;
+    text-overflow: auto;
 
     @media only screen and (min-width: $layout-breakpoint-sm) {
         padding: 0 24px;
@@ -13,7 +14,7 @@
     }
 }
 
-.component-content__actions {
+.component__actions {
     .md-button:first-child {
         margin-left: 0;
     }
@@ -23,19 +24,23 @@
     }
 }
 
-.component-content__actions__info {
+.component__actions__info {
     font-style: italic;
     margin-left: 8px;
     opacity: 0.8;
     color: lighten(color('accent-2'), 5%);
 }
 
-.component-content__actions__more {
+.component__actions__more {
     border-bottom: 1px dotted;
 }
 
 .component__prompt {
-    margin: 0 4px 16px;
+    margin-bottom: 8px;
+}
+
+.component__prompt__content {
+    display: inline;
 }
 
 .component__attachment {
@@ -78,7 +83,7 @@
     }
 }
 
-.component-revision {
+.component__revision {
     margin: 8px 0;
     padding: 8px;
 
@@ -87,12 +92,12 @@
     }
 }
 
-.component-revision__content {
+.component__revision__content {
     padding: 4px 0 8px 0;
     border-bottom: 1px solid color('gray-light');
 }
 
-.component-revision__actions {
+.component__revision__actions {
     color: color('gray-dark');
     padding-top: 4px;
 }

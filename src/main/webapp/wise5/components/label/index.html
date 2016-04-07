@@ -1,170 +1,153 @@
-<html>
-    <head></head>
-    <body>
-        <div class='openResponse' ng-controller='LabelController as labelController' style='display: flex'>
-            <div style='flex: 1'>
-                <style>
-                    {{labelController.nodeContent.style}}
-                </style>
-                <div ng-if='labelController.mode === "authoring"'>
-                    <textarea ng-model='labelController.authoringComponentContent.prompt'
-                              ng-change='labelController.authoringViewComponentChanged()'
-                              ng-model-options='{ debounce: 1000 }'
-                              rows='10'
-                              cols='100'></textarea>
-                    <br/>
-                    Background Image: <input ng-model='labelController.authoringComponentContent.backgroundImage'
+<style>
+    {{labelController.nodeContent.style}}
+</style>
+
+<div class='openResponse' ng-controller='LabelController as labelController' flex>
+    <div ng-if='labelController.mode === "authoring"'>
+        <textarea ng-model='labelController.authoringComponentContent.prompt'
+                  ng-change='labelController.authoringViewComponentChanged()'
+                  ng-model-options='{ debounce: 1000 }'
+                  rows='10'
+                  cols='100'></textarea>
+        <br/>
+        Background Image: <input ng-model='labelController.authoringComponentContent.backgroundImage'
+                                 ng-change='labelController.authoringViewComponentChanged()'
+                                 ng-model-options='{ debounce: 1000 }'
+                                 size='50'/>
+        <br/>
+        Can Student Create Labels: <input type='checkbox'
+                                          ng-model='labelController.authoringComponentContent.canCreateLabels'
+                                          ng-change='labelController.authoringViewComponentChanged()'/>
+        <br/>
+        Can Student Delete Labels: <input type='checkbox'
+                                          ng-model='labelController.authoringComponentContent.canDeleteLabels'
+                                          ng-change='labelController.authoringViewComponentChanged()'/>
+        <br/>
+        Width: <input type='number'
+                      ng-model='labelController.authoringComponentContent.width'
+                      ng-change='labelController.authoringViewComponentChanged()'
+                      ng-model-options='{ debounce: 1000 }'
+                      style='width: 4em'/>
+        Height: <input type='number'
+                       ng-model='labelController.authoringComponentContent.height'
+                       ng-change='labelController.authoringViewComponentChanged()'
+                       ng-model-options='{ debounce: 1000 }'
+                       style='width: 4em'/>
+        <br/>
+        Labels <button ng-click='labelController.authoringAddLabelClicked()'>Add Label</button>
+        <div ng-repeat='label in labelController.authoringComponentContent.labels track by $index'
+             style='border: 1px solid black'>
+            Text: <input ng-model='label.text'
+                         ng-change='labelController.authoringViewComponentChanged()'
+                         ng-model-options='{ debounce: 1000 }'/>
+            <br/>
+            Color: <input ng-model='label.color'
+                          ng-change='labelController.authoringViewComponentChanged()'
+                          ng-model-options='{ debounce: 1000 }'/>
+            <br/>
+            X Location: <input type='number'
+                               ng-model='label.pointX'
+                               ng-change='labelController.authoringViewComponentChanged()'
+                               ng-model-options='{ debounce: 1000 }'/>
+            Y Location: <input type='number'
+                               ng-model='label.pointY'
+                               ng-change='labelController.authoringViewComponentChanged()'
+                               ng-model-options='{ debounce: 1000 }'/>
+            <br/>
+            Relative Text X Location: <input type='number'
+                                             ng-model='label.textX'
                                              ng-change='labelController.authoringViewComponentChanged()'
-                                             ng-model-options='{ debounce: 1000 }'
-                                             size='50'/>
-                    <br/>
-                    Can Student Create Labels: <input type='checkbox'
-                                                      ng-model='labelController.authoringComponentContent.canCreateLabels'
-                                                      ng-change='labelController.authoringViewComponentChanged()'/>
-                    <br/>
-                    Can Student Delete Labels: <input type='checkbox'
-                                                      ng-model='labelController.authoringComponentContent.canDeleteLabels'
-                                                      ng-change='labelController.authoringViewComponentChanged()'/>
-                    <br/>
-                    Width: <input type='number'
-                                  ng-model='labelController.authoringComponentContent.width'
-                                  ng-change='labelController.authoringViewComponentChanged()'
-                                  ng-model-options='{ debounce: 1000 }'
-                                  style='width: 4em'/>
-                    Height: <input type='number'
-                                   ng-model='labelController.authoringComponentContent.height'
-                                   ng-change='labelController.authoringViewComponentChanged()'
-                                   ng-model-options='{ debounce: 1000 }'
-                                   style='width: 4em'/>
-                    <br/>
-                    Labels <button ng-click='labelController.authoringAddLabelClicked()'>Add Label</button>
-                    <div ng-repeat='label in labelController.authoringComponentContent.labels track by $index'
-                         style='border: 1px solid black'>
-                        Text: <input ng-model='label.text'
-                                     ng-change='labelController.authoringViewComponentChanged()'
-                                     ng-model-options='{ debounce: 1000 }'/>
-                        <br/>
-                        Color: <input ng-model='label.color'
-                                      ng-change='labelController.authoringViewComponentChanged()'
-                                      ng-model-options='{ debounce: 1000 }'/>
-                        <br/>
-                        X Location: <input type='number'
-                                           ng-model='label.pointX'
-                                           ng-change='labelController.authoringViewComponentChanged()'
-                                           ng-model-options='{ debounce: 1000 }'/>
-                        Y Location: <input type='number'
-                                           ng-model='label.pointY'
-                                           ng-change='labelController.authoringViewComponentChanged()'
-                                           ng-model-options='{ debounce: 1000 }'/>
-                        <br/>
-                        Relative Text X Location: <input type='number'
-                                                         ng-model='label.textX'
-                                                         ng-change='labelController.authoringViewComponentChanged()'
-                                                         ng-model-options='{ debounce: 1000 }'/>
-                        Relative Text Y Location: <input type='number'
-                                                         ng-model='label.textY'
-                                                         ng-change='labelController.authoringViewComponentChanged()'
-                                                         ng-model-options='{ debounce: 1000 }'/>
-                        <br/>
-                        <button ng-click='labelController.authoringDeleteLabelClicked($index)'>Delete Label</button>
-                    </div>
-                    <br/>
-                    Max Score:
-                    <input type='number'
-                           ng-model='labelController.authoringComponentContent.maxScore'
-                           ng-change='labelController.authoringViewComponentChanged()'
-                           ng-model-options='{ debounce: 1000 }'
-                           style='width: 3em'/>
-                    <br/>
-                    <textarea ng-model='labelController.authoringComponentContentJSONString'
-                              ng-change='labelController.advancedAuthoringViewComponentChanged()'
-                              ng-model-options='{ debounce: 1000 }'
-                              rows='10'
-                              cols='100'></textarea>
-                </div>
-            <md-input-container class="input-container md-block input-container--open-response input-container--component md-no-float">
-                <label class="input-label md-no-float" ng-disabled="labelController.isDisabled"
-                       compile="labelController.getPrompt()" ng-if="labelController.showPrompt()"></label>
-                <div class="input-wrapper">
-                    <md-button class="md-raised md-primary"
-                               ng-click="labelController.newLabelButtonClicked()"
-                               ng-disabled="labelController.isDisabled"
-                               ng-if="labelController.showNewLabelButton()">New Label</md-button>
-                    <span ng-show="labelController.createLabelMode">{{labelController.newLabelMessage}}</span>
-                    <md-button class="md-raised md-primary"
-                               ng-click="labelController.cancelButtonClicked()"
-                               ng-disabled="labelController.isDisabled"
-                               ng-if="labelController.showCancelButton()">Cancel</md-button>
-                    <div id="canvasParent">
-                        <canvas id="{{labelController.canvasId}}" width="800" height="600" style="border:1px solid black;"></canvas>
-                    </div>
-                </div>
-            </md-input-container>
-                <div class="component-content__actions" ng-show="labelController.attachments.length && labelController.isStudentAttachmentEnabled" layout="row" layout-wrap="true">
-                    <div class="component__add-attachment">
-                        <md-button class="md-accent"
-                                   ng-click="nodeController.showStudentAssets($event, component.id, labelController.isDisabled)">
-                            <md-icon>image</md-icon> <span>Add File</span>
-                        </md-button>
-                    </div>
-                    <div class="component__attachment" ng-repeat="attachment in labelController.attachments">
-                        <img ng-src="{{attachment.iconURL}}" class="component__attachment__content" />
-                        <md-button class="component__attachment__delete" ng-click='labelController.removeAttachment(attachment)' title="Remove file"><md-icon>cancel</md-icon></md-button>
-                    </div>
-                </div>
-                <div ng-if='labelController.mode == "student"'>
-                    <annotation type='score'
-                                mode='{{labelController.mode}}'
-                                nodeid='{{labelController.nodeId}}'
-                                componentid='{{labelController.componentId}}'
-                                fromworkgroupid='{{teacherWorkgroupId}}'
-                                toworkgroupid='{{workgroupId}}'
-                                componentstateid='{{componentState.id}}'></annotation>
-                    <br/>
-                    <annotation type='comment'
-                                mode='{{labelController.mode}}'
-                                nodeid='{{labelController.nodeId}}'
-                                componentid='{{labelController.componentId}}'
-                                fromworkgroupid='{{teacherWorkgroupId}}'
-                                toworkgroupid='{{workgroupId}}'
-                                componentstateid='{{componentState.id}}'></annotation>
-                </div>
-                <div class="component-content__actions" layout="row" layout-align="start center">
-                    <md-button class="md-raised md-primary"
-                               ng-click='labelController.submitButtonClicked()'
-                               ng-if='labelController.showSubmitButton()'
-                               ng-disabled='labelController.isDisabled || !labelController.isSubmitDirty'>Submit</md-button>
-                    <md-button class="md-primary"
-                               ng-class="{'md-raised': !labelController.showSubmitButton()}"
-                               ng-click='labelController.saveButtonClicked()'
-                               ng-if='labelController.showSaveButton()'
-                               ng-disabled='labelController.isDisabled || !labelController.isDirty'>Save</md-button>
-                    <span ng-if="labelController.showSaveButton() || labelController.showSubmitButton()"
-                             ng-show="labelController.saveMessage.text"
-                             class="component-content__actions__info md-caption">
-                             {{labelController.saveMessage.text}} <span class="component-content__actions__more"><md-tooltip md-direction="top">{{ labelController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="labelController.saveMessage.time"></span></span>
-                    </span>
-                </div>
+                                             ng-model-options='{ debounce: 1000 }'/>
+            Relative Text Y Location: <input type='number'
+                                             ng-model='label.textY'
+                                             ng-change='labelController.authoringViewComponentChanged()'
+                                             ng-model-options='{ debounce: 1000 }'/>
+            <br/>
+            <button ng-click='labelController.authoringDeleteLabelClicked($index)'>Delete Label</button>
+        </div>
+        <br/>
+        Max Score:
+        <input type='number'
+               ng-model='labelController.authoringComponentContent.maxScore'
+               ng-change='labelController.authoringViewComponentChanged()'
+               ng-model-options='{ debounce: 1000 }'
+               style='width: 3em'/>
+        <br/>
+        <textarea ng-model='labelController.authoringComponentContentJSONString'
+                  ng-change='labelController.advancedAuthoringViewComponentChanged()'
+                  ng-model-options='{ debounce: 1000 }'
+                  rows='10'
+                  cols='100'></textarea>
+    </div>
+    <div class="component__prompt">
+        <div class="component__prompt__content" compile='labelController.getPrompt()'></div>
+        <possible-score max-score="labelController.componentContent.maxScore"
+                        ng-if="labelController.mode === 'student' && !labelController.latestAnnotations.score"></possible-score>
+    </div>
+    <div class="input-wrapper">
+        <md-button class="md-raised md-primary"
+                   ng-click="labelController.newLabelButtonClicked()"
+                   ng-disabled="labelController.isDisabled"
+                   ng-if="labelController.showNewLabelButton()">New Label</md-button>
+        <span ng-show="labelController.createLabelMode">{{labelController.newLabelMessage}}</span>
+        <md-button class="md-raised md-primary"
+                   ng-click="labelController.cancelButtonClicked()"
+                   ng-disabled="labelController.isDisabled"
+                   ng-if="labelController.showCancelButton()">Cancel</md-button>
+        <div id="canvasParent_{{labelController.canvasId}}">
+            <canvas id="{{labelController.canvasId}}" width="800" height="600" style="border:1px solid black;"></canvas>
+        </div>
+    </div>
+        <div class="component__actions" ng-show="labelController.attachments.length && labelController.isStudentAttachmentEnabled" layout="row" layout-wrap="true">
+            <div class="component__add-attachment">
+                <md-button class="md-accent"
+                           ng-click="nodeController.showStudentAssets($event, component.id, labelController.isDisabled)">
+                    <md-icon>image</md-icon> <span>Add File</span>
+                </md-button>
             </div>
-            <div ng-if='labelController.mode == "grading"' style='width: 400px'>
-                <annotation type='score'
-                            mode='{{labelController.mode}}'
-                            nodeid='{{labelController.nodeId}}'
-                            componentid='{{labelController.componentId}}'
-                            fromworkgroupid='{{teacherWorkgroupId}}'
-                            toworkgroupid='{{workgroupId}}'
-                            componentstateid='{{componentState.id}}'
-                            active='true'></annotation>
-                <br/>
-                <annotation type='comment'
-                            mode='{{labelController.mode}}'
-                            nodeid='{{labelController.nodeId}}'
-                            componentid='{{labelController.componentId}}'
-                            fromworkgroupid='{{teacherWorkgroupId}}'
-                            toworkgroupid='{{workgroupId}}'
-                            componentstateid='{{componentState.id}}'
-                            active='true'></annotation>
+            <div class="component__attachment" ng-repeat="attachment in labelController.attachments">
+                <img ng-src="{{attachment.iconURL}}" class="component__attachment__content" />
+                <md-button class="component__attachment__delete" ng-click='labelController.removeAttachment(attachment)' title="Remove file"><md-icon>cancel</md-icon></md-button>
             </div>
         </div>
-    </body>
-</html>
+        <component-annotations ng-if="labelController.mode === 'student'"
+                               score-annotation='labelController.latestAnnotations.score'
+                               comment-annotation='labelController.latestAnnotations.comment'
+                               max-score="labelController.componentContent.maxScore"></component-annotations>
+        <div class="component__actions" layout="row" layout-align="start center">
+            <md-button class="md-raised md-primary"
+                       ng-click='labelController.submitButtonClicked()'
+                       ng-if='labelController.showSubmitButton()'
+                       ng-disabled='labelController.isDisabled || !labelController.isSubmitDirty'>Submit</md-button>
+            <md-button class="md-primary"
+                       ng-class="{'md-raised': !labelController.showSubmitButton()}"
+                       ng-click='labelController.saveButtonClicked()'
+                       ng-if='labelController.showSaveButton()'
+                       ng-disabled='labelController.isDisabled || !labelController.isDirty'>Save</md-button>
+            <span ng-if="labelController.showSaveButton() || labelController.showSubmitButton()"
+                     ng-show="labelController.saveMessage.text"
+                     class="component__actions__info md-caption">
+                     {{labelController.saveMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ labelController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="labelController.saveMessage.time"></span></span>
+            </span>
+        </div>
+    </div>
+    <div ng-if='labelController.mode === "grading" && labelController.componentContent.maxScore > -1'>
+        <annotation type='score'
+                    mode='labelController.mode'
+                    node-id='labelController.nodeId'
+                    component-id='labelController.componentId'
+                    from-workgroup-id='teacherWorkgroupId'
+                    to-workgroup-id='workgroupId'
+                    component-state-id='componentState.id'
+                    active='true'></annotation>
+        <br/>
+        <annotation type='comment'
+                    mode='labelController.mode'
+                    node-id='labelController.nodeId'
+                    component-id='labelController.componentId'
+                    from-workgroup-id='teacherWorkgroupId'
+                    to-workgroup-id='workgroupId'
+                    component-state-id='componentState.id'
+                    active='true'></annotation>
+    </div>
+</div>

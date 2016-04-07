@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var MatchController = function () {
-    function MatchController($rootScope, $scope, MatchService, NodeService, ProjectService, StudentDataService, UtilService) {
+    function MatchController($rootScope, $scope, MatchService, NodeService, ProjectService, StudentDataService, UtilService, $mdMedia) {
         var _this = this;
 
         _classCallCheck(this, MatchController);
@@ -21,6 +21,7 @@ var MatchController = function () {
         this.ProjectService = ProjectService;
         this.StudentDataService = StudentDataService;
         this.UtilService = UtilService;
+        this.$mdMedia = $mdMedia;
 
         // the node id of the current node
         this.nodeId = null;
@@ -67,6 +68,9 @@ var MatchController = function () {
             time: ''
         };
 
+        // the latest annotations
+        this.latestAnnotations = null;
+
         // get the current node and node id
         var currentNode = this.StudentDataService.getCurrentNode();
         if (currentNode != null) {
@@ -81,7 +85,11 @@ var MatchController = function () {
         // get the authoring component content
         this.authoringComponentContent = this.$scope.authoringComponentContent;
 
+        // the mode to load the component in e.g. 'student', 'grading', 'onlyShowWork'
         this.mode = this.$scope.mode;
+
+        this.workgroupId = this.$scope.workgroupId;
+        this.teacherWorkgroupId = this.$scope.teacherWorkgroupId;
 
         if (this.componentContent != null) {
 
@@ -92,6 +100,10 @@ var MatchController = function () {
                 this.isPromptVisible = true;
                 this.isSaveButtonVisible = this.componentContent.showSaveButton;
                 this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+
+                // get the latest annotations
+                // TODO: watch for new annotations and update accordingly
+                this.latestAnnotations = this.$scope.$parent.nodeController.getLatestComponentAnnotations(this.componentId);
             } else if (this.mode === 'grading') {
                 this.isPromptVisible = true;
                 this.isSaveButtonVisible = false;
@@ -316,6 +328,12 @@ var MatchController = function () {
         this.$scope.$on('exitNode', angular.bind(this, function (event, args) {
             // do nothing
         }));
+
+        this.$scope.$watch(function () {
+            return $mdMedia('gt-sm');
+        }, function (md) {
+            $scope.mdScreen = md;
+        });
     }
 
     /**
@@ -1625,7 +1643,7 @@ var MatchController = function () {
     return MatchController;
 }();
 
-MatchController.$inject = ['$rootScope', '$scope', 'MatchService', 'NodeService', 'ProjectService', 'StudentDataService', 'UtilService'];
+MatchController.$inject = ['$rootScope', '$scope', 'MatchService', 'NodeService', 'ProjectService', 'StudentDataService', 'UtilService', '$mdMedia'];
 
 exports.default = MatchController;
 //# sourceMappingURL=matchController.js.map

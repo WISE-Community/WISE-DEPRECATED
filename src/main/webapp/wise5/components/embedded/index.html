@@ -25,41 +25,28 @@
         <iframe id="componentApp_{{embeddedController.componentId}}" ng-src='{{embeddedController.url}}'
                 class="embedded-content__iframe"
                 style="max-width: {{embeddedController.maxWidth}}; max-height: {{embeddedController.maxHeight}};"></iframe>
-        <div ng-if='embeddedController.mode == "student"' style='text-align: left'>
-            <annotation type='score'
-                        mode='{{embeddedController.mode}}'
-                        nodeid='{{embeddedController.nodeId}}'
-                        componentid='{{embeddedController.componentId}}'
-                        fromworkgroupid='{{teacherWorkgroupId}}'
-                        toworkgroupid='{{workgroupId}}'
-                        componentstateid='{{componentState.id}}'></annotation>
-            <br/>
-            <annotation type='comment'
-                        mode='{{embeddedController.mode}}'
-                        nodeid='{{embeddedController.nodeId}}'
-                        componentid='{{embeddedController.componentId}}'
-                        fromworkgroupid='{{teacherWorkgroupId}}'
-                        toworkgroupid='{{workgroupId}}'
-                        componentstateid='{{componentState.id}}'></annotation>
-        </div>
+                <component-annotations ng-if="embeddedController.mode === 'student'"
+                                       score-annotation='embeddedController.latestAnnotations.score'
+                                       comment-annotation='embeddedController.latestAnnotations.comment'
+                                       max-score="embeddedController.componentContent.maxScore"></component-annotations>
     </div>
-    <div ng-if='embeddedController.mode == "grading"' style='width: 400px; text-align: left'>
+    <div ng-if='embeddedController.mode === "grading" && embeddedController.componentContent.maxScore > -1'>
         <annotation type='score'
-                    mode='{{embeddedController.mode}}'
-                    nodeid='{{embeddedController.nodeId}}'
-                    componentid='{{embeddedController.componentId}}'
-                    fromworkgroupid='{{teacherWorkgroupId}}'
-                    toworkgroupid='{{workgroupId}}'
-                    componentstateid='{{componentState.id}}'
+                    mode='embeddedController.mode'
+                    node-id='embeddedController.nodeId'
+                    component-id='embeddedController.componentId'
+                    from-workgroup-id='teacherWorkgroupId'
+                    to-workgroup-id='workgroupId'
+                    component-state-id='componentState.id'
                     active='true'></annotation>
         <br/>
         <annotation type='comment'
-                    mode='{{embeddedController.mode}}'
-                    nodeid='{{embeddedController.nodeId}}'
-                    componentid='{{embeddedController.componentId}}'
-                    fromworkgroupid='{{teacherWorkgroupId}}'
-                    toworkgroupid='{{workgroupId}}'
-                    componentstateid='{{componentState.id}}'
+                    mode='embeddedController.mode'
+                    node-id='embeddedController.nodeId'
+                    component-id='embeddedController.componentId'
+                    from-workgroup-id='teacherWorkgroupId'
+                    to-workgroup-id='workgroupId'
+                    component-state-id='componentState.id'
                     active='true'></annotation>
     </div>
 </div>

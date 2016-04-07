@@ -13,7 +13,6 @@ import angularTranslateLoaderPartial from 'angular-translate-loader-partial';
 import angularUIRouter from 'angular-ui-router';
 import angularUITree from 'angular-ui-tree';
 import angularWebSocket from 'angular-websocket';
-import AnnotationController from '../controllers/annotationController';
 import AnnotationService from '../services/annotationService';
 //import AudioRecorderService from '../components/audioRecorder/audioRecorderService';
 import ConfigService from '../services/configService';
@@ -113,7 +112,6 @@ let mainModule = angular.module('vle', [
     .service(TableService.name, TableService)
     .service(TeacherDataService.name, TeacherDataService)
     .service(UtilService.name, UtilService)
-    .controller(AnnotationController.name, AnnotationController)
     .controller(DiscussionController.name, DiscussionController)
     .controller(DrawController.name, DrawController)
     .controller(EmbeddedController.name, EmbeddedController)
@@ -292,6 +290,9 @@ let mainModule = angular.module('vle', [
                 .primaryPalette('primary')
                 .accentPalette('accent',  {
                     'default': '500'
+                })
+                .warnPalette('red', {
+                    'default': 'A700'
                 });
 
             var lightMap = $mdThemingProvider.extendPalette('grey', {

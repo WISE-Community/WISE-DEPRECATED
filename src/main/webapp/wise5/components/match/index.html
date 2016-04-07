@@ -1,170 +1,159 @@
-<div ng-controller='MatchController as matchController' style='display: flex'>
-    <div style='flex: 1'>
-        <div ng-if='matchController.mode === "authoring"'>
-            <textarea ng-model='matchController.authoringComponentContent.prompt'
-                      ng-change='matchController.authoringViewComponentChanged()'
-                      ng-model-options='{ debounce: 1000 }'
-                      rows='10'
-                      cols='100'></textarea>
-            <br/>
-            <br/>
-            Label for choices bucket: <input ng-model='matchController.authoringComponentContent.choicesLabel'
+<div ng-controller='MatchController as matchController' flex>
+    <div ng-if='matchController.mode === "authoring"'>
+        <textarea ng-model='matchController.authoringComponentContent.prompt'
+                  ng-change='matchController.authoringViewComponentChanged()'
+                  ng-model-options='{ debounce: 1000 }'
+                  rows='10'
+                  cols='100'></textarea>
+        <br/>
+        <br/>
+        Label for choices bucket: <input ng-model='matchController.authoringComponentContent.choicesLabel'
+               ng-change='matchController.authoringViewComponentChanged()'
+               ng-model-options='{ debounce: 1000 }'
+               size='100'/>
+       <br/>
+        Choices <button ng-click='matchController.authoringAddChoice()'>Add Choice</button>
+        <div ng-repeat='choice in matchController.authoringComponentContent.choices track by $index'>
+            <input ng-model='choice.value'
                    ng-change='matchController.authoringViewComponentChanged()'
-                   ng-model-options='{ debounce: 1000 }'
                    size='100'/>
-           <br/>
-            Choices <button ng-click='matchController.authoringAddChoice()'>Add Choice</button>
-            <div ng-repeat='choice in matchController.authoringComponentContent.choices track by $index'>
-                <input ng-model='choice.value'
-                       ng-change='matchController.authoringViewComponentChanged()'
-                       size='100'/>
-                <button ng-click='matchController.authoringDeleteChoice($index)'>Delete Choice</button>
-            </div>
-            <br/>
-            Buckets <button ng-click='matchController.authoringAddBucket()'>Add Bucket</button>
-            <div ng-repeat='bucket in matchController.authoringComponentContent.buckets track by $index'>
-                <input ng-model='bucket.value'
-                       ng-change='matchController.authoringViewComponentChanged()'
-                       size='100'/>
-                <button ng-click='matchController.authoringDeleteBucket($index)'>Delete Bucket</button>
-            </div>
-            <br/>
-            Feedback
-            <br/>
-            Ordered: <input type='checkbox'
-                            ng-model='matchController.authoringComponentContent.ordered'
-                            ng-change='matchController.authoringViewComponentChanged()'/>
-            <br/>
-            <div ng-repeat='bucketFeedback in matchController.authoringComponentContent.feedback'>
-                <span>{{matchController.getBucketValueById(bucketFeedback.bucketId)}}</span>
-                <div ng-repeat='choiceFeedback in bucketFeedback.choices'
-                     style='border: 1px solid black'>
-                    <span>{{matchController.getChoiceValueById(choiceFeedback.choiceId)}}</span>
-                    <br/>
-                    Feedback: <input ng-model='choiceFeedback.feedback'
-                           ng-change='matchController.authoringViewComponentChanged()'
-                           size='60'/>
-                    <br/>
-                    Is Correct: <input type='checkbox'
-                                       ng-model='choiceFeedback.isCorrect'
-                                       ng-change='matchController.authoringViewComponentChanged()'/>
-                    <br/>
-                    <span ng-show='matchController.authoringComponentContent.ordered && choiceFeedback.isCorrect'>
-                        Position: <input type='number'
-                                     ng-model='choiceFeedback.position'
-                                     ng-change='matchController.authoringViewComponentChanged()'
-                                     style='width: 3em'/>
-                        Incorrect Position Feedback: <input ng-model='choiceFeedback.incorrectPositionFeedback'
-                                                            ng-change='matchController.authoringViewComponentChanged()'
-                                                            size='60'/>
-                    </span>
-                </div>
-                <br/>
-            </div>
-            <br/>
-            Max Score:
-            <input type='number'
-                   ng-model='matchController.authoringComponentContent.maxScore'
+            <button ng-click='matchController.authoringDeleteChoice($index)'>Delete Choice</button>
+        </div>
+        <br/>
+        Buckets <button ng-click='matchController.authoringAddBucket()'>Add Bucket</button>
+        <div ng-repeat='bucket in matchController.authoringComponentContent.buckets track by $index'>
+            <input ng-model='bucket.value'
                    ng-change='matchController.authoringViewComponentChanged()'
-                   ng-model-options='{ debounce: 1000 }'
-                   style='width: 3em'/>
+                   size='100'/>
+            <button ng-click='matchController.authoringDeleteBucket($index)'>Delete Bucket</button>
+        </div>
+        <br/>
+        Feedback
+        <br/>
+        Ordered: <input type='checkbox'
+                        ng-model='matchController.authoringComponentContent.ordered'
+                        ng-change='matchController.authoringViewComponentChanged()'/>
+        <br/>
+        <div ng-repeat='bucketFeedback in matchController.authoringComponentContent.feedback'>
+            <span>{{matchController.getBucketValueById(bucketFeedback.bucketId)}}</span>
+            <div ng-repeat='choiceFeedback in bucketFeedback.choices'
+                 style='border: 1px solid black'>
+                <span>{{matchController.getChoiceValueById(choiceFeedback.choiceId)}}</span>
+                <br/>
+                Feedback: <input ng-model='choiceFeedback.feedback'
+                       ng-change='matchController.authoringViewComponentChanged()'
+                       size='60'/>
+                <br/>
+                Is Correct: <input type='checkbox'
+                                   ng-model='choiceFeedback.isCorrect'
+                                   ng-change='matchController.authoringViewComponentChanged()'/>
+                <br/>
+                <span ng-show='matchController.authoringComponentContent.ordered && choiceFeedback.isCorrect'>
+                    Position: <input type='number'
+                                 ng-model='choiceFeedback.position'
+                                 ng-change='matchController.authoringViewComponentChanged()'
+                                 style='width: 3em'/>
+                    Incorrect Position Feedback: <input ng-model='choiceFeedback.incorrectPositionFeedback'
+                                                        ng-change='matchController.authoringViewComponentChanged()'
+                                                        size='60'/>
+                </span>
+            </div>
             <br/>
-            <textarea ng-model='matchController.authoringComponentContentJSONString'
-                      ng-change='matchController.advancedAuthoringViewComponentChanged()'
-                      ng-model-options='{ debounce: 1000 }'
-                      rows='10'
-                      cols='100'></textarea>
         </div>
-
-        <div class="component__prompt" compile='matchController.getPrompt()'></div>
-        <div class="md-padding match-content" ui-tree='options'>
-            <ol ui-tree-nodes data-type='bucket' ng-model='matchController.buckets'>
-                <li ui-tree-node ng-repeat='bucket in matchController.buckets' class='bucket' ng-if="$index === 0">
-                    <div ui-tree-handle class='group-title angular-ui-tree-handle' data-nodrag>
-                        <div>{{bucket.value}}</div>
-                    </div>
-                    <ol ui-tree-nodes data-type='choice' ng-model='bucket.items'>
-                        <li ng-repeat='item in bucket.items' ui-tree-node>
-                            <div ui-tree-handle class='category-title angular-ui-tree-handle' data-nodrag='{{matchController.isDisabled}}'>
-                                <div compile='item.value'></div>
-                            </div>
-                        </li>
-                    </ol>
-                </li>
-            </ol>
-            <ol ui-tree-nodes data-type='bucket' ng-model='matchController.buckets'>
-                <li ui-tree-node ng-repeat='bucket in matchController.buckets' class='bucket' ng-if="$index > 0" flex>
-                    <div ui-tree-handle class='group-title angular-ui-tree-handle' data-nodrag>
-                        <div>{{bucket.value}}</div>
-                    </div>
-                    <ol ui-tree-nodes data-type='choice' ng-model='bucket.items'>
-                        <li ng-repeat='item in bucket.items' ui-tree-node>
-                            <div ui-tree-handle class='category-title angular-ui-tree-handle' data-nodrag='{{matchController.isDisabled}}'>
-                                <div compile='item.value'></div>
-                                <div class="match-feedback md-body-2" ng-show="item.feedback" ng-class='{"success": item.isCorrect, "info": item.isIncorrectPosition, "warn": !item.isCorrect}'>
-                                    <md-icon ng-if="item.isCorrect" class="success"> check_circle </md-icon>
-                                    <md-icon ng-if="item.isIncorrectPosition" class="info"> warning </md-icon>
-                                    <md-icon ng-if="!item.isCorrect && !item.isIncorrectPosition" class="warn"> error </md-icon>
-                                    <span>{{item.feedback}}</span>
-                                </div>
-                            </div>
-                        </li>
-                    </ol>
-                </li>
-            </ol>
-        </div>
-
-        <div ng-if='matchController.mode == "student"'>
-            <annotation type='score'
-                        mode='{{matchController.mode}}'
-                        nodeid='{{matchController.nodeId}}'
-                        componentid='{{matchController.componentId}}'
-                        fromworkgroupid='{{teacherWorkgroupId}}'
-                        toworkgroupid='{{workgroupId}}'
-                        componentstateid='{{componentState.id}}'></annotation>
-            <br/>
-            <annotation type='comment'
-                        mode='{{matchController.mode}}'
-                        nodeid='{{matchController.nodeId}}'
-                        componentid='{{matchController.componentId}}'
-                        fromworkgroupid='{{teacherWorkgroupId}}'
-                        toworkgroupid='{{workgroupId}}'
-                        componentstateid='{{componentState.id}}'></annotation>
-        </div>
-        <div class="component-content__actions" layout="row" layout-align="start center">
-            <md-button class="md-raised md-primary"
-                       ng-click='matchController.submitButtonClicked()'
-                       ng-if='matchController.showSubmitButton()'
-                       ng-disabled='matchController.isDisabled || !matchController.isSubmitDirty'>Submit</md-button>
-            <md-button class="md-primary"
-                       ng-class="{'md-raised': !matchController.showSubmitButton()}"
-                       ng-click='matchController.saveButtonClicked()'
-                       ng-if='matchController.showSaveButton()'
-                       ng-disabled='matchController.isDisabled || !matchController.isDirty'>Save</md-button>
-            <span ng-if="matchController.showSaveButton() || matchController.showSubmitButton()"
-                     ng-show="matchController.saveMessage.text"
-                     class="component-content__actions__info md-caption">
-                     {{matchController.saveMessage.text}} <span class="component-content__actions__more"><md-tooltip md-direction="top">{{ matchController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="matchController.saveMessage.time"></span></span>
-            </span>
-        </div>
+        <br/>
+        Max Score:
+        <input type='number'
+               ng-model='matchController.authoringComponentContent.maxScore'
+               ng-change='matchController.authoringViewComponentChanged()'
+               ng-model-options='{ debounce: 1000 }'
+               style='width: 3em'/>
+        <br/>
+        <textarea ng-model='matchController.authoringComponentContentJSONString'
+                  ng-change='matchController.advancedAuthoringViewComponentChanged()'
+                  ng-model-options='{ debounce: 1000 }'
+                  rows='10'
+                  cols='100'></textarea>
     </div>
-    <div ng-if='matchController.mode == "grading"' style='width: 400px'>
+
+    <div class="component__prompt">
+        <div class="component__prompt__content" compile='matchController.getPrompt()'></div>
+        <possible-score max-score="matchController.componentContent.maxScore"
+                        ng-if="matchController.mode === 'student' && !matchController.latestAnnotations.score"></possible-score>
+    </div>
+    <div class="md-padding match-content" ui-tree='options'>
+        <component-annotations ng-if="matchController.mode === 'student'"
+                               class="annotations--inside"
+                               score-annotation='matchController.latestAnnotations.score'
+                               comment-annotation='matchController.latestAnnotations.comment'
+                               max-score="matchController.componentContent.maxScore"></component-annotations>
+        <ol ui-tree-nodes data-type='bucket' ng-model='matchController.buckets'>
+            <li ui-tree-node ng-repeat='bucket in matchController.buckets' class='bucket' ng-if="$index === 0">
+                <div ui-tree-handle class='group-title angular-ui-tree-handle' data-nodrag>
+                    <div>{{bucket.value}}</div>
+                </div>
+                <ol ui-tree-nodes data-type='choice' ng-model='bucket.items'>
+                    <li ng-repeat='item in bucket.items' ui-tree-node>
+                        <div ui-tree-handle class='category-title angular-ui-tree-handle' data-nodrag='{{matchController.isDisabled}}'>
+                            <div compile='item.value'></div>
+                        </div>
+                    </li>
+                </ol>
+            </li>
+        </ol>
+        <ol ui-tree-nodes data-type='bucket' ng-model='matchController.buckets'>
+            <li ui-tree-node ng-repeat='bucket in matchController.buckets' class='bucket' ng-if="$index > 0" flex>
+                <div ui-tree-handle class='group-title angular-ui-tree-handle' data-nodrag>
+                    <div>{{bucket.value}}</div>
+                </div>
+                <ol ui-tree-nodes data-type='choice' ng-model='bucket.items'>
+                    <li ng-repeat='item in bucket.items' ui-tree-node>
+                        <div ui-tree-handle class='category-title angular-ui-tree-handle' data-nodrag='{{matchController.isDisabled}}'>
+                            <div compile='item.value'></div>
+                            <div class="match-feedback md-body-2" ng-show="item.feedback" ng-class='{"success": item.isCorrect, "info": item.isIncorrectPosition, "warn": !item.isCorrect}'>
+                                <md-icon ng-if="item.isCorrect" class="success"> check_circle </md-icon>
+                                <md-icon ng-if="item.isIncorrectPosition" class="info"> warning </md-icon>
+                                <md-icon ng-if="!item.isCorrect && !item.isIncorrectPosition" class="warn"> error </md-icon>
+                                <span>{{item.feedback}}</span>
+                            </div>
+                        </div>
+                    </li>
+                </ol>
+            </li>
+        </ol>
+    </div>
+    <div class="component__actions" layout="row" layout-align="start center">
+        <md-button class="md-raised md-primary"
+                   ng-click='matchController.submitButtonClicked()'
+                   ng-if='matchController.showSubmitButton()'
+                   ng-disabled='matchController.isDisabled || !matchController.isSubmitDirty'>Submit</md-button>
+        <md-button class="md-primary"
+                   ng-class="{'md-raised': !matchController.showSubmitButton()}"
+                   ng-click='matchController.saveButtonClicked()'
+                   ng-if='matchController.showSaveButton()'
+                   ng-disabled='matchController.isDisabled || !matchController.isDirty'>Save</md-button>
+        <span ng-if="matchController.showSaveButton() || matchController.showSubmitButton()"
+                 ng-show="matchController.saveMessage.text"
+                 class="component__actions__info md-caption">
+                 {{matchController.saveMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ matchController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="matchController.saveMessage.time"></span></span>
+        </span>
+    </div>
+    <div ng-if='matchController.mode === "grading" && matchController.componentContent.maxScore > -1'>
         <annotation type='score'
-                    mode='{{matchController.mode}}'
-                    nodeid='{{matchController.nodeId}}'
-                    componentid='{{matchController.componentId}}'
-                    fromworkgroupid='{{teacherWorkgroupId}}'
-                    toworkgroupid='{{workgroupId}}'
-                    componentstateid='{{componentState.id}}'
+                    mode='matchController.mode'
+                    node-id='matchController.nodeId'
+                    component-id='matchController.componentId'
+                    from-workgroup-id='teacherWorkgroupId'
+                    to-workgroup-id='workgroupId'
+                    component-state-id='componentState.id'
                     active='true'></annotation>
         <br/>
         <annotation type='comment'
-                    mode='{{matchController.mode}}'
-                    nodeid='{{matchController.nodeId}}'
-                    componentid='{{matchController.componentId}}'
-                    fromworkgroupid='{{teacherWorkgroupId}}'
-                    toworkgroupid='{{workgroupId}}'
-                    componentstateid='{{componentState.id}}'
+                    mode='matchController.mode'
+                    node-id='matchController.nodeId'
+                    component-id='matchController.componentId'
+                    from-workgroup-id='teacherWorkgroupId'
+                    to-workgroup-id='workgroupId'
+                    component-state-id='componentState.id'
                     active='true'></annotation>
     </div>
 </div>

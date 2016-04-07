@@ -155,7 +155,7 @@ JSON.parse(projectJSONString);}catch(e){throw new Error("Invalid projectJSONStri
 return wiseBaseURL+'/wise5/vle/themes/'+project.theme;}else { // TODO: get default theme name from ConfigService
 return wiseBaseURL+'/wise5/vle/themes/default';}}},{key:'getThemeSettings', /**
      * Returns the theme settings for the current project
-     */value:function getThemeSettings(){var themeSettings={};var project=this.project;if(project&&project.themeSettings){themeSettings=project.themeSettings;}return themeSettings;}},{key:'getFlattenedProjectAsNodeIds', /**
+     */value:function getThemeSettings(){var themeSettings={};var project=this.project;if(project&&project.themeSettings){if(project.theme){themeSettings=project.themeSettings[project.theme];}else {themeSettings=project.themeSettings["default"];}}return themeSettings?themeSettings:{};}},{key:'getFlattenedProjectAsNodeIds', /**
      * Flatten the project to obtain a list of node ids
      */value:function getFlattenedProjectAsNodeIds(){var nodeIds=[]; // get the start node id
 var startNodeId=this.getStartNodeId(); /*

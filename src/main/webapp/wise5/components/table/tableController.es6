@@ -61,6 +61,9 @@ class TableController {
         // whether the submit button is shown or not
         this.isSubmitButtonVisible = false;
 
+        // the latest annotations
+        this.latestAnnotations = null;
+
         // whether the reset table button is shown or not
         this.isResetTableButtonVisible = true;
 
@@ -78,7 +81,11 @@ class TableController {
         // get the authoring component content
         this.authoringComponentContent = this.$scope.authoringComponentContent;
 
+        // the mode to load the component in e.g. 'student', 'grading', 'onlyShowWork'
         this.mode = this.$scope.mode;
+
+        this.workgroupId = this.$scope.workgroupId;
+        this.teacherWorkgroupId = this.$scope.teacherWorkgroupId;
 
         if (this.componentContent != null) {
 
@@ -89,6 +96,10 @@ class TableController {
                 this.isPromptVisible = true;
                 this.isSaveButtonVisible = this.componentContent.showSaveButton;
                 this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+
+                // get the latest annotations
+                // TODO: watch for new annotations and update accordingly
+                this.latestAnnotations = this.$scope.$parent.nodeController.getLatestComponentAnnotations(this.componentId);
                 this.isResetTableButtonVisible = true;
             } else if (this.mode === 'grading') {
                 this.isPromptVisible = true;

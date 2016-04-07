@@ -6,9 +6,9 @@ $color: (
   'accent-1': #F05843, // should match the default color of your ng-material default theme's 'accent' palette
   'accent-2': #795C3A,
   'accent-3': #CAD266,
-  'warn': #F44336, // should match the default color of your ng-material default theme's 'warn' palette
+  'warn': #D50000, // should match the default color of your ng-material default theme's 'warn' palette
   'info': #FFA000,
-  'success': #62C766,
+  'success': #00C853,
   'gray-lightest': #f7f7f7,
   'gray-lighter': #eeeeee,
   'gray-light': #dddddd,
@@ -20,6 +20,9 @@ $color: (
   'text-disabled': rgba(0, 0, 0, 0.26),
   'selected-bg': lighten($_primary-color, 59%)
 );
+
+//'warn': #F44336, // should match the default color of your ng-material default theme's 'warn' palette
+//'success': #62C766,
 
 $body-color: (
   'body': map-get($color, 'text'),
