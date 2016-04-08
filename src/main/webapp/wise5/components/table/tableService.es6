@@ -14,7 +14,6 @@ class TableService extends NodeService {
      * @returns a new Table component object
      */
     createComponent() {
-
         var component = {};
         component.id = this.UtilService.generateKey();
         component.type = 'Table';
@@ -77,6 +76,22 @@ class TableService extends NodeService {
             ]
         ];
 
+        return component;
+    }
+
+    /**
+     * Copies an existing Table component object
+     * @returns a copied Table component object
+     */
+    copyComponent(componentToCopy) {
+        var component = this.createComponent();
+        component.prompt = componentToCopy.prompt;
+        component.showSaveButton = componentToCopy.showSaveButton;
+        component.showSubmitButton = componentToCopy.showSubmitButton;
+        component.globalCellSize = componentToCopy.globalCellSize;
+        component.numRows = componentToCopy.numRows;
+        component.numColumns = componentToCopy.numColumns;
+        component.tableData = componentToCopy.tableData;
         return component;
     }
 

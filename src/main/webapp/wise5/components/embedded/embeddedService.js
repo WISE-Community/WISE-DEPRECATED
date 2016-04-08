@@ -39,13 +39,27 @@ var EmbeddedService = function (_NodeService) {
     _createClass(EmbeddedService, [{
         key: 'createComponent',
         value: function createComponent() {
-
             var component = {};
             component.id = this.UtilService.generateKey();
             component.type = 'Embedded';
+            component.url = '';
             component.showSaveButton = false;
             component.showSubmitButton = false;
+            return component;
+        }
 
+        /**
+         * Copies an existing Embedded component object
+         * @returns a copied Embedded component object
+         */
+
+    }, {
+        key: 'copyComponent',
+        value: function copyComponent(componentToCopy) {
+            var component = this.createComponent();
+            component.url = componentToCopy.url;
+            component.showSaveButton = componentToCopy.showSaveButton;
+            component.showSubmitButton = componentToCopy.showSubmitButton;
             return component;
         }
 

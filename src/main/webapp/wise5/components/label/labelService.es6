@@ -14,7 +14,6 @@ class LabelService extends NodeService {
      * @returns a new Label component object
      */
     createComponent() {
-
         var component = {};
         component.id = this.UtilService.generateKey();
         component.type = 'Label';
@@ -27,7 +26,32 @@ class LabelService extends NodeService {
         component.width = 800;
         component.height = 600;
         component.labels = [];
+        return component;
+    }
 
+    /**
+     * Copies an existing Label component object
+     * @returns a copied Label component object
+     */
+    copyComponent(componentToCopy) {
+        var component = this.createComponent();
+        component.prompt = componentToCopy.prompt;
+        component.showSaveButton = componentToCopy.showSaveButton;
+        component.showSubmitButton = componentToCopy.showSubmitButton;
+        component.backgroundImage = componentToCopy.backgroundImage;
+        component.canCreateLabels = componentToCopy.canCreateLabels;
+        component.canDeleteLabels = componentToCopy.canDeleteLabels;
+        component.width = componentToCopy.width;
+        component.height = componentToCopy.height;
+        component.labels = [];
+        // go through the original labels and create new id's
+        if (componentToCopy.labels != null && componentToCopy.labels.length > 0) {
+            for (var l = 0; l < componentToCopy.labels.length; l++) {
+                var label = componentToCopy.labels[l];
+                label.id = this.UtilService.generateKey();  // generate a new id for this label.
+                component.labels.push(label);
+            }
+        }
         return component;
     }
 

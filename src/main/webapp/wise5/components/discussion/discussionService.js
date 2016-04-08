@@ -43,7 +43,6 @@ var DiscussionService = function (_NodeService) {
     _createClass(DiscussionService, [{
         key: 'createComponent',
         value: function createComponent() {
-
             var component = {};
             component.id = this.UtilService.generateKey();
             component.type = 'Discussion';
@@ -52,7 +51,23 @@ var DiscussionService = function (_NodeService) {
             component.showSubmitButton = true;
             component.isStudentAttachmentEnabled = true;
             component.gateClassmateResponses = true;
+            return component;
+        }
 
+        /**
+         * Copies an existing Discussion component object
+         * @returns a copied Discussion component object
+         */
+
+    }, {
+        key: 'copyComponent',
+        value: function copyComponent(componentToCopy) {
+            var component = this.createComponent();
+            component.prompt = componentToCopy.prompt;
+            component.showSaveButton = componentToCopy.showSaveButton;
+            component.showSubmitButton = componentToCopy.showSubmitButton;
+            component.isStudentAttachmentEnabled = componentToCopy.isStudentAttachmentEnabled;
+            component.gateClassmateResponses = componentToCopy.gateClassmateResponses;
             return component;
         }
     }, {

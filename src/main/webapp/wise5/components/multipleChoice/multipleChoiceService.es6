@@ -13,7 +13,6 @@ class MultipleChoiceService extends NodeService {
      * @returns a new MultipleChoice component object
      */
     createComponent() {
-
         let component = {};
         component.id = this.UtilService.generateKey();
         component.type = 'MultipleChoice';
@@ -22,7 +21,28 @@ class MultipleChoiceService extends NodeService {
         component.showSubmitButton = true;
         component.choiceType = 'radio';
         component.choices = [];
+        return component;
+    }
 
+    /**
+     * Copies an existing Graph component object
+     * @returns a copied Graph component object
+     */
+    copyComponent(componentToCopy) {
+        var component = this.createComponent();
+        component.prompt = componentToCopy.prompt;
+        component.showSaveButton = componentToCopy.showSaveButton;
+        component.showSubmitButton = componentToCopy.showSubmitButton;
+        component.choiceType = componentToCopy.choiceType;
+        component.choices = [];
+        // go through the original choices and create new id's
+        if (componentToCopy.choices != null && componentToCopy.choices.length > 0) {
+            for (var c = 0; c < componentToCopy.choices.length; c++) {
+                var choice = componentToCopy.choices[c];
+                choice.id = this.UtilService.generateKey();  // generate a new id for this choice.
+                component.choices.push(choice);
+            }
+        }
         return component;
     }
 

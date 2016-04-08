@@ -267,6 +267,21 @@ var ProjectController = function () {
                     this.insertGroupMode = false;
                     this.insertNodeMode = false;
                 }
+            } else if (this.copyMode) {
+                // We are in copy mode
+
+                // get the nodes that were selected
+                var selectedNodeIds = this.getSelectedItems();
+
+                // copy the nodes into the group
+                this.ProjectService.copyNodesInside(selectedNodeIds, nodeId);
+
+                // turn off copy mode
+                this.copyMode = false;
+
+                // turn off insert mode
+                this.insertGroupMode = false;
+                this.insertNodeMode = false;
             }
 
             // check if the project start node id should be changed
@@ -353,6 +368,63 @@ var ProjectController = function () {
 
                     this.unselectAllItems();
                 }
+            } else if (this.copyMode) {
+                // We are in copy mode
+
+                // get the selected nodes
+                var selectedNodeIds = this.getSelectedItems();
+
+                // copy the nodes and put them after the node id
+                this.ProjectService.copyNodesAfter(selectedNodeIds, nodeId);
+
+                // save the project
+                this.ProjectService.saveProject();
+
+                // turn off copy mode
+                this.copyMode = false;
+
+                // turn off insert mode
+                this.insertGroupMode = false;
+                this.insertNodeMode = false;
+
+                // refresh the project
+                this.ProjectService.parseProject();
+                this.items = this.ProjectService.idToOrder;
+
+                this.unselectAllItems();
+            }
+        }
+
+        /**
+         * Turn on copy mode
+         */
+
+    }, {
+        key: 'copy',
+        value: function copy() {
+
+            // make sure there is at least one item selected
+            var selectedNodeIds = this.getSelectedItems();
+
+            if (selectedNodeIds != null && selectedNodeIds.length > 0) {
+                // get the nodes that were selected
+                var selectedItemTypes = this.getSelectedItemTypes();
+
+                if (selectedItemTypes != null && selectedItemTypes.length > 0) {
+
+                    if (selectedItemTypes.length === 0) {
+                        // there are no selected items
+                        alert('Please select an item to copy.');
+                    } else if (selectedItemTypes.length === 1 && selectedItemTypes[0] === 'node') {
+                        // turn on insert mode
+                        this.insertNodeMode = true;
+
+                        // turn on copy mode
+                        this.copyMode = true;
+                    } else {
+                        alert('You cannot copy the item(s) at this time.');
+                    }
+                }
             }
         }
 
@@ -372,8 +444,6 @@ var ProjectController = function () {
                 var selectedItemTypes = this.getSelectedItemTypes();
 
                 if (selectedItemTypes != null && selectedItemTypes.length > 0) {
-
-                    this.showMove = true;
 
                     if (selectedItemTypes.length == 0) {
                         // there are no selected items

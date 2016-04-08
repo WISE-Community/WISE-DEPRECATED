@@ -13,7 +13,6 @@ class OpenResponseService extends NodeService {
      * @returns a new OpenResponse component object
      */
     createComponent() {
-
         var component = {};
         component.id = this.UtilService.generateKey();
         component.type = 'OpenResponse';
@@ -22,10 +21,22 @@ class OpenResponseService extends NodeService {
         component.showSubmitButton = false;
         component.starterSentence = null;
         component.isStudentAttachmentEnabled = false;
-
         return component;
     }
 
+    /**
+     * Copies a OpenResponse component object
+     * @returns a copied OpenResponse component object
+     */
+    copyComponent(componentToCopy) {
+        var component = this.createComponent();
+        component.prompt = componentToCopy.prompt;
+        component.showSaveButton = componentToCopy.showSaveButton;
+        component.showSubmitButton = componentToCopy.showSubmitButton;
+        component.starterSentence = componentToCopy.starterSentence;
+        component.isStudentAttachmentEnabled = componentToCopy.isStudentAttachmentEnabled;
+        return component;
+    }
     /**
      * Populate a component state with the data from another component state
      * @param componentStateFromOtherComponent the component state to obtain the data from

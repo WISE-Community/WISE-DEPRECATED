@@ -11,14 +11,24 @@ class OutsideURLService extends NodeService {
      * @returns a new OutsideURL component object
      */
     createComponent() {
-
         var component = {};
         component.id = this.UtilService.generateKey();
         component.type = 'OutsideURL';
         component.url = '';
         component.showSaveButton = false;
         component.showSubmitButton = false;
+        return component;
+    }
 
+    /**
+     * Copies an existing OutsideURL component object
+     * @returns a copied OutsideURL component object
+     */
+    copyComponent(componentToCopy) {
+        var component = this.createComponent();
+        component.url = componentToCopy.url;
+        component.showSaveButton = componentToCopy.showSaveButton;
+        component.showSubmitButton = componentToCopy.showSubmitButton;
         return component;
     }
 

@@ -11,13 +11,24 @@ class EmbeddedService extends NodeService {
      * @returns a new Embedded component object
      */
     createComponent() {
-
         var component = {};
         component.id = this.UtilService.generateKey();
         component.type = 'Embedded';
+        component.url = '';
         component.showSaveButton = false;
         component.showSubmitButton = false;
+        return component;
+    }
 
+    /**
+     * Copies an existing Embedded component object
+     * @returns a copied Embedded component object
+     */
+    copyComponent(componentToCopy) {
+        var component = this.createComponent();
+        component.url = componentToCopy.url;
+        component.showSaveButton = componentToCopy.showSaveButton;
+        component.showSubmitButton = componentToCopy.showSubmitButton;
         return component;
     }
 

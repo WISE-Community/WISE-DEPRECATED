@@ -34,6 +34,7 @@
 <button id="createNewActivityButton" ng-click='projectController.toggleCreateGroup()' translate="createNewActivity"></button>
 <button id="createNewStepButton" ng-click='projectController.toggleCreateNode()' translate="createNewStep"></button>
 <button id="moveButton" ng-click='projectController.move()' translate="move" ng-disabled="projectController.getSelectedItems().length == 0"></button>
+<button id="copyButton" ng-click='projectController.copy()' translate="copy" ng-disabled="projectController.getSelectedItems().length == 0"></button>
 <button id="deleteButton" ng-click='projectController.delete()' translate="delete" ng-disabled="projectController.getSelectedItems().length == 0"></button>
 <button id="saveProjectButton" ng-click='projectController.saveProject()' translate="save"></button>
 <button id="closeProjectButton" ng-click='projectController.closeProject()' translate="close"></button>
@@ -48,7 +49,7 @@
     <button ng-click='projectController.hideCreateNode()' translate="cancel"></button>
 </div>
 <div ng-show='projectController.insertGroupMode || projectController.insertNodeMode'>
-    <span translate="chooseNewLocation"></span><button ng-click='projectController.cancelMove()' translate="cancel"></button>
+    <span translate="chooseNewLocation"></span> <button ng-click='projectController.cancelMove()' translate="cancel"></button>
 </div>
 <div ng-repeat='item in projectController.items | toArray | orderBy : "order"'
      ng-class='{"node-select--group": projectController.isGroupNode(item.$key), "node-select--node": !projectController.isGroupNode(item.$key)}'>
