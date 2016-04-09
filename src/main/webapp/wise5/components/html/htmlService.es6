@@ -23,6 +23,20 @@ class HTMLService extends NodeService {
     }
 
     /**
+     * Copies an existing HTML component object
+     * @returns a copied HTML component object
+     */
+    copyComponent(componentToCopy) {
+
+        var component = {};
+        component.id = this.UtilService.generateKey();
+        component.type = 'HTML';
+        component.html = componentToCopy.html;
+
+        return component;
+    }
+
+    /**
      * Check if the component was completed
      * @param component the component object
      * @param componentStates the component states for the specific component

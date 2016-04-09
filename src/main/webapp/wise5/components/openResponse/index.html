@@ -2,36 +2,37 @@
     <head></head>
     <body>
         <div class='openResponse' ng-controller='OpenResponseController as openResponseController' flex>
-            <div flex="100">
-                <style>
-                    {{openResponseController.nodeContent.style}}
-                </style>
+            <style>
+                {{openResponseController.nodeContent.style}}
+            </style>
 
-                <div ng-if='openResponseController.mode === "authoring"'>
-                    Prompt:
-                    <br/>
-                    <textarea ng-model='openResponseController.authoringComponentContent.prompt'
-                              ng-change='openResponseController.authoringViewComponentChanged()'
-                              ng-model-options='{ debounce: 1000 }'
-                              rows='10'
-                              cols='100'></textarea>
-                    <br/>
-                    Max Score:
-                    <input type='number'
-                           ng-model='openResponseController.authoringComponentContent.maxScore'
-                           ng-change='openResponseController.authoringViewComponentChanged()'
-                           ng-model-options='{ debounce: 1000 }'
-                           style='width: 3em'/>
-                    <br/>
-                    <textarea ng-model='openResponseController.authoringComponentContentJSONString'
-                              ng-change='openResponseController.advancedAuthoringViewComponentChanged()'
-                              ng-model-options='{ debounce: 1000 }'
-                              rows='10'
-                              cols='100'></textarea>
-                </div>
+            <div ng-if='openResponseController.mode === "authoring"'>
+                Prompt:
+                <br/>
+                <textarea ng-model='openResponseController.authoringComponentContent.prompt'
+                          ng-change='openResponseController.authoringViewComponentChanged()'
+                          ng-model-options='{ debounce: 1000 }'
+                          rows='10'
+                          cols='100'></textarea>
+                <br/>
+                Max Score:
+                <input type='number'
+                       ng-model='openResponseController.authoringComponentContent.maxScore'
+                       ng-change='openResponseController.authoringViewComponentChanged()'
+                       ng-model-options='{ debounce: 1000 }'
+                       style='width: 3em'/>
+                <br/>
+                <textarea ng-model='openResponseController.authoringComponentContentJSONString'
+                          ng-change='openResponseController.advancedAuthoringViewComponentChanged()'
+                          ng-model-options='{ debounce: 1000 }'
+                          rows='10'
+                          cols='100'></textarea>
+            </div>
             <md-input-container class="input-container md-block input-container--open-response input-container--component md-no-float">
                 <label class="input-label md-no-float" ng-disabled="openResponseController.isDisabled"
                        compile="openResponseController.getPrompt()" ng-if="openResponseController.showPrompt()"></label>
+                <possible-score max-score="openResponseController.componentContent.maxScore"
+                                ng-if="openResponseController.mode === 'student' && !openResponseController.latestAnnotations.score"></possible-score>
                 <div class="input-wrapper" ng-class="{'input-wrapper--richtext': openResponseController.isRichTextEnabled}">
                     <textarea ng-if="openResponseController.isRichTextEnabled && !openResponseController.isDisabled"
                               ui-tinymce="openResponseController.tinymceOptions"
@@ -55,69 +56,60 @@
                         <md-tooltip md-direction="left">{{nodeController.getRevisions(component.id).length}} Versions</md-tooltip>
                     </md-button>
                 </div>
-                </md-input-container>
-                <div class="component-content__actions" ng-show="openResponseController.isStudentAttachmentEnabled" layout="row" layout-wrap="true">
-                    <div class="component__add-attachment">
-                        <md-button class="md-accent"
-                                   ng-click="nodeController.showStudentAssets($event, component.id, openResponseController.isDisabled)">
-                            <md-icon>image</md-icon> <span>Add File</span>
-                        </md-button>
-                    </div>
-                    <div class="component__attachment" ng-repeat="attachment in openResponseController.attachments">
-                        <img ng-src="{{attachment.iconURL}}" class="component__attachment__content" />
-                        <md-button ng-show="!openResponseController.isDisabled" class="component__attachment__delete" ng-click='openResponseController.removeAttachment(attachment)' title="Remove file"><md-icon>cancel</md-icon></md-button>
-                    </div>
+                <component-annotations ng-if="openResponseController.mode === 'student'"
+                                       score-annotation='openResponseController.latestAnnotations.score'
+                                       comment-annotation='openResponseController.latestAnnotations.comment'
+                                       max-score="openResponseController.componentContent.maxScore"></component-annotations>
+            </md-input-container>
+            <div class="component__actions" ng-show="openResponseController.isStudentAttachmentEnabled" layout="row" layout-wrap="true">
+                <div class="component__add-attachment">
+                    <md-button class="md-accent"
+                               ng-click="nodeController.showStudentAssets($event, component.id, openResponseController.isDisabled)">
+                        <md-icon>image</md-icon> <span>Add File</span>
+                    </md-button>
                 </div>
-                <div ng-if='openResponseController.mode == "student"'>
-                    <annotation type='score'
-                                mode='{{openResponseController.mode}}'
-                                nodeid='{{openResponseController.nodeId}}'
-                                componentid='{{openResponseController.componentId}}'
-                                fromworkgroupid='{{teacherWorkgroupId}}'
-                                toworkgroupid='{{workgroupId}}'
-                                componentstateid='{{componentState.id}}'></annotation>
-                    <annotation type='comment'
-                                mode='{{openResponseController.mode}}'
-                                nodeid='{{openResponseController.nodeId}}'
-                                componentid='{{openResponseController.componentId}}'
-                                fromworkgroupid='{{teacherWorkgroupId}}'
-                                toworkgroupid='{{workgroupId}}'
-                                componentstateid='{{componentState.id}}'></annotation>
-                </div>
-                <div class="component-content__actions" layout="row" layout-align="start center">
-                    <md-button class="md-raised md-primary"
-                               ng-click="openResponseController.submitButtonClicked()"
-                               ng-disabled="openResponseController.isDisabled || !openResponseController.isSubmitDirty"
-                               ng-if="openResponseController.showSubmitButton()">Submit</md-button>
-                    <md-button class="md-primary"
-                               ng-class="{'md-raised': !openResponseController.showSubmitButton()}"
-                               ng-click="openResponseController.saveButtonClicked()"
-                               ng-disabled="openResponseController.isDisabled || !openResponseController.isDirty"
-                               ng-if="openResponseController.showSaveButton()">Save</md-button>
-                    <span ng-if="openResponseController.showSaveButton() || openResponseController.showSubmitButton()"
-                          ng-show="openResponseController.saveMessage.text"
-                          class="component-content__actions__info md-caption">
-                          {{openResponseController.saveMessage.text}} <span class="component-content__actions__more"><md-tooltip md-direction="top">{{ openResponseController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="openResponseController.saveMessage.time"></span></span>
-                    </span>
+                <div class="component__attachment" ng-repeat="attachment in openResponseController.attachments">
+                    <img ng-src="{{attachment.iconURL}}" class="component__attachment__content" />
+                    <md-button ng-show="!openResponseController.isDisabled" class="component__attachment__delete" ng-click='openResponseController.removeAttachment(attachment)' title="Remove file"><md-icon>cancel</md-icon></md-button>
                 </div>
             </div>
-            <div ng-if='openResponseController.mode == "grading"' style='width: 400px'>
+            <div ng-if="openResponseController.showSaveButton() || openResponseController.showSubmitButton()"
+                 class="component__actions" layout="row" layout-align="start center">
+                <md-button class="md-raised md-primary"
+                           ng-click="openResponseController.submitButtonClicked()"
+                           ng-disabled="openResponseController.isDisabled || !openResponseController.isSubmitDirty"
+                           ng-if="openResponseController.showSubmitButton()"
+                           aria-label="Submit"
+                           translate="submit"></md-button>
+                <md-button class="md-primary"
+                           ng-class="{'md-raised': !openResponseController.showSubmitButton()}"
+                           ng-click="openResponseController.saveButtonClicked()"
+                           ng-disabled="openResponseController.isDisabled || !openResponseController.isDirty"
+                           ng-if="openResponseController.showSaveButton()"
+                           aria-label="Save"
+                           translate="save"></md-button>
+                <span ng-show="openResponseController.saveMessage.text"
+                      class="component__actions__info md-caption">
+                      {{openResponseController.saveMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ openResponseController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="openResponseController.saveMessage.time"></span></span>
+                </span>
+            </div>
+            <div ng-if='openResponseController.mode === "grading" && openResponseController.componentContent.maxScore > -1'>
                 <annotation type='score'
-                            mode='{{openResponseController.mode}}'
-                            nodeid='{{openResponseController.nodeId}}'
-                            componentid='{{openResponseController.componentId}}'
-                            fromworkgroupid='{{teacherWorkgroupId}}'
-                            toworkgroupid='{{workgroupId}}'
-                            componentstateid='{{componentState.id}}'
+                            mode='openResponseController.mode'
+                            node-id='openResponseController.nodeId'
+                            component-id='openResponseController.componentId'
+                            from-workgroup-id='teacherWorkgroupId'
+                            to-workgroup-id='workgroupId'
+                            component-state-id='componentState.id'
                             active='true'></annotation>
                 <br/>
                 <annotation type='comment'
-                            mode='{{openResponseController.mode}}'
-                            nodeid='{{openResponseController.nodeId}}'
-                            componentid='{{openResponseController.componentId}}'
-                            fromworkgroupid='{{teacherWorkgroupId}}'
-                            toworkgroupid='{{workgroupId}}'
-                            componentstateid='{{componentState.id}}'
+                            mode='openResponseController.mode'
+                            node-id='openResponseController.nodeId'
+                            component-id='openResponseController.componentId'
+                            from-workgroup-id='teacherWorkgroupId'
+                            to-workgroup-id='workgroupId'
+                            component-state-id='componentState.id'
                             active='true'></annotation>
             </div>
         </div>

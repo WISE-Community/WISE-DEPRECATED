@@ -56,6 +56,9 @@ var EmbeddedController = function () {
             time: ''
         };
 
+        // the latest annotations
+        this.latestAnnotations = null;
+
         // variable to store component states (from application)
         this.componentState = null;
 
@@ -133,7 +136,11 @@ var EmbeddedController = function () {
         // get the authoring component content
         this.authoringComponentContent = this.$scope.authoringComponentContent;
 
+        // the mode to load the component in e.g. 'student', 'grading', 'onlyShowWork'
         this.mode = this.$scope.mode;
+
+        this.workgroupId = this.$scope.workgroupId;
+        this.teacherWorkgroupId = this.$scope.teacherWorkgroupId;
 
         if (this.componentContent != null) {
 
@@ -145,7 +152,11 @@ var EmbeddedController = function () {
 
             this.componentType = this.componentContent.type;
 
-            if (this.mode === 'authoring') {
+            if (this.mode === 'student') {
+                // get the latest annotations
+                // TODO: watch for new annotations and update accordingly
+                this.latestAnnotations = this.$scope.$parent.nodeController.getLatestComponentAnnotations(this.componentId);
+            } else if (this.mode === 'authoring') {
                 this.updateAdvancedAuthoringView();
 
                 $scope.$watch(function () {

@@ -80,6 +80,7 @@ describe('WISE Authoring Tool', function () {
     it('should have elements on the page in project view', function () {
         // check that move, delete buttons are disabled and other buttons are enabled.
         expect(element(by.id("moveButton")).isEnabled()).toBe(false);
+        expect(element(by.id("copyButton")).isEnabled()).toBe(false);
         expect(element(by.id("deleteButton")).isEnabled()).toBe(false);
         expect(element(by.id("saveProjectButton")).isEnabled()).toBe(true);
         expect(element(by.id("closeProjectButton")).isEnabled()).toBe(true);

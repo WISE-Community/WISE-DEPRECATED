@@ -1272,10 +1272,14 @@ class ProjectService {
         let project = this.project;
 
         if (project && project.themeSettings) {
-            themeSettings = project.themeSettings;
+            if (project.theme) {
+                themeSettings = project.themeSettings[project.theme];
+            } else {
+                themeSettings = project.themeSettings["default"];
+            }
         }
 
-        return themeSettings;
+        return themeSettings ? themeSettings : {};
     };
 
     /**
@@ -2892,12 +2896,106 @@ class ProjectService {
                 this.insertNodeAfterInTransitions(node, nodeId);
             }
 
-            /*
-             * remember the node id so we can put the next node (if any)
-             * after this one
-             */
+            // remember the node id so we can put the next node (if any) after this one
             nodeId = node.id;
         }
+    }
+
+    /**
+     * Copy nodes and put them after a certain node id
+     * @param nodeIds the node ids to copy
+     * @param nodeId the node id we will put the copied nodes after
+     */
+    copyNodesInside(nodeIds, nodeId) {
+        // loop through all the nodes we are copying
+        for (var n = 0; n < nodeIds.length; n++) {
+
+            // get the node we are copying
+            var nodeIdToCopy = nodeIds[n];
+
+            // create a copy of the node
+            var newNode = this.copyNode(nodeIdToCopy);
+            var newNodeId = newNode.id;
+
+            if (n == 0) {
+                // this is the first node we are copying so we will insert it
+                // into the beginning of the group
+                this.createNodeInside(newNode, nodeId);
+            } else {
+                // this is not the first node we are copying so we will insert
+                // it after the node we previously inserted
+                this.createNodeAfter(newNode, nodeId);
+            }
+
+            // remember the node id so we can put the next node (if any) after this one
+            nodeId = newNodeId;
+            this.parseProject();  // refresh project and update references because a new node have been added.
+        }
+    }
+
+    /**
+     * Copy nodes and put them after a certain node id
+     * @param nodeIds the node ids to copy
+     * @param nodeId the node id we will put the copied nodes after
+     */
+    copyNodesAfter(nodeIds, nodeId) {
+        // loop through all the nodes we are copying
+        for (var n = 0; n < nodeIds.length; n++) {
+
+            // get the node we are copying
+            var nodeIdToCopy = nodeIds[n];
+
+            // create a copy of the node
+            var newNode = this.copyNode(nodeIdToCopy);
+            var newNodeId = newNode.id;
+
+            this.createNodeAfter(newNode, nodeId);
+
+            // remember the node id so we can put the next node (if any) after this one
+            nodeId = newNodeId;
+            this.parseProject();  // refresh project and update references because a new node have been added.
+        }
+    }
+
+    /**
+     * Copy the node with the specified nodeId
+     * @param nodeId the node id to copy
+     * @return copied node
+     */
+    copyNode(nodeId) {
+        var node = this.getNodeById(nodeId);
+
+        var nodeCopy = JSON.parse(JSON.stringify(node));
+        nodeCopy.id = this.getNextAvailableNodeId();
+        nodeCopy.transitionLogic = {};  // clear transition logic
+        nodeCopy.constraints = [];  // clear constraints
+        for (var c = 0; c < nodeCopy.components.length; c++) {
+            var component = nodeCopy.components[c];
+            var componentType = component.type;
+            // get the service for the node type 
+            var service = this.$injector.get(componentType + 'Service'); 
+            // copy the component
+            var componentCopy = service.copyComponent(component);
+            if (component.maxScore != null) {
+                // Also copy the max score if exists in original node
+                componentCopy.maxScore = component.maxScore;
+            }
+            if (component.showPreviousWorkPrompt != null) {
+                // Also copy the showPreviousWorkPrompt if exists in original node
+                componentCopy.showPreviousWorkPrompt = component.showPreviousWorkPrompt;
+            }
+            if (component.showPreviousWorkNodeId != null) {
+                // Also copy the showPreviousWorkNodeId if exists in original node
+                componentCopy.showPreviousWorkNodeId = component.showPreviousWorkNodeId;
+            }
+            if (component.showPreviousWorkComponentId != null) {
+                // Also copy the showPreviousWorkComponentId if exists in original node
+                componentCopy.showPreviousWorkComponentId = component.showPreviousWorkComponentId;
+            }
+
+            nodeCopy.components[c] = componentCopy;
+        }
+        return nodeCopy;
     }
 
     /**

@@ -63,8 +63,12 @@
                               rows='10'
                               cols='100'></textarea>
         </div>
-        <div compile='tableController.getPrompt()'></div>
-        <div class="component-content__actions" layout="row">
+        <div class="component__prompt">
+            <div class="component__prompt__content" compile='tableController.getPrompt()'></div>
+            <possible-score max-score="tableController.componentContent.maxScore"
+                            ng-if="tableController.mode === 'student' && !tableController.latestAnnotations.score"></possible-score>
+        </div>
+        <div class="component__actions" layout="row">
             <md-button class="md-accent" ng-show="tableController.isStudentAttachmentEnabled"
                        ng-click="nodeController.showStudentAssets($event, component.id, tableController.isDisabled)">
                 <md-icon>image</md-icon> Import Data
@@ -82,24 +86,11 @@
                 </td>
             </tr>
         </table>
-        <div ng-if='tableController.mode == "student"'>
-            <annotation type='score'
-                        mode='{{tableController.mode}}'
-                        nodeid='{{tableController.nodeId}}'
-                        componentid='{{tableController.componentId}}'
-                        fromworkgroupid='{{teacherWorkgroupId}}'
-                        toworkgroupid='{{workgroupId}}'
-                        componentstateid='{{componentState.id}}'></annotation>
-            <br/>
-            <annotation type='comment'
-                        mode='{{tableController.mode}}'
-                        nodeid='{{tableController.nodeId}}'
-                        componentid='{{tableController.componentId}}'
-                        fromworkgroupid='{{teacherWorkgroupId}}'
-                        toworkgroupid='{{workgroupId}}'
-                        componentstateid='{{componentState.id}}'></annotation>
-        </div>
-        <div class="component-content__actions" layout="row" layout-align="start center">
+        <component-annotations ng-if="tableController.mode === 'student'"
+                               score-annotation='tableController.latestAnnotations.score'
+                               comment-annotation='tableController.latestAnnotations.comment'
+                               max-score="tableController.componentContent.maxScore"></component-annotations>
+        <div class="component__actions" layout="row" layout-align="start center">
             <md-button class="md-raised md-primary"
                        ng-click='tableController.submitButtonClicked()'
                        ng-disabled='tableController.isDisabled || !tableController.isSubmitDirty'
@@ -111,28 +102,28 @@
                        ng-show='tableController.showSaveButton()'>Save</md-button>
             <span ng-if="tableController.showSaveButton() || tableController.showSubmitButton()"
                   ng-show="tableController.saveMessage.text"
-                  class="component-content__actions__info md-caption">
-                  {{tableController.saveMessage.text}} <span class="component-content__actions__more"><md-tooltip md-direction="top">{{ tableController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="tableController.saveMessage.time"></span></span>
+                  class="component__actions__info md-caption">
+                  {{tableController.saveMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ tableController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="tableController.saveMessage.time"></span></span>
             </span>
         </div>
     </div>
-    <div ng-if='tableController.mode == "grading"' style='width: 400px'>
+    <div ng-if='tableController.mode === "grading" && tableController.componentContent.maxScore > -1'>
         <annotation type='score'
-                    mode='{{tableController.mode}}'
-                    nodeid='{{tableController.nodeId}}'
-                    componentid='{{tableController.componentId}}'
-                    fromworkgroupid='{{teacherWorkgroupId}}'
-                    toworkgroupid='{{workgroupId}}'
-                    componentstateid='{{componentState.id}}'
+                    mode='tableController.mode'
+                    node-id='tableController.nodeId'
+                    component-id='tableController.componentId'
+                    from-workgroup-id='teacherWorkgroupId'
+                    to-workgroup-id='workgroupId'
+                    component-state-id='componentState.id'
                     active='true'></annotation>
         <br/>
         <annotation type='comment'
-                    mode='{{tableController.mode}}'
-                    nodeid='{{tableController.nodeId}}'
-                    componentid='{{tableController.componentId}}'
-                    fromworkgroupid='{{teacherWorkgroupId}}'
-                    toworkgroupid='{{workgroupId}}'
-                    componentstateid='{{componentState.id}}'
+                    mode='tableController.mode'
+                    node-id='tableController.nodeId'
+                    component-id='tableController.componentId'
+                    from-workgroup-id='teacherWorkgroupId'
+                    to-workgroup-id='workgroupId'
+                    component-state-id='componentState.id'
                     active='true'></annotation>
     </div>
 </div>

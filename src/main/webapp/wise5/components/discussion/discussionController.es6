@@ -79,8 +79,14 @@ class DiscussionController {
         // whether we have retrieved the classmate responses
         this.retrievedClassmateResponses = false;
 
+        // the latest annotations
+        this.latestAnnotations = null;
+
         // the mode to load the component in e.g. 'student', 'grading', 'onlyShowWork'
-        this.mode = null;
+        this.mode = this.$scope.mode;
+
+        this.workgroupId = this.$scope.workgroupId;
+        this.teacherWorkgroupId = this.$scope.teacherWorkgroupId;
 
         this.workgroupId = null;
 
@@ -169,6 +175,10 @@ class DiscussionController {
                             // classmate responses are not gated so we will show them
                             this.getClassmateResponses();
                         }
+
+                        // get the latest annotations
+                        // TODO: watch for new annotations and update accordingly
+                        this.latestAnnotations = this.$scope.$parent.nodeController.getLatestComponentAnnotations(this.componentId);
                     }
 
                     // check if we need to lock this component

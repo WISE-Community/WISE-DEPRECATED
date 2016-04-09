@@ -1,6 +1,7 @@
 class NodeController {
     constructor($rootScope,
                 $scope,
+                AnnotationService,
                 ConfigService,
                 NodeService,
                 NotebookService,
@@ -9,6 +10,7 @@ class NodeController {
 
         this.$rootScope = $rootScope;
         this.$scope = $scope;
+        this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
         this.NodeService = NodeService;
         this.NotebookService = NotebookService;
@@ -831,6 +833,34 @@ class NodeController {
     };
 
     /**
+     * Get the latest annotations for a given component
+     * TODO: move to a parent component class in the future?
+     * @param componentId the component's id
+     * @return object containing the component's latest score and comment annotations
+     */
+    getLatestComponentAnnotations(componentId) {
+        let latestScoreAnnotation = null;
+        let latestCommentAnnotation = null;
+        let annotationParams = {};
+        annotationParams.nodeId = this.nodeId;
+        annotationParams.componentId = componentId;
+        annotationParams.fromWorkgroupId = this.teacherWorkgroupId;
+        annotationParams.toWorkgroupId = this.workgroupId;
+
+        // get the latest annotations for this component
+        annotationParams.type = "score";
+        latestScoreAnnotation = this.AnnotationService.getLatestAnnotation(annotationParams);
+
+        annotationParams.type = "comment";
+        latestCommentAnnotation = this.AnnotationService.getLatestAnnotation(annotationParams);
+
+        return {
+            'score': latestScoreAnnotation,
+            'comment': latestCommentAnnotation
+        };
+    };
+
+    /**
      * Notify any connected components that the student data has changed
      * @param componentId the component id that has changed
      * @param componentState the new component state
@@ -1045,6 +1075,7 @@ class NodeController {
 NodeController.$inject = [
     '$rootScope',
     '$scope',
+    'AnnotationService',
     'ConfigService',
     'NodeService',
     'NotebookService',

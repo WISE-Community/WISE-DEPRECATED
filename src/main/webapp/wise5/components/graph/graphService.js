@@ -74,6 +74,25 @@ var GraphService = function (_NodeService) {
         }
 
         /**
+         * Copies an existing Graph component object
+         * @returns a copied Graph component object
+         */
+
+    }, {
+        key: 'copyComponent',
+        value: function copyComponent(componentToCopy) {
+            var component = this.createComponent();
+            component.prompt = componentToCopy.prompt;
+            component.showSaveButton = componentToCopy.showSaveButton;
+            component.showSubmitButton = componentToCopy.showSubmitButton;
+            component.title = componentToCopy.title;
+            component.xAxis = componentToCopy.xAxis;
+            component.yAxis = componentToCopy.yAxis;
+            component.series = componentToCopy.series;
+            return component;
+        }
+
+        /**
          * Populate a component state with the data from another component state
          * @param componentStateFromOtherComponent the component state to obtain the data from
          * @return a new component state that contains the student data from the other

@@ -230,7 +230,7 @@ let mainModule = angular.module('authoring', [
 
             // ngMaterial default theme configuration
             // TODO: make dynamic and support alternate themes; allow projects to specify theme parameters and settings
-            $mdThemingProvider.definePalette('primaryPaletteWise', {
+            $mdThemingProvider.definePalette('primary', {
                 '50': 'e1f0f4',
                 '100': 'b8dbe4',
                 '200': '8ec6d4',
@@ -252,7 +252,7 @@ let mainModule = angular.module('authoring', [
                 'contrastLightColors': undefined    // could also specify this if default was 'dark'
             });
 
-            $mdThemingProvider.definePalette('accentPaletteWise', {
+            $mdThemingProvider.definePalette('accent', {
                 '50': 'fde9e6',
                 '100': 'fbcbc4',
                 '200': 'f8aca1',
@@ -267,16 +267,33 @@ let mainModule = angular.module('authoring', [
                 'A200': 'ff7061',
                 'A400': 'ff3829',
                 'A700': 'cc1705',
-                'contrastDefaultColor': 'light',    // whether, by default, text (contrast)
-                                                    // on this palette should be dark or light
-                'contrastDarkColors': ['50', '100', //hues which contrast should be 'dark' by default
+                'contrastDefaultColor': 'light',
+                'contrastDarkColors': ['50', '100',
                     '200', '300', 'A100'],
-                'contrastLightColors': undefined    // could also specify this if default was 'dark'
+                'contrastLightColors': undefined
             });
 
             $mdThemingProvider.theme('default')
-                .primaryPalette('primaryPaletteWise')
-                .accentPalette('accentPaletteWise');
+                .primaryPalette('primary')
+                .accentPalette('accent',  {
+                    'default': '500'
+                })
+                .warnPalette('red', {
+                    'default': 'A700'
+                });
+
+            var lightMap = $mdThemingProvider.extendPalette('grey', {
+                'A100': 'ffffff'
+            });
+            $mdThemingProvider.definePalette('light', lightMap);
+
+            $mdThemingProvider.theme('light')
+                .primaryPalette('light', {
+                    'default': 'A100'
+                })
+                .accentPalette('primary');
+
+            $mdThemingProvider.setDefaultTheme('default');
     }]);
 
 export default mainModule;

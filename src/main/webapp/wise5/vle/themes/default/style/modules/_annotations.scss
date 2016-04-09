@@ -1,0 +1,32 @@
+.annotations--student {
+    padding: 8px 0;
+    border-bottom: 1px dotted color(gray-light);
+}
+
+.annotations--student__score {
+    display: inline-block;
+}
+
+.annotations--grading__score {
+    input {
+        width: 46px;
+    }
+}
+
+.annotations--student__icon {
+    color: color('accent-1') !important;
+}
+
+.annotations--inside {
+    @media only screen and (max-width: ($layout-breakpoint-xs - 1)) {
+        padding: 8px 8px 0;
+        display: block;
+    }
+
+    .annotations--student {
+        background-color: #ffffff;
+        padding: 8px;
+        margin-bottom: 8px;
+        border: 0 none;
+    }
+}

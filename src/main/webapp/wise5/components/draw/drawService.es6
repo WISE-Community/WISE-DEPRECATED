@@ -13,7 +13,6 @@ class DrawService extends NodeService {
      * @returns a new Draw component object
      */
     createComponent() {
-
         var component = {};
         component.id = this.UtilService.generateKey();
         component.type = 'Draw';
@@ -22,7 +21,20 @@ class DrawService extends NodeService {
         component.showSubmitButton = false;
         component.stamps = {};
         component.stamps.Stamps = [];
+        return component;
+    }
 
+    /**
+     * Copies an existing Draw component object
+     * @returns a copied Draw component object
+     */
+    copyComponent(componentToCopy) {
+        var component = this.createComponent();
+        component.prompt = componentToCopy.prompt;
+        component.showSaveButton = componentToCopy.showSaveButton;
+        component.showSubmitButton = componentToCopy.showSubmitButton;
+        component.stamps = componentToCopy.stamps;
+        component.stamps.Stamps = componentToCopy.stamps.Stamps;
         return component;
     }
 

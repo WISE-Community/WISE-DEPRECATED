@@ -23,8 +23,17 @@
                               rows='10'
                               cols='100'></textarea>
             </div>
-            <div class="component__prompt" compile="discussionController.getPrompt()" ng-if="discussionController.getPrompt()"></div>
+            <div class="component__prompt">
+                <div class="component__prompt__content" compile='discussionController.getPrompt()'></div>
+                <possible-score max-score="discussionController.componentContent.maxScore"
+                                ng-if="discussionController.mode === 'student' && !discussionController.latestAnnotations.score"></possible-score>
+            </div>
             <div class="md-padding discussion-content">
+                <component-annotations ng-if="discussionController.mode === 'student'"
+                                       class="annotations--inside"
+                                       score-annotation='discussionController.latestAnnotations.score'
+                                       comment-annotation='discussionController.latestAnnotations.comment'
+                                       max-score="discussionController.componentContent.maxScore"></component-annotations>
                 <div layout="row">
                     <div class="discussion-posts" flex>
                         <md-card class="discussion-new discussion-post"
@@ -94,40 +103,23 @@
                     </div>
                 </div>
             </div>
-            <div ng-if='discussionController.mode == "student"'>
+            <div ng-if='discussionController.mode === "grading" && discussionController.componentContent.maxScore > -1'>
                 <annotation type='score'
-                            mode='{{discussionController.mode}}'
-                            nodeid='{{discussionController.nodeId}}'
-                            componentid='{{discussionController.componentId}}'
-                            fromworkgroupid='{{teacherWorkgroupId}}'
-                            toworkgroupid='{{workgroupId}}'
-                            componentstateid='{{componentState.id}}'></annotation>
-                <br/>
-                <annotation type='comment'
-                            mode='{{discussionController.mode}}'
-                            nodeid='{{discussionController.nodeId}}'
-                            componentid='{{discussionController.componentId}}'
-                            fromworkgroupid='{{teacherWorkgroupId}}'
-                            toworkgroupid='{{workgroupId}}'
-                            componentstateid='{{componentState.id}}'></annotation>
-            </div>
-            <div ng-if='discussionController.mode == "grading"' style='width: 400px'>
-                <annotation type='score'
-                            mode='{{discussionController.mode}}'
-                            nodeid='{{discussionController.nodeId}}'
-                            componentid='{{discussionController.componentId}}'
-                            fromworkgroupid='{{teacherWorkgroupId}}'
-                            toworkgroupid='{{workgroupId}}'
-                            componentstateid='{{componentState.id}}'
+                            mode='discussionController.mode'
+                            node-id='discussionController.nodeId'
+                            component-id='discussionController.componentId'
+                            from-workgroup-id='teacherWorkgroupId'
+                            to-workgroup-id='workgroupId'
+                            component-state-id='componentState.id'
                             active='true'></annotation>
                 <br/>
                 <annotation type='comment'
-                            mode='{{discussionController.mode}}'
-                            nodeid='{{discussionController.nodeId}}'
-                            componentid='{{discussionController.componentId}}'
-                            fromworkgroupid='{{teacherWorkgroupId}}'
-                            toworkgroupid='{{workgroupId}}'
-                            componentstateid='{{componentState.id}}'
+                            mode='discussionController.mode'
+                            node-id='discussionController.nodeId'
+                            component-id='discussionController.componentId'
+                            from-workgroup-id='teacherWorkgroupId'
+                            to-workgroup-id='workgroupId'
+                            component-state-id='componentState.id'
                             active='true'></annotation>
             </div>
         </div>

@@ -63,8 +63,12 @@
                       rows='10'
                       cols='100'></textarea>
         </div>
-        <div id='prompt' compile='graphController.getPrompt()' ng-show='graphController.showPrompt()'></div>
-        <div class="component-content__actions" layout="row">
+        <div class="component__prompt">
+            <div class="component__prompt__content" compile='graphController.getPrompt()'></div>
+            <possible-score max-score="graphController.componentContent.maxScore"
+                            ng-if="graphController.mode === 'student' && !graphController.latestAnnotations.score"></possible-score>
+        </div>
+        <div class="component__actions" layout="row">
             <md-button class="md-accent" ng-show="graphController.isStudentAttachmentEnabled"
                        ng-click="nodeController.showStudentAssets($event, component.id, graphController.isDisabled)">
                 <md-icon>image</md-icon> Import Data
@@ -80,24 +84,11 @@
                 ng-show='graphController.showSelectSeries()'>
         </select>
         <highchart id="{{graphController.chartId}}" config="graphController.chartConfig" class="span10" style="width:80%"></highchart>
-        <div ng-if='graphController.mode == "student"'>
-            <annotation type='score'
-                        mode='{{graphController.mode}}'
-                        nodeid='{{graphController.nodeId}}'
-                        componentid='{{graphController.componentId}}'
-                        fromworkgroupid='{{teacherWorkgroupId}}'
-                        toworkgroupid='{{workgroupId}}'
-                        componentstateid='{{componentState.id}}'></annotation>
-            <br/>
-            <annotation type='comment'
-                        mode='{{graphController.mode}}'
-                        nodeid='{{graphController.nodeId}}'
-                        componentid='{{graphController.componentId}}'
-                        fromworkgroupid='{{teacherWorkgroupId}}'
-                        toworkgroupid='{{workgroupId}}'
-                        componentstateid='{{componentState.id}}'></annotation>
-        </div>
-        <div class="component-content__actions" layout="row" layout-align="start center">
+        <component-annotations ng-if="graphController.mode === 'student'"
+                               score-annotation='graphController.latestAnnotations.score'
+                               comment-annotation='graphController.latestAnnotations.comment'
+                               max-score="graphController.componentContent.maxScore"></component-annotations>
+        <div class="component__actions" layout="row" layout-align="start center">
             <md-button class="md-raised md-primary"
                        ng-click='graphController.submitButtonClicked()'
                        ng-if='graphController.showSubmitButton()'
@@ -109,28 +100,28 @@
                        ng-disabled='graphController.isDisabled || !graphController.isDirty'>Save</md-button>
             <span ng-if="graphController.showSaveButton() || graphController.showSubmitButton()"
                       ng-show="graphController.saveMessage.text"
-                      class="component-content__actions__info md-caption">
-                      {{graphController.saveMessage.text}} <span class="component-content__actions__more"><md-tooltip md-direction="top">{{ graphController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="graphController.saveMessage.time"></span></span>
+                      class="component__actions__info md-caption">
+                      {{graphController.saveMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ graphController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="graphController.saveMessage.time"></span></span>
             </span>
         </div>
     </div>
-    <div ng-if='graphController.mode == "grading"' style='width: 400px'>
+    <div ng-if='graphController.mode === "grading" && graphController.componentContent.maxScore > -1'>
         <annotation type='score'
-                    mode='{{graphController.mode}}'
-                    nodeid='{{graphController.nodeId}}'
-                    componentid='{{graphController.componentId}}'
-                    fromworkgroupid='{{teacherWorkgroupId}}'
-                    toworkgroupid='{{workgroupId}}'
-                    componentstateid='{{componentState.id}}'
+                    mode='graphController.mode'
+                    node-id='graphController.nodeId'
+                    component-id='graphController.componentId'
+                    from-workgroup-id='teacherWorkgroupId'
+                    to-workgroup-id='workgroupId'
+                    component-state-id='componentState.id'
                     active='true'></annotation>
         <br/>
         <annotation type='comment'
-                    mode='{{graphController.mode}}'
-                    nodeid='{{graphController.nodeId}}'
-                    componentid='{{graphController.componentId}}'
-                    fromworkgroupid='{{teacherWorkgroupId}}'
-                    toworkgroupid='{{workgroupId}}'
-                    componentstateid='{{componentState.id}}'
+                    mode='graphController.mode'
+                    node-id='graphController.nodeId'
+                    component-id='graphController.componentId'
+                    from-workgroup-id='teacherWorkgroupId'
+                    to-workgroup-id='workgroupId'
+                    component-state-id='componentState.id'
                     active='true'></annotation>
     </div>
 </div>

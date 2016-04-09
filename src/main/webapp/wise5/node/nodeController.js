@@ -9,11 +9,12 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var NodeController = function () {
-    function NodeController($rootScope, $scope, ConfigService, NodeService, NotebookService, ProjectService, StudentDataService) {
+    function NodeController($rootScope, $scope, AnnotationService, ConfigService, NodeService, NotebookService, ProjectService, StudentDataService) {
         _classCallCheck(this, NodeController);
 
         this.$rootScope = $rootScope;
         this.$scope = $scope;
+        this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
         this.NodeService = NodeService;
         this.NotebookService = NotebookService;
@@ -891,6 +892,37 @@ var NodeController = function () {
             return componentAnnotations;
         }
     }, {
+        key: 'getLatestComponentAnnotations',
+
+
+        /**
+         * Get the latest annotations for a given component
+         * TODO: move to a parent component class in the future?
+         * @param componentId the component's id
+         * @return object containing the component's latest score and comment annotations
+         */
+        value: function getLatestComponentAnnotations(componentId) {
+            var latestScoreAnnotation = null;
+            var latestCommentAnnotation = null;
+            var annotationParams = {};
+            annotationParams.nodeId = this.nodeId;
+            annotationParams.componentId = componentId;
+            annotationParams.fromWorkgroupId = this.teacherWorkgroupId;
+            annotationParams.toWorkgroupId = this.workgroupId;
+
+            // get the latest annotations for this component
+            annotationParams.type = "score";
+            latestScoreAnnotation = this.AnnotationService.getLatestAnnotation(annotationParams);
+
+            annotationParams.type = "comment";
+            latestCommentAnnotation = this.AnnotationService.getLatestAnnotation(annotationParams);
+
+            return {
+                'score': latestScoreAnnotation,
+                'comment': latestCommentAnnotation
+            };
+        }
+    }, {
         key: 'notifyConnectedParts',
 
 
@@ -1126,7 +1158,7 @@ var NodeController = function () {
     return NodeController;
 }();
 
-NodeController.$inject = ['$rootScope', '$scope', 'ConfigService', 'NodeService', 'NotebookService', 'ProjectService', 'StudentDataService'];
+NodeController.$inject = ['$rootScope', '$scope', 'AnnotationService', 'ConfigService', 'NodeService', 'NotebookService', 'ProjectService', 'StudentDataService'];
 
 exports.default = NodeController;
 //# sourceMappingURL=nodeController.js.map

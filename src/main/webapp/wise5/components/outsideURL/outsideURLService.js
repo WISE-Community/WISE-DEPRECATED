@@ -39,14 +39,27 @@ var OutsideURLService = function (_NodeService) {
     _createClass(OutsideURLService, [{
         key: 'createComponent',
         value: function createComponent() {
-
             var component = {};
             component.id = this.UtilService.generateKey();
             component.type = 'OutsideURL';
             component.url = '';
             component.showSaveButton = false;
             component.showSubmitButton = false;
+            return component;
+        }
 
+        /**
+         * Copies an existing OutsideURL component object
+         * @returns a copied OutsideURL component object
+         */
+
+    }, {
+        key: 'copyComponent',
+        value: function copyComponent(componentToCopy) {
+            var component = this.createComponent();
+            component.url = componentToCopy.url;
+            component.showSaveButton = componentToCopy.showSaveButton;
+            component.showSubmitButton = componentToCopy.showSubmitButton;
             return component;
         }
 

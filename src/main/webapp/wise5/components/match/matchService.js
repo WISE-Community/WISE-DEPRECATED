@@ -56,6 +56,69 @@ var MatchService = function (_NodeService) {
         }
 
         /**
+         * Copies an existing Match component object
+         * @returns a copied Match component object
+         */
+
+    }, {
+        key: 'copyComponent',
+        value: function copyComponent(componentToCopy) {
+            var component = this.createComponent();
+            component.prompt = componentToCopy.prompt;
+            component.showSaveButton = componentToCopy.showSaveButton;
+            component.showSubmitButton = componentToCopy.showSubmitButton;
+            component.feedback = componentToCopy.feedback; // Copy the feedback as-is. We'll update the id's below.
+            component.choices = [];
+            // go through the original choices and create new id's
+            if (componentToCopy.choices != null && componentToCopy.choices.length > 0) {
+                for (var c = 0; c < componentToCopy.choices.length; c++) {
+                    var choice = componentToCopy.choices[c];
+                    var oldChoiceId = choice.id;
+                    var newChoiceId = this.UtilService.generateKey(); // generate a new id for this choice.
+                    choice.id = newChoiceId; // update the choice.
+                    component.choices.push(choice);
+                    // Also update any matching choice in the feedback.
+                    if (component.feedback != null && component.feedback.length > 0) {
+                        for (var f = 0; f < component.feedback.length; f++) {
+                            var feedback = component.feedback[f];
+                            if (feedback.choices != null && feedback.choices.length > 0) {
+                                for (var fc = 0; fc < feedback.choices.length; fc++) {
+                                    var feedbackChoice = feedback.choices[fc];
+                                    if (feedbackChoice.choiceId === oldChoiceId) {
+                                        feedbackChoice.choiceId = newChoiceId;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            component.buckets = [];
+            // go through the original buckets and create new id's
+            if (componentToCopy.buckets != null && componentToCopy.buckets.length > 0) {
+                for (var b = 0; b < componentToCopy.buckets.length; b++) {
+                    var bucket = componentToCopy.buckets[b];
+                    var oldBucketId = bucket.id;
+                    var newBucketId = this.UtilService.generateKey(); // generate a new id for this bucket.
+                    bucket.id = newBucketId; // update the bucket's id
+                    component.buckets.push(bucket);
+                    // Also update any matching bucket in the feedback.
+                    if (component.feedback != null && component.feedback.length > 0) {
+                        for (var f = 0; f < component.feedback.length; f++) {
+                            var feedback = component.feedback[f];
+                            if (feedback.bucketId === oldBucketId) {
+                                feedback.bucketId = newBucketId;
+                            }
+                        }
+                    }
+                }
+            }
+            component.ordered = false;
+            return component;
+        }
+
+        /**
          * Populate a component state with the data from another component state
          * @param componentStateFromOtherComponent the component state to obtain the data from
          * @return a new component state that contains the student data from the other
