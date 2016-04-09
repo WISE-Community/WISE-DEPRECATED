@@ -15,6 +15,8 @@ import angularUITree from 'angular-ui-tree';
 import angularWebSocket from 'angular-websocket';
 import AnnotationController from '../controllers/annotationController';
 import AnnotationService from '../services/annotationService';
+import AudioPlayerController from '../components/audioPlayer/audioPlayerController';
+import AudioPlayerService from '../components/audioPlayer/audioPlayerService';
 //import AudioRecorderService from '../components/audioRecorder/audioRecorderService';
 import ConfigService from '../services/configService';
 //import CRaterService from '../components/cRater/cRaterService';
@@ -87,6 +89,7 @@ let mainModule = angular.module('vle', [
     ])
 
     .service(AnnotationService.name, AnnotationService)
+    .service(AudioPlayerService.name, AudioPlayerService)
     //.service(AudioRecorderService.name, AudioRecorderService)
     .service(ConfigService.name, ConfigService)
     //.service(CRaterService.name, CRaterService)
@@ -113,6 +116,7 @@ let mainModule = angular.module('vle', [
     .service(TableService.name, TableService)
     .service(TeacherDataService.name, TeacherDataService)
     .service(UtilService.name, UtilService)
+    .controller(AudioPlayerController.name, AudioPlayerController)
     .controller(AnnotationController.name, AnnotationController)
     .controller(DiscussionController.name, DiscussionController)
     .controller(DrawController.name, DrawController)

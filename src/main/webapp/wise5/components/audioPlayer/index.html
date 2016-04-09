@@ -1,0 +1,145 @@
+<div ng-controller='AudioPlayerController as audioPlayerController' style='display: flex'>
+    <div style='flex: 1'>
+        <div ng-if='audioPlayerController.mode === "authoring"'>
+            <textarea ng-model='audioPlayerController.authoringComponentContent.prompt'
+                      ng-change='audioPlayerController.authoringViewComponentChanged()'
+                      ng-model-options='{ debounce: 1000 }'
+                      rows='10'
+                      cols='100'></textarea>
+            <br/>
+            Graph Title: <input ng-model='audioPlayerController.authoringComponentContent.title'
+                                ng-change='audioPlayerController.authoringViewComponentChanged()'
+                                size='30'/>
+            Graph Type: <input ng-model='audioPlayerController.authoringComponentContent.graphType'
+                               ng-change='audioPlayerController.authoringViewComponentChanged()'/>
+            <br/>
+            <br/>
+            X Axis Title: <input ng-model='audioPlayerController.authoringComponentContent.xAxis.title.text'
+                                 ng-change='audioPlayerController.authoringViewComponentChanged()'/>
+            X Min: <input type='number'
+                          ng-model='audioPlayerController.authoringComponentContent.xAxis.min'
+                          ng-change='audioPlayerController.authoringViewComponentChanged()'/>
+            X Max: <input type='number'
+                          ng-model='audioPlayerController.authoringComponentContent.xAxis.max'
+                          ng-change='audioPlayerController.authoringViewComponentChanged()'/>
+            <br/>
+            <br/>
+            Y Axis Title: <input ng-model='audioPlayerController.authoringComponentContent.yAxis.title.text'
+                                 ng-change='audioPlayerController.authoringViewComponentChanged()'/>
+            Y Min: <input type='number'
+                          ng-model='audioPlayerController.authoringComponentContent.yAxis.min'
+                          ng-change='audioPlayerController.authoringViewComponentChanged()'/>
+            Y Max: <input type='number'
+                          ng-model='audioPlayerController.authoringComponentContent.yAxis.max'
+                          ng-change='audioPlayerController.authoringViewComponentChanged()'/>
+            <br/>
+            Series
+            <button ng-click='audioPlayerController.authoringAddSeriesClicked()'>Add Series</button>
+            <div ng-repeat='series in audioPlayerController.authoringComponentContent.series track by $index'
+                 style='border: 1px solid black'>
+                Name: <input ng-model='series.name'
+                             ng-change='audioPlayerController.authoringViewComponentChanged()'
+                             size='30'/>
+                <br/>
+                Color: <input ng-model='series.color'/>
+                <br/>
+                Symbol: <input ng-model='series.marker.symbol'/>
+                <br/>
+                Can Student Edit: <input type='checkbox' ng-model='series.canEdit'/>
+                <br/>
+                <button ng-click='audioPlayerController.authoringDeleteSeriesClicked($index)'>Delete Series</button>
+            </div>
+            <br/>
+            Max Score:
+            <input type='number'
+                   ng-model='audioPlayerController.authoringComponentContent.maxScore'
+                   ng-change='audioPlayerController.authoringViewComponentChanged()'
+                   ng-model-options='{ debounce: 1000 }'
+                   style='width: 3em'/>
+            <br/>
+            <textarea ng-model='audioPlayerController.authoringComponentContentJSONString'
+                      ng-change='audioPlayerController.advancedAuthoringViewComponentChanged()'
+                      ng-model-options='{ debounce: 1000 }'
+                      rows='10'
+                      cols='100'></textarea>
+        </div>
+        <div id='prompt' compile='audioPlayerController.getPrompt()' ng-show='audioPlayerController.showPrompt()'></div>
+        <div class="component-content__actions" layout="row">
+            <md-button class="md-accent" ng-show="audioPlayerController.isStudentAttachmentEnabled"
+                       ng-click="nodeController.showStudentAssets($event, component.id, audioPlayerController.isDisabled)">
+                <md-icon>image</md-icon> Import Data
+            </md-button>
+        </div>
+        <span ng-if='audioPlayerController.oscillatorTypes.length == 0 || audioPlayerController.oscillatorTypes.length == 1'>
+            Oscillator Type: {{audioPlayerController.oscillatorType}}
+        </span>
+        <span ng-if='audioPlayerController.oscillatorTypes.length > 1'>
+            Oscillator Type: 
+            <select ng-model='audioPlayerController.oscillatorType'
+                    ng-change='audioPlayerController.oscillatorTypeChanged()'>
+                <option ng-repeat='oscillatorType in audioPlayerController.oscillatorTypes'
+                        value='{{oscillatorType}}'>{{oscillatorType}}</option>
+            </select>
+        </span>
+        <br/>
+        Frequency: <input type='number'
+                          ng-model='audioPlayerController.frequency'
+                          ng-change='audioPlayerController.frequencyChanged()'/>
+        <br/>
+        <button ng-click='audioPlayerController.playPauseClicked()'>{{audioPlayerController.isPlaying == true ? 'Pause' : 'Play'}}</button>
+        <br/>
+        <canvas id='oscilloscope' width={{audioPlayerController.oscilloscopeWidth}} height={{audioPlayerController.oscilloscopeHeight}} style="border:1px solid lightgrey"></canvas>
+        <div ng-if='audioPlayerController.mode == "student"'>
+            <annotation type='score'
+                        mode='{{audioPlayerController.mode}}'
+                        nodeid='{{audioPlayerController.nodeId}}'
+                        componentid='{{audioPlayerController.componentId}}'
+                        fromworkgroupid='{{teacherWorkgroupId}}'
+                        toworkgroupid='{{workgroupId}}'
+                        componentstateid='{{componentState.id}}'></annotation>
+            <br/>
+            <annotation type='comment'
+                        mode='{{audioPlayerController.mode}}'
+                        nodeid='{{audioPlayerController.nodeId}}'
+                        componentid='{{audioPlayerController.componentId}}'
+                        fromworkgroupid='{{teacherWorkgroupId}}'
+                        toworkgroupid='{{workgroupId}}'
+                        componentstateid='{{componentState.id}}'></annotation>
+        </div>
+        <div class="component-content__actions" layout="row" layout-align="start center">
+            <md-button class="md-raised md-primary"
+                       ng-click='audioPlayerController.submitButtonClicked()'
+                       ng-if='audioPlayerController.showSubmitButton()'
+                       ng-disabled='audioPlayerController.isDisabled || !audioPlayerController.isSubmitDirty'>Submit</md-button>
+            <md-button class="md-primary"
+                       ng-class="{'md-raised': !audioPlayerController.showSubmitButton()}"
+                       ng-click='audioPlayerController.saveButtonClicked()'
+                       ng-if='audioPlayerController.showSaveButton()'
+                       ng-disabled='audioPlayerController.isDisabled || !audioPlayerController.isDirty'>Save</md-button>
+            <span ng-if="audioPlayerController.showSaveButton() || audioPlayerController.showSubmitButton()"
+                      ng-show="audioPlayerController.saveMessage.text"
+                      class="component-content__actions__info md-caption">
+                      {{audioPlayerController.saveMessage.text}} <span class="component-content__actions__more"><md-tooltip md-direction="top">{{ audioPlayerController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="audioPlayerController.saveMessage.time"></span></span>
+            </span>
+        </div>
+    </div>
+    <div ng-if='audioPlayerController.mode == "grading"' style='width: 400px'>
+        <annotation type='score'
+                    mode='{{audioPlayerController.mode}}'
+                    nodeid='{{audioPlayerController.nodeId}}'
+                    componentid='{{audioPlayerController.componentId}}'
+                    fromworkgroupid='{{teacherWorkgroupId}}'
+                    toworkgroupid='{{workgroupId}}'
+                    componentstateid='{{componentState.id}}'
+                    active='true'></annotation>
+        <br/>
+        <annotation type='comment'
+                    mode='{{audioPlayerController.mode}}'
+                    nodeid='{{audioPlayerController.nodeId}}'
+                    componentid='{{audioPlayerController.componentId}}'
+                    fromworkgroupid='{{teacherWorkgroupId}}'
+                    toworkgroupid='{{workgroupId}}'
+                    componentstateid='{{componentState.id}}'
+                    active='true'></annotation>
+    </div>
+</div>
