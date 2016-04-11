@@ -6,7 +6,7 @@ import angularFileUpload from 'ng-file-upload';
 import angularHighcharts from 'highcharts-ng';
 import angularUIRouter from 'angular-ui-router';
 import angularUITree from 'angular-ui-tree';
-import ngMaterial from 'angular-material';
+import angularMaterial from 'angular-material';
 import angularMoment from 'angular-moment';
 import angularSanitize from 'angular-sanitize';
 import angularToArrayFilter from 'lib/angular-toArrayFilter/toArrayFilter';

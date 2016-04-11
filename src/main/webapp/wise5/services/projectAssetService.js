@@ -46,6 +46,11 @@ var ProjectAssetService = function () {
             });
         }
     }, {
+        key: 'getFullAssetItemURL',
+        value: function getFullAssetItemURL(assetItem) {
+            return this.ConfigService.getConfigParam('projectBaseURL') + "assets/" + assetItem.fileName;
+        }
+    }, {
         key: 'retrieveProjectAssets',
         value: function retrieveProjectAssets() {
             var _this2 = this;
