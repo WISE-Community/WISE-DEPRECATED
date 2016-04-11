@@ -14,8 +14,8 @@ import angularUIRouter from 'angular-ui-router';
 import angularUITree from 'angular-ui-tree';
 import angularWebSocket from 'angular-websocket';
 import AnnotationService from '../services/annotationService';
-import AudioPlayerController from '../components/audioPlayer/audioPlayerController';
-import AudioPlayerService from '../components/audioPlayer/audioPlayerService';
+import AudioOscillatorController from '../components/audioOscillator/audioOscillatorController';
+import AudioOscillatorService from '../components/audioOscillator/audioOscillatorService';
 //import AudioRecorderService from '../components/audioRecorder/audioRecorderService';
 import ConfigService from '../services/configService';
 //import CRaterService from '../components/cRater/cRaterService';
@@ -88,7 +88,7 @@ let mainModule = angular.module('vle', [
     ])
 
     .service(AnnotationService.name, AnnotationService)
-    .service(AudioPlayerService.name, AudioPlayerService)
+    .service(AudioOscillatorService.name, AudioOscillatorService)
     //.service(AudioRecorderService.name, AudioRecorderService)
     .service(ConfigService.name, ConfigService)
     //.service(CRaterService.name, CRaterService)
@@ -115,7 +115,7 @@ let mainModule = angular.module('vle', [
     .service(TableService.name, TableService)
     .service(TeacherDataService.name, TeacherDataService)
     .service(UtilService.name, UtilService)
-    .controller(AudioPlayerController.name, AudioPlayerController)
+    .controller(AudioOscillatorController.name, AudioOscillatorController)
     .controller(DiscussionController.name, DiscussionController)
     .controller(DrawController.name, DrawController)
     .controller(EmbeddedController.name, EmbeddedController)

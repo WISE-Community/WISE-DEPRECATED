@@ -8,18 +8,18 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var AudioPlayerController = function () {
-    function AudioPlayerController($injector, $rootScope, $scope, $timeout, NodeService, AudioPlayerService, ProjectService, StudentAssetService, StudentDataService) {
+var AudioOscillatorController = function () {
+    function AudioOscillatorController($injector, $rootScope, $scope, $timeout, NodeService, AudioOscillatorService, ProjectService, StudentAssetService, StudentDataService) {
         var _this2 = this;
 
-        _classCallCheck(this, AudioPlayerController);
+        _classCallCheck(this, AudioOscillatorController);
 
         this.$injector = $injector;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$timeout = $timeout;
         this.NodeService = NodeService;
-        this.AudioPlayerService = AudioPlayerService;
+        this.AudioOscillatorService = AudioOscillatorService;
         this.ProjectService = ProjectService;
         this.StudentAssetService = StudentAssetService;
         this.StudentDataService = StudentDataService;
@@ -251,7 +251,7 @@ var AudioPlayerController = function () {
          * Returns true iff there is student work that hasn't been saved yet
          */
         this.$scope.isDirty = function () {
-            return this.$scope.audioPlayerController.isDirty;
+            return this.$scope.audioOscillatorController.isDirty;
         }.bind(this);
 
         /**
@@ -267,18 +267,18 @@ var AudioPlayerController = function () {
             var getState = false;
 
             if (isSubmit) {
-                if (this.$scope.audioPlayerController.isSubmitDirty) {
+                if (this.$scope.audioOscillatorController.isSubmitDirty) {
                     getState = true;
                 }
             } else {
-                if (this.$scope.audioPlayerController.isDirty) {
+                if (this.$scope.audioOscillatorController.isDirty) {
                     getState = true;
                 }
             }
 
             if (getState) {
                 // create a component state populated with the student data
-                componentState = this.$scope.audioPlayerController.createComponentState();
+                componentState = this.$scope.audioOscillatorController.createComponentState();
             }
 
             return componentState;
@@ -348,7 +348,7 @@ var AudioPlayerController = function () {
      */
 
 
-    _createClass(AudioPlayerController, [{
+    _createClass(AudioOscillatorController, [{
         key: 'setStudentWork',
         value: function setStudentWork(componentState) {
 
@@ -1065,7 +1065,7 @@ var AudioPlayerController = function () {
                              * populate a new component state with the work from the
                              * imported component state
                              */
-                            var populatedComponentState = this.AudioPlayerService.populateComponentState(importWorkComponentState);
+                            var populatedComponentState = this.AudioOscillatorService.populateComponentState(importWorkComponentState);
 
                             // populate the component state into this component
                             this.setStudentWork(populatedComponentState);
@@ -1174,12 +1174,12 @@ var AudioPlayerController = function () {
         }
     }]);
 
-    return AudioPlayerController;
+    return AudioOscillatorController;
 }();
 
 ;
 
-AudioPlayerController.$inject = ['$injector', '$rootScope', '$scope', '$timeout', 'NodeService', 'AudioPlayerService', 'ProjectService', 'StudentAssetService', 'StudentDataService'];
+AudioOscillatorController.$inject = ['$injector', '$rootScope', '$scope', '$timeout', 'NodeService', 'AudioOscillatorService', 'ProjectService', 'StudentAssetService', 'StudentDataService'];
 
-exports.default = AudioPlayerController;
-//# sourceMappingURL=audioPlayerController.js.map
+exports.default = AudioOscillatorController;
+//# sourceMappingURL=audioOscillatorController.js.map

@@ -1,13 +1,13 @@
 'use strict';
 
-class AudioPlayerController {
+class AudioOscillatorController {
 
     constructor($injector,
                 $rootScope,
                 $scope,
                 $timeout,
                 NodeService,
-                AudioPlayerService,
+                AudioOscillatorService,
                 ProjectService,
                 StudentAssetService,
                 StudentDataService) {
@@ -17,7 +17,7 @@ class AudioPlayerController {
         this.$scope = $scope;
         this.$timeout = $timeout;
         this.NodeService = NodeService;
-        this.AudioPlayerService = AudioPlayerService;
+        this.AudioOscillatorService = AudioOscillatorService;
         this.ProjectService = ProjectService;
         this.StudentAssetService = StudentAssetService;
         this.StudentDataService = StudentDataService;
@@ -248,7 +248,7 @@ class AudioPlayerController {
          * Returns true iff there is student work that hasn't been saved yet
          */
         this.$scope.isDirty = function() {
-            return this.$scope.audioPlayerController.isDirty;
+            return this.$scope.audioOscillatorController.isDirty;
         }.bind(this);
 
         /**
@@ -264,18 +264,18 @@ class AudioPlayerController {
             let getState = false;
 
             if (isSubmit) {
-                if (this.$scope.audioPlayerController.isSubmitDirty) {
+                if (this.$scope.audioOscillatorController.isSubmitDirty) {
                     getState = true;
                 }
             } else {
-                if (this.$scope.audioPlayerController.isDirty) {
+                if (this.$scope.audioOscillatorController.isDirty) {
                     getState = true;
                 }
             }
 
             if (getState) {
                 // create a component state populated with the student data
-                componentState = this.$scope.audioPlayerController.createComponentState();
+                componentState = this.$scope.audioOscillatorController.createComponentState();
             }
 
             return componentState;
@@ -976,7 +976,7 @@ class AudioPlayerController {
                          * populate a new component state with the work from the
                          * imported component state
                          */
-                        var populatedComponentState = this.AudioPlayerService.populateComponentState(importWorkComponentState);
+                        var populatedComponentState = this.AudioOscillatorService.populateComponentState(importWorkComponentState);
 
                         // populate the component state into this component
                         this.setStudentWork(populatedComponentState);
@@ -1071,16 +1071,16 @@ class AudioPlayerController {
     };
 };
 
-AudioPlayerController.$inject = [
+AudioOscillatorController.$inject = [
     '$injector',
     '$rootScope',
     '$scope',
     '$timeout',
     'NodeService',
-    'AudioPlayerService',
+    'AudioOscillatorService',
     'ProjectService',
     'StudentAssetService',
     'StudentDataService'
 ];
 
-export default AudioPlayerController;
+export default AudioOscillatorController;

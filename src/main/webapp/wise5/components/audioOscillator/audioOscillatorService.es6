@@ -1,6 +1,6 @@
 import NodeService from '../../services/nodeService';
 
-class AudioPlayerService extends NodeService {
+class AudioOscillatorService extends NodeService {
     constructor(StudentDataService,
                 UtilService) {
         super();
@@ -117,9 +117,9 @@ class AudioPlayerService extends NodeService {
 
 }
 
-AudioPlayerService.$inject = [
+AudioOscillatorService.$inject = [
     'StudentDataService',
     'UtilService'
 ];
 
-export default AudioPlayerService;
+export default AudioOscillatorService;

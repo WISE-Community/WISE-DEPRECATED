@@ -14,8 +14,8 @@ import angularTranslate from 'angular-translate';
 import angularTranslateLoaderPartial from 'angular-translate-loader-partial';
 import angularWebSocket from 'angular-websocket';
 import AnnotationService from '../services/annotationService';
-import AudioPlayerController from '../components/audioPlayer/audioPlayerController';
-import AudioPlayerService from '../components/audioPlayer/audioPlayerService';
+import AudioOscillatorController from '../components/audioOscillator/audioOscillatorController';
+import AudioOscillatorService from '../components/audioOscillator/audioOscillatorService';
 import AuthoringToolController from './authoringToolController';
 import AuthoringToolMainController from './main/authoringToolMainController';
 import AuthoringToolNewProjectController from './main/authoringToolNewProjectController';
@@ -77,7 +77,7 @@ let mainModule = angular.module('authoring', [
     'ui.tree'
 ])
     .service(AnnotationService.name, AnnotationService)
-    .service(AudioPlayerService.name, AudioPlayerService)
+    .service(AudioOscillatorService.name, AudioOscillatorService)
     .service(ConfigService.name, ConfigService)
     .service(DiscussionService.name, DiscussionService)
     .service(DrawService.name, DrawService)
@@ -100,7 +100,7 @@ let mainModule = angular.module('authoring', [
     .service(TableService.name, TableService)
     .service(TeacherDataService.name, TeacherDataService)
     .service(UtilService.name, UtilService)
-    .controller(AudioPlayerController.name, AudioPlayerController)
+    .controller(AudioOscillatorController.name, AudioOscillatorController)
     .controller(AuthoringToolController.name, AuthoringToolController)
     .controller(AuthoringToolMainController.name, AuthoringToolMainController)
     .controller(AuthoringToolNewProjectController.name, AuthoringToolNewProjectController)

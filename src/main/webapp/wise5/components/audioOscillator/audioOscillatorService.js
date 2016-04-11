@@ -18,13 +18,13 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var AudioPlayerService = function (_NodeService) {
-    _inherits(AudioPlayerService, _NodeService);
+var AudioOscillatorService = function (_NodeService) {
+    _inherits(AudioOscillatorService, _NodeService);
 
-    function AudioPlayerService(StudentDataService, UtilService) {
-        _classCallCheck(this, AudioPlayerService);
+    function AudioOscillatorService(StudentDataService, UtilService) {
+        _classCallCheck(this, AudioOscillatorService);
 
-        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(AudioPlayerService).call(this));
+        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(AudioOscillatorService).call(this));
 
         _this.StudentDataService = StudentDataService;
         _this.UtilService = UtilService;
@@ -37,7 +37,7 @@ var AudioPlayerService = function (_NodeService) {
      */
 
 
-    _createClass(AudioPlayerService, [{
+    _createClass(AudioOscillatorService, [{
         key: 'createComponent',
         value: function createComponent() {
 
@@ -147,10 +147,10 @@ var AudioPlayerService = function (_NodeService) {
         }
     }]);
 
-    return AudioPlayerService;
+    return AudioOscillatorService;
 }(_nodeService2.default);
 
-AudioPlayerService.$inject = ['StudentDataService', 'UtilService'];
+AudioOscillatorService.$inject = ['StudentDataService', 'UtilService'];
 
-exports.default = AudioPlayerService;
-//# sourceMappingURL=audioPlayerService.js.map
+exports.default = AudioOscillatorService;
+//# sourceMappingURL=audioOscillatorService.js.map
