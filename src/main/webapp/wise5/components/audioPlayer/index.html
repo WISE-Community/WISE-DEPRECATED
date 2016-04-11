@@ -7,48 +7,46 @@
                       rows='10'
                       cols='100'></textarea>
             <br/>
-            Graph Title: <input ng-model='audioPlayerController.authoringComponentContent.title'
-                                ng-change='audioPlayerController.authoringViewComponentChanged()'
-                                size='30'/>
-            Graph Type: <input ng-model='audioPlayerController.authoringComponentContent.graphType'
-                               ng-change='audioPlayerController.authoringViewComponentChanged()'/>
-            <br/>
-            <br/>
-            X Axis Title: <input ng-model='audioPlayerController.authoringComponentContent.xAxis.title.text'
-                                 ng-change='audioPlayerController.authoringViewComponentChanged()'/>
-            X Min: <input type='number'
-                          ng-model='audioPlayerController.authoringComponentContent.xAxis.min'
-                          ng-change='audioPlayerController.authoringViewComponentChanged()'/>
-            X Max: <input type='number'
-                          ng-model='audioPlayerController.authoringComponentContent.xAxis.max'
-                          ng-change='audioPlayerController.authoringViewComponentChanged()'/>
-            <br/>
-            <br/>
-            Y Axis Title: <input ng-model='audioPlayerController.authoringComponentContent.yAxis.title.text'
-                                 ng-change='audioPlayerController.authoringViewComponentChanged()'/>
-            Y Min: <input type='number'
-                          ng-model='audioPlayerController.authoringComponentContent.yAxis.min'
-                          ng-change='audioPlayerController.authoringViewComponentChanged()'/>
-            Y Max: <input type='number'
-                          ng-model='audioPlayerController.authoringComponentContent.yAxis.max'
-                          ng-change='audioPlayerController.authoringViewComponentChanged()'/>
-            <br/>
-            Series
-            <button ng-click='audioPlayerController.authoringAddSeriesClicked()'>Add Series</button>
-            <div ng-repeat='series in audioPlayerController.authoringComponentContent.series track by $index'
-                 style='border: 1px solid black'>
-                Name: <input ng-model='series.name'
-                             ng-change='audioPlayerController.authoringViewComponentChanged()'
-                             size='30'/>
-                <br/>
-                Color: <input ng-model='series.color'/>
-                <br/>
-                Symbol: <input ng-model='series.marker.symbol'/>
-                <br/>
-                Can Student Edit: <input type='checkbox' ng-model='series.canEdit'/>
-                <br/>
-                <button ng-click='audioPlayerController.authoringDeleteSeriesClicked($index)'>Delete Series</button>
+            Oscillator Types <button ng-click='audioPlayerController.authoringOpenAddOscillatorType()'>Add Oscillator Type</button>
+            <span ng-show='audioPlayerController.showOscillatorTypeChooser'>
+                <select ng-model='audioPlayerController.oscillatorTypeToAdd'>
+                    <option ng-repeat='availableOscillatorType in audioPlayerController.availableOscillatorTypes' value='{{availableOscillatorType}}'>{{availableOscillatorType}}</option>
+                </select>
+                <button ng-click='audioPlayerController.authoringAddOscillatorTypeClicked()'>Add</button>
+                <button ng-click='audioPlayerController.authoringCancelOscillatorTypeClicked()'>Cancel</button>
+            </span>
+            <div ng-repeat='oscillatorType in audioPlayerController.authoringComponentContent.oscillatorTypes track by $index'>
+                {{oscillatorType}} <button ng-click='audioPlayerController.authoringDeleteOscillatorTypeClicked($index)'>Delete</button>
             </div>
+            Starting Frequency: <input type='number'
+                                       ng-model='audioPlayerController.authoringComponentContent.startingFrequency'
+                                       ng-change='audioPlayerController.authoringViewComponentChanged()'
+                                       ng-model-options='{ debounce: 1000 }'
+                                       style='width: 5em'/>
+            <br/>
+            Oscilloscope Width: <input type='number'
+                                       ng-model='audioPlayerController.authoringComponentContent.oscilloscopeWidth'
+                                       ng-change='audioPlayerController.authoringViewComponentChanged()'
+                                       ng-model-options='{ debounce: 1000 }'
+                                       style='width: 5em'/>
+            <br/>
+            Oscilloscope Height: <input type='number'
+                                        ng-model='audioPlayerController.authoringComponentContent.oscilloscopeHeight'
+                                        ng-change='audioPlayerController.authoringViewComponentChanged()'
+                                        ng-model-options='{ debounce: 1000 }'
+                                        style='width: 5em'/>
+            <br/>
+            Oscilloscope Grid Size: <input type='number'
+                                        ng-model='audioPlayerController.authoringComponentContent.gridCellSize'
+                                        ng-change='audioPlayerController.authoringViewComponentChanged()'
+                                        ng-model-options='{ debounce: 1000 }'
+                                        style='width: 5em'/>
+            <br/>
+            Oscilloscope Stop After Good Draw: <input type='checkbox'
+                                        ng-model='audioPlayerController.authoringComponentContent.stopAfterGoodDraw'
+                                        ng-change='audioPlayerController.authoringViewComponentChanged()'
+                                        ng-model-options='{ debounce: 1000 }'
+                                        style='width: 5em'/>
             <br/>
             Max Score:
             <input type='number'
@@ -88,7 +86,7 @@
         <br/>
         <button ng-click='audioPlayerController.playPauseClicked()'>{{audioPlayerController.isPlaying == true ? 'Pause' : 'Play'}}</button>
         <br/>
-        <canvas id='oscilloscope' width={{audioPlayerController.oscilloscopeWidth}} height={{audioPlayerController.oscilloscopeHeight}} style="border:1px solid lightgrey"></canvas>
+        <canvas id='{{audioPlayerController.oscilloscopeId}}' width={{audioPlayerController.oscilloscopeWidth}} height={{audioPlayerController.oscilloscopeHeight}} style="border:1px solid lightgrey"></canvas>
         <div ng-if='audioPlayerController.mode == "student"'>
             <annotation type='score'
                         mode='{{audioPlayerController.mode}}'

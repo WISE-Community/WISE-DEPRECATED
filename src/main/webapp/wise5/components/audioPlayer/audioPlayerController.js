@@ -10,7 +10,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var AudioPlayerController = function () {
     function AudioPlayerController($injector, $rootScope, $scope, $timeout, NodeService, AudioPlayerService, ProjectService, StudentAssetService, StudentDataService) {
-        var _this = this;
+        var _this2 = this;
 
         _classCallCheck(this, AudioPlayerController);
 
@@ -91,6 +91,7 @@ var AudioPlayerController = function () {
         this.oscillatorTypes = [];
 
         // the default dimensions of the oscilloscope
+        this.oscilloscopeId = 'oscilloscope';
         this.oscilloscopeWidth = 800;
         this.oscilloscopeHeight = 400;
         this.gridCellSize = 50;
@@ -100,6 +101,10 @@ var AudioPlayerController = function () {
 
         // whether we should stop drawing after a good draw
         this.stopAfterGoodDraw = true;
+
+        this.showOscillatorTypeChooser = false;
+        this.availableOscillatorTypes = ['sine', 'square', 'triangle', 'sawtooth'];
+        this.oscillatorTypeToAdd = 'sine';
 
         // get the current node and node id
         var currentNode = this.StudentDataService.getCurrentNode();
@@ -142,9 +147,22 @@ var AudioPlayerController = function () {
                 $scope.$watch(function () {
                     return this.authoringComponentContent;
                 }.bind(this), function (newValue, oldValue) {
+                    var _this = this;
+
                     this.componentContent = this.ProjectService.injectAssetPaths(newValue);
+                    this.oscillatorTypes = this.componentContent.oscillatorTypes;
+                    this.frequency = this.componentContent.startingFrequency;
+                    this.oscilloscopeWidth = this.componentContent.oscilloscopeWidth;
+                    this.oscilloscopeHeight = this.componentContent.oscilloscopeHeight;
+                    this.gridCellSize = this.componentContent.gridCellSize;
+                    this.stopAfterGoodDraw = this.componentContent.stopAfterGoodDraw;
+                    $timeout(function () {
+                        _this.drawOscilloscopeGrid();
+                    }, 0);
                 }.bind(this), true);
             }
+
+            this.oscilloscopeId = 'oscilloscope' + this.componentId;
 
             if (this.componentContent.startingFrequency != null) {
                 this.frequency = this.componentContent.startingFrequency;
@@ -225,7 +243,7 @@ var AudioPlayerController = function () {
              * dimensions of the canvas will erase it.
              */
             $timeout(function () {
-                _this.drawOscilloscopeGrid();
+                _this2.drawOscilloscopeGrid();
             }, 0);
         }
 
@@ -602,7 +620,7 @@ var AudioPlayerController = function () {
          * @param studentAsset
          */
         value: function attachStudentAsset(studentAsset) {
-            var _this2 = this;
+            var _this3 = this;
 
             if (studentAsset != null) {
                 this.StudentAssetService.copyAssetForReference(studentAsset).then(function (copiedAsset) {
@@ -612,8 +630,8 @@ var AudioPlayerController = function () {
                             iconURL: copiedAsset.iconURL
                         };
 
-                        _this2.attachments.push(attachment);
-                        _this2.studentDataChanged();
+                        _this3.attachments.push(attachment);
+                        _this3.studentDataChanged();
                     }
                 });
             }
@@ -725,13 +743,13 @@ var AudioPlayerController = function () {
     }, {
         key: 'drawOscilloscope',
         value: function drawOscilloscope() {
-            var _this3 = this;
+            var _this4 = this;
 
             // get the analyser to obtain the oscillator data
             var analyser = this.analyser;
 
             // get the oscilloscope canvas context
-            var ctx = document.getElementById('oscilloscope').getContext('2d');;
+            var ctx = document.getElementById(this.oscilloscopeId).getContext('2d');
 
             var width = ctx.canvas.width;
             var height = ctx.canvas.height;
@@ -835,7 +853,7 @@ var AudioPlayerController = function () {
                  * draw was good we will stop drawing.
                  */
                 requestAnimationFrame(function () {
-                    _this3.drawOscilloscope();
+                    _this4.drawOscilloscope();
                 });
             }
         }
@@ -848,7 +866,7 @@ var AudioPlayerController = function () {
         key: 'drawOscilloscopeGrid',
         value: function drawOscilloscopeGrid() {
             // get the oscilliscope canvas context
-            var ctx = document.getElementById('oscilloscope').getContext('2d');
+            var ctx = document.getElementById(this.oscilloscopeId).getContext('2d');
 
             var width = ctx.canvas.width;
             var height = ctx.canvas.height;
@@ -947,6 +965,68 @@ var AudioPlayerController = function () {
         value: function restartPlayer() {
             this.pause();
             this.play();
+        }
+
+        /**
+         * Show the controls for adding an oscillator type
+         */
+
+    }, {
+        key: 'authoringOpenAddOscillatorType',
+        value: function authoringOpenAddOscillatorType() {
+            this.showOscillatorTypeChooser = true;
+        }
+
+        /**
+         * The author has clicked the add button to add an oscillator type
+         */
+
+    }, {
+        key: 'authoringAddOscillatorTypeClicked',
+        value: function authoringAddOscillatorTypeClicked() {
+            var oscillatorTypeToAdd = this.oscillatorTypeToAdd;
+
+            if (this.authoringComponentContent.oscillatorTypes.indexOf(oscillatorTypeToAdd) != -1) {
+                // the oscillator type is already in the array of oscillator types
+
+                alert('Error: You have already added ' + oscillatorTypeToAdd);
+            } else {
+                // the oscillator type is not already in the array of oscillator types
+                this.authoringComponentContent.oscillatorTypes.push(oscillatorTypeToAdd);
+
+                // hide the oscillator type chooser
+                this.showOscillatorTypeChooser = false;
+
+                // perform preview updating and project saving
+                this.authoringViewComponentChanged();
+            }
+        }
+
+        /**
+         * The author has clicked the cancel button for adding an oscillator type
+         */
+
+    }, {
+        key: 'authoringCancelOscillatorTypeClicked',
+        value: function authoringCancelOscillatorTypeClicked() {
+            // hide the oscillator type chooser
+            this.showOscillatorTypeChooser = false;
+        }
+
+        /**
+         * The author has clicked the delete button for removing an oscillator type
+         * @param index the index of the oscillator type to remove
+         */
+
+    }, {
+        key: 'authoringDeleteOscillatorTypeClicked',
+        value: function authoringDeleteOscillatorTypeClicked(index) {
+
+            // remove the oscillator type at the given index
+            this.authoringComponentContent.oscillatorTypes.splice(index, 1);
+
+            // perform preview updating and project saving
+            this.authoringViewComponentChanged();
         }
 
         /**

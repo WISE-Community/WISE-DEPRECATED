@@ -18,6 +18,14 @@ class AudioPlayerService extends NodeService {
         component.id = this.UtilService.generateKey();
         component.type = 'AudioPlayer';
         component.prompt = 'Enter prompt here';
+        component.oscillatorTypes = [
+            'sine'
+        ];
+        component.startingFrequency = 440;
+        component.oscilloscopeWidth = 800;
+        component.oscilloscopeHeight = 400;
+        component.gridCellSize = 50;
+        component.stopAfterGoodDraw = true;
         component.showSaveButton = false;
         component.showSubmitButton = false;
         component.starterSentence = null;

@@ -32,6 +32,7 @@ class NodeController {
 
         // the array of component types that can be created
         this.componentTypes = [
+            {componentType: 'AudioPlayer', componentName: 'Audio Player'},
             {componentType: 'Discussion', componentName: 'Discussion'},
             {componentType: 'Draw', componentName: 'Draw'},
             {componentType: 'Embedded', componentName: 'Embedded'},
