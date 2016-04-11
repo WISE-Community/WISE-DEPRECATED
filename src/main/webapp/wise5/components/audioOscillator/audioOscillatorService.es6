@@ -16,7 +16,7 @@ class AudioOscillatorService extends NodeService {
 
         var component = {};
         component.id = this.UtilService.generateKey();
-        component.type = 'AudioPlayer';
+        component.type = 'AudioOscillator';
         component.prompt = 'Enter prompt here';
         component.oscillatorTypes = [
             'sine'
