@@ -34,10 +34,10 @@ View.prototype.specialExportButtonClickedEventListener = function(nodeId) {
  * Request a special export
  * @param nodeId the node id for the step we will special export
  */
-View.prototype.specialExportCSVButtonClickedEventListener = function(nodeId) {
+View.prototype.specialExportCSVButtonClickedEventListener = function(nodeId, revision) {
 
     // retrieve the student work for the node from the server
-	this.specialExportGetWorkForNodeId(nodeId);
+	this.specialExportGetWorkForNodeId(nodeId, revision);
 };
 
 /**
@@ -45,13 +45,17 @@ View.prototype.specialExportCSVButtonClickedEventListener = function(nodeId) {
  *
  * @param nodeId the node id
  */
-View.prototype.specialExportGetWorkForNodeId = function(nodeId) {
+View.prototype.specialExportGetWorkForNodeId = function(nodeId, revisions) {
 	//get the url for retrieving student data
 	var studentDataURL = this.getConfig().getConfigParam('studentDataURL');
 
 	var runId = this.getConfig().getConfigParam('runId');
 	var grading = true;
 	var getRevisions = false;
+	
+	if (revisions == 'all' || revisions == 'firstAndLatest') {
+		getRevisions = true;
+	}
 
 	//get the workgroup ids in the run
 	var workgroupIds = this.getUserAndClassInfo().getClassmateWorkgroupIds();
@@ -69,7 +73,7 @@ View.prototype.specialExportGetWorkForNodeId = function(nodeId) {
 		"&useCachedWork=false";
 
 	//make the request to retrieve the student data
-	this.connectionManager.request('GET', 1, studentDataURLWithParams, null, this.specialExportGetWorkForNodeIdCallback, [this, nodeId], this.specialExportGetWorkForNodeIdCallbackFail);
+	this.connectionManager.request('GET', 1, studentDataURLWithParams, null, this.specialExportGetWorkForNodeIdCallback, [this, nodeId, revisions], this.specialExportGetWorkForNodeIdCallbackFail);
 
 };
 
@@ -83,9 +87,10 @@ View.prototype.specialExportGetWorkForNodeId = function(nodeId) {
 View.prototype.specialExportGetWorkForNodeIdCallback = function(text, xml, args) {
 	var thisView = args[0];
 	var nodeId = args[1];
+	var revisions = args[2];
 
 	//get the student work and then display the grade by step grading page
-	thisView.specialExportGetWorkForNodeIdCallbackHandler(text, nodeId);
+	thisView.specialExportGetWorkForNodeIdCallbackHandler(text, nodeId, revisions);
 };
 
 /**
@@ -96,7 +101,7 @@ View.prototype.specialExportGetWorkForNodeIdCallback = function(text, xml, args)
  * step we are looking at
  * @param nodeId the node id for the step
  */
-View.prototype.specialExportGetWorkForNodeIdCallbackHandler = function(text, nodeId) {
+View.prototype.specialExportGetWorkForNodeIdCallbackHandler = function(text, nodeId, revisions) {
 	//parse the text into JSON, this will be an object which contains an array of vle states
 	var vleStatesForNodeId = JSON.parse(text);
 
@@ -127,7 +132,7 @@ View.prototype.specialExportGetWorkForNodeIdCallbackHandler = function(text, nod
             TableNode.prototype.generateTableSpecialExportCSV(nodeId);
         } else if (this.getProject().getNodeById(nodeId).type === 'MatchSequenceNode') {
 			// generate the match special export csv
-			MatchSequenceNode.prototype.generateMatchSequenceSpecialExportCSV(nodeId);
+			MatchSequenceNode.prototype.generateMatchSequenceSpecialExportCSV(nodeId, revisions);
 		}
 	}
 };

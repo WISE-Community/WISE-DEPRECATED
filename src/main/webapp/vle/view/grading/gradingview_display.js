@@ -538,7 +538,9 @@ View.prototype.displaySpecialExportPageHelper = function(node) {
             }
 			
             if (node.type === 'MatchSequenceNode') {
-                displayCustomExportPageHelperHtml += "<input id='stepButton_" + nodeId + "_CSV' type='button' value='Latest CSV' style='margin-left:20px' onClick=\"eventManager.fire('specialExportCSVButtonClicked', '" + nodeId + "')\"/>";
+				displayCustomExportPageHelperHtml += "<input id='stepButton_" + nodeId + "_CSV' type='button' value='All Work CSV' style='margin-left:20px' onClick=\"eventManager.fire('specialExportCSVButtonClicked', ['" + nodeId + "', 'all'])\"/>";
+				displayCustomExportPageHelperHtml += "<input id='stepButton_" + nodeId + "_CSV' type='button' value='First and Latest Work CSV' style='margin-left:20px' onClick=\"eventManager.fire('specialExportCSVButtonClicked', ['" + nodeId + "', 'firstAndLatest'])\"/>";
+				displayCustomExportPageHelperHtml += "<input id='stepButton_" + nodeId + "_CSV' type='button' value='Latest Work CSV' style='margin-left:20px' onClick=\"eventManager.fire('specialExportCSVButtonClicked', ['" + nodeId + "', 'latest'])\"/>";
             }
 
             displayCustomExportPageHelperHtml += "</td></tr>";

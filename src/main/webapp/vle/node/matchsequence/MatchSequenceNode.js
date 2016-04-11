@@ -533,8 +533,10 @@ MatchSequenceNode.prototype.getBucketNameById = function(bucketId, buckets) {
  * student. Each student data column represents a choice. The cell value is
  * the name of the bucket that the student placed the choice in.
  * @param nodeId the node id to generate the export for
+ * @param revisions whether to output all revisions, latest, or first and latest
+ * the acceptable values are 'all', 'latest', 'firstAndLatest'
  */
-MatchSequenceNode.prototype.generateMatchSequenceSpecialExportCSV = function(nodeId) {
+MatchSequenceNode.prototype.generateMatchSequenceSpecialExportCSV = function(nodeId, revisions) {
 	
 	var rows = [];
 	
@@ -570,7 +572,8 @@ MatchSequenceNode.prototype.generateMatchSequenceSpecialExportCSV = function(nod
         'Run Id',
         'Step Work Id',
         'Step Title',
-        'Step Type'
+        'Step Type',
+		'Revision'
 	];
 	
 	var choiceIds = [];
@@ -630,87 +633,152 @@ MatchSequenceNode.prototype.generateMatchSequenceSpecialExportCSV = function(nod
 		var classmate = view.userAndClassInfo.getClassmateByWorkgroupId(workgroupId);
 
 		if (classmate != null) {
-			var row = [];
-
-			// add the workgroup id cell
-			row.push(workgroupId);
-
-			// add the wise id cells
-			var wiseIds = classmate.userIds;
-			for (var wi = 0; wi < wiseIds.length; wi++) {
-				var wiseId = wiseIds[wi];
-
-				row.push(wiseId);
-			}
-
-			// add any necessary empty cells for wise ids (if the workgroup has less than 3 members)
-			var numEmptyWISEIdColumns = 3 - wiseIds.length;
-			if (numEmptyWISEIdColumns > 0) {
-				for (var e = 0; e < numEmptyWISEIdColumns; e++) {
-					row.push("");
-				}
-			}
-
-			// add the period name
-			var periodName = classmate.periodName;
-			row.push(view.wrapInQuotesForCSVIfNecessary(periodName));
-
-			// add the teacher name
-			row.push(view.wrapInQuotesForCSVIfNecessary(teacherUserName));
-
-			// add the project id
-			row.push(projectId);
-
-			// add the parent project id
-			row.push(parentProjectId);
-
-			// add the project name
-			row.push(view.wrapInQuotesForCSVIfNecessary(projectName));
-
-			// add the run id
-			row.push(runId);
-
-			//row.push(''); // start date
-			//row.push(''); // end date
 
 			// get all the node visits for view student for the step
 			var nodeVisits = view.model.getNodeVisitsByNodeIdAndWorkgroupId(nodeId, workgroupId);
 
-			if (nodeVisits != null && nodeVisits.length > 0) {
+			// flag to check if we added a row for this workgroup yet
+			var rowAdded = false;
 
-				// get the latest node visit
-				var nodeVisit = nodeVisits[nodeVisits.length - 1];
-
-				// add the step work id
-				var stepWorkId = parseInt(nodeVisit.id);
-				row.push(stepWorkId);
-
-				// add the step number and title
-				row.push(view.wrapInQuotesForCSVIfNecessary(stepNumberAndTitle));
-
-				// add the node type
-				row.push(nodeType);
-
-				var nodeStates = nodeVisit.nodeStates;
-
-				if (nodeStates != null && nodeStates.length > 0) {
-
-					// get the latest node state
-					var nodeState = nodeStates[nodeStates.length - 1];
-
-					if (nodeState != null) {
+			if (nodeVisits != null) {
+				if (revisions == null || revisions == 'latest') {
+					// we will get the latest revision
+					
+					// get the latest node state and the node visit it was in
+					var returnValue = MatchSequenceNode.prototype.getLatestNodeStateFromNodeVisits(nodeVisits);
+					
+					if (returnValue != null) {
+						var nodeVisit = returnValue.nodeVisit;
+						var nodeState = returnValue.nodeState;
 						
-						// get the bucket names for this row
-						var bucketNames = this.getBucketsChoicesAreIn(nodeState, choiceIds);
+						var revisionValue = 'Latest';
 						
-						// add the bucket names to the row
-						row = row.concat(bucketNames);
+						// generate the values for the row
+						row = this.generateSpecialExportCSVRow(nodeId, workgroupId, nodeVisit, nodeState, revisionValue, choiceIds);
+						
+						// add the row to the rows
+						rows.push(row);
+						
+						rowAdded = true;
+					}
+				} else if (revisions == 'all') {
+					// we will get all the revisions
+					
+					var revisionCount = 1;
+					
+					// loop through all the node visits
+					for (var nv = 0; nv < nodeVisits.length; nv++) {
+						var nodeVisit = nodeVisits[nv];
+						
+						if (nodeVisit != null) {
+							
+							var nodeStates = nodeVisit.nodeStates;
+							
+							if (nodeStates != null) {
+								
+								// loop through all the node states
+								for (var ns = 0; ns < nodeStates.length; ns++) {
+									var nodeState = nodeStates[ns];
+									
+									if (nodeState != null) {
+										var revisionValue = revisionCount;
+										
+										// generate the values for the row
+										row = this.generateSpecialExportCSVRow(nodeId, workgroupId, nodeVisit, nodeState, revisionValue, choiceIds);
+										
+										// add the row to the rows
+										rows.push(row);
+										
+										// increment the revision count
+										revisionCount++;
+										
+										rowAdded = true;
+									}
+								}
+							}
+						}
+					}
+				} else if (revisions == 'firstAndLatest') {
+					// we will get the first and latest revisions
+					
+					// get the first node state and the node visit it was in
+					var firstReturnValue = MatchSequenceNode.prototype.getFirstNodeStateFromNodeVisits(nodeVisits);
+					
+					// get the latest node state and the node visit it was in
+					var latestReturnValue = MatchSequenceNode.prototype.getLatestNodeStateFromNodeVisits(nodeVisits);
+					
+					var firstNodeState = null;
+					var firstNodeVisit = null;
+					var latestNodeState = null;
+					var latestNodeVisit = null;
+					
+					if (firstReturnValue != null) {
+						firstNodeVisit = firstReturnValue.nodeVisit;
+						firstNodeState = firstReturnValue.nodeState;
+					}
+					
+					if (latestReturnValue != null) {
+						latestNodeVisit = latestReturnValue.nodeVisit;
+						latestNodeState = latestReturnValue.nodeState;
+					}
+					
+					if (firstNodeState == latestNodeState) {
+						// the first and latest node state is the same
+						
+						var revisionValue = 'Only One Work';
+						
+						// generate the values for the row
+						row = this.generateSpecialExportCSVRow(nodeId, workgroupId, latestNodeVisit, latestNodeState, revisionValue, choiceIds);
+						
+						// add the row to the rows
+						rows.push(row);
+						
+						rowAdded = true;
+					} else {
+						// the first and latest node state are not the same node state
+						
+						if (firstNodeState != null) {
+							var revisionValue = 'First';
+							
+							// generate the values for the row
+							row = this.generateSpecialExportCSVRow(nodeId, workgroupId, firstNodeVisit, firstNodeState, revisionValue, choiceIds);
+							
+							// add the row to the rows
+							rows.push(row);
+							
+							rowAdded = true;
+						}
+						
+						if (latestNodeState != null) {
+							var revisionValue = 'Latest';
+							
+							// generate the values for the row
+							row = this.generateSpecialExportCSVRow(nodeId, workgroupId, latestNodeVisit, latestNodeState, revisionValue, choiceIds);
+							
+							// add the row to the rows
+							rows.push(row);
+							
+							rowAdded = true;
+						}
 					}
 				}
 			}
 
-			// add the workgroup's row
-			rows.push(row);
+			if (!rowAdded) {
+				/*
+				 * we have not added a row for this workgroup yet so we will
+				 * add it now with blank work cells
+				 */
+				var nodeVisit = null;
+				var nodeState = null;
+				var revisionValue = '';
+				
+				// generate the values for the row
+				row = this.generateSpecialExportCSVRow(nodeId, workgroupId, nodeVisit, nodeState, revisionValue, choiceIds);
+				
+				// add the row to the rows
+				rows.push(row);
+			}
 		}
 	}
 
@@ -722,6 +790,181 @@ MatchSequenceNode.prototype.generateMatchSequenceSpecialExportCSV = function(nod
 
 	// download the csv file
 	view.downloadCSV(fileName, csvString);
+};
+
+/**
+ * Generate the csv row
+ * @param nodeId the node id
+ * @param workgroupId the workgroup id
+ * @param nodeVisit the node visit
+ * @param nodeState the node state
+ * @param revision the value that will go into the revision column
+ * @param choiceIds all the choice ids for the step 
+ */
+MatchSequenceNode.prototype.generateSpecialExportCSVRow = function(
+	nodeId,
+	workgroupId,
+	nodeVisit,
+	nodeState,
+	revision,
+	choiceIds) {
+	
+	var project = view.getProject();	
+	var node = project.getNodeById(nodeId);
+	var runId = view.getConfig().getConfigParam('runId');
+	var stepNumberAndTitle = project.getStepNumberAndTitle(nodeId);
+	var teacherUserName = view.userAndClassInfo.getTeacherUserInfo().userName;
+	var projectId = view.config.getConfigParam('projectId');
+	var parentProjectId = view.config.getConfigParam('parentProjectId');
+	var projectName = project.getTitle();
+	var nodeType = project.getNodeById(nodeId).type;
+	var classmate = view.userAndClassInfo.getClassmateByWorkgroupId(workgroupId);
+	
+	if (classmate != null) {
+		var row = [];
+		
+		var periodName = classmate.periodName;
+
+		// add the workgroup id cell
+		row.push(workgroupId);
+
+		// add the wise id cells
+		var wiseIds = classmate.userIds;
+		for (var wi = 0; wi < wiseIds.length; wi++) {
+			var wiseId = wiseIds[wi];
+
+			row.push(wiseId);
+		}
+
+		// add any necessary empty cells for wise ids (if the workgroup has less than 3 members)
+		var numEmptyWISEIdColumns = 3 - wiseIds.length;
+		if (numEmptyWISEIdColumns > 0) {
+			for (var e = 0; e < numEmptyWISEIdColumns; e++) {
+				row.push("");
+			}
+		}
+
+		// add the period name
+		row.push(view.wrapInQuotesForCSVIfNecessary(periodName));
+
+		// add the teacher name
+		row.push(view.wrapInQuotesForCSVIfNecessary(teacherUserName));
+
+		// add the project id
+		row.push(projectId);
+
+		// add the parent project id
+		row.push(parentProjectId);
+
+		// add the project name
+		row.push(view.wrapInQuotesForCSVIfNecessary(projectName));
+
+		// add the run id
+		row.push(runId);
+		
+		if (nodeVisit != null && nodeState != null) {
+			// add the step work id
+			var stepWorkId = parseInt(nodeVisit.id);
+			row.push(stepWorkId);
+
+			// add the step number and title
+			row.push(view.wrapInQuotesForCSVIfNecessary(stepNumberAndTitle));
+
+			// add the node type
+			row.push(nodeType);
+			
+			row.push(revision);
+
+			// get the bucket names for this row
+			var bucketNames = this.getBucketsChoicesAreIn(nodeState, choiceIds);
+			
+			// add the bucket names to the row
+			row = row.concat(bucketNames);
+		}
+	}
+	
+	return row;
+};
+
+/**
+ * Get the first node state from the node visits
+ * @param nodeVisits the node visits to search
+ * @returns an object containing the first node state and the node visit the
+ * node state was in
+ */
+MatchSequenceNode.prototype.getFirstNodeStateFromNodeVisits = function(nodeVisits) {
+	
+	if (nodeVisits != null) {
+		
+		// loop through all the node visits
+		for (var nv = 0; nv < nodeVisits.length; nv++) {
+			var nodeVisit = nodeVisits[nv];
+			
+			if (nodeVisit != null) {
+				var nodeStates = nodeVisit.nodeStates;
+				
+				if (nodeStates != null) {
+					// loop through all the node states
+					for (var ns = 0; ns < nodeStates.length; ns++) {
+						var nodeState = nodeStates[ns];
+						
+						if (nodeState != null) {
+							// we have found the first node state
+							
+							var returnValue = {
+								nodeVisit: nodeVisit,
+								nodeState: nodeState
+							}
+							
+							return returnValue;
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	return null;
+};
+
+/**
+ * Get the latest node state from the node visits
+ * @param nodeVisits the node visits to search
+ * @returns an object containing the latest node state and the node visit the
+ * the node state was in
+ */
+MatchSequenceNode.prototype.getLatestNodeStateFromNodeVisits = function(nodeVisits) {
+	
+	if (nodeVisits != null) {
+		
+		// loop through the node visits from newest to oldest
+		for (var nv = nodeVisits.length - 1; nv >= 0; nv--) {
+			var nodeVisit = nodeVisits[nv];
+			
+			if (nodeVisit != null) {
+				var nodeStates = nodeVisit.nodeStates;
+				
+				if (nodeStates != null) {
+					// loop through the node states from newest to oldest
+					for (var ns = nodeStates.length - 1; ns >= 0; ns--) {
+						var nodeState = nodeStates[ns];
+						
+						if (nodeState != null) {
+							// we have found the latest node state
+							
+							var returnValue = {
+								nodeVisit: nodeVisit,
+								nodeState: nodeState
+							}
+							return returnValue;
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	return null;
 };
 
 NodeFactory.addNode('MatchSequenceNode', MatchSequenceNode);
