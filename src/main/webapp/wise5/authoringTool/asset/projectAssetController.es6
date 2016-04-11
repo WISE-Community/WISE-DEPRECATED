@@ -2,7 +2,9 @@
 
 class ProjectAssetController {
 
-    constructor($state, $stateParams, $scope, $timeout, $translate, ProjectAssetService) {
+    constructor($filter, $mdDialog, $state, $stateParams, $scope, $timeout, $translate, ProjectAssetService) {
+        this.$filter = $filter;
+        this.$mdDialog = $mdDialog;
         this.$state = $state;
         this.$stateParams = $stateParams;
         this.$scope = $scope;
@@ -77,11 +79,34 @@ class ProjectAssetController {
             result = 1;
         }
         return result;
-    };
+    }
 
     deleteAsset(assetItem) {
         this.ProjectAssetService.deleteAssetItem(assetItem).then((newProjectAssets) => {
             this.projectAssets = this.ProjectAssetService.projectAssets;
+        });
+    }
+
+    /**
+     * Show asset image in a popup dialog and give author an option to delete it.
+     */
+    viewAsset(assetItem) {
+        this.$translate(['close', 'delete']).then((translations) => {
+            // Append dialog to document.body
+            let assetFullURL = this.ProjectAssetService.getFullAssetItemURL(assetItem);
+            let appropriateFileSize = this.$filter('appropriateSizeText')(assetItem.fileSize);
+            let confirm = this.$mdDialog.confirm()
+                .parent(angular.element(document.body))
+                .title(assetItem.fileName + " (" + appropriateFileSize + ")")
+                .htmlContent("<img src=\"" + assetFullURL + "\" />")
+                .ok(translations.close)
+                .cancel(translations.delete);
+            this.$mdDialog.show(confirm).then(() => {
+                // Author wants to simply close the dialog
+            }, () => {
+                // Author wants to delete this item
+                this.deleteAsset(assetItem);
+            });
         });
     }
 
@@ -110,6 +135,6 @@ class ProjectAssetController {
     }
 }
 
-ProjectAssetController.$inject = ['$state', '$stateParams', '$scope', '$timeout', '$translate', 'ProjectAssetService'];
+ProjectAssetController.$inject = ['$filter', '$mdDialog', '$state', '$stateParams', '$scope', '$timeout', '$translate', 'ProjectAssetService'];
 
 export default ProjectAssetController;

@@ -29,6 +29,10 @@ class ProjectAssetService {
         });
     }
 
+    getFullAssetItemURL(assetItem) {
+        return this.ConfigService.getConfigParam('projectBaseURL') + "assets/" + assetItem.fileName;
+    }
+
     retrieveProjectAssets() {
 
         return this.$http.get(this.projectAssetURL).then((result) => {

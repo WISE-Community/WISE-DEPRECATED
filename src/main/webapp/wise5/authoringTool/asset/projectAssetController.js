@@ -9,11 +9,13 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var ProjectAssetController = function () {
-    function ProjectAssetController($state, $stateParams, $scope, $timeout, $translate, ProjectAssetService) {
+    function ProjectAssetController($filter, $mdDialog, $state, $stateParams, $scope, $timeout, $translate, ProjectAssetService) {
         var _this = this;
 
         _classCallCheck(this, ProjectAssetController);
 
+        this.$filter = $filter;
+        this.$mdDialog = $mdDialog;
         this.$state = $state;
         this.$stateParams = $stateParams;
         this.$scope = $scope;
@@ -95,10 +97,33 @@ var ProjectAssetController = function () {
                 _this2.projectAssets = _this2.ProjectAssetService.projectAssets;
             });
         }
+
+        /**
+         * Show asset image in a popup dialog and give author an option to delete it.
+         */
+
+    }, {
+        key: "viewAsset",
+        value: function viewAsset(assetItem) {
+            var _this3 = this;
+
+            this.$translate(['close', 'delete']).then(function (translations) {
+                // Append dialog to document.body
+                var assetFullURL = _this3.ProjectAssetService.getFullAssetItemURL(assetItem);
+                var appropriateFileSize = _this3.$filter('appropriateSizeText')(assetItem.fileSize);
+                var confirm = _this3.$mdDialog.confirm().parent(angular.element(document.body)).title(assetItem.fileName + " (" + appropriateFileSize + ")").htmlContent("<img src=\"" + assetFullURL + "\" />").ok(translations.close).cancel(translations.delete);
+                _this3.$mdDialog.show(confirm).then(function () {
+                    // Author wants to simply close the dialog
+                }, function () {
+                    // Author wants to delete this item
+                    _this3.deleteAsset(assetItem);
+                });
+            });
+        }
     }, {
         key: "uploadAssetItems",
         value: function uploadAssetItems(files) {
-            var _this3 = this;
+            var _this4 = this;
 
             this.ProjectAssetService.uploadAssets(files).then(function (uploadAssetsResults) {
                 if (uploadAssetsResults && uploadAssetsResults.length > 0) {
@@ -107,15 +132,15 @@ var ProjectAssetController = function () {
                         var uploadAssetsResult = uploadAssetsResults[r];
                         uploadedAssetsFilenames.push(uploadAssetsResult.config.file.name);
                     }
-                    _this3.$translate('assetUploadSuccessful', { assetFilenames: uploadedAssetsFilenames.join(", ") }).then(function (assetUploadSuccessful) {
+                    _this4.$translate('assetUploadSuccessful', { assetFilenames: uploadedAssetsFilenames.join(", ") }).then(function (assetUploadSuccessful) {
                         // show a confirmation message for 7 seconds
-                        _this3.assetMessage = assetUploadSuccessful;
-                        _this3.$timeout(function () {
-                            _this3.assetMessage = "";
+                        _this4.assetMessage = assetUploadSuccessful;
+                        _this4.$timeout(function () {
+                            _this4.assetMessage = "";
                         }, 7000);
                     });
                 }
-                _this3.projectAssets = _this3.ProjectAssetService.projectAssets;
+                _this4.projectAssets = _this4.ProjectAssetService.projectAssets;
             });
         }
     }, {
@@ -128,7 +153,7 @@ var ProjectAssetController = function () {
     return ProjectAssetController;
 }();
 
-ProjectAssetController.$inject = ['$state', '$stateParams', '$scope', '$timeout', '$translate', 'ProjectAssetService'];
+ProjectAssetController.$inject = ['$filter', '$mdDialog', '$state', '$stateParams', '$scope', '$timeout', '$translate', 'ProjectAssetService'];
 
 exports.default = ProjectAssetController;
 //# sourceMappingURL=projectAssetController.js.map
