@@ -2473,7 +2473,7 @@ class ProjectService {
     /**
      * Create a node inside the group
      * @param node the new node
-     * @param nodeId the node id of the group
+     * @param nodeId the node id of the group to create the node in
      */
     createNodeInside(node, nodeId) {
 
@@ -2483,38 +2483,9 @@ class ProjectService {
         // add the node to our mapping of node id to node
         this.setIdToNode(node.id, node);
 
-        // get the group node
-        var groupNode = this.getNodeById(nodeId);
-
-        if (groupNode != null) {
-            var ids = groupNode.ids;
-
-            if (ids != null) {
-                // add the node id to the beginning of the array of children ids
-                ids.splice(0, 0, node.id);
-            }
-        }
-
-        // get the start node id
-        var previousStartId = groupNode.startId;
-
-        // set the new node as the start node
-        groupNode.startId = node.id;
-
-        if (node.transitionLogic == null) {
-            node.transitionLogic = {};
-        }
-
-        if (node.transitionLogic.transitions == null) {
-            node.transitionLogic.transitions = [];
-        }
-
-        if (previousStartId != null && previousStartId != '') {
-            // have the new node point to the previous start id
-            var transitionObject = {};
-            transitionObject.to = previousStartId;
-            node.transitionLogic.transitions.push(transitionObject);
-        }
+        this.insertNodeInsideInTransitions(node.id, nodeId);
+        this.insertNodeInsideInGroups(node.id, nodeId);
+        // TODO: create a transition from PreviousActivity.lastStep -> node if PreviousActivity exists.
     }
 
     /**

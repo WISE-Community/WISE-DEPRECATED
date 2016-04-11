@@ -3,14 +3,17 @@
 TODO: implement me. Allow authors to view assets while authoring node conent. Perhaps make ProjectAssets into a directive.
     <button ng-click='nodeController.viewProjectAssets()'>View Assets</button>
     -->
-    <button ng-click="nodeController.previewStep()" translate="previewStep"></button>
+    <button ng-click="nodeController.previewStep()" ng-show="!projectController.isGroupNode(nodeController.node.id)" translate="previewStep"></button>
     <button ng-click="nodeController.undo()"
-            ng-disabled="nodeController.undoStack.length == 0" translate="undo"></button>
+            ng-show="!projectController.isGroupNode(nodeController.node.id)"
+            ng-disabled="nodeController.undoStack.length == 0"
+            translate="undo"></button>
     <button ng-click="nodeController.close()" translate="saveAndClose"></button>
     <button ng-click="nodeController.cancel()" translate="close"></button>
 </div>
-<div><span translate="stepTitle"></span>: <input ng-model='nodeController.node.title' ng-change='nodeController.authoringViewNodeChanged()' ng-model-options='{ debounce: 1000 }' size='60' /></div>
-<button ng-click='nodeController.showCreateComponent = true' ng-show='!nodeController.showCreateComponent' translate="addNewComponent"></button>
+<div><span ng-show="!projectController.isGroupNode(nodeController.node.id)" translate="stepTitle"></span>
+     <span ng-show="projectController.isGroupNode(nodeController.node.id)" translate="activityTitle"></span>: <input ng-model='nodeController.node.title' ng-change='nodeController.authoringViewNodeChanged()' ng-model-options='{ debounce: 1000 }' size='60' /></div>
+<button ng-click='nodeController.showCreateComponent = true' ng-show='!projectController.isGroupNode(nodeController.node.id) && !nodeController.showCreateComponent' translate="addNewComponent"></button>
 <div ng-show='nodeController.showCreateComponent'>
     <select ng-model='nodeController.selectedComponent'>
         <option ng-repeat='componentType in nodeController.componentTypes' value='{{componentType.componentType}}'>

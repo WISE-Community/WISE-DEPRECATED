@@ -21,7 +21,7 @@ var AuthoringToolNewProjectController = function () {
                 "id": "group0",
                 "type": "group",
                 "title": "Master",
-                "startId": "",
+                "startId": "group1",
                 "ids": ["group1"]
             }, {
                 "id": "group1",

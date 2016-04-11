@@ -2,7 +2,8 @@
 
 class ProjectController {
 
-    constructor($scope, $state, $stateParams, $translate, ProjectService, ConfigService) {
+    constructor($q, $scope, $state, $stateParams, $translate, ProjectService, ConfigService) {
+        this.$q = $q;
         this.$scope = $scope;
         this.$state = $state;
         this.$stateParams = $stateParams;
@@ -240,16 +241,16 @@ class ProjectController {
         }
         
         // check if the project start node id should be changed
-        this.checkPotentialStartNodeIdChange();
-        
-        // save the project
-        this.ProjectService.saveProject();
-        
-        // refresh the project
-        this.ProjectService.parseProject();
-        this.items = this.ProjectService.idToOrder;
-        
-        this.unselectAllItems();
+        this.checkPotentialStartNodeIdChange().then(() => {
+            // save the project
+            this.ProjectService.saveProject();
+
+            // refresh the project
+            this.ProjectService.parseProject();
+            this.items = this.ProjectService.idToOrder;
+
+            this.unselectAllItems();
+        });
     }
 
     /**
@@ -631,45 +632,43 @@ class ProjectController {
      * change.
      */
     checkPotentialStartNodeIdChange() {
-        
-        var potentialChange = false;
-    
-        // get the current start node id
-        var currentStartNodeId = this.ProjectService.getStartNodeId();
-        
-        // get the first leaf node id
-        var firstLeafNodeId = this.ProjectService.getFirstLeafNodeId();
-        
-        if (currentStartNodeId != firstLeafNodeId) {
-            /*
-             * the node ids are different which means the first leaf node
-             * id is different than the current start node id and that
-             * the author may want to use the first leaf node id as the
-             * new start node id
-             */
-            potentialChange = true;
-            
-            var firstLeafNode = this.ProjectService.getNodeById(firstLeafNodeId);
-            
-            if (firstLeafNode != null) {
-                var firstChildTitle = firstLeafNode.title;
+        return this.$q((resolve, reject) => {
+            // get the current start node id
+            var currentStartNodeId = this.ProjectService.getStartNodeId();
 
-                // ask the user if they would like to change the start step to the step that is now the first child in the group
-                this.$translate('confirmUpdateStartStep', { startStepTitle: firstChildTitle }).then((confirmUpdateStartStep) => {
-                    var answer = confirm(confirmUpdateStartStep);
+            // get the first leaf node id
+            var firstLeafNodeId = this.ProjectService.getFirstLeafNodeId();
 
-                    if (answer) {
-                        // change the project start node id
-                        this.ProjectService.setStartNodeId(firstLeafNodeId);
-                    }
-                });
+            if (currentStartNodeId != firstLeafNodeId) {
+                /*
+                 * the node ids are different which means the first leaf node
+                 * id is different than the current start node id and that
+                 * the author may want to use the first leaf node id as the
+                 * new start node id
+                 */
+                var firstLeafNode = this.ProjectService.getNodeById(firstLeafNodeId);
+
+                if (firstLeafNode != null) {
+                    var firstChildTitle = firstLeafNode.title;
+
+                    // ask the user if they would like to change the start step to the step that is now the first child in the group
+                    this.$translate('confirmUpdateStartStep', { startStepTitle: firstChildTitle }).then((confirmUpdateStartStep) => {
+                        var answer = confirm(confirmUpdateStartStep);
+
+                        if (answer) {
+                            // change the project start node id
+                            this.ProjectService.setStartNodeId(firstLeafNodeId);
+                            resolve();
+                        }
+                    });
+                }
+            } else {
+                resolve();
             }
-        }
-        
-        return potentialChange;
+        });
     }
 };
 
-ProjectController.$inject = ['$scope', '$state', '$stateParams', '$translate', 'ProjectService', 'ConfigService'];
+ProjectController.$inject = ['$q', '$scope', '$state', '$stateParams', '$translate', 'ProjectService', 'ConfigService'];
 
 export default ProjectController;

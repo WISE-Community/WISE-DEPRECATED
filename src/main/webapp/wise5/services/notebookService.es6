@@ -105,37 +105,6 @@ class NotebookService {
         return false;
     };
 
-    addStudentWorkNotebookItem(studentWork) {
-        // don't allow duplicate student work notebook items
-        if (this.hasStudentWorkNotebookItem(studentWork)) {
-            this.$rootScope.$broadcast('notebookAddDuplicateAttempt');
-            return;
-        }
-
-        var config = {};
-        config.method = 'POST';
-        config.url = this.ConfigService.getStudentNotebookURL();
-        config.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
-        var params = {};
-        params.workgroupId = this.ConfigService.getWorkgroupId();
-        params.periodId = this.ConfigService.getPeriodId();
-        params.nodeId = studentWork.nodeId;
-        params.componentId = studentWork.componentId;
-        params.studentWorkId = studentWork.id;
-        params.clientSaveTime = Date.parse(new Date());
-
-        config.data = $.param(params);
-
-        return this.$http(config).then((result) => {
-            var notebookItem = result.data;
-            if (notebookItem != null) {
-                notebookItem.studentWork = studentWork;
-                this.notebook.items.push(notebookItem);
-            }
-            return null;
-        });
-    };
-
     saveNotebookItem(nodeId, type, title, content) {
         if (this.ConfigService.isPreview()) {
             return this.$q((resolve, reject) => {
