@@ -987,36 +987,6 @@ class NodeController {
         this.StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
     };
 
-    // saves current work and adds to notebook as needed
-    // TODO: remove, deprecated
-    addStudentWorkItemToNotebook(componentId) {
-        var currentNode = this.StudentDataService.getCurrentNode();
-        if (currentNode != null) {
-            var currentNodeId = currentNode.id;
-
-            // get the scope for the component
-            var childScope = this.$scope.componentToScope[componentId];
-
-            if (childScope != null && childScope.isDirty()) {
-                // we need to save this component first before adding to notebook
-                var isAutoSave = false;
-
-                this.createAndSaveComponentData(isAutoSave, componentId).then(angular.bind(this, function(saveResult) {
-                    var currentComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(currentNodeId, componentId);
-                    if (currentComponentState != null) {
-                        this.NotebookService.addStudentWorkNotebookItem(currentComponentState);
-                    }
-                }));
-            } else {
-                // no new data to save. Get the latest componentstate and add to notebook
-                var currentComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(currentNodeId, componentId);
-                if (currentComponentState != null) {
-                    this.NotebookService.addStudentWorkNotebookItem(currentComponentState);
-                }
-            }
-        }
-    };
-
     /**
      * Checks whether any of the node's components have unsubmitted work
      * @return boolean whether or not there is unsubmitted work

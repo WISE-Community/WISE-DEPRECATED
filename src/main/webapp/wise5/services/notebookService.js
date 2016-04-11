@@ -117,43 +117,9 @@ var NotebookService = function () {
             return false;
         }
     }, {
-        key: 'addStudentWorkNotebookItem',
-        value: function addStudentWorkNotebookItem(studentWork) {
-            var _this2 = this;
-
-            // don't allow duplicate student work notebook items
-            if (this.hasStudentWorkNotebookItem(studentWork)) {
-                this.$rootScope.$broadcast('notebookAddDuplicateAttempt');
-                return;
-            }
-
-            var config = {};
-            config.method = 'POST';
-            config.url = this.ConfigService.getStudentNotebookURL();
-            config.headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
-            var params = {};
-            params.workgroupId = this.ConfigService.getWorkgroupId();
-            params.periodId = this.ConfigService.getPeriodId();
-            params.nodeId = studentWork.nodeId;
-            params.componentId = studentWork.componentId;
-            params.studentWorkId = studentWork.id;
-            params.clientSaveTime = Date.parse(new Date());
-
-            config.data = $.param(params);
-
-            return this.$http(config).then(function (result) {
-                var notebookItem = result.data;
-                if (notebookItem != null) {
-                    notebookItem.studentWork = studentWork;
-                    _this2.notebook.items.push(notebookItem);
-                }
-                return null;
-            });
-        }
-    }, {
         key: 'saveNotebookItem',
         value: function saveNotebookItem(nodeId, type, title, content) {
-            var _this3 = this;
+            var _this2 = this;
 
             if (this.ConfigService.isPreview()) {
                 return this.$q(function (resolve, reject) {
@@ -161,8 +127,8 @@ var NotebookService = function () {
                         type: type,
                         content: content
                     };
-                    _this3.notebook.items.push(notebookItem);
-                    _this3.$rootScope.$broadcast('notebookUpdated', { notebook: _this3.notebook });
+                    _this2.notebook.items.push(notebookItem);
+                    _this2.$rootScope.$broadcast('notebookUpdated', { notebook: _this2.notebook });
                     resolve();
                 });
             } else {
@@ -186,8 +152,8 @@ var NotebookService = function () {
                         if (notebookItem.type === "note") {
                             notebookItem.content = angular.fromJson(notebookItem.content);
                         }
-                        _this3.notebook.items.push(notebookItem);
-                        _this3.$rootScope.$broadcast('notebookUpdated', { notebook: _this3.notebook });
+                        _this2.notebook.items.push(notebookItem);
+                        _this2.$rootScope.$broadcast('notebookUpdated', { notebook: _this2.notebook });
                     }
                     return null;
                 });
@@ -196,29 +162,29 @@ var NotebookService = function () {
     }, {
         key: 'uploadStudentAssetNotebookItem',
         value: function uploadStudentAssetNotebookItem(file) {
-            var _this4 = this;
+            var _this3 = this;
 
             this.StudentAssetService.uploadAsset(file).then(function (studentAsset) {
 
                 var config = {};
                 config.method = 'POST';
-                config.url = _this4.ConfigService.getStudentNotebookURL();
+                config.url = _this3.ConfigService.getStudentNotebookURL();
                 config.headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
                 var params = {};
-                params.workgroupId = _this4.ConfigService.getWorkgroupId();
-                params.periodId = _this4.ConfigService.getPeriodId();
+                params.workgroupId = _this3.ConfigService.getWorkgroupId();
+                params.periodId = _this3.ConfigService.getPeriodId();
                 params.studentAssetId = studentAsset.id;
                 params.clientSaveTime = Date.parse(new Date());
 
                 config.data = $.param(params);
 
-                return _this4.$http(config).then(function (result) {
+                return _this3.$http(config).then(function (result) {
                     var notebookItem = result.data;
                     if (notebookItem != null) {
-                        notebookItem.studentAsset = _this4.StudentAssetService.getAssetById(notebookItem.studentAssetId);
-                        _this4.notebook.items.push(notebookItem);
+                        notebookItem.studentAsset = _this3.StudentAssetService.getAssetById(notebookItem.studentAssetId);
+                        _this3.notebook.items.push(notebookItem);
                     }
-                    _this4.calculateTotalUsage();
+                    _this3.calculateTotalUsage();
                     return notebookItem;
                 });
             });

@@ -115,21 +115,6 @@ class ThemeController {
             this.handleServerReconnect();
         });
 
-        // alert user when attempt to add component state to notebook that already exists in notebook
-        // TODO: remove, deprecated
-        this.$scope.$on('notebookAddDuplicateAttempt', angular.bind(this, function (event, args) {
-            this.$mdDialog.show(
-                this.$mdDialog.alert()
-                    .parent(angular.element(document.body))
-                    .title('Item already exists in Notebook')
-                    .content('You can add another version of the item by making changes and then adding it again.')
-                    .ariaLabel('Notebook Duplicate')
-                    .clickOutsideToClose(true)
-                    .ok('OK')
-                    .targetEvent(event)
-            );
-        }));
-
         // show list of revisions in a dialog when user clicks the show revisions link for a component
         this.$scope.$on('showRevisions', (event, args) => {
             let revisions = args.revisions;
@@ -190,41 +175,6 @@ class ThemeController {
             }
             StudentAssetDialogController.$inject = ["$scope", "$mdDialog", "componentController"];
         });
-
-        this.$scope.$on('showNotebook', angular.bind(this, function (event, args) {
-            alert('show notebook not implemented yet!');
-            /*
-             TODO: delete me after confirming that this is no longer used
-
-            let notebookFilters = args.notebookFilters;
-            let componentController = args.componentController;
-            let $event = args.$event;
-            let notebookDialogTemplateUrl = scope.themePath + '/templates/notebookDialog.html';
-            let notebookTemplateUrl = scope.themePath + '/notebook/notebook.html';
-
-            this.$mdDialog.show({
-                parent: angular.element(document.body),
-                targetEvent: $event,
-                templateUrl: notebookDialogTemplateUrl,
-                locals: {
-                    notebookFilters: notebookFilters,
-                    notebookTemplateUrl: notebookTemplateUrl,
-                    componentController: componentController
-                },
-                controller: NotebookDialogController
-            });
-            function NotebookDialogController($scope, $mdDialog, componentController) {
-                    $scope.notebookFilters = notebookFilters;
-                    $scope.notebookFilter = notebookFilters[0].name;
-                    $scope.notebookTemplateUrl = notebookTemplateUrl;
-                    $scope.componentController = componentController;
-                $scope.closeDialog = function () {
-                        $mdDialog.hide();
-                    }
-                }
-            NotebookDialogController.$inject = ["$scope", "$mdDialog", "componentController"];
-             */
-        }));
 
         // capture notebook open/close events
         this.$mdComponentRegistry.when('notebook').then(it => {
