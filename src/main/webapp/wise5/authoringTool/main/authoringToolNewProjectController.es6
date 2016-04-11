@@ -14,7 +14,7 @@ class AuthoringToolNewProjectController {
                     "id": "group0",
                     "type": "group",
                     "title": "Master",
-                    "startId": "",
+                    "startId": "group1",
                     "ids": [
                         "group1"
                     ]

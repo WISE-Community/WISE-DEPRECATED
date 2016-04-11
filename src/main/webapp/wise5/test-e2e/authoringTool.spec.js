@@ -59,7 +59,7 @@ describe('WISE Authoring Tool', function () {
         expect(createNewProjectButton.isPresent()).toBeTruthy();
     });
 
-    it('should create a new project', function () {
+    it('should create a new project and open it', function () {
         createNewProjectButton.click(); // click button to create a new project
         expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/author#/new');
         var createProjectButton = element(by.id('createProjectButton'));
@@ -74,10 +74,12 @@ describe('WISE Authoring Tool', function () {
         element(by.id('newProjectTitle')).clear(); // clear out what's there.
         element(by.id('newProjectTitle')).sendKeys('My Science Project');
         createProjectButton.click();
-        expect(element(by.id("projectTitle")).getText()).toEqual("My Science Project");
+        expect(browser.getCurrentUrl()).toContain('http://localhost:8080/wise/author#/project/'); // should open the project editing view.
     });
 
     it('should have elements on the page in project view', function () {
+        expect(element(by.id("projectTitle")).getText()).toEqual("My Science Project");
+
         // check that move, delete buttons are disabled and other buttons are enabled.
         expect(element(by.id("moveButton")).isEnabled()).toBe(false);
         expect(element(by.id("copyButton")).isEnabled()).toBe(false);
@@ -91,7 +93,27 @@ describe('WISE Authoring Tool', function () {
         expect(element(by.id("viewHistoryButton")).isEnabled()).toBe(true);
     });
 
+    it('should allow user to preview the project', function () {
+        // Clicking on the preview project button should open the preview in a new window
+        element(by.id("previewProjectButton")).click();
+        browser.getAllWindowHandles().then(function (handles) {
+            browser.switchTo().window(handles[1]).then(function () {
+                browser.refresh(); // needed for this issue https://github.com/angular/protractor/issues/2643
+                expect(browser.getCurrentUrl()).toContain('http://localhost:8080/wise/project/');
+                //to close the current window
+                browser.driver.close().then(function () {
+                    //to switch to the main authoring window
+                    browser.switchTo().window(handles[0]);
+                });
+            });
+        });
+    });
+
     // TODO: add test for opening newly-created project
+
+    // TODO: add test for copying a project
+
+    // TODO: add test for copying a step
 
     it('should exit the authoring tool and then sign out', function () {
         exitAuthoringToolButton.click();

@@ -9,11 +9,12 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var ProjectController = function () {
-    function ProjectController($scope, $state, $stateParams, $translate, ProjectService, ConfigService) {
+    function ProjectController($q, $scope, $state, $stateParams, $translate, ProjectService, ConfigService) {
         var _this = this;
 
         _classCallCheck(this, ProjectController);
 
+        this.$q = $q;
         this.$scope = $scope;
         this.$state = $state;
         this.$stateParams = $stateParams;
@@ -218,6 +219,7 @@ var ProjectController = function () {
     }, {
         key: 'insertInside',
         value: function insertInside(nodeId) {
+            var _this3 = this;
 
             // TODO check that we are inserting into a group
 
@@ -285,16 +287,16 @@ var ProjectController = function () {
             }
 
             // check if the project start node id should be changed
-            this.checkPotentialStartNodeIdChange();
+            this.checkPotentialStartNodeIdChange().then(function () {
+                // save the project
+                _this3.ProjectService.saveProject();
 
-            // save the project
-            this.ProjectService.saveProject();
+                // refresh the project
+                _this3.ProjectService.parseProject();
+                _this3.items = _this3.ProjectService.idToOrder;
 
-            // refresh the project
-            this.ProjectService.parseProject();
-            this.items = this.ProjectService.idToOrder;
-
-            this.unselectAllItems();
+                _this3.unselectAllItems();
+            });
         }
 
         /**
@@ -718,43 +720,42 @@ var ProjectController = function () {
     }, {
         key: 'checkPotentialStartNodeIdChange',
         value: function checkPotentialStartNodeIdChange() {
-            var _this3 = this;
+            var _this4 = this;
 
-            var potentialChange = false;
+            return this.$q(function (resolve, reject) {
+                // get the current start node id
+                var currentStartNodeId = _this4.ProjectService.getStartNodeId();
 
-            // get the current start node id
-            var currentStartNodeId = this.ProjectService.getStartNodeId();
+                // get the first leaf node id
+                var firstLeafNodeId = _this4.ProjectService.getFirstLeafNodeId();
 
-            // get the first leaf node id
-            var firstLeafNodeId = this.ProjectService.getFirstLeafNodeId();
+                if (currentStartNodeId != firstLeafNodeId) {
+                    /*
+                     * the node ids are different which means the first leaf node
+                     * id is different than the current start node id and that
+                     * the author may want to use the first leaf node id as the
+                     * new start node id
+                     */
+                    var firstLeafNode = _this4.ProjectService.getNodeById(firstLeafNodeId);
 
-            if (currentStartNodeId != firstLeafNodeId) {
-                /*
-                 * the node ids are different which means the first leaf node
-                 * id is different than the current start node id and that
-                 * the author may want to use the first leaf node id as the
-                 * new start node id
-                 */
-                potentialChange = true;
+                    if (firstLeafNode != null) {
+                        var firstChildTitle = firstLeafNode.title;
 
-                var firstLeafNode = this.ProjectService.getNodeById(firstLeafNodeId);
+                        // ask the user if they would like to change the start step to the step that is now the first child in the group
+                        _this4.$translate('confirmUpdateStartStep', { startStepTitle: firstChildTitle }).then(function (confirmUpdateStartStep) {
+                            var answer = confirm(confirmUpdateStartStep);
 
-                if (firstLeafNode != null) {
-                    var firstChildTitle = firstLeafNode.title;
-
-                    // ask the user if they would like to change the start step to the step that is now the first child in the group
-                    this.$translate('confirmUpdateStartStep', { startStepTitle: firstChildTitle }).then(function (confirmUpdateStartStep) {
-                        var answer = confirm(confirmUpdateStartStep);
-
-                        if (answer) {
-                            // change the project start node id
-                            _this3.ProjectService.setStartNodeId(firstLeafNodeId);
-                        }
-                    });
+                            if (answer) {
+                                // change the project start node id
+                                _this4.ProjectService.setStartNodeId(firstLeafNodeId);
+                                resolve();
+                            }
+                        });
+                    }
+                } else {
+                    resolve();
                 }
-            }
-
-            return potentialChange;
+            });
         }
     }]);
 
@@ -763,7 +764,7 @@ var ProjectController = function () {
 
 ;
 
-ProjectController.$inject = ['$scope', '$state', '$stateParams', '$translate', 'ProjectService', 'ConfigService'];
+ProjectController.$inject = ['$q', '$scope', '$state', '$stateParams', '$translate', 'ProjectService', 'ConfigService'];
 
 exports.default = ProjectController;
 //# sourceMappingURL=projectController.js.map
