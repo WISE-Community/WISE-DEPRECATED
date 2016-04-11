@@ -75,9 +75,6 @@ var AudioOscillatorController = function () {
         // whether the submit button is shown or not
         this.isSubmitButtonVisible = false;
 
-        // the text in the play/pause button
-        this.playPauseButtonText = 'Play';
-
         // whether the audio is playing
         this.isPlaying = false;
 
@@ -669,17 +666,17 @@ var AudioOscillatorController = function () {
             return response;
         }
     }, {
-        key: 'playPauseClicked',
+        key: 'playStopClicked',
 
 
         /**
-         * The play/pause button was clicked
+         * The play/stop button was clicked
          */
-        value: function playPauseClicked() {
+        value: function playStopClicked() {
 
             if (this.isPlaying) {
-                // the audio is playing so we will now pause it
-                this.pause();
+                // the audio is playing so we will now stop it
+                this.stop();
             } else {
                 // the audio is not playing so we will not play it
                 this.play();
@@ -725,12 +722,12 @@ var AudioOscillatorController = function () {
         }
 
         /**
-         * Pause the audio
+         * Stop the audio
          */
 
     }, {
-        key: 'pause',
-        value: function pause() {
+        key: 'stop',
+        value: function stop() {
             this.oscillator.stop();
 
             this.isPlaying = false;
@@ -963,7 +960,7 @@ var AudioOscillatorController = function () {
     }, {
         key: 'restartPlayer',
         value: function restartPlayer() {
-            this.pause();
+            this.stop();
             this.play();
         }
 

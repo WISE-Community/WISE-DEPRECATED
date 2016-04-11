@@ -84,26 +84,9 @@
                           ng-model='audioOscillatorController.frequency'
                           ng-change='audioOscillatorController.frequencyChanged()'/>
         <br/>
-        <button ng-click='audioOscillatorController.playPauseClicked()'>{{audioOscillatorController.isPlaying == true ? 'Pause' : 'Play'}}</button>
+        <button ng-click='audioOscillatorController.playStopClicked()'>{{audioOscillatorController.isPlaying == true ? 'Stop' : 'Play'}}</button>
         <br/>
         <canvas id='{{audioOscillatorController.oscilloscopeId}}' width={{audioOscillatorController.oscilloscopeWidth}} height={{audioOscillatorController.oscilloscopeHeight}} style="border:1px solid lightgrey"></canvas>
-        <div ng-if='audioOscillatorController.mode == "student"'>
-            <annotation type='score'
-                        mode='{{audioOscillatorController.mode}}'
-                        nodeid='{{audioOscillatorController.nodeId}}'
-                        componentid='{{audioOscillatorController.componentId}}'
-                        fromworkgroupid='{{teacherWorkgroupId}}'
-                        toworkgroupid='{{workgroupId}}'
-                        componentstateid='{{componentState.id}}'></annotation>
-            <br/>
-            <annotation type='comment'
-                        mode='{{audioOscillatorController.mode}}'
-                        nodeid='{{audioOscillatorController.nodeId}}'
-                        componentid='{{audioOscillatorController.componentId}}'
-                        fromworkgroupid='{{teacherWorkgroupId}}'
-                        toworkgroupid='{{workgroupId}}'
-                        componentstateid='{{componentState.id}}'></annotation>
-        </div>
         <div class="component-content__actions" layout="row" layout-align="start center">
             <md-button class="md-raised md-primary"
                        ng-click='audioOscillatorController.submitButtonClicked()'
@@ -121,23 +104,23 @@
             </span>
         </div>
     </div>
-    <div ng-if='audioOscillatorController.mode == "grading"' style='width: 400px'>
+    <div ng-if='audioOscillatorController.mode == "grading" && audioOscillatorController.componentContent.maxScore > -1' style='width: 400px'>
         <annotation type='score'
-                    mode='{{audioOscillatorController.mode}}'
-                    nodeid='{{audioOscillatorController.nodeId}}'
-                    componentid='{{audioOscillatorController.componentId}}'
-                    fromworkgroupid='{{teacherWorkgroupId}}'
-                    toworkgroupid='{{workgroupId}}'
-                    componentstateid='{{componentState.id}}'
+                    mode='audioOscillatorController.mode'
+                    node-id='audioOscillatorController.nodeId'
+                    component-id='audioOscillatorController.componentId'
+                    from-workgroup-id='teacherWorkgroupId'
+                    to-workgroup-id='workgroupId'
+                    component-state-id='componentState.id'
                     active='true'></annotation>
         <br/>
         <annotation type='comment'
-                    mode='{{audioOscillatorController.mode}}'
-                    nodeid='{{audioOscillatorController.nodeId}}'
-                    componentid='{{audioOscillatorController.componentId}}'
-                    fromworkgroupid='{{teacherWorkgroupId}}'
-                    toworkgroupid='{{workgroupId}}'
-                    componentstateid='{{componentState.id}}'
+                    mode='audioOscillatorController.mode'
+                    node-id='audioOscillatorController.nodeId'
+                    component-id='audioOscillatorController.componentId'
+                    from-workgroup-id='teacherWorkgroupId'
+                    to-workgroup-id='workgroupId'
+                    component-state-id='componentState.id'
                     active='true'></annotation>
     </div>
 </div>

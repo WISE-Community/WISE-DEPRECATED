@@ -11,6 +11,8 @@ import angularTranslate from 'angular-translate';
 import angularTranslateLoaderPartial from 'angular-translate-loader-partial';
 import ngWebSocket from 'angular-websocket';
 import AnnotationService from '../services/annotationService';
+import AudioOscillatorController from '../components/audioOscillator/audioOscillatorController';
+import AudioOscillatorService from '../components/audioOscillator/audioOscillatorService';
 import ClassroomMonitorController from './classroomMonitorController';
 import ConfigService from '../services/configService';
 import Directives from '../directives/directives';
@@ -66,6 +68,7 @@ let mainModule = angular.module('classroomMonitor', [
         'ui.router'
     ])
     .service(AnnotationService.name, AnnotationService)
+    .service(AudioOscillatorService.name, AudioOscillatorService)
     .service(ConfigService.name, ConfigService)
     .service(DiscussionService.name, DiscussionService)
     .service(DrawService.name, DrawService)
@@ -87,6 +90,7 @@ let mainModule = angular.module('classroomMonitor', [
     .service(TeacherDataService.name, TeacherDataService)
     .service(TeacherWebSocketService.name, TeacherWebSocketService)
     .service(UtilService.name, UtilService)
+    .controller(AudioOscillatorController.name, AudioOscillatorController)
     .controller(ClassroomMonitorController.name, ClassroomMonitorController)
     .controller(DiscussionController.name, DiscussionController)
     .controller(DrawController.name, DrawController)

@@ -73,9 +73,6 @@ class AudioOscillatorController {
         // whether the submit button is shown or not
         this.isSubmitButtonVisible = false;
         
-        // the text in the play/pause button
-        this.playPauseButtonText = 'Play';
-        
         // whether the audio is playing
         this.isPlaying = false;
         
@@ -620,13 +617,13 @@ class AudioOscillatorController {
     };
     
     /**
-     * The play/pause button was clicked
+     * The play/stop button was clicked
      */
-    playPauseClicked() {
+    playStopClicked() {
         
         if (this.isPlaying) {
-            // the audio is playing so we will now pause it
-            this.pause();
+            // the audio is playing so we will now stop it
+            this.stop();
         } else {
             // the audio is not playing so we will not play it
             this.play();
@@ -669,9 +666,9 @@ class AudioOscillatorController {
     }
     
     /**
-     * Pause the audio
+     * Stop the audio
      */
-    pause() {
+    stop() {
         this.oscillator.stop();
         
         this.isPlaying = false;
@@ -889,7 +886,7 @@ class AudioOscillatorController {
      * Restart the player
      */
     restartPlayer() {
-        this.pause();
+        this.stop();
         this.play();
     }
 
