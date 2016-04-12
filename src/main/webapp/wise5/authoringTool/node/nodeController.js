@@ -75,6 +75,9 @@ var NodeController = function () {
          * Close the node authoring view
          */
         value: function close() {
+            // perform any node cleanup if necessary
+            this.$scope.$broadcast('exitNode', { nodeToExit: this.node });
+
             this.$state.go('root.project', { projectId: this.projectId });
         }
     }, {
@@ -238,6 +241,9 @@ var NodeController = function () {
                     var result = confirm(confirmUndoLastChange);
 
                     if (result) {
+                        // perform any node cleanup if necessary
+                        _this4.$scope.$broadcast('exitNode', { nodeToExit: _this4.node });
+
                         // get the previous version of the node
                         var nodeCopy = _this4.undoStack.pop();
 

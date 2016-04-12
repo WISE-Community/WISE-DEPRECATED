@@ -146,13 +146,16 @@ var AudioOscillatorController = function () {
                 }.bind(this), function (newValue, oldValue) {
                     var _this = this;
 
+                    // stop the audio if it is playing
+                    this.stop();
+
+                    // inject asset paths if necessary
                     this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-                    this.oscillatorTypes = this.componentContent.oscillatorTypes;
-                    this.frequency = this.componentContent.startingFrequency;
-                    this.oscilloscopeWidth = this.componentContent.oscilloscopeWidth;
-                    this.oscilloscopeHeight = this.componentContent.oscilloscopeHeight;
-                    this.gridCellSize = this.componentContent.gridCellSize;
-                    this.stopAfterGoodDraw = this.componentContent.stopAfterGoodDraw;
+
+                    // load the parameters into the component
+                    this.setParametersFromComponentContent();
+
+                    // draw the oscilloscope gride after the view has rendered
                     $timeout(function () {
                         _this.drawOscilloscopeGrid();
                     }, 0);
@@ -161,33 +164,8 @@ var AudioOscillatorController = function () {
 
             this.oscilloscopeId = 'oscilloscope' + this.componentId;
 
-            if (this.componentContent.startingFrequency != null) {
-                this.frequency = this.componentContent.startingFrequency;
-            }
-
-            if (this.componentContent.oscillatorTypes != null) {
-                this.oscillatorTypes = this.componentContent.oscillatorTypes;
-
-                if (this.componentContent.oscillatorTypes.length > 0) {
-                    this.oscillatorType = this.componentContent.oscillatorTypes[0];
-                }
-            }
-
-            if (this.componentContent.oscilloscopeWidth != null) {
-                this.oscilloscopeWidth = this.componentContent.oscilloscopeWidth;
-            }
-
-            if (this.componentContent.oscilloscopeHeight != null) {
-                this.oscilloscopeHeight = this.componentContent.oscilloscopeHeight;
-            }
-
-            if (this.componentContent.gridCellSize != null) {
-                this.gridCellSize = this.componentContent.gridCellSize;
-            }
-
-            if (this.componentContent.stopAfterGoodDraw != null) {
-                this.stopAfterGoodDraw = this.componentContent.stopAfterGoodDraw;
-            }
+            // load the parameters into the component
+            this.setParametersFromComponentContent();
 
             // get the show previous work node id if it is provided
             var showPreviousWorkNodeId = this.componentContent.showPreviousWorkNodeId;
@@ -336,16 +314,56 @@ var AudioOscillatorController = function () {
          * exits the parent node. This will perform any necessary cleanup
          * when the student exits the parent node.
          */
-        this.$scope.$on('exitNode', function (event, args) {}.bind(this));
+        this.$scope.$on('exitNode', function (event, args) {
+            // stop playing the audio if the student leaves the step
+            this.stop();
+            this.audioContext.close();
+        }.bind(this));
     }
 
     /**
-     * Populate the student work into the component
-     * @param componentState the component state to populate into the component
+     * Load the parameters from the component content object
      */
 
 
     _createClass(AudioOscillatorController, [{
+        key: 'setParametersFromComponentContent',
+        value: function setParametersFromComponentContent() {
+            if (this.componentContent.startingFrequency != null) {
+                this.frequency = this.componentContent.startingFrequency;
+            }
+
+            if (this.componentContent.oscillatorTypes != null) {
+                this.oscillatorTypes = this.componentContent.oscillatorTypes;
+
+                if (this.componentContent.oscillatorTypes.length > 0) {
+                    this.oscillatorType = this.componentContent.oscillatorTypes[0];
+                }
+            }
+
+            if (this.componentContent.oscilloscopeWidth != null) {
+                this.oscilloscopeWidth = this.componentContent.oscilloscopeWidth;
+            }
+
+            if (this.componentContent.oscilloscopeHeight != null) {
+                this.oscilloscopeHeight = this.componentContent.oscilloscopeHeight;
+            }
+
+            if (this.componentContent.gridCellSize != null) {
+                this.gridCellSize = this.componentContent.gridCellSize;
+            }
+
+            if (this.componentContent.stopAfterGoodDraw != null) {
+                this.stopAfterGoodDraw = this.componentContent.stopAfterGoodDraw;
+            }
+        }
+
+        /**
+         * Populate the student work into the component
+         * @param componentState the component state to populate into the component
+         */
+
+    }, {
         key: 'setStudentWork',
         value: function setStudentWork(componentState) {
 
@@ -728,7 +746,9 @@ var AudioOscillatorController = function () {
     }, {
         key: 'stop',
         value: function stop() {
-            this.oscillator.stop();
+            if (this.oscillator != null) {
+                this.oscillator.stop();
+            }
 
             this.isPlaying = false;
         }
