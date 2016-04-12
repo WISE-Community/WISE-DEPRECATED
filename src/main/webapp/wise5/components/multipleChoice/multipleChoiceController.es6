@@ -605,10 +605,8 @@ class MultipleChoiceController {
     checkAnswer() {
         var isCorrect = false;
 
-        this.hideAllFeedback();
-
         // check if any correct choices have been authored
-        if (this.hasCorrectChoices()) {
+        if (this.hasFeedback() || this.hasCorrectChoices()) {
 
             var isCorrectSoFar = true;
 
@@ -644,8 +642,10 @@ class MultipleChoiceController {
 
             isCorrect = isCorrectSoFar;
         }
-
-        this.isCorrect = isCorrect;
+        
+        if (this.hasCorrectChoices()) {
+            this.isCorrect = isCorrect;
+        }
     };
 
     /**
@@ -681,7 +681,10 @@ class MultipleChoiceController {
         if (this.isLockAfterSubmit()) {
             this.isDisabled = true;
         }
-
+        
+        // hide all the current feedback
+        this.hideAllFeedback();
+        
         this.checkAnswer();
     };
 
@@ -894,6 +897,38 @@ class MultipleChoiceController {
 
         return result;
     };
+    
+    /**
+     * Check if there is any feedback
+     * @returns whether there is any feedback
+     */
+    hasFeedback() {
+        var result = false;
+
+        // get the component content
+        var componentContent = this.componentContent;
+
+        if (componentContent != null) {
+
+            var choices = componentContent.choices;
+
+            if (choices != null) {
+
+                // loop through all the authored choices
+                for (var c = 0; c < choices.length; c++) {
+                    var choice = choices[c];
+
+                    if (choice != null) {
+                        if (choice.feedback != null && choice.feedback != '') {
+                            result = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
 
     /**
      * Get a choice object by choice id
@@ -1123,6 +1158,17 @@ class MultipleChoiceController {
         return this.componentContent.id;
     };
 
+    /**
+     * The author has changed the feedback so we will enable the submit button
+     */
+    authoringViewFeedbackChanged() {
+        
+        // enable the submit button
+        this.authoringComponentContent.showSubmitButton = true;
+        
+        // save the component
+        this.authoringViewComponentChanged();
+    }
 
     /**
      * The component has changed in the regular authoring view so we will save the project

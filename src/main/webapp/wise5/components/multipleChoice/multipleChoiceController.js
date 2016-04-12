@@ -652,10 +652,8 @@ var MultipleChoiceController = function () {
         value: function checkAnswer() {
             var isCorrect = false;
 
-            this.hideAllFeedback();
-
             // check if any correct choices have been authored
-            if (this.hasCorrectChoices()) {
+            if (this.hasFeedback() || this.hasCorrectChoices()) {
 
                 var isCorrectSoFar = true;
 
@@ -692,7 +690,9 @@ var MultipleChoiceController = function () {
                 isCorrect = isCorrectSoFar;
             }
 
-            this.isCorrect = isCorrect;
+            if (this.hasCorrectChoices()) {
+                this.isCorrect = isCorrect;
+            }
         }
     }, {
         key: 'getCorrectChoice',
@@ -735,6 +735,9 @@ var MultipleChoiceController = function () {
             if (this.isLockAfterSubmit()) {
                 this.isDisabled = true;
             }
+
+            // hide all the current feedback
+            this.hideAllFeedback();
 
             this.checkAnswer();
         }
@@ -964,14 +967,49 @@ var MultipleChoiceController = function () {
             return result;
         }
     }, {
-        key: 'getChoiceById',
+        key: 'hasFeedback',
 
+
+        /**
+         * Check if there is any feedback
+         * @returns whether there is any feedback
+         */
+        value: function hasFeedback() {
+            var result = false;
+
+            // get the component content
+            var componentContent = this.componentContent;
+
+            if (componentContent != null) {
+
+                var choices = componentContent.choices;
+
+                if (choices != null) {
+
+                    // loop through all the authored choices
+                    for (var c = 0; c < choices.length; c++) {
+                        var choice = choices[c];
+
+                        if (choice != null) {
+                            if (choice.feedback != null && choice.feedback != '') {
+                                result = true;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return result;
+        }
 
         /**
          * Get a choice object by choice id
          * @param choiceId the choice id
          * @return the choice object with the given choice id
          */
+
+    }, {
+        key: 'getChoiceById',
         value: function getChoiceById(choiceId) {
             var choice = null;
 
@@ -1225,12 +1263,27 @@ var MultipleChoiceController = function () {
             return this.componentContent.id;
         }
     }, {
-        key: 'authoringViewComponentChanged',
+        key: 'authoringViewFeedbackChanged',
 
+
+        /**
+         * The author has changed the feedback so we will enable the submit button
+         */
+        value: function authoringViewFeedbackChanged() {
+
+            // enable the submit button
+            this.authoringComponentContent.showSubmitButton = true;
+
+            // save the component
+            this.authoringViewComponentChanged();
+        }
 
         /**
          * The component has changed in the regular authoring view so we will save the project
          */
+
+    }, {
+        key: 'authoringViewComponentChanged',
         value: function authoringViewComponentChanged() {
 
             // clean up the choices by removing fields injected by the controller during run time

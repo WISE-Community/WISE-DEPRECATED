@@ -18,7 +18,7 @@ class MultipleChoiceService extends NodeService {
         component.type = 'MultipleChoice';
         component.prompt = 'Enter prompt here';
         component.showSaveButton = false;
-        component.showSubmitButton = true;
+        component.showSubmitButton = false;
         component.choiceType = 'radio';
         component.choices = [];
         return component;
