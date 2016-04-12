@@ -9,8 +9,8 @@ class AudioOscillatorService extends NodeService {
     }
 
     /**
-     * Create a AudioPlayer component object
-     * @returns a new AudioPlayer component object
+     * Create a AudioOscillator component object
+     * @returns a new AudioOscillator component object
      */
     createComponent() {
 
@@ -51,7 +51,7 @@ class AudioOscillatorService extends NodeService {
             // get the component type of the other component state
             var otherComponentType = componentStateFromOtherComponent.componentType;
 
-            if (otherComponentType === 'AudioPlayer') {
+            if (otherComponentType === 'AudioOscillator') {
                 // the other component is an OpenResponse component
 
                 // get the student data from the other component state
