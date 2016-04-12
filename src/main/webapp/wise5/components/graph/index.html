@@ -74,15 +74,17 @@
                 <md-icon>image</md-icon> Import Data
             </md-button>
         </div>
-        <button id='resetGraphButton'
-                ng-click='graphController.resetGraph()'
-                ng-show='graphController.showResetGraphButton()'>Reset Graph</button>
-
         <select ng-model='graphController.activeSeries'
                 ng-options='series as series.name for series in graphController.series'
                 ng-change='graphController.activeSeriesChanged()'
                 ng-show='graphController.showSelectSeries()'>
         </select>
+        <button id='resetGraphButton'
+                ng-click='graphController.resetGraph()'
+                ng-show='graphController.showResetGraphButton()'>Reset Graph</button>
+        <button id='resetSeriesButton'
+                ng-click='graphController.resetSeries()'
+                ng-show='graphController.showResetSeriesButton()'>Reset Series</button>
         <highchart id="{{graphController.chartId}}" config="graphController.chartConfig" class="span10" style="width:80%"></highchart>
         <component-annotations ng-if="graphController.mode === 'student'"
                                score-annotation='graphController.latestAnnotations.score'

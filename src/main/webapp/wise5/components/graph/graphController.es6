@@ -88,10 +88,10 @@ class GraphController {
         this.latestAnnotations = null;
 
         // whether the reset graph button is shown or not
-        this.isResetGraphButtonVisible = true;
+        this.isResetGraphButtonVisible = false;
 
         // whether the select series input is shown or not
-        this.isSelectSeriesVisible = true;
+        this.isSelectSeriesVisible = false;
 
         // the id of the chart element
         this.chartId = 'chart1';
@@ -134,7 +134,8 @@ class GraphController {
                 this.isPromptVisible = true;
                 this.isSaveButtonVisible = this.componentContent.showSaveButton;
                 this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-                this.isResetGraphButtonVisible = true;
+                //this.isResetGraphButtonVisible = true;
+                this.isResetSeriesButtonVisible = true;
                 this.isSelectSeriesVisible = true;
 
                 // get the latest annotations
@@ -144,7 +145,8 @@ class GraphController {
                 this.isPromptVisible = true;
                 this.isSaveButtonVisible = false;
                 this.isSubmitButtonVisible = false;
-                this.isResetGraphButtonVisible = false;
+                //this.isResetGraphButtonVisible = false;
+                this.isResetSeriesButtonVisible = false;
                 this.isSelectSeriesVisible = false;
                 this.isDisabled = true;
             } else if (this.mode === 'onlyShowWork') {
@@ -152,6 +154,7 @@ class GraphController {
                 this.isSaveButtonVisible = false;
                 this.isSubmitButtonVisible = false;
                 this.isResetGraphButtonVisible = false;
+                this.isResetSeriesButtonVisible = false;
                 this.isSelectSeriesVisible = false;
                 this.isDisabled = true;
             } else if (this.mode === 'authoring') {
@@ -919,6 +922,28 @@ class GraphController {
     getSeries() {
         return this.series;
     };
+    
+    /**
+     * Set the series at the given index
+     * @param series the series object
+     * @param index the index the series will be placed in
+     */
+    setSeriesByIndex(series, index) {
+        
+        if (series != null && index != null) {
+            // set the series in the array of series
+            this.series[index] = series;
+        }
+    }
+    
+    /**
+     * Get the series at the given index
+     * @param index the index to get the series at
+     * @returns the series at the given index
+     */
+    getSeriesByIndex(index) {
+        return this.series[index];
+    }
 
     /**
      * Set the xAxis object
@@ -1005,6 +1030,42 @@ class GraphController {
          */
         this.studentDataChanged();
     };
+    
+    /**
+     * Reset the active series
+     */
+    resetSeries() {
+        
+        // get the index of the active series
+        var activeSeriesIndex  = this.getSeriesIndex(this.activeSeries);
+        
+        if (activeSeriesIndex != null) {
+            
+            // get the original series from the component content
+            var originalSeries = this.componentContent.series[activeSeriesIndex];
+            
+            if (originalSeries != null) {
+                
+                // make a copy of the series
+                originalSeries = this.UtilService.makeCopyOfJSONObject(originalSeries);
+                
+                // set the series
+                this.setSeriesByIndex(originalSeries, activeSeriesIndex);
+                
+                /*
+                 * set the active series index so that the the active series
+                 * is the same as before.
+                 */
+                this.setActiveSeriesByIndex(activeSeriesIndex);
+                
+                /*
+                 * notify the controller that the student data has changed
+                 * so that the graph will be redrawn
+                 */
+                this.studentDataChanged();
+            }
+        }
+    }
 
     /**
      * Populate the student work into the component
@@ -1267,6 +1328,20 @@ class GraphController {
 
         return show;
     };
+    
+    /**
+     * Check whether we need to show the reset series button
+     * @return whether to show the reset series button
+     */
+    showResetSeriesButton() {
+        var show = false;
+        
+        if (this.isResetSeriesButtonVisible) {
+            show = true;
+        }
+        
+        return show;
+    }
 
     /**
      * Check whether we need to lock the component after the student

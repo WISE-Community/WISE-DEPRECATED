@@ -95,10 +95,10 @@ var GraphController = function () {
         this.latestAnnotations = null;
 
         // whether the reset graph button is shown or not
-        this.isResetGraphButtonVisible = true;
+        this.isResetGraphButtonVisible = false;
 
         // whether the select series input is shown or not
-        this.isSelectSeriesVisible = true;
+        this.isSelectSeriesVisible = false;
 
         // the id of the chart element
         this.chartId = 'chart1';
@@ -141,7 +141,8 @@ var GraphController = function () {
                 this.isPromptVisible = true;
                 this.isSaveButtonVisible = this.componentContent.showSaveButton;
                 this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-                this.isResetGraphButtonVisible = true;
+                //this.isResetGraphButtonVisible = true;
+                this.isResetSeriesButtonVisible = true;
                 this.isSelectSeriesVisible = true;
 
                 // get the latest annotations
@@ -151,7 +152,8 @@ var GraphController = function () {
                 this.isPromptVisible = true;
                 this.isSaveButtonVisible = false;
                 this.isSubmitButtonVisible = false;
-                this.isResetGraphButtonVisible = false;
+                //this.isResetGraphButtonVisible = false;
+                this.isResetSeriesButtonVisible = false;
                 this.isSelectSeriesVisible = false;
                 this.isDisabled = true;
             } else if (this.mode === 'onlyShowWork') {
@@ -159,6 +161,7 @@ var GraphController = function () {
                 this.isSaveButtonVisible = false;
                 this.isSubmitButtonVisible = false;
                 this.isResetGraphButtonVisible = false;
+                this.isResetSeriesButtonVisible = false;
                 this.isSelectSeriesVisible = false;
                 this.isDisabled = true;
             } else if (this.mode === 'authoring') {
@@ -951,13 +954,41 @@ var GraphController = function () {
             return this.series;
         }
     }, {
-        key: 'setXAxis',
+        key: 'setSeriesByIndex',
 
+
+        /**
+         * Set the series at the given index
+         * @param series the series object
+         * @param index the index the series will be placed in
+         */
+        value: function setSeriesByIndex(series, index) {
+
+            if (series != null && index != null) {
+                // set the series in the array of series
+                this.series[index] = series;
+            }
+        }
+
+        /**
+         * Get the series at the given index
+         * @param index the index to get the series at
+         * @returns the series at the given index
+         */
+
+    }, {
+        key: 'getSeriesByIndex',
+        value: function getSeriesByIndex(index) {
+            return this.series[index];
+        }
 
         /**
          * Set the xAxis object
          * @param xAxis the xAxis object that can be used to render the graph
          */
+
+    }, {
+        key: 'setXAxis',
         value: function setXAxis(xAxis) {
             this.xAxis = xAxis;
         }
@@ -1058,13 +1089,52 @@ var GraphController = function () {
             this.studentDataChanged();
         }
     }, {
-        key: 'setStudentWork',
+        key: 'resetSeries',
 
+
+        /**
+         * Reset the active series
+         */
+        value: function resetSeries() {
+
+            // get the index of the active series
+            var activeSeriesIndex = this.getSeriesIndex(this.activeSeries);
+
+            if (activeSeriesIndex != null) {
+
+                // get the original series from the component content
+                var originalSeries = this.componentContent.series[activeSeriesIndex];
+
+                if (originalSeries != null) {
+
+                    // make a copy of the series
+                    originalSeries = this.UtilService.makeCopyOfJSONObject(originalSeries);
+
+                    // set the series
+                    this.setSeriesByIndex(originalSeries, activeSeriesIndex);
+
+                    /*
+                     * set the active series index so that the the active series
+                     * is the same as before.
+                     */
+                    this.setActiveSeriesByIndex(activeSeriesIndex);
+
+                    /*
+                     * notify the controller that the student data has changed
+                     * so that the graph will be redrawn
+                     */
+                    this.studentDataChanged();
+                }
+            }
+        }
 
         /**
          * Populate the student work into the component
          * @param componentState the component state to populate into the component
          */
+
+    }, {
+        key: 'setStudentWork',
         value: function setStudentWork(componentState) {
 
             if (componentState != null) {
@@ -1357,13 +1427,30 @@ var GraphController = function () {
             return show;
         }
     }, {
-        key: 'isLockAfterSubmit',
+        key: 'showResetSeriesButton',
 
+
+        /**
+         * Check whether we need to show the reset series button
+         * @return whether to show the reset series button
+         */
+        value: function showResetSeriesButton() {
+            var show = false;
+
+            if (this.isResetSeriesButtonVisible) {
+                show = true;
+            }
+
+            return show;
+        }
 
         /**
          * Check whether we need to lock the component after the student
          * submits an answer.
          */
+
+    }, {
+        key: 'isLockAfterSubmit',
         value: function isLockAfterSubmit() {
             var result = false;
 
