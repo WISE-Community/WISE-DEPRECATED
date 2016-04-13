@@ -1,3 +1,5 @@
+import iframeResizer from 'iframe-resizer';
+
 class EmbeddedController {
     constructor($scope,
                 $sce,
@@ -57,6 +59,9 @@ class EmbeddedController {
         // variable to store component states (from application)
         this.componentState = null;
 
+        // the id of the embedded application's iframe
+        this.embeddedApplicationIFrameId = '';
+
         this.messageEventListener = angular.bind(this, function(messageEvent) {
             // handle messages received from iframe
             var messageEventData = messageEvent.data;
@@ -97,6 +102,7 @@ class EmbeddedController {
                 // application has finished loading, so send latest component state to application
                 this.sendLatestWorkToApplication();
                 this.processLatestSubmit();
+                $('#' + this.embeddedApplicationIFrameId).iFrameResize({scrolling: true});
             } else if (messageEventData.messageType === "componentDirty") {
                 let isDirty = messageEventData.isDirty;
 

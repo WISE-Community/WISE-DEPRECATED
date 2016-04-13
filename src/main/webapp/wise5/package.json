@@ -14,6 +14,7 @@
       "angular-websocket": "npm:angular-websocket@^1.0.14",
       "highcharts-ng": "npm:highcharts-ng@^0.0.11",
       "highcharts/draggable-points": "github:highcharts/draggable-points@master",
+      "iframe-resizer": "npm:iframe-resizer@^3.5.3",
       "jquery": "npm:jquery@^2.2.0",
       "moment": "npm:moment@^2.11.1",
       "ng-file-upload": "npm:ng-file-upload@^10.1.11",
