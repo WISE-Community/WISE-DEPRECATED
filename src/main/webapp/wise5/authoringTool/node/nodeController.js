@@ -25,9 +25,13 @@ var NodeController = function () {
         this.projectId = $stateParams.projectId;
         this.nodeId = $stateParams.nodeId;
         this.showCreateComponent = false;
+        this.showEditTransitions = false;
         this.selectedComponent = null;
         this.nodeCopy = null;
         this.undoStack = [];
+        this.howToChooseAmongAvailablePathsOptions = [null, "random", "workgroupId", "firstAvailable", "lastAvailable"];
+        this.whenToChoosePathOptions = [null, "enterNode", "exitNode", "studentDataChanged"];
+        this.canChangePathOptions = [null, true, false];
 
         // the array of component types that can be created
         this.componentTypes = [{ componentType: 'AudioOscillator', componentName: 'Audio Oscillator' }, { componentType: 'Discussion', componentName: 'Discussion' }, { componentType: 'Draw', componentName: 'Draw' }, { componentType: 'Embedded', componentName: 'Embedded' }, { componentType: 'Graph', componentName: 'Graph' }, { componentType: 'HTML', componentName: 'HTML' }, { componentType: 'Label', componentName: 'Label' }, { componentType: 'Match', componentName: 'Match' }, { componentType: 'MultipleChoice', componentName: 'Multiple Choice' }, { componentType: 'OpenResponse', componentName: 'Open Response' }, { componentType: 'OutsideURL', componentName: 'Outside URL' }, { componentType: 'Table', componentName: 'Table' }];
@@ -61,14 +65,14 @@ var NodeController = function () {
 
 
     _createClass(NodeController, [{
-        key: 'previewStep',
+        key: "previewStep",
         value: function previewStep() {
             var previewProjectURL = this.ConfigService.getConfigParam("previewProjectURL");
             var previewStepURL = previewProjectURL + "#/vle/" + this.nodeId;
             window.open(previewStepURL);
         }
     }, {
-        key: 'close',
+        key: "close",
 
 
         /**
@@ -81,7 +85,7 @@ var NodeController = function () {
             this.$state.go('root.project', { projectId: this.projectId });
         }
     }, {
-        key: 'cancel',
+        key: "cancel",
 
 
         /**
@@ -118,11 +122,92 @@ var NodeController = function () {
         }
 
         /**
+         * Add a new transition for this node.
+         */
+
+    }, {
+        key: "addNewTransition",
+        value: function addNewTransition() {
+            if (this.node.transitionLogic.transitions == null) {
+                this.node.transitionLogic.transitions = [];
+            }
+            var nodeTransitions = this.node.transitionLogic.transitions;
+            if (nodeTransitions.length > 0) {
+                // If this node already has transitions, copy the last one.
+                var lastNodeTransition = nodeTransitions[nodeTransitions.length - 1];
+                var newTransition = {
+                    "to": lastNodeTransition.to
+                };
+                nodeTransitions.push(newTransition);
+            } else {
+                // Otherwise set the new transition to the current nodeId
+                var _newTransition = {
+                    "to": this.nodeId
+                };
+                nodeTransitions.push(_newTransition);
+            }
+        }
+
+        /**
+         * Add a new transition for the specified transition.
+         */
+
+    }, {
+        key: "addNewTransitionCriteria",
+        value: function addNewTransitionCriteria(transition) {
+            var nodeTransitions = this.node.transitionLogic.transitions;
+            for (var n = 0; n < nodeTransitions.length; n++) {
+                var nodeTransition = nodeTransitions[n];
+                if (nodeTransition == transition) {
+                    if (nodeTransition.criteria == null) {
+                        nodeTransition.criteria = [];
+                    }
+                    var newTransitionCriteria = {
+                        "nodeId": "",
+                        "componentId": "",
+                        "function": {}
+                    };
+                    nodeTransition.criteria.push(newTransitionCriteria);
+                }
+            }
+        }
+
+        /**
+         * Deletes the specified transition from this node
+         */
+
+    }, {
+        key: "deleteTransition",
+        value: function deleteTransition(transition) {
+            var nodeTransitions = this.node.transitionLogic.transitions;
+
+            var index = nodeTransitions.indexOf(transition);
+            if (index > -1) {
+                nodeTransitions.splice(index, 1);
+            }
+        }
+
+        /**
+         * Save transitions for this node
+         */
+
+    }, {
+        key: "saveTransitions",
+        value: function saveTransitions() {
+
+            // save the project
+            this.ProjectService.saveProject();
+
+            // hide the create component elements
+            this.showEditTransitions = false;
+        }
+
+        /**
          * Create a component in this node
          */
 
     }, {
-        key: 'createComponent',
+        key: "createComponent",
         value: function createComponent() {
             var _this2 = this;
 
@@ -148,7 +233,7 @@ var NodeController = function () {
          */
 
     }, {
-        key: 'moveComponentUp',
+        key: "moveComponentUp",
         value: function moveComponentUp(componentId) {
 
             // move the component up within the node
@@ -164,7 +249,7 @@ var NodeController = function () {
          */
 
     }, {
-        key: 'moveComponentDown',
+        key: "moveComponentDown",
         value: function moveComponentDown(componentId) {
 
             // move the component down within the node
@@ -180,7 +265,7 @@ var NodeController = function () {
          */
 
     }, {
-        key: 'deleteComponent',
+        key: "deleteComponent",
         value: function deleteComponent(componentId) {
             var _this3 = this;
 
@@ -206,7 +291,7 @@ var NodeController = function () {
          */
 
     }, {
-        key: 'authoringViewNodeChanged',
+        key: "authoringViewNodeChanged",
         value: function authoringViewNodeChanged() {
             // put the previous version of the node on to the undo stack
             this.undoStack.push(this.currentNodeCopy);
@@ -223,7 +308,7 @@ var NodeController = function () {
          */
 
     }, {
-        key: 'undo',
+        key: "undo",
         value: function undo() {
             var _this4 = this;
 

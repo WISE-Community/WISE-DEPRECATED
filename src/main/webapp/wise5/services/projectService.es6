@@ -989,6 +989,24 @@ class ProjectService {
     };
 
     /**
+     * Returns all possible transition criteria for the specified node and component.
+     */
+    getPossibleTransitionCriteria(nodeId, componentId) {
+        let component = this.getComponentByNodeIdAndComponentId(nodeId, componentId);
+        if (component != null) {
+            let componentType = component.type;
+            let componentService = this.$injector.get(componentType + 'Service');
+            if (componentService.getPossibleTransitionCriteria) {
+                return componentService.getPossibleTransitionCriteria(nodeId, componentId, component);
+            } else {
+                return [];
+            }
+        } else {
+            return [];
+        }
+    };
+
+    /**
      * Get the transition logic for a node
      * @param fromNodeId the from node id
      * @returns the transition logic object
@@ -1371,7 +1389,7 @@ class ProjectService {
 
                                         if (allPathsFromToNode != null) {
                                             // loop through all the paths for the to node
-                                            for (var a = 0; a<allPathsFromToNode.length; a++) {
+                                            for (var a = 0; a < allPathsFromToNode.length; a++) {
 
                                                 // get a path
                                                 var tempPath = allPathsFromToNode[a];
