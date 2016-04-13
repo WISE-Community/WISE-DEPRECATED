@@ -1097,33 +1097,51 @@ var GraphController = function () {
          */
         value: function resetSeries() {
 
-            // get the index of the active series
-            var activeSeriesIndex = this.getSeriesIndex(this.activeSeries);
+            var confirmMessage = '';
 
-            if (activeSeriesIndex != null) {
+            // get the series name
+            var seriesName = this.activeSeries.name;
 
-                // get the original series from the component content
-                var originalSeries = this.componentContent.series[activeSeriesIndex];
+            if (seriesName == null || seriesName == '') {
+                confirmMessage = 'Are you sure you want to reset the series?';
+            } else {
+                confirmMessage = 'Are you sure you want to reset the "' + seriesName + '" series?';
+            }
 
-                if (originalSeries != null) {
+            // ask the student if they are sure they want to reset the series
+            var answer = confirm(confirmMessage);
 
-                    // make a copy of the series
-                    originalSeries = this.UtilService.makeCopyOfJSONObject(originalSeries);
+            if (answer) {
+                // the student answer yes to reset the series
 
-                    // set the series
-                    this.setSeriesByIndex(originalSeries, activeSeriesIndex);
+                // get the index of the active series
+                var activeSeriesIndex = this.getSeriesIndex(this.activeSeries);
 
-                    /*
-                     * set the active series index so that the the active series
-                     * is the same as before.
-                     */
-                    this.setActiveSeriesByIndex(activeSeriesIndex);
+                if (activeSeriesIndex != null) {
 
-                    /*
-                     * notify the controller that the student data has changed
-                     * so that the graph will be redrawn
-                     */
-                    this.studentDataChanged();
+                    // get the original series from the component content
+                    var originalSeries = this.componentContent.series[activeSeriesIndex];
+
+                    if (originalSeries != null) {
+
+                        // make a copy of the series
+                        originalSeries = this.UtilService.makeCopyOfJSONObject(originalSeries);
+
+                        // set the series
+                        this.setSeriesByIndex(originalSeries, activeSeriesIndex);
+
+                        /*
+                         * set the active series index so that the the active series
+                         * is the same as before.
+                         */
+                        this.setActiveSeriesByIndex(activeSeriesIndex);
+
+                        /*
+                         * notify the controller that the student data has changed
+                         * so that the graph will be redrawn
+                         */
+                        this.studentDataChanged();
+                    }
                 }
             }
         }
