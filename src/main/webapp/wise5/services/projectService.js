@@ -106,7 +106,9 @@ if(this.isNodeDescendentOfGroup(node,targetNode)){result=true;}}}}}return result
 var pathsToEnd=this.getAllPaths([],nodeIdBefore);if(pathsToEnd!=null){ // loop through all the paths
 for(var p=0;p<pathsToEnd.length;p++){var pathToEnd=pathsToEnd[p];if(pathToEnd!=null){ // remove the first node id because that will be the beforeNodeId
 pathToEnd.shift();if(pathToEnd.indexOf(nodeIdAfter)!=-1){ // we have found the nodeIdAfter in the path to the end of the project
-result=true;}}}}}return result;}},{key:'getNavigationMode',value:function getNavigationMode(){var navigationMode=null;var project=this.project;if(project!=null){navigationMode=project.navigationMode;}return navigationMode;}},{key:'getTransitions',value:function getTransitions(){var transitions=null;var project=this.project;if(project!=null){transitions=project.transitions;}return transitions;}},{key:'getTransitionLogicByFromNodeId', /**
+result=true;}}}}}return result;}},{key:'getNavigationMode',value:function getNavigationMode(){var navigationMode=null;var project=this.project;if(project!=null){navigationMode=project.navigationMode;}return navigationMode;}},{key:'getTransitions',value:function getTransitions(){var transitions=null;var project=this.project;if(project!=null){transitions=project.transitions;}return transitions;}},{key:'getPossibleTransitionCriteria', /**
+     * Returns all possible transition criteria for the specified node and component.
+     */value:function getPossibleTransitionCriteria(nodeId,componentId){var component=this.getComponentByNodeIdAndComponentId(nodeId,componentId);if(component!=null){var componentType=component.type;var componentService=this.$injector.get(componentType+'Service');if(componentService.getPossibleTransitionCriteria){return componentService.getPossibleTransitionCriteria(nodeId,componentId,component);}else {return [];}}else {return [];}}},{key:'getTransitionLogicByFromNodeId', /**
      * Get the transition logic for a node
      * @param fromNodeId the from node id
      * @returns the transition logic object

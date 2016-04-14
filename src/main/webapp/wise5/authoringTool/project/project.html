@@ -10,11 +10,6 @@
             line-height: 30px;
             width: 75%;
         }
-        #saveButton {
-            padding: 8px 12px;
-            font-weight:bold;
-            margin: 10px 0px;
-        }
         #projectStylesDiv {
         }
         .stepHeader {
@@ -22,22 +17,32 @@
         }
     </style>
     <div style="float:right">
-        <button id="previewProjectButton" ng-click='projectController.previewProject()' translate="previewProject"></button>
-        <button id="manageAssetsButton" ng-click='projectController.viewProjectAssets()' translate="manageAssets"></button>
-        <button id="viewHistoryButton" ng-click='projectController.viewProjectHistory()' translate="viewHistory"></button>
+        <button id="previewProjectButton" ng-click='projectController.previewProject()' translate="previewProject"
+                ng-disabled="projectController.insertGroupMode || projectController.insertNodeMode"></button>
+        <button id="manageAssetsButton" ng-click='projectController.viewProjectAssets()' translate="manageAssets"
+                ng-disabled="projectController.insertGroupMode || projectController.insertNodeMode"></button>
+        <button id="viewHistoryButton" ng-click='projectController.viewProjectHistory()' translate="viewHistory"
+                ng-disabled="projectController.insertGroupMode || projectController.insertNodeMode"></button>
     </div>
     <div id="commitDiv" style="display:none">
         <label id="editMessageLabel">Edit Message:</label>
         <input id="commitMessageInput" type="text" size="50" placeholder="Write a small message here explaining this change. (Optional)" />
         <button id="saveHistoryButton" ng-click='projectController.saveProject()' translate="save"></button>
     </div>
-<button id="createNewActivityButton" ng-click='projectController.toggleCreateGroup()' translate="createNewActivity"></button>
-<button id="createNewStepButton" ng-click='projectController.toggleCreateNode()' translate="createNewStep"></button>
-<button id="moveButton" ng-click='projectController.move()' translate="move" ng-disabled="projectController.getSelectedItems().length == 0"></button>
-<button id="copyButton" ng-click='projectController.copy()' translate="copy" ng-disabled="projectController.getSelectedItems().length == 0"></button>
-<button id="deleteButton" ng-click='projectController.delete()' translate="delete" ng-disabled="projectController.getSelectedItems().length == 0"></button>
-<button id="saveProjectButton" ng-click='projectController.saveProject()' translate="save"></button>
-<button id="closeProjectButton" ng-click='projectController.closeProject()' translate="close"></button>
+<button id="createNewActivityButton" ng-click='projectController.toggleCreateGroup()' translate="createNewActivity"
+        ng-disabled="projectController.insertGroupMode || projectController.insertNodeMode"></button>
+<button id="createNewStepButton" ng-click='projectController.toggleCreateNode()' translate="createNewStep"
+        ng-disabled="projectController.insertGroupMode || projectController.insertNodeMode"></button>
+<button id="moveButton" ng-click='projectController.move()' translate="move"
+        ng-disabled="projectController.getSelectedItems().length == 0 || projectController.insertGroupMode || projectController.insertNodeMode"></button>
+<button id="copyButton" ng-click='projectController.copy()' translate="copy"
+        ng-disabled="projectController.getSelectedItems().length == 0 || projectController.insertGroupMode || projectController.insertNodeMode"></button>
+<button id="deleteButton" ng-click='projectController.delete()' translate="delete"
+        ng-disabled="projectController.getSelectedItems().length == 0 || projectController.insertGroupMode || projectController.insertNodeMode"></button>
+<button id="saveProjectButton" ng-click='projectController.saveProject()' translate="save"
+        ng-disabled="projectController.insertGroupMode || projectController.insertNodeMode"></button>
+<button id="closeProjectButton" ng-click='projectController.closeProject()' translate="close"
+        ng-disabled="projectController.insertGroupMode || projectController.insertNodeMode"></button>
 <div ng-show='projectController.showCreateGroup'>
     <label translate="activityTitle"></label>: <input ng-model='projectController.createGroupTitle' size='50'/>
     <button ng-click='projectController.createGroup()' translate="create"></button>

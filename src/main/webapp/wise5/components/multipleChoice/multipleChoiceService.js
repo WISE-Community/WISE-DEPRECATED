@@ -77,6 +77,40 @@ var MultipleChoiceService = function (_NodeService) {
         }
 
         /**
+         * Returns all possible criteria for this component.
+         * @param component a MC component
+         */
+
+    }, {
+        key: 'getPossibleTransitionCriteria',
+        value: function getPossibleTransitionCriteria(nodeId, componentId, component) {
+            var allPossibleTransitionCriteria = [];
+            if (component.choiceType === "radio") {
+                // Go through all the choices
+                for (var c = 0; c < component.choices.length; c++) {
+                    var choice = component.choices[c];
+                    var possibleTransitionCriteria = {
+                        "nodeId": nodeId,
+                        "componentId": componentId,
+                        "function": {
+                            "id": "choiceChosen_" + choice.id,
+                            "name": "choiceChosen",
+                            "params": {
+                                "choiceIds": [choice.id]
+                            }
+                        },
+                        "userFriendlyDescription": "User chose \"" + choice.text + "\" (Choice ID: " + choice.id + ") on this component."
+
+                    };
+                    allPossibleTransitionCriteria.push(possibleTransitionCriteria);
+                }
+            } else if (component.choiceType === "checkbox") {
+                // TODO: implement meeee!
+            }
+            return allPossibleTransitionCriteria;
+        }
+
+        /**
          * Check if the student chose a specific choice
          * @param criteria the criteria object
          * @returns a boolean value whether the student chose the choice specified in the
@@ -92,8 +126,8 @@ var MultipleChoiceService = function (_NodeService) {
             if (criteria != null) {
                 var nodeId = criteria.nodeId;
                 var componentId = criteria.componentId;
-                var functionName = criteria.functionName;
-                var functionParams = criteria.functionParams;
+                var functionName = criteria.function.name;
+                var functionParams = criteria.function.params;
 
                 if (nodeId != null && componentId != null) {
 

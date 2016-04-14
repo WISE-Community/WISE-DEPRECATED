@@ -26,9 +26,13 @@ class NodeController {
         this.projectId = $stateParams.projectId;
         this.nodeId = $stateParams.nodeId;
         this.showCreateComponent = false;
+        this.showEditTransitions = false;
         this.selectedComponent = null;
         this.nodeCopy = null;
         this.undoStack = [];
+        this.howToChooseAmongAvailablePathsOptions = [null, "random", "workgroupId", "firstAvailable", "lastAvailable"];
+        this.whenToChoosePathOptions = [null, "enterNode", "exitNode", "studentDataChanged"];
+        this.canChangePathOptions = [null, true, false];
 
         // the array of component types that can be created
         this.componentTypes = [
@@ -118,6 +122,76 @@ class NodeController {
             //close the node authoring view
             this.close();
         }
+    }
+
+    /**
+     * Add a new transition for this node.
+     */
+    addNewTransition() {
+        if (this.node.transitionLogic.transitions == null) {
+            this.node.transitionLogic.transitions = [];
+        }
+        let nodeTransitions = this.node.transitionLogic.transitions;
+        if (nodeTransitions.length > 0) {
+            // If this node already has transitions, copy the last one.
+            let lastNodeTransition = nodeTransitions[nodeTransitions.length - 1];
+            let newTransition = {
+                "to": lastNodeTransition.to
+            };
+            nodeTransitions.push(newTransition);
+        } else {
+            // Otherwise set the new transition to the current nodeId
+            let newTransition = {
+                "to": this.nodeId
+            };
+            nodeTransitions.push(newTransition);
+        }
+    }
+
+    /**
+     * Add a new transition for the specified transition.
+     */
+    addNewTransitionCriteria(transition) {
+        let nodeTransitions = this.node.transitionLogic.transitions;
+        for (var n = 0; n < nodeTransitions.length; n++) {
+            let nodeTransition = nodeTransitions[n];
+            if (nodeTransition == transition) {
+                if (nodeTransition.criteria == null) {
+                    nodeTransition.criteria = [];
+                }
+                let newTransitionCriteria = {
+                    "nodeId": "",
+                    "componentId": "",
+                    "function": {}
+                };
+                nodeTransition.criteria.push(newTransitionCriteria);
+            }
+        }
+    }
+
+    /**
+     * Deletes the specified transition from this node
+     */
+    deleteTransition(transition) {
+        let nodeTransitions = this.node.transitionLogic.transitions;
+
+        let index = nodeTransitions.indexOf(transition);
+        if (index > -1) {
+            nodeTransitions.splice(index, 1);
+        }
+    }
+
+
+    /**
+     * Save transitions for this node
+     */
+    saveTransitions() {
+
+        // save the project
+        this.ProjectService.saveProject();
+
+        // hide the create component elements
+        this.showEditTransitions = false;
     }
 
     /**

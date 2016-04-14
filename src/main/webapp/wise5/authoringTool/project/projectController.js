@@ -114,14 +114,38 @@ var ProjectController = function () {
             return this.ProjectService.getNodePositionById(nodeId);
         }
     }, {
-        key: 'getNodeTitleByNodeId',
+        key: 'getComponentsByNodeId',
 
+
+        /**
+         * The the components in the specified node id.
+         * @param nodeId the node id
+         * @returns components in the node
+         */
+        value: function getComponentsByNodeId(nodeId) {
+            return this.ProjectService.getComponentsByNodeId(nodeId);
+        }
+
+        /**
+         * Returns a list of possible criteria for the specified node and component
+         * @param nodeId the node id
+         * @param componentId the component id in the node
+         */
+
+    }, {
+        key: 'getPossibleTransitionCriteria',
+        value: function getPossibleTransitionCriteria(nodeId, componentId) {
+            return this.ProjectService.getPossibleTransitionCriteria(nodeId, componentId);
+        }
 
         /**
          * Get the node title for a node
          * @param nodeId the node id
          * @returns the node title
          */
+
+    }, {
+        key: 'getNodeTitleByNodeId',
         value: function getNodeTitleByNodeId(nodeId) {
             return this.ProjectService.getNodeTitleByNodeId(nodeId);
         }

@@ -37,6 +37,7 @@ System.config({
     "core-js": "npm:core-js@1.2.6",
     "highcharts-ng": "npm:highcharts-ng@0.0.11",
     "highcharts/draggable-points": "github:highcharts/draggable-points@master",
+    "iframe-resizer": "npm:iframe-resizer@3.5.3",
     "jquery": "npm:jquery@2.2.2",
     "moment": "npm:moment@2.12.0",
     "ng-file-upload": "npm:ng-file-upload@10.1.14",
@@ -310,6 +311,10 @@ System.config({
     },
     "npm:https-browserify@0.0.0": {
       "http": "github:jspm/nodelibs-http@1.7.1"
+    },
+    "npm:iframe-resizer@3.5.3": {
+      "fs": "github:jspm/nodelibs-fs@0.1.2",
+      "process": "github:jspm/nodelibs-process@0.1.2"
     },
     "npm:inherits@2.0.1": {
       "util": "github:jspm/nodelibs-util@0.1.0"

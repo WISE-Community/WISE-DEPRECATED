@@ -3,17 +3,26 @@
 TODO: implement me. Allow authors to view assets while authoring node conent. Perhaps make ProjectAssets into a directive.
     <button ng-click='nodeController.viewProjectAssets()'>View Assets</button>
     -->
-    <button ng-click="nodeController.previewStep()" ng-show="!projectController.isGroupNode(nodeController.node.id)" translate="previewStep"></button>
+    <button ng-click="nodeController.previewStep()"
+            ng-show="!projectController.isGroupNode(nodeController.node.id)"
+            ng-disabled="nodeController.showEditTransitions"
+            translate="previewStep"></button>
     <button ng-click="nodeController.undo()"
             ng-show="!projectController.isGroupNode(nodeController.node.id)"
             ng-disabled="nodeController.undoStack.length == 0"
             translate="undo"></button>
-    <button ng-click="nodeController.close()" translate="saveAndClose"></button>
+    <button ng-click="nodeController.close()"
+            translate="saveAndClose"
+            ng-disabled="nodeController.showEditTransitions"></button>
     <button ng-click="nodeController.cancel()" translate="close"></button>
 </div>
 <div><span ng-show="!projectController.isGroupNode(nodeController.node.id)" translate="stepTitle"></span>
-     <span ng-show="projectController.isGroupNode(nodeController.node.id)" translate="activityTitle"></span>: <input ng-model='nodeController.node.title' ng-change='nodeController.authoringViewNodeChanged()' ng-model-options='{ debounce: 1000 }' size='60' /></div>
-<button ng-click='nodeController.showCreateComponent = true' ng-show='!projectController.isGroupNode(nodeController.node.id) && !nodeController.showCreateComponent' translate="addNewComponent"></button>
+     <span ng-show="projectController.isGroupNode(nodeController.node.id)" translate="activityTitle"></span>:
+     <input ng-model='nodeController.node.title' ng-change='nodeController.authoringViewNodeChanged()' ng-model-options='{ debounce: 1000 }' size='60' />
+</div>
+<button ng-click='nodeController.showCreateComponent = true'
+        ng-show='!projectController.isGroupNode(nodeController.node.id) && !nodeController.showCreateComponent && !nodeController.showEditTransitions'
+        translate="addNewComponent"></button>
 <div ng-show='nodeController.showCreateComponent'>
     <select ng-model='nodeController.selectedComponent'>
         <option ng-repeat='componentType in nodeController.componentTypes' value='{{componentType.componentType}}'>
@@ -23,6 +32,121 @@ TODO: implement me. Allow authors to view assets while authoring node conent. Pe
     <button ng-click='nodeController.createComponent()' translate="add"></button>
     <button ng-click='nodeController.showCreateComponent = false' translate="cancel"></button>
 </div>
+
+<button ng-click='nodeController.showEditTransitions = true'
+        ng-show='!projectController.isGroupNode(nodeController.node.id) && !nodeController.showCreateComponent && !nodeController.showEditTransitions' translate="editTransitions"></button>
+<div ng-show='nodeController.showEditTransitions'>
+    <span>{{'transitions' | translate}}:</span>
+    <div id="transitions" style="margin-left:40px; margin-bottom:10px; background-color:lightgray; width:700px" ng-repeat='transition in nodeController.node.transitionLogic.transitions track by $index'>
+        {{$index+1}}. {{'transitionToStep' | translate}}:
+        <md-select id="stepSelectMenu" md-theme="default" class="node-select md-subhead" ng-model="transition.to"
+                   aria-label="Transitions" style="margin-left:30px; width:600px">
+            <md-option ng-repeat="item in projectController.items | toArray | orderBy : 'order'"
+                       value="{{ item.$key }}"
+                       ng-class="{'node-select-option--group': projectController.isGroupNode(item.$key), 'node-select-option--node': !projectController.isGroupNode(item.$key)}">
+                <span layout="row" layout-align="start center">
+                    <span class="node-select__text">{{ projectController.getNodePositionById(item.$key) + ': '}}{{ projectController.getNodeTitleByNodeId(item.$key) }} ({{item.$key}})</span>
+                    <node-status-icon node-id="item.$key" custom-class="'node-select__status'"></node-status-icon>
+                </span>
+            </md-option>
+        </md-select>
+        <br/>
+        <div ng-repeat='transitionCriteria in transition.criteria'>
+            {{'transitionCriteriaStep' | translate}}:
+            <md-select id="stepSelectMenu" md-theme="default" class="node-select md-subhead"
+                       ng-model="transitionCriteria.nodeId"
+                       aria-label="TransitionCriteriaNode" style="margin-left:30px; width:600px">
+                <md-option ng-repeat="item in projectController.items | toArray | orderBy : 'order'"
+                           value="{{ item.$key }}"
+                           ng-class="{'node-select-option--group': projectController.isGroupNode(item.$key), 'node-select-option--node': !projectController.isGroupNode(item.$key)}">
+                <span layout="row" layout-align="start center">
+                    <span class="node-select__text">{{ projectController.getNodePositionById(item.$key) + ': '}}{{ projectController.getNodeTitleByNodeId(item.$key) }} ({{item.$key}})</span>
+                    <node-status-icon node-id="item.$key" custom-class="'node-select__status'"></node-status-icon>
+                </span>
+                </md-option>
+            </md-select>
+            <div ng-if="transitionCriteria.nodeId != null && transitionCriteria.nodeId != ''">
+            {{'transitionCriteriaComponent' | translate }}:
+            <md-select id="stepSelectMenu" md-theme="default" class="node-select md-subhead"
+                       ng-model="transitionCriteria.componentId"
+                       aria-label="TransitionCriteriaComponent" style="margin-left:30px; width:600px">
+                <md-option ng-repeat="component in projectController.getComponentsByNodeId(transitionCriteria.nodeId)"
+                           value="{{ component.id }}">
+                <span layout="row" layout-align="start center">
+                    <span class="node-select__text">ID: {{component.id}} | Type: {{component.type}} | Prompt: {{component.prompt}}</span>
+                </span>
+                </md-option>
+            </md-select>
+            </div>
+            <div ng-if="transitionCriteria.nodeId != null && transitionCriteria.nodeId != '' &&
+                            transitionCriteria.componentId != null && transitionCriteria.componentId != ''"
+                 ng-init="possibleTransitionCriterias = projectController.getPossibleTransitionCriteria(transitionCriteria.nodeId, transitionCriteria.componentId)">
+            {{'transitionCriteria' | translate }}:
+            <md-select id="stepSelectMenu" md-theme="default" class="node-select md-subhead"
+                       ng-model="transitionCriteria.function"
+                       ng-model-options="{trackBy: '$value.id'}"
+                       ng-change="transitionCriteriaSelected()"
+                       aria-label="TransitionCriteriaFunctionName" style="margin-left:30px; width:600px">
+                <md-option ng-repeat="possibleTransitionCriteria in possibleTransitionCriterias"
+                           ng-value='{{possibleTransitionCriteria.function}}'>
+                <span layout="row" layout-align="start center">
+                    <span class="node-select__text">{{ possibleTransitionCriteria.userFriendlyDescription }}</span>
+                </span>
+                </md-option>
+            </md-select>
+            </div>
+        </div>
+        <button ng-click="nodeController.addNewTransitionCriteria(transition)" translate="addNewTransitionCriteria"></button><br/><br/>
+        <button ng-click="nodeController.deleteTransition(transition)" translate="deleteTransition"></button>
+    </div>
+    <button style="margin-left:40px; margin-bottom:10px" ng-click='nodeController.addNewTransition()' translate="addNewTransition"></button>
+
+    <div id="howToChooseAmongAvailablePaths" style="margin-left:40px">
+        <span>{{'howToChooseAmongAvailablePaths' | translate}}:</span>
+        <md-select id="stepSelectMenu" md-theme="default" class="node-select md-subhead" ng-model="nodeController.node.transitionLogic.howToChooseAmongAvailablePaths"
+                   aria-label="howToChooseAmongAvailablePaths" style="margin-left:30px; width:600px">
+            <md-option ng-repeat="item in nodeController.howToChooseAmongAvailablePathsOptions"
+                       value="{{ item }}">
+                <span layout="row" layout-align="start center">
+                    <span class="node-select__text">{{item}}</span>
+                </span>
+            </md-option>
+        </md-select>
+    </div>
+
+    <div id="whenToChoosePath" style="margin-left:40px">
+        <span>{{'whenToChoosePath' | translate}}:</span>
+        <md-select id="stepSelectMenu" md-theme="default" class="node-select md-subhead" ng-model="nodeController.node.transitionLogic.whenToChoosePath"
+                   aria-label="whenToChoosePath" style="margin-left:30px; width:600px">
+            <md-option ng-repeat="item in nodeController.whenToChoosePathOptions"
+                       value="{{ item }}">
+                <span layout="row" layout-align="start center">
+                    <span class="node-select__text">{{item}}</span>
+                </span>
+            </md-option>
+        </md-select>
+    </div>
+
+    <div id="canChangePath" style="margin-left:40px">
+        <span>{{'canChangePath' | translate}}:</span>
+        <md-select id="stepSelectMenu" md-theme="default" class="node-select md-subhead" ng-model="nodeController.node.transitionLogic.canChangePath"
+                   aria-label="canChangePath" style="margin-left:30px; width:600px">
+            <md-option ng-repeat="item in nodeController.canChangePathOptions"
+                       value="{{ item }}">
+                <span layout="row" layout-align="start center">
+                    <span class="node-select__text">{{item}}</span>
+                </span>
+            </md-option>
+        </md-select>
+    </div>
+
+    <div><span translate="maxPathsVisitable"></span> :
+        <input ng-model='nodeController.node.transitionLogic.maxPathsVisitable' ng-model-options='{ debounce: 1000 }' size='60' />
+    </div>
+
+    <button ng-click='nodeController.saveTransitions()' translate="save"></button>
+</div>
+
 <div ng-repeat='component in nodeController.components'>
     <div style="margin-top: 7px; border-top: 2px dotted black">
         {{component.type}}

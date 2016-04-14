@@ -47,6 +47,37 @@ class MultipleChoiceService extends NodeService {
     }
 
     /**
+     * Returns all possible criteria for this component.
+     * @param component a MC component
+     */
+    getPossibleTransitionCriteria(nodeId, componentId, component) {
+        let allPossibleTransitionCriteria = [];
+        if (component.choiceType === "radio") {
+            // Go through all the choices
+            for (var c = 0; c < component.choices.length; c++) {
+                let choice = component.choices[c];
+                let possibleTransitionCriteria = {
+                    "nodeId": nodeId,
+                    "componentId": componentId,
+                    "function": {
+                        "id": "choiceChosen_" + choice.id,
+                        "name": "choiceChosen",
+                        "params": {
+                            "choiceIds": [choice.id]
+                        }
+                    },
+                    "userFriendlyDescription": "User chose \"" + choice.text + "\" (Choice ID: " + choice.id + ") on this component."
+
+                };
+                allPossibleTransitionCriteria.push(possibleTransitionCriteria);
+            }
+        } else if (component.choiceType === "checkbox") {
+            // TODO: implement meeee!
+        }
+        return allPossibleTransitionCriteria;
+    }
+
+    /**
      * Check if the student chose a specific choice
      * @param criteria the criteria object
      * @returns a boolean value whether the student chose the choice specified in the
@@ -59,8 +90,8 @@ class MultipleChoiceService extends NodeService {
         if (criteria != null) {
             let nodeId = criteria.nodeId;
             let componentId = criteria.componentId;
-            let functionName = criteria.functionName;
-            let functionParams = criteria.functionParams;
+            let functionName = criteria.function.name;
+            let functionParams = criteria.function.params;
 
             if (nodeId != null && componentId != null) {
 
