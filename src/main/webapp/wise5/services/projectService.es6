@@ -2503,7 +2503,41 @@ class ProjectService {
 
         this.insertNodeInsideInTransitions(node.id, nodeId);
         this.insertNodeInsideInGroups(node.id, nodeId);
-        // TODO: create a transition from PreviousActivity.lastStep -> node if PreviousActivity exists.
+
+        // Create a transition from PreviousActivity.lastStep -> this new node if PreviousActivity.lastStep exists.
+        let groupNodes = this.getGroupNodes();
+        for (var g = 0; g < groupNodes.length; g++) {
+            let groupNode = groupNodes[g];
+
+            if (this.isNodeDirectChildOfGroup(node, groupNode)) {
+                if (g != 0) {
+                    // there is a sibling group that is before the group that the node was added to ("olderSibling")
+                    // e.g. if groups = ["a","b","c"], a is b's older sibling, and b is c's older sibling.
+                    let olderSiblingGroup = groupNodes[g - 1];
+                    let ids = olderSiblingGroup.ids;
+
+                    if (ids != null) {
+                        // get the last children in the sibling group
+                        let olderSiblingLastNodeId = ids[ids.length - 1];
+                        if (!this.isGroupNode(olderSiblingLastNodeId)) {
+                            let olderSiblingLastNode = this.getNodeById(olderSiblingLastNodeId);
+
+                            // remove the transitions from the before node
+                            olderSiblingLastNode.transitionLogic.transitions = [];
+
+                            let transitionObject = {};
+                            transitionObject.to = node.id;
+
+                            // make the before node point to the new node
+                            olderSiblingLastNode.transitionLogic.transitions.push(transitionObject);
+                            break;
+                        } else {
+                            // if the last node in the older sibling is a group node, we don't add any transition from it to the new node.
+                        }
+                    }
+                }
+            }
+        }
     }
 
     /**
