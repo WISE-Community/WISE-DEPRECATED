@@ -68,7 +68,7 @@ class ComponentDirective {
         $scope.nodeId = nodeId;
         $scope.workgroupId = workgroupId;
         $scope.teacherWorkgroupId = teacherWorkgroupId;
-        
+
         if (originalNodeId != null && originalComponentId != null) {
             /*
              * set the original node id and component id. this is used
@@ -76,7 +76,7 @@ class ComponentDirective {
              */
             $scope.originalNodeId = originalNodeId;
             $scope.originalComponentId = originalComponentId;
-            
+
             // get the original component
             var originalComponentContent = ComponentDirective.instance.ProjectService.getComponentByNodeIdAndComponentId(originalNodeId, originalComponentId);
             $scope.originalComponentContent = originalComponentContent;
@@ -333,7 +333,7 @@ const Annotation = {
         active: '<',
         maxScore: '<'
     },
-    templateUrl: '/wise/wise5/directives/annotation/annotation.html',
+    templateUrl: 'wise5/directives/annotation/annotation.html',
     controller: 'AnnotationController as annotationController'
 }
 
@@ -343,7 +343,7 @@ const ComponentAnnotations = {
         commentAnnotation: '<',
         maxScore: '<'
     },
-    templateUrl: '/wise/wise5/directives/componentAnnotations/componentAnnotations.html',
+    templateUrl: 'wise5/directives/componentAnnotations/componentAnnotations.html',
     controller: 'ComponentAnnotationsController as componentAnnotationsCtrl'
 }
 
@@ -351,7 +351,7 @@ const PossibleScore = {
     bindings: {
         maxScore: '<'
     },
-    templateUrl: '/wise/wise5/directives/possibleScore/possibleScore.html',
+    templateUrl: 'wise5/directives/possibleScore/possibleScore.html',
     controller: 'PossibleScoreController as possibleScoreCtrl'
 }
 

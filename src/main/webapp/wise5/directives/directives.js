@@ -387,7 +387,7 @@ var Annotation = {
         active: '<',
         maxScore: '<'
     },
-    templateUrl: '/wise/wise5/directives/annotation/annotation.html',
+    templateUrl: 'wise5/directives/annotation/annotation.html',
     controller: 'AnnotationController as annotationController'
 };
 
@@ -397,7 +397,7 @@ var ComponentAnnotations = {
         commentAnnotation: '<',
         maxScore: '<'
     },
-    templateUrl: '/wise/wise5/directives/componentAnnotations/componentAnnotations.html',
+    templateUrl: 'wise5/directives/componentAnnotations/componentAnnotations.html',
     controller: 'ComponentAnnotationsController as componentAnnotationsCtrl'
 };
 
@@ -405,7 +405,7 @@ var PossibleScore = {
     bindings: {
         maxScore: '<'
     },
-    templateUrl: '/wise/wise5/directives/possibleScore/possibleScore.html',
+    templateUrl: 'wise5/directives/possibleScore/possibleScore.html',
     controller: 'PossibleScoreController as possibleScoreCtrl'
 };
 
