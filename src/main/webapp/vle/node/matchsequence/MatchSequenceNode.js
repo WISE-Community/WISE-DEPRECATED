@@ -352,6 +352,45 @@ MatchSequenceNode.prototype.getBucketChoiceIsIn = function(nodeState, choiceId) 
 };
 
 /**
+ * Get the bucket id the given choice is in
+ * @param nodeState the student work
+ * @param choiceId we want to determine which bucket id this choice is in
+ * @returns the bucket id the choice is in
+ */
+MatchSequenceNode.prototype.getBucketIdChoiceIsIn = function(nodeState, choiceId) {
+	
+	var bucketId = null;
+	
+	// get the source bucket
+	var sourceBucket = nodeState.sourceBucket;
+	
+	if (sourceBucket != null) {
+		
+		if (this.isChoiceInBucket(choiceId, sourceBucket)) {
+			// the choice is in the source bucket
+			bucketId = sourceBucket.identifier;
+		}
+	}
+	
+	var buckets = nodeState.buckets;
+	
+	if (buckets != null) {
+		
+		// loop through all the buckets
+		for (var b = 0; b < buckets.length; b++) {
+			var tempBucket = buckets[b];
+			
+			if (this.isChoiceInBucket(choiceId, tempBucket)) {
+				// the choice is in the bucket
+				bucketId = tempBucket.identifier;
+			}
+		}
+	}
+	
+	return bucketId;
+};
+
+/**
  * Check if a choice is in a given bucket
  * @param choiceId the choice
  * @param bucket the bucket
@@ -549,6 +588,8 @@ MatchSequenceNode.prototype.generateMatchSequenceSpecialExportCSV = function(nod
 	var parentProjectId = view.config.getConfigParam('parentProjectId');
 	var projectName = project.getTitle();
 	var nodeType = project.getNodeById(nodeId).type;
+	var contentJSON = null;
+	var correctResponses = null;
 
 	/*
 	 * remove the Node part of the node type for example
@@ -584,7 +625,7 @@ MatchSequenceNode.prototype.generateMatchSequenceSpecialExportCSV = function(nod
 	
 	if (node != null) {
 		// get the step content
-		var contentJSON = node.content.getContentJSON();
+		contentJSON = node.content.getContentJSON();
 		
 		// get the source bucket name
 		var sourceBucketName = contentJSON.sourceBucketName;
@@ -603,6 +644,8 @@ MatchSequenceNode.prototype.generateMatchSequenceSpecialExportCSV = function(nod
 				
 				if (choices != null) {
 					
+					var choiceValues = [];
+					
 					// loop through all the choices
 					for (var c = 0; c < choices.length; c++) {
 						var tempChoice = choices[c];
@@ -614,11 +657,24 @@ MatchSequenceNode.prototype.generateMatchSequenceSpecialExportCSV = function(nod
 							// accumulate the choice ids so we can use them later
 							choiceIds.push(tempIdentifier);
 							
-							// add the value to the row
-							headerRow.push(view.wrapInQuotesForCSVIfNecessary(tempText));
+							// accumulate the choice text
+							choiceValues.push(view.wrapInQuotesForCSVIfNecessary(tempText));
 						}
 					}
+					
+					/*
+					 * add the choice text twice. once for the bucket text
+					 * columns and once for the correctness columns.
+					 */
+					headerRow = headerRow.concat(choiceValues).concat(choiceValues);
 				}
+			}
+			
+			var responseDeclaration = assessmentItem.responseDeclaration;
+			
+			if (responseDeclaration != null) {
+				// get the feedback data
+				correctResponses = responseDeclaration.correctResponses;
 			}
 		}
 	}
@@ -654,7 +710,7 @@ MatchSequenceNode.prototype.generateMatchSequenceSpecialExportCSV = function(nod
 						var revisionValue = 'Latest';
 						
 						// generate the values for the row
-						row = this.generateSpecialExportCSVRow(nodeId, workgroupId, nodeVisit, nodeState, revisionValue, choiceIds);
+						row = this.generateSpecialExportCSVRow(nodeId, workgroupId, nodeVisit, nodeState, revisionValue, choiceIds, correctResponses);
 						
 						// add the row to the rows
 						rows.push(row);
@@ -684,7 +740,7 @@ MatchSequenceNode.prototype.generateMatchSequenceSpecialExportCSV = function(nod
 										var revisionValue = revisionCount;
 										
 										// generate the values for the row
-										row = this.generateSpecialExportCSVRow(nodeId, workgroupId, nodeVisit, nodeState, revisionValue, choiceIds);
+										row = this.generateSpecialExportCSVRow(nodeId, workgroupId, nodeVisit, nodeState, revisionValue, choiceIds, correctResponses);
 										
 										// add the row to the rows
 										rows.push(row);
@@ -728,7 +784,7 @@ MatchSequenceNode.prototype.generateMatchSequenceSpecialExportCSV = function(nod
 						var revisionValue = 'Only One Work';
 						
 						// generate the values for the row
-						row = this.generateSpecialExportCSVRow(nodeId, workgroupId, latestNodeVisit, latestNodeState, revisionValue, choiceIds);
+						row = this.generateSpecialExportCSVRow(nodeId, workgroupId, latestNodeVisit, latestNodeState, revisionValue, choiceIds, correctResponses);
 						
 						// add the row to the rows
 						rows.push(row);
@@ -741,7 +797,7 @@ MatchSequenceNode.prototype.generateMatchSequenceSpecialExportCSV = function(nod
 							var revisionValue = 'First';
 							
 							// generate the values for the row
-							row = this.generateSpecialExportCSVRow(nodeId, workgroupId, firstNodeVisit, firstNodeState, revisionValue, choiceIds);
+							row = this.generateSpecialExportCSVRow(nodeId, workgroupId, firstNodeVisit, firstNodeState, revisionValue, choiceIds, correctResponses);
 							
 							// add the row to the rows
 							rows.push(row);
@@ -753,7 +809,7 @@ MatchSequenceNode.prototype.generateMatchSequenceSpecialExportCSV = function(nod
 							var revisionValue = 'Latest';
 							
 							// generate the values for the row
-							row = this.generateSpecialExportCSVRow(nodeId, workgroupId, latestNodeVisit, latestNodeState, revisionValue, choiceIds);
+							row = this.generateSpecialExportCSVRow(nodeId, workgroupId, latestNodeVisit, latestNodeState, revisionValue, choiceIds, correctResponses);
 							
 							// add the row to the rows
 							rows.push(row);
@@ -807,7 +863,8 @@ MatchSequenceNode.prototype.generateSpecialExportCSVRow = function(
 	nodeVisit,
 	nodeState,
 	revision,
-	choiceIds) {
+	choiceIds,
+	correctResponses) {
 	
 	var project = view.getProject();	
 	var node = project.getNodeById(nodeId);
@@ -880,6 +937,12 @@ MatchSequenceNode.prototype.generateSpecialExportCSVRow = function(
 			
 			// add the bucket names to the row
 			row = row.concat(bucketNames);
+			
+			// get the correctness values for the choices
+			var correctness = this.getCorrectnessOfChoices(nodeState, choiceIds, correctResponses);
+			
+			// add the correctness values to the row
+			row = row.concat(correctness);
 		}
 	}
 	
@@ -965,6 +1028,87 @@ MatchSequenceNode.prototype.getLatestNodeStateFromNodeVisits = function(nodeVisi
 	}
 	
 	return null;
+};
+
+/**
+ * Get the correctness values for the choices
+ * @param nodeState the student work
+ * @param choiceIds the choice ids
+ * @param correctResponses the array that holds the feedback and whether a
+ * choice and bucket pair is correct
+ * @returns an array of 0, 1, or 'Not Used' values that represent whether the 
+ * corresponding choices were placed in the correct bucket
+ */
+MatchSequenceNode.prototype.getCorrectnessOfChoices = function(nodeState, choiceIds, correctResponses) {
+	
+	var cells = [];
+	
+	if (nodeState != null && choiceIds != null && correctResponses != null) {
+		
+		// loop through all the choices
+		for (var c = 0; c < choiceIds.length; c++) {
+			
+			var choiceId = choiceIds[c];
+			
+			// get the bucket id the choice was placed in
+			var bucketId = this.getBucketIdChoiceIsIn(nodeState, choiceId);
+			
+			if (bucketId == null) {
+				// it should never go here
+				cells.push('Error');
+			} else if (bucketId == 'sourceBucket') {
+				// the student left the choice in the source bucket
+				cells.push('Not Used');
+			} else {
+				// the student placed the choice in a bucket
+				
+				if (this.isChoiceInCorrectBucket(choiceId, bucketId, correctResponses)) {
+					// the student placed the choice in the correct bucket
+					cells.push(1);
+				} else {
+					// the student placed the choice in an incorrect bucket
+					cells.push(0);
+				}
+			}
+		}
+	}
+	
+	return cells;
+};
+
+/**
+ * Check if a choice is placed in the correct bucket
+ * @param choiceId the choice id
+ * @param bucketId the bucket id
+ * @param correctResponses the array that holds the feedback and whether a
+ * choice and bucket pair is correct
+ * @returns whether the choice was placed in the correct bucket
+ */
+MatchSequenceNode.prototype.isChoiceInCorrectBucket = function(choiceId, bucketId, correctResponses) {
+	
+	var result = false;
+	
+	if (choiceId != null && bucketId != null && correctResponses != null) {
+		
+		// loop through all the feedback
+		for (var cr = 0; cr < correctResponses.length; cr++) {
+			var correctResponse = correctResponses[cr];
+			
+			if (correctResponse != null) {
+				// get the choice id and bucket id for the feedback
+				var choiceIdentifier = correctResponse.choiceIdentifier;
+				var bucketIdentifier = correctResponse.fieldIdentifier;
+				
+				if (choiceId == choiceIdentifier && bucketId == bucketIdentifier) {
+					// we have found the feedback for the choice id and bucket id pair
+					result = correctResponse.isCorrect;
+					break;
+				}
+			}
+		}
+	}
+	
+	return result;
 };
 
 NodeFactory.addNode('MatchSequenceNode', MatchSequenceNode);
