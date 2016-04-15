@@ -31,5 +31,11 @@
   "submit": "提出",
   "team": "チーム",
   "timeSpent": "滞在時間",
-  "yes": "Yes"
+  "yes": "Yes",
+  "commentLabel": "コメント",
+  "point": "点",
+  "pointPlural": "点",
+  "scoreLabel": "得点：",
+  "scoreLabelAndValue": "得点：{{score}}",
+  "teacherFeedbackLabel": "先生の評価："
 }
