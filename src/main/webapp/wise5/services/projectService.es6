@@ -273,6 +273,29 @@ class ProjectService {
             }
         }
     };
+    
+    /**
+     * Load the planning template nodes
+     * @param planning template nodes
+     */
+    loadPlanningNodes(planningNodes) {
+        if (planningNodes != null) {
+            
+            // loop through all the planning template nodes
+            for (var p = 0; p < planningNodes.length; p++) {
+                var planningNode = planningNodes[p];
+                
+                if (planningNode != null) {
+                    var nodeId = planningNode.id;
+                    
+                    this.setIdToNode(nodeId, planningNode);
+                    this.setIdToElement(nodeId, planningNode);
+                    
+                    // TODO: may need to add more function calls here to add the planning
+                }
+            }
+        }
+    }
 
     parseProject() {
         var project = this.project;
@@ -287,6 +310,10 @@ class ProjectService {
 
             var nodes = project.nodes;
             this.loadNodes(nodes);
+            
+            // load the planning node templates
+            var planningNodes = project.planningNodes;
+            this.loadPlanningNodes(planningNodes);
 
             var constraints = project.constraints;
 
@@ -308,7 +335,7 @@ class ProjectService {
 
             // set project order
             this.setNodeOrder(this.rootNode, this.nodeCount);
-            this.nodeCount = 0;
+            //this.nodeCount = 0;
 
             var n = nodes.length;
             var branches = this.getBranches();
@@ -3617,6 +3644,194 @@ class ProjectService {
                 }
             }
         }
+    }
+    
+    /**
+     * Check if a node is a planning node
+     * @param nodeId the node id
+     * @returns whether the node is a planning node
+     */
+    isPlanning(nodeId) {
+        var result = false;
+        
+        if (nodeId != null) {
+            var node = this.getNodeById(nodeId);
+            
+            if (node != null) {
+                if (node.planning) {
+                    result = true;
+                }
+            }
+        }
+        
+        return result;
+    }
+    
+    /**
+     * Get the available planning node ids for a node
+     * @param nodeId the node we want available planning nodes for
+     * @returns an array of available planning node ids
+     */
+    getAvailablePlanningNodeIds(nodeId) {
+        var availablePlanningNodeIds = [];
+        
+        if (nodeId != null) {
+            var node = this.getNodeById(nodeId);
+            
+            if (node != null && node.availablePlanningNodeIds != null) {
+                availablePlanningNodeIds = node.availablePlanningNodeIds;
+            }
+        }
+        
+        return availablePlanningNodeIds;
+    }
+    
+    /**
+     * Create a planning node instance and add it to the project
+     * @param groupId the group id to add the planning node instance to
+     * @param nodeId the node id of the planning node template
+     */
+    createPlanningNodeInstance(groupId, nodeId) {
+        
+        var planningNodeInstance = null;
+        
+        if (nodeId != null) {
+            // get the planning node template
+            var node = this.getNodeById(nodeId);
+            
+            // create a planning node instance by copying the planning node template
+            planningNodeInstance = this.copyNode(nodeId);
+            
+            // set the template id to point back to the planning template node
+            planningNodeInstance.templateId = planningNodeInstance.id;
+            
+            // set the planning node instance node id
+            planningNodeInstance.id = this.getNextAvailablePlanningNodeId();
+            
+            // add the planning node instance to the project
+            this.addPlanningNodeInstance(groupId, planningNodeInstance);
+        }
+        
+        return planningNodeInstance;
+    }
+    
+    /**
+     * Add the planning node instance to the project
+     * @param groupId the group to add the planning node instance to
+     * @param the planning node instance
+     */
+    addPlanningNodeInstance(groupId, planningNodeInstance) {
+        
+        // get the node id
+        var planningNodeInstanceNodeId = planningNodeInstance.id;
+        
+        // add an entry in our mapping data structures of node id to object
+        this.setIdToNode(planningNodeInstanceNodeId, planningNodeInstance);
+        this.setIdToElement(planningNodeInstanceNodeId, planningNodeInstance);
+        
+        // add the node to the nodes array in the project
+        this.addNode(planningNodeInstance);
+        
+        /*
+         * get the child ids of the group we are going to put the planning node 
+         * instance into
+         */
+        var childIds = this.getChildNodeIdsById(groupId);
+        
+        if (childIds == null) {
+            
+        } else if (childIds.length == 0) {
+            /*
+             * the group has no children so we will add the planning node 
+             * instance as the first node in the group
+             */
+            this.insertNodeInsideInTransitions(planningNodeInstanceNodeId, groupId);
+            this.insertNodeInsideInGroups(planningNodeInstanceNodeId, groupId);
+        } else {
+            /*
+             * the group has children so we will add the planning node 
+             * instance as the last node in the group
+             */
+             
+            // get the node id of the last child
+            var lastChildId = childIds[childIds.length - 1];
+            
+            // add the planning node instance after the last child
+            this.insertNodeAfterInTransitions(planningNodeInstance, lastChildId);
+            this.insertNodeAfterInGroups(planningNodeInstanceNodeId, lastChildId);
+        }
+        
+        // get the position of the planning node instance
+        var pos = this.getPositionById(planningNodeInstanceNodeId);
+        
+        // set the mapping of node id to position
+        this.setIdToPosition(planningNodeInstanceNodeId, pos);
+        
+        /*
+         * set the order of the planning node instance so that it shows up
+         * in the select step drop down
+         */
+        this.setNodeOrder(planningNodeInstance);
+        
+        // TODO: handle moving and deleting planning node instances
+    }
+    
+    /**
+     * Get the next available planning node instance node id
+     * @returns the next available planning node instance node id
+     */
+    getNextAvailablePlanningNodeId() {
+        
+        var nextAvailablePlanningInstanceNodeId = null;
+        
+        // used to keep track of the highest planning node number we have found
+        var maxPlanningNodeNumber = 0;
+        
+        var nodes = this.project.nodes;
+        
+        if (nodes != null) {
+            
+            // loop through all the nodes in the project
+            for (var n = 0; n < nodes.length; n++) {
+                var node = nodes[n];
+                
+                if (node != null) {
+                    var nodeId = node.id;
+                    
+                    if (nodeId != null) {
+                        // regex to match the planning node id e.g. planningNode2
+                        var planningNodeIdRegEx = /planningNode(.*)/;
+                        
+                        // run the regex on the node id
+                        var result = nodeId.match(planningNodeIdRegEx);
+                        
+                        if (result != null) {
+                            // we have found a planning node instance node id
+                            
+                            /*
+                             * get the number part of the planning node instance node id
+                             * e.g. if the nodeId is planningNode2, the number part
+                             * would be 2
+                             */
+                            var planningNodeNumber = parseInt(result[1]);
+                            
+                            if (planningNodeNumber > maxPlanningNodeNumber) {
+                                /*
+                                 * update the max number part if we have found a new
+                                 * higher number
+                                 */
+                                maxPlanningNodeNumber = planningNodeNumber;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        // create the next available planning node instance node id
+        nextAvailablePlanningInstanceNodeId = 'planningNode' + (maxPlanningNodeNumber + 1);
+        
+        return nextAvailablePlanningInstanceNodeId;
     }
 }
 
