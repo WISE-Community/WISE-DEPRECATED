@@ -29,6 +29,18 @@ var NavItemController = function () {
         this.isCurrentNode = this.currentNode.id === this.nodeId;
         this.setNewNode = false;
 
+        // whether this node is a planning node
+        this.isPlanning = this.ProjectService.isPlanning(this.nodeId);
+        this.availablePlanningNodeIds = null;
+
+        if (this.isPlanning) {
+            /*
+             * planning is enabled so we will get the available planning
+             * nodes that can be used in this group
+             */
+            this.availablePlanningNodeIds = this.ProjectService.getAvailablePlanningNodeIds(this.nodeId);
+        }
+
         this.$scope.$watch(function () {
             return this.StudentDataService.currentNode;
         }.bind(this), function (newNode) {
@@ -98,6 +110,25 @@ var NavItemController = function () {
             } else {
                 this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(this.nodeId);
             }
+        }
+    }, {
+        key: 'addPlanningNodeInstance',
+
+
+        /**
+         * Create a planning node instance and add it to the project
+         * @param groupId the group the new planning node instance will be added to
+         * @param nodeId the node id of the planning node template
+         */
+        value: function addPlanningNodeInstance(groupId, nodeId) {
+            // create the planning node instance
+            this.ProjectService.createPlanningNodeInstance(groupId, nodeId);
+
+            /*
+             * update the node statuses so that a node status is created for
+             * the new planning node instance
+             */
+            this.StudentDataService.updateNodeStatuses();
         }
     }]);
 

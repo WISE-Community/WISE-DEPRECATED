@@ -11,6 +11,12 @@
                 </div>
                 <md-icon class="nav-item__collapse" ng-show="navitemCtrl.isGroup && navitemCtrl.expanded" aria-label="collapse">remove</md-icon>
             </md-card-content>
+            <div ng-if="navitemCtrl.isPlanning">
+                Available Planning Steps
+                <span ng-repeat="availablePlanningNodeId in navitemCtrl.availablePlanningNodeIds">
+                    <button ng-click="navitemCtrl.addPlanningNodeInstance(navitemCtrl.nodeId, availablePlanningNodeId)">{{availablePlanningNodeId}}</button>
+                </span>
+            </div>
             <md-card-content ng-if="navitemCtrl.isGroup" ng-show="navitemCtrl.expanded" class="nav-contents nav-contents--group">
                 <md-list class="nav-contents__list">
                     <nav-item ng-repeat="childId in navitemCtrl.item.ids"

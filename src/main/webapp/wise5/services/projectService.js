@@ -8,10 +8,17 @@ this.filters=[{'name':'all','label':'All'}, //{'name': 'todo', 'label': 'Todo'},
      * Returns the name/title of the current project
      */value:function getProjectTitle(){var name=this.getProjectMetadata().title;return name?name:'A WISE Project (No name)';}},{key:'getProjectMetadata',value:function getProjectMetadata(){return this.metadata;}},{key:'getNodes',value:function getNodes(){var nodes=null;var project=this.project;if(project!=null){nodes=project.nodes;}return nodes;}},{key:'getChildNodeIdsById',value:function getChildNodeIdsById(nodeId){var childIds=[];var node=this.getNodeById(nodeId);if(node.ids){childIds=node.ids;}return childIds;}},{key:'getGroupNodes',value:function getGroupNodes(){return this.groupNodes;}},{key:'isNode',value:function isNode(id){var result=false;var nodes=this.getNodes();if(nodes!=null){for(var n=0;n<nodes.length;n++){var node=nodes[n];if(node!=null){var nodeId=node.id;if(nodeId===id){result=true;break;}}}}return result;}},{key:'addTransition', // adds or update transition if exists
 value:function addTransition(transition){var existingTransitions=this.getTransitions();var replaced=false;for(var t=0;t<existingTransitions.length;t++){var existingTransition=existingTransitions[t];if(existingTransition.id===transition.id){existingTransitions.splice(t,1,transition);replaced=true;}}if(!replaced){existingTransitions.push(transition);}}},{key:'addNode',value:function addNode(node){var existingNodes=this.project.nodes;var replaced=false;if(node!=null&&existingNodes!=null){for(var n=0;n<existingNodes.length;n++){var existingNode=existingNodes[n];var existingNodeId=existingNode.id;if(existingNodeId===node.id){existingNodes.splice(n,1,node);replaced=true;}}}if(!replaced){existingNodes.push(node);}}},{key:'addApplicationNode',value:function addApplicationNode(node){var applicationNodes=this.applicationNodes;if(node!=null&&applicationNodes!=null){applicationNodes.push(node);}}},{key:'addGroupNode',value:function addGroupNode(node){var groupNodes=this.groupNodes;if(node!=null&&groupNodes!=null){groupNodes.push(node);}this.$rootScope.$broadcast('groupsChanged');}},{key:'addNodeToGroupNode',value:function addNodeToGroupNode(groupId,nodeId){if(groupId!=null&&nodeId!=null){var group=this.getNodeById(groupId);if(group!=null){var groupChildNodeIds=group.ids;if(groupChildNodeIds!=null){if(groupChildNodeIds.indexOf(nodeId)===-1){groupChildNodeIds.push(nodeId);}}}}}},{key:'isGroupNode',value:function isGroupNode(id){var result=false;var groupNode=this.getNodeById(id);if(groupNode!=null){var type=groupNode.type;if(type==='group'){result=true;}}return result;}},{key:'isApplicationNode',value:function isApplicationNode(id){var result=false;var applicationNode=this.getNodeById(id);if(applicationNode!=null){var type=applicationNode.type;if(type!=='group'){result=true;}}return result;}},{key:'getGroups',value:function getGroups(){return this.groupNodes;}},{key:'loadNodes',value:function loadNodes(nodes){if(nodes!=null){for(var n=0;n<nodes.length;n++){var node=nodes[n];if(node!=null){var nodeId=node.id;var nodeType=node.type;var content=node.content;var constraints=node.constraints;if(content!=null){ //node.content = this.injectAssetPaths(content);
-}this.setIdToNode(nodeId,node);this.setIdToElement(nodeId,node);this.addNode(node);if(nodeType==='group'){this.addGroupNode(node);}else {this.addApplicationNode(node);}var groupId=node.groupId;if(groupId!=null){this.addNodeToGroupNode(groupId,nodeId);}if(constraints!=null){for(var c=0;c<constraints.length;c++){var constraint=constraints[c];this.activeConstraints.push(constraint);}}}}}}},{key:'parseProject',value:function parseProject(){var project=this.project;if(project!=null){ // clear and initialize our project data structures
-this.clearProjectFields();if(project.metadata){this.metadata=project.metadata;}var nodes=project.nodes;this.loadNodes(nodes);var constraints=project.constraints;if(constraints!=null){for(var c=0;c<constraints.length;c++){var constraint=constraints[c];if(constraint!=null){var constraintId=constraint.id;constraint.active=true;this.setIdToElement(constraintId,constraint);}}} // set root node
+}this.setIdToNode(nodeId,node);this.setIdToElement(nodeId,node);this.addNode(node);if(nodeType==='group'){this.addGroupNode(node);}else {this.addApplicationNode(node);}var groupId=node.groupId;if(groupId!=null){this.addNodeToGroupNode(groupId,nodeId);}if(constraints!=null){for(var c=0;c<constraints.length;c++){var constraint=constraints[c];this.activeConstraints.push(constraint);}}}}}}},{key:'loadPlanningNodes', /**
+     * Load the planning template nodes
+     * @param planning template nodes
+     */value:function loadPlanningNodes(planningNodes){if(planningNodes!=null){ // loop through all the planning template nodes
+for(var p=0;p<planningNodes.length;p++){var planningNode=planningNodes[p];if(planningNode!=null){var nodeId=planningNode.id;this.setIdToNode(nodeId,planningNode);this.setIdToElement(nodeId,planningNode); // TODO: may need to add more function calls here to add the planning
+}}}}},{key:'parseProject',value:function parseProject(){var project=this.project;if(project!=null){ // clear and initialize our project data structures
+this.clearProjectFields();if(project.metadata){this.metadata=project.metadata;}var nodes=project.nodes;this.loadNodes(nodes); // load the planning node templates
+var planningNodes=project.planningNodes;this.loadPlanningNodes(planningNodes);var constraints=project.constraints;if(constraints!=null){for(var c=0;c<constraints.length;c++){var constraint=constraints[c];if(constraint!=null){var constraintId=constraint.id;constraint.active=true;this.setIdToElement(constraintId,constraint);}}} // set root node
 this.rootNode=this.getRootNode(nodes[0].id); // set project order
-this.setNodeOrder(this.rootNode,this.nodeCount);this.nodeCount=0;var n=nodes.length;var branches=this.getBranches();var branchNodeIds=[]; // set node positions
+this.setNodeOrder(this.rootNode,this.nodeCount); //this.nodeCount = 0;
+var n=nodes.length;var branches=this.getBranches();var branchNodeIds=[]; // set node positions
 var id,pos;while(n--){id=nodes[n].id;if(id===this.rootNode.id){this.setIdToPosition(id,'0');}else if(this.isNodeIdInABranch(branches,id)){ // node is in a branch, so process later
 branchNodeIds.push(id);}else {pos=this.getPositionById(id);this.setIdToPosition(id,pos);}} // set branch node positions
 var b=branchNodeIds.length;while(b--){id=branchNodeIds[b];pos=this.getBranchNodePositionById(id);this.setIdToPosition(id,pos);}}}},{key:'setNodeOrder',value:function setNodeOrder(node){this.idToOrder[node.id]={'order':this.nodeCount};this.nodeCount++;if(this.isGroupNode(node.id)){var childIds=node.ids;for(var i=0;i<childIds.length;i++){var child=this.getNodeById(childIds[i]);this.setNodeOrder(child);}}}},{key:'getPositionById', /**
@@ -845,5 +852,62 @@ this.setIdToElement(nodeId,node); // update the nodes array
 var nodes=this.getNodes();if(nodes!=null){for(var n=0;n<nodes.length;n++){var tempNode=nodes[n];if(tempNode!=null){var tempNodeId=tempNode.id;if(nodeId===tempNodeId){ // we have found the node we want to replace
 nodes.splice(n,1,node);break;}}}} // update the application nodes array
 var applicationNodes=this.applicationNodes;if(applicationNodes!=null){for(var a=0;a<applicationNodes.length;a++){var tempApplicationNode=applicationNodes[a];if(tempApplicationNode!=null){var tempApplicationNodeId=tempApplicationNode.id;if(nodeId===tempApplicationNodeId){ // we have found the node we want to replace
-applicationNodes.splice(a,1,node);}}}}}}}]);return ProjectService;}();ProjectService.$inject=['$http','$injector','$rootScope','ConfigService'];exports.default=ProjectService;
+applicationNodes.splice(a,1,node);}}}}}} /**
+     * Check if a node is a planning node
+     * @param nodeId the node id
+     * @returns whether the node is a planning node
+     */},{key:'isPlanning',value:function isPlanning(nodeId){var result=false;if(nodeId!=null){var node=this.getNodeById(nodeId);if(node!=null){if(node.planning){result=true;}}}return result;} /**
+     * Get the available planning node ids for a node
+     * @param nodeId the node we want available planning nodes for
+     * @returns an array of available planning node ids
+     */},{key:'getAvailablePlanningNodeIds',value:function getAvailablePlanningNodeIds(nodeId){var availablePlanningNodeIds=[];if(nodeId!=null){var node=this.getNodeById(nodeId);if(node!=null&&node.availablePlanningNodeIds!=null){availablePlanningNodeIds=node.availablePlanningNodeIds;}}return availablePlanningNodeIds;} /**
+     * Create a planning node instance and add it to the project
+     * @param groupId the group id to add the planning node instance to
+     * @param nodeId the node id of the planning node template
+     */},{key:'createPlanningNodeInstance',value:function createPlanningNodeInstance(groupId,nodeId){var planningNodeInstance=null;if(nodeId!=null){ // get the planning node template
+var node=this.getNodeById(nodeId); // create a planning node instance by copying the planning node template
+planningNodeInstance=this.copyNode(nodeId); // set the template id to point back to the planning template node
+planningNodeInstance.templateId=planningNodeInstance.id; // set the planning node instance node id
+planningNodeInstance.id=this.getNextAvailablePlanningNodeId(); // add the planning node instance to the project
+this.addPlanningNodeInstance(groupId,planningNodeInstance);}return planningNodeInstance;} /**
+     * Add the planning node instance to the project
+     * @param groupId the group to add the planning node instance to
+     * @param the planning node instance
+     */},{key:'addPlanningNodeInstance',value:function addPlanningNodeInstance(groupId,planningNodeInstance){ // get the node id
+var planningNodeInstanceNodeId=planningNodeInstance.id; // add an entry in our mapping data structures of node id to object
+this.setIdToNode(planningNodeInstanceNodeId,planningNodeInstance);this.setIdToElement(planningNodeInstanceNodeId,planningNodeInstance); // add the node to the nodes array in the project
+this.addNode(planningNodeInstance); /*
+         * get the child ids of the group we are going to put the planning node 
+         * instance into
+         */var childIds=this.getChildNodeIdsById(groupId);if(childIds==null){}else if(childIds.length==0){ /*
+             * the group has no children so we will add the planning node 
+             * instance as the first node in the group
+             */this.insertNodeInsideInTransitions(planningNodeInstanceNodeId,groupId);this.insertNodeInsideInGroups(planningNodeInstanceNodeId,groupId);}else { /*
+             * the group has children so we will add the planning node 
+             * instance as the last node in the group
+             */ // get the node id of the last child
+var lastChildId=childIds[childIds.length-1]; // add the planning node instance after the last child
+this.insertNodeAfterInTransitions(planningNodeInstance,lastChildId);this.insertNodeAfterInGroups(planningNodeInstanceNodeId,lastChildId);} // get the position of the planning node instance
+var pos=this.getPositionById(planningNodeInstanceNodeId); // set the mapping of node id to position
+this.setIdToPosition(planningNodeInstanceNodeId,pos); /*
+         * set the order of the planning node instance so that it shows up
+         * in the select step drop down
+         */this.setNodeOrder(planningNodeInstance); // TODO: handle moving and deleting planning node instances
+} /**
+     * Get the next available planning node instance node id
+     * @returns the next available planning node instance node id
+     */},{key:'getNextAvailablePlanningNodeId',value:function getNextAvailablePlanningNodeId(){var nextAvailablePlanningInstanceNodeId=null; // used to keep track of the highest planning node number we have found
+var maxPlanningNodeNumber=0;var nodes=this.project.nodes;if(nodes!=null){ // loop through all the nodes in the project
+for(var n=0;n<nodes.length;n++){var node=nodes[n];if(node!=null){var nodeId=node.id;if(nodeId!=null){ // regex to match the planning node id e.g. planningNode2
+var planningNodeIdRegEx=/planningNode(.*)/; // run the regex on the node id
+var result=nodeId.match(planningNodeIdRegEx);if(result!=null){ // we have found a planning node instance node id
+/*
+                             * get the number part of the planning node instance node id
+                             * e.g. if the nodeId is planningNode2, the number part
+                             * would be 2
+                             */var planningNodeNumber=parseInt(result[1]);if(planningNodeNumber>maxPlanningNodeNumber){ /*
+                                 * update the max number part if we have found a new
+                                 * higher number
+                                 */maxPlanningNodeNumber=planningNodeNumber;}}}}}} // create the next available planning node instance node id
+nextAvailablePlanningInstanceNodeId='planningNode'+(maxPlanningNodeNumber+1);return nextAvailablePlanningInstanceNodeId;}}]);return ProjectService;}();ProjectService.$inject=['$http','$injector','$rootScope','ConfigService'];exports.default=ProjectService;
 //# sourceMappingURL=projectService.js.map
