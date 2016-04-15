@@ -103,6 +103,12 @@ var GraphController = function () {
         // the id of the chart element
         this.chartId = 'chart1';
 
+        // the width of the graph
+        this.width = 800;
+
+        // the height of the graph
+        this.height = 500;
+
         // get the current node and node id
         var currentNode = this.StudentDataService.getCurrentNode();
         if (currentNode != null) {
@@ -470,6 +476,16 @@ var GraphController = function () {
                 this.yAxis = yAxis;
             }
 
+            if (this.componentContent.width != null) {
+                // set the width of the graph
+                this.width = this.componentContent.width;
+            }
+
+            if (this.componentContent.height != null) {
+                // set the height of the graph
+                this.height = this.componentContent.height;
+            }
+
             /*
              * remember this graph controller so we can access it in the click
              * event for the graph
@@ -578,6 +594,8 @@ var GraphController = function () {
                         }
                     },
                     chart: {
+                        width: this.width,
+                        height: this.height,
                         type: graphType,
                         events: {
                             click: function click(e) {

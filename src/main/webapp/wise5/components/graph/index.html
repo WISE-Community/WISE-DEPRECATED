@@ -13,6 +13,12 @@
             Graph Type: <input ng-model='graphController.authoringComponentContent.graphType'
                                ng-change='graphController.authoringViewComponentChanged()'/>
             <br/>
+            Graph Width: <input type='number'
+                                ng-model='graphController.authoringComponentContent.width'
+                                ng-change='graphController.authoringViewComponentChanged()'/>
+            Graph Height: <input type='number'
+                                 ng-model='graphController.authoringComponentContent.height'
+                                 ng-change='graphController.authoringViewComponentChanged()'/>
             <br/>
             X Axis Title: <input ng-model='graphController.authoringComponentContent.xAxis.title.text'
                                  ng-change='graphController.authoringViewComponentChanged()'/>

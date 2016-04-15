@@ -48,13 +48,19 @@ var GraphService = function (_NodeService) {
             component.showSaveButton = false;
             component.showSubmitButton = false;
             component.title = 'Enter graph title here';
+            component.width = 800;
+            component.height = 500;
             component.xAxis = {
-                title: 'Time (seconds)',
+                title: {
+                    text: 'Time (seconds)'
+                },
                 min: 0,
                 max: 10
             };
             component.yAxis = {
-                title: 'Position (meters)',
+                title: {
+                    text: 'Position (meters)'
+                },
                 min: 0,
                 max: 10
             };
