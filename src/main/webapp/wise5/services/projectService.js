@@ -563,8 +563,14 @@ var newNode={};newNode.id=newNodeId;newNode.title=title;newNode.type='node';newN
      * @param nodeId the node id of the group to create the node in
      */value:function createNodeInside(node,nodeId){ // add the node to the project
 this.addNode(node); // add the node to our mapping of node id to node
-this.setIdToNode(node.id,node);this.insertNodeInsideInTransitions(node.id,nodeId);this.insertNodeInsideInGroups(node.id,nodeId); // TODO: create a transition from PreviousActivity.lastStep -> node if PreviousActivity exists.
-} /**
+this.setIdToNode(node.id,node);this.insertNodeInsideInTransitions(node.id,nodeId);this.insertNodeInsideInGroups(node.id,nodeId); // Create a transition from PreviousActivity.lastStep -> this new node if PreviousActivity.lastStep exists.
+var groupNodes=this.getGroupNodes();for(var g=0;g<groupNodes.length;g++){var groupNode=groupNodes[g];if(this.isNodeDirectChildOfGroup(node,groupNode)){if(g!=0){ // there is a sibling group that is before the group that the node was added to ("olderSibling")
+// e.g. if groups = ["a","b","c"], a is b's older sibling, and b is c's older sibling.
+var olderSiblingGroup=groupNodes[g-1];var ids=olderSiblingGroup.ids;if(ids!=null){ // get the last children in the sibling group
+var olderSiblingLastNodeId=ids[ids.length-1];if(!this.isGroupNode(olderSiblingLastNodeId)){var olderSiblingLastNode=this.getNodeById(olderSiblingLastNodeId); // remove the transitions from the before node
+olderSiblingLastNode.transitionLogic.transitions=[];var transitionObject={};transitionObject.to=node.id; // make the before node point to the new node
+olderSiblingLastNode.transitionLogic.transitions.push(transitionObject);break;}else { // if the last node in the older sibling is a group node, we don't add any transition from it to the new node.
+}}}}}} /**
      * Create a node after the given node id
      * @param node the new node
      * @param nodeId the node to add after
