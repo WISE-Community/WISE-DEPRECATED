@@ -14,7 +14,7 @@
             <div ng-if="navitemCtrl.isPlanning">
                 Available Planning Steps
                 <span ng-repeat="availablePlanningNodeId in navitemCtrl.availablePlanningNodeIds">
-                    <button ng-click="navitemCtrl.addPlanningNodeInstance(navitemCtrl.nodeId, availablePlanningNodeId)">{{availablePlanningNodeId}}</button>
+                    <button ng-click="navitemCtrl.addPlanningNodeInstanceInside(navitemCtrl.nodeId, availablePlanningNodeId)">{{navitemCtrl.getNodeTitle(availablePlanningNodeId)}}</button>
                 </span>
             </div>
             <md-card-content ng-if="navitemCtrl.isGroup" ng-show="navitemCtrl.expanded" class="nav-contents nav-contents--group">
@@ -53,5 +53,15 @@
                 <md-icon> bookmark </md-icon>
             </md-button>-->
         </md-list-item>
+        <div ng-if="navitemCtrl.isParentGroupPlanning">
+            Available Planning Steps
+            <span ng-repeat="availablePlanningNodeId in navitemCtrl.availablePlanningNodeIds">
+                <button ng-click="navitemCtrl.addPlanningNodeInstanceAfter(navitemCtrl.nodeId, availablePlanningNodeId)">{{navitemCtrl.getNodeTitle(availablePlanningNodeId)}}</button>
+            </span>
+            <select ng-model="selectedNodeId" ng-change="navitemCtrl.movePlanningNode(selectedNodeId)">
+                <option ng-repeat="siblingNodeId in navitemCtrl.siblingNodeIds" value="{{siblingNodeId}}">{{navitemCtrl.getNodeTitle(siblingNodeId)}}</option>
+            </select>
+            <button ng-click="navitemCtrl.removePlanningNodeInstance(navitemCtrl.nodeId)">X</button>
+        </div>
     </ng-switch>
 </div>

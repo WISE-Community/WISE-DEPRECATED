@@ -1515,7 +1515,7 @@ class ProjectService {
                             var consumedPath = this.consumePathsUntilNodeId(paths, nodeId);
 
                             // remove the node id from the paths
-                            this.removeNodeIdFromPaths(nodeId, paths);
+                            this.removeNodeaIdFromPaths(nodeId, paths);
 
                             // add the node id to the end of the consumed path
                             consumedPath.push(nodeId);
@@ -3132,6 +3132,10 @@ class ProjectService {
         this.removeNodeIdFromGroups(nodeId);
         this.removeNodeIdFromTransitions(nodeId);
         this.removeNodeIdFromNodes(nodeId);
+        
+        if (parentGroup != null) {
+            this.recalculatePositionsInGroup(parentGroup.id);
+        }
     }
 
     /**
@@ -3709,19 +3713,18 @@ class ProjectService {
             planningNodeInstance.id = this.getNextAvailablePlanningNodeId();
             
             // add the planning node instance to the project
-            this.addPlanningNodeInstance(groupId, planningNodeInstance);
+            //this.addPlanningNodeInstance(groupId, planningNodeInstance);
         }
         
         return planningNodeInstance;
     }
     
     /**
-     * Add the planning node instance to the project
-     * @param groupId the group to add the planning node instance to
-     * @param the planning node instance
+     * Add a planning node instance inside a group node
+     * @param nodeIdToInsertInside the group id to insert into
+     * @param planningNodeInstance the planning node instance to add
      */
-    addPlanningNodeInstance(groupId, planningNodeInstance) {
-        
+    addPlanningNodeInstanceInside(nodeIdToInsertInside, planningNodeInstance) {
         // get the node id
         var planningNodeInstanceNodeId = planningNodeInstance.id;
         
@@ -3732,48 +3735,129 @@ class ProjectService {
         // add the node to the nodes array in the project
         this.addNode(planningNodeInstance);
         
-        /*
-         * get the child ids of the group we are going to put the planning node 
-         * instance into
-         */
-        var childIds = this.getChildNodeIdsById(groupId);
+        // update the transitions
+        this.insertNodeInsideInTransitions(planningNodeInstanceNodeId, nodeIdToInsertInside);
         
-        if (childIds == null) {
-            
-        } else if (childIds.length == 0) {
-            /*
-             * the group has no children so we will add the planning node 
-             * instance as the first node in the group
-             */
-            this.insertNodeInsideInTransitions(planningNodeInstanceNodeId, groupId);
-            this.insertNodeInsideInGroups(planningNodeInstanceNodeId, groupId);
-        } else {
-            /*
-             * the group has children so we will add the planning node 
-             * instance as the last node in the group
-             */
-             
-            // get the node id of the last child
-            var lastChildId = childIds[childIds.length - 1];
-            
-            // add the planning node instance after the last child
-            this.insertNodeAfterInTransitions(planningNodeInstance, lastChildId);
-            this.insertNodeAfterInGroups(planningNodeInstanceNodeId, lastChildId);
-        }
-        
-        // get the position of the planning node instance
-        var pos = this.getPositionById(planningNodeInstanceNodeId);
-        
-        // set the mapping of node id to position
-        this.setIdToPosition(planningNodeInstanceNodeId, pos);
+        // update the child ids of the group
+        this.insertNodeInsideInGroups(planningNodeInstanceNodeId, nodeIdToInsertInside);
+
+        // recalculate all the position values in the group
+        this.recalculatePositionsInGroup(nodeIdToInsertInside);
         
         /*
          * set the order of the planning node instance so that it shows up
-         * in the select step drop down
+         * in the select step drop down in the correct order
          */
-        this.setNodeOrder(planningNodeInstance);
+        this.setNodeOrder(this.rootNode, 0);
+    }
+    
+    /**
+     * Add a planning node instance after a node
+     * @param nodeIdToInsertAfter the node to insert after
+     * @param planningNodeInstance the planning node instance to add
+     */
+    addPlanningNodeInstanceAfter(nodeIdToInsertAfter, planningNodeInstance) {
+        // get the node id
+        var planningNodeInstanceNodeId = planningNodeInstance.id;
         
-        // TODO: handle moving and deleting planning node instances
+        // add an entry in our mapping data structures of node id to object
+        this.setIdToNode(planningNodeInstanceNodeId, planningNodeInstance);
+        this.setIdToElement(planningNodeInstanceNodeId, planningNodeInstance);
+        
+        // add the node to the nodes array in the project
+        this.addNode(planningNodeInstance);
+        
+        // update the transitions
+        this.insertNodeAfterInTransitions(planningNodeInstance, nodeIdToInsertAfter);
+        
+        // update the child ids of the group
+        this.insertNodeAfterInGroups(planningNodeInstanceNodeId, nodeIdToInsertAfter);
+
+        var parentGroup = this.getParentGroup(nodeIdToInsertAfter);
+        
+        if (parentGroup != null) {
+            var parentGroupId = parentGroup.id;
+            
+            // recalculate all the position values in the group
+            this.recalculatePositionsInGroup(parentGroupId);
+        }
+        
+        /*
+         * set the order of the planning node instance so that it shows up
+         * in the select step drop down in the correct order
+         */
+        this.setNodeOrder(this.rootNode, 0);
+    }
+    
+    /**
+     * Move a planning node instance inside a group
+     * @param nodeIdToMove the node to move
+     * @param nodeIdToInsertInside the group to move the node into
+     */
+    movePlanningNodeInstanceInside(nodeIdToMove, nodeIdToInsertInside) {
+        
+        // move the node inside the group node
+        this.moveNodesInside([nodeIdToMove], nodeIdToInsertInside);
+        
+        // recalculate all the position values in the group
+        this.recalculatePositionsInGroup(nodeIdToInsertInside);
+        
+        /*
+         * set the order of the planning node instance so that it shows up
+         * in the select step drop down in the correct order
+         */
+        this.setNodeOrder(this.rootNode, 0);
+    }
+    
+    /**
+     * Move a planning node instance after a node
+     * @param nodeIdToMove the node to move
+     * @param nodeIdToInsertAfter the other node to move the node after
+     */
+    movePlanningNodeInstanceAfter(nodeIdToMove, nodeIdToInsertAfter) {
+        
+        // move the node after the other node
+        this.moveNodesAfter([nodeIdToMove], nodeIdToInsertAfter);
+        
+        var parentGroup = this.getParentGroup(nodeIdToInsertAfter);
+        
+        if (parentGroup != null) {
+            var parentGroupId = parentGroup.id;
+            
+            // recalculate all the position values in the group
+            this.recalculatePositionsInGroup(parentGroupId);
+        }
+        
+        /*
+         * set the order of the planning node instance so that it shows up
+         * in the select step drop down in the correct order
+         */
+        this.setNodeOrder(this.rootNode, 0);
+    }
+    
+    /**
+     * Recalculate the positions of the children in the group.
+     * The positions are the numbers usually seen before the title
+     * e.g. if the step is seen as 1.3: Gather Evidence, then 1.3
+     * is the position
+     * @param groupId recalculate all the children of this group
+     */
+    recalculatePositionsInGroup(groupId) {
+        
+        if (groupId != null) {
+            var childIds = this.getChildNodeIdsById(groupId);
+            
+            // loop througha all the children
+            for (var c = 0; c < childIds.length; c++) {
+                var childId = childIds[c];
+                
+                // calculate the position of the child id
+                var pos = this.getPositionById(childId);
+                
+                // set the mapping of node id to position
+                this.setIdToPosition(childId, pos);
+            }
+        }
     }
     
     /**

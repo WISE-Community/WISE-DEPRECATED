@@ -1,11 +1,13 @@
 "use strict";
 
 class NavItemController {
-    constructor($scope,
+    constructor($rootScope,
+                $scope,
                 $element,
                 ProjectService,
                 StudentDataService) {
 
+        this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$element = $element;
         this.ProjectService = ProjectService;
@@ -26,6 +28,14 @@ class NavItemController {
         // whether this node is a planning node
         this.isPlanning = this.ProjectService.isPlanning(this.nodeId);
         this.availablePlanningNodeIds = null;
+        this.parentGroupId = null;
+        
+        var parentGroup = this.ProjectService.getParentGroup(this.nodeId);
+        
+        if (parentGroup != null) {
+            this.parentGroupId = parentGroup.id;
+            this.isParentGroupPlanning = this.ProjectService.isPlanning(this.parentGroupId);
+        }
         
         if (this.isPlanning) {
             /*
@@ -33,6 +43,37 @@ class NavItemController {
              * nodes that can be used in this group
              */
             this.availablePlanningNodeIds = this.ProjectService.getAvailablePlanningNodeIds(this.nodeId);
+        }
+        
+        if (this.isParentGroupPlanning) {
+            /*
+             * planning is enabled so we will get the available planning
+             * nodes that can be used in this group
+             */
+            this.availablePlanningNodeIds = this.ProjectService.getAvailablePlanningNodeIds(this.parentGroupId);
+            
+            /*
+             * update the nodes in the select drop down used to move planning
+             * nodes around
+             */
+            this.updateSiblingNodeIds();
+            
+            this.$scope.$watch(
+                function () {
+                    // watch the position of this node
+                    return this.ProjectService.idToPosition[this.nodeId];
+                }.bind(this),
+                function(value) {
+                    // the position has changed for this node so we will update it in the UI
+                    this.nodeTitle = this.showPosition ? (this.ProjectService.idToPosition[this.nodeId] + ': ' + this.item.title) : this.item.title;
+                    
+                    /*
+                     * update the nodes in the select drop down used to move planning
+                     * nodes around
+                     */
+                    this.updateSiblingNodeIds();
+                }.bind(this)
+            );
         }
 
         this.$scope.$watch(
@@ -58,8 +99,24 @@ class NavItemController {
                 }
             }.bind(this)
         );
+        
+        this.$rootScope.$on('planningNodeChanged', () => {
+            /*
+             * update the nodes in the select drop down used to move planning
+             * nodes around
+             */
+            this.updateSiblingNodeIds();
+        });
 
         this.setExpanded();
+    }
+    
+    updateSiblingNodeIds() {
+        var childNodeIds = this.ProjectService.getChildNodeIdsById(this.parentGroupId);
+        
+        this.siblingNodeIds = [];
+        this.siblingNodeIds.push(this.parentGroupId);
+        this.siblingNodeIds = this.siblingNodeIds.concat(childNodeIds);
     }
 
     getTemplateUrl(){
@@ -104,21 +161,122 @@ class NavItemController {
     /**
      * Create a planning node instance and add it to the project
      * @param groupId the group the new planning node instance will be added to
-     * @param nodeId the node id of the planning node template
+     * @param templateNodeId the node id of the planning node template
      */
-    addPlanningNodeInstance(groupId, nodeId) {
+    addPlanningNodeInstanceInside(nodeIdToInsertInside, templateNodeId) {
         // create the planning node instance
-        this.ProjectService.createPlanningNodeInstance(groupId, nodeId);
+        var planningNodeInstance = this.ProjectService.createPlanningNodeInstance(nodeIdToInsertInside, templateNodeId);
+        
+        // add the planning node instance inside
+        this.ProjectService.addPlanningNodeInstanceInside(nodeIdToInsertInside, planningNodeInstance);
         
         /*
          * update the node statuses so that a node status is created for
          * the new planning node instance
          */
         this.StudentDataService.updateNodeStatuses();
+        
+        // perform any necessary updating
+        this.planningNodeChanged();
+    }
+    
+    /**
+     * Create a planning node instance and add it to the project
+     * @param groupId the group the new planning node instance will be added to
+     * @param nodeId the node id of the planning node template
+     */
+    addPlanningNodeInstanceAfter(nodeIdToInsertAfter, templateNodeId) {
+        
+        var parentGroup = this.ProjectService.getParentGroup(nodeIdToInsertAfter);
+        
+        if (parentGroup != null) {
+            var parentGroupId = parentGroup.id;
+            
+            // create the planning node instance
+            var planningNodeInstance = this.ProjectService.createPlanningNodeInstance(parentGroupId, templateNodeId);
+            
+            // insert planning node instance after
+            this.ProjectService.addPlanningNodeInstanceAfter(nodeIdToInsertAfter, planningNodeInstance);
+            
+            /*
+             * update the node statuses so that a node status is created for
+             * the new planning node instance
+             */
+            this.StudentDataService.updateNodeStatuses();
+            
+            // perform any necessary updating
+            this.planningNodeChanged();
+        }
+    }
+    
+    /**
+     * Remove the planning node instance
+     * @param planningNodeInstanceNodeId the planning node instance to remove
+     */
+    removePlanningNodeInstance(planningNodeInstanceNodeId) {
+        // delete the node from the project
+        this.ProjectService.deleteNode(planningNodeInstanceNodeId);
+        
+        // perform any necessary updating
+        this.planningNodeChanged();
+    }
+    
+    /**
+     * Get the node title
+     * @param nodeId get the title for this node
+     * @returns the title for the node
+     */
+    getNodeTitle(nodeId) {
+        var node = this.ProjectService.idToNode[nodeId];
+        var title = null;
+        
+        if (node != null) {
+            title = node.title;
+        }
+        
+        // get the position
+        var position = this.ProjectService.idToPosition[nodeId];
+        
+        if (position == null) {
+            return title;
+        } else {
+            return position + ': ' + title;
+        }
+    }
+    
+    /**
+     * Move the planning node. If the other node is a group node, we will
+     * insert this node as the first node in the group. If the other node is
+     * a step node, we will insert this node after the other node.
+     * @param otherNodeId the other node we will move this node inside or after
+     */
+    movePlanningNode(otherNodeId) {
+        
+        /*
+         * check that this node is not the same as the other node.
+         * if they are the same we don't need to do anything.
+         */
+        if (this.nodeId != otherNodeId) {
+            if (this.ProjectService.isGroupNode(otherNodeId)) {
+                // insert this node inside the group node
+                this.ProjectService.movePlanningNodeInstanceInside(this.nodeId, otherNodeId);
+            } else {
+                // insert this node after the other node
+                this.ProjectService.movePlanningNodeInstanceAfter(this.nodeId, otherNodeId);
+            }
+        }
+        
+        // perform any necessary updating
+        this.planningNodeChanged();
+    }
+    
+    planningNodeChanged() {
+        this.$rootScope.$broadcast('planningNodeChanged');
     }
 }
 
 NavItemController.$inject = [
+    '$rootScope',
     '$scope',
     '$element',
     'ProjectService',
