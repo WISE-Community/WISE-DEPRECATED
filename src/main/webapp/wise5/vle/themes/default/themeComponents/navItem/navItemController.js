@@ -37,6 +37,13 @@ var NavItemController = function () {
         this.availablePlanningNodeIds = null;
         this.parentGroupId = null;
 
+        /*
+         * whether planning mode is on or off which determines if students
+         * can edit planning related aspects of the project such as adding,
+         * moving, or deleting planning steps.
+         */
+        this.planningMode = false;
+
         var parentGroup = this.ProjectService.getParentGroup(this.nodeId);
 
         if (parentGroup != null) {
@@ -53,6 +60,12 @@ var NavItemController = function () {
         }
 
         if (this.isParentGroupPlanning) {
+
+            if (parentGroup.planningMode) {
+                // the parent is currently in planning mode
+                this.planningMode = true;
+            }
+
             /*
              * planning is enabled so we will get the available planning
              * nodes that can be used in this group
@@ -110,6 +123,27 @@ var NavItemController = function () {
             _this.updateSiblingNodeIds();
         });
 
+        // a group node has turned on or off planning mode
+        this.$rootScope.$on('togglePlanningModeClicked', function (event, args) {
+
+            // get the group node that has had its planning node changed
+            var planningModeClickedNodeId = args.nodeId;
+            var planningMode = args.planningMode;
+
+            // get this node's parent group
+            var parentGroup = _this.ProjectService.getParentGroup(_this.nodeId);
+            var parentGroupId = null;
+
+            if (parentGroup != null) {
+                parentGroupId = parentGroup.id;
+            }
+
+            if (parentGroupId == planningModeClickedNodeId) {
+                // the parent of this node has changed their planning mode
+                _this.planningMode = planningMode;
+            }
+        });
+
         this.setExpanded();
     }
 
@@ -164,7 +198,15 @@ var NavItemController = function () {
                 }
                 this.expanded = !this.expanded;
             } else {
-                this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(this.nodeId);
+                if (this.planningMode) {
+                    /*
+                     * students are not allowed to enter planning steps while in
+                     * planning mode
+                     */
+                    alert('You are not allowed to enter the step while in Planning Mode. Turn off Planning Mode to enter the step.');
+                } else {
+                    this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(this.nodeId);
+                }
             }
         }
     }, {
@@ -294,10 +336,35 @@ var NavItemController = function () {
             // perform any necessary updating
             this.planningNodeChanged();
         }
+
+        /**
+         * Something related to planning has changed in the project. This
+         * means a planning node was added, moved, or deleted.
+         */
+
     }, {
         key: 'planningNodeChanged',
         value: function planningNodeChanged() {
             this.$rootScope.$broadcast('planningNodeChanged');
+        }
+
+        /**
+         * Toggle the planning mode on and off. Notify child nodes that 
+         * the planning mode has changed so they can act accordingly.
+         */
+
+    }, {
+        key: 'togglePlanningMode',
+        value: function togglePlanningMode() {
+            // toggle the planning mode
+            this.planningMode = !this.planningMode;
+            this.item.planningMode = this.planningMode;
+
+            /*
+             * notify the child nodes that the planning mode of this group
+             * node has changed
+             */
+            this.$rootScope.$broadcast('togglePlanningModeClicked', { nodeId: this.nodeId, planningMode: this.planningMode });
         }
     }]);
 

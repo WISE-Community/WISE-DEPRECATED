@@ -3154,7 +3154,7 @@ class ProjectService {
         var nodeToRemoveTransitionLogic = nodeToRemove.transitionLogic;
         var nodeToRemoveTransitions = [];
 
-        if (nodeToRemoveTransitionLogic != null) {
+        if (nodeToRemoveTransitionLogic != null && nodeToRemoveTransitionLogic.transitions != null) {
             nodeToRemoveTransitions = nodeToRemoveTransitionLogic.transitions;
         }
 

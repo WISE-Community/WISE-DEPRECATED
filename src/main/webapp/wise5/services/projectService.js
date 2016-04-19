@@ -737,7 +737,7 @@ this.removeNodeIdFromGroups(nodeId);this.removeNodeIdFromTransitions(nodeId);thi
      */},{key:'removeNodeIdFromTransitions',value:function removeNodeIdFromTransitions(nodeId){ // get the node we are removing
 var nodeToRemove=this.getNodeById(nodeId); // get all the nodes that have a transition to the node we are removing
 var nodesByToNodeId=this.getNodesByToNodeId(nodeId); // get the transitions of the node we are removing
-var nodeToRemoveTransitionLogic=nodeToRemove.transitionLogic;var nodeToRemoveTransitions=[];if(nodeToRemoveTransitionLogic!=null){nodeToRemoveTransitions=nodeToRemoveTransitionLogic.transitions;} // loop through all the nodes that transition to the node we are removing
+var nodeToRemoveTransitionLogic=nodeToRemove.transitionLogic;var nodeToRemoveTransitions=[];if(nodeToRemoveTransitionLogic!=null&&nodeToRemoveTransitionLogic.transitions!=null){nodeToRemoveTransitions=nodeToRemoveTransitionLogic.transitions;} // loop through all the nodes that transition to the node we are removing
 for(var n=0;n<nodesByToNodeId.length;n++){ // get a node that has a transition to the node we are removing
 var node=nodesByToNodeId[n];var transitionLogic=node.transitionLogic;if(transitionLogic!=null){var transitions=transitionLogic.transitions; // loop through all the transitions of this node
 for(var t=0;t<transitions.length;t++){var transition=transitions[t];if(nodeId===transition.to){ // we have found the transition to the node we are removing
