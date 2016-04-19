@@ -434,7 +434,10 @@ class StudentDataService {
         if (criteria != null) {
             //var nodeId = criteria.nodeId;
             //var componentId = criteria.componentId;
-            var functionName = criteria.function.name;
+            var functionName = null;
+            if (criteria.function != null) {
+                functionName = criteria.function.name;
+            }
 
             if (functionName == null) {
 

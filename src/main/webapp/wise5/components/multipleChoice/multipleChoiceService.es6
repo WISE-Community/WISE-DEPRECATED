@@ -90,8 +90,10 @@ class MultipleChoiceService extends NodeService {
         if (criteria != null) {
             let nodeId = criteria.nodeId;
             let componentId = criteria.componentId;
-            let functionName = criteria.function.name;
-            let functionParams = criteria.function.params;
+            let functionParams = [];
+            if (criteria.function != null) {
+                functionParams = criteria.function.params;
+            }
 
             if (nodeId != null && componentId != null) {
 

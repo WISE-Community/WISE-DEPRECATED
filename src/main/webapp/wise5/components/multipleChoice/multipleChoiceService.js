@@ -126,8 +126,10 @@ var MultipleChoiceService = function (_NodeService) {
             if (criteria != null) {
                 var nodeId = criteria.nodeId;
                 var componentId = criteria.componentId;
-                var functionName = criteria.function.name;
-                var functionParams = criteria.function.params;
+                var functionParams = [];
+                if (criteria.function != null) {
+                    functionParams = criteria.function.params;
+                }
 
                 if (nodeId != null && componentId != null) {
 
