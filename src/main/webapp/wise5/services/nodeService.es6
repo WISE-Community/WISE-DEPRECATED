@@ -28,6 +28,9 @@ class NodeService {
      */
     createNewNodeState() {
         var nodeState = {};
+        nodeState.runId = this.ConfigService.getRunId();
+        nodeState.periodId = this.ConfigService.getPeriodId();
+        nodeState.workgroupId = this.ConfigService.getWorkgroupId();
 
         // set the timestamp
         nodeState.clientSaveTime = Date.parse(new Date());

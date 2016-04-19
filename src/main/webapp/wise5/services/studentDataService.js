@@ -90,6 +90,40 @@ var StudentDataService = function () {
                             }
                         }
 
+                        // Check to see if this Project contains any Planning activities
+                        if (_this.ProjectService.project.nodes != null && _this.ProjectService.project.nodes.length > 0) {
+                            // Overload/add new nodes based on student's work in the NodeState for the planning group.
+                            for (var p = 0; p < _this.ProjectService.project.nodes.length; p++) {
+                                var planningGroupNode = _this.ProjectService.project.nodes[p];
+                                if (planningGroupNode.planning) {
+                                    var lastestNodeStateForPlanningGroupNode = _this.getLatestNodeStateByNodeId(planningGroupNode.id);
+                                    if (lastestNodeStateForPlanningGroupNode != null) {
+                                        var studentModifiedNodes = lastestNodeStateForPlanningGroupNode.studentData.nodes;
+                                        if (studentModifiedNodes != null) {
+                                            for (var _s = 0; _s < studentModifiedNodes.length; _s++) {
+                                                var studentModifiedNode = studentModifiedNodes[_s]; // Planning Node that student modified or new instances.
+                                                var studentModifiedNodeId = studentModifiedNode.id;
+                                                if (studentModifiedNode.planning) {
+                                                    // If this is a Planning Node that exists in the project, replace the one in the original project with this one.
+                                                    for (var n = 0; n < _this.ProjectService.project.nodes.length; n++) {
+                                                        if (_this.ProjectService.project.nodes[n].id === studentModifiedNodeId) {
+                                                            // Only overload the ids. This will allow authors to add more planningNodes during the run if needed.
+                                                            _this.ProjectService.project.nodes[n].ids = studentModifiedNode.ids;
+                                                        }
+                                                    }
+                                                } else {
+                                                    // Otherwise, this is an instance of a PlanningNode template, so just append it to the end of the Project.nodes
+                                                    _this.ProjectService.project.nodes.push(studentModifiedNode);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            // Re-parse the project with the modified changes
+                            _this.ProjectService.parseProject();
+                        }
+
                         // get events
                         _this.studentData.events = resultData.events;
 
@@ -1088,6 +1122,23 @@ var StudentDataService = function () {
             }
 
             return submitDirty;
+        }
+    }, {
+        key: 'getLatestNodeStateByNodeId',
+
+
+        /**
+         * Get the latest NodeState for the specified node id
+         * @param nodeId the node id
+         * @return the latest node state with the matching node id or null if none are found
+         */
+        value: function getLatestNodeStateByNodeId(nodeId) {
+            var latestNodeState = null;
+            var allNodeStatesByNodeId = this.getNodeStatesByNodeId(nodeId);
+            if (allNodeStatesByNodeId != null && allNodeStatesByNodeId.length > 0) {
+                latestNodeState = allNodeStatesByNodeId[allNodeStatesByNodeId.length - 1];
+            }
+            return latestNodeState;
         }
     }, {
         key: 'getLatestComponentStateByNodeIdAndComponentId',

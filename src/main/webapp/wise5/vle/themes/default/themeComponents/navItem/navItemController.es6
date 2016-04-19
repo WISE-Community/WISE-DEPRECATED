@@ -4,12 +4,14 @@ class NavItemController {
     constructor($rootScope,
                 $scope,
                 $element,
+                NodeService,
                 ProjectService,
                 StudentDataService) {
 
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$element = $element;
+        this.NodeService = NodeService;
         this.ProjectService = ProjectService;
         this.StudentDataService = StudentDataService;
 
@@ -70,7 +72,7 @@ class NavItemController {
              * nodes around
              */
             this.updateSiblingNodeIds();
-            
+
             this.$scope.$watch(
                 function () {
                     // watch the position of this node
@@ -328,7 +330,34 @@ class NavItemController {
         // toggle the planning mode
         this.planningMode = !this.planningMode;
         this.item.planningMode = this.planningMode;
-        
+
+        if (!this.planningMode) {
+            // Student is exiting planning mode, so save the changed nodes in NodeState
+            let nodeState = this.NodeService.createNewNodeState();
+            nodeState.nodeId = this.nodeId;
+            nodeState.isAutoSave = false;
+            nodeState.isSubmit = false;
+
+            var studentData = {};
+            studentData.nodeId = this.nodeId;
+            studentData.nodes = [];
+            let planningNode = this.ProjectService.getNodeById(this.nodeId);
+            studentData.nodes.push(planningNode);  // add the planning node (group)
+            // loop through the child ids in the planning group and save them also
+            if (planningNode.ids != null) {
+                for (let c = 0; c < planningNode.ids.length; c++) {
+                    let childPlanningNodeId = planningNode.ids[c];
+                    let childPlanningNode = this.ProjectService.getNodeById(childPlanningNodeId);
+                    studentData.nodes.push(childPlanningNode);
+                }
+            }
+
+            nodeState.studentData = studentData;
+            var nodeStates = [];
+            nodeStates.push(nodeState);
+            this.StudentDataService.saveNodeStates(nodeStates);
+        }
+
         /*
          * notify the child nodes that the planning mode of this group
          * node has changed
@@ -341,6 +370,7 @@ NavItemController.$inject = [
     '$rootScope',
     '$scope',
     '$element',
+    'NodeService',
     'ProjectService',
     'StudentDataService'
 ];

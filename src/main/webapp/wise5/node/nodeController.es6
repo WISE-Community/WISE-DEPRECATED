@@ -122,7 +122,6 @@ class NodeController {
          * @param component the component content for the component
          */
         this.$scope.registerComponentController = function(childScope, component) {
-
             if (this.$scope != null && component != null) {
                 // get the component id
                 var componentId = component.id;
@@ -136,7 +135,7 @@ class NodeController {
          * Listen for the componentSaveTriggered event which occurs when a
          * component is requesting student data to be saved
          */
-        this.$scope.$on('componentSaveTriggered', angular.bind(this, function(event, args) {
+        this.$scope.$on('componentSaveTriggered', (event, args) => {
             var isAutoSave = false;
 
             if (args != null) {
@@ -153,13 +152,13 @@ class NodeController {
                     }
                 }
             }
-        }));
+        });
 
         /**
          * Listen for the componentSubmitTriggered event which occurs when a
          * component is requesting student data to be submitted
          */
-        this.$scope.$on('componentSubmitTriggered', angular.bind(this, function(event, args) {
+        this.$scope.$on('componentSubmitTriggered', (event, args) => {
             var isAutoSave = false;
             var isSubmit = true;
 
@@ -177,7 +176,7 @@ class NodeController {
                     }
                 }
             }
-        }));
+        });
 
         /**
          * Listen for the componentStudentDataChanged event that will come from
@@ -185,12 +184,11 @@ class NodeController {
          * @param event
          * @param args the arguments provided when the event is fired
          */
-        this.$scope.$on('componentStudentDataChanged', angular.bind(this, function(event, args) {
+        this.$scope.$on('componentStudentDataChanged', (event, args) => {
             /*
              * the student data in one of our child scopes has changed so
              * we will need to save
              */
-
             if (args != null) {
 
                 // get the part id
@@ -208,7 +206,7 @@ class NodeController {
                     this.notifyConnectedParts(componentId, componentState);
                 }
             }
-        }));
+        });
 
         /**
          * Listen for the componentDirty event that will come from child component
@@ -216,7 +214,7 @@ class NodeController {
          * @param event
          * @param args the arguments provided when the event is fired
          */
-        this.$scope.$on('componentDirty', angular.bind(this, function(event, args) {
+        this.$scope.$on('componentDirty', (event, args) => {
             let componentId = args.componentId;
 
             if (componentId) {
@@ -231,7 +229,7 @@ class NodeController {
                     this.dirtyComponentIds.splice(index, 1);
                 }
             }
-        }));
+        });
 
         /**
          * Listen for the componentSubmitDirty event that will come from child
@@ -240,7 +238,7 @@ class NodeController {
          * @param event
          * @param args the arguments provided when the event is fired
          */
-        this.$scope.$on('componentSubmitDirty', angular.bind(this, function(event, args) {
+        this.$scope.$on('componentSubmitDirty', (event, args) => {
             let componentId = args.componentId;
 
             if (componentId) {
@@ -255,15 +253,14 @@ class NodeController {
                     this.dirtySubmitComponentIds.splice(index, 1);
                 }
             }
-        }));
+        });
 
         /**
          * Listen for the 'exitNode' event which is fired when the student
          * exits the node. This will perform saving when the student exits
          * the node.
          */
-        this.$scope.$on('exitNode', angular.bind(this, function(event, args) {
-
+        this.$scope.$on('exitNode', (event, args) => {
             // get the node that is exiting
             var nodeToExit = args.nodeToExit;
 
@@ -289,7 +286,7 @@ class NodeController {
                     this.NodeService.evaluateTransitionLogic();
                 }
             }
-        }));
+        });
     }
 
     /**
@@ -599,7 +596,7 @@ class NodeController {
      * Start the auto save interval for this node
      */
     startAutoSaveInterval() {
-        this.autoSaveIntervalId = setInterval(angular.bind(this, function() {
+        this.autoSaveIntervalId = setInterval(() => {
             // check if the student work is dirty
             if (this.dirtyComponentIds.length) {
                 // the student work is dirty so we will save
@@ -612,7 +609,7 @@ class NodeController {
                  */
                 this.createAndSaveComponentData(isAutoSave);
             }
-        }), this.autoSaveInterval);
+        }, this.autoSaveInterval);
     };
 
     /**
@@ -642,7 +639,7 @@ class NodeController {
             (componentAnnotations != null && componentAnnotations.length) ||
             (componentEvents != null && componentEvents.length)) {
             // save the component states to the server
-            return this.StudentDataService.saveToServer(componentStates, nodeStates, componentEvents, componentAnnotations).then(angular.bind(this, function(savedStudentDataResponse) {
+            return this.StudentDataService.saveToServer(componentStates, nodeStates, componentEvents, componentAnnotations).then((savedStudentDataResponse) => {
                 if (savedStudentDataResponse) {
                     // check if this node has transition logic that should be run when the student data changes
                     if (this.NodeService.hasTransitionLogic() && this.NodeService.evaluateTransitionLogicOn('studentDataChanged')) {
@@ -669,7 +666,7 @@ class NodeController {
                 }
 
                 return savedStudentDataResponse;
-            }));
+            });
         }
     };
 
@@ -1012,7 +1009,7 @@ class NodeController {
          * Listen for the 'exit' event which is fired when the student exits
          * the VLE. This will perform saving before exiting.
          */
-        this.logOutListener = this.$scope.$on('exit', angular.bind(this, function(event, args) {
+        this.logOutListener = this.$scope.$on('exit', (event, args) => {
 
             // stop the auto save interval for this node
             this.stopAutoSaveInterval();
@@ -1031,7 +1028,7 @@ class NodeController {
              * performing everything it needs to do before exiting
              */
             this.$rootScope.$broadcast('doneExiting');
-        }));
+        });
     };
 }
 

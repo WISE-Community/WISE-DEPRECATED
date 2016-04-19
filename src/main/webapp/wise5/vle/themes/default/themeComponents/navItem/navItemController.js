@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var NavItemController = function () {
-    function NavItemController($rootScope, $scope, $element, ProjectService, StudentDataService) {
+    function NavItemController($rootScope, $scope, $element, NodeService, ProjectService, StudentDataService) {
         var _this = this;
 
         _classCallCheck(this, NavItemController);
@@ -17,6 +17,7 @@ var NavItemController = function () {
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$element = $element;
+        this.NodeService = NodeService;
         this.ProjectService = ProjectService;
         this.StudentDataService = StudentDataService;
 
@@ -360,6 +361,33 @@ var NavItemController = function () {
             this.planningMode = !this.planningMode;
             this.item.planningMode = this.planningMode;
 
+            if (!this.planningMode) {
+                // Student is exiting planning mode, so save the changed nodes in NodeState
+                var nodeState = this.NodeService.createNewNodeState();
+                nodeState.nodeId = this.nodeId;
+                nodeState.isAutoSave = false;
+                nodeState.isSubmit = false;
+
+                var studentData = {};
+                studentData.nodeId = this.nodeId;
+                studentData.nodes = [];
+                var planningNode = this.ProjectService.getNodeById(this.nodeId);
+                studentData.nodes.push(planningNode); // add the planning node (group)
+                // loop through the child ids in the planning group and save them also
+                if (planningNode.ids != null) {
+                    for (var c = 0; c < planningNode.ids.length; c++) {
+                        var childPlanningNodeId = planningNode.ids[c];
+                        var childPlanningNode = this.ProjectService.getNodeById(childPlanningNodeId);
+                        studentData.nodes.push(childPlanningNode);
+                    }
+                }
+
+                nodeState.studentData = studentData;
+                var nodeStates = [];
+                nodeStates.push(nodeState);
+                this.StudentDataService.saveNodeStates(nodeStates);
+            }
+
             /*
              * notify the child nodes that the planning mode of this group
              * node has changed
@@ -371,7 +399,7 @@ var NavItemController = function () {
     return NavItemController;
 }();
 
-NavItemController.$inject = ['$rootScope', '$scope', '$element', 'ProjectService', 'StudentDataService'];
+NavItemController.$inject = ['$rootScope', '$scope', '$element', 'NodeService', 'ProjectService', 'StudentDataService'];
 
 exports.default = NavItemController;
 //# sourceMappingURL=navItemController.js.map

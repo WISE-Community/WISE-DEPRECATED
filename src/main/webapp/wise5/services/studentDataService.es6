@@ -76,6 +76,40 @@ class StudentDataService {
                         }
                     }
 
+                    // Check to see if this Project contains any Planning activities
+                    if (this.ProjectService.project.nodes != null && this.ProjectService.project.nodes.length > 0) {
+                        // Overload/add new nodes based on student's work in the NodeState for the planning group.
+                        for (let p = 0; p < this.ProjectService.project.nodes.length; p++) {
+                            let planningGroupNode = this.ProjectService.project.nodes[p];
+                            if (planningGroupNode.planning) {
+                                let lastestNodeStateForPlanningGroupNode = this.getLatestNodeStateByNodeId(planningGroupNode.id);
+                                if (lastestNodeStateForPlanningGroupNode != null) {
+                                    let studentModifiedNodes = lastestNodeStateForPlanningGroupNode.studentData.nodes;
+                                    if (studentModifiedNodes != null) {
+                                        for (let s = 0; s < studentModifiedNodes.length; s++) {
+                                            let studentModifiedNode = studentModifiedNodes[s];  // Planning Node that student modified or new instances.
+                                            let studentModifiedNodeId = studentModifiedNode.id;
+                                            if (studentModifiedNode.planning) {
+                                                // If this is a Planning Node that exists in the project, replace the one in the original project with this one.
+                                                for (let n = 0; n < this.ProjectService.project.nodes.length; n++) {
+                                                    if (this.ProjectService.project.nodes[n].id === studentModifiedNodeId) {
+                                                        // Only overload the ids. This will allow authors to add more planningNodes during the run if needed.
+                                                        this.ProjectService.project.nodes[n].ids = studentModifiedNode.ids;
+                                                    }
+                                                }
+                                            } else {
+                                                // Otherwise, this is an instance of a PlanningNode template, so just append it to the end of the Project.nodes
+                                                this.ProjectService.project.nodes.push(studentModifiedNode);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        // Re-parse the project with the modified changes
+                        this.ProjectService.parseProject();
+                    }
+
                     // get events
                     this.studentData.events = resultData.events;
 
@@ -114,7 +148,7 @@ class StudentDataService {
             //create the params for the request
             var params = {
                 runId:runId
-            }
+            };
 
             var httpParams = {};
             httpParams.method = 'GET';
@@ -911,7 +945,7 @@ class StudentDataService {
         // handle saved studentWork
         if (savedStudentDataResponse.studentWorkList) {
             let savedStudentWorkList = savedStudentDataResponse.studentWorkList;
-            let localStudentWorkList = this.studentData.componentStates
+            let localStudentWorkList = this.studentData.componentStates;
             if (this.studentData.nodeStates) {
                 localStudentWorkList = localStudentWorkList.concat(this.studentData.nodeStates);
             }
@@ -1033,6 +1067,20 @@ class StudentDataService {
         }
 
         return submitDirty;
+    };
+
+    /**
+     * Get the latest NodeState for the specified node id
+     * @param nodeId the node id
+     * @return the latest node state with the matching node id or null if none are found
+     */
+    getLatestNodeStateByNodeId(nodeId) {
+        let latestNodeState = null;
+        let allNodeStatesByNodeId = this.getNodeStatesByNodeId(nodeId);
+        if (allNodeStatesByNodeId != null && allNodeStatesByNodeId.length > 0) {
+            latestNodeState = allNodeStatesByNodeId[allNodeStatesByNodeId.length - 1];
+        }
+        return latestNodeState;
     };
 
     /**
@@ -1610,7 +1658,7 @@ class StudentDataService {
      * can be overriden in the second argument.
      * Source: http://www.bennadel.com/blog/1504-ask-ben-parsing-csv-strings-with-javascript-exec-regular-expression-command.htm
      */
-    CSVToArray( strData, strDelimiter ){
+    CSVToArray( strData, strDelimiter ) {
         // Check to see if the delimiter is defined. If not,
         // then default to comma.
         strDelimiter = (strDelimiter || ",");
@@ -1641,7 +1689,7 @@ class StudentDataService {
 
         // Keep looping over the regular expression matches
         // until we can no longer find a match.
-        while (arrMatches = objPattern.exec( strData )){
+        while (arrMatches = objPattern.exec( strData )) {
 
             // Get the delimiter that was found.
             var strMatchedDelimiter = arrMatches[ 1 ];
