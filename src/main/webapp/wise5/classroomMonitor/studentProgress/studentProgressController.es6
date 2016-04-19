@@ -111,10 +111,6 @@ class StudentProgressController {
         }), this.updateTimeSpentInterval);
     }
 
-    getNewNodeVisits() {
-        return this.StudentStatusService.getNewNodeVisits();
-    };
-
     getCurrentNodeForWorkgroupId(workgroupId) {
         return this.StudentStatusService.getCurrentNodePositionAndNodeTitleForWorkgroupId(workgroupId);
     };

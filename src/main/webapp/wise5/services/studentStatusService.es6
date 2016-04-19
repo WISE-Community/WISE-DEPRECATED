@@ -8,8 +8,6 @@ class StudentStatusService {
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
         this.studentStatuses = null;
-
-        this.newNodeVisits = [];
     }
 
     retrieveStudentStatuses(config) {
@@ -52,14 +50,6 @@ class StudentStatusService {
         }
 
         return nodePositionAndTitle;
-    };
-
-    getNewNodeVisits() {
-        return this.newNodeVisits;
-    };
-
-    addNewNodeVisit(nodeVisit) {
-        this.newNodeVisits.push(nodeVisit);
     };
 
     getStudentStatusForWorkgroupId(workgroupId) {

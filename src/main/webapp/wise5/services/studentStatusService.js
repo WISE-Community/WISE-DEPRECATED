@@ -17,8 +17,6 @@ var StudentStatusService = function () {
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
         this.studentStatuses = null;
-
-        this.newNodeVisits = [];
     }
 
     _createClass(StudentStatusService, [{
@@ -69,16 +67,6 @@ var StudentStatusService = function () {
             }
 
             return nodePositionAndTitle;
-        }
-    }, {
-        key: 'getNewNodeVisits',
-        value: function getNewNodeVisits() {
-            return this.newNodeVisits;
-        }
-    }, {
-        key: 'addNewNodeVisit',
-        value: function addNewNodeVisit(nodeVisit) {
-            this.newNodeVisits.push(nodeVisit);
         }
     }, {
         key: 'getStudentStatusForWorkgroupId',
