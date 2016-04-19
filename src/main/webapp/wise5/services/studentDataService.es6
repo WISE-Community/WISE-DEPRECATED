@@ -84,9 +84,6 @@ class StudentDataService {
 
                     this.AnnotationService.setAnnotations(this.studentData.annotations);
 
-                    // load the student planning nodes
-                    //this.loadStudentNodes();
-
                     // TODO
                     // populate the student history
                     this.populateHistories(this.studentData.componentStates, this.studentData.events);
@@ -137,32 +134,6 @@ class StudentDataService {
             });
         }
     }
-
-    loadStudentNodes() {
-        var nodes = this.ProjectService.applicationNodes;
-
-        if (nodes != null) {
-            for (var n = 0; n < nodes.length; n++) {
-                var node = nodes[n];
-
-                if (node != null) {
-                    if (node.type === 'Planning') {
-                        var nodeId = node.id;
-
-                        var latestNodeState = this.getLatestNodeStateByNodeId(nodeId);
-
-                        if (latestNodeState != null) {
-                            var latestStateStudentNodes = latestNodeState.studentNodes;
-                            var latestTransitions = latestNodeState.studentTransition;
-
-                            this.ProjectService.loadNodes(latestStateStudentNodes);
-                            this.ProjectService.loadTransitions(latestTransitions);
-                        }
-                    }
-                }
-            }
-        }
-    };
 
     getNodeStatuses() {
         return this.nodeStatuses;

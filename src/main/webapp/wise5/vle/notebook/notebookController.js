@@ -125,19 +125,6 @@ var NotebookController = function () {
             $event.stopPropagation(); // prevents parent notebook list item from getting the onclick event so this item won't be re-selected.
         }
     }, {
-        key: 'notebookItemDragStartCallback',
-        value: function notebookItemDragStartCallback(event, ui, notebookItem) {
-            //$(ui.helper.context).data('objectType', 'NotebookItem');
-            //$(ui.helper.context).data('objectData', notebookItem);
-        }
-    }, {
-        key: 'myWorkDragStartCallback',
-        value: function myWorkDragStartCallback(event, ui, nodeId, nodeType) {
-            //$(ui.helper.context).data('importType', 'NodeState');
-            //$(ui.helper.context).data('importWorkNodeState', StudentDataService.getLatestNodeStateByNodeId(nodeId));
-            //$(ui.helper.context).data('importWorkNodeType', nodeType);
-        }
-    }, {
         key: 'showAddNote',
         value: function showAddNote() {
             // setting this will show the add note div

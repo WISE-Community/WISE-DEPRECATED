@@ -20,44 +20,14 @@ var NodeService = function () {
         this.StudentDataService = StudentDataService;
     }
 
+    /**
+     * Create a new empty node state
+     * @return a new empty node state
+     */
+
+
     _createClass(NodeService, [{
-        key: 'getLatestNodeState',
-        value: function getLatestNodeState(nodeVisits) {
-            var result = null;
-
-            if (nodeVisits != null) {
-                for (var nv = nodeVisits.length - 1; nv >= 0; nv--) {
-                    var nodeVisit = nodeVisits[nv];
-
-                    if (nodeVisit != null) {
-                        var nodeStates = nodeVisit.nodeStates;
-
-                        for (var ns = nodeStates.length - 1; ns >= 0; ns--) {
-                            var nodeState = nodeStates[ns];
-
-                            if (nodeState != null) {
-                                result = nodeState;
-                                break;
-                            }
-                        }
-
-                        if (result != null) {
-                            break;
-                        }
-                    }
-                }
-            }
-
-            return result;
-        }
-    }, {
         key: 'createNewComponentState',
-
-
-        /**
-         * Create a new empty node state
-         * @return a new empty node state
-         */
         value: function createNewComponentState() {
             var componentState = {};
 

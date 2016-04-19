@@ -116,11 +116,6 @@ var StudentProgressController = function () {
     }
 
     _createClass(StudentProgressController, [{
-        key: 'getNewNodeVisits',
-        value: function getNewNodeVisits() {
-            return this.StudentStatusService.getNewNodeVisits();
-        }
-    }, {
         key: 'getCurrentNodeForWorkgroupId',
         value: function getCurrentNodeForWorkgroupId(workgroupId) {
             return this.StudentStatusService.getCurrentNodePositionAndNodeTitleForWorkgroupId(workgroupId);

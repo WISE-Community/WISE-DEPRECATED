@@ -81,9 +81,6 @@ class NodeController {
 
             //this.importWork();
 
-            // tell the parent controller that this node has loaded
-            //this.nodeLoaded(this.nodeId);
-
             // start the auto save interval
             this.startAutoSaveInterval();
 
@@ -966,10 +963,6 @@ class NodeController {
         }
 
         return componentState;
-    };
-
-    nodeLoaded(nodeId) {
-        //var newNodeVisit = this.StudentDataService.createNodeVisit(nodeId);
     };
 
     nodeUnloaded(nodeId) {

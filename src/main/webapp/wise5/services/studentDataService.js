@@ -98,9 +98,6 @@ var StudentDataService = function () {
 
                         _this.AnnotationService.setAnnotations(_this.studentData.annotations);
 
-                        // load the student planning nodes
-                        //this.loadStudentNodes();
-
                         // TODO
                         // populate the student history
                         _this.populateHistories(_this.studentData.componentStates, _this.studentData.events);
@@ -153,33 +150,6 @@ var StudentDataService = function () {
                         }
                     }
                 });
-            }
-        }
-    }, {
-        key: 'loadStudentNodes',
-        value: function loadStudentNodes() {
-            var nodes = this.ProjectService.applicationNodes;
-
-            if (nodes != null) {
-                for (var n = 0; n < nodes.length; n++) {
-                    var node = nodes[n];
-
-                    if (node != null) {
-                        if (node.type === 'Planning') {
-                            var nodeId = node.id;
-
-                            var latestNodeState = this.getLatestNodeStateByNodeId(nodeId);
-
-                            if (latestNodeState != null) {
-                                var latestStateStudentNodes = latestNodeState.studentNodes;
-                                var latestTransitions = latestNodeState.studentTransition;
-
-                                this.ProjectService.loadNodes(latestStateStudentNodes);
-                                this.ProjectService.loadTransitions(latestTransitions);
-                            }
-                        }
-                    }
-                }
             }
         }
     }, {

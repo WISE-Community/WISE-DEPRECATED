@@ -83,8 +83,6 @@ class LabelService extends NodeService {
 
                 // set the student data into the new component state
                 componentState.studentData = studentDataCopy;
-            } else if (otherComponentType === 'Planning') {
-                componentState.studentData = JSON.stringify(componentStateFromOtherComponent.studentNodes);
             }
         }
 
