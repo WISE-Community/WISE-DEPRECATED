@@ -193,49 +193,6 @@ class NodeService {
         return result;
     };
 
-    branchPathTaken(node, component, functionName, functionParams, componentStates, nodeStates, componentEvents, nodeEvents) {
-
-        var result = false;
-
-        var expectedFromNodeId = null;
-        var expectedToNodeId = null;
-
-        if (node != null) {
-            expectedFromNodeId = node.id;
-        }
-
-        if (functionParams != null && functionParams.toNodeId != null) {
-            expectedToNodeId = functionParams.toNodeId;
-        }
-
-        if (nodeStates != null) {
-            for (var n = 0; n < nodeStates.length; n++) {
-                var nodeState = nodeStates[n];
-
-                if (nodeState != null) {
-                    var studentData = nodeState.studentData;
-
-                    if (studentData != null) {
-                        var dataType = nodeState.dataType;
-
-                        if (dataType != null && dataType === 'branchPathTaken') {
-
-                            var fromNodeId = studentData.fromNodeId;
-                            var toNodeId = studentData.toNodeId;
-
-                            if (expectedFromNodeId === fromNodeId &&
-                                expectedToNodeId === toNodeId) {
-                                result = true;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        return result;
-    }
-
     /**
      * Go to the next node
      */
@@ -577,87 +534,6 @@ class NodeService {
         eventData.toNodeId = toNodeId;
         this.StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
     }
-
-    getBranchNodeStates() {
-        var branchNodeStates = [];
-
-        var nodeStates = this.StudentDataService.getNodeStatesByNodeId(currentNode.id);
-
-        if (nodeStates != null) {
-            for (var n = 0; n < nodeStates.length; n++) {
-                var nodeState = nodeStates[n];
-
-                if (nodeState != null) {
-                    var studentData = nodeState.studentData;
-
-                    if (studentData != null) {
-                        var dataType = studentData.dataType;
-
-                        if (dataType != null && dataType === 'branchPathTaken') {
-                            branchNodeStates.push(nodeState);
-                        }
-                    }
-                }
-            }
-        }
-
-        return branchNodeStates;
-    };
-
-    createBranchNodeState(fromNodeId, toNodeId) {
-
-        if (fromNodeId != null && toNodeId != null) {
-
-            // create a new node state
-            var nodeState = this.createNewNodeState();
-            nodeState.runId = this.ConfigService.getRunId();
-            nodeState.periodId = this.ConfigService.getPeriodId();
-            nodeState.workgroupId = this.ConfigService.getWorkgroupId();
-            nodeState.nodeId = fromNodeId;
-            nodeState.isAutoSave = false;
-            nodeState.isSubmit = false;
-
-            var studentData = {};
-            studentData.dataType = 'branchPathTaken';
-            studentData.fromNodeId = fromNodeId;
-            studentData.toNodeId = toNodeId;
-
-            nodeState.studentData = studentData;
-            var nodeStates = [];
-            nodeStates.push(nodeState);
-            this.StudentDataService.saveNodeStates(nodeStates);
-        }
-    };
-
-    /**
-     * Get the latest branch node state for given nodeId
-     */
-    getLatestBranchNodeState(nodeId) {
-
-        var latestBranchNodeState = null;
-
-        var nodeStates = this.StudentDataService.getNodeStatesByNodeId(nodeId);
-
-        if (nodeStates != null) {
-            for (var n = nodeStates.length - 1; n >= 0; n--) {
-                var nodeState = nodeStates[n];
-
-                if (nodeState != null) {
-                    var studentData = nodeState.studentData;
-
-                    if (studentData != null) {
-                        var dataType = studentData.dataType;
-
-                        if (dataType != null && dataType === 'branchPathTaken') {
-                            latestBranchNodeState = nodeState;
-                        }
-                    }
-                }
-            }
-        }
-
-        return latestBranchNodeState;
-    };
 
     evaluateTransitionLogicOn(event) {
         var result = false;

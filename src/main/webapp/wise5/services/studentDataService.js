@@ -600,45 +600,15 @@ var StudentDataService = function () {
 
             return branchPathTakenEvents;
         }
-    }, {
-        key: 'getBranchPathTakenNodeStates',
-        value: function getBranchPathTakenNodeStates(fromNodeId) {
-
-            var branchpathTakenNodeStates = [];
-
-            // get the node states
-            var nodeStatesFromNodeId = this.getNodeStatesByNodeId(fromNodeId);
-
-            if (nodeStatesFromNodeId != null) {
-                for (var n = 0; n < nodeStatesFromNodeId.length; n++) {
-                    var nodeState = nodeStatesFromNodeId[n];
-
-                    if (nodeState != null) {
-                        var studentData = nodeState.studentData;
-
-                        if (studentData != null) {
-                            var dataType = studentData.dataType;
-
-                            if (dataType != null && dataType === 'branchPathTaken') {
-
-                                branchpathTakenNodeStates.push(nodeState);
-                            }
-                        }
-                    }
-                }
-            }
-
-            return branchpathTakenNodeStates;
-        }
-    }, {
-        key: 'evaluateChoiceChosenCriteria',
-
 
         /**
          * Evaluate the choice chosen criteria
          * @param criteria the criteria to evaluate
          * @returns a boolena value whether the criteria was satisfied or not
          */
+
+    }, {
+        key: 'evaluateChoiceChosenCriteria',
         value: function evaluateChoiceChosenCriteria(criteria) {
 
             var result = false;

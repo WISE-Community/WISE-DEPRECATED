@@ -25,8 +25,8 @@ class MultipleChoiceService extends NodeService {
     }
 
     /**
-     * Copies an existing Graph component object
-     * @returns a copied Graph component object
+     * Copies an existing MultipleChoice component object
+     * @returns a copied MultipleChoice component object
      */
     copyComponent(componentToCopy) {
         var component = this.createComponent();
@@ -48,7 +48,7 @@ class MultipleChoiceService extends NodeService {
 
     /**
      * Returns all possible criteria for this component.
-     * @param component a MC component
+     * @param component a MultipleChoice component
      */
     getPossibleTransitionCriteria(nodeId, componentId, component) {
         let allPossibleTransitionCriteria = [];

@@ -52,8 +52,8 @@ var MultipleChoiceService = function (_NodeService) {
         }
 
         /**
-         * Copies an existing Graph component object
-         * @returns a copied Graph component object
+         * Copies an existing MultipleChoice component object
+         * @returns a copied MultipleChoice component object
          */
 
     }, {
@@ -78,7 +78,7 @@ var MultipleChoiceService = function (_NodeService) {
 
         /**
          * Returns all possible criteria for this component.
-         * @param component a MC component
+         * @param component a MultipleChoice component
          */
 
     }, {

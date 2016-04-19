@@ -570,35 +570,6 @@ class StudentDataService {
         return branchPathTakenEvents;
     }
 
-    getBranchPathTakenNodeStates(fromNodeId) {
-
-        var branchpathTakenNodeStates = [];
-
-        // get the node states
-        var nodeStatesFromNodeId = this.getNodeStatesByNodeId(fromNodeId);
-
-        if (nodeStatesFromNodeId != null) {
-            for (var n = 0; n < nodeStatesFromNodeId.length; n++) {
-                var nodeState = nodeStatesFromNodeId[n];
-
-                if (nodeState != null) {
-                    var studentData = nodeState.studentData;
-
-                    if (studentData != null) {
-                        var dataType = studentData.dataType;
-
-                        if (dataType != null && dataType === 'branchPathTaken') {
-
-                            branchpathTakenNodeStates.push(nodeState);
-                        }
-                    }
-                }
-            }
-        }
-
-        return branchpathTakenNodeStates;
-    };
-
     /**
      * Evaluate the choice chosen criteria
      * @param criteria the criteria to evaluate
