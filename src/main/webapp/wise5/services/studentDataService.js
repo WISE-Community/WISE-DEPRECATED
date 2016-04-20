@@ -46,7 +46,7 @@ var StudentDataService = function () {
                 this.studentData.userId = '0';
 
                 // populate the student history
-                this.populateHistories(this.studentData.componentStates);
+                this.populateHistories(this.studentData.events);
 
                 // update the node statuses
                 this.updateNodeStatuses();
@@ -132,11 +132,9 @@ var StudentDataService = function () {
 
                         _this.AnnotationService.setAnnotations(_this.studentData.annotations);
 
-                        // TODO
                         // populate the student history
-                        _this.populateHistories(_this.studentData.componentStates, _this.studentData.events);
+                        _this.populateHistories(_this.studentData.events);
 
-                        // TODO
                         // update the node statuses
                         _this.updateNodeStatuses();
                     }
@@ -666,10 +664,9 @@ var StudentDataService = function () {
 
         /**
          * Populate the stack history and visited nodes history
-         * @param componentStates the component states
          * @param events the events
          */
-        value: function populateHistories(componentStates, events) {
+        value: function populateHistories(events) {
             this.stackHistory = [];
             this.visitedNodesHistory = [];
 
