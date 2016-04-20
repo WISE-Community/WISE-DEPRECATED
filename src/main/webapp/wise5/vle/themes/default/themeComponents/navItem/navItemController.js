@@ -310,6 +310,25 @@ var NavItemController = function () {
         }
 
         /**
+         * Get the node description
+         * @param nodeId get the description for this node
+         * @returns the description for the node
+         */
+
+    }, {
+        key: 'getNodeDescription',
+        value: function getNodeDescription(nodeId) {
+            var node = this.ProjectService.idToNode[nodeId];
+            var description = null;
+
+            if (node != null) {
+                description = node.description;
+            }
+
+            return description;
+        }
+
+        /**
          * Move the planning node. If the other node is a group node, we will
          * insert this node as the first node in the group. If the other node is
          * a step node, we will insert this node after the other node.

@@ -235,7 +235,7 @@ this.removeNodeIdFromPath(nodeId,paths,currentPath); // add the node id to our c
 consolidatedPath.push(nodeId);}else { // there are multiple paths that have this node id
 // consume all the node ids up to the given node id
 var consumedPath=this.consumePathsUntilNodeId(paths,nodeId); // remove the node id from the paths
-this.removeNodeaIdFromPaths(nodeId,paths); // add the node id to the end of the consumed path
+this.removeNodeIdFromPaths(nodeId,paths); // add the node id to the end of the consumed path
 consumedPath.push(nodeId); // add the consumed path to our consolidated path
 consolidatedPath=consolidatedPath.concat(consumedPath);}}}}}return consolidatedPath;}},{key:'consumePathsUntilNodeId', /**
      * Consume the node ids in the paths until we get to the given node id

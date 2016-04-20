@@ -17,9 +17,12 @@
                     <br/>
                     <span ng-show="navitemCtrl.planningMode">
                         Available Planning Steps
-                        <span ng-repeat="availablePlanningNodeId in navitemCtrl.availablePlanningNodeIds">
-                            <button ng-click="navitemCtrl.addPlanningNodeInstanceInside(navitemCtrl.nodeId, availablePlanningNodeId)">{{navitemCtrl.getNodeTitle(availablePlanningNodeId)}}</button>
-                        </span>
+                        <div ng-repeat="availablePlanningNodeId in navitemCtrl.availablePlanningNodeIds">
+                            <button ng-click="navitemCtrl.addPlanningNodeInstanceInside(navitemCtrl.nodeId, availablePlanningNodeId)">
+                                {{navitemCtrl.getNodeTitle(availablePlanningNodeId)}}
+                            </button>
+                            {{navitemCtrl.getNodeDescription(availablePlanningNodeId)}}
+                        </div>
                     </span>
                 </div>
                 <md-list class="nav-contents__list">
@@ -60,9 +63,12 @@
         <div ng-if="navitemCtrl.isParentGroupPlanning">
             <span ng-show="navitemCtrl.planningMode">
                 Available Planning Steps
-                <span ng-repeat="availablePlanningNodeId in navitemCtrl.availablePlanningNodeIds">
-                    <button ng-click="navitemCtrl.addPlanningNodeInstanceAfter(navitemCtrl.nodeId, availablePlanningNodeId)">{{navitemCtrl.getNodeTitle(availablePlanningNodeId)}}</button>
-                </span>
+                <div ng-repeat="availablePlanningNodeId in navitemCtrl.availablePlanningNodeIds">
+                    <button ng-click="navitemCtrl.addPlanningNodeInstanceAfter(navitemCtrl.nodeId, availablePlanningNodeId)">
+                        {{navitemCtrl.getNodeTitle(availablePlanningNodeId)}}
+                    </button>
+                    {{navitemCtrl.getNodeDescription(availablePlanningNodeId)}}
+                </div>
                 <select ng-model="selectedNodeId" ng-change="navitemCtrl.movePlanningNode(selectedNodeId)">
                     <option ng-repeat="siblingNodeId in navitemCtrl.siblingNodeIds" value="{{siblingNodeId}}">{{navitemCtrl.getNodeTitle(siblingNodeId)}}</option>
                 </select>
