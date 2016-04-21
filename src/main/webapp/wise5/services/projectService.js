@@ -861,6 +861,13 @@ applicationNodes.splice(a,1,node);}}}}}} /**
      * @param nodeId the node we want available planning nodes for
      * @returns an array of available planning node ids
      */},{key:'getAvailablePlanningNodeIds',value:function getAvailablePlanningNodeIds(nodeId){var availablePlanningNodeIds=[];if(nodeId!=null){var node=this.getNodeById(nodeId);if(node!=null&&node.availablePlanningNodeIds!=null){availablePlanningNodeIds=node.availablePlanningNodeIds;}}return availablePlanningNodeIds;} /**
+     * Get the available planning nodes for a given group
+     * @param nodeId the node id of the group
+     * @returns an array of planning node templates
+     */},{key:'getAvailablePlanningNodes',value:function getAvailablePlanningNodes(nodeId){var availablePlanningNodes=[]; // get the available planning node ids
+var availablePlanningNodeIds=this.getAvailablePlanningNodeIds(nodeId);if(availablePlanningNodeIds!=null){ // loop through all the node ids
+for(var a=0;a<availablePlanningNodeIds.length;a++){var availablePlanningNodeId=availablePlanningNodeIds[a];if(availablePlanningNodeId!=null){ // get the node
+var availablePlanningNode=this.getNodeById(availablePlanningNodeId);if(availablePlanningNode!=null){availablePlanningNodes.push(availablePlanningNode);}}}}return availablePlanningNodes;} /**
      * Create a planning node instance and add it to the project
      * @param groupId the group id to add the planning node instance to
      * @param nodeId the node id of the planning node template

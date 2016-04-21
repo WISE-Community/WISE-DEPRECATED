@@ -34,8 +34,32 @@ var NavItemController = function () {
 
         // whether this node is a planning node
         this.isPlanning = this.ProjectService.isPlanning(this.nodeId);
-        this.availablePlanningNodeIds = null;
+        this.availablePlanningNodeIds = [];
+
+        // the array of nodes used for drag/drop planning sorting
+        this.availablePlanningNodes = [];
+
+        /*
+         * the array of nodes used for drag/drop planning sorting. the elements
+         * in this array are not the actual nodes that are in the project.
+         * they are just mirrors of them. when the elements in this array
+         * are added/moved/deleted we will do the same to the actual nodes
+         * that are in the project.
+         */
+        this.planningNodeInstances = [];
+
         this.parentGroupId = null;
+
+        // the options for the planning node template tree
+        this.treeOptions1 = {
+            accept: function accept(sourceNodeScope, destNodesScope, destIndex) {
+                /*
+                 * do not allow any nodes to be dropped in this tree
+                 * since it is the source tree
+                 */
+                return false;
+            }
+        };
 
         /*
          * whether planning mode is on or off which determines if students
@@ -57,6 +81,7 @@ var NavItemController = function () {
              * nodes that can be used in this group
              */
             this.availablePlanningNodeIds = this.ProjectService.getAvailablePlanningNodeIds(this.nodeId);
+            this.availablePlanningNodes = this.ProjectService.getAvailablePlanningNodes(this.nodeId);
         }
 
         if (this.isParentGroupPlanning) {
@@ -71,6 +96,7 @@ var NavItemController = function () {
              * nodes that can be used in this group
              */
             this.availablePlanningNodeIds = this.ProjectService.getAvailablePlanningNodeIds(this.parentGroupId);
+            this.availablePlanningNodes = this.ProjectService.getAvailablePlanningNodes(this.parentGroupId);
 
             /*
              * update the nodes in the select drop down used to move planning
@@ -113,6 +139,12 @@ var NavItemController = function () {
             if (value) {
                 this.zoomToElement();
             }
+        }.bind(this));
+
+        // watch the planning node instances used for drag/drop planning sorting
+        this.$scope.$watchCollection('navitemCtrl.planningNodeInstances', function (newValue, oldValue) {
+            // the planning node instances have changed
+            this.planningNodeInstancesChanged(newValue, oldValue);
         }.bind(this));
 
         this.$rootScope.$on('planningNodeChanged', function () {
@@ -233,6 +265,8 @@ var NavItemController = function () {
 
             // perform any necessary updating
             this.planningNodeChanged();
+
+            return planningNodeInstance;
         }
 
         /**
@@ -264,6 +298,8 @@ var NavItemController = function () {
 
                 // perform any necessary updating
                 this.planningNodeChanged();
+
+                return planningNodeInstance;
             }
         }
 
@@ -316,8 +352,8 @@ var NavItemController = function () {
          */
 
     }, {
-        key: 'movePlanningNode',
-        value: function movePlanningNode(otherNodeId) {
+        key: 'movePlanningNode0',
+        value: function movePlanningNode0(otherNodeId) {
 
             /*
              * check that this node is not the same as the other node.
@@ -330,6 +366,35 @@ var NavItemController = function () {
                 } else {
                     // insert this node after the other node
                     this.ProjectService.movePlanningNodeInstanceAfter(this.nodeId, otherNodeId);
+                }
+            }
+
+            // perform any necessary updating
+            this.planningNodeChanged();
+        }
+
+        /**
+         * Move the planning node. If the other node is a group node, we will
+         * insert this node as the first node in the group. If the other node is
+         * a step node, we will insert this node after the other node.
+         * @param otherNodeId the other node we will move this node inside or after
+         */
+
+    }, {
+        key: 'movePlanningNode',
+        value: function movePlanningNode(nodeIdToMove, nodeIdToMoveAfter) {
+
+            /*
+             * check that this node is not the same as the other node.
+             * if they are the same we don't need to do anything.
+             */
+            if (nodeIdToMove != nodeIdToMoveAfter) {
+                if (this.ProjectService.isGroupNode(nodeIdToMoveAfter)) {
+                    // insert this node inside the group node
+                    this.ProjectService.movePlanningNodeInstanceInside(nodeIdToMove, nodeIdToMoveAfter);
+                } else {
+                    // insert this node after the other node
+                    this.ProjectService.movePlanningNodeInstanceAfter(nodeIdToMove, nodeIdToMoveAfter);
                 }
             }
 
@@ -365,6 +430,276 @@ var NavItemController = function () {
              * node has changed
              */
             this.$rootScope.$broadcast('togglePlanningModeClicked', { nodeId: this.nodeId, planningMode: this.planningMode });
+        }
+
+        /**
+         * The student has clicked the X on a planning step to delete it
+         * @param planningNodeInstance the planning node instance object to delete
+         */
+
+    }, {
+        key: 'deletePlanningNodeInstance',
+        value: function deletePlanningNodeInstance(planningNodeInstance) {
+
+            var planningNodeInstances = this.planningNodeInstances;
+
+            if (planningNodeInstances != null) {
+
+                // get the index of the planning node instance we are deleting
+                var index = planningNodeInstances.indexOf(planningNodeInstance);
+
+                if (index != null && index != -1) {
+                    // delete the planning node instance
+                    planningNodeInstances.splice(index, 1);
+                }
+            }
+        }
+
+        /**
+         * The planning node instances array has changed
+         * @param newValue the new value of the planning instance array
+         * @param oldValue the old value of the planning instance array
+         */
+
+    }, {
+        key: 'planningNodeInstancesChanged',
+        value: function planningNodeInstancesChanged(newValue, oldValue) {
+
+            if (newValue.length == oldValue.length) {
+                // the length is the same as before
+
+                if (newValue.length == 0) {
+                    /*
+                     * if the length is 0 it means this function was called during
+                     * angular initialization and nothing really changed
+                     */
+                } else {
+                        // the student moved a planning step
+
+                        // find the node that was moved and where it was placed
+                        var movedPlanningNodeResults = this.findMovedPlanningNode(newValue, oldValue);
+
+                        if (movedPlanningNodeResults != null) {
+                            var movedPlanningNode = movedPlanningNodeResults.movedPlanningNode;
+                            var nodeIdAddedAfter = movedPlanningNodeResults.nodeIdAddedAfter;
+
+                            if (nodeIdAddedAfter == null) {
+                                // the node was moved to the beginning of the group
+                                this.movePlanningNode(movedPlanningNode.id, this.nodeId);
+                            } else {
+                                // the node was moved after another node in the group
+                                this.movePlanningNode(movedPlanningNode.id, nodeIdAddedAfter);
+                            }
+                        }
+                    }
+            } else if (newValue.length > oldValue.length) {
+                // the student added a planning step
+
+                // find the node that was added and where it was placed
+                var addedPlanningNodeResults = this.findAddedPlanningNode(newValue, oldValue);
+                var addedPlanningNode = addedPlanningNodeResults.addedPlanningNode;
+                var nodeIdAddedAfter = addedPlanningNodeResults.nodeIdAddedAfter;
+
+                var planningNodeInstance = null;
+
+                if (nodeIdAddedAfter == null) {
+                    // the node was added at the beginning of the group
+                    planningNodeInstance = this.addPlanningNodeInstanceInside(this.nodeId, addedPlanningNode.id);
+                } else {
+                    // the node was added after another node in the group
+                    planningNodeInstance = this.addPlanningNodeInstanceAfter(nodeIdAddedAfter, addedPlanningNode.id);
+                }
+
+                // update the ids
+                addedPlanningNode.templateId = planningNodeInstance.templateId;
+                addedPlanningNode.id = planningNodeInstance.id;
+            } else if (newValue.length < oldValue.length) {
+                // the student deleted a planning step
+
+                // find the node that was deleted
+                var deletedPlanningNode = this.findDeletedPlanningNode(newValue, oldValue);
+
+                // remove the node
+                this.removePlanningNodeInstance(deletedPlanningNode.id);
+            }
+        }
+
+        /**
+         * Find the node that was moved and where it was moved to
+         * @param newPlanningNodes the new array of planning nodes
+         * @param oldPlanningNodes the old array of planning nodes
+         * @returns an object containing the node that was moved
+         * and the node id it was moved after
+         */
+
+    }, {
+        key: 'findMovedPlanningNode',
+        value: function findMovedPlanningNode(newPlanningNodes, oldPlanningNodes) {
+            var movedPlanningNode = null;
+            var nodeIdAddedAfter = null;
+
+            // an array used to keep track of the nodes that were moved up
+            var planningNodesMovedUp = [];
+
+            // an array used to keep track of the nodes that were moved down
+            var planningNodesMovedDown = [];
+
+            // loop through all the old nodes
+            for (var o = 0; o < oldPlanningNodes.length; o++) {
+                // get the index of the node in the old array
+                var oldIndex = o;
+
+                // get the node
+                var oldPlanningNode = oldPlanningNodes[o];
+
+                // get the index of the node in the new array
+                var newIndex = newPlanningNodes.indexOf(oldPlanningNode);
+
+                if (oldIndex == newIndex) {
+                    // the node was not moved
+                } else if (oldIndex < newIndex) {
+                        // the node was moved down
+                        planningNodesMovedDown.push(oldPlanningNode);
+                    } else if (oldIndex > newIndex) {
+                        // the node was moved up
+                        planningNodesMovedUp.push(oldPlanningNode);
+                    }
+            }
+
+            /*
+             * since the student can only drag one node at a time, it means one
+             * of the planningNodesMovedDown or planningNodesMovedUp arrays must
+             * only contain one element. when referring to nodes moving up and down
+             * it is in reference to the UI which is opposite of the array index.
+             * moving a node down in the UI will move it up in the array index.
+             * consider the case when the student moves a node from the
+             * top to the bottom. all the node indexes will have seemed to 
+             * move up except for the node that was moved down. the 
+             * opposite case of moving a node from the bottom to the top is similar.
+             * all the node indexes will have seemed to move down except for the
+             * node that was moved up. in all cases only one node will move up and
+             * other nodes will move down or one node will move down and other
+             * nodes will move up. we will look for the lone node that moved in
+             * a given direction as opposed to all the other nodes that moved the
+             * other direction.
+             */
+            if (planningNodesMovedDown.length == 1) {
+                // the student moved one node down
+                movedPlanningNode = planningNodesMovedDown[0];
+            } else if (planningNodesMovedUp.length == 1) {
+                // the student moved one node up
+                movedPlanningNode = planningNodesMovedUp[0];
+            }
+
+            if (movedPlanningNode != null) {
+                // get the new index of the node that was moved
+                var newIndex = newPlanningNodes.indexOf(movedPlanningNode);
+
+                if (newIndex == 0) {
+                    // the node is the first in the group
+                    nodeIdAddedAfter = null;
+                } else {
+                    /*
+                     * the node is after a node in the group so we will get
+                     * the node id of the node that comes before it
+                     */
+                    var previousNode = newPlanningNodes[newIndex - 1];
+
+                    if (previousNode != null) {
+                        nodeIdAddedAfter = previousNode.id;
+                    }
+                }
+            }
+
+            var returnValue = {};
+            returnValue.movedPlanningNode = movedPlanningNode;
+            returnValue.nodeIdAddedAfter = nodeIdAddedAfter;
+
+            return returnValue;
+        }
+
+        /**
+         * Find the node that was added and where it was moved to
+         * @param newPlanningNodes the new array of planning nodes
+         * @param oldPlanningNodes the old array of planning nodes
+         * @returns an object containing the node that was added
+         * and the node id it was added after
+         */
+
+    }, {
+        key: 'findAddedPlanningNode',
+        value: function findAddedPlanningNode(newPlanningNodes, oldPlanningNodes) {
+            var addedPlanningNode = null;
+            var nodeIdAddedAfter = null;
+
+            // loop through all the new nodes
+            for (var n = 0; n < newPlanningNodes.length; n++) {
+                var newPlanningNode = newPlanningNodes[n];
+
+                if (newPlanningNode != null) {
+
+                    // look up the node in the old nodes array
+                    if (oldPlanningNodes.indexOf(newPlanningNode) == -1) {
+                        /*
+                         * the node was not found in the old array which means
+                         * we have found the new node
+                         */
+                        addedPlanningNode = newPlanningNode;
+
+                        if (n == 0) {
+                            // the node is the first in the group
+                            nodeIdAddedAfter = null;
+                        } else {
+                            /*
+                             * the node is after a node in the group so we will get
+                             * the node id of the node that comes before it
+                             */
+                            var previousPlanningNode = newPlanningNodes[n - 1];
+
+                            if (previousPlanningNode != null) {
+                                nodeIdAddedAfter = previousPlanningNode.id;
+                            }
+                        }
+
+                        break;
+                    }
+                }
+            }
+
+            var returnValue = {};
+            returnValue.addedPlanningNode = addedPlanningNode;
+            returnValue.nodeIdAddedAfter = nodeIdAddedAfter;
+
+            return returnValue;
+        }
+
+        /**
+         * Find the node that was deleted
+         * @param newPlanningNodes the new array of planning nodes
+         * @param oldPlanningNodes the old array of planning nodes
+         * @returns the node that was deleted
+         */
+
+    }, {
+        key: 'findDeletedPlanningNode',
+        value: function findDeletedPlanningNode(newPlanningNodes, oldPlanningNodes) {
+
+            // loop through all the old nodes
+            for (var o = 0; o < oldPlanningNodes.length; o++) {
+                var oldPlanningNode = oldPlanningNodes[o];
+
+                if (oldPlanningNode != null) {
+                    if (newPlanningNodes.indexOf(oldPlanningNode) == -1) {
+                        /*
+                         * the node was not found in the old array which means
+                         * we have found the node that was deleted
+                         */
+                        return oldPlanningNode;
+                    }
+                }
+            }
+
+            return null;
         }
     }]);
 

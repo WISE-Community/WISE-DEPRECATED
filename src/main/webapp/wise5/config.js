@@ -30,7 +30,7 @@ System.config({
     "angular-translate": "github:angular-translate/bower-angular-translate@2.11.0",
     "angular-translate-loader-partial": "github:angular-translate/bower-angular-translate-loader-partial@2.11.0",
     "angular-ui-router": "github:angular-ui/ui-router@0.2.18",
-    "angular-ui-tree": "github:angular-ui-tree/angular-ui-tree@2.15.0",
+    "angular-ui-tree": "github:angular-ui-tree/angular-ui-tree@2.14.0",
     "angular-websocket": "npm:angular-websocket@1.0.14",
     "babel": "npm:babel-core@5.8.38",
     "babel-runtime": "npm:babel-runtime@5.8.38",
@@ -50,7 +50,7 @@ System.config({
     "github:angular-translate/bower-angular-translate@2.11.0": {
       "angular": "github:angular/bower-angular@1.5.3"
     },
-    "github:angular-ui-tree/angular-ui-tree@2.15.0": {
+    "github:angular-ui-tree/angular-ui-tree@2.14.0": {
       "angular": "github:angular/bower-angular@1.5.3"
     },
     "github:angular-ui/ui-router@0.2.18": {
