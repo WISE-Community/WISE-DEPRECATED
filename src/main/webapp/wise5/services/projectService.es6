@@ -1515,7 +1515,7 @@ class ProjectService {
                             var consumedPath = this.consumePathsUntilNodeId(paths, nodeId);
 
                             // remove the node id from the paths
-                            this.removeNodeaIdFromPaths(nodeId, paths);
+                            this.removeNodeIdFromPaths(nodeId, paths);
 
                             // add the node id to the end of the consumed path
                             consumedPath.push(nodeId);

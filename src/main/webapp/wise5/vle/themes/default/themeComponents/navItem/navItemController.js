@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var NavItemController = function () {
-    function NavItemController($rootScope, $scope, $element, ProjectService, StudentDataService) {
+    function NavItemController($rootScope, $scope, $element, NodeService, ProjectService, StudentDataService) {
         var _this = this;
 
         _classCallCheck(this, NavItemController);
@@ -17,6 +17,7 @@ var NavItemController = function () {
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$element = $element;
+        this.NodeService = NodeService;
         this.ProjectService = ProjectService;
         this.StudentDataService = StudentDataService;
 
@@ -242,6 +243,26 @@ var NavItemController = function () {
             }
         }
     }, {
+        key: 'savePlanningNodeAddedEvent',
+
+
+        /**
+         * Save an event when planning node is added
+         * @param planningNodeAdded
+         */
+        value: function savePlanningNodeAddedEvent(planningNodeAdded) {
+            var componentId = null;
+            var componentType = null;
+            var category = "Planning";
+            var eventName = "planningNodeAdded";
+            var eventData = {
+                nodeIdAdded: planningNodeAdded.id,
+                templateNodeId: planningNodeAdded.templateId
+            };
+            var eventNodeId = this.nodeId;
+            this.StudentDataService.saveVLEEvent(eventNodeId, componentId, componentType, category, eventName, eventData);
+        }
+    }, {
         key: 'addPlanningNodeInstanceInside',
 
 
@@ -249,6 +270,7 @@ var NavItemController = function () {
          * Create a planning node instance and add it to the project
          * @param groupId the group the new planning node instance will be added to
          * @param templateNodeId the node id of the planning node template
+         * @returns the planning node instance
          */
         value: function addPlanningNodeInstanceInside(nodeIdToInsertInside, templateNodeId) {
             // create the planning node instance
@@ -265,6 +287,9 @@ var NavItemController = function () {
 
             // perform any necessary updating
             this.planningNodeChanged();
+
+            // Save add planning node event
+            this.savePlanningNodeAddedEvent(planningNodeInstance);
 
             return planningNodeInstance;
         }
@@ -299,6 +324,9 @@ var NavItemController = function () {
                 // perform any necessary updating
                 this.planningNodeChanged();
 
+                // Save add planning node event
+                this.savePlanningNodeAddedEvent(planningNodeInstance);
+
                 return planningNodeInstance;
             }
         }
@@ -316,6 +344,17 @@ var NavItemController = function () {
 
             // perform any necessary updating
             this.planningNodeChanged();
+
+            // Save remove planning node event
+            var componentId = null;
+            var componentType = null;
+            var category = "Planning";
+            var eventName = "planningNodeRemoved";
+            var eventData = {
+                nodeIdRemoved: planningNodeInstanceNodeId
+            };
+            var eventNodeId = this.nodeId;
+            this.StudentDataService.saveVLEEvent(eventNodeId, componentId, componentType, category, eventName, eventData);
         }
 
         /**
@@ -345,6 +384,25 @@ var NavItemController = function () {
         }
 
         /**
+         * Get the node description
+         * @param nodeId get the description for this node
+         * @returns the description for the node
+         */
+
+    }, {
+        key: 'getNodeDescription',
+        value: function getNodeDescription(nodeId) {
+            var node = this.ProjectService.idToNode[nodeId];
+            var description = null;
+
+            if (node != null) {
+                description = node.description;
+            }
+
+            return description;
+        }
+
+        /**
          * Move the planning node. If the other node is a group node, we will
          * insert this node as the first node in the group. If the other node is
          * a step node, we will insert this node after the other node.
@@ -367,6 +425,18 @@ var NavItemController = function () {
                     // insert this node after the other node
                     this.ProjectService.movePlanningNodeInstanceAfter(this.nodeId, otherNodeId);
                 }
+
+                // Save move planning node event
+                var componentId = null;
+                var componentType = null;
+                var category = "Planning";
+                var eventName = "planningNodeMoved";
+                var eventData = {
+                    nodeIdMoved: this.nodeId,
+                    nodeIdMovedInsideOrAfter: otherNodeId
+                };
+                var eventNodeId = this.nodeId;
+                this.StudentDataService.saveVLEEvent(eventNodeId, componentId, componentType, category, eventName, eventData);
             }
 
             // perform any necessary updating
@@ -425,10 +495,45 @@ var NavItemController = function () {
             this.planningMode = !this.planningMode;
             this.item.planningMode = this.planningMode;
 
-            /*
-             * notify the child nodes that the planning mode of this group
-             * node has changed
-             */
+            if (!this.planningMode) {
+                // Student is exiting planning mode, so save the changed nodes in NodeState
+                var nodeState = this.NodeService.createNewNodeState();
+                nodeState.nodeId = this.nodeId;
+                nodeState.isAutoSave = false;
+                nodeState.isSubmit = false;
+
+                var studentData = {};
+                studentData.nodeId = this.nodeId;
+                studentData.nodes = [];
+                var planningNode = this.ProjectService.getNodeById(this.nodeId);
+                studentData.nodes.push(planningNode); // add the planning node (group)
+                // loop through the child ids in the planning group and save them also
+                if (planningNode.ids != null) {
+                    for (var c = 0; c < planningNode.ids.length; c++) {
+                        var childPlanningNodeId = planningNode.ids[c];
+                        var childPlanningNode = this.ProjectService.getNodeById(childPlanningNodeId);
+                        studentData.nodes.push(childPlanningNode);
+                    }
+                }
+
+                nodeState.studentData = studentData;
+                var nodeStates = [];
+                nodeStates.push(nodeState);
+                this.StudentDataService.saveNodeStates(nodeStates);
+            }
+
+            // Save planning mode on/off event
+            var componentId = null;
+            var componentType = null;
+            var category = "Planning";
+            var eventName = this.planningMode ? "planningModeOn" : "planningModeOff";
+            var eventData = {
+                nodeId: this.nodeId
+            };
+            var eventNodeId = this.nodeId;
+            this.StudentDataService.saveVLEEvent(eventNodeId, componentId, componentType, category, eventName, eventData);
+
+            // notify the child nodes that the planning mode of this group node has changed
             this.$rootScope.$broadcast('togglePlanningModeClicked', { nodeId: this.nodeId, planningMode: this.planningMode });
         }
 
@@ -706,7 +811,7 @@ var NavItemController = function () {
     return NavItemController;
 }();
 
-NavItemController.$inject = ['$rootScope', '$scope', '$element', 'ProjectService', 'StudentDataService'];
+NavItemController.$inject = ['$rootScope', '$scope', '$element', 'NodeService', 'ProjectService', 'StudentDataService'];
 
 exports.default = NavItemController;
 //# sourceMappingURL=navItemController.js.map

@@ -1,36 +1,3 @@
-<script type="text/ng-template" id="nodes_renderer1.html">
-  <div ui-tree-handle class="tree-node tree-node-content">
-      hello2
-    <!--
-    <a class="btn btn-success btn-xs" data-nodrag ng-click="toggle(this)"><span class="glyphicon" ng-class="{'glyphicon-chevron-right': collapsed, 'glyphicon-chevron-down': !collapsed}"></span></a>
-    <input type="text" ng-model="node.title">
-    <a class="pull-right btn btn-danger btn-xs" data-nodrag ng-click="remove(this)"><span class="glyphicon glyphicon-remove"></span></a>
-    <a class="pull-right btn btn-primary btn-xs" data-nodrag ng-click="newSubItem(this)" style="margin-right: 8px;"><span class="glyphicon glyphicon-plus"></span></a>
-    -->
-  </div>
-</script>
-<script type="text/ng-template" id="nodes_renderer2.html">
-  <div class="tree-node">
-    <div class="pull-left tree-handle" ui-tree-handle>
-      <span class="glyphicon glyphicon-list"></span>
-    </div>
-    <div class="tree-node-content">
-      <a class="btn btn-success btn-xs" data-nodrag ng-click="toggle(this)">
-        <span class="glyphicon" ng-class="{
-          'glyphicon-chevron-right': collapsed,
-          'glyphicon-chevron-down': !collapsed
-          }">
-        </span>
-      </a>
-
-      <input type="text" ng-model="node.title">
-
-      <a class="pull-right btn btn-danger btn-xs" data-nodrag ng-click="remove(this)"><span class="glyphicon glyphicon-remove"></span></a>
-      <a class="pull-right btn btn-primary btn-xs" data-nodrag ng-click="newSubItem(this)" style="margin-right: 8px;"><span class="glyphicon glyphicon-plus"></span></a>
-    </div>
-  </div>
-</script>
-
 <div ng-if="navitemCtrl.nodeStatus.isVisible">
     <ng-switch on="navitemCtrl.type">
         <md-card ng-switch-when="card" class="nav-item--card" ng-class="{'nav-item--card--group':navitemCtrl.isGroup, 'expanded md-whiteframe-z3':navitemCtrl.expanded}"">
@@ -50,9 +17,12 @@
                     <br/>
                     <span ng-show="navitemCtrl.planningMode">
                         Available Planning Steps
-                        <span ng-repeat="availablePlanningNodeId in navitemCtrl.availablePlanningNodeIds">
-                            <button ng-click="navitemCtrl.addPlanningNodeInstanceInside(navitemCtrl.nodeId, availablePlanningNodeId)">{{navitemCtrl.getNodeTitle(availablePlanningNodeId)}}</button>
-                        </span>
+                        <div ng-repeat="availablePlanningNodeId in navitemCtrl.availablePlanningNodeIds">
+                            <button ng-click="navitemCtrl.addPlanningNodeInstanceInside(navitemCtrl.nodeId, availablePlanningNodeId)">
+                                {{navitemCtrl.getNodeTitle(availablePlanningNodeId)}}
+                            </button>
+                            {{navitemCtrl.getNodeDescription(availablePlanningNodeId)}}
+                        </div>
                         <div id="tree1-root" ui-tree="navitemCtrl.treeOptions1" data-clone-enabled="true">
                             <ol ui-tree-nodes data-type="node" ng-model="navitemCtrl.availablePlanningNodes">
                                 <li ui-tree-node ng-repeat="availablePlanningNode in navitemCtrl.availablePlanningNodes">
@@ -116,9 +86,12 @@
         <div ng-if="navitemCtrl.isParentGroupPlanning">
             <span ng-show="navitemCtrl.planningMode">
                 Available Planning Steps
-                <span ng-repeat="availablePlanningNodeId in navitemCtrl.availablePlanningNodeIds">
-                    <button ng-click="navitemCtrl.addPlanningNodeInstanceAfter(navitemCtrl.nodeId, availablePlanningNodeId)">{{navitemCtrl.getNodeTitle(availablePlanningNodeId)}}</button>
-                </span>
+                <div ng-repeat="availablePlanningNodeId in navitemCtrl.availablePlanningNodeIds">
+                    <button ng-click="navitemCtrl.addPlanningNodeInstanceAfter(navitemCtrl.nodeId, availablePlanningNodeId)">
+                        {{navitemCtrl.getNodeTitle(availablePlanningNodeId)}}
+                    </button>
+                    {{navitemCtrl.getNodeDescription(availablePlanningNodeId)}}
+                </div>
                 <select ng-model="selectedNodeId" ng-change="navitemCtrl.movePlanningNode(selectedNodeId)">
                     <option ng-repeat="siblingNodeId in navitemCtrl.siblingNodeIds" value="{{siblingNodeId}}">{{navitemCtrl.getNodeTitle(siblingNodeId)}}</option>
                 </select>
