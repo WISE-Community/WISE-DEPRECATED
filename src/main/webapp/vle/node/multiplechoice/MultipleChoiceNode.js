@@ -517,6 +517,14 @@ MultipleChoiceNode.prototype.getCriteriaValue = function() {
 	return result;
 };
 
+/**
+ * Returns whether this step type can be special exported
+ * @return a boolean value
+ */
+MultipleChoiceNode.prototype.canSpecialExport = function() {
+	return true;
+};
+
 NodeFactory.addNode('MultipleChoiceNode', MultipleChoiceNode);
 
 //used to notify scriptloader that this script has finished loading
