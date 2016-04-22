@@ -109,7 +109,7 @@ if(this.isNodeDescendentOfGroup(node,targetNode)){result=true;}}}}}return result
      * Check if a node id comes after another node id in the project
      * @param nodeIdBefore the node id before
      * @param nodeIdAfter the node id after
-     */value:function isNodeIdAfter(nodeIdBefore,nodeIdAfter){var result=false;if(nodeIdBefore!=null&&nodeIdAfter!=null){if(this.ProjectService.isApplicationNode(nodeIdBefore)){ // the node id before is a step
+     */value:function isNodeIdAfter(nodeIdBefore,nodeIdAfter){var result=false;if(nodeIdBefore!=null&&nodeIdAfter!=null){if(this.isApplicationNode(nodeIdBefore)){ // the node id before is a step
 }else {} // the node id before is an activity
 // get all the paths from the beforeNodeId to the end of the project
 var pathsToEnd=this.getAllPaths([],nodeIdBefore);if(pathsToEnd!=null){ // loop through all the paths

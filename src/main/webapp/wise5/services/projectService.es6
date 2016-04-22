@@ -970,7 +970,7 @@ class ProjectService {
         
         if (nodeIdBefore != null && nodeIdAfter != null) {
             
-            if (this.ProjectService.isApplicationNode(nodeIdBefore)) {
+            if (this.isApplicationNode(nodeIdBefore)) {
                 // the node id before is a step
                 
             } else {
