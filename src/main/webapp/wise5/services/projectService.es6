@@ -970,6 +970,14 @@ class ProjectService {
         
         if (nodeIdBefore != null && nodeIdAfter != null) {
             
+            if (this.ProjectService.isApplicationNode(nodeIdBefore)) {
+                // the node id before is a step
+                
+            } else {
+                // the node id before is an activity
+                
+            }
+            
             // get all the paths from the beforeNodeId to the end of the project
             var pathsToEnd = this.getAllPaths([], nodeIdBefore);
             
@@ -1359,7 +1367,7 @@ class ProjectService {
      * @param pathSoFar the node ids in the path so far. the node ids
      * in this array are referenced to make sure we don't loop back
      * on the path.
-     * @param nodeId the node id we are want to get the paths from
+     * @param nodeId the node id we want to get the paths from
      * @return an array of paths. each path is an array of node ids.
      */
     getAllPaths(pathSoFar, nodeId) {
@@ -2507,6 +2515,7 @@ class ProjectService {
         newNode.type = 'node';
         newNode.constraints = [];
         newNode.transitionLogic = {};
+        newNode.transitionLogic.transitions = [];
 
         newNode.showSaveButton = true;
         newNode.showSubmitButton = false;
@@ -2549,15 +2558,17 @@ class ProjectService {
                         if (!this.isGroupNode(olderSiblingLastNodeId)) {
                             let olderSiblingLastNode = this.getNodeById(olderSiblingLastNodeId);
 
-                            // remove the transitions from the before node
-                            olderSiblingLastNode.transitionLogic.transitions = [];
+                            if (olderSiblingLastNode != null) {
+                                // remove the transitions from the before node
+                                olderSiblingLastNode.transitionLogic.transitions = [];
 
-                            let transitionObject = {};
-                            transitionObject.to = node.id;
+                                let transitionObject = {};
+                                transitionObject.to = node.id;
 
-                            // make the before node point to the new node
-                            olderSiblingLastNode.transitionLogic.transitions.push(transitionObject);
-                            break;
+                                // make the before node point to the new node
+                                olderSiblingLastNode.transitionLogic.transitions.push(transitionObject);
+                                break;
+                            }
                         } else {
                             // if the last node in the older sibling is a group node, we don't add any transition from it to the new node.
                         }

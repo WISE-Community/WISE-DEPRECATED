@@ -109,7 +109,9 @@ if(this.isNodeDescendentOfGroup(node,targetNode)){result=true;}}}}}return result
      * Check if a node id comes after another node id in the project
      * @param nodeIdBefore the node id before
      * @param nodeIdAfter the node id after
-     */value:function isNodeIdAfter(nodeIdBefore,nodeIdAfter){var result=false;if(nodeIdBefore!=null&&nodeIdAfter!=null){ // get all the paths from the beforeNodeId to the end of the project
+     */value:function isNodeIdAfter(nodeIdBefore,nodeIdAfter){var result=false;if(nodeIdBefore!=null&&nodeIdAfter!=null){if(this.ProjectService.isApplicationNode(nodeIdBefore)){ // the node id before is a step
+}else {} // the node id before is an activity
+// get all the paths from the beforeNodeId to the end of the project
 var pathsToEnd=this.getAllPaths([],nodeIdBefore);if(pathsToEnd!=null){ // loop through all the paths
 for(var p=0;p<pathsToEnd.length;p++){var pathToEnd=pathsToEnd[p];if(pathToEnd!=null){ // remove the first node id because that will be the beforeNodeId
 pathToEnd.shift();if(pathToEnd.indexOf(nodeIdAfter)!=-1){ // we have found the nodeIdAfter in the path to the end of the project
@@ -180,7 +182,7 @@ return nodeIds;}},{key:'getAllPaths', /**
      * @param pathSoFar the node ids in the path so far. the node ids
      * in this array are referenced to make sure we don't loop back
      * on the path.
-     * @param nodeId the node id we are want to get the paths from
+     * @param nodeId the node id we want to get the paths from
      * @return an array of paths. each path is an array of node ids.
      */value:function getAllPaths(pathSoFar,nodeId){var allPaths=[];if(nodeId!=null){if(this.isApplicationNode(nodeId)){ // the node is an application node
 // get the transition logic from the node id
@@ -564,7 +566,7 @@ var newGroup={};newGroup.id=newGroupId;newGroup.type='group';newGroup.title=titl
      * @returns the node object
      */value:function createNode(title){ // get the next available node id
 var newNodeId=this.getNextAvailableNodeId(); // create the node object
-var newNode={};newNode.id=newNodeId;newNode.title=title;newNode.type='node';newNode.constraints=[];newNode.transitionLogic={};newNode.showSaveButton=true;newNode.showSubmitButton=false;newNode.components=[];return newNode;}},{key:'createNodeInside', /**
+var newNode={};newNode.id=newNodeId;newNode.title=title;newNode.type='node';newNode.constraints=[];newNode.transitionLogic={};newNode.transitionLogic.transitions=[];newNode.showSaveButton=true;newNode.showSubmitButton=false;newNode.components=[];return newNode;}},{key:'createNodeInside', /**
      * Create a node inside the group
      * @param node the new node
      * @param nodeId the node id of the group to create the node in
@@ -574,9 +576,9 @@ this.setIdToNode(node.id,node);this.insertNodeInsideInTransitions(node.id,nodeId
 var groupNodes=this.getGroupNodes();for(var g=0;g<groupNodes.length;g++){var groupNode=groupNodes[g];if(this.isNodeDirectChildOfGroup(node,groupNode)){if(g!=0){ // there is a sibling group that is before the group that the node was added to ("olderSibling")
 // e.g. if groups = ["a","b","c"], a is b's older sibling, and b is c's older sibling.
 var olderSiblingGroup=groupNodes[g-1];var ids=olderSiblingGroup.ids;if(ids!=null){ // get the last children in the sibling group
-var olderSiblingLastNodeId=ids[ids.length-1];if(!this.isGroupNode(olderSiblingLastNodeId)){var olderSiblingLastNode=this.getNodeById(olderSiblingLastNodeId); // remove the transitions from the before node
+var olderSiblingLastNodeId=ids[ids.length-1];if(!this.isGroupNode(olderSiblingLastNodeId)){var olderSiblingLastNode=this.getNodeById(olderSiblingLastNodeId);if(olderSiblingLastNode!=null){ // remove the transitions from the before node
 olderSiblingLastNode.transitionLogic.transitions=[];var transitionObject={};transitionObject.to=node.id; // make the before node point to the new node
-olderSiblingLastNode.transitionLogic.transitions.push(transitionObject);break;}else { // if the last node in the older sibling is a group node, we don't add any transition from it to the new node.
+olderSiblingLastNode.transitionLogic.transitions.push(transitionObject);break;}}else { // if the last node in the older sibling is a group node, we don't add any transition from it to the new node.
 }}}}}} /**
      * Create a node after the given node id
      * @param node the new node
