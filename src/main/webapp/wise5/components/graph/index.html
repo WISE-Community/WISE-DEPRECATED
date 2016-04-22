@@ -113,8 +113,9 @@
             </span>
         </div>
     </div>
-    <div ng-if='graphController.mode === "grading" && graphController.componentContent.maxScore > -1'>
-        <annotation type='score'
+    <div ng-if='graphController.mode === "grading"'>
+        <annotation ng-if='graphController.componentContent.maxScore > -1'
+                    type='score'
                     mode='graphController.mode'
                     node-id='graphController.nodeId'
                     component-id='graphController.componentId'
@@ -122,7 +123,7 @@
                     to-workgroup-id='workgroupId'
                     component-state-id='componentState.id'
                     active='true'></annotation>
-        <br/>
+        <br ng-if='graphController.componentContent.maxScore > -1'/>
         <annotation type='comment'
                     mode='graphController.mode'
                     node-id='graphController.nodeId'

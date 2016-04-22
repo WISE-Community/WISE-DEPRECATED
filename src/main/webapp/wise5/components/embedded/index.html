@@ -30,8 +30,9 @@
                                comment-annotation='embeddedController.latestAnnotations.comment'
                                max-score="embeddedController.componentContent.maxScore"></component-annotations>
     </div>
-    <div ng-if='embeddedController.mode === "grading" && embeddedController.componentContent.maxScore > -1'>
-        <annotation type='score'
+    <div ng-if='embeddedController.mode === "grading"'>
+        <annotation ng-if='embeddedController.componentContent.maxScore > -1'
+                    type='score'
                     mode='embeddedController.mode'
                     node-id='embeddedController.nodeId'
                     component-id='embeddedController.componentId'
@@ -39,7 +40,7 @@
                     to-workgroup-id='workgroupId'
                     component-state-id='componentState.id'
                     active='true'></annotation>
-        <br/>
+        <br ng-if='embeddedController.componentContent.maxScore > -1'/>
         <annotation type='comment'
                     mode='embeddedController.mode'
                     node-id='embeddedController.nodeId'

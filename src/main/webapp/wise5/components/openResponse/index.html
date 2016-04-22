@@ -93,8 +93,9 @@
                       {{openResponseController.saveMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ openResponseController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="openResponseController.saveMessage.time"></span></span>
                 </span>
             </div>
-            <div ng-if='openResponseController.mode === "grading" && openResponseController.componentContent.maxScore > -1'>
-                <annotation type='score'
+            <div ng-if='openResponseController.mode === "grading"'>
+                <annotation ng-if='openResponseController.componentContent.maxScore > -1'
+                            type='score'
                             mode='openResponseController.mode'
                             node-id='openResponseController.nodeId'
                             component-id='openResponseController.componentId'
@@ -102,7 +103,7 @@
                             to-workgroup-id='workgroupId'
                             component-state-id='componentState.id'
                             active='true'></annotation>
-                <br/>
+                <br ng-if='openResponseController.componentContent.maxScore > -1'/>
                 <annotation type='comment'
                             mode='openResponseController.mode'
                             node-id='openResponseController.nodeId'
