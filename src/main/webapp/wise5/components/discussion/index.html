@@ -103,8 +103,9 @@
                     </div>
                 </div>
             </div>
-            <div ng-if='discussionController.mode === "grading" && discussionController.componentContent.maxScore > -1'>
-                <annotation type='score'
+            <div ng-if='discussionController.mode === "grading"'>
+                <annotation ng-if='discussionController.componentContent.maxScore > -1'
+                            type='score'
                             mode='discussionController.mode'
                             node-id='discussionController.nodeId'
                             component-id='discussionController.componentId'
@@ -112,7 +113,7 @@
                             to-workgroup-id='workgroupId'
                             component-state-id='componentState.id'
                             active='true'></annotation>
-                <br/>
+                <br ng-if='discussionController.componentContent.maxScore > -1'/>
                 <annotation type='comment'
                             mode='discussionController.mode'
                             node-id='discussionController.nodeId'

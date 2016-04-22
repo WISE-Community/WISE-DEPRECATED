@@ -77,8 +77,9 @@
                  {{drawController.saveMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ drawController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="drawController.saveMessage.time"></span></span>
            </span>
     </div>
-    <div ng-if='drawController.mode === "grading" && drawController.componentContent.maxScore > -1'>
-        <annotation type='score'
+    <div ng-if='drawController.mode === "grading"'>
+        <annotation ng-if='drawController.componentContent.maxScore > -1'
+                    type='score'
                     mode='drawController.mode'
                     node-id='drawController.nodeId'
                     component-id='drawController.componentId'
@@ -86,7 +87,7 @@
                     to-workgroup-id='workgroupId'
                     component-state-id='componentState.id'
                     active='true'></annotation>
-        <br/>
+        <br ng-if='drawController.componentContent.maxScore > -1'/>
         <annotation type='comment'
                     mode='drawController.mode'
                     node-id='drawController.nodeId'

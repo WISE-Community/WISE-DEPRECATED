@@ -131,8 +131,9 @@
             </span>
         </div>
     </div>
-    <div ng-if='labelController.mode === "grading" && labelController.componentContent.maxScore > -1'>
-        <annotation type='score'
+    <div ng-if='labelController.mode === "grading"'>
+        <annotation ng-if='labelController.componentContent.maxScore > -1'
+                    type='score'
                     mode='labelController.mode'
                     node-id='labelController.nodeId'
                     component-id='labelController.componentId'
@@ -140,7 +141,7 @@
                     to-workgroup-id='workgroupId'
                     component-state-id='componentState.id'
                     active='true'></annotation>
-        <br/>
+        <br ng-if='labelController.componentContent.maxScore > -1'/>
         <annotation type='comment'
                     mode='labelController.mode'
                     node-id='labelController.nodeId'

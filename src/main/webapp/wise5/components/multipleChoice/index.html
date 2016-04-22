@@ -24,12 +24,12 @@
                     <div>Is Correct: <input type='checkbox' ng-model='choice.isCorrect' ng-change='multipleChoiceController.authoringViewComponentChanged()'/></div>
                     <button ng-click='multipleChoiceController.deleteChoice(choice.id)'>Delete</button>
                 </div>
-                Show Submit Button: <input type='checkbox' 
+                Show Submit Button: <input type='checkbox'
                                            ng-model='multipleChoiceController.authoringComponentContent.showSubmitButton'
                                            ng-change='multipleChoiceController.authoringViewComponentChanged()'/>
                 <br/>
-                Show Save Button: <input type='checkbox' 
-                                         ng-model='multipleChoiceController.authoringComponentContent.showSaveButton' 
+                Show Save Button: <input type='checkbox'
+                                         ng-model='multipleChoiceController.authoringComponentContent.showSaveButton'
                                          ng-change='multipleChoiceController.authoringViewComponentChanged()'/>
                 <br/>
                 Max Score:
@@ -58,7 +58,7 @@
                                          ng-click="multipleChoiceController.isDisabled || multipleChoiceController.radioChoiceSelected(choice.id)"
                                          ng-disabled="multipleChoiceController.isDisabled">
                             {{ choice.text }}
-                            <span ng-show="choice.showFeedback" 
+                            <span ng-show="choice.showFeedback"
                                   ng-class="{'success': multipleChoiceController.hasCorrectChoices() && choice.isCorrect, 'warn': multipleChoiceController.hasCorrectChoices() && !choice.isCorrect, 'info': !multipleChoiceController.hasCorrectChoices()}">
                                   {{choice.feedbackToShow}}
                             </span>
@@ -72,7 +72,7 @@
                                      ng-click="multipleChoiceController.isDisabled || multipleChoiceController.toggleSelection(choice.id)"
                                      ng-disabled="multipleChoiceController.isDisabled">
                             {{ choice.text }}
-                            <span ng-show="choice.showFeedback" 
+                            <span ng-show="choice.showFeedback"
                                   ng-class="{'success': multipleChoiceController.hasCorrectChoices() && choice.isCorrect, 'warn': multipleChoiceController.hasCorrectChoices() && !choice.isCorrect, 'info': !multipleChoiceController.hasCorrectChoices()}">
                                   {{choice.feedbackToShow}}
                             </span>
@@ -110,8 +110,9 @@
                       {{multipleChoiceController.saveMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ multipleChoiceController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="multipleChoiceController.saveMessage.time"></span></span>
                 </span>
         </div>
-        <div ng-if='multipleChoiceController.mode === "grading" && multipleChoiceController.componentContent.maxScore > -1'>
-            <annotation type='score'
+        <div ng-if='multipleChoiceController.mode === "grading"'>
+            <annotation ng-if='multipleChoiceController.componentContent.maxScore > -1'
+                        type='score'
                         mode='multipleChoiceController.mode'
                         node-id='multipleChoiceController.nodeId'
                         component-id='multipleChoiceController.componentId'
@@ -119,7 +120,7 @@
                         to-workgroup-id='workgroupId'
                         component-state-id='componentState.id'
                         active='true'></annotation>
-            <br/>
+            <br ng-if='multipleChoiceController.componentContent.maxScore > -1'/>
             <annotation type='comment'
                         mode='multipleChoiceController.mode'
                         node-id='multipleChoiceController.nodeId'

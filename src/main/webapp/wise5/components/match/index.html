@@ -137,8 +137,9 @@
                  {{matchController.saveMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ matchController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="matchController.saveMessage.time"></span></span>
         </span>
     </div>
-    <div ng-if='matchController.mode === "grading" && matchController.componentContent.maxScore > -1'>
-        <annotation type='score'
+    <div ng-if='matchController.mode === "grading"'>
+        <annotation ng-if='matchController.componentContent.maxScore > -1'
+                    type='score'
                     mode='matchController.mode'
                     node-id='matchController.nodeId'
                     component-id='matchController.componentId'
@@ -146,7 +147,7 @@
                     to-workgroup-id='workgroupId'
                     component-state-id='componentState.id'
                     active='true'></annotation>
-        <br/>
+        <br ng-if='matchController.componentContent.maxScore > -1'/>
         <annotation type='comment'
                     mode='matchController.mode'
                     node-id='matchController.nodeId'

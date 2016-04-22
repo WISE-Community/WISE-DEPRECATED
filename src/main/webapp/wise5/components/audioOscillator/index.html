@@ -72,7 +72,7 @@
             Oscillator Type: {{audioOscillatorController.oscillatorType}}
         </span>
         <span ng-if='audioOscillatorController.oscillatorTypes.length > 1'>
-            Oscillator Type: 
+            Oscillator Type:
             <select ng-model='audioOscillatorController.oscillatorType'
                     ng-change='audioOscillatorController.oscillatorTypeChanged()'>
                 <option ng-repeat='oscillatorType in audioOscillatorController.oscillatorTypes'
@@ -104,8 +104,9 @@
             </span>
         </div>
     </div>
-    <div ng-if='audioOscillatorController.mode == "grading" && audioOscillatorController.componentContent.maxScore > -1' style='width: 400px'>
-        <annotation type='score'
+    <div ng-if='audioOscillatorController.mode == "grading"'>
+        <annotation ng-if='audioOscillatorController.componentContent.maxScore > -1'
+                    type='score'
                     mode='audioOscillatorController.mode'
                     node-id='audioOscillatorController.nodeId'
                     component-id='audioOscillatorController.componentId'
@@ -113,7 +114,7 @@
                     to-workgroup-id='workgroupId'
                     component-state-id='componentState.id'
                     active='true'></annotation>
-        <br/>
+        <br ng-if='audioOscillatorController.componentContent.maxScore > -1'/>
         <annotation type='comment'
                     mode='audioOscillatorController.mode'
                     node-id='audioOscillatorController.nodeId'
