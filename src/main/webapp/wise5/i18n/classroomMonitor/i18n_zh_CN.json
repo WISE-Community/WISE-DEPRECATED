@@ -1,0 +1,10 @@
+{
+    "averageScore": "平均分",
+    "downloadStudentWork": "下载学生作业",
+    "gradeByStep": "按步骤评分",
+    "gradeByWorkgroup": "按小组评分",
+    "newWorkCounter": "新的作业计数: {{count}}",
+    "numberOfStudentOnStep": "步骤中的学生数",
+    "pauseStudentScreens": "暂停学生屏幕",
+    "unPauseStudentScreens": "取消暂停学生屏幕"
+}
