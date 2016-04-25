@@ -3707,30 +3707,35 @@ class ProjectService {
      * @returns an array of planning node templates
      */
     getAvailablePlanningNodes(nodeId) {
-        var availablePlanningNodes = [];
-        
-        // get the available planning node ids
-        var availablePlanningNodeIds = this.getAvailablePlanningNodeIds(nodeId);
-        
-        if (availablePlanningNodeIds != null) {
-            
-            // loop through all the node ids
-            for (var a = 0; a < availablePlanningNodeIds.length; a++) {
-                var availablePlanningNodeId = availablePlanningNodeIds[a];
-                
-                if (availablePlanningNodeId != null) {
-                    
-                    // get the node
-                    var availablePlanningNode = this.getNodeById(availablePlanningNodeId);
-                    
+        var availablePlanningNodesSoFar = [];
+
+        if (nodeId != null) {
+            var node = this.getNodeById(nodeId);
+
+            if (node != null && node.availablePlanningNodes != null) {
+                let availablePlanningNodes = node.availablePlanningNodes;
+
+                // loop through all the nodes and retrieve the actual node
+                for (var a = 0; a < availablePlanningNodes.length; a++) {
+                    var availablePlanningNode = availablePlanningNodes[a];
+
                     if (availablePlanningNode != null) {
-                        availablePlanningNodes.push(availablePlanningNode);
+
+                        // get the node
+                        var availablePlanningNodeActual = this.getNodeById(availablePlanningNode.nodeId);
+
+                        if (availablePlanningNodeActual != null) {
+                            if (availablePlanningNode.max != null) {
+                                availablePlanningNodeActual.max = availablePlanningNode.max;
+                            }
+                            availablePlanningNodesSoFar.push(availablePlanningNodeActual);
+                        }
                     }
                 }
             }
         }
-        
-        return availablePlanningNodes;
+
+        return availablePlanningNodesSoFar;
     }
     
     /**
@@ -3738,11 +3743,11 @@ class ProjectService {
      * @param groupId the group id to add the planning node instance to
      * @param nodeId the node id of the planning node template
      */
-    createPlanningNodeInstance(groupId, nodeId) {
+    createPlanningNodeInstance(groupId, nodeId, nextAvailablePlanningNodeId) {
         
         var planningNodeInstance = null;
         
-        if (nodeId != null) {
+        if (nodeId != null && nextAvailablePlanningNodeId != null) {
             // get the planning node template
             var node = this.getNodeById(nodeId);
             
@@ -3750,13 +3755,10 @@ class ProjectService {
             planningNodeInstance = this.copyNode(nodeId);
             
             // set the template id to point back to the planning template node
-            planningNodeInstance.templateId = planningNodeInstance.id;
+            planningNodeInstance.templateId = nodeId;
             
             // set the planning node instance node id
-            planningNodeInstance.id = this.getNextAvailablePlanningNodeId();
-            
-            // add the planning node instance to the project
-            //this.addPlanningNodeInstance(groupId, planningNodeInstance);
+            planningNodeInstance.id = nextAvailablePlanningNodeId;
         }
         
         return planningNodeInstance;
@@ -3901,64 +3903,6 @@ class ProjectService {
                 this.setIdToPosition(childId, pos);
             }
         }
-    }
-    
-    /**
-     * Get the next available planning node instance node id
-     * @returns the next available planning node instance node id
-     */
-    getNextAvailablePlanningNodeId() {
-        
-        var nextAvailablePlanningInstanceNodeId = null;
-        
-        // used to keep track of the highest planning node number we have found
-        var maxPlanningNodeNumber = 0;
-        
-        var nodes = this.project.nodes;
-        
-        if (nodes != null) {
-            
-            // loop through all the nodes in the project
-            for (var n = 0; n < nodes.length; n++) {
-                var node = nodes[n];
-                
-                if (node != null) {
-                    var nodeId = node.id;
-                    
-                    if (nodeId != null) {
-                        // regex to match the planning node id e.g. planningNode2
-                        var planningNodeIdRegEx = /planningNode(.*)/;
-                        
-                        // run the regex on the node id
-                        var result = nodeId.match(planningNodeIdRegEx);
-                        
-                        if (result != null) {
-                            // we have found a planning node instance node id
-                            
-                            /*
-                             * get the number part of the planning node instance node id
-                             * e.g. if the nodeId is planningNode2, the number part
-                             * would be 2
-                             */
-                            var planningNodeNumber = parseInt(result[1]);
-                            
-                            if (planningNodeNumber > maxPlanningNodeNumber) {
-                                /*
-                                 * update the max number part if we have found a new
-                                 * higher number
-                                 */
-                                maxPlanningNodeNumber = planningNodeNumber;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        
-        // create the next available planning node instance node id
-        nextAvailablePlanningInstanceNodeId = 'planningNode' + (maxPlanningNodeNumber + 1);
-        
-        return nextAvailablePlanningInstanceNodeId;
     }
 }
 

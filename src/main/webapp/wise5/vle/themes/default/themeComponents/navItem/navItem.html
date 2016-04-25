@@ -17,16 +17,17 @@
                     <br/>
                     <span ng-show="navitemCtrl.planningMode">
                         Available Planning Steps
-                        <div ng-repeat="availablePlanningNodeId in navitemCtrl.availablePlanningNodeIds">
-                            <button ng-click="navitemCtrl.addPlanningNodeInstanceInside(navitemCtrl.nodeId, availablePlanningNodeId)">
-                                {{navitemCtrl.getNodeTitle(availablePlanningNodeId)}}
+                        <div ng-repeat="availablePlanningNode in navitemCtrl.availablePlanningNodes">
+                            <button ng-disabled="!navitemCtrl.planningMode || !navitemCtrl.canAddPlanningNode(availablePlanningNode.id)"
+                                    ng-click="navitemCtrl.addPlanningNodeInstanceInside(navitemCtrl.nodeId, availablePlanningNode.id)">
+                                {{navitemCtrl.getNodeTitle(availablePlanningNode.id)}}
                             </button>
-                            {{navitemCtrl.getNodeDescription(availablePlanningNodeId)}}
+                            {{navitemCtrl.getNodeDescription(availablePlanningNode.id)}}
                         </div>
                         <div id="tree1-root" ui-tree="navitemCtrl.treeOptions1" data-clone-enabled="true">
                             <ol ui-tree-nodes data-type="node" ng-model="navitemCtrl.availablePlanningNodes">
                                 <li ui-tree-node ng-repeat="availablePlanningNode in navitemCtrl.availablePlanningNodes">
-                                    <div ui-tree-handle class="tree-node tree-node-content">
+                                    <div ng-show="navitemCtrl.planningMode && navitemCtrl.canAddPlanningNode(availablePlanningNode.id)" ui-tree-handle class="tree-node tree-node-content">
                                         {{availablePlanningNode.title}}
                                     </div>
                                 </li>
@@ -85,12 +86,13 @@
         </md-list-item>
         <div ng-if="navitemCtrl.isParentGroupPlanning">
             <span ng-show="navitemCtrl.planningMode">
-                Available Planning Steps
-                <div ng-repeat="availablePlanningNodeId in navitemCtrl.availablePlanningNodeIds">
-                    <button ng-click="navitemCtrl.addPlanningNodeInstanceAfter(navitemCtrl.nodeId, availablePlanningNodeId)">
-                        {{navitemCtrl.getNodeTitle(availablePlanningNodeId)}}
+                Available Planning Steps!
+                <div ng-repeat="availablePlanningNode in navitemCtrl.availablePlanningNodes">
+                    <button ng-disabled="!navitemCtrl.planningMode || !navitemCtrl.canAddPlanningNode(availablePlanningNode.id)"
+                            ng-click="navitemCtrl.addPlanningNodeInstanceAfter(navitemCtrl.nodeId, availablePlanningNode.id)">
+                        {{navitemCtrl.getNodeTitle(availablePlanningNode.id)}}
                     </button>
-                    {{navitemCtrl.getNodeDescription(availablePlanningNodeId)}}
+                    {{navitemCtrl.getNodeDescription(availablePlanningNode.id)}}
                 </div>
                 <select ng-model="selectedNodeId" ng-change="navitemCtrl.movePlanningNode(selectedNodeId)">
                     <option ng-repeat="siblingNodeId in navitemCtrl.siblingNodeIds" value="{{siblingNodeId}}">{{navitemCtrl.getNodeTitle(siblingNodeId)}}</option>

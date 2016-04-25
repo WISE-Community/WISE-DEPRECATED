@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var NavItemController = function () {
-    function NavItemController($rootScope, $scope, $element, NodeService, ProjectService, StudentDataService) {
+    function NavItemController($rootScope, $scope, $translate, $element, NodeService, ProjectService, StudentDataService) {
         var _this = this;
 
         _classCallCheck(this, NavItemController);
@@ -17,6 +17,7 @@ var NavItemController = function () {
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$element = $element;
+        this.$translate = $translate;
         this.NodeService = NodeService;
         this.ProjectService = ProjectService;
         this.StudentDataService = StudentDataService;
@@ -35,7 +36,6 @@ var NavItemController = function () {
 
         // whether this node is a planning node
         this.isPlanning = this.ProjectService.isPlanning(this.nodeId);
-        this.availablePlanningNodeIds = [];
 
         // the array of nodes used for drag/drop planning sorting
         this.availablePlanningNodes = [];
@@ -81,7 +81,6 @@ var NavItemController = function () {
              * planning is enabled so we will get the available planning
              * nodes that can be used in this group
              */
-            this.availablePlanningNodeIds = this.ProjectService.getAvailablePlanningNodeIds(this.nodeId);
             this.availablePlanningNodes = this.ProjectService.getAvailablePlanningNodes(this.nodeId);
         }
 
@@ -96,7 +95,6 @@ var NavItemController = function () {
              * planning is enabled so we will get the available planning
              * nodes that can be used in this group
              */
-            this.availablePlanningNodeIds = this.ProjectService.getAvailablePlanningNodeIds(this.parentGroupId);
             this.availablePlanningNodes = this.ProjectService.getAvailablePlanningNodes(this.parentGroupId);
 
             /*
@@ -231,12 +229,11 @@ var NavItemController = function () {
                 }
                 this.expanded = !this.expanded;
             } else {
-                if (this.planningMode) {
-                    /*
-                     * students are not allowed to enter planning steps while in
-                     * planning mode
-                     */
-                    alert('You are not allowed to enter the step while in Planning Mode. Turn off Planning Mode to enter the step.');
+                if (this.StudentDataService.planningMode) {
+                    // Don't allow students to enter planning steps while in planning mode
+                    this.$translate('planningModeStepsUnVisitable').then(function (planningModeStepsUnVisitable) {
+                        alert(planningModeStepsUnVisitable);
+                    });
                 } else {
                     this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(this.nodeId);
                 }
@@ -263,6 +260,53 @@ var NavItemController = function () {
             this.StudentDataService.saveVLEEvent(eventNodeId, componentId, componentType, category, eventName, eventData);
         }
     }, {
+        key: 'canAddPlanningNode',
+
+
+        /**
+         * Returns true iff this student can add the specified planning node.
+         * Limits include reaching the max allowed count
+         * @param planningNodeId
+         */
+        value: function canAddPlanningNode(planningNodeId) {
+            var maxAddAllowed = 1; // by default, students can only add up to one planning node.
+            var planningGroupNode = null;
+            if (this.isParentGroupPlanning) {
+                planningGroupNode = this.ProjectService.getNodeById(this.parentGroupId);
+            } else {
+                planningGroupNode = this.ProjectService.getNodeById(this.nodeId);
+            }
+            // get the maxAddAllowed value by looking up the planningNode in the project.
+            if (planningGroupNode != null && planningGroupNode.availablePlanningNodes != null) {
+                for (var a = 0; a < planningGroupNode.availablePlanningNodes.length; a++) {
+                    var availablePlanningNode = planningGroupNode.availablePlanningNodes[a];
+                    if (availablePlanningNode.nodeId === planningNodeId && availablePlanningNode.max != null) {
+                        maxAddAllowed = availablePlanningNode.max;
+                    }
+                }
+            }
+
+            // if maxAddAllowed was not found, it means they can add as many as they want
+            if (maxAddAllowed === -1) {
+                return true;
+            }
+
+            var numPlanningNodesAdded = 0; // keep track of number of instances
+            // otherwise, see how many times the planning node template has been used.
+            // loop through the child ids in the planning group and see how many times they've been used
+            if (planningGroupNode.ids != null) {
+                for (var c = 0; c < planningGroupNode.ids.length; c++) {
+                    var childPlanningNodeId = planningGroupNode.ids[c];
+                    var childPlanningNode = this.ProjectService.getNodeById(childPlanningNodeId);
+                    if (childPlanningNode != null && childPlanningNode.templateId === planningNodeId) {
+                        numPlanningNodesAdded++;
+                    }
+                }
+            }
+
+            return numPlanningNodesAdded < maxAddAllowed;
+        }
+    }, {
         key: 'addPlanningNodeInstanceInside',
 
 
@@ -274,7 +318,8 @@ var NavItemController = function () {
          */
         value: function addPlanningNodeInstanceInside(nodeIdToInsertInside, templateNodeId) {
             // create the planning node instance
-            var planningNodeInstance = this.ProjectService.createPlanningNodeInstance(nodeIdToInsertInside, templateNodeId);
+            var nextAvailablePlanningNodeId = this.StudentDataService.getNextAvailablePlanningNodeId();
+            var planningNodeInstance = this.ProjectService.createPlanningNodeInstance(nodeIdToInsertInside, templateNodeId, nextAvailablePlanningNodeId);
 
             // add the planning node instance inside
             this.ProjectService.addPlanningNodeInstanceInside(nodeIdToInsertInside, planningNodeInstance);
@@ -310,7 +355,8 @@ var NavItemController = function () {
                 var parentGroupId = parentGroup.id;
 
                 // create the planning node instance
-                var planningNodeInstance = this.ProjectService.createPlanningNodeInstance(parentGroupId, templateNodeId);
+                var nextAvailablePlanningNodeId = this.StudentDataService.getNextAvailablePlanningNodeId();
+                var planningNodeInstance = this.ProjectService.createPlanningNodeInstance(parentGroupId, templateNodeId, nextAvailablePlanningNodeId);
 
                 // insert planning node instance after
                 this.ProjectService.addPlanningNodeInstanceAfter(nodeIdToInsertAfter, planningNodeInstance);
@@ -491,12 +537,23 @@ var NavItemController = function () {
     }, {
         key: 'togglePlanningMode',
         value: function togglePlanningMode() {
+            if (this.StudentDataService.planningMode && !this.item.planningMode) {
+                // Don't allow multiple concurrent planning modes.
+                this.$translate('planningModeOnlyOnePlanningModeAllowed').then(function (planningModeOnlyOnePlanningModeAllowed) {
+                    alert(planningModeOnlyOnePlanningModeAllowed);
+                });
+
+                return;
+            }
             // toggle the planning mode
             this.planningMode = !this.planningMode;
             this.item.planningMode = this.planningMode;
+            // also toggle StudentDataService planning mode. This will be used to constrain the entire project when in planning mode.
+            this.StudentDataService.planningMode = this.planningMode;
 
             if (!this.planningMode) {
                 // Student is exiting planning mode, so save the changed nodes in NodeState
+
                 var nodeState = this.NodeService.createNewNodeState();
                 nodeState.nodeId = this.nodeId;
                 nodeState.isAutoSave = false;
@@ -811,7 +868,7 @@ var NavItemController = function () {
     return NavItemController;
 }();
 
-NavItemController.$inject = ['$rootScope', '$scope', '$element', 'NodeService', 'ProjectService', 'StudentDataService'];
+NavItemController.$inject = ['$rootScope', '$scope', '$translate', '$element', 'NodeService', 'ProjectService', 'StudentDataService'];
 
 exports.default = NavItemController;
 //# sourceMappingURL=navItemController.js.map

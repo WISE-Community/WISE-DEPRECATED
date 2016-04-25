@@ -17,6 +17,8 @@ class StudentDataService {
         this.visitedNodesHistory = [];
         this.nodeStatuses = {};
         this.runStatus = null;
+
+        this.maxPlanningNodeNumber = 0;
     }
 
     retrieveStudentData() {
@@ -727,7 +729,25 @@ class StudentDataService {
         }
     };
 
+    /**
+     * Returns all NodeStates
+     * @returns Array of all NodeStates
+     */
+    getNodeStates() {
+        let nodeStates = [];
 
+        if (this.studentData != null && this.studentData.nodeStates != null) {
+            nodeStates = this.studentData.nodeStates;
+        }
+
+        return nodeStates;
+    };
+
+    /**
+     * Get all NodeStates for a specific node
+     * @param nodeId id of node
+     * @returns Array of NodeStates for the specified node
+     */
     getNodeStatesByNodeId(nodeId) {
         var nodeStatesByNodeId = [];
 
@@ -1767,6 +1787,72 @@ class StudentDataService {
      */
     getRunStatus() {
         return this.runStatus;
+    }
+
+    /**
+     * Get the next available planning node instance node id
+     * @returns the next available planning node instance node id
+     */
+    getNextAvailablePlanningNodeId() {
+
+        // used to keep track of the highest planning node number we have found, which is 1-based
+        let currentMaxPlanningNodeNumber = 1;
+
+        let nodeStates = this.getNodeStates();
+
+        if (nodeStates != null) {
+
+            // loop through all the NodeStates
+            for (var ns = 0; ns < nodeStates.length; ns++) {
+                let nodeState = nodeStates[ns];
+
+                if (nodeState != null) {
+                    let nodeStateNodeId = nodeState.nodeId;
+                    if (this.ProjectService.isPlanning(nodeStateNodeId) && nodeState.studentData != null) {
+                        let nodes = nodeState.studentData.nodes;
+                        for (var n = 0; n < nodes.length; n++) {
+                            let node = nodes[n];
+                            let nodeId = node.id;
+                            // regex to match the planning node id e.g. planningNode2
+                            let planningNodeIdRegEx = /planningNode(.*)/;
+
+                            // run the regex on the node id
+                            let result = nodeId.match(planningNodeIdRegEx);
+
+                            if (result != null) {
+                                // we have found a planning node instance node id
+
+                                /*
+                                 * get the number part of the planning node instance node id
+                                 * e.g. if the nodeId is planningNode2, the number part
+                                 * would be 2
+                                 */
+                                let planningNodeNumber = parseInt(result[1]);
+
+                                if (planningNodeNumber > currentMaxPlanningNodeNumber) {
+                                    /*
+                                     * update the max number part if we have found a new
+                                     * higher number
+                                     */
+                                    currentMaxPlanningNodeNumber = planningNodeNumber;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if (this.maxPlanningNodeNumber < currentMaxPlanningNodeNumber) {
+            // Update maxPlanningNodeNumber if we find a bigger number in the NodeStates
+            this.maxPlanningNodeNumber = currentMaxPlanningNodeNumber;
+        }
+
+        // Increment maxPlanningNodeNumber each time this function is called.
+        this.maxPlanningNodeNumber++;
+
+        // return the next available planning node instance node id
+        return 'planningNode' + this.maxPlanningNodeNumber;
     }
 }
 
