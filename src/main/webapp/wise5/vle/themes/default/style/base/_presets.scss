@@ -139,6 +139,21 @@ md-icon {
   &.warn {
     color: color('warn') !important;
   }
+  &.accent-1 {
+    color: color('accent-1') !important;
+  }
+  &.accent-2 {
+    color: color('accent-2') !important;
+  }
+  &.accent-3 {
+    color: color('accent-3') !important;
+  }
+  &.note {
+    color: color('note') !important;
+  }
+  &.question {
+    color: color('question') !important;
+  }
 }
 
 .md-subheader, md-list .md-subheader, .md-subheader a, md-list .md-subheader a,

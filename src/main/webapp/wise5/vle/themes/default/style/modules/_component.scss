@@ -1,7 +1,7 @@
 .component {
     padding: 0 16px;
     margin: 24px 0;
-    text-overflow: auto;
+    overflow-x: auto;
 
     @media only screen and (min-width: $layout-breakpoint-sm) {
         padding: 0 24px;

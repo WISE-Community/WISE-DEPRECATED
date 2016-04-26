@@ -19,7 +19,8 @@
                 <md-icon md-menu-origin> book </md-icon>
                 <md-tooltip md-direction="left"><span translate="notebook" /></md-tooltip>
             </md-button>
-            <md-progress-circular id="menu-progress" md-mode="determinate" md-diameter="26" value="{{ themeCtrl.rootNodeStatus.progress.completionPct }}"></md-progress-circular>
+            <md-progress-circular class="menu-progress" md-mode="determinate" md-diameter="26" value="{{ themeCtrl.rootNodeStatus.progress.completionPct }}"></md-progress-circular>
+            <div class="menu-progress-bg"></div>
             <md-menu md-position-mode="target-right target" md-offset="8 26">
                 <md-button aria-label="Open user menu" class="md-icon-button" ng-click="$mdOpenMenu()">
                     <md-icon md-menu-origin> account_circle </md-icon>

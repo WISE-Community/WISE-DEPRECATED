@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var NavItemController = function () {
-    function NavItemController($rootScope, $scope, $translate, $element, NodeService, ProjectService, StudentDataService) {
+    function NavItemController($rootScope, $scope, $translate, $element, NodeService, ProjectService, StudentDataService, $mdDialog) {
         var _this = this;
 
         _classCallCheck(this, NavItemController);
@@ -21,6 +21,7 @@ var NavItemController = function () {
         this.NodeService = NodeService;
         this.ProjectService = ProjectService;
         this.StudentDataService = StudentDataService;
+        this.$mdDialog = $mdDialog;
 
         this.expanded = false;
 
@@ -39,6 +40,10 @@ var NavItemController = function () {
 
         // the array of nodes used for drag/drop planning sorting
         this.availablePlanningNodes = [];
+
+        // whether the node is a planning node instance
+        this.node = this.ProjectService.getNodeById(this.nodeId);
+        this.isPlanningInstance = this.node.templateId ? true : false;
 
         /*
          * the array of nodes used for drag/drop planning sorting. the elements
@@ -61,7 +66,6 @@ var NavItemController = function () {
                 return false;
             }
         };
-
         /*
          * whether planning mode is on or off which determines if students
          * can edit planning related aspects of the project such as adding,
@@ -340,13 +344,64 @@ var NavItemController = function () {
         }
 
         /**
-         * Create a planning node instance and add it to the project
-         * @param groupId the group the new planning node instance will be added to
-         * @param nodeId the node id of the planning node template
+         * Open the planning mode select dialog to choose a planning node template
+         * to create a new planning instance
+         * @param event the trigger event
+         * @param targetNodeId the node to insert the new planning instance after or inside
+         * @param insertInside boolean whether to insert the new planning instance
+         * inside the target node (optional; default is after)
          */
 
     }, {
+        key: 'addPlanningInstance',
+        value: function addPlanningInstance(event, targetNodeId, insertInside) {
+            // show dialog with list of planning nodes user can add to current group
+
+            var choosePlanningItemTemplateUrl = this.ProjectService.getThemePath() + '/themeComponents/navItem/choosePlanningItem.html';
+            var navitemCtrl = this;
+
+            this.$mdDialog.show({
+                parent: angular.element(document.body),
+                locals: {
+                    targetNodeId: targetNodeId,
+                    insertInside: insertInside,
+                    navitemCtrl: navitemCtrl
+                },
+                templateUrl: choosePlanningItemTemplateUrl,
+                targetEvent: event,
+                controller: ChoosePlanningItemController
+            });
+
+            function ChoosePlanningItemController($scope, $mdDialog, targetNodeId, insertInside, navitemCtrl) {
+                $scope.navitemCtrl = navitemCtrl;
+                $scope.targetNodeId = targetNodeId;
+                $scope.insertInside = insertInside;
+
+                $scope.addSelectedPlanningInstance = function (templateNodeId) {
+                    if ($scope.insertInside) {
+                        $scope.navitemCtrl.addPlanningNodeInstanceInside($scope.targetNodeId, templateNodeId);
+                    } else {
+                        $scope.navitemCtrl.addPlanningNodeInstanceAfter($scope.targetNodeId, templateNodeId);
+                    }
+
+                    $mdDialog.hide();
+                };
+
+                $scope.close = function () {
+                    $mdDialog.hide();
+                };
+            }
+            ChoosePlanningItemController.$inject = ["$scope", "$mdDialog", "targetNodeId", "insertInside", "navitemCtrl"];
+        }
+    }, {
         key: 'addPlanningNodeInstanceAfter',
+
+
+        /**
+         * Create a planning node instance and add it to the project after the specified nodeId
+         * @param groupId the group the new planning node instance will be added to
+         * @param nodeId the node id of the planning node template
+         */
         value: function addPlanningNodeInstanceAfter(nodeIdToInsertAfter, templateNodeId) {
 
             var parentGroup = this.ProjectService.getParentGroup(nodeIdToInsertAfter);
@@ -526,58 +581,90 @@ var NavItemController = function () {
     }, {
         key: 'planningNodeChanged',
         value: function planningNodeChanged() {
+            this.savePlanningNodeChanges();
+
             this.$rootScope.$broadcast('planningNodeChanged');
         }
 
         /**
-         * Toggle the planning mode on and off. Notify child nodes that 
+        * Save the changed nodes in NodeState
+        **/
+
+    }, {
+        key: 'savePlanningNodeChanges',
+        value: function savePlanningNodeChanges() {
+            var nodeState = this.NodeService.createNewNodeState();
+            nodeState.nodeId = this.nodeId;
+            nodeState.isAutoSave = false;
+            nodeState.isSubmit = false;
+
+            var studentData = {};
+            studentData.nodeId = this.nodeId;
+            studentData.nodes = [];
+            var planningNode = this.ProjectService.getNodeById(this.nodeId);
+            studentData.nodes.push(planningNode); // add the planning node (group)
+            // loop through the child ids in the planning group and save them also
+            if (planningNode.ids != null) {
+                for (var c = 0; c < planningNode.ids.length; c++) {
+                    var childPlanningNodeId = planningNode.ids[c];
+                    var childPlanningNode = this.ProjectService.getNodeById(childPlanningNodeId);
+                    studentData.nodes.push(childPlanningNode);
+                }
+            }
+
+            nodeState.studentData = studentData;
+            var nodeStates = [];
+            nodeStates.push(nodeState);
+            this.StudentDataService.saveNodeStates(nodeStates);
+        }
+
+        /**
+         * Toggle the planning mode on and off. Notify child nodes that
          * the planning mode has changed so they can act accordingly.
          */
 
     }, {
         key: 'togglePlanningMode',
         value: function togglePlanningMode() {
-            if (this.StudentDataService.planningMode && !this.item.planningMode) {
+            /*if (this.StudentDataService.planningMode && !this.item.planningMode) {
                 // Don't allow multiple concurrent planning modes.
-                this.$translate('planningModeOnlyOnePlanningModeAllowed').then(function (planningModeOnlyOnePlanningModeAllowed) {
+                this.$translate('planningModeOnlyOnePlanningModeAllowed').then((planningModeOnlyOnePlanningModeAllowed) => {
                     alert(planningModeOnlyOnePlanningModeAllowed);
                 });
+                 return;
+            }*/
 
-                return;
-            }
             // toggle the planning mode
-            this.planningMode = !this.planningMode;
-            this.item.planningMode = this.planningMode;
+            //this.planningMode = !this.planningMode;
+            //this.item.planningMode = this.planningMode;
+
             // also toggle StudentDataService planning mode. This will be used to constrain the entire project when in planning mode.
             this.StudentDataService.planningMode = this.planningMode;
 
-            if (!this.planningMode) {
+            /*if (!this.planningMode) {
                 // Student is exiting planning mode, so save the changed nodes in NodeState
-
-                var nodeState = this.NodeService.createNewNodeState();
+                 let nodeState = this.NodeService.createNewNodeState();
                 nodeState.nodeId = this.nodeId;
                 nodeState.isAutoSave = false;
                 nodeState.isSubmit = false;
-
-                var studentData = {};
+                 var studentData = {};
                 studentData.nodeId = this.nodeId;
                 studentData.nodes = [];
-                var planningNode = this.ProjectService.getNodeById(this.nodeId);
-                studentData.nodes.push(planningNode); // add the planning node (group)
+                let planningNode = this.ProjectService.getNodeById(this.nodeId);
+                studentData.nodes.push(planningNode);  // add the planning node (group)
                 // loop through the child ids in the planning group and save them also
                 if (planningNode.ids != null) {
-                    for (var c = 0; c < planningNode.ids.length; c++) {
-                        var childPlanningNodeId = planningNode.ids[c];
-                        var childPlanningNode = this.ProjectService.getNodeById(childPlanningNodeId);
+                    for (let c = 0; c < planningNode.ids.length; c++) {
+                        let childPlanningNodeId = planningNode.ids[c];
+                        let childPlanningNode = this.ProjectService.getNodeById(childPlanningNodeId);
                         studentData.nodes.push(childPlanningNode);
                     }
                 }
-
-                nodeState.studentData = studentData;
+                 nodeState.studentData = studentData;
                 var nodeStates = [];
                 nodeStates.push(nodeState);
                 this.StudentDataService.saveNodeStates(nodeStates);
-            }
+            }*/
 
             // Save planning mode on/off event
             var componentId = null;
@@ -735,8 +822,8 @@ var NavItemController = function () {
              * it is in reference to the UI which is opposite of the array index.
              * moving a node down in the UI will move it up in the array index.
              * consider the case when the student moves a node from the
-             * top to the bottom. all the node indexes will have seemed to 
-             * move up except for the node that was moved down. the 
+             * top to the bottom. all the node indexes will have seemed to
+             * move up except for the node that was moved down. the
              * opposite case of moving a node from the bottom to the top is similar.
              * all the node indexes will have seemed to move down except for the
              * node that was moved up. in all cases only one node will move up and
@@ -868,7 +955,7 @@ var NavItemController = function () {
     return NavItemController;
 }();
 
-NavItemController.$inject = ['$rootScope', '$scope', '$translate', '$element', 'NodeService', 'ProjectService', 'StudentDataService'];
+NavItemController.$inject = ['$rootScope', '$scope', '$translate', '$element', 'NodeService', 'ProjectService', 'StudentDataService', '$mdDialog'];
 
 exports.default = NavItemController;
 //# sourceMappingURL=navItemController.js.map
