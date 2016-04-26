@@ -87,7 +87,11 @@ return delimiter+contentBaseURL+"assets/"+matchedStringWithoutQuotes+delimiter;}
 var defaultName=nodeType==='group'?'explore':'school';nodeIcon={color:'rgba(0,0,0,0.54)',type:'font',fontSet:'material-icons',fontName:defaultName,imgSrc:'',imgAlt:'node icon'}; // TODO: check for different statuses
 var icons=node.icons;if(!!icons&&!!icons.default){var icon=icons.default;nodeIcon=$.extend(true,nodeIcon,icon);} // check for empty image source
 if(!nodeIcon.imgSrc){ // revert to font icon
-nodeIcon.type='font';}}return nodeIcon;}},{key:'getParentGroup',value:function getParentGroup(nodeId){var result=null;if(nodeId!=null){var node=this.getNodeById(nodeId);if(node!=null){var groupNodes=this.getGroupNodes();for(var g=0;g<groupNodes.length;g++){var groupNode=groupNodes[g];if(this.isNodeDirectChildOfGroup(node,groupNode)){result=groupNode;break;}}}}return result;}},{key:'getNodeDepth',value:function getNodeDepth(nodeId,val){var result=null;if(nodeId!=null){var depth=typeof val==="number"?val:0;var parent=this.getParentGroup(nodeId);if(parent){depth=this.getNodeDepth(parent.id,depth+1);}result=depth;}return result;}},{key:'getRootNode',value:function getRootNode(nodeId){var result=null;var parentGroup=this.getParentGroup(nodeId);if(parentGroup==null){result=this.getNodeById(nodeId);}else {result=this.getRootNode(parentGroup.id);}return result;}},{key:'isNodeDirectChildOfGroup',value:function isNodeDirectChildOfGroup(node,group){var result=false;if(node!=null&&group!=null){var nodeId=node.id;var groupIds=group.ids;if(groupIds!=null&&groupIds.indexOf(nodeId)!=-1){result=true;}}return result;}},{key:'isNodeDescendentOfGroup',value:function isNodeDescendentOfGroup(node,group){var result=false;if(node!=null&&group!=null){var descendents=this.getDescendentsOfGroup(group);var nodeId=node.id;if(descendents.indexOf(nodeId)!=-1){result=true;}}return result;}},{key:'getDescendentsOfGroup',value:function getDescendentsOfGroup(group){var descendents=[];if(group!=null){var childIds=group.ids;if(childIds!=null){descendents=childIds;for(var c=0;c<childIds.length;c++){var childId=childIds[c];var node=this.getNodeById(childId);if(node!=null){var childDescendents=this.getDescendentsOfGroup(node);descendents=descendents.concat(childDescendents);}}}}return descendents;}},{key:'isStartNode',value:function isStartNode(node){var result=false;if(node!=null){var nodeId=node.id;var projectStartId=this.getStartNodeId();if(nodeId===projectStartId){result=true;}var groups=this.getGroups();for(var g=0;g<groups.length;g++){var group=groups[g];if(group!=null){var groupStartId=group.startId;if(nodeId===groupStartId){result=true;break;}}}}return result;}},{key:'getStartNodeId', /**
+nodeIcon.type='font';}}return nodeIcon;}},{key:'getParentGroup',value:function getParentGroup(nodeId){var result=null;if(nodeId!=null){var node=this.getNodeById(nodeId);if(node!=null){var groupNodes=this.getGroupNodes();for(var g=0;g<groupNodes.length;g++){var groupNode=groupNodes[g];if(this.isNodeDirectChildOfGroup(node,groupNode)){result=groupNode;break;}}}}return result;}},{key:'getParentGroupId', /**
+     * Get the parent group id
+     * @param nodeId the parent group id
+     * @returns the parent group id
+     */value:function getParentGroupId(nodeId){var parentGroupId=null;if(nodeId!=null){var parentGroup=this.getParentGroup(nodeId);if(parentGroup!=null){parentGroupId=parentGroup.id;}}return parentGroupId;}},{key:'getNodeDepth',value:function getNodeDepth(nodeId,val){var result=null;if(nodeId!=null){var depth=typeof val==="number"?val:0;var parent=this.getParentGroup(nodeId);if(parent){depth=this.getNodeDepth(parent.id,depth+1);}result=depth;}return result;}},{key:'getRootNode',value:function getRootNode(nodeId){var result=null;var parentGroup=this.getParentGroup(nodeId);if(parentGroup==null){result=this.getNodeById(nodeId);}else {result=this.getRootNode(parentGroup.id);}return result;}},{key:'isNodeDirectChildOfGroup',value:function isNodeDirectChildOfGroup(node,group){var result=false;if(node!=null&&group!=null){var nodeId=node.id;var groupIds=group.ids;if(groupIds!=null&&groupIds.indexOf(nodeId)!=-1){result=true;}}return result;}},{key:'isNodeDescendentOfGroup',value:function isNodeDescendentOfGroup(node,group){var result=false;if(node!=null&&group!=null){var descendents=this.getDescendentsOfGroup(group);var nodeId=node.id;if(descendents.indexOf(nodeId)!=-1){result=true;}}return result;}},{key:'getDescendentsOfGroup',value:function getDescendentsOfGroup(group){var descendents=[];if(group!=null){var childIds=group.ids;if(childIds!=null){descendents=childIds;for(var c=0;c<childIds.length;c++){var childId=childIds[c];var node=this.getNodeById(childId);if(node!=null){var childDescendents=this.getDescendentsOfGroup(node);descendents=descendents.concat(childDescendents);}}}}return descendents;}},{key:'isStartNode',value:function isStartNode(node){var result=false;if(node!=null){var nodeId=node.id;var projectStartId=this.getStartNodeId();if(nodeId===projectStartId){result=true;}var groups=this.getGroups();for(var g=0;g<groups.length;g++){var group=groups[g];if(group!=null){var groupStartId=group.startId;if(nodeId===groupStartId){result=true;break;}}}}return result;}},{key:'getStartNodeId', /**
      * Returns the Project's start node id, or null if it's not defined in the project
      */value:function getStartNodeId(){var startNodeId=null;var project=this.project;if(project!=null){startNodeId=project.startNodeId;}return startNodeId;}},{key:'setStartNodeId', /**
      * Set the start node id
@@ -109,13 +113,27 @@ if(this.isNodeDescendentOfGroup(node,targetNode)){result=true;}}}}}return result
      * Check if a node id comes after another node id in the project
      * @param nodeIdBefore the node id before
      * @param nodeIdAfter the node id after
-     */value:function isNodeIdAfter(nodeIdBefore,nodeIdAfter){var result=false;if(nodeIdBefore!=null&&nodeIdAfter!=null){if(this.ProjectService.isApplicationNode(nodeIdBefore)){ // the node id before is a step
-}else {} // the node id before is an activity
+     */value:function isNodeIdAfter(nodeIdBefore,nodeIdAfter){var result=false;if(nodeIdBefore!=null&&nodeIdAfter!=null){if(this.isApplicationNode(nodeIdBefore)){ // the node id before is a step
 // get all the paths from the beforeNodeId to the end of the project
-var pathsToEnd=this.getAllPaths([],nodeIdBefore);if(pathsToEnd!=null){ // loop through all the paths
-for(var p=0;p<pathsToEnd.length;p++){var pathToEnd=pathsToEnd[p];if(pathToEnd!=null){ // remove the first node id because that will be the beforeNodeId
-pathToEnd.shift();if(pathToEnd.indexOf(nodeIdAfter)!=-1){ // we have found the nodeIdAfter in the path to the end of the project
-result=true;}}}}}return result;}},{key:'getNavigationMode',value:function getNavigationMode(){var navigationMode=null;var project=this.project;if(project!=null){navigationMode=project.navigationMode;}return navigationMode;}},{key:'getTransitions',value:function getTransitions(){var transitions=null;var project=this.project;if(project!=null){transitions=project.transitions;}return transitions;}},{key:'getPossibleTransitionCriteria', /**
+var pathsToEnd=this.getAllPaths([],nodeIdBefore,true);if(pathsToEnd!=null){ // loop through all the paths
+for(var p=0;p<pathsToEnd.length;p++){var pathToEnd=pathsToEnd[p];if(pathToEnd!=null){ /*
+                             * remove the first node id and its parent id because
+                             * we will check the remaining node ids in the array
+                             * for the nodeIdAfter
+                             */ // get the index of the node id before
+var index=pathToEnd.indexOf(nodeIdBefore);if(index!=-1){ // remove the node id before
+pathToEnd.splice(index,1);} // get the parent group of the node id before
+var parentGroup=this.getParentGroup(nodeIdBefore);if(parentGroup!=null){ // remove the parent group of the node id before
+var parentGroupId=parentGroup.id;var parentGroupIndex=pathToEnd.indexOf(parentGroupId);if(parentGroupIndex!=-1){pathToEnd.splice(parentGroupIndex,1);}}if(pathToEnd.indexOf(nodeIdAfter)!=-1){ // we have found the nodeIdAfter in the path to the end of the project
+result=true;}}}}}else { // the node id before is an activity
+// get the group
+var group=this.getNodeById(nodeIdBefore);if(group!=null){ // get the transitions from the group
+var transitions=this.getTransitionsByFromNodeId(nodeIdBefore);if(transitions!=null){ // loop through all the transitions
+for(var t=0;t<transitions.length;t++){var transition=transitions[t];if(transition!=null){var toNodeId=transition.to; // get the paths between to toNodeId and the end of the project
+var pathsToEnd=this.getAllPaths([],toNodeId,true); // loop through all the paths
+for(var p=0;p<pathsToEnd.length;p++){ // get a path
+var pathToEnd=pathsToEnd[p];if(pathToEnd!=null){if(pathToEnd.indexOf(nodeIdAfter)!=-1){ // we have found the nodeIdAfter in the path to the end of the project
+result=true;}}}}}}}}}return result;}},{key:'getNavigationMode',value:function getNavigationMode(){var navigationMode=null;var project=this.project;if(project!=null){navigationMode=project.navigationMode;}return navigationMode;}},{key:'getTransitions',value:function getTransitions(){var transitions=null;var project=this.project;if(project!=null){transitions=project.transitions;}return transitions;}},{key:'getPossibleTransitionCriteria', /**
      * Returns all possible transition criteria for the specified node and component.
      */value:function getPossibleTransitionCriteria(nodeId,componentId){var component=this.getComponentByNodeIdAndComponentId(nodeId,componentId);if(component!=null){var componentType=component.type;var componentService=this.$injector.get(componentType+'Service');if(componentService.getPossibleTransitionCriteria){return componentService.getPossibleTransitionCriteria(nodeId,componentId,component);}else {return [];}}else {return [];}}},{key:'getTransitionLogicByFromNodeId', /**
      * Get the transition logic for a node
@@ -123,12 +141,18 @@ result=true;}}}}}return result;}},{key:'getNavigationMode',value:function getNav
      * @returns the transition logic object
      */value:function getTransitionLogicByFromNodeId(fromNodeId){var transitionLogic=null;if(fromNodeId!=null){ // get the node
 var node=this.getNodeById(fromNodeId);if(node!=null){ // get the transition logic
-transitionLogic=node.transitionLogic;}}return transitionLogic;}},{key:'getNodesByToNodeId', /**
+transitionLogic=node.transitionLogic;}}return transitionLogic;}},{key:'getTransitionsByFromNodeId', /**
+     * Get the transitions for a node
+     * @param fromNodeId the node to get transitions from
+     * @returns an array of transitions
+     */value:function getTransitionsByFromNodeId(fromNodeId){var transitions=null;if(fromNodeId!=null){ // get the transition logic
+var transitionLogic=this.getTransitionLogicByFromNodeId(fromNodeId);if(transitionLogic!=null){ // get the transitions
+transitions=transitionLogic.transitions;}}return transitions;} /**
      * Get nodes that have a transition to the given node id
      * @param toNodeId the node id
      * @returns an array of node objects that transition to the
      * given node id
-     */value:function getNodesByToNodeId(toNodeId){var nodesByToNodeId=[];if(toNodeId!=null){ // get all the nodes
+     */},{key:'getNodesByToNodeId',value:function getNodesByToNodeId(toNodeId){var nodesByToNodeId=[];if(toNodeId!=null){ // get all the nodes
 var nodes=this.project.nodes; // loop through all the nodes
 for(var n=0;n<nodes.length;n++){var node=nodes[n];var transitionLogic=node.transitionLogic;if(transitionLogic!=null){var transitions=transitionLogic.transitions;if(transitions!=null){ // loop through all the transitions for the node
 for(var t=0;t<transitions.length;t++){var transition=transitions[t];if(transition!=null){if(toNodeId===transition.to){ // this node has a transition to the node id
@@ -183,40 +207,98 @@ return nodeIds;}},{key:'getAllPaths', /**
      * in this array are referenced to make sure we don't loop back
      * on the path.
      * @param nodeId the node id we want to get the paths from
+     * @param includeGroups whether to include the group node ids in the paths
      * @return an array of paths. each path is an array of node ids.
-     */value:function getAllPaths(pathSoFar,nodeId){var allPaths=[];if(nodeId!=null){if(this.isApplicationNode(nodeId)){ // the node is an application node
-// get the transition logic from the node id
-var transitionLogic=this.getTransitionLogicByFromNodeId(nodeId);if(transitionLogic!=null){ // get all the transitions from this node
-var transitions=transitionLogic.transitions;var path=[];if(transitions!=null){ // add the node id to the path so far
-pathSoFar.push(nodeId);if(transitions.length===0){ /*
-                             * there are no transitions from the node id so this path
-                             * only contains this node id
-                             */ // add the node id to the path
-path.push(nodeId); // add the path to the all paths array
-allPaths.push(path);}else { // loop through all the transitions from this node id
-for(var t=0;t<transitions.length;t++){var transitionResult=[]; // get a transition
-var transition=transitions[t];if(transition!=null){ // get the to node id
-var toNodeId=transition.to;if(pathSoFar.indexOf(toNodeId)==-1){ /*
+     */value:function getAllPaths(pathSoFar,nodeId,includeGroups){var allPaths=[];if(nodeId!=null){if(this.isApplicationNode(nodeId)){ // the node is an application node
+var path=[]; // get all the transitions from this node
+var transitions=this.getTransitionsByFromNodeId(nodeId);if(transitions!=null){if(includeGroups){ // get the parent group
+var parentGroup=this.getParentGroup(nodeId);if(parentGroup!=null){ // get the parent group id
+var parentGroupId=parentGroup.id;if(parentGroupId!=null&&pathSoFar.indexOf(parentGroupId)==-1){ // add the parent group id
+pathSoFar.push(parentGroup.id);}}} /*
+                     * add the node id to the path so far so we can later check
+                     * which nodes are already in the path to prevent looping
+                     * back in the path
+                     */pathSoFar.push(nodeId);if(transitions.length===0){ /*
+                         * there are no transitions from the node id so we will
+                         * look for a transition in the parent group
+                         */var addedCurrentNodeId=false;var parentGroupId=this.getParentGroupId(nodeId);var parentGroupTransitions=this.getTransitionsByFromNodeId(parentGroupId);if(parentGroupTransitions!=null){for(var p=0;p<parentGroupTransitions.length;p++){var parentGroupTransition=parentGroupTransitions[p];if(parentGroupTransition!=null){var toNodeId=parentGroupTransition.to;if(pathSoFar.indexOf(toNodeId)==-1){ /*
                                          * recursively get the paths by getting all
                                          * the paths for the to node
-                                         */var allPathsFromToNode=this.getAllPaths(pathSoFar,toNodeId);if(allPathsFromToNode!=null){ // loop through all the paths for the to node
+                                         */var allPathsFromToNode=this.getAllPaths(pathSoFar,toNodeId,includeGroups);for(var a=0;a<allPathsFromToNode.length;a++){ // get a path
+var tempPath=allPathsFromToNode[a]; // prepend the current node id to the path
+tempPath.unshift(nodeId); // add the path to our collection of paths
+allPaths.push(tempPath);addedCurrentNodeId=true;}}}}}if(!addedCurrentNodeId){ /*
+                             * if the parent group doesn't have any transitions we will
+                             * need to add the current node id to the path
+                             */ // add the node id to the path
+path.push(nodeId); // add the path to the all paths array
+allPaths.push(path);}}else { // there are transitions from this node id
+// loop through all the transitions from this node id
+for(var t=0;t<transitions.length;t++){var transitionResult=[]; // get a transition
+var transition=transitions[t];if(transition!=null){ // get the to node id
+var toNodeId=transition.to;if(pathSoFar.indexOf(toNodeId)==-1){ // we have not found the to node in the path yet so we can traverse it
+/*
+                                     * recursively get the paths by getting all
+                                     * the paths from the to node
+                                     */var allPathsFromToNode=this.getAllPaths(pathSoFar,toNodeId,includeGroups);if(allPathsFromToNode!=null){ // loop through all the paths from the to node
+for(var a=0;a<allPathsFromToNode.length;a++){ // get a path
+var tempPath=allPathsFromToNode[a];if(includeGroups){ // we need to add the group id to the path
+if(tempPath.length>0){ // get the first node id in the path
+var firstNodeId=tempPath[0]; // get the parent id of the first node
+var firstParentGroupId=this.getParentGroupId(firstNodeId); // get the parent id of the current node
+var parentGroupId=this.getParentGroupId(nodeId);if(parentGroupId!=firstParentGroupId){ /*
+                                                         * the parent ids are different which means this is a boundary
+                                                         * between two groups. for example if the project looked like
+                                                         * group1>node1>node2>group2>node3>node4
+                                                         * and the current node was node2 then the first node in the
+                                                         * path would be node3 which means we would need to place
+                                                         * group2 on the bath before node3
+                                                         */tempPath.unshift(firstParentGroupId);}}} // prepend the current node id to the path
+tempPath.unshift(nodeId); // add the path to our collection of paths
+allPaths.push(tempPath);}}}else { /*
+                                     * the node is already in the path so far which means
+                                     * the transition is looping back to a previous node.
+                                     * we do not want to take this transition because
+                                     * it will lead to an infinite loop. we will just
+                                     * add the current node id to the path and not take
+                                     * the transition which essentially ends the path.
+                                     */ // add the node id to the path
+path.push(nodeId); // add the path to the all paths array
+allPaths.push(path);}}}}if(pathSoFar.length>0){ // get the last node id
+var lastNodeId=pathSoFar[pathSoFar.length-1]; // check if the last node id is a group id
+if(this.isGroupNode(lastNodeId)){ /*
+                             * the last node id is a group id so we will remove it
+                             * since we are moving back up the path as we traverse
+                             * the nodes depth first
+                             */pathSoFar.pop();}} /*
+                     * remove the latest node id (this will be a step node id)
+                     * since we are moving back up the path as we traverse the
+                     * nodes depth first
+                     */pathSoFar.pop();}}else if(this.isGroupNode(nodeId)){ // the node is a group node
+/*
+                 * add the node id to the path so far so we can later check
+                 * which nodes are already in the path to prevent looping
+                 * back in the path
+                 */pathSoFar.push(nodeId); // get the group node
+var groupNode=this.getNodeById(nodeId);if(groupNode!=null){var startId=groupNode.startId;if(startId==null||startId==""){ // there is no start id so we will take the transition from the group
+// TODO? there is no start id so we will loop through all the child nodes
+// get the transitions from the group
+var transitions=this.getTransitionsByFromNodeId(groupNode.id);if(transitions!=null){ // loop through all the transitions from the group
+for(var t=0;t<transitions.length;t++){var transition=transitions[t];if(transition!=null){var toNodeId=transition.to; // get the paths from the to node to the end of the project
+var allPathsFromToNode=this.getAllPaths(pathSoFar,toNodeId,includeGroups);if(allPathsFromToNode!=null){ // loop through all the paths from the to node
 for(var a=0;a<allPathsFromToNode.length;a++){ // get a path
 var tempPath=allPathsFromToNode[a]; // prepend the current node id to the path
 tempPath.unshift(nodeId); // add the path to our collection of paths
-allPaths.push(tempPath);}}}else { /*
-                                         * the node is already in the path so far which means
-                                         * the transition is looping back to a previous node.
-                                         * we do not want to take this transition because
-                                         * it will lead to an infinite loop. we will just
-                                         * add the current node id to the path and not take
-                                         * the transition which essentially ends the path.
-                                         */ // add the node id to the path
-path.push(nodeId); // add the path to the all paths array
-allPaths.push(path);}}}} /*
-                         * remove the latest node id since we are moving back
-                         * up the path as we traverse the nodes depth first
-                         */pathSoFar.pop();}}}else if(this.isGroupNode(nodeId)){ // the node is a group node
-}}return allPaths;}},{key:'consolidatePaths', /**
+allPaths.push(tempPath);}}}}}}else { // there is a start id so we will traverse it
+// get the paths from the start id to the end of the project
+var allPathsFromToNode=this.getAllPaths(pathSoFar,startId,includeGroups);if(allPathsFromToNode!=null){ // loop through all the paths from the to node
+for(var a=0;a<allPathsFromToNode.length;a++){ // get a path
+var tempPath=allPathsFromToNode[a]; // prepend the current node id to the path
+tempPath.unshift(nodeId); // add the path to our collection of paths
+allPaths.push(tempPath);}}}} /*
+                 * remove the latest node id since we are moving back
+                 * up the path as we traverse the nodes depth first
+                 */pathSoFar.pop();}}return allPaths;}},{key:'consolidatePaths', /**
      * Consolidate all the paths into a linear list of node ids
      * @param paths an array of paths. each path is an array of node ids.
      * @return an array of node ids that have been properly ordered

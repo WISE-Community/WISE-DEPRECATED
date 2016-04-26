@@ -41,6 +41,7 @@ var StudentDataService = function () {
                 // initialize dummy student data
                 this.studentData = {};
                 this.studentData.componentStates = [];
+                this.studentData.nodeStates = [];
                 this.studentData.events = [];
                 this.studentData.userName = 'Preview Student';
                 this.studentData.userId = '0';
@@ -252,6 +253,12 @@ var StudentDataService = function () {
         }
     }, {
         key: 'updateNodeStatusByNode',
+
+
+        /**
+         * Update the node status for a node
+         * @param node the node to update
+         */
         value: function updateNodeStatusByNode(node) {
 
             if (node != null) {
@@ -511,20 +518,141 @@ var StudentDataService = function () {
                     result = this.evaluateIsVisitedCriteria(criteria);
                 } else if (functionName === 'isComplete') {} else if (functionName === 'isCorrect') {} else if (functionName === 'choiceChosen') {
                     result = this.evaluateChoiceChosenCriteria(criteria);
+                } else if (functionName === 'isPlanningActivityCompleted') {
+                    result = this.evaluateIsPlanningActivityCompletedCriteria(criteria);
                 } else if (functionName === '') {}
             }
 
             return result;
         }
     }, {
-        key: 'evaluateBranchPathTakenCriteria',
+        key: 'evaluateIsPlanningActivityCompletedCriteria',
 
+
+        /**
+         * Check if the isPlanningActivityCompleted criteria was satisfied
+         * @param criteria a isPlanningActivityCompleted criteria
+         */
+        value: function evaluateIsPlanningActivityCompletedCriteria(criteria) {
+            var result = false;
+
+            if (criteria != null) {
+                // get the function name
+                //var name = criteria.name;
+
+                var params = null;
+
+                // get the params
+                if (criteria.function != null) {
+                    params = criteria.function.params;
+                }
+
+                if (params != null) {
+
+                    // get the group id
+                    var nodeId = params.nodeId;
+
+                    // get the number of planning steps the student needs to create
+                    var planningStepsCreated = params.planningStepsCreated;
+
+                    // get whether the student needs to complete all the steps in the activity
+                    var planningStepsCompleted = params.planningStepsCompleted;
+
+                    var planningStepsCreatedSatisfied = false;
+                    var planningStepsCompletedSatisfied = false;
+
+                    var planningNodes = [];
+
+                    if (planningStepsCreated == null) {
+                        // there is no value set so we will regard it as satisfied
+                        planningStepsCreatedSatisfied = true;
+                    } else {
+                        /*
+                         * there is a value for number of planning steps that need to be created
+                         * so we will check if the student created enough planning steps
+                         */
+
+                        // get the node states for the activity
+                        var nodeStates = this.getNodeStatesByNodeId(nodeId);
+
+                        if (nodeStates != null) {
+
+                            /*
+                             * loop through all the node states from newest to oldest
+                             * for the sake of efficiency
+                             */
+                            for (var ns = nodeStates.length - 1; ns >= 0; ns--) {
+
+                                var planningStepCount = 0;
+
+                                var nodeState = nodeStates[ns];
+
+                                if (nodeState != null) {
+
+                                    // get the student data
+                                    var studentData = nodeState.studentData;
+
+                                    if (studentData != null) {
+
+                                        // get the nodes
+                                        var nodes = studentData.nodes;
+
+                                        if (nodes != null) {
+
+                                            // loop through the nodes
+                                            for (var n = 0; n < nodes.length; n++) {
+                                                var node = nodes[n];
+
+                                                if (node != null) {
+                                                    if (node.type === 'node' && (node.templateId != null || node.planningTemplateId != null)) {
+                                                        // we have found a planning step the student created
+                                                        planningStepCount++;
+                                                    }
+                                                }
+                                            }
+
+                                            if (planningStepCount >= planningStepsCreated) {
+                                                // the student has created a sufficient number of planning steps
+                                                planningStepsCreatedSatisfied = true;
+                                                planningNodes = nodes;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    if (planningStepsCompleted == null) {
+                        planningStepsCompletedSatisfied = true;
+                    } else {
+                        /*
+                         * check if the activity is completed. this checks if all
+                         * the children of the activity are completed.
+                         */
+                        if (this.isCompleted(nodeId)) {
+                            planningStepsCompletedSatisfied = true;
+                        }
+                    }
+
+                    if (planningStepsCreatedSatisfied && planningStepsCompletedSatisfied) {
+                        result = true;
+                    }
+                }
+            }
+
+            return result;
+        }
 
         /**
          * Check if this branchPathTaken criteria was satisfied
          * @param criteria a branchPathTaken criteria
          * @returns whether the branchPathTaken criteria was satisfied
          */
+
+    }, {
+        key: 'evaluateBranchPathTakenCriteria',
         value: function evaluateBranchPathTakenCriteria(criteria) {
             var result = false;
 
@@ -1540,11 +1668,13 @@ var StudentDataService = function () {
                     // node is a group
                     var tempResult = true;
 
-                    // check that all the nodes in the group and visible are completed
+                    // check that all the nodes in the group are visible and completed
                     var nodeIds = this.ProjectService.getChildNodeIdsById(nodeId);
                     for (var n = 0; n < nodeIds.length; n++) {
                         var id = nodeIds[n];
-                        if (this.nodeStatuses[id].isVisible && !this.nodeStatuses[id].isCompleted) {
+
+                        if (this.nodeStatuses[id] == null || !this.nodeStatuses[id].isVisible || !this.nodeStatuses[id].isCompleted) {
+                            // the child is not visible or not completed so the group is not completed
                             tempResult = false;
                             break;
                         }
