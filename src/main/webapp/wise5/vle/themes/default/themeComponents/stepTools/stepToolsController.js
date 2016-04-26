@@ -60,6 +60,11 @@ var StepToolsCtrl = function () {
             }
         }
     }, {
+        key: 'getSelectedText',
+        value: function getSelectedText() {
+            return (this.showPosition ? this.getNodePositionById(this.nodeId) + ': ' : '') + this.getNodeTitleByNodeId(this.nodeId);
+        }
+    }, {
         key: 'getTemplateUrl',
         value: function getTemplateUrl() {
             return this.ProjectService.getThemePath() + '/themeComponents/stepTools/stepTools.html';

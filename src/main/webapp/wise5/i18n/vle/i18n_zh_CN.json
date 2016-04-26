@@ -1,0 +1,10 @@
+{
+    "accountMenuItems": "{{item}} 条目",
+    "accountMenuTotalScore": "总分",
+    "addNewNote": "添加新的笔记",
+    "newNote": "添加新的笔记",
+    "projectCompletion": "项目完成",
+    "projectPlan": "项目计划",
+    "typeYourNoteHere": "在这里输入笔记",
+    "accountMenuPoints": "{{point}} 点"
+}

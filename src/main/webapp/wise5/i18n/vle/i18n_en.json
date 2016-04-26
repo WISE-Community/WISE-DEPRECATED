@@ -4,6 +4,8 @@
   "accountMenuTotalScore": "Total Score",
   "addNewNote": "Add New Note",
   "newNote": "Add New Note",
+  "planningModeOnlyOnePlanningModeAllowed": "You can only work on one Planning Activity at the same time. Turn off Planning Mode on the existing Planning Activity before working on this one.",
+  "planningModeStepsUnVisitable": "You are not allowed to enter the step while in Planning Mode. Turn off Planning Mode to enter the step.",
   "projectCompletion": "Project Completion",
   "projectPlan": "Project Plan",
   "typeYourNoteHere": "Type your note here..."

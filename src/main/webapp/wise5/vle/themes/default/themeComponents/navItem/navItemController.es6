@@ -3,17 +3,21 @@
 class NavItemController {
     constructor($rootScope,
                 $scope,
+                $translate,
                 $element,
                 NodeService,
                 ProjectService,
-                StudentDataService) {
+                StudentDataService,
+                $mdDialog) {
 
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$element = $element;
+        this.$translate = $translate;
         this.NodeService = NodeService;
         this.ProjectService = ProjectService;
         this.StudentDataService = StudentDataService;
+        this.$mdDialog = $mdDialog;
 
         this.expanded = false;
 
@@ -26,14 +30,17 @@ class NavItemController {
         this.currentNode = this.StudentDataService.currentNode;
         this.isCurrentNode = (this.currentNode.id === this.nodeId);
         this.setNewNode = false;
-        
+
         // whether this node is a planning node
         this.isPlanning = this.ProjectService.isPlanning(this.nodeId);
-        this.availablePlanningNodeIds = [];
-        
+
         // the array of nodes used for drag/drop planning sorting
         this.availablePlanningNodes = [];
-        
+
+        // whether the node is a planning node instance
+        this.node = this.ProjectService.getNodeById(this.nodeId);
+        this.isPlanningInstance = this.node.templateId ? true : false;
+
         /*
          * the array of nodes used for drag/drop planning sorting. the elements
          * in this array are not the actual nodes that are in the project.
@@ -42,9 +49,9 @@ class NavItemController {
          * that are in the project.
          */
         this.planningNodeInstances = [];
-        
+
         this.parentGroupId = null;
-        
+
         // the options for the planning node template tree
         this.treeOptions1 = {
             accept: function(sourceNodeScope, destNodesScope, destIndex) {
@@ -54,45 +61,42 @@ class NavItemController {
                  */
                 return false;
             }
-        }
-        
+        };
         /*
          * whether planning mode is on or off which determines if students
          * can edit planning related aspects of the project such as adding,
          * moving, or deleting planning steps.
          */
         this.planningMode = false;
-        
+
         var parentGroup = this.ProjectService.getParentGroup(this.nodeId);
-        
+
         if (parentGroup != null) {
             this.parentGroupId = parentGroup.id;
             this.isParentGroupPlanning = this.ProjectService.isPlanning(this.parentGroupId);
         }
-        
+
         if (this.isPlanning) {
             /*
              * planning is enabled so we will get the available planning
              * nodes that can be used in this group
              */
-            this.availablePlanningNodeIds = this.ProjectService.getAvailablePlanningNodeIds(this.nodeId);
             this.availablePlanningNodes = this.ProjectService.getAvailablePlanningNodes(this.nodeId);
         }
-        
+
         if (this.isParentGroupPlanning) {
-            
+
             if (parentGroup.planningMode) {
                 // the parent is currently in planning mode
                 this.planningMode = true;
             }
-            
+
             /*
              * planning is enabled so we will get the available planning
              * nodes that can be used in this group
              */
-            this.availablePlanningNodeIds = this.ProjectService.getAvailablePlanningNodeIds(this.parentGroupId);
             this.availablePlanningNodes = this.ProjectService.getAvailablePlanningNodes(this.parentGroupId);
-            
+
             /*
              * update the nodes in the select drop down used to move planning
              * nodes around
@@ -107,7 +111,7 @@ class NavItemController {
                 function(value) {
                     // the position has changed for this node so we will update it in the UI
                     this.nodeTitle = this.showPosition ? (this.ProjectService.idToPosition[this.nodeId] + ': ' + this.item.title) : this.item.title;
-                    
+
                     /*
                      * update the nodes in the select drop down used to move planning
                      * nodes around
@@ -140,7 +144,7 @@ class NavItemController {
                 }
             }.bind(this)
         );
-        
+
         // watch the planning node instances used for drag/drop planning sorting
         this.$scope.$watchCollection(
             'navitemCtrl.planningNodeInstances',
@@ -149,7 +153,7 @@ class NavItemController {
                 this.planningNodeInstancesChanged(newValue, oldValue);
             }.bind(this)
         );
-        
+
         this.$rootScope.$on('planningNodeChanged', () => {
             /*
              * update the nodes in the select drop down used to move planning
@@ -157,22 +161,22 @@ class NavItemController {
              */
             this.updateSiblingNodeIds();
         });
-        
+
         // a group node has turned on or off planning mode
         this.$rootScope.$on('togglePlanningModeClicked', (event, args) => {
-            
+
             // get the group node that has had its planning node changed
             var planningModeClickedNodeId = args.nodeId;
             var planningMode = args.planningMode;
-            
+
             // get this node's parent group
             var parentGroup = this.ProjectService.getParentGroup(this.nodeId);
             var parentGroupId = null;
-            
+
             if (parentGroup != null) {
                 parentGroupId = parentGroup.id;
             }
-            
+
             if (parentGroupId == planningModeClickedNodeId) {
                 // the parent of this node has changed their planning mode
                 this.planningMode = planningMode;
@@ -181,10 +185,10 @@ class NavItemController {
 
         this.setExpanded();
     }
-    
+
     updateSiblingNodeIds() {
         var childNodeIds = this.ProjectService.getChildNodeIdsById(this.parentGroupId);
-        
+
         this.siblingNodeIds = [];
         this.siblingNodeIds.push(this.parentGroupId);
         this.siblingNodeIds = this.siblingNodeIds.concat(childNodeIds);
@@ -225,12 +229,11 @@ class NavItemController {
             }
             this.expanded = !this.expanded;
         } else {
-            if (this.planningMode) {
-                /*
-                 * students are not allowed to enter planning steps while in
-                 * planning mode
-                 */
-                alert('You are not allowed to enter the step while in Planning Mode. Turn off Planning Mode to enter the step.');
+            if (this.StudentDataService.planningMode) {
+                // Don't allow students to enter planning steps while in planning mode
+                this.$translate('planningModeStepsUnVisitable').then((planningModeStepsUnVisitable) => {
+                    alert(planningModeStepsUnVisitable);
+                });
             } else {
                 this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(this.nodeId);
             }
@@ -253,7 +256,51 @@ class NavItemController {
         let eventNodeId = this.nodeId;
         this.StudentDataService.saveVLEEvent(eventNodeId, componentId, componentType, category, eventName, eventData);
     };
-    
+
+    /**
+     * Returns true iff this student can add the specified planning node.
+     * Limits include reaching the max allowed count
+     * @param planningNodeId
+     */
+    canAddPlanningNode(planningNodeId) {
+        let maxAddAllowed = 1;  // by default, students can only add up to one planning node.
+        let planningGroupNode = null;
+        if (this.isParentGroupPlanning) {
+            planningGroupNode = this.ProjectService.getNodeById(this.parentGroupId);
+        } else {
+            planningGroupNode = this.ProjectService.getNodeById(this.nodeId);
+        }
+        // get the maxAddAllowed value by looking up the planningNode in the project.
+        if (planningGroupNode != null && planningGroupNode.availablePlanningNodes != null) {
+            for (let a = 0; a < planningGroupNode.availablePlanningNodes.length; a++) {
+                let availablePlanningNode = planningGroupNode.availablePlanningNodes[a];
+                if (availablePlanningNode.nodeId === planningNodeId && availablePlanningNode.max != null) {
+                    maxAddAllowed = availablePlanningNode.max;
+                }
+            }
+        }
+
+        // if maxAddAllowed was not found, it means they can add as many as they want
+        if (maxAddAllowed === -1) {
+            return true;
+        }
+
+        let numPlanningNodesAdded = 0;  // keep track of number of instances
+        // otherwise, see how many times the planning node template has been used.
+        // loop through the child ids in the planning group and see how many times they've been used
+        if (planningGroupNode.ids != null) {
+            for (let c = 0; c < planningGroupNode.ids.length; c++) {
+                let childPlanningNodeId = planningGroupNode.ids[c];
+                let childPlanningNode = this.ProjectService.getNodeById(childPlanningNodeId);
+                if (childPlanningNode != null && childPlanningNode.templateId === planningNodeId) {
+                    numPlanningNodesAdded++;
+                }
+            }
+        }
+
+        return numPlanningNodesAdded < maxAddAllowed;
+    };
+
     /**
      * Create a planning node instance and add it to the project
      * @param groupId the group the new planning node instance will be added to
@@ -262,50 +309,100 @@ class NavItemController {
      */
     addPlanningNodeInstanceInside(nodeIdToInsertInside, templateNodeId) {
         // create the planning node instance
-        var planningNodeInstance = this.ProjectService.createPlanningNodeInstance(nodeIdToInsertInside, templateNodeId);
-        
+        let nextAvailablePlanningNodeId = this.StudentDataService.getNextAvailablePlanningNodeId();
+        let planningNodeInstance = this.ProjectService.createPlanningNodeInstance(nodeIdToInsertInside, templateNodeId, nextAvailablePlanningNodeId);
+
         // add the planning node instance inside
         this.ProjectService.addPlanningNodeInstanceInside(nodeIdToInsertInside, planningNodeInstance);
-        
+
         /*
          * update the node statuses so that a node status is created for
          * the new planning node instance
          */
         this.StudentDataService.updateNodeStatuses();
-        
+
         // perform any necessary updating
         this.planningNodeChanged();
 
         // Save add planning node event
         this.savePlanningNodeAddedEvent(planningNodeInstance);
-        
+
         return planningNodeInstance;
     }
-    
+
     /**
-     * Create a planning node instance and add it to the project
+     * Open the planning mode select dialog to choose a planning node template
+     * to create a new planning instance
+     * @param event the trigger event
+     * @param targetNodeId the node to insert the new planning instance after or inside
+     * @param insertInside boolean whether to insert the new planning instance
+     * inside the target node (optional; default is after)
+     */
+    addPlanningInstance(event, targetNodeId, insertInside) {
+        // show dialog with list of planning nodes user can add to current group
+
+        let choosePlanningItemTemplateUrl = this.ProjectService.getThemePath() + '/themeComponents/navItem/choosePlanningItem.html';
+        let navitemCtrl = this;
+
+        this.$mdDialog.show({
+            parent: angular.element(document.body),
+            locals: {
+                targetNodeId: targetNodeId,
+                insertInside: insertInside,
+                navitemCtrl: navitemCtrl
+            },
+            templateUrl: choosePlanningItemTemplateUrl,
+            targetEvent: event,
+            controller: ChoosePlanningItemController
+        });
+
+        function ChoosePlanningItemController($scope, $mdDialog, targetNodeId, insertInside, navitemCtrl) {
+            $scope.navitemCtrl = navitemCtrl;
+            $scope.targetNodeId = targetNodeId;
+            $scope.insertInside = insertInside;
+
+            $scope.addSelectedPlanningInstance = (templateNodeId) => {
+                if ($scope.insertInside) {
+                    $scope.navitemCtrl.addPlanningNodeInstanceInside($scope.targetNodeId, templateNodeId);
+                } else {
+                    $scope.navitemCtrl.addPlanningNodeInstanceAfter($scope.targetNodeId, templateNodeId);
+                }
+
+                $mdDialog.hide();
+            };
+
+            $scope.close = () => {
+                $mdDialog.hide();
+            };
+        }
+        ChoosePlanningItemController.$inject = ["$scope", "$mdDialog", "targetNodeId", "insertInside", "navitemCtrl"];
+    };
+
+    /**
+     * Create a planning node instance and add it to the project after the specified nodeId
      * @param groupId the group the new planning node instance will be added to
      * @param nodeId the node id of the planning node template
      */
     addPlanningNodeInstanceAfter(nodeIdToInsertAfter, templateNodeId) {
-        
+
         var parentGroup = this.ProjectService.getParentGroup(nodeIdToInsertAfter);
-        
+
         if (parentGroup != null) {
             var parentGroupId = parentGroup.id;
-            
+
             // create the planning node instance
-            var planningNodeInstance = this.ProjectService.createPlanningNodeInstance(parentGroupId, templateNodeId);
-            
+            let nextAvailablePlanningNodeId = this.StudentDataService.getNextAvailablePlanningNodeId();
+            let planningNodeInstance = this.ProjectService.createPlanningNodeInstance(parentGroupId, templateNodeId, nextAvailablePlanningNodeId);
+
             // insert planning node instance after
             this.ProjectService.addPlanningNodeInstanceAfter(nodeIdToInsertAfter, planningNodeInstance);
-            
+
             /*
              * update the node statuses so that a node status is created for
              * the new planning node instance
              */
             this.StudentDataService.updateNodeStatuses();
-            
+
             // perform any necessary updating
             this.planningNodeChanged();
 
@@ -315,7 +412,7 @@ class NavItemController {
             return planningNodeInstance;
         }
     }
-    
+
     /**
      * Remove the planning node instance
      * @param planningNodeInstanceNodeId the planning node instance to remove
@@ -323,7 +420,7 @@ class NavItemController {
     removePlanningNodeInstance(planningNodeInstanceNodeId) {
         // delete the node from the project
         this.ProjectService.deleteNode(planningNodeInstanceNodeId);
-        
+
         // perform any necessary updating
         this.planningNodeChanged();
 
@@ -338,7 +435,7 @@ class NavItemController {
         let eventNodeId = this.nodeId;
         this.StudentDataService.saveVLEEvent(eventNodeId, componentId, componentType, category, eventName, eventData);
     }
-    
+
     /**
      * Get the node title
      * @param nodeId get the title for this node
@@ -347,14 +444,14 @@ class NavItemController {
     getNodeTitle(nodeId) {
         var node = this.ProjectService.idToNode[nodeId];
         var title = null;
-        
+
         if (node != null) {
             title = node.title;
         }
-        
+
         // get the position
         var position = this.ProjectService.idToPosition[nodeId];
-        
+
         if (position == null) {
             return title;
         } else {
@@ -377,7 +474,7 @@ class NavItemController {
 
         return description;
     }
-    
+
     /**
      * Move the planning node. If the other node is a group node, we will
      * insert this node as the first node in the group. If the other node is
@@ -385,7 +482,7 @@ class NavItemController {
      * @param otherNodeId the other node we will move this node inside or after
      */
     movePlanningNode0(otherNodeId) {
-        
+
         /*
          * check that this node is not the same as the other node.
          * if they are the same we don't need to do anything.
@@ -411,11 +508,11 @@ class NavItemController {
             let eventNodeId = this.nodeId;
             this.StudentDataService.saveVLEEvent(eventNodeId, componentId, componentType, category, eventName, eventData);
         }
-        
+
         // perform any necessary updating
         this.planningNodeChanged();
     }
-    
+
     /**
      * Move the planning node. If the other node is a group node, we will
      * insert this node as the first node in the group. If the other node is
@@ -423,7 +520,7 @@ class NavItemController {
      * @param otherNodeId the other node we will move this node inside or after
      */
     movePlanningNode(nodeIdToMove, nodeIdToMoveAfter) {
-        
+
         /*
          * check that this node is not the same as the other node.
          * if they are the same we don't need to do anything.
@@ -437,30 +534,74 @@ class NavItemController {
                 this.ProjectService.movePlanningNodeInstanceAfter(nodeIdToMove, nodeIdToMoveAfter);
             }
         }
-        
+
         // perform any necessary updating
         this.planningNodeChanged();
     }
-    
+
     /**
      * Something related to planning has changed in the project. This
      * means a planning node was added, moved, or deleted.
      */
     planningNodeChanged() {
+        this.savePlanningNodeChanges();
+
         this.$rootScope.$broadcast('planningNodeChanged');
     }
-    
+
     /**
-     * Toggle the planning mode on and off. Notify child nodes that 
+    * Save the changed nodes in NodeState
+    **/
+    savePlanningNodeChanges() {
+        let nodeState = this.NodeService.createNewNodeState();
+        nodeState.nodeId = this.nodeId;
+        nodeState.isAutoSave = false;
+        nodeState.isSubmit = false;
+
+        var studentData = {};
+        studentData.nodeId = this.nodeId;
+        studentData.nodes = [];
+        let planningNode = this.ProjectService.getNodeById(this.nodeId);
+        studentData.nodes.push(planningNode);  // add the planning node (group)
+        // loop through the child ids in the planning group and save them also
+        if (planningNode.ids != null) {
+            for (let c = 0; c < planningNode.ids.length; c++) {
+                let childPlanningNodeId = planningNode.ids[c];
+                let childPlanningNode = this.ProjectService.getNodeById(childPlanningNodeId);
+                studentData.nodes.push(childPlanningNode);
+            }
+        }
+
+        nodeState.studentData = studentData;
+        var nodeStates = [];
+        nodeStates.push(nodeState);
+        this.StudentDataService.saveNodeStates(nodeStates);
+    }
+
+    /**
+     * Toggle the planning mode on and off. Notify child nodes that
      * the planning mode has changed so they can act accordingly.
      */
     togglePlanningMode() {
-        // toggle the planning mode
-        this.planningMode = !this.planningMode;
-        this.item.planningMode = this.planningMode;
+        /*if (this.StudentDataService.planningMode && !this.item.planningMode) {
+            // Don't allow multiple concurrent planning modes.
+            this.$translate('planningModeOnlyOnePlanningModeAllowed').then((planningModeOnlyOnePlanningModeAllowed) => {
+                alert(planningModeOnlyOnePlanningModeAllowed);
+            });
 
-        if (!this.planningMode) {
+            return;
+        }*/
+
+        // toggle the planning mode
+        //this.planningMode = !this.planningMode;
+        //this.item.planningMode = this.planningMode;
+
+        // also toggle StudentDataService planning mode. This will be used to constrain the entire project when in planning mode.
+        this.StudentDataService.planningMode = this.planningMode;
+
+        /*if (!this.planningMode) {
             // Student is exiting planning mode, so save the changed nodes in NodeState
+
             let nodeState = this.NodeService.createNewNodeState();
             nodeState.nodeId = this.nodeId;
             nodeState.isAutoSave = false;
@@ -484,7 +625,7 @@ class NavItemController {
             var nodeStates = [];
             nodeStates.push(nodeState);
             this.StudentDataService.saveNodeStates(nodeStates);
-        }
+        }*/
 
         // Save planning mode on/off event
         let componentId = null;
@@ -500,37 +641,37 @@ class NavItemController {
         // notify the child nodes that the planning mode of this group node has changed
         this.$rootScope.$broadcast('togglePlanningModeClicked', { nodeId: this.nodeId, planningMode: this.planningMode });
     }
-    
+
     /**
      * The student has clicked the X on a planning step to delete it
      * @param planningNodeInstance the planning node instance object to delete
      */
     deletePlanningNodeInstance(planningNodeInstance) {
-        
+
         var planningNodeInstances = this.planningNodeInstances;
-        
+
         if (planningNodeInstances != null) {
-            
+
             // get the index of the planning node instance we are deleting
             var index = planningNodeInstances.indexOf(planningNodeInstance);
-            
+
             if (index != null && index != -1) {
                 // delete the planning node instance
                 planningNodeInstances.splice(index, 1);
             }
         }
     }
-    
+
     /**
      * The planning node instances array has changed
      * @param newValue the new value of the planning instance array
      * @param oldValue the old value of the planning instance array
      */
     planningNodeInstancesChanged(newValue, oldValue) {
-        
+
         if (newValue.length == oldValue.length) {
             // the length is the same as before
-            
+
             if (newValue.length == 0) {
                 /*
                  * if the length is 0 it means this function was called during
@@ -538,14 +679,14 @@ class NavItemController {
                  */
             } else {
                 // the student moved a planning step
-                
+
                 // find the node that was moved and where it was placed
                 var movedPlanningNodeResults = this.findMovedPlanningNode(newValue, oldValue);
-                
+
                 if (movedPlanningNodeResults != null) {
                     var movedPlanningNode = movedPlanningNodeResults.movedPlanningNode;
                     var nodeIdAddedAfter = movedPlanningNodeResults.nodeIdAddedAfter;
-                    
+
                     if (nodeIdAddedAfter == null) {
                         // the node was moved to the beginning of the group
                         this.movePlanningNode(movedPlanningNode.id, this.nodeId);
@@ -557,14 +698,14 @@ class NavItemController {
             }
         } else if (newValue.length > oldValue.length) {
             // the student added a planning step
-            
+
             // find the node that was added and where it was placed
             var addedPlanningNodeResults = this.findAddedPlanningNode(newValue, oldValue);
             var addedPlanningNode = addedPlanningNodeResults.addedPlanningNode;
             var nodeIdAddedAfter = addedPlanningNodeResults.nodeIdAddedAfter;
-            
+
             var planningNodeInstance = null;
-            
+
             if (nodeIdAddedAfter == null) {
                 // the node was added at the beginning of the group
                 planningNodeInstance = this.addPlanningNodeInstanceInside(this.nodeId, addedPlanningNode.id);
@@ -572,21 +713,21 @@ class NavItemController {
                 // the node was added after another node in the group
                 planningNodeInstance = this.addPlanningNodeInstanceAfter(nodeIdAddedAfter, addedPlanningNode.id);
             }
-            
+
             // update the ids
             addedPlanningNode.templateId = planningNodeInstance.templateId;
             addedPlanningNode.id = planningNodeInstance.id;
         } else if (newValue.length < oldValue.length) {
             // the student deleted a planning step
-            
+
             // find the node that was deleted
             var deletedPlanningNode = this.findDeletedPlanningNode(newValue, oldValue);
-            
+
             // remove the node
             this.removePlanningNodeInstance(deletedPlanningNode.id);
         }
     }
-    
+
     /**
      * Find the node that was moved and where it was moved to
      * @param newPlanningNodes the new array of planning nodes
@@ -597,24 +738,24 @@ class NavItemController {
     findMovedPlanningNode(newPlanningNodes, oldPlanningNodes) {
         var movedPlanningNode = null;
         var nodeIdAddedAfter = null;
-        
+
         // an array used to keep track of the nodes that were moved up
         var planningNodesMovedUp = [];
-        
+
         // an array used to keep track of the nodes that were moved down
         var planningNodesMovedDown = [];
-        
+
         // loop through all the old nodes
         for (var o = 0; o < oldPlanningNodes.length; o++) {
             // get the index of the node in the old array
             var oldIndex = o;
-            
+
             // get the node
             var oldPlanningNode = oldPlanningNodes[o];
-            
+
             // get the index of the node in the new array
             var newIndex = newPlanningNodes.indexOf(oldPlanningNode);
-            
+
             if (oldIndex == newIndex) {
                 // the node was not moved
             } else if (oldIndex < newIndex) {
@@ -625,7 +766,7 @@ class NavItemController {
                 planningNodesMovedUp.push(oldPlanningNode);
             }
         }
-        
+
         /*
          * since the student can only drag one node at a time, it means one
          * of the planningNodesMovedDown or planningNodesMovedUp arrays must
@@ -633,8 +774,8 @@ class NavItemController {
          * it is in reference to the UI which is opposite of the array index.
          * moving a node down in the UI will move it up in the array index.
          * consider the case when the student moves a node from the
-         * top to the bottom. all the node indexes will have seemed to 
-         * move up except for the node that was moved down. the 
+         * top to the bottom. all the node indexes will have seemed to
+         * move up except for the node that was moved down. the
          * opposite case of moving a node from the bottom to the top is similar.
          * all the node indexes will have seemed to move down except for the
          * node that was moved up. in all cases only one node will move up and
@@ -650,11 +791,11 @@ class NavItemController {
             // the student moved one node up
             movedPlanningNode = planningNodesMovedUp[0];
         }
-        
+
         if (movedPlanningNode != null) {
             // get the new index of the node that was moved
             var newIndex = newPlanningNodes.indexOf(movedPlanningNode);
-            
+
             if (newIndex == 0) {
                 // the node is the first in the group
                 nodeIdAddedAfter = null;
@@ -664,20 +805,20 @@ class NavItemController {
                  * the node id of the node that comes before it
                  */
                 var previousNode = newPlanningNodes[newIndex - 1];
-                
+
                 if (previousNode != null) {
                     nodeIdAddedAfter = previousNode.id;
                 }
             }
         }
-        
+
         var returnValue = {};
         returnValue.movedPlanningNode = movedPlanningNode;
         returnValue.nodeIdAddedAfter = nodeIdAddedAfter;
-        
+
         return returnValue;
     }
-    
+
     /**
      * Find the node that was added and where it was moved to
      * @param newPlanningNodes the new array of planning nodes
@@ -688,13 +829,13 @@ class NavItemController {
     findAddedPlanningNode(newPlanningNodes, oldPlanningNodes) {
         var addedPlanningNode = null;
         var nodeIdAddedAfter = null;
-        
+
         // loop through all the new nodes
         for (var n = 0; n < newPlanningNodes.length; n++) {
             var newPlanningNode = newPlanningNodes[n];
-            
+
             if (newPlanningNode != null) {
-                
+
                 // look up the node in the old nodes array
                 if (oldPlanningNodes.indexOf(newPlanningNode) == -1) {
                     /*
@@ -702,7 +843,7 @@ class NavItemController {
                      * we have found the new node
                      */
                     addedPlanningNode = newPlanningNode;
-                    
+
                     if (n == 0) {
                         // the node is the first in the group
                         nodeIdAddedAfter = null;
@@ -712,24 +853,24 @@ class NavItemController {
                          * the node id of the node that comes before it
                          */
                         var previousPlanningNode = newPlanningNodes[n - 1];
-                        
+
                         if (previousPlanningNode != null) {
                             nodeIdAddedAfter = previousPlanningNode.id;
                         }
                     }
-                    
+
                     break;
                 }
             }
         }
-        
+
         var returnValue = {};
         returnValue.addedPlanningNode = addedPlanningNode;
         returnValue.nodeIdAddedAfter = nodeIdAddedAfter;
-        
+
         return returnValue;
     }
-    
+
     /**
      * Find the node that was deleted
      * @param newPlanningNodes the new array of planning nodes
@@ -737,11 +878,11 @@ class NavItemController {
      * @returns the node that was deleted
      */
     findDeletedPlanningNode(newPlanningNodes, oldPlanningNodes) {
-        
+
         // loop through all the old nodes
         for (var o = 0; o < oldPlanningNodes.length; o++) {
             var oldPlanningNode = oldPlanningNodes[o];
-            
+
             if (oldPlanningNode != null) {
                 if (newPlanningNodes.indexOf(oldPlanningNode) == -1) {
                     /*
@@ -752,7 +893,7 @@ class NavItemController {
                 }
             }
         }
-        
+
         return null;
     }
 }
@@ -760,10 +901,12 @@ class NavItemController {
 NavItemController.$inject = [
     '$rootScope',
     '$scope',
+    '$translate',
     '$element',
     'NodeService',
     'ProjectService',
-    'StudentDataService'
+    'StudentDataService',
+    '$mdDialog'
 ];
 
 export default NavItemController;

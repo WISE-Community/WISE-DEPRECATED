@@ -81,6 +81,17 @@
   border-bottom: 1px solid color('gray-lighter');
 }
 
+.nav-item--list__reorder {
+    color: color('text-disabled');
+    padding-left: 8px;
+}
+
+.nav-item--list--planning {
+    button._md-no-style {
+        cursor: move;
+    }
+}
+
 .nav-item--card {
 
 }
@@ -128,4 +139,8 @@
 .progress-wrapper {
   padding: 8px 0;
   cursor: pointer;
+}
+
+.nav-item__planning-toggle {
+    margin: 0;
 }

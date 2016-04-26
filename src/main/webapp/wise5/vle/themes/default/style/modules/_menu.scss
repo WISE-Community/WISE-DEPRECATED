@@ -1,28 +1,21 @@
-#menu-progress {
+.menu-progress {
     width: 26px;
     height: 26px;
     position: absolute;
     top: 12px;
     right: 15px;
-    z-index: 0;
 
-    .md-left, .md-right {
-        .md-half-circle {
-            border-color: rgba(255,255,255,0.4);
-        }
+    path {
+        stroke: color('accent-3') !important;
     }
+}
 
-    .md-left {
-        .md-half-circle {
-            border-left-color: color('accent-3');
-            border-top-color: color('accent-3');
-        }
-    }
-
-    .md-right {
-        .md-half-circle {
-            border-right-color: color('accent-3');
-            border-top-color: color('accent-3');
-        }
-    }
+.menu-progress-bg {
+    border-radius: 50%;
+    border: 2.6px solid rgba(255,255,255,0.4);
+    height: 26px;
+    width: 26px;
+    position: absolute;
+    top: 12px;
+    right: 15px;
 }

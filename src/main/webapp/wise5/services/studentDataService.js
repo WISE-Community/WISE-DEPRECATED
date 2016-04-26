@@ -28,6 +28,8 @@ var StudentDataService = function () {
         this.visitedNodesHistory = [];
         this.nodeStatuses = {};
         this.runStatus = null;
+
+        this.maxPlanningNodeNumber = 0;
     }
 
     _createClass(StudentDataService, [{
@@ -901,7 +903,31 @@ var StudentDataService = function () {
             }
         }
     }, {
+        key: 'getNodeStates',
+
+
+        /**
+         * Returns all NodeStates
+         * @returns Array of all NodeStates
+         */
+        value: function getNodeStates() {
+            var nodeStates = [];
+
+            if (this.studentData != null && this.studentData.nodeStates != null) {
+                nodeStates = this.studentData.nodeStates;
+            }
+
+            return nodeStates;
+        }
+    }, {
         key: 'getNodeStatesByNodeId',
+
+
+        /**
+         * Get all NodeStates for a specific node
+         * @param nodeId id of node
+         * @returns Array of NodeStates for the specified node
+         */
         value: function getNodeStatesByNodeId(nodeId) {
             var nodeStatesByNodeId = [];
 
@@ -2003,6 +2029,75 @@ var StudentDataService = function () {
         key: 'getRunStatus',
         value: function getRunStatus() {
             return this.runStatus;
+        }
+
+        /**
+         * Get the next available planning node instance node id
+         * @returns the next available planning node instance node id
+         */
+
+    }, {
+        key: 'getNextAvailablePlanningNodeId',
+        value: function getNextAvailablePlanningNodeId() {
+
+            // used to keep track of the highest planning node number we have found, which is 1-based
+            var currentMaxPlanningNodeNumber = 1;
+
+            var nodeStates = this.getNodeStates();
+
+            if (nodeStates != null) {
+
+                // loop through all the NodeStates
+                for (var ns = 0; ns < nodeStates.length; ns++) {
+                    var nodeState = nodeStates[ns];
+
+                    if (nodeState != null) {
+                        var nodeStateNodeId = nodeState.nodeId;
+                        if (this.ProjectService.isPlanning(nodeStateNodeId) && nodeState.studentData != null) {
+                            var nodes = nodeState.studentData.nodes;
+                            for (var n = 0; n < nodes.length; n++) {
+                                var node = nodes[n];
+                                var nodeId = node.id;
+                                // regex to match the planning node id e.g. planningNode2
+                                var planningNodeIdRegEx = /planningNode(.*)/;
+
+                                // run the regex on the node id
+                                var result = nodeId.match(planningNodeIdRegEx);
+
+                                if (result != null) {
+                                    // we have found a planning node instance node id
+
+                                    /*
+                                     * get the number part of the planning node instance node id
+                                     * e.g. if the nodeId is planningNode2, the number part
+                                     * would be 2
+                                     */
+                                    var planningNodeNumber = parseInt(result[1]);
+
+                                    if (planningNodeNumber > currentMaxPlanningNodeNumber) {
+                                        /*
+                                         * update the max number part if we have found a new
+                                         * higher number
+                                         */
+                                        currentMaxPlanningNodeNumber = planningNodeNumber;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (this.maxPlanningNodeNumber < currentMaxPlanningNodeNumber) {
+                // Update maxPlanningNodeNumber if we find a bigger number in the NodeStates
+                this.maxPlanningNodeNumber = currentMaxPlanningNodeNumber;
+            }
+
+            // Increment maxPlanningNodeNumber each time this function is called.
+            this.maxPlanningNodeNumber++;
+
+            // return the next available planning node instance node id
+            return 'planningNode' + this.maxPlanningNodeNumber;
         }
     }]);
 

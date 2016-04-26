@@ -104,7 +104,7 @@ md-progress-linear:not([md-mode="indeterminate"]) {
   }
 }
 
-md-list-item .md-list-item-inner p {
+md-list-item ._md-list-item-inner p {
   line-height: 1.6rem;
 
   md-icon {
@@ -112,7 +112,7 @@ md-list-item .md-list-item-inner p {
   }
 }
 
-md-list-item .md-list-item-inner>.md-avatar:first-child, md-list-item>.md-avatar:first-child {
+md-list-item ._md-list-item-inner>.md-avatar:first-child, md-list-item>.md-avatar:first-child {
   display: flex;
 }
 
@@ -205,4 +205,10 @@ md-tooltip {
 
 .md-open-menu-container {
     border-radius: $card-border-radius;
+}
+
+// hack until https://github.com/angular/material/issues/8094 is fixed
+md-list-item._md-button-wrap>div.md-button:first-child ._md-list-item-inner,
+md-list-item ._md-list-item-inner ._md-secondary-container, md-list-item ._md-secondary-container {
+    height: inherit;
 }

@@ -18,7 +18,9 @@ $color: (
   'text': rgba(0, 0, 0, 0.87),
   'text-secondary': rgba(0, 0, 0, 0.54),
   'text-disabled': rgba(0, 0, 0, 0.26),
-  'selected-bg': lighten($_primary-color, 59%)
+  'selected-bg': lighten($_primary-color, 59%),
+  'note': #1565C0,
+  'question': #F57C00
 );
 
 //'warn': #F44336, // should match the default color of your ng-material default theme's 'warn' palette

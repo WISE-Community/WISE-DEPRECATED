@@ -948,20 +948,17 @@ applicationNodes.splice(a,1,node);}}}}}} /**
      * Get the available planning nodes for a given group
      * @param nodeId the node id of the group
      * @returns an array of planning node templates
-     */},{key:'getAvailablePlanningNodes',value:function getAvailablePlanningNodes(nodeId){var availablePlanningNodes=[]; // get the available planning node ids
-var availablePlanningNodeIds=this.getAvailablePlanningNodeIds(nodeId);if(availablePlanningNodeIds!=null){ // loop through all the node ids
-for(var a=0;a<availablePlanningNodeIds.length;a++){var availablePlanningNodeId=availablePlanningNodeIds[a];if(availablePlanningNodeId!=null){ // get the node
-var availablePlanningNode=this.getNodeById(availablePlanningNodeId);if(availablePlanningNode!=null){availablePlanningNodes.push(availablePlanningNode);}}}}return availablePlanningNodes;} /**
+     */},{key:'getAvailablePlanningNodes',value:function getAvailablePlanningNodes(nodeId){var availablePlanningNodesSoFar=[];if(nodeId!=null){var node=this.getNodeById(nodeId);if(node!=null&&node.availablePlanningNodes!=null){var availablePlanningNodes=node.availablePlanningNodes; // loop through all the nodes and retrieve the actual node
+for(var a=0;a<availablePlanningNodes.length;a++){var availablePlanningNode=availablePlanningNodes[a];if(availablePlanningNode!=null){ // get the node
+var availablePlanningNodeActual=this.getNodeById(availablePlanningNode.nodeId);if(availablePlanningNodeActual!=null){if(availablePlanningNode.max!=null){availablePlanningNodeActual.max=availablePlanningNode.max;}availablePlanningNodesSoFar.push(availablePlanningNodeActual);}}}}}return availablePlanningNodesSoFar;} /**
      * Create a planning node instance and add it to the project
      * @param groupId the group id to add the planning node instance to
      * @param nodeId the node id of the planning node template
-     */},{key:'createPlanningNodeInstance',value:function createPlanningNodeInstance(groupId,nodeId){var planningNodeInstance=null;if(nodeId!=null){ // get the planning node template
+     */},{key:'createPlanningNodeInstance',value:function createPlanningNodeInstance(groupId,nodeId,nextAvailablePlanningNodeId){var planningNodeInstance=null;if(nodeId!=null&&nextAvailablePlanningNodeId!=null){ // get the planning node template
 var node=this.getNodeById(nodeId); // create a planning node instance by copying the planning node template
 planningNodeInstance=this.copyNode(nodeId); // set the template id to point back to the planning template node
-planningNodeInstance.templateId=planningNodeInstance.id; // set the planning node instance node id
-planningNodeInstance.id=this.getNextAvailablePlanningNodeId(); // add the planning node instance to the project
-//this.addPlanningNodeInstance(groupId, planningNodeInstance);
-}return planningNodeInstance;} /**
+planningNodeInstance.templateId=nodeId; // set the planning node instance node id
+planningNodeInstance.id=nextAvailablePlanningNodeId;}return planningNodeInstance;} /**
      * Add a planning node instance inside a group node
      * @param nodeIdToInsertInside the group id to insert into
      * @param planningNodeInstance the planning node instance to add
@@ -1014,21 +1011,5 @@ this.recalculatePositionsInGroup(parentGroupId);} /*
      */},{key:'recalculatePositionsInGroup',value:function recalculatePositionsInGroup(groupId){if(groupId!=null){var childIds=this.getChildNodeIdsById(groupId); // loop througha all the children
 for(var c=0;c<childIds.length;c++){var childId=childIds[c]; // calculate the position of the child id
 var pos=this.getPositionById(childId); // set the mapping of node id to position
-this.setIdToPosition(childId,pos);}}} /**
-     * Get the next available planning node instance node id
-     * @returns the next available planning node instance node id
-     */},{key:'getNextAvailablePlanningNodeId',value:function getNextAvailablePlanningNodeId(){var nextAvailablePlanningInstanceNodeId=null; // used to keep track of the highest planning node number we have found
-var maxPlanningNodeNumber=0;var nodes=this.project.nodes;if(nodes!=null){ // loop through all the nodes in the project
-for(var n=0;n<nodes.length;n++){var node=nodes[n];if(node!=null){var nodeId=node.id;if(nodeId!=null){ // regex to match the planning node id e.g. planningNode2
-var planningNodeIdRegEx=/planningNode(.*)/; // run the regex on the node id
-var result=nodeId.match(planningNodeIdRegEx);if(result!=null){ // we have found a planning node instance node id
-/*
-                             * get the number part of the planning node instance node id
-                             * e.g. if the nodeId is planningNode2, the number part
-                             * would be 2
-                             */var planningNodeNumber=parseInt(result[1]);if(planningNodeNumber>maxPlanningNodeNumber){ /*
-                                 * update the max number part if we have found a new
-                                 * higher number
-                                 */maxPlanningNodeNumber=planningNodeNumber;}}}}}} // create the next available planning node instance node id
-nextAvailablePlanningInstanceNodeId='planningNode'+(maxPlanningNodeNumber+1);return nextAvailablePlanningInstanceNodeId;}}]);return ProjectService;}();ProjectService.$inject=['$http','$injector','$rootScope','ConfigService'];exports.default=ProjectService;
+this.setIdToPosition(childId,pos);}}}}]);return ProjectService;}();ProjectService.$inject=['$http','$injector','$rootScope','ConfigService'];exports.default=ProjectService;
 //# sourceMappingURL=projectService.js.map

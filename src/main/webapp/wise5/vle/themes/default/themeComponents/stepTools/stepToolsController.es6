@@ -31,7 +31,7 @@ class StepToolsCtrl {
         this.$scope.$on('currentNodeChanged', (event, args) => {
             this.updateModel();
         });
-        
+
         this.$scope.$on('nodeStatusesChanged', (event, arge) => {
             this.updateModel();
         })
@@ -49,6 +49,10 @@ class StepToolsCtrl {
             // model variable for selected node id
             this.toNodeId = this.nodeId;
         }
+    };
+
+    getSelectedText() {
+        return (this.showPosition ? this.getNodePositionById(this.nodeId) + ': ' : '') + this.getNodeTitleByNodeId(this.nodeId);
     };
 
     getTemplateUrl(){
