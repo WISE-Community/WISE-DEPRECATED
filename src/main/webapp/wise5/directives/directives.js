@@ -80,6 +80,7 @@ var ComponentDirective = function () {
             $scope.nodeId = nodeId;
             $scope.workgroupId = workgroupId;
             $scope.teacherWorkgroupId = teacherWorkgroupId;
+            $scope.type = componentContent.type;
 
             if (originalNodeId != null && originalComponentId != null) {
                 /*
@@ -94,7 +95,7 @@ var ComponentDirective = function () {
                 $scope.originalComponentContent = originalComponentContent;
             }
 
-            var componentHTML = "<div id=\"{{component.id}}\" class=\"component\" >" + "<div ng-include=\"componentTemplatePath\"></div></div>";
+            var componentHTML = '<div id="{{component.id}}" class="component-wrapper">' + '<div ng-include="componentTemplatePath" class="component component--{{type}}"></div></div>';
 
             if (componentHTML != null) {
                 element.html(componentHTML);
@@ -413,7 +414,7 @@ var wiselink = function () {
 
                 element.bind('click', function () {
                     /*
-                     * when the link or button is clicked, navigate the student to 
+                     * when the link or button is clicked, navigate the student to
                      * the appropriate step or activity
                      */
                     wiselink.instance.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(nodeId);

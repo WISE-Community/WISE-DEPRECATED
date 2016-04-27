@@ -1,6 +1,10 @@
 // Variables
 
 // Base
+.component--Discussion {
+    overflow: hidden;
+}
+
 .discussion-content {
   background-color: color('gray-light');
   margin: 0 0 -16px;
