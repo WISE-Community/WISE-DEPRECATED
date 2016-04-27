@@ -320,6 +320,53 @@ class ListenForDeleteKeypress {
     }
 }
 
+/**
+ * Creates a link or button that the student can click on to navigate to
+ * another step or activity in the project.
+ */
+class wiselink {
+    constructor($document, StudentDataService) {
+        this.restrict = 'E';
+        this.$document = $document;
+        this.StudentDataService = StudentDataService;
+    }
+
+    static directiveFactory($document, StudentDataService) {
+        wiselink.instance = new wiselink($document, StudentDataService);
+        return wiselink.instance;
+    }
+
+    link($scope, element, attrs) {
+        
+        // the node id to navigate the student to
+        var nodeId = attrs.nodeid;
+        
+        // the text to display in the link or button
+        var linkText = attrs.linktext;
+        
+        // the type is optional and defaults to link
+        var type = attrs.type;
+        
+        if (nodeId != null) {
+            if (type == 'button') {
+                // we will make a button
+                element.html('<button>' + linkText + '</button>');
+            } else {
+                // we will make a link
+                element.html('<a>' + linkText + '</a>');
+            }
+            
+            element.bind('click', function() {
+                /*
+                 * when the link or button is clicked, navigate the student to 
+                 * the appropriate step or activity
+                 */
+                wiselink.instance.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(nodeId);
+            });
+        }
+    }
+}
+
 const Annotation = {
     bindings: {
         annotation: '<',
@@ -363,6 +410,7 @@ ComponentDirective.directiveFactory.$inject = ['$injector', '$compile', 'NodeSer
 ConfirmNumberDecrease.directiveFactory.$inject = [];
 DisableDeleteKeypress.directiveFactory.$inject = ['$document'];
 ListenForDeleteKeypress.directiveFactory.$inject = ['$document'];
+wiselink.directiveFactory.$inject = ['$document', 'StudentDataService'];
 
 Directives.controller('AnnotationController', AnnotationController);
 Directives.component('annotation', Annotation);
@@ -376,5 +424,6 @@ Directives.directive('component', ComponentDirective.directiveFactory);
 Directives.directive('confirmNumberDecrease', ConfirmNumberDecrease.directiveFactory);
 Directives.directive('disableDeleteKeypress', DisableDeleteKeypress.directiveFactory);
 Directives.directive('listenForDeleteKeypress', ListenForDeleteKeypress.directiveFactory);
+Directives.directive('wiselink', wiselink.directiveFactory);
 
 export default Directives;
