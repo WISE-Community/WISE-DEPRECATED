@@ -507,12 +507,8 @@ var StudentDataService = function () {
             var result = false;
 
             if (criteria != null) {
-                //var nodeId = criteria.nodeId;
-                //var componentId = criteria.componentId;
-                var functionName = null;
-                if (criteria.function != null) {
-                    functionName = criteria.function.name;
-                }
+
+                var functionName = criteria.name;
 
                 if (functionName == null) {} else if (functionName === 'branchPathTaken') {
                     result = this.evaluateBranchPathTakenCriteria(criteria);
@@ -538,109 +534,99 @@ var StudentDataService = function () {
         value: function evaluateIsPlanningActivityCompletedCriteria(criteria) {
             var result = false;
 
-            if (criteria != null) {
-                // get the function name
-                //var name = criteria.name;
+            if (criteria != null && criteria.params != null) {
 
-                var params = null;
+                var params = criteria.params;
 
-                // get the params
-                if (criteria.function != null) {
-                    params = criteria.function.params;
-                }
+                // get the group id
+                var nodeId = params.nodeId;
 
-                if (params != null) {
+                // get the number of planning steps the student needs to create
+                var planningStepsCreated = params.planningStepsCreated;
 
-                    // get the group id
-                    var nodeId = params.nodeId;
+                // get whether the student needs to complete all the steps in the activity
+                var planningStepsCompleted = params.planningStepsCompleted;
 
-                    // get the number of planning steps the student needs to create
-                    var planningStepsCreated = params.planningStepsCreated;
+                var planningStepsCreatedSatisfied = false;
+                var planningStepsCompletedSatisfied = false;
 
-                    // get whether the student needs to complete all the steps in the activity
-                    var planningStepsCompleted = params.planningStepsCompleted;
+                var planningNodes = [];
 
-                    var planningStepsCreatedSatisfied = false;
-                    var planningStepsCompletedSatisfied = false;
+                if (planningStepsCreated == null) {
+                    // there is no value set so we will regard it as satisfied
+                    planningStepsCreatedSatisfied = true;
+                } else {
+                    /*
+                     * there is a value for number of planning steps that need to be created
+                     * so we will check if the student created enough planning steps
+                     */
 
-                    var planningNodes = [];
+                    // get the node states for the activity
+                    var nodeStates = this.getNodeStatesByNodeId(nodeId);
 
-                    if (planningStepsCreated == null) {
-                        // there is no value set so we will regard it as satisfied
-                        planningStepsCreatedSatisfied = true;
-                    } else {
+                    if (nodeStates != null) {
+
                         /*
-                         * there is a value for number of planning steps that need to be created
-                         * so we will check if the student created enough planning steps
+                         * loop through all the node states from newest to oldest
+                         * for the sake of efficiency
                          */
+                        for (var ns = nodeStates.length - 1; ns >= 0; ns--) {
 
-                        // get the node states for the activity
-                        var nodeStates = this.getNodeStatesByNodeId(nodeId);
+                            var planningStepCount = 0;
 
-                        if (nodeStates != null) {
+                            var nodeState = nodeStates[ns];
 
-                            /*
-                             * loop through all the node states from newest to oldest
-                             * for the sake of efficiency
-                             */
-                            for (var ns = nodeStates.length - 1; ns >= 0; ns--) {
+                            if (nodeState != null) {
 
-                                var planningStepCount = 0;
+                                // get the student data
+                                var studentData = nodeState.studentData;
 
-                                var nodeState = nodeStates[ns];
+                                if (studentData != null) {
 
-                                if (nodeState != null) {
+                                    // get the nodes
+                                    var nodes = studentData.nodes;
 
-                                    // get the student data
-                                    var studentData = nodeState.studentData;
+                                    if (nodes != null) {
 
-                                    if (studentData != null) {
+                                        // loop through the nodes
+                                        for (var n = 0; n < nodes.length; n++) {
+                                            var node = nodes[n];
 
-                                        // get the nodes
-                                        var nodes = studentData.nodes;
-
-                                        if (nodes != null) {
-
-                                            // loop through the nodes
-                                            for (var n = 0; n < nodes.length; n++) {
-                                                var node = nodes[n];
-
-                                                if (node != null) {
-                                                    if (node.type === 'node' && (node.templateId != null || node.planningTemplateId != null)) {
-                                                        // we have found a planning step the student created
-                                                        planningStepCount++;
-                                                    }
+                                            if (node != null) {
+                                                if (node.type === 'node' && (node.templateId != null || node.planningTemplateId != null)) {
+                                                    // we have found a planning step the student created
+                                                    planningStepCount++;
                                                 }
                                             }
+                                        }
 
-                                            if (planningStepCount >= planningStepsCreated) {
-                                                // the student has created a sufficient number of planning steps
-                                                planningStepsCreatedSatisfied = true;
-                                                planningNodes = nodes;
-                                                break;
-                                            }
+                                        if (planningStepCount >= planningStepsCreated) {
+                                            // the student has created a sufficient number of planning steps
+                                            planningStepsCreatedSatisfied = true;
+                                            planningNodes = nodes;
+                                            break;
                                         }
                                     }
                                 }
                             }
                         }
                     }
+                }
 
-                    if (planningStepsCompleted == null) {
+                if (planningStepsCompleted == null) {
+                    planningStepsCompletedSatisfied = true;
+                } else {
+                    /*
+                     * check if the activity is completed. this checks if all
+                     * the children of the activity are completed.
+                     */
+                    if (this.isCompleted(nodeId)) {
                         planningStepsCompletedSatisfied = true;
-                    } else {
-                        /*
-                         * check if the activity is completed. this checks if all
-                         * the children of the activity are completed.
-                         */
-                        if (this.isCompleted(nodeId)) {
-                            planningStepsCompletedSatisfied = true;
-                        }
                     }
+                }
 
-                    if (planningStepsCreatedSatisfied && planningStepsCompletedSatisfied) {
-                        result = true;
-                    }
+                if (planningStepsCreatedSatisfied && planningStepsCompletedSatisfied) {
+                    result = true;
                 }
             }
 
@@ -658,10 +644,10 @@ var StudentDataService = function () {
         value: function evaluateBranchPathTakenCriteria(criteria) {
             var result = false;
 
-            if (criteria != null) {
+            if (criteria != null && criteria.params != null) {
                 // get the expected from and to node ids
-                var expectedFromNodeId = criteria.fromNodeId;
-                var expectedToNodeId = criteria.toNodeId;
+                var expectedFromNodeId = criteria.params.fromNodeId;
+                var expectedToNodeId = criteria.params.toNodeId;
 
                 // get all the branchPathTaken events from the from node id
                 var branchPathTakenEvents = this.getBranchPathTakenEventsByNodeId(expectedFromNodeId);
@@ -705,10 +691,10 @@ var StudentDataService = function () {
 
             var isVisited = false;
 
-            if (criteria != null) {
+            if (criteria != null && criteria.params != null) {
 
                 // get the node id we want to check if was visited
-                var nodeId = criteria.nodeId;
+                var nodeId = criteria.params.nodeId;
 
                 // get all the events
                 var events = this.studentData.events;
@@ -775,7 +761,7 @@ var StudentDataService = function () {
 
             var result = false;
 
-            var serviceName = 'MultipleChoiceService';
+            var serviceName = 'MultipleChoiceService'; // Assume MC component.
 
             if (this.$injector.has(serviceName)) {
 

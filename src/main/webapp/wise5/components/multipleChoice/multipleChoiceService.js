@@ -123,13 +123,10 @@ var MultipleChoiceService = function (_NodeService) {
 
             var result = false;
 
-            if (criteria != null) {
-                var nodeId = criteria.nodeId;
-                var componentId = criteria.componentId;
-                var functionParams = [];
-                if (criteria.function != null) {
-                    functionParams = criteria.function.params;
-                }
+            if (criteria != null && criteria.params != null) {
+                var nodeId = criteria.params.nodeId;
+                var componentId = criteria.params.componentId;
+                var choiceIds = criteria.params.choiceIds; // the choice ids that we expect the student to have chosen
 
                 if (nodeId != null && componentId != null) {
 
@@ -137,9 +134,6 @@ var MultipleChoiceService = function (_NodeService) {
                     var componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(nodeId, componentId);
 
                     if (componentStates != null && componentStates.length > 0) {
-
-                        // get the choice ids that we expect the student to have chose
-                        var choiceIds = functionParams.choiceIds;
 
                         if (choiceIds != null) {
                             // get the latest component state
