@@ -593,7 +593,7 @@ var StudentDataService = function () {
                                             var node = nodes[n];
 
                                             if (node != null) {
-                                                if (node.type === 'node' && (node.templateId != null || node.planningTemplateId != null)) {
+                                                if (node.type === 'node' && node.planningNodeTemplateId != null) {
                                                     // we have found a planning step the student created
                                                     planningStepCount++;
                                                 }

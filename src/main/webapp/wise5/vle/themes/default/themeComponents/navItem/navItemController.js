@@ -43,7 +43,7 @@ var NavItemController = function () {
 
         // whether the node is a planning node instance
         this.node = this.ProjectService.getNodeById(this.nodeId);
-        this.isPlanningInstance = this.node.templateId ? true : false;
+        this.isPlanningInstance = this.node.planningNodeTemplateId ? true : false;
 
         /*
          * the array of nodes used for drag/drop planning sorting. the elements
@@ -258,7 +258,7 @@ var NavItemController = function () {
             var eventName = "planningNodeAdded";
             var eventData = {
                 nodeIdAdded: planningNodeAdded.id,
-                templateNodeId: planningNodeAdded.templateId
+                planningNodeTemplateId: planningNodeAdded.planningNodeTemplateId
             };
             var eventNodeId = this.nodeId;
             this.StudentDataService.saveVLEEvent(eventNodeId, componentId, componentType, category, eventName, eventData);
@@ -273,7 +273,7 @@ var NavItemController = function () {
          * @param planningNodeId
          */
         value: function canAddPlanningNode(planningNodeId) {
-            var maxAddAllowed = 1; // by default, students can only add up to one planning node.
+            var maxAddAllowed = -1; // by default, students can add as many instances as they want
             var planningGroupNode = null;
             if (this.isParentGroupPlanning) {
                 planningGroupNode = this.ProjectService.getNodeById(this.parentGroupId);
@@ -302,7 +302,7 @@ var NavItemController = function () {
                 for (var c = 0; c < planningGroupNode.ids.length; c++) {
                     var childPlanningNodeId = planningGroupNode.ids[c];
                     var childPlanningNode = this.ProjectService.getNodeById(childPlanningNodeId);
-                    if (childPlanningNode != null && childPlanningNode.templateId === planningNodeId) {
+                    if (childPlanningNode != null && childPlanningNode.planningNodeTemplateId === planningNodeId) {
                         numPlanningNodesAdded++;
                     }
                 }
@@ -760,7 +760,7 @@ var NavItemController = function () {
                 }
 
                 // update the ids
-                addedPlanningNode.templateId = planningNodeInstance.templateId;
+                addedPlanningNode.planningNodeTemplateId = planningNodeInstance.planningNodeTemplateId;
                 addedPlanningNode.id = planningNodeInstance.id;
             } else if (newValue.length < oldValue.length) {
                 // the student deleted a planning step
