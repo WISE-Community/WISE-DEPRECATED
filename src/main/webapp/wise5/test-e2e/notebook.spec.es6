@@ -37,7 +37,7 @@ describe('WISE5 Notebook in Preview Mode', () => {
     it('should open and close the notebook', () => {
         // Click on the notebook icon to open the notebook
         notebookButton.click();
-        expect(hasClass(notebookSideNav, 'md-closed')).toBe(false);  // side nav should appear on the page with the notebook
+        expect(hasClass(notebookSideNav, '_md-closed')).toBe(false);  // side nav should appear on the page with the notebook
         expect(notebookSideNav.element(by.tagName('h3')).getText()).toEqual("Notebook");
         verifyAddNewNoteDisplayed(false);
 
@@ -51,13 +51,13 @@ describe('WISE5 Notebook in Preview Mode', () => {
 
         // Hitting the escape key should dismiss the notebook
         browser.actions().sendKeys(protractor.Key.ESCAPE).perform();
-        expect(hasClass(notebookSideNav, 'md-closed')).toBe(true);  // side nav should disappear
+        expect(hasClass(notebookSideNav, '_md-closed')).toBe(true);  // side nav should disappear
     });
 
     it('should allow user to cancel adding a new note in the notebook', () => {
         // Click on the notebook icon to open the notebook again
         notebookButton.click();
-        expect(hasClass(notebookSideNav, 'md-closed')).toBe(false);  // side nav should appear on the page with the notebook
+        expect(hasClass(notebookSideNav, '_md-closed')).toBe(false);  // side nav should appear on the page with the notebook
 
         addNoteButton.click();   // Open add note display
         verifyAddNewNoteDisplayed(true);
@@ -102,6 +102,6 @@ describe('WISE5 Notebook in Preview Mode', () => {
 
         // Clicking outside of the notebook should dismiss the notebook
         element(by.xpath('//body')).click();
-        expect(hasClass(notebookSideNav, 'md-closed')).toBe(true);  // side nav should disappear
+        expect(hasClass(notebookSideNav, '_md-closed')).toBe(true);  // side nav should disappear
     });
 });
