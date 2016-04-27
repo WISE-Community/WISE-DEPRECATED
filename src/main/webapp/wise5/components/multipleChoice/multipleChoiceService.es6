@@ -87,13 +87,10 @@ class MultipleChoiceService extends NodeService {
 
         let result = false;
 
-        if (criteria != null) {
-            let nodeId = criteria.nodeId;
-            let componentId = criteria.componentId;
-            let functionParams = [];
-            if (criteria.function != null) {
-                functionParams = criteria.function.params;
-            }
+        if (criteria != null && criteria.params != null) {
+            let nodeId = criteria.params.nodeId;
+            let componentId = criteria.params.componentId;
+            let choiceIds = criteria.params.choiceIds; // the choice ids that we expect the student to have chosen
 
             if (nodeId != null && componentId != null) {
 
@@ -101,9 +98,6 @@ class MultipleChoiceService extends NodeService {
                 let componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(nodeId, componentId);
 
                 if (componentStates != null && componentStates.length > 0) {
-
-                    // get the choice ids that we expect the student to have chose
-                    let choiceIds = functionParams.choiceIds;
 
                     if (choiceIds != null) {
                         // get the latest component state

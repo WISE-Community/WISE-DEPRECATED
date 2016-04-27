@@ -4040,7 +4040,7 @@ class ProjectService {
             planningNodeInstance = this.copyNode(nodeId);
             
             // set the template id to point back to the planning template node
-            planningNodeInstance.templateId = nodeId;
+            planningNodeInstance.planningNodeTemplateId = nodeId;
             
             // set the planning node instance node id
             planningNodeInstance.id = nextAvailablePlanningNodeId;

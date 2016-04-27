@@ -957,7 +957,7 @@ var availablePlanningNodeActual=this.getNodeById(availablePlanningNode.nodeId);i
      */},{key:'createPlanningNodeInstance',value:function createPlanningNodeInstance(groupId,nodeId,nextAvailablePlanningNodeId){var planningNodeInstance=null;if(nodeId!=null&&nextAvailablePlanningNodeId!=null){ // get the planning node template
 var node=this.getNodeById(nodeId); // create a planning node instance by copying the planning node template
 planningNodeInstance=this.copyNode(nodeId); // set the template id to point back to the planning template node
-planningNodeInstance.templateId=nodeId; // set the planning node instance node id
+planningNodeInstance.planningNodeTemplateId=nodeId; // set the planning node instance node id
 planningNodeInstance.id=nextAvailablePlanningNodeId;}return planningNodeInstance;} /**
      * Add a planning node instance inside a group node
      * @param nodeIdToInsertInside the group id to insert into
