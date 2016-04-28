@@ -68,14 +68,44 @@ class ThemeController {
 
         // alert user when a locked node has been clicked
         this.$scope.$on('nodeClickLocked', (event, args) => {
+            var message = 'Sorry, you cannot view this item yet.';
             let nodeId = args.nodeId;
+            
+            var node = this.ProjectService.getNodeById(nodeId);
+            
+            if (node != null) {
+                
+                // get the constraints that affect this node
+                var constraints = this.ProjectService.getConstraintsForNode(node);
+                
+                if (constraints != null && constraints.length > 0) {
+                    message = '';
+                }
+                
+                // loop through all the constraints that affect this node
+                for (var c = 0; c < constraints.length; c++) {
+                    var constraint = constraints[c];
+                    
+                    // check if the constraint has been satisfied
+                    if (constraint != null && !this.StudentDataService.evaluateConstraint(node, constraint)) {
+                        // the constraint has not been satisfied and is still active
+                        
+                        if (message != '') {
+                            // separate multiple constraints with line breaks
+                            message += '<br/><br/>';
+                        }
+                        
+                        // get the message that describes how to disable the constraint
+                        message += this.ProjectService.getConstraintMessage(nodeId, constraint);
+                    }
+                }
+            }
 
-            // TODO: customize alert with constraint details, correct node term
             this.$mdDialog.show(
                 this.$mdDialog.alert()
                     .parent(angular.element(document.body))
                     .title('Item Locked')
-                    .textContent('Sorry, you cannot view this item yet.')
+                    .htmlContent(message)
                     .ariaLabel('Item Locked')
                     .ok('OK')
                     .targetEvent(event)

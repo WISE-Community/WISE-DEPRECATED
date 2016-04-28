@@ -4189,6 +4189,104 @@ class ProjectService {
             }
         }
     }
+    
+    /**
+     * Get the message that describes how to disable the constraint
+     * @param nodeId the node the student is trying to go to
+     * @param constraint the constraint that is preventing the student
+     * from going to the node
+     * @returns the message to display to the student that describes how
+     * to disable the constraint
+     */
+    getConstraintMessage(nodeId, constraint) {
+        
+        var message = '';
+        
+        if (nodeId != null && constraint != null) {
+            
+            // get the node title the student is trying to go to
+            var nodeTitle = this.getNodePositionAndTitleByNodeId(nodeId);
+            
+            var removalConditional = constraint.removalConditional;
+            var removalCriteria = constraint.removalCriteria;
+            
+            if (removalConditional === 'any') {
+                message += 'To visit "' + nodeTitle + '" you must perform one of the actions below:<br/>';
+            } else {
+                message += 'To visit "' + nodeTitle + '" you must perform all of the actions below:<br/>';
+            }
+            
+            if (removalCriteria != null) {
+                
+                var criteriaMessages = '';
+                
+                // loop through all the criteria
+                for (var x = 0; x < removalCriteria.length; x++) {
+                    var tempRemovalCriteria = removalCriteria[x];
+                    
+                    if (tempRemovalCriteria != null) {
+                        
+                        // get the message that describes the criteria that needs to be satisfied
+                        var criteriaMessage = this.getCriteriaMessage(tempRemovalCriteria);
+                        
+                        if (criteriaMessage != null && criteriaMessage != '') {
+                            // separate criteria messages with a line break
+                            if (criteriaMessages != '') {
+                                criteriaMessages += '<br/>';
+                            }
+                            criteriaMessages += criteriaMessage;
+                        }
+                    }
+                }
+                
+                message += criteriaMessages;
+            }
+        }
+        
+        return message;
+    }
+    
+    /**
+     * Get the message that describes how to satisfy the criteria
+     * TODO: check if the criteria is satisfied
+     * @param criteria the criteria object that needs to be satisfied
+     * @returns the message to display to the student that describes how to
+     * satisfy the criteria
+     */
+    getCriteriaMessage(criteria) {
+        var message = '';
+        
+        if (criteria != null) {
+            var name = criteria.name;
+            var params = criteria.params;
+            
+            if (name === 'isCompleted') {
+                var nodeId = params.nodeId;
+                if (nodeId != null) {
+                    var nodeTitle = this.getNodePositionAndTitleByNodeId(nodeId);
+                    message += 'Complete "' + nodeTitle + '"';
+                }
+            } else if (name === 'isVisited') {
+                var nodeId = params.nodeId;
+                if (nodeId != null) {
+                    var nodeTitle = this.getNodePositionAndTitleByNodeId(nodeId);
+                    message += 'Visit "' + nodeTitle + '"';
+                }
+            } else if (name === 'choiceChosen') {
+                
+            } else if (name === 'branchPathTaken') {
+                
+            } else if (name === 'isPlanningActivityCompleted') {
+                var nodeId = params.nodeId;
+                if (nodeId != null) {
+                    var nodeTitle = this.getNodePositionAndTitleByNodeId(nodeId);
+                    message += 'Complete "' + nodeTitle + '"';
+                }
+            }
+        }
+        
+        return message;
+    }
 }
 
 ProjectService.$inject = [

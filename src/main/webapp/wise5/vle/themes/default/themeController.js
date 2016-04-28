@@ -69,10 +69,40 @@ var ThemeController = function () {
 
         // alert user when a locked node has been clicked
         this.$scope.$on('nodeClickLocked', function (event, args) {
+            var message = 'Sorry, you cannot view this item yet.';
             var nodeId = args.nodeId;
 
-            // TODO: customize alert with constraint details, correct node term
-            _this.$mdDialog.show(_this.$mdDialog.alert().parent(angular.element(document.body)).title('Item Locked').textContent('Sorry, you cannot view this item yet.').ariaLabel('Item Locked').ok('OK').targetEvent(event));
+            var node = _this.ProjectService.getNodeById(nodeId);
+
+            if (node != null) {
+
+                // get the constraints that affect this node
+                var constraints = _this.ProjectService.getConstraintsForNode(node);
+
+                if (constraints != null && constraints.length > 0) {
+                    message = '';
+                }
+
+                // loop through all the constraints that affect this node
+                for (var c = 0; c < constraints.length; c++) {
+                    var constraint = constraints[c];
+
+                    // check if the constraint has been satisfied
+                    if (constraint != null && !_this.StudentDataService.evaluateConstraint(node, constraint)) {
+                        // the constraint has not been satisfied and is still active
+
+                        if (message != '') {
+                            // separate multiple constraints with line breaks
+                            message += '<br/><br/>';
+                        }
+
+                        // get the message that describes how to disable the constraint
+                        message += _this.ProjectService.getConstraintMessage(nodeId, constraint);
+                    }
+                }
+            }
+
+            _this.$mdDialog.show(_this.$mdDialog.alert().parent(angular.element(document.body)).title('Item Locked').htmlContent(message).ariaLabel('Item Locked').ok('OK').targetEvent(event));
         });
 
         // alert user when inactive for a long time
