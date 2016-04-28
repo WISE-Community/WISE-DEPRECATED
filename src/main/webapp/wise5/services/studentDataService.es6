@@ -427,6 +427,7 @@ class StudentDataService {
 
         if (constraintForNode != null) {
             var removalCriteria = constraintForNode.removalCriteria;
+            var removalConditional = constraintForNode.removalConditional;
 
             if (removalCriteria == null) {
                 result = true;
@@ -449,8 +450,15 @@ class StudentDataService {
                             result = tempResult;
                             firstResult = false;
                         } else {
-                            // this is not the first criteria in this for loop so we will && the result
-                            result = result && tempResult;
+                            // this is not the first criteria
+                            
+                            if (removalConditional === 'any') {
+                                // any of the criteria can be true to remove the constraint
+                                result = result || tempResult;
+                            } else {
+                                // all the criteria need to be true to remove the constraint
+                                result = result && tempResult;
+                            }
                         }
                     }
                 }
@@ -484,8 +492,8 @@ class StudentDataService {
 
             } else if (functionName === 'isVisited') {
                 result = this.evaluateIsVisitedCriteria(criteria);
-            } else if (functionName === 'isComplete') {
-
+            } else if (functionName === 'isCompleted') {
+                result = this.evaluateIsCompletedCriteria(criteria);
             } else if (functionName === 'isCorrect') {
 
             } else if (functionName === 'choiceChosen') {
@@ -501,8 +509,27 @@ class StudentDataService {
     };
     
     /**
+     * Check if the isCompleted criteria was satisfied
+     * @param criteria an isCompleted criteria
+     * @returns whether the criteria was satisfied or not
+     */
+    evaluateIsCompletedCriteria(criteria) {
+        var result = false;
+        
+        if (criteria != null && criteria.params != null) {
+            var params = criteria.params;
+            var nodeId = params.nodeId;
+            
+            result = this.isCompleted(nodeId);
+        }
+        
+        return result;
+    }
+    
+    /**
      * Check if the isPlanningActivityCompleted criteria was satisfied
      * @param criteria a isPlanningActivityCompleted criteria
+     * @returns whether the criteria was satisfied or not
      */
     evaluateIsPlanningActivityCompletedCriteria(criteria) {
         var result = false;
