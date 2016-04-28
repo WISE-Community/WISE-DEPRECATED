@@ -1,6 +1,9 @@
-.component {
+.component-wrapper {
     padding: 0 16px;
     margin: 24px 0;
+}
+
+.component {
     overflow-x: auto;
 
     @media only screen and (min-width: $layout-breakpoint-sm) {

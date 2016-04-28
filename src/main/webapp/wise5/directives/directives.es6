@@ -68,6 +68,7 @@ class ComponentDirective {
         $scope.nodeId = nodeId;
         $scope.workgroupId = workgroupId;
         $scope.teacherWorkgroupId = teacherWorkgroupId;
+        $scope.type = componentContent.type;
 
         if (originalNodeId != null && originalComponentId != null) {
             /*
@@ -82,8 +83,8 @@ class ComponentDirective {
             $scope.originalComponentContent = originalComponentContent;
         }
 
-        var componentHTML = "<div id=\"{{component.id}}\" class=\"component\" >" +
-            "<div ng-include=\"componentTemplatePath\"></div></div>";
+        var componentHTML = '<div id="{{component.id}}" class="component-wrapper">' +
+            '<div ng-include="componentTemplatePath" class="component component--{{type}}"></div></div>';
 
         if (componentHTML != null) {
             element.html(componentHTML);
@@ -337,16 +338,16 @@ class wiselink {
     }
 
     link($scope, element, attrs) {
-        
+
         // the node id to navigate the student to
         var nodeId = attrs.nodeid;
-        
+
         // the text to display in the link or button
         var linkText = attrs.linktext;
-        
+
         // the type is optional and defaults to link
         var type = attrs.type;
-        
+
         if (nodeId != null) {
             if (type == 'button') {
                 // we will make a button
@@ -355,10 +356,10 @@ class wiselink {
                 // we will make a link
                 element.html('<a>' + linkText + '</a>');
             }
-            
+
             element.bind('click', function() {
                 /*
-                 * when the link or button is clicked, navigate the student to 
+                 * when the link or button is clicked, navigate the student to
                  * the appropriate step or activity
                  */
                 wiselink.instance.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(nodeId);

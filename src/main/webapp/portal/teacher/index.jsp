@@ -63,7 +63,7 @@ $(document).ready(function() {
 								<td><a href="${contextPath}/pages/gettingstarted.html" target="_blank"><spring:message code="teacher.index.quickstartGuide"/></a></td>
 							</tr>
 							<tr>
-								<td><a href="${contextPath}/teacher/management/library.html"><spring:message code="teacher.index.browseWISEProjects"/></a></td>
+								<td><a id="projectLibraryLink" href="${contextPath}/teacher/management/library.html"><spring:message code="teacher.index.browseWISEProjects"/></a></td>
 							</tr>
 							<tr>
 								<td><a href="${contextPath}/teacher/management/classroomruns.html"><spring:message code="teacher.index.gradeAndManageClassroomRuns"/></a></td>

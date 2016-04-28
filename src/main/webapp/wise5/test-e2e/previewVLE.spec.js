@@ -36,7 +36,7 @@ describe('WISE5 Student VLE Preview', function () {
     var notebookButton = element(by.id("notebookButton"));
     var notebookSideNav = element(by.xpath('//md-sidenav')); // side navigation bar for the notebook
     var accountButton = element(by.xpath('//button[@aria-label="Open user menu"]'));
-    var accountMenu = element(by.css('.md-open-menu-container'));
+    var accountMenu = element(by.css('._md-open-menu-container'));
 
     it('should load the vle and go to node 1', function () {
         waitForUrlToChangeTo(new RegExp('http://localhost:8080/wise/project/demo#/vle/node1', 'gi'));
@@ -51,7 +51,7 @@ describe('WISE5 Student VLE Preview', function () {
         expect(closeButton.getText()).toBe('close');
         expect(notebookButton.getText()).toBe('book');
         expect(accountButton.getText()).toBe('account_circle');
-        expect(hasClass(notebookSideNav, 'md-closed')).toBe(true); // Notebook side nav should be hidden
+        expect(hasClass(notebookSideNav, '_md-closed')).toBe(true); // Notebook side nav should be hidden
         expect(accountMenu.getAttribute('aria-hidden')).toEqual("true"); // Account menu should be hidden
     });
 
@@ -108,11 +108,11 @@ describe('WISE5 Student VLE Preview', function () {
             activity1.all(by.repeater('childId in navitemCtrl.item.ids')).then(function (stepNavItems) {
 
                 // step 1.1 should be completed because it's an HTML step and we visited it
-                expect(stepNavItems[0].element(by.css('.md-button')).getText()).toBe('chrome_reader_mode\n1.1: Introduction to Newton Scooters check_circle');
+                expect(stepNavItems[0].getText()).toBe('chrome_reader_mode\n1.1: Introduction to Newton Scooters check_circle');
                 expect(stepNavItems[0].element(by.cssContainingText('.material-icons', 'check_circle')).isPresent()).toBeTruthy();
 
                 // step 1.2 should not be completed yet
-                expect(stepNavItems[1].element(by.css('.md-button')).getText()).toBe('assignment\n1.2: Initial Ideas');
+                expect(stepNavItems[1].getText()).toBe('assignment\n1.2: Initial Ideas');
                 expect(stepNavItems[1].element(by.cssContainingText('.material-icons', 'check_circle')).isPresent()).toBeFalsy();
             });
 
@@ -122,10 +122,10 @@ describe('WISE5 Student VLE Preview', function () {
             // Check that steps in activity 2 displays the step title and icon
             activity2.all(by.repeater('childId in navitemCtrl.item.ids')).then(function (stepNavItems) {
                 // step 2.1 should be completed because it's an HTML step and we visited it
-                expect(stepNavItems[0].element(by.css('.md-button')).getText()).toBe('chrome_reader_mode\n2.1: Newton Scooter Concepts check_circle');
+                expect(stepNavItems[0].getText()).toBe('chrome_reader_mode\n2.1: Newton Scooter Concepts check_circle');
                 expect(stepNavItems[0].element(by.cssContainingText('.material-icons', 'check_circle')).isPresent()).toBeTruthy();
 
-                expect(stepNavItems[2].element(by.css('.md-button')).getText()).toBe('gamepad\n2.3: Explore the concepts');
+                expect(stepNavItems[2].getText()).toBe('gamepad\n2.3: Explore the concepts');
                 stepNavItems[2].element(by.tagName('button')).click(); // Go to step 2.3.
                 expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/project/demo#/vle/node5');
             });
