@@ -52,7 +52,7 @@
 								</tr>
 								<tr>
 									<td style="font-weight:bold;"><spring:message code="teacher.run.create.createrunfinish.runId" /></td>
-									<td><strong><c:out value="${run.id}" /></strong> <span class="instructions"><spring:message code="teacher.run.create.createrunfinish.everyRunHasUniqueId" /></span></td>
+									<td><strong><span id="runId"><c:out value="${run.id}" /></span></strong> <span class="instructions"><spring:message code="teacher.run.create.createrunfinish.everyRunHasUniqueId" /></span></td>
 								</tr>
 								<tr>
 									<td style="font-weight:bold;"><spring:message code="teacher.run.create.createrunfinish.runCreated" /></td>
@@ -69,7 +69,7 @@
 						</div>
 					</div>
 					<div style="margin-top:1em;">
-						<a class="wisebutton" style="margin:0 auto;" href="${contextPath}/teacher/management/classroomruns.html"><spring:message code="teacher.run.create.createrunfinish.myClassroomRuns"/></a>
+						<a id="myClassroomRunLink" class="wisebutton" style="margin:0 auto;" href="${contextPath}/teacher/management/classroomruns.html"><spring:message code="teacher.run.create.createrunfinish.myClassroomRuns"/></a>
 					</div>
 				</div>
 			</div>

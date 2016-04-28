@@ -91,7 +91,7 @@ function checkIfTextAreaEmpty (form) {
 							<input id="goToPageInput" type="hidden" name="_page" value="3" />
 							<input id="goBackButton" type="submit" name="_back" value="<spring:message code="teacher.run.create.createrunperiods.back"/>"/>
 							<input id="cancelButton" type="submit" name="_cancel" value="<spring:message code="teacher.run.create.createrunperiods.cancel"/>" />
-							<input type="submit" name="_target3" value="<spring:message code="teacher.run.create.createrunperiods.next"/>" />
+							<input type="submit" name="_target3" value="<spring:message code="teacher.run.create.createrunperiods.next"/>" id='nextButt' />
 						</div>
 					</div>
 				</form:form>
