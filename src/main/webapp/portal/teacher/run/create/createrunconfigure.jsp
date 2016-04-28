@@ -60,7 +60,7 @@
 							<input id="goToPageInput" type="hidden" name="_page" value="4" />
 							<input id="goBackButton" type="submit" name="_back" value="<spring:message code="teacher.run.create.createrunperiods.back"/>"/>
 							<input id="cancelButton" type="submit" name="_cancel" value="<spring:message code="teacher.run.create.createrunconfigure.cancel"/>" />
-							<input type="submit" name="_target4" value="<spring:message code="teacher.run.create.createrunconfigure.next"/>" />
+							<input type="submit" name="_target4" value="<spring:message code="teacher.run.create.createrunconfigure.next"/>" id='nextButt' />
 						</div>
 					</div>
 				</form:form>

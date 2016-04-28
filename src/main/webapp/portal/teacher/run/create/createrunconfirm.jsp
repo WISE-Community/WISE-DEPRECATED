@@ -85,7 +85,7 @@
 						<form method="post">
 							<input id="goToPageInput" type="hidden" name="_page" value="1" />
 							<input id="cancelButton" type="submit" name="_cancel" value="<spring:message code="teacher.run.create.createrunconfirm.cancel" />" />
-							<input type="submit" name="_target1" value="<spring:message code="teacher.run.create.createrunconfirm.next" />" id='nextButt'/>
+							<input type="submit" name="_target1" value="<spring:message code="teacher.run.create.createrunconfirm.next" />" id='nextButt' />
 						</form>
 					</div>
 				</div>
