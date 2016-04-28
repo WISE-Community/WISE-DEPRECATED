@@ -53,6 +53,14 @@ class NavItemController {
         this.parentGroupId = null;
 
         // the options for the planning node template tree
+        this.treeOptions = {
+            dropped: (event) => {
+                let nodeChangedId = event.source.nodeScope.$modelValue;
+                this.planningNodeItemsChanged(nodeChangedId);
+            }
+        };
+
+        // the options for the planning node template tree
         this.treeOptions1 = {
             accept: function(sourceNodeScope, destNodesScope, destIndex) {
                 /*
@@ -258,11 +266,11 @@ class NavItemController {
     };
 
     /**
-     * Returns true iff this student can add the specified planning node.
-     * Limits include reaching the max allowed count
+     * Returns the max times a planning node can be added to the project (-1 is
+     * is returned if there is no limit)
      * @param planningNodeId
      */
-    canAddPlanningNode(planningNodeId) {
+    getPlannindNodeMaxAllowed(planningNodeId) {
         let maxAddAllowed = -1;  // by default, students can add as many instances as they want
         let planningGroupNode = null;
         if (this.isParentGroupPlanning) {
@@ -271,7 +279,7 @@ class NavItemController {
             planningGroupNode = this.ProjectService.getNodeById(this.nodeId);
         }
         // get the maxAddAllowed value by looking up the planningNode in the project.
-        if (planningGroupNode != null && planningGroupNode.availablePlanningNodes != null) {
+        if (planningGroupNode && planningGroupNode.availablePlanningNodes) {
             for (let a = 0; a < planningGroupNode.availablePlanningNodes.length; a++) {
                 let availablePlanningNode = planningGroupNode.availablePlanningNodes[a];
                 if (availablePlanningNode.nodeId === planningNodeId && availablePlanningNode.max != null) {
@@ -280,15 +288,26 @@ class NavItemController {
             }
         }
 
-        // if maxAddAllowed was not found, it means they can add as many as they want
-        if (maxAddAllowed === -1) {
-            return true;
-        }
+        return maxAddAllowed;
+    };
 
+    /**
+     * Returns the number of times a planning node has been added to the project
+     * @param planningNodeId
+     */
+    getNumPlannindNodeInstances(planningNodeId) {
         let numPlanningNodesAdded = 0;  // keep track of number of instances
         // otherwise, see how many times the planning node template has been used.
+
+        let planningGroupNode = null;
+        if (this.isParentGroupPlanning) {
+            planningGroupNode = this.ProjectService.getNodeById(this.parentGroupId);
+        } else {
+            planningGroupNode = this.ProjectService.getNodeById(this.nodeId);
+        }
+
         // loop through the child ids in the planning group and see how many times they've been used
-        if (planningGroupNode.ids != null) {
+        if (planningGroupNode && planningGroupNode.ids) {
             for (let c = 0; c < planningGroupNode.ids.length; c++) {
                 let childPlanningNodeId = planningGroupNode.ids[c];
                 let childPlanningNode = this.ProjectService.getNodeById(childPlanningNodeId);
@@ -297,6 +316,24 @@ class NavItemController {
                 }
             }
         }
+
+        return numPlanningNodesAdded;
+    };
+
+    /**
+     * Returns true iff this student can add the specified planning node.
+     * Limits include reaching the max allowed count
+     * @param planningNodeId
+     */
+    canAddPlanningNode(planningNodeId) {
+        let maxAddAllowed = this.getPlannindNodeMaxAllowed(planningNodeId);
+
+        // if maxAddAllowed was not found or is set to 0, it means students can add as many as they want
+        if (maxAddAllowed < 1) {
+            return true;
+        }
+
+        let numPlanningNodesAdded = this.getNumPlannindNodeInstances(planningNodeId);
 
         return numPlanningNodesAdded < maxAddAllowed;
     };
@@ -416,24 +453,38 @@ class NavItemController {
     /**
      * Remove the planning node instance
      * @param planningNodeInstanceNodeId the planning node instance to remove
+     * @param event the event that triggered the function call
      */
-    removePlanningNodeInstance(planningNodeInstanceNodeId) {
-        // delete the node from the project
-        this.ProjectService.deleteNode(planningNodeInstanceNodeId);
+    removePlanningNodeInstance(planningNodeInstanceNodeId, event) {
+        this.$translate(["yes", "no"]).then((translations) => {
+            let confirm = this.$mdDialog.confirm()
+                .parent(angular.element(document.body))
+                .title('Are you sure you want to delete this item?')
+                .textContent('Note: Any work you have done on the item will be lost.')
+                .ariaLabel('Delete item from project')
+                .targetEvent(event)
+                .ok(translations.yes)
+                .cancel(translations.no);
 
-        // perform any necessary updating
-        this.planningNodeChanged();
+            this.$mdDialog.show(confirm).then(() => {
+                // delete the node from the project
+                this.ProjectService.deleteNode(planningNodeInstanceNodeId);
 
-        // Save remove planning node event
-        let componentId = null;
-        let componentType = null;
-        let category = "Planning";
-        let eventName = "planningNodeRemoved";
-        let eventData = {
-            nodeIdRemoved: planningNodeInstanceNodeId
-        };
-        let eventNodeId = this.nodeId;
-        this.StudentDataService.saveVLEEvent(eventNodeId, componentId, componentType, category, eventName, eventData);
+                // perform any necessary updating
+                this.planningNodeChanged(this.parentGroupId);
+
+                // Save remove planning node event
+                let componentId = null;
+                let componentType = null;
+                let category = "Planning";
+                let eventName = "planningNodeRemoved";
+                let eventData = {
+                    nodeIdRemoved: planningNodeInstanceNodeId
+                };
+                let eventNodeId = this.nodeId;
+                this.StudentDataService.saveVLEEvent(eventNodeId, componentId, componentType, category, eventName, eventData);
+            }, () => {});
+        });
     }
 
     /**
@@ -542,26 +593,29 @@ class NavItemController {
     /**
      * Something related to planning has changed in the project. This
      * means a planning node was added, moved, or deleted.
+     * @param param planningNodeId planning node id
      */
-    planningNodeChanged() {
-        this.savePlanningNodeChanges();
+    planningNodeChanged(planningNodeId) {
+        this.savePlanningNodeChanges(planningNodeId);
 
         this.$rootScope.$broadcast('planningNodeChanged');
     }
 
     /**
     * Save the changed nodes in NodeState
+    * @param param planningNodeId planning node id
     **/
-    savePlanningNodeChanges() {
+    savePlanningNodeChanges(planningNodeId) {
         let nodeState = this.NodeService.createNewNodeState();
-        nodeState.nodeId = this.nodeId;
+        let nodeId = planningNodeId ? planningNodeId : this.nodeId;
+        nodeState.nodeId = nodeId;
         nodeState.isAutoSave = false;
         nodeState.isSubmit = false;
 
         var studentData = {};
-        studentData.nodeId = this.nodeId;
+        studentData.nodeId = nodeId;
         studentData.nodes = [];
-        let planningNode = this.ProjectService.getNodeById(this.nodeId);
+        let planningNode = this.ProjectService.getNodeById(nodeId);
         studentData.nodes.push(planningNode);  // add the planning node (group)
         // loop through the child ids in the planning group and save them also
         if (planningNode.ids != null) {
@@ -594,7 +648,7 @@ class NavItemController {
 
         // toggle the planning mode
         //this.planningMode = !this.planningMode;
-        //this.item.planningMode = this.planningMode;
+        this.item.planningMode = this.planningMode;
 
         // also toggle StudentDataService planning mode. This will be used to constrain the entire project when in planning mode.
         this.StudentDataService.planningMode = this.planningMode;
@@ -661,6 +715,24 @@ class NavItemController {
             }
         }
     }
+
+    /**
+     * The planning node's items array has changed
+     * @param newValue the new value of the planning node's items array
+     * @param oldValue the old value of the planning node's items array
+     */
+    planningNodeItemsChanged(nodeChangedId) {
+        let index = this.item.ids.indexOf(nodeChangedId);
+        let nodeIdAddedAfter = this.item.ids[index-1];
+
+        if (nodeIdAddedAfter) {
+            // the node was moved after another node in the group
+            this.movePlanningNode(nodeChangedId, nodeIdAddedAfter);
+        } else {
+            // the node was moved to the beginning of the group
+            this.movePlanningNode(nodeChangedId, this.nodeId);
+        }
+    };
 
     /**
      * The planning node instances array has changed

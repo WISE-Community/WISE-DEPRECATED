@@ -52,23 +52,26 @@
                                 </li>
                             </ol>
                         </div>
-                    </div>-->
+                    </div-->
                 </div>
-                <md-list class="nav-contents__list">
-                    <nav-item ng-repeat="childId in navitemCtrl.item.ids"
-                              ng-class="{'expanded': itemExpanded, 'prev': isPrevStep}"
-                              aria-label="{{ isPrevNode ? 'Last Visited Item' : null }}"
-                              show-position="navitemCtrl.showPosition"
-                              node-id="childId" type="'list'" ng-animate-ref="{{ childId }}" class="nav-item ng-enter">
-                    </nav-item>
-                    <div ng-show="navitemCtrl.planningMode" layout="column" layout-align="center center">
-                        <md-button class="md-accent" aria-label="Add new item to {{ navitemCtrl.nodeTitle }}"
-                                   ng-click="navitemCtrl.item.ids.length ? navitemCtrl.addPlanningInstance($event, navitemCtrl.item.ids[navitemCtrl.item.ids.length-1]) : navitemCtrl.addPlanningInstance($event, navitemCtrl.nodeId, true)">
-                            <md-icon class="md-accent">add_circle</md-icon>
-                            Add item
-                        </md-button>
+                <div ui-tree="navitemCtrl.treeOptions">
+                    <div ui-tree-nodes ng-model="navitemCtrl.item.ids" role="list" class="nav-contents__list">
+                        <div ui-tree-node ng-repeat="childId in navitemCtrl.item.ids">
+                                <nav-item ng-class="{'expanded': itemExpanded, 'prev': isPrevStep}"
+                                          aria-label="{{ isPrevNode ? 'Last Visited Item' : null }}"
+                                          show-position="navitemCtrl.showPosition"
+                                          node-id="childId" type="'list'" ng-animate-ref="{{ childId }}" class="nav-item ng-enter">
+                                </nav-item>
+                        </div>
                     </div>
-                </md-list>
+                </div>
+                <div ng-show="navitemCtrl.planningMode" layout="column" layout-align="center center">
+                    <md-button class="md-accent" aria-label="Add new item to {{ navitemCtrl.nodeTitle }}"
+                               ng-click="navitemCtrl.item.ids.length ? navitemCtrl.addPlanningInstance($event, navitemCtrl.item.ids[navitemCtrl.item.ids.length-1]) : navitemCtrl.addPlanningInstance($event, navitemCtrl.nodeId, true)">
+                        <md-icon class="md-accent">add_circle</md-icon>
+                        Add item
+                    </md-button>
+                </div>
             </md-card-content>
             <md-card-footer class="nav-item__more" layout="row" layout-align="center center" flex>
                 <div class="progress-wrapper">
@@ -86,8 +89,7 @@
         <md-list-item ng-switch-when="list" ng-click="navitemCtrl.itemClicked()"
                       class="md-long-text noright nav-item--list md-whiteframe-z1"
                       aria-label="{{navitemCtrl.planningMode && navitemCtrl.isPlanningInstance ? 'Move' : 'Go to'}} {{navitemCtrl.nodeTitle}}"
-                      ng-class="{'nav-item--list--group':navitemCtrl.isGroup, 'nav-item--list--planning': navitemCtrl.planningMode && navitemCtrl.isPlanningInstance}"
-                      ng-disabled="navitemCtrl.planningMode && !navitemCtrl.isPlanningInstance">
+                      ng-class="{'nav-item--list--group':navitemCtrl.isGroup, 'nav-item--planning-mode': navitemCtrl.planningMode}">
             <img ng-if="navitemCtrl.nodeStatus.icon.type === 'img'" ng-class="navitemCtrl.isGroup ? 'avatar--square' : ''" class="md-avatar" ng-src="{{navitemCtrl.nodeStatus.icon.imgSrc}}" alt="{{navitemCtrl.nodeStatus.icon.imgAlt}}" />
             <div ng-if="navitemCtrl.nodeStatus.icon.type === 'font'" ng-class="navitemCtrl.isGroup ? 'avatar--square' : ''" style="background-color: {{navitemCtrl.nodeStatus.icon.color}};" class="md-avatar">
                 <md-icon md-font-set="{{navitemCtrl.nodeStatus.icon.fontSet}}" class="md-light">{{navitemCtrl.nodeStatus.icon.fontName}}</md-icon>
@@ -96,25 +98,11 @@
             <md-icon class="md-secondary" ng-if="navitemCtrl.isParentGroupPlanning"
                      aria-label="Delete Item"
                      ng-show="navitemCtrl.planningMode && navitemCtrl.isPlanningInstance"
-                     ng-click="navitemCtrl.removePlanningNodeInstance(navitemCtrl.nodeId)"> delete </md-icon>
+                     ng-click="navitemCtrl.removePlanningNodeInstance(navitemCtrl.nodeId, $event)"> delete </md-icon>
             <md-icon class="md-secondary nav-item--list__reorder" ng-if="navitemCtrl.isParentGroupPlanning"
-                     ng-show="navitemCtrl.planningMode && navitemCtrl.isPlanningInstance"> reorder </md-icon>
+                     aria-label="Move Item"
+                     ng-show="navitemCtrl.planningMode && navitemCtrl.isPlanningInstance"
+                     ng-click="" ui-tree-handle> reorder </md-icon>
         </md-list-item>
-        <!--<div ng-if="navitemCtrl.isParentGroupPlanning"
-            <span ng-show="navitemCtrl.planningMode">
-                Available Planning Steps!
-                <div ng-repeat="availablePlanningNode in navitemCtrl.availablePlanningNodes">
-                    <button ng-disabled="!navitemCtrl.planningMode || !navitemCtrl.canAddPlanningNode(availablePlanningNode.id)"
-                            ng-click="navitemCtrl.addPlanningNodeInstanceAfter(navitemCtrl.nodeId, availablePlanningNode.id)">
-                        {{navitemCtrl.getNodeTitle(availablePlanningNode.id)}}
-                    </button>
-                    {{navitemCtrl.getNodeDescription(availablePlanningNode.id)}}
-                </div>
-                <select ng-model="selectedNodeId" ng-change="navitemCtrl.movePlanningNode(selectedNodeId)">
-                    <option ng-repeat="siblingNodeId in navitemCtrl.siblingNodeIds" value="{{siblingNodeId}}">{{navitemCtrl.getNodeTitle(siblingNodeId)}}</option>
-                </select>
-                <button ng-click="navitemCtrl.removePlanningNodeInstance(navitemCtrl.nodeId)">X</button>
-            </span>
-        </div>-->
     </ng-switch>
 </div>
