@@ -41,9 +41,9 @@ describe('WISE Authoring Tool', function () {
 
     it('should log in using preview username and password and open the authoring tool', function () {
         browser.ignoreSynchronization = true; // doesn't use Angular
-        element(by.id('username')).sendKeys('preview');
-        element(by.id('password')).sendKeys('wise');
-        element(by.id('signInButton')).click();
+        $('#username').sendKeys('preview');
+        $('#password').sendKeys('wise');
+        $('#signInButton').click();
 
         browser.ignoreSynchronization = false; // uses Angular
         browser.get('http://localhost:8080/wise/author');
@@ -53,56 +53,56 @@ describe('WISE Authoring Tool', function () {
         // check that the exitAuthoringTool button and create new project buttons are displayed
         expect(browser.getTitle()).toEqual('WISE Authoring');
         expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/author#/');
-        exitAuthoringToolButton = element(by.id('exitAuthoringToolButton'));
+        exitAuthoringToolButton = $('#exitAuthoringToolButton');
         expect(exitAuthoringToolButton.isPresent()).toBeTruthy();
-        createNewProjectButton = element(by.id('createNewProjectButton'));
+        createNewProjectButton = $('#createNewProjectButton');
         expect(createNewProjectButton.isPresent()).toBeTruthy();
     });
 
     it('should create a new project and open it', function () {
         createNewProjectButton.click(); // click button to create a new project
         expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/author#/new');
-        var createProjectButton = element(by.id('createProjectButton'));
+        var createProjectButton = $('#createProjectButton');
         expect(createProjectButton.isPresent()).toBeTruthy();
-        var cancelCreateProjectButton = element(by.id('cancelCreateProjectButton'));
+        var cancelCreateProjectButton = $('#cancelCreateProjectButton');
         expect(cancelCreateProjectButton.isPresent()).toBeTruthy();
         cancelCreateProjectButton.click(); // cancel create. We should go back to main authoring page.
         expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/author#/');
 
         createNewProjectButton.click(); // click button to create a new project
         expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/author#/new');
-        element(by.id('newProjectTitle')).clear(); // clear out what's there.
-        element(by.id('newProjectTitle')).sendKeys('My Science Project');
+        $('#newProjectTitle').clear(); // clear out what's there.
+        $('#newProjectTitle').sendKeys('My Science Project');
         createProjectButton.click();
         expect(browser.getCurrentUrl()).toContain('http://localhost:8080/wise/author#/project/'); // should open the project editing view.
     });
 
     it('should have elements on the page in project view', function () {
-        expect(element(by.id("projectTitle")).getText()).toEqual("My Science Project");
+        expect($("#projectTitle").getText()).toEqual("My Science Project");
 
         // check that move, delete buttons are disabled and other buttons are enabled.
-        expect(element(by.id("moveButton")).isEnabled()).toBe(false);
-        expect(element(by.id("copyButton")).isEnabled()).toBe(false);
-        expect(element(by.id("deleteButton")).isEnabled()).toBe(false);
-        expect(element(by.id("saveProjectButton")).isEnabled()).toBe(true);
-        expect(element(by.id("closeProjectButton")).isEnabled()).toBe(true);
-        expect(element(by.id("createNewActivityButton")).isEnabled()).toBe(true);
-        expect(element(by.id("createNewStepButton")).isEnabled()).toBe(true);
-        expect(element(by.id("previewProjectButton")).isEnabled()).toBe(true);
-        expect(element(by.id("manageAssetsButton")).isEnabled()).toBe(true);
-        expect(element(by.id("viewHistoryButton")).isEnabled()).toBe(true);
+        expect($("#moveButton").isEnabled()).toBe(false);
+        expect($("#copyButton").isEnabled()).toBe(false);
+        expect($("#deleteButton").isEnabled()).toBe(false);
+        expect($("#saveProjectButton").isEnabled()).toBe(true);
+        expect($("#closeProjectButton").isEnabled()).toBe(true);
+        expect($("#createNewActivityButton").isEnabled()).toBe(true);
+        expect($("#createNewStepButton").isEnabled()).toBe(true);
+        expect($("#previewProjectButton").isEnabled()).toBe(true);
+        expect($("#manageAssetsButton").isEnabled()).toBe(true);
+        expect($("#viewHistoryButton").isEnabled()).toBe(true);
     });
 
     it('should allow user to preview the project', function () {
         // Clicking on the preview project button should open the preview in a new window
-        element(by.id("previewProjectButton")).click();
+        $("#previewProjectButton").click();
         browser.getAllWindowHandles().then(function (handles) {
             browser.switchTo().window(handles[1]).then(function () {
                 browser.refresh(); // needed for this issue https://github.com/angular/protractor/issues/2643
                 expect(browser.getCurrentUrl()).toContain('http://localhost:8080/wise/project/');
-                //to close the current window
+                // close the current window
                 browser.driver.close().then(function () {
-                    //to switch to the main authoring window
+                    // switch to the main authoring window
                     browser.switchTo().window(handles[0]);
                 });
             });
@@ -120,7 +120,7 @@ describe('WISE Authoring Tool', function () {
 
         browser.ignoreSynchronization = true; // doesn't use Angular
         expect(browser.getTitle()).toEqual('WISE Teacher Dashboard');
-        var signOutButton = element(by.id('signOut'));
+        var signOutButton = $("#signOut");
         expect(signOutButton.isPresent()).toBeTruthy();
         signOutButton.click();
         expect(browser.getTitle()).toEqual('Web-based Inquiry Science Environment (WISE)');

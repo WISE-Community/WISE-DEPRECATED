@@ -6,7 +6,7 @@ exports.config = {
     sauceKey: process.env.SAUCE_ACCESS_KEY,
     //seleniumAddress: 'http://localhost:4444/wd/hub',
 
-    specs: ['previewVLE.spec.js', 'notebook.spec.js', 'authoringTool.spec.js', 'setUpRun.spec.js']
+    specs: ['previewVLE.spec.js', 'notebook.spec.js', 'authoringTool.spec.js', 'setUpRun.spec.js', 'classroomMonitor.spec.js']
 };
 
 // This won’t affect local tests, it will only activate when running on Travis CI:
