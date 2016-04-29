@@ -82,13 +82,19 @@
 }
 
 .nav-item--list__reorder {
+    margin-left: 8px;
     color: color('text-disabled');
-    padding-left: 8px;
 }
 
-.nav-item--list--planning {
+.nav-item--planning-mode {
     button._md-no-style {
         cursor: move;
+    }
+
+    &:hover, &:focus, &:active {
+        .nav-item--list__reorder {
+            color: color('text-secondary');
+        }
     }
 }
 
@@ -143,4 +149,18 @@
 
 .nav-item__planning-toggle {
     margin: 0;
+}
+
+.planning-contents {
+    padding: 0;
+}
+
+.planning-item--list {
+    &.disabled {
+        opacity: 0.6;
+
+        button {
+            cursor: not-allowed !important;
+        }
+    }
 }

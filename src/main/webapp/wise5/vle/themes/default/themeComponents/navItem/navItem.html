@@ -1,7 +1,7 @@
 <div ng-if="navitemCtrl.nodeStatus.isVisible">
     <ng-switch on="navitemCtrl.type">
         <md-card ng-switch-when="card" class="nav-item--card" ng-class="{'nav-item--card--group':navitemCtrl.isGroup, 'expanded md-whiteframe-z3':navitemCtrl.expanded}"">
-            <md-card-content class="nav-item--card__content" ng-click="navitemCtrl.itemClicked()" role="button" md-ink-ripple layout="row">
+            <md-card-content class="nav-item--card__content" ng-click="navitemCtrl.itemClicked($event)" role="button" md-ink-ripple layout="row">
                 <img ng-if="navitemCtrl.nodeStatus.icon.type === 'img'" ng-animate-ref="{{ navitemCtrl.nodeId }}" ng-class="navitemCtrl.isGroup ? 'avatar--square' : ''" class="md-36 avatar nav-item__avatar" ng-src="{{navitemCtrl.nodeStatus.icon.imgSrc}}" alt="{{navitemCtrl.nodeStatus.icon.imgAlt}}" />
                 <div ng-if="navitemCtrl.nodeStatus.icon.type === 'font'" ng-animate-ref="{{ navitemCtrl.nodeId }}" ng-class="navitemCtrl.isGroup ? 'avatar--square' : ''" style="background-color: {{navitemCtrl.nodeStatus.icon.color}};" class="md-36 avatar avatar--icon nav-item__avatar">
                     <md-icon md-font-set="{{navitemCtrl.nodeStatus.icon.fontSet}}" class="md-36 md-light">{{navitemCtrl.nodeStatus.icon.fontName}}</md-icon>
@@ -20,51 +20,20 @@
                                ng-disabled="navitemCtrl.StudentDataService.planningMode && !navitemCtrl.planningMode">
                         Planning Mode: {{ navitemCtrl.planningMode ? 'ON' : 'OFF' }}
                     </md-switch>
-                    <!--div ng-show="navitemCtrl.planningMode">
-                        Available Planning Steps
-                        <div ng-repeat="availablePlanningNode in navitemCtrl.availablePlanningNodes">
-                            <button ng-disabled="!navitemCtrl.planningMode || !navitemCtrl.canAddPlanningNode(availablePlanningNode.id)"
-                                    ng-click="navitemCtrl.addPlanningNodeInstanceInside(navitemCtrl.nodeId, availablePlanningNode.id)">
-                                {{navitemCtrl.getNodeTitle(availablePlanningNode.id)}}
-                            </button>
-                            {{navitemCtrl.getNodeDescription(availablePlanningNode.id)}}
-                        </div>
-                        <div id="tree1-root" ui-tree="navitemCtrl.treeOptions1" data-clone-enabled="true">
-                            <ol ui-tree-nodes data-type="node" ng-model="navitemCtrl.availablePlanningNodes">
-                                <li ui-tree-node ng-repeat="availablePlanningNode in navitemCtrl.availablePlanningNodes">
-                                    <div ng-show="navitemCtrl.planningMode && navitemCtrl.canAddPlanningNode(availablePlanningNode.id)" ui-tree-handle class="tree-node tree-node-content">
-                                        {{availablePlanningNode.title}}
-                                    </div>
-                                </li>
-                            </ol>
-                        </div>
-                        <div>Planning Step Instances</div>
-                        <div id="tree2-root" ui-tree data-clone-enabled="true">
-                            <ol ui-tree-nodes data-type="node" ng-model="navitemCtrl.planningNodeInstances">
-                                <li ui-tree-node ng-repeat="planningNodeInstance in navitemCtrl.planningNodeInstances">
-                                    <div ui-tree-handle class='category-title angular-ui-tree-handle'>
-                                        <span>{{planningNodeInstance.title}}</span>
-                                        <button ng-if="planningNodeInstance.id != 'dummyNode'"
-                                                ng-click="navitemCtrl.deletePlanningNodeInstance(planningNodeInstance)">
-                                                X
-                                        </button>
-                                    </div>
-                                </li>
-                            </ol>
-                        </div>
-                    </div-->
                 </div>
-                <div ui-tree="navitemCtrl.treeOptions">
-                    <div ui-tree-nodes ng-model="navitemCtrl.item.ids" role="list" class="nav-contents__list">
-                        <div ui-tree-node ng-repeat="childId in navitemCtrl.item.ids">
-                                <nav-item ng-class="{'expanded': itemExpanded, 'prev': isPrevStep}"
-                                          aria-label="{{ isPrevNode ? 'Last Visited Item' : null }}"
-                                          show-position="navitemCtrl.showPosition"
-                                          node-id="childId" type="'list'" ng-animate-ref="{{ childId }}" class="nav-item ng-enter">
-                                </nav-item>
-                        </div>
+                <md-list class="nav-contents__list">
+                    <div dragula="'planning'" dragula-model="navitemCtrl.item.ids">
+                        <nav-item ng-repeat="childId in navitemCtrl.item.ids"
+                                  ng-class="{'expanded': itemExpanded, 'prev': isPrevStep}"
+                                  aria-label="{{ isPrevNode ? 'Last Visited Item' : null }}"
+                                  show-position="navitemCtrl.showPosition"
+                                  node-id="childId" type="'list'" ng-animate-ref="{{ childId }}"
+                                  class="nav-item"
+                                  data-nodeid="{{ childId }}"
+                                  style="display: block">
+                        </nav-item>
                     </div>
-                </div>
+                </md-list>
                 <div ng-show="navitemCtrl.planningMode" layout="column" layout-align="center center">
                     <md-button class="md-accent" aria-label="Add new item to {{ navitemCtrl.nodeTitle }}"
                                ng-click="navitemCtrl.item.ids.length ? navitemCtrl.addPlanningInstance($event, navitemCtrl.item.ids[navitemCtrl.item.ids.length-1]) : navitemCtrl.addPlanningInstance($event, navitemCtrl.nodeId, true)">
@@ -86,10 +55,10 @@
             </md-card-footer>
         </md-card>
 
-        <md-list-item ng-switch-when="list" ng-click="navitemCtrl.itemClicked()"
+        <md-list-item ng-switch-when="list" ng-click="navitemCtrl.itemClicked($event)"
                       class="md-long-text noright nav-item--list md-whiteframe-z1"
                       aria-label="{{navitemCtrl.planningMode && navitemCtrl.isPlanningInstance ? 'Move' : 'Go to'}} {{navitemCtrl.nodeTitle}}"
-                      ng-class="{'nav-item--list--group':navitemCtrl.isGroup, 'nav-item--planning-mode': navitemCtrl.planningMode}">
+                      ng-class="{'nav-item--list--group':navitemCtrl.isGroup, 'nav-item--planning-mode': navitemCtrl.planningMode && navitemCtrl.isPlanningInstance}">
             <img ng-if="navitemCtrl.nodeStatus.icon.type === 'img'" ng-class="navitemCtrl.isGroup ? 'avatar--square' : ''" class="md-avatar" ng-src="{{navitemCtrl.nodeStatus.icon.imgSrc}}" alt="{{navitemCtrl.nodeStatus.icon.imgAlt}}" />
             <div ng-if="navitemCtrl.nodeStatus.icon.type === 'font'" ng-class="navitemCtrl.isGroup ? 'avatar--square' : ''" style="background-color: {{navitemCtrl.nodeStatus.icon.color}};" class="md-avatar">
                 <md-icon md-font-set="{{navitemCtrl.nodeStatus.icon.fontSet}}" class="md-light">{{navitemCtrl.nodeStatus.icon.fontName}}</md-icon>
@@ -101,8 +70,7 @@
                      ng-click="navitemCtrl.removePlanningNodeInstance(navitemCtrl.nodeId, $event)"> delete </md-icon>
             <md-icon class="md-secondary nav-item--list__reorder" ng-if="navitemCtrl.isParentGroupPlanning"
                      aria-label="Move Item"
-                     ng-show="navitemCtrl.planningMode && navitemCtrl.isPlanningInstance"
-                     ng-click="" ui-tree-handle> reorder </md-icon>
+                     ng-show="navitemCtrl.planningMode && navitemCtrl.isPlanningInstance"> reorder </md-icon>
         </md-list-item>
     </ng-switch>
 </div>

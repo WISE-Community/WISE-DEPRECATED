@@ -1,7 +1,7 @@
 <md-dialog aria-label="Add Item to Project">
     <md-toolbar md-theme="light">
         <div class="md-toolbar-tools">
-            <h2 class="md-title">Add Item to Project</h2>
+            <h2 class="md-title">Add Item to {{ navitemCtrl.getNodeTitle(navitemCtrl.nodeId) }}</h2>
         </div>
     </md-toolbar>
     <md-dialog-content class="nav-contents--group md-dialog-content">
@@ -17,7 +17,7 @@
                     <md-icon md-font-set="{{navitemCtrl.nodeStatuses[item.id].icon.fontSet}}" class="md-light">{{navitemCtrl.nodeStatuses[item.id].icon.fontName}}</md-icon>
                 </div>
                 <div class="md-list-item-text">
-                    <h3>{{ navitemCtrl.getNodeTitle(item.id) }} <span class="md-caption accent-2" ng-if="navitemCtrl.getPlannindNodeMaxAllowed(item.id) > 0">(Used: {{ navitemCtrl.getNumPlannindNodeInstances(item.id) }}/{{ navitemCtrl.getPlannindNodeMaxAllowed(item.id) }})</span></h3>
+                    <h3>{{ navitemCtrl.getNodeTitle(item.id) }} <span class="md-caption accent-2" ng-if="navitemCtrl.getPlannindNodeMaxAllowed(item.id) > 0">(Used: {{ navitemCtrl.getNumPlannindNodeInstances(item.id) }}, Available: {{ navitemCtrl.getPlannindNodeMaxAllowed(item.id)-navitemCtrl.getNumPlannindNodeInstances(item.id) }})</span></h3>
                     <p>{{ navitemCtrl.getNodeDescription(item.id) }}</p>
                 </div>
             </md-list-item>
