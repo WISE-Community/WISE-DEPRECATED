@@ -2,6 +2,7 @@
 
 import $ from 'jquery';
 import angular from 'angular';
+import angularDragula from 'angular-dragula';
 import angularFileUpload from 'ng-file-upload';
 import angularHighcharts from 'highcharts-ng';
 import angularMaterial from 'angular-material';
@@ -67,6 +68,7 @@ import ocLazyLoad from 'oclazyload';
 import moment from 'moment';
 
 let mainModule = angular.module('vle', [
+    angularDragula(angular),
     'angularMoment',
     'angular-toArrayFilter',
     'directives',

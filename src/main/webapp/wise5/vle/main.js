@@ -12,6 +12,10 @@ var _angular = require('angular');
 
 var _angular2 = _interopRequireDefault(_angular);
 
+var _angularDragula = require('angular-dragula');
+
+var _angularDragula2 = _interopRequireDefault(_angularDragula);
+
 var _ngFileUpload = require('ng-file-upload');
 
 var _ngFileUpload2 = _interopRequireDefault(_ngFileUpload);
@@ -255,7 +259,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //import CRaterService from '../components/cRater/cRaterService';
 
 
-var mainModule = _angular2.default.module('vle', ['angularMoment', 'angular-toArrayFilter', 'directives', 'filters', 'highcharts-ng',
+var mainModule = _angular2.default.module('vle', [(0, _angularDragula2.default)(_angular2.default), 'angularMoment', 'angular-toArrayFilter', 'directives', 'filters', 'highcharts-ng',
 //'ngAudio',
 'ngAria', 'ngFileUpload', 'ngMaterial', 'ngSanitize', 'ngWebSocket', 'notebook', 'oc.lazyLoad', 'pascalprecht.translate', 'studentAsset', 'ui.router',
 //'ui.tinymce',

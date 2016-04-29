@@ -3,6 +3,7 @@
     "dependencies": {
       "angular": "github:angular/bower-angular@^1.5.3",
       "angular-animate": "github:angular/bower-angular-animate@^1.5.3",
+      "angular-dragula": "npm:angular-dragula@^1.2.6",
       "angular-material": "github:angular/bower-material@^1.1.0-rc3",
       "angular-mocks": "github:angular/bower-angular-mocks@^1.5.3",
       "angular-moment": "npm:angular-moment@^1.0.0-beta.3",

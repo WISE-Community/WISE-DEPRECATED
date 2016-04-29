@@ -73,7 +73,7 @@ class ProjectService {
     };
 
     getProjectMetadata() {
-        return this.metadata;
+        return this.metadata ? this.metadata : {};
     };
 
     getNodes() {
@@ -273,24 +273,24 @@ class ProjectService {
             }
         }
     };
-    
+
     /**
      * Load the planning template nodes
      * @param planning template nodes
      */
     loadPlanningNodes(planningNodes) {
         if (planningNodes != null) {
-            
+
             // loop through all the planning template nodes
             for (var p = 0; p < planningNodes.length; p++) {
                 var planningNode = planningNodes[p];
-                
+
                 if (planningNode != null) {
                     var nodeId = planningNode.id;
-                    
+
                     this.setIdToNode(nodeId, planningNode);
                     this.setIdToElement(nodeId, planningNode);
-                    
+
                     // TODO: may need to add more function calls here to add the planning
                 }
             }
@@ -310,7 +310,7 @@ class ProjectService {
 
             var nodes = project.nodes;
             this.loadNodes(nodes);
-            
+
             // load the planning node templates
             var planningNodes = project.planningNodes;
             this.loadPlanningNodes(planningNodes);
@@ -716,24 +716,24 @@ class ProjectService {
 
         return result;
     };
-    
+
     /**
      * Get the parent group id
      * @param nodeId the parent group id
      * @returns the parent group id
      */
     getParentGroupId(nodeId) {
-        
+
         var parentGroupId = null;
-        
+
         if (nodeId != null) {
             var parentGroup = this.getParentGroup(nodeId);
-            
+
             if (parentGroup != null) {
                 parentGroupId = parentGroup.id;
             }
         }
-        
+
         return parentGroupId;
     }
 
@@ -944,7 +944,7 @@ class ProjectService {
             var nodeId = node.id;
             var targetId = constraint.targetId;
             var action = constraint.action;
-            
+
             if (action === 'makeAllNodesAfterThisNotVisible') {
                 if (this.isNodeIdAfter(targetId, node.id)) {
                     result = true;
@@ -978,7 +978,7 @@ class ProjectService {
 
         return result;
     };
-    
+
     /**
      * Check if a node id comes after another node id in the project
      * @param nodeIdBefore the node id before
@@ -986,41 +986,41 @@ class ProjectService {
      */
     isNodeIdAfter(nodeIdBefore, nodeIdAfter) {
         var result = false;
-        
+
         if (nodeIdBefore != null && nodeIdAfter != null) {
-            
+
             if (this.isApplicationNode(nodeIdBefore)) {
                 // the node id before is a step
-                
+
                 // get all the paths from the beforeNodeId to the end of the project
                 var pathsToEnd = this.getAllPaths([], nodeIdBefore, true);
-                
+
                 if (pathsToEnd != null) {
-                    
+
                     // loop through all the paths
                     for (var p = 0; p < pathsToEnd.length; p++) {
-                        
+
                         var pathToEnd = pathsToEnd[p];
-                        
+
                         if (pathToEnd != null) {
-                            
+
                             /*
                              * remove the first node id and its parent id because
                              * we will check the remaining node ids in the array
                              * for the nodeIdAfter
                              */
-                            
+
                             // get the index of the node id before
                             var index = pathToEnd.indexOf(nodeIdBefore);
-                            
+
                             if (index != -1) {
                                 // remove the node id before
                                 pathToEnd.splice(index, 1);
                             }
-                            
+
                             // get the parent group of the node id before
                             var parentGroup = this.getParentGroup(nodeIdBefore);
-                            
+
                             if (parentGroup != null) {
                                 // remove the parent group of the node id before
                                 var parentGroupId = parentGroup.id;
@@ -1029,7 +1029,7 @@ class ProjectService {
                                     pathToEnd.splice(parentGroupIndex, 1);
                                 }
                             }
-                            
+
                             if (pathToEnd.indexOf(nodeIdAfter) != -1) {
                                 // we have found the nodeIdAfter in the path to the end of the project
                                 result = true;
@@ -1039,33 +1039,33 @@ class ProjectService {
                 }
             } else {
                 // the node id before is an activity
-                
+
                 // get the group
                 var group = this.getNodeById(nodeIdBefore);
-                
+
                 if (group != null) {
-                    
+
                     // get the transitions from the group
                     var transitions = this.getTransitionsByFromNodeId(nodeIdBefore);
-                    
+
                     if (transitions != null) {
-                        
+
                         // loop through all the transitions
                         for (var t = 0; t < transitions.length; t++) {
                             var transition = transitions[t];
-                            
+
                             if (transition != null) {
                                 var toNodeId = transition.to;
-                                
+
                                 // get the paths between to toNodeId and the end of the project
                                 var pathsToEnd = this.getAllPaths([], toNodeId, true);
-                                
+
                                 // loop through all the paths
                                 for (var p = 0; p < pathsToEnd.length; p++) {
-                                    
+
                                     // get a path
                                     var pathToEnd = pathsToEnd[p];
-                                    
+
                                     if (pathToEnd != null) {
                                         if (pathToEnd.indexOf(nodeIdAfter) != -1) {
                                             // we have found the nodeIdAfter in the path to the end of the project
@@ -1079,7 +1079,7 @@ class ProjectService {
                 }
             }
         }
-        
+
         return result;
     }
 
@@ -1140,26 +1140,26 @@ class ProjectService {
 
         return transitionLogic;
     };
-    
+
     /**
      * Get the transitions for a node
      * @param fromNodeId the node to get transitions from
      * @returns an array of transitions
      */
     getTransitionsByFromNodeId(fromNodeId) {
-        
+
         var transitions = null;
-        
+
         if (fromNodeId != null) {
             // get the transition logic
             var transitionLogic = this.getTransitionLogicByFromNodeId(fromNodeId);
-            
+
             if (transitionLogic != null) {
                 // get the transitions
                 transitions = transitionLogic.transitions;
             }
         }
-        
+
         return transitions;
     }
 
@@ -1206,7 +1206,7 @@ class ProjectService {
 
         return nodesByToNodeId;
     };
-    
+
     /**
      * Get node ids of all the nodes that have a to transition to the given node id
      * @param toNodeId
@@ -1214,22 +1214,22 @@ class ProjectService {
      */
     getNodeIdsByToNodeId(toNodeId) {
         var nodeIds = [];
-        
+
         // get all the nodes that transition to the toNodeId
         var nodes = this.getNodesByToNodeId(toNodeId);
-        
+
         if (nodes != null) {
-            
+
             // loop through all the nodes to get the node ids
             for (var n = 0; n < nodes.length; n++) {
                 var node = nodes[n];
-                
+
                 if (node != null) {
                     nodeIds.push(node.id);
                 }
             }
         }
-        
+
         return nodeIds;
     }
 
@@ -1473,7 +1473,7 @@ class ProjectService {
      */
     getAllPaths(pathSoFar, nodeId, includeGroups) {
         var allPaths = [];
-        
+
         if (nodeId != null) {
             if (this.isApplicationNode(nodeId)) {
                 // the node is an application node
@@ -1482,17 +1482,17 @@ class ProjectService {
 
                 // get all the transitions from this node
                 var transitions = this.getTransitionsByFromNodeId(nodeId);
-                
+
                 if (transitions != null) {
-                    
+
                     if (includeGroups) {
                         // get the parent group
                         var parentGroup = this.getParentGroup(nodeId);
                         if (parentGroup != null) {
-                            
+
                             // get the parent group id
                             var parentGroupId = parentGroup.id;
-                            
+
                             if (parentGroupId != null && pathSoFar.indexOf(parentGroupId) == -1) {
                                 // add the parent group id
                                 pathSoFar.push(parentGroup.id);
@@ -1506,7 +1506,7 @@ class ProjectService {
                      * back in the path
                      */
                     pathSoFar.push(nodeId);
-                    
+
                     if (transitions.length === 0) {
                         /*
                          * there are no transitions from the node id so we will
@@ -1514,49 +1514,49 @@ class ProjectService {
                          */
 
                         var addedCurrentNodeId = false;
-                        
+
                         var parentGroupId = this.getParentGroupId(nodeId);
                         var parentGroupTransitions = this.getTransitionsByFromNodeId(parentGroupId);
-                        
+
                         if (parentGroupTransitions != null) {
                             for (var p = 0; p < parentGroupTransitions.length; p++) {
                                 var parentGroupTransition = parentGroupTransitions[p];
-                                
+
                                 if (parentGroupTransition != null) {
-                                    
+
                                     var toNodeId = parentGroupTransition.to;
-                                    
+
                                     if (pathSoFar.indexOf(toNodeId) == -1) {
                                         /*
                                          * recursively get the paths by getting all
                                          * the paths for the to node
                                          */
                                         var allPathsFromToNode = this.getAllPaths(pathSoFar, toNodeId, includeGroups);
-                                        
+
                                         for (var a = 0; a < allPathsFromToNode.length; a++) {
-                                            
+
                                             // get a path
                                             var tempPath = allPathsFromToNode[a];
-                                            
+
                                             // prepend the current node id to the path
                                             tempPath.unshift(nodeId);
 
                                             // add the path to our collection of paths
                                             allPaths.push(tempPath);
-                                            
+
                                             addedCurrentNodeId = true;
                                         }
                                     }
                                 }
                             }
                         }
-                        
+
                         if (!addedCurrentNodeId) {
                             /*
                              * if the parent group doesn't have any transitions we will
                              * need to add the current node id to the path
                              */
-                             
+
                             // add the node id to the path
                             path.push(nodeId);
 
@@ -1565,7 +1565,7 @@ class ProjectService {
                         }
                     } else {
                         // there are transitions from this node id
-                        
+
                         // loop through all the transitions from this node id
                         for (var t = 0; t < transitions.length; t++) {
                             var transitionResult = [];
@@ -1579,13 +1579,13 @@ class ProjectService {
 
                                 if (pathSoFar.indexOf(toNodeId) == -1) {
                                     // we have not found the to node in the path yet so we can traverse it
-                                    
+
                                     /*
                                      * recursively get the paths by getting all
                                      * the paths from the to node
                                      */
                                     var allPathsFromToNode = this.getAllPaths(pathSoFar, toNodeId, includeGroups);
-                                    
+
                                     if (allPathsFromToNode != null) {
                                         // loop through all the paths from the to node
                                         for (var a = 0; a < allPathsFromToNode.length; a++) {
@@ -1595,18 +1595,18 @@ class ProjectService {
 
                                             if (includeGroups) {
                                                 // we need to add the group id to the path
-                                                
+
                                                 if (tempPath.length > 0) {
-                                                    
+
                                                     // get the first node id in the path
                                                     var firstNodeId = tempPath[0];
-                                                    
+
                                                     // get the parent id of the first node
                                                     var firstParentGroupId = this.getParentGroupId(firstNodeId);
-                                                    
+
                                                     // get the parent id of the current node
                                                     var parentGroupId = this.getParentGroupId(nodeId);
-                                                    
+
                                                     if (parentGroupId != firstParentGroupId) {
                                                         /*
                                                          * the parent ids are different which means this is a boundary
@@ -1646,11 +1646,11 @@ class ProjectService {
                             }
                         }
                     }
-                    
+
                     if (pathSoFar.length > 0) {
                         // get the last node id
                         var lastNodeId = pathSoFar[pathSoFar.length - 1];
-                        
+
                         // check if the last node id is a group id
                         if (this.isGroupNode(lastNodeId)) {
                             /*
@@ -1661,7 +1661,7 @@ class ProjectService {
                             pathSoFar.pop();
                         }
                     }
-                    
+
                     /*
                      * remove the latest node id (this will be a step node id)
                      * since we are moving back up the path as we traverse the
@@ -1671,39 +1671,39 @@ class ProjectService {
                 }
             } else if (this.isGroupNode(nodeId)) {
                 // the node is a group node
-                
+
                 /*
                  * add the node id to the path so far so we can later check
                  * which nodes are already in the path to prevent looping
                  * back in the path
                  */
                 pathSoFar.push(nodeId);
-                
+
                 // get the group node
                 var groupNode = this.getNodeById(nodeId);
-                
+
                 if (groupNode != null) {
                     var startId = groupNode.startId;
-                    
+
                     if (startId == null || startId == "") {
                         // there is no start id so we will take the transition from the group
                         // TODO? there is no start id so we will loop through all the child nodes
-                        
+
                         // get the transitions from the group
                         var transitions = this.getTransitionsByFromNodeId(groupNode.id);
-                        
+
                         if (transitions != null) {
-                            
+
                             // loop through all the transitions from the group
                             for (var t = 0; t < transitions.length; t++) {
                                 var transition = transitions[t];
-                                
+
                                 if (transition != null) {
                                     var toNodeId = transition.to;
-                                    
+
                                     // get the paths from the to node to the end of the project
                                     var allPathsFromToNode = this.getAllPaths(pathSoFar, toNodeId, includeGroups);
-                                    
+
                                     if (allPathsFromToNode != null) {
                                         // loop through all the paths from the to node
                                         for (var a = 0; a < allPathsFromToNode.length; a++) {
@@ -1723,10 +1723,10 @@ class ProjectService {
                         }
                     } else {
                         // there is a start id so we will traverse it
-                        
+
                         // get the paths from the start id to the end of the project
                         var allPathsFromToNode = this.getAllPaths(pathSoFar, startId, includeGroups);
-                        
+
                         if (allPathsFromToNode != null) {
                             // loop through all the paths from the to node
                             for (var a = 0; a < allPathsFromToNode.length; a++) {
@@ -1743,7 +1743,7 @@ class ProjectService {
                         }
                     }
                 }
-                
+
                 /*
                  * remove the latest node id since we are moving back
                  * up the path as we traverse the nodes depth first
@@ -1751,7 +1751,7 @@ class ProjectService {
                 pathSoFar.pop();
             }
         }
-        
+
         return allPaths;
     };
 
@@ -2939,12 +2939,12 @@ class ProjectService {
                 previousNode.transitionLogic = {};
                 previousNode.transitionLogic.transitions = [];
             }
-            
+
             if (node.transitionLogic == null) {
                 node.transitionLogic = {};
-                
+
             }
-            
+
             if (node.transitionLogic.transitions == null) {
                 node.transitionLogic.transitions = [];
             }
@@ -2966,37 +2966,37 @@ class ProjectService {
                     node.transitionLogic.transitions = transitionsCopy;
                 }
             }
-            
+
             if (node.transitionLogic.transitions.length == 0) {
                 /*
                  * The node does not have any transitions so we will look for
-                 * a transition on the parent group. If the parent has a 
+                 * a transition on the parent group. If the parent has a
                  * transition we will use it for the node.
                  */
-                
+
                 // get the parent group
                 var parentGroupId = this.getParentGroupId(nodeId);
-                
+
                 // get the parent transitions
                 var parentTransitions = this.getTransitionsByFromNodeId(parentGroupId);
-                
+
                 if (parentTransitions != null) {
-                    
+
                     // loop through all the parent transitions
                     for (var p = 0; p < parentTransitions.length; p++) {
                         var parentTransition = parentTransitions[p];
-                        
+
                         var newTransition = {};
-                        
+
                         if (parentTransition != null) {
                             var toNodeId = parentTransition.to;
-                            
+
                             if (this.isGroupNode(toNodeId)) {
                                 // the transition is to a group
-                                
+
                                 // get the start id of the group
                                 var startId = this.getGroupStartId(toNodeId);
-                                
+
                                 if (startId == null || startId == '') {
                                     // there is no start id so we will just use the group id
                                     newTransition.to = toNodeId;
@@ -3009,7 +3009,7 @@ class ProjectService {
                                 newTransition.to = toNodeId;
                             }
                         }
-                        
+
                         // add the new transition to the node
                         node.transitionLogic.transitions.push(newTransition);
                     }
@@ -3483,7 +3483,7 @@ class ProjectService {
         this.removeNodeIdFromGroups(nodeId);
         this.removeNodeIdFromTransitions(nodeId);
         this.removeNodeIdFromNodes(nodeId);
-        
+
         if (parentGroup != null) {
             this.recalculatePositionsInGroup(parentGroup.id);
         }
@@ -4000,7 +4000,7 @@ class ProjectService {
             }
         }
     }
-    
+
     /**
      * Check if a node is a planning node
      * @param nodeId the node id
@@ -4008,20 +4008,39 @@ class ProjectService {
      */
     isPlanning(nodeId) {
         var result = false;
-        
+
         if (nodeId != null) {
             var node = this.getNodeById(nodeId);
-            
+
             if (node != null) {
                 if (node.planning) {
                     result = true;
                 }
             }
         }
-        
+
         return result;
     }
-    
+
+    /**
+     * Check if a node is a planning node instance
+     * @param nodeId the node id
+     * @returns whether the node is a planning node instance
+     */
+    isPlanningInstance(nodeId) {
+        var result = false;
+
+        if (nodeId != null) {
+            var node = this.getNodeById(nodeId);
+
+            if (node.planningNodeTemplateId) {
+                result = true;
+            }
+        }
+
+        return result;
+    }
+
     /**
      * Get the available planning node ids for a node
      * @param nodeId the node we want available planning nodes for
@@ -4029,18 +4048,18 @@ class ProjectService {
      */
     getAvailablePlanningNodeIds(nodeId) {
         var availablePlanningNodeIds = [];
-        
+
         if (nodeId != null) {
             var node = this.getNodeById(nodeId);
-            
+
             if (node != null && node.availablePlanningNodeIds != null) {
                 availablePlanningNodeIds = node.availablePlanningNodeIds;
             }
         }
-        
+
         return availablePlanningNodeIds;
     }
-    
+
     /**
      * Get the available planning nodes for a given group
      * @param nodeId the node id of the group
@@ -4077,33 +4096,33 @@ class ProjectService {
 
         return availablePlanningNodesSoFar;
     }
-    
+
     /**
      * Create a planning node instance and add it to the project
      * @param groupId the group id to add the planning node instance to
      * @param nodeId the node id of the planning node template
      */
     createPlanningNodeInstance(groupId, nodeId, nextAvailablePlanningNodeId) {
-        
+
         var planningNodeInstance = null;
-        
+
         if (nodeId != null && nextAvailablePlanningNodeId != null) {
             // get the planning node template
             var node = this.getNodeById(nodeId);
-            
+
             // create a planning node instance by copying the planning node template
             planningNodeInstance = this.copyNode(nodeId);
-            
+
             // set the template id to point back to the planning template node
             planningNodeInstance.planningNodeTemplateId = nodeId;
-            
+
             // set the planning node instance node id
             planningNodeInstance.id = nextAvailablePlanningNodeId;
         }
-        
+
         return planningNodeInstance;
     }
-    
+
     /**
      * Add a planning node instance inside a group node
      * @param nodeIdToInsertInside the group id to insert into
@@ -4112,30 +4131,30 @@ class ProjectService {
     addPlanningNodeInstanceInside(nodeIdToInsertInside, planningNodeInstance) {
         // get the node id
         var planningNodeInstanceNodeId = planningNodeInstance.id;
-        
+
         // add an entry in our mapping data structures of node id to object
         this.setIdToNode(planningNodeInstanceNodeId, planningNodeInstance);
         this.setIdToElement(planningNodeInstanceNodeId, planningNodeInstance);
-        
+
         // add the node to the nodes array in the project
         this.addNode(planningNodeInstance);
-        
+
         // update the transitions
         this.insertNodeInsideInTransitions(planningNodeInstanceNodeId, nodeIdToInsertInside);
-        
+
         // update the child ids of the group
         this.insertNodeInsideInGroups(planningNodeInstanceNodeId, nodeIdToInsertInside);
 
         // recalculate all the position values in the group
         this.recalculatePositionsInGroup(nodeIdToInsertInside);
-        
+
         /*
          * set the order of the planning node instance so that it shows up
          * in the select step drop down in the correct order
          */
         this.setNodeOrder(this.rootNode, 0);
     }
-    
+
     /**
      * Add a planning node instance after a node
      * @param nodeIdToInsertAfter the node to insert after
@@ -4144,82 +4163,82 @@ class ProjectService {
     addPlanningNodeInstanceAfter(nodeIdToInsertAfter, planningNodeInstance) {
         // get the node id
         var planningNodeInstanceNodeId = planningNodeInstance.id;
-        
+
         // add an entry in our mapping data structures of node id to object
         this.setIdToNode(planningNodeInstanceNodeId, planningNodeInstance);
         this.setIdToElement(planningNodeInstanceNodeId, planningNodeInstance);
-        
+
         // add the node to the nodes array in the project
         this.addNode(planningNodeInstance);
-        
+
         // update the transitions
         this.insertNodeAfterInTransitions(planningNodeInstance, nodeIdToInsertAfter);
-        
+
         // update the child ids of the group
         this.insertNodeAfterInGroups(planningNodeInstanceNodeId, nodeIdToInsertAfter);
 
         var parentGroup = this.getParentGroup(nodeIdToInsertAfter);
-        
+
         if (parentGroup != null) {
             var parentGroupId = parentGroup.id;
-            
+
             // recalculate all the position values in the group
             this.recalculatePositionsInGroup(parentGroupId);
         }
-        
+
         /*
          * set the order of the planning node instance so that it shows up
          * in the select step drop down in the correct order
          */
         this.setNodeOrder(this.rootNode, 0);
     }
-    
+
     /**
      * Move a planning node instance inside a group
      * @param nodeIdToMove the node to move
      * @param nodeIdToInsertInside the group to move the node into
      */
     movePlanningNodeInstanceInside(nodeIdToMove, nodeIdToInsertInside) {
-        
+
         // move the node inside the group node
         this.moveNodesInside([nodeIdToMove], nodeIdToInsertInside);
-        
+
         // recalculate all the position values in the group
         this.recalculatePositionsInGroup(nodeIdToInsertInside);
-        
+
         /*
          * set the order of the planning node instance so that it shows up
          * in the select step drop down in the correct order
          */
         this.setNodeOrder(this.rootNode, 0);
     }
-    
+
     /**
      * Move a planning node instance after a node
      * @param nodeIdToMove the node to move
      * @param nodeIdToInsertAfter the other node to move the node after
      */
     movePlanningNodeInstanceAfter(nodeIdToMove, nodeIdToInsertAfter) {
-        
+
         // move the node after the other node
         this.moveNodesAfter([nodeIdToMove], nodeIdToInsertAfter);
-        
+
         var parentGroup = this.getParentGroup(nodeIdToInsertAfter);
-        
+
         if (parentGroup != null) {
             var parentGroupId = parentGroup.id;
-            
+
             // recalculate all the position values in the group
             this.recalculatePositionsInGroup(parentGroupId);
         }
-        
+
         /*
          * set the order of the planning node instance so that it shows up
          * in the select step drop down in the correct order
          */
         this.setNodeOrder(this.rootNode, 0);
     }
-    
+
     /**
      * Recalculate the positions of the children in the group.
      * The positions are the numbers usually seen before the title
@@ -4228,23 +4247,23 @@ class ProjectService {
      * @param groupId recalculate all the children of this group
      */
     recalculatePositionsInGroup(groupId) {
-        
+
         if (groupId != null) {
             var childIds = this.getChildNodeIdsById(groupId);
-            
+
             // loop througha all the children
             for (var c = 0; c < childIds.length; c++) {
                 var childId = childIds[c];
-                
+
                 // calculate the position of the child id
                 var pos = this.getPositionById(childId);
-                
+
                 // set the mapping of node id to position
                 this.setIdToPosition(childId, pos);
             }
         }
     }
-    
+
     /**
      * Get the message that describes how to disable the constraint
      * @param nodeId the node the student is trying to go to
@@ -4254,36 +4273,36 @@ class ProjectService {
      * to disable the constraint
      */
     getConstraintMessage(nodeId, constraint) {
-        
+
         var message = '';
-        
+
         if (nodeId != null && constraint != null) {
-            
+
             // get the node title the student is trying to go to
             var nodeTitle = this.getNodePositionAndTitleByNodeId(nodeId);
-            
+
             var removalConditional = constraint.removalConditional;
             var removalCriteria = constraint.removalCriteria;
-            
+
             if (removalConditional === 'any') {
                 message += 'To visit "' + nodeTitle + '" you must perform one of the actions below:<br/>';
             } else {
                 message += 'To visit "' + nodeTitle + '" you must perform all of the actions below:<br/>';
             }
-            
+
             if (removalCriteria != null) {
-                
+
                 var criteriaMessages = '';
-                
+
                 // loop through all the criteria
                 for (var x = 0; x < removalCriteria.length; x++) {
                     var tempRemovalCriteria = removalCriteria[x];
-                    
+
                     if (tempRemovalCriteria != null) {
-                        
+
                         // get the message that describes the criteria that needs to be satisfied
                         var criteriaMessage = this.getCriteriaMessage(tempRemovalCriteria);
-                        
+
                         if (criteriaMessage != null && criteriaMessage != '') {
                             // separate criteria messages with a line break
                             if (criteriaMessages != '') {
@@ -4293,14 +4312,14 @@ class ProjectService {
                         }
                     }
                 }
-                
+
                 message += criteriaMessages;
             }
         }
-        
+
         return message;
     }
-    
+
     /**
      * Get the message that describes how to satisfy the criteria
      * TODO: check if the criteria is satisfied
@@ -4310,11 +4329,11 @@ class ProjectService {
      */
     getCriteriaMessage(criteria) {
         var message = '';
-        
+
         if (criteria != null) {
             var name = criteria.name;
             var params = criteria.params;
-            
+
             if (name === 'isCompleted') {
                 var nodeId = params.nodeId;
                 if (nodeId != null) {
@@ -4328,9 +4347,9 @@ class ProjectService {
                     message += 'Visit "' + nodeTitle + '"';
                 }
             } else if (name === 'choiceChosen') {
-                
+
             } else if (name === 'branchPathTaken') {
-                
+
             } else if (name === 'isPlanningActivityCompleted') {
                 var nodeId = params.nodeId;
                 if (nodeId != null) {
@@ -4339,34 +4358,34 @@ class ProjectService {
                 }
             }
         }
-        
+
         return message;
     }
-    
+
     /**
      * Get the start id of a group
      * @param nodeId get the start id of this group
      * @returns the start id of the group
      */
     getGroupStartId(nodeId) {
-        
+
         var startId = null;
-        
+
         if (nodeId != null) {
-            
+
             // get the group
             var node = this.getNodeById(nodeId);
-            
+
             if (node != null) {
                 // get the start id
                 startId = node.startId;
             }
         }
-        
-        
+
+
         return startId;
     }
-    
+
     /**
      * Get the start id of the node's parent group
      * @param nodeId we will get the parent of this node and then look
@@ -4375,15 +4394,15 @@ class ProjectService {
      */
     getParentGroupStartId(nodeId) {
         var parentGroupStartId = null;
-        
+
         if (nodeId != null) {
             var parentGroup = this.getParentGroup(nodeId);
-            
+
             if (parentGroup != null) {
                 parentGroupStartId = parentGroup.startId;
             }
         }
-        
+
         return parentGroupStartId;
     }
 }
