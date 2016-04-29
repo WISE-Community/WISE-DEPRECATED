@@ -28,13 +28,13 @@ describe('WISE5 Notebook in Preview Mode', function () {
         expect(element(by.model("stepToolsCtrl.toNodeId")).getText()).toBe('1.1: Introduction to Newton Scooters');
     });
 
-    var notebookButton = element(by.id("notebookButton"));
+    var notebookButton = $("#notebookButton");
     var notebookSideNav = element(by.xpath('//md-sidenav')); // side navigation bar for the notebook
-    var addNoteButton = element(by.id("addNoteButton"));
-    var newNoteDiv = element(by.id("newNote"));
-    var newNoteTextArea = element(by.id("newNoteTextArea"));
-    var saveNewNoteButton = element(by.id("saveNewNoteButton"));
-    var cancelNewNoteButton = element(by.id("cancelNewNoteButton"));
+    var addNoteButton = $("#addNoteButton");
+    var newNoteDiv = $("#newNote");
+    var newNoteTextArea = $("#newNoteTextArea");
+    var saveNewNoteButton = $("#saveNewNoteButton");
+    var cancelNewNoteButton = $("#cancelNewNoteButton");
 
     it('should open and close the notebook', function () {
         // Click on the notebook icon to open the notebook

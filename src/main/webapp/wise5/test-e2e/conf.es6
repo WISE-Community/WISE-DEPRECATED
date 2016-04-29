@@ -8,7 +8,8 @@ exports.config = {
         'previewVLE.spec.js',
         'notebook.spec.js',
         'authoringTool.spec.js',
-        'setUpRun.spec.js'
+        'setUpRun.spec.js',
+        'classroomMonitor.spec.js'
     ]
 };
 

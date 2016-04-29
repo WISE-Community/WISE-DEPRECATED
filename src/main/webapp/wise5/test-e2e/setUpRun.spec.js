@@ -38,29 +38,41 @@ describe('WISE Setting Up a Run', function () {
 
     it('should log in using preview username and password and open the project library', function () {
         browser.ignoreSynchronization = true; // doesn't use Angular
-        element(by.id('username')).sendKeys('preview');
-        element(by.id('password')).sendKeys('wise');
-        element(by.id('signInButton')).click();
+        $('#username').sendKeys('preview');
+        $('#password').sendKeys('wise');
+        $('#signInButton').click();
         expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/teacher');
         expect(browser.getTitle()).toEqual('WISE Teacher Dashboard');
 
         // click on the project library link
-        var projectLibraryLink = element(by.id('projectLibraryLink'));
+        var projectLibraryLink = $('#projectLibraryLink');
         expect(projectLibraryLink.isPresent()).toBeTruthy();
         projectLibraryLink.click();
 
         // check that the user is now on the Project Library page and has projects
         expect(browser.getTitle()).toEqual('Project Library');
         expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/teacher/management/library.html');
-        var setUpRunLink = element(by.className('setupRun'));
-        expect(setUpRunLink.isPresent()).toBeTruthy();
+
+        // search for the newly created project
+        var keywordFilterInput = $("input[type=text]");
+        expect(keywordFilterInput.isPresent()).toBeTruthy();
+        keywordFilterInput.sendKeys("My Science Project");
+        keywordFilterInput.sendKeys(protractor.Key.ENTER);
+
+        // filter by owned project
+        var ownedSearch = $("#owned_search_0 a");
+        expect(ownedSearch.isPresent()).toBeTruthy();
+        ownedSearch.click();
+
+        // get the first project in the filter result, which is the WISE5 project we created earlier.
+        var setUpRunLink = $(".setupRun");
         setUpRunLink.click();
     });
 
     it('should display the set up run wizard page 1', function () {
         // check that the user is now on the set up run wizard page 1
         expect(browser.getTitle()).toEqual('Setting Up a Project Run - Step 1');
-        var nextButton = element(by.id('nextButt'));
+        var nextButton = $('#nextButt');
         expect(nextButton.isPresent()).toBeTruthy();
         nextButton.click();
     });
@@ -68,7 +80,7 @@ describe('WISE Setting Up a Run', function () {
     it('should display the set up run wizard page 2', function () {
         // check that the user is now on the set up run wizard page 2
         expect(browser.getTitle()).toEqual('Setting Up a Project Run - Step 2');
-        var nextButton = element(by.id('nextButt'));
+        var nextButton = $('#nextButt');
         expect(nextButton.isPresent()).toBeTruthy();
         nextButton.click();
     });
@@ -78,9 +90,9 @@ describe('WISE Setting Up a Run', function () {
         expect(browser.getTitle()).toEqual('Setting Up a Project Run - Step 3');
 
         // choose period 1
-        element(by.id('PERIOD_1')).click();
+        $('#PERIOD_1').click();
 
-        var nextButton = element(by.id('nextButt'));
+        var nextButton = $('#nextButt');
         expect(nextButton.isPresent()).toBeTruthy();
         nextButton.click();
     });
@@ -88,7 +100,7 @@ describe('WISE Setting Up a Run', function () {
     it('should display the set up run wizard page 4', function () {
         // check that the user is now on the set up run wizard page 4
         expect(browser.getTitle()).toEqual('Setting Up a Project Run - Step 4');
-        var nextButton = element(by.id('nextButt'));
+        var nextButton = $('#nextButt');
         expect(nextButton.isPresent()).toBeTruthy();
         nextButton.click();
     });
@@ -96,7 +108,7 @@ describe('WISE Setting Up a Run', function () {
     it('should display the set up run wizard page 5', function () {
         // check that the user is now on the set up run wizard page 5
         expect(browser.getTitle()).toEqual('Setting Up a Project Run - Step 5');
-        var submitFormButton = element(by.id('submit_form'));
+        var submitFormButton = $('#submit_form');
         expect(submitFormButton.isPresent()).toBeTruthy();
         submitFormButton.click();
     });
@@ -107,15 +119,15 @@ describe('WISE Setting Up a Run', function () {
     it('should display the classroom run created confirmation page', function () {
         // check that the user is now on the classroom run created confirmation page
         expect(browser.getTitle()).toEqual('Classroom Run Created!');
-        var runCode = element(by.id('runCode')).getText();
+        var runCode = $('#runCode').getText();
         runCode.then(function (value) {
             newRunCode = value;
         });
-        var runId = element(by.id('runId')).getText();
+        var runId = $('#runId').getText();
         runId.then(function (value) {
             newRunId = value;
         });
-        var myClassroomRunLink = element(by.id('myClassroomRunLink'));
+        var myClassroomRunLink = $('#myClassroomRunLink');
         expect(myClassroomRunLink.isPresent()).toBeTruthy();
         myClassroomRunLink.click();
     });
@@ -129,7 +141,7 @@ describe('WISE Setting Up a Run', function () {
 
     it('should sign out', function () {
         browser.ignoreSynchronization = true; // doesn't use Angular
-        var signOutButton = element(by.id('signOut'));
+        var signOutButton = $("#signOut");
         expect(signOutButton.isPresent()).toBeTruthy();
         signOutButton.click();
         expect(browser.getTitle()).toEqual('Web-based Inquiry Science Environment (WISE)');

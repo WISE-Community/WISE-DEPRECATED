@@ -33,7 +33,7 @@ describe('WISE5 Student VLE Preview', () => {
     var previousButton = element(by.xpath('//button[@aria-label="Previous Item"]'));
     var nextButton = element(by.xpath('//button[@aria-label="Next Item"]'));
     var closeButton = element(by.xpath('//button[@aria-label="Close Step"]'));
-    var notebookButton = element(by.id("notebookButton"));
+    var notebookButton = $("#notebookButton");
     var notebookSideNav = element(by.xpath('//md-sidenav'));  // side navigation bar for the notebook
     var accountButton = element(by.xpath('//button[@aria-label="Open user menu"]'));
     var accountMenu = element(by.css('._md-open-menu-container'));
@@ -73,7 +73,7 @@ describe('WISE5 Student VLE Preview', () => {
     });
 
     it('should allow user to jump to a step using the navigation drop-down menu', () => {
-        let stepSelectMenu = element(by.id("stepSelectMenu"));
+        let stepSelectMenu = $("#stepSelectMenu");
         stepSelectMenu.click();
         element.all(by.repeater("item in stepToolsCtrl.idToOrder | toArray | orderBy : 'order'")).then((stepSelectOptions) => {
             expect(stepSelectOptions[1].element(by.css('.node-select__text')).getText()).toBe("1.1: Introduction to Newton Scooters");
@@ -161,10 +161,10 @@ describe('WISE5 Student VLE Preview', () => {
             expect(workgroupNames[0].getText()).toBe('Preview Team');
         });
 
-        var exitButton = element(by.id("exitButton"));
+        var exitButton = $("#exitButton");
         expect(exitButton.isPresent()).toBeTruthy();
         expect(exitButton.getText()).toEqual("EXIT");
-        var logOutButton = element(by.id("logOutButton"));
+        var logOutButton = $("#logOutButton");
         expect(logOutButton.isPresent()).toBeTruthy();
         expect(logOutButton.getText()).toEqual("SIGN OUT");
 
