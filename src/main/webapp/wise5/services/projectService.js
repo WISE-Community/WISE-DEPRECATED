@@ -683,10 +683,23 @@ ids.splice(i+1,0,nodeIdToInsert);return;}}}}}}} /**
      * @param node the node to insert
      * @param nodeId the node id to insert after
      */},{key:'insertNodeAfterInTransitions',value:function insertNodeAfterInTransitions(node,nodeId){ // get the node that will end up before
-var previousNode=this.getNodeById(nodeId);if(previousNode!=null){if(previousNode.transitionLogic==null){previousNode.transitionLogic={};}var previousNodeTransitionLogic=previousNode.transitionLogic;if(previousNodeTransitionLogic!=null){ // get the transitions from the before node
+var previousNode=this.getNodeById(nodeId);if(previousNode!=null){if(previousNode.transitionLogic==null){previousNode.transitionLogic={};previousNode.transitionLogic.transitions=[];}if(node.transitionLogic==null){node.transitionLogic={};}if(node.transitionLogic.transitions==null){node.transitionLogic.transitions=[];}var previousNodeTransitionLogic=previousNode.transitionLogic;if(previousNodeTransitionLogic!=null){ // get the transitions from the before node
 var transitions=previousNodeTransitionLogic.transitions;if(transitions!=null){ // make a copy of the transitions
-var transitionsJSONString=angular.toJson(transitions);var transitionsCopy=angular.fromJson(transitionsJSONString);if(node.transitionLogic==null){node.transitionLogic={};} // set the transitions from the before node into the inserted node
-node.transitionLogic.transitions=transitionsCopy;}}var newNodeId=node.id; // TODO handle branching case
+var transitionsJSONString=angular.toJson(transitions);var transitionsCopy=angular.fromJson(transitionsJSONString); // set the transitions from the before node into the inserted node
+node.transitionLogic.transitions=transitionsCopy;}}if(node.transitionLogic.transitions.length==0){ /*
+                 * The node does not have any transitions so we will look for
+                 * a transition on the parent group. If the parent has a 
+                 * transition we will use it for the node.
+                 */ // get the parent group
+var parentGroupId=this.getParentGroupId(nodeId); // get the parent transitions
+var parentTransitions=this.getTransitionsByFromNodeId(parentGroupId);if(parentTransitions!=null){ // loop through all the parent transitions
+for(var p=0;p<parentTransitions.length;p++){var parentTransition=parentTransitions[p];var newTransition={};if(parentTransition!=null){var toNodeId=parentTransition.to;if(this.isGroupNode(toNodeId)){ // the transition is to a group
+// get the start id of the group
+var startId=this.getGroupStartId(toNodeId);if(startId==null||startId==''){ // there is no start id so we will just use the group id
+newTransition.to=toNodeId;}else { // there is a start id so we will use it as the to node
+newTransition.to=startId;}}else { // the tranisition is to a step
+newTransition.to=toNodeId;}} // add the new transition to the node
+node.transitionLogic.transitions.push(newTransition);}}}var newNodeId=node.id; // TODO handle branching case
 // remove the transitions from the before node
 previousNode.transitionLogic.transitions=[];var transitionObject={};transitionObject.to=newNodeId; // make the before node point to the new node
 previousNode.transitionLogic.transitions.push(transitionObject);}} /**
