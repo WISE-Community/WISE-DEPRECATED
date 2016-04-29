@@ -1,17 +1,23 @@
 <md-dialog aria-label="Add Item to Project">
     <md-toolbar md-theme="light">
         <div class="md-toolbar-tools">
-            <h2>Add Item to Project</h2>
+            <h2 class="md-title">Add Item to Project</h2>
         </div>
     </md-toolbar>
-    <md-dialog-content class="md-dialog-content">
-        <md-list>
+    <md-dialog-content class="nav-contents--group md-dialog-content">
+        <md-list class="planning-contents">
             <md-list-item ng-repeat="item in navitemCtrl.availablePlanningNodes"
-                          class="md-2-line md-long-text nav-item--list md-whiteframe-z1"
+                          class="md-2-line md-long-text nav-item--list planning-item--list md-whiteframe-z1"
+                          ng-class="{'disabled': !navitemCtrl.canAddPlanningNode(item.id)}"
                           ng-click="addSelectedPlanningInstance(item.id)"
-                          ng-disabled="!navitemCtrl.canAddPlanningNode(item.id)">
+                          ng-disabled="!navitemCtrl.canAddPlanningNode(item.id)"
+                          aria-label="Add '{{ navitemCtrl.getNodeTitle(item.id) }}' to the project">
+                <img ng-if="navitemCtrl.nodeStatuses[item.id].icon.type === 'img'" ng-class="navitemCtrl.ProjectService.isGroupNode(item.id) ? 'avatar--square' : ''" class="md-avatar" ng-src="{{navitemCtrl.nodeStatuses[item.id].icon.imgSrc}}" alt="{{navitemCtrl.nodeStatuses[item.id].icon.imgAlt}}" />
+                <div ng-if="navitemCtrl.nodeStatuses[item.id].icon.type === 'font'" ng-class="navitemCtrl.ProjectService.isGroupNode(item.id) ? 'avatar--square' : ''" style="background-color: {{navitemCtrl.nodeStatuses[item.id].icon.color}};" class="md-avatar">
+                    <md-icon md-font-set="{{navitemCtrl.nodeStatuses[item.id].icon.fontSet}}" class="md-light">{{navitemCtrl.nodeStatuses[item.id].icon.fontName}}</md-icon>
+                </div>
                 <div class="md-list-item-text">
-                    <h3>{{ navitemCtrl.getNodeTitle(item.id) }}</h3>
+                    <h3>{{ navitemCtrl.getNodeTitle(item.id) }} <span class="md-caption accent-2" ng-if="navitemCtrl.getPlannindNodeMaxAllowed(item.id) > 0">(Used: {{ navitemCtrl.getNumPlannindNodeInstances(item.id) }}/{{ navitemCtrl.getPlannindNodeMaxAllowed(item.id) }})</span></h3>
                     <p>{{ navitemCtrl.getNodeDescription(item.id) }}</p>
                 </div>
             </md-list-item>
