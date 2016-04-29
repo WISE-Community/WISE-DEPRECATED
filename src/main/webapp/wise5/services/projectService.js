@@ -1028,5 +1028,16 @@ if(criteriaMessages!=''){criteriaMessages+='<br/>';}criteriaMessages+=criteriaMe
      * @param criteria the criteria object that needs to be satisfied
      * @returns the message to display to the student that describes how to
      * satisfy the criteria
-     */},{key:'getCriteriaMessage',value:function getCriteriaMessage(criteria){var message='';if(criteria!=null){var name=criteria.name;var params=criteria.params;if(name==='isCompleted'){var nodeId=params.nodeId;if(nodeId!=null){var nodeTitle=this.getNodePositionAndTitleByNodeId(nodeId);message+='Complete "'+nodeTitle+'"';}}else if(name==='isVisited'){var nodeId=params.nodeId;if(nodeId!=null){var nodeTitle=this.getNodePositionAndTitleByNodeId(nodeId);message+='Visit "'+nodeTitle+'"';}}else if(name==='choiceChosen'){}else if(name==='branchPathTaken'){}else if(name==='isPlanningActivityCompleted'){var nodeId=params.nodeId;if(nodeId!=null){var nodeTitle=this.getNodePositionAndTitleByNodeId(nodeId);message+='Complete "'+nodeTitle+'"';}}}return message;}}]);return ProjectService;}();ProjectService.$inject=['$http','$injector','$rootScope','ConfigService'];exports.default=ProjectService;
+     */},{key:'getCriteriaMessage',value:function getCriteriaMessage(criteria){var message='';if(criteria!=null){var name=criteria.name;var params=criteria.params;if(name==='isCompleted'){var nodeId=params.nodeId;if(nodeId!=null){var nodeTitle=this.getNodePositionAndTitleByNodeId(nodeId);message+='Complete "'+nodeTitle+'"';}}else if(name==='isVisited'){var nodeId=params.nodeId;if(nodeId!=null){var nodeTitle=this.getNodePositionAndTitleByNodeId(nodeId);message+='Visit "'+nodeTitle+'"';}}else if(name==='choiceChosen'){}else if(name==='branchPathTaken'){}else if(name==='isPlanningActivityCompleted'){var nodeId=params.nodeId;if(nodeId!=null){var nodeTitle=this.getNodePositionAndTitleByNodeId(nodeId);message+='Complete "'+nodeTitle+'"';}}}return message;} /**
+     * Get the start id of a group
+     * @param nodeId get the start id of this group
+     * @returns the start id of the group
+     */},{key:'getGroupStartId',value:function getGroupStartId(nodeId){var startId=null;if(nodeId!=null){ // get the group
+var node=this.getNodeById(nodeId);if(node!=null){ // get the start id
+startId=node.startId;}}return startId;} /**
+     * Get the start id of the node's parent group
+     * @param nodeId we will get the parent of this node and then look
+     * for the start id of the parent
+     * @returns the start id of the parent
+     */},{key:'getParentGroupStartId',value:function getParentGroupStartId(nodeId){var parentGroupStartId=null;if(nodeId!=null){var parentGroup=this.getParentGroup(nodeId);if(parentGroup!=null){parentGroupStartId=parentGroup.startId;}}return parentGroupStartId;}}]);return ProjectService;}();ProjectService.$inject=['$http','$injector','$rootScope','ConfigService'];exports.default=ProjectService;
 //# sourceMappingURL=projectService.js.map

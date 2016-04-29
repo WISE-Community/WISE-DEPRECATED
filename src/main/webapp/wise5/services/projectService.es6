@@ -4287,6 +4287,50 @@ class ProjectService {
         
         return message;
     }
+    
+    /**
+     * Get the start id of a group
+     * @param nodeId get the start id of this group
+     * @returns the start id of the group
+     */
+    getGroupStartId(nodeId) {
+        
+        var startId = null;
+        
+        if (nodeId != null) {
+            
+            // get the group
+            var node = this.getNodeById(nodeId);
+            
+            if (node != null) {
+                // get the start id
+                startId = node.startId;
+            }
+        }
+        
+        
+        return startId;
+    }
+    
+    /**
+     * Get the start id of the node's parent group
+     * @param nodeId we will get the parent of this node and then look
+     * for the start id of the parent
+     * @returns the start id of the parent
+     */
+    getParentGroupStartId(nodeId) {
+        var parentGroupStartId = null;
+        
+        if (nodeId != null) {
+            var parentGroup = this.getParentGroup(nodeId);
+            
+            if (parentGroup != null) {
+                parentGroupStartId = parentGroup.startId;
+            }
+        }
+        
+        return parentGroupStartId;
+    }
 }
 
 ProjectService.$inject = [

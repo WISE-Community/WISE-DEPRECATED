@@ -247,14 +247,63 @@ class NodeService {
                 // the student has not branched on this node before
                 
                 // get the transition logic from the current node
-                var transitions = this.ProjectService.getTransitionLogicByFromNodeId(currentNodeId);
+                var transitionLogic = this.ProjectService.getTransitionLogicByFromNodeId(currentNodeId);
+                
+                if (transitionLogic != null) {
+                    var transitions = transitionLogic.transitions;
+                    
+                    if (transitions == null || transitions.length == 0) {
+                        /*
+                         * this node does not have any transitions so we will
+                         * check if the parent group has transitions
+                         */
+                        
+                        // get the parent group id
+                        var parentGroupId = this.ProjectService.getParentGroupId(currentNodeId);
+                        
+                        if (parentGroupId != null) {
+                            
+                            // get the transition logic from the parent
+                            var parentTransitionLogic = this.ProjectService.getTransitionLogicByFromNodeId(parentGroupId);
+                            
+                            if (parentTransitionLogic != null) {
+                                
+                                // choose a transition
+                                var transition = this.chooseTransition(parentTransitionLogic);
+                                
+                                if (transition != null) {
+                                    // get the to node id
+                                    var transitionToNodeId = transition.to;
+                                    
+                                    if (this.ProjectService.isGroupNode(transitionToNodeId)) {
+                                        // the to node is a group
+                                        
+                                        // get the start id of the group
+                                        var startId = this.ProjectService.getGroupStartId(transitionToNodeId);
+                                        
+                                        if (startId == null || startId == '') {
+                                            // the group does not have a start id so we will just use the group
+                                            nextNodeId = transitionToNodeId;
+                                        } else {
+                                            // the group has a start id so we will use the start id
+                                            nextNodeId = startId;
+                                        }
+                                    } else {
+                                        // the to node is a step
+                                        nextNodeId = transitionToNodeId;
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        // choose a transition
+                        var transition = this.chooseTransition(transitionLogic);
 
-                // choose a transition
-                var transition = this.chooseTransition(transitions);
-
-                if (transition != null) {
-                    // move the student to the toNodeId
-                    nextNodeId = transition.to;
+                        if (transition != null) {
+                            // move the student to the toNodeId
+                            nextNodeId = transition.to;
+                        }
+                    }
                 }
             }
         }
