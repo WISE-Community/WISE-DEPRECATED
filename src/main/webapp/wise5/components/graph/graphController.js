@@ -467,6 +467,11 @@ var GraphController = function () {
                 this.xAxis = xAxis;
             }
 
+            if (this.xAxis != null) {
+                // do not display decimals on the x axis
+                this.xAxis.allowDecimals = false;
+            }
+
             if (this.yAxis == null && this.componentContent.yAxis != null) {
                 /*
                  * the student does not have y axis data so we will use the
@@ -474,6 +479,11 @@ var GraphController = function () {
                  */
                 yAxis = this.componentContent.yAxis;
                 this.yAxis = yAxis;
+            }
+
+            if (this.yAxis != null) {
+                // do not display decimals on the y axis
+                this.yAxis.allowDecimals = false;
             }
 
             if (this.componentContent.width != null) {
