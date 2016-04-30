@@ -102,9 +102,9 @@ var ThemeController = function () {
                 }
             }
 
-            _this.$mdDialog.show(_this.$translate(['itemLocked', 'ok']).then(function (translations) {
-                _this.$mdDialog.alert().parent(angular.element(document.body)).title(translations.itemLocked).htmlContent(message).ariaLabel(translations.itemLocked).ok(translations.ok).targetEvent(event);
-            }));
+            _this.$translate(['itemLocked', 'ok']).then(function (translations) {
+                _this.$mdDialog.show(_this.$mdDialog.alert().parent(angular.element(document.body)).title(translations.itemLocked).htmlContent(message).ariaLabel(translations.itemLocked).ok(translations.ok).targetEvent(event));
+            });
         });
 
         // alert user when inactive for a long time

@@ -101,8 +101,8 @@ class ThemeController {
                 }
             }
 
-            this.$mdDialog.show(
-                this.$translate(['itemLocked', 'ok']).then((translations) => {
+            this.$translate(['itemLocked', 'ok']).then((translations) => {
+                this.$mdDialog.show(
                     this.$mdDialog.alert()
                         .parent(angular.element(document.body))
                         .title(translations.itemLocked)
@@ -110,8 +110,8 @@ class ThemeController {
                         .ariaLabel(translations.itemLocked)
                         .ok(translations.ok)
                         .targetEvent(event)
-                })
-            );
+                );
+            })
         });
 
         // alert user when inactive for a long time
