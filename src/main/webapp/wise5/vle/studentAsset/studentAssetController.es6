@@ -87,7 +87,7 @@ StudentAssetController.$inject = [
     "$scope",
     "ConfigService",
     "ProjectService",
-    "StudentAssetService",
+    "StudentAssetService"
 ];
 
 export default StudentAssetController;

@@ -74,7 +74,7 @@ describe('WISE Authoring Tool', () => {
         $('#newProjectTitle').clear();  // clear out what's there.
         $('#newProjectTitle').sendKeys('My Science Project');
         createProjectButton.click();
-        expect(browser.getCurrentUrl()).toContain('http://localhost:8080/wise/author#/project/');  // should open the project editing view.
+        expect(browser.getCurrentUrl()).toMatch('http://localhost:8080/wise/author#/project/[0-9]+');  // should open the project editing view.
     });
 
     it('should have elements on the page in project view', () => {
@@ -91,6 +91,14 @@ describe('WISE Authoring Tool', () => {
         expect($("#previewProjectButton").isEnabled()).toBe(true);
         expect($("#manageAssetsButton").isEnabled()).toBe(true);
         expect($("#viewHistoryButton").isEnabled()).toBe(true);
+    });
+
+    it('should display my assets', () => {
+        $("#manageAssetsButton").click();
+        expect(browser.getCurrentUrl()).toMatch('http://localhost:8080/wise/author#/project/[0-9]+/asset');
+        expect($(".drop-box").isPresent()).toBeTruthy();  // the drop box for uploading assets should exist.
+        $("#closeAssetsButton").click();
+        expect(browser.getCurrentUrl()).toMatch('http://localhost:8080/wise/author#/project/[0-9]+');  // should go back to the project editing view.
     });
 
     it('should allow user to preview the project', () => {
