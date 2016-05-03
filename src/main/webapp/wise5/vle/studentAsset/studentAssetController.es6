@@ -18,8 +18,6 @@ class StudentAssetController {
 
         this.studentAssets = this.StudentAssetService.allAssets;
 
-        this.selectedStudentAsset = null;  // This is used when student choose an asset to attach to a component
-
         this.itemId = null;
         this.item = null;
 
@@ -49,9 +47,14 @@ class StudentAssetController {
         if (files != null) {
             for (var f = 0; f < files.length; f++) {
                 var file = files[f];
-                this.StudentAssetService.uploadAsset(file).then(() => {
+                this.StudentAssetService.uploadAsset(file).then((studentAsset) => {
+                    if (this.componentController != null) {
+                        // If the student asset dialog is a part of a component (e.g. attaching image to OR or Discussion)
+                        // Also attach the file(s) to the componentstate's attachments
+                        this.componentController.attachStudentAsset(studentAsset);
+                    }
                     this.studentAssets = this.StudentAssetService.allAssets;
-                })
+                });
             }
         }
     };
@@ -67,15 +70,14 @@ class StudentAssetController {
          */
     };
 
-    studentAssetSelected($event, studentAsset) {
-        this.selectedStudentAsset = studentAsset;
-    };
-
     attachStudentAssetToComponent($event, studentAsset) {
-        this.componentController.attachStudentAsset(studentAsset);
-        this.selectedStudentAsset = null;  // reset selected student asset
-        // TODO: add some kind of unobtrusive confirmation to let student know that the student asset has been added to current component
-        $event.stopPropagation();  // prevents parent student asset list item from getting the onclick event so this item won't be re-selected.
+        if (this.componentController != null) {
+            // If the student asset dialog is a part of a component (e.g. attaching image to OR or Discussion)
+            // Also attach the file(s) to the componentstate's attachments
+            this.componentController.attachStudentAsset(studentAsset);
+            // TODO: add some kind of unobtrusive confirmation to let student know that the student asset has been added to current component
+            $event.stopPropagation();  // prevents parent student asset list item from getting the onclick event so this item won't be re-selected.
+        }
     };
 }
 
