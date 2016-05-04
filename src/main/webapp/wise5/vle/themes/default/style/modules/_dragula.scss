@@ -3,6 +3,7 @@
   margin: 0 !important;
   z-index: 9999 !important;
   opacity: 0.8;
+  transition: opacity 250ms ease-in-out;
 }
 .gu-hide {
   display: none !important;
