@@ -258,17 +258,8 @@ class ProjectController {
             this.insertNodeMode = false;
         }
         
-        // check if the project start node id should be changed
-        this.checkPotentialStartNodeIdChange().then(() => {
-            // save the project
-            this.ProjectService.saveProject();
-
-            // refresh the project
-            this.ProjectService.parseProject();
-            this.items = this.ProjectService.idToOrder;
-
-            this.unselectAllItems();
-        });
+        // save and refresh the project
+        this.checkPotentialStartNodeIdChangeThenSaveProject();
     }
 
     /**
@@ -290,19 +281,15 @@ class ProjectController {
              */
             this.nodeToAdd = null;
 
-            // save the project
-            this.ProjectService.saveProject();
-
             // turn off create mode
             this.createMode = false;
 
             // turn off insert mode
             this.insertGroupMode = false;
             this.insertNodeMode = false;
-
-            // refresh the project
-            this.ProjectService.parseProject();
-            this.items = this.ProjectService.idToOrder;
+            
+            // save and referesh the project
+            this.checkPotentialStartNodeIdChangeThenSaveProject();
         } else if (this.moveMode) {
             // we are in move mode
 
@@ -322,22 +309,16 @@ class ProjectController {
             } else {
                 // move the nodes after the node id
                 this.ProjectService.moveNodesAfter(selectedNodeIds, nodeId);
-    
-                // save the project
-                this.ProjectService.saveProject();
-    
+
                 // turn off move mode
                 this.moveMode = false;
     
                 // turn off insert mode
                 this.insertGroupMode = false;
                 this.insertNodeMode = false;
-    
-                // refresh the project
-                this.ProjectService.parseProject();
-                this.items = this.ProjectService.idToOrder;
-    
-                this.unselectAllItems();
+
+                // save and refresh the project
+                this.checkPotentialStartNodeIdChangeThenSaveProject();
             }
         } else if (this.copyMode) {
             // We are in copy mode
@@ -348,9 +329,6 @@ class ProjectController {
             // copy the nodes and put them after the node id
             this.ProjectService.copyNodesAfter(selectedNodeIds, nodeId);
 
-            // save the project
-            this.ProjectService.saveProject();
-
             // turn off copy mode
             this.copyMode = false;
 
@@ -358,11 +336,8 @@ class ProjectController {
             this.insertGroupMode = false;
             this.insertNodeMode = false;
 
-            // refresh the project
-            this.ProjectService.parseProject();
-            this.items = this.ProjectService.idToOrder;
-
-            this.unselectAllItems();
+            // save and refresh the project
+            this.checkPotentialStartNodeIdChangeThenSaveProject();
         }
     }
 
@@ -657,32 +632,64 @@ class ProjectController {
             // get the first leaf node id
             var firstLeafNodeId = this.ProjectService.getFirstLeafNodeId();
 
-            if (currentStartNodeId != firstLeafNodeId) {
-                /*
-                 * the node ids are different which means the first leaf node
-                 * id is different than the current start node id and that
-                 * the author may want to use the first leaf node id as the
-                 * new start node id
-                 */
-                var firstLeafNode = this.ProjectService.getNodeById(firstLeafNodeId);
-
-                if (firstLeafNode != null) {
-                    var firstChildTitle = firstLeafNode.title;
-
-                    // ask the user if they would like to change the start step to the step that is now the first child in the group
-                    this.$translate('confirmUpdateStartStep', { startStepTitle: firstChildTitle }).then((confirmUpdateStartStep) => {
-                        var answer = confirm(confirmUpdateStartStep);
-
-                        if (answer) {
-                            // change the project start node id
-                            this.ProjectService.setStartNodeId(firstLeafNodeId);
-                            resolve();
-                        }
-                    });
-                }
-            } else {
+            if (firstLeafNodeId == null) {
+                // there are no steps in the project
+                
+                // set the start node id to empty string
+                this.ProjectService.setStartNodeId('');
+                
                 resolve();
+            } else {
+                // we have found a leaf node
+                
+                if (currentStartNodeId != firstLeafNodeId) {
+                    /*
+                     * the node ids are different which means the first leaf node
+                     * id is different than the current start node id and that
+                     * the author may want to use the first leaf node id as the
+                     * new start node id
+                     */
+                    var firstLeafNode = this.ProjectService.getNodeById(firstLeafNodeId);
+
+                    if (firstLeafNode != null) {
+                        var firstChildTitle = firstLeafNode.title;
+
+                        // ask the user if they would like to change the start step to the step that is now the first child in the group
+                        this.$translate('confirmUpdateStartStep', { startStepTitle: firstChildTitle }).then((confirmUpdateStartStep) => {
+                            var answer = confirm(confirmUpdateStartStep);
+
+                            if (answer) {
+                                // change the project start node id
+                                this.ProjectService.setStartNodeId(firstLeafNodeId);
+                                resolve();
+                            } else {
+                                resolve();
+                            }
+                        });
+                    } else {
+                        resolve();
+                    }
+                } else {
+                    resolve();
+                }
             }
+        });
+    }
+    
+    /**
+     * Check if the start node id has changed and then save the project
+     */
+    checkPotentialStartNodeIdChangeThenSaveProject() {
+        // check if the project start node id should be changed
+        this.checkPotentialStartNodeIdChange().then(() => {
+            // save the project
+            this.ProjectService.saveProject();
+
+            // refresh the project
+            this.ProjectService.parseProject();
+            this.items = this.ProjectService.idToOrder;
+
+            this.unselectAllItems();
         });
     }
 };
