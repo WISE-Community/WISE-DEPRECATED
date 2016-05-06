@@ -19,7 +19,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var DrawController = function () {
-    function DrawController($injector, $rootScope, $scope, $timeout, DrawService, NodeService, ProjectService, StudentAssetService, StudentDataService) {
+    function DrawController($injector, $rootScope, $scope, $timeout, DrawService, NodeService, ProjectService, StudentAssetService, StudentDataService, UtilService) {
+        var _this = this;
+
         _classCallCheck(this, DrawController);
 
         this.$injector = $injector;
@@ -31,6 +33,7 @@ var DrawController = function () {
         this.ProjectService = ProjectService;
         this.StudentAssetService = StudentAssetService;
         this.StudentDataService = StudentDataService;
+        this.UtilService = UtilService;
 
         // the node id of the current node
         this.nodeId = null;
@@ -331,6 +334,35 @@ var DrawController = function () {
             }
         }));
 
+        /*
+         * Listen for the requestImage event which is fired when something needs
+         * an image representation of the student data from a specific
+         * component.
+         */
+        this.$scope.$on('requestImage', function (event, args) {
+
+            // get the node id and component id from the args
+            var nodeId = args.nodeId;
+            var componentId = args.componentId;
+
+            // check if the image is being requested from this component
+            if (_this.nodeId === nodeId && _this.componentId === componentId) {
+
+                // obtain the image blob
+                var imageObject = _this.getImageObject();
+
+                if (imageObject != null) {
+                    var args = {};
+                    args.nodeId = nodeId;
+                    args.componentId = componentId;
+                    args.imageObject = imageObject;
+
+                    // fire an event that contains the image object
+                    _this.$scope.$emit('requestImageCallback', args);
+                }
+            }
+        });
+
         /**
          * Listen for the 'exitNode' event which is fired when the student
          * exits the parent node. This will perform any necessary cleanup
@@ -614,7 +646,7 @@ var DrawController = function () {
          * @param studentAsset
          */
         value: function attachStudentAsset(studentAsset) {
-            var _this = this;
+            var _this2 = this;
 
             if (studentAsset != null) {
                 this.StudentAssetService.copyAssetForReference(studentAsset).then(function (copiedAsset) {
@@ -626,7 +658,7 @@ var DrawController = function () {
                             //oImg.setTop((this.drawingTool.canvas.height / 2) - (oImg.height / 2));
                             //oImg.center();
                             oImg.studentAssetId = copiedAsset.id; // keep track of this asset id
-                            _this.drawingTool.canvas.add(oImg); // add copied asset image to canvas
+                            _this2.drawingTool.canvas.add(oImg); // add copied asset image to canvas
                         });
                     }
                 });
@@ -779,14 +811,36 @@ var DrawController = function () {
             this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
         }
     }, {
-        key: 'setSaveMessage',
+        key: 'getImageObject',
 
+
+        /**
+         * Get the image object representation of the student data
+         * @returns an image object
+         */
+        value: function getImageObject() {
+            var pngFile = null;
+
+            if (this.drawingTool != null && this.drawingTool.canvas != null) {
+
+                // get the image as a base64 string
+                var img_b64 = this.drawingTool.canvas.toDataURL('image/png');
+
+                // get the image object
+                pngFile = this.UtilService.getImageObjectFromBase64String(img_b64);
+            }
+
+            return pngFile;
+        }
 
         /**
          * Set the message next to the save button
          * @param message the message to display
          * @param time the time to displau
          */
+
+    }, {
+        key: 'setSaveMessage',
         value: function setSaveMessage(message, time) {
             this.saveMessage.text = message;
             this.saveMessage.time = time;
@@ -815,7 +869,7 @@ var DrawController = function () {
     return DrawController;
 }();
 
-DrawController.$inject = ['$injector', '$rootScope', '$scope', '$timeout', 'DrawService', 'NodeService', 'ProjectService', 'StudentAssetService', 'StudentDataService'];
+DrawController.$inject = ['$injector', '$rootScope', '$scope', '$timeout', 'DrawService', 'NodeService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'UtilService'];
 
 exports.default = DrawController;
 //# sourceMappingURL=drawController.js.map

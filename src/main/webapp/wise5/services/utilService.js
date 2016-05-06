@@ -81,6 +81,54 @@ var UtilService = function () {
 
             return copyOfJSONObject;
         }
+    }, {
+        key: "getImageObjectFromBase64String",
+
+
+        /**
+         * Get the image object
+         * @params img_b64 the base64 image string
+         * @returns an image object
+         */
+        value: function getImageObjectFromBase64String(img_b64) {
+
+            // create a blob from the base64 image string
+            var blob = this.dataURItoBlob(img_b64);
+
+            var now = new Date().getTime();
+            var filename = encodeURIComponent('picture_' + now + '.png');
+            var pngFile = new File([blob], filename, {
+                lastModified: now, // optional - default = now
+                type: 'image/png' // optional - default = ''
+            });
+
+            return pngFile;
+        }
+
+        /**
+         * Convert base64/URLEncoded data component to raw binary data held in a string
+         * @param dataURI base64/URLEncoded data
+         * @returns a Blob object
+         */
+
+    }, {
+        key: "dataURItoBlob",
+        value: function dataURItoBlob(dataURI) {
+
+            var byteString;
+            if (dataURI.split(',')[0].indexOf('base64') >= 0) byteString = atob(dataURI.split(',')[1]);else byteString = unescape(dataURI.split(',')[1]);
+
+            // separate out the mime component
+            var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+
+            // write the bytes of the string to a typed array
+            var ia = new Uint8Array(byteString.length);
+            for (var i = 0; i < byteString.length; i++) {
+                ia[i] = byteString.charCodeAt(i);
+            }
+
+            return new Blob([ia], { type: mimeString });
+        }
     }]);
 
     return UtilService;

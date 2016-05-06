@@ -9,7 +9,9 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var LabelController = function () {
-    function LabelController($injector, $scope, $timeout, LabelService, NodeService, OpenResponseService, ProjectService, StudentAssetService, StudentDataService) {
+    function LabelController($injector, $scope, $timeout, LabelService, NodeService, OpenResponseService, ProjectService, StudentAssetService, StudentDataService, UtilService) {
+        var _this = this;
+
         _classCallCheck(this, LabelController);
 
         this.$injector = $injector;
@@ -21,6 +23,7 @@ var LabelController = function () {
         this.ProjectService = ProjectService;
         this.StudentAssetService = StudentAssetService;
         this.StudentDataService = StudentDataService;
+        this.UtilService = UtilService;
 
         // the node id of the current node
         this.nodeId = null;
@@ -324,6 +327,35 @@ var LabelController = function () {
                 }
             }
         }));
+
+        /*
+         * Listen for the requestImage event which is fired when something needs
+         * an image representation of the student data from a specific
+         * component.
+         */
+        this.$scope.$on('requestImage', function (event, args) {
+
+            // get the node id and component id from the args
+            var nodeId = args.nodeId;
+            var componentId = args.componentId;
+
+            // check if the image is being requested from this component
+            if (_this.nodeId === nodeId && _this.componentId === componentId) {
+
+                // obtain the image blob
+                var imageObject = _this.getImageObject();
+
+                if (imageObject != null) {
+                    var args = {};
+                    args.nodeId = nodeId;
+                    args.componentId = componentId;
+                    args.imageObject = imageObject;
+
+                    // fire an event that contains the image object
+                    _this.$scope.$emit('requestImageCallback', args);
+                }
+            }
+        });
 
         /**
          * Listen for the 'exitNode' event which is fired when the student
@@ -839,7 +871,7 @@ var LabelController = function () {
     }, {
         key: 'attachStudentAsset',
         value: function attachStudentAsset(studentAsset) {
-            var _this = this;
+            var _this2 = this;
 
             if (studentAsset != null) {
                 this.StudentAssetService.copyAssetForReference(studentAsset).then(function (copiedAsset) {
@@ -849,8 +881,8 @@ var LabelController = function () {
                             iconURL: copiedAsset.iconURL
                         };
 
-                        _this.attachments.push(attachment);
-                        _this.studentDataChanged();
+                        _this2.attachments.push(attachment);
+                        _this2.studentDataChanged();
                     }
                 });
             }
@@ -1442,6 +1474,28 @@ var LabelController = function () {
         }
 
         /**
+         * Get the image object representation of the student data
+         * @returns an image object
+         */
+
+    }, {
+        key: 'getImageObject',
+        value: function getImageObject() {
+            var pngFile = null;
+
+            if (this.canvas != null) {
+
+                // get the image as a base64 string
+                var img_b64 = this.canvas.toDataURL('image/png');
+
+                // get the image object
+                pngFile = this.UtilService.getImageObjectFromBase64String(img_b64);
+            }
+
+            return pngFile;
+        }
+
+        /**
          * Set the message next to the save button
          * @param message the message to display
          * @param time the time to display
@@ -1474,7 +1528,7 @@ var LabelController = function () {
     return LabelController;
 }();
 
-LabelController.$inject = ['$injector', '$scope', '$timeout', 'LabelService', 'NodeService', 'OpenResponseService', 'ProjectService', 'StudentAssetService', 'StudentDataService'];
+LabelController.$inject = ['$injector', '$scope', '$timeout', 'LabelService', 'NodeService', 'OpenResponseService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'UtilService'];
 
 exports.default = LabelController;
 //# sourceMappingURL=labelController.js.map

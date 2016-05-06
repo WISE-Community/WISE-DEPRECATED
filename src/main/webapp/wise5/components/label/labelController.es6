@@ -8,7 +8,8 @@ class LabelController {
         OpenResponseService,
         ProjectService,
         StudentAssetService,
-        StudentDataService
+        StudentDataService,
+        UtilService
     ) {
 
         this.$injector = $injector;
@@ -20,6 +21,7 @@ class LabelController {
         this.ProjectService = ProjectService;
         this.StudentAssetService = StudentAssetService;
         this.StudentDataService = StudentDataService;
+        this.UtilService = UtilService;
 
         // the node id of the current node
         this.nodeId = null;
@@ -324,6 +326,35 @@ class LabelController {
                 }
             }
         }));
+
+        /*
+         * Listen for the requestImage event which is fired when something needs
+         * an image representation of the student data from a specific
+         * component.
+         */
+        this.$scope.$on('requestImage', (event, args) => {
+            
+            // get the node id and component id from the args
+            var nodeId = args.nodeId;
+            var componentId = args.componentId;
+            
+            // check if the image is being requested from this component
+            if (this.nodeId === nodeId && this.componentId === componentId) {
+                
+                // obtain the image blob
+                var imageObject = this.getImageObject();
+                
+                if (imageObject != null) {
+                    var args = {};
+                    args.nodeId = nodeId;
+                    args.componentId = componentId;
+                    args.imageObject = imageObject;
+                    
+                    // fire an event that contains the image object
+                    this.$scope.$emit('requestImageCallback', args);
+                }
+            }
+        });
 
         /**
          * Listen for the 'exitNode' event which is fired when the student
@@ -1335,6 +1366,25 @@ class LabelController {
         // save the project
         this.authoringViewComponentChanged();
     }
+    
+    /**
+     * Get the image object representation of the student data
+     * @returns an image object
+     */
+    getImageObject() {
+        var pngFile = null;
+        
+        if (this.canvas != null) {
+            
+            // get the image as a base64 string
+            var img_b64 = this.canvas.toDataURL('image/png');
+            
+            // get the image object
+            pngFile = this.UtilService.getImageObjectFromBase64String(img_b64);
+        }
+        
+        return pngFile;
+    }
 
     /**
      * Set the message next to the save button
@@ -1371,7 +1421,8 @@ LabelController.$inject = [
     'OpenResponseService',
     'ProjectService',
     'StudentAssetService',
-    'StudentDataService'
+    'StudentDataService',
+    'UtilService'
 ];
 
 export default LabelController;
