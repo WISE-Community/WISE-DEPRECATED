@@ -994,6 +994,9 @@ var LabelController = function () {
             canvas.setWidth(this.canvasWidth);
             canvas.setHeight(this.canvasHeight);
 
+            // set the height on the parent div so that a vertical scrollbar doesn't show up
+            $('#canvasParent_' + this.canvasId).css('height', this.canvasHeight + 2);
+
             // listen for the mouse down event
             canvas.on('mouse:down', angular.bind(this, function (options) {
 
