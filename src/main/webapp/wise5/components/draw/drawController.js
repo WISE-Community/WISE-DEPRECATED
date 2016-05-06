@@ -206,6 +206,11 @@ var DrawController = function () {
                     // set whether studentAttachment is enabled
                     this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
 
+                    if (this.componentContent.background != null) {
+                        // set the background from the component content
+                        this.drawingTool.setBackgroundImage(this.componentContent.background);
+                    }
+
                     if (componentState == null) {
                         /*
                          * only import work if the student does not already have
