@@ -252,6 +252,12 @@ var mainModule = _angular2.default.module('authoring', ['angularMoment', 'angula
         templateUrl: 'wise5/authoringTool/authoringTool.html',
         controller: 'AuthoringToolController',
         controllerAs: 'authoringToolController',
+        resolve: {}
+    }).state('root.main', {
+        url: '/',
+        templateUrl: 'wise5/authoringTool/main/main.html',
+        controller: 'AuthoringToolMainController',
+        controllerAs: 'authoringToolMainController',
         resolve: {
             config: function config(ConfigService) {
                 var configURL = window.configURL;
@@ -266,18 +272,25 @@ var mainModule = _angular2.default.module('authoring', ['angularMoment', 'angula
                 return SessionService.initializeSession();
             }
         }
-    }).state('root.main', {
-        url: '/',
-        templateUrl: 'wise5/authoringTool/main/main.html',
-        controller: 'AuthoringToolMainController',
-        controllerAs: 'authoringToolMainController',
-        resolve: {}
     }).state('root.new', {
         url: '/new',
         templateUrl: 'wise5/authoringTool/main/new.html',
         controller: 'AuthoringToolNewProjectController',
         controllerAs: 'authoringToolNewProjectController',
-        resolve: {}
+        resolve: {
+            config: function config(ConfigService) {
+                var configURL = window.configURL;
+
+                return ConfigService.retrieveConfig(configURL);
+            },
+            language: function language($translate, ConfigService, config) {
+                var locale = ConfigService.getLocale(); // defaults to "en"
+                $translate.use(locale);
+            },
+            sessionTimers: function sessionTimers(SessionService, config) {
+                return SessionService.initializeSession();
+            }
+        }
     }).state('root.project', {
         url: '/project/:projectId',
         templateUrl: 'wise5/authoringTool/project/project.html',
@@ -294,6 +307,13 @@ var mainModule = _angular2.default.module('authoring', ['angularMoment', 'angula
             },
             projectAssets: function projectAssets(ProjectAssetService, projectConfig) {
                 return ProjectAssetService.retrieveProjectAssets();
+            },
+            language: function language($translate, ConfigService, projectConfig) {
+                var locale = ConfigService.getLocale(); // defaults to "en"
+                $translate.use(locale);
+            },
+            sessionTimers: function sessionTimers(SessionService, projectConfig) {
+                return SessionService.initializeSession();
             }
         }
     }).state('root.project.node', {

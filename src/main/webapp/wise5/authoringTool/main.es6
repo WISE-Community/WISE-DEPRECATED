@@ -142,6 +142,14 @@ let mainModule = angular.module('authoring', [
                     controller: 'AuthoringToolController',
                     controllerAs: 'authoringToolController',
                     resolve: {
+                    }
+                })
+                .state('root.main', {
+                    url: '/',
+                    templateUrl: 'wise5/authoringTool/main/main.html',
+                    controller: 'AuthoringToolMainController',
+                    controllerAs: 'authoringToolMainController',
+                    resolve: {
                         config: (ConfigService) => {
                             var configURL = window.configURL;
 
@@ -156,20 +164,24 @@ let mainModule = angular.module('authoring', [
                         }
                     }
                 })
-                .state('root.main', {
-                    url: '/',
-                    templateUrl: 'wise5/authoringTool/main/main.html',
-                    controller: 'AuthoringToolMainController',
-                    controllerAs: 'authoringToolMainController',
-                    resolve: {
-                    }
-                })
                 .state('root.new', {
                     url: '/new',
                     templateUrl: 'wise5/authoringTool/main/new.html',
                     controller: 'AuthoringToolNewProjectController',
                     controllerAs: 'authoringToolNewProjectController',
                     resolve: {
+                        config: (ConfigService) => {
+                            var configURL = window.configURL;
+
+                            return ConfigService.retrieveConfig(configURL);
+                        },
+                        language: ($translate, ConfigService, config) => {
+                            let locale = ConfigService.getLocale();  // defaults to "en"
+                            $translate.use(locale);
+                        },
+                        sessionTimers: (SessionService, config) => {
+                            return SessionService.initializeSession();
+                        }
                     }
                 })
                 .state('root.project', {
@@ -188,6 +200,13 @@ let mainModule = angular.module('authoring', [
                         },
                         projectAssets: (ProjectAssetService, projectConfig) => {
                             return ProjectAssetService.retrieveProjectAssets();
+                        },
+                        language: ($translate, ConfigService, projectConfig) => {
+                            let locale = ConfigService.getLocale();  // defaults to "en"
+                            $translate.use(locale);
+                        },
+                        sessionTimers: (SessionService, projectConfig) => {
+                            return SessionService.initializeSession();
                         }
                     }
                 })
