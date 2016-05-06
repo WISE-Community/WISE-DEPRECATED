@@ -1359,6 +1359,43 @@ View.prototype.convertDraw = function(node, nodeContent) {
 
         component.stamps = wise5Stamps;
     }
+    
+    if (nodeContent.img_background != null) {
+        // get the background image file path
+        var imgBackground = nodeContent.img_background;
+        
+        // remove the assets part of the path
+        var backgroundFileName = imgBackground.replace('assets/', '');
+        
+        // set the background image file name
+        component.background = backgroundFileName;
+    }
+    
+    if (true || component.background == null) {
+        /*
+         * we have not obtained a background yet so we will now check for the
+         * svg background
+         */
+        if (nodeContent.svg_background != null) {
+            
+            // get the svg background
+            var svgBackground = nodeContent.svg_background;
+            
+            // regex to match the background file name in the svg
+            var backgroundImageRegEx = /xlink:href=["'](assets\/)*(.*?)["']/
+            
+            // perform the match
+            var match = svgBackground.match(backgroundImageRegEx);
+            
+            // get the second match group
+            var backgroundFileName = match[2];
+            
+            if (backgroundFileName != null) {
+                // set the background image file name
+                component.background = backgroundFileName;
+            }
+        }
+    }
 
     wise5Node.components.push(component);
 
