@@ -1,12 +1,14 @@
 'use strict';
 
 import NotebookController from './notebookController';
+import NotebookItemController from './notebookItemController';
 
 let notebookModule = angular.module('notebook', [])
-    .directive('notebook', function() {
+    .directive('notebook', () => {
         return {
             scope: {
                 filter: '=',
+                themePath: '=',
                 templateUrl: '=',
                 componentController: '='
             },
@@ -16,6 +18,21 @@ let notebookModule = angular.module('notebook', [])
             bindToController: true
         };
     })
-    .controller('NotebookController', NotebookController);
+    .directive('notebookitem', () => {
+        return {
+            scope: {
+                itemId: '=',
+                isEditEnabled: '=',
+                templateUrl: '=',
+                componentController: '='
+            },
+            template: '<ng-include src="notebookItemController.getTemplateUrl()"></ng-include>',
+            controller: 'NotebookItemController',
+            controllerAs: 'notebookItemController',
+            bindToController: true
+        };
+    })
+    .controller('NotebookController', NotebookController)
+    .controller('NotebookItemController', NotebookItemController);
 
 export default notebookModule;

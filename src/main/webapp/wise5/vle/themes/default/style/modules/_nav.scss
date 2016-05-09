@@ -36,10 +36,13 @@
     transition: opacity 250ms ease-in-out;
 
     &.prev {
-        md-list-item > .md-button {
-            border-left: 3px solid color('primary');
-            margin-left: -3px;
+        md-list-item {
             background-color: color('selected-bg');
+
+            &._md-button-wrap>div.md-button:first-child {
+                border-left: 3px solid color('primary');
+                margin-left: -3px;
+            }
         }
     }
 }

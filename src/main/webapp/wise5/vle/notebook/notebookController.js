@@ -24,9 +24,6 @@ var NotebookController = function () {
         this.ProjectService = ProjectService;
         this.StudentAssetService = StudentAssetService;
         this.StudentDataService = StudentDataService;
-        this.$translate('typeYourNoteHere').then(function (typeYourNoteHere) {
-            _this.newNotePlaceholderText = typeYourNoteHere;
-        });
 
         this.notebook = null;
         this.itemId = null;
@@ -65,36 +62,6 @@ var NotebookController = function () {
             });
         }
     }, {
-        key: 'attachStudentAssetToNewNote',
-        value: function attachStudentAssetToNewNote(files) {
-            var _this3 = this;
-
-            if (files != null) {
-                for (var f = 0; f < files.length; f++) {
-                    var file = files[f];
-                    this.StudentAssetService.uploadAsset(file).then(function (studentAsset) {
-                        _this3.StudentAssetService.copyAssetForReference(studentAsset).then(function (copiedAsset) {
-                            if (copiedAsset != null) {
-                                var attachment = {
-                                    studentAssetId: copiedAsset.id,
-                                    iconURL: copiedAsset.iconURL
-                                };
-
-                                _this3.newNote.content.attachments.push(attachment);
-                            }
-                        });
-                    });
-                }
-            }
-        }
-    }, {
-        key: 'removeAttachment',
-        value: function removeAttachment(attachment) {
-            if (this.newNote.content.attachments.indexOf(attachment) != -1) {
-                this.newNote.content.attachments.splice(this.newNote.content.attachments.indexOf(attachment), 1);
-            }
-        }
-    }, {
         key: 'deleteStudentAsset',
         value: function deleteStudentAsset(studentAsset) {
             alert('delete student asset from note book not implemented yet');
@@ -124,40 +91,27 @@ var NotebookController = function () {
             // TODO: add some kind of unobtrusive confirmation to let student know that the notebook item has been added to current component
             $event.stopPropagation(); // prevents parent notebook list item from getting the onclick event so this item won't be re-selected.
         }
-    }, {
-        key: 'showAddNote',
-        value: function showAddNote() {
+
+        /*
+        showAddNote() {
             // setting this will show the add note div
-            var currentNodeId = this.StudentDataService.getCurrentNodeId();
-            var currentNodeTitle = this.ProjectService.getNodeTitleByNodeId(currentNodeId);
+            let currentNodeId = this.StudentDataService.getCurrentNodeId();
+            let currentNodeTitle = this.ProjectService.getNodeTitleByNodeId(currentNodeId);
             this.newNote = {
                 type: "note",
                 nodeId: currentNodeId, // Id of the node this note was created on
-                title: "Note on " + currentNodeTitle, // Title of the node this note was created on
+                title: "Note on " + currentNodeTitle,  // Title of the node this note was created on
                 content: {
                     text: "",
                     attachments: []
                 }
             };
         }
-    }, {
-        key: 'cancelAddNote',
-        value: function cancelAddNote() {
+         cancelAddNote() {
             this.newNote = null; // this will hide the add note div
         }
-    }, {
-        key: 'addNote',
-        value: function addNote() {
-            var _this4 = this;
+        */
 
-            var newNoteContent = {
-                text: this.newNote.content.text,
-                attachments: this.newNote.content.attachments
-            };
-            this.NotebookService.saveNotebookItem(this.newNote.nodeId, this.newNote.type, this.newNote.title, newNoteContent).then(function () {
-                _this4.newNote = null; // this will hide the add note div
-            });
-        }
     }, {
         key: 'addBookmark',
         value: function addBookmark() {

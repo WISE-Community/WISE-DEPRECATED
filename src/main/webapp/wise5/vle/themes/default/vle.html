@@ -15,7 +15,13 @@
                 <span>{{vleController.projectName}}</span>
             </h3>
             <span flex></span>
-            <md-button id="notebookButton" aria-label="Toggle Notebook" class="md-icon-button" ng-click="vleController.toggleNotebook()">
+            <md-button id="addNewNoteButton" ng-show="vleController.isNotebookEnabled()" aria-label="Add Note" class="md-icon-button"
+                       ng-click="vleController.addNewNote()">
+                <md-icon md-menu-origin> add </md-icon>
+                <md-tooltip md-direction="left"><span translate="addNewNote" /></md-tooltip>
+            </md-button>
+            <md-button ng-show="vleController.isNotebookEnabled()" id="notebookButton" aria-label="Toggle Notebook" class="md-icon-button"
+                       ng-click="vleController.toggleNotebook()">
                 <md-icon md-menu-origin> book </md-icon>
                 <md-tooltip md-direction="left"><span translate="notebook" /></md-tooltip>
             </md-button>
@@ -53,6 +59,6 @@
         </div>
     </md-toolbar>
     <md-content class="md-padding">
-        <notebook template-url="vleController.themePath + '/notebook/notebook.html'" filter="vleController.notebookFilter"></notebook>
+        <notebook theme-path="vleController.themePath" template-url="vleController.themePath + '/notebook/notebook.html'" filter="vleController.notebookFilter"></notebook>
     </md-content>
 </md-sidenav>

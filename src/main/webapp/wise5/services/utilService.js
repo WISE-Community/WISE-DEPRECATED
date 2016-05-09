@@ -134,6 +134,15 @@ var UtilService = function () {
     return UtilService;
 }();
 
+// Get the last element of the array
+
+
+if (!Array.prototype.last) {
+    Array.prototype.last = function () {
+        return this[this.length - 1];
+    };
+};
+
 UtilService.$inject = [];
 
 exports.default = UtilService;

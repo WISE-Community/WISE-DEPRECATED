@@ -3012,5 +3012,48 @@
     },
     "metadata": {
         "title": "Self-Propelled Vehicles Challenge"
+    },
+    "notebook": {
+        "enabled": true,
+        "question": {
+            "enabled": false
+        },
+        "note": {
+            "enabled": true
+        },
+        "report": {
+            "enabled": true,
+            "notes": [
+                {
+                    "id": "letterToCongressperson",
+                    "title": "Letter to a congress person",
+                    "description": "In this page, you will write a report to a congress person",
+                    "prompt": "Sort the text evidence in your notebook to build a persuasive letter to your congressperson.",
+                    "content": {
+                        "sections": [
+                            {
+                                "id": "intro",
+                                "title": "Introduction",
+                                "content": [
+                                    {"type": "text", "value": "This is a nice sentence with <b>bold letters</b>.", "editable": false}
+                                ]
+                            },
+                            {
+                                "id": "body",
+                                "title": "Methods",
+                                "content": [
+                                ]
+                            },
+                            {
+                                "id": "results",
+                                "title": "Results",
+                                "content": [
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
     }
 }

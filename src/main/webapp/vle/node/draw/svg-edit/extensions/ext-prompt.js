@@ -75,7 +75,7 @@ svgEditor.addExtension("Prompt", function(S) {
 			'<img class="tool_prompt" src="extensions/prompt.png" ' + // TODO: create svg icon
 			'alt="icon" />' +
 			'</div>';
-		var dialogtxt = '<div id="prompt_dialog" style="display:none;">' +
+		var dialogtxt = '<div id="prompt_dialog" style="display:none; text-align: left">' +
 			'<div id="prompt_content"></div></div>';
 		
 		// add extension UI components to page

@@ -21,9 +21,6 @@ class NotebookController {
         this.ProjectService = ProjectService;
         this.StudentAssetService = StudentAssetService;
         this.StudentDataService = StudentDataService;
-        this.$translate('typeYourNoteHere').then((typeYourNoteHere) => {
-            this.newNotePlaceholderText = typeYourNoteHere;
-        });
 
         this.notebook = null;
         this.itemId = null;
@@ -57,32 +54,6 @@ class NotebookController {
         });
     }
 
-    attachStudentAssetToNewNote(files) {
-        if (files != null) {
-            for (var f = 0; f < files.length; f++) {
-                var file = files[f];
-                this.StudentAssetService.uploadAsset(file).then((studentAsset) => {
-                    this.StudentAssetService.copyAssetForReference(studentAsset).then((copiedAsset) => {
-                        if (copiedAsset != null) {
-                            var attachment = {
-                                studentAssetId: copiedAsset.id,
-                                iconURL: copiedAsset.iconURL
-                            };
-
-                            this.newNote.content.attachments.push(attachment);
-                        }
-                    });
-                });
-            }
-        }
-    }
-
-    removeAttachment(attachment) {
-        if (this.newNote.content.attachments.indexOf(attachment) != -1) {
-            this.newNote.content.attachments.splice(this.newNote.content.attachments.indexOf(attachment), 1);
-        }
-    }
-
     deleteStudentAsset(studentAsset) {
         alert('delete student asset from note book not implemented yet');
         /*
@@ -109,6 +80,7 @@ class NotebookController {
         $event.stopPropagation();  // prevents parent notebook list item from getting the onclick event so this item won't be re-selected.
     }
 
+    /*
     showAddNote() {
         // setting this will show the add note div
         let currentNodeId = this.StudentDataService.getCurrentNodeId();
@@ -127,17 +99,7 @@ class NotebookController {
     cancelAddNote() {
         this.newNote = null; // this will hide the add note div
     }
-
-    addNote() {
-        let newNoteContent = {
-            text: this.newNote.content.text,
-            attachments: this.newNote.content.attachments
-        };
-        this.NotebookService.saveNotebookItem(this.newNote.nodeId, this.newNote.type, this.newNote.title, newNoteContent)
-            .then(() => {
-                this.newNote = null; // this will hide the add note div
-            });
-    }
+    */
 
     addBookmark() {
         // TODO: implement me

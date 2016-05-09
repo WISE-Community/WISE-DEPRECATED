@@ -39,7 +39,7 @@ describe('WISE5 Notebook in Preview Mode', () => {
         notebookButton.click();
         expect(hasClass(notebookSideNav, '_md-closed')).toBe(false);  // side nav should appear on the page with the notebook
         expect(notebookSideNav.element(by.tagName('h3')).getText()).toEqual("Notebook");
-        verifyAddNewNoteDisplayed(false);
+        //verifyAddNewNoteDisplayed(false);
 
         // The drop-down filters should have 'all', 'notes', 'bookmarks', and 'questions' options
         element.all(by.repeater('filter in vleController.notebookFilters')).then((notebookFilterItems) => {
@@ -54,6 +54,7 @@ describe('WISE5 Notebook in Preview Mode', () => {
         expect(hasClass(notebookSideNav, '_md-closed')).toBe(true);  // side nav should disappear
     });
 
+    /*
     it('should allow user to cancel adding a new note in the notebook', () => {
         // Click on the notebook icon to open the notebook again
         notebookButton.click();
@@ -104,4 +105,5 @@ describe('WISE5 Notebook in Preview Mode', () => {
         element(by.xpath('//body')).click();
         expect(hasClass(notebookSideNav, '_md-closed')).toBe(true);  // side nav should disappear
     });
+    */
 });
