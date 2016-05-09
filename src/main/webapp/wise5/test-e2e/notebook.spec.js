@@ -41,7 +41,7 @@ describe('WISE5 Notebook in Preview Mode', function () {
         notebookButton.click();
         expect(hasClass(notebookSideNav, '_md-closed')).toBe(false); // side nav should appear on the page with the notebook
         expect(notebookSideNav.element(by.tagName('h3')).getText()).toEqual("Notebook");
-        verifyAddNewNoteDisplayed(false);
+        //verifyAddNewNoteDisplayed(false);
 
         // The drop-down filters should have 'all', 'notes', 'bookmarks', and 'questions' options
         element.all(by.repeater('filter in vleController.notebookFilters')).then(function (notebookFilterItems) {
@@ -56,55 +56,47 @@ describe('WISE5 Notebook in Preview Mode', function () {
         expect(hasClass(notebookSideNav, '_md-closed')).toBe(true); // side nav should disappear
     });
 
-    it('should allow user to cancel adding a new note in the notebook', function () {
+    /*
+    it('should allow user to cancel adding a new note in the notebook', () => {
         // Click on the notebook icon to open the notebook again
         notebookButton.click();
-        expect(hasClass(notebookSideNav, '_md-closed')).toBe(false); // side nav should appear on the page with the notebook
-
-        addNoteButton.click(); // Open add note display
+        expect(hasClass(notebookSideNav, '_md-closed')).toBe(false);  // side nav should appear on the page with the notebook
+         addNoteButton.click();   // Open add note display
         verifyAddNewNoteDisplayed(true);
-
-        // Save button should be disabled because user hasn't typed anything yet.
+         // Save button should be disabled because user hasn't typed anything yet.
         expect(saveNewNoteButton.getAttribute("disabled")).not.toBeNull();
-
-        // Canceling should hide the add note view without saving
+         // Canceling should hide the add note view without saving
         cancelNewNoteButton.click();
         verifyAddNewNoteDisplayed(false);
     });
-
-    it('should allow user to add a new note in the notebook', function () {
-
-        // Add my first note
+     it('should allow user to add a new note in the notebook', () => {
+         // Add my first note
         addNoteButton.click();
         verifyAddNewNoteDisplayed(true);
         newNoteTextArea.sendKeys('my note #1');
         saveNewNoteButton.click();
         verifyAddNewNoteDisplayed(false);
-
-        // Verify that the new note is displayed
-        element.all(by.repeater('notebookItem in notebookController.notebook.items')).then(function (notebookItems) {
+         // Verify that the new note is displayed
+        element.all(by.repeater('notebookItem in notebookController.notebook.items')).then((notebookItems) => {
             expect(notebookItems[0].getText()).toEqual('my note #1');
         });
     });
-
-    it('should allow user to add a second new note in the notebook', function () {
-
-        // Add my second note
+     it('should allow user to add a second new note in the notebook', () => {
+         // Add my second note
         addNoteButton.click();
         verifyAddNewNoteDisplayed(true);
         newNoteTextArea.sendKeys('my note #2');
         saveNewNoteButton.click();
         verifyAddNewNoteDisplayed(false);
-
-        // Verify that the first and second notes are displayed
-        element.all(by.repeater('notebookItem in notebookController.notebook.items')).then(function (notebookItems) {
+         // Verify that the first and second notes are displayed
+        element.all(by.repeater('notebookItem in notebookController.notebook.items')).then((notebookItems) => {
             expect(notebookItems[0].getText()).toEqual('my note #1');
             expect(notebookItems[1].getText()).toEqual('my note #2');
         });
-
-        // Clicking outside of the notebook should dismiss the notebook
+         // Clicking outside of the notebook should dismiss the notebook
         element(by.xpath('//body')).click();
-        expect(hasClass(notebookSideNav, '_md-closed')).toBe(true); // side nav should disappear
+        expect(hasClass(notebookSideNav, '_md-closed')).toBe(true);  // side nav should disappear
     });
+    */
 });
 //# sourceMappingURL=notebook.spec.js.map

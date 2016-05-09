@@ -1,0 +1,41 @@
+
+<div ng-show="notebookItemController.item != null && !notebookItemController.isEditEnabled">
+    <!-- Display an existing notebook item. -->
+    <span>{{notebookItemController.latestNotebookItemContentRevision.text}}</span>
+    <div class="component__attachment" ng-repeat="attachment in notebookItemController.latestNotebookItemContentRevision.attachments">
+        <img ng-src="{{attachment.iconURL}}" class="component__attachment__content" />
+        <div class="notebookItemSource"><wiselink type="link" nodeId="{{notebookItemController.getItemNodeId()}}" linkText="{{notebookItemController.getItemNodePositionAndTitle()}}"></wiselink></div>
+    </div>
+    <md-button id="editNotebookItemButton" aria-label="Edit NotebookItem" class="md-icon-button"
+               ng-click="notebookItemController.editNotebookItem()">
+        <md-icon md-menu-origin> edit </md-icon>
+        <md-tooltip md-direction="left"><span translate="editNotebookItem" /></md-tooltip>
+    </md-button>
+</div>
+
+<div ng-show="notebookItemController.item == null || notebookItemController.isEditEnabled">
+    <!-- User wants to add a new note or edit existing note. -->
+    <textarea id="itemTextArea" placeholder="{{ 'typeYourNoteHere' | translate }}" ng-model="notebookItemController.latestNotebookItemContentRevision.text" ng-model-options='{ debounce: 100 }' />
+    <div class="component__attachment" ng-repeat="attachment in notebookItemController.latestNotebookItemContentRevision.attachments">
+        <img ng-src="{{attachment.iconURL}}" class="component__attachment__content" />
+        <md-button class="component__attachment__delete" ng-click='notebookItemController.removeAttachment(attachment)' title="Remove file"><md-icon>cancel</md-icon></md-button>
+    </div>
+    <br/>
+    <div ng-show="notebookItemController.mode != 'preview'">
+        <span translate="attachments"></span>:<br/>
+        <div ngf-drop ngf-select ngf-change="notebookItemController.attachStudentAssetToNote($files)" class="drop-box"
+             drag-over-class="dragover" ngf-multiple="true" allow-dir="false"
+             accept="image/*,application/pdf,text/csv" translate="dropAssetMessage"></div>
+        <!--
+            TODO: ask researchers if we should display usage information to students. we'll hide it for now.
+            You are using {{notebookController.notebook.totalSize | appropriateSizeText }} out of {{notebookController.notebook.totalSizeMax | appropriateSizeText}} ({{notebookController.notebook.usagePercentage | roundToDecimal:0 }}%)
+         -->
+    </div>
+    <md-button id='saveItemButton'
+               ng-disabled='notebookItemController.latestNotebookItemContentRevision.text === "" && notebookItemController.latestNotebookItemContentRevision.attachments.length == 0'
+               ng-click='notebookItemController.saveNotebookItem()'>
+        <span translate="save"></span>
+    </md-button>
+    <md-button id='cancelButton' ng-click='notebookItemController.closeNoteDialog()'><span translate="cancel"></span></md-button>
+
+</div>

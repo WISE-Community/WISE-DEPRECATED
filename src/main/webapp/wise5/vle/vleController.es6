@@ -25,6 +25,7 @@ class VLEController {
 
         this.currentNode = null;
         this.pauseDialog = null;
+        this.noteDialog = null;
 
         this.navFilters = this.ProjectService.getFilters();
         this.navFilter = this.navFilters[0].name;
@@ -42,11 +43,7 @@ class VLEController {
         // get the max score for the project
         this.maxScore = this.ProjectService.getMaxScore();
 
-        this.toggleNotebook = function() {
-            this.notebookOpen = !this.notebookOpen;
-        };
-
-        this.$scope.$on('currentNodeChanged', angular.bind(this, function(event, args) {
+        this.$scope.$on('currentNodeChanged', (event, args) => {
             var previousNode = args.previousNode;
             var currentNode = this.StudentDataService.getCurrentNode();
             var currentNodeId = currentNode.id;
@@ -86,11 +83,11 @@ class VLEController {
                 eventNodeId = currentNode.id;
                 this.StudentDataService.saveVLEEvent(eventNodeId, componentId, componentType, category, eventName, eventData);
             }
-        }));
+        });
 
-        this.$scope.$on('componentStudentDataChanged', angular.bind(this, function() {
+        this.$scope.$on('componentStudentDataChanged', () => {
             this.StudentDataService.updateNodeStatuses();
-        }));
+        });
 
         // listen for the pause screen event
         this.$scope.$on('pauseScreen', (event, args) => {
@@ -100,6 +97,16 @@ class VLEController {
         // listen for the unpause screen event
         this.$scope.$on('unPauseScreen', (event, args) => {
             this.unPauseScreen();
+        });
+
+        // listen for the open note dialog event
+        this.$scope.$on('openNoteDialog', (event, args) => {
+            this.openNoteDialog(event, args);
+        });
+
+        // listen for the close note dialog event
+        this.$scope.$on('closeNoteDialog', (event, args) => {
+            this.closeNoteDialog();
         });
 
         // Make sure if we drop something on the page we don't navigate away
@@ -115,6 +122,8 @@ class VLEController {
         });
 
         this.themePath = this.ProjectService.getThemePath();
+        this.notebookItemPath = this.themePath + '/notebook/notebookItem.html';
+
         this.setLayoutState();
 
         var nodeId = null;
@@ -183,6 +192,53 @@ class VLEController {
         }
     }
 
+    toggleNotebook() {
+        this.notebookOpen = !this.notebookOpen;
+    }
+
+    isNotebookEnabled() {
+        return this.NotebookService.isNotebookEnabled();
+    }
+
+    // Display a dialog where students can add/edit a note
+    addNewNote() {
+        this.noteDialog = this.$mdDialog.show({
+            template: '<md-dialog aria-label="Note"><md-toolbar><div class="md-toolbar-tools"><h2>Add New Note</h2></div></md-toolbar>' +
+                            '<md-dialog-content><div class="md-dialog-content">' +
+                                '<notebookitem is-edit-enabled="true" template-url="\'' + this.notebookItemPath + '\'"></notebookitem>' +
+                            '</div></md-dialog-content></md-dialog>',
+            fullscreen: true,
+            escapeToClose: true
+        });
+    }
+
+    openNoteDialog(event, args) {
+        // close any open note dialogs
+        this.closeNoteDialog();
+
+        // get the notebook item to edit.
+        let notebookItem = args.notebookItem;
+        let notebookItemId = notebookItem.id;
+
+        this.noteDialog = this.$mdDialog.show({
+            template: '<md-dialog aria-label="Note"><md-toolbar><div class="md-toolbar-tools"><h2>Edit Note</h2></div></md-toolbar>' +
+            '<md-dialog-content><div class="md-dialog-content">' +
+            '<notebookitem is-edit-enabled="true" item-id="' + notebookItemId + '" template-url="\'' + this.notebookItemPath + '\'" ></notebookitem>' +
+            '</div></md-dialog-content></md-dialog>',
+            fullscreen: true,
+            escapeToClose: true
+        });
+
+    }
+
+    // Close the note dialog
+    closeNoteDialog() {
+        if (this.noteDialog) {
+            this.$mdDialog.hide( this.noteDialog, "finished" );
+            this.noteDialog = undefined;
+        }
+    }
+
     setLayoutState() {
         var layoutState = 'nav'; // default layout state
         var node = this.StudentDataService.getCurrentNode();
@@ -242,6 +298,7 @@ class VLEController {
      * Pause the screen
      */
     pauseScreen() {
+        // TODO: i18n
         this.pauseDialog = this.$mdDialog.show({
             template: '<md-dialog aria-label="Screen Paused"><md-toolbar><div class="md-toolbar-tools"><h2>Screen Paused</h2></div></md-toolbar><md-dialog-content><div class="md-dialog-content">Your teacher has paused all the screens in the class.</div></md-dialog-content></md-dialog>',
             fullscreen: true,
@@ -253,7 +310,8 @@ class VLEController {
      * Unpause the screen
      */
     unPauseScreen() {
-        this.$mdDialog.hide();
+        this.$mdDialog.hide( this.pauseDialog, "finished" );
+        this.pauseDialog = undefined;
     }
 }
 

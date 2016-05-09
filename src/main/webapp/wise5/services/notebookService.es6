@@ -3,6 +3,7 @@ class NotebookService {
                 $q,
                 $rootScope,
                 ConfigService,
+                ProjectService,
                 StudentAssetService,
                 StudentDataService) {
 
@@ -10,12 +11,13 @@ class NotebookService {
         this.$q = $q;
         this.$rootScope = $rootScope;
         this.ConfigService = ConfigService;
+        this.ProjectService = ProjectService;
         this.StudentAssetService = StudentAssetService;
         this.StudentDataService = StudentDataService;
 
         this.filters = [
-            {'name': 'all', 'label': 'All'},
-            {'name': 'notes', 'label': 'Notes'}
+            {'name': 'all', 'type': 'all', 'label': 'All'},
+            {'name': 'notes', 'type': 'all', 'label': 'Notes'}
             /*,
             {'name': 'bookmarks', 'label': 'Bookmarks'},
             {'name': 'questions', 'label': 'Questions'}
@@ -25,6 +27,23 @@ class NotebookService {
         this.notebook = {};
         this.notebook.items = [];
         this.notebook.deletedItems = [];
+
+        if (this.ProjectService.project != null) {
+            this.notebookConfig = this.ProjectService.project.notebook;
+            if (this.notebookConfig != null) {
+                if (this.notebookConfig.report != null && this.notebookConfig.report.enabled) {
+                    let reportNotes = this.notebookConfig.report.notes;
+                    for (let i = 0; i < reportNotes.length; i++) {
+                        let reportNote = reportNotes[i];
+                        this.filters.push({
+                            "name": reportNote.id,
+                            "type": "report",
+                            "label": reportNote.title
+                        });
+                    }
+                }
+            }
+        }
     }
 
     addItem(notebookItem) {
@@ -46,6 +65,19 @@ class NotebookService {
         }
     };
 
+    getNotebookItemById(itemId) {
+        let notebookItem = null;
+        var items = this.notebook.items;
+        for (var i = 0; i < items.length; i++) {
+            var item = items[i];
+            if (item.id === itemId) {
+                notebookItem = item;
+                break;
+            }
+        }
+        return notebookItem;
+    }
+
     calculateTotalUsage() {
         // get the total size
         var totalSizeSoFar = 0;
@@ -59,6 +91,10 @@ class NotebookService {
         this.notebook.totalSize = totalSizeSoFar;
         this.notebook.totalSizeMax = this.ConfigService.getStudentMaxTotalAssetsSize();
         this.notebook.usagePercentage = this.notebook.totalSize / this.notebook.totalSizeMax * 100;
+    };
+
+    isNotebookEnabled() {
+        return this.notebookConfig != null && this.notebookConfig.enabled;
     };
 
     retrieveNotebookItems() {
@@ -105,7 +141,7 @@ class NotebookService {
         return false;
     };
 
-    saveNotebookItem(nodeId, type, title, content) {
+    saveNotebookItem(notebookItemId, nodeId, type, title, content) {
         if (this.ConfigService.isPreview()) {
             return this.$q((resolve, reject) => {
                 let notebookItem = {
@@ -124,6 +160,7 @@ class NotebookService {
             var params = {};
             params.workgroupId = this.ConfigService.getWorkgroupId();
             params.periodId = this.ConfigService.getPeriodId();
+            params.notebookItemId = notebookItemId;
             params.nodeId = nodeId;
             params.type = type;
             params.title = title;
@@ -137,7 +174,20 @@ class NotebookService {
                     if (notebookItem.type === "note") {
                         notebookItem.content = angular.fromJson(notebookItem.content);
                     }
-                    this.notebook.items.push(notebookItem);
+                    // add/update notebook
+                    let notebookItemExists = false;
+                    for (let n = 0; n < this.notebook.items.length; n++) {
+                        let localNotebookItem = this.notebook.items[n];
+                        if (localNotebookItem.id === notebookItem.id) {
+                            this.notebook.items[n] = notebookItem;
+                            notebookItemExists = true;
+                            break;
+                        }
+                    }
+                    if (!notebookItemExists) {
+                        this.notebook.items.push(notebookItem);
+                    }
+
                     this.$rootScope.$broadcast('notebookUpdated', {notebook: this.notebook});
                 }
                 return null;
@@ -192,6 +242,7 @@ NotebookService.$inject = [
     '$q',
     '$rootScope',
     'ConfigService',
+    'ProjectService',
     'StudentAssetService',
     'StudentDataService'
 ];

@@ -9,17 +9,18 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var NotebookService = function () {
-    function NotebookService($http, $q, $rootScope, ConfigService, StudentAssetService, StudentDataService) {
+    function NotebookService($http, $q, $rootScope, ConfigService, ProjectService, StudentAssetService, StudentDataService) {
         _classCallCheck(this, NotebookService);
 
         this.$http = $http;
         this.$q = $q;
         this.$rootScope = $rootScope;
         this.ConfigService = ConfigService;
+        this.ProjectService = ProjectService;
         this.StudentAssetService = StudentAssetService;
         this.StudentDataService = StudentDataService;
 
-        this.filters = [{ 'name': 'all', 'label': 'All' }, { 'name': 'notes', 'label': 'Notes' }
+        this.filters = [{ 'name': 'all', 'type': 'all', 'label': 'All' }, { 'name': 'notes', 'type': 'all', 'label': 'Notes' }
         /*,
         {'name': 'bookmarks', 'label': 'Bookmarks'},
         {'name': 'questions', 'label': 'Questions'}
@@ -29,6 +30,23 @@ var NotebookService = function () {
         this.notebook = {};
         this.notebook.items = [];
         this.notebook.deletedItems = [];
+
+        if (this.ProjectService.project != null) {
+            this.notebookConfig = this.ProjectService.project.notebook;
+            if (this.notebookConfig != null) {
+                if (this.notebookConfig.report != null && this.notebookConfig.report.enabled) {
+                    var reportNotes = this.notebookConfig.report.notes;
+                    for (var i = 0; i < reportNotes.length; i++) {
+                        var reportNote = reportNotes[i];
+                        this.filters.push({
+                            "name": reportNote.id,
+                            "type": "report",
+                            "label": reportNote.title
+                        });
+                    }
+                }
+            }
+        }
     }
 
     _createClass(NotebookService, [{
@@ -53,6 +71,20 @@ var NotebookService = function () {
             }
         }
     }, {
+        key: 'getNotebookItemById',
+        value: function getNotebookItemById(itemId) {
+            var notebookItem = null;
+            var items = this.notebook.items;
+            for (var i = 0; i < items.length; i++) {
+                var item = items[i];
+                if (item.id === itemId) {
+                    notebookItem = item;
+                    break;
+                }
+            }
+            return notebookItem;
+        }
+    }, {
         key: 'calculateTotalUsage',
         value: function calculateTotalUsage() {
             // get the total size
@@ -67,6 +99,11 @@ var NotebookService = function () {
             this.notebook.totalSize = totalSizeSoFar;
             this.notebook.totalSizeMax = this.ConfigService.getStudentMaxTotalAssetsSize();
             this.notebook.usagePercentage = this.notebook.totalSize / this.notebook.totalSizeMax * 100;
+        }
+    }, {
+        key: 'isNotebookEnabled',
+        value: function isNotebookEnabled() {
+            return this.notebookConfig != null && this.notebookConfig.enabled;
         }
     }, {
         key: 'retrieveNotebookItems',
@@ -118,7 +155,7 @@ var NotebookService = function () {
         }
     }, {
         key: 'saveNotebookItem',
-        value: function saveNotebookItem(nodeId, type, title, content) {
+        value: function saveNotebookItem(notebookItemId, nodeId, type, title, content) {
             var _this2 = this;
 
             if (this.ConfigService.isPreview()) {
@@ -139,6 +176,7 @@ var NotebookService = function () {
                 var params = {};
                 params.workgroupId = this.ConfigService.getWorkgroupId();
                 params.periodId = this.ConfigService.getPeriodId();
+                params.notebookItemId = notebookItemId;
                 params.nodeId = nodeId;
                 params.type = type;
                 params.title = title;
@@ -152,7 +190,20 @@ var NotebookService = function () {
                         if (notebookItem.type === "note") {
                             notebookItem.content = angular.fromJson(notebookItem.content);
                         }
-                        _this2.notebook.items.push(notebookItem);
+                        // add/update notebook
+                        var notebookItemExists = false;
+                        for (var n = 0; n < _this2.notebook.items.length; n++) {
+                            var localNotebookItem = _this2.notebook.items[n];
+                            if (localNotebookItem.id === notebookItem.id) {
+                                _this2.notebook.items[n] = notebookItem;
+                                notebookItemExists = true;
+                                break;
+                            }
+                        }
+                        if (!notebookItemExists) {
+                            _this2.notebook.items.push(notebookItem);
+                        }
+
                         _this2.$rootScope.$broadcast('notebookUpdated', { notebook: _this2.notebook });
                     }
                     return null;
@@ -209,7 +260,7 @@ var NotebookService = function () {
     return NotebookService;
 }();
 
-NotebookService.$inject = ['$http', '$q', '$rootScope', 'ConfigService', 'StudentAssetService', 'StudentDataService'];
+NotebookService.$inject = ['$http', '$q', '$rootScope', 'ConfigService', 'ProjectService', 'StudentAssetService', 'StudentDataService'];
 
 exports.default = NotebookService;
 //# sourceMappingURL=notebookService.js.map

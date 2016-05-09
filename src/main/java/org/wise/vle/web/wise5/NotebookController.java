@@ -79,6 +79,7 @@ public class NotebookController {
             @PathVariable Integer runId,
             @RequestParam(value = "periodId", required = true) Integer periodId,
             @RequestParam(value = "workgroupId", required = true) Integer workgroupId,
+            @RequestParam(value = "notebookItemId", required = false) Integer notebookItemId,
             @RequestParam(value = "nodeId", required = false) String nodeId,
             @RequestParam(value = "componentId", required = false) String componentId,
             @RequestParam(value = "studentWorkId", required = false) Integer studentWorkId,
@@ -104,10 +105,9 @@ public class NotebookController {
             return;
         }
 
-        Integer id = null;
         String clientDeleteTime = null;
         NotebookItem notebookItem = vleService.saveNotebookItem(
-                id,
+                notebookItemId,
                 runId,
                 periodId,
                 workgroupId,

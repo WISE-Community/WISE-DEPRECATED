@@ -3,6 +3,7 @@
   "accountMenuPoints": "{{point}} points",
   "accountMenuTotalScore": "Total Score",
   "addNewNote": "Add New Note",
+  "editNotebookItem": "Edit Notebook Item",
   "itemLocked": "Item Locked",
   "newNote": "Add New Note",
   "planningModeOnlyOnePlanningModeAllowed": "You can only work on one Planning Activity at a time. Turn off Planning Mode on the existing Planning Activity before working on this one.",
