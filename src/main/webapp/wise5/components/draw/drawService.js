@@ -171,6 +171,55 @@ var DrawService = function (_NodeService) {
 
             return result;
         }
+    }, {
+        key: 'removeBackgroundFromComponentState',
+
+
+        /**
+         * Remove the background object from the draw data in the component state
+         * @param componentState the component state
+         * @returns the componentState
+         */
+        value: function removeBackgroundFromComponentState(componentState) {
+
+            if (componentState != null) {
+                var studentData = componentState.studentData;
+
+                if (studentData != null) {
+
+                    // get the draw data string
+                    var drawData = studentData.drawData;
+
+                    if (drawData != null) {
+
+                        // convert the draw data string to an object
+                        var drawDataObject = angular.fromJson(drawData);
+
+                        if (drawDataObject != null) {
+
+                            // get the canvas value
+                            var canvas = drawDataObject.canvas;
+
+                            if (canvas != null) {
+
+                                // remove the background image from the canvas
+                                delete canvas.backgroundImage;
+
+                                // convert the object back to a JSON string
+                                var drawDataJSONString = angular.toJson(drawDataObject);
+
+                                if (drawDataJSONString != null) {
+                                    // set the draw data JSON string back into the student data
+                                    studentData.drawData = drawDataJSONString;
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            return componentState;
+        }
     }]);
 
     return DrawService;

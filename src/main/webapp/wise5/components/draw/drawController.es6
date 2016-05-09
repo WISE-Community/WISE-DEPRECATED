@@ -49,6 +49,9 @@ class DrawController {
 
         // whether the submit button is shown or not
         this.isSubmitButtonVisible = false;
+        
+        // whether the reset button is visible or not
+        this.isResetButtonVisible = false;
 
         // message to show next to save/submit buttons
         this.saveMessage = {
@@ -79,6 +82,9 @@ class DrawController {
 
         this.workgroupId = this.$scope.workgroupId;
         this.teacherWorkgroupId = this.$scope.teacherWorkgroupId;
+        
+        this.latestConnectedComponentState = null;
+        this.latestConnectedComponentParams = null;
 
         // get the current node and node id
         var currentNode = this.StudentDataService.getCurrentNode();
@@ -99,6 +105,7 @@ class DrawController {
             if (this.mode === "student") {
                 this.isSaveButtonVisible = this.componentContent.showSaveButton;
                 this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+                this.isResetButtonVisible = true;
 
                 this.drawingToolId = "drawingtool_" + this.nodeId + "_" + this.componentId;
 
@@ -327,6 +334,65 @@ class DrawController {
                     this.setSaveMessage('Saved', clientSaveTime);
                 }
             }
+            
+            // check if the component state is from a connected component
+            if (this.isConnectedComponent(componentState.componentId)) {
+                
+                /*
+                 * make a copy of the component state so we don't accidentally
+                 * change any values in the referenced object
+                 */
+                componentState = this.UtilService.makeCopyOfJSONObject(componentState);
+                
+                // get the connected component params
+                var connectedComponentParams = this.getConnectedComponentParams(componentState.componentId);
+                
+                /*
+                 * check if the the canvas is empty which means the student has 
+                 * not drawn anything yet
+                 */
+                var isCanvasEmpty = this.isCanvasEmpty();
+                var connectedComponentParamsSatisfied = false;
+                
+                if (connectedComponentParams.updateOnlyOnSubmit) {
+                    // we will update only if the connected component state was submitted
+                    
+                    if (componentState.isSubmit) {
+                        connectedComponentParamsSatisfied = true;
+                    }
+                } else {
+                    /*
+                     * the component params were satisfied so we may update
+                     * the student work as long as the canvas is empty
+                     */
+                    connectedComponentParamsSatisfied = true;
+                }
+                
+                if (!connectedComponentParams.includeBackground) {
+                    // remove the background from the draw data
+                    this.DrawService.removeBackgroundFromComponentState(componentState);
+                }
+                
+                if (isCanvasEmpty && connectedComponentParamsSatisfied) {
+                    /*
+                     * the canvas is empty and the connected component params
+                     * have been satisfied so we will update the draw data
+                     * in this component
+                     */
+                    
+                    // update the draw data
+                    this.setDrawData(componentState);
+                }
+                
+                if (connectedComponentParamsSatisfied) {
+                    /*
+                     * remember the component state and connected component params
+                     * in case we need to use them again later
+                     */
+                    this.latestConnectedComponentState = componentState;
+                    this.latestConnectedComponentParams = connectedComponentParams;
+                }
+            }
         }));
         
         /*
@@ -377,21 +443,14 @@ class DrawController {
 
         if (componentState != null) {
 
-            // get the student data from the component state
-            var studentData = componentState.studentData;
+            // set the draw data
+            this.setDrawData(componentState);
 
-            if (studentData != null) {
-
-                // get the draw data
-                var drawData = studentData.drawData;
-
-                if (drawData != null) {
-                    // set the draw data into the drawing tool
-                    this.drawingTool.load(drawData);
-                }
-
-                this.processLatestSubmit();
-            }
+            /*
+             * check if the latest component state is a submit and perform
+             * any necessary processing
+             */
+            this.processLatestSubmit();
         }
     };
 
@@ -437,6 +496,29 @@ class DrawController {
         // tell the parent node that this component wants to submit
         this.$scope.$emit('componentSubmitTriggered', {nodeId: this.nodeId, componentId: this.componentId});
     };
+    
+    /**
+     * The reset button was clicked
+     */
+    resetButtonClicked() {
+        
+        // ask the student if they are sure they want to clear the drawing
+        var result = confirm('Are you sure you want to clear your drawing?');
+        
+        if (result) {
+            // clear the drawing
+            this.drawingTool.clear();
+            
+            // check if we need to reload student data from a connected component
+            var latestConnectedComponentState = this.latestConnectedComponentState;
+            var latestConnectedComponentParams = this.latestConnectedComponentParams;
+            
+            if (latestConnectedComponentState && latestConnectedComponentParams) {
+                // reload the student data from the connected component
+                this.setDrawData(latestConnectedComponentState, latestConnectedComponentParams);
+            }
+        }
+    }
 
     submit() {
         // check if we need to lock the component after the student submits
@@ -773,9 +855,121 @@ class DrawController {
     }
     
     /**
+     * Set the draw data
+     * @param componentState the component state
+     */
+    setDrawData(componentState) {
+        if (componentState != null) {
+
+            // get the student data from the component state
+            var studentData = componentState.studentData;
+
+            if (studentData != null) {
+
+                // get the draw data
+                var drawData = studentData.drawData;
+
+                if (drawData != null) {
+                    // set the draw data into the drawing tool
+                    this.drawingTool.load(drawData);
+                }
+            }
+        }
+    }
+    
+    /**
+     * Check if a component id is a connected component
+     * @param componentId check if this component id is a connected component
+     * @returns whether the component id is a connected component
+     */
+    isConnectedComponent(componentId) {
+        
+        var result = false;
+        
+        // get the connected components
+        var connectedComponents = this.componentContent.connectedComponents;
+        
+        if (connectedComponents != null) {
+            
+            // loop through all the connected components
+            for (var c = 0; c < connectedComponents.length; c++) {
+                
+                // get a connected component
+                var connectedComponent = connectedComponents[c];
+                
+                if (connectedComponent != null) {
+                    var tempComponentId = connectedComponent.id;
+                    
+                    if (componentId === tempComponentId) {
+                        // the component id matches so it is a connected component
+                        result = true;
+                        break;
+                    }
+                }
+            }
+        }
+        
+        return result;
+    }
+    
+    /**
+     * Get a connected component params
+     * @param componentId the connected component id
+     * @returns the params for the connected component
+     */
+    getConnectedComponentParams(componentId) {
+        
+        var connectedComponentParams = null;
+        
+        // get the connected components
+        var connectedComponents = this.componentContent.connectedComponents;
+        
+        if (connectedComponents != null) {
+            
+            // loop through all the connected components
+            for (var c = 0; c < connectedComponents.length; c++) {
+                var connectedComponent = connectedComponents[c];
+                
+                if (connectedComponent != null) {
+                    var tempComponentId = connectedComponent.id;
+                    
+                    if (componentId === tempComponentId) {
+                        // we have found the connected component we are looking for
+                        connectedComponentParams = connectedComponent;
+                    }
+                }
+            }
+        }
+        
+        return connectedComponentParams;
+    }
+    
+    /**
+     * Check if the student has drawn anything
+     * @returns whether the canvas is empty
+     */
+    isCanvasEmpty() {
+        
+        var result = true;
+        
+        if (this.drawingTool != null && this.drawingTool.canvas != null) {
+            
+            // get the objects in the canvas where the student draws
+            var objects = this.drawingTool.canvas.getObjects();
+            
+            if (objects != null && objects.length > 0) {
+                // there are objects in the canvas 
+                result = false;
+            }
+        }
+        
+        return result;
+    }
+    
+    /**
      * Set the message next to the save button
      * @param message the message to display
-     * @param time the time to displau
+     * @param time the time to display
      */
     setSaveMessage(message, time) {
         this.saveMessage.text = message;

@@ -32,6 +32,9 @@
             <md-icon>image</md-icon> Insert file
         </md-button>
     </div>
+    <md-button class="md-raised md-primary"
+            ng-click="drawController.resetButtonClicked()"
+            ng-show="drawController.isResetButtonVisible">Reset</md-button>
     <div class="container"
          data-drop="true"
          jqyoui-droppable="{onDrop: 'drawController.dropCallback(item, $index)'}">
