@@ -5,6 +5,7 @@ class VLEController {
                 $rootScope,
                 $mdDialog,
                 $state,
+                $translate,
                 ConfigService,
                 NotebookService,
                 ProjectService,
@@ -16,6 +17,7 @@ class VLEController {
         this.$rootScope = $rootScope;
         this.$mdDialog = $mdDialog;
         this.$state = $state;
+        this.$translate = $translate;
         this.ConfigService = ConfigService;
         this.NotebookService = NotebookService;
         this.ProjectService = ProjectService;
@@ -202,13 +204,15 @@ class VLEController {
 
     // Display a dialog where students can add/edit a note
     addNewNote() {
-        this.noteDialog = this.$mdDialog.show({
-            template: '<md-dialog aria-label="Note"><md-toolbar><div class="md-toolbar-tools"><h2>Add New Note</h2></div></md-toolbar>' +
-                            '<md-dialog-content><div class="md-dialog-content">' +
-                                '<notebookitem is-edit-enabled="true" template-url="\'' + this.notebookItemPath + '\'"></notebookitem>' +
-                            '</div></md-dialog-content></md-dialog>',
-            fullscreen: true,
-            escapeToClose: true
+        this.$translate(["addNewNote"]).then((translations) => {
+            this.noteDialog = this.$mdDialog.show({
+                template: '<md-dialog aria-label="Note"><md-toolbar><div class="md-toolbar-tools"><h2>' + translations.addNewNote + '</h2></div></md-toolbar>' +
+                '<md-dialog-content><div class="md-dialog-content">' +
+                '<notebookitem is-edit-mode="true" template-url="\'' + this.notebookItemPath + '\'"></notebookitem>' +
+                '</div></md-dialog-content></md-dialog>',
+                fullscreen: true,
+                escapeToClose: true
+            });
         });
     }
 
@@ -218,12 +222,11 @@ class VLEController {
 
         // get the notebook item to edit.
         let notebookItem = args.notebookItem;
-        let notebookItemId = notebookItem.id;
-
+        let notebookItemId = notebookItem.localNotebookItemId;
         this.noteDialog = this.$mdDialog.show({
             template: '<md-dialog aria-label="Note"><md-toolbar><div class="md-toolbar-tools"><h2>Edit Note</h2></div></md-toolbar>' +
             '<md-dialog-content><div class="md-dialog-content">' +
-            '<notebookitem is-edit-enabled="true" item-id="' + notebookItemId + '" template-url="\'' + this.notebookItemPath + '\'" ></notebookitem>' +
+            '<notebookitem is-edit-mode="true" item-id="' + notebookItemId + '" template-url="\'' + this.notebookItemPath + '\'" ></notebookitem>' +
             '</div></md-dialog-content></md-dialog>',
             fullscreen: true,
             escapeToClose: true
@@ -320,6 +323,7 @@ VLEController.$inject = [
     '$rootScope',
     '$mdDialog',
     '$state',
+    '$translate',
     'ConfigService',
     'NotebookService',
     'ProjectService',

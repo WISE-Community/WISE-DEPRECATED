@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var NotebookItemController = function () {
-    function NotebookItemController($injector, $rootScope, $scope, $translate, ConfigService, NotebookService, ProjectService, StudentAssetService, StudentDataService) {
+    function NotebookItemController($injector, $rootScope, $scope, $translate, ConfigService, NotebookService, ProjectService, StudentAssetService, StudentDataService, UtilService) {
         _classCallCheck(this, NotebookItemController);
 
         this.$injector = $injector;
@@ -21,29 +21,27 @@ var NotebookItemController = function () {
         this.ProjectService = ProjectService;
         this.StudentAssetService = StudentAssetService;
         this.StudentDataService = StudentDataService;
+        this.UtilService = UtilService;
         this.mode = this.ConfigService.getMode();
 
         if (this.itemId == null) {
             var currentNodeId = this.StudentDataService.getCurrentNodeId();
             var currentNodeTitle = this.ProjectService.getNodeTitleByNodeId(currentNodeId);
-            this.latestNotebookItemContentRevision = {
-                text: "",
-                attachments: []
-            };
 
             this.item = {
                 id: null, // null id means we're creating a new notebook item.
+                localNotebookItemId: this.UtilService.generateKey(10), // this is the id that is common across the same notebook item revisions.
                 type: "note",
                 nodeId: currentNodeId, // Id of the node this note was created on
                 title: "Note on " + currentNodeTitle, // Title of the node this note was created on
-                content: []
+                content: {
+                    text: "",
+                    attachments: []
+                }
             };
         } else {
-            this.item = this.NotebookService.getNotebookItemById(this.itemId);
-            this.latestNotebookItemContentRevision = {
-                text: this.item.content.last().text,
-                attachments: this.item.content.last().attachments
-            };
+            this.item = this.NotebookService.getLatestNotebookItemByLocalNotebookItemId(this.itemId);
+            this.item.id = null; // set to null so we're creating a new notebook item. An edit to a notebook item results in a new entry in the db.
         }
     }
 
@@ -86,10 +84,9 @@ var NotebookItemController = function () {
         value: function saveNotebookItem() {
             var _this = this;
 
-            // add new notebook item content revision
-            this.latestNotebookItemContentRevision.clientSaveTime = Date.parse(new Date()); // set save timestamp
-            this.item.content.push(this.latestNotebookItemContentRevision);
-            this.NotebookService.saveNotebookItem(this.item.id, this.item.nodeId, this.item.type, this.item.title, this.item.content).then(function () {
+            // add new notebook item
+            this.item.content.clientSaveTime = Date.parse(new Date()); // set save timestamp
+            this.NotebookService.saveNotebookItem(this.item.id, this.item.nodeId, this.item.localNotebookItemId, this.item.type, this.item.title, this.item.content).then(function () {
                 _this.closeNoteDialog();
             });
         }
@@ -115,7 +112,7 @@ var NotebookItemController = function () {
                                     iconURL: copiedAsset.iconURL
                                 };
 
-                                _this2.latestNotebookItemContentRevision.attachments.push(attachment);
+                                _this2.item.content.attachments.push(attachment);
                             }
                         });
                     });
@@ -125,8 +122,8 @@ var NotebookItemController = function () {
     }, {
         key: "removeAttachment",
         value: function removeAttachment(attachment) {
-            if (this.latestNotebookItemContentRevision.attachments.indexOf(attachment) != -1) {
-                this.latestNotebookItemContentRevision.attachments.splice(this.latestNotebookItemContentRevision.attachments.indexOf(attachment), 1);
+            if (this.item.content.attachments.indexOf(attachment) != -1) {
+                this.item.content.attachments.splice(this.item.content.attachments.indexOf(attachment), 1);
             }
         }
     }]);
@@ -134,7 +131,7 @@ var NotebookItemController = function () {
     return NotebookItemController;
 }();
 
-NotebookItemController.$inject = ["$injector", "$rootScope", "$scope", "$translate", "ConfigService", "NotebookService", "ProjectService", "StudentAssetService", "StudentDataService"];
+NotebookItemController.$inject = ["$injector", "$rootScope", "$scope", "$translate", "ConfigService", "NotebookService", "ProjectService", "StudentAssetService", "StudentDataService", "UtilService"];
 
 exports.default = NotebookItemController;
 //# sourceMappingURL=notebookItemController.js.map

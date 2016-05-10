@@ -77,6 +77,9 @@ public class NotebookItem extends PersistableDomain {
 	@JoinColumn(name = "studentAssetId", nullable = true)
 	private StudentAsset studentAsset;
 
+	@Column(name = "localNotebookItemId", length = 30, nullable = true)
+	private String localNotebookItemId;  // ex: [ "1", "letterToACongressperson", "z5hc4jeu12" ]
+
 	@Column(name = "type", length = 30, nullable = true)
 	private String type;  // ex: [ "note", "bookmark", "question" ]
 
@@ -157,6 +160,14 @@ public class NotebookItem extends PersistableDomain {
     public void setStudentAsset(StudentAsset studentAsset) {
         this.studentAsset = studentAsset;
     }
+
+	public String getLocalNotebookItemId() {
+		return localNotebookItemId;
+	}
+
+	public void setLocalNotebookItemId(String localNotebookItemId) {
+		this.localNotebookItemId = localNotebookItemId;
+	}
 
 	public String getType() {
 		return type;
@@ -266,7 +277,11 @@ public class NotebookItem extends PersistableDomain {
                 studentWorkJSONObject.put("studentAssetId", this.studentAsset.getId());
             }
 
-            if (this.type != null) {
+			if (this.localNotebookItemId != null) {
+				studentWorkJSONObject.put("localNotebookItemId", this.localNotebookItemId);
+			}
+
+			if (this.type != null) {
                 studentWorkJSONObject.put("type", this.type);
             }
 

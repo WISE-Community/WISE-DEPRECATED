@@ -12,6 +12,10 @@ var _notebookItemController = require('./notebookItemController');
 
 var _notebookItemController2 = _interopRequireDefault(_notebookItemController);
 
+var _notebookItemReportController = require('./notebookItemReportController');
+
+var _notebookItemReportController2 = _interopRequireDefault(_notebookItemReportController);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var notebookModule = angular.module('notebook', []).directive('notebook', function () {
@@ -30,8 +34,9 @@ var notebookModule = angular.module('notebook', []).directive('notebook', functi
 }).directive('notebookitem', function () {
     return {
         scope: {
-            itemId: '=',
-            isEditEnabled: '=',
+            itemId: '@',
+            isEditAllowed: '=',
+            isEditMode: '=',
             templateUrl: '=',
             componentController: '='
         },
@@ -40,7 +45,20 @@ var notebookModule = angular.module('notebook', []).directive('notebook', functi
         controllerAs: 'notebookItemController',
         bindToController: true
     };
-}).controller('NotebookController', _notebookController2.default).controller('NotebookItemController', _notebookItemController2.default);
+}).directive('notebookitemreport', function () {
+    return {
+        scope: {
+            reportId: '=',
+            isEditAllowed: '=',
+            templateUrl: '=',
+            themePath: '='
+        },
+        template: '<ng-include src="notebookItemReportController.getTemplateUrl()"></ng-include>',
+        controller: 'NotebookItemReportController',
+        controllerAs: 'notebookItemReportController',
+        bindToController: true
+    };
+}).controller('NotebookController', _notebookController2.default).controller('NotebookItemController', _notebookItemController2.default).controller('NotebookItemReportController', _notebookItemReportController2.default);
 
 exports.default = notebookModule;
 //# sourceMappingURL=notebook.js.map

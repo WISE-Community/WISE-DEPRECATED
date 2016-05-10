@@ -2,6 +2,7 @@
 
 import NotebookController from './notebookController';
 import NotebookItemController from './notebookItemController';
+import NotebookItemReportController from './notebookItemReportController';
 
 let notebookModule = angular.module('notebook', [])
     .directive('notebook', () => {
@@ -21,8 +22,9 @@ let notebookModule = angular.module('notebook', [])
     .directive('notebookitem', () => {
         return {
             scope: {
-                itemId: '=',
-                isEditEnabled: '=',
+                itemId: '@',
+                isEditAllowed: '=',
+                isEditMode: '=',
                 templateUrl: '=',
                 componentController: '='
             },
@@ -32,7 +34,22 @@ let notebookModule = angular.module('notebook', [])
             bindToController: true
         };
     })
+    .directive('notebookitemreport', () => {
+        return {
+            scope: {
+                reportId: '=',
+                isEditAllowed: '=',
+                templateUrl: '=',
+                themePath: '='
+            },
+            template: '<ng-include src="notebookItemReportController.getTemplateUrl()"></ng-include>',
+            controller: 'NotebookItemReportController',
+            controllerAs: 'notebookItemReportController',
+            bindToController: true
+        };
+    })
     .controller('NotebookController', NotebookController)
-    .controller('NotebookItemController', NotebookItemController);
+    .controller('NotebookItemController', NotebookItemController)
+    .controller('NotebookItemReportController', NotebookItemReportController);
 
 export default notebookModule;

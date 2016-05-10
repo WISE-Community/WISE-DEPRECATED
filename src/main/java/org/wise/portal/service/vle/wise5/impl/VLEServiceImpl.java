@@ -664,7 +664,7 @@ public class VLEServiceImpl implements VLEService {
     public NotebookItem saveNotebookItem(Integer id, Integer runId, Integer periodId, Integer workgroupId,
                                          String nodeId, String componentId,
                                          Integer studentWorkId, Integer studentAssetId,
-                                         String type, String title, String content,
+                                         String localNotebookItemId, String type, String title, String content,
                                          String clientSaveTime, String clientDeleteTime) {
         NotebookItem notebookItem;
         if (id != null) {
@@ -720,6 +720,9 @@ public class VLEServiceImpl implements VLEService {
             } catch (ObjectNotFoundException e) {
                 e.printStackTrace();
             }
+        }
+        if (localNotebookItemId != null) {
+            notebookItem.setLocalNotebookItemId(localNotebookItemId);
         }
         if (type != null) {
             notebookItem.setType(type);

@@ -19,13 +19,15 @@ class NotebookService {
             {'name': 'all', 'type': 'all', 'label': 'All'},
             {'name': 'notes', 'type': 'all', 'label': 'Notes'}
             /*,
-            {'name': 'bookmarks', 'label': 'Bookmarks'},
             {'name': 'questions', 'label': 'Questions'}
             */
         ];
 
+        this.reports = [];
+
         this.notebook = {};
-        this.notebook.items = [];
+        this.notebook.allItems = [];
+        this.notebook.items = {};
         this.notebook.deletedItems = [];
 
         if (this.ProjectService.project != null) {
@@ -36,7 +38,7 @@ class NotebookService {
                     for (let i = 0; i < reportNotes.length; i++) {
                         let reportNote = reportNotes[i];
                         this.filters.push({
-                            "name": reportNote.id,
+                            "name": reportNote.reportId,
                             "type": "report",
                             "label": reportNote.title
                         });
@@ -46,8 +48,11 @@ class NotebookService {
         }
     }
 
+
     addItem(notebookItem) {
-        this.notebook.items.push(notebookItem);
+        this.notebook.allItems.push(notebookItem);
+
+        this.groupNotebookItems();
 
         // the current node is about to change
         this.$rootScope.$broadcast('notebookUpdated', {notebook: this.notebook});
@@ -65,17 +70,36 @@ class NotebookService {
         }
     };
 
-    getNotebookItemById(itemId) {
-        let notebookItem = null;
-        var items = this.notebook.items;
-        for (var i = 0; i < items.length; i++) {
-            var item = items[i];
-            if (item.id === itemId) {
-                notebookItem = item;
+    getLatestNotebookItemByLocalNotebookItemId(itemId) {
+        if (this.notebook.items.hasOwnProperty(itemId)) {
+            let items = this.notebook.items[itemId];
+            return items.last();
+        } else {
+            return null;
+        }
+    }
+
+    // returns student's report item if they've done work, or the template if they haven't.
+    getLatestNotebookReportItemByReportId(reportId) {
+        return this.getLatestNotebookItemByLocalNotebookItemId(reportId);
+    }
+
+    // returns the authored report item
+    getTemplateReportItemByReportId(reportId) {
+        let templateReportItem = null;
+        let reportNotes = this.notebookConfig.report.notes;
+        for (let i = 0; i < reportNotes.length; i++) {
+            let reportNote = reportNotes[i];
+            if (reportNote.reportId == reportId) {
+                templateReportItem = {};
+                templateReportItem.id = null;
+                templateReportItem.type = "report";
+                templateReportItem.localNotebookItemId = reportId;
+                templateReportItem.content = reportNote;
                 break;
             }
         }
-        return notebookItem;
+        return templateReportItem;
     }
 
     calculateTotalUsage() {
@@ -106,7 +130,7 @@ class NotebookService {
         config.params.workgroupId = this.ConfigService.getWorkgroupId();
         return this.$http(config).then((response) => {
             // loop through the assets and make them into JSON object with more details
-            this.notebook.items = [];  // clear local notebook items array
+            this.notebook.allItems = [];  // clear local notebook items array
             var allNotebookItems = response.data;
             for (var n = 0; n < allNotebookItems.length; n++) {
                 var notebookItem = allNotebookItems[n];
@@ -116,20 +140,46 @@ class NotebookService {
                 } else if (notebookItem.studentWorkId != null) {
                     // if this notebook item is a StudentWork item, add the association here
                     notebookItem.studentWork = this.StudentDataService.getStudentWorkByStudentWorkId(notebookItem.studentWorkId);
-                } else if (notebookItem.type === "note") {
+                } else if (notebookItem.type === "note" || notebookItem.type === "report") {
                     notebookItem.content = angular.fromJson(notebookItem.content);
                 }
                 if (notebookItem.serverDeleteTime == null) {
-                    this.notebook.items.push(notebookItem);
+                    this.notebook.allItems.push(notebookItem);
                 } else {
                     this.notebook.deletedItems.push(notebookItem)
                 }
             }
             this.calculateTotalUsage();
 
+            // now group notebook items based on item.localNotebookItemId
+            this.groupNotebookItems();
+
+            console.log(this.notebook);
             return this.notebook;
         });
     };
+
+    /**
+     * Groups the notebook items together in to a map-like structure inside this.notebook.items.
+     * {
+     *    "abc123": [{localNotebookItemId:"abc123", "text":"first revision"}, {localNotebookItemId:"abc123", "text":"second revision"}],
+     *    "def456": [{localNotebookItemId:"def456", "text":"hello"}, {localNotebookItemId:"def456", "text":"hello my friend"}]
+     * }
+     */
+    groupNotebookItems() {
+        this.notebook.items = {};
+        for (let ni = 0; ni < this.notebook.allItems.length; ni++) {
+            let notebookItem = this.notebook.allItems[ni];
+            let notebookItemLocalNotebookItemId = notebookItem.localNotebookItemId;
+            if (this.notebook.items.hasOwnProperty(notebookItemLocalNotebookItemId)) {
+                // if this was already added before, we'll append this notebook item to the array
+                this.notebook.items[notebookItemLocalNotebookItemId].push(notebookItem);
+            } else {
+                // otherwise, we'll create a new field and add the item to the array
+                this.notebook.items[notebookItemLocalNotebookItemId] = [notebookItem];
+            }
+        }
+    }
 
     hasStudentWorkNotebookItem(studentWork) {
         for (var i = 0; i < this.notebook.items.length; i++) {
@@ -141,7 +191,7 @@ class NotebookService {
         return false;
     };
 
-    saveNotebookItem(notebookItemId, nodeId, type, title, content) {
+    saveNotebookItem(notebookItemId, nodeId, localNotebookItemId, type, title, content) {
         if (this.ConfigService.isPreview()) {
             return this.$q((resolve, reject) => {
                 let notebookItem = {
@@ -161,6 +211,7 @@ class NotebookService {
             params.workgroupId = this.ConfigService.getWorkgroupId();
             params.periodId = this.ConfigService.getPeriodId();
             params.notebookItemId = notebookItemId;
+            params.localNotebookItemId = localNotebookItemId;
             params.nodeId = nodeId;
             params.type = type;
             params.title = title;
@@ -171,22 +222,12 @@ class NotebookService {
             return this.$http(config).then((result) => {
                 var notebookItem = result.data;
                 if (notebookItem != null) {
-                    if (notebookItem.type === "note") {
+                    if (notebookItem.type === "note" || notebookItem.type === "report") {
                         notebookItem.content = angular.fromJson(notebookItem.content);
                     }
                     // add/update notebook
-                    let notebookItemExists = false;
-                    for (let n = 0; n < this.notebook.items.length; n++) {
-                        let localNotebookItem = this.notebook.items[n];
-                        if (localNotebookItem.id === notebookItem.id) {
-                            this.notebook.items[n] = notebookItem;
-                            notebookItemExists = true;
-                            break;
-                        }
-                    }
-                    if (!notebookItemExists) {
-                        this.notebook.items.push(notebookItem);
-                    }
+                    this.notebook.allItems.push(notebookItem);
+                    this.groupNotebookItems();
 
                     this.$rootScope.$broadcast('notebookUpdated', {notebook: this.notebook});
                 }
@@ -214,7 +255,8 @@ class NotebookService {
                 var notebookItem = result.data;
                 if (notebookItem != null) {
                     notebookItem.studentAsset = this.StudentAssetService.getAssetById(notebookItem.studentAssetId);
-                    this.notebook.items.push(notebookItem);
+                    this.notebook.allItems.push(notebookItem);
+                    this.groupNotebookItems();
                 }
                 this.calculateTotalUsage();
                 return notebookItem;

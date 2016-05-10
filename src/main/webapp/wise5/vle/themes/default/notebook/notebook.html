@@ -47,13 +47,16 @@
         height: 80px;
     }
 </style>
-<ul class='notebookItems' ng-show="notebookController.newNote == null" >
-    <li ng-repeat="notebookItem in notebookController.notebook.items"
-        ng-click='notebookController.notebookItemSelected($event, notebookItem)'>
-        <div ng-show="(notebookController.filter == 'all' || notebookController.filter == 'notes') && notebookItem.type == 'note'"
-             class='notebookItem notebookItemNote'>
-            <notebookitem item-id="notebookItem.id" template-url="notebookController.themePath + '/notebook/notebookItem.html'"></notebookitem>
+<ul class='notebookItems' ng-if="notebookController.filter == 'all' || notebookController.filter == 'notes'">
+    <li ng-repeat="(localNotebookItemId, notebookItems) in notebookController.notebook.items">
+        <div ng-if="(notebookController.filter == 'all' || notebookController.filter == 'notes') && notebookItems.last().type == 'note'" class="notebookItem">
+            <notebookitem item-id="{{notebookItems.last().localNotebookItemId}}" template-url="notebookController.themePath + '/notebook/notebookItem.html'" is-edit-allowed="true"></notebookitem>
         </div>
+        <!--
+        <div ng-if="notebookItem.type == 'report' && notebookController.filter == notebookItem.reportId">
+            <notebookitemreport item-id="notebookItem.id" template-url="notebookController.themePath + '/notebook/notebookItemReport.html'"></notebookitemreport>
+        </div>
+        -->
         <!--
         <img ng-click='notebookController.deleteNotebookItem(notebookItem)' src='wise5/vle/notebook/trash.png' class='studentAssetRemoveImage' />
         <span ng-show='{{notebookItem.studentAsset.type === "audio"}}' ng-audio='{{notebookItem.studentAsset.url}}' volume='0.5'><img class='studentAssetOverlay' src='wise5/vle/notebook/play.png' /></span>
@@ -61,3 +64,7 @@
         <!-- <span class='studentAssetname'>{{studentAsset.name}}</span> -->
     </li>
 </ul>
+<div ng-if="notebookController.filter != 'all' && notebookController.filter != 'notes'">
+    <!-- assume it's a report for now.-->
+    <notebookitemreport report-id="notebookController.filter" theme-path="notebookController.themePath" template-url="notebookController.themePath + '/notebook/notebookItemReport.html'"></notebookitemreport>
+</div>

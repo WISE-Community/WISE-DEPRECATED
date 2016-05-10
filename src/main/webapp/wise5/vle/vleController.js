@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var VLEController = function () {
-    function VLEController($scope, $rootScope, $mdDialog, $state, ConfigService, NotebookService, ProjectService, SessionService, StudentDataService, StudentWebSocketService) {
+    function VLEController($scope, $rootScope, $mdDialog, $state, $translate, ConfigService, NotebookService, ProjectService, SessionService, StudentDataService, StudentWebSocketService) {
         var _this = this;
 
         _classCallCheck(this, VLEController);
@@ -18,6 +18,7 @@ var VLEController = function () {
         this.$rootScope = $rootScope;
         this.$mdDialog = $mdDialog;
         this.$state = $state;
+        this.$translate = $translate;
         this.ConfigService = ConfigService;
         this.NotebookService = NotebookService;
         this.ProjectService = ProjectService;
@@ -210,10 +211,14 @@ var VLEController = function () {
     }, {
         key: 'addNewNote',
         value: function addNewNote() {
-            this.noteDialog = this.$mdDialog.show({
-                template: '<md-dialog aria-label="Note"><md-toolbar><div class="md-toolbar-tools"><h2>Add New Note</h2></div></md-toolbar>' + '<md-dialog-content><div class="md-dialog-content">' + '<notebookitem is-edit-enabled="true" template-url="\'' + this.notebookItemPath + '\'"></notebookitem>' + '</div></md-dialog-content></md-dialog>',
-                fullscreen: true,
-                escapeToClose: true
+            var _this2 = this;
+
+            this.$translate(["addNewNote"]).then(function (translations) {
+                _this2.noteDialog = _this2.$mdDialog.show({
+                    template: '<md-dialog aria-label="Note"><md-toolbar><div class="md-toolbar-tools"><h2>' + translations.addNewNote + '</h2></div></md-toolbar>' + '<md-dialog-content><div class="md-dialog-content">' + '<notebookitem is-edit-mode="true" template-url="\'' + _this2.notebookItemPath + '\'"></notebookitem>' + '</div></md-dialog-content></md-dialog>',
+                    fullscreen: true,
+                    escapeToClose: true
+                });
             });
         }
     }, {
@@ -224,10 +229,9 @@ var VLEController = function () {
 
             // get the notebook item to edit.
             var notebookItem = args.notebookItem;
-            var notebookItemId = notebookItem.id;
-
+            var notebookItemId = notebookItem.localNotebookItemId;
             this.noteDialog = this.$mdDialog.show({
-                template: '<md-dialog aria-label="Note"><md-toolbar><div class="md-toolbar-tools"><h2>Edit Note</h2></div></md-toolbar>' + '<md-dialog-content><div class="md-dialog-content">' + '<notebookitem is-edit-enabled="true" item-id="' + notebookItemId + '" template-url="\'' + this.notebookItemPath + '\'" ></notebookitem>' + '</div></md-dialog-content></md-dialog>',
+                template: '<md-dialog aria-label="Note"><md-toolbar><div class="md-toolbar-tools"><h2>Edit Note</h2></div></md-toolbar>' + '<md-dialog-content><div class="md-dialog-content">' + '<notebookitem is-edit-mode="true" item-id="' + notebookItemId + '" template-url="\'' + this.notebookItemPath + '\'" ></notebookitem>' + '</div></md-dialog-content></md-dialog>',
                 fullscreen: true,
                 escapeToClose: true
             });
@@ -336,7 +340,7 @@ var VLEController = function () {
     return VLEController;
 }();
 
-VLEController.$inject = ['$scope', '$rootScope', '$mdDialog', '$state', 'ConfigService', 'NotebookService', 'ProjectService', 'SessionService', 'StudentDataService', 'StudentWebSocketService'];
+VLEController.$inject = ['$scope', '$rootScope', '$mdDialog', '$state', '$translate', 'ConfigService', 'NotebookService', 'ProjectService', 'SessionService', 'StudentDataService', 'StudentWebSocketService'];
 
 exports.default = VLEController;
 //# sourceMappingURL=vleController.js.map

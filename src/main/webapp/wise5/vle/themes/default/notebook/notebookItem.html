@@ -1,22 +1,22 @@
 
-<div ng-show="notebookItemController.item != null && !notebookItemController.isEditEnabled">
+<div ng-show="notebookItemController.item != null && !notebookItemController.isEditMode">
     <!-- Display an existing notebook item. -->
-    <span>{{notebookItemController.latestNotebookItemContentRevision.text}}</span>
-    <div class="component__attachment" ng-repeat="attachment in notebookItemController.latestNotebookItemContentRevision.attachments">
+    <span>{{notebookItemController.item.content.text}}</span>
+    <div class="component__attachment" ng-repeat="attachment in notebookItemController.item.content.attachments">
         <img ng-src="{{attachment.iconURL}}" class="component__attachment__content" />
-        <div class="notebookItemSource"><wiselink type="link" nodeId="{{notebookItemController.getItemNodeId()}}" linkText="{{notebookItemController.getItemNodePositionAndTitle()}}"></wiselink></div>
     </div>
-    <md-button id="editNotebookItemButton" aria-label="Edit NotebookItem" class="md-icon-button"
+    <div class="notebookItemSource"><wiselink type="link" nodeId="{{notebookItemController.getItemNodeId()}}" linkText="{{notebookItemController.getItemNodePositionAndTitle()}}"></wiselink></div>
+    <md-button ng-if="notebookItemController.isEditAllowed" id="editNotebookItemButton" aria-label="Edit NotebookItem" class="md-icon-button"
                ng-click="notebookItemController.editNotebookItem()">
         <md-icon md-menu-origin> edit </md-icon>
         <md-tooltip md-direction="left"><span translate="editNotebookItem" /></md-tooltip>
     </md-button>
 </div>
 
-<div ng-show="notebookItemController.item == null || notebookItemController.isEditEnabled">
+<div ng-show="notebookItemController.item == null || notebookItemController.isEditMode">
     <!-- User wants to add a new note or edit existing note. -->
-    <textarea id="itemTextArea" placeholder="{{ 'typeYourNoteHere' | translate }}" ng-model="notebookItemController.latestNotebookItemContentRevision.text" ng-model-options='{ debounce: 100 }' />
-    <div class="component__attachment" ng-repeat="attachment in notebookItemController.latestNotebookItemContentRevision.attachments">
+    <textarea id="itemTextArea" placeholder="{{ 'typeYourNoteHere' | translate }}" ng-model="notebookItemController.item.content.text" ng-model-options='{ debounce: 100 }' />
+    <div class="component__attachment" ng-repeat="attachment in notebookItemController.item.content.attachments">
         <img ng-src="{{attachment.iconURL}}" class="component__attachment__content" />
         <md-button class="component__attachment__delete" ng-click='notebookItemController.removeAttachment(attachment)' title="Remove file"><md-icon>cancel</md-icon></md-button>
     </div>
