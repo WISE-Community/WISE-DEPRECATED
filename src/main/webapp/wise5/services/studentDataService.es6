@@ -137,7 +137,7 @@ class StudentDataService {
      * Retrieve the run status
      */
     retrieveRunStatus() {
-        
+
         if (this.ConfigService.isPreview()) {
             // we are previewing the project
             this.runStatus = {};
@@ -198,11 +198,15 @@ class StudentDataService {
     };
 
     updateNodeStatuses() {
-        var nodes = this.ProjectService.getNodes();
+        let nodes = this.ProjectService.getNodes();
+        let planningNodes = this.ProjectService.getPlanningNodes();
         var groups = this.ProjectService.getGroups();
 
         if (nodes != null) {
-            
+            if (planningNodes != null) {
+                nodes = nodes.concat(planningNodes);
+            }
+
             for (var n = 0; n < nodes.length; n++) {
                 var node = nodes[n];
                 if (!this.ProjectService.isGroupNode(node.id)) {
@@ -451,7 +455,7 @@ class StudentDataService {
                             firstResult = false;
                         } else {
                             // this is not the first criteria
-                            
+
                             if (removalConditional === 'any') {
                                 // any of the criteria can be true to remove the constraint
                                 result = result || tempResult;
@@ -501,13 +505,13 @@ class StudentDataService {
             } else if (functionName === 'isPlanningActivityCompleted') {
                 result = this.evaluateIsPlanningActivityCompletedCriteria(criteria);
             } else if (functionName === '') {
-                
+
             }
         }
 
         return result;
     };
-    
+
     /**
      * Check if the isCompleted criteria was satisfied
      * @param criteria an isCompleted criteria
@@ -515,17 +519,17 @@ class StudentDataService {
      */
     evaluateIsCompletedCriteria(criteria) {
         var result = false;
-        
+
         if (criteria != null && criteria.params != null) {
             var params = criteria.params;
             var nodeId = params.nodeId;
-            
+
             result = this.isCompleted(nodeId);
         }
-        
+
         return result;
     }
-    
+
     /**
      * Check if the isPlanningActivityCompleted criteria was satisfied
      * @param criteria a isPlanningActivityCompleted criteria
@@ -533,7 +537,7 @@ class StudentDataService {
      */
     evaluateIsPlanningActivityCompletedCriteria(criteria) {
         var result = false;
-        
+
         if (criteria != null && criteria.params != null) {
 
             var params = criteria.params;
@@ -629,7 +633,7 @@ class StudentDataService {
                 result = true;
             }
         }
-        
+
         return result;
     }
 
@@ -650,19 +654,19 @@ class StudentDataService {
             var branchPathTakenEvents = this.getBranchPathTakenEventsByNodeId(expectedFromNodeId);
 
             if (branchPathTakenEvents != null) {
-                
+
                 // loop through all the branchPathTaken events
                 for (var b = 0; b < branchPathTakenEvents.length; b++) {
                     var branchPathTakenEvent = branchPathTakenEvents[b];
-                    
+
                     if (branchPathTakenEvent != null) {
                         var data = branchPathTakenEvent.data;
-                        
+
                         if (data != null) {
                             // get the from and to node ids of the event
                             var fromNodeId = data.fromNodeId;
                             var toNodeId = data.toNodeId;
-                            
+
                             if (expectedFromNodeId === fromNodeId && expectedToNodeId === toNodeId) {
                                 // the from and to node ids match the ones we are looking for
                                 result = true;
@@ -675,30 +679,30 @@ class StudentDataService {
 
         return result;
     };
-    
+
     /**
      * Check if the isVisited criteria was satisfied
      * @param criteria the isVisited criteria
      * @returns whether the node id is visited
      */
     evaluateIsVisitedCriteria(criteria) {
-        
+
         var isVisited = false;
-        
+
         if (criteria != null && criteria.params != null) {
-            
+
             // get the node id we want to check if was visited
             var nodeId = criteria.params.nodeId;
-            
+
             // get all the events
             var events = this.studentData.events;
-            
+
             if (events != null) {
-                
+
                 // loop through all the events
                 for (var e = 0; e < events.length; e++) {
                     var event = events[e];
-                    
+
                     if (event != null) {
                         if (nodeId == event.nodeId && 'nodeEntered' === event.event) {
                             // the student has entered the node before
@@ -708,26 +712,26 @@ class StudentDataService {
                 }
             }
         }
-        
+
         return isVisited;
     }
-    
+
     /**
      * Get all the branchPathTaken events by node id
      * @params fromNodeId the from node id
      * @returns all the branchPathTaken events from the given node id
      */
     getBranchPathTakenEventsByNodeId(fromNodeId) {
-        
+
         var branchPathTakenEvents = [];
         var events = this.studentData.events;
-        
+
         if (events != null) {
-            
+
             // loop through all the events
             for (var e = 0; e < events.length; e++) {
                 var event = events[e];
-                
+
                 if (event != null) {
                     if (fromNodeId === event.nodeId && 'branchPathTaken' === event.event) {
                         // we have found a branchPathTaken event from the from node id
@@ -736,7 +740,7 @@ class StudentDataService {
                 }
             }
         }
-        
+
         return branchPathTakenEvents;
     }
 
@@ -1182,9 +1186,9 @@ class StudentDataService {
                 }
             }
         }
-        
+
         this.updateNodeStatuses();
-        
+
     };
 
     retrieveComponentStates(runId, periodId, workgroupId) {

@@ -34,7 +34,8 @@
                         </nav-item>
                     </div>
                 </md-list>
-                <div ng-show="navitemCtrl.planningMode" layout="column" layout-align="center center">
+                <div ng-if="navitemCtrl.isPlanning" ng-show="navitemCtrl.planningMode"
+                     class="animate-show" layout="column" layout-align="center center">
                     <md-button class="md-accent" aria-label="Add new item to {{ navitemCtrl.nodeTitle }}"
                                ng-click="navitemCtrl.item.ids.length ? navitemCtrl.addPlanningInstance($event, navitemCtrl.item.ids[navitemCtrl.item.ids.length-1]) : navitemCtrl.addPlanningInstance($event, navitemCtrl.nodeId, true)">
                         <md-icon class="md-accent">add_circle</md-icon>
@@ -64,11 +65,11 @@
                 <md-icon md-font-set="{{navitemCtrl.nodeStatus.icon.fontSet}}" class="md-light">{{navitemCtrl.nodeStatus.icon.fontName}}</md-icon>
             </div>
             <p>{{ navitemCtrl.nodeTitle }} <node-status-icon node-id="navitemCtrl.nodeId"></node-status-icon> <md-icon ng-if="!navitemCtrl.nodeStatus.isVisitable" aria-label="Item is locked"> lock </md-icon></p>
-            <md-icon class="md-secondary" ng-if="navitemCtrl.isParentGroupPlanning"
+            <md-icon class="md-secondary animate-show" ng-if="navitemCtrl.isParentGroupPlanning"
                      aria-label="Delete Item"
                      ng-show="navitemCtrl.planningMode && navitemCtrl.isPlanningInstance"
                      ng-click="navitemCtrl.removePlanningNodeInstance(navitemCtrl.nodeId, $event)"> delete </md-icon>
-            <md-icon class="md-secondary nav-item--list__reorder" ng-if="navitemCtrl.isParentGroupPlanning"
+            <md-icon class="md-secondary nav-item--list__reorder animate-show" ng-if="navitemCtrl.isParentGroupPlanning"
                      aria-label="Move Item"
                      ng-show="navitemCtrl.planningMode && navitemCtrl.isPlanningInstance"> reorder </md-icon>
         </md-list-item>

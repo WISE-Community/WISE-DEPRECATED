@@ -6,7 +6,7 @@ this.filters=[{'name':'all','label':'All'}, //{'name': 'todo', 'label': 'Todo'},
      * Initialize the data structures used to hold project information
      */value:function clearProjectFields(){this.transitions=[];this.applicationNodes=[];this.groupNodes=[];this.idToNode={};this.idToElement={};this.metadata={};this.activeConstraints=[];this.rootNode=null;this.idToPosition={};this.idToOrder={};this.nodeCount=0;}},{key:'getStyle',value:function getStyle(){var style='';var project=this.project;if(project!=null){style=project.style;}return style;}},{key:'getFilters',value:function getFilters(){return this.filters;}},{key:'getProjectTitle', /**
      * Returns the name/title of the current project
-     */value:function getProjectTitle(){var name=this.getProjectMetadata().title;return name?name:'A WISE Project (No name)';}},{key:'getProjectMetadata',value:function getProjectMetadata(){return this.metadata?this.metadata:{};}},{key:'getNodes',value:function getNodes(){var nodes=null;var project=this.project;if(project!=null){nodes=project.nodes;}return nodes;}},{key:'getChildNodeIdsById',value:function getChildNodeIdsById(nodeId){var childIds=[];var node=this.getNodeById(nodeId);if(node.ids){childIds=node.ids;}return childIds;}},{key:'getGroupNodes',value:function getGroupNodes(){return this.groupNodes;}},{key:'isNode',value:function isNode(id){var result=false;var nodes=this.getNodes();if(nodes!=null){for(var n=0;n<nodes.length;n++){var node=nodes[n];if(node!=null){var nodeId=node.id;if(nodeId===id){result=true;break;}}}}return result;}},{key:'addTransition', // adds or update transition if exists
+     */value:function getProjectTitle(){var name=this.getProjectMetadata().title;return name?name:'A WISE Project (No name)';}},{key:'getProjectMetadata',value:function getProjectMetadata(){return this.metadata?this.metadata:{};}},{key:'getNodes',value:function getNodes(){var nodes=null;var project=this.project;if(project!=null){nodes=project.nodes;}return nodes;}},{key:'getPlanningNodes',value:function getPlanningNodes(){var planningNodes=null;var project=this.project;if(project!=null){planningNodes=project.planningNodes;}return planningNodes;}},{key:'getChildNodeIdsById',value:function getChildNodeIdsById(nodeId){var childIds=[];var node=this.getNodeById(nodeId);if(node.ids){childIds=node.ids;}return childIds;}},{key:'getGroupNodes',value:function getGroupNodes(){return this.groupNodes;}},{key:'isNode',value:function isNode(id){var result=false;var nodes=this.getNodes();if(nodes!=null){for(var n=0;n<nodes.length;n++){var node=nodes[n];if(node!=null){var nodeId=node.id;if(nodeId===id){result=true;break;}}}}return result;}},{key:'addTransition', // adds or update transition if exists
 value:function addTransition(transition){var existingTransitions=this.getTransitions();var replaced=false;for(var t=0;t<existingTransitions.length;t++){var existingTransition=existingTransitions[t];if(existingTransition.id===transition.id){existingTransitions.splice(t,1,transition);replaced=true;}}if(!replaced){existingTransitions.push(transition);}}},{key:'addNode',value:function addNode(node){var existingNodes=this.project.nodes;var replaced=false;if(node!=null&&existingNodes!=null){for(var n=0;n<existingNodes.length;n++){var existingNode=existingNodes[n];var existingNodeId=existingNode.id;if(existingNodeId===node.id){existingNodes.splice(n,1,node);replaced=true;}}}if(!replaced){existingNodes.push(node);}}},{key:'addApplicationNode',value:function addApplicationNode(node){var applicationNodes=this.applicationNodes;if(node!=null&&applicationNodes!=null){applicationNodes.push(node);}}},{key:'addGroupNode',value:function addGroupNode(node){var groupNodes=this.groupNodes;if(node!=null&&groupNodes!=null){groupNodes.push(node);}this.$rootScope.$broadcast('groupsChanged');}},{key:'addNodeToGroupNode',value:function addNodeToGroupNode(groupId,nodeId){if(groupId!=null&&nodeId!=null){var group=this.getNodeById(groupId);if(group!=null){var groupChildNodeIds=group.ids;if(groupChildNodeIds!=null){if(groupChildNodeIds.indexOf(nodeId)===-1){groupChildNodeIds.push(nodeId);}}}}}},{key:'isGroupNode',value:function isGroupNode(id){var result=false;var groupNode=this.getNodeById(id);if(groupNode!=null){var type=groupNode.type;if(type==='group'){result=true;}}return result;}},{key:'isApplicationNode',value:function isApplicationNode(id){var result=false;var applicationNode=this.getNodeById(id);if(applicationNode!=null){var type=applicationNode.type;if(type!=='group'){result=true;}}return result;}},{key:'getGroups',value:function getGroups(){return this.groupNodes;}},{key:'loadNodes',value:function loadNodes(nodes){if(nodes!=null){for(var n=0;n<nodes.length;n++){var node=nodes[n];if(node!=null){var nodeId=node.id;var nodeType=node.type;var content=node.content;var constraints=node.constraints;if(content!=null){ //node.content = this.injectAssetPaths(content);
 }this.setIdToNode(nodeId,node);this.setIdToElement(nodeId,node);this.addNode(node);if(nodeType==='group'){this.addGroupNode(node);}else {this.addApplicationNode(node);}var groupId=node.groupId;if(groupId!=null){this.addNodeToGroupNode(groupId,nodeId);}if(constraints!=null){for(var c=0;c<constraints.length;c++){var constraint=constraints[c];this.activeConstraints.push(constraint);}}}}}}},{key:'loadPlanningNodes', /**
      * Load the planning template nodes
@@ -164,7 +164,7 @@ nodesByToNodeId.push(node);}}}}}}}return nodesByToNodeId;}},{key:'getNodeIdsByTo
 var nodes=this.getNodesByToNodeId(toNodeId);if(nodes!=null){ // loop through all the nodes to get the node ids
 for(var n=0;n<nodes.length;n++){var node=nodes[n];if(node!=null){nodeIds.push(node.id);}}}return nodeIds;} /**
      * Get the group nodes that point to a given node id
-     * @param toNodeId 
+     * @param toNodeId
      */},{key:'getGroupNodesByToNodeId',value:function getGroupNodesByToNodeId(toNodeId){var groupsThatPointToNodeId=[];if(toNodeId!=null){var groups=this.getGroups();for(var g=0;g<groups.length;g++){var group=groups[g];if(group!=null){if(this.hasTransitionTo(group,toNodeId)){groupsThatPointToNodeId.push(group);}}}}return groupsThatPointToNodeId;} /**
      * Check if a node has a transition to a node id
      * @param node check if this node has a transition to the node id
@@ -679,7 +679,7 @@ this.addNode(node); // add the node to our mapping of node id to node
 this.setIdToNode(node.id,node); // insert the new node id into the array of children ids
 this.insertNodeAfterInGroups(node.id,nodeId); // create the transition to the node
 this.insertNodeAfterInTransitions(node,nodeId);if(this.isGroupNode(node.id)){ /*
-             * we are creating a group node so we will update/create the 
+             * we are creating a group node so we will update/create the
              * transitions that traverse from the previous group to this group
              */var oldToGroupIds=[]; // get the transitions that come out of the previous group
 var transitionsFromGroup=this.getTransitionsByFromNodeId(nodeId);if(transitionsFromGroup!=null){ /*
@@ -745,7 +745,7 @@ var group=this.getNodeById(nodeIdToInsertInside);if(this.isGroupNode(nodeIdToIns
              */this.updateChildrenTransitionsForMovingGroup(nodeToInsert,null);} /*
          * since we are inserting a node into a group, the node will become
          * the first node in the group. this means we need to update any nodes
-         * that point to the old start id and make them point to the node 
+         * that point to the old start id and make them point to the node
          * we are inserting.
          */if(nodeToInsert!=null&&group!=null){ // get the start node
 var startId=group.startId; // get transitions that point to the start node
@@ -767,7 +767,7 @@ this.updateToTransition(previousNode,startId,nodeIdToInsert);}}} /*
 var startNode=this.getNodeById(startId);if(startNode!=null){ // the group has a start node which will become the transition to node
 if(nodeToInsert.transitionLogic==null){nodeToInsert.transitionLogic={};}if(nodeToInsert.transitionLogic.transitions==null){nodeToInsert.transitionLogic.transitions=[];} /*
                      * make the inserted node transition to the previous start node
-                     */var transitionObject={};transitionObject.to=startId;nodeToInsert.transitionLogic.transitions.push(transitionObject);}} //check if the node we inserted has any transitions now            
+                     */var transitionObject={};transitionObject.to=startId;nodeToInsert.transitionLogic.transitions.push(transitionObject);}} //check if the node we inserted has any transitions now
 var transitions=this.getTransitionsByFromNodeId(nodeIdToInsert);if(transitions==null||transitions.length==0){ /*
                  * the node doesn't have any transitions so we will see if
                  * the parent group transitions to anything and use that
@@ -1217,7 +1217,7 @@ for(var t=0;t<transitions.length;t++){var transition=transitions[t];if(transitio
                                              * the transition is to a node in the old group so we will update
                                              * the transition to point to the new group
                                              */if(newToGroupStartId==null||newToGroupStartId==''){transition.to=newToGroupId;}else {transition.to=newToGroupStartId;}}}}}}}}}} /*
-         * make the steps that do not have a transition now point to the old 
+         * make the steps that do not have a transition now point to the old
          * group
          * newToGroup -> oldToGroup
          */if(newToGroup!=null){var childIds=newToGroup.ids;if(childIds!=null){ // loop through all the children in the new group
@@ -1236,8 +1236,8 @@ this.addToTransition(child,toNodeId);}}}}}}}} /**
      */},{key:'updateChildrenTransitionsForMovingGroup',value:function updateChildrenTransitionsForMovingGroup(node,nodeId){var transitionsBefore=null; // get the group nodes that point to the group we are moving
 var previousGroupNodes=this.getGroupNodesByToNodeId(node.id); // get all the transitions from the group we are moving
 var transitionsAfter=this.getTransitionsByFromNodeId(node.id);var extracted=false; /*
-         * extract the group we are moving by updating the transitions of the 
-         * from group and the new to group. also remove the transitions from the 
+         * extract the group we are moving by updating the transitions of the
+         * from group and the new to group. also remove the transitions from the
          * group we are moving.
          */ // loop through all the groups that point to the group we are moving
 for(var p=0;p<previousGroupNodes.length;p++){var previousGroupNode=previousGroupNodes[p];if(transitionsAfter==null||transitionsAfter.length==0){ // the group we are moving does not have any transitions
@@ -1255,7 +1255,7 @@ for(var t=0;t<transitionsAfter.length;t++){var transitionAfter=transitionsAfter[
              */ // remove the transitions from the group we are moving
 for(var t=0;t<transitionsAfter.length;t++){var transitionAfter=transitionsAfter[t];if(transitionAfter!=null){var toNodeId=transitionAfter.to; // remove the transitions to the group we are moving
 this.updateTransitionsForExtractingGroup(null,node.id,toNodeId);extracted=true;}}}var inserted=false; /*
-         * create the transitions from the from group to the group we are moving 
+         * create the transitions from the from group to the group we are moving
          * and the transitions from the group we are moving to the old to group
          */if(nodeId!=null){ // get the transitions from the previous group to the next group
 var transitionsAfter=this.getTransitionsByFromNodeId(nodeId);for(var t=0;t<transitionsAfter.length;t++){var transitionAfter=transitionsAfter[t];if(transitionAfter!=null){var toNodeId=transitionAfter.to; /*
@@ -1264,17 +1264,17 @@ var transitionsAfter=this.getTransitionsByFromNodeId(nodeId);for(var t=0;t<trans
                      * that traverse from the group we are moving to the old
                      * to group.
                      */this.updateTransitionsForInsertingGroup(nodeId,[toNodeId],node.id);inserted=true;}}}if(!inserted){ /*
-             * we have not inserted the transitions yet because there were no 
+             * we have not inserted the transitions yet because there were no
              * previous group transitions
              */if(nodeId==null){ /*
                  * the previous node id is null which means there was no previous
-                 * group. this means the group we are inserting will become the 
+                 * group. this means the group we are inserting will become the
                  * first group. this happens when the group we are moving
                  * is moved inside the root (group0).
                  */var startGroupId=this.getStartGroupId();if(startGroupId!=null){ // get the start group for the whole project (group0)
 var startGroup=this.getNodeById(startGroupId);if(startGroup!=null){ // get the first activity
 var firstGroupId=startGroup.startId; /*
-                         * create the transitions that traverse from the group 
+                         * create the transitions that traverse from the group
                          * we are moving to the previous first activity.
                          */this.updateTransitionsForInsertingGroup(nodeId,[firstGroupId],node.id);}}}else { /*
                  * we have not inserted the group yet because the from group doesn't
