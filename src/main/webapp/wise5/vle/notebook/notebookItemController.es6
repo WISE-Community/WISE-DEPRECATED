@@ -31,9 +31,9 @@ class NotebookItemController {
             this.item = {
                 id: null,       // null id means we're creating a new notebook item.
                 localNotebookItemId: this.UtilService.generateKey(10),   // this is the id that is common across the same notebook item revisions.
-                type: "note",
+                type: "note", // the notebook item type, TODO: once questions are enabled, don't hard code
                 nodeId: currentNodeId, // Id of the node this note was created on
-                title: "Note on " + currentNodeTitle,  // Title of the node this note was created on
+                title: "Note from " + currentNodeTitle,  // Title of the node this note was created on
                 content: {
                     text: "",
                     attachments: []
@@ -43,6 +43,9 @@ class NotebookItemController {
             this.item = this.NotebookService.getLatestNotebookItemByLocalNotebookItemId(this.itemId);
             this.item.id = null; // set to null so we're creating a new notebook item. An edit to a notebook item results in a new entry in the db.
         }
+
+        // set the type in the controller
+        this.type = this.item ? this.item.type : null;
     }
 
     getItemNodeId() {
@@ -65,26 +68,7 @@ class NotebookItemController {
     }
 
     getTemplateUrl() {
-        return this.templateUrl;
-    }
-
-    editNotebookItem() {
-        // the actual closing of the dialog will be performed by the vleController.
-        this.$rootScope.$broadcast('openNoteDialog', {notebookItem: this.item});
-    }
-
-    saveNotebookItem() {
-        // add new notebook item
-        this.item.content.clientSaveTime = Date.parse(new Date());  // set save timestamp
-        this.NotebookService.saveNotebookItem(this.item.id, this.item.nodeId, this.item.localNotebookItemId, this.item.type, this.item.title, this.item.content)
-            .then(() => {
-                this.closeNoteDialog();
-            });
-    }
-
-    closeNoteDialog() {
-        // the actual closing of the dialog will be performed by the vleController.
-        this.$rootScope.$broadcast('closeNoteDialog');
+        return this.ProjectService.getThemePath() + '/notebook/notebookItem.html';
     }
 
     attachStudentAssetToNote(files) {
@@ -101,6 +85,7 @@ class NotebookItemController {
 
                             this.item.content.attachments.push(attachment);
                         }
+                        this.update();
                     });
                 });
             }
@@ -110,7 +95,14 @@ class NotebookItemController {
     removeAttachment(attachment) {
         if (this.item.content.attachments.indexOf(attachment) != -1) {
             this.item.content.attachments.splice(this.item.content.attachments.indexOf(attachment), 1);
+            this.update();
         }
+    }
+
+    update() {
+        // update local notebook item
+        this.item.content.clientSaveTime = Date.parse(new Date());  // set save timestamp
+        this.onUpdate({item: this.item});
     }
 }
 

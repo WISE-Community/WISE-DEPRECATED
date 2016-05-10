@@ -16,7 +16,7 @@ class NotebookService {
         this.StudentDataService = StudentDataService;
 
         this.filters = [
-            {'name': 'all', 'type': 'all', 'label': 'All'},
+            //{'name': 'all', 'type': 'all', 'label': 'All'},
             {'name': 'notes', 'type': 'all', 'label': 'Notes'}
             /*,
             {'name': 'questions', 'label': 'Questions'}
@@ -29,6 +29,7 @@ class NotebookService {
         this.notebook.allItems = [];
         this.notebook.items = {};
         this.notebook.deletedItems = [];
+        this.notebookConfig = {};
 
         if (this.ProjectService.project != null) {
             this.notebookConfig = this.ProjectService.project.notebook;
@@ -48,6 +49,9 @@ class NotebookService {
         }
     }
 
+    toggleNotebook(ev) {
+        this.$rootScope.$broadcast('toggleNotebook', {ev: ev});
+    }
 
     addItem(notebookItem) {
         this.notebook.allItems.push(notebookItem);
@@ -56,6 +60,16 @@ class NotebookService {
 
         // the current node is about to change
         this.$rootScope.$broadcast('notebookUpdated', {notebook: this.notebook});
+    };
+
+    editItem(itemId, ev) {
+        // boradcast edit notebook item event
+        this.$rootScope.$broadcast('editNote', {item: itemId, ev: ev});
+    };
+
+    addNewItem(ev) {
+        // boradcast create new notebook item event
+        this.$rootScope.$broadcast('addNewNote', {ev: ev});
     };
 
     deleteItem(itemToDelete) {
@@ -117,8 +131,12 @@ class NotebookService {
         this.notebook.usagePercentage = this.notebook.totalSize / this.notebook.totalSizeMax * 100;
     };
 
+    getNotebookConfig() {
+        return this.notebookConfig;
+    };
+
     isNotebookEnabled() {
-        return this.notebookConfig != null && this.notebookConfig.enabled;
+        return this.notebookConfig.enabled;
     };
 
     retrieveNotebookItems() {

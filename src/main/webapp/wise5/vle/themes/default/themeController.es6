@@ -10,6 +10,7 @@ class ThemeController {
                 NotebookService,
                 SessionService,
                 $mdDialog,
+                $mdMedia,
                 $mdToast,
                 $mdComponentRegistry) {
 
@@ -22,6 +23,7 @@ class ThemeController {
         this.SessionService = SessionService;
         this.StudentStatusService = StudentStatusService;
         this.$mdDialog = $mdDialog;
+        this.$mdMedia = $mdMedia;
         this.$mdToast = $mdToast;
         this.$mdComponentRegistry = $mdComponentRegistry;
 
@@ -40,6 +42,8 @@ class ThemeController {
 
         this.workgroupId = this.ConfigService.getWorkgroupId();
         this.workgroupUserNames = this.ConfigService.getUserNamesByWorkgroupId(this.workgroupId);
+
+        this.notebookOpen = false;
 
         // build project status pop-up
         let statusTemplateUrl = this.themePath + '/templates/projectStatus.html';
@@ -208,6 +212,23 @@ class ThemeController {
             StudentAssetDialogController.$inject = ["$scope", "$mdDialog", "componentController"];
         });
 
+        this.$scope.$on('toggleNotebook', () => {
+            this.toggleNotebook();
+        });
+
+        // show edit note dialog on 'editNote' event
+        this.$scope.$on('editNote', (event, args) => {
+            let itemId = args.itemId;
+            let ev = args.ev;
+            this.editNote(itemId, true, ev);
+        });
+
+        // show edit note dialog on 'addNewNote' event
+        this.$scope.$on('addNewNote', (event, args) => {
+            let ev = args.ev;
+            this.editNote(null, true, ev);
+        });
+
         // capture notebook open/close events
         this.$mdComponentRegistry.when('notebook').then(it => {
             this.$scope.$watch(() => {
@@ -245,8 +266,60 @@ class ThemeController {
         this.connectionLostShown = false;
     }
 
-    getAvatarColorForWorkgroupId (workgroupId) {
+    getAvatarColorForWorkgroupId(workgroupId) {
         return this.StudentStatusService.getAvatarColorForWorkgroupId(workgroupId);
+    }
+
+    toggleNotebook(ev) {
+        this.notebookOpen = !this.notebookOpen;
+    }
+
+    editNote(itemId, isEditEnabled, ev) {
+        let showFullScreen = this.$mdMedia('xs');
+        let notebookItemTemplate = this.themePath + '/notebook/editNotebookItem.html';
+        let item = this.NotebookService.getLatestNotebookItemByLocalNotebookItemId(itemId);
+        let type = item ? item.type : 'note'; // TODO: don't hardcode type once questions are enabled
+
+        // Display a dialog where students can add/edit a notebook item
+        this.$mdDialog.show({
+            parent: angular.element(document.body),
+            targetEvent: ev,
+            fullscreen: showFullScreen,
+            templateUrl: notebookItemTemplate,
+            controller: EditNotebookItemController,
+            locals: {
+                itemId: itemId,
+                isEditEnabled: isEditEnabled,
+                type: type
+            }
+            //template: '<notebookitem is-edit-enabled="true" item-id="{{itemId}}"></notebookitem>'
+        });
+
+        function EditNotebookItemController($scope, $mdDialog, NotebookService) {
+            $scope.itemId = itemId;
+            $scope.type = type;
+            $scope.isEditEnabled = isEditEnabled;
+            $scope.NotebookService = NotebookService;
+            $scope.item = null;
+            $scope.title = ($scope.isEditEnabled ? ($scope.itemId ? 'Edit ' : 'Add ') : 'View ') + $scope.type;
+
+            $scope.cancel = () => {
+                $mdDialog.hide();
+            };
+
+            $scope.save = () => {
+                $scope.NotebookService.saveNotebookItem($scope.item.id, $scope.item.nodeId, $scope.item.localNotebookItemId, $scope.item.type, $scope.item.title, $scope.item.content)
+                    .then(() => {
+                        $mdDialog.hide();
+                    });
+            };
+
+            $scope.update = (item) => {
+                // notebook item has changed
+                $scope.item = item;
+            };
+        }
+        EditNotebookItemController.$inject = ["$scope", "$mdDialog", "NotebookService"];
     }
 }
 
@@ -261,6 +334,7 @@ ThemeController.$inject = [
     'NotebookService',
     'SessionService',
     '$mdDialog',
+    '$mdMedia',
     '$mdToast',
     '$mdComponentRegistry'
 ];

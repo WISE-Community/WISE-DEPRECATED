@@ -189,3 +189,22 @@ $input-action-vertical-offset-richtext: -7px;
     margin-right: 0;
   }
 }
+
+.node-sidebar-active {
+    margin-right: ($toolbar-height + 16);
+}
+
+.node-sidebar {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: $toolbar-height;
+}
+
+.node-sidebar__toolbar {
+    position: fixed;
+    width: $toolbar-height;
+    background-color: #ffffff;
+    padding: 8px 0;
+    border-radius: $button-border-radius;
+}

@@ -1,0 +1,20 @@
+<md-dialog aria-label="{{title}}" ng-cloak>
+    <md-toolbar md-theme="light">
+        <div class="md-toolbar-tools">
+            <h2>{{title}}</h2>
+        </div>
+    </md-toolbar>
+    <md-dialog-content>
+        <div class="md-dialog-content">
+            <notebook-item is-edit-enabled="isEditEnabled" item-id="itemId" on-update="update(item)"></notebookitem>
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row" layout-align="end center">
+        <md-button aria-label="Cancel" ng-click="cancel()">
+            Cancel
+        </md-button>
+        <md-button aria-label="Save" ng-click="save()" ng-disabled="!item">
+            Save
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>

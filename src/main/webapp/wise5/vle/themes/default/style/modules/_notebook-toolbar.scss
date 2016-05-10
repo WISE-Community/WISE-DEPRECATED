@@ -1,0 +1,18 @@
+.notebook-toolbar {
+    md-divider {
+        margin: 8px 0;
+    }
+}
+
+.notebook-toolbar__add-menu {
+    position: absolute;
+    bottom: 40px;
+
+    .md-fab-action-item {
+        background-color: #ffffff;
+    }
+}
+
+.notebook-toolbar__add-icon {
+    border-radius: 50%;
+}

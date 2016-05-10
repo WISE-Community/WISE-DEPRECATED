@@ -1,21 +1,23 @@
 
-<div ng-show="notebookItemController.item != null && !notebookItemController.isEditMode">
+<div ng-if="!notebookItemController.isEditEnabled">
     <!-- Display an existing notebook item. -->
     <span>{{notebookItemController.item.content.text}}</span>
     <div class="component__attachment" ng-repeat="attachment in notebookItemController.item.content.attachments">
         <img ng-src="{{attachment.iconURL}}" class="component__attachment__content" />
     </div>
     <div class="notebookItemSource"><wiselink type="link" nodeId="{{notebookItemController.getItemNodeId()}}" linkText="{{notebookItemController.getItemNodePositionAndTitle()}}"></wiselink></div>
-    <md-button ng-if="notebookItemController.isEditAllowed" id="editNotebookItemButton" aria-label="Edit NotebookItem" class="md-icon-button"
-               ng-click="notebookItemController.editNotebookItem()">
-        <md-icon md-menu-origin> edit </md-icon>
-        <md-tooltip md-direction="left"><span translate="editNotebookItem" /></md-tooltip>
-    </md-button>
 </div>
 
-<div ng-show="notebookItemController.item == null || notebookItemController.isEditMode">
+<div ng-if="notebookItemController.isEditEnabled">
     <!-- User wants to add a new note or edit existing note. -->
-    <textarea id="itemTextArea" placeholder="{{ 'typeYourNoteHere' | translate }}" ng-model="notebookItemController.item.content.text" ng-model-options='{ debounce: 100 }' />
+    <md-input-container class="md-block md-input-has-placeholder" md-no-float>
+          <textarea placeholder="{{ 'typeYourNoteHere' | translate }}"
+                    ng-model="notebookItemController.item.content.text"
+                    ng-model-options='{ debounce: 100 }'
+                    ng-change="notebookItemController.update()"
+                    rows="3"
+                    md-select-on-focus></textarea>
+    </md-input-container>
     <div class="component__attachment" ng-repeat="attachment in notebookItemController.item.content.attachments">
         <img ng-src="{{attachment.iconURL}}" class="component__attachment__content" />
         <md-button class="component__attachment__delete" ng-click='notebookItemController.removeAttachment(attachment)' title="Remove file"><md-icon>cancel</md-icon></md-button>
@@ -31,11 +33,5 @@
             You are using {{notebookController.notebook.totalSize | appropriateSizeText }} out of {{notebookController.notebook.totalSizeMax | appropriateSizeText}} ({{notebookController.notebook.usagePercentage | roundToDecimal:0 }}%)
          -->
     </div>
-    <md-button id='saveItemButton'
-               ng-disabled='notebookItemController.latestNotebookItemContentRevision.text === "" && notebookItemController.latestNotebookItemContentRevision.attachments.length == 0'
-               ng-click='notebookItemController.saveNotebookItem()'>
-        <span translate="save"></span>
-    </md-button>
-    <md-button id='cancelButton' ng-click='notebookItemController.closeNoteDialog()'><span translate="cancel"></span></md-button>
 
 </div>

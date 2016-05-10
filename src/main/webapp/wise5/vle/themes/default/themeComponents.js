@@ -20,6 +20,10 @@ var _projectStatusController = require('./themeComponents/projectStatus/projectS
 
 var _projectStatusController2 = _interopRequireDefault(_projectStatusController);
 
+var _notebookToolbarController = require('./themeComponents/notebookToolbar/notebookToolbarController');
+
+var _notebookToolbarController2 = _interopRequireDefault(_notebookToolbarController);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var NavItem = {
@@ -49,9 +53,17 @@ var StepTools = {
     controller: 'StepToolsCtrl as stepToolsCtrl'
 };
 
+var NotebookToolbar = {
+    bindings: {
+        nodeId: '<'
+    },
+    template: '<ng-include src="notebookToolbarCtrl.getTemplateUrl()"></ng-include>',
+    controller: 'NotebookToolbarCtrl as notebookToolbarCtrl'
+};
+
 var ThemeComponents = angular.module('theme.components', []);
 
-ThemeComponents.controller(_navItemController2.default.name, _navItemController2.default).controller(_stepToolsController2.default.name, _stepToolsController2.default).controller(_nodeStatusIconController2.default.name, _nodeStatusIconController2.default).component('navItem', NavItem).component('nodeStatusIcon', NodeStatusIcon).component('stepTools', StepTools);
+ThemeComponents.controller(_navItemController2.default.name, _navItemController2.default).controller(_stepToolsController2.default.name, _stepToolsController2.default).controller(_nodeStatusIconController2.default.name, _nodeStatusIconController2.default).controller(_notebookToolbarController2.default.name, _notebookToolbarController2.default).component('navItem', NavItem).component('nodeStatusIcon', NodeStatusIcon).component('stepTools', StepTools).component('notebookToolbar', NotebookToolbar);
 
 exports.default = ThemeComponents;
 //# sourceMappingURL=themeComponents.js.map

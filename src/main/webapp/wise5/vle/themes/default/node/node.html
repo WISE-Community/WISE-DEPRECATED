@@ -1,5 +1,6 @@
 <div class="l-constrained">
-    <md-content class="node-content md-whiteframe-1dp" style="border-color: {{nodeController.nodeStatus.icon.color}}">
+    <md-content class="node-content md-whiteframe-1dp" style="border-color: {{nodeController.nodeStatus.icon.color}}"
+                ng-class="{'node-sidebar-active': vleController.isNotebookEnabled()}">
         <div id="{{component.id}}" ng-repeat='component in nodeController.getComponents()'>
             <component ng-if='component.showPreviousWorkNodeId != null && component.showPreviousWorkComponentId != null'
                          nodeid='{{component.showPreviousWorkNodeId}}'
@@ -39,4 +40,7 @@
             </span>
         </div>
     </md-content>
+    <div class="node-sidebar" ng-if="vleController.isNotebookEnabled()">
+        <notebook-toolbar node-id="nodeController.nodeId"></notebook-toolbar>
+    </div>
 </div>

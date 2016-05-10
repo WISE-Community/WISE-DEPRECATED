@@ -37,8 +37,7 @@ var VLEController = function () {
         this.projectName = this.ProjectService.getProjectTitle();
 
         this.notebookFilters = this.NotebookService.filters;
-        this.notebookFilter = this.notebookFilters[0].name; // show All note book items on load
-        this.notebookOpen = false;
+        this.notebookFilter = this.notebookFilters[0].name; // show notes on load; TODO: move to theme?
 
         // get the total score for the workgroup
         this.totalScore = this.StudentDataService.getTotalScore();
@@ -102,14 +101,15 @@ var VLEController = function () {
             _this.unPauseScreen();
         });
 
-        // listen for the open note dialog event
-        this.$scope.$on('openNoteDialog', function (event, args) {
-            _this.openNoteDialog(event, args);
-        });
-
-        // listen for the close note dialog event
-        this.$scope.$on('closeNoteDialog', function (event, args) {
-            _this.closeNoteDialog();
+        // listen for the unpause screen event
+        this.$scope.$on('setNotebookFilter', function (event, args) {
+            // TODO: move to theme?
+            var filter = args.filter;
+            if (filter === 'report') {
+                _this.notebookFilter = _this.notebookFilters.last().name;
+            } else {
+                _this.notebookFilter = filter;
+            }
         });
 
         // Make sure if we drop something on the page we don't navigate away
@@ -196,56 +196,9 @@ var VLEController = function () {
     }
 
     _createClass(VLEController, [{
-        key: 'toggleNotebook',
-        value: function toggleNotebook() {
-            this.notebookOpen = !this.notebookOpen;
-        }
-    }, {
         key: 'isNotebookEnabled',
         value: function isNotebookEnabled() {
             return this.NotebookService.isNotebookEnabled();
-        }
-
-        // Display a dialog where students can add/edit a note
-
-    }, {
-        key: 'addNewNote',
-        value: function addNewNote() {
-            var _this2 = this;
-
-            this.$translate(["addNewNote"]).then(function (translations) {
-                _this2.noteDialog = _this2.$mdDialog.show({
-                    template: '<md-dialog aria-label="Note"><md-toolbar><div class="md-toolbar-tools"><h2>' + translations.addNewNote + '</h2></div></md-toolbar>' + '<md-dialog-content><div class="md-dialog-content">' + '<notebookitem is-edit-mode="true" template-url="\'' + _this2.notebookItemPath + '\'"></notebookitem>' + '</div></md-dialog-content></md-dialog>',
-                    fullscreen: true,
-                    escapeToClose: true
-                });
-            });
-        }
-    }, {
-        key: 'openNoteDialog',
-        value: function openNoteDialog(event, args) {
-            // close any open note dialogs
-            this.closeNoteDialog();
-
-            // get the notebook item to edit.
-            var notebookItem = args.notebookItem;
-            var notebookItemId = notebookItem.localNotebookItemId;
-            this.noteDialog = this.$mdDialog.show({
-                template: '<md-dialog aria-label="Note"><md-toolbar><div class="md-toolbar-tools"><h2>Edit Note</h2></div></md-toolbar>' + '<md-dialog-content><div class="md-dialog-content">' + '<notebookitem is-edit-mode="true" item-id="' + notebookItemId + '" template-url="\'' + this.notebookItemPath + '\'" ></notebookitem>' + '</div></md-dialog-content></md-dialog>',
-                fullscreen: true,
-                escapeToClose: true
-            });
-        }
-
-        // Close the note dialog
-
-    }, {
-        key: 'closeNoteDialog',
-        value: function closeNoteDialog() {
-            if (this.noteDialog) {
-                this.$mdDialog.hide(this.noteDialog, "finished");
-                this.noteDialog = undefined;
-            }
         }
     }, {
         key: 'setLayoutState',

@@ -18,6 +18,18 @@ var _notebookItemReportController2 = _interopRequireDefault(_notebookItemReportC
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var NotebookItem = {
+    bindings: {
+        itemId: '<',
+        isEditEnabled: '<',
+        templateUrl: '<',
+        componentController: '<',
+        onUpdate: '&'
+    },
+    template: '<ng-include src="notebookItemController.getTemplateUrl()"></ng-include>',
+    controller: 'NotebookItemController as notebookItemController'
+};
+
 var notebookModule = angular.module('notebook', []).directive('notebook', function () {
     return {
         scope: {
@@ -29,20 +41,6 @@ var notebookModule = angular.module('notebook', []).directive('notebook', functi
         template: '<ng-include src="notebookController.getTemplateUrl()"></ng-include>',
         controller: 'NotebookController',
         controllerAs: 'notebookController',
-        bindToController: true
-    };
-}).directive('notebookitem', function () {
-    return {
-        scope: {
-            itemId: '@',
-            isEditAllowed: '=',
-            isEditMode: '=',
-            templateUrl: '=',
-            componentController: '='
-        },
-        template: '<ng-include src="notebookItemController.getTemplateUrl()"></ng-include>',
-        controller: 'NotebookItemController',
-        controllerAs: 'notebookItemController',
         bindToController: true
     };
 }).directive('notebookitemreport', function () {
@@ -58,7 +56,7 @@ var notebookModule = angular.module('notebook', []).directive('notebook', functi
         controllerAs: 'notebookItemReportController',
         bindToController: true
     };
-}).controller('NotebookController', _notebookController2.default).controller('NotebookItemController', _notebookItemController2.default).controller('NotebookItemReportController', _notebookItemReportController2.default);
+}).controller('NotebookController', _notebookController2.default).controller('NotebookItemReportController', _notebookItemReportController2.default).controller(_notebookItemController2.default.name, _notebookItemController2.default).component('notebookItem', NotebookItem);
 
 exports.default = notebookModule;
 //# sourceMappingURL=notebook.js.map

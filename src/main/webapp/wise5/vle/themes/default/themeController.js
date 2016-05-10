@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var ThemeController = function () {
-    function ThemeController($scope, $translate, ConfigService, ProjectService, StudentDataService, StudentStatusService, NotebookService, SessionService, $mdDialog, $mdToast, $mdComponentRegistry) {
+    function ThemeController($scope, $translate, ConfigService, ProjectService, StudentDataService, StudentStatusService, NotebookService, SessionService, $mdDialog, $mdMedia, $mdToast, $mdComponentRegistry) {
         var _this = this;
 
         _classCallCheck(this, ThemeController);
@@ -23,6 +23,7 @@ var ThemeController = function () {
         this.SessionService = SessionService;
         this.StudentStatusService = StudentStatusService;
         this.$mdDialog = $mdDialog;
+        this.$mdMedia = $mdMedia;
         this.$mdToast = $mdToast;
         this.$mdComponentRegistry = $mdComponentRegistry;
 
@@ -41,6 +42,8 @@ var ThemeController = function () {
 
         this.workgroupId = this.ConfigService.getWorkgroupId();
         this.workgroupUserNames = this.ConfigService.getUserNamesByWorkgroupId(this.workgroupId);
+
+        this.notebookOpen = false;
 
         // build project status pop-up
         var statusTemplateUrl = this.themePath + '/templates/projectStatus.html';
@@ -193,6 +196,23 @@ var ThemeController = function () {
             StudentAssetDialogController.$inject = ["$scope", "$mdDialog", "componentController"];
         });
 
+        this.$scope.$on('toggleNotebook', function () {
+            _this.toggleNotebook();
+        });
+
+        // show edit note dialog on 'editNote' event
+        this.$scope.$on('editNote', function (event, args) {
+            var itemId = args.itemId;
+            var ev = args.ev;
+            _this.editNote(itemId, true, ev);
+        });
+
+        // show edit note dialog on 'addNewNote' event
+        this.$scope.$on('addNewNote', function (event, args) {
+            var ev = args.ev;
+            _this.editNote(null, true, ev);
+        });
+
         // capture notebook open/close events
         this.$mdComponentRegistry.when('notebook').then(function (it) {
             _this.$scope.$watch(function () {
@@ -242,12 +262,65 @@ var ThemeController = function () {
         value: function getAvatarColorForWorkgroupId(workgroupId) {
             return this.StudentStatusService.getAvatarColorForWorkgroupId(workgroupId);
         }
+    }, {
+        key: 'toggleNotebook',
+        value: function toggleNotebook(ev) {
+            this.notebookOpen = !this.notebookOpen;
+        }
+    }, {
+        key: 'editNote',
+        value: function editNote(itemId, isEditEnabled, ev) {
+            var showFullScreen = this.$mdMedia('xs');
+            var notebookItemTemplate = this.themePath + '/notebook/editNotebookItem.html';
+            var item = this.NotebookService.getLatestNotebookItemByLocalNotebookItemId(itemId);
+            var type = item ? item.type : 'note'; // TODO: don't hardcode type once questions are enabled
+
+            // Display a dialog where students can add/edit a notebook item
+            this.$mdDialog.show({
+                parent: angular.element(document.body),
+                targetEvent: ev,
+                fullscreen: showFullScreen,
+                templateUrl: notebookItemTemplate,
+                controller: EditNotebookItemController,
+                locals: {
+                    itemId: itemId,
+                    isEditEnabled: isEditEnabled,
+                    type: type
+                }
+                //template: '<notebookitem is-edit-enabled="true" item-id="{{itemId}}"></notebookitem>'
+            });
+
+            function EditNotebookItemController($scope, $mdDialog, NotebookService) {
+                $scope.itemId = itemId;
+                $scope.type = type;
+                $scope.isEditEnabled = isEditEnabled;
+                $scope.NotebookService = NotebookService;
+                $scope.item = null;
+                $scope.title = ($scope.isEditEnabled ? $scope.itemId ? 'Edit ' : 'Add ' : 'View ') + $scope.type;
+
+                $scope.cancel = function () {
+                    $mdDialog.hide();
+                };
+
+                $scope.save = function () {
+                    $scope.NotebookService.saveNotebookItem($scope.item.id, $scope.item.nodeId, $scope.item.localNotebookItemId, $scope.item.type, $scope.item.title, $scope.item.content).then(function () {
+                        $mdDialog.hide();
+                    });
+                };
+
+                $scope.update = function (item) {
+                    // notebook item has changed
+                    $scope.item = item;
+                };
+            }
+            EditNotebookItemController.$inject = ["$scope", "$mdDialog", "NotebookService"];
+        }
     }]);
 
     return ThemeController;
 }();
 
-ThemeController.$inject = ['$scope', '$translate', 'ConfigService', 'ProjectService', 'StudentDataService', 'StudentStatusService', 'NotebookService', 'SessionService', '$mdDialog', '$mdToast', '$mdComponentRegistry'];
+ThemeController.$inject = ['$scope', '$translate', 'ConfigService', 'ProjectService', 'StudentDataService', 'StudentStatusService', 'NotebookService', 'SessionService', '$mdDialog', '$mdMedia', '$mdToast', '$mdComponentRegistry'];
 
 exports.default = ThemeController;
 //# sourceMappingURL=themeController.js.map

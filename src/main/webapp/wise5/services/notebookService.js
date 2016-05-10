@@ -20,7 +20,9 @@ var NotebookService = function () {
         this.StudentAssetService = StudentAssetService;
         this.StudentDataService = StudentDataService;
 
-        this.filters = [{ 'name': 'all', 'type': 'all', 'label': 'All' }, { 'name': 'notes', 'type': 'all', 'label': 'Notes' }
+        this.filters = [
+        //{'name': 'all', 'type': 'all', 'label': 'All'},
+        { 'name': 'notes', 'type': 'all', 'label': 'Notes' }
         /*,
         {'name': 'questions', 'label': 'Questions'}
         */
@@ -32,6 +34,7 @@ var NotebookService = function () {
         this.notebook.allItems = [];
         this.notebook.items = {};
         this.notebook.deletedItems = [];
+        this.notebookConfig = {};
 
         if (this.ProjectService.project != null) {
             this.notebookConfig = this.ProjectService.project.notebook;
@@ -52,6 +55,11 @@ var NotebookService = function () {
     }
 
     _createClass(NotebookService, [{
+        key: 'toggleNotebook',
+        value: function toggleNotebook(ev) {
+            this.$rootScope.$broadcast('toggleNotebook', { ev: ev });
+        }
+    }, {
         key: 'addItem',
         value: function addItem(notebookItem) {
             this.notebook.allItems.push(notebookItem);
@@ -60,6 +68,18 @@ var NotebookService = function () {
 
             // the current node is about to change
             this.$rootScope.$broadcast('notebookUpdated', { notebook: this.notebook });
+        }
+    }, {
+        key: 'editItem',
+        value: function editItem(itemId, ev) {
+            // boradcast edit notebook item event
+            this.$rootScope.$broadcast('editNote', { item: itemId, ev: ev });
+        }
+    }, {
+        key: 'addNewItem',
+        value: function addNewItem(ev) {
+            // boradcast create new notebook item event
+            this.$rootScope.$broadcast('addNewNote', { ev: ev });
         }
     }, {
         key: 'deleteItem',
@@ -130,9 +150,14 @@ var NotebookService = function () {
             this.notebook.usagePercentage = this.notebook.totalSize / this.notebook.totalSizeMax * 100;
         }
     }, {
+        key: 'getNotebookConfig',
+        value: function getNotebookConfig() {
+            return this.notebookConfig;
+        }
+    }, {
         key: 'isNotebookEnabled',
         value: function isNotebookEnabled() {
-            return this.notebookConfig != null && this.notebookConfig.enabled;
+            return this.notebookConfig.enabled;
         }
     }, {
         key: 'retrieveNotebookItems',

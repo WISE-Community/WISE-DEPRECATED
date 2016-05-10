@@ -15,16 +15,16 @@
                 <span>{{vleController.projectName}}</span>
             </h3>
             <span flex></span>
-            <md-button id="addNewNoteButton" ng-show="vleController.isNotebookEnabled()" aria-label="Add Note" class="md-icon-button"
+            <!--<md-button id="addNewNoteButton" ng-show="vleController.isNotebookEnabled()" aria-label="Add Note" class="md-icon-button"
                        ng-click="vleController.addNewNote()">
                 <md-icon md-menu-origin> add </md-icon>
                 <md-tooltip md-direction="left"><span translate="addNewNote" /></md-tooltip>
             </md-button>
-            <md-button ng-show="vleController.isNotebookEnabled()" id="notebookButton" aria-label="Toggle Notebook" class="md-icon-button"
-                       ng-click="vleController.toggleNotebook()">
+            <md-button ng-show="vleController.isNotebookEnabled()" aria-label="Toggle Notebook" class="md-icon-button"
+                       ng-click="themeCtrl.toggleNotebook()">
                 <md-icon md-menu-origin> book </md-icon>
                 <md-tooltip md-direction="left"><span translate="notebook" /></md-tooltip>
-            </md-button>
+            </md-button>-->
             <md-progress-circular class="menu-progress" md-mode="determinate" md-diameter="26" value="{{ themeCtrl.rootNodeStatus.progress.completionPct }}"></md-progress-circular>
             <div class="menu-progress-bg"></div>
             <md-menu md-position-mode="target-right target" md-offset="8 26">
@@ -46,19 +46,19 @@
              jqyoui-droppable="{onDrop: 'vleController.notebookDropCallback()'}"
              ng-mousemove='vleController.mouseMoved()'></div>
     </md-content>
+    <md-sidenav class="md-sidenav-right md-whiteframe-z2" md-component-id="notebook" layout="column" flex
+            md-is-open="themeCtrl.notebookOpen"> <!--md-is-locked-open="vleController.notebookOpen && $mdMedia('gt-lg')"-->
+        <md-toolbar class="l-sidebar__header md-whiteframe-z1">
+            <div class="md-toolbar-tools">
+                <h3 translate="notebook"></h3>
+                <span flex></span>
+                <md-select class="md-body-1" placeholder="Filter" ng-model="vleController.notebookFilter">
+                    <md-option ng-repeat="filter in vleController.notebookFilters" value="{{filter.name}}">{{filter.label}}</md-option>
+                </md-select>
+            </div>
+        </md-toolbar>
+        <md-content class="md-padding">
+            <notebook theme-path="vleController.themePath" template-url="vleController.themePath + '/notebook/notebook.html'" filter="vleController.notebookFilter"></notebook>
+        </md-content>
+    </md-sidenav>
 </div>
-<md-sidenav class="md-sidenav-right md-whiteframe-z2" md-component-id="notebook" layout="column" flex
-        md-is-open="vleController.notebookOpen"> <!--md-is-locked-open="vleController.notebookOpen && $mdMedia('gt-lg')"-->
-    <md-toolbar class="l-sidebar__header md-whiteframe-z1">
-        <div class="md-toolbar-tools">
-            <h3 translate="notebook"></h3>
-            <span flex></span>
-            <md-select class="md-body-1" placeholder="Filter" ng-model="vleController.notebookFilter">
-                <md-option ng-repeat="filter in vleController.notebookFilters" value="{{filter.name}}">{{filter.label}}</md-option>
-            </md-select>
-        </div>
-    </md-toolbar>
-    <md-content class="md-padding">
-        <notebook theme-path="vleController.themePath" template-url="vleController.themePath + '/notebook/notebook.html'" filter="vleController.notebookFilter"></notebook>
-    </md-content>
-</md-sidenav>

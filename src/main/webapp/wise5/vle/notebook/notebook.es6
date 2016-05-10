@@ -4,6 +4,18 @@ import NotebookController from './notebookController';
 import NotebookItemController from './notebookItemController';
 import NotebookItemReportController from './notebookItemReportController';
 
+const NotebookItem = {
+    bindings: {
+        itemId: '<',
+        isEditEnabled: '<',
+        templateUrl: '<',
+        componentController: '<',
+        onUpdate: '&'
+    },
+    template: '<ng-include src="notebookItemController.getTemplateUrl()"></ng-include>',
+    controller: 'NotebookItemController as notebookItemController'
+}
+
 let notebookModule = angular.module('notebook', [])
     .directive('notebook', () => {
         return {
@@ -16,21 +28,6 @@ let notebookModule = angular.module('notebook', [])
             template: '<ng-include src="notebookController.getTemplateUrl()"></ng-include>',
             controller: 'NotebookController',
             controllerAs: 'notebookController',
-            bindToController: true
-        };
-    })
-    .directive('notebookitem', () => {
-        return {
-            scope: {
-                itemId: '@',
-                isEditAllowed: '=',
-                isEditMode: '=',
-                templateUrl: '=',
-                componentController: '='
-            },
-            template: '<ng-include src="notebookItemController.getTemplateUrl()"></ng-include>',
-            controller: 'NotebookItemController',
-            controllerAs: 'notebookItemController',
             bindToController: true
         };
     })
@@ -49,7 +46,8 @@ let notebookModule = angular.module('notebook', [])
         };
     })
     .controller('NotebookController', NotebookController)
-    .controller('NotebookItemController', NotebookItemController)
-    .controller('NotebookItemReportController', NotebookItemReportController);
+    .controller('NotebookItemReportController', NotebookItemReportController)
+    .controller(NotebookItemController.name, NotebookItemController)
+    .component('notebookItem', NotebookItem);
 
 export default notebookModule;
