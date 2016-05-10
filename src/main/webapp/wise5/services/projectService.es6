@@ -87,6 +87,17 @@ class ProjectService {
         return nodes;
     };
 
+    getPlanningNodes() {
+        var planningNodes = null;
+        var project = this.project;
+
+        if (project != null) {
+            planningNodes = project.planningNodes;
+        }
+
+        return planningNodes;
+    };
+
     getChildNodeIdsById(nodeId) {
         var childIds = [];
         var node = this.getNodeById(nodeId);
@@ -1232,20 +1243,20 @@ class ProjectService {
 
         return nodeIds;
     }
-    
+
     /**
      * Get the group nodes that point to a given node id
-     * @param toNodeId 
+     * @param toNodeId
      */
     getGroupNodesByToNodeId(toNodeId) {
         var groupsThatPointToNodeId = [];
-        
+
         if (toNodeId != null) {
             var groups = this.getGroups();
-            
+
             for (var g = 0; g < groups.length; g++) {
                 var group = groups[g];
-                
+
                 if (group != null) {
                     if (this.hasTransitionTo(group, toNodeId)) {
                         groupsThatPointToNodeId.push(group);
@@ -1253,10 +1264,10 @@ class ProjectService {
                 }
             }
         }
-        
+
         return groupsThatPointToNodeId;
     }
-    
+
     /**
      * Check if a node has a transition to a node id
      * @param node check if this node has a transition to the node id
@@ -1265,17 +1276,17 @@ class ProjectService {
      */
     hasTransitionTo(node, toNodeId) {
         var result = false;
-        
+
         if (node != null && toNodeId != null) {
             var transitionLogic = node.transitionLogic;
-            
+
             if (transitionLogic != null) {
                 var transitions = transitionLogic.transitions;
-                
+
                 if (transitions != null) {
                     for (var t = 0; t < transitions.length; t++) {
                         var transition = transitions[t];
-                        
+
                         if (toNodeId === transition.to) {
                             result = true;
                         }
@@ -1283,7 +1294,7 @@ class ProjectService {
                 }
             }
         }
-        
+
         return result;
     }
 
@@ -2884,7 +2895,7 @@ class ProjectService {
 
         // create the transitions for the node
         this.insertNodeInsideInTransitions(node.id, nodeId);
-        
+
         // add the node to the group
         this.insertNodeInsideInGroups(node.id, nodeId);
     }
@@ -2907,41 +2918,41 @@ class ProjectService {
 
         // create the transition to the node
         this.insertNodeAfterInTransitions(node, nodeId);
-        
+
         if (this.isGroupNode(node.id)) {
             /*
-             * we are creating a group node so we will update/create the 
+             * we are creating a group node so we will update/create the
              * transitions that traverse from the previous group to this group
              */
-            
+
             var oldToGroupIds = [];
-            
+
             // get the transitions that come out of the previous group
             var transitionsFromGroup = this.getTransitionsByFromNodeId(nodeId);
-            
+
             if (transitionsFromGroup != null) {
-                
+
                 /*
                  * loop through all the transitions that come out of the previous group
                  * and get the node ids that the group transitions to
                  */
                 for (var t = 0; t < transitionsFromGroup.length; t++) {
                     var transitionFromGroup = transitionsFromGroup[t];
-                    
+
                     if (transitionFromGroup != null) {
                         var toNodeId = transitionFromGroup.to;
-                        
+
                         if (toNodeId != null) {
                             oldToGroupIds.push(toNodeId);
                         }
                     }
                 }
             }
-            
+
             var fromGroupId = nodeId;
             var oldToGroupIds = oldToGroupIds;
             var newToGroupId = node.id;
-            
+
             /*
              * make the transitions point to the new group and make the new
              * group transition to the old group
@@ -3012,7 +3023,7 @@ class ProjectService {
             if (node.transitionLogic.transitions == null) {
                 node.transitionLogic.transitions = [];
             }
-            
+
             if (this.isGroupNode(node.id)) {
                 /*
                  * the node we are inserting is a group so we will update
@@ -3140,7 +3151,7 @@ class ProjectService {
 
         // get the group we are inserting into
         var group = this.getNodeById(nodeIdToInsertInside);
-        
+
         if (this.isGroupNode(nodeIdToInsert)) {
             /*
              * the node we are inserting is a group so we will update
@@ -3153,35 +3164,35 @@ class ProjectService {
         /*
          * since we are inserting a node into a group, the node will become
          * the first node in the group. this means we need to update any nodes
-         * that point to the old start id and make them point to the node 
+         * that point to the old start id and make them point to the node
          * we are inserting.
          */
         if (nodeToInsert != null && group != null) {
 
             // get the start node
             var startId = group.startId;
-            
+
             // get transitions that point to the start node
             var previousNodes = this.getNodesByToNodeId(startId);
-            
+
             if (previousNodes == null || previousNodes.length == 0) {
                 // there are no transitions to the start node
-                
+
                 // find all the groups that point to this group
                 var previousGroups = this.getGroupNodesByToNodeId(nodeIdToInsertInside);
-                
+
                 // loop through all the groups that point to this group
                 for (var g = 0; g < previousGroups.length; g++) {
                     var previousGroup = previousGroups[g];
-                    
+
                     if (previousGroup != null) {
                         // get the nodes that do not have a transition in the previous group
                         var lastNodesInGroup = this.getLastNodesInGroup(previousGroup.id);
-                        
+
                         for (var n = 0; n < lastNodesInGroup.length; n++) {
                             // get a node that does not have a transition
                             var node = lastNodesInGroup[n];
-                            
+
                             // add a transition from the node to the node we are inserting
                             this.addToTransition(node, nodeIdToInsert);
                         }
@@ -3189,40 +3200,40 @@ class ProjectService {
                 }
             } else {
                 // there are transitions to the start node
-                
+
                 for (var p = 0; p < previousNodes.length; p++) {
                     var previousNode = previousNodes[p];
-                    
+
                     if (previousNode != null) {
                         // change the transition to point to the node we are inserting
                         this.updateToTransition(previousNode, startId, nodeIdToInsert);
                     }
                 }
             }
-            
+
             /*
              * update all the transitions that point to the group and change
              * them to point to the new start id
              */
             var nodesThatTransitionToGroup = this.getNodesByToNodeId(nodeIdToInsertInside);
-            
+
             if (nodesThatTransitionToGroup != null) {
                 for (var n = 0; n < nodesThatTransitionToGroup.length; n++) {
                     var nodeThatTransitionsToGroup = nodesThatTransitionToGroup[n];
-                    
+
                     if (!this.isGroupNode(nodeThatTransitionsToGroup.id)) {
                         this.updateToTransition(nodeThatTransitionsToGroup, nodeIdToInsertInside, nodeIdToInsert);
                     }
                 }
             }
-            
+
             /*
              * create a transition from the node we are inserting to the node that
              * was previously the start node
              */
             if (startId != null && startId != '') {
                 // there is a start id
-                
+
                 var startNode = this.getNodeById(startId);
 
                 if (startNode != null) {
@@ -3244,40 +3255,40 @@ class ProjectService {
                     nodeToInsert.transitionLogic.transitions.push(transitionObject);
                 }
             }
-            
-            //check if the node we inserted has any transitions now            
+
+            //check if the node we inserted has any transitions now
             var transitions = this.getTransitionsByFromNodeId(nodeIdToInsert);
-            
+
             if (transitions == null || transitions.length == 0) {
                 /*
                  * the node doesn't have any transitions so we will see if
                  * the parent group transitions to anything and use that
                  * transition
                  */
-                
+
                 // get the transitions from the parent
                 var parentTransitions = this.getTransitionsByFromNodeId(nodeIdToInsertInside);
-                
+
                 if (parentTransitions != null) {
-                    
+
                     // loop through all the parent transitions
                     for (var t = 0; t < parentTransitions.length; t++) {
                         var parentTransition = parentTransitions[t];
-                        
+
                         if (parentTransition != null) {
                             var toNodeId = parentTransition.to;
-                            
+
                             if (this.isGroupNode(toNodeId)) {
                                 // the to node is a group
-                                
+
                                 // get the to group
                                 var nextGroup = this.getNodeById(toNodeId);
-                                
+
                                 if (nextGroup != null) {
-                                    
+
                                     // get the start id of the to group
                                     var startId = nextGroup.startId;
-                                    
+
                                     if (startId == null || startId == '') {
                                         // there is no start id so we will just transition to the group
                                         this.addToTransition(nodeToInsert, toNodeId);
@@ -3288,7 +3299,7 @@ class ProjectService {
                                 }
                             } else {
                                 // the to node is not a group
-                                
+
                                 /*
                                  * we will add a transition from the node we are inserting to
                                  * to that node
@@ -3301,7 +3312,7 @@ class ProjectService {
             }
         }
     }
-    
+
     /**
      * Add a transition to a node
      * @param node the node we are adding a transition to
@@ -3314,26 +3325,26 @@ class ProjectService {
             if (node.transitionLogic == null) {
                 node.transitionLogic = {};
             }
-            
+
             if (node.transitionLogic.transitions == null) {
                 node.transitionLogic.transitions = [];
             }
-            
+
             var transition = {};
-            
+
             // set the to node id
             transition.to = toNodeId;
-            
+
             if (criteria != null) {
                 // set the criteria
                 transition.criteria = criteria;
             }
-            
+
             // add the transition to the node's transitions
             node.transitionLogic.transitions.push(transition);
         }
     }
-    
+
     /**
      * Update the to value of aa transition
      * @param node the node to update
@@ -3345,23 +3356,23 @@ class ProjectService {
             if (node.transitionLogic == null) {
                 node.transitionLogic = {};
             }
-            
+
             if (node.transitionLogic.transitions == null) {
                 node.transitionLogic.transitions = [];
             }
-            
+
             var transitions = node.transitionLogic.transitions;
-            
+
             // loop through all the transitions
             for (var t = 0; t < transitions.length; t++) {
                 var transition = transitions[t];
-                
+
                 if (transition != null) {
                     var toNodeId = transition.to;
-                    
+
                     if (oldToNodeId === toNodeId) {
                         // we have found the transition we want to update
-                        
+
                         // update the to node id
                         transition.to = newToNodeId;
                     }
@@ -3369,7 +3380,7 @@ class ProjectService {
             }
         }
     }
-    
+
     /**
      * Get the nodes in a group that do not have transitions
      * @param groupId the group id
@@ -3377,30 +3388,30 @@ class ProjectService {
      */
     getLastNodesInGroup(groupId) {
         var lastNodes = [];
-        
+
         if (groupId != null) {
             var group = this.getNodeById(groupId);
-            
+
             if (group != null) {
                 var childIds = group.ids;
-                
+
                 if (childIds != null) {
-                    
+
                     // loop through all the child ids
                     for (var c = 0; c < childIds.length; c++) {
                         var childId = childIds[c];
-                        
+
                         if (childId != null) {
                             var child = this.getNodeById(childId);
-                            
+
                             if (child != null) {
                                 var transitionLogic = child.transitionLogic;
-                                
+
                                 if (transitionLogic != null) {
-                                    
+
                                     // get the transitions
                                     var transitions = transitionLogic.transitions;
-                                    
+
                                     if (transitions == null || transitions.length == 0) {
                                         // this child does not have any transitions
                                         lastNodes.push(child);
@@ -3412,7 +3423,7 @@ class ProjectService {
                 }
             }
         }
-        
+
         return lastNodes;
     }
 
@@ -3608,7 +3619,7 @@ class ProjectService {
                 // this is not a group node so we will remove it from transitions
                 this.removeNodeIdFromTransitions(tempNodeId);
             }
-            
+
             // remove the node from the groups
             this.removeNodeIdFromGroups(tempNodeId);
 
@@ -3785,10 +3796,10 @@ class ProjectService {
                                 var toNodeId = transition.to;
 
                                 if (toNodeId != null) {
-                                    
+
                                     // check that the to node is in the same group
                                     if (this.isNodeInGroup(toNodeId, parentGroup.id)) {
-                                        
+
                                         // update the parent group start id
                                         parentGroup.startId = toNodeId;
                                         hasSetNewStartId = true;
@@ -3834,28 +3845,28 @@ class ProjectService {
         if (nodeToRemoveTransitionLogic != null && nodeToRemoveTransitionLogic.transitions != null) {
             nodeToRemoveTransitions = nodeToRemoveTransitionLogic.transitions;
         }
-        
+
         var parentIdOfNodeToRemove = this.getParentGroupId(nodeId);
 
         var parentGroup = this.getNodeById(parentIdOfNodeToRemove);
-        
+
         //update the start id if we are removing the start node of a group
         if (parentGroup != null) {
             var parentGroupStartId = parentGroup.startId;
-            
+
             if (parentGroupStartId != null) {
                 if (parentGroupStartId === nodeId) {
                     // the node we are removing is the start node
-                    
+
                     if (nodeToRemoveTransitions != null && nodeToRemoveTransitions.length > 0) {
-                        
+
                         // loop through all the transitions from the node to choose a new start id
                         for (var t = 0; t < nodeToRemoveTransitions.length; t++) {
                             var nodeToRemoveTransition = nodeToRemoveTransitions[t];
-                            
+
                             if (nodeToRemoveTransition != null) {
                                 var toNodeId = nodeToRemoveTransition.to;
-                                
+
                                 if (toNodeId != null) {
                                     /*
                                      * we need to check that the to node id is in the
@@ -3864,7 +3875,7 @@ class ProjectService {
                                      * for the start id.
                                      */
                                     if (this.getParentGroupId(toNodeId) == parentIdOfNodeToRemove) {
-                                        
+
                                         // set the new start id
                                         parentGroup.startId = toNodeId;
                                     }
@@ -3878,13 +3889,13 @@ class ProjectService {
                 }
             }
         }
-        
+
         // loop through all the nodes that transition to the node we are removing
         for (var n = 0; n < nodesByToNodeId.length; n++) {
 
             // get a node that has a transition to the node we are removing
             var node = nodesByToNodeId[n];
-            
+
             if (node != null) {
                 var parentIdOfFromNode = this.getParentGroupId(node.id);
 
@@ -3909,21 +3920,21 @@ class ProjectService {
                              * remove transitions that are to a node in a different group than
                              * the parent removing group
                              */
-                            
+
                             if (parentIdOfFromNode != parentIdOfNodeToRemove) {
-                                
+
                                 for (var tc = 0; tc < transitionsCopy.length; tc++) {
                                     var tempTransition = transitionsCopy[tc];
-                                    
+
                                     if (tempTransition != null) {
                                         var tempToNodeId = tempTransition.to;
-                                        
+
                                         if (tempToNodeId != null) {
                                             var parentIdOfToNode = this.getParentGroupId(tempToNodeId);
-                                            
+
                                             if (parentIdOfNodeToRemove != parentIdOfToNode) {
                                                 // remove the transition
-                                                
+
                                                 transitionsCopy.splice(tc, 1);
                                                 tc--;
                                             }
@@ -4335,7 +4346,7 @@ class ProjectService {
             } else if (this.isGroupNode(node.id)) {
                 // set the first leaf node id to the group id for now
                 firstLeafNodeId = node.id;
-                
+
                 // the current node is a group
                 node = this.getNodeById(node.startId);
             } else if (this.isApplicationNode(node.id)) {
@@ -4810,7 +4821,7 @@ class ProjectService {
 
         return parentGroupStartId;
     }
-    
+
     /**
      * Update the transitions so that the fromGroup points to the newToGroup
      *
@@ -4822,7 +4833,7 @@ class ProjectService {
      * oldToGroup becomes dangling and has no transitions to or from it
      */
     updateTransitionsForExtractingGroup(fromGroupId, oldToGroupId, newToGroupId) {
-        
+
         /*
          * make the transitions
          * fromGroup -> newToGroup
@@ -4832,34 +4843,34 @@ class ProjectService {
             var oldToGroup = this.getNodeById(oldToGroupId);
             var newToGroup = null;
             var newToGroupStartId = null;
-            
+
             if (newToGroupId != null) {
                 newToGroup = this.getNodeById(newToGroupId);
             }
-            
+
             if (newToGroup != null) {
                 newToGroupStartId = newToGroup.startId;
             }
-            
+
             if (fromGroup != null && oldToGroup != null) {
                 var childIds = fromGroup.ids;
-                
+
                 // update the children of the from group to point to the new to group
                 if (childIds != null) {
                     for (var c = 0; c < childIds.length; c++) {
                         var childId = childIds[c];
                         var child = this.getNodeById(childId);
                         var transitions = this.getTransitionsByFromNodeId(childId);
-                        
+
                         if (transitions != null) {
-                            
+
                             // loop through all the transitions from the from group
                             for (var t = 0; t < transitions.length; t++) {
                                 var transition = transitions[t];
-                                
+
                                 if (transition != null) {
                                     var toNodeId = transition.to;
-                                    
+
                                     if (toNodeId === oldToGroupId) {
                                         // the transition is to the group
                                         if (newToGroupId == null && newToGroupStartId == null) {
@@ -4891,33 +4902,33 @@ class ProjectService {
                 }
             }
         }
-        
+
         /*
          * remove the transitions from the oldToGroup
          */
         if (oldToGroupId != null && newToGroupId != null) {
-            
+
             var oldToGroup = this.getNodeById(oldToGroupId);
-            
+
             if (oldToGroup != null) {
                 var childIds = oldToGroup.ids;
-                
+
                 // remove the transitions from the old to group that point to the new to group
                 if (childIds != null) {
                     for (var c = 0; c < childIds.length; c++) {
                         var childId = childIds[c];
                         var child = this.getNodeById(childId);
                         var transitions = this.getTransitionsByFromNodeId(childId);
-                        
+
                         if (transitions != null) {
-                            
+
                             // loop through all the transitions from the old to group
                             for (var t = 0; t < transitions.length; t++) {
                                 var transition = transitions[t];
-                                
+
                                 if (transition != null) {
                                     var toNodeId = transition.to;
-                                    
+
                                     if (toNodeId === newToGroupId) {
                                         // the transition is to the group so we will remove it
                                         transitions.splice(t, 1);
@@ -4935,7 +4946,7 @@ class ProjectService {
             }
         }
     }
-    
+
     /**
      * Update the transitions so that the fromGroup points to the newToGroup
      *
@@ -4947,18 +4958,18 @@ class ProjectService {
      * fromGroup -> newToGroup -> oldToGroup
      */
     updateTransitionsForInsertingGroup(fromGroupId, oldToGroupIds, newToGroupId) {
-        
+
         var fromGroup = null;
         var newToGroup = null;
-        
+
         if (fromGroupId != null) {
             fromGroup = this.getNodeById(fromGroupId);
         }
-        
+
         if (newToGroupId != null) {
             newToGroup = this.getNodeById(newToGroupId);
         }
-        
+
         /*
          * make the transitions that point to the old group now point
          * to the new group
@@ -4967,17 +4978,17 @@ class ProjectService {
         if (fromGroup != null && newToGroup != null) {
             var childIds = fromGroup.ids;
             var newToGroupStartId = newToGroup.startId;
-            
+
             if (childIds != null) {
-                
+
                 // loop through all the nodes in the from group
                 for (var c = 0; c < childIds.length; c++) {
                     var childId = childIds[c];
                     var child = this.getNodeById(childId);
-                    
+
                     // get the transitions from the child
                     var transitions = this.getTransitionsByFromNodeId(childId);
-                    
+
                     if (transitions == null || transitions.length == 0) {
                         /*
                          * the child does not have any transitions so we will make it
@@ -4989,23 +5000,23 @@ class ProjectService {
                             this.addToTransition(child, newToGroupStartId)
                         }
                     } else if (transitions != null) {
-                        
+
                         // loop through all the transitions from the child
                         for (var t = 0; t < transitions.length; t++) {
                             var transition = transitions[t];
-                            
+
                             if (transition != null) {
                                 var toNodeId = transition.to;
-                                
+
                                 if (oldToGroupIds != null) {
-                                    
+
                                     /*
                                      * loop through all the old to group ids to find transitions
                                      * to the old to group
                                      */
                                     for (var ot = 0; ot < oldToGroupIds.length; ot++) {
                                         var oldToGroupId = oldToGroupIds[ot];
-                                        
+
                                         if (toNodeId === oldToGroupId) {
                                             /*
                                              * the transition is to the group so we will update the transition
@@ -5031,9 +5042,9 @@ class ProjectService {
                 }
             }
         }
-        
+
         /*
-         * make the steps that do not have a transition now point to the old 
+         * make the steps that do not have a transition now point to the old
          * group
          * newToGroup -> oldToGroup
          */
@@ -5041,32 +5052,32 @@ class ProjectService {
             var childIds = newToGroup.ids;
 
             if (childIds != null) {
-                
+
                 // loop through all the children in the new group
                 for (var c = 0; c < childIds.length; c++) {
                     var childId = childIds[c];
                     var child = this.getNodeById(childId);
-                    
+
                     // get the transitions for the child
                     var transitions = this.getTransitionsByFromNodeId(childId);
-                    
+
                     if (transitions == null || transitions.length == 0) {
-                        
+
                         if (oldToGroupIds != null) {
-                            
+
                             // loop through all the old groups
                             for (var ot = 0; ot < oldToGroupIds.length; ot++) {
                                 var oldToGroupId = oldToGroupIds[ot];
                                 var oldToGroup = this.getNodeById(oldToGroupId);
-                                
+
                                 if (oldToGroup != null) {
-                                    
+
                                     var oldToGroupStartId = oldToGroup.startId;
-                                    
+
                                     var transition = {};
-                                    
+
                                     var toNodeId = '';
-                                    
+
                                     if (oldToGroupStartId == null) {
                                         // there is no start node id so we will just point to the group
                                         toNodeId = oldToGroup;
@@ -5074,7 +5085,7 @@ class ProjectService {
                                         // there is a start node id so we will point to it
                                         toNodeId = oldToGroupStartId;
                                     }
-                                    
+
                                     // create the transition from the child to the old group
                                     this.addToTransition(child, toNodeId);
                                 }
@@ -5085,7 +5096,7 @@ class ProjectService {
             }
         }
     }
-    
+
     /**
      * Update the child transitions because we are moving a group. We will
      * update the transitions into and out of the group in the location
@@ -5096,28 +5107,28 @@ class ProjectService {
      */
     updateChildrenTransitionsForMovingGroup(node, nodeId) {
         var transitionsBefore = null;
-        
+
         // get the group nodes that point to the group we are moving
         var previousGroupNodes = this.getGroupNodesByToNodeId(node.id);
-        
+
         // get all the transitions from the group we are moving
         var transitionsAfter = this.getTransitionsByFromNodeId(node.id);
-        
+
         var extracted = false;
-        
+
         /*
-         * extract the group we are moving by updating the transitions of the 
-         * from group and the new to group. also remove the transitions from the 
+         * extract the group we are moving by updating the transitions of the
+         * from group and the new to group. also remove the transitions from the
          * group we are moving.
          */
-        
+
         // loop through all the groups that point to the group we are moving
         for (var p = 0; p < previousGroupNodes.length; p++) {
             var previousGroupNode = previousGroupNodes[p];
-            
+
             if (transitionsAfter == null || transitionsAfter.length == 0) {
                 // the group we are moving does not have any transitions
-                
+
                 /*
                  * remove the transitions to the group we are moving and make
                  * new transitions from the from group to the new to group
@@ -5126,14 +5137,14 @@ class ProjectService {
                 extracted = true;
             } else {
                 // the group we are moving has transitions
-                
+
                 // make the previous group point to the new to group
                 for (var t = 0; t < transitionsAfter.length; t++) {
                     var transitionAfter = transitionsAfter[t];
-                    
+
                     if (transitionAfter != null) {
                         var toNodeId = transitionAfter.to;
-                        
+
                         /*
                          * remove the transitions to the group we are moving and make
                          * new transitions from the from group to the new to group
@@ -5141,46 +5152,46 @@ class ProjectService {
                         this.updateTransitionsForExtractingGroup(previousGroupNode.id, node.id, toNodeId);
                         extracted = true;
                     }
-                }    
+                }
             }
         }
-        
+
         if (!extracted) {
             /*
              * we have not removed the transitions yet because the group
              * we are moving does not have any groups before it
              */
-            
+
             // remove the transitions from the group we are moving
             for (var t = 0; t < transitionsAfter.length; t++) {
                 var transitionAfter = transitionsAfter[t];
-                
+
                 if (transitionAfter != null) {
                     var toNodeId = transitionAfter.to;
-                    
+
                     // remove the transitions to the group we are moving
                     this.updateTransitionsForExtractingGroup(null, node.id, toNodeId);
                     extracted = true;
                 }
             }
         }
-        
+
         var inserted = false;
-        
+
         /*
-         * create the transitions from the from group to the group we are moving 
+         * create the transitions from the from group to the group we are moving
          * and the transitions from the group we are moving to the old to group
          */
         if (nodeId != null) {
             // get the transitions from the previous group to the next group
             var transitionsAfter = this.getTransitionsByFromNodeId(nodeId);
-            
+
             for (var t = 0; t < transitionsAfter.length; t++) {
                 var transitionAfter = transitionsAfter[t];
-                
+
                 if (transitionAfter != null) {
                     var toNodeId = transitionAfter.to;
-                    
+
                     /*
                      * create the transitions that traverse from the from group
                      * to the group we are moving. also create the transitions
@@ -5192,47 +5203,47 @@ class ProjectService {
                 }
             }
         }
-        
+
         if (!inserted) {
             /*
-             * we have not inserted the transitions yet because there were no 
+             * we have not inserted the transitions yet because there were no
              * previous group transitions
              */
-             
+
             if (nodeId == null) {
                 /*
                  * the previous node id is null which means there was no previous
-                 * group. this means the group we are inserting will become the 
+                 * group. this means the group we are inserting will become the
                  * first group. this happens when the group we are moving
                  * is moved inside the root (group0).
                  */
-                
+
                 var startGroupId = this.getStartGroupId();
-                
+
                 if (startGroupId != null) {
-                    
+
                     // get the start group for the whole project (group0)
                     var startGroup = this.getNodeById(startGroupId);
-                    
+
                     if (startGroup != null) {
-                        
+
                         // get the first activity
                         var firstGroupId = startGroup.startId;
-                        
+
                         /*
-                         * create the transitions that traverse from the group 
+                         * create the transitions that traverse from the group
                          * we are moving to the previous first activity.
                          */
                         this.updateTransitionsForInsertingGroup(nodeId, [firstGroupId], node.id);
                     }
                 }
-                
+
             } else {
                 /*
                  * we have not inserted the group yet because the from group doesn't
                  * have a group after it
                  */
-                
+
                 /*
                  * create the transitions that traverse from the from group
                  * to the group we are moving.

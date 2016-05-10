@@ -221,9 +221,13 @@ var StudentDataService = function () {
         key: 'updateNodeStatuses',
         value: function updateNodeStatuses() {
             var nodes = this.ProjectService.getNodes();
+            var planningNodes = this.ProjectService.getPlanningNodes();
             var groups = this.ProjectService.getGroups();
 
             if (nodes != null) {
+                if (planningNodes != null) {
+                    nodes = nodes.concat(planningNodes);
+                }
 
                 for (var n = 0; n < nodes.length; n++) {
                     var node = nodes[n];
