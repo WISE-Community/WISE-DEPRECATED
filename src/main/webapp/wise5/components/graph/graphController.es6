@@ -1637,15 +1637,11 @@ class GraphController {
                 var xText = null;
                 if (typeof(xCell) === 'object' && xCell.text) {
                     xText = xCell.text;
-                } else {
-                    xText = xCell;
                 }
 
                 var yText = null;
                 if (typeof(yCell) === 'object' && yCell.text) {
                     yText = yCell.text;
-                } else {
-                    yText = yCell;
                 }
 
                 if (xText != null &&

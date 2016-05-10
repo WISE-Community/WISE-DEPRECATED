@@ -1761,15 +1761,11 @@ var GraphController = function () {
                     var xText = null;
                     if ((typeof xCell === 'undefined' ? 'undefined' : _typeof(xCell)) === 'object' && xCell.text) {
                         xText = xCell.text;
-                    } else {
-                        xText = xCell;
                     }
 
                     var yText = null;
                     if ((typeof yCell === 'undefined' ? 'undefined' : _typeof(yCell)) === 'object' && yCell.text) {
                         yText = yCell.text;
-                    } else {
-                        yText = yCell;
                     }
 
                     if (xText != null && xText !== '' && yText != null && yText !== '') {
