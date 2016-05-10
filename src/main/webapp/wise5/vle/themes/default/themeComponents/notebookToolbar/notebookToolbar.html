@@ -1,0 +1,48 @@
+<md-toolbar md-theme="light" class="notebook-toolbar node-sidebar__toolbar md-whiteframe-1dp" layout="column">
+    <md-button ng-if="notebookToolbarCtrl.noteEnabled" aria-label="View Notes" class="md-icon-button" ng-click="notebookToolbarCtrl.openNotebook($event)">
+        <md-icon class="note"> description </md-icon>
+        <md-tooltip md-direction="left"><span translate="Notes">Notes</span></md-tooltip>
+    </md-button>
+    <md-button ng-if="notebookToolbarCtrl.questionEnabled" aria-label="View Questions" class="md-icon-button">
+        <md-icon class="question"> live_help </md-icon>
+        <md-tooltip md-direction="left"><span translate="Questions">Questions</span></md-tooltip>
+    </md-button>
+    <md-divider></md-divider>
+    <md-button ng-if="notebookToolbarCtrl.reportEnabled" aria-label="Report" class="md-icon-button" ng-click="notebookToolbarCtrl.openReport($event)">
+        <md-icon class="accent-2"> chrome_reader_mode </md-icon>
+        <md-tooltip md-direction="left"><span translate="Report">Report</span></md-tooltip>
+    </md-button>
+    <md-divider></md-divider>
+    <md-button aria-label="Add Notebook item" class="md-icon-button" ng-click="notebookToolbarCtrl.addNewNote($event)">
+        <md-icon class="md-accent"> add_circle </md-icon>
+        <md-tooltip md-direction="left"><span>Add Note</span></md-tooltip>
+    </md-button>
+    <!--<md-fab-speed-dial class="md-scale" md-theme="default" md-direction="up" md-open="notebookToolbarCtrl.addMode"
+                       ng-mouseenter="notebookToolbarCtrl.addMode=true" ng-mouseleave="notebookToolbarCtrl.addMode=false">
+        <md-fab-trigger>
+            <md-button aria-label="Add Notebook item menu" class="md-accent md-icon-button">
+                <md-icon class="notebook-toolbar__add-icon"
+                         ng-class="{'md-whiteframe-3dp': notebookToolbarCtrl.addMode}"> add_circle </md-icon>
+                <md-tooltip md-direction="left"><span translate="AddNote">Add Note</span></md-tooltip>
+            </md-button>
+        </md-fab-trigger>
+        <md-fab-actions class="notebook-toolbar__add-menu">
+            <md-button aria-label="New text note" class="md-icon-button">
+                <md-icon class="note"> subject </md-icon>
+                <md-tooltip md-direction="left"><span translate="Text">Text</span></md-tooltip>
+            </md-button>
+            <md-button aria-label="New note with file" class="md-icon-button">
+                <md-icon class="note"> photo </md-icon>
+                <md-tooltip md-direction="left"><span translate="File">File</span></md-tooltip>
+            </md-button>
+            <md-button aria-label="New note with clip" class="md-icon-button">
+                <md-icon class="note"> content_cut </md-icon>
+                <md-tooltip md-direction="left"><span translate="Clip">Clip</span></md-tooltip>
+            </md-button>
+            <md-button aria-label="New question" class="md-icon-button">
+                <md-icon class="question"> live_help </md-icon>
+                <md-tooltip md-direction="left"><span translate="Question">Question</span></md-tooltip>
+            </md-button>
+        </md-fab-actions>
+    </md-fab-speed-dial>-->
+</md-toolbar>
