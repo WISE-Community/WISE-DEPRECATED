@@ -77,9 +77,9 @@ var NotebookService = function () {
         }
     }, {
         key: 'addNewItem',
-        value: function addNewItem(ev) {
+        value: function addNewItem(ev, file) {
             // boradcast create new notebook item event
-            this.$rootScope.$broadcast('addNewNote', { ev: ev });
+            this.$rootScope.$broadcast('addNewNote', { ev: ev, file: file });
         }
     }, {
         key: 'deleteItem',
@@ -196,7 +196,6 @@ var NotebookService = function () {
                 // now group notebook items based on item.localNotebookItemId
                 _this.groupNotebookItems();
 
-                console.log(_this.notebook);
                 return _this.notebook;
             });
         }

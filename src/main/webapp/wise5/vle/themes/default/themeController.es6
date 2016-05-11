@@ -226,7 +226,8 @@ class ThemeController {
         // show edit note dialog on 'addNewNote' event
         this.$scope.$on('addNewNote', (event, args) => {
             let ev = args.ev;
-            this.editNote(null, true, ev);
+            let file = args.file;
+            this.editNote(null, true, ev, file);
         });
 
         // capture notebook open/close events
@@ -274,7 +275,7 @@ class ThemeController {
         this.notebookOpen = !this.notebookOpen;
     }
 
-    editNote(itemId, isEditEnabled, ev) {
+    editNote(itemId, isEditEnabled, ev, file) {
         let showFullScreen = this.$mdMedia('xs');
         let notebookItemTemplate = this.themePath + '/notebook/editNotebookItem.html';
         let item = this.NotebookService.getLatestNotebookItemByLocalNotebookItemId(itemId);
@@ -290,7 +291,8 @@ class ThemeController {
             locals: {
                 itemId: itemId,
                 isEditEnabled: isEditEnabled,
-                type: type
+                type: type,
+                file: file
             }
             //template: '<notebookitem is-edit-enabled="true" item-id="{{itemId}}"></notebookitem>'
         });
@@ -302,6 +304,7 @@ class ThemeController {
             $scope.NotebookService = NotebookService;
             $scope.item = null;
             $scope.title = ($scope.isEditEnabled ? ($scope.itemId ? 'Edit ' : 'Add ') : 'View ') + $scope.type;
+            $scope.file = file;
 
             $scope.cancel = () => {
                 $mdDialog.hide();

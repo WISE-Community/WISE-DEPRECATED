@@ -1,11 +1,22 @@
-<h3>Choose Item to Snip to Notebook...</h3>
-<ul style="list-style-type: none">
-    <li ng-repeat="snippableItem in notebookContentSnippetController.snippableItems">
-        <img src="{{snippableItem}}">
-        <md-button class="md-accent" aria-label="Snip this item"
-                   ng-click="chooseSnippet(snippableItem)">
-            <md-icon class="md-accent">add_circle</md-icon>
-            Add this item to my notebook
-        </md-button>
-    </li>
-</ul>
+<md-toolbar>
+  <div class="md-toolbar-tools">
+    <h2>Choose Item to Snip to Notebook</h2>
+    <span flex></span>
+    <md-button class="md-icon-button" ng-click="close()">
+      <md-icon aria-label="Close dialog">close</md-icon>
+    </md-button>
+  </div>
+</md-toolbar>
+<md-dialog-content>
+    <ul style="list-style-type: none">
+        <li ng-repeat="snippableItem in notebookContentSnippetController.snippableItems">
+            <img ng-src="{{snippableItem.url}}" height="200px">
+            <md-button class="md-accent" aria-label="Snip this item"
+                       ng-click="chooseSnippet(snippableItem)">
+                <md-icon class="md-accent">add_circle</md-icon>
+                Add this item to my notebook
+            </md-button>
+            <hr/>
+        </li>
+    </ul>
+</md-dialog-content>

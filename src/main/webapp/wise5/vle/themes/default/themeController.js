@@ -210,7 +210,8 @@ var ThemeController = function () {
         // show edit note dialog on 'addNewNote' event
         this.$scope.$on('addNewNote', function (event, args) {
             var ev = args.ev;
-            _this.editNote(null, true, ev);
+            var file = args.file;
+            _this.editNote(null, true, ev, file);
         });
 
         // capture notebook open/close events
@@ -269,7 +270,7 @@ var ThemeController = function () {
         }
     }, {
         key: 'editNote',
-        value: function editNote(itemId, isEditEnabled, ev) {
+        value: function editNote(itemId, isEditEnabled, ev, file) {
             var showFullScreen = this.$mdMedia('xs');
             var notebookItemTemplate = this.themePath + '/notebook/editNotebookItem.html';
             var item = this.NotebookService.getLatestNotebookItemByLocalNotebookItemId(itemId);
@@ -285,7 +286,8 @@ var ThemeController = function () {
                 locals: {
                     itemId: itemId,
                     isEditEnabled: isEditEnabled,
-                    type: type
+                    type: type,
+                    file: file
                 }
                 //template: '<notebookitem is-edit-enabled="true" item-id="{{itemId}}"></notebookitem>'
             });
@@ -297,6 +299,7 @@ var ThemeController = function () {
                 $scope.NotebookService = NotebookService;
                 $scope.item = null;
                 $scope.title = ($scope.isEditEnabled ? $scope.itemId ? 'Edit ' : 'Add ' : 'View ') + $scope.type;
+                $scope.file = file;
 
                 $scope.cancel = function () {
                     $mdDialog.hide();

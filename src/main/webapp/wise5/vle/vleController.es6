@@ -113,12 +113,30 @@ class VLEController {
         });
 
         this.$scope.$on('requestImageCallback', (event, args) => {
-            console.log('requestimagecallback!');
-            debugger;
+            
+            // initialize the snippable items
             if (this.snippableItems == null) {
                 this.snippableItems = [];
             }
-            this.snippableItems.push(args.imageObject);
+            
+            if (args.imageObject != null) {
+                // add the image object as a snippable item
+                this.snippableItems.push(args.imageObject);
+            }
+            
+            if (args.imageObjects != null) {
+                
+                // loop through the image objects
+                for (var i = 0; i < args.imageObjects.length; i++) {
+                    
+                    var imageObject = args.imageObjects[i];
+                    
+                    if (imageObject != null) {
+                        // add the image object as a snippable item
+                        this.snippableItems.push(imageObject);
+                    }
+                }
+            }
         });
 
         // Make sure if we drop something on the page we don't navigate away
@@ -233,18 +251,26 @@ class VLEController {
 
         let currentNodeId = this.StudentDataService.getCurrentNodeId();
         let currentComponents = this.ProjectService.getComponentsByNodeId(currentNodeId);
+        
+        /*
+         * initialize the snippable items array that will become populated
+         * with snippable items
+         */
+        this.snippableItems = [];
+        
         for (let c = 0; c < currentComponents.length; c++) {
             let currentComponent = currentComponents[c];
             var args = {};
             args.nodeId = currentNodeId;
             args.componentId = currentComponent.id;
-            console.log("emitting request image: " + args);
+            
             this.$rootScope.$broadcast('requestImage', args);
         }
         this.$mdDialog.show({
             parent: angular.element(document.body),
             targetEvent: $event,
             templateUrl: templateUrl,
+            clickOutsideToClose: true,
             locals: {
                 snippableItems: this.snippableItems
             },
@@ -252,22 +278,38 @@ class VLEController {
             controllerAs: 'notebookContentSnippetController',
             bindToController: true
         });
-        function NotebookContentSnippetController($rootScope, $scope, $mdDialog, snippableItems, StudentDataService, ProjectService) {
+        function NotebookContentSnippetController($rootScope, $scope, $mdDialog, snippableItems, NotebookService, StudentDataService, ProjectService) {
+            $scope.NotebookService = NotebookService;
             $scope.StudentDataService = StudentDataService;
             $scope.ProjectService = ProjectService;
             $scope.snippableItems = snippableItems;
+            
+            // loop through the snippable items
+            for (var s = 0; s < snippableItems.length; s++) {
+                var snippableItem = snippableItems[s];
+                
+                if (snippableItem != null) {
+                    /*
+                     * create a local browser URL for the snippable item so 
+                     * we can display it as an image
+                     */
+                    snippableItem.url = URL.createObjectURL(snippableItem);
+                }
+            }
 
             $scope.close = () => {
                 $mdDialog.hide();
             };
-            $scope.chooseSnippet = (snippet) => {
-                alert('snippetchosen!');
-                alert(snippet);
+            $scope.chooseSnippet = (snippableItem) => {
+                
+                // add the snippable item
+                $scope.NotebookService.addNewItem(event, snippableItem);
+                
                 $mdDialog.hide();
             };
         }
 
-        NotebookContentSnippetController.$inject = ["$rootScope", "$scope", "$mdDialog", "snippableItems", "StudentDataService", "ProjectService"];
+        NotebookContentSnippetController.$inject = ["$rootScope", "$scope", "$mdDialog", "snippableItems", "NotebookService", "StudentDataService", "ProjectService"];
     }
 
     openNoteDialog(event, args) {

@@ -67,9 +67,9 @@ class NotebookService {
         this.$rootScope.$broadcast('editNote', {item: itemId, ev: ev});
     };
 
-    addNewItem(ev) {
+    addNewItem(ev, file) {
         // boradcast create new notebook item event
-        this.$rootScope.$broadcast('addNewNote', {ev: ev});
+        this.$rootScope.$broadcast('addNewNote', {ev: ev, file: file});
     };
 
     deleteItem(itemToDelete) {
@@ -172,7 +172,6 @@ class NotebookService {
             // now group notebook items based on item.localNotebookItemId
             this.groupNotebookItems();
 
-            console.log(this.notebook);
             return this.notebook;
         });
     };

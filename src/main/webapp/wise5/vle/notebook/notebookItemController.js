@@ -46,6 +46,14 @@ var NotebookItemController = function () {
 
         // set the type in the controller
         this.type = this.item ? this.item.type : null;
+
+        if ($scope.$parent.file != null) {
+            // put the file into an array
+            var files = [$scope.$parent.file];
+
+            // add the file(s) as a student asset
+            this.attachStudentAssetToNote(files);
+        }
     }
 
     _createClass(NotebookItemController, [{
