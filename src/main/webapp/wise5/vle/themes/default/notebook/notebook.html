@@ -50,7 +50,7 @@
 <ul class='notebookItems' ng-if="notebookController.filter == 'all' || notebookController.filter == 'notes'">
     <li ng-repeat="(localNotebookItemId, notebookItems) in notebookController.notebook.items">
         <div ng-if="(notebookController.filter == 'all' || notebookController.filter == 'notes') && notebookItems.last().type == 'note'" class="notebookItem">
-            <notebook-item item-id="localNotebookItemId" ng-click="notebookController.editItem(localNotebookItemId)"></notebookitem>
+            <notebook-item item-id="localNotebookItemId" ng-click="notebookController.editItem(localNotebookItemId)" is-edit-allowed="true"></notebookitem>
         </div>
         <!--
         <div ng-if="notebookItem.type == 'report' && notebookController.filter == notebookItem.reportId">

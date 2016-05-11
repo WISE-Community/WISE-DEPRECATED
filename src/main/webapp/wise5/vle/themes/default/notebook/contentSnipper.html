@@ -1,0 +1,11 @@
+<h3>Choose Item to Snip to Notebook...</h3>
+<ul style="list-style-type: none">
+    <li ng-repeat="snippableItem in notebookContentSnippetController.snippableItems">
+        <img src="{{snippableItem}}">
+        <md-button class="md-accent" aria-label="Snip this item"
+                   ng-click="chooseSnippet(snippableItem)">
+            <md-icon class="md-accent">add_circle</md-icon>
+            Add this item to my notebook
+        </md-button>
+    </li>
+</ul>

@@ -401,7 +401,6 @@ class DrawController {
          * component.
          */
         this.$scope.$on('requestImage', (event, args) => {
-            
             // get the node id and component id from the args
             var nodeId = args.nodeId;
             var componentId = args.componentId;

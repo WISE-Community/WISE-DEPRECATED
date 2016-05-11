@@ -112,6 +112,15 @@ class VLEController {
 
         });
 
+        this.$scope.$on('requestImageCallback', (event, args) => {
+            console.log('requestimagecallback!');
+            debugger;
+            if (this.snippableItems == null) {
+                this.snippableItems = [];
+            }
+            this.snippableItems.push(args.imageObject);
+        });
+
         // Make sure if we drop something on the page we don't navigate away
         // https://developer.mozilla.org/En/DragDrop/Drag_Operations#drop
         $(document.body).on('dragover', function(e) {
@@ -197,6 +206,94 @@ class VLEController {
 
     isNotebookEnabled() {
         return this.NotebookService.isNotebookEnabled();
+    }
+
+    // Display a dialog where students can add/edit a note
+    addNewNote() {
+        this.$translate(["addNewNote"]).then((translations) => {
+            this.noteDialog = this.$mdDialog.show({
+                template: '<md-dialog aria-label="Note"><md-toolbar><div class="md-toolbar-tools"><h2>' + translations.addNewNote + '</h2></div></md-toolbar>' +
+                '<md-dialog-content><div class="md-dialog-content">' +
+                '<notebookitem is-edit-mode="true" template-url="\'' + this.notebookItemPath + '\'"></notebookitem>' +
+                '</div></md-dialog-content></md-dialog>',
+                fullscreen: true,
+                escapeToClose: true
+            });
+        });
+    }
+
+    // Display a dialog where students can snip elements from the page into their notebook
+    displaySnipperDialog() {
+
+    }
+
+    snipNewNote($event) {
+        // Ask all of the components on the page for snippable items
+        let templateUrl = this.themePath + '/notebook/contentSnipper.html';
+
+        let currentNodeId = this.StudentDataService.getCurrentNodeId();
+        let currentComponents = this.ProjectService.getComponentsByNodeId(currentNodeId);
+        for (let c = 0; c < currentComponents.length; c++) {
+            let currentComponent = currentComponents[c];
+            var args = {};
+            args.nodeId = currentNodeId;
+            args.componentId = currentComponent.id;
+            console.log("emitting request image: " + args);
+            this.$rootScope.$broadcast('requestImage', args);
+        }
+        this.$mdDialog.show({
+            parent: angular.element(document.body),
+            targetEvent: $event,
+            templateUrl: templateUrl,
+            locals: {
+                snippableItems: this.snippableItems
+            },
+            controller: NotebookContentSnippetController,
+            controllerAs: 'notebookContentSnippetController',
+            bindToController: true
+        });
+        function NotebookContentSnippetController($rootScope, $scope, $mdDialog, snippableItems, StudentDataService, ProjectService) {
+            $scope.StudentDataService = StudentDataService;
+            $scope.ProjectService = ProjectService;
+            $scope.snippableItems = snippableItems;
+
+            $scope.close = () => {
+                $mdDialog.hide();
+            };
+            $scope.chooseSnippet = (snippet) => {
+                alert('snippetchosen!');
+                alert(snippet);
+                $mdDialog.hide();
+            };
+        }
+
+        NotebookContentSnippetController.$inject = ["$rootScope", "$scope", "$mdDialog", "snippableItems", "StudentDataService", "ProjectService"];
+    }
+
+    openNoteDialog(event, args) {
+        // close any open note dialogs
+        this.closeNoteDialog();
+
+        // get the notebook item to edit.
+        let notebookItem = args.notebookItem;
+        let notebookItemId = notebookItem.localNotebookItemId;
+        this.noteDialog = this.$mdDialog.show({
+            template: '<md-dialog aria-label="Note"><md-toolbar><div class="md-toolbar-tools"><h2>Edit Note</h2></div></md-toolbar>' +
+            '<md-dialog-content><div class="md-dialog-content">' +
+            '<notebookitem is-edit-mode="true" item-id="' + notebookItemId + '" template-url="\'' + this.notebookItemPath + '\'" ></notebookitem>' +
+            '</div></md-dialog-content></md-dialog>',
+            fullscreen: true,
+            escapeToClose: true
+        });
+
+    }
+
+    // Close the note dialog
+    closeNoteDialog() {
+        if (this.noteDialog) {
+            this.$mdDialog.hide( this.noteDialog, "finished" );
+            this.noteDialog = undefined;
+        }
     }
 
     setLayoutState() {

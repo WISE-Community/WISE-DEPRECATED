@@ -15,16 +15,11 @@
                 <span>{{vleController.projectName}}</span>
             </h3>
             <span flex></span>
-            <!--<md-button id="addNewNoteButton" ng-show="vleController.isNotebookEnabled()" aria-label="Add Note" class="md-icon-button"
-                       ng-click="vleController.addNewNote()">
-                <md-icon md-menu-origin> add </md-icon>
-                <md-tooltip md-direction="left"><span translate="addNewNote" /></md-tooltip>
+            <md-button id="addNewNoteButton" ng-show="vleController.isNotebookEnabled()" aria-label="Add Note" class="md-icon-button"
+                       ng-click="vleController.snipNewNote($event)">
+                <md-icon md-menu-origin> content_cut </md-icon>
+                <md-tooltip md-direction="left">Snip to Notebook...</md-tooltip>
             </md-button>
-            <md-button ng-show="vleController.isNotebookEnabled()" aria-label="Toggle Notebook" class="md-icon-button"
-                       ng-click="themeCtrl.toggleNotebook()">
-                <md-icon md-menu-origin> book </md-icon>
-                <md-tooltip md-direction="left"><span translate="notebook" /></md-tooltip>
-            </md-button>-->
             <md-progress-circular class="menu-progress" md-mode="determinate" md-diameter="26" value="{{ themeCtrl.rootNodeStatus.progress.completionPct }}"></md-progress-circular>
             <div class="menu-progress-bg"></div>
             <md-menu md-position-mode="target-right target" md-offset="8 26">
