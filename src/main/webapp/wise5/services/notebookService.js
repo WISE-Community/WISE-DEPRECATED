@@ -157,7 +157,7 @@ var NotebookService = function () {
     }, {
         key: 'isNotebookEnabled',
         value: function isNotebookEnabled() {
-            return this.notebookConfig.enabled;
+            return this.notebookConfig != null && this.notebookConfig.enabled;
         }
     }, {
         key: 'retrieveNotebookItems',

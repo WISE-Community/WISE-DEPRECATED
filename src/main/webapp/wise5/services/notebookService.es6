@@ -136,7 +136,7 @@ class NotebookService {
     };
 
     isNotebookEnabled() {
-        return this.notebookConfig.enabled;
+        return this.notebookConfig != null && this.notebookConfig.enabled;
     };
 
     retrieveNotebookItems() {

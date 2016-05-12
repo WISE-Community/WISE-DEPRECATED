@@ -212,7 +212,8 @@ var HTMLController = function () {
             var imageObjects = [];
 
             // get the image elements in the scope
-            var imageElements = angular.element('img').filter('.ng-scope');
+            var componentId = this.componentId;
+            var imageElements = angular.element('#' + componentId + ' img');
 
             if (imageElements != null) {
 
@@ -221,14 +222,13 @@ var HTMLController = function () {
                     var imageElement = imageElements[i];
 
                     if (imageElement != null) {
-
                         /*
                          * create a canvas so we can put the image into it and then
                          * create a base64 string from it
                          */
                         var canvas = document.createElement("canvas");
-                        canvas.width = imageElement.width;
-                        canvas.height = imageElement.height;
+                        canvas.width = imageElement.naturalWidth;
+                        canvas.height = imageElement.naturalHeight;
                         var ctx = canvas.getContext("2d");
                         ctx.drawImage(imageElement, 0, 0);
 
