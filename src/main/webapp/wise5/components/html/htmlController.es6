@@ -6,7 +6,8 @@ class HTMLController {
                 ConfigService,
                 NodeService,
                 ProjectService,
-                StudentDataService) {
+                StudentDataService,
+                UtilService) {
         this.$scope = $scope;
         this.$state = $state;
         this.$stateParams = $stateParams;
@@ -15,6 +16,7 @@ class HTMLController {
         this.NodeService = NodeService;
         this.ProjectService = ProjectService;
         this.StudentDataService = StudentDataService;
+        this.UtilService = UtilService;
 
         // the node id of the current node
         this.nodeId = null;
@@ -104,6 +106,34 @@ class HTMLController {
                 }
             }
         }
+        
+        /*
+         * Listen for the requestImage event which is fired when something needs
+         * an image representation of the student data from a specific
+         * component.
+         */
+        this.$scope.$on('requestImage', (event, args) => {
+            // get the node id and component id from the args
+            var nodeId = args.nodeId;
+            var componentId = args.componentId;
+            
+            // check if the image is being requested from this component
+            if (this.nodeId === nodeId && this.componentId === componentId) {
+                
+                // obtain the image objects
+                var imageObjects = this.getImageObjects();
+                
+                if (imageObjects != null) {
+                    var args = {};
+                    args.nodeId = nodeId;
+                    args.componentId = componentId;
+                    args.imageObjects = imageObjects;
+                    
+                    // fire an event that contains the image objects
+                    this.$scope.$emit('requestImageCallback', args);
+                }
+            }
+        });
     }
 
 
@@ -157,8 +187,59 @@ class HTMLController {
     updateAdvancedAuthoringView() {
         this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
     };
+    
+    /**
+     * Get the image object representation of the student data
+     * @returns an image object
+     */
+    getImageObjects() {
+        var imageObjects = [];
+        
+        // get the image elements in the scope
+        var imageElements = angular.element('img').filter('.ng-scope');
+        
+        if (imageElements != null) {
+            
+            // loop through all the image elements
+            for (var i = 0; i < imageElements.length; i++) {
+                var imageElement = imageElements[i];
+                
+                if (imageElement != null) {
+                    
+                    /*
+                     * create a canvas so we can put the image into it and then
+                     * create a base64 string from it
+                     */
+                    var canvas = document.createElement("canvas");
+                    canvas.width = imageElement.width;
+                    canvas.height = imageElement.height;
+                    var ctx = canvas.getContext("2d");
+                    ctx.drawImage(imageElement, 0, 0);
+                    
+                    // create the base64 string representation of the image
+                    var dataURL = canvas.toDataURL("image/png");
+                    
+                    // get the image object
+                    var imageObject = this.UtilService.getImageObjectFromBase64String(dataURL);
+                    imageObjects.push(imageObject);
+                }
+            }
+        }
+        
+        return imageObjects;
+    }
 }
 
-HTMLController.$inject = ['$scope', '$state', '$stateParams', '$sce', 'ConfigService', 'NodeService', 'ProjectService', 'StudentDataService'];
+HTMLController.$inject = [
+    '$scope',
+    '$state',
+    '$stateParams',
+    '$sce',
+    'ConfigService',
+    'NodeService',
+    'ProjectService',
+    'StudentDataService',
+    'UtilService'
+];
 
 export default HTMLController;

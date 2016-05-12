@@ -9,7 +9,9 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var HTMLController = function () {
-    function HTMLController($scope, $state, $stateParams, $sce, ConfigService, NodeService, ProjectService, StudentDataService) {
+    function HTMLController($scope, $state, $stateParams, $sce, ConfigService, NodeService, ProjectService, StudentDataService, UtilService) {
+        var _this = this;
+
         _classCallCheck(this, HTMLController);
 
         this.$scope = $scope;
@@ -20,6 +22,7 @@ var HTMLController = function () {
         this.NodeService = NodeService;
         this.ProjectService = ProjectService;
         this.StudentDataService = StudentDataService;
+        this.UtilService = UtilService;
 
         // the node id of the current node
         this.nodeId = null;
@@ -109,6 +112,34 @@ var HTMLController = function () {
                 }
             }
         }
+
+        /*
+         * Listen for the requestImage event which is fired when something needs
+         * an image representation of the student data from a specific
+         * component.
+         */
+        this.$scope.$on('requestImage', function (event, args) {
+            // get the node id and component id from the args
+            var nodeId = args.nodeId;
+            var componentId = args.componentId;
+
+            // check if the image is being requested from this component
+            if (_this.nodeId === nodeId && _this.componentId === componentId) {
+
+                // obtain the image objects
+                var imageObjects = _this.getImageObjects();
+
+                if (imageObjects != null) {
+                    var args = {};
+                    args.nodeId = nodeId;
+                    args.componentId = componentId;
+                    args.imageObjects = imageObjects;
+
+                    // fire an event that contains the image objects
+                    _this.$scope.$emit('requestImageCallback', args);
+                }
+            }
+        });
     }
 
     /**
@@ -169,12 +200,56 @@ var HTMLController = function () {
         value: function updateAdvancedAuthoringView() {
             this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
         }
+    }, {
+        key: 'getImageObjects',
+
+
+        /**
+         * Get the image object representation of the student data
+         * @returns an image object
+         */
+        value: function getImageObjects() {
+            var imageObjects = [];
+
+            // get the image elements in the scope
+            var imageElements = angular.element('img').filter('.ng-scope');
+
+            if (imageElements != null) {
+
+                // loop through all the image elements
+                for (var i = 0; i < imageElements.length; i++) {
+                    var imageElement = imageElements[i];
+
+                    if (imageElement != null) {
+
+                        /*
+                         * create a canvas so we can put the image into it and then
+                         * create a base64 string from it
+                         */
+                        var canvas = document.createElement("canvas");
+                        canvas.width = imageElement.width;
+                        canvas.height = imageElement.height;
+                        var ctx = canvas.getContext("2d");
+                        ctx.drawImage(imageElement, 0, 0);
+
+                        // create the base64 string representation of the image
+                        var dataURL = canvas.toDataURL("image/png");
+
+                        // get the image object
+                        var imageObject = this.UtilService.getImageObjectFromBase64String(dataURL);
+                        imageObjects.push(imageObject);
+                    }
+                }
+            }
+
+            return imageObjects;
+        }
     }]);
 
     return HTMLController;
 }();
 
-HTMLController.$inject = ['$scope', '$state', '$stateParams', '$sce', 'ConfigService', 'NodeService', 'ProjectService', 'StudentDataService'];
+HTMLController.$inject = ['$scope', '$state', '$stateParams', '$sce', 'ConfigService', 'NodeService', 'ProjectService', 'StudentDataService', 'UtilService'];
 
 exports.default = HTMLController;
 //# sourceMappingURL=htmlController.js.map
