@@ -206,21 +206,9 @@ class HTMLController {
                 var imageElement = imageElements[i];
                 
                 if (imageElement != null) {
-                    /*
-                     * create a canvas so we can put the image into it and then
-                     * create a base64 string from it
-                     */
-                    var canvas = document.createElement("canvas");
-                    canvas.width = imageElement.naturalWidth;
-                    canvas.height = imageElement.naturalHeight;
-                    var ctx = canvas.getContext("2d");
-                    ctx.drawImage(imageElement, 0, 0);
 
-                    // create the base64 string representation of the image
-                    var dataURL = canvas.toDataURL("image/png");
-
-                    // get the image object
-                    var imageObject = this.UtilService.getImageObjectFromBase64String(dataURL);
+                    // create an image object
+                    var imageObject = this.UtilService.getImageObjectFromImageElement(imageElement);
                     imageObjects.push(imageObject);
                 }
             }

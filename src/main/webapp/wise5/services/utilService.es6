@@ -109,6 +109,37 @@ class UtilService {
 
         return new Blob([ia], {type:mimeString});
     };
+    
+    /**
+     * Get an image object from an image element
+     * @param imageElement an image element (<img src='abc.jpg'/>)
+     * @returns an image object
+     */
+    getImageObjectFromImageElement(imageElement) {
+        
+        var imageObject = null;
+        
+        if (imageElement != null) {
+            // create a canvas element that we will use to generate a base64 string
+            var canvas = document.createElement("canvas");
+            
+            // set the width and height of the canvas to match the image dimensions
+            canvas.width = imageElement.naturalWidth;
+            canvas.height = imageElement.naturalHeight;
+            
+            // draw the image onto the canvas
+            var ctx = canvas.getContext("2d");
+            ctx.drawImage(imageElement, 0, 0);
+
+            // create the base64 string representation of the image
+            var dataURL = canvas.toDataURL("image/png");
+
+            // get the image object
+            imageObject = this.getImageObjectFromBase64String(dataURL);
+        }
+        
+        return imageObject;
+    }
 }
 
 // Get the last element of the array

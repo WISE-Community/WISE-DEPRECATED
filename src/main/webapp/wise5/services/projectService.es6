@@ -615,6 +615,66 @@ class ProjectService {
 
         return contentString;
     };
+    
+    /**
+     * Inject the ng-click attribute that will call the snipImage function
+     * @param content the content
+     * @returns the modified content
+     */
+    injectClickToSnipImage(content) {
+        if (content != null) {
+
+            if (typeof content === 'object') {
+
+                var contentString = JSON.stringify(content);
+
+                if (contentString != null) {
+
+                    // replace the relative asset paths with the absolute paths
+                    contentString = this.injectClickToSnipImageIntoContentString(contentString);
+
+                    content = JSON.parse(contentString);
+                }
+            } else if (typeof content === 'string') {
+
+                // replace the relative asset paths with the absolute paths
+                content = this.injectClickToSnipImageIntoContentString(content);
+            }
+        }
+
+        return content;
+    }
+    
+    /**
+     * Inject the ng-click attribute that will call the snipImage function
+     * @param contentString the content in string format
+     * @returns the modified content string
+     */
+    injectClickToSnipImageIntoContentString(contentString) {
+        
+        if (contentString != null) {
+            
+            // regex to match image elements
+            var imgMatcher = new RegExp('<img.*?src=\\\\?[\'"](.*?)\\\\?[\'"].*?>', 'gi');
+            
+            // replace all instances that match
+            contentString = contentString.replace(imgMatcher,
+                (matchedString, matchGroup1) => {
+                    
+                    /*
+                     * insert the ng-click attribute
+                     * Before: <img src="abc.png"/>
+                     * After: <img ng-click="vleController.snipImage($event)"/>
+                     */
+                    var newString = matchedString.replace('img', 'img ng-click=\\\"vleController.snipImage($event)\\\"');
+                    
+                    return newString;
+                }
+            );
+        }
+        
+        return contentString;
+    }
 
     /**
      * Returns the node specified by the nodeId

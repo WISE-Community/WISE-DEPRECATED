@@ -60,6 +60,9 @@ class ComponentDirective {
 
         var authoringComponentContent = ComponentDirective.instance.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
         var componentContent = ComponentDirective.instance.ProjectService.injectAssetPaths(authoringComponentContent);
+        
+        // inject the click attribute that will snip the image when the image is clicked
+        componentContent = ComponentDirective.instance.ProjectService.injectClickToSnipImage(componentContent);
 
         $scope.componentContent = componentContent;
         $scope.authoringComponentContent = authoringComponentContent;

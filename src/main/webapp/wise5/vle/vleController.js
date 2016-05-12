@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var VLEController = function () {
-    function VLEController($scope, $rootScope, $mdDialog, $state, $translate, ConfigService, NotebookService, ProjectService, SessionService, StudentDataService, StudentWebSocketService) {
+    function VLEController($scope, $rootScope, $mdDialog, $state, $translate, ConfigService, NotebookService, ProjectService, SessionService, StudentDataService, StudentWebSocketService, UtilService) {
         var _this = this;
 
         _classCallCheck(this, VLEController);
@@ -25,6 +25,7 @@ var VLEController = function () {
         this.SessionService = SessionService;
         this.StudentDataService = StudentDataService;
         this.StudentWebSocketService = StudentWebSocketService;
+        this.UtilService = UtilService;
 
         this.currentNode = null;
         this.pauseDialog = null;
@@ -431,12 +432,37 @@ var VLEController = function () {
             this.$mdDialog.hide(this.pauseDialog, "finished");
             this.pauseDialog = undefined;
         }
+
+        /**
+         * Snip an image from the VLE
+         * @param $event the click event from the student clicking on the image
+         */
+
+    }, {
+        key: 'snipImage',
+        value: function snipImage($event) {
+
+            // get the target that was clicked
+            var imageElement = $event.target;
+
+            if (imageElement != null) {
+
+                // create an image object
+                var imageObject = this.UtilService.getImageObjectFromImageElement(imageElement);
+
+                if (imageObject != null) {
+
+                    // create a notebook item with the image populated into it
+                    this.NotebookService.addNewItem(event, imageObject);
+                }
+            }
+        }
     }]);
 
     return VLEController;
 }();
 
-VLEController.$inject = ['$scope', '$rootScope', '$mdDialog', '$state', '$translate', 'ConfigService', 'NotebookService', 'ProjectService', 'SessionService', 'StudentDataService', 'StudentWebSocketService'];
+VLEController.$inject = ['$scope', '$rootScope', '$mdDialog', '$state', '$translate', 'ConfigService', 'NotebookService', 'ProjectService', 'SessionService', 'StudentDataService', 'StudentWebSocketService', 'UtilService'];
 
 exports.default = VLEController;
 //# sourceMappingURL=vleController.js.map

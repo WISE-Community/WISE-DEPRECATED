@@ -11,7 +11,8 @@ class VLEController {
                 ProjectService,
                 SessionService,
                 StudentDataService,
-                StudentWebSocketService) {
+                StudentWebSocketService,
+                UtilService) {
 
         this.$scope = $scope;
         this.$rootScope = $rootScope;
@@ -24,6 +25,7 @@ class VLEController {
         this.SessionService = SessionService;
         this.StudentDataService = StudentDataService;
         this.StudentWebSocketService = StudentWebSocketService;
+        this.UtilService = UtilService;
 
         this.currentNode = null;
         this.pauseDialog = null;
@@ -412,6 +414,28 @@ class VLEController {
         this.$mdDialog.hide( this.pauseDialog, "finished" );
         this.pauseDialog = undefined;
     }
+    
+    /**
+     * Snip an image from the VLE
+     * @param $event the click event from the student clicking on the image
+     */
+    snipImage($event) {
+        
+        // get the target that was clicked
+        var imageElement = $event.target;
+
+        if (imageElement != null) {
+            
+            // create an image object
+            var imageObject = this.UtilService.getImageObjectFromImageElement(imageElement);
+            
+            if (imageObject != null) {
+                
+                // create a notebook item with the image populated into it
+                this.NotebookService.addNewItem(event, imageObject);
+            }
+        }
+    }
 }
 
 VLEController.$inject = [
@@ -425,7 +449,8 @@ VLEController.$inject = [
     'ProjectService',
     'SessionService',
     'StudentDataService',
-    'StudentWebSocketService'
+    'StudentWebSocketService',
+    'UtilService'
 ];
 
 export default VLEController;
