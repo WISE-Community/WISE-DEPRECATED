@@ -15,42 +15,66 @@ class NotebookService {
         this.StudentAssetService = StudentAssetService;
         this.StudentDataService = StudentDataService;
 
-        this.filters = [
-            //{'name': 'all', 'type': 'all', 'label': 'All'},
-            {'name': 'notes', 'type': 'all', 'label': 'Notes'}
-            /*,
-            {'name': 'questions', 'label': 'Questions'}
-            */
-        ];
+        // default notebook configuration
+        // TODO: i18n
+        // TODO: decide on desired defaults
+        // TODO: allow wise instance to set default enabled/disabled for each type in wise config?
+        this.config = {
+            enabled: true,
+            label: "Notebook",
+            itemTypes: {
+                note: {
+                    enabled: true,
+                    enableAddNote: true,
+                    enableClipping: true,
+                    enableStudentUploads: true,
+                    type: "note",
+                    label: {
+                        singular: "note",
+                        plural: "notes",
+                        link: "Notes"
+                    },
+                },
+                question: {
+                    enabled: true,
+                    enableAddNote: true,
+                    enableClipping: true,
+                    enableStudentUploads: true,
+                    type: "question",
+                    label: {
+                        singular: "question",
+                        plural: "questions",
+                        link: "Questions"
+                    }
+                },
+                report: {
+                    enabled: false,
+                    label: {
+                        singular: "report",
+                        plural: "reports",
+                        link: "Report"
+                    },
+                    notes: []
+                }
+            }
+        };
 
         this.reports = [];
-
         this.notebook = {};
         this.notebook.allItems = [];
         this.notebook.items = {};
         this.notebook.deletedItems = [];
-        this.notebookConfig = {};
 
-        if (this.ProjectService.project != null) {
+        this.notebookConfig = {};
+        if (this.ProjectService.project) {
+            // get notebook config from project
             this.notebookConfig = this.ProjectService.project.notebook;
-            if (this.notebookConfig != null) {
-                if (this.notebookConfig.report != null && this.notebookConfig.report.enabled) {
-                    let reportNotes = this.notebookConfig.report.notes;
-                    for (let i = 0; i < reportNotes.length; i++) {
-                        let reportNote = reportNotes[i];
-                        this.filters.push({
-                            "name": reportNote.reportId,
-                            "type": "report",
-                            "label": reportNote.title
-                        });
-                    }
-                }
+            // update local notebook config, preserving any defaults that aren't overriden
+            if (this.notebookConfig !== null && typeof this.notebookConfig === 'object') {
+                this.config = angular.merge(this.config, this.notebookConfig);
             }
         }
-    }
 
-    toggleNotebook(ev) {
-        this.$rootScope.$broadcast('toggleNotebook', {ev: ev});
     }
 
     addItem(notebookItem) {
@@ -62,7 +86,7 @@ class NotebookService {
         this.$rootScope.$broadcast('notebookUpdated', {notebook: this.notebook});
     };
 
-    editItem(itemId, ev) {
+    editItem(ev, itemId) {
         // boradcast edit notebook item event
         this.$rootScope.$broadcast('editNote', {itemId: itemId, ev: ev});
     };
@@ -101,7 +125,7 @@ class NotebookService {
     // returns the authored report item
     getTemplateReportItemByReportId(reportId) {
         let templateReportItem = null;
-        let reportNotes = this.notebookConfig.report.notes;
+        let reportNotes = this.notebookConfig.itemTypes.report.notes;
         for (let i = 0; i < reportNotes.length; i++) {
             let reportNote = reportNotes[i];
             if (reportNote.reportId == reportId) {
@@ -132,11 +156,11 @@ class NotebookService {
     };
 
     getNotebookConfig() {
-        return this.notebookConfig;
+        return this.config;
     };
 
     isNotebookEnabled() {
-        return this.notebookConfig != null && this.notebookConfig.enabled;
+        return this.config.enabled;
     };
 
     retrieveNotebookItems() {

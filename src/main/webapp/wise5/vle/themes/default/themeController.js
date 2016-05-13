@@ -44,6 +44,19 @@ var ThemeController = function () {
         this.workgroupUserNames = this.ConfigService.getUserNamesByWorkgroupId(this.workgroupId);
 
         this.notebookOpen = false;
+        this.notebookConfig = this.NotebookService.getNotebookConfig();
+        this.notebookFilter = '';
+
+        // set current notebook type filter to first enabled type
+        if (this.notebookConfig.enabled) {
+            for (var type in this.notebookConfig.itemTypes) {
+                var prop = this.notebookConfig.itemTypes[type];
+                if (this.notebookConfig.itemTypes.hasOwnProperty(type) && prop.enabled) {
+                    this.notebookFilter = type;
+                    break;
+                }
+            }
+        }
 
         // build project status pop-up
         var statusTemplateUrl = this.themePath + '/templates/projectStatus.html';
@@ -196,22 +209,29 @@ var ThemeController = function () {
             StudentAssetDialogController.$inject = ["$scope", "$mdDialog", "componentController"];
         });
 
+        // toggle notebook opened or closed on 'toggleNotebook' event
         this.$scope.$on('toggleNotebook', function () {
             _this.toggleNotebook();
+        });
+
+        // update notebook filter on 'setNotebookFilter' event
+        this.$scope.$on('setNotebookFilter', function (event, args) {
+            var filter = args.filter;
+            _this.notebookFilter = filter;
         });
 
         // show edit note dialog on 'editNote' event
         this.$scope.$on('editNote', function (event, args) {
             var itemId = args.itemId;
             var ev = args.ev;
-            _this.editNote(itemId, true, ev);
+            _this.viewNote(itemId, true, null, ev);
         });
 
         // show edit note dialog on 'addNewNote' event
         this.$scope.$on('addNewNote', function (event, args) {
             var ev = args.ev;
             var file = args.file;
-            _this.editNote(null, true, ev, file);
+            _this.viewNote(null, true, file, ev);
         });
 
         // capture notebook open/close events
@@ -269,20 +289,20 @@ var ThemeController = function () {
             this.notebookOpen = !this.notebookOpen;
         }
     }, {
-        key: 'editNote',
-        value: function editNote(itemId, isEditMode, ev, file) {
+        key: 'viewNote',
+        value: function viewNote(itemId, isEditMode, file, ev) {
             var showFullScreen = this.$mdMedia('xs');
-            var notebookItemTemplate = this.themePath + '/notebook/editNotebookItem.html';
+            var notebookItemTemplate = this.themePath + '/notebook/viewNotebookItem.html';
             var item = this.NotebookService.getLatestNotebookItemByLocalNotebookItemId(itemId);
             var type = item ? item.type : 'note'; // TODO: don't hardcode type once questions are enabled
 
-            // Display a dialog where students can add/edit a notebook item
+            // Display a dialog where students can view/add/edit a notebook item
             this.$mdDialog.show({
                 parent: angular.element(document.body),
                 targetEvent: ev,
                 fullscreen: showFullScreen,
                 templateUrl: notebookItemTemplate,
-                controller: EditNotebookItemController,
+                controller: ViewNotebookItemController,
                 locals: {
                     itemId: itemId,
                     isEditMode: isEditMode,
@@ -292,7 +312,7 @@ var ThemeController = function () {
                 //template: '<notebookitem is-edit-enabled="true" item-id="{{itemId}}"></notebookitem>'
             });
 
-            function EditNotebookItemController($scope, $mdDialog, NotebookService) {
+            function ViewNotebookItemController($scope, $mdDialog, NotebookService) {
                 $scope.itemId = itemId;
                 $scope.type = type;
                 $scope.isEditMode = isEditMode;
@@ -316,7 +336,7 @@ var ThemeController = function () {
                     $scope.item = item;
                 };
             }
-            EditNotebookItemController.$inject = ["$scope", "$mdDialog", "NotebookService"];
+            ViewNotebookItemController.$inject = ["$scope", "$mdDialog", "NotebookService"];
         }
     }]);
 

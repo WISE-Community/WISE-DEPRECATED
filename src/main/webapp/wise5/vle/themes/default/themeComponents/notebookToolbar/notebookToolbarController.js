@@ -22,9 +22,12 @@ var NotebookToolbarCtrl = function () {
         this.addMode = false;
 
         this.notebookConfig = this.NotebookService.getNotebookConfig();
-        this.noteEnabled = this.notebookConfig.note && this.notebookConfig.note.enabled;
-        this.questionEnabled = this.notebookConfig.question && this.notebookConfig.question.enabled;
-        this.reportEnabled = this.notebookConfig.report && this.notebookConfig.report.enabled;
+        this.noteEnabled = this.notebookConfig.itemTypes.note.enabled;
+        this.questionEnabled = this.notebookConfig.itemTypes.question.enabled;
+        this.reportEnabled = this.notebookConfig.itemTypes.report.enabled;
+        this.noteLabel = this.notebookConfig.itemTypes.note.label.link;
+        this.questionLabel = this.notebookConfig.itemTypes.question.label.link;
+        this.reportLabel = this.notebookConfig.itemTypes.report.label.link;
     }
 
     _createClass(NotebookToolbarCtrl, [{
@@ -34,16 +37,9 @@ var NotebookToolbarCtrl = function () {
         }
     }, {
         key: 'openNotebook',
-        value: function openNotebook(ev) {
-            this.$rootScope.$broadcast('setNotebookFilter', { filter: 'notes' }); // TODO: make into NotebookService function
-            this.NotebookService.toggleNotebook(ev);
-        }
-    }, {
-        key: 'openReport',
-        value: function openReport(ev) {
-            // TODO: support multiple reports
-            this.$rootScope.$broadcast('setNotebookFilter', { filter: 'report' }); // TODO: make into NotebookService function
-            this.NotebookService.toggleNotebook(ev);
+        value: function openNotebook(ev, filter) {
+            this.$rootScope.$broadcast('setNotebookFilter', { filter: filter, ev: ev });
+            this.$rootScope.$broadcast('toggleNotebook', { ev: ev });
         }
     }, {
         key: 'getTemplateUrl',

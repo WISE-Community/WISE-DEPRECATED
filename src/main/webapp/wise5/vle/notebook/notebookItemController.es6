@@ -46,11 +46,11 @@ class NotebookItemController {
 
         // set the type in the controller
         this.type = this.item ? this.item.type : null;
-        
+
         if ($scope.$parent.file != null) {
             // put the file into an array
             var files = [$scope.$parent.file];
-            
+
             // add the file(s) as a student asset
             this.attachStudentAssetToNote(files);
         }
@@ -79,8 +79,8 @@ class NotebookItemController {
         return this.ProjectService.getThemePath() + '/notebook/notebookItem.html';
     }
 
-    editNotebookItem(notebookItemId, $event) {
-        this.NotebookService.editItem(notebookItemId, $event);
+    editNotebookItem(ev, itemId) {
+        this.NotebookService.editItem(ev, itemId);
     }
 
     attachStudentAssetToNote(files) {

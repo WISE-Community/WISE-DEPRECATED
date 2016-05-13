@@ -37,9 +37,6 @@ class VLEController {
         this.projectStyle = this.ProjectService.getStyle();
         this.projectName = this.ProjectService.getProjectTitle();
 
-        this.notebookFilters = this.NotebookService.filters;
-        this.notebookFilter = this.notebookFilters[0].name;   // show notes on load; TODO: move to theme?
-
         // get the total score for the workgroup
         this.totalScore = this.StudentDataService.getTotalScore();
 
@@ -102,37 +99,25 @@ class VLEController {
             this.unPauseScreen();
         });
 
-        // listen for the unpause screen event
-        this.$scope.$on('setNotebookFilter', (event, args) => {
-            // TODO: move to theme?
-            let filter = args.filter;
-            if (filter === 'report') {
-                this.notebookFilter = this.notebookFilters.last().name;
-            } else {
-                this.notebookFilter = filter;
-            }
-
-        });
-
         this.$scope.$on('requestImageCallback', (event, args) => {
-            
+
             // initialize the snippable items
             if (this.snippableItems == null) {
                 this.snippableItems = [];
             }
-            
+
             if (args.imageObject != null) {
                 // add the image object as a snippable item
                 this.snippableItems.push(args.imageObject);
             }
-            
+
             if (args.imageObjects != null) {
-                
+
                 // loop through the image objects
                 for (var i = 0; i < args.imageObjects.length; i++) {
-                    
+
                     var imageObject = args.imageObjects[i];
-                    
+
                     if (imageObject != null) {
                         // add the image object as a snippable item
                         this.snippableItems.push(imageObject);
@@ -253,19 +238,19 @@ class VLEController {
 
         let currentNodeId = this.StudentDataService.getCurrentNodeId();
         let currentComponents = this.ProjectService.getComponentsByNodeId(currentNodeId);
-        
+
         /*
          * initialize the snippable items array that will become populated
          * with snippable items
          */
         this.snippableItems = [];
-        
+
         for (let c = 0; c < currentComponents.length; c++) {
             let currentComponent = currentComponents[c];
             var args = {};
             args.nodeId = currentNodeId;
             args.componentId = currentComponent.id;
-            
+
             this.$rootScope.$broadcast('requestImage', args);
         }
         this.$mdDialog.show({
@@ -285,14 +270,14 @@ class VLEController {
             $scope.StudentDataService = StudentDataService;
             $scope.ProjectService = ProjectService;
             $scope.snippableItems = snippableItems;
-            
+
             // loop through the snippable items
             for (var s = 0; s < snippableItems.length; s++) {
                 var snippableItem = snippableItems[s];
-                
+
                 if (snippableItem != null) {
                     /*
-                     * create a local browser URL for the snippable item so 
+                     * create a local browser URL for the snippable item so
                      * we can display it as an image
                      */
                     snippableItem.url = URL.createObjectURL(snippableItem);
@@ -303,10 +288,10 @@ class VLEController {
                 $mdDialog.hide();
             };
             $scope.chooseSnippet = (snippableItem) => {
-                
+
                 // add the snippable item
                 $scope.NotebookService.addNewItem(event, snippableItem);
-                
+
                 $mdDialog.hide();
             };
         }
@@ -414,23 +399,23 @@ class VLEController {
         this.$mdDialog.hide( this.pauseDialog, "finished" );
         this.pauseDialog = undefined;
     }
-    
+
     /**
      * Snip an image from the VLE
      * @param $event the click event from the student clicking on the image
      */
     snipImage($event) {
-        
+
         // get the target that was clicked
         var imageElement = $event.target;
 
         if (imageElement != null) {
-            
+
             // create an image object
             var imageObject = this.UtilService.getImageObjectFromImageElement(imageElement);
-            
+
             if (imageObject != null) {
-                
+
                 // create a notebook item with the image populated into it
                 this.NotebookService.addNewItem(event, imageObject);
             }
