@@ -56,6 +56,12 @@ var OutsideURLController = function () {
         // get the authoring component content
         this.authoringComponentContent = this.$scope.authoringComponentContent;
 
+        /*
+         * get the original component content. this is used when showing
+         * previous work from another component.
+         */
+        this.originalComponentContent = this.$scope.originalComponentContent;
+
         this.mode = this.$scope.mode;
 
         if (this.componentContent != null) {

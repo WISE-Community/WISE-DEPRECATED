@@ -121,6 +121,12 @@ class OpenResponseController {
         // get the authoring component content
         this.authoringComponentContent = this.$scope.authoringComponentContent;
 
+        /*
+         * get the original component content. this is used when showing
+         * previous work from another component.
+         */
+        this.originalComponentContent = this.$scope.originalComponentContent;
+
         // the mode to load the component in e.g. 'student', 'grading', 'onlyShowWork'
         this.mode = this.$scope.mode;
 
@@ -147,6 +153,11 @@ class OpenResponseController {
                 this.isDisabled = true;
             } else if (this.mode === 'onlyShowWork') {
                 this.isPromptVisible = false;
+                this.isSaveButtonVisible = false;
+                this.isSubmitButtonVisible = false;
+                this.isDisabled = true;
+            } else if (this.mode === 'showPreviousWork') {
+                this.isPromptVisible = true;
                 this.isSaveButtonVisible = false;
                 this.isSubmitButtonVisible = false;
                 this.isDisabled = true;
@@ -593,7 +604,17 @@ class OpenResponseController {
     getPrompt() {
         var prompt = null;
 
-        if (this.componentContent != null) {
+        if (this.originalComponentContent != null) {
+            // this is a show previous work component
+            
+            if (this.originalComponentContent.showPreviousWorkPrompt) {
+                // show the prompt from the previous work component
+                prompt = this.componentContent.prompt;
+            } else {
+                // show the prompt from the original component
+                prompt = this.originalComponentContent.prompt;
+            }
+        } else if (this.componentContent != null) {
             prompt = this.componentContent.prompt;
         }
 

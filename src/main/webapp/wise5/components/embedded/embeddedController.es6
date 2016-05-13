@@ -137,6 +137,12 @@ class EmbeddedController {
         // get the authoring component content
         this.authoringComponentContent = this.$scope.authoringComponentContent;
 
+        /*
+         * get the original component content. this is used when showing
+         * previous work from another component.
+         */
+        this.originalComponentContent = this.$scope.originalComponentContent;
+
         // the mode to load the component in e.g. 'student', 'grading', 'onlyShowWork'
         this.mode = this.$scope.mode;
 

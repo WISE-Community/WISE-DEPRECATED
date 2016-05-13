@@ -74,6 +74,12 @@ class DrawController {
         // get the authoring component content
         this.authoringComponentContent = this.$scope.authoringComponentContent;
 
+        /*
+         * get the original component content. this is used when showing
+         * previous work from another component.
+         */
+        this.originalComponentContent = this.$scope.originalComponentContent;
+
         // whether students can attach files to their work
         this.isStudentAttachmentEnabled = false;
 
@@ -118,6 +124,16 @@ class DrawController {
                 if (componentState != null) {
                     this.drawingToolId = "drawingtool_" + componentState.id;
                 }
+            } else if (this.mode === 'showPreviousWork') {
+                // get the component state from the scope
+                var componentState = this.$scope.componentState;
+                if (componentState != null) {
+                    this.drawingToolId = "drawingtool_" + componentState.id;
+                }
+                this.isPromptVisible = true;
+                this.isSaveButtonVisible = false;
+                this.isSubmitButtonVisible = false;
+                this.isDisabled = true;
             } else if (this.mode === 'authoring') {
                 this.drawingToolId = "drawingtool_" + this.nodeId + "_" + this.componentId;
                 this.updateAdvancedAuthoringView();
@@ -713,7 +729,17 @@ class DrawController {
     getPrompt() {
         var prompt = null;
 
-        if (this.componentContent != null) {
+        if (this.originalComponentContent != null) {
+            // this is a show previous work component
+            
+            if (this.originalComponentContent.showPreviousWorkPrompt) {
+                // show the prompt from the previous work component
+                prompt = this.componentContent.prompt;
+            } else {
+                // show the prompt from the original component
+                prompt = this.originalComponentContent.prompt;
+            }
+        } else if (this.componentContent != null) {
             prompt = this.componentContent.prompt;
         }
 

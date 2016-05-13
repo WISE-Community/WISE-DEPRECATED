@@ -47,7 +47,7 @@
             </div>
             <md-input-container class="input-container md-block input-container--open-response input-container--component md-no-float"
                                 ng-switch on="multipleChoiceController.getChoiceType()">
-                <label class="input-label md-no-float" ng-if="multipleChoiceController.getPrompt()" compile="multipleChoiceController.getPrompt()"></label>
+                <label class="input-label md-no-float" ng-if="multipleChoiceController.showPrompt()" compile="multipleChoiceController.getPrompt()"></label>
                 <possible-score max-score="multipleChoiceController.componentContent.maxScore"
                                 ng-if="multipleChoiceController.mode === 'student' && !multipleChoiceController.latestAnnotations.score"></possible-score>
                 <md-radio-group ng-switch-when="radio" ng-model="multipleChoiceController.studentChoices"

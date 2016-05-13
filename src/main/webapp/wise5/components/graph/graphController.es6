@@ -163,6 +163,11 @@ class GraphController {
                 this.isResetSeriesButtonVisible = false;
                 this.isSelectSeriesVisible = false;
                 this.isDisabled = true;
+            } else if (this.mode === 'showPreviousWork') {
+                this.isPromptVisible = true;
+                this.isSaveButtonVisible = false;
+                this.isSubmitButtonVisible = false;
+                this.isDisabled = true;
             } else if (this.mode === 'authoring') {
                 this.updateAdvancedAuthoringView()
 
@@ -1415,7 +1420,15 @@ class GraphController {
         var prompt = null;
 
         if (this.originalComponentContent != null) {
-            prompt = this.originalComponentContent.prompt;
+            // this is a show previous work component
+            
+            if (this.originalComponentContent.showPreviousWorkPrompt) {
+                // show the prompt from the previous work component
+                prompt = this.componentContent.prompt;
+            } else {
+                // show the prompt from the original component
+                prompt = this.originalComponentContent.prompt;
+            }
         } else if (this.componentContent != null) {
             prompt = this.componentContent.prompt;
         }
