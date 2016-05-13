@@ -79,7 +79,7 @@ class EmbeddedController {
             } else if (messageEventData.messageType === "studentWork") {
                 // save student work to WISE
                 // create a new component state
-                this.componentState = this.NodeService.createNewComponentState(data);
+                this.componentState = this.NodeService.createNewComponentState();
 
                 // set the student data into the component state
                 this.componentState.studentData = messageEventData.studentData;
