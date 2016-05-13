@@ -1,8 +1,10 @@
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -20,47 +22,69 @@ var NotebookService = function () {
         this.StudentAssetService = StudentAssetService;
         this.StudentDataService = StudentDataService;
 
-        this.filters = [
-        //{'name': 'all', 'type': 'all', 'label': 'All'},
-        { 'name': 'notes', 'type': 'all', 'label': 'Notes' }
-        /*,
-        {'name': 'questions', 'label': 'Questions'}
-        */
-        ];
+        // default notebook configuration
+        // TODO: i18n
+        // TODO: decide on desired defaults
+        // TODO: allow wise instance to set default enabled/disabled for each type in wise config?
+        this.config = {
+            enabled: true,
+            label: "Notebook",
+            itemTypes: {
+                note: {
+                    enabled: true,
+                    enableAddNote: true,
+                    enableClipping: true,
+                    enableStudentUploads: true,
+                    type: "note",
+                    label: {
+                        singular: "note",
+                        plural: "notes",
+                        link: "Notes"
+                    }
+                },
+                question: {
+                    enabled: false,
+                    enableAddNote: true,
+                    enableClipping: true,
+                    enableStudentUploads: true,
+                    type: "question",
+                    label: {
+                        singular: "question",
+                        plural: "questions",
+                        link: "Questions"
+                    }
+                },
+                report: {
+                    enabled: false,
+                    label: {
+                        singular: "report",
+                        plural: "reports",
+                        link: "Report"
+                    },
+                    notes: []
+                }
+            }
+        };
 
         this.reports = [];
-
         this.notebook = {};
         this.notebook.allItems = [];
         this.notebook.items = {};
         this.notebook.deletedItems = [];
-        this.notebookConfig = {};
 
-        if (this.ProjectService.project != null) {
+        this.notebookConfig = {};
+        if (this.ProjectService.project) {
+            // get notebook config from project
             this.notebookConfig = this.ProjectService.project.notebook;
-            if (this.notebookConfig != null) {
-                if (this.notebookConfig.report != null && this.notebookConfig.report.enabled) {
-                    var reportNotes = this.notebookConfig.report.notes;
-                    for (var i = 0; i < reportNotes.length; i++) {
-                        var reportNote = reportNotes[i];
-                        this.filters.push({
-                            "name": reportNote.reportId,
-                            "type": "report",
-                            "label": reportNote.title
-                        });
-                    }
-                }
+            // update local notebook config, preserving any defaults that aren't overriden
+            if (this.notebookConfig !== null && _typeof(this.notebookConfig) === 'object') {
+                this.config = angular.merge(this.config, this.notebookConfig);
             }
         }
     }
 
     _createClass(NotebookService, [{
-        key: 'toggleNotebook',
-        value: function toggleNotebook(ev) {
-            this.$rootScope.$broadcast('toggleNotebook', { ev: ev });
-        }
-    }, {
-        key: 'addItem',
+        key: "addItem",
         value: function addItem(notebookItem) {
             this.notebook.allItems.push(notebookItem);
 
@@ -70,19 +94,19 @@ var NotebookService = function () {
             this.$rootScope.$broadcast('notebookUpdated', { notebook: this.notebook });
         }
     }, {
-        key: 'editItem',
-        value: function editItem(itemId, ev) {
+        key: "editItem",
+        value: function editItem(ev, itemId) {
             // boradcast edit notebook item event
             this.$rootScope.$broadcast('editNote', { itemId: itemId, ev: ev });
         }
     }, {
-        key: 'addNewItem',
+        key: "addNewItem",
         value: function addNewItem(ev, file) {
             // boradcast create new notebook item event
             this.$rootScope.$broadcast('addNewNote', { ev: ev, file: file });
         }
     }, {
-        key: 'deleteItem',
+        key: "deleteItem",
         value: function deleteItem(itemToDelete) {
             var items = this.notebook.items;
             var deletedItems = this.notebook.deletedItems;
@@ -95,7 +119,7 @@ var NotebookService = function () {
             }
         }
     }, {
-        key: 'getLatestNotebookItemByLocalNotebookItemId',
+        key: "getLatestNotebookItemByLocalNotebookItemId",
         value: function getLatestNotebookItemByLocalNotebookItemId(itemId) {
             if (this.notebook.items.hasOwnProperty(itemId)) {
                 var items = this.notebook.items[itemId];
@@ -108,7 +132,7 @@ var NotebookService = function () {
         // returns student's report item if they've done work, or the template if they haven't.
 
     }, {
-        key: 'getLatestNotebookReportItemByReportId',
+        key: "getLatestNotebookReportItemByReportId",
         value: function getLatestNotebookReportItemByReportId(reportId) {
             return this.getLatestNotebookItemByLocalNotebookItemId(reportId);
         }
@@ -116,10 +140,10 @@ var NotebookService = function () {
         // returns the authored report item
 
     }, {
-        key: 'getTemplateReportItemByReportId',
+        key: "getTemplateReportItemByReportId",
         value: function getTemplateReportItemByReportId(reportId) {
             var templateReportItem = null;
-            var reportNotes = this.notebookConfig.report.notes;
+            var reportNotes = this.notebookConfig.itemTypes.report.notes;
             for (var i = 0; i < reportNotes.length; i++) {
                 var reportNote = reportNotes[i];
                 if (reportNote.reportId == reportId) {
@@ -134,7 +158,7 @@ var NotebookService = function () {
             return templateReportItem;
         }
     }, {
-        key: 'calculateTotalUsage',
+        key: "calculateTotalUsage",
         value: function calculateTotalUsage() {
             // get the total size
             var totalSizeSoFar = 0;
@@ -150,17 +174,17 @@ var NotebookService = function () {
             this.notebook.usagePercentage = this.notebook.totalSize / this.notebook.totalSizeMax * 100;
         }
     }, {
-        key: 'getNotebookConfig',
+        key: "getNotebookConfig",
         value: function getNotebookConfig() {
-            return this.notebookConfig;
+            return this.config;
         }
     }, {
-        key: 'isNotebookEnabled',
+        key: "isNotebookEnabled",
         value: function isNotebookEnabled() {
-            return this.notebookConfig != null && this.notebookConfig.enabled;
+            return this.config.enabled;
         }
     }, {
-        key: 'retrieveNotebookItems',
+        key: "retrieveNotebookItems",
         value: function retrieveNotebookItems() {
             var _this = this;
 
@@ -200,7 +224,7 @@ var NotebookService = function () {
             });
         }
     }, {
-        key: 'groupNotebookItems',
+        key: "groupNotebookItems",
 
 
         /**
@@ -225,7 +249,7 @@ var NotebookService = function () {
             }
         }
     }, {
-        key: 'hasStudentWorkNotebookItem',
+        key: "hasStudentWorkNotebookItem",
         value: function hasStudentWorkNotebookItem(studentWork) {
             for (var i = 0; i < this.notebook.items.length; i++) {
                 var notebookItem = this.notebook.items[i];
@@ -236,7 +260,7 @@ var NotebookService = function () {
             return false;
         }
     }, {
-        key: 'saveNotebookItem',
+        key: "saveNotebookItem",
         value: function saveNotebookItem(notebookItemId, nodeId, localNotebookItemId, type, title, content) {
             var _this2 = this;
 
@@ -284,7 +308,7 @@ var NotebookService = function () {
             }
         }
     }, {
-        key: 'uploadStudentAssetNotebookItem',
+        key: "uploadStudentAssetNotebookItem",
         value: function uploadStudentAssetNotebookItem(file) {
             var _this3 = this;
 
@@ -315,7 +339,7 @@ var NotebookService = function () {
             });
         }
     }, {
-        key: 'saveNotebookToggleEvent',
+        key: "saveNotebookToggleEvent",
         value: function saveNotebookToggleEvent(isOpen, currentNode) {
             var nodeId = null;
             var componentId = null;

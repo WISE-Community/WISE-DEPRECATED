@@ -1,21 +1,30 @@
 <md-toolbar md-theme="light" class="notebook-toolbar node-sidebar__toolbar md-whiteframe-1dp" layout="column">
-    <md-button ng-if="notebookToolbarCtrl.noteEnabled" aria-label="View Notes" class="md-icon-button" ng-click="notebookToolbarCtrl.openNotebook($event)">
+    <md-button ng-if="notebookToolbarCtrl.noteEnabled"
+               aria-label="View {{notebookToolbarCtrl.noteLabel}}"
+               class="md-icon-button"
+               ng-click="notebookToolbarCtrl.openNotebook($event, 'note')">
         <md-icon class="note"> description </md-icon>
-        <md-tooltip md-direction="left"><span translate="Notes">Notes</span></md-tooltip>
+        <md-tooltip md-direction="left">{{notebookToolbarCtrl.noteLabel}}</md-tooltip>
     </md-button>
-    <md-button ng-if="notebookToolbarCtrl.questionEnabled" aria-label="View Questions" class="md-icon-button">
+    <md-button ng-if="notebookToolbarCtrl.questionEnabled"
+               aria-label="View {{notebookToolbarCtrl.questionLabel}}"
+               class="md-icon-button"
+               ng-click="notebookToolbarCtrl.openNotebook($event, 'question')">
         <md-icon class="question"> live_help </md-icon>
-        <md-tooltip md-direction="left"><span translate="Questions">Questions</span></md-tooltip>
+        <md-tooltip md-direction="left">{{notebookToolbarCtrl.questionLabel}}</md-tooltip>
     </md-button>
-    <md-divider></md-divider>
-    <md-button ng-if="notebookToolbarCtrl.reportEnabled" aria-label="Report" class="md-icon-button" ng-click="notebookToolbarCtrl.openReport($event)">
-        <md-icon class="accent-2"> chrome_reader_mode </md-icon>
-        <md-tooltip md-direction="left"><span translate="Report">Report</span></md-tooltip>
+    <md-divider ng-if="notebookToolbarCtrl.reportEnabled"></md-divider>
+    <md-button ng-if="notebookToolbarCtrl.reportEnabled"
+               aria-label="View {{notebookToolbarCtrl.reportLabel}}"
+               class="md-icon-button"
+               ng-click="notebookToolbarCtrl.openNotebook($event, 'report')">
+        <md-icon class="accent-2"> assignment </md-icon>
+        <md-tooltip md-direction="left">{{notebookToolbarCtrl.reportLabel}}</md-tooltip>
     </md-button>
     <md-divider></md-divider>
     <md-button aria-label="Add Notebook item" class="md-icon-button" ng-click="notebookToolbarCtrl.addNewNote($event)">
         <md-icon class="md-accent"> add_circle </md-icon>
-        <md-tooltip md-direction="left"><span>Add Note</span></md-tooltip>
+        <md-tooltip md-direction="left"><span>New Note</span></md-tooltip>
     </md-button>
     <!--<md-fab-speed-dial class="md-scale" md-theme="default" md-direction="up" md-open="notebookToolbarCtrl.addMode"
                        ng-mouseenter="notebookToolbarCtrl.addMode=true" ng-mouseleave="notebookToolbarCtrl.addMode=false">

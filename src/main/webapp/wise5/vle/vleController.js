@@ -37,9 +37,6 @@ var VLEController = function () {
         this.projectStyle = this.ProjectService.getStyle();
         this.projectName = this.ProjectService.getProjectTitle();
 
-        this.notebookFilters = this.NotebookService.filters;
-        this.notebookFilter = this.notebookFilters[0].name; // show notes on load; TODO: move to theme?
-
         // get the total score for the workgroup
         this.totalScore = this.StudentDataService.getTotalScore();
 
@@ -100,17 +97,6 @@ var VLEController = function () {
         // listen for the unpause screen event
         this.$scope.$on('unPauseScreen', function (event, args) {
             _this.unPauseScreen();
-        });
-
-        // listen for the unpause screen event
-        this.$scope.$on('setNotebookFilter', function (event, args) {
-            // TODO: move to theme?
-            var filter = args.filter;
-            if (filter === 'report') {
-                _this.notebookFilter = _this.notebookFilters.last().name;
-            } else {
-                _this.notebookFilter = filter;
-            }
         });
 
         this.$scope.$on('requestImageCallback', function (event, args) {
@@ -297,7 +283,7 @@ var VLEController = function () {
 
                     if (snippableItem != null) {
                         /*
-                         * create a local browser URL for the snippable item so 
+                         * create a local browser URL for the snippable item so
                          * we can display it as an image
                          */
                         snippableItem.url = URL.createObjectURL(snippableItem);

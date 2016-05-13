@@ -3001,59 +3001,49 @@
     "startGroupId": "group0",
     "startNodeId": "node1",
     "navigationMode": "guided",
-    "navigationApplications": [
-        "wiseMap",
-        "wiseList"
-    ],
-    "layout": {
-        "template": "starmap|leftNav|rightNav",
-        "studentIsOnGroupNode": "layout3",
-        "studentIsOnApplicationNode": "layout4"
-    },
     "metadata": {
         "title": "Self-Propelled Vehicles Challenge"
     },
     "notebook": {
         "enabled": true,
-        "question": {
-            "enabled": false
-        },
-        "note": {
-            "enabled": true
-        },
-        "report": {
-            "enabled": true,
-            "notes": [
-                {
-                    "id": "letterToCongressperson",
-                    "title": "Letter to a congress person",
-                    "description": "In this page, you will write a report to a congress person",
-                    "prompt": "Sort the text evidence in your notebook to build a persuasive letter to your congressperson.",
-                    "content": {
-                        "sections": [
-                            {
-                                "id": "intro",
-                                "title": "Introduction",
-                                "content": [
-                                    {"type": "text", "value": "This is a nice sentence with <b>bold letters</b>.", "editable": false}
-                                ]
-                            },
-                            {
-                                "id": "body",
-                                "title": "Methods",
-                                "content": [
-                                ]
-                            },
-                            {
-                                "id": "results",
-                                "title": "Results",
-                                "content": [
-                                ]
-                            }
-                        ]
-                    }
+        "label": "Notebook",
+        "itemTypes": {
+            "note": {
+                "enabled": true,
+                "enableAddNote": true,
+                "enableClipping": true,
+                "enableStudentUploads": true,
+                "label": {
+                    "singular": "note",
+                    "plural": "notes",
+                    "link": "Notes"
                 }
-            ]
+            },
+            "question": {
+                "enabled": false,
+                "label": {
+                    "singular": "question",
+                    "plural": "questions",
+                    "link": "Questions"
+                }
+            },
+            "report": {
+                "enabled": true,
+                "label": {
+                    "singular": "report",
+                    "plural": "reports",
+                    "link": "Report"
+                },
+                "notes": [
+                    {
+                        "reportId": "finalReport",
+                        "title": "Final Report",
+                        "description": "Final summary report of what you learned in this project",
+                        "prompt": "Use this space to write your final report using evidence from your notebook.",
+                        "content": "<h3>This is a heading</h3><p>This is a paragraph.</p>"
+                    }
+                ]
+            }
         }
     }
 }

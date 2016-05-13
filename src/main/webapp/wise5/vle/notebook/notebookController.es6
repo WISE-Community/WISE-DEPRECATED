@@ -25,6 +25,7 @@ class NotebookController {
         this.notebook = null;
         this.itemId = null;
         this.item = null;
+        this.notebookConfig = this.NotebookService.config;
 
         $scope.$on('notebookUpdated', (event, args) => {
             this.notebook = args.notebook;

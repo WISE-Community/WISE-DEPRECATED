@@ -7,7 +7,7 @@
     </div>
     <div class="notebookItemSource"><wiselink type="link" nodeId="{{notebookItemController.getItemNodeId()}}" linkText="{{notebookItemController.getItemNodePositionAndTitle()}}"></wiselink></div>
     <md-button ng-if="notebookItemController.isEditAllowed" id="editNotebookItemButton" aria-label="Edit NotebookItem" class="md-icon-button"
-               ng-click="notebookItemController.editNotebookItem(notebookItemController.item.localNotebookItemId, $event)">
+               ng-click="notebookItemController.editNotebookItem($event, notebookItemController.item.localNotebookItemId)">
         <md-icon md-menu-origin> edit </md-icon>
         <md-tooltip md-direction="left"><span translate="editNotebookItem" /></md-tooltip>
     </md-button>

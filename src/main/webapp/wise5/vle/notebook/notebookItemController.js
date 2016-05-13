@@ -86,8 +86,8 @@ var NotebookItemController = function () {
         }
     }, {
         key: "editNotebookItem",
-        value: function editNotebookItem(notebookItemId, $event) {
-            this.NotebookService.editItem(notebookItemId, $event);
+        value: function editNotebookItem(ev, itemId) {
+            this.NotebookService.editItem(ev, itemId);
         }
     }, {
         key: "attachStudentAssetToNote",
