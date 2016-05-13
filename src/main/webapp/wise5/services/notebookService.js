@@ -43,7 +43,7 @@ var NotebookService = function () {
                     }
                 },
                 question: {
-                    enabled: true,
+                    enabled: false,
                     enableAddNote: true,
                     enableClipping: true,
                     enableStudentUploads: true,

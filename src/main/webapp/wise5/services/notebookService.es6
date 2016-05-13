@@ -36,7 +36,7 @@ class NotebookService {
                     },
                 },
                 question: {
-                    enabled: true,
+                    enabled: false,
                     enableAddNote: true,
                     enableClipping: true,
                     enableStudentUploads: true,
