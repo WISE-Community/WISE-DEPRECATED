@@ -79,6 +79,10 @@ class NotebookItemController {
         return this.ProjectService.getThemePath() + '/notebook/notebookItem.html';
     }
 
+    editNotebookItem(notebookItemId, $event) {
+        this.NotebookService.editItem(notebookItemId, $event);
+    }
+
     attachStudentAssetToNote(files) {
         if (files != null) {
             for (var f = 0; f < files.length; f++) {

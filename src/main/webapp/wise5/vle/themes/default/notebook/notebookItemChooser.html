@@ -2,7 +2,7 @@
 <ul style="list-style-type: none">
     <li ng-repeat="(localNotebookItemId, notebookItems) in notebookItemChooserController.notebookItems">
         <div ng-if="notebookItems.last().type == 'note'" class="notebookItem">
-            <notebookitem item-id="{{notebookItems.last().localNotebookItemId}}" template-url="notebookItemChooserController.themePath + '/notebook/notebookItem.html'" is-edit-allowed="false"></notebookitem>
+            <notebook-item item-id="localNotebookItemId" is-edit-allowed="false"></notebook-item>
             <md-button class="md-accent" aria-label="Add new item to {{ section.title }}"
                        ng-click="chooseNotebookItem(notebookItems.last())">
                 <md-icon class="md-accent">add_circle</md-icon>

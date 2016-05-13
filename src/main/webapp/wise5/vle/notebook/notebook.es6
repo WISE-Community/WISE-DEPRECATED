@@ -7,7 +7,8 @@ import NotebookItemReportController from './notebookItemReportController';
 const NotebookItem = {
     bindings: {
         itemId: '<',
-        isEditEnabled: '<',
+        isEditMode: '<',
+        isEditAllowed: '<',
         templateUrl: '<',
         componentController: '<',
         onUpdate: '&'

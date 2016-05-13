@@ -59,21 +59,10 @@ class NotebookItemReportController {
         return this.templateUrl;
     }
 
-    addTextContent(section) {
-        let newReportContent = {
-            "type": "text",
-            "value": "Write your thoughts here..."
-        };
-        section.content.push(newReportContent);
-    }
-
-    editSectionContentText(sectionContent) {
-
-    }
-
-    addNotebookItemContent($event, section) {
+    addNotebookItemContent($event) {
         let notebookItems = this.NotebookService.notebook.items;
         let templateUrl = this.themePath + '/notebook/notebookItemChooser.html';
+        let reportTextareaCursorPosition = angular.element('textarea.report').prop("selectionStart"); // insert the notebook item at the cursor position later
 
         this.$mdDialog.show({
             parent: angular.element(document.body),
@@ -81,30 +70,29 @@ class NotebookItemReportController {
             templateUrl: templateUrl,
             locals: {
                 notebookItems: notebookItems,
-                section: section,
+                reportItem: this.reportItem,
+                reportTextareaCursorPosition: reportTextareaCursorPosition,
                 themePath: this.themePath
             },
             controller: NotebookItemChooserController,
             controllerAs: 'notebookItemChooserController',
             bindToController: true
         });
-        function NotebookItemChooserController($scope, $mdDialog, notebookItems, section, themePath) {
+        function NotebookItemChooserController($scope, $mdDialog, notebookItems, reportItem, reportTextareaCursorPosition, themePath) {
             $scope.notebookItems = notebookItems;
-            $scope.section = section;
+            $scope.reportItem = reportItem;
+            $scope.reportTextareaCursorPosition = reportTextareaCursorPosition;
             $scope.themePath = themePath;
             $scope.close = () => {
                 $mdDialog.hide();
             };
             $scope.chooseNotebookItem = (notebookItem) => {
-                let newReportContent = {
-                    type: "notebookItem",
-                    notebookItemId: notebookItem.localNotebookItemId
-                };
-                section.content.push(newReportContent);
+                let notebookItemHTML = '<notebook-item item-id="\'' + notebookItem.localNotebookItemId + '\'" is-edit-allowed="true"></notebook-item>';
+                $scope.reportItem.content.content = $scope.reportItem.content.content.substring(0, reportTextareaCursorPosition) + notebookItemHTML + $scope.reportItem.content.content.substring(reportTextareaCursorPosition);
                 $mdDialog.hide();
             };
         }
-        NotebookItemChooserController.$inject = ["$scope", "$mdDialog", "notebookItems", "section", "themePath"];
+        NotebookItemChooserController.$inject = ["$scope", "$mdDialog", "notebookItems", "reportItem", "reportTextareaCursorPosition", "themePath"];
     }
 
     saveNotebookReportItem() {

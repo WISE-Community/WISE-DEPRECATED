@@ -73,7 +73,7 @@ var NotebookService = function () {
         key: 'editItem',
         value: function editItem(itemId, ev) {
             // boradcast edit notebook item event
-            this.$rootScope.$broadcast('editNote', { item: itemId, ev: ev });
+            this.$rootScope.$broadcast('editNote', { itemId: itemId, ev: ev });
         }
     }, {
         key: 'addNewItem',

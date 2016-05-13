@@ -85,6 +85,11 @@ var NotebookItemController = function () {
             return this.ProjectService.getThemePath() + '/notebook/notebookItem.html';
         }
     }, {
+        key: "editNotebookItem",
+        value: function editNotebookItem(notebookItemId, $event) {
+            this.NotebookService.editItem(notebookItemId, $event);
+        }
+    }, {
         key: "attachStudentAssetToNote",
         value: function attachStudentAssetToNote(files) {
             var _this = this;
