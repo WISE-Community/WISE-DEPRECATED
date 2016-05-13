@@ -64,7 +64,7 @@ class NotebookService {
 
     editItem(itemId, ev) {
         // boradcast edit notebook item event
-        this.$rootScope.$broadcast('editNote', {item: itemId, ev: ev});
+        this.$rootScope.$broadcast('editNote', {itemId: itemId, ev: ev});
     };
 
     addNewItem(ev, file) {

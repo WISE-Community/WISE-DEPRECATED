@@ -21,7 +21,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var NotebookItem = {
     bindings: {
         itemId: '<',
-        isEditEnabled: '<',
+        isEditMode: '<',
+        isEditAllowed: '<',
         templateUrl: '<',
         componentController: '<',
         onUpdate: '&'

@@ -33,8 +33,6 @@ describe('WISE5 Student VLE Preview', function () {
     var previousButton = element(by.xpath('//button[@aria-label="Previous Item"]'));
     var nextButton = element(by.xpath('//button[@aria-label="Next Item"]'));
     var closeButton = element(by.xpath('//button[@aria-label="Close Step"]'));
-    var notebookButton = $("#notebookButton");
-    var notebookSideNav = element(by.xpath('//md-sidenav')); // side navigation bar for the notebook
     var accountButton = element(by.xpath('//button[@aria-label="Open user menu"]'));
     var accountMenu = element(by.css('._md-open-menu-container'));
 
@@ -45,13 +43,11 @@ describe('WISE5 Student VLE Preview', function () {
     });
 
     it('should have UI elements on the page', function () {
-        // Check that previous, next, close, notebook, and account buttons are on the page and have the right md-icons
+        // Check that previous, next, close, and account buttons are on the page and have the right md-icons
         expect(previousButton.getText()).toBe('arrow_back');
         expect(nextButton.getText()).toBe('arrow_forward');
         expect(closeButton.getText()).toBe('close');
-        expect(notebookButton.getText()).toBe('book');
         expect(accountButton.getText()).toBe('account_circle');
-        expect(hasClass(notebookSideNav, '_md-closed')).toBe(true); // Notebook side nav should be hidden
         expect(accountMenu.getAttribute('aria-hidden')).toEqual("true"); // Account menu should be hidden
     });
 

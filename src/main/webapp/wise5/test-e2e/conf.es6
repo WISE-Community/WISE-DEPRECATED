@@ -6,7 +6,7 @@ exports.config = {
 
     specs: [
         'previewVLE.spec.js',
-        'notebook.spec.js',
+        /*'notebook.spec.js', commented out until notebook behavior settles */
         'authoringTool.spec.js',
         'setUpRun.spec.js',
         'classroomMonitor.spec.js'

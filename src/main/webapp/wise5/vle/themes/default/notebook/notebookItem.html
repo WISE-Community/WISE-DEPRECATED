@@ -1,14 +1,19 @@
 
-<div ng-if="!notebookItemController.isEditEnabled">
+<div ng-if="!notebookItemController.isEditMode">
     <!-- Display an existing notebook item. -->
     <span>{{notebookItemController.item.content.text}}</span>
     <div class="component__attachment" ng-repeat="attachment in notebookItemController.item.content.attachments">
         <img ng-src="{{attachment.iconURL}}" class="component__attachment__content" />
     </div>
     <div class="notebookItemSource"><wiselink type="link" nodeId="{{notebookItemController.getItemNodeId()}}" linkText="{{notebookItemController.getItemNodePositionAndTitle()}}"></wiselink></div>
+    <md-button ng-if="notebookItemController.isEditAllowed" id="editNotebookItemButton" aria-label="Edit NotebookItem" class="md-icon-button"
+               ng-click="notebookItemController.editNotebookItem(notebookItemController.item.localNotebookItemId, $event)">
+        <md-icon md-menu-origin> edit </md-icon>
+        <md-tooltip md-direction="left"><span translate="editNotebookItem" /></md-tooltip>
+    </md-button>
 </div>
 
-<div ng-if="notebookItemController.isEditEnabled">
+<div ng-if="notebookItemController.isEditMode">
     <!-- User wants to add a new note or edit existing note. -->
     <md-input-container class="md-block md-input-has-placeholder" md-no-float>
           <textarea placeholder="{{ 'typeYourNoteHere' | translate }}"

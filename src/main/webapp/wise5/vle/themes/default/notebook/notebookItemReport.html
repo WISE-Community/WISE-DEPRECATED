@@ -1,29 +1,18 @@
 <h3>{{notebookItemReportController.reportItem.content.title}}</h3>
 <h4>{{notebookItemReportController.reportItem.content.prompt}}</h4>
 
-<div class="reportSection" ng-repeat="section in notebookItemReportController.reportItem.content.content.sections" style="border: 1px dotted gray">
-    <h5>{{section.title}}</h5>
-    <div ng-repeat="sectionContent in section.content">
-        <div ng-if="sectionContent.type == 'text'">
-            <!-- a text item in the report -->
-            <textarea rows="4" ng-model="sectionContent.value" cols="ng-disabled="!sectionContent.editable"></textarea>
-        </div>
-        <div ng-if="sectionContent.type == 'notebookItem'">
-            <!-- a notebook item in the report -->
-            <notebookitem item-id="{{sectionContent.notebookItemId}}" template-url="notebookItemReportController.themePath + '/notebook/notebookItem.html'" is-edit-allowed="true"></notebookitem>
-        </div>
-    </div>
-    <md-button class="md-accent" aria-label="Add new item to {{ section.title }}"
-               ng-click="notebookItemReportController.addTextContent(section)">
-        <md-icon class="md-accent">add_circle</md-icon>
-        Add text item
-    </md-button>
-    <md-button class="md-accent" aria-label="Add new item to {{ section.title }}"
-               ng-click="notebookItemReportController.addNotebookItemContent($event, section)">
-        <md-icon class="md-accent">add_circle</md-icon>
-        Add notebook item
-    </md-button>
-</div>
+<textarea class="report" ng-model="notebookItemReportController.reportItem.content.content" rows="10" cols="20"></textarea>
+
+<md-button class="md-accent" aria-label="Add notebook item to report"
+           ng-click="notebookItemReportController.addNotebookItemContent($event, notebookItemReportController.reportItem.content.content)">
+    <md-icon class="md-accent">add_circle</md-icon>
+    Add notebook item
+</md-button>
+
+<br/>
+Preview:
+<div compile="notebookItemReportController.reportItem.content.content"></div>
+
 <md-button class="md-accent" aria-label="Save Report"
            ng-click="notebookItemReportController.saveNotebookReportItem()">
     <md-icon class="md-accent">save</md-icon>

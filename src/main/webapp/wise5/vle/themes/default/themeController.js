@@ -270,7 +270,7 @@ var ThemeController = function () {
         }
     }, {
         key: 'editNote',
-        value: function editNote(itemId, isEditEnabled, ev, file) {
+        value: function editNote(itemId, isEditMode, ev, file) {
             var showFullScreen = this.$mdMedia('xs');
             var notebookItemTemplate = this.themePath + '/notebook/editNotebookItem.html';
             var item = this.NotebookService.getLatestNotebookItemByLocalNotebookItemId(itemId);
@@ -285,7 +285,7 @@ var ThemeController = function () {
                 controller: EditNotebookItemController,
                 locals: {
                     itemId: itemId,
-                    isEditEnabled: isEditEnabled,
+                    isEditMode: isEditMode,
                     type: type,
                     file: file
                 }
@@ -295,10 +295,10 @@ var ThemeController = function () {
             function EditNotebookItemController($scope, $mdDialog, NotebookService) {
                 $scope.itemId = itemId;
                 $scope.type = type;
-                $scope.isEditEnabled = isEditEnabled;
+                $scope.isEditMode = isEditMode;
                 $scope.NotebookService = NotebookService;
                 $scope.item = null;
-                $scope.title = ($scope.isEditEnabled ? $scope.itemId ? 'Edit ' : 'Add ' : 'View ') + $scope.type;
+                $scope.title = ($scope.isEditMode ? $scope.itemId ? 'Edit ' : 'Add ' : 'View ') + $scope.type;
                 $scope.file = file;
 
                 $scope.cancel = function () {
