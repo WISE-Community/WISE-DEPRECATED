@@ -5312,6 +5312,79 @@ class ProjectService {
             }
         }
     }
+    
+    /**
+     * Check if a component is a connected component
+     * @param nodeId the node id of the component
+     * @param componentId the component that is listening for connected changes
+     * @param connectedComponentId the component that is broadcasting connected changes
+     * @returns whether the componentId is connected to the connectedComponentId
+     */
+    isConnectedComponent(nodeId, componentId, connectedComponentId) {
+        
+        var result = false;
+        
+        // get the component
+        var component = this.getComponentByNodeIdAndComponentId(nodeId, componentId);
+        
+        if (component != null) {
+            
+            var connectedComponents = component.connectedComponents;
+            
+            if (connectedComponents != null) {
+                
+                // loop through all the connected components
+                for (var c = 0; c < connectedComponents.length; c++) {
+                    var connectedComponent = connectedComponents[c];
+                    
+                    if (connectedComponent != null) {
+                        if (connectedComponentId === connectedComponent.id) {
+                            // we have found the connected component id we are looking for
+                            result = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        
+        return result;
+    }
+    
+    /**
+     * Get a connected component params
+     * @param componentId the connected component id
+     * @returns the params for the connected component
+     */
+    getConnectedComponentParams(componentContent, componentId) {
+        
+        var connectedComponentParams = null;
+        
+        if (componentContent != null && componentId != null) {
+            
+            // get the connected components
+            var connectedComponents = componentContent.connectedComponents;
+            
+            if (connectedComponents != null) {
+                
+                // loop through all the connected components
+                for (var c = 0; c < connectedComponents.length; c++) {
+                    var connectedComponent = connectedComponents[c];
+                    
+                    if (connectedComponent != null) {
+                        var tempComponentId = connectedComponent.id;
+                        
+                        if (componentId === tempComponentId) {
+                            // we have found the connected component we are looking for
+                            connectedComponentParams = connectedComponent;
+                        }
+                    }
+                }
+            }
+        }
+        
+        return connectedComponentParams;
+    }
 }
 
 ProjectService.$inject = [
