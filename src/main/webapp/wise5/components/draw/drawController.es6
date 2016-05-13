@@ -352,61 +352,65 @@ class DrawController {
             }
             
             // check if the component state is from a connected component
-            if (this.isConnectedComponent(componentState.componentId)) {
-                
-                /*
-                 * make a copy of the component state so we don't accidentally
-                 * change any values in the referenced object
-                 */
-                componentState = this.UtilService.makeCopyOfJSONObject(componentState);
+            if (this.ProjectService.isConnectedComponent(this.nodeId, this.componentId, componentState.componentId)) {
                 
                 // get the connected component params
-                var connectedComponentParams = this.getConnectedComponentParams(componentState.componentId);
+                var connectedComponentParams = this.ProjectService.getConnectedComponentParams(this.componentContent, componentState.componentId);
                 
-                /*
-                 * check if the the canvas is empty which means the student has 
-                 * not drawn anything yet
-                 */
-                var isCanvasEmpty = this.isCanvasEmpty();
-                var connectedComponentParamsSatisfied = false;
-                
-                if (connectedComponentParams.updateOnlyOnSubmit) {
-                    // we will update only if the connected component state was submitted
+                if (connectedComponentParams != null) {
                     
-                    if (componentState.isSubmit) {
-                        connectedComponentParamsSatisfied = true;
+                    if (connectedComponentParams.updateOn === 'save' ||
+                        (connectedComponentParams.updateOn === 'submit' && componentState.isSubmit)) {
+                        
+                        var performUpdate = false;
+                        
+                        /*
+                         * make a copy of the component state so we don't accidentally
+                         * change any values in the referenced object
+                         */
+                        componentState = this.UtilService.makeCopyOfJSONObject(componentState);
+                        
+                        /*
+                         * check if the the canvas is empty which means the student has 
+                         * not drawn anything yet
+                         */
+                        if (this.isCanvasEmpty()) {
+                            performUpdate = true;
+                        } else {
+                            /*
+                             * the student has drawn on the canvas so we
+                             * will ask them if they want to update it
+                             */
+                            var answer = confirm('Do you want to update the connected drawing?');
+                            
+                            if (answer) {
+                                // the student answered yes
+                                performUpdate = true;
+                            }
+                        }
+                        
+                        if (performUpdate) {
+                            
+                            if (!connectedComponentParams.includeBackground) {
+                                // remove the background from the draw data
+                                this.DrawService.removeBackgroundFromComponentState(componentState);
+                            }
+                            
+                            // update the draw data
+                            this.setDrawData(componentState);
+                            
+                            // the table has changed
+                            this.$scope.drawController.isDirty = true;
+                            this.$scope.drawController.isSubmitDirty = true;
+                        }
+                        
+                        /*
+                         * remember the component state and connected component params
+                         * in case we need to use them again later
+                         */
+                        this.latestConnectedComponentState = componentState;
+                        this.latestConnectedComponentParams = connectedComponentParams;
                     }
-                } else {
-                    /*
-                     * the component params were satisfied so we may update
-                     * the student work as long as the canvas is empty
-                     */
-                    connectedComponentParamsSatisfied = true;
-                }
-                
-                if (!connectedComponentParams.includeBackground) {
-                    // remove the background from the draw data
-                    this.DrawService.removeBackgroundFromComponentState(componentState);
-                }
-                
-                if (isCanvasEmpty && connectedComponentParamsSatisfied) {
-                    /*
-                     * the canvas is empty and the connected component params
-                     * have been satisfied so we will update the draw data
-                     * in this component
-                     */
-                    
-                    // update the draw data
-                    this.setDrawData(componentState);
-                }
-                
-                if (connectedComponentParamsSatisfied) {
-                    /*
-                     * remember the component state and connected component params
-                     * in case we need to use them again later
-                     */
-                    this.latestConnectedComponentState = componentState;
-                    this.latestConnectedComponentParams = connectedComponentParams;
                 }
             }
         }));
@@ -900,73 +904,6 @@ class DrawController {
                 }
             }
         }
-    }
-    
-    /**
-     * Check if a component id is a connected component
-     * @param componentId check if this component id is a connected component
-     * @returns whether the component id is a connected component
-     */
-    isConnectedComponent(componentId) {
-        
-        var result = false;
-        
-        // get the connected components
-        var connectedComponents = this.componentContent.connectedComponents;
-        
-        if (connectedComponents != null) {
-            
-            // loop through all the connected components
-            for (var c = 0; c < connectedComponents.length; c++) {
-                
-                // get a connected component
-                var connectedComponent = connectedComponents[c];
-                
-                if (connectedComponent != null) {
-                    var tempComponentId = connectedComponent.id;
-                    
-                    if (componentId === tempComponentId) {
-                        // the component id matches so it is a connected component
-                        result = true;
-                        break;
-                    }
-                }
-            }
-        }
-        
-        return result;
-    }
-    
-    /**
-     * Get a connected component params
-     * @param componentId the connected component id
-     * @returns the params for the connected component
-     */
-    getConnectedComponentParams(componentId) {
-        
-        var connectedComponentParams = null;
-        
-        // get the connected components
-        var connectedComponents = this.componentContent.connectedComponents;
-        
-        if (connectedComponents != null) {
-            
-            // loop through all the connected components
-            for (var c = 0; c < connectedComponents.length; c++) {
-                var connectedComponent = connectedComponents[c];
-                
-                if (connectedComponent != null) {
-                    var tempComponentId = connectedComponent.id;
-                    
-                    if (componentId === tempComponentId) {
-                        // we have found the connected component we are looking for
-                        connectedComponentParams = connectedComponent;
-                    }
-                }
-            }
-        }
-        
-        return connectedComponentParams;
     }
     
     /**

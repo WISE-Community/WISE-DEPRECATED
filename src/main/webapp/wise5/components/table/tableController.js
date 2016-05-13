@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var TableController = function () {
-    function TableController($rootScope, $scope, NodeService, ProjectService, StudentDataService, TableService) {
+    function TableController($rootScope, $scope, NodeService, ProjectService, StudentDataService, TableService, UtilService) {
         _classCallCheck(this, TableController);
 
         this.$rootScope = $rootScope;
@@ -18,6 +18,7 @@ var TableController = function () {
         this.ProjectService = ProjectService;
         this.StudentDataService = StudentDataService;
         this.TableService = TableService;
+        this.UtilService = UtilService;
 
         // the node id of the current node
         this.nodeId = null;
@@ -95,6 +96,9 @@ var TableController = function () {
 
         // the mode to load the component in e.g. 'student', 'grading', 'onlyShowWork'
         this.mode = this.$scope.mode;
+
+        this.latestConnectedComponentState = null;
+        this.latestConnectedComponentParams = null;
 
         this.workgroupId = this.$scope.workgroupId;
         this.teacherWorkgroupId = this.$scope.teacherWorkgroupId;
@@ -224,16 +228,31 @@ var TableController = function () {
 
             if (connectedComponent != null && connectedComponentParams != null && componentState != null) {
 
-                // get the component type that has changed
-                var componentType = connectedComponent.type;
+                if (connectedComponentParams.updateOn === 'change') {
+                    // get the component type that has changed
+                    var componentType = connectedComponent.type;
 
-                if (componentType === 'Graph') {
+                    /*
+                     * make a copy of the component state so we don't accidentally
+                     * change any values in the referenced object
+                     */
+                    componentState = this.UtilService.makeCopyOfJSONObject(componentState);
 
-                    // set the graph data into the table
-                    this.$scope.tableController.setGraphDataIntoTableData(componentState, connectedComponentParams);
+                    if (componentType === 'Table') {
 
-                    // the table has changed
-                    this.$scope.tableController.isDirty = true;
+                        // set the table data
+                        this.$scope.tableController.setStudentWork(componentState);
+
+                        // the table has changed
+                        this.$scope.tableController.isDirty = true;
+                    } else if (componentType === 'Graph') {
+
+                        // set the graph data into the table
+                        this.$scope.tableController.setGraphDataIntoTableData(componentState, connectedComponentParams);
+
+                        // the table has changed
+                        this.$scope.tableController.isDirty = true;
+                    }
                 }
             }
         }.bind(this);
@@ -316,6 +335,66 @@ var TableController = function () {
                     this.setSaveMessage('Saved', clientSaveTime);
                 }
             }
+
+            // check if the component state is from a connected component
+            if (this.ProjectService.isConnectedComponent(this.nodeId, this.componentId, componentState.componentId)) {
+
+                // get the connected component params
+                var connectedComponentParams = this.ProjectService.getConnectedComponentParams(this.componentContent, componentState.componentId);
+
+                if (connectedComponentParams != null) {
+
+                    if (connectedComponentParams.updateOn === 'save' || connectedComponentParams.updateOn === 'submit' && componentState.isSubmit) {
+
+                        var performUpdate = false;
+
+                        /*
+                         * make a copy of the component state so we don't accidentally
+                         * change any values in the referenced object
+                         */
+                        componentState = this.UtilService.makeCopyOfJSONObject(componentState);
+
+                        /*
+                         * make sure the student hasn't entered any values into the
+                         * table so that we don't overwrite any of their work.
+                         */
+                        if (this.isTableEmpty() || this.isTableReset()) {
+                            /*
+                             * the student has not entered any values into the table
+                             * so we can update it
+                             */
+                            performUpdate = true;
+                        } else {
+                            /*
+                             * the student has entered values into the table so we
+                             * will ask them if they want to update it
+                             */
+                            var answer = confirm('Do you want to update the connected table?');
+
+                            if (answer) {
+                                // the student answered yes
+                                performUpdate = true;
+                            }
+                        }
+
+                        if (performUpdate) {
+                            // set the table data
+                            this.$scope.tableController.setStudentWork(componentState);
+
+                            // the table has changed
+                            this.$scope.tableController.isDirty = true;
+                            this.$scope.tableController.isSubmitDirty = true;
+                        }
+
+                        /*
+                         * remember the component state and connected component params
+                         * in case we need to use them again later
+                         */
+                        this.latestConnectedComponentState = componentState;
+                        this.latestConnectedComponentParams = connectedComponentParams;
+                    }
+                }
+            }
         }));
 
         /**
@@ -379,6 +458,7 @@ var TableController = function () {
          * Reset the table data to its initial state from the component content
          */
         value: function resetTable() {
+
             // get the original table from the step content
             this.tableData = this.getCopyOfTableData(this.componentContent.tableData);
 
@@ -872,13 +952,54 @@ var TableController = function () {
             }
         }
     }, {
-        key: 'getComponentId',
+        key: 'getTableDataCellValue',
 
+
+        /**
+         * Get the value of a cell in the table
+         * @param x the x coordinate
+         * @param y the y coordinate
+         * @param table (optional) table data to get the value from. this is used
+         * when we want to look up the value in the default authored table
+         * @returns the cell value (text or a number)
+         */
+        value: function getTableDataCellValue(x, y, table) {
+
+            var cellValue = null;
+
+            if (table == null) {
+                // get the table data rows
+                table = this.getTableDataRows();
+            }
+
+            if (table != null) {
+
+                // get the row we want
+                var row = table[y];
+
+                if (row != null) {
+
+                    // get the cell we want
+                    var cell = row[x];
+
+                    if (cell != null) {
+
+                        // set the value into the cell
+                        cellValue = cell.text;
+                    }
+                }
+            }
+
+            return cellValue;
+        }
 
         /**
          * Get the component id
          * @return the component id
          */
+
+    }, {
+        key: 'getComponentId',
         value: function getComponentId() {
             return this.componentContent.id;
         }
@@ -1209,13 +1330,118 @@ var TableController = function () {
             this.saveMessage.time = time;
         }
     }, {
-        key: 'registerExitListener',
+        key: 'getNumRows',
 
+
+        /**
+         * Get the number of rows in the table
+         * @returns the number of rows in the table
+         */
+        value: function getNumRows() {
+            return this.componentContent.numRows;
+        }
+
+        /**
+         * Get the number of columns in the table
+         * @returns the number of columns in the table
+         */
+
+    }, {
+        key: 'getNumColumns',
+        value: function getNumColumns() {
+            return this.componentContent.numColumns;
+        }
+
+        /**
+         * Check if the table is empty. The table is empty if all the 
+         * cells are empty string.
+         * @returns whether the table is empty
+         */
+
+    }, {
+        key: 'isTableEmpty',
+        value: function isTableEmpty() {
+            var result = true;
+
+            var numRows = this.getNumRows();
+            var numColumns = this.getNumColumns();
+
+            // loop through all the rows
+            for (var r = 0; r < numRows; r++) {
+
+                // loop through all the cells in the row
+                for (var c = 0; c < numColumns; c++) {
+
+                    // get a cell value
+                    var cellValue = this.getTableDataCellValue(c, r);
+
+                    if (cellValue != null && cellValue != '') {
+                        // the cell is not empty so the table is not empty
+                        result = false;
+                        break;
+                    }
+                }
+
+                if (result == false) {
+                    break;
+                }
+            }
+
+            return result;
+        }
+
+        /**
+         * Check if the table is set to the default values. The table
+         * is set to the default values if all the cells match the
+         * values in the default authored table.
+         * @returns whether the table is set to the default values
+         */
+
+    }, {
+        key: 'isTableReset',
+        value: function isTableReset() {
+            var result = true;
+
+            var numRows = this.getNumRows();
+            var numColumns = this.getNumColumns();
+
+            // get the default table
+            var defaultTable = this.componentContent.tableData;
+
+            // loop through all the rows
+            for (var r = 0; r < numRows; r++) {
+
+                // loop through all the cells in the row
+                for (var c = 0; c < numColumns; c++) {
+
+                    // get the cell value from the student table
+                    var cellValue = this.getTableDataCellValue(c, r);
+
+                    // get the cell value from the default table
+                    var defaultCellValue = this.getTableDataCellValue(c, r, defaultTable);
+
+                    if (cellValue != defaultCellValue) {
+                        // the cell values do not match so the table is not set to the default values
+                        result = false;
+                        break;
+                    }
+                }
+
+                if (result == false) {
+                    break;
+                }
+            }
+
+            return result;
+        }
 
         /**
          * Register the the listener that will listen for the exit event
          * so that we can perform saving before exiting.
          */
+
+    }, {
+        key: 'registerExitListener',
         value: function registerExitListener() {
 
             /*
@@ -1232,7 +1458,7 @@ var TableController = function () {
     return TableController;
 }();
 
-TableController.$inject = ['$rootScope', '$scope', 'NodeService', 'ProjectService', 'StudentDataService', 'TableService'];
+TableController.$inject = ['$rootScope', '$scope', 'NodeService', 'ProjectService', 'StudentDataService', 'TableService', 'UtilService'];
 
 exports.default = TableController;
 //# sourceMappingURL=tableController.js.map

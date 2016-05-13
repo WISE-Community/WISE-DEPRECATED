@@ -81,8 +81,7 @@
                            ng-if="openResponseController.showSubmitButton()"
                            aria-label="Submit"
                            translate="submit"></md-button>
-                <md-button class="md-primary"
-                           ng-class="{'md-raised': !openResponseController.showSubmitButton()}"
+                <md-button class="md-primary md-raised"
                            ng-click="openResponseController.saveButtonClicked()"
                            ng-disabled="openResponseController.isDisabled || !openResponseController.isDirty"
                            ng-if="openResponseController.showSaveButton()"
