@@ -247,6 +247,13 @@ class TableController {
 
                         // the table has changed
                         this.$scope.tableController.isDirty = true;
+                    } else if (componentType === 'Embedded') {
+
+                        // set the table data
+                        this.$scope.tableController.setStudentWork(componentState);
+
+                        // the table has changed
+                        this.$scope.tableController.isDirty = true;
                     }
                 }
             }
