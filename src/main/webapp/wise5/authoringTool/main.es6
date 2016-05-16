@@ -41,6 +41,7 @@ import MultipleChoiceController from '../components/multipleChoice/multipleChoic
 import MultipleChoiceService from '../components/multipleChoice/multipleChoiceService';
 import NodeController from './node/nodeController';
 import NodeService from '../services/nodeService';
+import NotebookService from '../services/notebookService';
 import OpenResponseController from '../components/openResponse/openResponseController';
 import OpenResponseService from '../components/openResponse/openResponseService';
 import OutsideURLController from '../components/outsideURL/outsideURLController';
@@ -88,6 +89,7 @@ let mainModule = angular.module('authoring', [
     .service(MatchService.name, MatchService)
     .service(MultipleChoiceService.name, MultipleChoiceService)
     .service(NodeService.name, NodeService)
+    .service(NotebookService.name, NotebookService)
     .service(OpenResponseService.name, OpenResponseService)
     .service(OutsideURLService.name, OutsideURLService)
     .service(ProjectService.name, ProjectService)

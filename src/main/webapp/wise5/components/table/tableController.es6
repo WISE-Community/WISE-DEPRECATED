@@ -1,7 +1,10 @@
+import html2canvas from 'html2canvas';
+
 class TableController {
     constructor($rootScope,
                 $scope,
                 NodeService,
+                NotebookService,
                 ProjectService,
                 StudentDataService,
                 TableService,
@@ -10,6 +13,7 @@ class TableController {
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.NodeService = NodeService;
+        this.NotebookService = NotebookService;
         this.ProjectService = ProjectService;
         this.StudentDataService = StudentDataService;
         this.TableService = TableService;
@@ -69,6 +73,9 @@ class TableController {
         // whether the reset table button is shown or not
         this.isResetTableButtonVisible = true;
 
+        // whether the snip table button is shown or not
+        this.isSnipTableButtonVisible = true;
+        
         // get the current node and node id
         var currentNode = this.StudentDataService.getCurrentNode();
         if (currentNode != null) {
@@ -117,12 +124,14 @@ class TableController {
                 this.isSaveButtonVisible = false;
                 this.isSubmitButtonVisible = false;
                 this.isResetTableButtonVisible = false;
+                this.isSnipTableButtonVisible = false;
                 this.isDisabled = true;
             } else if (this.mode === 'onlyShowWork') {
                 this.isPromptVisible = false;
                 this.isSaveButtonVisible = false;
                 this.isSubmitButtonVisible = false;
                 this.isResetTableButtonVisible = false;
+                this.isSnipTableButtonVisible = false;
                 this.isDisabled = true;
             } else if (this.mode === 'showPreviousWork') {
                 this.isPromptVisible = true;
@@ -411,7 +420,14 @@ class TableController {
         }));
 
         this.$scope.getNumber = function(num) {
-            return new Array(parseInt(num));
+            var array = new Array();
+            
+            // make sure num is a valid number
+            if (num != null && !isNaN(num)) {
+                array = new Array(parseInt(num));
+            }
+            
+            return array;
         }
     }
 
@@ -1325,6 +1341,42 @@ class TableController {
         
         return result;
     }
+    
+    /**
+     * Snip the table by converting it to an image
+     */
+    snipTable() {
+        
+        // get the table element
+        var tableElement = angular.element('#' + this.componentId + ' table');
+        
+        if (tableElement != null) {
+            tableElement = tableElement[0];
+            
+            // convert the table element to a canvas element
+            html2canvas(tableElement).then((canvas) => {
+                
+                // get the image as a base64 string
+                var img_b64 = canvas.toDataURL('image/png');
+                
+                // get the image object
+                var imageObject = this.UtilService.getImageObjectFromBase64String(img_b64);
+                
+                var event = null;
+                
+                // create a notebook item with the image populated into it
+                this.NotebookService.addNewItem(event, imageObject);
+            });
+        }
+    }
+    
+    /**
+     * Check whether we need to show the snip table button
+     * @return whether to show the snip table button
+     */
+    showSnipTableButton() {
+        return this.isSnipTableButtonVisible;
+    }
 
     /**
      * Register the the listener that will listen for the exit event
@@ -1347,6 +1399,7 @@ TableController.$inject = [
     '$rootScope',
     '$scope',
     'NodeService',
+    'NotebookService',
     'ProjectService',
     'StudentDataService',
     'TableService',

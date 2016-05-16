@@ -6,15 +6,22 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _html2canvas = require('html2canvas');
+
+var _html2canvas2 = _interopRequireDefault(_html2canvas);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var TableController = function () {
-    function TableController($rootScope, $scope, NodeService, ProjectService, StudentDataService, TableService, UtilService) {
+    function TableController($rootScope, $scope, NodeService, NotebookService, ProjectService, StudentDataService, TableService, UtilService) {
         _classCallCheck(this, TableController);
 
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.NodeService = NodeService;
+        this.NotebookService = NotebookService;
         this.ProjectService = ProjectService;
         this.StudentDataService = StudentDataService;
         this.TableService = TableService;
@@ -74,6 +81,9 @@ var TableController = function () {
         // whether the reset table button is shown or not
         this.isResetTableButtonVisible = true;
 
+        // whether the snip table button is shown or not
+        this.isSnipTableButtonVisible = true;
+
         // get the current node and node id
         var currentNode = this.StudentDataService.getCurrentNode();
         if (currentNode != null) {
@@ -122,12 +132,14 @@ var TableController = function () {
                 this.isSaveButtonVisible = false;
                 this.isSubmitButtonVisible = false;
                 this.isResetTableButtonVisible = false;
+                this.isSnipTableButtonVisible = false;
                 this.isDisabled = true;
             } else if (this.mode === 'onlyShowWork') {
                 this.isPromptVisible = false;
                 this.isSaveButtonVisible = false;
                 this.isSubmitButtonVisible = false;
                 this.isResetTableButtonVisible = false;
+                this.isSnipTableButtonVisible = false;
                 this.isDisabled = true;
             } else if (this.mode === 'showPreviousWork') {
                 this.isPromptVisible = true;
@@ -412,7 +424,14 @@ var TableController = function () {
         this.$scope.$on('exitNode', angular.bind(this, function (event, args) {}));
 
         this.$scope.getNumber = function (num) {
-            return new Array(parseInt(num));
+            var array = new Array();
+
+            // make sure num is a valid number
+            if (num != null && !isNaN(num)) {
+                array = new Array(parseInt(num));
+            }
+
+            return array;
         };
     }
 
@@ -1443,6 +1462,49 @@ var TableController = function () {
         }
 
         /**
+         * Snip the table by converting it to an image
+         */
+
+    }, {
+        key: 'snipTable',
+        value: function snipTable() {
+            var _this = this;
+
+            // get the table element
+            var tableElement = angular.element('#' + this.componentId + ' table');
+
+            if (tableElement != null) {
+                tableElement = tableElement[0];
+
+                // convert the table element to a canvas element
+                (0, _html2canvas2.default)(tableElement).then(function (canvas) {
+
+                    // get the image as a base64 string
+                    var img_b64 = canvas.toDataURL('image/png');
+
+                    // get the image object
+                    var imageObject = _this.UtilService.getImageObjectFromBase64String(img_b64);
+
+                    var event = null;
+
+                    // create a notebook item with the image populated into it
+                    _this.NotebookService.addNewItem(event, imageObject);
+                });
+            }
+        }
+
+        /**
+         * Check whether we need to show the snip table button
+         * @return whether to show the snip table button
+         */
+
+    }, {
+        key: 'showSnipTableButton',
+        value: function showSnipTableButton() {
+            return this.isSnipTableButtonVisible;
+        }
+
+        /**
          * Register the the listener that will listen for the exit event
          * so that we can perform saving before exiting.
          */
@@ -1465,7 +1527,7 @@ var TableController = function () {
     return TableController;
 }();
 
-TableController.$inject = ['$rootScope', '$scope', 'NodeService', 'ProjectService', 'StudentDataService', 'TableService', 'UtilService'];
+TableController.$inject = ['$rootScope', '$scope', 'NodeService', 'NotebookService', 'ProjectService', 'StudentDataService', 'TableService', 'UtilService'];
 
 exports.default = TableController;
 //# sourceMappingURL=tableController.js.map

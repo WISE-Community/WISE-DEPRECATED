@@ -38,6 +38,7 @@ System.config({
     "core-js": "npm:core-js@1.2.6",
     "highcharts-ng": "npm:highcharts-ng@0.0.11",
     "highcharts/draggable-points": "github:highcharts/draggable-points@master",
+    "html2canvas": "npm:html2canvas@0.5.0-beta4",
     "iframe-resizer": "npm:iframe-resizer@3.5.3",
     "jquery": "npm:jquery@2.2.2",
     "moment": "npm:moment@2.12.0",
@@ -112,7 +113,7 @@ System.config({
       "path-browserify": "npm:path-browserify@0.0.0"
     },
     "github:jspm/nodelibs-process@0.1.2": {
-      "process": "npm:process@0.11.2"
+      "process": "npm:process@0.11.3"
     },
     "github:jspm/nodelibs-stream@0.1.0": {
       "stream-browserify": "npm:stream-browserify@1.0.0"
@@ -335,6 +336,10 @@ System.config({
     "npm:highcharts-ng@0.0.11": {
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
+    "npm:html2canvas@0.5.0-beta4": {
+      "buffer": "github:jspm/nodelibs-buffer@0.1.0",
+      "process": "github:jspm/nodelibs-process@0.1.2"
+    },
     "npm:https-browserify@0.0.0": {
       "http": "github:jspm/nodelibs-http@1.7.1"
     },
@@ -396,7 +401,7 @@ System.config({
     "npm:process-nextick-args@1.0.6": {
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
-    "npm:process@0.11.2": {
+    "npm:process@0.11.3": {
       "assert": "github:jspm/nodelibs-assert@0.1.0"
     },
     "npm:public-encrypt@4.0.0": {
