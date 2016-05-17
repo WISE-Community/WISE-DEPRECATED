@@ -249,7 +249,7 @@ SVGDrawNode.prototype.renderGradingView = function(displayStudentWorkDiv, nodeVi
 			//svgString = svgString.replace(/(<image.*xlink:href=)"(.*)"(.*\/>)/gmi, '$1'+'"'+contentBaseUrl+'$2'+'"'+'$3');
 			// only replace local hrefs. leave absolute hrefs alone!
 			svgString = svgString.replace(/(<image.*xlink:href=)"(.*)"(.*\/>)/gmi, function(m,key,value) {
-				  if (value.indexOf("http://") == -1) {
+				  if (value.startsWith("./assets") || value.startsWith("assets")) {
 				    return m.replace(/(<image.*xlink:href=)"(.*)"(.*\/>)/gmi, '$1'+'"'+contentBaseUrl+'$2'+'"'+'$3');
 				  }
 				  return m;
@@ -284,7 +284,7 @@ SVGDrawNode.prototype.renderGradingView = function(displayStudentWorkDiv, nodeVi
 				//currSnap = currSnap.replace(/(<image.*xlink:href=)"(.*)"(.*\/>)/gmi, '$1'+'"'+contentBaseUrl+'$2'+'"'+'$3');
 				// only replace local hrefs. leave absolute hrefs alone!
 				currSnap = currSnap.replace(/(<image.*xlink:href=)"(.*)"(.*\/>)/gmi, function(m,key,value) {
-					  if (value.indexOf("http://") == -1) {
+					  if (value.startsWith("./assets") || value.startsWith("assets")) {
 					    return m.replace(/(<image.*xlink:href=)"(.*)"(.*\/>)/gmi, '$1'+'"'+contentBaseUrl+'$2'+'"'+'$3');
 					  }
 					  return m;

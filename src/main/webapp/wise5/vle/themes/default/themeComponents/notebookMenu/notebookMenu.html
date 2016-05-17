@@ -1,0 +1,94 @@
+<md-toolbar ng-if="notebookMenuCtrl.viewMode === 'toolbar'" md-theme="light" class="notebook-toolbar node-sidebar__toolbar md-whiteframe-1dp" layout="column">
+    <md-button ng-if="notebookMenuCtrl.noteEnabled"
+               aria-label="View {{notebookMenuCtrl.noteLabel}}"
+               class="md-icon-button"
+               ng-click="notebookMenuCtrl.openNotebook($event, 'note')">
+        <md-icon style="color: {{notebookMenuCtrl.noteColor}} !important"> {{notebookMenuCtrl.noteIcon}} </md-icon>
+        <md-tooltip md-direction="left">{{notebookMenuCtrl.noteLabel}}</md-tooltip>
+    </md-button>
+    <md-button ng-if="notebookMenuCtrl.questionEnabled"
+               aria-label="View {{notebookMenuCtrl.questionLabel}}"
+               class="md-icon-button"
+               ng-click="notebookMenuCtrl.openNotebook($event, 'question')">
+        <md-icon style="color: {{notebookMenuCtrl.questionColor}} !important"> {{notebookMenuCtrl.questionIcon}} </md-icon>
+        <md-tooltip md-direction="left">{{notebookMenuCtrl.questionLabel}}</md-tooltip>
+    </md-button>
+    <md-divider ng-if="notebookMenuCtrl.reportEnabled"></md-divider>
+    <md-button ng-if="notebookMenuCtrl.reportEnabled"
+               aria-label="View {{notebookMenuCtrl.reportLabel}}"
+               class="md-icon-button"
+               ng-click="notebookMenuCtrl.openNotebook($event, 'report')">
+        <md-icon style="color: {{notebookMenuCtrl.reportColor}} !important"> {{notebookMenuCtrl.reportIcon}} </md-icon>
+        <md-tooltip md-direction="left">{{notebookMenuCtrl.reportLabel}}</md-tooltip>
+    </md-button>
+    <md-divider></md-divider>
+    <md-button aria-label="Add Notebook item" class="md-icon-button" ng-click="notebookMenuCtrl.addNewNote($event)">
+        <md-icon class="md-accent"> add_circle </md-icon>
+        <md-tooltip md-direction="left"><span>New Note</span></md-tooltip>
+    </md-button>
+    <!--<md-fab-speed-dial class="md-scale" md-theme="default" md-direction="up" md-open="notebookMenuCtrl.addMode"
+                       ng-mouseenter="notebookMenuCtrl.addMode=true" ng-mouseleave="notebookMenuCtrl.addMode=false">
+        <md-fab-trigger>
+            <md-button aria-label="Add Notebook item menu" class="md-accent md-icon-button">
+                <md-icon class="notebook-toolbar__add-icon"
+                         ng-class="{'md-whiteframe-3dp': notebookMenuCtrl.addMode}"> add_circle </md-icon>
+                <md-tooltip md-direction="left"><span translate="AddNote">Add Note</span></md-tooltip>
+            </md-button>
+        </md-fab-trigger>
+        <md-fab-actions class="notebook-toolbar__add-menu">
+            <md-button aria-label="New text note" class="md-icon-button">
+                <md-icon class="note"> subject </md-icon>
+                <md-tooltip md-direction="left"><span translate="Text">Text</span></md-tooltip>
+            </md-button>
+            <md-button aria-label="New note with file" class="md-icon-button">
+                <md-icon class="note"> photo </md-icon>
+                <md-tooltip md-direction="left"><span translate="File">File</span></md-tooltip>
+            </md-button>
+            <md-button aria-label="New note with clip" class="md-icon-button">
+                <md-icon class="note"> content_cut </md-icon>
+                <md-tooltip md-direction="left"><span translate="Clip">Clip</span></md-tooltip>
+            </md-button>
+            <md-button aria-label="New question" class="md-icon-button">
+                <md-icon class="question"> live_help </md-icon>
+                <md-tooltip md-direction="left"><span translate="Question">Question</span></md-tooltip>
+            </md-button>
+        </md-fab-actions>
+    </md-fab-speed-dial>-->
+</md-toolbar>
+
+<md-content ng-if="notebookMenuCtrl.viewMode === 'nav'">
+    <md-toolbar class="md-toolbar--wise" md-theme="light">
+        <div class="md-toolbar-tools accent-2">
+            {{notebookMenuCtrl.notebookConfig.label}}
+        </div>
+    </md-toolbar>
+    <md-divider></md-divider>
+    <md-list>
+        <md-list-item ng-repeat="item in notebookMenuCtrl.notebookConfig.itemTypes | toArray | orderBy: ''"
+                      ng-if="item.enabled"
+                      aria-label="View {{item.label.link}}"
+                      ng-click="notebookMenuCtrl.setNotebookFilter($event, item.$key)"
+                      ng-class="{'active': notebookMenuCtrl.notebookFilter === item.$key}">
+            <md-icon style="color: {{item.label.color}} !important"> {{item.label.icon}} </md-icon>
+            <p class="side-menu__item" style="color: {{item.label.color}}">{{item.label.link}}</p>
+        </md-list-item>
+    </md-list>
+    <md-divider></md-divider>
+    <md-list>
+        <md-list-item aria-label="Close {{notebookMenuCtrl.notebookConfig.label}}" ng-click="notebookMenuCtrl.toggleNotebook($event)">
+            <md-icon> close </md-icon>
+            <p class="side-menu__item">Close</p>
+        </md-list-item>
+    </md-list>
+</md-content>
+
+<div class="notebook-sidebar" ng-if="notebookMenuCtrl.viewMode === 'sidebar'">
+    <md-button ng-repeat="item in notebookMenuCtrl.notebookConfig.itemTypes | toArray | orderBy: ''"
+               ng-if="item.enabled"
+               class="md-icon-button notebook-sidebar__link"
+               aria-label="View {{item.label.link}}"
+               ng-click="notebookMenuCtrl.openNotebook($event, item.$key)">
+        <md-icon style="color: {{notebookMenuCtrl.notebookFilter === item.$key ? item.label.color + ' !important' : 'auto'}}"> {{item.label.icon}} </md-icon>
+        <md-tooltip md-direction="right">{{item.label.link}}</md-tooltip>
+    </md-button>
+</div>

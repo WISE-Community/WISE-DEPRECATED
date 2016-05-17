@@ -36,6 +36,7 @@ var ThemeController = function () {
         this.hideTotalScores = this.themeSettings.hideTotalScores;
 
         this.nodeStatuses = this.StudentDataService.nodeStatuses;
+        this.idToOrder = this.ProjectService.idToOrder;
 
         this.rootNode = this.ProjectService.rootNode;
         this.rootNodeStatus = this.nodeStatuses[this.rootNode.id];
@@ -46,6 +47,8 @@ var ThemeController = function () {
         this.notebookOpen = false;
         this.notebookConfig = this.NotebookService.getNotebookConfig();
         this.notebookFilter = '';
+
+        this.currentNode = this.StudentDataService.getCurrentNode();
 
         // set current notebook type filter to first enabled type
         if (this.notebookConfig.enabled) {
@@ -58,22 +61,6 @@ var ThemeController = function () {
             }
         }
 
-        // build project status pop-up
-        var statusTemplateUrl = this.themePath + '/templates/projectStatus.html';
-        var scope = this;
-
-        this.statusDisplay = this.$mdToast.build({
-            locals: {
-                projectStatus: scope.rootNodeStatus,
-                userNames: scope.workgroupUserNames
-            },
-            controller: 'ProjectStatusController',
-            bindToController: true,
-            templateUrl: statusTemplateUrl,
-            hideDelay: 0
-        });
-        this.projectStatusOpen = false;
-
         // build server disconnect display
         this.connectionLostDisplay = $mdToast.build({
             template: '<md-toast>\
@@ -82,6 +69,14 @@ var ThemeController = function () {
             hideDelay: 0
         });
         this.connectionLostShown = false;
+
+        this.setLayoutState();
+
+        // update layout state when current node changes
+        this.$scope.$on('currentNodeChanged', function (event, args) {
+            _this.currentNode = _this.StudentDataService.getCurrentNode();
+            _this.setLayoutState();
+        });
 
         // alert user when a locked node has been clicked
         this.$scope.$on('nodeClickLocked', function (event, args) {
@@ -210,8 +205,15 @@ var ThemeController = function () {
         });
 
         // toggle notebook opened or closed on 'toggleNotebook' event
-        this.$scope.$on('toggleNotebook', function () {
-            _this.toggleNotebook();
+        this.$scope.$on('toggleNotebook', function (event, args) {
+            var ev = args.ev;
+            var open = args.open;
+            _this.toggleNotebook(ev, open);
+        });
+
+        // toggle notebook nav opened or closed on 'toggleNotebookNav' event
+        this.$scope.$on('toggleNotebookNav', function () {
+            _this.toggleNotebookNav();
         });
 
         // update notebook filter on 'setNotebookFilter' event
@@ -247,16 +249,37 @@ var ThemeController = function () {
         });
     }
 
+    /**
+    * Set the layout state of the vle
+    * @param state string specifying state (e.g. 'notebook'; optional)
+    */
+
+
     _createClass(ThemeController, [{
-        key: 'showProjectStatus',
-        value: function showProjectStatus($event) {
-            if (this.projectStatusOpen) {
-                this.$mdToast.hide(this.statusDisplay);
-                this.projectStatusOpen = false;
+        key: 'setLayoutState',
+        value: function setLayoutState(state) {
+            var layoutState = 'nav'; // default layout state
+            if (state) {
+                layoutState = state;
             } else {
-                this.$mdToast.show(this.statusDisplay);
-                this.projectStatusOpen = true;
+                // no state was sent, so set based on current node
+                if (this.currentNode) {
+                    var id = this.currentNode.id;
+                    if (this.ProjectService.isApplicationNode(id)) {
+                        // currently viewing step, so show step view
+                        layoutState = 'node';
+                    } else if (this.ProjectService.isGroupNode(id)) {
+                        // currently viewing group node, so show navigation view
+                        layoutState = 'nav';
+                    }
+                }
             }
+
+            if (layoutState !== 'notebook') {
+                this.notebookNavOpen = false;
+            }
+
+            this.layoutState = layoutState;
         }
 
         // show server error alert when connection is lost
@@ -283,10 +306,32 @@ var ThemeController = function () {
         value: function getAvatarColorForWorkgroupId(workgroupId) {
             return this.StudentStatusService.getAvatarColorForWorkgroupId(workgroupId);
         }
+
+        /**
+        * Open or close the notebook and save notebook open/close events
+        */
+
     }, {
         key: 'toggleNotebook',
-        value: function toggleNotebook(ev) {
-            this.notebookOpen = !this.notebookOpen;
+        value: function toggleNotebook(ev, open) {
+            //this.notebookOpen = !this.notebookOpen;
+            if (this.layoutState === 'notebook' && !open) {
+                this.setLayoutState();
+                this.NotebookService.saveNotebookToggleEvent(false, this.currentNode);
+            } else {
+                this.layoutState = 'notebook';
+                this.NotebookService.saveNotebookToggleEvent(true, this.currentNode);
+            }
+        }
+
+        /**
+        * Open or close the notebook nav menu
+        */
+
+    }, {
+        key: 'toggleNotebookNav',
+        value: function toggleNotebookNav() {
+            this.notebookNavOpen = !this.notebookNavOpen;
         }
     }, {
         key: 'viewNote',

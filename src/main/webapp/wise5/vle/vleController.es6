@@ -52,8 +52,6 @@ class VLEController {
             this.StudentDataService.updateVisitedNodesHistory(currentNodeId);
             this.StudentDataService.updateNodeStatuses();
 
-            this.setLayoutState();
-
             this.StudentWebSocketService.sendStudentStatus();
             this.$state.go('root.vle', {nodeId:currentNodeId});
 
@@ -141,8 +139,6 @@ class VLEController {
         this.themePath = this.ProjectService.getThemePath();
         this.notebookItemPath = this.themePath + '/notebook/notebookItem.html';
 
-        this.setLayoutState();
-
         var nodeId = null;
         var stateParams = null;
         var stateParamNodeId = null;
@@ -213,25 +209,7 @@ class VLEController {
         return this.NotebookService.isNotebookEnabled();
     }
 
-    // Display a dialog where students can add/edit a note
-    addNewNote() {
-        this.$translate(["addNewNote"]).then((translations) => {
-            this.noteDialog = this.$mdDialog.show({
-                template: '<md-dialog aria-label="Note"><md-toolbar><div class="md-toolbar-tools"><h2>' + translations.addNewNote + '</h2></div></md-toolbar>' +
-                '<md-dialog-content><div class="md-dialog-content">' +
-                '<notebookitem is-edit-mode="true" template-url="\'' + this.notebookItemPath + '\'"></notebookitem>' +
-                '</div></md-dialog-content></md-dialog>',
-                fullscreen: true,
-                escapeToClose: true
-            });
-        });
-    }
-
-    // Display a dialog where students can snip elements from the page into their notebook
-    displaySnipperDialog() {
-
-    }
-
+    // TODO: remove and use inline clipping (with guidance)
     snipNewNote($event) {
         // Ask all of the components on the page for snippable items
         let templateUrl = this.themePath + '/notebook/contentSnipper.html';
@@ -298,48 +276,6 @@ class VLEController {
 
         NotebookContentSnippetController.$inject = ["$rootScope", "$scope", "$mdDialog", "snippableItems", "NotebookService", "StudentDataService", "ProjectService"];
     }
-
-    openNoteDialog(event, args) {
-        // close any open note dialogs
-        this.closeNoteDialog();
-
-        // get the notebook item to edit.
-        let notebookItem = args.notebookItem;
-        let notebookItemId = notebookItem.localNotebookItemId;
-        this.noteDialog = this.$mdDialog.show({
-            template: '<md-dialog aria-label="Note"><md-toolbar><div class="md-toolbar-tools"><h2>Edit Note</h2></div></md-toolbar>' +
-            '<md-dialog-content><div class="md-dialog-content">' +
-            '<notebookitem is-edit-mode="true" item-id="' + notebookItemId + '" template-url="\'' + this.notebookItemPath + '\'" ></notebookitem>' +
-            '</div></md-dialog-content></md-dialog>',
-            fullscreen: true,
-            escapeToClose: true
-        });
-
-    }
-
-    // Close the note dialog
-    closeNoteDialog() {
-        if (this.noteDialog) {
-            this.$mdDialog.hide( this.noteDialog, "finished" );
-            this.noteDialog = undefined;
-        }
-    }
-
-    setLayoutState() {
-        var layoutState = 'nav'; // default layout state
-        var node = this.StudentDataService.getCurrentNode();
-
-        if(node) {
-            var id = node.id;
-            if (this.ProjectService.isApplicationNode(id)) {
-                layoutState = 'node';
-            } else if (this.ProjectService.isGroupNode(id)) {
-                layoutState = 'nav';
-            }
-        }
-
-        this.layoutState = layoutState;
-    };
 
     goHome() {
         // save goHome event

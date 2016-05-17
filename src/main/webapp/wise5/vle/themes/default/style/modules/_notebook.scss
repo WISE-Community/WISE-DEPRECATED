@@ -1,0 +1,90 @@
+// Variables
+
+// Base
+#notebook {
+    margin: 0 auto;
+    padding: 8px;
+    position: absolute;
+    left: 0;
+    right: 0;
+    transition: opacity 500ms;
+
+    @media only screen and (min-width: $layout-breakpoint-xs) {
+        margin-left: 54px;
+        padding: 24px;
+    }
+
+    @media only screen and (min-width: $layout-breakpoint-sm) {
+        padding: 32px;
+    }
+
+    &.ng-enter {
+        opacity: 0;
+    }
+
+    .ng-enter-active {
+        opacity: 1;
+        transition-delay: 250ms;
+    }
+
+    &.ng-leave-active, &.ng-hide {
+        opacity: 0;
+    }
+
+    &.ng-hide-add, &.ng-hide-add-active,
+    &.ng-hide-remove, &.ng-hide-remove-active {
+        opacity: 0;
+    }
+}
+
+.notebook-title {
+    margin-left: 8px;
+    font-size: rem(1.6);
+    font-weight: 600;
+}
+
+.notebook-menu {
+    transition: opacity 500ms;
+
+    &.ng-enter {
+        opacity: 0;
+    }
+
+    .ng-enter-active {
+        opacity: 1;
+        transition-delay: 250ms;
+    }
+
+    &.ng-leave-active, &.ng-hide {
+        opacity: 0;
+    }
+
+    &.ng-hide-add, &.ng-hide-add-active,
+    &.ng-hide-remove, &.ng-hide-remove-active {
+        opacity: 0;
+    }
+}
+
+.notebook-sidebar {
+    position: absolute;
+    top: ($wise-toolbar-height + $toolbar-height);
+    bottom: 0;
+    left: 0;
+    background-color: #fff;
+    width: 56px;
+    overflow: hidden;
+    padding: 8px 0;
+    text-align: center;
+
+    @media only screen and (max-width: ($layout-breakpoint-xs - 1)) {
+        display: none;
+    }
+}
+
+.md-button.md-icon-button.notebook-sidebar__link {
+    margin-top: 6px;
+    margin-bottom: 6px;
+}
+
+.notebook-content {
+}

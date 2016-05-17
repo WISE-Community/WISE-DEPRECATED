@@ -19,15 +19,17 @@
         "layouts/l-main",
         "layouts/l-nav",
         "layouts/l-node",
+        "layouts/l-notebook",
         "layouts/l-sidebar";
 
 // 3. Modules
 @import "modules/ui-tree",
         "modules/dragula",
         "modules/inputs",
+        "modules/toolbar",
         "modules/nav",
         "modules/node",
-        "modules/toolbar",
+        "modules/notebook",
         "modules/menu",
         "modules/account-menu",
         "modules/annotations",

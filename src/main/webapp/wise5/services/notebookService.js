@@ -39,7 +39,9 @@ var NotebookService = function () {
                     label: {
                         singular: "note",
                         plural: "notes",
-                        link: "Notes"
+                        link: "Notes",
+                        icon: "note",
+                        color: "#1565C0"
                     }
                 },
                 question: {
@@ -51,7 +53,9 @@ var NotebookService = function () {
                     label: {
                         singular: "question",
                         plural: "questions",
-                        link: "Questions"
+                        link: "Questions",
+                        icon: "live_help",
+                        color: "#F57C00"
                     }
                 },
                 report: {
@@ -59,7 +63,9 @@ var NotebookService = function () {
                     label: {
                         singular: "report",
                         plural: "reports",
-                        link: "Report"
+                        link: "Report",
+                        icon: "assignment",
+                        color: "#AD1457"
                     },
                     notes: []
                 }
