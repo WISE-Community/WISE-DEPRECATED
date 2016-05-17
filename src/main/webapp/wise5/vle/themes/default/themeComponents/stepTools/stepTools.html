@@ -1,4 +1,4 @@
-<md-toolbar class="md-whiteframe-z1 node-toolbar md-toolbar--wise" md-theme="light">
+<md-toolbar class="md-whiteframe-z1 layout-toolbar md-toolbar--wise" md-theme="light">
     <div class="md-toolbar-tools">
         <img ng-if="stepToolsCtrl.nodeStatus.icon.type === 'img'" ng-animate-ref="{{ stepToolsCtrl.nodeId }}" class="md-18 avatar node-avatar" ng-src="{{stepToolsCtrl.nodeStatus.icon.imgSrc}}" alt="{{stepToolsCtrl.nodeStatus.icon.imgAlt}}" />
         <div ng-if="stepToolsCtrl.nodeStatus.icon.type === 'font'" ng-animate-ref="{{ stepToolsCtrl.nodeId }}" style="background-color: {{stepToolsCtrl.nodeStatus.icon.color}};" class="md-18 avatar avatar--icon node-avatar">

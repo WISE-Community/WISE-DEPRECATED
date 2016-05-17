@@ -8,9 +8,9 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var NotebookToolbarCtrl = function () {
-    function NotebookToolbarCtrl($scope, $element, $rootScope, NotebookService, ProjectService, StudentDataService) {
-        _classCallCheck(this, NotebookToolbarCtrl);
+var NotebookMenuCtrl = function () {
+    function NotebookMenuCtrl($scope, $element, $rootScope, NotebookService, ProjectService, StudentDataService) {
+        _classCallCheck(this, NotebookMenuCtrl);
 
         this.$scope = $scope;
         this.$element = $element;
@@ -20,6 +20,7 @@ var NotebookToolbarCtrl = function () {
         this.StudentDataService = StudentDataService;
 
         this.addMode = false;
+        //this.viewMode ? this.viewMode : 'toolbar'; // default view is the side toolbar; 'nav' mode will show a sidenav with more options
 
         this.notebookConfig = this.NotebookService.getNotebookConfig();
         this.noteEnabled = this.notebookConfig.itemTypes.note.enabled;
@@ -28,9 +29,15 @@ var NotebookToolbarCtrl = function () {
         this.noteLabel = this.notebookConfig.itemTypes.note.label.link;
         this.questionLabel = this.notebookConfig.itemTypes.question.label.link;
         this.reportLabel = this.notebookConfig.itemTypes.report.label.link;
+        this.noteIcon = this.notebookConfig.itemTypes.note.label.icon;
+        this.questionIcon = this.notebookConfig.itemTypes.question.label.icon;
+        this.reportIcon = this.notebookConfig.itemTypes.report.label.icon;
+        this.noteColor = this.notebookConfig.itemTypes.note.label.color;
+        this.questionColor = this.notebookConfig.itemTypes.question.label.color;
+        this.reportColor = this.notebookConfig.itemTypes.report.label.color;
     }
 
-    _createClass(NotebookToolbarCtrl, [{
+    _createClass(NotebookMenuCtrl, [{
         key: 'addNewNote',
         value: function addNewNote(ev) {
             this.NotebookService.addNewItem(ev);
@@ -39,19 +46,30 @@ var NotebookToolbarCtrl = function () {
         key: 'openNotebook',
         value: function openNotebook(ev, filter) {
             this.$rootScope.$broadcast('setNotebookFilter', { filter: filter, ev: ev });
+            this.$rootScope.$broadcast('toggleNotebook', { ev: ev, open: true });
+        }
+    }, {
+        key: 'toggleNotebook',
+        value: function toggleNotebook(ev) {
             this.$rootScope.$broadcast('toggleNotebook', { ev: ev });
+        }
+    }, {
+        key: 'setNotebookFilter',
+        value: function setNotebookFilter(ev, filter) {
+            this.$rootScope.$broadcast('setNotebookFilter', { filter: filter, ev: ev });
+            this.$rootScope.$broadcast('toggleNotebookNav', { ev: ev });
         }
     }, {
         key: 'getTemplateUrl',
         value: function getTemplateUrl() {
-            return this.ProjectService.getThemePath() + '/themeComponents/notebookToolbar/notebookToolbar.html';
+            return this.ProjectService.getThemePath() + '/themeComponents/notebookMenu/notebookMenu.html';
         }
     }]);
 
-    return NotebookToolbarCtrl;
+    return NotebookMenuCtrl;
 }();
 
-NotebookToolbarCtrl.$inject = ['$scope', '$element', '$rootScope', 'NotebookService', 'ProjectService', 'StudentDataService'];
+NotebookMenuCtrl.$inject = ['$scope', '$element', '$rootScope', 'NotebookService', 'ProjectService', 'StudentDataService'];
 
-exports.default = NotebookToolbarCtrl;
-//# sourceMappingURL=notebookToolbarController.js.map
+exports.default = NotebookMenuCtrl;
+//# sourceMappingURL=notebookMenuController.js.map

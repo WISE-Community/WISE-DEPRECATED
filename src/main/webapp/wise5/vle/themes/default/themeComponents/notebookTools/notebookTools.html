@@ -1,0 +1,13 @@
+<md-toolbar class="md-whiteframe-z1 layout-toolbar md-toolbar--wise" md-theme="light">
+    <div class="md-toolbar-tools">
+        <md-button aria-label="Project content menu" class="md-icon-button" ng-click="notebookToolsCtrl.toggleNotebookNav($event)">
+            <md-icon> menu </md-icon>
+        </md-button>
+        <!--<md-icon style="color: {{ notebookToolsCtrl.notebookConfig.itemTypes[notebookToolsCtrl.notebookFilter].label.color }} !important">{{ notebookToolsCtrl.notebookConfig.itemTypes[notebookToolsCtrl.notebookFilter].label.icon }}</md-icon>-->
+        <span class="notebook-title" style="color: {{ notebookToolsCtrl.notebookConfig.itemTypes[notebookToolsCtrl.notebookFilter].label.color }} !important">{{ notebookToolsCtrl.notebookConfig.itemTypes[notebookToolsCtrl.notebookFilter].label.link }}</span>
+        <span flex></span>
+        <md-button aria-label="Close Notebook" class="md-icon-button" ng-click="notebookToolsCtrl.toggleNotebook($event)">
+            <md-icon md-theme="default"> close </md-icon>
+        </md-button>
+    </div>
+</md-toolbar>

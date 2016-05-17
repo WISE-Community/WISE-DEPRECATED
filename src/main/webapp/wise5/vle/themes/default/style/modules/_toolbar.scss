@@ -1,14 +1,41 @@
 .md-toolbar--wise {
-  min-height: $wise-toolbar-height;
+    min-height: $wise-toolbar-height;
 
-  .md-toolbar-tools {
-    height: $wise-toolbar-height;
-    max-height: $wise-toolbar-height;
-  }
+    .md-toolbar-tools {
+        height: $wise-toolbar-height;
+        max-height: $wise-toolbar-height;
+    }
 
-  .md-button.md-icon-button {
-    height: $wise-toolbar-height;
-    line-height: $wise-toolbar-height;
-    width: $wise-toolbar-height;
-  }
+    .md-button.md-icon-button {
+        height: $wise-toolbar-height;
+        line-height: $wise-toolbar-height;
+        width: $wise-toolbar-height;
+    }
+}
+
+.layout-toolbar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: $toolbar-height;
+    transition: 250ms linear all;
+    transition-delay: 250ms;
+}
+
+
+.layout-tools {
+    transition: 250ms linear all;
+    transition-delay: 250ms;
+
+    &.ng-hide-add, &.ng-hide-add-active,
+    &.ng-hide-remove, &.ng-hide-remove-active  {
+        .layout-toolbar {
+            height: 0;
+            min-height: 0;
+
+            .md-toolbar-tools {
+                opacity: 0;
+            }
+        }
+    }
 }

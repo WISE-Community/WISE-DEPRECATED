@@ -1,6 +1,6 @@
 "use strict";
 
-class NotebookToolbarCtrl {
+class NotebookMenuCtrl {
     constructor($scope,
                 $element,
                 $rootScope,
@@ -16,6 +16,7 @@ class NotebookToolbarCtrl {
         this.StudentDataService = StudentDataService;
 
         this.addMode = false;
+        //this.viewMode ? this.viewMode : 'toolbar'; // default view is the side toolbar; 'nav' mode will show a sidenav with more options
 
         this.notebookConfig = this.NotebookService.getNotebookConfig();
         this.noteEnabled = this.notebookConfig.itemTypes.note.enabled;
@@ -24,6 +25,12 @@ class NotebookToolbarCtrl {
         this.noteLabel = this.notebookConfig.itemTypes.note.label.link;
         this.questionLabel = this.notebookConfig.itemTypes.question.label.link;
         this.reportLabel = this.notebookConfig.itemTypes.report.label.link;
+        this.noteIcon = this.notebookConfig.itemTypes.note.label.icon;
+        this.questionIcon = this.notebookConfig.itemTypes.question.label.icon;
+        this.reportIcon = this.notebookConfig.itemTypes.report.label.icon;
+        this.noteColor = this.notebookConfig.itemTypes.note.label.color;
+        this.questionColor = this.notebookConfig.itemTypes.question.label.color;
+        this.reportColor = this.notebookConfig.itemTypes.report.label.color;
     }
 
     addNewNote(ev) {
@@ -32,15 +39,24 @@ class NotebookToolbarCtrl {
 
     openNotebook(ev, filter) {
         this.$rootScope.$broadcast('setNotebookFilter', {filter: filter, ev: ev});
+        this.$rootScope.$broadcast('toggleNotebook', {ev: ev, open: true});
+    }
+
+    toggleNotebook(ev) {
         this.$rootScope.$broadcast('toggleNotebook', {ev: ev});
     }
 
+    setNotebookFilter(ev, filter) {
+        this.$rootScope.$broadcast('setNotebookFilter', {filter: filter, ev: ev});
+        this.$rootScope.$broadcast('toggleNotebookNav', {ev: ev});
+    }
+
     getTemplateUrl() {
-        return this.ProjectService.getThemePath() + '/themeComponents/notebookToolbar/notebookToolbar.html';
+        return this.ProjectService.getThemePath() + '/themeComponents/notebookMenu/notebookMenu.html';
     }
 }
 
-NotebookToolbarCtrl.$inject = [
+NotebookMenuCtrl.$inject = [
     '$scope',
     '$element',
     '$rootScope',
@@ -49,4 +65,4 @@ NotebookToolbarCtrl.$inject = [
     'StudentDataService'
 ];
 
-export default NotebookToolbarCtrl;
+export default NotebookMenuCtrl;

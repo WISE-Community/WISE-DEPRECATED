@@ -6,7 +6,7 @@
 </style>
 
 <div disable-delete-keypress ng-controller="ThemeController as themeCtrl" role="main" layout="column" layout-fill>
-    <md-toolbar class="l-header" ng-class="{'md-whiteframe-z1': vleController.layoutState == 'nav'}">
+    <md-toolbar class="l-header" ng-class="{'md-whiteframe-z1': themeCtrl.layoutState === 'nav'}">
         <div class="md-toolbar-tools">
             <a ng-click="vleController.loadRoot()" class="md-button logo-link">
                 <img ng-src="{{vleController.themePath}}/images/WISE-logo-1b8ca8.svg" alt="WISE Logo" class="logo" />
@@ -15,11 +15,6 @@
                 <span>{{vleController.projectName}}</span>
             </h3>
             <span flex></span>
-            <md-button id="addNewNoteButton" ng-show="vleController.isNotebookEnabled()" aria-label="Add Note" class="md-icon-button"
-                       ng-click="vleController.snipNewNote($event)">
-                <md-icon md-menu-origin> content_cut </md-icon>
-                <md-tooltip md-direction="left">Snip to Notebook...</md-tooltip>
-            </md-button>
             <md-progress-circular class="menu-progress" md-mode="determinate" md-diameter="26" value="{{ themeCtrl.rootNodeStatus.progress.completionPct }}"></md-progress-circular>
             <div class="menu-progress-bg"></div>
             <md-menu md-position-mode="target-right target" md-offset="8 26">
@@ -32,15 +27,28 @@
             </md-menu>
         </div>
     </md-toolbar>
-    <md-content id="content" flex role="main" ng-class="{'l-nav': vleController.layoutState == 'nav', 'l-node': vleController.layoutState == 'node'}" layout="column">
-        <step-tools id="step-tools" show-position="themeCtrl.numberProject"
-                    ng-show="vleController.layoutState == 'node'"></step-tools>
-        <div id="nav" ng-include="vleController.themePath + '/navigation/navigation.html'" ng-show="vleController.layoutState == 'nav'"></div>
-        <div id="node" ng-cloak ui-view="nodeView" ng-show="vleController.layoutState == 'node'"
+    <md-content id="content" flex role="main"
+                ng-class="{'l-nav': themeCtrl.layoutState === 'nav', 'l-node': themeCtrl.layoutState === 'node',
+                'l-notebook': themeCtrl.layoutState === 'notebook', 'notebook-nav-open': themeCtrl.notebookNavOpen}" layout="column">
+        <step-tools class="layout-tools" show-position="themeCtrl.numberProject"
+                    ng-show="themeCtrl.layoutState === 'node'"></step-tools>
+        <notebook-tools class="layout-tools" ng-show="themeCtrl.layoutState === 'notebook'"
+                        notebook-filter="themeCtrl.notebookFilter"></notebook-tools>
+        <div id="nav" ng-include="vleController.themePath + '/navigation/navigation.html'" ng-show="themeCtrl.layoutState === 'nav'"></div>
+        <div id="node" ng-cloak ui-view="nodeView" ng-show="themeCtrl.layoutState === 'node'"
              data-drop="true"
              jqyoui-droppable="{onDrop: 'vleController.notebookDropCallback()'}"
              ng-mousemove='vleController.mouseMoved()'></div>
+        <div id="notebook" ng-cloak ng-show="themeCtrl.layoutState === 'notebook'">
+             <div class="l-constrained notebook-content">
+                 <notebook theme-path="vleController.themePath" template-url="vleController.themePath + '/notebook/notebook.html'" filter="themeCtrl.notebookFilter"></notebook>
+             </div>
+         </div>
+        <md-sidenav md-component-id="notebookSidenav" md-is-open="themeCtrl.notebookNavOpen">
+            <notebook-menu view-mode="nav" nodeId="themeCtrl.currentNodeId" notebook-filter="themeCtrl.notebookFilter"></notebook-menu>
+        </md-sidenav>
     </md-content>
+    <notebook-menu class="notebook-menu" view-mode="sidebar" nodeId="themeCtrl.currentNodeId" notebook-filter="themeCtrl.notebookFilter" ng-show="themeCtrl.layoutState === 'notebook'"></notebook-menu>
     <md-sidenav class="md-sidenav-right md-whiteframe-z2" md-component-id="notebook" layout="column" flex
             md-is-open="themeCtrl.notebookOpen" ng-if="themeCtrl.notebookConfig.enabled"> <!--md-is-locked-open="vleController.notebookOpen && $mdMedia('gt-lg')"-->
         <md-toolbar class="l-sidebar__header md-whiteframe-z1">
