@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var LabelController = function () {
-    function LabelController($injector, $scope, $timeout, LabelService, NodeService, OpenResponseService, ProjectService, StudentAssetService, StudentDataService, UtilService) {
+    function LabelController($injector, $scope, $timeout, LabelService, NodeService, NotebookService, OpenResponseService, ProjectService, StudentAssetService, StudentDataService, UtilService) {
         var _this = this;
 
         _classCallCheck(this, LabelController);
@@ -19,6 +19,7 @@ var LabelController = function () {
         this.$timeout = $timeout;
         this.LabelService = LabelService;
         this.NodeService = NodeService;
+        this.NotebookService = NotebookService;
         this.OpenResponseService = OpenResponseService;
         this.ProjectService = ProjectService;
         this.StudentAssetService = StudentAssetService;
@@ -81,6 +82,9 @@ var LabelController = function () {
 
         // whether the cancel button is shown or not
         this.isCancelButtonVisible = false;
+
+        // whether the snip labels button is shown or not
+        this.isSnipLabelsButtonVisible = true;
 
         // whether the student can create new labels
         this.canCreateLabels = true;
@@ -187,6 +191,7 @@ var LabelController = function () {
                 this.isSaveButtonVisible = false;
                 this.isSubmitButtonVisible = false;
                 this.isNewLabelButtonVisible = false;
+                this.isSnipLabelsButtonVisible = false;
                 this.canDeleteLabels = false;
                 this.isDisabled = true;
 
@@ -198,6 +203,7 @@ var LabelController = function () {
                 this.isSaveButtonVisible = false;
                 this.isSubmitButtonVisible = false;
                 this.isNewLabelButtonVisible = false;
+                this.isSnipLabelsButtonVisible = false;
                 this.canDeleteLabels = false;
                 this.isDisabled = true;
             } else if (this.mode === 'showPreviousWork') {
@@ -1534,13 +1540,52 @@ var LabelController = function () {
             this.saveMessage.time = time;
         }
     }, {
-        key: 'registerExitListener',
+        key: 'showSnipLabelsButton',
 
+
+        /**
+         * Check whether we need to show the snip labels button
+         * @return whether to show the snip labels button
+         */
+        value: function showSnipLabelsButton() {
+            return this.isSnipLabelsButtonVisible;
+        }
+
+        /**
+         * Snip the labels by converting it to an image
+         * @param $event the click event
+         */
+
+    }, {
+        key: 'snipLabels',
+        value: function snipLabels($event) {
+
+            // get the canvas element
+            var canvas = angular.element('#' + this.componentId + ' canvas');
+
+            if (canvas != null && canvas.length > 0) {
+
+                // get the top canvas
+                canvas = canvas[0];
+
+                // get the canvas as a base64 string
+                var img_b64 = canvas.toDataURL('image/png');
+
+                // get the image object
+                var imageObject = this.UtilService.getImageObjectFromBase64String(img_b64);
+
+                // create a notebook item with the image populated into it
+                this.NotebookService.addNewItem($event, imageObject);
+            }
+        }
 
         /**
          * Register the the listener that will listen for the exit event
          * so that we can perform saving before exiting.
          */
+
+    }, {
+        key: 'registerExitListener',
         value: function registerExitListener() {
 
             /*
@@ -1554,7 +1599,7 @@ var LabelController = function () {
     return LabelController;
 }();
 
-LabelController.$inject = ['$injector', '$scope', '$timeout', 'LabelService', 'NodeService', 'OpenResponseService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'UtilService'];
+LabelController.$inject = ['$injector', '$scope', '$timeout', 'LabelService', 'NodeService', 'NotebookService', 'OpenResponseService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'UtilService'];
 
 exports.default = LabelController;
 //# sourceMappingURL=labelController.js.map

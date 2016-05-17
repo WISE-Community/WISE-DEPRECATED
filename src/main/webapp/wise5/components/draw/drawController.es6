@@ -8,6 +8,7 @@ class DrawController {
                 $timeout,
                 DrawService,
                 NodeService,
+                NotebookService,
                 ProjectService,
                 StudentAssetService,
                 StudentDataService,
@@ -18,6 +19,7 @@ class DrawController {
         this.$timeout = $timeout;
         this.DrawService = DrawService;
         this.NodeService = NodeService;
+        this.NotebookService = NotebookService;
         this.ProjectService = ProjectService;
         this.StudentAssetService = StudentAssetService;
         this.StudentDataService = StudentDataService;
@@ -52,6 +54,9 @@ class DrawController {
         
         // whether the reset button is visible or not
         this.isResetButtonVisible = false;
+        
+        // whether the snip drawing button is shown or not
+        this.isSnipDrawingButtonVisible = true;
 
         // message to show next to save/submit buttons
         this.saveMessage = {
@@ -124,6 +129,7 @@ class DrawController {
                 if (componentState != null) {
                     this.drawingToolId = "drawingtool_" + componentState.id;
                 }
+                this.isSnipDrawingButtonVisible = false;
             } else if (this.mode === 'showPreviousWork') {
                 // get the component state from the scope
                 var componentState = this.$scope.componentState;
@@ -133,6 +139,7 @@ class DrawController {
                 this.isPromptVisible = true;
                 this.isSaveButtonVisible = false;
                 this.isSubmitButtonVisible = false;
+                this.isSnipDrawingButtonVisible = false;
                 this.isDisabled = true;
             } else if (this.mode === 'authoring') {
                 this.drawingToolId = "drawingtool_" + this.nodeId + "_" + this.componentId;
@@ -938,6 +945,40 @@ class DrawController {
         this.saveMessage.time = time;
     };
 
+
+    /**
+     * Check whether we need to show the snip drawing button
+     * @return whether to show the snip drawing button
+     */
+    showSnipDrawingButton() {
+        return this.isSnipDrawingButtonVisible;
+    }
+    
+    /**
+     * Snip the drawing by converting it to an image
+     * @param $event the click event
+     */
+    snipDrawing($event) {
+        
+        // get the canvas element
+        var canvas = angular.element('#' + this.componentId + ' canvas');
+        
+        if (canvas != null && canvas.length > 0) {
+            
+            // get the top canvas
+            canvas = canvas[0];
+            
+            // get the canvas as a base64 string
+            var img_b64 = canvas.toDataURL('image/png');
+            
+            // get the image object
+            var imageObject = this.UtilService.getImageObjectFromBase64String(img_b64);
+            
+            // create a notebook item with the image populated into it
+            this.NotebookService.addNewItem($event, imageObject);
+        }
+    }
+    
     /**
      * Register the the listener that will listen for the exit event
      * so that we can perform saving before exiting.
@@ -962,6 +1003,7 @@ DrawController.$inject = ['$injector',
     '$timeout',
     'DrawService',
     'NodeService',
+    'NotebookService',
     'ProjectService',
     'StudentAssetService',
     'StudentDataService',

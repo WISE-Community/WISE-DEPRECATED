@@ -35,6 +35,9 @@
     <md-button class="md-raised md-primary"
             ng-click="drawController.resetButtonClicked()"
             ng-show="drawController.isResetButtonVisible">Reset</md-button>
+    <md-button class="md-raised md-primary"
+            ng-click='drawController.snipDrawing($event)' 
+            ng-show='drawController.showSnipDrawingButton()'>Snip Drawing</md-button>
     <div class="container"
          data-drop="true"
          jqyoui-droppable="{onDrop: 'drawController.dropCallback(item, $index)'}">
