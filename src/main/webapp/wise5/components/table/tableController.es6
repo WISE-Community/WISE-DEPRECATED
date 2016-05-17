@@ -1344,28 +1344,27 @@ class TableController {
     
     /**
      * Snip the table by converting it to an image
+     * @param $event the click event
      */
-    snipTable() {
+    snipTable($event) {
         
         // get the table element
         var tableElement = angular.element('#' + this.componentId + ' table');
         
-        if (tableElement != null) {
+        if (tableElement != null && tableElement.length > 0) {
             tableElement = tableElement[0];
             
             // convert the table element to a canvas element
             html2canvas(tableElement).then((canvas) => {
                 
-                // get the image as a base64 string
+                // get the canvas as a base64 string
                 var img_b64 = canvas.toDataURL('image/png');
                 
                 // get the image object
                 var imageObject = this.UtilService.getImageObjectFromBase64String(img_b64);
                 
-                var event = null;
-                
                 // create a notebook item with the image populated into it
-                this.NotebookService.addNewItem(event, imageObject);
+                this.NotebookService.addNewItem($event, imageObject);
             });
         }
     }

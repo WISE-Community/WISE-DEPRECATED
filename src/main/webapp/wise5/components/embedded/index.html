@@ -22,6 +22,7 @@
                       rows='10'
                       cols='100'></textarea>
         </div>
+        <button ng-click='embeddedController.snipModel($event)' ng-show='embeddedController.showSnipModelButton()'>Snip Model</button>
         <iframe ng-attr-id="{{'componentApp_' + embeddedController.componentId}}" ng-src='{{embeddedController.url}}'
                 class="embedded-content__iframe"
                 style="max-width: {{embeddedController.maxWidth}}; max-height: {{embeddedController.maxHeight}};"></iframe>

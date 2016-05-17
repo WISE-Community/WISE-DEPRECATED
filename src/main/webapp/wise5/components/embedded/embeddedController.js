@@ -10,21 +10,27 @@ var _iframeResizer = require('iframe-resizer');
 
 var _iframeResizer2 = _interopRequireDefault(_iframeResizer);
 
+var _html2canvas = require('html2canvas');
+
+var _html2canvas2 = _interopRequireDefault(_html2canvas);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var EmbeddedController = function () {
-    function EmbeddedController($scope, $sce, $window, NodeService, EmbeddedService, ProjectService, StudentDataService) {
+    function EmbeddedController($scope, $sce, $window, NodeService, NotebookService, EmbeddedService, ProjectService, StudentDataService, UtilService) {
         _classCallCheck(this, EmbeddedController);
 
         this.$scope = $scope;
         this.$sce = $sce;
         this.$window = $window;
         this.NodeService = NodeService;
+        this.NotebookService = NotebookService;
         this.EmbeddedService = EmbeddedService;
         this.ProjectService = ProjectService;
         this.StudentDataService = StudentDataService;
+        this.UtilService = UtilService;
 
         // the node id of the current node
         this.nodeId = null;
@@ -55,6 +61,9 @@ var EmbeddedController = function () {
 
         // whether the student work has changed since last submit
         this.isSubmitDirty = false;
+
+        // whether the snip model button is shown or not
+        this.isSnipModelButtonVisible = true;
 
         // message to show next to save/submit buttons
         this.saveMessage = {
@@ -172,6 +181,7 @@ var EmbeddedController = function () {
                 // get the latest annotations
                 // TODO: watch for new annotations and update accordingly
                 this.latestAnnotations = this.$scope.$parent.nodeController.getLatestComponentAnnotations(this.componentId);
+                this.isSnipModelButtonVisible = true;
             } else if (this.mode === 'authoring') {
                 this.updateAdvancedAuthoringView();
 
@@ -181,6 +191,12 @@ var EmbeddedController = function () {
                     this.componentContent = this.ProjectService.injectAssetPaths(newValue);
                     this.setURL(this.componentContent.url);
                 }.bind(this), true);
+            } else if (this.mode === 'grading') {
+                this.isSnipModelButtonVisible = false;
+            } else if (this.mode === 'onlyShowWork') {
+                this.isSnipModelButtonVisible = false;
+            } else if (this.mode === 'showPreviousWork') {
+                this.isSnipModelButtonVisible = false;
             }
 
             // get the show previous work node id if it is provided
@@ -552,13 +568,61 @@ var EmbeddedController = function () {
             this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
         }
     }, {
-        key: 'registerExitListener',
+        key: 'snipModel',
 
+
+        /**
+         * Snip the model by converting it to an image
+         * @param $event the click event
+         */
+        value: function snipModel($event) {
+            var _this = this;
+
+            // get the iframe
+            var iframe = $('#componentApp_' + this.componentId);
+
+            if (iframe != null && iframe.length > 0) {
+
+                //get the html from the iframe
+                var modelElement = iframe.contents().find('html');
+
+                if (modelElement != null && modelElement.length > 0) {
+                    modelElement = modelElement[0];
+
+                    // convert the model element to a canvas element
+                    (0, _html2canvas2.default)(modelElement).then(function (canvas) {
+
+                        // get the canvas as a base64 string
+                        var img_b64 = canvas.toDataURL('image/png');
+
+                        // get the image object
+                        var imageObject = _this.UtilService.getImageObjectFromBase64String(img_b64);
+
+                        // create a notebook item with the image populated into it
+                        _this.NotebookService.addNewItem($event, imageObject);
+                    });
+                }
+            }
+        }
+
+        /**
+         * Check whether we need to show the snip model button
+         * @return whether to show the snip model button
+         */
+
+    }, {
+        key: 'showSnipModelButton',
+        value: function showSnipModelButton() {
+            return this.isSnipModelButtonVisible;
+        }
 
         /**
          * Register the the listener that will listen for the exit event
          * so that we can perform saving before exiting.
          */
+
+    }, {
+        key: 'registerExitListener',
         value: function registerExitListener() {
 
             /*
@@ -572,7 +636,7 @@ var EmbeddedController = function () {
     return EmbeddedController;
 }();
 
-EmbeddedController.$inject = ['$scope', '$sce', '$window', 'NodeService', 'EmbeddedService', 'ProjectService', 'StudentDataService'];
+EmbeddedController.$inject = ['$scope', '$sce', '$window', 'NodeService', 'NotebookService', 'EmbeddedService', 'ProjectService', 'StudentDataService', 'UtilService'];
 
 exports.default = EmbeddedController;
 //# sourceMappingURL=embeddedController.js.map

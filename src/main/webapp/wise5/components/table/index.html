@@ -75,7 +75,7 @@
             </md-button>
         </div>
         <button ng-click='tableController.resetTable()' ng-show='tableController.showResetTableButton()'>Reset Table</button>
-        <button ng-click='tableController.snipTable()' ng-show='tableController.showSnipTableButton()'>Snip Table</button>
+        <button ng-click='tableController.snipTable($event)' ng-show='tableController.showSnipTableButton()'>Snip Table</button>
         <table>
             <tr ng-repeat='row in tableController.getTableDataRows()'>
                 <td ng-repeat='cell in row'>
