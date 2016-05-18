@@ -8,6 +8,111 @@
                           rows='10'
                           cols='100'></textarea>
                 <br/>
+                <label>
+                    <input type='checkbox'
+                       ng-model='drawController.authoringComponentContent.tools.select'
+                       ng-change='drawController.authoringViewComponentChanged()'/>
+                    Select Tool
+                </label>
+                <br/>
+                <label>
+                    <input type='checkbox'
+                           ng-model='drawController.authoringComponentContent.tools.line'
+                           ng-change='drawController.authoringViewComponentChanged()'/>
+                    Line Tool
+                </label>
+                <br/>
+                <label>
+                    <input type='checkbox'
+                           ng-model='drawController.authoringComponentContent.tools.shape'
+                           ng-change='drawController.authoringViewComponentChanged()'/>
+                    Shape Tool
+                </label>
+                <br/>
+                <label>
+                    <input type='checkbox'
+                           ng-model='drawController.authoringComponentContent.tools.free'
+                           ng-change='drawController.authoringViewComponentChanged()'/>
+                    Free Hand Tool
+                </label>
+                <br/>
+                <label>
+                    <input type='checkbox'
+                           ng-model='drawController.authoringComponentContent.tools.text'
+                           ng-change='drawController.authoringViewComponentChanged()'/>
+                    Text Tool
+                </label>
+                <br/>
+                <label>
+                    <input type='checkbox'
+                           ng-model='drawController.authoringComponentContent.tools.stamp'
+                           ng-change='drawController.authoringViewComponentChanged()'/>
+                    Stamp Tool
+                </label>
+                <br/>
+                <label>
+                    <input type='checkbox'
+                           ng-model='drawController.authoringComponentContent.tools.clone'
+                           ng-change='drawController.authoringViewComponentChanged()'/>
+                    Clone Tool
+                </label>
+                <br/>
+                <label>
+                    <input type='checkbox'
+                           ng-model='drawController.authoringComponentContent.tools.strokeColor'
+                           ng-change='drawController.authoringViewComponentChanged()'/>
+                    Stroke Color Tool
+                </label>
+                <br/>
+                <label>
+                    <input type='checkbox'
+                           ng-model='drawController.authoringComponentContent.tools.fillColor'
+                           ng-change='drawController.authoringViewComponentChanged()'/>
+                    Fill Color Tool
+                </label>
+                <br/>
+                <label>
+                    <input type='checkbox'
+                           ng-model='drawController.authoringComponentContent.tools.strokeWidth'
+                           ng-change='drawController.authoringViewComponentChanged()'/>
+                    Stroke Width Tool
+                </label>
+                <br/>
+                <label>
+                    <input type='checkbox'
+                           ng-model='drawController.authoringComponentContent.tools.sendBack'
+                           ng-change='drawController.authoringViewComponentChanged()'/>
+                    Send Back Tool
+                </label>
+                <br/>
+                <label>
+                    <input type='checkbox'
+                           ng-model='drawController.authoringComponentContent.tools.sendForward'
+                           ng-change='drawController.authoringViewComponentChanged()'/>
+                    Send Forward Tool
+                </label>
+                <br/>
+                <label>
+                    <input type='checkbox'
+                           ng-model='drawController.authoringComponentContent.tools.undo'
+                           ng-change='drawController.authoringViewComponentChanged()'/>
+                    Undo Tool
+                </label>
+                <br/>
+                <label>
+                    <input type='checkbox'
+                           ng-model='drawController.authoringComponentContent.tools.redo'
+                           ng-change='drawController.authoringViewComponentChanged()'/>
+                    Redo Tool
+                </label>
+                <br/>
+                <label>
+                    <input type='checkbox'
+                           ng-model='drawController.authoringComponentContent.tools.delete'
+                           ng-change='drawController.authoringViewComponentChanged()'/>
+                    Delete Tool
+                </label>
+                <br/>
                 Max Score:
                 <input type='number'
                        ng-model='drawController.authoringComponentContent.maxScore'

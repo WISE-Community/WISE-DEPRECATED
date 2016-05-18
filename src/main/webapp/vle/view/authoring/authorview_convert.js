@@ -1334,6 +1334,8 @@ View.prototype.convertDraw = function(node, nodeContent) {
     component.id = this.createRandomId();
     component.type = 'Draw';
     component.prompt = nodeContent.prompt;
+    component.showSaveButton = false;
+    component.showSubmitButton = false;
 
     if (nodeContent.stamps != null) {
 
