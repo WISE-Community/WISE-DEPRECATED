@@ -816,6 +816,9 @@ public class VLEGetSpecialExport {
 		//get the step work id
 		Long stepWorkId = stepWork.getId();
 		
+		// get the server post time
+		Timestamp postTime = stepWork.getPostTime();
+		
 		try {
 			//set the step work id
 			studentData.put("stepWorkId", stepWorkId);
@@ -829,6 +832,11 @@ public class VLEGetSpecialExport {
 			if (data != null && !data.equals("")) {
 				//get the JSONObject of the data
 				JSONObject jsonData = new JSONObject(data);
+				
+				if (postTime != null) {
+					// put the server post time into the JSON data
+					jsonData.put("postTime", postTime.getTime());
+				}
 				
 				//put the data into the object we will return
 				studentData.put("data", jsonData);
