@@ -95,8 +95,8 @@
                    ng-disabled="labelController.isDisabled"
                    ng-if="labelController.showCancelButton()">Cancel</md-button>
         <md-button class="md-raised md-primary"
-                ng-click='labelController.snipLabels($event)' 
-                ng-show='labelController.showSnipLabelsButton()'>Snip Labels</md-button>
+                ng-click='labelController.snipImage($event)' 
+                ng-show='labelController.showSnipImageButton()'>Snip Image</md-button>
         <div id="canvasParent_{{labelController.canvasId}}">
             <canvas id="{{labelController.canvasId}}" width="800" height="600" style="border:1px solid black;"></canvas>
         </div>

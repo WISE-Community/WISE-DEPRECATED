@@ -82,8 +82,8 @@ class LabelController {
         // whether the cancel button is shown or not
         this.isCancelButtonVisible = false;
         
-        // whether the snip labels button is shown or not
-        this.isSnipLabelsButtonVisible = true;
+        // whether the snip image button is shown or not
+        this.isSnipImageButtonVisible = true;
 
         // whether the student can create new labels
         this.canCreateLabels = true;
@@ -190,7 +190,7 @@ class LabelController {
                 this.isSaveButtonVisible = false;
                 this.isSubmitButtonVisible = false;
                 this.isNewLabelButtonVisible = false;
-                this.isSnipLabelsButtonVisible = false;
+                this.isSnipImageButtonVisible = false;
                 this.canDeleteLabels = false;
                 this.isDisabled = true;
 
@@ -202,7 +202,7 @@ class LabelController {
                 this.isSaveButtonVisible = false;
                 this.isSubmitButtonVisible = false;
                 this.isNewLabelButtonVisible = false;
-                this.isSnipLabelsButtonVisible = false;
+                this.isSnipImageButtonVisible = false;
                 this.canDeleteLabels = false;
                 this.isDisabled = true;
             } else if (this.mode === 'showPreviousWork') {
@@ -1430,18 +1430,18 @@ class LabelController {
     };
 
     /**
-     * Check whether we need to show the snip labels button
-     * @return whether to show the snip labels button
+     * Check whether we need to show the snip image button
+     * @return whether to show the snip image button
      */
-    showSnipLabelsButton() {
-        return this.isSnipLabelsButtonVisible;
+    showSnipImageButton() {
+        return this.isSnipImageButtonVisible;
     }
     
     /**
      * Snip the labels by converting it to an image
      * @param $event the click event
      */
-    snipLabels($event) {
+    snipImage($event) {
         
         // get the canvas element
         var canvas = angular.element('#' + this.componentId + ' canvas');

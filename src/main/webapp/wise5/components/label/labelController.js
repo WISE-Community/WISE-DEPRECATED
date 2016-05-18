@@ -83,8 +83,8 @@ var LabelController = function () {
         // whether the cancel button is shown or not
         this.isCancelButtonVisible = false;
 
-        // whether the snip labels button is shown or not
-        this.isSnipLabelsButtonVisible = true;
+        // whether the snip image button is shown or not
+        this.isSnipImageButtonVisible = true;
 
         // whether the student can create new labels
         this.canCreateLabels = true;
@@ -191,7 +191,7 @@ var LabelController = function () {
                 this.isSaveButtonVisible = false;
                 this.isSubmitButtonVisible = false;
                 this.isNewLabelButtonVisible = false;
-                this.isSnipLabelsButtonVisible = false;
+                this.isSnipImageButtonVisible = false;
                 this.canDeleteLabels = false;
                 this.isDisabled = true;
 
@@ -203,7 +203,7 @@ var LabelController = function () {
                 this.isSaveButtonVisible = false;
                 this.isSubmitButtonVisible = false;
                 this.isNewLabelButtonVisible = false;
-                this.isSnipLabelsButtonVisible = false;
+                this.isSnipImageButtonVisible = false;
                 this.canDeleteLabels = false;
                 this.isDisabled = true;
             } else if (this.mode === 'showPreviousWork') {
@@ -1540,15 +1540,15 @@ var LabelController = function () {
             this.saveMessage.time = time;
         }
     }, {
-        key: 'showSnipLabelsButton',
+        key: 'showSnipImageButton',
 
 
         /**
-         * Check whether we need to show the snip labels button
-         * @return whether to show the snip labels button
+         * Check whether we need to show the snip image button
+         * @return whether to show the snip image button
          */
-        value: function showSnipLabelsButton() {
-            return this.isSnipLabelsButtonVisible;
+        value: function showSnipImageButton() {
+            return this.isSnipImageButtonVisible;
         }
 
         /**
@@ -1557,8 +1557,8 @@ var LabelController = function () {
          */
 
     }, {
-        key: 'snipLabels',
-        value: function snipLabels($event) {
+        key: 'snipImage',
+        value: function snipImage($event) {
 
             // get the canvas element
             var canvas = angular.element('#' + this.componentId + ' canvas');
