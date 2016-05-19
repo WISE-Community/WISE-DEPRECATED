@@ -23,8 +23,20 @@ class NotebookItemReportController {
         this.StudentAssetService = StudentAssetService;
         this.StudentDataService = StudentDataService;
         this.mode = this.ConfigService.getMode();
+
+        this.dirty = false;
+
+        this.saveMessage = {
+            text: '',
+            time: ''
+        };
+
         this.reportItem = this.NotebookService.getLatestNotebookReportItemByReportId(this.reportId);
-        if (this.reportItem == null) {
+        if (this.reportItem) {
+            let serverSaveTime = this.reportItem.serverSaveTime;
+            let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
+            this.setSaveMessage('Last saved', clientSaveTime);
+        } else {
             // Student doesn't have work for this report yet, so we'll use the template.
             this.reportItem = this.NotebookService.getTemplateReportItemByReportId(this.reportId);
             if (this.reportItem == null) {
@@ -34,6 +46,17 @@ class NotebookItemReportController {
                 this.reportItem.id = null;  // set the id to null so it can be inserted as initial version, as opposed to updated.
             }
         }
+
+        this.notebookConfig = this.NotebookService.getNotebookConfig();
+        this.label = this.notebookConfig.itemTypes.report.label;
+
+        this.$scope.$watch(() => {
+            return this.reportItem.content.content;
+        }, (newValue, oldValue) => {
+            if (newValue !== oldValue) {
+                this.dirty = true;
+            }
+        });
     }
 
     getItemNodeId() {
@@ -99,19 +122,26 @@ class NotebookItemReportController {
         // save new report notebook item
         this.reportItem.content.clientSaveTime = Date.parse(new Date());  // set save timestamp
         this.NotebookService.saveNotebookItem(this.reportItem.id, this.reportItem.nodeId, this.reportItem.localNotebookItemId, this.reportItem.type, this.reportItem.title, this.reportItem.content)
-            .then(() => {
-                this.$translate(['ok']).then((translations) => {
-                    this.$mdDialog.show(
-                        this.$mdDialog.alert()
-                            .parent(angular.element(document.body))
-                            .title("Report Saved")
-                            .htmlContent("Report was saved successfully.")
-                            .ariaLabel("Report was saved successfully.")
-                            .ok(translations.ok)
-                            .targetEvent(event)
-                    );
-                })
+            .then((result) => {
+                if(result) {
+                    //this.$translate(['ok']).then((translations) => {
+                    this.dirty = false;
+                    let serverSaveTime = result.serverSaveTime;
+                    let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
+                    this.setSaveMessage('Saved', clientSaveTime);
+                    //})
+                }
             });
+    }
+
+    /**
+     * Set the message next to the save button
+     * @param message the message to display
+     * @param time the time to display
+     */
+    setSaveMessage(message, time) {
+        this.saveMessage.text = message;
+        this.saveMessage.time = time;
     }
 }
 

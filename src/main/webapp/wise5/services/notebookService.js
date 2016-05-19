@@ -309,7 +309,7 @@ var NotebookService = function () {
 
                         _this2.$rootScope.$broadcast('notebookUpdated', { notebook: _this2.notebook });
                     }
-                    return null;
+                    return result.data;
                 });
             }
         }

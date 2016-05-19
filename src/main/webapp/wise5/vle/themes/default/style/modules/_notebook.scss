@@ -154,3 +154,16 @@
 .view-notebook-item {
     width: $layout-breakpoint-xs;
 }
+
+.notebook-item--report {
+    background-color: #ffffff;
+}
+
+.notebook-item--report__heading {
+    text-align: center;
+}
+
+.notebook-item--report__content {
+    width: 100%;
+    margin: 16px 0;
+}
