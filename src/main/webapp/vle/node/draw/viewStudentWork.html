@@ -36,6 +36,9 @@ function loadStudentData() {
 	//add the next button
 	document.getElementById('navigationDiv').innerHTML += '<input type="button" value="Next" onclick="displayNext()"/>';
 
+	// get the project folder name e.g. /13583
+	projectFolderName = data.projectFolderName;
+
 	//get the array of student data
 	var students = data.students;
 
@@ -284,6 +287,9 @@ function getStudentDataHtml(nodeState) {
 		//get the svgstring field
 		svgString = data.svgString;
 		
+		// remove the beginning part of the curriculum path
+		svgString = removeCurriculumPath(svgString);
+
 		/*
 		 * get the snapshots if any. if there are snapshots we will
 		 * display all the snapshots instead of the svgString.
@@ -309,6 +315,9 @@ function getStudentDataHtml(nodeState) {
 						snapshotSVG = snapshotSVG.replace(/^--lz77--/, "");
 						snapshotSVG = lz77.decompress(snapshotSVG);
 					}
+					
+					// remove the beginning part of the curriculum path
+					snapshotSVG = removeCurriculumPath(snapshotSVG);
 					
 					//append the snapshot svg
 					snapshotsSVGString += snapshotSVG;
@@ -352,6 +361,36 @@ function nodeStateHasWork(nodeState) {
 	}
 	
 	return hasWork;
+};
+
+/**
+ * Remove the beginning part of the curriculum path
+ * e.g. if the string contains something like
+ * "/wise/curriculum/12345/assets/spongebob.png"
+ * or
+ * "/curriculum/12345/assets/spongebob.png"
+ * we will change it to
+ * "assets/spongebob.png"
+ * 
+ * @param str the content string to modify
+ * @returns the string with the beginning part of the curriculum path removed
+ */
+function removeCurriculumPath(str) {
+	
+	if (str != null && projectFolderName != null) {
+		// create regex to match paths we want to find
+		var folderPath1RegEx = new RegExp('"/wise/curriculum/' + projectFolderName + '/', 'gi');
+		var folderPath2RegEx = new RegExp('"/curriculum/' + projectFolderName + '/', 'gi');
+		
+		/*
+		 * remove the beginning part of the paths that contain the folder path
+		 * which should leave the path starting with assets/
+		 */
+		str = str.replace(folderPath1RegEx, '"');
+		str = str.replace(folderPath2RegEx, '"');
+	}
+	
+	return str;
 };
 
 </script>

@@ -305,6 +305,18 @@ public class VLEGetSpecialExport {
 		String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
 		String rawProjectUrl = (String) run.getProject().getCurnit().accept(new CurnitGetCurnitUrlVisitor());		
 		String projectPath = curriculumBaseDir + rawProjectUrl;
+		String projectFolderName = "";
+		String projectFolderPath = "";
+		
+		if (rawProjectUrl != null) {
+			// get the folder name e.g. 12345
+			projectFolderName = rawProjectUrl.substring(1, rawProjectUrl.indexOf("/", 1));
+		}
+		
+		if (projectPath != null) {
+			// get the project folder path e.g. /user/wise/tomcat/webapps/curriculum/12345
+			projectFolderPath = projectPath.substring(0, projectPath.lastIndexOf("/"));
+		}
 		
 		//get the classmate user infos
 		JSONArray classmateUserInfosJSONArray = RunUtil.getClassmateUserInfos(run, workgroupService, runService);
@@ -571,6 +583,7 @@ public class VLEGetSpecialExport {
 				data.put("runId", runId);
 				data.put("stepName", nodeTitleWithPosition);
 				data.put("nodeId", nodeId);
+				data.put("projectFolderName", projectFolderName);
 			} catch (JSONException e1) {
 				e1.printStackTrace();
 			}
@@ -615,6 +628,12 @@ public class VLEGetSpecialExport {
 					
 					//copy the contents of the viewStudentWork.html file into our new file
 					FileUtils.copyFile(sourceViewStudentWorkFile, newViewStudentWorkFile);
+					
+					// get the project assets folder
+					File assetsFolder = new File(projectFolderPath, "assets");
+					
+					// copy the assets folder into the folder we are creating
+					FileUtils.copyDirectoryToDirectory(assetsFolder, zipFolder);
 				}
 			} else if (nodeType.equals("mysystem2")) {
 				if (wiseBaseDir != null && wiseBaseDir != "") { 
@@ -644,9 +663,6 @@ public class VLEGetSpecialExport {
 						//copy the file to our zip folder
 						copyFileToFolder(filePath, zipFolder);
 					}
-					
-					//get the path to the step content file
-					String projectFolderPath = projectPath.substring(0, projectPath.lastIndexOf("/"));
 					
 					//get the original step content file
 					File originalStepContentFile = new File(projectFolderPath + "/" + nodeId);
