@@ -18,6 +18,10 @@ var _possibleScoreController = require('./possibleScore/possibleScoreController'
 
 var _possibleScoreController2 = _interopRequireDefault(_possibleScoreController);
 
+var _wiselinkController = require('./wiselink/wiselinkController');
+
+var _wiselinkController2 = _interopRequireDefault(_wiselinkController);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -384,56 +388,17 @@ var ListenForDeleteKeypress = function () {
  */
 
 
-var wiselink = function () {
-    function wiselink($document, StudentDataService) {
-        _classCallCheck(this, wiselink);
-
-        this.restrict = 'E';
-        this.$document = $document;
-        this.StudentDataService = StudentDataService;
-    }
-
-    _createClass(wiselink, [{
-        key: 'link',
-        value: function link($scope, element, attrs) {
-
-            // the node id to navigate the student to
-            var nodeId = attrs.nodeid;
-
-            // the text to display in the link or button
-            var linkText = attrs.linktext;
-
-            // the type is optional and defaults to link
-            var type = attrs.type;
-
-            if (nodeId != null) {
-                if (type == 'button') {
-                    // we will make a button
-                    element.html('<button>' + linkText + '</button>');
-                } else {
-                    // we will make a link
-                    element.html('<a>' + linkText + '</a>');
-                }
-
-                element.bind('click', function () {
-                    /*
-                     * when the link or button is clicked, navigate the student to
-                     * the appropriate step or activity
-                     */
-                    wiselink.instance.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(nodeId);
-                });
-            }
-        }
-    }], [{
-        key: 'directiveFactory',
-        value: function directiveFactory($document, StudentDataService) {
-            wiselink.instance = new wiselink($document, StudentDataService);
-            return wiselink.instance;
-        }
-    }]);
-
-    return wiselink;
-}();
+var Wiselink = {
+    bindings: {
+        nodeId: '@',
+        linkText: '@',
+        tooltip: '@',
+        linkClass: '@',
+        type: '@'
+    },
+    templateUrl: 'wise5/directives/wiselink/wiselink.html',
+    controller: 'WiselinkController as wiselinkCtrl'
+};
 
 var Annotation = {
     bindings: {
@@ -478,13 +443,14 @@ ComponentDirective.directiveFactory.$inject = ['$injector', '$compile', 'NodeSer
 ConfirmNumberDecrease.directiveFactory.$inject = [];
 DisableDeleteKeypress.directiveFactory.$inject = ['$document'];
 ListenForDeleteKeypress.directiveFactory.$inject = ['$document'];
-wiselink.directiveFactory.$inject = ['$document', 'StudentDataService'];
 
 Directives.controller('AnnotationController', _annotationController2.default);
 Directives.component('annotation', Annotation);
 Directives.controller('ComponentAnnotationsController', _componentAnnotationsController2.default);
 Directives.component('componentAnnotations', ComponentAnnotations);
 Directives.controller('PossibleScoreController', _possibleScoreController2.default);
+Directives.component('wiselink', Wiselink);
+Directives.controller('WiselinkController', _wiselinkController2.default);
 Directives.component('possibleScore', PossibleScore);
 Directives.directive('classResponse', ClassResponseDirective.directiveFactory);
 Directives.directive('compile', CompileDirective.directiveFactory);
@@ -492,7 +458,6 @@ Directives.directive('component', ComponentDirective.directiveFactory);
 Directives.directive('confirmNumberDecrease', ConfirmNumberDecrease.directiveFactory);
 Directives.directive('disableDeleteKeypress', DisableDeleteKeypress.directiveFactory);
 Directives.directive('listenForDeleteKeypress', ListenForDeleteKeypress.directiveFactory);
-Directives.directive('wiselink', wiselink.directiveFactory);
 
 exports.default = Directives;
 //# sourceMappingURL=directives.js.map

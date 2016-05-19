@@ -478,6 +478,25 @@ var ConfigService = function () {
 
             return serverTimestamp;
         }
+
+        /**
+         * Convert a server timestamp to a client timestamp. This is required
+         * in case the client and server clocks are not synchronized.
+         * @param serverTimestamp the client timestamp
+         */
+
+    }, {
+        key: 'convertToClientTimestamp',
+        value: function convertToClientTimestamp(serverTimestamp) {
+
+            // get the difference between the client time and server time
+            var timestampDiff = this.getConfigParam('timestampDiff');
+
+            // convert the client timestamp to a server timestamp
+            var clientTimestamp = serverTimestamp + timestampDiff;
+
+            return clientTimestamp;
+        }
     }]);
 
     return ConfigService;

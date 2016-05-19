@@ -137,12 +137,16 @@
             <md-icon>image</md-icon> Insert file
         </md-button>
     </div>
-    <md-button class="md-raised md-primary"
+    <md-button class="md-accent"
             ng-click="drawController.resetButtonClicked()"
-            ng-show="drawController.isResetButtonVisible">Reset</md-button>
-    <md-button class="md-raised md-primary"
-            ng-click='drawController.snipDrawing($event)' 
-            ng-show='drawController.showSnipDrawingButton()'>Snip Drawing</md-button>
+            ng-show="drawController.isResetButtonVisible">
+            <md-icon> restore </md-icon> Reset
+    </md-button>
+    <md-button class="md-accent md-primary"
+            ng-click='drawController.snipDrawing($event)'
+            ng-show='drawController.showSnipDrawingButton()'>
+        <md-icon> content_cut </md-icon> Add to Notebook
+    </md-button>
     <div class="container"
          data-drop="true"
          jqyoui-droppable="{onDrop: 'drawController.dropCallback(item, $index)'}">

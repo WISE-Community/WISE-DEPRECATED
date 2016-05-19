@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var StepToolsCtrl = function () {
-    function StepToolsCtrl($scope, NodeService, ProjectService, StudentDataService) {
+    function StepToolsCtrl($scope, NodeService, ProjectService, StudentDataService, $mdSidenav) {
         var _this = this;
 
         _classCallCheck(this, StepToolsCtrl);
@@ -18,6 +18,7 @@ var StepToolsCtrl = function () {
         this.NodeService = NodeService;
         this.ProjectService = ProjectService;
         this.StudentDataService = StudentDataService;
+        //this.$mdSidenav = $mdSidenav;
 
         this.nodeStatuses = this.StudentDataService.nodeStatuses;
 
@@ -45,6 +46,11 @@ var StepToolsCtrl = function () {
     }
 
     _createClass(StepToolsCtrl, [{
+        key: 'toggleStepNav',
+        value: function toggleStepNav() {
+            this.$mdSidenav('stepNav').toggle();
+        }
+    }, {
         key: 'updateModel',
         value: function updateModel() {
             var nodeId = this.StudentDataService.getCurrentNodeId();
@@ -104,7 +110,7 @@ var StepToolsCtrl = function () {
     return StepToolsCtrl;
 }();
 
-StepToolsCtrl.$inject = ['$scope', 'NodeService', 'ProjectService', 'StudentDataService'];
+StepToolsCtrl.$inject = ['$scope', 'NodeService', 'ProjectService', 'StudentDataService', '$mdSidenav'];
 
 exports.default = StepToolsCtrl;
 //# sourceMappingURL=stepToolsController.js.map

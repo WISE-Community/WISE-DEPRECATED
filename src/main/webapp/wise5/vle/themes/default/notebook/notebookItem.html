@@ -1,21 +1,48 @@
 
-<div ng-if="!notebookItemController.isEditMode">
-    <!-- Display an existing notebook item. -->
-    <span>{{notebookItemController.item.content.text}}</span>
-    <div class="component__attachment" ng-repeat="attachment in notebookItemController.item.content.attachments">
-        <img ng-src="{{attachment.iconURL}}" class="component__attachment__content" />
-    </div>
-    <div class="notebookItemSource"><wiselink type="link" nodeId="{{notebookItemController.getItemNodeId()}}" linkText="{{notebookItemController.getItemNodePositionAndTitle()}}"></wiselink></div>
-    <md-button ng-if="notebookItemController.isEditAllowed" id="editNotebookItemButton" aria-label="Edit NotebookItem" class="md-icon-button"
-               ng-click="notebookItemController.editNotebookItem($event, notebookItemController.item.localNotebookItemId)">
-        <md-icon md-menu-origin> edit </md-icon>
-        <md-tooltip md-direction="left"><span translate="editNotebookItem" /></md-tooltip>
-    </md-button>
-</div>
+<md-card class="notebook-item"
+         ng-if="!notebookItemController.isEditMode"
+         ng-mouseenter="focus=true;"
+         ng-mouseleave="focus=false;"
+         ng-class="{ 'md-whiteframe-5dp': focus}">
+    <md-card-content ng-click="notebookItemController.editNotebookItem($event, notebookItemController.item.localNotebookItemId)"
+                     aria-label="Edit note"
+                     class="notebook-item__content notebook-item__edit"
+                     md-ink-ripple>
+        <div ng-repeat="attachment in notebookItemController.item.content.attachments"
+             ng-if="$first"
+             class="notebook-item__content__attachment"
+             style="color: {{notebookItemController.label.color}}; background: url('{{attachment.iconURL}}')"
+             ng-class="{'notebook-item__content__attachment--only': !notebookItemController.item.content.text}"></div>
+        <div ng-if="notebookItemController.item.content.text"
+             class="notebook-item__content__text notebook-item__edit md-body-1"
+             style="color: {{notebookItemController.label.color}}"
+             ng-class="{'notebook-item__content__text--only': !notebookItemController.item.content.attachments.length}">
+            {{notebookItemController.item.content.text}}
+         </div>
+        <!--<img ng-repeat="attachment in notebookItemController.item.content.attachments"
+             ng-if="$first"
+             ng-src="{{attachment.iconURL}}"
+             class="md-card-image notebook-item__content--attachment"
+             alt="Note attachment"
+             ng-class="{'notebook-item__content--attachment--notext': notebookItemController.item.content.text}">
+        <md-card-content class="notebook-item__content--text notebook-item__edit"
+                         style="color: {{notebookItemController.label.color}}"
+                         ng-class="{'notebook-item__content--text--noattachment': notebookItemController.item.content.attachments.length}">
+            <p>{{notebookItemController.item.content.text}}</p>
+        </md-card-content>-->
+    </md-card-content>
+    <md-divider></md-divider>
+    <md-card-actions class="notebook-item__actions" layout="row" layout-align="end center">
+        <md-button class="md-icon-button" aria-label="Archive note">
+            <md-icon> delete </md-icon>
+            <md-tooltip md-direction="top">Delete</md-tooltip>
+        </md-button>
+    </md-card-actions>
+</md-card>
 
 <div ng-if="notebookItemController.isEditMode">
     <!-- User wants to add a new note or edit existing note. -->
-    <md-input-container class="md-block md-input-has-placeholder" md-no-float>
+    <md-input-container class="md-block md-input-has-placeholder notebook-item__text-input" md-no-float>
           <textarea placeholder="{{ 'typeYourNoteHere' | translate }}"
                     ng-model="notebookItemController.item.content.text"
                     ng-model-options='{ debounce: 100 }'
@@ -28,8 +55,7 @@
         <md-button class="component__attachment__delete" ng-click='notebookItemController.removeAttachment(attachment)' title="Remove file"><md-icon>cancel</md-icon></md-button>
     </div>
     <br/>
-    <div ng-show="notebookItemController.mode != 'preview'">
-        <span translate="attachments"></span>:<br/>
+    <div ng-show="notebookItemController.mode != 'preview' && !notebookItemController.item.content.attachments.length">
         <div ngf-drop ngf-select ngf-change="notebookItemController.attachStudentAssetToNote($files)" class="drop-box"
              drag-over-class="dragover" ngf-multiple="true" allow-dir="false"
              accept="image/*,application/pdf,text/csv" translate="dropAssetMessage"></div>
@@ -38,5 +64,10 @@
             You are using {{notebookController.notebook.totalSize | appropriateSizeText }} out of {{notebookController.notebook.totalSizeMax | appropriateSizeText}} ({{notebookController.notebook.usagePercentage | roundToDecimal:0 }}%)
          -->
     </div>
-
+    <div>
+        <md-icon> place </md-icon> <wiselink type="link" node-id="{{notebookItemController.getItemNodeId()}}"
+                                             link-text="{{notebookItemController.getItemNodeLink()}}"
+                                             link-class="accent-2"></wiselink>
+    </div>
+    <span flex></span>
 </div>

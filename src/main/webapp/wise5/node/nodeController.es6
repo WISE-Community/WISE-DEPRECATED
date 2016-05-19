@@ -50,7 +50,6 @@ class NodeController {
          * and the value being the scope object from the child controller
          */
         this.$scope.componentToScope = {};
-        this.notebookOpen = false;
 
         // message to show next to save/submit buttons
         this.saveMessage = {
@@ -651,7 +650,8 @@ class NodeController {
                     if (!componentId && studentWorkList && studentWorkList.length) {
                         // this was a step save or submission and student work was saved, so set save message
                         let latestStudentWork = studentWorkList[studentWorkList.length - 1];
-                        let clientSaveTime = latestStudentWork.clientSaveTime;
+                        let serverSaveTime = latestStudentWork.serverSaveTime;
+                        let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
 
                         if (isAutoSave) {
                             this.setSaveMessage('Auto-Saved', clientSaveTime);

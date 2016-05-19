@@ -47,6 +47,9 @@ class NotebookItemController {
         // set the type in the controller
         this.type = this.item ? this.item.type : null;
 
+        this.notebookConfig = this.NotebookService.getNotebookConfig();
+        this.label = this.notebookConfig.itemTypes[this.type].label;
+
         if ($scope.$parent.file != null) {
             // put the file into an array
             var files = [$scope.$parent.file];
@@ -65,9 +68,9 @@ class NotebookItemController {
     }
 
     /**
-     * Returns this NotebookItem's position and title.
+     * Returns this NotebookItem's location link
      */
-    getItemNodePositionAndTitle() {
+    getItemNodeLink() {
         if (this.item == null) {
             return "";
         } else {

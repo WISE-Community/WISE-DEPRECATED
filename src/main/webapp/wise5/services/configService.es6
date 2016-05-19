@@ -31,7 +31,7 @@ class ConfigService {
             }
 
             this.setConfig(configJSON);
-            
+
             if (this.isPreview()) {
                 // assign a random workgroup id
                 var myUserInfo = this.getMyUserInfo();
@@ -40,7 +40,7 @@ class ConfigService {
                     myUserInfo.workgroupId = Math.floor(100 * Math.random()) + 1;
                 }
             }
-            
+
             return configJSON;
         });
     };
@@ -419,6 +419,22 @@ class ConfigService {
         var serverTimestamp = clientTimestamp - timestampDiff;
 
         return serverTimestamp;
+    }
+
+    /**
+     * Convert a server timestamp to a client timestamp. This is required
+     * in case the client and server clocks are not synchronized.
+     * @param serverTimestamp the client timestamp
+     */
+    convertToClientTimestamp(serverTimestamp) {
+
+        // get the difference between the client time and server time
+        var timestampDiff = this.getConfigParam('timestampDiff');
+
+        // convert the client timestamp to a server timestamp
+        var clientTimestamp = serverTimestamp + timestampDiff;
+
+        return clientTimestamp;
     }
 };
 

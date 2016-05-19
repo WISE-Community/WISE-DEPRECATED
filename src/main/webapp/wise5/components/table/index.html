@@ -74,8 +74,14 @@
                 <md-icon>image</md-icon> Import Data
             </md-button>
         </div>
-        <button ng-click='tableController.resetTable()' ng-show='tableController.showResetTableButton()'>Reset Table</button>
-        <button ng-click='tableController.snipTable($event)' ng-show='tableController.showSnipTableButton()'>Snip Table</button>
+        <md-button class="md-accent" ng-click='tableController.resetTable()' ng-show='tableController.showResetTableButton()'>
+            <md-icon> restore </md-icon> Reset
+        </md-button>
+        <md-button class="md-accent"
+                   ng-click='tableController.snipTable($event)'
+                   ng-show='tableController.showSnipTableButton()'>
+            <md-icon> content_cut </md-icon> Add to Notebook
+        </md-button>
         <table>
             <tr ng-repeat='row in tableController.getTableDataRows()'>
                 <td ng-repeat='cell in row'>
@@ -111,8 +117,9 @@
             </span>
         </div>
     </div>
-    <div ng-if='tableController.mode === "grading" && tableController.componentContent.maxScore > -1'>
-        <annotation type='score'
+    <div ng-if='tableController.mode === "grading"'>
+        <annotation ng-if='tableController.componentContent.maxScore > -1'
+                    type='score'
                     mode='tableController.mode'
                     node-id='tableController.nodeId'
                     component-id='tableController.componentId'
@@ -120,7 +127,7 @@
                     to-workgroup-id='workgroupId'
                     component-state-id='componentState.id'
                     active='true'></annotation>
-        <br/>
+        <br ng-if='tableController.componentContent.maxScore > -1'/>
         <annotation type='comment'
                     mode='tableController.mode'
                     node-id='tableController.nodeId'

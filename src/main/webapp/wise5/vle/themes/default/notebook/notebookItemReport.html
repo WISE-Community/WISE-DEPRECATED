@@ -1,20 +1,29 @@
-<h3>{{notebookItemReportController.reportItem.content.title}}</h3>
-<h4>{{notebookItemReportController.reportItem.content.prompt}}</h4>
+<div class="notebook-item--report md-padding md-whiteframe-1dp">
+    <div class="notebook-item--report__heading">
+        <p class="md-headline"
+            style="color: {{notebookItemReportController.label.color}};">{{notebookItemReportController.reportItem.content.title}}</p>
+        <p class="text-secondary">{{notebookItemReportController.reportItem.content.prompt}}</p>
+    </div>
 
-<textarea class="report" ng-model="notebookItemReportController.reportItem.content.content" rows="10" cols="20"></textarea>
+    <textarea class="notebook-item--report__content" ng-model="notebookItemReportController.reportItem.content.content" rows="10" cols="20"></textarea>
 
-<md-button class="md-accent" aria-label="Add notebook item to report"
-           ng-click="notebookItemReportController.addNotebookItemContent($event, notebookItemReportController.reportItem.content.content)">
-    <md-icon class="md-accent">add_circle</md-icon>
-    Add notebook item
-</md-button>
+    <md-button class="md-accent" aria-label="Add notebook item to report"
+               ng-click="notebookItemReportController.addNotebookItemContent($event, notebookItemReportController.reportItem.content.content)">
+        <md-icon class="md-accent">add_circle</md-icon>
+        Add notebook item
+    </md-button>
 
-<br/>
-Preview:
-<div compile="notebookItemReportController.reportItem.content.content"></div>
+    <br/>
+    Preview:
+    <div compile="notebookItemReportController.reportItem.content.content"></div>
 
-<md-button class="md-accent" aria-label="Save Report"
-           ng-click="notebookItemReportController.saveNotebookReportItem()">
-    <md-icon class="md-accent">save</md-icon>
-    Save Report
-</md-button>
+    <div class="component__actions">
+        <md-button class="md-primary md-raised" aria-label="Save {{notebookItemReportController.label.link}}"
+                   ng-click="notebookItemReportController.saveNotebookReportItem()"
+                   ng-disabled="!notebookItemReportController.dirty">Save</md-button>
+        <span ng-show="notebookItemReportController.saveMessage.text"
+              class="component__actions__info md-caption">
+              {{notebookItemReportController.saveMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ notebookItemReportController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="notebookItemReportController.saveMessage.time"></span></span>
+        </span>
+    </div>
+</div>

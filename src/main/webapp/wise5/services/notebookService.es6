@@ -278,7 +278,7 @@ class NotebookService {
 
                     this.$rootScope.$broadcast('notebookUpdated', {notebook: this.notebook});
                 }
-                return null;
+                return result.data;
             });
         }
     };
