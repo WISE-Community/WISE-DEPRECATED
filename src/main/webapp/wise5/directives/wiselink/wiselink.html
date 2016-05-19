@@ -1,0 +1,15 @@
+<md-button ng-if="wiselinkCtrl.type === 'button'"
+        aria-label="Go to item"
+        class="{{wiselinkCtrl.linkClass ? wiselinkCtrl.linkClass : ''}}"
+        ng-click="wiselinkCtrl.follow()"
+        compile="wiselinkCtrl.linkText">
+    <md-tooltip ng-if="wiselinkCtrl.tooltip" md-direction="top">{{wiselinkCtrl.tooltip}}</md-tooltip>
+</md-button>
+
+<a ng-if="wiselinkCtrl.type !== 'button'"
+   aria-label="Go to item"
+   class="{{wiselinkCtrl.linkClass ? wiselinkCtrl.linkClass : ''}}"
+   ng-click="wiselinkCtrl.follow()"
+   compile="wiselinkCtrl.linkText">
+    <md-tooltip ng-if="wiselinkCtrl.tooltip" md-direction="top">{{wiselinkCtrl.tooltip}}</md-tooltip>
+</a>

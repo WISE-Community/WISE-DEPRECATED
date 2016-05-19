@@ -1,6 +1,6 @@
 <div ng-if="navitemCtrl.nodeStatus.isVisible">
     <ng-switch on="navitemCtrl.type">
-        <md-card ng-switch-when="card" class="nav-item--card" ng-class="{'nav-item--card--group':navitemCtrl.isGroup, 'expanded md-whiteframe-z3':navitemCtrl.expanded}"">
+        <md-card ng-switch-when="card" class="nav-item--card" ng-class="{'nav-item--card--group':navitemCtrl.isGroup, 'expanded md-whiteframe-z3':navitemCtrl.expanded}">
             <md-card-content class="nav-item--card__content" ng-click="navitemCtrl.itemClicked($event)" role="button" md-ink-ripple layout="row">
                 <img ng-if="navitemCtrl.nodeStatus.icon.type === 'img'" ng-animate-ref="{{ navitemCtrl.nodeId }}" ng-class="navitemCtrl.isGroup ? 'avatar--square' : ''" class="md-36 avatar nav-item__avatar" ng-src="{{navitemCtrl.nodeStatus.icon.imgSrc}}" alt="{{navitemCtrl.nodeStatus.icon.imgAlt}}" />
                 <div ng-if="navitemCtrl.nodeStatus.icon.type === 'font'" ng-animate-ref="{{ navitemCtrl.nodeId }}" ng-class="navitemCtrl.isGroup ? 'avatar--square' : ''" style="background-color: {{navitemCtrl.nodeStatus.icon.color}};" class="md-36 avatar avatar--icon nav-item__avatar">

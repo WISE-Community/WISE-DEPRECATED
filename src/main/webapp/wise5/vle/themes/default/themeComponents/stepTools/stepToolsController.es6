@@ -4,12 +4,14 @@ class StepToolsCtrl {
     constructor($scope,
                 NodeService,
                 ProjectService,
-                StudentDataService) {
+                StudentDataService,
+                $mdSidenav) {
 
         this.$scope = $scope;
         this.NodeService = NodeService;
         this.ProjectService = ProjectService;
         this.StudentDataService = StudentDataService;
+        //this.$mdSidenav = $mdSidenav;
 
         this.nodeStatuses = this.StudentDataService.nodeStatuses;
 
@@ -35,6 +37,11 @@ class StepToolsCtrl {
         this.$scope.$on('nodeStatusesChanged', (event, arge) => {
             this.updateModel();
         })
+    }
+
+    toggleStepNav() {
+        this.$mdSidenav('stepNav')
+          .toggle();
     }
 
     updateModel() {
@@ -88,7 +95,8 @@ StepToolsCtrl.$inject = [
     '$scope',
     'NodeService',
     'ProjectService',
-    'StudentDataService'
+    'StudentDataService',
+    '$mdSidenav'
 ];
 
 export default StepToolsCtrl;

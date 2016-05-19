@@ -40,10 +40,8 @@
              jqyoui-droppable="{onDrop: 'vleController.notebookDropCallback()'}"
              ng-mousemove='vleController.mouseMoved()'></div>
         <div id="notebook" ng-cloak ng-show="themeCtrl.layoutState === 'notebook'">
-             <div class="l-constrained notebook-content">
                  <notebook theme-path="vleController.themePath" template-url="vleController.themePath + '/notebook/notebook.html'" filter="themeCtrl.notebookFilter"></notebook>
              </div>
-         </div>
         <md-sidenav md-component-id="notebookSidenav" md-is-open="themeCtrl.notebookNavOpen">
             <notebook-menu view-mode="nav" nodeId="themeCtrl.currentNodeId" notebook-filter="themeCtrl.notebookFilter"></notebook-menu>
         </md-sidenav>

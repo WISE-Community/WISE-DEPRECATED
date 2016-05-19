@@ -207,6 +207,16 @@ md-tooltip {
     border-radius: $card-border-radius;
 }
 
+md-card .md-actions:not(.layout-column) .md-button.md-icon-button:last-of-type,
+md-card md-card-actions:not(.layout-column) .md-button.md-icon-button:last-of-type {
+    margin-right: 0;
+}
+
+md-card .md-actions:not(.layout-column) .md-button.md-icon-button:first-of-type,
+md-card md-card-actions:not(.layout-column) .md-button.md-icon-button:first-of-type {
+    margin-left: 0;
+}
+
 // hack until https://github.com/angular/material/issues/8094 is fixed
 md-list-item._md-button-wrap>div.md-button:first-child ._md-list-item-inner,
 md-list-item ._md-list-item-inner ._md-secondary-container, md-list-item ._md-secondary-container {

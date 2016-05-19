@@ -17,54 +17,19 @@
     .dragover {
         border: 5px dashed blue;
     }
-
-    .notebookItems {
-        height: auto;
-        width: auto;
-        min-height: 200px;
-        max-width: 450px;
-        overflow:auto;
-        list-style-type: none;
-        padding:0px;
-    }
-
-    .notebookItem {
-        width: auto;
-        height: auto;
-        max-height: 200px;
-        padding: 10px;
-        margin: 5px;
-        border: 3px solid #DDD;
-        overflow:auto;
-    }
-
-    .notebookItem:hover {
-        cursor: pointer;
-    }
-
-    #newNoteTextArea {
-        width: 250px;
-        height: 80px;
-    }
 </style>
-<ul class='notebookItems' ng-if="notebookController.filter === 'note'">
-    <li ng-repeat="(localNotebookItemId, notebookItems) in notebookController.notebook.items">
-        <div ng-if="(notebookController.filter === 'note') && notebookItems.last().type == 'note'" class="notebookItem">
-            <notebook-item item-id="localNotebookItemId" ng-click="notebookController.editItem(localNotebookItemId)" is-edit-allowed="true"></notebookitem>
-        </div>
-        <!--
-        <div ng-if="notebookItem.type == 'report' && notebookController.filter == notebookItem.reportId">
-            <notebookitemreport item-id="notebookItem.id" template-url="notebookController.themePath + '/notebook/notebookItemReport.html'"></notebookitemreport>
-        </div>
-        -->
-        <!--
-        <img ng-click='notebookController.deleteNotebookItem(notebookItem)' src='wise5/vle/notebook/trash.png' class='studentAssetRemoveImage' />
-        <span ng-show='{{notebookItem.studentAsset.type === "audio"}}' ng-audio='{{notebookItem.studentAsset.url}}' volume='0.5'><img class='studentAssetOverlay' src='wise5/vle/notebook/play.png' /></span>
-        -->
-        <!-- <span class='studentAssetname'>{{studentAsset.name}}</span> -->
-    </li>
-</ul>
-<div ng-if="notebookController.filter === 'report'">
-    <!-- assume only one report for now -->
-    <notebookitemreport report-id="notebookController.notebookConfig.itemTypes.report.notes[0].reportId" theme-path="notebookController.themePath" template-url="notebookController.themePath + '/notebook/notebookItemReport.html'"></notebookitemreport>
+
+<div class="l-constrained l-constrained-md" layout="column">
+    <div ng-if="notebookController.filter === 'note'" layout="row" layout-wrap layout-align="start start">
+        <notebook-item ng-repeat="(localNotebookItemId, notebookItems) in notebookController.notebook.items"
+                       ng-if="(notebookController.filter === 'note') && notebookItems.last().type == 'note'"
+                       item-id="localNotebookItemId"
+                       is-edit-allowed="true"
+                       flex="100" flex-sm="50" flex-md="33" flex-gt-md="33"></notebookitem>
+    </div>
+
+    <div ng-if="notebookController.filter === 'report'">
+        <!-- assume only one report for now -->
+        <notebookitemreport report-id="notebookController.notebookConfig.itemTypes.report.notes[0].reportId" theme-path="notebookController.themePath" template-url="notebookController.themePath + '/notebook/notebookItemReport.html'"></notebookitemreport>
+    </div>
 </div>

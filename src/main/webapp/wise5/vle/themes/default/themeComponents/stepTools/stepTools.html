@@ -1,9 +1,13 @@
 <md-toolbar class="md-whiteframe-z1 layout-toolbar md-toolbar--wise" md-theme="light">
     <div class="md-toolbar-tools">
+        <!--<md-button aria-label="Project content menu" class="md-icon-button" ng-click="stepToolsCtrl.toggleStepNav()">
+            <md-icon> menu </md-icon>
+        </md-button>-->
         <img ng-if="stepToolsCtrl.nodeStatus.icon.type === 'img'" ng-animate-ref="{{ stepToolsCtrl.nodeId }}" class="md-18 avatar node-avatar" ng-src="{{stepToolsCtrl.nodeStatus.icon.imgSrc}}" alt="{{stepToolsCtrl.nodeStatus.icon.imgAlt}}" />
         <div ng-if="stepToolsCtrl.nodeStatus.icon.type === 'font'" ng-animate-ref="{{ stepToolsCtrl.nodeId }}" style="background-color: {{stepToolsCtrl.nodeStatus.icon.color}};" class="md-18 avatar avatar--icon node-avatar">
             <md-icon md-font-set="{{stepToolsCtrl.nodeStatus.icon.fontSet}}" class="md-18 md-light node-icon" md-theme="default">{{stepToolsCtrl.nodeStatus.icon.fontName}}</md-icon>
         </div>
+        <!--<span>{{ stepToolsCtrl.showPosition ? stepToolsCtrl.getNodePositionById(stepToolsCtrl.nodeId) + ': ' : '' }}{{ stepToolsCtrl.getNodeTitleByNodeId(stepToolsCtrl.nodeId) }}</span>-->
 
         <md-select id="stepSelectMenu" md-theme="default" class="node-select md-subhead"
                    ng-model="stepToolsCtrl.toNodeId" aria-label="Project item select"
