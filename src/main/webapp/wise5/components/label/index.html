@@ -94,9 +94,11 @@
                    ng-click="labelController.cancelButtonClicked()"
                    ng-disabled="labelController.isDisabled"
                    ng-if="labelController.showCancelButton()">Cancel</md-button>
-        <md-button class="md-raised md-primary"
+        <md-button class="md-accent md-primary"
                 ng-click='labelController.snipImage($event)' 
-                ng-show='labelController.showSnipImageButton()'>Snip Image</md-button>
+                ng-show='labelController.showSnipImageButton()'>
+            <md-icon> content_cut </md-icon> Add to Notebook
+        </md-button>
         <div id="canvasParent_{{labelController.canvasId}}">
             <canvas id="{{labelController.canvasId}}" width="800" height="600" style="border:1px solid black;"></canvas>
         </div>
