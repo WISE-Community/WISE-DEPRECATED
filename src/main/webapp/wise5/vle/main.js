@@ -236,6 +236,18 @@ var _teacherDataService = require('../services/teacherDataService');
 
 var _teacherDataService2 = _interopRequireDefault(_teacherDataService);
 
+var _textboxioDirective = require('textboxioDirective');
+
+var _textboxioDirective2 = _interopRequireDefault(_textboxioDirective);
+
+var _textboxioConfigFactory = require('textboxioConfigFactory');
+
+var _textboxioConfigFactory2 = _interopRequireDefault(_textboxioConfigFactory);
+
+var _textboxioValidationsFactory = require('textboxioValidationsFactory');
+
+var _textboxioValidationsFactory2 = _interopRequireDefault(_textboxioValidationsFactory);
+
 var _utilService = require('../services/utilService');
 
 var _utilService2 = _interopRequireDefault(_utilService);
@@ -254,12 +266,10 @@ var _moment2 = _interopRequireDefault(_moment);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-//import PhotoBoothService from '../components/photoBooth/photoBoothService';
-
-//import CRaterService from '../components/cRater/cRaterService';
+//import AudioRecorderService from '../components/audioRecorder/audioRecorderService';
 
 
-var mainModule = _angular2.default.module('vle', [(0, _angularDragula2.default)(_angular2.default), 'angularMoment', 'angular-toArrayFilter', 'directives', 'filters', 'highcharts-ng',
+var mainModule = _angular2.default.module('vle', [(0, _angularDragula2.default)(_angular2.default), 'angularMoment', 'angular-toArrayFilter', 'directives', 'ephox.textboxio', 'filters', 'highcharts-ng',
 //'ngAudio',
 'ngAria', 'ngFileUpload', 'ngMaterial', 'ngSanitize', 'ngWebSocket', 'notebook', 'oc.lazyLoad', 'pascalprecht.translate', 'studentAsset', 'ui.router',
 //'ui.tinymce',
@@ -450,7 +460,9 @@ var mainModule = _angular2.default.module('vle', [(0, _angularDragula2.default)(
         }
     });
 }]);
-//import AudioRecorderService from '../components/audioRecorder/audioRecorderService';
+//import PhotoBoothService from '../components/photoBooth/photoBoothService';
+
+//import CRaterService from '../components/cRater/cRaterService';
 
 
 exports.default = mainModule;

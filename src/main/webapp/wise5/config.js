@@ -505,6 +505,9 @@ System.config({
       "utf-8-validate": "npm:utf-8-validate@1.1.0",
       "util": "github:jspm/nodelibs-util@0.1.0",
       "zlib": "github:jspm/nodelibs-zlib@0.1.0"
-    }
+    },
+    "textboxioDirective": "lib/textboxio/angular-textboxio/directives/tbio",
+    "textboxioConfigFactory": "lib/textboxio/angular-textboxio/factories/tbioConfigFactory",
+    "textboxioValidationsFactory": "lib/textboxio/angular-textboxio/factories/tbioValidationsFactory"
   }
 });

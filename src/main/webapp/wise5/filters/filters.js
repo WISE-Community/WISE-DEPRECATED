@@ -55,5 +55,4 @@ var Filters = angular.module('filters', []).filter('sanitizeHTML', ['$sce', func
 });
 
 exports.default = Filters;
-
 //# sourceMappingURL=filters.js.map
