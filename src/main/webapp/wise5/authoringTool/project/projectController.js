@@ -10,8 +10,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var ProjectController = function () {
     function ProjectController($q, $scope, $state, $stateParams, $translate, ProjectService, ConfigService) {
-        var _this = this;
-
         _classCallCheck(this, ProjectController);
 
         this.$q = $q;
@@ -23,23 +21,27 @@ var ProjectController = function () {
         this.ConfigService = ConfigService;
 
         this.projectId = this.$stateParams.projectId;
-        this.project = this.ProjectService.project;
+        //this.project = this.ProjectService.project;
         this.items = this.ProjectService.idToOrder;
         this.nodeIds = this.ProjectService.getFlattenedProjectAsNodeIds();
         this.showCreateGroup = false;
         this.showCreateNode = false;
 
-        this.updateProjectAsText();
+        //this.updateProjectAsText();
 
-        $scope.$watch(function () {
-            return _this.projectAsText;
-        }, function () {
-            try {
-                _this.project = JSON.parse(_this.projectAsText);
-            } catch (exp) {
-                //Exception handler
-            };
+        /*
+        $scope.$watch(
+            () => {
+                return this.projectAsText;
+            },
+            () => {
+                try {
+                    this.project = JSON.parse(this.projectAsText);
+                } catch(exp) {
+                    //Exception handler
+                };
         });
+        */
     }
 
     _createClass(ProjectController, [{
@@ -48,7 +50,7 @@ var ProjectController = function () {
 
         // updates projectAsText field, which is the string representation of the project that we'll show in the textarea
         value: function updateProjectAsText() {
-            this.projectAsText = JSON.stringify(this.project, null, 4);
+            this.projectAsText = JSON.stringify(this.ProjectService.project, null, 4);
         }
     }, {
         key: 'previewProject',
@@ -74,16 +76,16 @@ var ProjectController = function () {
     }, {
         key: 'saveProject',
         value: function saveProject() {
-            var _this2 = this;
+            var _this = this;
 
             //let projectJSONString = JSON.stringify(this.project, null, 4);
             var commitMessage = $("#commitMessageInput").val();
             try {
                 // if projectJSONString is bad json, it will throw an exception and not save.
-                this.ProjectService.project = this.project;
+                //this.ProjectService.project = this.project;
 
                 this.ProjectService.saveProject(commitMessage).then(function (commitHistoryArray) {
-                    _this2.commitHistory = commitHistoryArray;
+                    _this.commitHistory = commitHistoryArray;
                     $("#commitMessageInput").val(""); // clear field after commit
                 });
             } catch (error) {
@@ -718,20 +720,20 @@ var ProjectController = function () {
     }, {
         key: 'checkPotentialStartNodeIdChange',
         value: function checkPotentialStartNodeIdChange() {
-            var _this3 = this;
+            var _this2 = this;
 
             return this.$q(function (resolve, reject) {
                 // get the current start node id
-                var currentStartNodeId = _this3.ProjectService.getStartNodeId();
+                var currentStartNodeId = _this2.ProjectService.getStartNodeId();
 
                 // get the first leaf node id
-                var firstLeafNodeId = _this3.ProjectService.getFirstLeafNodeId();
+                var firstLeafNodeId = _this2.ProjectService.getFirstLeafNodeId();
 
                 if (firstLeafNodeId == null) {
                     // there are no steps in the project
 
                     // set the start node id to empty string
-                    _this3.ProjectService.setStartNodeId('');
+                    _this2.ProjectService.setStartNodeId('');
 
                     resolve();
                 } else {
@@ -744,18 +746,18 @@ var ProjectController = function () {
                          * the author may want to use the first leaf node id as the
                          * new start node id
                          */
-                        var firstLeafNode = _this3.ProjectService.getNodeById(firstLeafNodeId);
+                        var firstLeafNode = _this2.ProjectService.getNodeById(firstLeafNodeId);
 
                         if (firstLeafNode != null) {
                             var firstChildTitle = firstLeafNode.title;
 
                             // ask the user if they would like to change the start step to the step that is now the first child in the group
-                            _this3.$translate('confirmUpdateStartStep', { startStepTitle: firstChildTitle }).then(function (confirmUpdateStartStep) {
+                            _this2.$translate('confirmUpdateStartStep', { startStepTitle: firstChildTitle }).then(function (confirmUpdateStartStep) {
                                 var answer = confirm(confirmUpdateStartStep);
 
                                 if (answer) {
                                     // change the project start node id
-                                    _this3.ProjectService.setStartNodeId(firstLeafNodeId);
+                                    _this2.ProjectService.setStartNodeId(firstLeafNodeId);
                                     resolve();
                                 } else {
                                     resolve();
@@ -778,18 +780,18 @@ var ProjectController = function () {
     }, {
         key: 'checkPotentialStartNodeIdChangeThenSaveProject',
         value: function checkPotentialStartNodeIdChangeThenSaveProject() {
-            var _this4 = this;
+            var _this3 = this;
 
             // check if the project start node id should be changed
             this.checkPotentialStartNodeIdChange().then(function () {
                 // save the project
-                _this4.ProjectService.saveProject();
+                _this3.ProjectService.saveProject();
 
                 // refresh the project
-                _this4.ProjectService.parseProject();
-                _this4.items = _this4.ProjectService.idToOrder;
+                _this3.ProjectService.parseProject();
+                _this3.items = _this3.ProjectService.idToOrder;
 
-                _this4.unselectAllItems();
+                _this3.unselectAllItems();
             });
         }
     }]);

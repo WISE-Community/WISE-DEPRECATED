@@ -12,14 +12,15 @@ class ProjectController {
         this.ConfigService = ConfigService;
 
         this.projectId = this.$stateParams.projectId;
-        this.project = this.ProjectService.project;
+        //this.project = this.ProjectService.project;
         this.items = this.ProjectService.idToOrder;
         this.nodeIds = this.ProjectService.getFlattenedProjectAsNodeIds();
         this.showCreateGroup = false;
         this.showCreateNode = false;
 
-        this.updateProjectAsText();
+        //this.updateProjectAsText();
 
+        /*
         $scope.$watch(
             () => {
                 return this.projectAsText;
@@ -31,11 +32,12 @@ class ProjectController {
                     //Exception handler
                 };
         });
+        */
     };
 
     // updates projectAsText field, which is the string representation of the project that we'll show in the textarea
     updateProjectAsText() {
-        this.projectAsText = JSON.stringify(this.project, null, 4);
+        this.projectAsText = JSON.stringify(this.ProjectService.project, null, 4);
     };
 
     /**
@@ -59,7 +61,7 @@ class ProjectController {
         let commitMessage = $("#commitMessageInput").val();
         try {
             // if projectJSONString is bad json, it will throw an exception and not save.
-            this.ProjectService.project = this.project;
+            //this.ProjectService.project = this.project;
 
             this.ProjectService.saveProject(commitMessage).then((commitHistoryArray) => {
                 this.commitHistory = commitHistoryArray;
