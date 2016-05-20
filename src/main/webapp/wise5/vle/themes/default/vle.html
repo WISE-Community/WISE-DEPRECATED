@@ -47,25 +47,6 @@
         </md-sidenav>
     </md-content>
     <notebook-menu class="notebook-menu" view-mode="sidebar" nodeId="themeCtrl.currentNodeId" notebook-filter="themeCtrl.notebookFilter" ng-show="themeCtrl.layoutState === 'notebook'"></notebook-menu>
-    <md-sidenav class="md-sidenav-right md-whiteframe-z2" md-component-id="notebook" layout="column" flex
-            md-is-open="themeCtrl.notebookOpen" ng-if="themeCtrl.notebookConfig.enabled"> <!--md-is-locked-open="vleController.notebookOpen && $mdMedia('gt-lg')"-->
-        <md-toolbar class="l-sidebar__header md-whiteframe-z1">
-            <div class="md-toolbar-tools">
-                <h3 translate="notebook"></h3>
-                <span flex></span>
-                <md-select class="md-body-1" placeholder="Filter Notebook" ng-model="themeCtrl.notebookFilter" md-on-close="themeCtrl.setNotebookFilter()">
-                    <md-option ng-repeat="type in themeCtrl.notebookConfig.itemTypes | toArray"
-                               ng-if="type.enabled"
-                               value="{{type.$key}}">
-                        {{type.label.link}}
-                    </md-option>
-                </md-select>
-            </div>
-        </md-toolbar>
-        <md-content class="md-padding">
-            <notebook theme-path="vleController.themePath" template-url="vleController.themePath + '/notebook/notebook.html'" filter="themeCtrl.notebookFilter"></notebook>
-        </md-content>
-    </md-sidenav>
     <!--<md-sidenav md-component-id="stepNav">
         <md-content role="navigation" flex>
             <ul>

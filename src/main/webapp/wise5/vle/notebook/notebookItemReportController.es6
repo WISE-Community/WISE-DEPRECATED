@@ -26,6 +26,8 @@ class NotebookItemReportController {
 
         this.dirty = false;
 
+        this.autoSaveInterval = 60000;  // the auto save interval in milliseconds
+
         this.saveMessage = {
             text: '',
             time: ''
@@ -43,9 +45,9 @@ class NotebookItemReportController {
                 // if there is no template, don't allow student to work on the report.
                 return;
             } else {
-                this.reportItem.id = null;  // set the id to null so it can be inserted as initial version, as opposed to updated.
             }
         }
+        this.reportItem.id = null;  // set the id to null so it can be inserted as initial version, as opposed to updated. this is true for both new and just-loaded reports.
 
         this.notebookConfig = this.NotebookService.getNotebookConfig();
         this.label = this.notebookConfig.itemTypes.report.label;
@@ -57,6 +59,9 @@ class NotebookItemReportController {
                 this.dirty = true;
             }
         });
+
+        // start the auto save interval
+        this.startAutoSaveInterval();
     }
 
     getItemNodeId() {
@@ -101,7 +106,7 @@ class NotebookItemReportController {
             controllerAs: 'notebookItemChooserController',
             bindToController: true
         });
-        function NotebookItemChooserController($scope, $mdDialog, notebookItems, reportItem, reportTextareaCursorPosition, themePath) {
+        function NotebookItemChooserController($rootScope, $scope, $mdDialog, notebookItems, reportItem, reportTextareaCursorPosition, themePath) {
             $scope.notebookItems = notebookItems;
             $scope.reportItem = reportItem;
             $scope.reportTextareaCursorPosition = reportTextareaCursorPosition;
@@ -110,14 +115,55 @@ class NotebookItemReportController {
                 $mdDialog.hide();
             };
             $scope.chooseNotebookItem = (notebookItem) => {
-                let notebookItemHTML = '<notebook-item item-id="\'' + notebookItem.localNotebookItemId + '\'" is-edit-allowed="true"></notebook-item>';
-                $scope.reportItem.content.content = $scope.reportItem.content.content.substring(0, reportTextareaCursorPosition) + notebookItemHTML + $scope.reportItem.content.content.substring(reportTextareaCursorPosition);
+                //let notebookItemHTML = '<notebook-item item-id="\'' + notebookItem.localNotebookItemId + '\'" is-edit-allowed="true"></notebook-item>';
+                let notebookItemHTML = "";
+                if (notebookItem.content != null && notebookItem.content.attachments != null) {
+                    for (let a = 0; a < notebookItem.content.attachments.length; a++) {
+                        let notebookItemAttachment = notebookItem.content.attachments[a];
+                        notebookItemHTML += "<img src=\"" + notebookItemAttachment.iconURL + "\" />";
+                    }
+                }
+                if (notebookItem.content != null && notebookItem.content.text != null) {
+                    notebookItemHTML += "<div>" + notebookItem.content.text + "</div>";
+                }
+                //theEditor.content.insertHtmlAtCursor(notebookItemHTML);
+                $rootScope.$broadcast("notebookItemChosen", {"notebookItemHTML": notebookItemHTML});
+                //$scope.reportItem.content.content = $scope.reportItem.content.content.substring(0, reportTextareaCursorPosition) + notebookItemHTML + $scope.reportItem.content.content.substring(reportTextareaCursorPosition);
                 $mdDialog.hide();
             };
         }
-        NotebookItemChooserController.$inject = ["$scope", "$mdDialog", "notebookItems", "reportItem", "reportTextareaCursorPosition", "themePath"];
+        NotebookItemChooserController.$inject = ["$rootScope", "$scope", "$mdDialog", "notebookItems", "reportItem", "reportTextareaCursorPosition", "themePath"];
     }
 
+    /**
+     * Start the auto save interval for this report
+     */
+    startAutoSaveInterval() {
+        this.stopAutoSaveInterval();  // stop any existing interval
+        this.autoSaveIntervalId = setInterval(() => {
+            // check if the student work is dirty
+            if (this.dirty) {
+                // the student work is dirty so we will save
+
+                /*
+                 * obtain the component states from the children and save them
+                 * to the server
+                 */
+                this.saveNotebookReportItem();
+            }
+        }, this.autoSaveInterval);
+    };
+
+    /**
+     * Stop the auto save interval for this report
+     */
+    stopAutoSaveInterval() {
+        clearInterval(this.autoSaveIntervalId);
+    };
+
+    /**
+     * Save the notebook report item to server
+     */
     saveNotebookReportItem() {
         // save new report notebook item
         this.reportItem.content.clientSaveTime = Date.parse(new Date());  // set save timestamp
@@ -126,6 +172,7 @@ class NotebookItemReportController {
                 if(result) {
                     //this.$translate(['ok']).then((translations) => {
                     this.dirty = false;
+                    this.reportItem.id = result.id; // set the reportNotebookItemId to the newly-incremented id so that future saves during this visit will be an update instead of an insert.
                     let serverSaveTime = result.serverSaveTime;
                     let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
                     this.setSaveMessage('Saved', clientSaveTime);

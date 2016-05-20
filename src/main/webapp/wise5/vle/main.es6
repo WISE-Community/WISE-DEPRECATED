@@ -61,6 +61,9 @@ import StudentWebSocketService from '../services/studentWebSocketService';
 import TableController from '../components/table/tableController';
 import TableService from '../components/table/tableService';
 import TeacherDataService from '../services/teacherDataService';
+import TextboxioDirective from 'textboxioDirective';
+import TextboxioConfigFactory from 'textboxioConfigFactory';
+import TextboxioValidationsFactory from 'textboxioValidationsFactory';
 import UtilService from '../services/utilService';
 import VLEController from './vleController';
 
@@ -72,6 +75,7 @@ let mainModule = angular.module('vle', [
     'angularMoment',
     'angular-toArrayFilter',
     'directives',
+    'ephox.textboxio',
     'filters',
     'highcharts-ng',
     //'ngAudio',

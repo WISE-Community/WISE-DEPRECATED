@@ -5,18 +5,19 @@
         <p class="text-secondary">{{notebookItemReportController.reportItem.content.prompt}}</p>
     </div>
 
-    <textarea class="notebook-item--report__content" ng-model="notebookItemReportController.reportItem.content.content" rows="10" cols="20"></textarea>
-
     <md-button class="md-accent" aria-label="Add notebook item to report"
                ng-click="notebookItemReportController.addNotebookItemContent($event, notebookItemReportController.reportItem.content.content)">
         <md-icon class="md-accent">add_circle</md-icon>
         Add notebook item
     </md-button>
 
+    <textarea tbio class="notebook-item--report__content" ng-model="notebookItemReportController.reportItem.content.content" rows="30" cols="20" id="notebookReportTextarea" name="notebookReportTextarea" configuration="simple"></textarea>
+
+    <!--
     <br/>
     Preview:
     <div compile="notebookItemReportController.reportItem.content.content"></div>
-
+    -->
     <div class="component__actions">
         <md-button class="md-primary md-raised" aria-label="Save {{notebookItemReportController.label.link}}"
                    ng-click="notebookItemReportController.saveNotebookReportItem()"
