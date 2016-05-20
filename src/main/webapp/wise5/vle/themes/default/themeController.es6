@@ -165,7 +165,7 @@ class ThemeController {
             let componentController = args.componentController;
             let allowRevert = args.allowRevert;
             let $event = args.$event;
-            let revisionsTemplateUrl = scope.themePath + '/templates/componentRevisions.html';
+            let revisionsTemplateUrl = this.themePath + '/templates/componentRevisions.html';
 
             this.$mdDialog.show({
                 parent: angular.element(document.body),
@@ -197,8 +197,8 @@ class ThemeController {
         this.$scope.$on('showStudentAssets', (event, args) => {
             let componentController = args.componentController;
             let $event = args.$event;
-            let studentAssetDialogTemplateUrl = scope.themePath + '/templates/studentAssetDialog.html';
-            let studentAssetTemplateUrl = scope.themePath + '/studentAsset/studentAsset.html';
+            let studentAssetDialogTemplateUrl = this.themePath + '/templates/studentAssetDialog.html';
+            let studentAssetTemplateUrl = this.themePath + '/studentAsset/studentAsset.html';
 
             this.$mdDialog.show({
                 parent: angular.element(document.body),

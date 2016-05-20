@@ -149,7 +149,7 @@ var ThemeController = function () {
             var componentController = args.componentController;
             var allowRevert = args.allowRevert;
             var $event = args.$event;
-            var revisionsTemplateUrl = scope.themePath + '/templates/componentRevisions.html';
+            var revisionsTemplateUrl = _this.themePath + '/templates/componentRevisions.html';
 
             _this.$mdDialog.show({
                 parent: angular.element(document.body),
@@ -181,8 +181,8 @@ var ThemeController = function () {
         this.$scope.$on('showStudentAssets', function (event, args) {
             var componentController = args.componentController;
             var $event = args.$event;
-            var studentAssetDialogTemplateUrl = scope.themePath + '/templates/studentAssetDialog.html';
-            var studentAssetTemplateUrl = scope.themePath + '/studentAsset/studentAsset.html';
+            var studentAssetDialogTemplateUrl = _this.themePath + '/templates/studentAssetDialog.html';
+            var studentAssetTemplateUrl = _this.themePath + '/studentAsset/studentAsset.html';
 
             _this.$mdDialog.show({
                 parent: angular.element(document.body),
