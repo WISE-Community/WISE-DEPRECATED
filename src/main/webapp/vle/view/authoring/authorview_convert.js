@@ -95,8 +95,11 @@ View.prototype.parseWISE4Project = function(wise4Project) {
     // get the string representation of the WISE5 project
     var wise5ProjectString = JSON.stringify(this.wise5Project, null, 4);
 
+    // get the WISE base url e.g. http://wise.berkeley.edu
+    var wiseBaseURL = this.config.getConfigParam('wiseBaseURL');
+
     // get the url to make the request to convert the project
-    var convertURL = 'http://' + location.host + '/wise/author/convert.html';
+    var convertURL = wiseBaseURL + '/author/convert.html';
 
     // make the request to create the WISE5 project
     $.ajax({
@@ -117,7 +120,7 @@ View.prototype.parseWISE4Project = function(wise4Project) {
              * redirect the author to the WISE5 authoring tool and load the new
              * WISE5 project
              */
-            var wise5AuthoringToolURL = 'http://' + location.host + '/wise/author#/project/' + wise5ProjectId;
+            var wise5AuthoringToolURL = wiseBaseURL + '/author#/project/' + wise5ProjectId;
 
             /*
              * redirect the user to the WISE5 authoring tool and load the new
