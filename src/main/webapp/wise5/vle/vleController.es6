@@ -268,7 +268,7 @@ class VLEController {
             $scope.chooseSnippet = (snippableItem) => {
 
                 // add the snippable item
-                $scope.NotebookService.addNewItem(event, snippableItem);
+                $scope.NotebookService.addNewItem($event, snippableItem);
 
                 $mdDialog.hide();
             };
@@ -353,7 +353,7 @@ class VLEController {
             if (imageObject != null) {
 
                 // create a notebook item with the image populated into it
-                this.NotebookService.addNewItem(event, imageObject);
+                this.NotebookService.addNewItem($event, imageObject);
             }
         }
     }
