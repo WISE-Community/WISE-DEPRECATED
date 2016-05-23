@@ -1,13 +1,11 @@
-<h3>Choose a Notebook Item...</h3>
-<ul style="list-style-type: none">
-    <li ng-repeat="(localNotebookItemId, notebookItems) in notebookItemChooserController.notebookItems">
-        <div ng-if="notebookItems.last().type == 'note'" class="notebookItem">
-            <notebook-item item-id="localNotebookItemId" is-edit-allowed="false"></notebook-item>
-            <md-button class="md-accent" aria-label="Add new item to {{ section.title }}"
-                       ng-click="chooseNotebookItem(notebookItems.last())">
-                <md-icon class="md-accent">add_circle</md-icon>
-                Add to Letter
-            </md-button>
-        </div>
-    </li>
-</ul>
+<md-bottom-sheet ng-cloak>
+  <p class="md-body-2">Choose an item to add:</p>
+  <div layout="row" class="notebook-item-chooser__contents">
+    <notebook-item ng-repeat="(localNotebookItemId, notebookItems) in notebookItemChooserController.notebookItems"
+                   ng-if="notebookItems.last().type == 'note'"
+                   item-id="localNotebookItemId"
+                   is-edit-allowed="false"
+                   is-choose-mode="true"
+                   on-select="chooseNotebookItem(notebookItems.last())"></notebook-item>
+  </div>
+</md-bottom-sheet>

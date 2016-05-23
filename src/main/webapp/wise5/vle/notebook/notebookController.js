@@ -80,6 +80,11 @@ var NotebookController = function () {
             this.NotebookService.deleteItem(item);
         }
     }, {
+        key: 'editItem',
+        value: function editItem(ev, itemId) {
+            this.NotebookService.editItem(ev, itemId);
+        }
+    }, {
         key: 'notebookItemSelected',
         value: function notebookItemSelected($event, notebookItem) {
             this.selectedNotebookItem = notebookItem;

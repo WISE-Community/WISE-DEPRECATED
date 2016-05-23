@@ -3,7 +3,7 @@
 class NotebookItemReportController {
 
     constructor($injector,
-                $mdDialog,
+                $mdBottomSheet,
                 $rootScope,
                 $scope,
                 $translate,
@@ -13,7 +13,7 @@ class NotebookItemReportController {
                 StudentAssetService,
                 StudentDataService) {
         this.$injector = $injector;
-        this.$mdDialog = $mdDialog;
+        this.$mdBottomSheet = $mdBottomSheet;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$translate = $translate;
@@ -92,9 +92,8 @@ class NotebookItemReportController {
         let templateUrl = this.themePath + '/notebook/notebookItemChooser.html';
         let reportTextareaCursorPosition = angular.element('textarea.report').prop("selectionStart"); // insert the notebook item at the cursor position later
 
-        this.$mdDialog.show({
+        this.$mdBottomSheet.show({
             parent: angular.element(document.body),
-            targetEvent: $event,
             templateUrl: templateUrl,
             locals: {
                 notebookItems: notebookItems,
@@ -102,37 +101,35 @@ class NotebookItemReportController {
                 reportTextareaCursorPosition: reportTextareaCursorPosition,
                 themePath: this.themePath
             },
+            controller: 'GridBottomSheetCtrl',
             controller: NotebookItemChooserController,
             controllerAs: 'notebookItemChooserController',
             bindToController: true
         });
-        function NotebookItemChooserController($rootScope, $scope, $mdDialog, notebookItems, reportItem, reportTextareaCursorPosition, themePath) {
+        function NotebookItemChooserController($rootScope, $mdBottomSheet, $scope, notebookItems, reportItem, reportTextareaCursorPosition, themePath) {
             $scope.notebookItems = notebookItems;
             $scope.reportItem = reportItem;
             $scope.reportTextareaCursorPosition = reportTextareaCursorPosition;
             $scope.themePath = themePath;
-            $scope.close = () => {
-                $mdDialog.hide();
-            };
             $scope.chooseNotebookItem = (notebookItem) => {
                 //let notebookItemHTML = '<notebook-item item-id="\'' + notebookItem.localNotebookItemId + '\'" is-edit-allowed="true"></notebook-item>';
                 let notebookItemHTML = "";
                 if (notebookItem.content != null && notebookItem.content.attachments != null) {
                     for (let a = 0; a < notebookItem.content.attachments.length; a++) {
                         let notebookItemAttachment = notebookItem.content.attachments[a];
-                        notebookItemHTML += "<img src=\"" + notebookItemAttachment.iconURL + "\" />";
+                        notebookItemHTML += '<img src="' + notebookItemAttachment.iconURL + '" alt="notebook image" style="max-width: 100%; height: auto;" />';
                     }
                 }
                 if (notebookItem.content != null && notebookItem.content.text != null) {
-                    notebookItemHTML += "<div>" + notebookItem.content.text + "</div>";
+                    notebookItemHTML += '<div>' + notebookItem.content.text + '</div>';
                 }
                 //theEditor.content.insertHtmlAtCursor(notebookItemHTML);
                 $rootScope.$broadcast("notebookItemChosen", {"notebookItemHTML": notebookItemHTML});
                 //$scope.reportItem.content.content = $scope.reportItem.content.content.substring(0, reportTextareaCursorPosition) + notebookItemHTML + $scope.reportItem.content.content.substring(reportTextareaCursorPosition);
-                $mdDialog.hide();
+                $mdBottomSheet.hide();
             };
         }
-        NotebookItemChooserController.$inject = ["$rootScope", "$scope", "$mdDialog", "notebookItems", "reportItem", "reportTextareaCursorPosition", "themePath"];
+        NotebookItemChooserController.$inject = ["$rootScope", "$mdBottomSheet", "$scope", "notebookItems", "reportItem", "reportTextareaCursorPosition", "themePath"];
     }
 
     /**
@@ -194,7 +191,7 @@ class NotebookItemReportController {
 
 NotebookItemReportController.$inject = [
     "$injector",
-    '$mdDialog',
+    '$mdBottomSheet',
     "$rootScope",
     "$scope",
     "$translate",

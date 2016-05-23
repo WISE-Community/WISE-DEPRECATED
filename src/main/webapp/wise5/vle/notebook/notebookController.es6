@@ -70,6 +70,10 @@ class NotebookController {
         this.NotebookService.deleteItem(item);
     }
 
+    editItem(ev, itemId) {
+        this.NotebookService.editItem(ev, itemId);
+    }
+
     notebookItemSelected($event, notebookItem) {
         this.selectedNotebookItem = notebookItem;
     }

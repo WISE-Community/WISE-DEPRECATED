@@ -23,9 +23,11 @@ var NotebookItem = {
         itemId: '<',
         isEditMode: '<',
         isEditAllowed: '<',
+        isChooseMode: '<',
         templateUrl: '<',
         componentController: '<',
-        onUpdate: '&'
+        onUpdate: '&',
+        onSelect: '&'
     },
     template: '<ng-include src="notebookItemController.getTemplateUrl()"></ng-include>',
     controller: 'NotebookItemController as notebookItemController'
