@@ -71,6 +71,17 @@ class ProjectService {
         var name = this.getProjectMetadata().title;
         return name ? name : 'A WISE Project (No name)';
     };
+    
+    /**
+     * Set the project title
+     */
+    setProjectTitle(projectTitle) {
+        var metadata = this.getProjectMetadata();
+        
+        if (metadata != null) {
+            metadata.title = projectTitle;
+        }
+    }
 
     getProjectMetadata() {
         return this.metadata ? this.metadata : {};
