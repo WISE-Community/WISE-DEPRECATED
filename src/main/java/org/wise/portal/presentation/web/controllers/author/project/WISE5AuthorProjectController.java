@@ -24,6 +24,7 @@ import org.wise.portal.domain.project.impl.ProjectParameters;
 import org.wise.portal.domain.project.impl.ProjectType;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
+import org.wise.portal.presentation.web.exception.NotAuthorizedException;
 import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.module.CurnitService;
 import org.wise.portal.service.project.ProjectService;
@@ -280,6 +281,38 @@ public class WISE5AuthorProjectController {
             Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(projectFile), "UTF-8"));
             writer.write(projectJSONString.toString());
             writer.close();
+            
+            // check if we need to update the project name in the project table in the db
+            try {
+                // convert the project JSON string into a JSON object
+                JSONObject projectJSONObject = new JSONObject(projectJSONString);
+                
+                // get the metadata object from the project
+                JSONObject projectMetadata = projectJSONObject.getJSONObject("metadata");
+                
+                if (projectMetadata != null) {
+                    // get the project title from the metadata
+                    String projectTitle = projectMetadata.getString("title");
+                    
+                    if (projectTitle != null) {
+                        
+                        // check if the project title has changed
+                        if (!projectTitle.equals(project.getName())) {
+                            // the project title has changed
+                            
+                            // set the project title in the db table
+                            project.setName(projectTitle);
+                            
+                            // update the project
+                            this.projectService.updateProject(project, user);
+                        }
+                    }
+                }
+            } catch(JSONException e) {
+                e.printStackTrace();
+            } catch (NotAuthorizedException e) {
+                e.printStackTrace();
+            }
 
             try {
                 // now commit changes

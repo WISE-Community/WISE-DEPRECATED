@@ -17,6 +17,7 @@ class ProjectController {
         this.nodeIds = this.ProjectService.getFlattenedProjectAsNodeIds();
         this.showCreateGroup = false;
         this.showCreateNode = false;
+        this.projectTitle = this.ProjectService.getProjectTitle();
 
         //this.updateProjectAsText();
 
@@ -693,6 +694,19 @@ class ProjectController {
 
             this.unselectAllItems();
         });
+    }
+    
+    /**
+     * The project title changed so we will update the project title in the 
+     * project service
+     */
+    projectTitleChanged() {
+        
+        // update the project title in the project service
+        this.ProjectService.setProjectTitle(this.projectTitle);
+        
+        // save the project
+        this.ProjectService.saveProject();
     }
 };
 
