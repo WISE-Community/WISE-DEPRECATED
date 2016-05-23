@@ -29,10 +29,11 @@ var NotebookService = function () {
         this.config = {
             enabled: true,
             label: "Notebook",
+            enableAddNew: true,
             itemTypes: {
                 note: {
                     enabled: true,
-                    enableAddNote: true,
+                    enableLink: true,
                     enableClipping: true,
                     enableStudentUploads: true,
                     type: "note",
@@ -46,7 +47,7 @@ var NotebookService = function () {
                 },
                 question: {
                     enabled: false,
-                    enableAddNote: true,
+                    enableLink: true,
                     enableClipping: true,
                     enableStudentUploads: true,
                     type: "question",

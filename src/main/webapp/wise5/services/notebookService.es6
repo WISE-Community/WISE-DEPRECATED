@@ -22,10 +22,11 @@ class NotebookService {
         this.config = {
             enabled: true,
             label: "Notebook",
+            enableAddNew: true,
             itemTypes: {
                 note: {
                     enabled: true,
-                    enableAddNote: true,
+                    enableLink: true,
                     enableClipping: true,
                     enableStudentUploads: true,
                     type: "note",
@@ -39,7 +40,7 @@ class NotebookService {
                 },
                 question: {
                     enabled: false,
-                    enableAddNote: true,
+                    enableLink: true,
                     enableClipping: true,
                     enableStudentUploads: true,
                     type: "question",

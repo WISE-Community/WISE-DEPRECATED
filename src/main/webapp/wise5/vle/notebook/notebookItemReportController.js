@@ -6,16 +6,18 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var NotebookItemReportController = function () {
-    function NotebookItemReportController($injector, $mdDialog, $rootScope, $scope, $translate, ConfigService, NotebookService, ProjectService, StudentAssetService, StudentDataService) {
+    function NotebookItemReportController($injector, $mdBottomSheet, $rootScope, $scope, $translate, ConfigService, NotebookService, ProjectService, StudentAssetService, StudentDataService) {
         var _this = this;
 
         _classCallCheck(this, NotebookItemReportController);
 
         this.$injector = $injector;
-        this.$mdDialog = $mdDialog;
+        this.$mdBottomSheet = $mdBottomSheet;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$translate = $translate;
@@ -96,13 +98,14 @@ var NotebookItemReportController = function () {
     }, {
         key: 'addNotebookItemContent',
         value: function addNotebookItemContent($event) {
+            var _$mdBottomSheet$show;
+
             var notebookItems = this.NotebookService.notebook.items;
             var templateUrl = this.themePath + '/notebook/notebookItemChooser.html';
             var reportTextareaCursorPosition = angular.element('textarea.report').prop("selectionStart"); // insert the notebook item at the cursor position later
 
-            this.$mdDialog.show({
+            this.$mdBottomSheet.show((_$mdBottomSheet$show = {
                 parent: angular.element(document.body),
-                targetEvent: $event,
                 templateUrl: templateUrl,
                 locals: {
                     notebookItems: notebookItems,
@@ -110,37 +113,32 @@ var NotebookItemReportController = function () {
                     reportTextareaCursorPosition: reportTextareaCursorPosition,
                     themePath: this.themePath
                 },
-                controller: NotebookItemChooserController,
-                controllerAs: 'notebookItemChooserController',
-                bindToController: true
-            });
-            function NotebookItemChooserController($rootScope, $scope, $mdDialog, notebookItems, reportItem, reportTextareaCursorPosition, themePath) {
+                controller: 'GridBottomSheetCtrl'
+            }, _defineProperty(_$mdBottomSheet$show, 'controller', NotebookItemChooserController), _defineProperty(_$mdBottomSheet$show, 'controllerAs', 'notebookItemChooserController'), _defineProperty(_$mdBottomSheet$show, 'bindToController', true), _$mdBottomSheet$show));
+            function NotebookItemChooserController($rootScope, $mdBottomSheet, $scope, notebookItems, reportItem, reportTextareaCursorPosition, themePath) {
                 $scope.notebookItems = notebookItems;
                 $scope.reportItem = reportItem;
                 $scope.reportTextareaCursorPosition = reportTextareaCursorPosition;
                 $scope.themePath = themePath;
-                $scope.close = function () {
-                    $mdDialog.hide();
-                };
                 $scope.chooseNotebookItem = function (notebookItem) {
                     //let notebookItemHTML = '<notebook-item item-id="\'' + notebookItem.localNotebookItemId + '\'" is-edit-allowed="true"></notebook-item>';
                     var notebookItemHTML = "";
                     if (notebookItem.content != null && notebookItem.content.attachments != null) {
                         for (var a = 0; a < notebookItem.content.attachments.length; a++) {
                             var notebookItemAttachment = notebookItem.content.attachments[a];
-                            notebookItemHTML += "<img src=\"" + notebookItemAttachment.iconURL + "\" />";
+                            notebookItemHTML += '<img src="' + notebookItemAttachment.iconURL + '" alt="notebook image" style="max-width: 100%; height: auto;" />';
                         }
                     }
                     if (notebookItem.content != null && notebookItem.content.text != null) {
-                        notebookItemHTML += "<div>" + notebookItem.content.text + "</div>";
+                        notebookItemHTML += '<div>' + notebookItem.content.text + '</div>';
                     }
                     //theEditor.content.insertHtmlAtCursor(notebookItemHTML);
                     $rootScope.$broadcast("notebookItemChosen", { "notebookItemHTML": notebookItemHTML });
                     //$scope.reportItem.content.content = $scope.reportItem.content.content.substring(0, reportTextareaCursorPosition) + notebookItemHTML + $scope.reportItem.content.content.substring(reportTextareaCursorPosition);
-                    $mdDialog.hide();
+                    $mdBottomSheet.hide();
                 };
             }
-            NotebookItemChooserController.$inject = ["$rootScope", "$scope", "$mdDialog", "notebookItems", "reportItem", "reportTextareaCursorPosition", "themePath"];
+            NotebookItemChooserController.$inject = ["$rootScope", "$mdBottomSheet", "$scope", "notebookItems", "reportItem", "reportTextareaCursorPosition", "themePath"];
         }
 
         /**
@@ -218,7 +216,7 @@ var NotebookItemReportController = function () {
     return NotebookItemReportController;
 }();
 
-NotebookItemReportController.$inject = ["$injector", '$mdDialog', "$rootScope", "$scope", "$translate", "ConfigService", "NotebookService", "ProjectService", "StudentAssetService", "StudentDataService"];
+NotebookItemReportController.$inject = ["$injector", '$mdBottomSheet', "$rootScope", "$scope", "$translate", "ConfigService", "NotebookService", "ProjectService", "StudentAssetService", "StudentDataService"];
 
 exports.default = NotebookItemReportController;
 //# sourceMappingURL=notebookItemReportController.js.map

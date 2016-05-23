@@ -57,6 +57,8 @@ class NotebookItemController {
             // add the file(s) as a student asset
             this.attachStudentAssetToNote(files);
         }
+
+        this.showUpload = this.mode !== 'preview' && !this.item.content.attachments.length;
     }
 
     getItemNodeId() {
@@ -68,7 +70,7 @@ class NotebookItemController {
     }
 
     /**
-     * Returns this NotebookItem's location link
+     * Returns this NotebookItem's position link
      */
     getItemNodeLink() {
         if (this.item == null) {
@@ -78,12 +80,25 @@ class NotebookItemController {
         }
     }
 
+    /**
+     * Returns this NotebookItem's position
+     */
+    getItemNodePosition() {
+        if (this.item == null) {
+            return "";
+        } else {
+            return this.ProjectService.getNodePositionById(this.item.nodeId);
+        }
+    }
+
     getTemplateUrl() {
         return this.ProjectService.getThemePath() + '/notebook/notebookItem.html';
     }
 
-    editNotebookItem(ev, itemId) {
-        this.NotebookService.editItem(ev, itemId);
+    doSelect(ev) {
+        if (this.onSelect) {
+            this.onSelect(ev, this.item.localNotebookItemId);
+        }
     }
 
     attachStudentAssetToNote(files) {

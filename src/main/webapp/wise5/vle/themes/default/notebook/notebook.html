@@ -25,6 +25,7 @@
                        ng-if="(notebookController.filter === 'note') && notebookItems.last().type == 'note'"
                        item-id="localNotebookItemId"
                        is-edit-allowed="true"
+                       on-select="notebookController.editItem($ev, localNotebookItemId)"
                        flex="100" flex-sm="50" flex-md="33" flex-gt-md="33"></notebookitem>
     </div>
 

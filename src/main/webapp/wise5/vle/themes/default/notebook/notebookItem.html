@@ -1,10 +1,9 @@
-
 <md-card class="notebook-item"
          ng-if="!notebookItemController.isEditMode"
          ng-mouseenter="focus=true;"
          ng-mouseleave="focus=false;"
          ng-class="{ 'md-whiteframe-5dp': focus}">
-    <md-card-content ng-click="notebookItemController.editNotebookItem($event, notebookItemController.item.localNotebookItemId)"
+    <md-card-content ng-click="notebookItemController.doSelect($event)"
                      aria-label="Edit note"
                      class="notebook-item__content notebook-item__edit"
                      md-ink-ripple>
@@ -18,56 +17,51 @@
              style="color: {{notebookItemController.label.color}}"
              ng-class="{'notebook-item__content__text--only': !notebookItemController.item.content.attachments.length}">
             {{notebookItemController.item.content.text}}
-         </div>
-        <!--<img ng-repeat="attachment in notebookItemController.item.content.attachments"
-             ng-if="$first"
-             ng-src="{{attachment.iconURL}}"
-             class="md-card-image notebook-item__content--attachment"
-             alt="Note attachment"
-             ng-class="{'notebook-item__content--attachment--notext': notebookItemController.item.content.text}">
-        <md-card-content class="notebook-item__content--text notebook-item__edit"
-                         style="color: {{notebookItemController.label.color}}"
-                         ng-class="{'notebook-item__content--text--noattachment': notebookItemController.item.content.attachments.length}">
-            <p>{{notebookItemController.item.content.text}}</p>
-        </md-card-content>-->
+        </div>
     </md-card-content>
     <md-divider></md-divider>
-    <md-card-actions class="notebook-item__actions" layout="row" layout-align="end center">
-        <md-button class="md-icon-button" aria-label="Archive note">
+    <md-card-actions class="notebook-item__actions" layout="row" layout-align="start center">
+        <span class="md-button md-icon-button notebook-item__content__location"><md-icon class="accent-2"> place </md-icon></span> <span class="md-body-1 accent-2">{{notebookItemController.getItemNodePosition()}}</span>
+        <span flex></span>
+        <!--<md-button class="md-icon-button" aria-label="Archive note">
             <md-icon> delete </md-icon>
             <md-tooltip md-direction="top">Delete</md-tooltip>
-        </md-button>
+        </md-button> TODO: show once delete is enabled-->
     </md-card-actions>
 </md-card>
 
 <div ng-if="notebookItemController.isEditMode">
     <!-- User wants to add a new note or edit existing note. -->
     <md-input-container class="md-block md-input-has-placeholder notebook-item__text-input" md-no-float>
-          <textarea placeholder="{{ 'typeYourNoteHere' | translate }}"
+          <textarea class="notebook-item__text-input__textarea"
+                    placeholder="{{ 'typeYourNoteHere' | translate }}"
                     ng-model="notebookItemController.item.content.text"
                     ng-model-options='{ debounce: 100 }'
                     ng-change="notebookItemController.update()"
                     rows="3"
                     md-select-on-focus></textarea>
     </md-input-container>
-    <div class="component__attachment" ng-repeat="attachment in notebookItemController.item.content.attachments">
-        <img ng-src="{{attachment.iconURL}}" class="component__attachment__content" />
-        <md-button class="component__attachment__delete" ng-click='notebookItemController.removeAttachment(attachment)' title="Remove file"><md-icon>cancel</md-icon></md-button>
+    <div class="notebook-item__attachment" ng-repeat="attachment in notebookItemController.item.content.attachments">
+        <img ng-src="{{attachment.iconURL}}" class="notebook-item__attachment__content" />
+        <md-button class="notebook-item__attachment__delete md-icon-button" ng-click='notebookItemController.removeAttachment(attachment)' title="Remove file">
+            <md-icon class="md-whiteframe-1dp">delete</md-icon>
+        </md-button>
     </div>
-    <br/>
-    <div ng-show="notebookItemController.mode != 'preview' && !notebookItemController.item.content.attachments.length">
-        <div ngf-drop ngf-select ngf-change="notebookItemController.attachStudentAssetToNote($files)" class="drop-box"
-             drag-over-class="dragover" ngf-multiple="true" allow-dir="false"
-             accept="image/*,application/pdf,text/csv" translate="dropAssetMessage"></div>
-        <!--
-            TODO: ask researchers if we should display usage information to students. we'll hide it for now.
-            You are using {{notebookController.notebook.totalSize | appropriateSizeText }} out of {{notebookController.notebook.totalSizeMax | appropriateSizeText}} ({{notebookController.notebook.usagePercentage | roundToDecimal:0 }}%)
-         -->
-    </div>
-    <div>
+    <div ng-show="notebookItemController.showUpload"
+         ngf-drop ngf-select ngf-change="notebookItemController.attachStudentAssetToNote($files)"
+         class="notebook-item__upload"
+         drag-over-class="dragover" ngf-multiple="true" allow-dir="false"
+         accept="image/*,application/pdf,text/csv">
+         <md-icon>image</md-icon> <span translate="dropAssetMessage"></span>
+     </div>
+    <!--
+        TODO: ask researchers if we should display usage information to students. we'll hide it for now.
+        You are using {{notebookController.notebook.totalSize | appropriateSizeText }} out of {{notebookController.notebook.totalSizeMax | appropriateSizeText}} ({{notebookController.notebook.usagePercentage | roundToDecimal:0 }}%)
+     -->
+    <div class="notebook-item__info md-caption">
         <md-icon> place </md-icon> <wiselink type="link" node-id="{{notebookItemController.getItemNodeId()}}"
                                              link-text="{{notebookItemController.getItemNodeLink()}}"
-                                             link-class="accent-2"></wiselink>
+                                             link-class="md-caption"></wiselink>
     </div>
     <span flex></span>
 </div>

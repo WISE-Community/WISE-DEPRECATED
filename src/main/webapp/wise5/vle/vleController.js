@@ -273,7 +273,7 @@ var VLEController = function () {
                 $scope.chooseSnippet = function (snippableItem) {
 
                     // add the snippable item
-                    $scope.NotebookService.addNewItem(event, snippableItem);
+                    $scope.NotebookService.addNewItem($event, snippableItem);
 
                     $mdDialog.hide();
                 };
@@ -373,7 +373,7 @@ var VLEController = function () {
                 if (imageObject != null) {
 
                     // create a notebook item with the image populated into it
-                    this.NotebookService.addNewItem(event, imageObject);
+                    this.NotebookService.addNewItem($event, imageObject);
                 }
             }
         }

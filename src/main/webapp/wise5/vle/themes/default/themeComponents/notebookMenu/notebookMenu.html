@@ -13,7 +13,7 @@
         <md-icon style="color: {{notebookMenuCtrl.questionColor}} !important"> {{notebookMenuCtrl.questionIcon}} </md-icon>
         <md-tooltip md-direction="left">{{notebookMenuCtrl.questionLabel}}</md-tooltip>
     </md-button>
-    <md-divider ng-if="notebookMenuCtrl.reportEnabled"></md-divider>
+    <md-divider ng-if="notebookMenuCtrl.reportDividerEnabled"></md-divider>
     <md-button ng-if="notebookMenuCtrl.reportEnabled"
                aria-label="View {{notebookMenuCtrl.reportLabel}}"
                class="md-icon-button"
@@ -21,8 +21,8 @@
         <md-icon style="color: {{notebookMenuCtrl.reportColor}} !important"> {{notebookMenuCtrl.reportIcon}} </md-icon>
         <md-tooltip md-direction="left">{{notebookMenuCtrl.reportLabel}}</md-tooltip>
     </md-button>
-    <md-divider></md-divider>
-    <md-button aria-label="Add Notebook item" class="md-icon-button" ng-click="notebookMenuCtrl.addNewNote($event)">
+    <md-divider ng-if="notebookMenuCtrl.addNewDividerEnabled"></md-divider>
+    <md-button ng-if="notebookMenuCtlrl.addNewEnabled" aria-label="Add Notebook item" class="md-icon-button" ng-click="notebookMenuCtrl.addNewNote($event)">
         <md-icon class="md-accent"> add_circle </md-icon>
         <md-tooltip md-direction="left"><span>New Note</span></md-tooltip>
     </md-button>
