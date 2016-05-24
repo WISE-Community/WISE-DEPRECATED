@@ -22,11 +22,13 @@ import org.wise.portal.domain.project.ProjectMetadata;
 import org.wise.portal.domain.project.impl.ProjectMetadataImpl;
 import org.wise.portal.domain.project.impl.ProjectParameters;
 import org.wise.portal.domain.project.impl.ProjectType;
+import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.presentation.web.exception.NotAuthorizedException;
 import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.module.CurnitService;
+import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.vle.utils.FileManager;
 
@@ -45,6 +47,9 @@ public class WISE5AuthorProjectController {
 
     @Autowired
     ProjectService projectService;
+
+    @Autowired
+    RunService runService;
 
     @Autowired
     CurnitService curnitService;
@@ -401,6 +406,8 @@ public class WISE5AuthorProjectController {
                 // get the default max project size
                 projectAssetTotalSizeMax = new Long(wiseProperties.getProperty("project_max_total_assets_size", "15728640"));
             }
+            Long runId = this.getRunId(projectId);
+            
             config.put("projectId", projectId);
             config.put("projectURL", projectURL);
             config.put("projectAssetTotalSizeMax", projectAssetTotalSizeMax);
@@ -409,6 +416,10 @@ public class WISE5AuthorProjectController {
             config.put("previewProjectURL", previewProjectURL);
             config.put("saveProjectURL", saveProjectURL);
             config.put("commitProjectURL", commitProjectURL);
+            
+            if (runId != null) {
+                config.put("runId", runId);
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -450,6 +461,18 @@ public class WISE5AuthorProjectController {
                     JSONObject projectJSONObject = new JSONObject();
                     projectJSONObject.put("id", project.getId());
                     projectJSONObject.put("name", project.getName());
+
+                    // get the project id
+                    String projectIdString = project.getId().toString();
+                    Long projectId = new Long(projectIdString);
+
+                    // get the run id if it exists
+                    Long runId = this.getRunId(projectId);
+                    
+                    if (runId != null) {
+                        projectJSONObject.put("runId", runId);
+                    }
+                    
                     wise5ProjectsOwnedByUser.add(projectJSONObject);
                 }
             }
@@ -776,5 +799,34 @@ public class WISE5AuthorProjectController {
             in.close();
             out.close();
         }
+    }
+    
+    /**
+     * Get the run id that uses the project id
+     * @param projectId the project id
+     * @returns the run id that uses the project if the project is used
+     * in a run
+     */
+    private Long getRunId(Long projectId) {
+        
+        Long runId = null;
+        
+        if (projectId != null) {
+            // get the runs that use the project
+            List<Run> runs = this.runService.getProjectRuns(projectId);
+            
+            if (runs != null && runs.size() > 0) {
+
+                // get the first run since a project can only be used in one run
+                Run run = runs.get(0);
+                
+                if (run != null) {
+                    // add the runId to the JSON object
+                    runId = run.getId();
+                }
+            }
+        }
+        
+        return runId;
     }
 }

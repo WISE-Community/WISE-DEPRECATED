@@ -10,6 +10,7 @@
 <div class="projectItem" style="padding:2px" ng-repeat='project in authoringToolMainController.projects'>
     {{project.id}}
     {{project.name}}
+    <span ng-if="project.runId != null">(Run ID: {{project.runId}})</span>
     <button ng-click="authoringToolMainController.openProject(project.id)" translate="open"></button>
     <button ng-click="authoringToolMainController.previewProject(project.id)" translate="preview"></button>
     <button ng-click="authoringToolMainController.copyProject(project.id)" translate="copy"></button>

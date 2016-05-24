@@ -12,6 +12,7 @@ class ProjectController {
         this.ConfigService = ConfigService;
 
         this.projectId = this.$stateParams.projectId;
+        this.runId = this.ConfigService.getRunId();
         //this.project = this.ProjectService.project;
         this.items = this.ProjectService.idToOrder;
         this.nodeIds = this.ProjectService.getFlattenedProjectAsNodeIds();
