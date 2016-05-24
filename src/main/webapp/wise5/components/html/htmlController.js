@@ -78,6 +78,22 @@ var HTMLController = function () {
                 }.bind(this), function (newValue, oldValue) {
                     this.componentContent = this.ProjectService.injectAssetPaths(newValue);
                 }.bind(this), true);
+            } else if (this.mode === 'grading') {
+                /*
+                 * do not display the html in the grading tool. we may want to
+                 * change this in the future to allow the teacher to toggle
+                 * seeing the html on and off.
+                 */
+                this.componentContent.html = '';
+            } else if (this.mode === 'student') {
+                if (this.componentContent != null) {
+                    this.html = this.componentContent.html;
+                }
+
+                if ($scope.$parent.registerComponentController != null) {
+                    // register this component with the parent node
+                    $scope.$parent.registerComponentController($scope, this.componentContent);
+                }
             }
 
             // get the show previous work node id if it is provided
@@ -107,15 +123,15 @@ var HTMLController = function () {
                 $scope.$parent.registerComponentController($scope, this.componentContent);
             } else {
                 // this is a regular component
-
+                /*
                 if (this.componentContent != null) {
                     this.html = this.componentContent.html;
                 }
-
-                if ($scope.$parent.registerComponentController != null) {
+                 if ($scope.$parent.registerComponentController != null) {
                     // register this component with the parent node
                     $scope.$parent.registerComponentController($scope, this.componentContent);
                 }
+                */
             }
         }
 
