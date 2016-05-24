@@ -30,7 +30,7 @@ class NotebookItemController {
 
             this.item = {
                 id: null,       // null id means we're creating a new notebook item.
-                localNotebookItemId: this.UtilService.generateKey(10),   // this is the id that is common across the same notebook item revisions.
+                localNotebookItemId: this.UtilService.generateKey(10),   // Id that is common across the same notebook item revisions.
                 type: "note", // the notebook item type, TODO: once questions are enabled, don't hard code
                 nodeId: currentNodeId, // Id of the node this note was created on
                 title: "Note from " + currentNodeTitle,  // Title of the node this note was created on
@@ -51,14 +51,34 @@ class NotebookItemController {
         this.label = this.notebookConfig.itemTypes[this.type].label;
 
         if ($scope.$parent.file != null) {
-            // put the file into an array
-            var files = [$scope.$parent.file];
+            // student is trying to add a file to this notebook item.
+            var files = [$scope.$parent.file];  // put the file into an array
 
-            // add the file(s) as a student asset
             this.attachStudentAssetToNote(files);
         }
 
-        this.showUpload = this.mode !== 'preview' && !this.item.content.attachments.length;
+        this.showUpload = this.mode !== 'preview' && (this.item.content.attachments != null && !this.item.content.attachments.length);
+    }
+
+    attachStudentAssetToNote(files) {
+        if (files != null) {
+            for (let f = 0; f < files.length; f++) {
+                let file = files[f];
+                // create a temporary attachment object
+                let attachment = {
+                    studentAssetId: null,
+                    iconURL: "",
+                    file: file  // add the file for uploading in the future
+                };
+                this.item.content.attachments.push(attachment);
+                // read image data as URL and set it in the temp attachment src attribute so students can preview the image
+                let reader = new FileReader();
+                reader.onload = (event) => {
+                    attachment.iconURL = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
     }
 
     getItemNodeId() {
@@ -98,27 +118,6 @@ class NotebookItemController {
     doSelect(ev) {
         if (this.onSelect) {
             this.onSelect(ev, this.item.localNotebookItemId);
-        }
-    }
-
-    attachStudentAssetToNote(files) {
-        if (files != null) {
-            for (var f = 0; f < files.length; f++) {
-                var file = files[f];
-                this.StudentAssetService.uploadAsset(file).then((studentAsset) => {
-                    this.StudentAssetService.copyAssetForReference(studentAsset).then((copiedAsset) => {
-                        if (copiedAsset != null) {
-                            var attachment = {
-                                studentAssetId: copiedAsset.id,
-                                iconURL: copiedAsset.iconURL
-                            };
-
-                            this.item.content.attachments.push(attachment);
-                        }
-                        this.update();
-                    });
-                });
-            }
         }
     }
 
