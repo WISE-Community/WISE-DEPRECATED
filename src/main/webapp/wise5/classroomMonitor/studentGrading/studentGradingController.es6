@@ -5,12 +5,14 @@ class StudentGradingController {
     constructor($stateParams,
                 AnnotationService,
                 ConfigService,
+                NotebookService,
                 ProjectService,
                 TeacherDataService) {
 
         this.$stateParams = $stateParams;
         this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
+        this.NotebookService = NotebookService;
         this.ProjectService = ProjectService;
         this.TeacherDataService = TeacherDataService;
 
@@ -145,13 +147,20 @@ class StudentGradingController {
         }
 
         return componentState;
-    };
+    }
+
+    showNotebookReport() {
+        this.NotebookService.retrieveNotebookItems(this.workgroupId).then((notebookItems) => {
+            debugger;
+        });
+    }
 }
 
 StudentGradingController.$inject = [
     '$stateParams',
     'AnnotationService',
     'ConfigService',
+    'NotebookService',
     'ProjectService',
     'TeacherDataService'
 ];

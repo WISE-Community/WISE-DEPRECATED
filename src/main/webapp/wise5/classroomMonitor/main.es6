@@ -36,6 +36,7 @@ import MultipleChoiceService from '../components/multipleChoice/multipleChoiceSe
 import NodeProgressController from './nodeProgress/nodeProgressController';
 import NodeGradingController from './nodeGrading/nodeGradingController';
 import NodeService from '../services/nodeService';
+import NotebookService from '../services/notebookService';
 import OpenResponseController from '../components/openResponse/openResponseController';
 import OpenResponseService from '../components/openResponse/openResponseService';
 import OutsideURLController from '../components/outsideURL/outsideURLController';
@@ -78,6 +79,7 @@ let mainModule = angular.module('classroomMonitor', [
     .service(MatchService.name, MatchService)
     .service(MultipleChoiceService.name, MultipleChoiceService)
     .service(NodeService.name, NodeService)
+    .service(NotebookService.name, NotebookService)
     .service(OpenResponseService.name, OpenResponseService)
     .service(OutsideURLService.name, OutsideURLService)
     .service(ProjectService.name, ProjectService)

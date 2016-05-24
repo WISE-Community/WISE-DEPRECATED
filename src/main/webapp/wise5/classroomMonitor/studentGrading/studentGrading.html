@@ -1,4 +1,5 @@
 <h3>{{studentGradingController.userName}}</h3>
+<button ng-click="studentGradingController.showNotebookReport()">Show Notebook Report</button>
 <div ng-repeat='nodeId in studentGradingController.nodeIds' ng-show='studentGradingController.showNodeIdForStudent(nodeId)'>
     <hr style='height: 1px; background-color: black'/>
     <div style='margin-left: 20px'><h4>{{studentGradingController.getNodePositionAndTitleByNodeId(nodeId)}}</h4></div>

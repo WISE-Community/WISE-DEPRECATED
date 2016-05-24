@@ -9,12 +9,13 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var StudentGradingController = function () {
-    function StudentGradingController($stateParams, AnnotationService, ConfigService, ProjectService, TeacherDataService) {
+    function StudentGradingController($stateParams, AnnotationService, ConfigService, NotebookService, ProjectService, TeacherDataService) {
         _classCallCheck(this, StudentGradingController);
 
         this.$stateParams = $stateParams;
         this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
+        this.NotebookService = NotebookService;
         this.ProjectService = ProjectService;
         this.TeacherDataService = TeacherDataService;
 
@@ -165,12 +166,19 @@ var StudentGradingController = function () {
 
             return componentState;
         }
+    }, {
+        key: 'showNotebookReport',
+        value: function showNotebookReport() {
+            this.NotebookService.retrieveNotebookItems(this.workgroupId).then(function (notebookItems) {
+                debugger;
+            });
+        }
     }]);
 
     return StudentGradingController;
 }();
 
-StudentGradingController.$inject = ['$stateParams', 'AnnotationService', 'ConfigService', 'ProjectService', 'TeacherDataService'];
+StudentGradingController.$inject = ['$stateParams', 'AnnotationService', 'ConfigService', 'NotebookService', 'ProjectService', 'TeacherDataService'];
 
 exports.default = StudentGradingController;
 //# sourceMappingURL=studentGradingController.js.map

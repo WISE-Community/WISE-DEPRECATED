@@ -195,12 +195,18 @@ var NotebookService = function () {
         value: function retrieveNotebookItems() {
             var _this = this;
 
+            var workgroupId = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
+
             var config = {};
             config.method = 'GET';
             config.url = this.ConfigService.getStudentNotebookURL();
             config.params = {};
-            config.params.periodId = this.ConfigService.getPeriodId();
-            config.params.workgroupId = this.ConfigService.getWorkgroupId();
+            if (workgroupId != null) {
+                config.params.workgroupId = workgroupId;
+            } else {
+                config.params.workgroupId = this.ConfigService.getWorkgroupId();
+                config.params.periodId = this.ConfigService.getPeriodId();
+            }
             return this.$http(config).then(function (response) {
                 // loop through the assets and make them into JSON object with more details
                 _this.notebook.allItems = []; // clear local notebook items array

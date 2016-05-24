@@ -170,13 +170,17 @@ class NotebookService {
         return this.config.enabled;
     };
 
-    retrieveNotebookItems() {
+    retrieveNotebookItems(workgroupId = null) {
         var config = {};
         config.method = 'GET';
         config.url = this.ConfigService.getStudentNotebookURL();
         config.params = {};
-        config.params.periodId = this.ConfigService.getPeriodId();
-        config.params.workgroupId = this.ConfigService.getWorkgroupId();
+        if (workgroupId != null) {
+            config.params.workgroupId = workgroupId;
+        } else {
+            config.params.workgroupId = this.ConfigService.getWorkgroupId();
+            config.params.periodId = this.ConfigService.getPeriodId();
+        }
         return this.$http(config).then((response) => {
             // loop through the assets and make them into JSON object with more details
             this.notebook.allItems = [];  // clear local notebook items array
