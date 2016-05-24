@@ -36,7 +36,7 @@ class NotebookService {
                         link: "Notes",
                         icon: "note",
                         color: "#1565C0"
-                    },
+                    }
                 },
                 question: {
                     enabled: false,

@@ -11,7 +11,7 @@
 <div ng-repeat='workgroupId in nodeGradingController.workgroupIds'>
     <div ng-show='nodeGradingController.getCurrentPeriod().periodName == "All" || nodeGradingController.getPeriodIdByWorkgroupId(workgroupId) == nodeGradingController.getCurrentPeriod().periodId'>
         <hr style='height: 1px; background-color: black'/>
-        <div style='margin-left: 20px'><h4>{{nodeGradingController.getUserNameByWorkgroupId(workgroupId)}} [Workgroup ID: {{workgroupId}}]</h4></div>
+        <div style='margin-left: 20px'><h4>{{nodeGradingController.getUserNameByWorkgroupId(workgroupId)}} (Workgroup ID: {{workgroupId}})</h4></div>
         <div id="{{component.id}}" class="component" ng-repeat='component in nodeGradingController.getComponents()'>
             <component ng-if='component.showPreviousWorkNodeId != null && component.showPreviousWorkComponentId != null' nodeid='{{component.showPreviousWorkNodeId}}' componentid='{{component.showPreviousWorkComponentId}}' componentstate='{{nodeGradingController.getLatestComponentStateByWorkgroupIdAndNodeIdAndComponentId(workgroupId, component.showPreviousWorkNodeId, component.showPreviousWorkComponentId)}}' workgroupid='{{workgroupId}}' teacherworkgroupid='{{nodeGradingController.teacherWorkgroupId}}' mode='grading'></component>
             <component ng-if='component.showPreviousWorkNodeId == null || component.showPreviousWorkComponentId == null' nodeid='{{nodeGradingController.nodeId}}' componentid='{{component.id}}' a='b' componentstate='{{nodeGradingController.getLatestComponentStateByWorkgroupIdAndComponentId(workgroupId, component.id)}}' workgroupid='{{workgroupId}}' teacherworkgroupid='{{nodeGradingController.teacherWorkgroupId}}' mode='grading'></component>

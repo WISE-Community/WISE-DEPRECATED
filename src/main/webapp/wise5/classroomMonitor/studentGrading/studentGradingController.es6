@@ -2,13 +2,15 @@
 
 class StudentGradingController {
 
-    constructor($stateParams,
+    constructor($mdDialog,
+                $stateParams,
                 AnnotationService,
                 ConfigService,
                 NotebookService,
                 ProjectService,
                 TeacherDataService) {
 
+        this.$mdDialog = $mdDialog;
         this.$stateParams = $stateParams;
         this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
@@ -149,14 +151,24 @@ class StudentGradingController {
         return componentState;
     }
 
-    showNotebookReport() {
+    showNotebookReport($event) {
         this.NotebookService.retrieveNotebookItems(this.workgroupId).then((notebookItems) => {
-            debugger;
+            // assume only one report for now
+            let reportItemId = this.NotebookService.config.itemTypes.report.notes[0].reportId;
+            let reportItem = this.NotebookService.getLatestNotebookItemByLocalNotebookItemId(reportItemId);
+            let reportItemContent = reportItem.content.content;
+            this.$mdDialog.show(this.$mdDialog.alert({
+                title: reportItem.content.title,
+                htmlContent: reportItemContent,
+                ok: 'Close',
+                targetEvent: $event
+            })).finally(() => { alert = undefined; });
         });
     }
 }
 
 StudentGradingController.$inject = [
+    '$mdDialog',
     '$stateParams',
     'AnnotationService',
     'ConfigService',
