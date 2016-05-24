@@ -355,11 +355,12 @@ class ThemeController {
             //template: '<notebookitem is-edit-enabled="true" item-id="{{itemId}}"></notebookitem>'
         });
 
-        function ViewNotebookItemController($scope, $mdDialog, NotebookService) {
+        function ViewNotebookItemController($scope, $mdDialog, $q, NotebookService, StudentAssetService) {
             $scope.itemId = itemId;
             $scope.type = type;
             $scope.isEditMode = isEditMode;
             $scope.NotebookService = NotebookService;
+            $scope.StudentAssetService = StudentAssetService;
             $scope.item = null;
             $scope.title = ($scope.isEditMode ? ($scope.itemId ? 'Edit ' : 'Add ') : 'View ') + $scope.type;
             $scope.file = file;
@@ -369,10 +370,40 @@ class ThemeController {
             };
 
             $scope.save = () => {
-                $scope.NotebookService.saveNotebookItem($scope.item.id, $scope.item.nodeId, $scope.item.localNotebookItemId, $scope.item.type, $scope.item.title, $scope.item.content)
-                    .then(() => {
-                        $mdDialog.hide();
-                    });
+                // go through the notebook item's attachments and look for any attachments that need to be uploaded and made into StudentAsset.
+                let uploadAssetPromises = [];
+                if ($scope.item.content.attachments != null) {
+                    for (let i = 0; i < $scope.item.content.attachments.length; i++) {
+                        let attachment = $scope.item.content.attachments[i];
+                        if (attachment.studentAssetId == null && attachment.file != null) {
+                            // this attachment hasn't been uploaded yet, so we'll do that now.
+                            let file = attachment.file;
+
+                            var deferred = $q.defer();
+                            $scope.StudentAssetService.uploadAsset(file).then((studentAsset) => {
+                                $scope.StudentAssetService.copyAssetForReference(studentAsset).then((copiedAsset) => {
+                                    if (copiedAsset != null) {
+                                        var newAttachment = {
+                                            studentAssetId: copiedAsset.id,
+                                            iconURL: copiedAsset.iconURL
+                                        };
+                                        $scope.item.content.attachments[i] = newAttachment;
+                                        deferred.resolve();
+                                    }
+                                });
+                            });
+                            uploadAssetPromises.push(deferred.promise);
+                        }
+                    }
+                }
+
+                // make sure all the assets are created before saving the notebook item.
+                $q.all(uploadAssetPromises).then(() => {
+                    $scope.NotebookService.saveNotebookItem($scope.item.id, $scope.item.nodeId, $scope.item.localNotebookItemId, $scope.item.type, $scope.item.title, $scope.item.content)
+                        .then(() => {
+                            $mdDialog.hide();
+                        });
+                });
             };
 
             $scope.update = (item) => {
@@ -380,7 +411,7 @@ class ThemeController {
                 $scope.item = item;
             };
         }
-        ViewNotebookItemController.$inject = ["$scope", "$mdDialog", "NotebookService"];
+        ViewNotebookItemController.$inject = ["$scope", "$mdDialog", "$q", "NotebookService", "StudentAssetService"];
     }
 }
 
