@@ -388,12 +388,15 @@ var TableController = function () {
                              * the student has entered values into the table so we
                              * will ask them if they want to update it
                              */
+                            /*
                             var answer = confirm('Do you want to update the connected table?');
-
+                            
                             if (answer) {
                                 // the student answered yes
                                 performUpdate = true;
                             }
+                            */
+                            performUpdate = true;
                         }
 
                         if (performUpdate) {
