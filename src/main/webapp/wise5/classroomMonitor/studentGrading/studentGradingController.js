@@ -9,9 +9,10 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var StudentGradingController = function () {
-    function StudentGradingController($stateParams, AnnotationService, ConfigService, NotebookService, ProjectService, TeacherDataService) {
+    function StudentGradingController($mdDialog, $stateParams, AnnotationService, ConfigService, NotebookService, ProjectService, TeacherDataService) {
         _classCallCheck(this, StudentGradingController);
 
+        this.$mdDialog = $mdDialog;
         this.$stateParams = $stateParams;
         this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
@@ -168,9 +169,22 @@ var StudentGradingController = function () {
         }
     }, {
         key: 'showNotebookReport',
-        value: function showNotebookReport() {
+        value: function showNotebookReport($event) {
+            var _this = this;
+
             this.NotebookService.retrieveNotebookItems(this.workgroupId).then(function (notebookItems) {
-                debugger;
+                // assume only one report for now
+                var reportItemId = _this.NotebookService.config.itemTypes.report.notes[0].reportId;
+                var reportItem = _this.NotebookService.getLatestNotebookItemByLocalNotebookItemId(reportItemId);
+                var reportItemContent = reportItem.content.content;
+                _this.$mdDialog.show(_this.$mdDialog.alert({
+                    title: reportItem.content.title,
+                    htmlContent: reportItemContent,
+                    ok: 'Close',
+                    targetEvent: $event
+                })).finally(function () {
+                    alert = undefined;
+                });
             });
         }
     }]);
@@ -178,7 +192,7 @@ var StudentGradingController = function () {
     return StudentGradingController;
 }();
 
-StudentGradingController.$inject = ['$stateParams', 'AnnotationService', 'ConfigService', 'NotebookService', 'ProjectService', 'TeacherDataService'];
+StudentGradingController.$inject = ['$mdDialog', '$stateParams', 'AnnotationService', 'ConfigService', 'NotebookService', 'ProjectService', 'TeacherDataService'];
 
 exports.default = StudentGradingController;
 //# sourceMappingURL=studentGradingController.js.map

@@ -7,6 +7,7 @@ import angularToArrayFilter from 'lib/angular-toArrayFilter/toArrayFilter';
 import angularUIRouter from 'angular-ui-router';
 import ngFileUpload from 'ng-file-upload';
 import ngMaterial from 'angular-material';
+import angularSanitize from 'angular-sanitize';
 import angularTranslate from 'angular-translate';
 import angularTranslateLoaderPartial from 'angular-translate-loader-partial';
 import ngWebSocket from 'angular-websocket';
@@ -64,6 +65,7 @@ let mainModule = angular.module('classroomMonitor', [
         'ngAria',
         'ngFileUpload',
         'ngMaterial',
+        'ngSanitize',
         'ngWebSocket',
         'pascalprecht.translate',
         'ui.router'
