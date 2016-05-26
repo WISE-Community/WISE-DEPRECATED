@@ -278,6 +278,14 @@ var StudentDataService = function () {
                 // get the constraints that affect this node
                 var constraintsForNode = this.ProjectService.getConstraintsForNode(node);
 
+                if (this.ConfigService.getConfigParam('constraints') == false) {
+                    /*
+                     * constraints have been disabled, most likely because we are 
+                     * in preview without constraints mode
+                     */
+                    constraintsForNode = null;
+                }
+
                 if (constraintsForNode == null || constraintsForNode.length == 0) {
                     // this node does not have any constraints so it is clickable
                     tempNodeStatus.isVisible = true;

@@ -7,6 +7,10 @@ TODO: implement me. Allow authors to view assets while authoring node conent. Pe
             ng-show="!projectController.isGroupNode(nodeController.node.id)"
             ng-disabled="nodeController.showEditTransitions"
             translate="previewStep"></button>
+    <button ng-click="nodeController.previewStepWithoutConstraints()"
+            ng-show="!projectController.isGroupNode(nodeController.node.id)"
+            ng-disabled="nodeController.showEditTransitions"
+            translate="previewStepWithoutConstraints"></button>
     <button ng-click="nodeController.undo()"
             ng-show="!projectController.isGroupNode(nodeController.node.id)"
             ng-disabled="nodeController.undoStack.length == 0"

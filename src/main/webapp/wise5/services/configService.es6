@@ -2,8 +2,9 @@
 
 class ConfigService {
 
-    constructor($http) {
+    constructor($http, $location) {
         this.$http = $http;
+        this.$location = $location;
         this.config = null;
     };
 
@@ -29,6 +30,22 @@ class ConfigService {
                 // add the timestamp diff to the config object
                 configJSON.timestampDiff = timestampDiff;
             }
+            
+            var constraints = true;
+            
+            // get the full url
+            var absURL = this.$location.$$absUrl;
+            
+            // regex to match constraints=false in the url
+            var regEx = new RegExp(/constraints=false/, 'gi');
+            
+            if (absURL != null && absURL.match(regEx)) {
+                // the url contains constraints=false
+                constraints = false;
+            }
+            
+            // set the constraints value into the config so we can access it later
+            configJSON.constraints = constraints;
 
             this.setConfig(configJSON);
 
@@ -439,7 +456,8 @@ class ConfigService {
 };
 
 ConfigService.$inject = [
-    '$http'
+    '$http',
+    '$location'
 ];
 
 export default ConfigService;

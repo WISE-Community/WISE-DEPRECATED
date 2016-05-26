@@ -51,6 +51,15 @@ class ProjectController {
         let previewProjectURL = this.ConfigService.getConfigParam("previewProjectURL");
         window.open(previewProjectURL);
     };
+    
+    /**
+     * Launch the project in preview mode without constraints
+     */
+    previewProjectWithoutConstraints() {
+        let previewProjectURL = this.ConfigService.getConfigParam("previewProjectURL");
+        previewProjectURL = previewProjectURL + '?constraints=false';
+        window.open(previewProjectURL);
+    };
 
     viewProjectAssets() {
         this.$state.go('root.project.asset', {projectId:this.projectId});

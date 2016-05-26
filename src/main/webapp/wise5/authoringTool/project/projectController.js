@@ -49,7 +49,7 @@ var ProjectController = function () {
     }
 
     _createClass(ProjectController, [{
-        key: 'updateProjectAsText',
+        key: "updateProjectAsText",
 
 
         // updates projectAsText field, which is the string representation of the project that we'll show in the textarea
@@ -57,7 +57,7 @@ var ProjectController = function () {
             this.projectAsText = JSON.stringify(this.ProjectService.project, null, 4);
         }
     }, {
-        key: 'previewProject',
+        key: "previewProject",
 
 
         /**
@@ -68,17 +68,29 @@ var ProjectController = function () {
             window.open(previewProjectURL);
         }
     }, {
-        key: 'viewProjectAssets',
+        key: "previewProjectWithoutConstraints",
+
+
+        /**
+         * Launch the project in preview mode without constraints
+         */
+        value: function previewProjectWithoutConstraints() {
+            var previewProjectURL = this.ConfigService.getConfigParam("previewProjectURL");
+            previewProjectURL = previewProjectURL + '?constraints=false';
+            window.open(previewProjectURL);
+        }
+    }, {
+        key: "viewProjectAssets",
         value: function viewProjectAssets() {
             this.$state.go('root.project.asset', { projectId: this.projectId });
         }
     }, {
-        key: 'viewProjectHistory',
+        key: "viewProjectHistory",
         value: function viewProjectHistory() {
             this.$state.go('root.project.history', { projectId: this.projectId });
         }
     }, {
-        key: 'saveProject',
+        key: "saveProject",
         value: function saveProject() {
             var _this = this;
 
@@ -98,7 +110,7 @@ var ProjectController = function () {
             }
         }
     }, {
-        key: 'closeProject',
+        key: "closeProject",
 
 
         /**
@@ -108,7 +120,7 @@ var ProjectController = function () {
             this.$state.go('root.main');
         }
     }, {
-        key: 'getNodePositionById',
+        key: "getNodePositionById",
 
 
         /**
@@ -120,7 +132,7 @@ var ProjectController = function () {
             return this.ProjectService.getNodePositionById(nodeId);
         }
     }, {
-        key: 'getComponentsByNodeId',
+        key: "getComponentsByNodeId",
 
 
         /**
@@ -139,7 +151,7 @@ var ProjectController = function () {
          */
 
     }, {
-        key: 'getPossibleTransitionCriteria',
+        key: "getPossibleTransitionCriteria",
         value: function getPossibleTransitionCriteria(nodeId, componentId) {
             return this.ProjectService.getPossibleTransitionCriteria(nodeId, componentId);
         }
@@ -151,12 +163,12 @@ var ProjectController = function () {
          */
 
     }, {
-        key: 'getNodeTitleByNodeId',
+        key: "getNodeTitleByNodeId",
         value: function getNodeTitleByNodeId(nodeId) {
             return this.ProjectService.getNodeTitleByNodeId(nodeId);
         }
     }, {
-        key: 'isGroupNode',
+        key: "isGroupNode",
 
 
         /**
@@ -168,7 +180,7 @@ var ProjectController = function () {
             return this.ProjectService.isGroupNode(nodeId);
         }
     }, {
-        key: 'nodeClicked',
+        key: "nodeClicked",
 
 
         /**
@@ -179,7 +191,7 @@ var ProjectController = function () {
             this.$state.go('root.project.node', { projectId: this.projectId, nodeId: nodeId });
         }
     }, {
-        key: 'createGroup',
+        key: "createGroup",
 
 
         /**
@@ -215,7 +227,7 @@ var ProjectController = function () {
          */
 
     }, {
-        key: 'createNode',
+        key: "createNode",
         value: function createNode() {
 
             // create a new node
@@ -247,7 +259,7 @@ var ProjectController = function () {
          */
 
     }, {
-        key: 'insertInside',
+        key: "insertInside",
         value: function insertInside(nodeId) {
 
             // TODO check that we are inserting into a group
@@ -325,7 +337,7 @@ var ProjectController = function () {
          */
 
     }, {
-        key: 'insertAfter',
+        key: "insertAfter",
         value: function insertAfter(nodeId) {
 
             if (this.createMode) {
@@ -406,7 +418,7 @@ var ProjectController = function () {
          */
 
     }, {
-        key: 'copy',
+        key: "copy",
         value: function copy() {
 
             // make sure there is at least one item selected
@@ -439,7 +451,7 @@ var ProjectController = function () {
          */
 
     }, {
-        key: 'move',
+        key: "move",
         value: function move() {
 
             // make sure there is at least one item selected
@@ -488,7 +500,7 @@ var ProjectController = function () {
          */
 
     }, {
-        key: 'delete',
+        key: "delete",
         value: function _delete() {
 
             // get the selected items
@@ -554,7 +566,7 @@ var ProjectController = function () {
          */
 
     }, {
-        key: 'getSelectedItems',
+        key: "getSelectedItems",
         value: function getSelectedItems() {
 
             // an array to hold the node ids of the nodes that are selected
@@ -592,7 +604,7 @@ var ProjectController = function () {
          */
 
     }, {
-        key: 'getSelectedItemTypes',
+        key: "getSelectedItemTypes",
         value: function getSelectedItemTypes() {
 
             var selectedItemTypes = [];
@@ -649,7 +661,7 @@ var ProjectController = function () {
          */
 
     }, {
-        key: 'unselectAllItems',
+        key: "unselectAllItems",
         value: function unselectAllItems() {
             angular.forEach(this.items, function (value, key) {
                 value.checked = false;
@@ -661,7 +673,7 @@ var ProjectController = function () {
          */
 
     }, {
-        key: 'toggleCreateGroup',
+        key: "toggleCreateGroup",
         value: function toggleCreateGroup() {
             this.hideCreateNode();
             this.showCreateGroup = !this.showCreateGroup;
@@ -673,7 +685,7 @@ var ProjectController = function () {
          */
 
     }, {
-        key: 'hideCreateGroup',
+        key: "hideCreateGroup",
         value: function hideCreateGroup() {
             this.showCreateGroup = false;
             this.createGroupTitle = '';
@@ -684,7 +696,7 @@ var ProjectController = function () {
          */
 
     }, {
-        key: 'toggleCreateNode',
+        key: "toggleCreateNode",
         value: function toggleCreateNode() {
             this.hideCreateGroup();
             this.showCreateNode = !this.showCreateNode;
@@ -696,7 +708,7 @@ var ProjectController = function () {
          */
 
     }, {
-        key: 'hideCreateNode',
+        key: "hideCreateNode",
         value: function hideCreateNode() {
             this.showCreateNode = false;
             this.createNodeTitle = '';
@@ -707,7 +719,7 @@ var ProjectController = function () {
          */
 
     }, {
-        key: 'cancelMove',
+        key: "cancelMove",
         value: function cancelMove() {
             this.insertGroupMode = false;
             this.insertNodeMode = false;
@@ -719,7 +731,7 @@ var ProjectController = function () {
          */
 
     }, {
-        key: 'updateStartNodeId',
+        key: "updateStartNodeId",
         value: function updateStartNodeId() {
 
             var newStartNodeId = null;
@@ -761,7 +773,7 @@ var ProjectController = function () {
          */
 
     }, {
-        key: 'checkPotentialStartNodeIdChange',
+        key: "checkPotentialStartNodeIdChange",
         value: function checkPotentialStartNodeIdChange() {
             var _this2 = this;
 
@@ -821,7 +833,7 @@ var ProjectController = function () {
          */
 
     }, {
-        key: 'checkPotentialStartNodeIdChangeThenSaveProject',
+        key: "checkPotentialStartNodeIdChangeThenSaveProject",
         value: function checkPotentialStartNodeIdChangeThenSaveProject() {
             var _this3 = this;
 
@@ -844,7 +856,7 @@ var ProjectController = function () {
          */
 
     }, {
-        key: 'projectTitleChanged',
+        key: "projectTitleChanged",
         value: function projectTitleChanged() {
 
             // update the project title in the project service

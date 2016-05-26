@@ -81,6 +81,15 @@ class NodeController {
         let previewStepURL  = previewProjectURL + "#/vle/" + this.nodeId;
         window.open(previewStepURL);
     };
+    
+    /**
+     * Launch VLE with this current step as the initial step without constraints
+     */
+    previewStepWithoutConstraints() {
+        let previewProjectURL = this.ConfigService.getConfigParam("previewProjectURL");
+        let previewStepURL  = previewProjectURL + "?constraints=false" + "#/vle/" + this.nodeId;
+        window.open(previewStepURL);
+    };
 
     /**
      * Close the node authoring view

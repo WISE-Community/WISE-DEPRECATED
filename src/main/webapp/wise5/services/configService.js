@@ -9,10 +9,11 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var ConfigService = function () {
-    function ConfigService($http) {
+    function ConfigService($http, $location) {
         _classCallCheck(this, ConfigService);
 
         this.$http = $http;
+        this.$location = $location;
         this.config = null;
     }
 
@@ -43,6 +44,22 @@ var ConfigService = function () {
                     // add the timestamp diff to the config object
                     configJSON.timestampDiff = timestampDiff;
                 }
+
+                var constraints = true;
+
+                // get the full url
+                var absURL = _this.$location.$$absUrl;
+
+                // regex to match constraints=false in the url
+                var regEx = new RegExp(/constraints=false/, 'gi');
+
+                if (absURL != null && absURL.match(regEx)) {
+                    // the url contains constraints=false
+                    constraints = false;
+                }
+
+                // set the constraints value into the config so we can access it later
+                configJSON.constraints = constraints;
 
                 _this.setConfig(configJSON);
 
@@ -504,7 +521,7 @@ var ConfigService = function () {
 
 ;
 
-ConfigService.$inject = ['$http'];
+ConfigService.$inject = ['$http', '$location'];
 
 exports.default = ConfigService;
 //# sourceMappingURL=configService.js.map

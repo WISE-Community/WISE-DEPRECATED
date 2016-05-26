@@ -72,6 +72,18 @@ var NodeController = function () {
             window.open(previewStepURL);
         }
     }, {
+        key: "previewStepWithoutConstraints",
+
+
+        /**
+         * Launch VLE with this current step as the initial step without constraints
+         */
+        value: function previewStepWithoutConstraints() {
+            var previewProjectURL = this.ConfigService.getConfigParam("previewProjectURL");
+            var previewStepURL = previewProjectURL + "?constraints=false" + "#/vle/" + this.nodeId;
+            window.open(previewStepURL);
+        }
+    }, {
         key: "close",
 
 

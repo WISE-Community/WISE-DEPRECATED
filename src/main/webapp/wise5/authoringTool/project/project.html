@@ -19,6 +19,8 @@
     <div style="float:right">
         <button id="previewProjectButton" ng-click='projectController.previewProject()' translate="previewProject"
                 ng-disabled="projectController.insertGroupMode || projectController.insertNodeMode"></button>
+        <button id="previewProjectWithoutConstraintsButton" ng-click='projectController.previewProjectWithoutConstraints()' translate="previewProjectWithoutConstraints"
+                ng-disabled="projectController.insertGroupMode || projectController.insertNodeMode"></button>
         <button id="manageAssetsButton" ng-click='projectController.viewProjectAssets()' translate="manageAssets"
                 ng-disabled="projectController.insertGroupMode || projectController.insertNodeMode"></button>
         <button id="viewHistoryButton" ng-click='projectController.viewProjectHistory()' translate="viewHistory"
