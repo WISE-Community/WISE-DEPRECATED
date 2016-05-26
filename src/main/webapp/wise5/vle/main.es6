@@ -61,21 +61,21 @@ import StudentWebSocketService from '../services/studentWebSocketService';
 import TableController from '../components/table/tableController';
 import TableService from '../components/table/tableService';
 import TeacherDataService from '../services/teacherDataService';
-import TextboxioDirective from 'textboxioDirective';
-import TextboxioConfigFactory from 'textboxioConfigFactory';
-import TextboxioValidationsFactory from 'textboxioValidationsFactory';
 import UtilService from '../services/utilService';
 import VLEController from './vleController';
 
 import ocLazyLoad from 'oclazyload';
 import moment from 'moment';
 
+//import bootstrap from 'bootstrap';
+//import summernote from 'summernote';
+import angularSummernote from 'lib/angular-summernote/dist/angular-summernote.min';
+
 let mainModule = angular.module('vle', [
     angularDragula(angular),
     'angularMoment',
     'angular-toArrayFilter',
     'directives',
-    'ephox.textboxio',
     'filters',
     'highcharts-ng',
     //'ngAudio',
@@ -88,6 +88,7 @@ let mainModule = angular.module('vle', [
     'oc.lazyLoad',
     'pascalprecht.translate',
     'studentAsset',
+    'summernote',
     'ui.router',
     //'ui.tinymce',
     'ui.tree'

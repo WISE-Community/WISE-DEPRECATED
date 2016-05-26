@@ -40,7 +40,7 @@ System.config({
     "highcharts/draggable-points": "github:highcharts/draggable-points@master",
     "html2canvas": "npm:html2canvas@0.5.0-beta4",
     "iframe-resizer": "npm:iframe-resizer@3.5.3",
-    "jquery": "npm:jquery@2.2.2",
+    "jquery": "npm:jquery@2.2.4",
     "moment": "npm:moment@2.12.0",
     "ng-file-upload": "npm:ng-file-upload@10.1.14",
     "oclazyload": "npm:oclazyload@1.0.9",
@@ -84,7 +84,7 @@ System.config({
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
     "github:jspm/nodelibs-assert@0.1.0": {
-      "assert": "npm:assert@1.3.0"
+      "assert": "npm:assert@1.4.0"
     },
     "github:jspm/nodelibs-buffer@0.1.0": {
       "buffer": "npm:buffer@3.6.0"
@@ -155,7 +155,11 @@ System.config({
       "minimalistic-assert": "npm:minimalistic-assert@1.0.0",
       "vm": "github:jspm/nodelibs-vm@0.1.0"
     },
-    "npm:assert@1.3.0": {
+    "npm:assert@1.4.0": {
+      "assert": "github:jspm/nodelibs-assert@0.1.0",
+      "buffer": "github:jspm/nodelibs-buffer@0.1.0",
+      "buffer-shims": "npm:buffer-shims@1.0.0",
+      "process": "github:jspm/nodelibs-process@0.1.2",
       "util": "npm:util@0.10.3"
     },
     "npm:babel-runtime@5.8.38": {
@@ -220,6 +224,9 @@ System.config({
       "process": "github:jspm/nodelibs-process@0.1.2",
       "readable-stream": "npm:readable-stream@2.0.6",
       "util": "github:jspm/nodelibs-util@0.1.0"
+    },
+    "npm:buffer-shims@1.0.0": {
+      "buffer": "github:jspm/nodelibs-buffer@0.1.0"
     },
     "npm:buffer-xor@1.0.3": {
       "buffer": "github:jspm/nodelibs-buffer@0.1.0",
@@ -505,9 +512,6 @@ System.config({
       "utf-8-validate": "npm:utf-8-validate@1.1.0",
       "util": "github:jspm/nodelibs-util@0.1.0",
       "zlib": "github:jspm/nodelibs-zlib@0.1.0"
-    },
-    "textboxioDirective": "lib/textboxio/angular-textboxio/directives/tbio",
-    "textboxioConfigFactory": "lib/textboxio/angular-textboxio/factories/tbioConfigFactory",
-    "textboxioValidationsFactory": "lib/textboxio/angular-textboxio/factories/tbioValidationsFactory"
+    }
   }
 });

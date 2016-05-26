@@ -181,13 +181,16 @@
 
 .notebook-item__attachment__delete {
     position: absolute;
-    top: -2px;
+    top: 4px;
     right: -2px;
+    // TODO: generalize for on item buttons like this (delete attachment, etc)
+    width: 34px !important;
+    height: 34px !important;
+    min-height: 0;
 
     md-icon {
-        background-color: #fff;
-        border-radius: 50%;
-        padding: 4px;
+        margin-left: -2px;
+        font-size: 22px;
     }
 }
 
@@ -201,8 +204,9 @@
     }
 
     md-icon {
-        font-size: 1.25rem;
+        font-size: 1.5em;
         min-width: 0;
+        width: auto;
     }
 }
 
@@ -246,11 +250,19 @@
 
 .notebook-item--report__heading {
     text-align: center;
+    margin-bottom: 32px;
 }
 
 .notebook-item--report__content {
-    width: 100%;
-    margin: 16px 0;
+}
+
+.notebook-item--report__add-note {
+    font-weight: 600;
+}
+
+.notebook-item--report__note-img {
+    max-width: 100%;
+    height: auto !important;
 }
 
 .notebook-item-chooser__contents {
