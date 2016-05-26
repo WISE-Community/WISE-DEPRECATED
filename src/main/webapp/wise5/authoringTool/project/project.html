@@ -83,7 +83,34 @@
             ng-if='item.order!==0' 
             ng-click='projectController.insertAfter(item.$key)' translate="insertAfter"></button>
 </div>
-
+<h6 style='display:none'>Inactive Activities</h6>
+<button ng-show='projectController.insertGroupMode'
+        ng-click='projectController.insertInside("inactiveGroups")'
+        style='display:none'>Insert Inside</button>
+<br/>
+<div ng-repeat='inactiveGroup in projectController.inactiveGroups' style='display:none'>
+    <input type='checkbox'
+           ng-model='inactiveGroup.checked'/>
+    <h6 ng-click='projectController.nodeClicked(inactiveGroup.id)'
+        style='display:inline; cursor:pointer'
+        class='groupHeader'>
+        {{projectController.getNodeTitleByNodeId(inactiveGroup.id)}}
+    </h6>
+</div>
+<h6 style='display:inline'>Inactive Steps</h6>
+<button ng-show='projectController.insertNodeMode'
+        ng-click='projectController.insertInside("inactiveNodes")'>Insert Inside</button>
+<div ng-repeat='inactiveNode in projectController.inactiveNodes'>
+    <input type='checkbox'
+           ng-model='inactiveNode.checked'/>
+    <h6 ng-click='projectController.nodeClicked(inactiveNode.id)'
+        style='display:inline; cursor:pointer'
+        class='stepHeader'>
+        {{projectController.getNodeTitleByNodeId(inactiveNode.id)}}
+    </h6>
+    <button ng-show='(projectController.insertNodeMode && !projectController.isGroupNode(inactiveNode.id))' 
+            ng-click='projectController.insertAfter(inactiveNode.id)' translate="insertAfter"></button>
+</div>
     <div id="projectJSONStringDiv" style="display:none">Project JSON:
         <textarea id="project" rows="40" cols="150" ng-model="projectController.projectAsText"></textarea>
     </div>

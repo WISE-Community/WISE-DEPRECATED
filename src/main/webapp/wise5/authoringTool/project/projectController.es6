@@ -19,6 +19,8 @@ class ProjectController {
         this.showCreateGroup = false;
         this.showCreateNode = false;
         this.projectTitle = this.ProjectService.getProjectTitle();
+        this.inactiveGroups = this.ProjectService.getInactiveGroups();
+        this.inactiveNodes = this.ProjectService.getInactiveNodes();
 
         //this.updateProjectAsText();
 
@@ -499,6 +501,21 @@ class ProjectController {
                 selectedNodeIds.push(key);
             }
         }, selectedNodeIds);
+        
+        if (this.inactiveNodes != null) {
+            
+            // loop through all the inactive nodes
+            for (var i = 0; i < this.inactiveNodes.length; i++) {
+                var inactiveNode = this.inactiveNodes[i];
+                
+                if (inactiveNode != null) {
+                    if (inactiveNode.checked) {
+                        // the inactive node was checked so we will add it
+                        selectedNodeIds.push(inactiveNode.id);
+                    }
+                }
+            }
+        }
 
         return selectedNodeIds;
     }
@@ -530,6 +547,30 @@ class ProjectController {
                 }
             }
         }, this);
+        
+        var inactiveNodes = this.inactiveNodes;
+        
+        if (inactiveNodes != null) {
+            
+            // loop through all the inactive nodes
+            for (var i = 0; i < inactiveNodes.length; i++) {
+                var inactiveNode = inactiveNodes[i];
+                
+                if (inactiveNode != null) {
+                    if (inactiveNode.checked) {
+                        // the node was checked
+                        
+                        // get the node type
+                        var nodeType = inactiveNode.type;
+                        
+                        if (selectedItemTypes.indexOf(nodeType) == -1) {
+                            // we have not seen this node type yet so we will add it
+                            selectedItemTypes.push(nodeType);
+                        }
+                    }
+                }
+            }
+        }
 
         return selectedItemTypes;
     }

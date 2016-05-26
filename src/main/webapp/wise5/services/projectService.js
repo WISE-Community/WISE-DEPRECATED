@@ -17,7 +17,8 @@ value:function addTransition(transition){var existingTransitions=this.getTransit
 for(var p=0;p<planningNodes.length;p++){var planningNode=planningNodes[p];if(planningNode!=null){var nodeId=planningNode.id;this.setIdToNode(nodeId,planningNode);this.setIdToElement(nodeId,planningNode); // TODO: may need to add more function calls here to add the planning
 }}}}},{key:'parseProject',value:function parseProject(){var project=this.project;if(project!=null){ // clear and initialize our project data structures
 this.clearProjectFields();if(project.metadata){this.metadata=project.metadata;}var nodes=project.nodes;this.loadNodes(nodes); // load the planning node templates
-var planningNodes=project.planningNodes;this.loadPlanningNodes(planningNodes);var constraints=project.constraints;if(constraints!=null){for(var c=0;c<constraints.length;c++){var constraint=constraints[c];if(constraint!=null){var constraintId=constraint.id;constraint.active=true;this.setIdToElement(constraintId,constraint);}}} // set root node
+var planningNodes=project.planningNodes;this.loadPlanningNodes(planningNodes); // load the inactive nodes
+var inactiveNodes=project.inactiveNodes;this.loadInactiveNodes(inactiveNodes);var constraints=project.constraints;if(constraints!=null){for(var c=0;c<constraints.length;c++){var constraint=constraints[c];if(constraint!=null){var constraintId=constraint.id;constraint.active=true;this.setIdToElement(constraintId,constraint);}}} // set root node
 this.rootNode=this.getRootNode(nodes[0].id); // set project order
 this.setNodeOrder(this.rootNode,this.nodeCount); //this.nodeCount = 0;
 var n=nodes.length;var branches=this.getBranches();var branchNodeIds=[]; // set node positions
@@ -204,11 +205,18 @@ for(var n=0;n<nodes.length;n++){var node=nodes[n];if(node!=null){nodeIds.push(no
              */projectURL+='?noCache='+new Date().getTime();}return this.$http.get(projectURL).then(function(result){var projectJSON=result.data;_this.setProject(projectJSON);return projectJSON;});}},{key:'saveProject', /**
      * Saves the project to Config.saveProjectURL and returns commit history promise.
      * if Config.saveProjectURL or Config.projectId are undefined, does not save and returns null
-     */value:function saveProject(){var commitMessage=arguments.length<=0||arguments[0]===undefined?"Made changes via WISE5 Authoring Tool":arguments[0];var projectId=this.ConfigService.getProjectId();var saveProjectURL=this.ConfigService.getConfigParam('saveProjectURL');if(projectId==null||saveProjectURL==null){return null;} // Get the project from this service
-var projectJSONString=angular.toJson(this.project,4);var httpParams={};httpParams.method='POST';httpParams.url=saveProjectURL;httpParams.headers={'Content-Type':'application/x-www-form-urlencoded'};var params={};params.projectId=projectId;params.commitMessage=commitMessage;params.projectJSONString=projectJSONString;httpParams.data=$.param(params);return this.$http(httpParams).then(function(result){var commitHistory=result.data;return commitHistory;});}},{key:'copyProject', /**
+     */value:function saveProject(){var commitMessage=arguments.length<=0||arguments[0]===undefined?"Made changes via WISE5 Authoring Tool":arguments[0]; // perform any cleanup before saving the project
+this.cleanupBeforeSave();var projectId=this.ConfigService.getProjectId();var saveProjectURL=this.ConfigService.getConfigParam('saveProjectURL');if(projectId==null||saveProjectURL==null){return null;} // Get the project from this service
+var projectJSONString=angular.toJson(this.project,4);var httpParams={};httpParams.method='POST';httpParams.url=saveProjectURL;httpParams.headers={'Content-Type':'application/x-www-form-urlencoded'};var params={};params.projectId=projectId;params.commitMessage=commitMessage;params.projectJSONString=projectJSONString;httpParams.data=$.param(params);return this.$http(httpParams).then(function(result){var commitHistory=result.data;return commitHistory;});}},{key:'cleanupBeforeSave', /**
+     * Perform any necessary cleanup before we save the project.
+     * For example we need to remove the checked field in the inactive node
+     * objects.
+     */value:function cleanupBeforeSave(){var inactiveNodes=this.project.inactiveNodes;if(inactiveNodes!=null){ // loop through all the inactive nodes
+for(var i=0;i<inactiveNodes.length;i++){var inactiveNode=inactiveNodes[i];if(inactiveNode!=null){ // remove the checked field
+delete inactiveNode.checked;}}}} /**
      * Copies the project with the specified id and returns a new project id if the project is
      * successfully copied
-     */value:function copyProject(projectId){var copyProjectURL=this.ConfigService.getConfigParam('copyProjectURL');if(copyProjectURL==null){return null;}var httpParams={};httpParams.method='POST';httpParams.url=copyProjectURL+"/"+projectId;httpParams.headers={'Content-Type':'application/x-www-form-urlencoded'};var params={};httpParams.data=$.param(params);return this.$http(httpParams).then(function(result){var projectId=result.data;return projectId;});}},{key:'registerNewProject', /**
+     */},{key:'copyProject',value:function copyProject(projectId){var copyProjectURL=this.ConfigService.getConfigParam('copyProjectURL');if(copyProjectURL==null){return null;}var httpParams={};httpParams.method='POST';httpParams.url=copyProjectURL+"/"+projectId;httpParams.headers={'Content-Type':'application/x-www-form-urlencoded'};var params={};httpParams.data=$.param(params);return this.$http(httpParams).then(function(result){var projectId=result.data;return projectId;});}},{key:'registerNewProject', /**
      * Registers a new project having the projectJSON content with the server.
      * Returns a new project Id if the project is successfully registered.
      * Returns null if Config.registerNewProjectURL is undefined.
@@ -858,15 +866,29 @@ for(var n=0;n<nodes.length;n++){var node=nodes[n];if(node!=null){var nodeId=node
      * @param nodeId the node id of the group we are moving the nodes inside
      */},{key:'moveNodesInside',value:function moveNodesInside(nodeIds,nodeId){ // loop thorugh all the nodes we are moving
 for(var n=0;n<nodeIds.length;n++){ // get the node we are moving
-var tempNodeId=nodeIds[n];var tempNode=this.getNodeById(tempNodeId);if(!this.isGroupNode(tempNodeId)){ // remove the node from the transitions
-this.removeNodeIdFromTransitions(tempNodeId);} // remove the node from the group
+var tempNodeId=nodeIds[n];var tempNode=this.getNodeById(tempNodeId);var movingNodeIsActive=this.isActive(tempNodeId);var stationaryNodeIsActive=this.isActive(nodeId);if(movingNodeIsActive&&stationaryNodeIsActive){ // we are moving from active to active
+// remove the transitions
+this.removeNodeIdFromTransitions(tempNodeId); // remove the node from the group
 this.removeNodeIdFromGroups(tempNodeId);if(n==0){ /*
-                 * this is the first node we are moving so we will insert it
-                 * into the beginning of the group
-                 */this.insertNodeInsideInTransitions(tempNodeId,nodeId);this.insertNodeInsideInGroups(tempNodeId,nodeId);}else { /*
-                 * this is not the first node we are moving so we will insert
-                 * it after the node we previously inserted
-                 */this.insertNodeAfterInTransitions(tempNode,nodeId);this.insertNodeAfterInGroups(tempNodeId,nodeId);} /*
+                     * this is the first node we are moving so we will insert it
+                     * into the beginning of the group
+                     */this.insertNodeInsideInTransitions(tempNodeId,nodeId);this.insertNodeInsideInGroups(tempNodeId,nodeId);}else { /*
+                     * this is not the first node we are moving so we will insert
+                     * it after the node we previously inserted
+                     */this.insertNodeAfterInTransitions(tempNode,nodeId);this.insertNodeAfterInGroups(tempNodeId,nodeId);}}else if(movingNodeIsActive&&!stationaryNodeIsActive){ // we are moving from active to inactive
+// remove the transitions
+this.removeNodeIdFromTransitions(tempNodeId); // remove the node from the group
+this.removeNodeIdFromGroups(tempNodeId); // move the node to the inactive array
+this.moveToInactive(tempNode,nodeId);}else if(!movingNodeIsActive&&stationaryNodeIsActive){ // we are moving from inactive to active
+this.moveToActive(tempNode);if(n==0){ /*
+                     * this is the first node we are moving so we will insert it
+                     * into the beginning of the group
+                     */this.insertNodeInsideInTransitions(tempNodeId,nodeId);this.insertNodeInsideInGroups(tempNodeId,nodeId);}else { /*
+                     * this is not the first node we are moving so we will insert
+                     * it after the node we previously inserted
+                     */this.insertNodeAfterInTransitions(tempNode,nodeId);this.insertNodeAfterInGroups(tempNodeId,nodeId);}}else if(!movingNodeIsActive&&!stationaryNodeIsActive){ // we are moving from inactive to inactive
+// move the node within the inactive nodes
+this.moveInactiveNode(tempNode,nodeId);} /*
              * remember the node id so we can put the next node (if any)
              * after this one
              */nodeId=tempNode.id;}} /**
@@ -875,11 +897,22 @@ this.removeNodeIdFromGroups(tempNodeId);if(n==0){ /*
      * @param nodeId the node id we will put the moved nodes after
      */},{key:'moveNodesAfter',value:function moveNodesAfter(nodeIds,nodeId){ // loop through all the nodes we are moving
 for(var n=0;n<nodeIds.length;n++){ // get the node we are moving
-var tempNodeId=nodeIds[n];var node=this.getNodeById(tempNodeId);if(!this.isGroupNode(node.id)){ // this is not a group node so we will remove it from transitions
+var tempNodeId=nodeIds[n];var node=this.getNodeById(tempNodeId);var movingNodeIsActive=this.isActive(tempNodeId);var stationaryNodeIsActive=this.isActive(nodeId);if(movingNodeIsActive&&stationaryNodeIsActive){ // we are moving from active to active
+if(!this.isGroupNode(node.id)){ // this is not a group node so we will remove it from transitions
 this.removeNodeIdFromTransitions(tempNodeId);} // remove the node from the groups
 this.removeNodeIdFromGroups(tempNodeId); // insert the node into the parent group
 this.insertNodeAfterInGroups(tempNodeId,nodeId); // create the transition
-this.insertNodeAfterInTransitions(node,nodeId); // remember the node id so we can put the next node (if any) after this one
+this.insertNodeAfterInTransitions(node,nodeId);}else if(movingNodeIsActive&&!stationaryNodeIsActive){ // we are moving from active to inactive
+if(!this.isGroupNode(node.id)){ // this is not a group node so we will remove it from transitions
+this.removeNodeIdFromTransitions(tempNodeId);} // remove the node from the groups
+this.removeNodeIdFromGroups(tempNodeId); // move the node to the inactive array
+this.moveToInactive(node,nodeId);}else if(!movingNodeIsActive&&stationaryNodeIsActive){ // we are moving from inactive to active
+// move the node to the active nodes array
+this.moveToActive(node); // insert the node into the parent group
+this.insertNodeAfterInGroups(tempNodeId,nodeId); // create the transition
+this.insertNodeAfterInTransitions(node,nodeId);}else if(!movingNodeIsActive&&!stationaryNodeIsActive){ // we are moving from inactive to inactive
+// move the node within the inactive nodes
+this.moveInactiveNode(node,nodeId);} // remember the node id so we can put the next node (if any) after this one
 nodeId=node.id;}} /**
      * Copy nodes and put them after a certain node id
      * @param nodeIds the node ids to copy
@@ -991,6 +1024,14 @@ group.startId=to;hasSetNewStartId=true;}}}}}if(!hasSetNewStartId){ /*
 var nodes=this.project.nodes; // loop through all the nodes
 for(var n=0;n<nodes.length;n++){var node=nodes[n];if(node!=null){if(nodeId===node.id){ // we have found the node we want to remove
 nodes.splice(n,1);}}}} /**
+     * Remove the node from the inactive nodes array
+     * @param nodeId the node to remove from the inactive nodes array
+     */},{key:'removeNodeIdFromInactiveNodes',value:function removeNodeIdFromInactiveNodes(nodeId){ // get the inactive nodes array
+var inactiveNodes=this.project.inactiveNodes;if(inactiveNodes!=null){ // loop through the inactive nodes
+for(var i=0;i<inactiveNodes.length;i++){var inactiveNode=inactiveNodes[i];if(inactiveNode!=null){var inactiveNodeId=inactiveNode.id;if(nodeId===inactiveNodeId){ /*
+                         * we have found the node we are looking for so we will
+                         * remove it
+                         */inactiveNodes.splice(i,1);}}}}} /**
      * Create a new component
      * @param nodeId the node id to create the component in
      * @param componentType the component type
@@ -1316,5 +1357,83 @@ result=true;break;}}}}}return result;} /**
      */},{key:'getConnectedComponentParams',value:function getConnectedComponentParams(componentContent,componentId){var connectedComponentParams=null;if(componentContent!=null&&componentId!=null){ // get the connected components
 var connectedComponents=componentContent.connectedComponents;if(connectedComponents!=null){ // loop through all the connected components
 for(var c=0;c<connectedComponents.length;c++){var connectedComponent=connectedComponents[c];if(connectedComponent!=null){var tempComponentId=connectedComponent.id;if(componentId===tempComponentId){ // we have found the connected component we are looking for
-connectedComponentParams=connectedComponent;}}}}}return connectedComponentParams;}}]);return ProjectService;}();ProjectService.$inject=['$http','$injector','$rootScope','ConfigService'];exports.default=ProjectService;
+connectedComponentParams=connectedComponent;}}}}}return connectedComponentParams;} /**
+     * Get the inactive groups
+     * @returns the inactive groups
+     */},{key:'getInactiveGroups',value:function getInactiveGroups(){var inactiveGroups=[];if(this.project!=null){if(this.project.inactiveGroups==null){this.project.inactiveGroups=[];}inactiveGroups=this.project.inactiveGroups;}return inactiveGroups;} /**
+     * Get the inactive nodes
+     * @returns the inactive nodes
+     */},{key:'getInactiveNodes',value:function getInactiveNodes(){var inactiveNodes=[];if(this.project!=null){if(this.project.inactiveNodes==null){this.project.inactiveNodes=[];}inactiveNodes=this.project.inactiveNodes;}return inactiveNodes;} /**
+     * Remove the node from the active nodes
+     * @param nodeId the node to remove
+     * @returns the node that we have removed
+     */},{key:'removeNodeFromActiveNodes',value:function removeNodeFromActiveNodes(nodeId){var node=null;if(nodeId!=null){ // get the active nodes
+var activeNodes=this.project.nodes;if(activeNodes!=null){ // loop through all the active nodes
+for(var a=0;a<activeNodes.length;a++){var activeNode=activeNodes[a];if(activeNode!=null){if(nodeId===activeNode.id){ // we have found the node we want to remove
+node=activeNode; // remove the node from the array
+activeNodes.splice(a,1);break;}}}}}return node;} /**
+     * Remove the node from the inactive nodes array
+     * @param nodeId the node to remove
+     * @returns the node that was removed
+     */},{key:'removeNodeFromInactiveNodes',value:function removeNodeFromInactiveNodes(nodeId){var node=null;if(nodeId!=null){ // get all the inactive nodes
+var inactiveNodes=this.project.inactiveNodes;if(inactiveNodes!=null){ // loop through all the inactive nodes
+for(var i=0;i<inactiveNodes.length;i++){var inactiveNode=inactiveNodes[i];if(inactiveNode!=null){if(nodeId===inactiveNode.id){ // we have found the node we want to remove
+node=inactiveNode; // remove the node from the array
+inactiveNodes.splice(i,1);break;}}}}}return node;} /**
+     * Load the inactive nodes
+     * @param nodes the inactive nodes
+     */},{key:'loadInactiveNodes',value:function loadInactiveNodes(nodes){if(nodes!=null){for(var n=0;n<nodes.length;n++){var node=nodes[n];if(node!=null){var nodeId=node.id; // set the node into the mapping data structures
+this.setIdToNode(nodeId,node);this.setIdToElement(nodeId,node);}}}} /**
+     * Check if the node is active
+     * @param nodeId the node to check
+     * @returns whether the node is in the active array
+     */},{key:'isActive',value:function isActive(nodeId){var result=true;if(nodeId!=null){if(nodeId==='inactiveNodes'){ // this occurs when the author puts a step into the inactive nodes
+result=false;}else if(nodeId==='inactiveGroups'){ // this occurs when the author puts a group into the inactive groups
+result=false;}else if(this.isGroupNode(nodeId)){ // the node is a group node
+// TODO: implement this
+}else { // the node is a step node
+// get the inactive nodes
+var inactiveNodes=this.project.inactiveNodes;if(inactiveNodes!=null){ // loop through all the inactive nodes
+for(var i=0;i<inactiveNodes.length;i++){var inactiveNode=inactiveNodes[i];if(inactiveNode!=null){if(nodeId===inactiveNode.id){ // we have found the node in the inactive nodes
+result=false;break;}}}}}}return result;} /**
+     * Move the node to the active nodes array
+     */},{key:'moveToActive',value:function moveToActive(node){if(node!=null){ // make sure the node is inactive
+if(!this.isActive(node.id)){ // the node is inactive so we will move it to the active array
+// remove the node from inactive nodes array
+this.removeNodeFromInactiveNodes(node.id); // add the node to the active array
+this.addNode(node);}}} /**
+     * Move the node to the inactive nodes array
+     * @param node the node to move
+     * @param nodeIdToInsertAfter place the node after this
+     */},{key:'moveToInactive',value:function moveToInactive(node,nodeIdToInsertAfter){if(node!=null){ // make sure the node is active
+if(this.isActive(node.id)){ // the node is active so we will move it to the inactive array
+// remove the node from the active array
+this.removeNodeFromActiveNodes(node.id); // add the node to the inactive array
+this.addInactiveNode(node,nodeIdToInsertAfter);}}} /**
+     * Add the node to the inactive nodes array
+     * @param node the node to move
+     * @param nodeIdToInsertAfter place the node after this
+     */},{key:'addInactiveNode',value:function addInactiveNode(node,nodeIdToInsertAfter){if(node!=null){var inactiveNodes=this.project.inactiveNodes;if(inactiveNodes!=null){if(nodeIdToInsertAfter==null||nodeIdToInsertAfter==='inactiveSteps'){ // put the node at the beginning of the inactive steps
+inactiveNodes.splice(0,0,node);}else { // put the node after one of the inactive nodes
+var added=false; // loop through all the inactive nodes
+for(var i=0;i<inactiveNodes.length;i++){var inactiveNode=inactiveNodes[i];if(inactiveNode!=null){if(nodeIdToInsertAfter===inactiveNode.id){ // we have found the position to place the node
+inactiveNodes.splice(i+1,0,node);added=true;}}}if(!added){ /*
+                         * we haven't added the node yet so we will just add it 
+                         * to the end of the array
+                         */inactiveNodes.push(node);}}}}} /**
+     * Move an inactive node within the inactive nodes array
+     * @param node the node to move
+     * @param nodeIdToInsertAfter place the node after this
+     */},{key:'moveInactiveNode',value:function moveInactiveNode(node,nodeIdToInsertAfter){if(node!=null){var inactiveNodes=this.project.inactiveNodes;if(inactiveNodes!=null){ // remove the node from inactive nodes
+// loop through all the inactive nodes
+for(var i=0;i<inactiveNodes.length;i++){var inactiveNode=inactiveNodes[i];if(inactiveNode!=null){if(node.id===inactiveNode.id){ // we have found the node we want to remove
+inactiveNodes.splice(i,1);}}} // add the node back into the inactive nodes
+if(nodeIdToInsertAfter==null||nodeIdToInsertAfter==='inactiveSteps'){ // put the node at the beginning of the inactive nodes
+inactiveNodes.splice(0,0,node);}else { // put the node after one of the inactive nodes
+var added=false; // loop through all the inactive nodes
+for(var i=0;i<inactiveNodes.length;i++){var inactiveNode=inactiveNodes[i];if(inactiveNode!=null){if(nodeIdToInsertAfter===inactiveNode.id){ // we have found the position to place the node
+inactiveNodes.splice(i+1,0,node);added=true;}}}if(!added){ /*
+                         * we haven't added the node yet so we will just add it 
+                         * to the end of the array
+                         */inactiveNodes.push(node);}}}}}}]);return ProjectService;}();ProjectService.$inject=['$http','$injector','$rootScope','ConfigService'];exports.default=ProjectService;
 //# sourceMappingURL=projectService.js.map
