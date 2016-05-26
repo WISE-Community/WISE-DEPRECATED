@@ -78,7 +78,11 @@ describe('WISE Authoring Tool', () => {
     });
 
     it('should have elements on the page in project view', () => {
-        expect($("#projectTitle").getText()).toEqual("My Science Project");
+        expect($("#projectTitle").getAttribute('value')).toEqual("My Science Project");
+
+        element.all(by.repeater("item in projectController.items")).then((nodeItem) => {
+            expect(nodeItem[1].getText()).toBe("1 First Activity");  // should have one default activity
+        });
 
         // check that move, delete buttons are disabled and other buttons are enabled.
         expect($("#moveButton").isEnabled()).toBe(false);
