@@ -3,5 +3,9 @@
 <link rel="stylesheet" href="wise5/vle/themes/default/style/vle.css">
 
 <button id="exitAuthoringToolButton" ng-click="authoringToolController.exit()" translate="backToTeacherHome"></button>
+<button id="backToMyProjectsAuthoringToolButton" 
+    ng-click="authoringToolController.goToMyProjects()" 
+    ng-show="!authoringToolController.isAuthorOnMyProjectsPage()"
+    translate="backToMyProjects"></button>
 <hr/>
 <div ui-view></div>

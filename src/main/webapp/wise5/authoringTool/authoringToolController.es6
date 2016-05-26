@@ -2,13 +2,15 @@
 
 class AuthoringToolController {
 
-    constructor($mdDialog,
+    constructor($location,
+                $mdDialog,
                 $scope,
                 $translate,
                 ConfigService,
                 SessionService
                 ) {
 
+        this.$location = $location;
         this.$mdDialog = $mdDialog;
         this.$scope = $scope;
         this.$translate = $translate;
@@ -35,6 +37,33 @@ class AuthoringToolController {
             });
         });
     }
+    
+    /**
+     * Check if the author is on the My Projects page in the Authoring Tool
+     * @returns whether the author is on the My Projects page in the Authoring
+     * Tool
+     */
+    isAuthorOnMyProjectsPage() {
+        var result = false;
+        
+        if (this.$location.url() == '/') {
+            /*
+             * the author is on the My Projects page. the url looks like
+             * http://wise.berkeley.edu/author#/
+             */
+            result = true;
+        }
+        
+        return result;
+    }
+    
+    /**
+     * Navigate the user to the My Projects page in the Authoring Tool
+     */
+    goToMyProjects() {
+        // send the user to the My Projects page in the Authoring Tool
+        this.$location.url('/author');
+    }
 
     exit() {
         // Send the user to the teacher home page
@@ -44,6 +73,6 @@ class AuthoringToolController {
     }
 }
 
-AuthoringToolController.$inject = ['$mdDialog', '$scope', '$translate', 'ConfigService', 'SessionService'];
+AuthoringToolController.$inject = ['$location', '$mdDialog', '$scope', '$translate', 'ConfigService', 'SessionService'];
 
 export default AuthoringToolController;

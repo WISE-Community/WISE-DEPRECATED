@@ -9,11 +9,12 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var AuthoringToolController = function () {
-    function AuthoringToolController($mdDialog, $scope, $translate, ConfigService, SessionService) {
+    function AuthoringToolController($location, $mdDialog, $scope, $translate, ConfigService, SessionService) {
         var _this = this;
 
         _classCallCheck(this, AuthoringToolController);
 
+        this.$location = $location;
         this.$mdDialog = $mdDialog;
         this.$scope = $scope;
         this.$translate = $translate;
@@ -34,7 +35,40 @@ var AuthoringToolController = function () {
         });
     }
 
+    /**
+     * Check if the author is on the My Projects page in the Authoring Tool
+     * @returns whether the author is on the My Projects page in the Authoring
+     * Tool
+     */
+
+
     _createClass(AuthoringToolController, [{
+        key: 'isAuthorOnMyProjectsPage',
+        value: function isAuthorOnMyProjectsPage() {
+            var result = false;
+
+            if (this.$location.url() == '/') {
+                /*
+                 * the author is on the My Projects page. the url looks like
+                 * http://wise.berkeley.edu/author#/
+                 */
+                result = true;
+            }
+
+            return result;
+        }
+
+        /**
+         * Navigate the user to the My Projects page in the Authoring Tool
+         */
+
+    }, {
+        key: 'goToMyProjects',
+        value: function goToMyProjects() {
+            // send the user to the My Projects page in the Authoring Tool
+            this.$location.url('/author');
+        }
+    }, {
         key: 'exit',
         value: function exit() {
             // Send the user to the teacher home page
@@ -47,7 +81,7 @@ var AuthoringToolController = function () {
     return AuthoringToolController;
 }();
 
-AuthoringToolController.$inject = ['$mdDialog', '$scope', '$translate', 'ConfigService', 'SessionService'];
+AuthoringToolController.$inject = ['$location', '$mdDialog', '$scope', '$translate', 'ConfigService', 'SessionService'];
 
 exports.default = AuthoringToolController;
 //# sourceMappingURL=authoringToolController.js.map
