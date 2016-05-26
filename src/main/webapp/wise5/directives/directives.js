@@ -317,7 +317,9 @@ var DisableDeleteKeypress = function () {
                         targetType = targetType.toLowerCase();
                     }
 
-                    if (nodeName === 'input' && targetType === 'text' || nodeName === 'input' && targetType === 'password' || nodeName === 'input' && targetType === 'file' || nodeName === 'input' && targetType === 'search' || nodeName === 'input' && targetType === 'email' || nodeName === 'input' && targetType === 'number' || nodeName === 'input' && targetType === 'date' || nodeName === 'textarea') {
+                    var contentEditable = e.target.contentEditable === 'true';
+
+                    if (nodeName === 'input' && targetType === 'text' || nodeName === 'input' && targetType === 'password' || nodeName === 'input' && targetType === 'file' || nodeName === 'input' && targetType === 'search' || nodeName === 'input' && targetType === 'email' || nodeName === 'input' && targetType === 'number' || nodeName === 'input' && targetType === 'date' || nodeName === 'textarea' || contentEditable) {
                         /*
                          * the user is typing in a valid input element so we will
                          * allow the delete key press

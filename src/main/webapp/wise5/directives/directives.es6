@@ -259,10 +259,10 @@ class DisableDeleteKeypress {
                 // the delete key was pressed
 
                 // get the name of the node e.g. body, input, div, etc.
-                var nodeName = e.target.nodeName;
+                let nodeName = e.target.nodeName;
 
                 // get the type if applicable e.g. text, password, file, etc.
-                var targetType = e.target.type;
+                let targetType = e.target.type;
 
                 if (nodeName != null) {
                     nodeName = nodeName.toLowerCase();
@@ -272,6 +272,8 @@ class DisableDeleteKeypress {
                     targetType = targetType.toLowerCase();
                 }
 
+                let contentEditable = e.target.contentEditable === 'true';
+
                 if ((nodeName === 'input' && targetType === 'text') ||
                     (nodeName === 'input' && targetType === 'password') ||
                     (nodeName === 'input' && targetType === 'file') ||
@@ -279,7 +281,7 @@ class DisableDeleteKeypress {
                     (nodeName === 'input' && targetType === 'email') ||
                     (nodeName === 'input' && targetType === 'number') ||
                     (nodeName === 'input' && targetType === 'date') ||
-                    nodeName === 'textarea') {
+                    nodeName === 'textarea' || contentEditable) {
                     /*
                      * the user is typing in a valid input element so we will
                      * allow the delete key press

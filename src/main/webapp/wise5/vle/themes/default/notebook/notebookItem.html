@@ -43,8 +43,8 @@
     </md-input-container>
     <div class="notebook-item__attachment" ng-repeat="attachment in notebookItemController.item.content.attachments">
         <img ng-src="{{attachment.iconURL}}" class="notebook-item__attachment__content" />
-        <md-button class="notebook-item__attachment__delete md-icon-button" ng-click='notebookItemController.removeAttachment(attachment)' title="Remove file">
-            <md-icon class="md-whiteframe-1dp">delete</md-icon>
+        <md-button class="md-whiteframe-1dp notebook-item__attachment__delete md-icon-button md-raised" ng-click='notebookItemController.removeAttachment(attachment)' title="Remove file">
+            <md-icon class="md-accent">delete</md-icon>
         </md-button>
     </div>
     <div ng-show="notebookItemController.showUpload"

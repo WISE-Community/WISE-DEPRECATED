@@ -52,6 +52,39 @@ class NotebookItemReportController {
         this.notebookConfig = this.NotebookService.getNotebookConfig();
         this.label = this.notebookConfig.itemTypes.report.label;
 
+        // summernote editor options
+        this.summernoteOptions = {
+            toolbar: [
+                ['edit',['undo','redo']],
+                ['style', ['bold', 'italic', 'underline'/*, 'superscript', 'subscript', 'strikethrough', 'clear'*/]],
+                //['style', ['style']],
+                //['fontface', ['fontname']],
+                //['textsize', ['fontsize']],
+                //['fontclr', ['color']],
+                ['alignment', ['ul', 'ol', 'paragraph'/*, 'lineheight'*/]],
+                //['height', ['height']],
+                //['table', ['table']],
+                //['insert', ['link','picture','video','hr']],
+                //['view', ['fullscreen', 'codeview']],
+                //['help', ['help']]
+                ['customButton', ['customButton']]
+                //['print', ['print']]
+            ],
+            customButton: {
+                buttonText: 'Add ' + this.notebookConfig.label + ' Item +',
+                tooltip: 'Insert in content',
+                buttonClass: 'accent-1 notebook-item--report__add-note',
+                action: () => {
+                    this.addNotebookItemContent();
+                }
+            },
+            callbacks: {
+                onBlur: function() {
+                    $(this).summernote('saveRange');
+                }
+            }
+        }
+
         this.$scope.$watch(() => {
             return this.reportItem.content.content;
         }, (newValue, oldValue) => {
@@ -87,10 +120,11 @@ class NotebookItemReportController {
         return this.templateUrl;
     }
 
-    addNotebookItemContent($event) {
+    addNotebookItemContent() {
         let notebookItems = this.NotebookService.notebook.items;
         let templateUrl = this.themePath + '/notebook/notebookItemChooser.html';
         let reportTextareaCursorPosition = angular.element('textarea.report').prop("selectionStart"); // insert the notebook item at the cursor position later
+        let $reportElement = $('#' + this.reportId);
 
         this.$mdBottomSheet.show({
             parent: angular.element(document.body),
@@ -99,7 +133,8 @@ class NotebookItemReportController {
                 notebookItems: notebookItems,
                 reportItem: this.reportItem,
                 reportTextareaCursorPosition: reportTextareaCursorPosition,
-                themePath: this.themePath
+                themePath: this.themePath,
+                notebookConfig: this.notebookConfig
             },
             controller: 'GridBottomSheetCtrl',
             controller: NotebookItemChooserController,
@@ -113,19 +148,28 @@ class NotebookItemReportController {
             $scope.themePath = themePath;
             $scope.chooseNotebookItem = (notebookItem) => {
                 //let notebookItemHTML = '<notebook-item item-id="\'' + notebookItem.localNotebookItemId + '\'" is-edit-allowed="true"></notebook-item>';
-                let notebookItemHTML = "";
+                let $p = $('<p></p>').css('text-align', 'center');
                 if (notebookItem.content != null && notebookItem.content.attachments != null) {
                     for (let a = 0; a < notebookItem.content.attachments.length; a++) {
                         let notebookItemAttachment = notebookItem.content.attachments[a];
-                        notebookItemHTML += '<img src="' + notebookItemAttachment.iconURL + '" alt="notebook image" style="max-width: 100%; height: auto;" />';
+                        let $img = $('<img src="' + notebookItemAttachment.iconURL + '" alt="notebook image" />');
+                        $img.addClass('notebook-item--report__note-img');
+                        //$reportElement.find('.note-editable').trigger('focus');
+                        $p.append($img);
                     }
                 }
                 if (notebookItem.content != null && notebookItem.content.text != null) {
-                    notebookItemHTML += '<div>' + notebookItem.content.text + '</div>';
+                    let $caption = $('<div class="md-caption">' + notebookItem.content.text + '</div>').css({'text-align': 'center', 'margin-top': '8px'});
+                    $p.append($caption);
                 }
                 //theEditor.content.insertHtmlAtCursor(notebookItemHTML);
-                $rootScope.$broadcast("notebookItemChosen", {"notebookItemHTML": notebookItemHTML});
+                //$rootScope.$broadcast("notebookItemChosen", {"notebookItemHTML": notebookItemHTML});
                 //$scope.reportItem.content.content = $scope.reportItem.content.content.substring(0, reportTextareaCursorPosition) + notebookItemHTML + $scope.reportItem.content.content.substring(reportTextareaCursorPosition);
+                $reportElement.summernote('focus');
+                $reportElement.summernote('restoreRange');
+                $reportElement.summernote('insertNode', $p[0]);
+
+                // hide chooser
                 $mdBottomSheet.hide();
             };
         }
@@ -172,6 +216,8 @@ class NotebookItemReportController {
                     this.reportItem.id = result.id; // set the reportNotebookItemId to the newly-incremented id so that future saves during this visit will be an update instead of an insert.
                     let serverSaveTime = result.serverSaveTime;
                     let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
+
+                    // set save message
                     this.setSaveMessage('Saved', clientSaveTime);
                     //})
                 }
