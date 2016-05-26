@@ -898,13 +898,13 @@ this.moveInactiveNode(tempNode,nodeId);} /*
      */},{key:'moveNodesAfter',value:function moveNodesAfter(nodeIds,nodeId){ // loop through all the nodes we are moving
 for(var n=0;n<nodeIds.length;n++){ // get the node we are moving
 var tempNodeId=nodeIds[n];var node=this.getNodeById(tempNodeId);var movingNodeIsActive=this.isActive(tempNodeId);var stationaryNodeIsActive=this.isActive(nodeId);if(movingNodeIsActive&&stationaryNodeIsActive){ // we are moving from active to active
-if(!this.isGroupNode(node.id)){ // this is not a group node so we will remove it from transitions
-this.removeNodeIdFromTransitions(tempNodeId);} // remove the node from the groups
+// remove the transitions
+this.removeNodeIdFromTransitions(tempNodeId); // remove the node from the groups
 this.removeNodeIdFromGroups(tempNodeId); // insert the node into the parent group
 this.insertNodeAfterInGroups(tempNodeId,nodeId); // create the transition
 this.insertNodeAfterInTransitions(node,nodeId);}else if(movingNodeIsActive&&!stationaryNodeIsActive){ // we are moving from active to inactive
-if(!this.isGroupNode(node.id)){ // this is not a group node so we will remove it from transitions
-this.removeNodeIdFromTransitions(tempNodeId);} // remove the node from the groups
+// remove the transitions
+this.removeNodeIdFromTransitions(tempNodeId); // remove the node from the groups
 this.removeNodeIdFromGroups(tempNodeId); // move the node to the inactive array
 this.moveToInactive(node,nodeId);}else if(!movingNodeIsActive&&stationaryNodeIsActive){ // we are moving from inactive to active
 // move the node to the active nodes array
@@ -974,7 +974,7 @@ this.removeNodeIdFromTransitions(nodeId);this.removeNodeIdFromGroups(nodeId);thi
      */},{key:'removeNodeIdFromTransitions',value:function removeNodeIdFromTransitions(nodeId){ // get the node we are removing
 var nodeToRemove=this.getNodeById(nodeId); // get all the nodes that have a transition to the node we are removing
 var nodesByToNodeId=this.getNodesByToNodeId(nodeId); // get the transitions of the node we are removing
-var nodeToRemoveTransitionLogic=nodeToRemove.transitionLogic;var nodeToRemoveTransitions=[];if(nodeToRemoveTransitionLogic!=null&&nodeToRemoveTransitionLogic.transitions!=null){nodeToRemoveTransitions=nodeToRemoveTransitionLogic.transitions;}var parentIdOfNodeToRemove=this.getParentGroupId(nodeId);var parentGroup=this.getNodeById(parentIdOfNodeToRemove); //update the start id if we are removing the start node of a group
+var nodeToRemoveTransitionLogic=nodeToRemove.transitionLogic;var nodeToRemoveTransitions=[];if(nodeToRemoveTransitionLogic!=null&&nodeToRemoveTransitionLogic.transitions!=null){nodeToRemoveTransitions=nodeToRemoveTransitionLogic.transitions;}var parentIdOfNodeToRemove=this.getParentGroupId(nodeId);var parentGroup=this.getNodeById(parentIdOfNodeToRemove); // update the start id if we are removing the start node of a group
 if(parentGroup!=null){var parentGroupStartId=parentGroup.startId;if(parentGroupStartId!=null){if(parentGroupStartId===nodeId){ // the node we are removing is the start node
 if(nodeToRemoveTransitions!=null&&nodeToRemoveTransitions.length>0){ // loop through all the transitions from the node to choose a new start id
 for(var t=0;t<nodeToRemoveTransitions.length;t++){var nodeToRemoveTransition=nodeToRemoveTransitions[t];if(nodeToRemoveTransition!=null){var toNodeId=nodeToRemoveTransition.to;if(toNodeId!=null){ /*
@@ -996,9 +996,17 @@ var transitionsCopy=angular.toJson(nodeToRemoveTransitions);transitionsCopy=angu
                              */if(parentIdOfFromNode!=parentIdOfNodeToRemove){for(var tc=0;tc<transitionsCopy.length;tc++){var tempTransition=transitionsCopy[tc];if(tempTransition!=null){var tempToNodeId=tempTransition.to;if(tempToNodeId!=null){var parentIdOfToNode=this.getParentGroupId(tempToNodeId);if(parentIdOfNodeToRemove!=parentIdOfToNode){ // remove the transition
 transitionsCopy.splice(tc,1);tc--;}}}}} // remove the transition to the node we are removing
 transitions.splice(t,1); // insert the transitions from the node we are removing
-transitions=transitions.slice(0,t).concat(transitionsCopy).concat(transitions.slice(t+1));}} // set the transitions into the node that transitions to the node we are removing
+transitions=transitions.slice(0,t).concat(transitionsCopy).concat(transitions.slice(t+1)); // check if the node we are moving is a group
+if(this.isGroupNode(nodeId)){ /*
+                                 * we are moving a group so we need to update transitions that
+                                 * go into the group
+                                 */var groupIdWeAreMoving=nodeId;var groupThatTransitionsToGroupWeAreMoving=node;this.updateChildrenTransitionsIntoGroupWeAreMoving(groupThatTransitionsToGroupWeAreMoving,groupIdWeAreMoving);}}} // set the transitions into the node that transitions to the node we are removing
 transitionLogic.transitions=transitions;}}}if(nodeToRemoveTransitionLogic!=null){ // clear the transitions of the node we are removing
-nodeToRemoveTransitionLogic.transitions=[];}}},{key:'removeNodeIdFromGroups', /**
+nodeToRemoveTransitionLogic.transitions=[];}if(this.isGroupNode(nodeId)){ /*
+             * this is a group node so we will remove all child transitions that
+             * go out of this group
+             */ //this.removeTransitionsIntoGroup(nodeId);
+this.removeTransitionsOutOfGroup(nodeId);}}},{key:'removeNodeIdFromGroups', /**
      * Remove the node id from a group
      * @param nodeId the node id to remove
      */value:function removeNodeIdFromGroups(nodeId){var groups=this.groupNodes;if(groups!=null){ // loop through all the groups
@@ -1435,5 +1443,70 @@ for(var i=0;i<inactiveNodes.length;i++){var inactiveNode=inactiveNodes[i];if(ina
 inactiveNodes.splice(i+1,0,node);added=true;}}}if(!added){ /*
                          * we haven't added the node yet so we will just add it 
                          * to the end of the array
-                         */inactiveNodes.push(node);}}}}}}]);return ProjectService;}();ProjectService.$inject=['$http','$injector','$rootScope','ConfigService'];exports.default=ProjectService;
+                         */inactiveNodes.push(node);}}}}} /**
+     * Remove transitions that go into the group
+     * @param nodeId the group id
+     */},{key:'removeTransitionsIntoGroup',value:function removeTransitionsIntoGroup(nodeId){if(nodeId!=null){var group=this.getNodeById(nodeId);if(group!=null){var childIds=group.ids;if(childIds!=null){ // loop through all the children
+for(var c=0;c<childIds.length;c++){var childId=childIds[c];if(childId!=null){this.removeTransitionsThatPointToNodeIdFromOutsideGroup(childId);}}}}}} /**
+     * Remove the transitions that point to the node that does not have
+     * the same parent
+     * @param nodeId remove transitions to this node
+     */},{key:'removeTransitionsThatPointToNodeIdFromOutsideGroup',value:function removeTransitionsThatPointToNodeIdFromOutsideGroup(nodeId){if(nodeId!=null){ // get the parent of the node
+var parentGroupId=this.getParentGroupId(nodeId); // get all the nodes that point to the node
+var nodesThatPointToTargetNode=this.getNodesByToNodeId(nodeId);if(nodesThatPointToTargetNode!=null){ // loop through all the nodes that point to the node
+for(var n=0;n<nodesThatPointToTargetNode.length;n++){var nodeThatPointsToTargetNode=nodesThatPointToTargetNode[n];if(nodeThatPointsToTargetNode!=null){ // get the parent of the node that points to the node target node
+var nodeThatPointsToTargetNodeParentGroupId=this.getParentGroupId(nodeThatPointsToTargetNode.id);if(parentGroupId!=nodeThatPointsToTargetNodeParentGroupId){ /*
+                             * the parent groups are different so we will remove
+                             * the transition
+                             */this.removeTransition(nodeThatPointsToTargetNode,nodeId);}}}}}} /**
+     * Remove a transition
+     * @param node remove a transition in this node
+     * @param toNodeId remove the transition that goes to this node id
+     */},{key:'removeTransition',value:function removeTransition(node,toNodeId){if(node!=null&&toNodeId!=null){var transitionLogic=node.transitionLogic;if(transitionLogic!=null){var transitions=transitionLogic.transitions;if(transitions!=null){ // loop through all the transitions
+for(var t=0;t<transitions.length;t++){var transition=transitions[t];if(transition!=null){if(toNodeId===transition.to){ // we have found a transition that goes to the toNodeId
+// remove the transition
+transitions.splice(t,1);t--;}}}}}}} /**
+     * Remove transitions that go out of the group
+     * @param nodeId the group id
+     */},{key:'removeTransitionsOutOfGroup',value:function removeTransitionsOutOfGroup(nodeId){if(nodeId!=null){var group=this.getNodeById(nodeId);if(group!=null){var childIds=group.ids;if(childIds!=null){ // loop through all the child ids
+for(var c=0;c<childIds.length;c++){var childId=childIds[c];if(childId!=null){ // get the transitions of the child
+var transitions=this.getTransitionsByFromNodeId(childId);if(transitions!=null){ // loop through all the transitions
+for(var t=0;t<transitions.length;t++){var transition=transitions[t];if(transition!=null){ // get the to node id of the transition
+var toNodeId=transition.to;if(toNodeId!=null){ // get the parent group id of the toNodeId
+var toNodeIdParentGroupId=this.getParentGroupId(toNodeId);if(nodeId!=toNodeIdParentGroupId){ /*
+                                                 * the parent group is different which means it is a 
+                                                 * transition that goes out of the group
+                                                 */ // remove the transition
+transitions.splice(t,1);t--;}}}}}}}}}}} /*
+     * Update the step transitions that point into the group we are moving
+     * For example
+     * group1 has children node1 and node2 (node2 transitions to node3)
+     * group2 has children node3 and node4 (node4 transitions to node5)
+     * group3 has children node5 and node6
+     * if we move group2 after group3 we will need to change the
+     * transition from node2 to node3 and make node2 transition to node5
+     * the result will be
+     * group1 has children node1 and node2 (node2 transitions to node5)
+     * group3 has children node5 and node6
+     * group2 has children node3 and node4 (node4 transitions to node5)
+     * note: the (node4 transition to node5) will be removed later 
+     * when is called removeTransitionsOutOfGroup
+     * note: when group2 is added in a later function call, we will add
+     * the node6 to node3 transition
+     * @param groupThatTransitionsToGroupWeAreMoving the group object 
+     * that transitions to the group we are moving. we may need to update
+     * the transitions of this group's children.
+     * @param groupIdWeAreMoving the group id of the group we are moving
+     */},{key:'updateChildrenTransitionsIntoGroupWeAreMoving',value:function updateChildrenTransitionsIntoGroupWeAreMoving(groupThatTransitionsToGroupWeAreMoving,groupIdWeAreMoving){if(groupThatTransitionsToGroupWeAreMoving!=null&&groupIdWeAreMoving!=null){var group=this.getNodeById(groupIdWeAreMoving);if(group!=null){ // get all the nodes that have a transition to the node we are removing
+var nodesByToNodeId=this.getNodesByToNodeId(groupIdWeAreMoving); // get the transitions of the node we are removing
+var nodeToRemoveTransitionLogic=group.transitionLogic;var nodeToRemoveTransitions=[];if(nodeToRemoveTransitionLogic!=null&&nodeToRemoveTransitionLogic.transitions!=null){nodeToRemoveTransitions=nodeToRemoveTransitionLogic.transitions;}if(nodeToRemoveTransitions.length>0){ // get the first group that comes after the group we are removing
+var firstNodeToRemoveTransition=nodeToRemoveTransitions[0];var firstNodeToRemoveTransitionToNodeId=firstNodeToRemoveTransition.to;if(this.isGroupNode(firstNodeToRemoveTransitionToNodeId)){ // get the group that comes after the group we are moving
+var groupNode=this.getNodeById(firstNodeToRemoveTransitionToNodeId); // get child ids of the group that comes before the group we are moving
+var childIds=groupThatTransitionsToGroupWeAreMoving.ids;if(childIds!=null){ // loop through all the children
+for(var c=0;c<childIds.length;c++){var childId=childIds[c];var transitionsFromChild=this.getTransitionsByFromNodeId(childId);if(transitionsFromChild!=null){ // loop through all the transitions from the child
+for(var tfc=0;tfc<transitionsFromChild.length;tfc++){var transitionFromChild=transitionsFromChild[tfc];if(transitionFromChild!=null){var toNodeId=transitionFromChild.to; // get the parent group id of the toNodeId
+var toNodeIdParentGroupId=this.getParentGroupId(toNodeId);if(groupIdWeAreMoving===toNodeIdParentGroupId){ // the transition is to a child in the group we are moving
+if(groupNode.startId==null){ // change the transition to point to the after group
+transitionFromChild.to=firstNodeToRemoveTransitionToNodeId;}else { // change the transition to point to the start id of the after group
+transitionFromChild.to=groupNode.startId;}}}}}}}}}}}}}]);return ProjectService;}();ProjectService.$inject=['$http','$injector','$rootScope','ConfigService'];exports.default=ProjectService;
 //# sourceMappingURL=projectService.js.map
