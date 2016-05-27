@@ -1220,6 +1220,8 @@ View.prototype.convertTable = function(node, nodeContent) {
     // convert the WISE4 table to a WISE5 table
     var newTableData = this.convertTableData(nodeContent.numColumns, nodeContent.numRows, nodeContent.tableData);
     tableComponent.tableData = newTableData;
+    tableComponent.numRows = nodeContent.numRows;
+    tableComponent.numColumns = nodeContent.numColumns;
 
     wise5Node.components.push(tableComponent);
 
@@ -1928,9 +1930,14 @@ View.prototype.createBranchConstraint = function(constraintAction, fromNodeId, t
 
         // create the critera that needs to be satisfied in order to remove the constraint
         var criteria = {};
-        criteria.functionName = 'branchPathTaken';
-        criteria.fromNodeId = fromNodeId;
-        criteria.toNodeId = toNodeId;
+        criteria.name = 'branchPathTaken';
+        
+        // create the params for the criteria
+        var params = {};
+        params.fromNodeId = fromNodeId;
+        params.toNodeId = toNodeId;
+        criteria.params = params;
+        
         branchConstraint.removalCriteria.push(criteria);
     }
 
