@@ -1,4 +1,5 @@
 // Variables
+$notebook-sidebar-width: 56px;
 
 // Base
 #notebook {
@@ -71,7 +72,7 @@
     bottom: 0;
     left: 0;
     background-color: #fff;
-    width: 56px;
+    width: $notebook-sidebar-width;
     overflow: hidden;
     padding: 8px 0;
     text-align: center;
@@ -88,13 +89,17 @@
 
 .notebook-item {
     transition: box-shadow 250ms;
+    margin: 16px;
 }
 
 .notebook-item__content {
     height: 250px;
-    min-width: 200px;
+    min-width: 230px;
     position: relative;
     padding: 0;
+    background-color: color('gray');
+    border-top-left-radius: $card-border-radius;
+    border-top-right-radius: $card-border-radius;
 }
 
 .notebook-item__content__attachment, .notebook-item__content__text {
@@ -110,19 +115,17 @@
     background-position: center top !important;
     background-size: cover !important;
     top: 0;
-    bottom: 32%;
-}
-
-.notebook-item__content__attachment--only {
     bottom: 0;
 }
 
 .notebook-item__content__text {
     bottom: 0;
-    top: 68%;
     padding: 8px;
     font-weight: 500;
     overflow: hidden;
+    max-height: 120px;
+    min-height: 56px;
+    background-color: rgba(255,255,255,0.95);
 
     &:after {
         content: "";
@@ -131,22 +134,52 @@
         bottom: 0;
         right: 0;
         width: 100%;
-        height: 1.5em;
-        background: linear-gradient(180deg,hsla(0,0%,100%,0),#fff 100%);
-        border-bottom-left-radius: $card-border-radius;
-        border-bottom-right-radius: $card-border-radius;
+        height: 0.8em;
+        background: linear-gradient(180deg,hsla(0,0%,100%,0),rgba(255,255,255,0.95) 100%);
     }
 }
 
-.notebook-item__content__text--only {
-    top: 0;
+.notebook-item__content--text-only {
+    &:after {
+        content: "note";
+        font-family: 'Material Icons';
+        font-weight: normal;
+        font-style: normal;
+        display: inline-block;
+        line-height: 1;
+        text-transform: none;
+        letter-spacing: normal;
+        word-wrap: normal;
+        white-space: nowrap;
+        direction: ltr;
+
+        /* Support for all WebKit browsers. */
+        -webkit-font-smoothing: antialiased;
+        /* Support for Safari and Chrome. */
+        text-rendering: optimizeLegibility;
+
+        /* Support for Firefox. */
+        -moz-osx-font-smoothing: grayscale;
+
+        /* Support for IE. */
+        font-feature-settings: 'liga';
+        //position: absolute;
+        font-size: 80px;
+        color: color('text-disabled');
+    }
+}
+
+.notebook-item--question__content--text-only {
+    content: "live_help";
 }
 
 .notebook-item__content__location {
-    cursor: default;
-    margin: 0 !important;
-    padding-right: 4px !important;
-    width: auto !important;
+    opacity: 0.9;
+    padding: 8px 0;
+
+    md-icon {
+        font-size: 22px;
+    }
 }
 
 .notebook-item__edit {
@@ -154,7 +187,15 @@
 }
 
 .notebook-item__actions {
-    margin: 4px;
+    margin: 0;
+    padding: 0 8px;
+    color: #ffffff;
+    border-bottom-left-radius: $card-border-radius;
+    border-bottom-right-radius: $card-border-radius;
+
+    md-icon {
+        color: #ffffff;
+    }
 }
 
 .notebook-item__text-input {
@@ -246,6 +287,60 @@
 
 .notebook-item--report {
     background-color: #ffffff;
+
+    .note-editor {
+        margin-bottom: 16px;
+        border-color: color('gray');
+    }
+}
+
+.notebook-item--report__container {
+    &.ui-scrollpoint {
+        .notebook-item--report__toolbar {
+            position: fixed;
+            top: ($wise-toolbar-height + $toolbar-height);
+            left: 0;
+            right: 0;
+            z-index: 1;
+
+            @media only screen and (min-width: $layout-breakpoint-xs) {
+                left: ($notebook-sidebar-width - 2);
+            }
+
+            @media only screen and (min-width: $layout-breakpoint-xs) {
+                padding: 0 24px;
+            }
+
+            @media only screen and (min-width: $layout-breakpoint-sm) {
+                padding: 0 32px;
+            }
+
+            .note-toolbar {
+                margin: 0 16px;
+
+                @media only screen and (min-width: $layout-breakpoint-xs) {
+                    margin: 0 8px;
+                }
+
+                @media only screen and (min-width: $layout-breakpoint-sm) {
+                    margin: 0 16px;
+                }
+            }
+        }
+
+        .note-editor {
+            padding-top: 40px;
+        }
+    }
+}
+
+.notebook-item--report__toolbar {
+
+    .note-toolbar {
+        background-color: color('gray-light');
+        border: 1px solid color('gray');
+        margin-bottom: -2px;
+    }
 }
 
 .notebook-item--report__heading {
@@ -270,6 +365,6 @@
     overflow: auto;
 
     .notebook-item__content {
-        height: 200px;
+        height: 220px;
     }
 }

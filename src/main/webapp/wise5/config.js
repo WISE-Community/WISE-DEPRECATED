@@ -31,6 +31,7 @@ System.config({
     "angular-translate": "github:angular-translate/bower-angular-translate@2.11.0",
     "angular-translate-loader-partial": "github:angular-translate/bower-angular-translate-loader-partial@2.11.0",
     "angular-ui-router": "github:angular-ui/ui-router@0.2.18",
+    "angular-ui-scrollpoint": "npm:angular-ui-scrollpoint@2.1.1",
     "angular-ui-tree": "github:angular-ui-tree/angular-ui-tree@2.14.0",
     "angular-websocket": "npm:angular-websocket@1.0.14",
     "babel": "npm:babel-core@5.8.38",
@@ -84,7 +85,7 @@ System.config({
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
     "github:jspm/nodelibs-assert@0.1.0": {
-      "assert": "npm:assert@1.4.0"
+      "assert": "npm:assert@1.4.1"
     },
     "github:jspm/nodelibs-buffer@0.1.0": {
       "buffer": "npm:buffer@3.6.0"
@@ -141,6 +142,11 @@ System.config({
     "npm:angular-moment@1.0.0-beta.5": {
       "moment": "npm:moment@2.12.0"
     },
+    "npm:angular-ui-scrollpoint@2.1.1": {
+      "fs": "github:jspm/nodelibs-fs@0.1.2",
+      "process": "github:jspm/nodelibs-process@0.1.2",
+      "systemjs-json": "github:systemjs/plugin-json@0.1.2"
+    },
     "npm:angular-websocket@1.0.14": {
       "angular": "npm:angular@1.5.3",
       "process": "github:jspm/nodelibs-process@0.1.2",
@@ -155,10 +161,9 @@ System.config({
       "minimalistic-assert": "npm:minimalistic-assert@1.0.0",
       "vm": "github:jspm/nodelibs-vm@0.1.0"
     },
-    "npm:assert@1.4.0": {
+    "npm:assert@1.4.1": {
       "assert": "github:jspm/nodelibs-assert@0.1.0",
       "buffer": "github:jspm/nodelibs-buffer@0.1.0",
-      "buffer-shims": "npm:buffer-shims@1.0.0",
       "process": "github:jspm/nodelibs-process@0.1.2",
       "util": "npm:util@0.10.3"
     },
@@ -224,9 +229,6 @@ System.config({
       "process": "github:jspm/nodelibs-process@0.1.2",
       "readable-stream": "npm:readable-stream@2.0.6",
       "util": "github:jspm/nodelibs-util@0.1.0"
-    },
-    "npm:buffer-shims@1.0.0": {
-      "buffer": "github:jspm/nodelibs-buffer@0.1.0"
     },
     "npm:buffer-xor@1.0.3": {
       "buffer": "github:jspm/nodelibs-buffer@0.1.0",

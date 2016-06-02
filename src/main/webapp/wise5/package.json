@@ -11,6 +11,7 @@
       "angular-translate": "github:angular-translate/bower-angular-translate@^2.11.0",
       "angular-translate-loader-partial": "github:angular-translate/bower-angular-translate-loader-partial@^2.11.0",
       "angular-ui-router": "github:angular-ui/ui-router@^0.2.15",
+      "angular-ui-scrollpoint": "npm:angular-ui-scrollpoint@^2.1.1",
       "angular-ui-tree": "github:angular-ui-tree/angular-ui-tree@^2.5",
       "angular-websocket": "npm:angular-websocket@^1.0.14",
       "highcharts-ng": "npm:highcharts-ng@^0.0.11",

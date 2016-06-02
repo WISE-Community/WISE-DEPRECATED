@@ -6,10 +6,15 @@
     </div>
 
     <!--<textarea tbio class="notebook-item--report__content" ng-model="notebookItemReportController.reportItem.content.content" rows="30" cols="20" id="notebookReportTextarea" name="notebookReportTextarea" configuration="simple"></textarea>-->
-    <summernote id="{{notebookItemReportController.reportId}}"
-                class="notebook-item--report__content"
-                ng-model="notebookItemReportController.reportItem.content.content"
-                config="notebookItemReportController.summernoteOptions"></summernote>
+    <div class="notebook-item--report__container" ui-scrollpoint ui-scrollpoint-action="notebookItemReportController.setEditorPosition">
+        <div class="notebook-item--report__toolbar">
+            <div id="{{notebookItemReportController.reportId}}-toolbar" class="l-constrained l-constrained-md"></div>
+        </div>
+        <summernote id="{{notebookItemReportController.reportId}}"
+                    class="notebook-item--report__content"
+                    ng-model="notebookItemReportController.reportItem.content.content"
+                    config="notebookItemReportController.summernoteOptions"></summernote>
+    </div>
     <!--
     <br/>
     Preview:

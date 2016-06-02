@@ -1,31 +1,10 @@
-<style>
-    .drop-box {
-        background: #F8F8F8;
-        border: 5px dashed #DDD;
-        width: 90%;
-        height: 100px;
-        text-align: center;
-        padding-top: 50px;
-        margin: 10px;
-        bottom: 0px;
-    }
-
-    .drop-box:hover {
-        cursor: pointer;
-    }
-
-    .dragover {
-        border: 5px dashed blue;
-    }
-</style>
-
 <div class="l-constrained l-constrained-md" layout="column">
     <div ng-if="notebookController.filter === 'note'" layout="row" layout-wrap layout-align="start start">
         <notebook-item ng-repeat="(localNotebookItemId, notebookItems) in notebookController.notebook.items"
                        ng-if="(notebookController.filter === 'note') && notebookItems.last().type == 'note'"
                        item-id="localNotebookItemId"
                        is-edit-allowed="true"
-                       on-select="notebookController.editItem($ev, localNotebookItemId)"
+                       on-select="notebookController.editItem($ev, $itemId)"
                        flex="100" flex-sm="50" flex-md="33" flex-gt-md="33"></notebook-item>
     </div>
 

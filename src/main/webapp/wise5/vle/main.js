@@ -56,6 +56,10 @@ var _angularUiTree = require('angular-ui-tree');
 
 var _angularUiTree2 = _interopRequireDefault(_angularUiTree);
 
+var _angularUiScrollpoint = require('angular-ui-scrollpoint');
+
+var _angularUiScrollpoint2 = _interopRequireDefault(_angularUiScrollpoint);
+
 var _angularWebsocket = require('angular-websocket');
 
 var _angularWebsocket2 = _interopRequireDefault(_angularWebsocket);
@@ -263,9 +267,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var mainModule = _angular2.default.module('vle', [(0, _angularDragula2.default)(_angular2.default), 'angularMoment', 'angular-toArrayFilter', 'directives', 'filters', 'highcharts-ng',
 //'ngAudio',
-'ngAria', 'ngFileUpload', 'ngMaterial', 'ngSanitize', 'ngWebSocket', 'notebook', 'oc.lazyLoad', 'pascalprecht.translate', 'studentAsset', 'summernote', 'ui.router',
-//'ui.tinymce',
-'ui.tree']).service(_annotationService2.default.name, _annotationService2.default).service(_audioOscillatorService2.default.name, _audioOscillatorService2.default)
+'ngAria', 'ngFileUpload', 'ngMaterial', 'ngSanitize', 'ngWebSocket', 'notebook', 'oc.lazyLoad', 'pascalprecht.translate', 'studentAsset', 'summernote', 'ui.router', 'ui.scrollpoint', 'ui.tree']).service(_annotationService2.default.name, _annotationService2.default).service(_audioOscillatorService2.default.name, _audioOscillatorService2.default)
 //.service(AudioRecorderService.name, AudioRecorderService)
 .service(_configService2.default.name, _configService2.default)
 //.service(CRaterService.name, CRaterService)
