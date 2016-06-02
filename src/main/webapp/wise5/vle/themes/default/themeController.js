@@ -366,6 +366,7 @@ var ThemeController = function () {
                 $scope.item = null;
                 $scope.title = ($scope.isEditMode ? $scope.itemId ? 'Edit ' : 'Add ' : 'View ') + $scope.type;
                 $scope.file = file;
+                $scope.saveEnabled = false;
 
                 $scope.cancel = function () {
                     $mdDialog.hide();
@@ -417,6 +418,16 @@ var ThemeController = function () {
                 $scope.update = function (item) {
                     // notebook item has changed
                     $scope.item = item;
+
+                    // set whether save button should be enabled
+                    var saveEnabled = false;
+                    if ($scope.item) {
+                        if ($scope.item.content.text || $scope.item.content.attachments.length) {
+                            // note has text and/or attachments, so we can save
+                            saveEnabled = true;
+                        }
+                    }
+                    $scope.saveEnabled = saveEnabled;
                 };
             }
             ViewNotebookItemController.$inject = ["$scope", "$mdDialog", "$q", "NotebookService", "StudentAssetService"];
