@@ -2,31 +2,38 @@
          ng-if="!notebookItemController.isEditMode"
          ng-mouseenter="focus=true;"
          ng-mouseleave="focus=false;"
-         ng-class="{ 'md-whiteframe-5dp': focus}">
-    <md-card-content ng-click="notebookItemController.doSelect($event)"
-                     aria-label="Edit note"
+         ng-class="{ 'md-whiteframe-5dp': focus}"
+         ng-click="notebookItemController.doSelect($event)">
+    <md-card-content aria-label="Edit note"
                      class="notebook-item__content notebook-item__edit"
-                     md-ink-ripple>
+                     ng-class="{'notebook-item__content--text-only': !notebookItemController.item.content.attachments.length}"
+                     md-ink-ripple
+                     flex
+                     layout="column"
+                     layout-align="center center">
         <div ng-repeat="attachment in notebookItemController.item.content.attachments"
              ng-if="$first"
              class="notebook-item__content__attachment"
-             style="color: {{notebookItemController.label.color}}; background: url('{{attachment.iconURL}}')"
-             ng-class="{'notebook-item__content__attachment--only': !notebookItemController.item.content.text}"></div>
+             style="background: url('{{attachment.iconURL}}')"></div>
         <div ng-if="notebookItemController.item.content.text"
              class="notebook-item__content__text notebook-item__edit md-body-1"
-             style="color: {{notebookItemController.label.color}}"
-             ng-class="{'notebook-item__content__text--only': !notebookItemController.item.content.attachments.length}">
+             style="color: {{notebookItemController.label.color}}">
             {{notebookItemController.item.content.text}}
         </div>
     </md-card-content>
-    <md-divider></md-divider>
-    <md-card-actions class="notebook-item__actions" layout="row" layout-align="start center">
-        <span class="md-button md-icon-button notebook-item__content__location"><md-icon class="accent-2"> place </md-icon></span> <span class="md-body-1 accent-2">{{notebookItemController.getItemNodePosition()}}</span>
+    <md-card-actions class="notebook-item__actions"
+                     layout="row"
+                     layout-align="start center"
+                     style="background-color: {{notebookItemController.label.color}}">
+        <span class="notebook-item__content__location"><md-icon> place </md-icon><span class="md-body-1">{{notebookItemController.getItemNodePosition()}}</span></span>
         <span flex></span>
-        <!--<md-button class="md-icon-button" aria-label="Archive note">
+        <md-button class="md-icon-button"
+                   aria-label="Archive notebook item"
+                   ng-if="!notebookItemController.isChooseMode"
+                   ng-click="notebookItemController.archive($event)">
             <md-icon> delete </md-icon>
             <md-tooltip md-direction="top">Delete</md-tooltip>
-        </md-button> TODO: show once delete is enabled-->
+        </md-button>
     </md-card-actions>
 </md-card>
 
@@ -44,7 +51,7 @@
     <div class="notebook-item__attachment" ng-repeat="attachment in notebookItemController.item.content.attachments">
         <img ng-src="{{attachment.iconURL}}" class="notebook-item__attachment__content" />
         <md-button class="md-whiteframe-1dp notebook-item__attachment__delete md-icon-button md-raised" ng-click='notebookItemController.removeAttachment(attachment)' title="Remove file">
-            <md-icon class="md-accent">delete</md-icon>
+            <md-icon class="text-secondary">delete</md-icon>
         </md-button>
     </div>
     <div ng-show="notebookItemController.showUpload"

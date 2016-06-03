@@ -15,7 +15,7 @@
     "@text-color": "@gray-dark",
     "@link-color": "@brand-primary",
     "@link-hover-color": "darken(@link-color, 15%)",
-    "@link-hover-decoration": "underline",
+    "@link-hover-decoration": "none",
     "@font-family-sans-serif": "Roboto,Helvetica Neue,sans-serif",
     "@font-family-serif": "Georgia, \"Times New Roman\", Times, serif",
     "@font-family-monospace": "Menlo, Monaco, Consolas, \"Courier New\", monospace",
@@ -382,8 +382,6 @@
     "@hr-border": "@gray-lighter"
   },
   "css": [
-    "print.less",
-    "type.less",
     "code.less",
     "grid.less",
     "tables.less",
@@ -393,29 +391,14 @@
     "glyphicons.less",
     "button-groups.less",
     "input-groups.less",
-    "navs.less",
-    "navbar.less",
-    "breadcrumbs.less",
-    "pagination.less",
-    "pager.less",
-    "labels.less",
-    "badges.less",
-    "jumbotron.less",
-    "thumbnails.less",
-    "alerts.less",
-    "progress-bars.less",
-    "media.less",
-    "list-group.less",
     "panels.less",
     "responsive-embed.less",
-    "wells.less",
     "close.less",
     "component-animations.less",
     "dropdowns.less",
     "tooltip.less",
     "popovers.less",
-    "modals.less",
-    "carousel.less"
+    "modals.less"
   ],
   "js": [
     "alert.js",
@@ -427,9 +410,7 @@
     "popover.js",
     "tab.js",
     "affix.js",
-    "collapse.js",
-    "scrollspy.js",
     "transition.js"
   ],
-  "customizerUrl": "http://getbootstrap.com/customize/?id=0d8bfd4b9e03f7f5e5d2506795c874fe"
+  "customizerUrl": "http://getbootstrap.com/customize/?id=4a4afa1a79db869782876d8b3e56441b"
 }

@@ -33,7 +33,7 @@
             </md-menu>
         </div>
     </md-toolbar>
-    <md-content id="content" flex role="main"
+    <md-content id="content" flex role="main" ui-scrollpoint-target
                 ng-class="{'l-nav': themeCtrl.layoutState === 'nav', 'l-node': themeCtrl.layoutState === 'node',
                 'l-notebook': themeCtrl.layoutState === 'notebook', 'notebook-nav-open': themeCtrl.notebookNavOpen}" layout="column">
         <step-tools class="layout-tools" show-position="themeCtrl.numberProject"

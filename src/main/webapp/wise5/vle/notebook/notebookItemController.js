@@ -81,6 +81,7 @@ var NotebookItemController = function () {
                         attachment.iconURL = event.target.result;
                     };
                     reader.readAsDataURL(file);
+                    _this.update();
                 };
 
                 for (var f = 0; f < files.length; f++) {
@@ -134,7 +135,7 @@ var NotebookItemController = function () {
         key: "doSelect",
         value: function doSelect(ev) {
             if (this.onSelect) {
-                this.onSelect(ev, this.item.localNotebookItemId);
+                this.onSelect({ $ev: ev, $itemId: this.item.localNotebookItemId });
             }
         }
     }, {
@@ -151,6 +152,11 @@ var NotebookItemController = function () {
             // update local notebook item
             this.item.content.clientSaveTime = Date.parse(new Date()); // set save timestamp
             this.onUpdate({ item: this.item });
+        }
+    }, {
+        key: "delete",
+        value: function _delete(ev) {
+            // TODO: add archiving/deleting notebook items
         }
     }]);
 

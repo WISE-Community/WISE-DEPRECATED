@@ -62,7 +62,7 @@ var NotebookItemReportController = function () {
             //['fontface', ['fontname']],
             //['textsize', ['fontsize']],
             //['fontclr', ['color']],
-            ['alignment', ['ul', 'ol', 'paragraph' /*, 'lineheight'*/]],
+            ['para', ['ul', 'ol', 'paragraph' /*, 'lineheight'*/]],
             //['height', ['height']],
             //['table', ['table']],
             //['insert', ['link','picture','video','hr']],
@@ -71,14 +71,21 @@ var NotebookItemReportController = function () {
             ['customButton', ['customButton']]
             //['print', ['print']]
             ],
+            popover: {
+                image: [['imagesize', ['imageSize100', 'imageSize50', 'imageSize25']],
+                //['float', ['floatLeft', 'floatRight', 'floatNone']],
+                ['remove', ['removeMedia']]]
+            },
             customButton: {
                 buttonText: 'Add ' + this.notebookConfig.label + ' Item +',
-                tooltip: 'Insert in content',
+                tooltip: 'Insert from ' + this.notebookConfig.label,
                 buttonClass: 'accent-1 notebook-item--report__add-note',
                 action: function action() {
                     _this.addNotebookItemContent();
                 }
             },
+            disableDragAndDrop: true,
+            toolbarContainer: '#' + this.reportId + '-toolbar',
             callbacks: {
                 onBlur: function onBlur() {
                     $(this).summernote('saveRange');
@@ -109,8 +116,8 @@ var NotebookItemReportController = function () {
         }
 
         /**
-         * Returns this NotebookItem's position and title.
-         */
+        * Returns this NotebookItem's position and title.
+        */
 
     }, {
         key: 'getItemNodePositionAndTitle',
@@ -155,26 +162,26 @@ var NotebookItemReportController = function () {
                 $scope.themePath = themePath;
                 $scope.chooseNotebookItem = function (notebookItem) {
                     //let notebookItemHTML = '<notebook-item item-id="\'' + notebookItem.localNotebookItemId + '\'" is-edit-allowed="true"></notebook-item>';
-                    var $p = $('<p></p>').css('text-align', 'center');
-                    if (notebookItem.content != null && notebookItem.content.attachments != null) {
+                    var $item = $('<div></div>').css('text-align', 'center');
+                    if (notebookItem.content && notebookItem.content.attachments) {
                         for (var a = 0; a < notebookItem.content.attachments.length; a++) {
                             var notebookItemAttachment = notebookItem.content.attachments[a];
-                            var $img = $('<img src="' + notebookItemAttachment.iconURL + '" alt="notebook image" />');
+                            var $img = $('<img src="' + notebookItemAttachment.iconURL + '" alt="notebook image" style="width: 75%; max-width: 100%; height: auto; border: 1px solid #aaaaaa; padding: 8px; margin-bottom: 4px;" />');
                             $img.addClass('notebook-item--report__note-img');
                             //$reportElement.find('.note-editable').trigger('focus');
-                            $p.append($img);
+                            $item.append($img);
                         }
                     }
-                    if (notebookItem.content != null && notebookItem.content.text != null) {
-                        var $caption = $('<div class="md-caption">' + notebookItem.content.text + '</div>').css({ 'text-align': 'center', 'margin-top': '8px' });
-                        $p.append($caption);
+                    if (notebookItem.content && notebookItem.content.text) {
+                        var $caption = $('<div><b>' + notebookItem.content.text + '</b></div>').css({ 'text-align': 'center' });
+                        $item.append($caption);
                     }
                     //theEditor.content.insertHtmlAtCursor(notebookItemHTML);
                     //$rootScope.$broadcast("notebookItemChosen", {"notebookItemHTML": notebookItemHTML});
                     //$scope.reportItem.content.content = $scope.reportItem.content.content.substring(0, reportTextareaCursorPosition) + notebookItemHTML + $scope.reportItem.content.content.substring(reportTextareaCursorPosition);
                     $reportElement.summernote('focus');
                     $reportElement.summernote('restoreRange');
-                    $reportElement.summernote('insertNode', $p[0]);
+                    $reportElement.summernote('insertNode', $item[0]);
 
                     // hide chooser
                     $mdBottomSheet.hide();
@@ -184,8 +191,8 @@ var NotebookItemReportController = function () {
         }
 
         /**
-         * Start the auto save interval for this report
-         */
+        * Start the auto save interval for this report
+        */
 
     }, {
         key: 'startAutoSaveInterval',
@@ -199,9 +206,9 @@ var NotebookItemReportController = function () {
                     // the student work is dirty so we will save
 
                     /*
-                     * obtain the component states from the children and save them
-                     * to the server
-                     */
+                    * obtain the component states from the children and save them
+                    * to the server
+                    */
                     _this2.saveNotebookReportItem();
                 }
             }, this.autoSaveInterval);
@@ -211,8 +218,8 @@ var NotebookItemReportController = function () {
 
 
         /**
-         * Stop the auto save interval for this report
-         */
+        * Stop the auto save interval for this report
+        */
         value: function stopAutoSaveInterval() {
             clearInterval(this.autoSaveIntervalId);
         }
@@ -221,8 +228,8 @@ var NotebookItemReportController = function () {
 
 
         /**
-         * Save the notebook report item to server
-         */
+        * Save the notebook report item to server
+        */
         value: function saveNotebookReportItem() {
             var _this3 = this;
 
@@ -244,10 +251,22 @@ var NotebookItemReportController = function () {
         }
 
         /**
-         * Set the message next to the save button
-         * @param message the message to display
-         * @param time the time to display
+         * Account for potential vertical scrollbar on Notebook content and set
+         * fixed rich text toolbar location accordingly
          */
+
+    }, {
+        key: 'setEditorPosition',
+        value: function setEditorPosition(distance, elem, edge) {
+            var scrollBarWidth = document.body.clientWidth - angular.element(document.querySelector('#notebook')).outerWidth(true);
+            elem.find('.notebook-item--report__toolbar').css('right', scrollBarWidth);
+        }
+
+        /**
+        * Set the message next to the save button
+        * @param message the message to display
+        * @param time the time to display
+        */
 
     }, {
         key: 'setSaveMessage',

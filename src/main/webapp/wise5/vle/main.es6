@@ -13,6 +13,7 @@ import angularTranslate from 'angular-translate';
 import angularTranslateLoaderPartial from 'angular-translate-loader-partial';
 import angularUIRouter from 'angular-ui-router';
 import angularUITree from 'angular-ui-tree';
+import angularUIScrollpoint from 'angular-ui-scrollpoint';
 import angularWebSocket from 'angular-websocket';
 import AnnotationService from '../services/annotationService';
 import AudioOscillatorController from '../components/audioOscillator/audioOscillatorController';
@@ -90,7 +91,7 @@ let mainModule = angular.module('vle', [
     'studentAsset',
     'summernote',
     'ui.router',
-    //'ui.tinymce',
+    'ui.scrollpoint',
     'ui.tree'
     ])
 

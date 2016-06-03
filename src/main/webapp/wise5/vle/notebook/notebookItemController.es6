@@ -77,6 +77,7 @@ class NotebookItemController {
                     attachment.iconURL = event.target.result;
                 };
                 reader.readAsDataURL(file);
+                this.update();
             }
         }
     }
@@ -117,7 +118,7 @@ class NotebookItemController {
 
     doSelect(ev) {
         if (this.onSelect) {
-            this.onSelect(ev, this.item.localNotebookItemId);
+            this.onSelect({$ev: ev, $itemId: this.item.localNotebookItemId});
         }
     }
 
@@ -132,6 +133,10 @@ class NotebookItemController {
         // update local notebook item
         this.item.content.clientSaveTime = Date.parse(new Date());  // set save timestamp
         this.onUpdate({item: this.item});
+    }
+
+    delete(ev) {
+        // TODO: add archiving/deleting notebook items
     }
 }
 

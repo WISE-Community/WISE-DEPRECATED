@@ -1,11 +1,11 @@
 <md-bottom-sheet ng-cloak>
-  <p class="md-body-2">Choose an item to add:</p>
+  <h4 class="md-body-2">Choose an item to add:</h4>
   <div layout="row" class="notebook-item-chooser__contents">
     <notebook-item ng-repeat="(localNotebookItemId, notebookItems) in notebookItemChooserController.notebookItems"
-                   ng-if="notebookItems.last().type == 'note'"
+                   ng-if="notebookItems.last().type === 'note'"
                    item-id="localNotebookItemId"
                    is-edit-allowed="false"
                    is-choose-mode="true"
                    on-select="chooseNotebookItem(notebookItems.last())"></notebook-item>
-  </div>
+  </div> <!-- TODO: add questions when supported -->
 </md-bottom-sheet>

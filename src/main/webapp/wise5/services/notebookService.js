@@ -103,13 +103,13 @@ var NotebookService = function () {
     }, {
         key: "editItem",
         value: function editItem(ev, itemId) {
-            // boradcast edit notebook item event
+            // broadcast edit notebook item event
             this.$rootScope.$broadcast('editNote', { itemId: itemId, ev: ev });
         }
     }, {
         key: "addNewItem",
         value: function addNewItem(ev, file) {
-            // boradcast create new notebook item event
+            // broadcast create new notebook item event
             this.$rootScope.$broadcast('addNewNote', { ev: ev, file: file });
         }
     }, {
