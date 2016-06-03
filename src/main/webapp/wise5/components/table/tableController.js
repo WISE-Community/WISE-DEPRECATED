@@ -823,6 +823,19 @@ var TableController = function () {
                              */
                             var populatedComponentState = this.TableService.populateComponentState(importWorkComponentState);
 
+                            /*
+                            // create a component state with no table data
+                            var defaultComponentState = this.createComponentState();
+                            
+                            if (defaultComponentState != null && defaultComponentState.studentData != null) {
+                                // set the authored component content table data into the component state
+                                defaultComponentState.studentData.tableData = this.getCopyOfTableData(this.componentContent.tableData);
+                            }
+                            
+                            // copy the cell text values into the default component state
+                            var mergedComponentState = this.copyTableDataCellText(populatedComponentState, defaultComponentState);
+                            */
+
                             // populate the component state into this component
                             this.setStudentWork(populatedComponentState);
                         }
@@ -935,8 +948,8 @@ var TableController = function () {
                                     }
 
                                     // set the x and y values into the table data
-                                    this.setTableDataCellValue(xColumn, r, x);
-                                    this.setTableDataCellValue(yColumn, r, y);
+                                    this.setTableDataCellValue(xColumn, r, null, x);
+                                    this.setTableDataCellValue(yColumn, r, null, y);
 
                                     // increment the data row counter
                                     dataRowCounter++;
@@ -957,10 +970,14 @@ var TableController = function () {
          * @param y the y index (0 indexed)
          * @param value the value to set in the cell
          */
-        value: function setTableDataCellValue(x, y, value) {
+        value: function setTableDataCellValue(x, y, table, value) {
 
-            // get the table data rows
-            var tableDataRows = this.getTableDataRows();
+            var tableDataRows = table;
+
+            if (table == null) {
+                // get the table data rows
+                tableDataRows = this.getTableDataRows();
+            }
 
             if (tableDataRows != null) {
 
@@ -1504,6 +1521,46 @@ var TableController = function () {
         key: 'showSnipTableButton',
         value: function showSnipTableButton() {
             return this.isSnipTableButtonVisible;
+        }
+
+        /**
+         * Copy the table data cell text from one component state to another
+         * @param fromComponentState get the cell text values from this component state
+         * @param toComponentState set the cell text values in this component state
+         */
+
+    }, {
+        key: 'copyTableDataCellText',
+        value: function copyTableDataCellText(fromComponentState, toComponentState) {
+
+            if (fromComponentState != null && toComponentState != null) {
+                var fromStudentData = fromComponentState.studentData;
+                var toStudentData = toComponentState.studentData;
+
+                if (fromStudentData != null && toStudentData != null) {
+                    var fromTableData = fromStudentData.tableData;
+                    var toTableData = toStudentData.tableData;
+
+                    if (fromTableData != null & toTableData != null) {
+
+                        // loop through all the rows
+                        for (var y = 0; y < this.getNumRows(); y++) {
+
+                            // loop through all the columns
+                            for (var x = 0; x < this.getNumColumns(); x++) {
+
+                                // get the cell value
+                                var cellValue = this.getTableDataCellValue(x, y, fromTableData);
+
+                                // set the cell value
+                                this.setTableDataCellValue(x, y, toTableData, cellValue);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return toComponentState;
         }
 
         /**
