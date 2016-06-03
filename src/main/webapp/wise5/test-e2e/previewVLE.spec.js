@@ -37,9 +37,10 @@ describe('WISE5 Student VLE Preview', function () {
     var accountMenu = element(by.css('._md-open-menu-container'));
 
     it('should load the vle and go to node 1', function () {
-        browser.waitForAngular(); // wait for Angular to load
+        var nodeDropDownMenu = element(by.model("stepToolsCtrl.toNodeId"));
+        browser.wait(nodeDropDownMenu.isPresent(), 5000); // give it at most 5 seconds to load.
         expect(browser.getTitle()).toEqual('WISE');
-        expect(element(by.model("stepToolsCtrl.toNodeId")).getText()).toBe('1.1: Introduction to Newton Scooters');
+        expect(nodeDropDownMenu.getText()).toBe('1.1: Introduction to Newton Scooters');
     });
 
     it('should have UI elements on the page', function () {
