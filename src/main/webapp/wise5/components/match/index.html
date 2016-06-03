@@ -89,7 +89,7 @@
         <ol ui-tree-nodes data-type='bucket' ng-model='matchController.buckets'>
             <li ui-tree-node ng-repeat='bucket in matchController.buckets' class='bucket' ng-if="$index === 0">
                 <div ui-tree-handle class='group-title angular-ui-tree-handle' data-nodrag>
-                    <div>{{bucket.value}}</div>
+                    <div compile='bucket.value'></div>
                 </div>
                 <ol ui-tree-nodes data-type='choice' ng-model='bucket.items'>
                     <li ng-repeat='item in bucket.items' ui-tree-node>
@@ -103,7 +103,7 @@
         <ol ui-tree-nodes data-type='bucket' ng-model='matchController.buckets'>
             <li ui-tree-node ng-repeat='bucket in matchController.buckets' class='bucket' ng-if="$index > 0" flex>
                 <div ui-tree-handle class='group-title angular-ui-tree-handle' data-nodrag>
-                    <div>{{bucket.value}}</div>
+                    <div compile='bucket.value'></div>
                 </div>
                 <ol ui-tree-nodes data-type='choice' ng-model='bucket.items'>
                     <li ng-repeat='item in bucket.items' ui-tree-node>
@@ -113,7 +113,7 @@
                                 <md-icon ng-if="item.isCorrect" class="success"> check_circle </md-icon>
                                 <md-icon ng-if="item.isIncorrectPosition" class="info"> warning </md-icon>
                                 <md-icon ng-if="!item.isCorrect && !item.isIncorrectPosition" class="warn"> error </md-icon>
-                                <span>{{item.feedback}}</span>
+                                <span compile='item.feedback'></span>
                             </div>
                         </div>
                     </li>
