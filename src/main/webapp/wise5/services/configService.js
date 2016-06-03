@@ -51,7 +51,7 @@ var ConfigService = function () {
                 var absURL = _this.$location.$$absUrl;
 
                 // regex to match constraints=false in the url
-                var regEx = new RegExp(/constraints=false/, 'gi');
+                var regEx = new RegExp("constraints=false", 'gi');
 
                 if (absURL != null && absURL.match(regEx)) {
                     // the url contains constraints=false
