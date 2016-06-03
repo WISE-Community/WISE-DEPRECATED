@@ -90,6 +90,7 @@ $notebook-sidebar-width: 56px;
 .notebook-item {
     transition: box-shadow 250ms;
     margin: 16px;
+    display: block;
 }
 
 .notebook-item__content {
