@@ -5464,6 +5464,7 @@ public class VLEGetXLS {
 
 					stepWorkResponse = responses.toString();
 				} else {
+					
 					//check if there are any elements in the node states array
 					if (jsonNodeStatesArray != null && jsonNodeStatesArray.length() > 0) {
 						//obtain the last element in the node states
@@ -5474,10 +5475,16 @@ public class VLEGetXLS {
 						} else {
 							JSONObject lastState = (JSONObject) nodeStateObject;
 							
-							if (nodeType.equals("ExplanationBuilderNode")) {
+							if (nodeType.equals("ExplanationBuilder")) {
 								if (lastState != null) {
-									//just return the JSON as a string
-									stepWorkResponse = lastState.toString();									
+									
+									if (lastState.has("answer")) {
+										// get the text response answer the student typed
+										stepWorkResponse = lastState.getString("answer");
+									} else {
+										//just return the JSON as a string
+										stepWorkResponse = lastState.toString();
+									}
 								}
 							} else if (nodeType.equals("SVGDrawNode")) {
 								if (lastState != null) {
