@@ -80,8 +80,8 @@ var NotebookItemReportController = function () {
                 buttonText: 'Add ' + this.notebookConfig.label + ' Item +',
                 tooltip: 'Insert from ' + this.notebookConfig.label,
                 buttonClass: 'accent-1 notebook-item--report__add-note',
-                action: function action() {
-                    _this.addNotebookItemContent();
+                action: function action($event) {
+                    _this.addNotebookItemContent($event);
                 }
             },
             disableDragAndDrop: true,
@@ -135,7 +135,7 @@ var NotebookItemReportController = function () {
         }
     }, {
         key: 'addNotebookItemContent',
-        value: function addNotebookItemContent() {
+        value: function addNotebookItemContent(ev) {
             var _$mdBottomSheet$show;
 
             var notebookItems = this.NotebookService.notebook.items;
@@ -155,6 +155,7 @@ var NotebookItemReportController = function () {
                 },
                 controller: 'GridBottomSheetCtrl'
             }, _defineProperty(_$mdBottomSheet$show, 'controller', NotebookItemChooserController), _defineProperty(_$mdBottomSheet$show, 'controllerAs', 'notebookItemChooserController'), _defineProperty(_$mdBottomSheet$show, 'bindToController', true), _$mdBottomSheet$show));
+
             function NotebookItemChooserController($rootScope, $mdBottomSheet, $scope, notebookItems, reportItem, reportTextareaCursorPosition, themePath) {
                 $scope.notebookItems = notebookItems;
                 $scope.reportItem = reportItem;

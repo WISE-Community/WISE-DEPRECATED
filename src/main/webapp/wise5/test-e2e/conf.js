@@ -13,11 +13,15 @@ exports.config = {
         'browserName': 'chrome',
         'tunnel-identifier': process.env.TRAVIS_JOB_NUMBER,
         'build': process.env.TRAVIS_BUILD_NUMBER
-    }, {
+    }
+    /*,
+    {
         'browserName': 'firefox',
         'tunnel-identifier': process.env.TRAVIS_JOB_NUMBER,
         'build': process.env.TRAVIS_BUILD_NUMBER
-    }]
+    }
+    */
+    ]
 };
 
 module.exports.config = exports.config;

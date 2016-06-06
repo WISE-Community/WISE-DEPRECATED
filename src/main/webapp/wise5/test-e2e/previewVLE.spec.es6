@@ -29,7 +29,7 @@ describe('WISE5 Student VLE Preview', () => {
         );
     };
 
-    browser.get('http://localhost:8080/wise/project/demo');
+    browser.get('http://localhost:8080/wise/project/demo#/vle/node1');
     var previousButton = element(by.xpath('//button[@aria-label="Previous Item"]'));
     var nextButton = element(by.xpath('//button[@aria-label="Next Item"]'));
     var closeButton = element(by.xpath('//button[@aria-label="Close Step"]'));
@@ -37,9 +37,10 @@ describe('WISE5 Student VLE Preview', () => {
     var accountMenu = element(by.css('._md-open-menu-container'));
 
     it('should load the vle and go to node 1', () => {
-        waitForUrlToChangeTo(new RegExp('http://localhost:8080/wise/project/demo#/vle/node1', 'gi'));
+        let nodeDropDownMenu = element(by.model("stepToolsCtrl.toNodeId"));
+        browser.wait((nodeDropDownMenu).isPresent(), 5000);  // give it at most 5 seconds to load.
         expect(browser.getTitle()).toEqual('WISE');
-        expect(element(by.model("stepToolsCtrl.toNodeId")).getText()).toBe('1.1: Introduction to Newton Scooters');
+        expect(nodeDropDownMenu.getText()).toBe('1.1: Introduction to Newton Scooters');
     });
 
     it('should have UI elements on the page', () => {

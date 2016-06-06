@@ -236,6 +236,21 @@ let mainModule = angular.module('vle', [
                             controllerAs: 'nodeController'
                         }
                     }
+                })
+                .state('root.notebook', {
+                    url: '/notebook/:nodeid',
+                    views: {
+                        'notebookView': {
+                            templateProvider: ['$http', 'ConfigService', function ($http, ConfigService) {
+                                let wiseBaseURL = ConfigService.getWISEBaseURL();
+                                return $http.get(wiseBaseURL + '/wise5/notebook/index.html').then(
+                                    response => {
+                                        return response.data;
+                                    }
+                                );
+                            }]
+                        }
+                    }
                 });
 
             $httpProvider.interceptors.push('HttpInterceptor');

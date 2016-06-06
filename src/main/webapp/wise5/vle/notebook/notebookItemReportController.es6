@@ -81,8 +81,8 @@ class NotebookItemReportController {
                     buttonText: 'Add ' + this.notebookConfig.label + ' Item +',
                     tooltip: 'Insert from ' + this.notebookConfig.label,
                     buttonClass: 'accent-1 notebook-item--report__add-note',
-                    action: () => {
-                        this.addNotebookItemContent();
+                    action: ($event) => {
+                        this.addNotebookItemContent($event);
                     }
                 },
                 disableDragAndDrop: true,
@@ -129,7 +129,7 @@ class NotebookItemReportController {
             return this.templateUrl;
         }
 
-        addNotebookItemContent() {
+        addNotebookItemContent(ev) {
             let notebookItems = this.NotebookService.notebook.items;
             let templateUrl = this.themePath + '/notebook/notebookItemChooser.html';
             let reportTextareaCursorPosition = angular.element('textarea.report').prop("selectionStart"); // insert the notebook item at the cursor position later
@@ -150,6 +150,7 @@ class NotebookItemReportController {
                 controllerAs: 'notebookItemChooserController',
                 bindToController: true
             });
+
             function NotebookItemChooserController($rootScope, $mdBottomSheet, $scope, notebookItems, reportItem, reportTextareaCursorPosition, themePath) {
                 $scope.notebookItems = notebookItems;
                 $scope.reportItem = reportItem;

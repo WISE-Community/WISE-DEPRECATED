@@ -349,6 +349,18 @@ var mainModule = _angular2.default.module('vle', [(0, _angularDragula2.default)(
                 controllerAs: 'nodeController'
             }
         }
+    }).state('root.notebook', {
+        url: '/notebook/:nodeid',
+        views: {
+            'notebookView': {
+                templateProvider: ['$http', 'ConfigService', function ($http, ConfigService) {
+                    var wiseBaseURL = ConfigService.getWISEBaseURL();
+                    return $http.get(wiseBaseURL + '/wise5/notebook/index.html').then(function (response) {
+                        return response.data;
+                    });
+                }]
+            }
+        }
     });
 
     $httpProvider.interceptors.push('HttpInterceptor');

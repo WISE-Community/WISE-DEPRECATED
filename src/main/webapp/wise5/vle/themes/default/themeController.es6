@@ -2,6 +2,7 @@
 
 class ThemeController {
     constructor($scope,
+                $state,
                 $translate,
                 ConfigService,
                 ProjectService,
@@ -15,6 +16,7 @@ class ThemeController {
                 $mdComponentRegistry) {
 
         this.$scope = $scope;
+        this.$state = $state;
         this.$translate = $translate;
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
@@ -287,8 +289,11 @@ class ThemeController {
             }
         }
 
-        if (layoutState !== 'notebook') {
+        if (layoutState === 'notebook') {
+            this.$state.go('root.notebook', {nodeId: this.currentNode.id});
+        } else {
             this.notebookNavOpen = false;
+            this.$state.go('root.vle', {nodeId: this.currentNode.id});
         }
 
         this.layoutState = layoutState;
@@ -322,6 +327,7 @@ class ThemeController {
             this.NotebookService.saveNotebookToggleEvent(false, this.currentNode);
         } else {
             this.layoutState = 'notebook';
+            this.setLayoutState('notebook');
             this.NotebookService.saveNotebookToggleEvent(true, this.currentNode);
         }
     }
@@ -429,6 +435,7 @@ class ThemeController {
 
 ThemeController.$inject = [
     '$scope',
+    '$state',
     '$translate',
     'ConfigService',
     'ProjectService',
