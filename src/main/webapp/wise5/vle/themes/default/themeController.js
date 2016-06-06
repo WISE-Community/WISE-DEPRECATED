@@ -9,12 +9,13 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var ThemeController = function () {
-    function ThemeController($scope, $translate, ConfigService, ProjectService, StudentDataService, StudentStatusService, NotebookService, SessionService, $mdDialog, $mdMedia, $mdToast, $mdComponentRegistry) {
+    function ThemeController($scope, $state, $translate, ConfigService, ProjectService, StudentDataService, StudentStatusService, NotebookService, SessionService, $mdDialog, $mdMedia, $mdToast, $mdComponentRegistry) {
         var _this = this;
 
         _classCallCheck(this, ThemeController);
 
         this.$scope = $scope;
+        this.$state = $state;
         this.$translate = $translate;
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
@@ -275,8 +276,11 @@ var ThemeController = function () {
                 }
             }
 
-            if (layoutState !== 'notebook') {
+            if (layoutState === 'notebook') {
+                this.$state.go('root.notebook', { nodeId: this.currentNode.id });
+            } else {
                 this.notebookNavOpen = false;
+                this.$state.go('root.vle', { nodeId: this.currentNode.id });
             }
 
             this.layoutState = layoutState;
@@ -320,6 +324,7 @@ var ThemeController = function () {
                 this.NotebookService.saveNotebookToggleEvent(false, this.currentNode);
             } else {
                 this.layoutState = 'notebook';
+                this.setLayoutState('notebook');
                 this.NotebookService.saveNotebookToggleEvent(true, this.currentNode);
             }
         }
@@ -437,7 +442,7 @@ var ThemeController = function () {
     return ThemeController;
 }();
 
-ThemeController.$inject = ['$scope', '$translate', 'ConfigService', 'ProjectService', 'StudentDataService', 'StudentStatusService', 'NotebookService', 'SessionService', '$mdDialog', '$mdMedia', '$mdToast', '$mdComponentRegistry'];
+ThemeController.$inject = ['$scope', '$state', '$translate', 'ConfigService', 'ProjectService', 'StudentDataService', 'StudentStatusService', 'NotebookService', 'SessionService', '$mdDialog', '$mdMedia', '$mdToast', '$mdComponentRegistry'];
 
 exports.default = ThemeController;
 //# sourceMappingURL=themeController.js.map
