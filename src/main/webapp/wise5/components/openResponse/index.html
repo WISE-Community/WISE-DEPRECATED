@@ -22,6 +22,27 @@
                        ng-model-options='{ debounce: 1000 }'
                        style='width: 3em'/>
                 <br/>
+                Show Previous Work Step:
+                <select ng-model='openResponseController.authoringComponentContent.showPreviousWorkNodeId'
+                        ng-change='openResponseController.authoringShowPreviousWorkNodeIdChanged()'>
+                    <option></option>
+                    <option ng-repeat='item in openResponseController.idToOrder | toArray | orderBy : "order"' 
+                            value='{{item.$key}}'
+                            ng-if='openResponseController.isApplicationNode(item.$key)'>{{openResponseController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
+                </select>
+                <br/>
+                Show Previous Work Component:
+                <select ng-model='openResponseController.authoringComponentContent.showPreviousWorkComponentId'
+                        ng-change='openResponseController.authoringViewComponentChanged()'>
+                    <option></option>
+                    <option ng-repeat='component in openResponseController.getComponentsByNodeId(openResponseController.authoringComponentContent.showPreviousWorkNodeId)' value='{{component.id}}'>{{component.type}}</option>
+                </select>
+                <br/>
+                Show Previous Work Prompt:
+                <input type='checkbox'
+                       ng-model='openResponseController.authoringComponentContent.showPreviousWorkPrompt'
+                       ng-change='openResponseController.authoringViewComponentChanged()'/>
+                <br/>
                 <textarea ng-model='openResponseController.authoringComponentContentJSONString'
                           ng-change='openResponseController.advancedAuthoringViewComponentChanged()'
                           ng-model-options='{ debounce: 1000 }'

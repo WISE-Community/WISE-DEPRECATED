@@ -18,6 +18,7 @@ class TableController {
         this.StudentDataService = StudentDataService;
         this.TableService = TableService;
         this.UtilService = UtilService;
+        this.idToOrder = this.ProjectService.idToOrder;
 
         // the node id of the current node
         this.nodeId = null;
@@ -150,73 +151,39 @@ class TableController {
                 }.bind(this), true);
             }
 
-            // get the show previous work node id if it is provided
-            var showPreviousWorkNodeId = this.componentContent.showPreviousWorkNodeId;
-
             var componentState = null;
 
-            if (showPreviousWorkNodeId != null) {
-                // this component is showing previous work
-                this.isShowPreviousWork = true;
+            // get the component state from the scope
+            componentState = this.$scope.componentState;
 
-                // get the show previous work component id if it is provided
-                var showPreviousWorkComponentId = this.componentContent.showPreviousWorkComponentId;
+            // set whether studentAttachment is enabled
+            this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
 
-                // get the node content for the other node
-                var showPreviousWorkNodeContent = this.ProjectService.getNodeContentByNodeId(showPreviousWorkNodeId);
+            if (componentState == null) {
+                // check if we need to import work.
+                // only import work if the student does not already have
+                // work for this component
+                var importWorkNodeId = this.componentContent.importWorkNodeId;
+                var importWorkComponentId = this.componentContent.importWorkComponentId;
 
-                // get the component content for the component we are showing previous work for
-                this.componentContent = this.NodeService.getComponentContentById(showPreviousWorkNodeContent, showPreviousWorkComponentId);
-
-                // get the component state for the show previous work
-                componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(showPreviousWorkNodeId, showPreviousWorkComponentId);
-
+                if (importWorkNodeId != null && importWorkComponentId != null) {
+                    // import the work from the other component
+                    this.importWork();
+                }
+            } else {
                 // populate the student work into this component
                 this.setStudentWork(componentState);
+            }
 
-                // disable the component since we are just showing previous work
-                this.isDisabled = true;
+            // set up the table
+            this.setupTable();
 
-                // set up the table
-                this.setupTable();
+            // check if we need to lock this component
+            this.calculateDisabled();
 
+            if (this.$scope.$parent.registerComponentController != null) {
                 // register this component with the parent node
                 this.$scope.$parent.registerComponentController(this.$scope, this.componentContent);
-            } else {
-                // this is a regular component
-
-                // get the component state from the scope
-                componentState = this.$scope.componentState;
-
-                // set whether studentAttachment is enabled
-                this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
-
-                if (componentState == null) {
-                    // check if we need to import work.
-                    // only import work if the student does not already have
-                    // work for this component
-                    var importWorkNodeId = this.componentContent.importWorkNodeId;
-                    var importWorkComponentId = this.componentContent.importWorkComponentId;
-
-                    if (importWorkNodeId != null && importWorkComponentId != null) {
-                        // import the work from the other component
-                        this.importWork();
-                    }
-                } else {
-                    // populate the student work into this component
-                    this.setStudentWork(componentState);
-                }
-
-                // set up the table
-                this.setupTable();
-
-                // check if we need to lock this component
-                this.calculateDisabled();
-
-                if (this.$scope.$parent.registerComponentController != null) {
-                    // register this component with the parent node
-                    this.$scope.$parent.registerComponentController(this.$scope, this.componentContent);
-                }
             }
         }
 
@@ -1257,6 +1224,49 @@ class TableController {
             // save the project and update the preview
             this.authoringViewComponentChanged();
         }
+    }
+    
+    /**
+     * Get all the step node ids in the project
+     * @returns all the step node ids
+     */
+    getStepNodeIds() {
+        var stepNodeIds = this.ProjectService.getNodeIds();
+        
+        return stepNodeIds;
+    }
+    
+    /**
+     * Get the step number and title
+     * @param nodeId get the step number and title for this node
+     * @returns the step number and title
+     */
+    getNodePositionAndTitleByNodeId(nodeId) {
+        var nodePositionAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
+        
+        return nodePositionAndTitle;
+    }
+    
+    /**
+     * Get the components in a step
+     * @param nodeId get the components in the step
+     * @returns the components in the step
+     */
+    getComponentsByNodeId(nodeId) {
+        var components = this.ProjectService.getComponentsByNodeId(nodeId);
+        
+        return components;
+    }
+    
+    /**
+     * Check if a node is a step node
+     * @param nodeId the node id to check
+     * @returns whether the node is an application node
+     */
+    isApplicationNode(nodeId) {
+        var result = this.ProjectService.isApplicationNode(nodeId);
+        
+        return result;
     }
 
     /**

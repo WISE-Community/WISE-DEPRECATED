@@ -18,6 +18,7 @@ var MultipleChoiceController = function () {
         this.ProjectService = ProjectService;
         this.StudentDataService = StudentDataService;
         this.UtilService = UtilService;
+        this.idToOrder = this.ProjectService.idToOrder;
 
         // the node id of the current node
         this.nodeId = null;
@@ -143,67 +144,36 @@ var MultipleChoiceController = function () {
             // get the component type
             this.componentType = this.componentContent.type;
 
-            // get the show previous work node id if it is provided
-            var showPreviousWorkNodeId = this.componentContent.showPreviousWorkNodeId;
-
             var componentState = null;
 
-            if (false) {
-                // this component is showing previous work
-                this.isShowPreviousWork = true;
+            // get the component state from the scope
+            componentState = this.$scope.componentState;
 
-                // get the show previous work component id if it is provided
-                var showPreviousWorkComponentId = this.componentContent.showPreviousWorkComponentId;
+            if (componentState == null) {
+                /*
+                 * only import work if the student does not already have
+                 * work for this component
+                 */
 
-                // get the node content for the other node
-                var showPreviousWorkNodeContent = this.ProjectService.getNodeContentByNodeId(showPreviousWorkNodeId);
+                // check if we need to import work
+                var importWorkNodeId = this.componentContent.importWorkNodeId;
+                var importWorkComponentId = this.componentContent.importWorkComponentId;
 
-                // get the component content for the component we are showing previous work for
-                this.componentContent = this.NodeService.getComponentContentById(showPreviousWorkNodeContent, showPreviousWorkComponentId);
-
-                // get the component state for the show previous work
-                componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(showPreviousWorkNodeId, showPreviousWorkComponentId);
-
+                if (importWorkNodeId != null && importWorkComponentId != null) {
+                    // import the work from the other component
+                    this.importWork();
+                }
+            } else {
                 // populate the student work into this component
                 this.setStudentWork(componentState);
+            }
 
-                // disable the component since we are just showing previous work
-                this.isDisabled = true;
+            // check if we need to lock this component
+            this.calculateDisabled();
 
+            if (this.$scope.$parent.registerComponentController != null) {
                 // register this component with the parent node
                 this.$scope.$parent.registerComponentController(this.$scope, this.componentContent);
-            } else {
-                // this is a regular component
-
-                // get the component state from the scope
-                componentState = this.$scope.componentState;
-
-                if (componentState == null) {
-                    /*
-                     * only import work if the student does not already have
-                     * work for this component
-                     */
-
-                    // check if we need to import work
-                    var importWorkNodeId = this.componentContent.importWorkNodeId;
-                    var importWorkComponentId = this.componentContent.importWorkComponentId;
-
-                    if (importWorkNodeId != null && importWorkComponentId != null) {
-                        // import the work from the other component
-                        this.importWork();
-                    }
-                } else {
-                    // populate the student work into this component
-                    this.setStudentWork(componentState);
-                }
-
-                // check if we need to lock this component
-                this.calculateDisabled();
-
-                if (this.$scope.$parent.registerComponentController != null) {
-                    // register this component with the parent node
-                    this.$scope.$parent.registerComponentController(this.$scope, this.componentContent);
-                }
             }
         }
 
@@ -1360,12 +1330,67 @@ var MultipleChoiceController = function () {
             this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
         }
     }, {
-        key: 'addChoice',
+        key: 'getStepNodeIds',
 
+
+        /**
+         * Get all the step node ids in the project
+         * @returns all the step node ids
+         */
+        value: function getStepNodeIds() {
+            var stepNodeIds = this.ProjectService.getNodeIds();
+
+            return stepNodeIds;
+        }
+
+        /**
+         * Get the step number and title
+         * @param nodeId get the step number and title for this node
+         * @returns the step number and title
+         */
+
+    }, {
+        key: 'getNodePositionAndTitleByNodeId',
+        value: function getNodePositionAndTitleByNodeId(nodeId) {
+            var nodePositionAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
+
+            return nodePositionAndTitle;
+        }
+
+        /**
+         * Get the components in a step
+         * @param nodeId get the components in the step
+         * @returns the components in the step
+         */
+
+    }, {
+        key: 'getComponentsByNodeId',
+        value: function getComponentsByNodeId(nodeId) {
+            var components = this.ProjectService.getComponentsByNodeId(nodeId);
+
+            return components;
+        }
+
+        /**
+         * Check if a node is a step node
+         * @param nodeId the node id to check
+         * @returns whether the node is an application node
+         */
+
+    }, {
+        key: 'isApplicationNode',
+        value: function isApplicationNode(nodeId) {
+            var result = this.ProjectService.isApplicationNode(nodeId);
+
+            return result;
+        }
 
         /**
          * Add a choice from within the authoring tool
          */
+
+    }, {
+        key: 'addChoice',
         value: function addChoice() {
 
             // get the authored choices

@@ -39,6 +39,27 @@
                        ng-model-options='{ debounce: 1000 }'
                        style='width: 3em'/>
                 <br/>
+                Show Previous Work Step:
+                <select ng-model='multipleChoiceController.authoringComponentContent.showPreviousWorkNodeId'
+                        ng-change='multipleChoiceController.authoringShowPreviousWorkNodeIdChanged()'>
+                    <option></option>
+                    <option ng-repeat='item in multipleChoiceController.idToOrder | toArray | orderBy : "order"' 
+                            value='{{item.$key}}'
+                            ng-if='multipleChoiceController.isApplicationNode(item.$key)'>{{multipleChoiceController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
+                </select>
+                <br/>
+                Show Previous Work Component:
+                <select ng-model='multipleChoiceController.authoringComponentContent.showPreviousWorkComponentId'
+                        ng-change='multipleChoiceController.authoringViewComponentChanged()'>
+                    <option></option>
+                    <option ng-repeat='component in multipleChoiceController.getComponentsByNodeId(multipleChoiceController.authoringComponentContent.showPreviousWorkNodeId)' value='{{component.id}}'>{{component.type}}</option>
+                </select>
+                <br/>
+                Show Previous Work Prompt:
+                <input type='checkbox'
+                       ng-model='multipleChoiceController.authoringComponentContent.showPreviousWorkPrompt'
+                       ng-change='multipleChoiceController.authoringViewComponentChanged()'/>
+                <br/>
                 <textarea ng-model='multipleChoiceController.authoringComponentContentJSONString'
                           ng-change='multipleChoiceController.advancedAuthoringViewComponentChanged()'
                           ng-model-options='{ debounce: 1000 }'

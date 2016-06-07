@@ -68,6 +68,27 @@
                ng-model-options='{ debounce: 1000 }'
                style='width: 3em'/>
         <br/>
+        Show Previous Work Step:
+        <select ng-model='matchController.authoringComponentContent.showPreviousWorkNodeId'
+                ng-change='matchController.authoringShowPreviousWorkNodeIdChanged()'>
+            <option></option>
+            <option ng-repeat='item in matchController.idToOrder | toArray | orderBy : "order"' 
+                    value='{{item.$key}}'
+                    ng-if='matchController.isApplicationNode(item.$key)'>{{matchController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
+        </select>
+        <br/>
+        Show Previous Work Component:
+        <select ng-model='matchController.authoringComponentContent.showPreviousWorkComponentId'
+                ng-change='matchController.authoringViewComponentChanged()'>
+            <option></option>
+            <option ng-repeat='component in matchController.getComponentsByNodeId(matchController.authoringComponentContent.showPreviousWorkNodeId)' value='{{component.id}}'>{{component.type}}</option>
+        </select>
+        <br/>
+        Show Previous Work Prompt:
+        <input type='checkbox'
+               ng-model='matchController.authoringComponentContent.showPreviousWorkPrompt'
+               ng-change='matchController.authoringViewComponentChanged()'/>
+        <br/>
         <textarea ng-model='matchController.authoringComponentContentJSONString'
                   ng-change='matchController.advancedAuthoringViewComponentChanged()'
                   ng-model-options='{ debounce: 1000 }'

@@ -73,6 +73,27 @@
                ng-model-options='{ debounce: 1000 }'
                style='width: 3em'/>
         <br/>
+        Show Previous Work Step:
+        <select ng-model='labelController.authoringComponentContent.showPreviousWorkNodeId'
+                ng-change='labelController.authoringShowPreviousWorkNodeIdChanged()'>
+            <option></option>
+            <option ng-repeat='item in labelController.idToOrder | toArray | orderBy : "order"' 
+                    value='{{item.$key}}'
+                    ng-if='labelController.isApplicationNode(item.$key)'>{{labelController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
+        </select>
+        <br/>
+        Show Previous Work Component:
+        <select ng-model='labelController.authoringComponentContent.showPreviousWorkComponentId'
+                ng-change='labelController.authoringViewComponentChanged()'>
+            <option></option>
+            <option ng-repeat='component in labelController.getComponentsByNodeId(labelController.authoringComponentContent.showPreviousWorkNodeId)' value='{{component.id}}'>{{component.type}}</option>
+        </select>
+        <br/>
+        Show Previous Work Prompt:
+        <input type='checkbox'
+               ng-model='labelController.authoringComponentContent.showPreviousWorkPrompt'
+               ng-change='labelController.authoringViewComponentChanged()'/>
+        <br/>
         <textarea ng-model='labelController.authoringComponentContentJSONString'
                   ng-change='labelController.advancedAuthoringViewComponentChanged()'
                   ng-model-options='{ debounce: 1000 }'

@@ -125,99 +125,71 @@ class DiscussionController {
                 this.nodeId = this.$scope.nodeId;
             }
 
-            // get the show previous work node id if it is provided
-            var showPreviousWorkNodeId = this.componentContent.showPreviousWorkNodeId;
-
-            if (false) {
-                // this component is showing previous work
-                this.isShowPreviousWork = true;
-
-                // get the show previous work component id if it is provided
-                var showPreviousWorkComponentId = this.componentContent.showPreviousWorkComponentId;
-
-                // get the node content for the other node
-                var showPreviousWorkNodeContent = this.ProjectService.getNodeContentByNodeId(showPreviousWorkNodeId);
-
-                // get the node content for the component we are showing previous work for
-                this.componentContent = this.NodeService.getComponentContentById(showPreviousWorkNodeContent, showPreviousWorkComponentId);
-
-                // get the component state for the show previous work
-                var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(showPreviousWorkNodeId, showPreviousWorkComponentId);
-
-                // populate the student work into this component
-                this.setStudentWork(componentState);
-
-                // disable the component since we are just showing previous work
-                this.isDisabled = true;
-            } else {
-                // this is a regular component
-
-                if (this.mode === 'student') {
-                    if (this.ConfigService.isPreview()) {
-                        // we are in preview mode, so get all posts
-                        var componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
-
-                        this.setClassResponses(componentStates);
-                    } else {
-                        // we are in regular student run mode
-
-                        if (this.isClassmateResponsesGated()) {
-                            /*
-                             * classmate responses are gated so we will not show them if the student
-                             * has not submitted a response
-                             */
-
-                            // get the component state from the scope
-                            var componentState = this.$scope.componentState;
-
-                            if (componentState != null) {
-                                /*
-                                 * the student has already submitted a response so we will
-                                 * display the classmate responses
-                                 */
-                                this.getClassmateResponses();
-                            }
-                        } else {
-                            // classmate responses are not gated so we will show them
-                            this.getClassmateResponses();
-                        }
-
-                        // get the latest annotations
-                        // TODO: watch for new annotations and update accordingly
-                        this.latestAnnotations = this.$scope.$parent.nodeController.getLatestComponentAnnotations(this.componentId);
-                    }
-
-                    // check if we need to lock this component
-                    this.calculateDisabled();
-                } else if (this.mode === 'grading') {
-
-                    /*
-                     * get all the posts that this workgroup id is part of. if the student
-                     * posted a top level response we will get the top level response and
-                     * all the replies. if the student replied to a top level response we
-                     * will get the top level response and all the replies.
-                     */
-                    var componentStates = this.DiscussionService.getPostsAssociatedWithWorkgroupId(this.componentId, this.workgroupId);
+            if (this.mode === 'student') {
+                if (this.ConfigService.isPreview()) {
+                    // we are in preview mode, so get all posts
+                    var componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
 
                     this.setClassResponses(componentStates);
+                } else {
+                    // we are in regular student run mode
 
-                    this.isDisabled = true;
-                } else if (this.mode === 'onlyShowWork') {
-                    this.isDisabled = true;
-                } else if (this.mode === 'showPreviousWork') {
-                    this.isPromptVisible = true;
-                    this.isSaveButtonVisible = false;
-                    this.isSubmitButtonVisible = false;
-                    this.isDisabled = true;
-                } else if (this.mode === 'authoring') {
-                    this.updateAdvancedAuthoringView();
+                    if (this.isClassmateResponsesGated()) {
+                        /*
+                         * classmate responses are gated so we will not show them if the student
+                         * has not submitted a response
+                         */
 
-                    $scope.$watch(function() {
-                        return this.authoringComponentContent;
-                    }.bind(this), function(newValue, oldValue) {
-                        this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-                    }.bind(this), true);
+                        // get the component state from the scope
+                        var componentState = this.$scope.componentState;
+
+                        if (componentState != null) {
+                            /*
+                             * the student has already submitted a response so we will
+                             * display the classmate responses
+                             */
+                            this.getClassmateResponses();
+                        }
+                    } else {
+                        // classmate responses are not gated so we will show them
+                        this.getClassmateResponses();
+                    }
+
+                    // get the latest annotations
+                    // TODO: watch for new annotations and update accordingly
+                    this.latestAnnotations = this.$scope.$parent.nodeController.getLatestComponentAnnotations(this.componentId);
                 }
+
+                // check if we need to lock this component
+                this.calculateDisabled();
+            } else if (this.mode === 'grading') {
+
+                /*
+                 * get all the posts that this workgroup id is part of. if the student
+                 * posted a top level response we will get the top level response and
+                 * all the replies. if the student replied to a top level response we
+                 * will get the top level response and all the replies.
+                 */
+                var componentStates = this.DiscussionService.getPostsAssociatedWithWorkgroupId(this.componentId, this.workgroupId);
+
+                this.setClassResponses(componentStates);
+
+                this.isDisabled = true;
+            } else if (this.mode === 'onlyShowWork') {
+                this.isDisabled = true;
+            } else if (this.mode === 'showPreviousWork') {
+                this.isPromptVisible = true;
+                this.isSaveButtonVisible = false;
+                this.isSubmitButtonVisible = false;
+                this.isDisabled = true;
+            } else if (this.mode === 'authoring') {
+                this.updateAdvancedAuthoringView();
+
+                $scope.$watch(function() {
+                    return this.authoringComponentContent;
+                }.bind(this), function(newValue, oldValue) {
+                    this.componentContent = this.ProjectService.injectAssetPaths(newValue);
+                }.bind(this), true);
             }
 
             this.isRichTextEnabled = this.componentContent.isRichTextEnabled;

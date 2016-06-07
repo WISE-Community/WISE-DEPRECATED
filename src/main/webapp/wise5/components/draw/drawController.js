@@ -35,6 +35,7 @@ var DrawController = function () {
         this.StudentAssetService = StudentAssetService;
         this.StudentDataService = StudentDataService;
         this.UtilService = UtilService;
+        this.idToOrder = this.ProjectService.idToOrder;
 
         // the node id of the current node
         this.nodeId = null;
@@ -197,93 +198,62 @@ var DrawController = function () {
                     this.drawingTool.load(state);
                 }));
 
-                // get the show previous work node id if it is provided
-                var showPreviousWorkNodeId = this.componentContent.showPreviousWorkNodeId;
-
                 var componentState = null;
 
-                if (showPreviousWorkNodeId != null) {
-                    // this component is showing previous work
-                    this.isShowPreviousWork = true;
+                // get the component state from the scope
+                componentState = this.$scope.componentState;
 
-                    // get the show previous work component id if it is provided
-                    var showPreviousWorkComponentId = this.componentContent.showPreviousWorkComponentId;
+                // set whether studentAttachment is enabled
+                this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
 
-                    // get the node content for the other node
-                    var showPreviousWorkNodeContent = this.ProjectService.getNodeContentByNodeId(showPreviousWorkNodeId);
+                if (this.componentContent.background != null) {
+                    // set the background from the component content
+                    this.drawingTool.setBackgroundImage(this.componentContent.background);
+                }
 
-                    // get the node content for the component we are showing previous work for
-                    this.componentContent = this.NodeService.getComponentContentById(showPreviousWorkNodeContent, showPreviousWorkComponentId);
+                if (componentState == null) {
+                    /*
+                     * only import work if the student does not already have
+                     * work for this component
+                     */
 
-                    // get the component state for the show previous work
-                    componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(showPreviousWorkNodeId, showPreviousWorkComponentId);
+                    // check if we need to import work
+                    var importWorkNodeId = this.componentContent.importWorkNodeId;
+                    var importWorkComponentId = this.componentContent.importWorkComponentId;
 
+                    if (importWorkNodeId != null && importWorkComponentId != null) {
+                        // import the work from the other component
+                        this.importWork();
+                    }
+                } else {
                     // populate the student work into this component
                     this.setStudentWork(componentState);
+                }
 
-                    // disable the component since we are just showing previous work
-                    this.isDisabled = true;
+                // check if we need to lock this component
+                this.calculateDisabled();
 
-                    // register this component with the parent node
+                // register this component with the parent node
+                if (this.$scope.$parent && this.$scope.$parent.registerComponentController) {
                     this.$scope.$parent.registerComponentController(this.$scope, this.componentContent);
-                } else {
-                    // this is a regular component
+                }
 
-                    // get the component state from the scope
-                    componentState = this.$scope.componentState;
+                // listen for the drawing changed event
+                this.drawingTool.on('drawing:changed', angular.bind(this, this.studentDataChanged));
 
-                    // set whether studentAttachment is enabled
-                    this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
+                // listen for selected tool changed event
+                this.drawingTool.on('tool:changed', function (toolName) {
+                    // log this event
+                    var category = "Tool";
+                    var event = "toolSelected";
+                    var data = {};
+                    data.selectedToolName = toolName;
+                    this.StudentDataService.saveComponentEvent(this, category, event, data);
+                }.bind(this));
 
-                    if (this.componentContent.background != null) {
-                        // set the background from the component content
-                        this.drawingTool.setBackgroundImage(this.componentContent.background);
-                    }
-
-                    if (componentState == null) {
-                        /*
-                         * only import work if the student does not already have
-                         * work for this component
-                         */
-
-                        // check if we need to import work
-                        var importWorkNodeId = this.componentContent.importWorkNodeId;
-                        var importWorkComponentId = this.componentContent.importWorkComponentId;
-
-                        if (importWorkNodeId != null && importWorkComponentId != null) {
-                            // import the work from the other component
-                            this.importWork();
-                        }
-                    } else {
-                        // populate the student work into this component
-                        this.setStudentWork(componentState);
-                    }
-
-                    // check if we need to lock this component
-                    this.calculateDisabled();
-
-                    // register this component with the parent node
-                    if (this.$scope.$parent && this.$scope.$parent.registerComponentController) {
-                        this.$scope.$parent.registerComponentController(this.$scope, this.componentContent);
-                    }
-
-                    // listen for the drawing changed event
-                    this.drawingTool.on('drawing:changed', angular.bind(this, this.studentDataChanged));
-
-                    // listen for selected tool changed event
-                    this.drawingTool.on('tool:changed', function (toolName) {
-                        // log this event
-                        var category = "Tool";
-                        var event = "toolSelected";
-                        var data = {};
-                        data.selectedToolName = toolName;
-                        this.StudentDataService.saveComponentEvent(this, category, event, data);
-                    }.bind(this));
-
-                    if (this.mode === 'grading' || this.mode === 'onlyShowWork') {
-                        // we're in show student work mode, so hide the toolbar and make the drawing non-editable
-                        $(".dt-tools").hide();
-                    }
+                if (this.mode === 'grading' || this.mode === 'onlyShowWork') {
+                    // we're in show student work mode, so hide the toolbar and make the drawing non-editable
+                    $(".dt-tools").hide();
                 }
 
                 // show or hide the draw tools
@@ -1091,13 +1061,89 @@ var DrawController = function () {
             this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
         }
     }, {
-        key: 'getImageObject',
+        key: 'authoringShowPreviousWorkNodeIdChanged',
 
+
+        /**
+         * The show previous work node id has changed
+         */
+        value: function authoringShowPreviousWorkNodeIdChanged() {
+
+            if (this.authoringComponentContent.showPreviousWorkNodeId == null || this.authoringComponentContent.showPreviousWorkNodeId == '') {
+
+                /*
+                 * the show previous work node id is null so we will also set the 
+                 * show previous component id to null
+                 */
+                this.authoringComponentContent.showPreviousWorkComponentId = '';
+            }
+
+            // the authoring component content has changed so we will save the project
+            this.authoringViewComponentChanged();
+        }
+
+        /**
+         * Get all the step node ids in the project
+         * @returns all the step node ids
+         */
+
+    }, {
+        key: 'getStepNodeIds',
+        value: function getStepNodeIds() {
+            var stepNodeIds = this.ProjectService.getNodeIds();
+
+            return stepNodeIds;
+        }
+
+        /**
+         * Get the step number and title
+         * @param nodeId get the step number and title for this node
+         * @returns the step number and title
+         */
+
+    }, {
+        key: 'getNodePositionAndTitleByNodeId',
+        value: function getNodePositionAndTitleByNodeId(nodeId) {
+            var nodePositionAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
+
+            return nodePositionAndTitle;
+        }
+
+        /**
+         * Get the components in a step
+         * @param nodeId get the components in the step
+         * @returns the components in the step
+         */
+
+    }, {
+        key: 'getComponentsByNodeId',
+        value: function getComponentsByNodeId(nodeId) {
+            var components = this.ProjectService.getComponentsByNodeId(nodeId);
+
+            return components;
+        }
+
+        /**
+         * Check if a node is a step node
+         * @param nodeId the node id to check
+         * @returns whether the node is an application node
+         */
+
+    }, {
+        key: 'isApplicationNode',
+        value: function isApplicationNode(nodeId) {
+            var result = this.ProjectService.isApplicationNode(nodeId);
+
+            return result;
+        }
 
         /**
          * Get the image object representation of the student data
          * @returns an image object
          */
+
+    }, {
+        key: 'getImageObject',
         value: function getImageObject() {
             var pngFile = null;
 

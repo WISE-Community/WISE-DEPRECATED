@@ -2895,7 +2895,7 @@ class ProjectService {
             var node = this.getNodeById(nodeId);
 
             if (node != null) {
-                nodeContent = node.content;
+                nodeContent = node;
             }
         }
 

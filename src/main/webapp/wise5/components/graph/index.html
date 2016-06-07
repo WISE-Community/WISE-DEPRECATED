@@ -63,6 +63,27 @@
                    ng-model-options='{ debounce: 1000 }'
                    style='width: 3em'/>
             <br/>
+            Show Previous Work Step:
+            <select ng-model='graphController.authoringComponentContent.showPreviousWorkNodeId'
+                    ng-change='graphController.authoringShowPreviousWorkNodeIdChanged()'>
+                <option></option>
+                <option ng-repeat='item in graphController.idToOrder | toArray | orderBy : "order"' 
+                        value='{{item.$key}}'
+                        ng-if='graphController.isApplicationNode(item.$key)'>{{graphController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
+            </select>
+            <br/>
+            Show Previous Work Component:
+            <select ng-model='graphController.authoringComponentContent.showPreviousWorkComponentId'
+                    ng-change='graphController.authoringViewComponentChanged()'>
+                <option></option>
+                <option ng-repeat='component in graphController.getComponentsByNodeId(graphController.authoringComponentContent.showPreviousWorkNodeId)' value='{{component.id}}'>{{component.type}}</option>
+            </select>
+            <br/>
+            Show Previous Work Prompt:
+            <input type='checkbox'
+                   ng-model='graphController.authoringComponentContent.showPreviousWorkPrompt'
+                   ng-change='graphController.authoringViewComponentChanged()'/>
+            <br/>
             <textarea ng-model='graphController.authoringComponentContentJSONString'
                       ng-change='graphController.advancedAuthoringViewComponentChanged()'
                       ng-model-options='{ debounce: 1000 }'

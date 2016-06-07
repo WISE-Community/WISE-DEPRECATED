@@ -189,36 +189,9 @@ class EmbeddedController {
                 this.isSnipModelButtonVisible = false;
             }
 
-            // get the show previous work node id if it is provided
-            var showPreviousWorkNodeId = this.componentContent.showPreviousWorkNodeId;
-
-            if (showPreviousWorkNodeId != null) {
-                // this component is showing previous work
-                this.isShowPreviousWork = true;
-
-                // get the show previous work component id if it is provided
-                var showPreviousWorkComponentId = this.componentContent.showPreviousWorkComponentId;
-
-                // get the node content for the other node
-                var showPreviousWorkNodeContent = this.ProjectService.getNodeContentByNodeId(showPreviousWorkNodeId);
-
-                // get the component content for the component we are showing previous work for
-                this.componentContent = this.NodeService.getComponentContentById(showPreviousWorkNodeContent, showPreviousWorkComponentId);
-
-                if (this.componentContent != null) {
-                    // set the url
-                    this.setURL(this.componentContent.url);
-                }
-
-                // disable the component since we are just showing previous work
-                this.isDisabled = true;
-            } else {
-                // this is a regular component
-
-                if (this.componentContent != null) {
-                    // set the url
-                    this.setURL(this.componentContent.url);
-                }
+            if (this.componentContent != null) {
+                // set the url
+                this.setURL(this.componentContent.url);
             }
 
             // get the max width

@@ -30,6 +30,7 @@ var GraphController = function () {
         this.StudentAssetService = StudentAssetService;
         this.StudentDataService = StudentDataService;
         this.UtilService = UtilService;
+        this.idToOrder = this.ProjectService.idToOrder;
 
         // the node id of the current node
         this.nodeId = null;
@@ -189,97 +190,42 @@ var GraphController = function () {
                 }.bind(this), true);
             }
 
-            // get the show previous work node id if it is provided
-            var showPreviousWorkNodeId = this.componentContent.showPreviousWorkNodeId;
-
             var componentState = null;
 
-            if (false) {
-                // this component is showing previous work
-                this.isShowPreviousWork = true;
+            // get the component state from the scope
+            componentState = this.$scope.componentState;
 
-                // get the show previous work component id if it is provided
-                var showPreviousWorkComponentId = this.componentContent.showPreviousWorkComponentId;
+            // set whether studentAttachment is enabled
+            this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
 
-                // get the node content for the other node
-                var showPreviousWorkNodeContent = this.ProjectService.getNodeContentByNodeId(showPreviousWorkNodeId);
-
-                //var showPreviousWorkPrompt = this.componentContent.showPreviousWorkPrompt;
-
-                // get the component content for the component we are showing previous work for
-                this.componentContent = this.NodeService.getComponentContentById(showPreviousWorkNodeContent, showPreviousWorkComponentId);
-
+            if (componentState == null) {
                 /*
-                 if (!showPreviousWorkPrompt) {
-                 this.componentContent = '';
-                 }
+                 * only import work if the student does not already have
+                 * work for this component
                  */
 
-                // hide the prompt, save, submit, and reset graph buttons when showing previous work
-                this.isPromptVisible = false;
-                this.isSaveButtonVisible = false;
-                this.isSubmitButtonVisible = false;
-                this.isResetGraphButtonVisible = false;
+                // check if we need to import work
+                var importWorkNodeId = this.componentContent.importWorkNodeId;
+                var importWorkComponentId = this.componentContent.importWorkComponentId;
 
-                // get the component state for the show previous work
-                componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(showPreviousWorkNodeId, showPreviousWorkComponentId);
-
-                if (componentState == null) {
-                    // the component state will be passed into the scope when we are in the grading tool
-                    componentState = this.$scope.componentState;
-                }
-
-                // populate the student work into this component
-                this.setStudentWork(componentState);
-
-                // setup the graph
-                this.setupGraph();
-
-                // disable the component since we are just showing previous work
-                this.isDisabled = true;
-
-                if (this.$scope.$parent.registerComponentController != null) {
-                    // register this component with the parent node
-                    this.$scope.$parent.registerComponentController(this.$scope, this.componentContent);
+                if (importWorkNodeId != null && importWorkComponentId != null) {
+                    // import the work from the other component
+                    this.importWork();
                 }
             } else {
-                // this is a regular component
+                // populate the student work into this component
+                this.setStudentWork(componentState);
+            }
 
-                // get the component state from the scope
-                componentState = this.$scope.componentState;
+            // check if we need to lock this component
+            this.calculateDisabled();
 
-                // set whether studentAttachment is enabled
-                this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
+            // setup the graph
+            this.setupGraph();
 
-                if (componentState == null) {
-                    /*
-                     * only import work if the student does not already have
-                     * work for this component
-                     */
-
-                    // check if we need to import work
-                    var importWorkNodeId = this.componentContent.importWorkNodeId;
-                    var importWorkComponentId = this.componentContent.importWorkComponentId;
-
-                    if (importWorkNodeId != null && importWorkComponentId != null) {
-                        // import the work from the other component
-                        this.importWork();
-                    }
-                } else {
-                    // populate the student work into this component
-                    this.setStudentWork(componentState);
-                }
-
-                // check if we need to lock this component
-                this.calculateDisabled();
-
-                // setup the graph
-                this.setupGraph();
-
-                if (this.$scope.$parent.registerComponentController != null) {
-                    // register this component with the parent node
-                    this.$scope.$parent.registerComponentController(this.$scope, this.componentContent);
-                }
+            if (this.$scope.$parent.registerComponentController != null) {
+                // register this component with the parent node
+                this.$scope.$parent.registerComponentController(this.$scope, this.componentContent);
             }
         }
 
@@ -2040,12 +1986,88 @@ var GraphController = function () {
             this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
         }
     }, {
-        key: 'authoringAddSeriesClicked',
+        key: 'authoringShowPreviousWorkNodeIdChanged',
 
+
+        /**
+         * The show previous work node id has changed
+         */
+        value: function authoringShowPreviousWorkNodeIdChanged() {
+
+            if (this.authoringComponentContent.showPreviousWorkNodeId == null || this.authoringComponentContent.showPreviousWorkNodeId == '') {
+
+                /*
+                 * the show previous work node id is null so we will also set the 
+                 * show previous component id to null
+                 */
+                this.authoringComponentContent.showPreviousWorkComponentId = '';
+            }
+
+            // the authoring component content has changed so we will save the project
+            this.authoringViewComponentChanged();
+        }
+
+        /**
+         * Get all the step node ids in the project
+         * @returns all the step node ids
+         */
+
+    }, {
+        key: 'getStepNodeIds',
+        value: function getStepNodeIds() {
+            var stepNodeIds = this.ProjectService.getNodeIds();
+
+            return stepNodeIds;
+        }
+
+        /**
+         * Get the step number and title
+         * @param nodeId get the step number and title for this node
+         * @returns the step number and title
+         */
+
+    }, {
+        key: 'getNodePositionAndTitleByNodeId',
+        value: function getNodePositionAndTitleByNodeId(nodeId) {
+            var nodePositionAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
+
+            return nodePositionAndTitle;
+        }
+
+        /**
+         * Get the components in a step
+         * @param nodeId get the components in the step
+         * @returns the components in the step
+         */
+
+    }, {
+        key: 'getComponentsByNodeId',
+        value: function getComponentsByNodeId(nodeId) {
+            var components = this.ProjectService.getComponentsByNodeId(nodeId);
+
+            return components;
+        }
+
+        /**
+         * Check if a node is a step node
+         * @param nodeId the node id to check
+         * @returns whether the node is an application node
+         */
+
+    }, {
+        key: 'isApplicationNode',
+        value: function isApplicationNode(nodeId) {
+            var result = this.ProjectService.isApplicationNode(nodeId);
+
+            return result;
+        }
 
         /**
          * Add a series in the authoring view
          */
+
+    }, {
+        key: 'authoringAddSeriesClicked',
         value: function authoringAddSeriesClicked() {
 
             // create a new series

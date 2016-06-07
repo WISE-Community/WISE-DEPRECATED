@@ -24,6 +24,7 @@ class LabelController {
         this.StudentAssetService = StudentAssetService;
         this.StudentDataService = StudentDataService;
         this.UtilService = UtilService;
+        this.idToOrder = this.ProjectService.idToOrder;
 
         // the node id of the current node
         this.nodeId = null;
@@ -1365,6 +1366,68 @@ class LabelController {
     updateAdvancedAuthoringView() {
         this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
     };
+    
+    /**
+     * The show previous work node id has changed
+     */
+    authoringShowPreviousWorkNodeIdChanged() {
+        
+        if (this.authoringComponentContent.showPreviousWorkNodeId == null ||
+            this.authoringComponentContent.showPreviousWorkNodeId == '') {
+
+            /*
+             * the show previous work node id is null so we will also set the 
+             * show previous component id to null
+             */
+            this.authoringComponentContent.showPreviousWorkComponentId = '';
+        }
+        
+        // the authoring component content has changed so we will save the project
+        this.authoringViewComponentChanged();
+    }
+    
+    /**
+     * Get all the step node ids in the project
+     * @returns all the step node ids
+     */
+    getStepNodeIds() {
+        var stepNodeIds = this.ProjectService.getNodeIds();
+        
+        return stepNodeIds;
+    }
+    
+    /**
+     * Get the step number and title
+     * @param nodeId get the step number and title for this node
+     * @returns the step number and title
+     */
+    getNodePositionAndTitleByNodeId(nodeId) {
+        var nodePositionAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
+        
+        return nodePositionAndTitle;
+    }
+    
+    /**
+     * Get the components in a step
+     * @param nodeId get the components in the step
+     * @returns the components in the step
+     */
+    getComponentsByNodeId(nodeId) {
+        var components = this.ProjectService.getComponentsByNodeId(nodeId);
+        
+        return components;
+    }
+    
+    /**
+     * Check if a node is a step node
+     * @param nodeId the node id to check
+     * @returns whether the node is an application node
+     */
+    isApplicationNode(nodeId) {
+        var result = this.ProjectService.isApplicationNode(nodeId);
+        
+        return result;
+    }
 
     /**
      * Add a label in the authoring view

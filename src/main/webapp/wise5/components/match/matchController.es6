@@ -17,6 +17,7 @@ class MatchController {
         this.StudentDataService = StudentDataService;
         this.UtilService = UtilService;
         this.$mdMedia = $mdMedia;
+        this.idToOrder = this.ProjectService.idToOrder;
 
         // the node id of the current node
         this.nodeId = null;
@@ -137,79 +138,41 @@ class MatchController {
                 }.bind(this), true);
             }
 
-            // get the show previous work node id if it is provided
-            var showPreviousWorkNodeId = this.componentContent.showPreviousWorkNodeId;
+            /*
+             * initialize the choices and buckets with the values from the
+             * component content
+             */
+            this.initializeChoices();
+            this.initializeBuckets();
 
-            if (showPreviousWorkNodeId != null) {
-                // this component is showing previous work
-                this.isShowPreviousWork = true;
+            // get the component state from the scope
+            var componentState = this.$scope.componentState;
 
-                // get the show previous work component id if it is provided
-                var showPreviousWorkComponentId = this.componentContent.showPreviousWorkComponentId;
-
-                // get the node content for the other node
-                var showPreviousWorkNodeContent = this.ProjectService.getNodeContentByNodeId(showPreviousWorkNodeId);
-
-                // get the component content for the component we are showing previous work for
-                this.componentContent = this.NodeService.getComponentContentById(showPreviousWorkNodeContent, showPreviousWorkComponentId);
-
+            if (componentState == null) {
                 /*
-                 * initialize the choices and buckets with the values from the
-                 * component content
+                 * only import work if the student does not already have
+                 * work for this component
                  */
-                this.initializeChoices();
-                this.initializeBuckets();
 
-                // get the component state for the show previous work
-                var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(showPreviousWorkNodeId, showPreviousWorkComponentId);
+                // check if we need to import work
+                var importWorkNodeId = this.componentContent.importWorkNodeId;
+                var importWorkComponentId = this.componentContent.importWorkComponentId;
 
+                if (importWorkNodeId != null && importWorkComponentId != null) {
+                    // import the work from the other component
+                    this.importWork();
+                }
+            } else {
                 // populate the student work into this component
                 this.setStudentWork(componentState);
+            }
 
-                // disable the component since we are just showing previous work
-                this.isDisabled = true;
+            // check if we need to lock this component
+            this.calculateDisabled();
 
+            if (this.$scope.$parent.registerComponentController != null) {
                 // register this component with the parent node
                 this.$scope.$parent.registerComponentController(this.$scope, this.componentContent);
-            } else {
-                // this is a regular component
-
-                /*
-                 * initialize the choices and buckets with the values from the
-                 * component content
-                 */
-                this.initializeChoices();
-                this.initializeBuckets();
-
-                // get the component state from the scope
-                var componentState = this.$scope.componentState;
-
-                if (componentState == null) {
-                    /*
-                     * only import work if the student does not already have
-                     * work for this component
-                     */
-
-                    // check if we need to import work
-                    var importWorkNodeId = this.componentContent.importWorkNodeId;
-                    var importWorkComponentId = this.componentContent.importWorkComponentId;
-
-                    if (importWorkNodeId != null && importWorkComponentId != null) {
-                        // import the work from the other component
-                        this.importWork();
-                    }
-                } else {
-                    // populate the student work into this component
-                    this.setStudentWork(componentState);
-                }
-
-                // check if we need to lock this component
-                this.calculateDisabled();
-
-                if (this.$scope.$parent.registerComponentController != null) {
-                    // register this component with the parent node
-                    this.$scope.$parent.registerComponentController(this.$scope, this.componentContent);
-                }
             }
         }
 
@@ -1123,6 +1086,68 @@ class MatchController {
     updateAdvancedAuthoringView() {
         this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
     };
+    
+    /**
+     * The show previous work node id has changed
+     */
+    authoringShowPreviousWorkNodeIdChanged() {
+        
+        if (this.authoringComponentContent.showPreviousWorkNodeId == null ||
+            this.authoringComponentContent.showPreviousWorkNodeId == '') {
+
+            /*
+             * the show previous work node id is null so we will also set the 
+             * show previous component id to null
+             */
+            this.authoringComponentContent.showPreviousWorkComponentId = '';
+        }
+        
+        // the authoring component content has changed so we will save the project
+        this.authoringViewComponentChanged();
+    }
+    
+    /**
+     * Get all the step node ids in the project
+     * @returns all the step node ids
+     */
+    getStepNodeIds() {
+        var stepNodeIds = this.ProjectService.getNodeIds();
+        
+        return stepNodeIds;
+    }
+    
+    /**
+     * Get the step number and title
+     * @param nodeId get the step number and title for this node
+     * @returns the step number and title
+     */
+    getNodePositionAndTitleByNodeId(nodeId) {
+        var nodePositionAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
+        
+        return nodePositionAndTitle;
+    }
+    
+    /**
+     * Get the components in a step
+     * @param nodeId get the components in the step
+     * @returns the components in the step
+     */
+    getComponentsByNodeId(nodeId) {
+        var components = this.ProjectService.getComponentsByNodeId(nodeId);
+        
+        return components;
+    }
+    
+    /**
+     * Check if a node is a step node
+     * @param nodeId the node id to check
+     * @returns whether the node is an application node
+     */
+    isApplicationNode(nodeId) {
+        var result = this.ProjectService.isApplicationNode(nodeId);
+        
+        return result;
+    }
 
     /**
      * Add a choice

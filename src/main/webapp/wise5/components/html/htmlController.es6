@@ -89,45 +89,6 @@ class HTMLController {
                     $scope.$parent.registerComponentController($scope, this.componentContent);
                 }
             }
-
-            // get the show previous work node id if it is provided
-            var showPreviousWorkNodeId = this.componentContent.showPreviousWorkNodeId;
-
-            if (showPreviousWorkNodeId != null) {
-                // this component is showing previous work
-                this.isShowPreviousWork = true;
-
-                // get the show previous work component id if it is provided
-                var showPreviousWorkComponentId = this.componentContent.showPreviousWorkComponentId;
-
-                // get the node content for the other node
-                var showPreviousWorkNodeContent = this.ProjectService.getNodeContentByNodeId(showPreviousWorkNodeId);
-
-                // get the component content for the component we are showing previous work for
-                this.componentContent = this.NodeService.getComponentContentById(showPreviousWorkNodeContent, showPreviousWorkComponentId);
-
-                if (this.componentContent != null) {
-                    this.componentContent = component.html;
-                }
-
-                // disable the component since we are just showing previous work
-                this.isDisabled = true;
-
-                // register this component with the parent node
-                $scope.$parent.registerComponentController($scope, this.componentContent);
-            } else {
-                // this is a regular component
-                /*
-                if (this.componentContent != null) {
-                    this.html = this.componentContent.html;
-                }
-
-                if ($scope.$parent.registerComponentController != null) {
-                    // register this component with the parent node
-                    $scope.$parent.registerComponentController($scope, this.componentContent);
-                }
-                */
-            }
         }
         
         /*

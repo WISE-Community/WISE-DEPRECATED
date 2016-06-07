@@ -668,7 +668,7 @@ componentPosition=c;break;}}}}return componentPosition;}},{key:'getComponentsByN
      * if the node exists but doesn't have any components, returns an empty array.
      */value:function getComponentsByNodeId(nodeId){var components=[];if(nodeId!=null){ // get the node
 var node=this.getNodeById(nodeId);if(node!=null){ // get the components
-if(node.components!=null){components=node.components;}}}return components;}},{key:'getNodeContentByNodeId',value:function getNodeContentByNodeId(nodeId){var nodeContent=null;if(nodeId!=null){var node=this.getNodeById(nodeId);if(node!=null){nodeContent=node.content;}}return nodeContent;}},{key:'replaceComponent', /**
+if(node.components!=null){components=node.components;}}}return components;}},{key:'getNodeContentByNodeId',value:function getNodeContentByNodeId(nodeId){var nodeContent=null;if(nodeId!=null){var node=this.getNodeById(nodeId);if(node!=null){nodeContent=node;}}return nodeContent;}},{key:'replaceComponent', /**
      * Replace a component
      * @param nodeId the node id
      * @param componentId the component id

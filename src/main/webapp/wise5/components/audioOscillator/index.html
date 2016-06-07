@@ -55,6 +55,27 @@
                    ng-model-options='{ debounce: 1000 }'
                    style='width: 3em'/>
             <br/>
+            Show Previous Work Step:
+            <select ng-model='audioOscillatorController.authoringComponentContent.showPreviousWorkNodeId'
+                    ng-change='audioOscillatorController.authoringShowPreviousWorkNodeIdChanged()'>
+                <option></option>
+                <option ng-repeat='item in audioOscillatorController.idToOrder | toArray | orderBy : "order"' 
+                        value='{{item.$key}}'
+                        ng-if='audioOscillatorController.isApplicationNode(item.$key)'>{{audioOscillatorController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
+            </select>
+            <br/>
+            Show Previous Work Component:
+            <select ng-model='audioOscillatorController.authoringComponentContent.showPreviousWorkComponentId'
+                    ng-change='audioOscillatorController.authoringViewComponentChanged()'>
+                <option></option>
+                <option ng-repeat='component in audioOscillatorController.getComponentsByNodeId(audioOscillatorController.authoringComponentContent.showPreviousWorkNodeId)' value='{{component.id}}'>{{component.type}}</option>
+            </select>
+            <br/>
+            Show Previous Work Prompt:
+            <input type='checkbox'
+                   ng-model='audioOscillatorController.authoringComponentContent.showPreviousWorkPrompt'
+                   ng-change='audioOscillatorController.authoringViewComponentChanged()'/>
+            <br/>
             <textarea ng-model='audioOscillatorController.authoringComponentContentJSONString'
                       ng-change='audioOscillatorController.advancedAuthoringViewComponentChanged()'
                       ng-model-options='{ debounce: 1000 }'
