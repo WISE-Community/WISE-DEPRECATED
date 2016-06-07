@@ -7,12 +7,9 @@ import NotebookItemReportController from './notebookItemReportController';
 const NotebookItem = {
     bindings: {
         itemId: '<',
-        isEditMode: '<',
-        isEditAllowed: '<',
         isChooseMode: '<',
         templateUrl: '<',
         componentController: '<',
-        onUpdate: '&',
         onSelect: '&'
     },
     template: '<ng-include src="notebookItemController.getTemplateUrl()"></ng-include>',

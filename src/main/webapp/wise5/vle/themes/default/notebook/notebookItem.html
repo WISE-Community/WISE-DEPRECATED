@@ -1,10 +1,9 @@
 <md-card class="notebook-item"
-         ng-if="!notebookItemController.isEditMode"
          ng-mouseenter="focus=true;"
          ng-mouseleave="focus=false;"
          ng-class="{ 'md-whiteframe-5dp': focus}"
          ng-click="notebookItemController.doSelect($event)">
-    <md-card-content aria-label="Edit note"
+    <md-card-content aria-label="View "
                      class="notebook-item__content notebook-item__edit"
                      ng-class="{'notebook-item__content--text-only': !notebookItemController.item.content.attachments.length}"
                      md-ink-ripple
@@ -28,47 +27,13 @@
         <span class="notebook-item__content__location"><md-icon> place </md-icon><span class="md-body-1">{{notebookItemController.getItemNodePosition()}}</span></span>
         <span flex></span>
         <md-button class="md-icon-button"
-                   aria-label="Archive notebook item"
+                   aria-label="Delete notebook item"
                    ng-if="!notebookItemController.isChooseMode"
-                   ng-click="notebookItemController.archive($event)">
+                   ng-click="NotebookItemController">
             <md-icon> delete </md-icon>
             <md-tooltip md-direction="top">Delete</md-tooltip>
         </md-button>
     </md-card-actions>
 </md-card>
 
-<div ng-if="notebookItemController.isEditMode">
-    <!-- User wants to add a new note or edit existing note. -->
-    <md-input-container class="md-block md-input-has-placeholder notebook-item__text-input" md-no-float>
-          <textarea class="notebook-item__text-input__textarea"
-                    placeholder="{{ 'typeYourNoteHere' | translate }}"
-                    ng-model="notebookItemController.item.content.text"
-                    ng-model-options='{ debounce: 100 }'
-                    ng-change="notebookItemController.update()"
-                    rows="3"
-                    md-select-on-focus></textarea>
-    </md-input-container>
-    <div class="notebook-item__attachment" ng-repeat="attachment in notebookItemController.item.content.attachments">
-        <img ng-src="{{attachment.iconURL}}" class="notebook-item__attachment__content" />
-        <md-button class="md-whiteframe-1dp notebook-item__attachment__delete md-icon-button md-raised" ng-click='notebookItemController.removeAttachment(attachment)' title="Remove file">
-            <md-icon class="text-secondary">delete</md-icon>
-        </md-button>
-    </div>
-    <div ng-show="notebookItemController.showUpload"
-         ngf-drop ngf-select ngf-change="notebookItemController.attachStudentAssetToNote($files)"
-         class="notebook-item__upload"
-         drag-over-class="dragover" ngf-multiple="true" allow-dir="false"
-         accept="image/*,application/pdf,text/csv">
-         <md-icon>image</md-icon> <span translate="dropAssetMessage"></span>
-     </div>
-    <!--
-        TODO: ask researchers if we should display usage information to students. we'll hide it for now.
-        You are using {{notebookController.notebook.totalSize | appropriateSizeText }} out of {{notebookController.notebook.totalSizeMax | appropriateSizeText}} ({{notebookController.notebook.usagePercentage | roundToDecimal:0 }}%)
-     -->
-    <div class="notebook-item__info md-caption">
-        <md-icon> place </md-icon> <wiselink type="link" node-id="{{notebookItemController.getItemNodeId()}}"
-                                             link-text="{{notebookItemController.getItemNodeLink()}}"
-                                             link-class="md-caption"></wiselink>
-    </div>
-    <span flex></span>
-</div>
+<!--TODO: add view mode (e.g. view full note content in a dialog)

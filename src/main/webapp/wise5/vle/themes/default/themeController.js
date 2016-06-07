@@ -6,6 +6,12 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _editNotebookItemController = require('./notebook/editNotebookItemController');
+
+var _editNotebookItemController2 = _interopRequireDefault(_editNotebookItemController);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var ThemeController = function () {
@@ -227,14 +233,14 @@ var ThemeController = function () {
         this.$scope.$on('editNote', function (event, args) {
             var itemId = args.itemId;
             var ev = args.ev;
-            _this.viewNote(itemId, true, null, ev);
+            _this.editNote(itemId, true, null, ev);
         });
 
         // show edit note dialog on 'addNewNote' event
         this.$scope.$on('addNewNote', function (event, args) {
             var ev = args.ev;
             var file = args.file;
-            _this.viewNote(null, true, file, ev);
+            _this.editNote(null, true, file, ev);
         });
 
         // capture notebook open/close events
@@ -339,12 +345,10 @@ var ThemeController = function () {
             this.notebookNavOpen = !this.notebookNavOpen;
         }
     }, {
-        key: 'viewNote',
-        value: function viewNote(itemId, isEditMode, file, ev) {
+        key: 'editNote',
+        value: function editNote(itemId, isEditMode, file, ev) {
             var showFullScreen = this.$mdMedia('xs');
-            var notebookItemTemplate = this.themePath + '/notebook/viewNotebookItem.html';
-            var item = this.NotebookService.getLatestNotebookItemByLocalNotebookItemId(itemId);
-            var type = item ? item.type : 'note'; // TODO: don't hardcode type once questions are enabled
+            var notebookItemTemplate = this.themePath + '/notebook/editNotebookItem.html';
 
             // Display a dialog where students can view/add/edit a notebook item
             this.$mdDialog.show({
@@ -352,90 +356,15 @@ var ThemeController = function () {
                 targetEvent: ev,
                 fullscreen: showFullScreen,
                 templateUrl: notebookItemTemplate,
-                controller: ViewNotebookItemController,
+                controller: _editNotebookItemController2.default,
+                controllerAs: 'editNotebookItemController',
+                bindToController: true,
                 locals: {
                     itemId: itemId,
                     isEditMode: isEditMode,
-                    type: type,
                     file: file
                 }
-                //template: '<notebookitem is-edit-enabled="true" item-id="{{itemId}}"></notebookitem>'
             });
-
-            function ViewNotebookItemController($scope, $mdDialog, $q, NotebookService, StudentAssetService) {
-                $scope.itemId = itemId;
-                $scope.type = type;
-                $scope.isEditMode = isEditMode;
-                $scope.NotebookService = NotebookService;
-                $scope.StudentAssetService = StudentAssetService;
-                $scope.item = null;
-                $scope.title = ($scope.isEditMode ? $scope.itemId ? 'Edit ' : 'Add ' : 'View ') + $scope.type;
-                $scope.file = file;
-                $scope.saveEnabled = false;
-
-                $scope.cancel = function () {
-                    $mdDialog.hide();
-                };
-
-                $scope.save = function () {
-                    // go through the notebook item's attachments and look for any attachments that need to be uploaded and made into StudentAsset.
-                    var uploadAssetPromises = [];
-                    if ($scope.item.content.attachments != null) {
-                        var _loop = function _loop(i) {
-                            var attachment = $scope.item.content.attachments[i];
-                            if (attachment.studentAssetId == null && attachment.file != null) {
-                                // this attachment hasn't been uploaded yet, so we'll do that now.
-                                var _file = attachment.file;
-
-                                deferred = $q.defer();
-
-                                $scope.StudentAssetService.uploadAsset(_file).then(function (studentAsset) {
-                                    $scope.StudentAssetService.copyAssetForReference(studentAsset).then(function (copiedAsset) {
-                                        if (copiedAsset != null) {
-                                            var newAttachment = {
-                                                studentAssetId: copiedAsset.id,
-                                                iconURL: copiedAsset.iconURL
-                                            };
-                                            $scope.item.content.attachments[i] = newAttachment;
-                                            deferred.resolve();
-                                        }
-                                    });
-                                });
-                                uploadAssetPromises.push(deferred.promise);
-                            }
-                        };
-
-                        for (var i = 0; i < $scope.item.content.attachments.length; i++) {
-                            var deferred;
-
-                            _loop(i);
-                        }
-                    }
-
-                    // make sure all the assets are created before saving the notebook item.
-                    $q.all(uploadAssetPromises).then(function () {
-                        $scope.NotebookService.saveNotebookItem($scope.item.id, $scope.item.nodeId, $scope.item.localNotebookItemId, $scope.item.type, $scope.item.title, $scope.item.content).then(function () {
-                            $mdDialog.hide();
-                        });
-                    });
-                };
-
-                $scope.update = function (item) {
-                    // notebook item has changed
-                    $scope.item = item;
-
-                    // set whether save button should be enabled
-                    var saveEnabled = false;
-                    if ($scope.item) {
-                        if ($scope.item.content.text || $scope.item.content.attachments.length) {
-                            // note has text and/or attachments, so we can save
-                            saveEnabled = true;
-                        }
-                    }
-                    $scope.saveEnabled = saveEnabled;
-                };
-            }
-            ViewNotebookItemController.$inject = ["$scope", "$mdDialog", "$q", "NotebookService", "StudentAssetService"];
         }
     }]);
 

@@ -6,18 +6,11 @@
     </md-toolbar>
     <md-dialog-content>
         <div class="md-dialog-content view-notebook-item__content">
-            <notebook-item is-edit-mode="isEditMode" item-id="itemId" on-update="update(item)"></notebook-item>
+            <notebook-item item-id="itemId"></notebook-item>
         </div>
     </md-dialog-content>
     <md-dialog-actions layout="row" layout-align="end center">
-        <md-button ng-if="!isEditMode" aria-label="Close" ng-click="cancel()">
+        <md-button aria-label="Close" ng-click="cancel()">
             Close
         </md-button>
-        <md-button class="primary" ng-if="isEditMode" aria-label="Cancel" ng-click="cancel()">
-            Cancel
-        </md-button>
-        <md-button class="primary" ng-if="isEditMode" aria-label="Save" ng-click="save()" ng-disabled="!saveEnabled">
-            Save
-        </md-button>
-    </md-dialog-actions>
 </md-dialog>

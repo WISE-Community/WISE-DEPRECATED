@@ -30,6 +30,7 @@ class NotebookController {
         $scope.$on('notebookUpdated', (event, args) => {
             this.notebook = args.notebook;
         });
+        //this.notebook = this.NotebookService.notebook;
 
         this.logOutListener = $scope.$on('logOut', (event, args) => {
             this.logOutListener();
@@ -71,7 +72,8 @@ class NotebookController {
     }
 
     editItem(ev, itemId) {
-        this.NotebookService.editItem(ev, itemId);
+        //this.NotebookService.editItem(ev, itemId);
+        this.$rootScope.$broadcast('editNote', {itemId: itemId, ev: ev});
     }
 
     notebookItemSelected($event, notebookItem) {

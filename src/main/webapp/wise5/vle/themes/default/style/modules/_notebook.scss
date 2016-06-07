@@ -127,6 +127,7 @@ $notebook-sidebar-width: 56px;
     max-height: 120px;
     min-height: 56px;
     background-color: rgba(255,255,255,0.95);
+    border-top: 1px solid color('gray-lighter');
 
     &:after {
         content: "";
@@ -267,7 +268,7 @@ $notebook-sidebar-width: 56px;
         transition: color 250ms;
     }
 
-    &:hover, &:focus {
+    &:hover, &:focus, &.dragover {
         border-color: color('accent-1');
         background-color: lighten(color('accent-1'), 35%);
         color: color('accent-1');

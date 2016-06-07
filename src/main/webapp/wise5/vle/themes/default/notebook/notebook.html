@@ -3,7 +3,6 @@
         <notebook-item ng-repeat="(localNotebookItemId, notebookItems) in notebookController.notebook.items"
                        ng-if="(notebookController.filter === 'note') && notebookItems.last().type == 'note'"
                        item-id="localNotebookItemId"
-                       is-edit-allowed="true"
                        on-select="notebookController.editItem($ev, $itemId)"
                        flex="100" flex-sm="50" flex-md="33" flex-gt-md="33"></notebook-item>
     </div>
@@ -22,3 +21,8 @@
         <notebookitemreport report-id="notebookController.notebookConfig.itemTypes.report.notes[0].reportId" theme-path="notebookController.themePath" template-url="notebookController.themePath + '/notebook/notebookItemReport.html'"></notebookitemreport>
     </div>
 </div>
+
+<!--
+    TODO: ask researchers if we should display usage information to students. we'll hide it for now.
+    You are using {{notebookController.notebook.totalSize | appropriateSizeText }} out of {{notebookController.notebook.totalSizeMax | appropriateSizeText}} ({{notebookController.notebook.usagePercentage | roundToDecimal:0 }}%)
+ -->
