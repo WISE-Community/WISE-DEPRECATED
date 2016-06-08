@@ -56,6 +56,9 @@ class NodeController {
         // get the node
         this.node = this.ProjectService.getNodeById(this.nodeId);
 
+        // get the step number e.g. 1.3
+        this.nodePosition = this.ProjectService.getNodePositionById(this.nodeId);
+
         // get the components in the node
         this.components = this.ProjectService.getComponentsByNodeId(this.nodeId);
 
