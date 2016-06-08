@@ -1337,6 +1337,13 @@ class StudentDataService {
     };
 
     /**
+     * Returns all the component states for this workgroup
+     */
+    getComponentStates() {
+        return this.studentData.componentStates;
+    };
+
+    /**
      * Get the component states for the given node id
      * @param nodeId the node id
      * @return an array of component states for the given node id

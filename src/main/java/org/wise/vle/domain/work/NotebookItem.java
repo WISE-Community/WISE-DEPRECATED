@@ -234,85 +234,85 @@ public class NotebookItem extends PersistableDomain {
 	}
 
     /**
-     * Get the JSON representation of the StudentWork
-     * @return a JSONObject with the values from the StudentWork
+     * Get the JSON representation of the NotebookItem
+     * @return a JSONObject with the values from the NotebookItem
      */
     public JSONObject toJSON() {
-        JSONObject studentWorkJSONObject = new JSONObject();
+        JSONObject notebookItemJSONObject = new JSONObject();
         
         try {
             
 			if (this.id != null) {
-				studentWorkJSONObject.put("id", this.id);
+				notebookItemJSONObject.put("id", this.id);
 			}
             
 			if (this.run != null) {
 				Long runId = this.run.getId();
-				studentWorkJSONObject.put("runId", runId);
+				notebookItemJSONObject.put("runId", runId);
 			}
             
 			if (this.period != null) {
 				Long periodId = this.period.getId();
-				studentWorkJSONObject.put("periodId", periodId);
+				notebookItemJSONObject.put("periodId", periodId);
 			}
 
 			if (this.workgroup != null) {
 				Long workgroupId = this.workgroup.getId();
-				studentWorkJSONObject.put("workgroupId", workgroupId);
+				notebookItemJSONObject.put("workgroupId", workgroupId);
 			}
 
 			if (this.nodeId != null) {
-				studentWorkJSONObject.put("nodeId", this.nodeId);
+				notebookItemJSONObject.put("nodeId", this.nodeId);
 			}
             
 			if (this.componentId != null) {
-				studentWorkJSONObject.put("componentId", this.componentId);
+				notebookItemJSONObject.put("componentId", this.componentId);
 			}
 
             if (this.studentWork != null) {
-                studentWorkJSONObject.put("studentWorkId", this.studentWork.getId());
+                notebookItemJSONObject.put("studentWorkId", this.studentWork.getId());
             }
 
             if (this.studentAsset != null) {
-                studentWorkJSONObject.put("studentAssetId", this.studentAsset.getId());
+                notebookItemJSONObject.put("studentAssetId", this.studentAsset.getId());
             }
 
 			if (this.localNotebookItemId != null) {
-				studentWorkJSONObject.put("localNotebookItemId", this.localNotebookItemId);
+				notebookItemJSONObject.put("localNotebookItemId", this.localNotebookItemId);
 			}
 
 			if (this.type != null) {
-                studentWorkJSONObject.put("type", this.type);
+                notebookItemJSONObject.put("type", this.type);
             }
 
             if (this.title != null) {
-                studentWorkJSONObject.put("title", this.title);
+                notebookItemJSONObject.put("title", this.title);
             }
 
             if (this.content != null) {
-                studentWorkJSONObject.put("content", this.content);
+                notebookItemJSONObject.put("content", this.content);
             }
 
 			if (this.clientSaveTime != null) {
-				studentWorkJSONObject.put("clientSaveTime", clientSaveTime.getTime());
+				notebookItemJSONObject.put("clientSaveTime", clientSaveTime.getTime());
 			}
 
 			if (this.serverSaveTime != null) {
-				studentWorkJSONObject.put("serverSaveTime", serverSaveTime.getTime());
+				notebookItemJSONObject.put("serverSaveTime", serverSaveTime.getTime());
 			}
 
             if (this.clientDeleteTime != null) {
-                studentWorkJSONObject.put("clientDeleteTime", clientDeleteTime.getTime());
+                notebookItemJSONObject.put("clientDeleteTime", clientDeleteTime.getTime());
             }
 
             if (this.serverDeleteTime != null) {
-                studentWorkJSONObject.put("serverDeleteTime", serverDeleteTime.getTime());
+                notebookItemJSONObject.put("serverDeleteTime", serverDeleteTime.getTime());
             }
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
         
-        return studentWorkJSONObject;
+        return notebookItemJSONObject;
     }
 }

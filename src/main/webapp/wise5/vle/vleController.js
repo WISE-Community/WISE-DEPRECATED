@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var VLEController = function () {
-    function VLEController($scope, $rootScope, $mdDialog, $state, $translate, ConfigService, NotebookService, ProjectService, SessionService, StudentDataService, StudentWebSocketService, UtilService) {
+    function VLEController($scope, $rootScope, $mdDialog, $state, $translate, ConfigService, NotebookService, NotificationService, ProjectService, SessionService, StudentDataService, StudentWebSocketService, UtilService) {
         var _this = this;
 
         _classCallCheck(this, VLEController);
@@ -21,6 +21,7 @@ var VLEController = function () {
         this.$translate = $translate;
         this.ConfigService = ConfigService;
         this.NotebookService = NotebookService;
+        this.NotificationService = NotificationService;
         this.ProjectService = ProjectService;
         this.SessionService = SessionService;
         this.StudentDataService = StudentDataService;
@@ -81,6 +82,14 @@ var VLEController = function () {
                 eventNodeId = currentNode.id;
                 _this.StudentDataService.saveVLEEvent(eventNodeId, componentId, componentType, category, eventName, eventData);
             }
+        });
+
+        this.notifications = this.NotificationService.notifications;
+        // watch for changes in notifications
+        this.$scope.$watch(function () {
+            return _this.NotificationService.notifications.length;
+        }, function (newValue, oldValue) {
+            _this.notifications = _this.NotificationService.notifications;
         });
 
         this.$scope.$on('componentStudentDataChanged', function () {
@@ -327,12 +336,50 @@ var VLEController = function () {
             this.SessionService.mouseEventOccurred();
         }
     }, {
-        key: 'pauseScreen',
+        key: 'hasNewNotifications',
 
+
+        /**
+         * Returns true iff there are new notifications
+         */
+        value: function hasNewNotifications() {
+            return this.getNewNotifications().length > 0;
+        }
+
+        /**
+         * Returns all notifications that have not been dismissed yet
+         */
+
+    }, {
+        key: 'getNewNotifications',
+        value: function getNewNotifications() {
+            return this.notifications.filter(function (notification) {
+                return notification.timeDismissed == null;
+            });
+        }
+
+        /**
+         * Dismiss all new notifications
+         */
+
+    }, {
+        key: 'dismissAllNotifications',
+        value: function dismissAllNotifications() {
+            var _this2 = this;
+
+            var newNotifications = this.getNewNotifications();
+            newNotifications.map(function (newNotification) {
+                newNotification.timeDismissed = Date.parse(new Date());
+                _this2.NotificationService.saveNotificationToServer(newNotification); // also save to server
+            });
+        }
 
         /**
          * Pause the screen
          */
+
+    }, {
+        key: 'pauseScreen',
         value: function pauseScreen() {
             // TODO: i18n
             this.pauseDialog = this.$mdDialog.show({
@@ -382,7 +429,7 @@ var VLEController = function () {
     return VLEController;
 }();
 
-VLEController.$inject = ['$scope', '$rootScope', '$mdDialog', '$state', '$translate', 'ConfigService', 'NotebookService', 'ProjectService', 'SessionService', 'StudentDataService', 'StudentWebSocketService', 'UtilService'];
+VLEController.$inject = ['$scope', '$rootScope', '$mdDialog', '$state', '$translate', 'ConfigService', 'NotebookService', 'NotificationService', 'ProjectService', 'SessionService', 'StudentDataService', 'StudentWebSocketService', 'UtilService'];
 
 exports.default = VLEController;
 //# sourceMappingURL=vleController.js.map

@@ -2,15 +2,21 @@ import NodeService from '../../services/nodeService';
 
 class DiscussionService extends NodeService {
     constructor($http,
+                $rootScope,
                 $q,
                 ConfigService,
+                NotificationService,
+                StudentDataService,
                 TeacherDataService,
                 UtilService) {
         super();
 
         this.$http = $http;
+        this.$rootScope = $rootScope;
         this.$q = $q;
         this.ConfigService = ConfigService;
+        this.NotificationService = NotificationService;
+        this.StudentDataService = StudentDataService;
         this.TeacherDataService = TeacherDataService;
         this.UtilService = UtilService;
     }
@@ -233,8 +239,11 @@ class DiscussionService extends NodeService {
 
 DiscussionService.$inject = [
     '$http',
+    '$rootScope',
     '$q',
     'ConfigService',
+    'NotificationService',
+    'StudentDataService',
     'TeacherDataService',
     'UtilService'
 ];

@@ -34,9 +34,9 @@ class StudentWebSocketService {
             this.dataStream = this.$websocket(webSocketURL);
 
             // this is the function that handles messages we receive from web sockets
-            this.dataStream.onMessage(angular.bind(this, function(message) {
+            this.dataStream.onMessage((message) => {
                 this.handleMessage(message);
-            }));
+            });
         }
     };
 
@@ -62,6 +62,8 @@ class StudentWebSocketService {
             this.$rootScope.$broadcast('pauseScreen', {data: data});
         } else if (messageType === 'unPauseScreen') {
             this.$rootScope.$broadcast('unPauseScreen', {data: data});
+        } else if (messageType === 'notification') {
+            this.$rootScope.$broadcast('newNotification', data.data);
         }
 
         this.handleWebSocketMessageReceived(data);
@@ -105,7 +107,7 @@ class StudentWebSocketService {
      * Send a message to classmates in the period
      * @param data the data to send to the classmates
      */
-    sendStudentToClassmatesInPeriodMessage(data) {
+    sendStudentToClassmatesInPeriodMessage(messageType, data) {
 
         if (!this.ConfigService.isPreview()) {
             // we are in a run
@@ -115,7 +117,7 @@ class StudentWebSocketService {
 
             // make the websocket message
             var messageJSON = {};
-            messageJSON.messageType = 'studentData';
+            messageJSON.messageType = messageType;
             messageJSON.messageParticipants = 'studentToClassmatesInPeriod';
             messageJSON.currentNodeId = currentNodeId;
             messageJSON.data = data;

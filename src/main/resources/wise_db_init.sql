@@ -202,6 +202,24 @@
         primary key (id)
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+    create table notification (
+        id integer not null auto_increment,
+        componentId varchar(30),
+        componentType varchar(30),
+        data mediumtext,
+        message varchar(255) not null,
+        nodeId varchar(30),
+        serverSaveTime timestamp not null,
+        timeDismissed timestamp,
+        timeGenerated timestamp not null,
+        type varchar(255),
+        fromWorkgroupId bigint,
+        periodId bigint not null,
+        runId bigint not null,
+        toWorkgroupId bigint,
+        primary key (id)
+    ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
     create table offerings (
         id bigint not null auto_increment,
         OPTLOCK integer,
@@ -604,6 +622,12 @@
 
     create index workgroupIdIndex on notebookItems (workgroupId);
 
+    create index runIdIndex on notification (runId);
+
+    create index toWorkgroupIdIndex on notification (toWorkgroupId);
+
+    create index fromWorkgroupIdIndex on notification (fromWorkgroupId);
+
     create index runIdAndWorkgroupIdIndex on portfolio (runId, workgroupId);
 
     alter table projects 
@@ -776,6 +800,26 @@
     alter table notebookItems 
         add constraint FK_1kysecht20yj67y65kh1n1agw 
         foreign key (workgroupId) 
+        references wiseworkgroups (id);
+
+    alter table notification
+        add constraint FK_s2r02d5cb8fx4p7yeoljc4dhp
+        foreign key (fromWorkgroupId)
+        references wiseworkgroups (id);
+
+    alter table notification
+        add constraint FK_ohnbl97r0jjlh6rv4or01ngqu
+        foreign key (periodId)
+        references groups (id);
+
+    alter table notification
+        add constraint FK_7s5o7rba23e06qag9479ohq5w
+        foreign key (runId)
+        references runs (id);
+
+    alter table notification
+        add constraint FK_7opq58yb9g6d4ggs8rg45cdti
+        foreign key (toWorkgroupId)
         references wiseworkgroups (id);
 
     alter table peerreviewgate 

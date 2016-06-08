@@ -95,6 +95,11 @@ var ConfigService = function () {
             return this.getConfigParam('mainHomePageURL');
         }
     }, {
+        key: 'getNotificationURL',
+        value: function getNotificationURL() {
+            return this.getConfigParam('notificationURL');
+        }
+    }, {
         key: 'getRunId',
         value: function getRunId() {
             return this.getConfigParam('runId');

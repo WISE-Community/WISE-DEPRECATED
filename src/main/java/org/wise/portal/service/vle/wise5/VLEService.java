@@ -26,6 +26,7 @@ package org.wise.portal.service.vle.wise5;
 import org.json.JSONArray;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.vle.domain.annotation.wise5.Annotation;
+import org.wise.vle.domain.notification.Notification;
 import org.wise.vle.domain.work.Event;
 import org.wise.vle.domain.work.NotebookItem;
 import org.wise.vle.domain.work.StudentAsset;
@@ -133,4 +134,42 @@ public interface VLEService {
             Integer studentWorkId, Integer studentAssetId,
             String localNotebookItemId, String type, String title, String content,
             String clientSaveTime, String clientDeleteTime);
+
+    /**
+     * @param notificationId id of the notification
+     * @return the Notification with the specified id
+     * @throws ObjectNotFoundException
+     */
+    Notification getNotificationById(Integer notificationId) throws ObjectNotFoundException;
+
+    /**
+     * @return NotebookItems from data store that match specified params
+     */
+    List<Notification> getNotifications(
+            Integer id, Integer runId, Integer periodId, Integer toWorkgroupId,
+            String nodeId, String componentId);
+
+    /**
+     * Save Notification in the data store
+     * @param id unique id of this notification
+     * @param runId
+     * @param periodId
+     * @param fromWorkgroupId
+     * @param toWorkgroupId
+     * @param nodeId
+     * @param componentId
+     * @param componentType
+     * @param type
+     * @param message
+     * @param data
+     * @param timeGenerated
+     * @param timeDismissed
+     * @return saved notification object
+     */
+    Notification saveNotification(
+            Integer id, Integer runId, Integer periodId,
+            Integer fromWorkgroupId, Integer toWorkgroupId,
+            String nodeId, String componentId, String componentType,
+            String type, String message, String data,
+            String timeGenerated, String timeDismissed);
 }

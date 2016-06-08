@@ -621,6 +621,7 @@ public class InformationController {
 					config.put("studentDataURL", wiseBaseURL + "/student/data");
 					config.put("studentAssetsURL", wiseBaseURL + "/student/asset/" + runId);
 					config.put("studentNotebookURL", wiseBaseURL + "/student/notebook/" + runId);
+					config.put("notificationURL", wiseBaseURL + "/notification/" + runId);
 
 					// check that the user has read or write permission on the run
 					if (signedInUser.isAdmin() ||

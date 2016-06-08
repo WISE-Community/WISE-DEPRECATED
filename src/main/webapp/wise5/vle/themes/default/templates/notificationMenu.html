@@ -1,0 +1,27 @@
+<div class="account-menu__caret" tabindex="0"></div>
+<div class="account-menu__info">
+    <md-list class="account-menu__users">
+        <md-list-item>
+            <div class="md-avatar">
+                <md-icon class="md-48" style="color: {{themeCtrl.getAvatarColorForWorkgroupId(themeCtrl.workgroupId)}};"> notifications </md-icon>
+            </div>
+            <div class="md-list-item-text">
+                Notifications
+            </div>
+            <button style="margin-left:50px; color: gray" ng-click="vleController.dismissAllNotifications()">
+                Clear
+            </button>
+        </md-list-item>
+    </md-list>
+</div>
+<md-divider></md-divider>
+<div ng-repeat="notification in vleController.getNewNotifications() track by $index">
+    {{notification.message}}
+    <md-icon class="accent-2"> place </md-icon>
+    <wiselink type="link"
+              node-id="{{notification.nodeId}}"
+              component-id="{{notification.componentId}}"
+              link-text="{{notification.nodePosition}}"
+              link-class="md-caption"></wiselink>
+    <md-divider></md-divider>
+</div>

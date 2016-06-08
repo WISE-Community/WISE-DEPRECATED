@@ -78,6 +78,10 @@ class ConfigService {
         return this.getConfigParam('mainHomePageURL');
     };
 
+    getNotificationURL() {
+        return this.getConfigParam('notificationURL');
+    };
+
     getRunId() {
         return this.getConfigParam('runId');
     };

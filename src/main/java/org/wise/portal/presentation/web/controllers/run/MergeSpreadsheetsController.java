@@ -221,6 +221,10 @@ public class MergeSpreadsheetsController {
         for (int mergeColumnValueIndex = 0; mergeColumnValueIndex < mergeColumnValues.size(); mergeColumnValueIndex++) {
             String mergeColumnValue = mergeColumnValues.get(mergeColumnValueIndex);
             HashMap<Integer, ArrayList<Row>> mergeColumnValueSheetRow = mergeColumnValueToSheetRows.get(mergeColumnValue);
+            if (mergeColumnValueSheetRow == null) {
+                System.out.println("Null mergeColumnValueSheetRow, continuing. mergeColumnValueIndex: " + mergeColumnValueIndex + " mergeColumnValue: " + mergeColumnValue);
+                continue;
+            }
 
             Row row = mergedSheet.createRow(mergeColumnValueIndex + 1);  // + 1 is to account for the header row;
 

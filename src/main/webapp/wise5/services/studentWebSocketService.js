@@ -28,6 +28,7 @@ var StudentWebSocketService = function () {
     _createClass(StudentWebSocketService, [{
         key: "initialize",
         value: function initialize() {
+            var _this = this;
 
             if (this.ConfigService.isPreview()) {
                 // We are previewing the project. Don't initialize websocket.
@@ -43,9 +44,9 @@ var StudentWebSocketService = function () {
                     this.dataStream = this.$websocket(webSocketURL);
 
                     // this is the function that handles messages we receive from web sockets
-                    this.dataStream.onMessage(angular.bind(this, function (message) {
-                        this.handleMessage(message);
-                    }));
+                    this.dataStream.onMessage(function (message) {
+                        _this.handleMessage(message);
+                    });
                 }
         }
     }, {
@@ -77,6 +78,8 @@ var StudentWebSocketService = function () {
                 this.$rootScope.$broadcast('pauseScreen', { data: data });
             } else if (messageType === 'unPauseScreen') {
                 this.$rootScope.$broadcast('unPauseScreen', { data: data });
+            } else if (messageType === 'notification') {
+                this.$rootScope.$broadcast('newNotification', data.data);
             }
 
             this.handleWebSocketMessageReceived(data);
@@ -126,7 +129,7 @@ var StudentWebSocketService = function () {
          * Send a message to classmates in the period
          * @param data the data to send to the classmates
          */
-        value: function sendStudentToClassmatesInPeriodMessage(data) {
+        value: function sendStudentToClassmatesInPeriodMessage(messageType, data) {
 
             if (!this.ConfigService.isPreview()) {
                 // we are in a run
@@ -136,7 +139,7 @@ var StudentWebSocketService = function () {
 
                 // make the websocket message
                 var messageJSON = {};
-                messageJSON.messageType = 'studentData';
+                messageJSON.messageType = messageType;
                 messageJSON.messageParticipants = 'studentToClassmatesInPeriod';
                 messageJSON.currentNodeId = currentNodeId;
                 messageJSON.data = data;

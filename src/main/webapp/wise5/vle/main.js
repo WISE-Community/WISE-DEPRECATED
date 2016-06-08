@@ -184,6 +184,10 @@ var _notebookService = require('../services/notebookService');
 
 var _notebookService2 = _interopRequireDefault(_notebookService);
 
+var _notificationService = require('../services/notificationService');
+
+var _notificationService2 = _interopRequireDefault(_notificationService);
+
 var _openResponseController = require('../components/openResponse/openResponseController');
 
 var _openResponseController2 = _interopRequireDefault(_openResponseController);
@@ -262,7 +266,7 @@ var _angularSummernote2 = _interopRequireDefault(_angularSummernote);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-//import AudioRecorderService from '../components/audioRecorder/audioRecorderService';
+//import CRaterService from '../components/cRater/cRaterService';
 
 
 var mainModule = _angular2.default.module('vle', [(0, _angularDragula2.default)(_angular2.default), 'angularMoment', 'angular-toArrayFilter', 'directives', 'filters', 'highcharts-ng',
@@ -271,7 +275,7 @@ var mainModule = _angular2.default.module('vle', [(0, _angularDragula2.default)(
 //.service(AudioRecorderService.name, AudioRecorderService)
 .service(_configService2.default.name, _configService2.default)
 //.service(CRaterService.name, CRaterService)
-.service(_discussionService2.default.name, _discussionService2.default).service(_drawService2.default.name, _drawService2.default).service(_embeddedService2.default.name, _embeddedService2.default).service(_graphService2.default.name, _graphService2.default).service(_htmlService2.default.name, _htmlService2.default).service(_httpInterceptor2.default.name, _httpInterceptor2.default).service(_labelService2.default.name, _labelService2.default).service(_matchService2.default.name, _matchService2.default).service(_multipleChoiceService2.default.name, _multipleChoiceService2.default).service(_nodeService2.default.name, _nodeService2.default).service(_notebookService2.default.name, _notebookService2.default).service(_openResponseService2.default.name, _openResponseService2.default).service(_outsideURLService2.default.name, _outsideURLService2.default)
+.service(_discussionService2.default.name, _discussionService2.default).service(_drawService2.default.name, _drawService2.default).service(_embeddedService2.default.name, _embeddedService2.default).service(_graphService2.default.name, _graphService2.default).service(_htmlService2.default.name, _htmlService2.default).service(_httpInterceptor2.default.name, _httpInterceptor2.default).service(_labelService2.default.name, _labelService2.default).service(_matchService2.default.name, _matchService2.default).service(_multipleChoiceService2.default.name, _multipleChoiceService2.default).service(_nodeService2.default.name, _nodeService2.default).service(_notebookService2.default.name, _notebookService2.default).service(_notificationService2.default.name, _notificationService2.default).service(_openResponseService2.default.name, _openResponseService2.default).service(_outsideURLService2.default.name, _outsideURLService2.default)
 //.service(PhotoBoothService.name, PhotoBoothService)
 .service(_projectService2.default.name, _projectService2.default).service(_sessionService2.default.name, _sessionService2.default).service(_studentAssetService2.default.name, _studentAssetService2.default).service(_studentDataService2.default.name, _studentDataService2.default).service(_studentStatusService2.default.name, _studentStatusService2.default).service(_studentWebSocketService2.default.name, _studentWebSocketService2.default).service(_tableService2.default.name, _tableService2.default).service(_teacherDataService2.default.name, _teacherDataService2.default).service(_utilService2.default.name, _utilService2.default).controller(_audioOscillatorController2.default.name, _audioOscillatorController2.default).controller(_discussionController2.default.name, _discussionController2.default).controller(_drawController2.default.name, _drawController2.default).controller(_embeddedController2.default.name, _embeddedController2.default).controller(_graphController2.default.name, _graphController2.default).controller(_htmlController2.default.name, _htmlController2.default).controller(_labelController2.default.name, _labelController2.default).controller(_matchController2.default.name, _matchController2.default).controller(_multipleChoiceController2.default.name, _multipleChoiceController2.default).controller(_navigationController2.default.name, _navigationController2.default).controller(_nodeController2.default.name, _nodeController2.default).controller(_vleController2.default.name, _vleController2.default).controller(_openResponseController2.default.name, _openResponseController2.default).controller(_outsideURLController2.default.name, _outsideURLController2.default).controller(_tableController2.default.name, _tableController2.default).filter(_filters2.default.name, _filters2.default).config(['$urlRouterProvider', '$stateProvider', '$translateProvider', '$translatePartialLoaderProvider', '$controllerProvider', '$mdThemingProvider', '$httpProvider', '$provide', function ($urlRouterProvider, $stateProvider, $translateProvider, $translatePartialLoaderProvider, $controllerProvider, $mdThemingProvider, $httpProvider, $provide) {
 
@@ -300,6 +304,9 @@ var mainModule = _angular2.default.module('vle', [(0, _angularDragula2.default)(
             },
             studentData: function studentData(StudentDataService, config, project) {
                 return StudentDataService.retrieveStudentData();
+            },
+            notifications: function notifications(NotificationService, studentData, config, project) {
+                return NotificationService.retrieveNotifications();
             },
             runStatus: function runStatus(StudentDataService, config) {
                 return StudentDataService.retrieveRunStatus();
@@ -472,7 +479,7 @@ var mainModule = _angular2.default.module('vle', [(0, _angularDragula2.default)(
 
 //import PhotoBoothService from '../components/photoBooth/photoBoothService';
 
-//import CRaterService from '../components/cRater/cRaterService';
+//import AudioRecorderService from '../components/audioRecorder/audioRecorderService';
 
 
 exports.default = mainModule;

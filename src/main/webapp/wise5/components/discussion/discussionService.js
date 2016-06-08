@@ -21,14 +21,17 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var DiscussionService = function (_NodeService) {
     _inherits(DiscussionService, _NodeService);
 
-    function DiscussionService($http, $q, ConfigService, TeacherDataService, UtilService) {
+    function DiscussionService($http, $rootScope, $q, ConfigService, NotificationService, StudentDataService, TeacherDataService, UtilService) {
         _classCallCheck(this, DiscussionService);
 
         var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(DiscussionService).call(this));
 
         _this.$http = $http;
+        _this.$rootScope = $rootScope;
         _this.$q = $q;
         _this.ConfigService = ConfigService;
+        _this.NotificationService = NotificationService;
+        _this.StudentDataService = StudentDataService;
         _this.TeacherDataService = TeacherDataService;
         _this.UtilService = UtilService;
         return _this;
@@ -271,7 +274,7 @@ var DiscussionService = function (_NodeService) {
     return DiscussionService;
 }(_nodeService2.default);
 
-DiscussionService.$inject = ['$http', '$q', 'ConfigService', 'TeacherDataService', 'UtilService'];
+DiscussionService.$inject = ['$http', '$rootScope', '$q', 'ConfigService', 'NotificationService', 'StudentDataService', 'TeacherDataService', 'UtilService'];
 
 exports.default = DiscussionService;
 //# sourceMappingURL=discussionService.js.map

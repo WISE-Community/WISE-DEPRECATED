@@ -8,6 +8,7 @@ class VLEController {
                 $translate,
                 ConfigService,
                 NotebookService,
+                NotificationService,
                 ProjectService,
                 SessionService,
                 StudentDataService,
@@ -21,6 +22,7 @@ class VLEController {
         this.$translate = $translate;
         this.ConfigService = ConfigService;
         this.NotebookService = NotebookService;
+        this.NotificationService = NotificationService;
         this.ProjectService = ProjectService;
         this.SessionService = SessionService;
         this.StudentDataService = StudentDataService;
@@ -82,6 +84,17 @@ class VLEController {
                 this.StudentDataService.saveVLEEvent(eventNodeId, componentId, componentType, category, eventName, eventData);
             }
         });
+
+        this.notifications = this.NotificationService.notifications;
+        // watch for changes in notifications
+        this.$scope.$watch(
+            () => {
+                return this.NotificationService.notifications.length;
+            },
+            (newValue, oldValue) => {
+                this.notifications = this.NotificationService.notifications;
+            }
+        );
 
         this.$scope.$on('componentStudentDataChanged', () => {
             this.StudentDataService.updateNodeStatuses();
@@ -317,6 +330,35 @@ class VLEController {
     };
 
     /**
+     * Returns true iff there are new notifications
+     */
+    hasNewNotifications() {
+        return this.getNewNotifications().length > 0;
+    }
+
+    /**
+     * Returns all notifications that have not been dismissed yet
+     */
+    getNewNotifications() {
+        return this.notifications.filter(
+            function(notification) {
+                return notification.timeDismissed == null;
+            }
+        );
+    }
+
+    /**
+     * Dismiss all new notifications
+     */
+    dismissAllNotifications() {
+        let newNotifications = this.getNewNotifications();
+        newNotifications.map((newNotification) => {
+            newNotification.timeDismissed = Date.parse(new Date());
+            this.NotificationService.saveNotificationToServer(newNotification);  // also save to server
+        });
+    }
+
+    /**
      * Pause the screen
      */
     pauseScreen() {
@@ -367,6 +409,7 @@ VLEController.$inject = [
     '$translate',
     'ConfigService',
     'NotebookService',
+    'NotificationService',
     'ProjectService',
     'SessionService',
     'StudentDataService',

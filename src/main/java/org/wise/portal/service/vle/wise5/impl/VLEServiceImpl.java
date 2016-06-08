@@ -31,6 +31,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.annotation.wise5.AnnotationDao;
+import org.wise.portal.dao.notification.NotificationDao;
 import org.wise.portal.dao.work.NotebookItemDao;
 import org.wise.portal.dao.work.StudentAssetDao;
 import org.wise.portal.dao.work.StudentWorkDao;
@@ -43,6 +44,7 @@ import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.vle.wise5.VLEService;
 import org.wise.portal.service.workgroup.WorkgroupService;
 import org.wise.vle.domain.annotation.wise5.Annotation;
+import org.wise.vle.domain.notification.Notification;
 import org.wise.vle.domain.work.Event;
 import org.wise.vle.domain.work.NotebookItem;
 import org.wise.vle.domain.work.StudentAsset;
@@ -75,6 +77,9 @@ public class VLEServiceImpl implements VLEService {
 
     @Autowired
     private NotebookItemDao notebookItemDao;
+
+    @Autowired
+    private NotificationDao notificationDao;
 
     @Autowired
     private RunService runService;
@@ -754,5 +759,130 @@ public class VLEServiceImpl implements VLEService {
 
         notebookItemDao.save(notebookItem);
         return notebookItem;
+    }
+
+    @Override
+    public Notification getNotificationById(Integer notificationId) throws ObjectNotFoundException {
+        return (Notification) notificationDao.getById(notificationId);
+    }
+
+    @Override
+    public List<Notification> getNotifications(
+            Integer id, Integer runId, Integer periodId, Integer toWorkgroupId,
+            String nodeId, String componentId) {
+
+        Run run = null;
+        if (runId != null) {
+            try {
+                boolean doEagerFetch = false;
+                run = runService.retrieveById(new Long(runId), doEagerFetch);
+            } catch (ObjectNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        Group period = null;
+        if (periodId != null) {
+            try {
+                period = groupService.retrieveById(new Long(periodId));
+            } catch (ObjectNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        WISEWorkgroup workgroup = null;
+        if (toWorkgroupId != null) {
+            try {
+                workgroup = (WISEWorkgroup) workgroupService.retrieveById(new Long(toWorkgroupId));
+            } catch (ObjectNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return notificationDao.getNotificationListByParams(
+                id, run, period, workgroup,
+                nodeId, componentId);
+    }
+
+    @Override
+    public Notification saveNotification(
+            Integer id, Integer runId, Integer periodId,
+            Integer fromWorkgroupId, Integer toWorkgroupId,
+            String nodeId, String componentId, String componentType,
+            String type, String message, String data,
+            String timeGenerated, String timeDismissed) {
+        Notification notification;
+        if (id != null) {
+            // if the id is passed in, the client is requesting an update, so fetch the StudentWork from data store
+            try {
+                notification = (Notification) notificationDao.getById(id);
+            } catch (ObjectNotFoundException e) {
+                e.printStackTrace();
+                return null;
+            }
+        } else {
+            // the id was not passed in, so we're creating a new StudentWork from scratch
+            notification = new Notification();
+        }
+        if (runId != null) {
+            try {
+                boolean doEagerFetch = false;
+                notification.setRun(runService.retrieveById(new Long(runId), doEagerFetch));
+            } catch (ObjectNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        if (periodId != null) {
+            try {
+                notification.setPeriod(groupService.retrieveById(new Long(periodId)));
+            } catch (ObjectNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        if (fromWorkgroupId != null) {
+            try {
+                notification.setFromWorkgroup((WISEWorkgroup) workgroupService.retrieveById(new Long(fromWorkgroupId)));
+            } catch (ObjectNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        if (toWorkgroupId != null) {
+            try {
+                notification.setToWorkgroup((WISEWorkgroup) workgroupService.retrieveById(new Long(toWorkgroupId)));
+            } catch (ObjectNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        if (nodeId != null) {
+            notification.setNodeId(nodeId);
+        }
+        if (componentId != null) {
+            notification.setComponentId(componentId);
+        }
+        if (componentType != null) {
+            notification.setComponentType(componentType);
+        }
+        if (type != null) {
+            notification.setType(type);
+        }
+        if (message != null) {
+            notification.setMessage(message);
+        }
+        if (data != null) {
+            notification.setData(data);
+        }
+        if (timeGenerated != null) {
+            Timestamp timeGeneratedTimestamp = new Timestamp(new Long(timeGenerated));
+            notification.setTimeGenerated(timeGeneratedTimestamp);
+        }
+        if (timeDismissed != null) {
+            Timestamp timeDismissedTimestamp = new Timestamp(new Long(timeDismissed));
+            notification.setTimeDismissed(timeDismissedTimestamp);
+        }
+        // set serverSaveTime
+        Calendar now = Calendar.getInstance();
+        Timestamp serverSaveTimestamp = new Timestamp(now.getTimeInMillis());
+        notification.setServerSaveTime(serverSaveTimestamp);
+
+        notificationDao.save(notification);
+        return notification;
     }
 }

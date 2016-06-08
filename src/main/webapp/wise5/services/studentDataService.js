@@ -1415,6 +1415,16 @@ var StudentDataService = function () {
             return null;
         }
     }, {
+        key: 'getComponentStates',
+
+
+        /**
+         * Returns all the component states for this workgroup
+         */
+        value: function getComponentStates() {
+            return this.studentData.componentStates;
+        }
+    }, {
         key: 'getComponentStatesByNodeId',
 
 

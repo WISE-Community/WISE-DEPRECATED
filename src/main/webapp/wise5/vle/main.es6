@@ -47,6 +47,7 @@ import NodeController from '../node/nodeController';
 import NodeService from '../services/nodeService';
 import Notebook from './notebook/notebook';
 import NotebookService from '../services/notebookService';
+import NotificationService from '../services/notificationService';
 import OpenResponseController from '../components/openResponse/openResponseController';
 import OpenResponseService from '../components/openResponse/openResponseService';
 import OutsideURLController from '../components/outsideURL/outsideURLController';
@@ -111,6 +112,7 @@ let mainModule = angular.module('vle', [
     .service(MultipleChoiceService.name, MultipleChoiceService)
     .service(NodeService.name, NodeService)
     .service(NotebookService.name, NotebookService)
+    .service(NotificationService.name, NotificationService)
     .service(OpenResponseService.name, OpenResponseService)
     .service(OutsideURLService.name, OutsideURLService)
     //.service(PhotoBoothService.name, PhotoBoothService)
@@ -184,6 +186,9 @@ let mainModule = angular.module('vle', [
                         },
                         studentData: function (StudentDataService, config, project) {
                             return StudentDataService.retrieveStudentData();
+                        },
+                        notifications: function (NotificationService, studentData, config, project) {
+                            return NotificationService.retrieveNotifications();
                         },
                         runStatus: function(StudentDataService, config) {
                             return StudentDataService.retrieveRunStatus();
