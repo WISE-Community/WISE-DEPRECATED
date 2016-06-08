@@ -217,7 +217,7 @@ class OpenResponseController {
             }
         }
 
-        $('.openResponse').off('dragover').off('drop');
+        //$('.openResponse').off('dragover').off('drop');
 
         /**
          * Returns true iff there is student work that hasn't been saved yet
