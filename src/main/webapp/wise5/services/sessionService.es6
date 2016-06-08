@@ -103,6 +103,7 @@ class SessionService {
             // no session management for previewers
             return;
         }
+        
         var minutes = 20;
         var seconds = minutes * 60;
         var milliseconds = seconds * 1000;
@@ -139,7 +140,7 @@ class SessionService {
      * Start the warning timer
      */
     startWarningTimer() {
-        var warningTimeoutInterval = this.sessionTimeoutInterval * 0.75;
+        var warningTimeoutInterval = this.sessionTimeoutInterval * 0.9;
         this.warningId = setTimeout(angular.bind(this, this.showWarning), warningTimeoutInterval);
     };
 
@@ -161,11 +162,16 @@ class SessionService {
      * Fire the event that will show the warning message
      */
     showWarning() {
-        this.$rootScope.$broadcast('showSessionWarning');
+        if (this.checkMouseEvent()) {
+            // a mouse event has occurred recently so we don't need to show the warning
+        } else {
+            // a mouse event has not occurred recently so we will show the warning
+            this.$rootScope.$broadcast('showSessionWarning');
+        }
     };
 
     /**
-     * Refresh the timers
+     * Renew the session with the server and refresh the local timers
      */
     renewSession() {
         var renewSessionURL = this.ConfigService.getConfigParam('renewSessionURL');
@@ -189,12 +195,11 @@ class SessionService {
         clearTimeout(this.warningId);
         clearTimeout(this.logOutId);
     };
-
+    
     /**
-     * Called when a mouse event occurs
+     * Called when the user moves the mouse
      */
-    mouseEventOccurred() {
-
+    mouseMoved() {
         // get the current timestamp
         var date = new Date();
         var timestamp = date.getTime();
@@ -204,9 +209,15 @@ class SessionService {
     };
 
     /**
-     * Check if there were any mouse events since the last time we checked
+     * Check if there were any mouse events since the last time we checked.
+     * Currently we check every 1 minute which is based on the value of the 
+     * checkMouseEventInterval variable.
+     * @returns whether there was a mouse event recently
      */
     checkMouseEvent() {
+        
+        var eventOccurred = false;
+        
         if (this.lastMouseEventTimestamp != null) {
             // there was a mouse event since the last time we checked
 
@@ -215,7 +226,11 @@ class SessionService {
 
             // clear the mouse event timestamp
             this.lastMouseEventTimestamp = null;
+            
+            eventOccurred = true;
         }
+        
+        return eventOccurred;
     };
 
     /**
@@ -241,8 +256,18 @@ class SessionService {
      * Log out the user
      */
     forceLogOut() {
-        this.clearTimers();
-        this.$rootScope.$broadcast('logOut');
+        
+        /*
+         * make a final check to see if there were any mouse events recently
+         * before we log out the user
+         */
+        if (this.checkMouseEvent()) {
+            // a mouse event has occurred so we will not log out the user
+        } else {
+            // a mouse event has not occurred recently so we will log out the user
+            this.clearTimers();
+            this.$rootScope.$broadcast('logOut');
+        }
     };
 
     /**
@@ -251,7 +276,6 @@ class SessionService {
      * components left to wait for, we can then exit.
      */
     attemptExit() {
-
         // get all the components listening for the exit event
         var exitListenerCount = this.$rootScope.$$listenerCount.exit;
 

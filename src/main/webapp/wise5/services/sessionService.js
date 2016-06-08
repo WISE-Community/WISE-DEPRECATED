@@ -119,6 +119,7 @@ var SessionService = function () {
                 // no session management for previewers
                 return;
             }
+
             var minutes = 20;
             var seconds = minutes * 60;
             var milliseconds = seconds * 1000;
@@ -161,7 +162,7 @@ var SessionService = function () {
          * Start the warning timer
          */
         value: function startWarningTimer() {
-            var warningTimeoutInterval = this.sessionTimeoutInterval * 0.75;
+            var warningTimeoutInterval = this.sessionTimeoutInterval * 0.9;
             this.warningId = setTimeout(angular.bind(this, this.showWarning), warningTimeoutInterval);
         }
     }, {
@@ -192,14 +193,19 @@ var SessionService = function () {
          * Fire the event that will show the warning message
          */
         value: function showWarning() {
-            this.$rootScope.$broadcast('showSessionWarning');
+            if (this.checkMouseEvent()) {
+                // a mouse event has occurred recently so we don't need to show the warning
+            } else {
+                    // a mouse event has not occurred recently so we will show the warning
+                    this.$rootScope.$broadcast('showSessionWarning');
+                }
         }
     }, {
         key: 'renewSession',
 
 
         /**
-         * Refresh the timers
+         * Renew the session with the server and refresh the local timers
          */
         value: function renewSession() {
             var _this2 = this;
@@ -229,14 +235,13 @@ var SessionService = function () {
             clearTimeout(this.logOutId);
         }
     }, {
-        key: 'mouseEventOccurred',
+        key: 'mouseMoved',
 
 
         /**
-         * Called when a mouse event occurs
+         * Called when the user moves the mouse
          */
-        value: function mouseEventOccurred() {
-
+        value: function mouseMoved() {
             // get the current timestamp
             var date = new Date();
             var timestamp = date.getTime();
@@ -249,9 +254,15 @@ var SessionService = function () {
 
 
         /**
-         * Check if there were any mouse events since the last time we checked
+         * Check if there were any mouse events since the last time we checked.
+         * Currently we check every 1 minute which is based on the value of the 
+         * checkMouseEventInterval variable.
+         * @returns whether there was a mouse event recently
          */
         value: function checkMouseEvent() {
+
+            var eventOccurred = false;
+
             if (this.lastMouseEventTimestamp != null) {
                 // there was a mouse event since the last time we checked
 
@@ -260,7 +271,11 @@ var SessionService = function () {
 
                 // clear the mouse event timestamp
                 this.lastMouseEventTimestamp = null;
+
+                eventOccurred = true;
             }
+
+            return eventOccurred;
         }
     }, {
         key: 'convertMinutesToMilliseconds',
@@ -292,8 +307,18 @@ var SessionService = function () {
          * Log out the user
          */
         value: function forceLogOut() {
-            this.clearTimers();
-            this.$rootScope.$broadcast('logOut');
+
+            /*
+             * make a final check to see if there were any mouse events recently
+             * before we log out the user
+             */
+            if (this.checkMouseEvent()) {
+                // a mouse event has occurred so we will not log out the user
+            } else {
+                    // a mouse event has not occurred recently so we will log out the user
+                    this.clearTimers();
+                    this.$rootScope.$broadcast('logOut');
+                }
         }
     }, {
         key: 'attemptExit',
@@ -305,7 +330,6 @@ var SessionService = function () {
          * components left to wait for, we can then exit.
          */
         value: function attemptExit() {
-
             // get all the components listening for the exit event
             var exitListenerCount = this.$rootScope.$$listenerCount.exit;
 

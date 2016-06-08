@@ -64,6 +64,17 @@ class AuthoringToolController {
         // send the user to the My Projects page in the Authoring Tool
         this.$location.url('/author');
     }
+    
+    /**
+     * The user has moved the mouse so
+     */
+    mouseMoved() {
+        /*
+         * notify the Session Service that the user has moved the mouse
+         * so we can refresh the session
+         */
+        this.SessionService.mouseMoved();
+    }
 
     exit() {
         // Send the user to the teacher home page

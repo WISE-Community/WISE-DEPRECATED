@@ -132,7 +132,7 @@
 	<distributable />
 
 	<session-config>
-		<session-timeout>20</session-timeout>
+		<session-timeout>30</session-timeout>
 	</session-config>
 
 	<!-- List of filenames that are automatically resolved for directory requests -->
