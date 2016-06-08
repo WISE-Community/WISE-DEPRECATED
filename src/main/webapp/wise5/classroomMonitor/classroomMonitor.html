@@ -11,6 +11,7 @@
     }
 </style>
 
+<div ng-mousemove='classroomMonitorController.mouseMoved()'>
 <button ui-sref-active="active" ui-sref='root.studentProgress' translate="gradeByWorkgroup" id="gradeByWorkgroupButton"></button>
 <button ui-sref-active="active" ui-sref='root.nodeProgress' translate="gradeByStep" id="gradeByStepButton"></button>
 <div style="float:right">
@@ -24,3 +25,4 @@
 -->
 
 <div ui-view></div>
+</div>

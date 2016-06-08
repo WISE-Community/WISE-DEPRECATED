@@ -271,6 +271,21 @@ var ClassroomMonitorController = function () {
                 _this4.pauseScreenButtonText = unPauseStudentScreens;
             });
         }
+
+        /**
+         * The user has moved the mouse so we will notify the Session Service
+         * so that it can refresh the session
+         */
+
+    }, {
+        key: 'mouseMoved',
+        value: function mouseMoved() {
+            /*
+             * notify the Session Service that the user has moved the mouse
+             * so we can refresh the session
+             */
+            this.SessionService.mouseMoved();
+        }
     }]);
 
     return ClassroomMonitorController;
