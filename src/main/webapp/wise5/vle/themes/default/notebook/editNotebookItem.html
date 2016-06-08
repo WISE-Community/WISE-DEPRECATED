@@ -1,0 +1,46 @@
+<md-dialog aria-label="{{editNotebookItemController.title}}" class="view-notebook-item" ng-cloak>
+    <md-toolbar md-theme="light">
+        <div class="md-toolbar-tools">
+            <h2>{{editNotebookItemController.title}}</h2>
+        </div>
+    </md-toolbar>
+    <md-dialog-content>
+        <div class="md-dialog-content view-notebook-item__content">
+            <md-input-container class="md-block md-input-has-placeholder notebook-item__text-input" md-no-float>
+                  <textarea class="notebook-item__text-input__textarea"
+                            placeholder="{{ 'typeYourNoteHere' | translate }}"
+                            ng-model="editNotebookItemController.item.content.text"
+                            ng-model-options='{ debounce: 100 }'
+                            ng-change="editNotebookItemController.update()"
+                            rows="3"
+                            md-select-on-focus></textarea>
+            </md-input-container>
+            <div class="notebook-item__attachment" ng-repeat="attachment in editNotebookItemController.item.content.attachments">
+                <img ng-src="{{attachment.iconURL}}" class="notebook-item__attachment__content" />
+                <md-button class="md-whiteframe-1dp notebook-item__attachment__delete md-icon-button md-raised" ng-click='editNotebookItemController.removeAttachment(attachment)' title="Remove file">
+                    <md-icon class="text-secondary">delete</md-icon>
+                </md-button>
+            </div>
+            <div ng-show="editNotebookItemController.showUpload"
+                 ngf-drop ngf-select ngf-change="editNotebookItemController.attachStudentAssetToNote($files)"
+                 class="notebook-item__upload"
+                 drag-over-class="dragover" allow-dir="false"
+                 accept="image/*,application/pdf,text/csv">
+                <md-icon>image</md-icon> <span translate="dropAssetMessage"></span>
+            </div>
+            <div class="notebook-item__info md-caption">
+                <md-icon> place </md-icon> <wiselink type="link" node-id="{{editNotebookItemController.getItemNodeId()}}"
+                                                     link-text="{{editNotebookItemController.getItemNodeLink()}}"
+                                                     link-class="md-caption"></wiselink>
+            </div>
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row" layout-align="end center">
+        <md-button class="primary" aria-label="Cancel" ng-click="editNotebookItemController.cancel()">
+            Cancel
+        </md-button>
+        <md-button class="primary" aria-label="Save" ng-click="editNotebookItemController.save()" ng-disabled="!editNotebookItemController.saveEnabled">
+            Save
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>

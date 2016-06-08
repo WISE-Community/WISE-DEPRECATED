@@ -33,6 +33,7 @@ var NotebookController = function () {
         $scope.$on('notebookUpdated', function (event, args) {
             _this.notebook = args.notebook;
         });
+        //this.notebook = this.NotebookService.notebook;
 
         this.logOutListener = $scope.$on('logOut', function (event, args) {
             _this.logOutListener();
@@ -82,7 +83,8 @@ var NotebookController = function () {
     }, {
         key: 'editItem',
         value: function editItem(ev, itemId) {
-            this.NotebookService.editItem(ev, itemId);
+            //this.NotebookService.editItem(ev, itemId);
+            this.$rootScope.$broadcast('editNote', { itemId: itemId, ev: ev });
         }
     }, {
         key: 'notebookItemSelected',

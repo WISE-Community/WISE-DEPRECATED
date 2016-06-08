@@ -21,12 +21,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var NotebookItem = {
     bindings: {
         itemId: '<',
-        isEditMode: '<',
-        isEditAllowed: '<',
         isChooseMode: '<',
         templateUrl: '<',
         componentController: '<',
-        onUpdate: '&',
         onSelect: '&'
     },
     template: '<ng-include src="notebookItemController.getTemplateUrl()"></ng-include>',
