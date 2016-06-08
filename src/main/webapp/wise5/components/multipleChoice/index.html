@@ -78,7 +78,7 @@
                                          ng-value="choice.id"
                                          ng-click="multipleChoiceController.isDisabled || multipleChoiceController.radioChoiceSelected(choice.id)"
                                          ng-disabled="multipleChoiceController.isDisabled">
-                            <span compile="choice.text">
+                            <span compile="choice.text"></span>
                             <span ng-show="choice.showFeedback"
                                   ng-class="{'success': multipleChoiceController.hasCorrectChoices() && choice.isCorrect, 'warn': multipleChoiceController.hasCorrectChoices() && !choice.isCorrect, 'info': !multipleChoiceController.hasCorrectChoices()}">
                                   {{choice.feedbackToShow}}
@@ -92,7 +92,7 @@
                                      ng-checked="multipleChoiceController.isChecked(choice.id)"
                                      ng-click="multipleChoiceController.isDisabled || multipleChoiceController.toggleSelection(choice.id)"
                                      ng-disabled="multipleChoiceController.isDisabled">
-                            {{ choice.text }}
+                            <span compile="choice.text"></span>
                             <span ng-show="choice.showFeedback"
                                   ng-class="{'success': multipleChoiceController.hasCorrectChoices() && choice.isCorrect, 'warn': multipleChoiceController.hasCorrectChoices() && !choice.isCorrect, 'info': !multipleChoiceController.hasCorrectChoices()}">
                                   {{choice.feedbackToShow}}
