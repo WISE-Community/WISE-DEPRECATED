@@ -104,7 +104,7 @@ class SessionService {
             return;
         }
         
-        var minutes = 20;
+        var minutes = 30;
         var seconds = minutes * 60;
         var milliseconds = seconds * 1000;
         this.sessionTimeoutInterval = milliseconds;

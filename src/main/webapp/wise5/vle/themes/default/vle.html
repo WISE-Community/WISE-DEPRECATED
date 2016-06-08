@@ -11,7 +11,7 @@
     {{vleController.projectStyle}}
 </style>
 
-<div disable-delete-keypress ng-controller="ThemeController as themeCtrl" role="main" layout="column" layout-fill>
+<div disable-delete-keypress ng-controller="ThemeController as themeCtrl" role="main" layout="column" ng-mousemove="themeCtrl.mouseMoved()" layout-fill>
     <md-toolbar class="l-header" ng-class="{'md-whiteframe-z1': themeCtrl.layoutState === 'nav'}">
         <div class="md-toolbar-tools">
             <a ng-click="vleController.loadRoot()" class="md-button logo-link">
