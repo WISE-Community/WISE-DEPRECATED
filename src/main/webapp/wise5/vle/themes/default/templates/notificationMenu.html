@@ -8,20 +8,29 @@
             <div class="md-list-item-text">
                 Notifications
             </div>
-            <button style="margin-left:50px; color: gray" ng-click="vleController.dismissAllNotifications()">
-                Clear
-            </button>
+            <md-button md-prevent-menu-close="md-prevent-menu-close"
+                       style="margin-left:50px; color: gray"
+                       ng-show="vleController.getNewNotifications().length > 0"
+                       ng-click="vleController.dismissAllNotifications()">
+                Dismiss All
+            </md-button>
         </md-list-item>
     </md-list>
 </div>
 <md-divider></md-divider>
 <div ng-repeat="notification in vleController.getNewNotifications() track by $index">
     {{notification.message}}
+    <br/>
     <md-icon class="accent-2"> place </md-icon>
     <wiselink type="link"
               node-id="{{notification.nodeId}}"
               component-id="{{notification.componentId}}"
               link-text="{{notification.nodePosition}}"
               link-class="md-caption"></wiselink>
+    <md-button md-prevent-menu-close="md-prevent-menu-close"
+               style="margin-left:50px; color: gray"
+               ng-click="vleController.dismissNotification(notification)">
+        Dismiss
+    </md-button>
     <md-divider></md-divider>
 </div>
