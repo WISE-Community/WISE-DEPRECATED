@@ -369,9 +369,20 @@ var VLEController = function () {
 
             var newNotifications = this.getNewNotifications();
             newNotifications.map(function (newNotification) {
-                newNotification.timeDismissed = Date.parse(new Date());
-                _this2.NotificationService.saveNotificationToServer(newNotification); // also save to server
+                _this2.dismissNotification(newNotification);
             });
+        }
+
+        /**
+         * Dismiss the specified notification
+         * @param notification
+         */
+
+    }, {
+        key: 'dismissNotification',
+        value: function dismissNotification(notification) {
+            notification.timeDismissed = Date.parse(new Date());
+            this.NotificationService.saveNotificationToServer(notification); // also save to server
         }
 
         /**

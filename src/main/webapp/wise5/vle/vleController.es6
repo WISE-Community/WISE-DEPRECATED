@@ -353,9 +353,17 @@ class VLEController {
     dismissAllNotifications() {
         let newNotifications = this.getNewNotifications();
         newNotifications.map((newNotification) => {
-            newNotification.timeDismissed = Date.parse(new Date());
-            this.NotificationService.saveNotificationToServer(newNotification);  // also save to server
+            this.dismissNotification(newNotification);
         });
+    }
+
+    /**
+     * Dismiss the specified notification
+     * @param notification
+     */
+    dismissNotification(notification) {
+        notification.timeDismissed = Date.parse(new Date());
+        this.NotificationService.saveNotificationToServer(notification);  // also save to server
     }
 
     /**
