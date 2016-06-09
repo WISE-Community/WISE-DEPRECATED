@@ -4120,7 +4120,7 @@ class ProjectService {
                             transitions.splice(t, 1);
 
                             // insert the transitions from the node we are removing
-                            transitions = transitions.slice(0, t).concat(transitionsCopy).concat(transitions.slice(t + 1));
+                            transitions = transitions.concat(transitionsCopy);
                             
                             // check if the node we are moving is a group
                             if (this.isGroupNode(nodeId)) {

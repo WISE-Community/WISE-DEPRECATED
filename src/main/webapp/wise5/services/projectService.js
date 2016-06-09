@@ -996,7 +996,7 @@ var transitionsCopy=angular.toJson(nodeToRemoveTransitions);transitionsCopy=angu
                              */if(parentIdOfFromNode!=parentIdOfNodeToRemove){for(var tc=0;tc<transitionsCopy.length;tc++){var tempTransition=transitionsCopy[tc];if(tempTransition!=null){var tempToNodeId=tempTransition.to;if(tempToNodeId!=null){var parentIdOfToNode=this.getParentGroupId(tempToNodeId);if(parentIdOfNodeToRemove!=parentIdOfToNode){ // remove the transition
 transitionsCopy.splice(tc,1);tc--;}}}}} // remove the transition to the node we are removing
 transitions.splice(t,1); // insert the transitions from the node we are removing
-transitions=transitions.slice(0,t).concat(transitionsCopy).concat(transitions.slice(t+1)); // check if the node we are moving is a group
+transitions=transitions.concat(transitionsCopy); // check if the node we are moving is a group
 if(this.isGroupNode(nodeId)){ /*
                                  * we are moving a group so we need to update transitions that
                                  * go into the group
