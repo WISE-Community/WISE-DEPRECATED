@@ -61,28 +61,38 @@ class NotificationService {
      * Retrieves notifications from the server
      */
     retrieveNotifications(toWorkgroupId = null) {
-        let config = {};
-        config.method = 'GET';
-        config.url = this.ConfigService.getNotificationURL();
-        config.params = {};
-        if (toWorkgroupId != null) {
-            config.params.toWorkgroupId = toWorkgroupId;
+        
+        var notificationURL = this.ConfigService.getNotificationURL();
+        
+        if (notificationURL == null) {
+            // the notification url is null most likely because we are in preview mode
+            return Promise.resolve(this.notifications);
         } else {
-            config.params.toWorkgroupId = this.ConfigService.getWorkgroupId();
-            config.params.periodId = this.ConfigService.getPeriodId();
-        }
-        return this.$http(config).then((response) => {
-            this.notifications = response.data;
-            // populate nodePosition and nodePositionAndTitle, where applicable
-            this.notifications.map((notification) => {
-                if (notification.nodeId != null) {
-                    notification.nodePosition = this.ProjectService.getNodePositionById(notification.nodeId);
-                    notification.nodePositionAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(notification.nodeId);
-                }
-            });
+            // the notification url is not null so we will retrieve the notifications
+            let config = {};
+            config.method = 'GET';
+            config.url = this.ConfigService.getNotificationURL();
+            config.params = {};
+            if (toWorkgroupId != null) {
+                config.params.toWorkgroupId = toWorkgroupId;
+            } else {
+                config.params.toWorkgroupId = this.ConfigService.getWorkgroupId();
+                config.params.periodId = this.ConfigService.getPeriodId();
+            }
+            
+            return this.$http(config).then((response) => {
+                this.notifications = response.data;
+                // populate nodePosition and nodePositionAndTitle, where applicable
+                this.notifications.map((notification) => {
+                    if (notification.nodeId != null) {
+                        notification.nodePosition = this.ProjectService.getNodePositionById(notification.nodeId);
+                        notification.nodePositionAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(notification.nodeId);
+                    }
+                });
 
-            return this.notifications;
-        });
+                return this.notifications;
+            });
+        }
     }
 
     /**

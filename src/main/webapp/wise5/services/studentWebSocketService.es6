@@ -30,13 +30,17 @@ class StudentWebSocketService {
             var webSocketURL = this.ConfigService.getWebSocketURL();
             webSocketURL += "?runId=" + runId + "&periodId=" + periodId + "&workgroupId=" + workgroupId;
 
-            // start the websocket connection
-            this.dataStream = this.$websocket(webSocketURL);
+            try {
+                // start the websocket connection
+                this.dataStream = this.$websocket(webSocketURL);
 
-            // this is the function that handles messages we receive from web sockets
-            this.dataStream.onMessage((message) => {
-                this.handleMessage(message);
-            });
+                // this is the function that handles messages we receive from web sockets
+                this.dataStream.onMessage((message) => {
+                    this.handleMessage(message);
+                });
+            } catch(e) {
+                console.log(e);
+            }
         }
     };
 

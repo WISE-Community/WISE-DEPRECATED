@@ -87,28 +87,38 @@ var NotificationService = function () {
 
             var toWorkgroupId = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
 
-            var config = {};
-            config.method = 'GET';
-            config.url = this.ConfigService.getNotificationURL();
-            config.params = {};
-            if (toWorkgroupId != null) {
-                config.params.toWorkgroupId = toWorkgroupId;
-            } else {
-                config.params.toWorkgroupId = this.ConfigService.getWorkgroupId();
-                config.params.periodId = this.ConfigService.getPeriodId();
-            }
-            return this.$http(config).then(function (response) {
-                _this2.notifications = response.data;
-                // populate nodePosition and nodePositionAndTitle, where applicable
-                _this2.notifications.map(function (notification) {
-                    if (notification.nodeId != null) {
-                        notification.nodePosition = _this2.ProjectService.getNodePositionById(notification.nodeId);
-                        notification.nodePositionAndTitle = _this2.ProjectService.getNodePositionAndTitleByNodeId(notification.nodeId);
-                    }
-                });
 
-                return _this2.notifications;
-            });
+            var notificationURL = this.ConfigService.getNotificationURL();
+
+            if (notificationURL == null) {
+                // the notification url is null most likely because we are in preview mode
+                return Promise.resolve(this.notifications);
+            } else {
+                // the notification url is not null so we will retrieve the notifications
+                var config = {};
+                config.method = 'GET';
+                config.url = this.ConfigService.getNotificationURL();
+                config.params = {};
+                if (toWorkgroupId != null) {
+                    config.params.toWorkgroupId = toWorkgroupId;
+                } else {
+                    config.params.toWorkgroupId = this.ConfigService.getWorkgroupId();
+                    config.params.periodId = this.ConfigService.getPeriodId();
+                }
+
+                return this.$http(config).then(function (response) {
+                    _this2.notifications = response.data;
+                    // populate nodePosition and nodePositionAndTitle, where applicable
+                    _this2.notifications.map(function (notification) {
+                        if (notification.nodeId != null) {
+                            notification.nodePosition = _this2.ProjectService.getNodePositionById(notification.nodeId);
+                            notification.nodePositionAndTitle = _this2.ProjectService.getNodePositionAndTitleByNodeId(notification.nodeId);
+                        }
+                    });
+
+                    return _this2.notifications;
+                });
+            }
         }
 
         /**
