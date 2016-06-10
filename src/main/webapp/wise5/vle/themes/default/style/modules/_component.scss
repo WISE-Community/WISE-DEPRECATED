@@ -5,6 +5,7 @@
 
 .component {
     overflow-x: auto;
+    font-size: rem(1.5);
 
     @media only screen and (min-width: $layout-breakpoint-sm) {
         padding: 0 24px;
