@@ -4,6 +4,7 @@ class VLEController {
     constructor($scope,
                 $rootScope,
                 $mdDialog,
+                $mdMedia,
                 $state,
                 $translate,
                 ConfigService,
@@ -18,6 +19,7 @@ class VLEController {
         this.$scope = $scope;
         this.$rootScope = $rootScope;
         this.$mdDialog = $mdDialog;
+        this.$mdMedia = $mdMedia;
         this.$state = $state;
         this.$translate = $translate;
         this.ConfigService = ConfigService;
@@ -218,6 +220,10 @@ class VLEController {
         }
     }
 
+    visitNode(nodeId) {
+        this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(nodeId);
+    }
+
     isNotebookEnabled() {
         return this.NotebookService.isNotebookEnabled();
     }
@@ -350,10 +356,22 @@ class VLEController {
     /**
      * Dismiss all new notifications
      */
-    dismissAllNotifications() {
-        let newNotifications = this.getNewNotifications();
-        newNotifications.map((newNotification) => {
-            this.dismissNotification(newNotification);
+    dismissAllNotifications(ev) {
+        this.$translate(["dismissNotificationsTitle", "dismissNotificationsMessage", "yes", "no"]).then((translations) => {
+            let confirm = this.$mdDialog.confirm()
+                .parent(angular.element($('._md-open-menu-container._md-active')))// TODO: hack for now (showing md-dialog on top of md-menu)
+                .ariaLabel(translations.dismissNotificationsTitle)
+                .textContent(translations.dismissNotificationsMessage)
+                .targetEvent(ev)
+                .ok(translations.yes)
+                .cancel(translations.no);
+
+            this.$mdDialog.show(confirm).then(() => {
+                let newNotifications = this.getNewNotifications();
+                newNotifications.map((newNotification) => {
+                    this.dismissNotification(newNotification);
+                });
+            });
         });
     }
 
@@ -372,7 +390,7 @@ class VLEController {
     pauseScreen() {
         // TODO: i18n
         this.pauseDialog = this.$mdDialog.show({
-            template: '<md-dialog aria-label="Screen Paused"><md-toolbar><div class="md-toolbar-tools"><h2>Screen Paused</h2></div></md-toolbar><md-dialog-content><div class="md-dialog-content">Your teacher has paused all the screens in the class.</div></md-dialog-content></md-dialog>',
+            template: '<md-dialog aria-label="Screen Paused"><md-dialog-content><div class="md-dialog-content">Your teacher has paused all the screens in the class.</div></md-dialog-content></md-dialog>',
             fullscreen: true,
             escapeToClose: false
         });
@@ -413,6 +431,7 @@ VLEController.$inject = [
     '$scope',
     '$rootScope',
     '$mdDialog',
+    '$mdMedia',
     '$state',
     '$translate',
     'ConfigService',

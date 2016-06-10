@@ -12,6 +12,8 @@
   "create": "Create",
   "currentLocation": "Current Location",
   "delete": "Delete",
+  "dismissNotificationsTitle": "Clear all alerts",
+  "dismissNotificationsMessage": "Are you sure you want to clear all your alerts?",
   "dropAssetMessage": "Drop image or file here or click to upload!",
   "exit": "Exit",
   "ok": "ok",

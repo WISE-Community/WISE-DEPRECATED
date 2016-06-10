@@ -1,36 +1,33 @@
-<div class="account-menu__caret" tabindex="0"></div>
-<div class="account-menu__info">
-    <md-list class="account-menu__users">
-        <md-list-item>
-            <div class="md-avatar">
-                <md-icon class="md-48" style="color: {{themeCtrl.getAvatarColorForWorkgroupId(themeCtrl.workgroupId)}};"> notifications </md-icon>
-            </div>
-            <div class="md-list-item-text">
-                Notifications
-            </div>
-            <md-button md-prevent-menu-close="md-prevent-menu-close"
-                       style="margin-left:50px; color: gray"
-                       ng-show="vleController.getNewNotifications().length > 0"
-                       ng-click="vleController.dismissAllNotifications()">
-                Dismiss All
-            </md-button>
-        </md-list-item>
-    </md-list>
-</div>
-<md-divider></md-divider>
-<div ng-repeat="notification in vleController.getNewNotifications() track by $index">
-    {{notification.message}}
-    <br/>
-    <md-icon class="accent-2"> place </md-icon>
-    <wiselink type="link"
-              node-id="{{notification.nodeId}}"
-              component-id="{{notification.componentId}}"
-              link-text="{{notification.nodePosition}}"
-              link-class="md-caption"></wiselink>
-    <md-button md-prevent-menu-close="md-prevent-menu-close"
-               style="margin-left:50px; color: gray"
-               ng-click="vleController.dismissNotification(notification)">
-        Dismiss
-    </md-button>
+<div class="account-menu__caret account-menu__caret--notification" tabindex="0"></div>
+<div layout="column" class="account-menu--fixed-height account-menu--fixed-width">
+    <md-toolbar md-theme="light" class="account-menu__info md-subhead" layout="row" layout-align="start center">
+        <span class="accent-1 account-menu__info__title" layout="row" layout-align="start center"><md-icon class="md-accent"> notifications </md-icon>&nbsp;Alerts</span>
+        <span flex></span>
+        <md-button class="md-icon-button"
+                   aria-label="Clear all notifications"
+                   md-prevent-menu-close="md-prevent-menu-close"
+                   ng-disabled="vleController.getNewNotifications().length < 2"
+                   ng-click="vleController.dismissAllNotifications($event)">
+            <md-icon> clear_all </md-icon>
+        </md-button>
+    </md-toolbar>
     <md-divider></md-divider>
+    <md-content class="account-menu__actions" flex>
+        <div class="md-padding center" ng-if="!vleController.getNewNotifications().length"><span class="md-body-1">Congratulations, you have no alerts!</span></div>
+        <md-list class="notification-list" ng-if="vleController.getNewNotifications().length">
+            <md-list-item ng-repeat="notification in vleController.getNewNotifications() track by $index"
+                          ng-click="vleController.visitNode(notification.nodeId)"
+                          md-autofocus="$first"
+                          class="md-2-line">
+                <div class="md-list-item-text">
+                    <div class="md-body-1 primary">{{notification.message}}</div>
+                    <h4 class="notification-list-item__source">{{vleController.ProjectService.getNodePositionAndTitleByNodeId(notification.nodeId)}}</h4>
+                </div>
+                <md-button class="md-icon-button" md-prevent-menu-close="md-prevent-menu-close"
+                           ng-click="vleController.dismissNotification(notification)">
+                    <md-icon>clear</md-icon>
+                </md-button>
+            </md-list-item>
+        </md-list>
+    </md-content>
 </div>

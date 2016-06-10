@@ -18,7 +18,8 @@ $color: (
   'text': rgba(0, 0, 0, 0.87),
   'text-secondary': rgba(0, 0, 0, 0.54),
   'text-disabled': rgba(0, 0, 0, 0.26),
-  'selected-bg': lighten($_primary-color, 59%)
+  'selected-bg': lighten($_primary-color, 59%),
+  'score': #FFC107
 );
 
 //'warn': #F44336, // should match the default color of your ng-material default theme's 'warn' palette
@@ -32,8 +33,17 @@ $body-color: (
 $colors: map-merge($color, $body-color);
 
 // Typography
+$baseline-grid:            8px;
 $body-font-size-base:      rem(1.500);
 $caption-font-size-base:   rem(1.300);
 
 // Layout
 $wise-toolbar-height: 42px;
+
+// Menus
+$menu-border-radius: 2px;
+$max-visible-items: 6;
+$menu-item-height: 6 * $baseline-grid !default;
+$dense-menu-item-height: 4 * $baseline-grid !default;
+$max-menu-height: 2 * $baseline-grid + $max-visible-items * $menu-item-height !default;
+$max-dense-menu-height: 2 * $baseline-grid + $max-visible-items * $dense-menu-item-height !default;

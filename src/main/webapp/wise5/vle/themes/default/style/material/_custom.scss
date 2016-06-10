@@ -203,6 +203,12 @@ md-tooltip {
     border-radius: $card-border-radius;
 }
 
+.md-toolbar-tools>.md-button:last-child {
+    @media (max-width: $layout-breakpoint-sm - 1) {
+        margin-right: 0;
+    }
+}
+
 md-card .md-actions:not(.layout-column) .md-button.md-icon-button:last-of-type,
 md-card md-card-actions:not(.layout-column) .md-button.md-icon-button:last-of-type {
     margin-right: 0;

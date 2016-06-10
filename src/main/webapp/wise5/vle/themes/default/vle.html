@@ -21,9 +21,9 @@
                 <span>{{vleController.projectName}}</span>
             </h3>
             <span flex></span>
-            <md-menu md-position-mode="target-right target" md-offset="8 26">
-                <md-button aria-label="Open user menu" class="md-icon-button" ng-click="$mdOpenMenu()">
-                    <span ng-show="vleController.hasNewNotifications()">{{vleController.getNewNotifications().length}}</span>
+            <md-menu md-position-mode="target-right target" md-offset="40 26">
+                <md-button aria-label="View notifications" class="md-icon-button notification-btn" ng-click="$mdOpenMenu()">
+                    <span ng-show="vleController.hasNewNotifications()" class="notification-count">{{vleController.getNewNotifications().length}}</span>
                     <md-icon md-menu-origin> notifications </md-icon>
                 </md-button>
                 <md-menu-content width="5" class="account-menu">
@@ -55,24 +55,16 @@
         <md-sidenav md-component-id="notebookSidenav" md-is-open="themeCtrl.notebookNavOpen">
             <notebook-menu view-mode="nav" nodeId="themeCtrl.currentNodeId" notebook-filter="themeCtrl.notebookFilter"></notebook-menu>
         </md-sidenav>
+        <!--<md-sidenav md-component-id="stepNav" md-is-open="themeCtrl.stepNavOpen">
+            <md-content role="navigation">
+                <md-list>
+                    <nav-item ng-repeat="item in themeCtrl.idToOrder | toArray | orderBy : 'order'"
+                              ng-if="themeCtrl.nodeStatuses[item.$key].isVisible && item.order!==0"
+                              show-position="themeCtrl.numberProject"
+                              node-id="item.$key" type="'list'"></nav-item>
+                </md-list>
+            </md-content>
+        </md-sidenav>-->
     </md-content>
     <notebook-menu class="notebook-menu" view-mode="sidebar" nodeId="themeCtrl.currentNodeId" notebook-filter="themeCtrl.notebookFilter" ng-show="themeCtrl.layoutState === 'notebook'"></notebook-menu>
-    <!--<md-sidenav md-component-id="stepNav">
-        <md-content role="navigation" flex>
-            <ul>
-                <li ng-repeat="item in themeCtrl.idToOrder | toArray | orderBy : 'order'"
-                    ng-if="themeCtrl.nodeStatuses[item.$key].isVisible && item.order!==0"
-                    value="{{ item.$key }}">
-                    <div layout="row" layout-align="start center">
-                        <img class="node-select__icon md-18 avatar node-avatar" ng-class="themeCtrl.ProjectService.isGroupNode(item.$key) ? 'avatar--square' : ''" ng-if="themeCtrl.nodeStatuses[item.$key].icon.type === 'img'" ng-src="{{themeCtrl.nodeStatuses[item.$key].icon.imgSrc}}" alt="{{themeCtrl.nodeStatuses[item.$key].icon.imgAlt}}" />
-                        <div class="node-select__icon md-18 avatar avatar--icon node-avatar" ng-class="themeCtrl.ProjectService.isGroupNode(item.$key) ? 'avatar--square' : ''" ng-if="themeCtrl.nodeStatuses[item.$key].icon.type === 'font'" style="background-color: {{themeCtrl.nodeStatuses[item.$key].icon.color}};">
-                            <md-icon md-font-set="{{themeCtrl.nodeStatuses[item.$key].icon.fontSet}}" class="md-18 md-light node-icon" md-theme="default">{{themeCtrl.nodeStatuses[item.$key].icon.fontName}}</md-icon>&nbsp;
-                        </div>
-                        <span class="node-select__text">{{ themeCtrl.showPosition ? themeCtrl.ProjectService.getNodePositionById(item.$key) + ': ' : '' }}{{ themeCtrl.ProjectService.getNodeTitleByNodeId(item.$key) }}</span>
-                        <node-status-icon node-id="item.$key" custom-class="'node-select__status'"></node-status-icon>
-                    </div>
-                </li>
-            </ul>
-        </md-content>
-    </md-sidenav>-->
 </div>

@@ -14,6 +14,18 @@
     }
 }
 
+.account-menu--fixed-height {
+    height: $max-menu-height;
+}
+
+.account-menu--fixed-width {
+    width: 320px;
+
+    @media (min-width: $layout-breakpoint-sm) {
+        width: 380px;
+    }
+}
+
 .account-menu__caret {
     position: absolute;
     right: 28px;
@@ -29,12 +41,19 @@
     }
 }
 
+.account-menu__caret--notification {
+    right: 80px;
+}
+
 .account-menu__info {
     padding: 8px 12px;
 }
 
-.account-menu__users {
+.account-menu__info__title {
     font-weight: 700;
+}
+
+.account-menu__users {
     padding: 0;
 
     md-list-item {
@@ -63,7 +82,7 @@
     margin-right: 4px;
 
     md-icon {
-        color: #FFC107;
+        color: color('score');
     }
 }
 
