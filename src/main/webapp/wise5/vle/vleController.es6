@@ -354,24 +354,35 @@ class VLEController {
     }
 
     /**
-     * Dismiss all new notifications
+     * Show confirmation dialog before dismissing all notifications
      */
-    dismissAllNotifications(ev) {
-        this.$translate(["dismissNotificationsTitle", "dismissNotificationsMessage", "yes", "no"]).then((translations) => {
-            let confirm = this.$mdDialog.confirm()
-                .parent(angular.element($('._md-open-menu-container._md-active')))// TODO: hack for now (showing md-dialog on top of md-menu)
-                .ariaLabel(translations.dismissNotificationsTitle)
-                .textContent(translations.dismissNotificationsMessage)
-                .targetEvent(ev)
-                .ok(translations.yes)
-                .cancel(translations.no);
+    confirmDismissAllNotifications(ev) {
+        if (this.getNewNotifications().length > 1) {
+            this.$translate(["dismissNotificationsTitle", "dismissNotificationsMessage", "yes", "no"]).then((translations) => {
+                let confirm = this.$mdDialog.confirm()
+                    .parent(angular.element($('._md-open-menu-container._md-active')))// TODO: hack for now (showing md-dialog on top of md-menu)
+                    .ariaLabel(translations.dismissNotificationsTitle)
+                    .textContent(translations.dismissNotificationsMessage)
+                    .targetEvent(ev)
+                    .ok(translations.yes)
+                    .cancel(translations.no);
 
-            this.$mdDialog.show(confirm).then(() => {
-                let newNotifications = this.getNewNotifications();
-                newNotifications.map((newNotification) => {
-                    this.dismissNotification(newNotification);
+                this.$mdDialog.show(confirm).then(() => {
+                    this.dismissAllNotifications();
                 });
             });
+        } else {
+            this.dismissAllNotifications();
+        }
+    }
+
+    /**
+     * Dismiss all new notifications
+     */
+    dismissAllNotifications() {
+        let newNotifications = this.getNewNotifications();
+        newNotifications.map((newNotification) => {
+            this.dismissNotification(newNotification);
         });
     }
 

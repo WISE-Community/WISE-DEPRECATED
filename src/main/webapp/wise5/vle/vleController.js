@@ -365,24 +365,40 @@ var VLEController = function () {
         }
 
         /**
+         * Show confirmation dialog before dismissing all notifications
+         */
+
+    }, {
+        key: 'confirmDismissAllNotifications',
+        value: function confirmDismissAllNotifications(ev) {
+            var _this2 = this;
+
+            if (this.getNewNotifications().length > 1) {
+                this.$translate(["dismissNotificationsTitle", "dismissNotificationsMessage", "yes", "no"]).then(function (translations) {
+                    var confirm = _this2.$mdDialog.confirm().parent(angular.element($('._md-open-menu-container._md-active'))) // TODO: hack for now (showing md-dialog on top of md-menu)
+                    .ariaLabel(translations.dismissNotificationsTitle).textContent(translations.dismissNotificationsMessage).targetEvent(ev).ok(translations.yes).cancel(translations.no);
+
+                    _this2.$mdDialog.show(confirm).then(function () {
+                        _this2.dismissAllNotifications();
+                    });
+                });
+            } else {
+                this.dismissAllNotifications();
+            }
+        }
+
+        /**
          * Dismiss all new notifications
          */
 
     }, {
         key: 'dismissAllNotifications',
-        value: function dismissAllNotifications(ev) {
-            var _this2 = this;
+        value: function dismissAllNotifications() {
+            var _this3 = this;
 
-            this.$translate(["dismissNotificationsTitle", "dismissNotificationsMessage", "yes", "no"]).then(function (translations) {
-                var confirm = _this2.$mdDialog.confirm().parent(angular.element($('._md-open-menu-container._md-active'))) // TODO: hack for now (showing md-dialog on top of md-menu)
-                .ariaLabel(translations.dismissNotificationsTitle).textContent(translations.dismissNotificationsMessage).targetEvent(ev).ok(translations.yes).cancel(translations.no);
-
-                _this2.$mdDialog.show(confirm).then(function () {
-                    var newNotifications = _this2.getNewNotifications();
-                    newNotifications.map(function (newNotification) {
-                        _this2.dismissNotification(newNotification);
-                    });
-                });
+            var newNotifications = this.getNewNotifications();
+            newNotifications.map(function (newNotification) {
+                _this3.dismissNotification(newNotification);
             });
         }
 

@@ -6,8 +6,8 @@
         <md-button class="md-icon-button"
                    aria-label="Clear all notifications"
                    md-prevent-menu-close="md-prevent-menu-close"
-                   ng-disabled="vleController.getNewNotifications().length < 2"
-                   ng-click="vleController.dismissAllNotifications($event)">
+                   ng-disabled="vleController.getNewNotifications().length < 1"
+                   ng-click="vleController.confirmDismissAllNotifications($event)">
             <md-icon> clear_all </md-icon>
         </md-button>
     </md-toolbar>
