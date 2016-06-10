@@ -13,6 +13,8 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.module.Curnit;
 import org.wise.portal.domain.module.impl.CurnitGetCurnitUrlVisitor;
@@ -26,15 +28,18 @@ import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.presentation.web.exception.NotAuthorizedException;
+import org.wise.portal.presentation.web.listeners.WISESessionListener;
 import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.module.CurnitService;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.vle.utils.FileManager;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.util.*;
 
@@ -56,6 +61,9 @@ public class WISE5AuthorProjectController {
 
     @Autowired
     Properties wiseProperties;
+
+    @Autowired
+    ServletContext servletContext;
 
     /**
      * Handle user's request to launch the Authoring Tool without specified project
@@ -416,7 +424,7 @@ public class WISE5AuthorProjectController {
             config.put("previewProjectURL", previewProjectURL);
             config.put("saveProjectURL", saveProjectURL);
             config.put("commitProjectURL", commitProjectURL);
-            
+
             if (runId != null) {
                 config.put("runId", runId);
             }
@@ -445,6 +453,9 @@ public class WISE5AuthorProjectController {
             config.put("sessionLogOutURL", wiseBaseURL + "/logout");
             config.put("registerNewProjectURL", wiseBaseURL + "/project/new");
             config.put("wiseBaseURL", wiseBaseURL);
+            config.put("notifyProjectBeginURL", wiseBaseURL + "/project/notifyAuthorBegin/");
+            config.put("notifyProjectEndURL", wiseBaseURL + "/project/notifyAuthorEnd/");
+            config.put("getCurrentAuthorsURL", wiseBaseURL + "/project/currentAuthors/");
 
             // add this teachers's info in config.userInfo.myUserInfo object
             JSONObject myUserInfo = new JSONObject();
@@ -493,6 +504,28 @@ public class WISE5AuthorProjectController {
                 }
             }
             config.put("locale", locale);
+
+            //get the websocket base url e.g. ws://wise.berkeley.edu:8080
+            String webSocketBaseURL = wiseProperties.getProperty("webSocketBaseUrl");
+
+            if (webSocketBaseURL == null) {
+				/*
+				 * if the websocket base url was not provided in the portal properties
+				 * we will use the default websocket base url.
+				 * e.g.
+				 * ws://localhost:8080/wise
+				 */
+                if (wiseBaseURL.contains("http")) {
+                    webSocketBaseURL = wiseBaseURL.replace("http", "ws");
+                } else {
+                    String portalContextPath = ControllerUtil.getPortalUrlString(request);
+                    webSocketBaseURL = portalContextPath.replace("http", "ws");
+                }
+            }
+
+            //get the url for websocket connections
+            String webSocketURL = webSocketBaseURL + "/websocket";
+            config.put("webSocketURL", webSocketURL);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -828,5 +861,154 @@ public class WISE5AuthorProjectController {
         }
         
         return runId;
+    }
+
+    /**
+     * Returns a list of authors who are currently editing the specified project
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @SuppressWarnings("unchecked")
+    @RequestMapping(value = "/project/currentAuthors/{projectId}", method = RequestMethod.GET)
+    private void handleGetCurrentAuthors(
+            @PathVariable String projectId,
+            HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
+        User user = ControllerUtil.getSignedInUser();
+        if (this.hasAuthorPermissions(user)) {
+
+            HashMap<String, ArrayList<String>> openedProjectsToSessions =
+                    (HashMap<String, ArrayList<String>>) servletContext.getAttribute("openedProjectsToSessions");
+
+            if (openedProjectsToSessions == null) {
+                openedProjectsToSessions = new HashMap<String, ArrayList<String>>();
+                servletContext.setAttribute("openedProjectsToSessions", openedProjectsToSessions);
+            }
+
+            if (openedProjectsToSessions.get(projectId) == null) {
+                openedProjectsToSessions.put(projectId, new ArrayList<String>());
+            }
+            ArrayList<String> sessions = openedProjectsToSessions.get(projectId);  // sessions that are currently authoring this project
+
+            // Now get all the logged in users who are editing this same project
+            HashMap<String, User> allLoggedInUsers = (HashMap<String, User>) servletContext
+                    .getAttribute(WISESessionListener.ALL_LOGGED_IN_USERS);
+
+            HttpSession currentUserSession = request.getSession();
+            JSONArray otherUsersAlsoEditingProject = new JSONArray();
+
+            for (String sessionId : sessions) {
+                if (sessionId != currentUserSession.getId()) {
+                    user = allLoggedInUsers.get(sessionId);
+                    if (user != null) {
+                        otherUsersAlsoEditingProject.put(user.getUserDetails().getUsername());
+                    }
+                }
+            }
+
+            response.getWriter().write(otherUsersAlsoEditingProject.toString());
+        }
+    }
+
+    /**
+     * Handles notifications of opened projects
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @SuppressWarnings("unchecked")
+    @RequestMapping(value = "/project/notifyAuthorBegin/{projectId}", method = RequestMethod.POST)
+    private ModelAndView handleNotifyAuthorProjectBegin(
+            @PathVariable String projectId,
+            HttpServletRequest request,
+            HttpServletResponse response) throws Exception{
+        User user = ControllerUtil.getSignedInUser();
+        if (this.hasAuthorPermissions(user)) {
+
+            HttpSession currentUserSession = request.getSession();
+            HashMap<String, ArrayList<String>> openedProjectsToSessions =
+                    (HashMap<String, ArrayList<String>>) servletContext.getAttribute("openedProjectsToSessions");
+
+            if (openedProjectsToSessions == null) {
+                openedProjectsToSessions = new HashMap<String, ArrayList<String>>();
+                servletContext.setAttribute("openedProjectsToSessions", openedProjectsToSessions);
+            }
+
+            if (openedProjectsToSessions.get(projectId) == null) {
+                openedProjectsToSessions.put(projectId, new ArrayList<String>());
+            }
+            ArrayList<String> sessions = openedProjectsToSessions.get(projectId);  // sessions that are currently authoring this project
+            if (!sessions.contains(currentUserSession.getId())) {
+                sessions.add(currentUserSession.getId());
+            }
+
+            // Now get all the logged in users who are editing this same project
+            HashMap<String, User> allLoggedInUsers = (HashMap<String, User>) servletContext
+                    .getAttribute(WISESessionListener.ALL_LOGGED_IN_USERS);
+
+            String otherUsersAlsoEditingProject = "";
+            for (String sessionId : sessions) {
+                if (sessionId != currentUserSession.getId()) {
+                    user = allLoggedInUsers.get(sessionId);
+                    if (user != null) {
+                        otherUsersAlsoEditingProject += user.getUserDetails().getUsername() + ",";
+                    }
+                }
+            }
+
+			/* strip off trailing comma */
+            if (otherUsersAlsoEditingProject.contains(",")) {
+                otherUsersAlsoEditingProject = otherUsersAlsoEditingProject.substring(0, otherUsersAlsoEditingProject.length() - 1);
+            }
+
+            response.getWriter().write(otherUsersAlsoEditingProject);
+            return null;
+        } else {
+            return new ModelAndView(new RedirectView("accessdenied.html"));
+        }
+    }
+
+    /**
+     * Handles notifications of closed projects
+     *
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @SuppressWarnings("unchecked")
+    @RequestMapping(value = "/project/notifyAuthorEnd/{projectId}", method = RequestMethod.POST)
+    private ModelAndView handleNotifyAuthorProjectEnd(
+            @PathVariable String projectId,
+            HttpServletRequest request,
+            HttpServletResponse response) throws Exception{
+        User user = ControllerUtil.getSignedInUser();
+        if (this.hasAuthorPermissions(user)) {
+            HttpSession currentSession = request.getSession();
+
+            Map<String, ArrayList<String>> openedProjectsToSessions = (Map<String, ArrayList<String>>) servletContext.getAttribute("openedProjectsToSessions");
+
+            if (openedProjectsToSessions == null || openedProjectsToSessions.get(projectId) == null) {
+                return null;
+            } else {
+                ArrayList<String> sessions = openedProjectsToSessions.get(projectId);
+                if (!sessions.contains(currentSession.getId())) {
+                    return null;
+                } else {
+                    sessions.remove(currentSession.getId());
+                    // if there are no more users authoring this project, remove this project from openedProjectsToSessions
+                    if (sessions.size() == 0) {
+                        openedProjectsToSessions.remove(projectId);
+                    }
+                    response.getWriter().write("success");
+                    return null;
+                }
+            }
+        } else {
+            return new ModelAndView(new RedirectView("accessdenied.html"));
+        }
     }
 }

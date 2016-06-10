@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var AuthoringToolController = function () {
-    function AuthoringToolController($location, $mdDialog, $scope, $translate, ConfigService, SessionService) {
+    function AuthoringToolController($location, $mdDialog, $scope, $translate, ConfigService, ProjectService, SessionService) {
         var _this = this;
 
         _classCallCheck(this, AuthoringToolController);
@@ -19,6 +19,7 @@ var AuthoringToolController = function () {
         this.$scope = $scope;
         this.$translate = $translate;
         this.ConfigService = ConfigService;
+        this.ProjectService = ProjectService;
         this.SessionService = SessionService;
 
         $scope.$on('showSessionWarning', function () {
@@ -85,17 +86,22 @@ var AuthoringToolController = function () {
     }, {
         key: 'exit',
         value: function exit() {
-            // Send the user to the teacher home page
-            var wiseBaseURL = this.ConfigService.getWISEBaseURL();
-            var teacherHomePageURL = wiseBaseURL + '/teacher';
-            window.location = teacherHomePageURL;
+            var _this2 = this;
+
+            // notify others that we've finished authoring
+            this.ProjectService.notifyAuthorProjectEnd().then(function () {
+                // send the user to the teacher home page
+                var wiseBaseURL = _this2.ConfigService.getWISEBaseURL();
+                var teacherHomePageURL = wiseBaseURL + '/teacher';
+                window.location = teacherHomePageURL;
+            });
         }
     }]);
 
     return AuthoringToolController;
 }();
 
-AuthoringToolController.$inject = ['$location', '$mdDialog', '$scope', '$translate', 'ConfigService', 'SessionService'];
+AuthoringToolController.$inject = ['$location', '$mdDialog', '$scope', '$translate', 'ConfigService', 'ProjectService', 'SessionService'];
 
 exports.default = AuthoringToolController;
 //# sourceMappingURL=authoringToolController.js.map

@@ -7,6 +7,7 @@ class AuthoringToolController {
                 $scope,
                 $translate,
                 ConfigService,
+                ProjectService,
                 SessionService
                 ) {
 
@@ -15,6 +16,7 @@ class AuthoringToolController {
         this.$scope = $scope;
         this.$translate = $translate;
         this.ConfigService = ConfigService;
+        this.ProjectService = ProjectService;
         this.SessionService = SessionService;
 
         $scope.$on('showSessionWarning', () => {
@@ -77,13 +79,16 @@ class AuthoringToolController {
     }
 
     exit() {
-        // Send the user to the teacher home page
-        let wiseBaseURL = this.ConfigService.getWISEBaseURL();
-        let teacherHomePageURL = wiseBaseURL + '/teacher';
-        window.location = teacherHomePageURL;
+        // notify others that we've finished authoring
+        this.ProjectService.notifyAuthorProjectEnd().then(() => {
+            // send the user to the teacher home page
+            let wiseBaseURL = this.ConfigService.getWISEBaseURL();
+            let teacherHomePageURL = wiseBaseURL + '/teacher';
+            window.location = teacherHomePageURL;
+        })
     }
 }
 
-AuthoringToolController.$inject = ['$location', '$mdDialog', '$scope', '$translate', 'ConfigService', 'SessionService'];
+AuthoringToolController.$inject = ['$location', '$mdDialog', '$scope', '$translate', 'ConfigService', 'ProjectService', 'SessionService'];
 
 export default AuthoringToolController;

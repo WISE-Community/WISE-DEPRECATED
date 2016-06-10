@@ -15,9 +15,9 @@ class TeacherWebSocketService {
         webSocketURL += "?runId=" + runId + "&periodId=" + periodId + "&workgroupId=" + workgroupId;
         this.dataStream = this.$websocket(webSocketURL);
 
-        this.dataStream.onMessage(angular.bind(this, function(message) {
+        this.dataStream.onMessage((message) => {
             this.handleMessage(message);
-        }));
+        });
     };
 
     handleMessage(message) {

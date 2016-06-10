@@ -22,6 +22,8 @@ var TeacherWebSocketService = function () {
     _createClass(TeacherWebSocketService, [{
         key: "initialize",
         value: function initialize() {
+            var _this = this;
+
             var runId = this.ConfigService.getRunId();
             var periodId = this.ConfigService.getPeriodId();
             var workgroupId = this.ConfigService.getWorkgroupId();
@@ -29,9 +31,9 @@ var TeacherWebSocketService = function () {
             webSocketURL += "?runId=" + runId + "&periodId=" + periodId + "&workgroupId=" + workgroupId;
             this.dataStream = this.$websocket(webSocketURL);
 
-            this.dataStream.onMessage(angular.bind(this, function (message) {
-                this.handleMessage(message);
-            }));
+            this.dataStream.onMessage(function (message) {
+                _this.handleMessage(message);
+            });
         }
     }, {
         key: "handleMessage",
