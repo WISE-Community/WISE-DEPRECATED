@@ -19,6 +19,7 @@ import AudioOscillatorService from '../components/audioOscillator/audioOscillato
 import AuthoringToolController from './authoringToolController';
 import AuthoringToolMainController from './main/authoringToolMainController';
 import AuthoringToolNewProjectController from './main/authoringToolNewProjectController';
+import AuthorWebSocketService from '../services/authorWebSocketService';
 import ConfigService from '../services/configService';
 import Directives from '../directives/directives';
 import DiscussionController from '../components/discussion/discussionController';
@@ -55,7 +56,6 @@ import SessionService from '../services/sessionService';
 import StudentAssetService from '../services/studentAssetService';
 import StudentDataService from '../services/studentDataService';
 import StudentStatusService from '../services/studentStatusService';
-import StudentWebSocketService from '../services/studentWebSocketService';
 import TableController from '../components/table/tableController';
 import TableService from '../components/table/tableService';
 import TeacherDataService from '../services/teacherDataService';
@@ -79,6 +79,7 @@ let mainModule = angular.module('authoring', [
 ])
     .service(AnnotationService.name, AnnotationService)
     .service(AudioOscillatorService.name, AudioOscillatorService)
+    .service(AuthorWebSocketService.name, AuthorWebSocketService)
     .service(ConfigService.name, ConfigService)
     .service(DiscussionService.name, DiscussionService)
     .service(DrawService.name, DrawService)
@@ -98,7 +99,6 @@ let mainModule = angular.module('authoring', [
     .service(StudentAssetService.name, StudentAssetService)
     .service(StudentDataService.name, StudentDataService)
     .service(StudentStatusService.name, StudentStatusService)
-    .service(StudentWebSocketService.name, StudentWebSocketService)
     .service(TableService.name, TableService)
     .service(TeacherDataService.name, TeacherDataService)
     .service(UtilService.name, UtilService)
@@ -210,6 +210,11 @@ let mainModule = angular.module('authoring', [
                         sessionTimers: (SessionService, projectConfig) => {
                             return SessionService.initializeSession();
                         }
+                        /*,
+                        webSocket: (AuthorWebSocketService, projectConfig, $stateParams) => {
+                            return AuthorWebSocketService.initialize($stateParams.projectId);
+                        }
+                        */
                     }
                 })
                 .state('root.project.node', {

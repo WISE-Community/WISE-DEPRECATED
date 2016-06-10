@@ -2,9 +2,10 @@
 
 class ProjectService {
 
-    constructor($http, $injector, $rootScope, ConfigService) {
+    constructor($http, $injector, $q, $rootScope, ConfigService) {
         this.$http = $http;
         this.$injector = $injector;
+        this.$q = $q;
         this.$rootScope = $rootScope;
         this.ConfigService = ConfigService;
         this.project = null;
@@ -1472,6 +1473,78 @@ class ProjectService {
             return commitHistory;
         });
     };
+
+    /**
+     * Get the current authors for this project
+     * @param projectId
+     */
+    getCurrentAuthors(projectId = null) {
+        return this.$q((resolve, reject) => {
+            if (projectId == null) {
+                if (this.project != null) {
+                    projectId = this.ConfigService.getProjectId();
+                } else {
+                    // we're not editing any projects, so there are no authors
+                    resolve([]);
+                }
+            }
+            let notifyProjectEndURL = this.ConfigService.getConfigParam('getCurrentAuthorsURL') + projectId;
+            let httpParams = {};
+            httpParams.method = 'GET';
+            httpParams.url = notifyProjectEndURL;
+
+            this.$http(httpParams).then((result) => {
+                resolve(result.data);
+            })
+        });
+    };
+
+    /**
+     * Notifies others that the specified project is being authored
+     * @param projectId id of the project
+     */
+    notifyAuthorProjectBegin(projectId = null) {
+        if (projectId == null) {
+            if (this.project != null) {
+                projectId = this.project.id;
+            } else {
+                return;
+            }
+        }
+        let notifyProjectBeginURL = this.ConfigService.getConfigParam('notifyProjectBeginURL') + projectId;
+        let httpParams = {};
+        httpParams.method = 'POST';
+        httpParams.url = notifyProjectBeginURL;
+
+        return this.$http(httpParams).then((result) => {
+            let otherAuthors = result.data;
+            return otherAuthors;
+        });
+    }
+
+    /**
+     * Notifies others that the specified project is being authored
+     * @param projectId id of the project
+     */
+    notifyAuthorProjectEnd(projectId = null) {
+        return this.$q((resolve, reject) => {
+            if (projectId == null) {
+                if (this.project != null) {
+                    projectId = this.ConfigService.getProjectId();
+                } else {
+                    resolve();
+                }
+            }
+            let notifyProjectEndURL = this.ConfigService.getConfigParam('notifyProjectEndURL') + projectId;
+            let httpParams = {};
+            httpParams.method = 'POST';
+            httpParams.url = notifyProjectEndURL;
+
+            this.$http(httpParams).then(() => {
+                resolve();
+            })
+        });
+    }
     
     /**
      * Perform any necessary cleanup before we save the project.
@@ -4099,18 +4172,18 @@ class ProjectService {
                                 for (var tc = 0; tc < transitionsCopy.length; tc++) {
                                     var tempTransition = transitionsCopy[tc];
 
-                                    if (tempTransition != null) {
-                                        var tempToNodeId = tempTransition.to;
+                                }
+                                if (tempTransition != null) {
+                                    var tempToNodeId = tempTransition.to;
 
-                                        if (tempToNodeId != null) {
-                                            var parentIdOfToNode = this.getParentGroupId(tempToNodeId);
+                                    if (tempToNodeId != null) {
+                                        var parentIdOfToNode = this.getParentGroupId(tempToNodeId);
 
-                                            if (parentIdOfNodeToRemove != parentIdOfToNode) {
-                                                // remove the transition
+                                        if (parentIdOfNodeToRemove != parentIdOfToNode) {
+                                            // remove the transition
 
-                                                transitionsCopy.splice(tc, 1);
-                                                tc--;
-                                            }
+                                            transitionsCopy.splice(tc, 1);
+                                            tc--;
                                         }
                                     }
                                 }
@@ -6132,6 +6205,7 @@ class ProjectService {
 ProjectService.$inject = [
     '$http',
     '$injector',
+    '$q',
     '$rootScope',
     'ConfigService'
 ];

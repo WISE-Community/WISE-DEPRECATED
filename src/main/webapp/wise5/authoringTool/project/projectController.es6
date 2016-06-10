@@ -2,18 +2,19 @@
 
 class ProjectController {
 
-    constructor($q, $scope, $state, $stateParams, $translate, ProjectService, ConfigService) {
+    constructor($interval, $q, $scope, $state, $stateParams, $translate, AuthorWebSocketService, ConfigService, ProjectService) {
+        this.$interval = $interval;
         this.$q = $q;
         this.$scope = $scope;
         this.$state = $state;
         this.$stateParams = $stateParams;
         this.$translate = $translate;
-        this.ProjectService = ProjectService;
+        this.AuthorWebSocketService = AuthorWebSocketService;
         this.ConfigService = ConfigService;
+        this.ProjectService = ProjectService;
 
         this.projectId = this.$stateParams.projectId;
         this.runId = this.ConfigService.getRunId();
-        //this.project = this.ProjectService.project;
         this.items = this.ProjectService.idToOrder;
         this.nodeIds = this.ProjectService.getFlattenedProjectAsNodeIds();
         this.showCreateGroup = false;
@@ -22,21 +23,39 @@ class ProjectController {
         this.inactiveGroups = this.ProjectService.getInactiveGroups();
         this.inactiveNodes = this.ProjectService.getInactiveNodes();
 
-        //this.updateProjectAsText();
-
-        /*
-        $scope.$watch(
-            () => {
-                return this.projectAsText;
-            },
-            () => {
-                try {
-                    this.project = JSON.parse(this.projectAsText);
-                } catch(exp) {
-                    //Exception handler
-                };
+        // check to see if there are other authors right now.
+        this.ProjectService.getCurrentAuthors(this.projectId).then((currentAuthors) => {
+            if (currentAuthors.length == 0) {
+                this.currentAuthorsMessage = "";
+            } else {
+                this.currentAuthorsMessage = currentAuthors.join(",") + " is currently editing this project.";
+                alert(currentAuthors.join(",") + " is currently editing this project. Please be careful not to overwrite each other's work!");
+            }
         });
-        */
+
+        // notify others that this project is being authored
+        this.ProjectService.notifyAuthorProjectBegin(this.projectId).then((otherAuthors) => {
+            // also send a websocket message to other online authors
+            //this.AuthorWebSocketService.notifyAuthorProjectBegin(this.projectId);
+        });
+
+        // temprary polling until we get websocket working
+        this.checkOtherAuthorsIntervalId = this.$interval(() => {
+            this.ProjectService.getCurrentAuthors(this.projectId).then((currentAuthors) => {
+                if (currentAuthors.length == 0) {
+                    this.currentAuthorsMessage = "";
+                } else {
+                    this.currentAuthorsMessage = currentAuthors.join(",") + " is currently editing this project.";
+                }
+            });
+        }, 15000);
+
+        this.$scope.$on("$destroy", () => {
+            // cancel the checkOtherAuthorsInterval
+            this.$interval.cancel(this.checkOtherAuthorsIntervalId);
+            // notify others that this project is no longer being authored
+            this.ProjectService.notifyAuthorProjectEnd(this.projectId);
+        });
     };
 
     // updates projectAsText field, which is the string representation of the project that we'll show in the textarea
@@ -761,6 +780,7 @@ class ProjectController {
     }
 };
 
-ProjectController.$inject = ['$q', '$scope', '$state', '$stateParams', '$translate', 'ProjectService', 'ConfigService'];
+ProjectController.$inject = ['$interval', '$q', '$scope', '$state', '$stateParams', '$translate',
+    'AuthorWebSocketService', 'ConfigService', 'ProjectService'];
 
 export default ProjectController;

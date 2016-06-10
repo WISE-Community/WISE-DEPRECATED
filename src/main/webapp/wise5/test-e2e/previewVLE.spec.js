@@ -34,7 +34,7 @@ describe('WISE5 Student VLE Preview', function () {
     var nextButton = element(by.xpath('//button[@aria-label="Next Item"]'));
     var closeButton = element(by.xpath('//button[@aria-label="Close Step"]'));
     var accountButton = element(by.xpath('//button[@aria-label="Open user menu"]'));
-    var accountMenu = element(by.css('._md-open-menu-container'));
+    var accountMenu = $("#accountMenu");
 
     it('should load the vle and go to node 1', function () {
         var nodeDropDownMenu = element(by.model("stepToolsCtrl.toNodeId"));

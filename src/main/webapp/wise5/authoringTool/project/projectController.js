@@ -9,20 +9,23 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var ProjectController = function () {
-    function ProjectController($q, $scope, $state, $stateParams, $translate, ProjectService, ConfigService) {
+    function ProjectController($interval, $q, $scope, $state, $stateParams, $translate, AuthorWebSocketService, ConfigService, ProjectService) {
+        var _this = this;
+
         _classCallCheck(this, ProjectController);
 
+        this.$interval = $interval;
         this.$q = $q;
         this.$scope = $scope;
         this.$state = $state;
         this.$stateParams = $stateParams;
         this.$translate = $translate;
-        this.ProjectService = ProjectService;
+        this.AuthorWebSocketService = AuthorWebSocketService;
         this.ConfigService = ConfigService;
+        this.ProjectService = ProjectService;
 
         this.projectId = this.$stateParams.projectId;
         this.runId = this.ConfigService.getRunId();
-        //this.project = this.ProjectService.project;
         this.items = this.ProjectService.idToOrder;
         this.nodeIds = this.ProjectService.getFlattenedProjectAsNodeIds();
         this.showCreateGroup = false;
@@ -31,21 +34,39 @@ var ProjectController = function () {
         this.inactiveGroups = this.ProjectService.getInactiveGroups();
         this.inactiveNodes = this.ProjectService.getInactiveNodes();
 
-        //this.updateProjectAsText();
-
-        /*
-        $scope.$watch(
-            () => {
-                return this.projectAsText;
-            },
-            () => {
-                try {
-                    this.project = JSON.parse(this.projectAsText);
-                } catch(exp) {
-                    //Exception handler
-                };
+        // check to see if there are other authors right now.
+        this.ProjectService.getCurrentAuthors(this.projectId).then(function (currentAuthors) {
+            if (currentAuthors.length == 0) {
+                _this.currentAuthorsMessage = "";
+            } else {
+                _this.currentAuthorsMessage = currentAuthors.join(",") + " is currently editing this project.";
+                alert(currentAuthors.join(",") + " is currently editing this project. Please be careful not to overwrite each other's work!");
+            }
         });
-        */
+
+        // notify others that this project is being authored
+        this.ProjectService.notifyAuthorProjectBegin(this.projectId).then(function (otherAuthors) {
+            // also send a websocket message to other online authors
+            //this.AuthorWebSocketService.notifyAuthorProjectBegin(this.projectId);
+        });
+
+        // temprary polling until we get websocket working
+        this.checkOtherAuthorsIntervalId = this.$interval(function () {
+            _this.ProjectService.getCurrentAuthors(_this.projectId).then(function (currentAuthors) {
+                if (currentAuthors.length == 0) {
+                    _this.currentAuthorsMessage = "";
+                } else {
+                    _this.currentAuthorsMessage = currentAuthors.join(",") + " is currently editing this project.";
+                }
+            });
+        }, 15000);
+
+        this.$scope.$on("$destroy", function () {
+            // cancel the checkOtherAuthorsInterval
+            _this.$interval.cancel(_this.checkOtherAuthorsIntervalId);
+            // notify others that this project is no longer being authored
+            _this.ProjectService.notifyAuthorProjectEnd(_this.projectId);
+        });
     }
 
     _createClass(ProjectController, [{
@@ -92,7 +113,7 @@ var ProjectController = function () {
     }, {
         key: "saveProject",
         value: function saveProject() {
-            var _this = this;
+            var _this2 = this;
 
             //let projectJSONString = JSON.stringify(this.project, null, 4);
             var commitMessage = $("#commitMessageInput").val();
@@ -101,7 +122,7 @@ var ProjectController = function () {
                 //this.ProjectService.project = this.project;
 
                 this.ProjectService.saveProject(commitMessage).then(function (commitHistoryArray) {
-                    _this.commitHistory = commitHistoryArray;
+                    _this2.commitHistory = commitHistoryArray;
                     $("#commitMessageInput").val(""); // clear field after commit
                 });
             } catch (error) {
@@ -775,20 +796,20 @@ var ProjectController = function () {
     }, {
         key: "checkPotentialStartNodeIdChange",
         value: function checkPotentialStartNodeIdChange() {
-            var _this2 = this;
+            var _this3 = this;
 
             return this.$q(function (resolve, reject) {
                 // get the current start node id
-                var currentStartNodeId = _this2.ProjectService.getStartNodeId();
+                var currentStartNodeId = _this3.ProjectService.getStartNodeId();
 
                 // get the first leaf node id
-                var firstLeafNodeId = _this2.ProjectService.getFirstLeafNodeId();
+                var firstLeafNodeId = _this3.ProjectService.getFirstLeafNodeId();
 
                 if (firstLeafNodeId == null) {
                     // there are no steps in the project
 
                     // set the start node id to empty string
-                    _this2.ProjectService.setStartNodeId('');
+                    _this3.ProjectService.setStartNodeId('');
 
                     resolve();
                 } else {
@@ -801,18 +822,18 @@ var ProjectController = function () {
                          * the author may want to use the first leaf node id as the
                          * new start node id
                          */
-                        var firstLeafNode = _this2.ProjectService.getNodeById(firstLeafNodeId);
+                        var firstLeafNode = _this3.ProjectService.getNodeById(firstLeafNodeId);
 
                         if (firstLeafNode != null) {
                             var firstChildTitle = firstLeafNode.title;
 
                             // ask the user if they would like to change the start step to the step that is now the first child in the group
-                            _this2.$translate('confirmUpdateStartStep', { startStepTitle: firstChildTitle }).then(function (confirmUpdateStartStep) {
+                            _this3.$translate('confirmUpdateStartStep', { startStepTitle: firstChildTitle }).then(function (confirmUpdateStartStep) {
                                 var answer = confirm(confirmUpdateStartStep);
 
                                 if (answer) {
                                     // change the project start node id
-                                    _this2.ProjectService.setStartNodeId(firstLeafNodeId);
+                                    _this3.ProjectService.setStartNodeId(firstLeafNodeId);
                                     resolve();
                                 } else {
                                     resolve();
@@ -835,18 +856,18 @@ var ProjectController = function () {
     }, {
         key: "checkPotentialStartNodeIdChangeThenSaveProject",
         value: function checkPotentialStartNodeIdChangeThenSaveProject() {
-            var _this3 = this;
+            var _this4 = this;
 
             // check if the project start node id should be changed
             this.checkPotentialStartNodeIdChange().then(function () {
                 // save the project
-                _this3.ProjectService.saveProject();
+                _this4.ProjectService.saveProject();
 
                 // refresh the project
-                _this3.ProjectService.parseProject();
-                _this3.items = _this3.ProjectService.idToOrder;
+                _this4.ProjectService.parseProject();
+                _this4.items = _this4.ProjectService.idToOrder;
 
-                _this3.unselectAllItems();
+                _this4.unselectAllItems();
             });
         }
 
@@ -872,7 +893,7 @@ var ProjectController = function () {
 
 ;
 
-ProjectController.$inject = ['$q', '$scope', '$state', '$stateParams', '$translate', 'ProjectService', 'ConfigService'];
+ProjectController.$inject = ['$interval', '$q', '$scope', '$state', '$stateParams', '$translate', 'AuthorWebSocketService', 'ConfigService', 'ProjectService'];
 
 exports.default = ProjectController;
 //# sourceMappingURL=projectController.js.map

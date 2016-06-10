@@ -1,26 +1,27 @@
-class TeacherWebSocketService {
-    constructor($rootScope, $websocket, ConfigService, StudentStatusService) {
+class AuthorWebSocketService {
+    constructor($rootScope, $websocket, ConfigService) {
         this.$rootScope = $rootScope;
         this.$websocket = $websocket;
         this.ConfigService = ConfigService;
-        this.StudentStatusService = StudentStatusService;
         this.dataStream = null;
     }
 
-    initialize() {
-        var runId = this.ConfigService.getRunId();
-        var periodId = this.ConfigService.getPeriodId();
-        var workgroupId = this.ConfigService.getWorkgroupId();
-        var webSocketURL = this.ConfigService.getWebSocketURL();
-        webSocketURL += "?runId=" + runId + "&periodId=" + periodId + "&workgroupId=" + workgroupId;
+    /**
+     * Initialize the websocket connection
+     */
+    initialize(projectId) {
+        // start the websocket connection
+        var webSocketURL = this.ConfigService.getWebSocketURL() + "?projectId=" + projectId;
         this.dataStream = this.$websocket(webSocketURL);
 
+        // this is the function that handles messages we receive from web sockets
         this.dataStream.onMessage((message) => {
             this.handleMessage(message);
         });
     };
 
     handleMessage(message) {
+        debugger;
         var data = JSON.parse(message.data);
         var messageType = data.messageType;
 
@@ -34,6 +35,20 @@ class TeacherWebSocketService {
             this.handleStudentDisconnected(data);
         }
     };
+
+    notifyAuthorProjectBegin(projectId) {
+        if (projectId != null) {
+            // create the websocket message
+            let messageJSON = {};
+
+            messageJSON.messageType = 'authorProjectBegin';
+            messageJSON.projectId = projectId;
+            messageJSON.username = this.ConfigService.getUserInfo().myUserInfo.userName;
+
+            // send the websocket message
+            this.sendMessage(messageJSON);
+        }
+    }
 
     sendMessage(messageJSON) {
         // send the websocket message
@@ -128,6 +143,6 @@ class TeacherWebSocketService {
     }
 }
 
-TeacherWebSocketService.$inject = ['$rootScope', '$websocket', 'ConfigService', 'StudentStatusService'];
+AuthorWebSocketService.$inject = ['$rootScope', '$websocket', 'ConfigService'];
 
-export default TeacherWebSocketService;
+export default AuthorWebSocketService;

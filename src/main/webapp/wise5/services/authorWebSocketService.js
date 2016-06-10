@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
     value: true
@@ -8,36 +8,39 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var TeacherWebSocketService = function () {
-    function TeacherWebSocketService($rootScope, $websocket, ConfigService, StudentStatusService) {
-        _classCallCheck(this, TeacherWebSocketService);
+var AuthorWebSocketService = function () {
+    function AuthorWebSocketService($rootScope, $websocket, ConfigService) {
+        _classCallCheck(this, AuthorWebSocketService);
 
         this.$rootScope = $rootScope;
         this.$websocket = $websocket;
         this.ConfigService = ConfigService;
-        this.StudentStatusService = StudentStatusService;
         this.dataStream = null;
     }
 
-    _createClass(TeacherWebSocketService, [{
-        key: "initialize",
-        value: function initialize() {
+    /**
+     * Initialize the websocket connection
+     */
+
+
+    _createClass(AuthorWebSocketService, [{
+        key: 'initialize',
+        value: function initialize(projectId) {
             var _this = this;
 
-            var runId = this.ConfigService.getRunId();
-            var periodId = this.ConfigService.getPeriodId();
-            var workgroupId = this.ConfigService.getWorkgroupId();
-            var webSocketURL = this.ConfigService.getWebSocketURL();
-            webSocketURL += "?runId=" + runId + "&periodId=" + periodId + "&workgroupId=" + workgroupId;
+            // start the websocket connection
+            var webSocketURL = this.ConfigService.getWebSocketURL() + "?projectId=" + projectId;
             this.dataStream = this.$websocket(webSocketURL);
 
+            // this is the function that handles messages we receive from web sockets
             this.dataStream.onMessage(function (message) {
                 _this.handleMessage(message);
             });
         }
     }, {
-        key: "handleMessage",
+        key: 'handleMessage',
         value: function handleMessage(message) {
+            debugger;
             var data = JSON.parse(message.data);
             var messageType = data.messageType;
 
@@ -50,20 +53,35 @@ var TeacherWebSocketService = function () {
             }
         }
     }, {
-        key: "sendMessage",
+        key: 'notifyAuthorProjectBegin',
+        value: function notifyAuthorProjectBegin(projectId) {
+            if (projectId != null) {
+                // create the websocket message
+                var messageJSON = {};
+
+                messageJSON.messageType = 'authorProjectBegin';
+                messageJSON.projectId = projectId;
+                messageJSON.username = this.ConfigService.getUserInfo().myUserInfo.userName;
+
+                // send the websocket message
+                this.sendMessage(messageJSON);
+            }
+        }
+    }, {
+        key: 'sendMessage',
         value: function sendMessage(messageJSON) {
             // send the websocket message
             this.dataStream.send(messageJSON);
         }
     }, {
-        key: "handleStudentsOnlineReceived",
+        key: 'handleStudentsOnlineReceived',
         value: function handleStudentsOnlineReceived(studentsOnlineMessage) {
             this.studentsOnlineArray = studentsOnlineMessage.studentsOnlineList;
 
             this.$rootScope.$broadcast('studentsOnlineReceived', { studentsOnline: this.studentsOnlineArray });
         }
     }, {
-        key: "getStudentsOnline",
+        key: 'getStudentsOnline',
         value: function getStudentsOnline() {
             var studentsOnline = [];
             if (this.studentsOnlineArray != null) {
@@ -72,7 +90,7 @@ var TeacherWebSocketService = function () {
             return studentsOnline;
         }
     }, {
-        key: "handleStudentStatusReceived",
+        key: 'handleStudentStatusReceived',
 
 
         /**
@@ -89,7 +107,7 @@ var TeacherWebSocketService = function () {
             this.$rootScope.$emit('studentStatusReceived', { studentStatus: studentStatus });
         }
     }, {
-        key: "handleStudentDisconnected",
+        key: 'handleStudentDisconnected',
 
 
         /**
@@ -108,7 +126,7 @@ var TeacherWebSocketService = function () {
          */
 
     }, {
-        key: "pauseScreens",
+        key: 'pauseScreens',
         value: function pauseScreens(periodId) {
 
             // create the websocket message
@@ -136,7 +154,7 @@ var TeacherWebSocketService = function () {
          */
 
     }, {
-        key: "unPauseScreens",
+        key: 'unPauseScreens',
         value: function unPauseScreens(periodId) {
 
             // create the websocket message
@@ -158,10 +176,10 @@ var TeacherWebSocketService = function () {
         }
     }]);
 
-    return TeacherWebSocketService;
+    return AuthorWebSocketService;
 }();
 
-TeacherWebSocketService.$inject = ['$rootScope', '$websocket', 'ConfigService', 'StudentStatusService'];
+AuthorWebSocketService.$inject = ['$rootScope', '$websocket', 'ConfigService'];
 
-exports.default = TeacherWebSocketService;
-//# sourceMappingURL=teacherWebSocketService.js.map
+exports.default = AuthorWebSocketService;
+//# sourceMappingURL=authorWebSocketService.js.map
