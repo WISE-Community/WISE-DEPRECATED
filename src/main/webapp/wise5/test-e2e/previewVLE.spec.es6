@@ -32,7 +32,7 @@ describe('WISE5 Student VLE Preview', () => {
     browser.get('http://localhost:8080/wise/project/demo#/vle/node1');
     var previousButton = element(by.xpath('//button[@aria-label="Previous Item"]'));
     var nextButton = element(by.xpath('//button[@aria-label="Next Item"]'));
-    var closeButton = element(by.xpath('//button[@aria-label="Close Step"]'));
+    var closeButton = element(by.xpath('//button[@aria-label="Go to project plan"]'));
     var accountButton = element(by.xpath('//button[@aria-label="Open user menu"]'));
     var accountMenu = element.all(by.css('._md-open-menu-container')).get(1);
 
