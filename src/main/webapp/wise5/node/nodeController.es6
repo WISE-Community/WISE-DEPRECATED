@@ -1,5 +1,6 @@
 class NodeController {
-    constructor($rootScope,
+    constructor($q,
+                $rootScope,
                 $scope,
                 AnnotationService,
                 ConfigService,
@@ -8,6 +9,7 @@ class NodeController {
                 ProjectService,
                 StudentDataService) {
 
+        this.$q = $q;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.AnnotationService = AnnotationService;
@@ -625,49 +627,73 @@ class NodeController {
      * @param componentId (optional) the component id of the component
      * that triggered the save
      * @param isSubmit (optional) whether this is a sumission or not
+     * @returns a promise that will save all the component states for the step
+     * that need saving
      */
     createAndSaveComponentData(isAutoSave, componentId, isSubmit) {
 
         // obtain the component states from the children
-        var componentStates = this.createComponentStates(isAutoSave, componentId, isSubmit);
-        var componentAnnotations = this.getComponentAnnotations();
-        var componentEvents = null;
-        var nodeStates = null;
+        return this.createComponentStates(isAutoSave, componentId, isSubmit).then((componentStates) => {
+            var componentAnnotations = [];
+            var componentEvents = null;
+            var nodeStates = null;
 
-        if ((componentStates != null && componentStates.length) ||
-            (componentAnnotations != null && componentAnnotations.length) ||
-            (componentEvents != null && componentEvents.length)) {
-            // save the component states to the server
-            return this.StudentDataService.saveToServer(componentStates, nodeStates, componentEvents, componentAnnotations).then((savedStudentDataResponse) => {
-                if (savedStudentDataResponse) {
-                    // check if this node has transition logic that should be run when the student data changes
-                    if (this.NodeService.hasTransitionLogic() && this.NodeService.evaluateTransitionLogicOn('studentDataChanged')) {
-                        // this node has transition logic
-                        this.NodeService.evaluateTransitionLogic();
-                    }
-
-                    let studentWorkList = savedStudentDataResponse.studentWorkList;
-                    if (!componentId && studentWorkList && studentWorkList.length) {
-                        // this was a step save or submission and student work was saved, so set save message
-                        let latestStudentWork = studentWorkList[studentWorkList.length - 1];
-                        let serverSaveTime = latestStudentWork.serverSaveTime;
-                        let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
-
-                        if (isAutoSave) {
-                            this.setSaveMessage('Auto-Saved', clientSaveTime);
-                        } else if (isSubmit) {
-                            this.setSaveMessage('Submitted', clientSaveTime);
-                        } else {
-                            this.setSaveMessage('Saved', clientSaveTime);
+            if ((componentStates != null && componentStates.length) ||
+                (componentAnnotations != null && componentAnnotations.length) ||
+                (componentEvents != null && componentEvents.length)) {
+                
+                // get the annotations from the components
+                for (var c = 0; c < componentStates.length; c++) {
+                    var componentState = componentStates[c];
+                    
+                    if (componentState != null) {
+                        var annotations = componentState.annotations;
+                        
+                        if (annotations != null) {
+                            /*
+                             * add the annotations to our array of annotations that will
+                             * be saved to the server
+                             */
+                            componentAnnotations = componentAnnotations.concat(annotations);
                         }
-                    } else {
-                        this.setSaveMessage('', null);
+                        
+                        // remove the annotations from the component state
+                        delete componentState.annotations;
                     }
                 }
+                
+                // save the component states to the server
+                return this.StudentDataService.saveToServer(componentStates, nodeStates, componentEvents, componentAnnotations).then((savedStudentDataResponse) => {
+                    if (savedStudentDataResponse) {
+                        // check if this node has transition logic that should be run when the student data changes
+                        if (this.NodeService.hasTransitionLogic() && this.NodeService.evaluateTransitionLogicOn('studentDataChanged')) {
+                            // this node has transition logic
+                            this.NodeService.evaluateTransitionLogic();
+                        }
 
-                return savedStudentDataResponse;
-            });
-        }
+                        let studentWorkList = savedStudentDataResponse.studentWorkList;
+                        if (!componentId && studentWorkList && studentWorkList.length) {
+                            // this was a step save or submission and student work was saved, so set save message
+                            let latestStudentWork = studentWorkList[studentWorkList.length - 1];
+                            let serverSaveTime = latestStudentWork.serverSaveTime;
+                            let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
+
+                            if (isAutoSave) {
+                                this.setSaveMessage('Auto-Saved', clientSaveTime);
+                            } else if (isSubmit) {
+                                this.setSaveMessage('Submitted', clientSaveTime);
+                            } else {
+                                this.setSaveMessage('Saved', clientSaveTime);
+                            }
+                        } else {
+                            this.setSaveMessage('', null);
+                        }
+                    }
+
+                    return savedStudentDataResponse;
+                });
+            }
+        });
     };
 
     /**
@@ -676,11 +702,11 @@ class NodeController {
      * @param componentId (optional) the component id of the component
      * that triggered the save
      * @param isSubmit (optional) whether this is a submission or not
-     * @returns an array of component states
+     * @returns an array of promises that will return component states
      */
     createComponentStates(isAutoSave, componentId, isSubmit) {
-        var componentStates = [];
         var components = [];
+        var componentStatePromises = [];
 
         // get the components for this node
         if (componentId) {
@@ -691,11 +717,13 @@ class NodeController {
         } else {
             components = this.getComponents();
         }
+        
         if (components.length) {
 
             var runId = this.ConfigService.getRunId();
             var periodId = this.ConfigService.getPeriodId();
             var workgroupId = this.ConfigService.getWorkgroupId();
+            var nodeId = this.nodeId;
 
             // loop through all the components
             for (var c = 0; c < components.length; c++) {
@@ -706,125 +734,86 @@ class NodeController {
                 if (component != null) {
                     // get the component id
                     var tempComponentId = component.id;
+                    var componentType = component.type;
 
                     // get the scope for the component
                     var childScope = this.$scope.componentToScope[tempComponentId];
 
                     if (childScope != null) {
-                        var componentState = null;
-
                         if (childScope.getComponentState) {
-                            // get the student work object from the child scope
-                            componentState = childScope.getComponentState(isSubmit);
-                        }
-
-                        if (componentState != null) {
-
-                            componentState.runId = runId;
-                            componentState.periodId = periodId;
-                            componentState.workgroupId = workgroupId;
-                            componentState.nodeId = this.nodeId;
-
-                            // set the component id into the student work object
-                            componentState.componentId = tempComponentId;
-
-                            // set the component type
-                            componentState.componentType = component.type;
-
-                            if (componentId == null) {
-                                /*
-                                 * the node has triggered the save so all the components will
-                                 * either have isAutoSave set to true or false; if this is a
-                                 * submission, all the components will have isSubmit set to true
-                                 */
-                                componentState.isAutoSave = isAutoSave;
-
-                                if (isSubmit) {
-                                    componentState.isSubmit = true;
-                                }
-
-                                // add the student work object to our components array
-                                componentStates.push(componentState);
-                            } else {
-                                /*
-                                 * a component has triggered the save so only that component will
-                                 * have isAutoSave set to false; if this is a submission,
-                                 * component will have isSubmit set to true
-                                 */
-
-                                if (componentId === tempComponentId) {
-                                    // this component triggered the save
-                                    componentState.isAutoSave = false;
-
-                                    if (isSubmit) {
-                                        componentState.isSubmit = true;
-                                    }
-
-                                    // add the student work object to our components array
-                                    componentStates.push(componentState);
-
-                                    break;
-                                }
-                            }
+                            // get the component state promise from the child scope
+                            var componentStatePromise = this.getComponentStateFromChildScope(childScope, runId, periodId, workgroupId, nodeId, componentId, tempComponentId, componentType, isAutoSave, isSubmit);
+                            componentStatePromises.push(componentStatePromise);
                         }
                     }
                 }
             }
         }
 
-        return componentStates;
+        return this.$q.all(componentStatePromises);
     };
-
+    
     /**
-     * Loop through this node's components and get annotations
-     * @param isAutoSave whether the component states were auto saved
-     * @param componentId (optional) the component id of the component
-     * that triggered the save
-     * @returns an array of component states
+     * Get the component state from the child scope
+     * @param childScope the child scope
+     * @param runId the run id
+     * @param periodId the period id
+     * @param workgroupId the workgroup id
+     * @param nodeId the node id
+     * @param componentId the component id that has triggered the save
+     * @param tempComponentId the component id of the component we are obtaining
+     * a component state for
+     * @param componentType the component type
+     * @param isAutoSave whether this save was triggered by an auto save
+     * @param isSubmit whether this save was triggered by a submit
      */
-    getComponentAnnotations() {
-        var componentAnnotations = [];
+    getComponentStateFromChildScope(childScope, runId, periodId, workgroupId, nodeId, componentId, tempComponentId, componentType, isAutoSave, isSubmit) {
+        return childScope.getComponentState(isSubmit).then((componentState) => {
+            if (componentState != null) {
 
-        // get the components for this node
-        var components = this.getComponents();
+                componentState.runId = runId;
+                componentState.periodId = periodId;
+                componentState.workgroupId = workgroupId;
+                componentState.nodeId = this.nodeId;
 
-        if (components != null) {
+                // set the component id into the student work object
+                componentState.componentId = tempComponentId;
 
-            // loop through all the components
-            for (var c = 0; c < components.length; c++) {
+                // set the component type
+                componentState.componentType = componentType;
 
-                // get a component
-                var component = components[c];
+                if (componentId == null) {
+                    /*
+                     * the node has triggered the save so all the components will
+                     * either have isAutoSave set to true or false; if this is a
+                     * submission, all the components will have isSubmit set to true
+                     */
+                    componentState.isAutoSave = isAutoSave;
 
-                if (component != null) {
-                    // get the component id
-                    var tempComponentId = component.id;
+                    if (isSubmit) {
+                        componentState.isSubmit = true;
+                    }
+                } else {
+                    /*
+                     * a component has triggered the save so only that component will
+                     * have isAutoSave set to false; if this is a submission,
+                     * component will have isSubmit set to true
+                     */
 
-                    // get the scope for the component
-                    var childScope = this.$scope.componentToScope[tempComponentId];
+                    if (componentId === tempComponentId) {
+                        // this component triggered the save
+                        componentState.isAutoSave = false;
 
-                    if (childScope != null) {
-
-                        var componentState = null;
-
-                        if (childScope.getUnSavedAnnotation != null) {
-                            // get the student work object from the child scope
-                            componentAnnotation = childScope.getUnSavedAnnotation();
-
-                            if (componentAnnotation != null) {
-                                // add the student work object to our components array
-                                componentAnnotations.push(componentAnnotation);
-
-                                childScope.setUnSavedAnnotation(null);
-                            }
+                        if (isSubmit) {
+                            componentState.isSubmit = true;
                         }
                     }
                 }
+                
+                return componentState
             }
-        }
-
-        return componentAnnotations;
-    };
+        });
+    }
 
     /**
      * Get the latest annotations for a given component
@@ -1033,6 +1022,7 @@ class NodeController {
 }
 
 NodeController.$inject = [
+    '$q',
     '$rootScope',
     '$scope',
     'AnnotationService',

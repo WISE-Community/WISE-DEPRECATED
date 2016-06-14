@@ -359,6 +359,58 @@ class AnnotationService {
 
         return score;
     }
+    
+    /**
+     * Create an auto score annotation
+     * @param runId the run id
+     * @param periodId the period id
+     * @param nodeId the node id
+     * @param componentId the component id
+     * @param toWorkgroupId the student workgroup id
+     * @param data the annotation data
+     * @returns the auto score annotation
+     */
+    createAutoScoreAnnotation(runId, periodId, nodeId, componentId, toWorkgroupId, data) {
+        var annotationId = null;
+        var fromWorkgroupId = null;
+        var studentWorkId = null;
+        var annotationType = 'autoScore';
+        var clientSaveTime = Date.parse(new Date());
+        
+        var annotation = this.createAnnotation(
+            annotationId, runId, periodId, fromWorkgroupId, toWorkgroupId,
+            nodeId, componentId, studentWorkId,
+            annotationType, data, clientSaveTime
+        );
+        
+        return annotation;
+    }
+    
+    /**
+     * Create an auto comment annotation
+     * @param runId the run id
+     * @param periodId the period id
+     * @param nodeId the node id
+     * @param componentId the component id
+     * @param toWorkgroupId the student workgroup id
+     * @param data the annotation data
+     * @returns the auto comment annotation
+     */
+    createAutoCommentAnnotation(runId, periodId, nodeId, componentId, toWorkgroupId, data) {
+        var annotationId = null;
+        var fromWorkgroupId = null;
+        var studentWorkId = null;
+        var annotationType = 'autoComment';
+        var clientSaveTime = Date.parse(new Date());
+        
+        var annotation = this.createAnnotation(
+            annotationId, runId, periodId, fromWorkgroupId, toWorkgroupId,
+            nodeId, componentId, studentWorkId,
+            annotationType, data, clientSaveTime
+        );
+        
+        return annotation;
+    }
 }
 
 AnnotationService.$inject = ['$http', '$rootScope', 'ConfigService', 'UtilService'];

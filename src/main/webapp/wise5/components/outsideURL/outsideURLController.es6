@@ -1,11 +1,13 @@
 class OutsideURLController {
-    constructor($scope,
+    constructor($q,
+                $scope,
                 $sce,
                 NodeService,
                 OutsideURLService,
                 ProjectService,
                 StudentDataService) {
 
+        this.$q = $q;
         this.$scope = $scope;
         this.$sce = $sce;
         this.NodeService = NodeService;
@@ -95,12 +97,19 @@ class OutsideURLController {
          * Get the component state from this component. The parent node will
          * call this function to obtain the component state when it needs to
          * save student data.
-         * @return a component state containing the student data
+         * @return a promise of a component state containing the student data
          */
         this.$scope.getComponentState = function() {
-            var studentWork = null;
-
-            return studentWork;
+            var deferred = this.$q.defer();
+            
+            /*
+             * the student does not have any unsaved changes in this component
+             * so we don't need to save a component state for this component.
+             * we will immediately resolve the promise here.
+             */
+            deferred.resolve();
+            
+            return deferred.promise;
         }.bind(this);
     }
 
@@ -189,6 +198,7 @@ class OutsideURLController {
 }
 
 OutsideURLController.$inject = [
+    '$q',
     '$scope',
     '$sce',
     'NodeService',

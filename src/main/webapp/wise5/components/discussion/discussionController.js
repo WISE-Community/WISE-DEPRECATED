@@ -9,12 +9,13 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var DiscussionController = function () {
-    function DiscussionController($injector, $rootScope, $scope, ConfigService, DiscussionService, NodeService, NotificationService, ProjectService, StudentAssetService, StudentDataService, StudentWebSocketService, UtilService, $mdMedia) {
-        var _this = this;
+    function DiscussionController($injector, $q, $rootScope, $scope, ConfigService, DiscussionService, NodeService, NotificationService, ProjectService, StudentAssetService, StudentDataService, StudentWebSocketService, UtilService, $mdMedia) {
+        var _this2 = this;
 
         _classCallCheck(this, DiscussionController);
 
         this.$injector = $injector;
+        this.$q = $q;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.ConfigService = ConfigService;
@@ -258,24 +259,38 @@ var DiscussionController = function () {
          * @return a component state containing the student data
          */
         this.$scope.getComponentState = function () {
-            var componentState = null;
+            var _this = this;
+
+            var deferred = this.$q.defer();
 
             // check if the student work is dirty and the student clicked the submit button
             if (this.$scope.discussionController.isDirty && this.$scope.discussionController.isSubmit) {
+
+                var action = 'submit';
+
                 // create a component state populated with the student data
-                componentState = this.$scope.discussionController.createComponentState();
+                this.$scope.discussionController.createComponentState(action).then(function (componentState) {
+                    /*
+                     * clear the component values so they aren't accidentally used again
+                     * later
+                     */
+                    _this.$scope.discussionController.clearComponentValues();
 
+                    // set isDirty to false since this student work is about to be saved
+                    _this.$scope.discussionController.isDirty = false;
+
+                    deferred.resolve(componentState);
+                });
+            } else {
                 /*
-                 * clear the component values so they aren't accidentally used again
-                 * later
+                 * the student does not have any unsaved changes in this component
+                 * so we don't need to save a component state for this component.
+                 * we will immediately resolve the promise here.
                  */
-                this.$scope.discussionController.clearComponentValues();
-
-                // set isDirty to false since this student work is about to be saved
-                this.$scope.discussionController.isDirty = false;
+                deferred.resolve();
             }
 
-            return componentState;
+            return deferred.promise;
         }.bind(this);
 
         /**
@@ -287,8 +302,8 @@ var DiscussionController = function () {
             var nodeId = args.nodeId;
 
             // make sure the node id matches our parent node
-            if (_this.nodeId === nodeId) {
-                _this.isSubmit = true;
+            if (_this2.nodeId === nodeId) {
+                _this2.isSubmit = true;
             }
         });
 
@@ -311,17 +326,17 @@ var DiscussionController = function () {
             var componentState = args.studentWork;
 
             // check that the component state is for this component
-            if (componentState && _this.nodeId === componentState.nodeId && _this.componentId === componentState.componentId) {
+            if (componentState && _this2.nodeId === componentState.nodeId && _this2.componentId === componentState.componentId) {
 
                 // check if the classmate responses are gated
-                if (_this.isClassmateResponsesGated() && !_this.retrievedClassmateResponses) {
+                if (_this2.isClassmateResponsesGated() && !_this2.retrievedClassmateResponses) {
                     /*
                      * the classmate responses are gated and we haven't retrieved
                      * them yet so we will obtain them now and show them since the student
                      * has just submitted a response. getting the classmate responses will
                      * also get the post the student just saved to the server.
                      */
-                    _this.getClassmateResponses();
+                    _this2.getClassmateResponses();
                 } else {
                     /*
                      * the classmate responses are not gated or have already been retrieved
@@ -330,18 +345,18 @@ var DiscussionController = function () {
                      */
 
                     // add the component state to our collection of class responses
-                    _this.addClassResponse(componentState);
+                    _this2.addClassResponse(componentState);
                 }
 
-                _this.submit();
+                _this2.submit();
 
                 // send the student post to web sockets so all the classmates receive it in real time
                 var messageType = "studentData";
-                _this.StudentWebSocketService.sendStudentToClassmatesInPeriodMessage(messageType, componentState);
+                _this2.StudentWebSocketService.sendStudentToClassmatesInPeriodMessage(messageType, componentState);
 
                 // next, send notifications to students who have posted a response in the same thread as this post
                 var studentData = componentState.studentData;
-                if (studentData != null && _this.responsesMap != null) {
+                if (studentData != null && _this2.responsesMap != null) {
                     var componentStateIdReplyingTo = studentData.componentStateIdReplyingTo;
                     if (componentStateIdReplyingTo != null) {
                         // populate fields of the notification
@@ -350,7 +365,7 @@ var DiscussionController = function () {
                         var nodeId = componentState.nodeId;
                         var componentId = componentState.componentId;
                         // add the user names to the component state so we can display next to the response
-                        var userNamesArray = _this.ConfigService.getUserNamesByWorkgroupId(fromWorkgroupId);
+                        var userNamesArray = _this2.ConfigService.getUserNamesByWorkgroupId(fromWorkgroupId);
                         var userNames = userNamesArray.map(function (obj) {
                             return obj.name;
                         }).join(' and ');
@@ -358,30 +373,30 @@ var DiscussionController = function () {
 
                         var workgroupsNotifiedSoFar = []; // keep track of workgroups we've already notified, in case a workgroup posts twice on a thread we only want to notify once.
                         // check if we have the component state that was replied to
-                        if (_this.responsesMap[componentStateIdReplyingTo] != null) {
-                            var originalPostComponentState = _this.responsesMap[componentStateIdReplyingTo];
+                        if (_this2.responsesMap[componentStateIdReplyingTo] != null) {
+                            var originalPostComponentState = _this2.responsesMap[componentStateIdReplyingTo];
                             var toWorkgroupId = originalPostComponentState.workgroupId; // notify the workgroup who posted this reply
                             if (toWorkgroupId != null && toWorkgroupId != fromWorkgroupId) {
-                                var notification = _this.NotificationService.createNewNotification(notificationType, nodeId, componentId, fromWorkgroupId, toWorkgroupId, notificationMessage);
-                                _this.NotificationService.saveNotificationToServer(notification).then(function (savedNotification) {
+                                var notification = _this2.NotificationService.createNewNotification(notificationType, nodeId, componentId, fromWorkgroupId, toWorkgroupId, notificationMessage);
+                                _this2.NotificationService.saveNotificationToServer(notification).then(function (savedNotification) {
                                     var messageType = "notification";
-                                    _this.StudentWebSocketService.sendStudentToClassmatesInPeriodMessage(messageType, savedNotification);
+                                    _this2.StudentWebSocketService.sendStudentToClassmatesInPeriodMessage(messageType, savedNotification);
                                 });
                                 workgroupsNotifiedSoFar.push(toWorkgroupId); // make sure we don't notify this workgroup again.
                             }
 
                             // also notify repliers to this thread, if any.
-                            if (_this.responsesMap[componentStateIdReplyingTo].replies != null) {
-                                var replies = _this.responsesMap[componentStateIdReplyingTo].replies;
+                            if (_this2.responsesMap[componentStateIdReplyingTo].replies != null) {
+                                var replies = _this2.responsesMap[componentStateIdReplyingTo].replies;
 
                                 for (var r = 0; r < replies.length; r++) {
                                     var reply = replies[r];
                                     var _toWorkgroupId = reply.workgroupId; // notify the workgroup who posted this reply
                                     if (_toWorkgroupId != null && _toWorkgroupId != fromWorkgroupId && workgroupsNotifiedSoFar.indexOf(_toWorkgroupId) == -1) {
-                                        var _notification = _this.NotificationService.createNewNotification(notificationType, nodeId, componentId, fromWorkgroupId, _toWorkgroupId, notificationMessage);
-                                        _this.NotificationService.saveNotificationToServer(_notification).then(function (savedNotification) {
+                                        var _notification = _this2.NotificationService.createNewNotification(notificationType, nodeId, componentId, fromWorkgroupId, _toWorkgroupId, notificationMessage);
+                                        _this2.NotificationService.saveNotificationToServer(_notification).then(function (savedNotification) {
                                             var messageType = "notification";
-                                            _this.StudentWebSocketService.sendStudentToClassmatesInPeriodMessage(messageType, savedNotification);
+                                            _this2.StudentWebSocketService.sendStudentToClassmatesInPeriodMessage(messageType, savedNotification);
                                         });
                                         workgroupsNotifiedSoFar.push(_toWorkgroupId); // make sure we don't notify this workgroup again.
                                     }
@@ -392,7 +407,7 @@ var DiscussionController = function () {
                 }
             }
 
-            _this.isSubmit = null;
+            _this2.isSubmit = null;
         });
 
         this.$scope.studentdatachanged = function () {
@@ -411,13 +426,13 @@ var DiscussionController = function () {
                 if (componentState != null) {
 
                     // check that the web socket message is for this step
-                    if (componentState.nodeId === _this.nodeId) {
+                    if (componentState.nodeId === _this2.nodeId) {
 
                         // get the sender of the message
                         var componentStateWorkgroupId = componentState.workgroupId;
 
                         // get the workgroup id of the signed in student
-                        var workgroupId = _this.ConfigService.getWorkgroupId();
+                        var workgroupId = _this2.ConfigService.getWorkgroupId();
 
                         /*
                          * check if the signed in student sent the message. if the
@@ -425,9 +440,9 @@ var DiscussionController = function () {
                          */
                         if (workgroupId !== componentStateWorkgroupId) {
 
-                            if (_this.retrievedClassmateResponses) {
+                            if (_this2.retrievedClassmateResponses) {
                                 // display the classmate post
-                                _this.addClassResponse(componentState);
+                                _this2.addClassResponse(componentState);
                             }
                         }
                     }
@@ -481,7 +496,7 @@ var DiscussionController = function () {
     _createClass(DiscussionController, [{
         key: 'getClassmateResponses',
         value: function getClassmateResponses() {
-            var _this2 = this;
+            var _this3 = this;
 
             var runId = this.ConfigService.getRunId();
             var periodId = this.ConfigService.getPeriodId();
@@ -495,7 +510,7 @@ var DiscussionController = function () {
                     var componentStates = result.studentWorkList;
 
                     // set the classmate responses
-                    _this2.setClassResponses(componentStates);
+                    _this3.setClassResponses(componentStates);
                 }
             });
         }
@@ -560,6 +575,8 @@ var DiscussionController = function () {
          * Called when the student changes their work
          */
         value: function studentDataChanged() {
+            var _this4 = this;
+
             /*
              * set the dirty flag so we will know we need to save the
              * student work later
@@ -569,8 +586,8 @@ var DiscussionController = function () {
             // get this part id
             var componentId = this.getComponentId();
 
-            // create a component state populated with the student data
-            var componentState = this.createComponentState();
+            // get this part id
+            var componentId = this.getComponentId();
 
             /*
              * the student work in this component has changed so we will tell
@@ -578,7 +595,12 @@ var DiscussionController = function () {
              * this will also notify connected parts that this component's student
              * data has changed.
              */
-            this.$scope.$emit('componentStudentDataChanged', { componentId: componentId, componentState: componentState });
+            var action = 'change';
+
+            // create a component state populated with the student data
+            this.createComponentState(action).then(function (componentState) {
+                _this4.$scope.$emit('componentStudentDataChanged', { componentId: componentId, componentState: componentState });
+            });
         }
     }, {
         key: 'createComponentState',
@@ -586,9 +608,11 @@ var DiscussionController = function () {
 
         /**
          * Create a new component state populated with the student data
-         * @return the componentState after it has been populated
+         * @param action the action that is triggering creating of this component state
+         * e.g. 'submit', 'save', 'change'
+         * @return a promise that will return a component state
          */
-        value: function createComponentState() {
+        value: function createComponentState(action) {
 
             // create a new component state
             var componentState = this.NodeService.createNewComponentState();
@@ -625,15 +649,44 @@ var DiscussionController = function () {
                 }
             }
 
-            return componentState;
+            var deferred = this.$q.defer();
+
+            /*
+             * perform any additional processing that is required before returning
+             * the component state
+             */
+            this.createComponentStateAdditionalProcessing(deferred, componentState, action);
+
+            return deferred.promise;
         }
     }, {
-        key: 'clearComponentValues',
+        key: 'createComponentStateAdditionalProcessing',
 
+
+        /**
+         * Perform any additional processing that is required before returning the
+         * component state
+         * Note: this function must call deferred.resolve() otherwise student work
+         * will not be saved
+         * @param deferred a deferred object
+         * @param componentState the component state
+         * @param action the action that we are creating the component state for
+         * e.g. 'submit', 'save', 'change'
+         */
+        value: function createComponentStateAdditionalProcessing(deferred, componentState, action) {
+            /*
+             * we don't need to perform any additional processing so we can resolve
+             * the promise immediately
+             */
+            deferred.resolve(componentState);
+        }
 
         /**
          * Clear the component values so they aren't accidentally used again
          */
+
+    }, {
+        key: 'clearComponentValues',
         value: function clearComponentValues() {
 
             // clear the student response
@@ -785,7 +838,7 @@ var DiscussionController = function () {
          * @param studentAsset
          */
         value: function attachStudentAsset(studentAsset) {
-            var _this3 = this;
+            var _this5 = this;
 
             if (studentAsset != null) {
                 this.StudentAssetService.copyAssetForReference(studentAsset).then(function (copiedAsset) {
@@ -795,8 +848,8 @@ var DiscussionController = function () {
                             iconURL: copiedAsset.iconURL
                         };
 
-                        _this3.newAttachments.push(attachment);
-                        _this3.studentDataChanged();
+                        _this5.newAttachments.push(attachment);
+                        _this5.studentDataChanged();
                     }
                 });
             }
@@ -1188,7 +1241,7 @@ var DiscussionController = function () {
          * so that we can perform saving before exiting.
          */
         value: function registerExitListener() {
-            var _this4 = this;
+            var _this6 = this;
 
             /*
              * Listen for the 'exit' event which is fired when the student exits
@@ -1196,7 +1249,7 @@ var DiscussionController = function () {
              */
             this.exitListener = this.$scope.$on('exit', function (event, args) {
                 // do nothing
-                _this4.$rootScope.$broadcast('doneExiting');
+                _this6.$rootScope.$broadcast('doneExiting');
             });
         }
     }]);
@@ -1204,7 +1257,7 @@ var DiscussionController = function () {
     return DiscussionController;
 }();
 
-DiscussionController.$inject = ['$injector', '$rootScope', '$scope', 'ConfigService', 'DiscussionService', 'NodeService', 'NotificationService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'StudentWebSocketService', 'UtilService', '$mdMedia'];
+DiscussionController.$inject = ['$injector', '$q', '$rootScope', '$scope', 'ConfigService', 'DiscussionService', 'NodeService', 'NotificationService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'StudentWebSocketService', 'UtilService', '$mdMedia'];
 
 exports.default = DiscussionController;
 //# sourceMappingURL=discussionController.js.map

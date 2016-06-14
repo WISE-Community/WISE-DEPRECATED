@@ -17,11 +17,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 //import draggablePoints from 'highcharts/draggable-points';
 
 var GraphController = function () {
-    function GraphController($rootScope, $scope, GraphService, NodeService, ProjectService, StudentAssetService, StudentDataService, UtilService) {
+    function GraphController($q, $rootScope, $scope, GraphService, NodeService, ProjectService, StudentAssetService, StudentDataService, UtilService) {
         var _this = this;
 
         _classCallCheck(this, GraphController);
 
+        this.$q = $q;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.GraphService = GraphService;
@@ -297,26 +298,37 @@ var GraphController = function () {
          * @return a component state containing the student data
          */
         this.$scope.getComponentState = function (isSubmit) {
-
-            var componentState = null;
+            var deferred = this.$q.defer();
             var getState = false;
+            var action = 'change';
 
             if (isSubmit) {
                 if (this.$scope.graphController.isSubmitDirty) {
                     getState = true;
+                    action = 'submit';
                 }
             } else {
                 if (this.$scope.graphController.isDirty) {
                     getState = true;
+                    action = 'save';
                 }
             }
 
             if (getState) {
                 // create a component state populated with the student data
-                componentState = this.$scope.graphController.createComponentState();
+                this.$scope.graphController.createComponentState(action).then(function (componentState) {
+                    deferred.resolve(componentState);
+                });
+            } else {
+                /*
+                 * the student does not have any unsaved changes in this component
+                 * so we don't need to save a component state for this component.
+                 * we will immediately resolve the promise here.
+                 */
+                deferred.resolve();
             }
 
-            return componentState;
+            return deferred.promise;
         }.bind(this);
 
         /**
@@ -1229,6 +1241,8 @@ var GraphController = function () {
          * Called when the student changes their work
          */
         value: function studentDataChanged() {
+            var _this2 = this;
+
             /*
              * set the dirty flags so we will know we need to save or submit the
              * student work later
@@ -1248,22 +1262,25 @@ var GraphController = function () {
             // get this component id
             var componentId = this.getComponentId();
 
-            // create a component state populated with the student data
-            var componentState = this.createComponentState();
-
-            // check if a digest is in progress
-            if (!this.$scope.$$phase) {
-                // digest is not in progress so we can force a redraw
-                this.$scope.$apply();
-            }
-
             /*
              * the student work in this component has changed so we will tell
              * the parent node that the student data will need to be saved.
              * this will also notify connected parts that this component's student
              * data has changed.
              */
-            this.$scope.$emit('componentStudentDataChanged', { componentId: componentId, componentState: componentState });
+            var action = 'change';
+
+            // create a component state populated with the student data
+            this.createComponentState(action).then(function (componentState) {
+
+                // check if a digest is in progress
+                if (!_this2.$scope.$$phase) {
+                    // digest is not in progress so we can force a redraw
+                    _this2.$scope.$apply();
+                }
+
+                _this2.$scope.$emit('componentStudentDataChanged', { componentId: componentId, componentState: componentState });
+            });
         }
     }, {
         key: 'createComponentState',
@@ -1271,9 +1288,11 @@ var GraphController = function () {
 
         /**
          * Create a new component state populated with the student data
-         * @return the componentState after it has been populated
+         * @param action the action that is triggering creating of this component state
+         * e.g. 'submit', 'save', 'change'
+         * @return a promise that will return a component state
          */
-        value: function createComponentState() {
+        value: function createComponentState(action) {
 
             // create a new component state
             var componentState = this.NodeService.createNewComponentState();
@@ -1318,15 +1337,44 @@ var GraphController = function () {
                 componentState.studentData = studentData;
             }
 
-            return componentState;
+            var deferred = this.$q.defer();
+
+            /*
+             * perform any additional processing that is required before returning
+             * the component state
+             */
+            this.createComponentStateAdditionalProcessing(deferred, componentState, action);
+
+            return deferred.promise;
         }
     }, {
-        key: 'calculateDisabled',
+        key: 'createComponentStateAdditionalProcessing',
 
+
+        /**
+         * Perform any additional processing that is required before returning the
+         * component state
+         * Note: this function must call deferred.resolve() otherwise student work
+         * will not be saved
+         * @param deferred a deferred object
+         * @param componentState the component state
+         * @param action the action that we are creating the component state for
+         * e.g. 'submit', 'save', 'change'
+         */
+        value: function createComponentStateAdditionalProcessing(deferred, componentState, action) {
+            /*
+             * we don't need to perform any additional processing so we can resolve
+             * the promise immediately
+             */
+            deferred.resolve(componentState);
+        }
 
         /**
          * Check if we need to lock the component
          */
+
+    }, {
+        key: 'calculateDisabled',
         value: function calculateDisabled() {
 
             var nodeId = this.nodeId;
@@ -1601,41 +1649,41 @@ var GraphController = function () {
          * @param studentAsset CSV file student asset
          */
         value: function attachStudentAsset(studentAsset) {
-            var _this2 = this;
+            var _this3 = this;
 
             if (studentAsset != null) {
                 this.StudentAssetService.copyAssetForReference(studentAsset).then(function (copiedAsset) {
                     if (copiedAsset != null) {
 
-                        _this2.StudentAssetService.getAssetContent(copiedAsset).then(function (assetContent) {
-                            var rowData = _this2.StudentDataService.CSVToArray(assetContent);
+                        _this3.StudentAssetService.getAssetContent(copiedAsset).then(function (assetContent) {
+                            var rowData = _this3.StudentDataService.CSVToArray(assetContent);
                             var params = {};
                             params.skipFirstRow = true; // first row contains header, so ignore it
                             params.xColumn = 0; // assume (for now) x-axis data is in first column
                             params.yColumn = 1; // assume (for now) y-axis data is in second column
 
-                            var seriesData = _this2.convertRowDataToSeriesData(rowData, params);
+                            var seriesData = _this3.convertRowDataToSeriesData(rowData, params);
 
                             // get the index of the series that we will put the data into
-                            var seriesIndex = _this2.series.length; // we're always appending a new series
+                            var seriesIndex = _this3.series.length; // we're always appending a new series
 
                             if (seriesIndex != null) {
 
                                 // get the series
-                                var series = _this2.series[seriesIndex];
+                                var series = _this3.series[seriesIndex];
 
                                 if (series == null) {
                                     // the series is null so we will create a series
                                     series = {};
                                     series.name = copiedAsset.fileName;
-                                    series.color = _this2.seriesColors[seriesIndex];
+                                    series.color = _this3.seriesColors[seriesIndex];
                                     series.marker = {
-                                        "symbol": _this2.seriesMarkers[seriesIndex]
+                                        "symbol": _this3.seriesMarkers[seriesIndex]
                                     };
                                     series.regression = false;
                                     series.regressionSettings = {};
                                     series.canEdit = false;
-                                    _this2.series[seriesIndex] = series;
+                                    _this3.series[seriesIndex] = series;
                                 }
 
                                 // set the data into the series
@@ -1643,12 +1691,12 @@ var GraphController = function () {
                             }
 
                             // render the graph
-                            _this2.setupGraph();
+                            _this3.setupGraph();
 
                             // the graph has changed
-                            _this2.isDirty = true;
+                            _this3.isDirty = true;
                         });
-                        _this2.studentDataChanged();
+                        _this3.studentDataChanged();
                     }
                 });
             }
@@ -2217,7 +2265,7 @@ var GraphController = function () {
     return GraphController;
 }();
 
-GraphController.$inject = ['$rootScope', '$scope', 'GraphService', 'NodeService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'UtilService'];
+GraphController.$inject = ['$q', '$rootScope', '$scope', 'GraphService', 'NodeService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'UtilService'];
 
 exports.default = GraphController;
 //# sourceMappingURL=graphController.js.map

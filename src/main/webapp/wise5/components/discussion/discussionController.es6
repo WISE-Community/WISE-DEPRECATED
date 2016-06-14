@@ -1,5 +1,6 @@
 class DiscussionController {
     constructor($injector,
+                $q,
                 $rootScope,
                 $scope,
                 ConfigService,
@@ -14,6 +15,7 @@ class DiscussionController {
                 $mdMedia) {
 
         this.$injector = $injector;
+        this.$q = $q;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.ConfigService = ConfigService;
@@ -257,24 +259,36 @@ class DiscussionController {
          * @return a component state containing the student data
          */
         this.$scope.getComponentState = function() {
-            var componentState = null;
+            var deferred = this.$q.defer();
 
             // check if the student work is dirty and the student clicked the submit button
             if (this.$scope.discussionController.isDirty && this.$scope.discussionController.isSubmit) {
+
+                var action = 'submit';
+
                 // create a component state populated with the student data
-                componentState = this.$scope.discussionController.createComponentState();
+                this.$scope.discussionController.createComponentState(action).then((componentState) => {
+                    /*
+                     * clear the component values so they aren't accidentally used again
+                     * later
+                     */
+                    this.$scope.discussionController.clearComponentValues();
 
+                    // set isDirty to false since this student work is about to be saved
+                    this.$scope.discussionController.isDirty = false;
+                    
+                    deferred.resolve(componentState);
+                });
+            } else {
                 /*
-                 * clear the component values so they aren't accidentally used again
-                 * later
+                 * the student does not have any unsaved changes in this component
+                 * so we don't need to save a component state for this component.
+                 * we will immediately resolve the promise here.
                  */
-                this.$scope.discussionController.clearComponentValues();
-
-                // set isDirty to false since this student work is about to be saved
-                this.$scope.discussionController.isDirty = false;
+                deferred.resolve();
             }
-
-            return componentState;
+            
+            return deferred.promise;
         }.bind(this);
 
         /**
@@ -549,8 +563,8 @@ class DiscussionController {
         // get this part id
         var componentId = this.getComponentId();
 
-        // create a component state populated with the student data
-        var componentState = this.createComponentState();
+        // get this part id
+        var componentId = this.getComponentId();
 
         /*
          * the student work in this component has changed so we will tell
@@ -558,14 +572,21 @@ class DiscussionController {
          * this will also notify connected parts that this component's student
          * data has changed.
          */
-        this.$scope.$emit('componentStudentDataChanged', {componentId: componentId, componentState: componentState});
+        var action = 'change';
+        
+        // create a component state populated with the student data
+        this.createComponentState(action).then((componentState) => {
+            this.$scope.$emit('componentStudentDataChanged', {componentId: componentId, componentState: componentState});
+        });
     };
 
     /**
      * Create a new component state populated with the student data
-     * @return the componentState after it has been populated
+     * @param action the action that is triggering creating of this component state
+     * e.g. 'submit', 'save', 'change'
+     * @return a promise that will return a component state
      */
-    createComponentState() {
+    createComponentState(action) {
 
         // create a new component state
         var componentState = this.NodeService.createNewComponentState();
@@ -602,8 +623,34 @@ class DiscussionController {
             }
         }
 
-        return componentState;
+        var deferred = this.$q.defer();
+        
+        /*
+         * perform any additional processing that is required before returning
+         * the component state
+         */
+        this.createComponentStateAdditionalProcessing(deferred, componentState, action);
+        
+        return deferred.promise;
     };
+
+    /**
+     * Perform any additional processing that is required before returning the
+     * component state
+     * Note: this function must call deferred.resolve() otherwise student work
+     * will not be saved
+     * @param deferred a deferred object
+     * @param componentState the component state
+     * @param action the action that we are creating the component state for
+     * e.g. 'submit', 'save', 'change'
+     */
+    createComponentStateAdditionalProcessing(deferred, componentState, action) {
+        /*
+         * we don't need to perform any additional processing so we can resolve
+         * the promise immediately
+         */
+        deferred.resolve(componentState);
+    }
 
     /**
      * Clear the component values so they aren't accidentally used again
@@ -1116,6 +1163,7 @@ class DiscussionController {
 
 DiscussionController.$inject = [
     '$injector',
+    '$q',
     '$rootScope',
     '$scope',
     'ConfigService',

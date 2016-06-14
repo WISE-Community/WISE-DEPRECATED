@@ -9,11 +9,12 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var OutsideURLController = function () {
-    function OutsideURLController($scope, $sce, NodeService, OutsideURLService, ProjectService, StudentDataService) {
+    function OutsideURLController($q, $scope, $sce, NodeService, OutsideURLService, ProjectService, StudentDataService) {
         var _this = this;
 
         _classCallCheck(this, OutsideURLController);
 
+        this.$q = $q;
         this.$scope = $scope;
         this.$sce = $sce;
         this.NodeService = NodeService;
@@ -103,12 +104,19 @@ var OutsideURLController = function () {
          * Get the component state from this component. The parent node will
          * call this function to obtain the component state when it needs to
          * save student data.
-         * @return a component state containing the student data
+         * @return a promise of a component state containing the student data
          */
         this.$scope.getComponentState = function () {
-            var studentWork = null;
+            var deferred = this.$q.defer();
 
-            return studentWork;
+            /*
+             * the student does not have any unsaved changes in this component
+             * so we don't need to save a component state for this component.
+             * we will immediately resolve the promise here.
+             */
+            deferred.resolve();
+
+            return deferred.promise;
         }.bind(this);
     }
 
@@ -213,7 +221,7 @@ var OutsideURLController = function () {
     return OutsideURLController;
 }();
 
-OutsideURLController.$inject = ['$scope', '$sce', 'NodeService', 'OutsideURLService', 'ProjectService', 'StudentDataService'];
+OutsideURLController.$inject = ['$q', '$scope', '$sce', 'NodeService', 'OutsideURLService', 'ProjectService', 'StudentDataService'];
 
 exports.default = OutsideURLController;
 //# sourceMappingURL=outsideURLController.js.map

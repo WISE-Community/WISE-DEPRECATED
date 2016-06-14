@@ -6,7 +6,8 @@
 //import draggablePoints from 'highcharts/draggable-points';
 
 class GraphController {
-    constructor($rootScope,
+    constructor($q,
+                $rootScope,
                 $scope,
                 GraphService,
                 NodeService,
@@ -15,6 +16,7 @@ class GraphController {
                 StudentDataService,
                 UtilService) {
 
+        this.$q = $q;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.GraphService = GraphService;
@@ -290,26 +292,37 @@ class GraphController {
          * @return a component state containing the student data
          */
         this.$scope.getComponentState = function(isSubmit) {
-
-            let componentState = null;
+            var deferred = this.$q.defer();
             let getState = false;
+            let action = 'change';
 
             if (isSubmit) {
                 if (this.$scope.graphController.isSubmitDirty) {
                     getState = true;
+                    action = 'submit';
                 }
             } else {
                 if (this.$scope.graphController.isDirty) {
                     getState = true;
+                    action = 'save';
                 }
             }
 
             if (getState) {
                 // create a component state populated with the student data
-                componentState = this.$scope.graphController.createComponentState();
+                this.$scope.graphController.createComponentState(action).then((componentState) => {
+                    deferred.resolve(componentState);
+                });
+            } else {
+                /*
+                 * the student does not have any unsaved changes in this component
+                 * so we don't need to save a component state for this component.
+                 * we will immediately resolve the promise here.
+                 */
+                deferred.resolve();
             }
-
-            return componentState;
+            
+            return deferred.promise;
         }.bind(this);
 
         /**
@@ -1167,30 +1180,35 @@ class GraphController {
 
         // get this component id
         var componentId = this.getComponentId();
-
-        // create a component state populated with the student data
-        var componentState = this.createComponentState();
-
-        // check if a digest is in progress
-        if(!this.$scope.$$phase) {
-            // digest is not in progress so we can force a redraw
-            this.$scope.$apply();
-        }
-
+        
         /*
          * the student work in this component has changed so we will tell
          * the parent node that the student data will need to be saved.
          * this will also notify connected parts that this component's student
          * data has changed.
          */
-        this.$scope.$emit('componentStudentDataChanged', {componentId: componentId, componentState: componentState});
+        var action = 'change';
+        
+        // create a component state populated with the student data
+        this.createComponentState(action).then((componentState) => {
+
+            // check if a digest is in progress
+            if(!this.$scope.$$phase) {
+                // digest is not in progress so we can force a redraw
+                this.$scope.$apply();
+            }
+            
+            this.$scope.$emit('componentStudentDataChanged', {componentId: componentId, componentState: componentState});
+        });
     };
 
     /**
      * Create a new component state populated with the student data
-     * @return the componentState after it has been populated
+     * @param action the action that is triggering creating of this component state
+     * e.g. 'submit', 'save', 'change'
+     * @return a promise that will return a component state
      */
-    createComponentState() {
+    createComponentState(action) {
 
         // create a new component state
         var componentState = this.NodeService.createNewComponentState();
@@ -1235,8 +1253,34 @@ class GraphController {
             componentState.studentData = studentData;
         }
 
-        return componentState;
+        var deferred = this.$q.defer();
+        
+        /*
+         * perform any additional processing that is required before returning
+         * the component state
+         */
+        this.createComponentStateAdditionalProcessing(deferred, componentState, action);
+        
+        return deferred.promise;
     };
+
+    /**
+     * Perform any additional processing that is required before returning the
+     * component state
+     * Note: this function must call deferred.resolve() otherwise student work
+     * will not be saved
+     * @param deferred a deferred object
+     * @param componentState the component state
+     * @param action the action that we are creating the component state for
+     * e.g. 'submit', 'save', 'change'
+     */
+    createComponentStateAdditionalProcessing(deferred, componentState, action) {
+        /*
+         * we don't need to perform any additional processing so we can resolve
+         * the promise immediately
+         */
+        deferred.resolve(componentState);
+    }
 
     /**
      * Check if we need to lock the component
@@ -2036,6 +2080,7 @@ class GraphController {
 
 
 GraphController.$inject = [
+    '$q',
     '$rootScope',
     '$scope',
     'GraphService',
