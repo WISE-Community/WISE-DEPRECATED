@@ -9,9 +9,12 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var NotebookMenuCtrl = function () {
-    function NotebookMenuCtrl($scope, $element, $rootScope, NotebookService, ProjectService, StudentDataService) {
+    function NotebookMenuCtrl($mdMedia, $scope, $element, $rootScope, NotebookService, ProjectService, StudentDataService) {
+        var _this = this;
+
         _classCallCheck(this, NotebookMenuCtrl);
 
+        this.$mdMedia = $mdMedia;
         this.$scope = $scope;
         this.$element = $element;
         this.$rootScope = $rootScope;
@@ -20,6 +23,7 @@ var NotebookMenuCtrl = function () {
         this.StudentDataService = StudentDataService;
 
         this.addMode = false;
+        this.xsScreen = false;
         //this.viewMode ? this.viewMode : 'toolbar'; // default view is the side toolbar; 'nav' mode will show a sidenav with more options
 
         this.notebookConfig = this.NotebookService.getNotebookConfig();
@@ -38,6 +42,12 @@ var NotebookMenuCtrl = function () {
         this.noteColor = this.notebookConfig.itemTypes.note.label.color;
         this.questionColor = this.notebookConfig.itemTypes.question.label.color;
         this.reportColor = this.notebookConfig.itemTypes.report.label.color;
+
+        this.$scope.$watch(function () {
+            return _this.$mdMedia('xs');
+        }, function (xs) {
+            _this.xsScreen = xs;
+        });
     }
 
     _createClass(NotebookMenuCtrl, [{
@@ -72,7 +82,7 @@ var NotebookMenuCtrl = function () {
     return NotebookMenuCtrl;
 }();
 
-NotebookMenuCtrl.$inject = ['$scope', '$element', '$rootScope', 'NotebookService', 'ProjectService', 'StudentDataService'];
+NotebookMenuCtrl.$inject = ['$mdMedia', '$scope', '$element', '$rootScope', 'NotebookService', 'ProjectService', 'StudentDataService'];
 
 exports.default = NotebookMenuCtrl;
 //# sourceMappingURL=notebookMenuController.js.map

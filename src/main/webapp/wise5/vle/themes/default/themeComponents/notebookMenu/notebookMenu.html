@@ -1,4 +1,6 @@
-<md-toolbar ng-if="notebookMenuCtrl.viewMode === 'toolbar'" md-theme="light" class="notebook-toolbar node-sidebar__toolbar md-whiteframe-1dp" layout="column">
+<md-toolbar ng-if="notebookMenuCtrl.viewMode === 'toolbar'" md-theme="light"
+            class="notebook-toolbar node-sidebar__toolbar md-whiteframe-1dp" layout="column"
+            ng-class="{'layout-row': notebookMenuCtrl.xsScreen, 'layout-align-end-center': notebookMenuCtrl.xsScreen}">
     <md-button ng-if="notebookMenuCtrl.noteEnabled"
                aria-label="View {{notebookMenuCtrl.noteLabel}}"
                class="md-icon-button"

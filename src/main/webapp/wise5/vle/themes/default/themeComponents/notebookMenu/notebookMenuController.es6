@@ -1,13 +1,15 @@
 "use strict";
 
 class NotebookMenuCtrl {
-    constructor($scope,
+    constructor($mdMedia,
+                $scope,
                 $element,
                 $rootScope,
                 NotebookService,
                 ProjectService,
                 StudentDataService) {
 
+        this.$mdMedia = $mdMedia;
         this.$scope = $scope;
         this.$element = $element;
         this.$rootScope = $rootScope;
@@ -16,6 +18,7 @@ class NotebookMenuCtrl {
         this.StudentDataService = StudentDataService;
 
         this.addMode = false;
+        this.xsScreen = false;
         //this.viewMode ? this.viewMode : 'toolbar'; // default view is the side toolbar; 'nav' mode will show a sidenav with more options
 
         this.notebookConfig = this.NotebookService.getNotebookConfig();
@@ -34,6 +37,10 @@ class NotebookMenuCtrl {
         this.noteColor = this.notebookConfig.itemTypes.note.label.color;
         this.questionColor = this.notebookConfig.itemTypes.question.label.color;
         this.reportColor = this.notebookConfig.itemTypes.report.label.color;
+
+        this.$scope.$watch(() => { return this.$mdMedia('xs'); }, (xs) => {
+            this.xsScreen = xs;
+        });
     }
 
     addNewNote(ev) {
@@ -60,6 +67,7 @@ class NotebookMenuCtrl {
 }
 
 NotebookMenuCtrl.$inject = [
+    '$mdMedia',
     '$scope',
     '$element',
     '$rootScope',
