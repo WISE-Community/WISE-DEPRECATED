@@ -9,12 +9,13 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var LabelController = function () {
-    function LabelController($injector, $scope, $timeout, LabelService, NodeService, NotebookService, OpenResponseService, ProjectService, StudentAssetService, StudentDataService, UtilService) {
+    function LabelController($injector, $q, $scope, $timeout, LabelService, NodeService, NotebookService, OpenResponseService, ProjectService, StudentAssetService, StudentDataService, UtilService) {
         var _this = this;
 
         _classCallCheck(this, LabelController);
 
         this.$injector = $injector;
+        this.$q = $q;
         this.$scope = $scope;
         this.$timeout = $timeout;
         this.LabelService = LabelService;
@@ -274,28 +275,40 @@ var LabelController = function () {
          * save student data.
          * @param isSubmit boolean whether the request is coming from a submit
          * action (optional; default is false)
-         * @return a component state containing the student data
+         * @return a promise of a component state containing the student data
          */
         this.$scope.getComponentState = function (isSubmit) {
-            var componentState = null;
+            var deferred = this.$q.defer();
             var getState = false;
+            var action = 'change';
 
             if (isSubmit) {
                 if (this.$scope.labelController.isSubmitDirty) {
                     getState = true;
+                    action = 'submit';
                 }
             } else {
                 if (this.$scope.labelController.isDirty) {
                     getState = true;
+                    action = 'save';
                 }
             }
 
             if (getState) {
                 // create a component state populated with the student data
-                componentState = this.$scope.labelController.createComponentState();
+                this.$scope.labelController.createComponentState(action).then(function (componentState) {
+                    deferred.resolve(componentState);
+                });
+            } else {
+                /*
+                 * the student does not have any unsaved changes in this component
+                 * so we don't need to save a component state for this component.
+                 * we will immediately resolve the promise here.
+                 */
+                deferred.resolve();
             }
 
-            return componentState;
+            return deferred.promise;
         }.bind(this);
 
         /**
@@ -605,6 +618,8 @@ var LabelController = function () {
          * Called when the student changes their work
          */
         value: function studentDataChanged() {
+            var _this2 = this;
+
             /*
              * set the dirty flags so we will know we need to save or submit the
              * student work later
@@ -621,16 +636,20 @@ var LabelController = function () {
             // get this part id
             var componentId = this.getComponentId();
 
-            // create a component state populated with the student data
-            var componentState = this.createComponentState();
-
             /*
              * the student work in this component has changed so we will tell
              * the parent node that the student data will need to be saved.
              * this will also notify connected parts that this component's student
              * data has changed.
              */
-            this.$scope.$emit('componentStudentDataChanged', { componentId: componentId, componentState: componentState });
+            var action = 'change';
+
+            // create a component state populated with the student data
+            this.createComponentState(action).then(function (componentState) {
+
+                _this2.processLatestSubmit();
+                _this2.$scope.$emit('componentStudentDataChanged', { componentId: componentId, componentState: componentState });
+            });
         }
     }, {
         key: 'getLabels',
@@ -736,9 +755,11 @@ var LabelController = function () {
 
         /**
          * Create a new component state populated with the student data
-         * @return the componentState after it has been populated
+         * @param action the action that is triggering creating of this component state
+         * e.g. 'submit', 'save', 'change'
+         * @return a promise that will return a component state
          */
-        value: function createComponentState() {
+        value: function createComponentState(action) {
 
             // create a new component state
             var componentState = this.NodeService.createNewComponentState();
@@ -769,15 +790,44 @@ var LabelController = function () {
             // set the student data into the component state
             componentState.studentData = studentData;
 
-            return componentState;
+            var deferred = this.$q.defer();
+
+            /*
+             * perform any additional processing that is required before returning
+             * the component state
+             */
+            this.createComponentStateAdditionalProcessing(deferred, componentState, action);
+
+            return deferred.promise;
         }
     }, {
-        key: 'calculateDisabled',
+        key: 'createComponentStateAdditionalProcessing',
 
+
+        /**
+         * Perform any additional processing that is required before returning the
+         * component state
+         * Note: this function must call deferred.resolve() otherwise student work
+         * will not be saved
+         * @param deferred a deferred object
+         * @param componentState the component state
+         * @param action the action that we are creating the component state for
+         * e.g. 'submit', 'save', 'change'
+         */
+        value: function createComponentStateAdditionalProcessing(deferred, componentState, action) {
+            /*
+             * we don't need to perform any additional processing so we can resolve
+             * the promise immediately
+             */
+            deferred.resolve(componentState);
+        }
 
         /**
          * Check if we need to lock the component
          */
+
+    }, {
+        key: 'calculateDisabled',
         value: function calculateDisabled() {
 
             // get the component content
@@ -891,7 +941,7 @@ var LabelController = function () {
     }, {
         key: 'attachStudentAsset',
         value: function attachStudentAsset(studentAsset) {
-            var _this2 = this;
+            var _this3 = this;
 
             if (studentAsset != null) {
                 this.StudentAssetService.copyAssetForReference(studentAsset).then(function (copiedAsset) {
@@ -901,8 +951,8 @@ var LabelController = function () {
                             iconURL: copiedAsset.iconURL
                         };
 
-                        _this2.attachments.push(attachment);
-                        _this2.studentDataChanged();
+                        _this3.attachments.push(attachment);
+                        _this3.studentDataChanged();
                     }
                 });
             }
@@ -1676,7 +1726,7 @@ var LabelController = function () {
     return LabelController;
 }();
 
-LabelController.$inject = ['$injector', '$scope', '$timeout', 'LabelService', 'NodeService', 'NotebookService', 'OpenResponseService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'UtilService'];
+LabelController.$inject = ['$injector', '$q', '$scope', '$timeout', 'LabelService', 'NodeService', 'NotebookService', 'OpenResponseService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'UtilService'];
 
 exports.default = LabelController;
 //# sourceMappingURL=labelController.js.map

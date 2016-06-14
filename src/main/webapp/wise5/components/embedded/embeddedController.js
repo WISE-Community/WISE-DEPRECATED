@@ -19,9 +19,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var EmbeddedController = function () {
-    function EmbeddedController($scope, $sce, $window, NodeService, NotebookService, EmbeddedService, ProjectService, StudentDataService, UtilService) {
+    function EmbeddedController($q, $scope, $sce, $window, NodeService, NotebookService, EmbeddedService, ProjectService, StudentDataService, UtilService) {
         _classCallCheck(this, EmbeddedController);
 
+        this.$q = $q;
         this.$scope = $scope;
         this.$sce = $sce;
         this.$window = $window;
@@ -289,28 +290,40 @@ var EmbeddedController = function () {
          * save student data.
          * @param isSubmit boolean whether the request is coming from a submit
          * action (optional; default is false)
-         * @return a component state containing the student data
+         * @return a promise of a component state containing the student data
          */
         this.$scope.getComponentState = function (isSubmit) {
-            var componentState = null;
+            var deferred = this.$q.defer();
             var getState = false;
+            var action = 'change';
 
             if (isSubmit) {
                 if (this.$scope.embeddedController.isSubmitDirty) {
                     getState = true;
+                    action = 'submit';
                 }
             } else {
                 if (this.$scope.embeddedController.isDirty) {
                     getState = true;
+                    action = 'save';
                 }
             }
 
             if (getState) {
                 // create a component state populated with the student data
-                componentState = this.$scope.embeddedController.componentState;
+                this.$scope.embeddedController.createComponentState(action).then(function (componentState) {
+                    deferred.resolve(componentState);
+                });
+            } else {
+                /*
+                 * the student does not have any unsaved changes in this component
+                 * so we don't need to save a component state for this component.
+                 * we will immediately resolve the promise here.
+                 */
+                deferred.resolve();
             }
 
-            return componentState;
+            return deferred.promise;
         }.bind(this);
 
         /**
@@ -380,6 +393,7 @@ var EmbeddedController = function () {
          * Called when the student changes their work
          */
         value: function studentDataChanged(data) {
+            var _this = this;
 
             /*
              * set the dirty flags so we will know we need to save or submit the
@@ -397,19 +411,18 @@ var EmbeddedController = function () {
             // get this part id
             var componentId = this.getComponentId();
 
-            // create a new component state
-            this.componentState = this.createComponentState();
-
-            // set the student data into the component state
-            this.componentState.studentData = data;
-
             /*
              * the student work in this component has changed so we will tell
              * the parent node that the student data will need to be saved.
              * this will also notify connected parts that this component's student
              * data has changed.
              */
-            this.$scope.$emit('componentStudentDataChanged', { componentId: componentId, componentState: this.componentState });
+            var action = 'change';
+
+            // create a component state populated with the student data
+            this.createComponentState(action).then(function (componentState) {
+                _this.$scope.$emit('componentStudentDataChanged', { componentId: componentId, componentState: componentState });
+            });
         }
     }, {
         key: 'createComponentState',
@@ -438,7 +451,36 @@ var EmbeddedController = function () {
             // set the student data into the component state
             componentState.studentData = this.studentData;
 
-            return componentState;
+            var deferred = this.$q.defer();
+
+            /*
+             * perform any additional processing that is required before returning
+             * the component state
+             */
+            this.createComponentStateAdditionalProcessing(deferred, componentState, action);
+
+            return deferred.promise;
+        }
+    }, {
+        key: 'createComponentStateAdditionalProcessing',
+
+
+        /**
+         * Perform any additional processing that is required before returning the
+         * component state
+         * Note: this function must call deferred.resolve() otherwise student work
+         * will not be saved
+         * @param deferred a deferred object
+         * @param componentState the component state
+         * @param action the action that we are creating the component state for
+         * e.g. 'submit', 'save', 'change'
+         */
+        value: function createComponentStateAdditionalProcessing(deferred, componentState, action) {
+            /*
+             * we don't need to perform any additional processing so we can resolve
+             * the promise immediately
+             */
+            deferred.resolve(componentState);
         }
     }, {
         key: 'sendLatestWorkToApplication',
@@ -549,7 +591,7 @@ var EmbeddedController = function () {
          * @param $event the click event
          */
         value: function snipModel($event) {
-            var _this = this;
+            var _this2 = this;
 
             // get the iframe
             var iframe = $('#componentApp_' + this.componentId);
@@ -569,10 +611,10 @@ var EmbeddedController = function () {
                         var img_b64 = canvas.toDataURL('image/png');
 
                         // get the image object
-                        var imageObject = _this.UtilService.getImageObjectFromBase64String(img_b64);
+                        var imageObject = _this2.UtilService.getImageObjectFromBase64String(img_b64);
 
                         // create a notebook item with the image populated into it
-                        _this.NotebookService.addNewItem($event, imageObject);
+                        _this2.NotebookService.addNewItem($event, imageObject);
                     });
                 }
             }
@@ -609,7 +651,7 @@ var EmbeddedController = function () {
     return EmbeddedController;
 }();
 
-EmbeddedController.$inject = ['$scope', '$sce', '$window', 'NodeService', 'NotebookService', 'EmbeddedService', 'ProjectService', 'StudentDataService', 'UtilService'];
+EmbeddedController.$inject = ['$q', '$scope', '$sce', '$window', 'NodeService', 'NotebookService', 'EmbeddedService', 'ProjectService', 'StudentDataService', 'UtilService'];
 
 exports.default = EmbeddedController;
 //# sourceMappingURL=embeddedController.js.map

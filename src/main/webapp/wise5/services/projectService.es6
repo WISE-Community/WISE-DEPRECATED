@@ -4523,6 +4523,23 @@ class ProjectService {
 
         return maxScore;
     }
+    
+    /**
+     * Get the max score for a component
+     * @param nodeId get the max score from a component in this node
+     * @param componentId get the max score from this component
+     */
+    getMaxScoreForComponent(nodeId, componentId) {
+        var maxScore = null;
+        
+        var component = this.getComponentByNodeIdAndComponentId(nodeId, componentId);
+        
+        if (component != null) {
+            maxScore = component.maxScore;
+        }
+        
+        return maxScore;
+    }
 
     /**
      * Determine if a node id is a direct child of a group

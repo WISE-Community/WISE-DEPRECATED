@@ -1098,6 +1098,10 @@ var componentMaxScore=component.maxScore; // check if the component has a max sc
 if(componentMaxScore!=null){ // make sure the max score is a valid number
 if(!isNaN(componentMaxScore)){if(maxScore==null){maxScore=componentMaxScore;}else { // accumulate the max score
 maxScore+=componentMaxScore;}}}}}}}return maxScore;} /**
+     * Get the max score for a component
+     * @param nodeId get the max score from a component in this node
+     * @param componentId get the max score from this component
+     */},{key:'getMaxScoreForComponent',value:function getMaxScoreForComponent(nodeId,componentId){var maxScore=null;var component=this.getComponentByNodeIdAndComponentId(nodeId,componentId);if(component!=null){maxScore=component.maxScore;}return maxScore;} /**
      * Determine if a node id is a direct child of a group
      * @param nodeId the node id
      * @param groupId the group id

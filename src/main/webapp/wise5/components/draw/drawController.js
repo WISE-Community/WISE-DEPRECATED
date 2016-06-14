@@ -19,12 +19,13 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var DrawController = function () {
-    function DrawController($injector, $rootScope, $scope, $timeout, DrawService, NodeService, NotebookService, ProjectService, StudentAssetService, StudentDataService, UtilService) {
+    function DrawController($injector, $q, $rootScope, $scope, $timeout, DrawService, NodeService, NotebookService, ProjectService, StudentAssetService, StudentDataService, UtilService) {
         var _this = this;
 
         _classCallCheck(this, DrawController);
 
         this.$injector = $injector;
+        this.$q = $q;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$timeout = $timeout;
@@ -270,25 +271,37 @@ var DrawController = function () {
          * @return a component state containing the student data
          */
         this.$scope.getComponentState = function (isSubmit) {
-            var componentState = null;
+            var deferred = this.$q.defer();
             var getState = false;
+            var action = 'change';
 
             if (isSubmit) {
                 if (this.$scope.drawController.isSubmitDirty) {
                     getState = true;
+                    action = 'submit';
                 }
             } else {
                 if (this.$scope.drawController.isDirty) {
                     getState = true;
+                    action = 'save';
                 }
             }
 
             if (getState) {
                 // create a component state populated with the student data
-                componentState = this.$scope.drawController.createComponentState();
+                this.$scope.drawController.createComponentState(action).then(function (componentState) {
+                    deferred.resolve(componentState);
+                });
+            } else {
+                /*
+                 * the student does not have any unsaved changes in this component
+                 * so we don't need to save a component state for this component.
+                 * we will immediately resolve the promise here.
+                 */
+                deferred.resolve();
             }
 
-            return componentState;
+            return deferred.promise;
         }.bind(this);
 
         /**
@@ -708,6 +721,8 @@ var DrawController = function () {
          * Called when the student changes their work
          */
         value: function studentDataChanged() {
+            var _this2 = this;
+
             /*
              * set the dirty flag so we will know we need to save the
              * student work later
@@ -724,16 +739,18 @@ var DrawController = function () {
             // get this part id
             var componentId = this.getComponentId();
 
-            // create a component state populated with the student data
-            var componentState = this.createComponentState();
-
             /*
              * the student work in this component has changed so we will tell
              * the parent node that the student data will need to be saved.
              * this will also notify connected parts that this component's student
              * data has changed.
              */
-            this.$scope.$emit('componentStudentDataChanged', { componentId: componentId, componentState: componentState });
+            var action = 'change';
+
+            // create a component state populated with the student data
+            this.createComponentState(action).then(function (componentState) {
+                _this2.$scope.$emit('componentStudentDataChanged', { componentId: componentId, componentState: componentState });
+            });
         }
     }, {
         key: 'createComponentState',
@@ -741,9 +758,11 @@ var DrawController = function () {
 
         /**
          * Create a new component state populated with the student data
-         * @return the componentState after it has been populated
+         * @param action the action that is triggering creating of this component state
+         * e.g. 'submit', 'save', 'change'
+         * @return a promise that will return a component state
          */
-        value: function createComponentState() {
+        value: function createComponentState(action) {
 
             // create a new component state
             var componentState = this.NodeService.createNewComponentState();
@@ -772,15 +791,44 @@ var DrawController = function () {
                 componentState.studentData = studentData;
             }
 
-            return componentState;
+            var deferred = this.$q.defer();
+
+            /*
+             * perform any additional processing that is required before returning
+             * the component state
+             */
+            this.createComponentStateAdditionalProcessing(deferred, componentState, action);
+
+            return deferred.promise;
         }
     }, {
-        key: 'calculateDisabled',
+        key: 'createComponentStateAdditionalProcessing',
 
+
+        /**
+         * Perform any additional processing that is required before returning the
+         * component state
+         * Note: this function must call deferred.resolve() otherwise student work
+         * will not be saved
+         * @param deferred a deferred object
+         * @param componentState the component state
+         * @param action the action that we are creating the component state for
+         * e.g. 'submit', 'save', 'change'
+         */
+        value: function createComponentStateAdditionalProcessing(deferred, componentState, action) {
+            /*
+             * we don't need to perform any additional processing so we can resolve
+             * the promise immediately
+             */
+            deferred.resolve(componentState);
+        }
 
         /**
          * Check if we need to lock the component
          */
+
+    }, {
+        key: 'calculateDisabled',
         value: function calculateDisabled() {
 
             var nodeId = this.nodeId;
@@ -886,7 +934,7 @@ var DrawController = function () {
          * @param studentAsset
          */
         value: function attachStudentAsset(studentAsset) {
-            var _this2 = this;
+            var _this3 = this;
 
             if (studentAsset != null) {
                 this.StudentAssetService.copyAssetForReference(studentAsset).then(function (copiedAsset) {
@@ -898,7 +946,7 @@ var DrawController = function () {
                             //oImg.setTop((this.drawingTool.canvas.height / 2) - (oImg.height / 2));
                             //oImg.center();
                             oImg.studentAssetId = copiedAsset.id; // keep track of this asset id
-                            _this2.drawingTool.canvas.add(oImg); // add copied asset image to canvas
+                            _this3.drawingTool.canvas.add(oImg); // add copied asset image to canvas
                         });
                     }
                 });
@@ -1285,7 +1333,7 @@ var DrawController = function () {
     return DrawController;
 }();
 
-DrawController.$inject = ['$injector', '$rootScope', '$scope', '$timeout', 'DrawService', 'NodeService', 'NotebookService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'UtilService'];
+DrawController.$inject = ['$injector', '$q', '$rootScope', '$scope', '$timeout', 'DrawService', 'NodeService', 'NotebookService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'UtilService'];
 
 exports.default = DrawController;
 //# sourceMappingURL=drawController.js.map

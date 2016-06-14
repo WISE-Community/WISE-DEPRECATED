@@ -20,6 +20,7 @@ import AuthoringToolController from './authoringToolController';
 import AuthoringToolMainController from './main/authoringToolMainController';
 import AuthoringToolNewProjectController from './main/authoringToolNewProjectController';
 import ConfigService from '../services/configService';
+import CRaterService from '../services/cRaterService';
 import Directives from '../directives/directives';
 import DiscussionController from '../components/discussion/discussionController';
 import DiscussionService from '../components/discussion/discussionService';
@@ -42,6 +43,7 @@ import MultipleChoiceService from '../components/multipleChoice/multipleChoiceSe
 import NodeController from './node/nodeController';
 import NodeService from '../services/nodeService';
 import NotebookService from '../services/notebookService';
+import NotificationService from '../services/notificationService';
 import OpenResponseController from '../components/openResponse/openResponseController';
 import OpenResponseService from '../components/openResponse/openResponseService';
 import OutsideURLController from '../components/outsideURL/outsideURLController';
@@ -80,6 +82,7 @@ let mainModule = angular.module('authoring', [
     .service(AnnotationService.name, AnnotationService)
     .service(AudioOscillatorService.name, AudioOscillatorService)
     .service(ConfigService.name, ConfigService)
+    .service(CRaterService.name, CRaterService)
     .service(DiscussionService.name, DiscussionService)
     .service(DrawService.name, DrawService)
     .service(EmbeddedService.name, EmbeddedService)
@@ -90,6 +93,7 @@ let mainModule = angular.module('authoring', [
     .service(MultipleChoiceService.name, MultipleChoiceService)
     .service(NodeService.name, NodeService)
     .service(NotebookService.name, NotebookService)
+    .service(NotificationService.name, NotificationService)
     .service(OpenResponseService.name, OpenResponseService)
     .service(OutsideURLService.name, OutsideURLService)
     .service(ProjectService.name, ProjectService)

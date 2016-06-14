@@ -9,11 +9,12 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var MatchController = function () {
-    function MatchController($rootScope, $scope, MatchService, NodeService, ProjectService, StudentDataService, UtilService, $mdMedia) {
+    function MatchController($q, $rootScope, $scope, MatchService, NodeService, ProjectService, StudentDataService, UtilService, $mdMedia) {
         var _this = this;
 
         _classCallCheck(this, MatchController);
 
+        this.$q = $q;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.MatchService = MatchService;
@@ -217,28 +218,40 @@ var MatchController = function () {
          * save student data.
          * @param isSubmit boolean whether the request is coming from a submit
          * action (optional; default is false)
-         * @return a component state containing the student data
+         * @return a promise of a component state containing the student data
          */
         this.$scope.getComponentState = function (isSubmit) {
-            var componentState = null;
+            var deferred = this.$q.defer();
             var getState = false;
+            var action = 'change';
 
             if (isSubmit) {
                 if (this.$scope.matchController.isSubmitDirty) {
                     getState = true;
+                    action = 'submit';
                 }
             } else {
                 if (this.$scope.matchController.isDirty) {
                     getState = true;
+                    action = 'save';
                 }
             }
 
             if (getState) {
                 // create a component state populated with the student data
-                componentState = this.$scope.matchController.createComponentState();
+                this.$scope.matchController.createComponentState(action).then(function (componentState) {
+                    deferred.resolve(componentState);
+                });
+            } else {
+                /*
+                 * the student does not have any unsaved changes in this component
+                 * so we don't need to save a component state for this component.
+                 * we will immediately resolve the promise here.
+                 */
+                deferred.resolve();
             }
 
-            return componentState;
+            return deferred.promise;
         }.bind(this);
 
         /**
@@ -864,6 +877,8 @@ var MatchController = function () {
          * Called when the student changes their work
          */
         value: function studentDataChanged() {
+            var _this2 = this;
+
             /*
              * set the dirty flag so we will know we need to save the
              * student work later
@@ -877,19 +892,20 @@ var MatchController = function () {
             // get this part id
             var componentId = this.getComponentId();
 
-            // create a component state populated with the student data
-            var componentState = this.createComponentState();
-            this.buckets = componentState.studentData.buckets;
-
-            this.processLatestSubmit();
-
             /*
              * the student work in this component has changed so we will tell
              * the parent node that the student data will need to be saved.
              * this will also notify connected parts that this component's student
              * data has changed.
              */
-            this.$scope.$emit('componentStudentDataChanged', { componentId: componentId, componentState: componentState });
+            var action = 'change';
+
+            // create a component state populated with the student data
+            this.createComponentState(action).then(function (componentState) {
+
+                _this2.processLatestSubmit();
+                _this2.$scope.$emit('componentStudentDataChanged', { componentId: componentId, componentState: componentState });
+            });
         }
     }, {
         key: 'createComponentState',
@@ -897,9 +913,11 @@ var MatchController = function () {
 
         /**
          * Create a new component state populated with the student data
-         * @return the componentState after it has been populated
+         * @param action the action that is triggering creating of this component state
+         * e.g. 'submit', 'save', 'change'
+         * @return a promise that will return a component state
          */
-        value: function createComponentState() {
+        value: function createComponentState(action) {
 
             // create a new component state
             var componentState = this.NodeService.createNewComponentState();
@@ -934,15 +952,44 @@ var MatchController = function () {
                 componentState.studentData = studentData;
             }
 
-            return componentState;
+            var deferred = this.$q.defer();
+
+            /*
+             * perform any additional processing that is required before returning
+             * the component state
+             */
+            this.createComponentStateAdditionalProcessing(deferred, componentState, action);
+
+            return deferred.promise;
         }
     }, {
-        key: 'calculateDisabled',
+        key: 'createComponentStateAdditionalProcessing',
 
+
+        /**
+         * Perform any additional processing that is required before returning the
+         * component state
+         * Note: this function must call deferred.resolve() otherwise student work
+         * will not be saved
+         * @param deferred a deferred object
+         * @param componentState the component state
+         * @param action the action that we are creating the component state for
+         * e.g. 'submit', 'save', 'change'
+         */
+        value: function createComponentStateAdditionalProcessing(deferred, componentState, action) {
+            /*
+             * we don't need to perform any additional processing so we can resolve
+             * the promise immediately
+             */
+            deferred.resolve(componentState);
+        }
 
         /**
          * Check if we need to lock the component
          */
+
+    }, {
+        key: 'calculateDisabled',
         value: function calculateDisabled() {
 
             var nodeId = this.nodeId;
@@ -1703,7 +1750,7 @@ var MatchController = function () {
     return MatchController;
 }();
 
-MatchController.$inject = ['$rootScope', '$scope', 'MatchService', 'NodeService', 'ProjectService', 'StudentDataService', 'UtilService', '$mdMedia'];
+MatchController.$inject = ['$q', '$rootScope', '$scope', 'MatchService', 'NodeService', 'ProjectService', 'StudentDataService', 'UtilService', '$mdMedia'];
 
 exports.default = MatchController;
 //# sourceMappingURL=matchController.js.map

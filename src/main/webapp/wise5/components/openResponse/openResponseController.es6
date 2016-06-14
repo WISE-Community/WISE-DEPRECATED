@@ -3,8 +3,12 @@
 class OpenResponseController {
 
     constructor($injector,
+                $q,
                 $rootScope,
                 $scope,
+                AnnotationService,
+                ConfigService,
+                CRaterService,
                 NodeService,
                 OpenResponseService,
                 ProjectService,
@@ -12,8 +16,12 @@ class OpenResponseController {
                 StudentDataService) {
 
         this.$injector = $injector;
+        this.$q = $q;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
+        this.AnnotationService = AnnotationService;
+        this.ConfigService = ConfigService;
+        this.CRaterService = CRaterService;
         this.NodeService = NodeService;
         this.OpenResponseService = OpenResponseService;
         this.ProjectService = ProjectService;
@@ -232,28 +240,40 @@ class OpenResponseController {
          * save student data.
          * @param isSubmit boolean whether the request is coming from a submit
          * action (optional; default is false)
-         * @return a component state containing the student data
+         * @return a promise of a component state containing the student data
          */
         this.$scope.getComponentState = function(isSubmit) {
-            let componentState = null;
+            var deferred = this.$q.defer();
             let getState = false;
+            let action = 'change';
 
             if (isSubmit) {
                 if (this.$scope.openResponseController.isSubmitDirty) {
                     getState = true;
+                    action = 'submit';
                 }
             } else {
                 if (this.$scope.openResponseController.isDirty) {
                     getState = true;
+                    action = 'save';
                 }
             }
 
             if (getState) {
                 // create a component state populated with the student data
-                componentState = this.$scope.openResponseController.createComponentState();
+                this.$scope.openResponseController.createComponentState(action).then((componentState) => {
+                    deferred.resolve(componentState);
+                });
+            } else {
+                /*
+                 * the student does not have any unsaved changes in this component
+                 * so we don't need to save a component state for this component.
+                 * we will immediately resolve the promise here.
+                 */
+                deferred.resolve();
             }
-
-            return componentState;
+            
+            return deferred.promise;
         }.bind(this);
 
         /**
@@ -383,7 +403,7 @@ class OpenResponseController {
      */
     submitButtonClicked() {
         this.isSubmit = true;
-
+        
         // tell the parent node that this component wants to submit
         this.$scope.$emit('componentSubmitTriggered', {nodeId: this.nodeId, componentId: this.componentId});
     };
@@ -415,16 +435,18 @@ class OpenResponseController {
         // get this part id
         var componentId = this.getComponentId();
 
-        // create a component state populated with the student data
-        var componentState = this.createComponentState();
-
         /*
          * the student work in this component has changed so we will tell
          * the parent node that the student data will need to be saved.
          * this will also notify connected parts that this component's student
          * data has changed.
          */
-        this.$scope.$emit('componentStudentDataChanged', {componentId: componentId, componentState: componentState});
+        var action = 'change';
+        
+        // create a component state populated with the student data
+        this.createComponentState(action).then((componentState) => {
+            this.$scope.$emit('componentStudentDataChanged', {componentId: componentId, componentState: componentState});
+        });
     };
 
     /**
@@ -436,9 +458,13 @@ class OpenResponseController {
 
     /**
      * Create a new component state populated with the student data
-     * @return the componentState after it has been populated
+     * @param action the action that is triggering creating of this component state
+     * e.g. 'submit', 'save', 'change'
+     * @return a promise that will return a component state
      */
-    createComponentState() {
+    createComponentState(action) {
+        
+        var deferred = this.$q.defer();
 
         // create a new component state
         var componentState = this.NodeService.createNewComponentState();
@@ -464,9 +490,161 @@ class OpenResponseController {
 
         // set the student data into the component state
         componentState.studentData = studentData;
-
-        return componentState;
+        
+        /*
+         * perform any additional processing that is required before returning
+         * the component state
+         */
+        this.createComponentStateAdditionalProcessing(deferred, componentState, action);
+        
+        return deferred.promise;
     };
+    
+    /**
+     * Perform any additional processing that is required before returning the
+     * component state
+     * Note: this function must call deferred.resolve() otherwise student work
+     * will not be saved
+     * @param deferred a deferred object
+     * @param componentState the component state
+     * @param action the action that we are creating the component state for
+     * e.g. 'submit', 'save', 'change'
+     */
+    createComponentStateAdditionalProcessing(deferred, componentState, action) {
+        
+        var performCRaterScoring = false;
+        
+        // determine if we need to perform CRater scoring
+        if (action == 'submit') {
+            if (this.isCRaterScoreOnSubmit(this.componentContent)) {
+                performCRaterScoring = true;
+            }
+        } else if (action == 'save') {
+            if (this.isCRaterScoreOnSave(this.componentContent)) {
+                performCRaterScoring = true;
+            }
+        } else if (action == 'change' || action == null) {
+            if (this.isCRaterScoreOnChange(this.componentContent)) {
+                performCRaterScoring = true;
+            }
+        }
+        
+        if (performCRaterScoring) {
+            // we need to perform CRater scoring
+            
+            var cRaterItemType = this.CRaterService.getCRaterItemType(this.componentContent);
+            var cRaterItemId = this.CRaterService.getCRaterItemId(this.componentContent);
+            var cRaterRequestType = 'scoring';
+            var cRaterResponseId = new Date().getTime();
+            var studentData = this.studentResponse;
+            
+            // make the CRater request to score the student data
+            this.CRaterService.makeCRaterRequest(cRaterItemType, cRaterItemId, cRaterRequestType, cRaterResponseId, studentData).then((result) => {
+                
+                if (result != null) {
+                    
+                    // get the CRater response
+                    var data = result.data;
+                    
+                    if (data != null) {
+                        
+                        /*
+                         * annotations we put in the component state will be 
+                         * removed from the component state and saved separately
+                         */
+                        componentState.annotations = [];
+                        
+                        // get the CRater score
+                        var score = data.score;
+                        var concepts = data.concepts;
+                        
+                        if (score != null) {
+                            // create the auto score annotation
+                            var autoScoreAnnotationData = {};
+                            autoScoreAnnotationData.value = score;
+                            autoScoreAnnotationData.maxAutoScore = this.ProjectService.getMaxScoreForComponent(this.nodeId, this.componentId);
+                            autoScoreAnnotationData.concepts = concepts;
+                            autoScoreAnnotationData.autoGrader = 'cRater';
+                            
+                            var autoScoreAnnotation = this.createAutoScoreAnnotation(autoScoreAnnotationData);
+                            componentState.annotations.push(autoScoreAnnotation);
+                            
+                            // get the feedback text
+                            var autoComment = this.CRaterService.getCRaterFeedbackTextByScore(this.componentContent, score);
+                            
+                            if (autoComment != null) {
+                                // create the auto comment annotation
+                                var autoCommentAnnotationData = {};
+                                autoCommentAnnotationData.value = autoComment;
+                                autoCommentAnnotationData.concepts = concepts;
+                                autoCommentAnnotationData.autoGrader = 'cRater';
+                                
+                                var autoCommentAnnotation = this.createAutoCommentAnnotation(autoCommentAnnotationData);
+                                componentState.annotations.push(autoCommentAnnotation);
+                            }
+                        }
+                    }
+                }
+                
+                // resolve the promise now that we are done performing additional processing
+                deferred.resolve(componentState);
+            });
+        } else {
+            /*
+             * we don't need to perform any additional processing so we can resolve
+             * the promise immediately
+             */
+            deferred.resolve(componentState);
+        }
+    }
+
+    /**
+     * Create an auto score annotation
+     * @param runId the run id
+     * @param periodId the period id
+     * @param nodeId the node id
+     * @param componentId the component id
+     * @param toWorkgroupId the student workgroup id
+     * @param data the annotation data
+     * @returns the auto score annotation
+     */
+    createAutoScoreAnnotation(data) {
+        
+        var runId = this.ConfigService.getRunId();
+        var periodId = this.ConfigService.getPeriodId();
+        var nodeId = this.nodeId;
+        var componentId = this.componentId;
+        var toWorkgroupId = this.ConfigService.getWorkgroupId();
+        
+        // create the auto score annotation
+        var annotation = this.AnnotationService.createAutoScoreAnnotation(runId, periodId, nodeId, componentId, toWorkgroupId, data);
+        
+        return annotation;
+    }
+    
+    /**
+     * Create an auto comment annotation
+     * @param runId the run id
+     * @param periodId the period id
+     * @param nodeId the node id
+     * @param componentId the component id
+     * @param toWorkgroupId the student workgroup id
+     * @param data the annotation data
+     * @returns the auto comment annotation
+     */
+    createAutoCommentAnnotation(data) {
+        
+        var runId = this.ConfigService.getRunId();
+        var periodId = this.ConfigService.getPeriodId();
+        var nodeId = this.nodeId;
+        var componentId = this.componentId;
+        var toWorkgroupId = this.ConfigService.getWorkgroupId();
+        
+        // create the auto comment annotation
+        var annotation = this.AnnotationService.createAutoCommentAnnotation(runId, periodId, nodeId, componentId, toWorkgroupId, data);
+        
+        return annotation;
+    }
 
     /**
      * Check if we need to lock the component
@@ -803,6 +981,76 @@ class OpenResponseController {
         this.saveMessage.text = message;
         this.saveMessage.time = time;
     };
+    
+    /**
+     * Check if CRater is enabled for this component
+     * @returns whether CRater is enabled for this component
+     */
+    isCRaterEnabled() {
+        var result = false;
+        
+        if (this.CRaterService.isCRaterEnabled(this.componentContent)) {
+            result = true;
+        }
+        
+        return result;
+    }
+    
+    /**
+     * Check if CRater is set to score on save
+     * @returns whether CRater is set to score on save
+     */
+    isCRaterScoreOnSave() {
+        var result = false;
+        
+        if (this.CRaterService.isCRaterScoreOnSave(this.componentContent)) {
+            result = true;
+        }
+        
+        return result;
+    }
+    
+    /**
+     * Check if CRater is set to score on submit
+     * @returns whether CRater is set to score on submit
+     */
+    isCRaterScoreOnSubmit() {
+        var result = false;
+        
+        if (this.CRaterService.isCRaterScoreOnSubmit(this.componentContent)) {
+            result = true;
+        }
+        
+        return result;
+    }
+    
+    /**
+     * Check if CRater is set to score on change
+     * @returns whether CRater is set to score on change
+     */
+    isCRaterScoreOnChange() {
+        var result = false;
+        
+        if (this.CRaterService.isCRaterScoreOnChange(this.componentContent)) {
+            result = true;
+        }
+        
+        return result;
+    }
+    
+    /**
+     * Check if CRater is set to score when the student exits the step
+     * @returns whether CRater is set to score when the student exits the step
+     */
+    isCRaterScoreOnExit() {
+        var result = false;
+        
+        if (this.CRaterService.isCRaterScoreOnExit(this.componentContent)) {
+            result = true;
+        }
+        
+        return result;
+    }
 
     /**
      * Register the the listener that will listen for the exit event
@@ -822,8 +1070,12 @@ class OpenResponseController {
 
 OpenResponseController.$inject = [
     '$injector',
+    '$q',
     '$rootScope',
     '$scope',
+    'AnnotationService',
+    'ConfigService',
+    'CRaterService',
     'NodeService',
     'OpenResponseService',
     'ProjectService',

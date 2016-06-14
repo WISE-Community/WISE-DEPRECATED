@@ -18,9 +18,8 @@ import angularWebSocket from 'angular-websocket';
 import AnnotationService from '../services/annotationService';
 import AudioOscillatorController from '../components/audioOscillator/audioOscillatorController';
 import AudioOscillatorService from '../components/audioOscillator/audioOscillatorService';
-//import AudioRecorderService from '../components/audioRecorder/audioRecorderService';
 import ConfigService from '../services/configService';
-//import CRaterService from '../components/cRater/cRaterService';
+import CRaterService from '../services/cRaterService';
 import Directives from '../directives/directives';
 import DiscussionController from '../components/discussion/discussionController';
 import DiscussionService from '../components/discussion/discussionService';
@@ -52,7 +51,6 @@ import OpenResponseController from '../components/openResponse/openResponseContr
 import OpenResponseService from '../components/openResponse/openResponseService';
 import OutsideURLController from '../components/outsideURL/outsideURLController';
 import OutsideURLService from '../components/outsideURL/outsideURLService';
-//import PhotoBoothService from '../components/photoBooth/photoBoothService';
 import ProjectService from '../services/projectService';
 import SessionService from '../services/sessionService';
 import StudentAsset from './studentAsset/studentAsset';
@@ -98,9 +96,8 @@ let mainModule = angular.module('vle', [
 
     .service(AnnotationService.name, AnnotationService)
     .service(AudioOscillatorService.name, AudioOscillatorService)
-    //.service(AudioRecorderService.name, AudioRecorderService)
     .service(ConfigService.name, ConfigService)
-    //.service(CRaterService.name, CRaterService)
+    .service(CRaterService.name, CRaterService)
     .service(DiscussionService.name, DiscussionService)
     .service(DrawService.name, DrawService)
     .service(EmbeddedService.name, EmbeddedService)
@@ -115,7 +112,6 @@ let mainModule = angular.module('vle', [
     .service(NotificationService.name, NotificationService)
     .service(OpenResponseService.name, OpenResponseService)
     .service(OutsideURLService.name, OutsideURLService)
-    //.service(PhotoBoothService.name, PhotoBoothService)
     .service(ProjectService.name, ProjectService)
     .service(SessionService.name, SessionService)
     .service(StudentAssetService.name, StudentAssetService)
