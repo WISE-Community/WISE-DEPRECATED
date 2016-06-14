@@ -47,7 +47,7 @@ describe('WISE5 Student VLE Preview', function () {
         // Check that previous, next, close, and account buttons are on the page and have the right md-icons
         expect(previousButton.getText()).toBe('arrow_back');
         expect(nextButton.getText()).toBe('arrow_forward');
-        expect(closeButton.getText()).toBe('close');
+        expect(closeButton.getText()).toBe('home');
         expect(accountButton.getText()).toBe('account_circle');
         expect(accountMenu.getAttribute('aria-hidden')).toEqual("true"); // Account menu should be hidden
     });
