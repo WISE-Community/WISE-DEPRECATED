@@ -47,11 +47,15 @@
                              ng-change='graphController.authoringViewComponentChanged()'
                              size='30'/>
                 <br/>
-                Color: <input ng-model='series.color'/>
+                Color: <input ng-model='series.color'
+                              ng-change='graphController.authoringViewComponentChanged()'/>
                 <br/>
-                Symbol: <input ng-model='series.marker.symbol'/>
+                Symbol: <input ng-model='series.marker.symbol'
+                               ng-change='graphController.authoringViewComponentChanged()'/>
                 <br/>
-                Can Student Edit: <input type='checkbox' ng-model='series.canEdit'/>
+                Can Student Edit: <input type='checkbox' 
+                                         ng-model='series.canEdit'
+                                         ng-change='graphController.authoringViewComponentChanged()'/>
                 <br/>
                 <button ng-click='graphController.authoringDeleteSeriesClicked($index)'>Delete Series</button>
             </div>
