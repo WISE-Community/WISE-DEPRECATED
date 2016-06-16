@@ -58,7 +58,7 @@ var MultipleChoiceController = function () {
         this.isCorrect = null;
 
         // keep track of the number of submits
-        this.numberOfAttempts = 0;
+        this.numberOfAttempts = null;
 
         // whether the latest work was submitted or not
         this.isSubmit = null;
@@ -74,6 +74,9 @@ var MultipleChoiceController = function () {
 
         // whether the submit button is shown or not
         this.isSubmitButtonVisible = false;
+
+        // whether to show the feedback or not
+        this.showFeedback = true;
 
         // the latest annotations
         this.latestAnnotations = null;
@@ -141,6 +144,8 @@ var MultipleChoiceController = function () {
                     this.componentContent = this.ProjectService.injectAssetPaths(newValue);
                 }.bind(this), true);
             }
+
+            this.showFeedback = this.componentContent.showFeedback;
 
             // get the component type
             this.componentType = this.componentContent.type;
@@ -575,6 +580,8 @@ var MultipleChoiceController = function () {
          */
         value: function saveButtonClicked() {
             this.isSubmit = false;
+            this.isCorrect = null;
+            this.hideAllFeedback();
 
             // tell the parent node that this component wants to save
             this.$scope.$emit('componentSaveTriggered', { nodeId: this.nodeId, componentId: this.componentId });
@@ -589,6 +596,8 @@ var MultipleChoiceController = function () {
         value: function submitButtonClicked() {
             // TODO: add confirmation dialog if lock after submit is enabled on this component
             this.isSubmit = true;
+            this.isCorrect = null;
+            this.hideAllFeedback();
             this.incrementNumberOfAttempts();
 
             // set saveFailed to true; will be set to false on save success response from server
@@ -674,7 +683,7 @@ var MultipleChoiceController = function () {
                         }
 
                         // show the feedback if it exists and the student checked it
-                        if (isChoiceChecked && choice.feedback != null && choice.feedback !== '') {
+                        if (this.showFeedback && isChoiceChecked && choice.feedback != null && choice.feedback !== '') {
                             choice.showFeedback = true;
                             choice.feedbackToShow = choice.feedback;
                         }
@@ -729,11 +738,6 @@ var MultipleChoiceController = function () {
             if (this.isLockAfterSubmit()) {
                 this.isDisabled = true;
             }
-
-            // hide all the current feedback
-            this.hideAllFeedback();
-
-            this.checkAnswer();
         }
     }, {
         key: 'studentDataChanged',
@@ -796,36 +800,42 @@ var MultipleChoiceController = function () {
                 // set the student choices into the component state
                 studentData.studentChoices = this.getStudentChoiceObjects();
 
-                // check if the student has answered correctly
-                var hasCorrect = this.hasCorrectChoices();
-
-                if (hasCorrect) {
+                if (action === 'submit' || action === 'save') {
                     /*
-                     * check if the student has chosen all the correct
-                     * choices
+                     * the student has clicked submit or save so we will
+                     * check if the student has chosen all the correct choices.
+                     * the isCorrect value will be stored in this.isCorrect.
                      */
+                    this.checkAnswer();
+
                     if (this.isCorrect != null) {
                         // set the isCorrect value into the student data
                         studentData.isCorrect = this.isCorrect;
                     }
-
-                    if (this.isSubmit != null) {
-                        componentState.isSubmit = this.isSubmit;
-                    }
-
-                    // set the number of attempts the student has made
-                    studentData.numberOfAttempts = this.numberOfAttempts;
+                } else {
+                    /*
+                     * the student data has changed but the student has not
+                     * clicked on the submit or save button so we will not
+                     * check the answer yet.
+                     */
                 }
 
-                if (this.isSubmit) {
-                    // the student submitted this work
-                    componentState.isSubmit = this.isSubmit;
+                if (action === 'submit') {
+                    if (this.isSubmit) {
+                        // the student submitted this work
+                        componentState.isSubmit = this.isSubmit;
 
-                    /*
-                     * reset the isSubmit value so that the next component state
-                     * doesn't maintain the same value
-                     */
-                    this.isSubmit = false;
+                        /*
+                         * reset the isSubmit value so that the next component state
+                         * doesn't maintain the same value
+                         */
+                        this.isSubmit = false;
+                    }
+                }
+
+                if (this.numberOfAttempts != null) {
+                    // set the number of attempts the student has made
+                    studentData.numberOfAttempts = this.numberOfAttempts;
                 }
 
                 componentState.studentData = studentData;

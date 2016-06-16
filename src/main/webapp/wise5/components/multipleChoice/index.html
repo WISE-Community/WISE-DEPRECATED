@@ -24,6 +24,11 @@
                     <div>Is Correct: <input type='checkbox' ng-model='choice.isCorrect' ng-change='multipleChoiceController.authoringViewComponentChanged()'/></div>
                     <button ng-click='multipleChoiceController.deleteChoice(choice.id)'>Delete</button>
                 </div>
+                <br/>
+                Show Feedback: <input type='checkbox'
+                                      ng-model='multipleChoiceController.authoringComponentContent.showFeedback'
+                                      ng-change='multipleChoiceController.authoringViewComponentChanged()'/>
+                <br/>
                 Show Submit Button: <input type='checkbox'
                                            ng-model='multipleChoiceController.authoringComponentContent.showSubmitButton'
                                            ng-change='multipleChoiceController.authoringViewComponentChanged()'/>
@@ -79,7 +84,8 @@
                                          ng-click="multipleChoiceController.isDisabled || multipleChoiceController.radioChoiceSelected(choice.id)"
                                          ng-disabled="multipleChoiceController.isDisabled">
                             <span compile="choice.text"></span>
-                            <span ng-show="choice.showFeedback"
+                            <span ng-if="multipleChoiceController.showFeedback"
+                                  ng-show="choice.showFeedback"
                                   ng-class="{'success': multipleChoiceController.hasCorrectChoices() && choice.isCorrect, 'warn': multipleChoiceController.hasCorrectChoices() && !choice.isCorrect, 'info': !multipleChoiceController.hasCorrectChoices()}">
                                   {{choice.feedbackToShow}}
                             </span>
@@ -101,9 +107,9 @@
                     </div>
                 </div>
 
-                <div class="md-caption" ng-if="multipleChoiceController.hasCorrectChoices()" ng-show="multipleChoiceController.numberOfAttempts != null">Number of Attempts: {{multipleChoiceController.numberOfAttempts}}</div>
-                <div ng-if="multipleChoiceController.hasCorrectChoices() && multipleChoiceController.isCorrect != null && multipleChoiceController.isCorrect">Correct!</div>
-                <div ng-if="multipleChoiceController.hasCorrectChoices() && multipleChoiceController.isCorrect != null && !multipleChoiceController.isCorrect">Incorrect</div>
+                <div class="md-caption" ng-if="multipleChoiceController.hasCorrectChoices() && multipleChoiceController.showFeedback" ng-show="multipleChoiceController.numberOfAttempts != null">Number of Attempts: {{multipleChoiceController.numberOfAttempts}}</div>
+                <div ng-if="multipleChoiceController.hasCorrectChoices() && multipleChoiceController.showFeedback && multipleChoiceController.isCorrect != null && multipleChoiceController.isCorrect">Correct!</div>
+                <div ng-if="multipleChoiceController.hasCorrectChoices() && multipleChoiceController.showFeedback && multipleChoiceController.isCorrect != null && !multipleChoiceController.isCorrect">Incorrect</div>
 
                 <component-annotations ng-if="multipleChoiceController.mode === 'student'"
                                        score-annotation='multipleChoiceController.latestAnnotations.score'
