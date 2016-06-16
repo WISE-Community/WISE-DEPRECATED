@@ -31,6 +31,7 @@ class StudentDataService {
             this.studentData.componentStates = [];
             this.studentData.nodeStates = [];
             this.studentData.events = [];
+            this.studentData.annotations = [];
             this.studentData.userName = 'Preview Student';
             this.studentData.userId = '0';
 
