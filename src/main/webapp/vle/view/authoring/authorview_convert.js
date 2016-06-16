@@ -933,6 +933,7 @@ View.prototype.convertMultipleChoice = function(node, nodeContent) {
     component.choices = [];
     component.showSaveButton = false;
     component.showSubmitButton = false;
+    component.showFeedback = true;
 
     var assessmentItem = nodeContent.assessmentItem;
 
