@@ -53,8 +53,13 @@
 	// setup grading and classroom monitor dialogs
 	$('.classroomMonitor').on('click',function(){
 		var settings = $(this).attr('id');
+		var runId = $(this).attr('runId');
 		var title = $(this).attr('title');
+		var wiseVersion = $(this).attr('wiseVersion');
 		var path = "${contextPath}/teacher/classroomMonitor/classroomMonitor?" + settings;
+		if (wiseVersion != null && wiseVersion == 5) {
+			path = "${contextPath}/classroomMonitor/" + runId;
+		}
 		window.open(path);
 	});
 	
@@ -435,7 +440,7 @@
 							    <td>
 
 							   <ul class="actionList">
-									<li><a class="classroomMonitor" title="<spring:message code="teacher.management.projectruntabs.monitorTitle"/> ${run.name} (<spring:message code="run_id"/> ${run.id})" id="runId=${run.id}&gradingType=monitor"><img class="icon" alt="monitor" src="${contextPath}/<spring:theme code="bar_chart"/>" /><span><spring:message code="teacher.management.projectruntabs.gradingTool"/></span></a></li>
+									<li><a class="classroomMonitor" wiseVersion="${run.project.wiseVersion == null ? 4 : run.project.wiseVersion}" runId="${run.id}" title="<spring:message code="teacher.management.projectruntabs.monitorTitle"/> ${run.name} (<spring:message code="run_id"/> ${run.id})" id="runId=${run.id}&gradingType=monitor"><img class="icon" alt="monitor" src="${contextPath}/<spring:theme code="bar_chart"/>" /><span><spring:message code="teacher.management.projectruntabs.gradingTool"/></span></a></li>
 				               </ul>
 				               <ul class="actionList">
 							        <li>
