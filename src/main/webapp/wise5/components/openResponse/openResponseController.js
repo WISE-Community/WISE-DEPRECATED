@@ -9,10 +9,13 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var OpenResponseController = function () {
-    function OpenResponseController($injector, $q, $rootScope, $scope, AnnotationService, ConfigService, CRaterService, NodeService, OpenResponseService, ProjectService, StudentAssetService, StudentDataService) {
+    function OpenResponseController($injector, $mdDialog, $q, $rootScope, $scope, AnnotationService, ConfigService, CRaterService, NodeService, OpenResponseService, ProjectService, StudentAssetService, StudentDataService) {
+        var _this = this;
+
         _classCallCheck(this, OpenResponseController);
 
         this.$injector = $injector;
+        this.$mdDialog = $mdDialog;
         this.$q = $q;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
@@ -82,6 +85,9 @@ var OpenResponseController = function () {
 
         // the latest annotations
         this.latestAnnotations = null;
+
+        // used to hold a message dialog if we need to use one
+        this.messageDialog = null;
 
         //var scope = this;
         var themePath = this.ProjectService.getThemePath();
@@ -323,6 +329,33 @@ var OpenResponseController = function () {
         }));
 
         /**
+         * Listen for the 'annotationSavedToServer' event which is fired when
+         * we receive the response from saving an annotation to the server
+         */
+        this.$scope.$on('annotationSavedToServer', function (event, args) {
+
+            if (args != null) {
+
+                // get the annotation that was saved to the server
+                var annotation = args.annotation;
+
+                if (annotation != null) {
+
+                    // get the node id and component id of the annotation
+                    var annotationNodeId = annotation.nodeId;
+                    var annotationComponentId = annotation.componentId;
+
+                    // make sure the annotation was for this component
+                    if (_this.nodeId === annotationNodeId && _this.componentId === annotationComponentId) {
+
+                        // get latest score and comment annotations for this component
+                        _this.latestAnnotations = _this.$scope.$parent.nodeController.getLatestComponentAnnotations(_this.componentId);
+                    }
+                }
+            }
+        });
+
+        /**
          * Listen for the 'exitNode' event which is fired when the student
          * exits the parent node. This will perform any necessary cleanup
          * when the student exits the parent node.
@@ -429,7 +462,7 @@ var OpenResponseController = function () {
          * Called when the student changes their work
          */
         value: function studentDataChanged() {
-            var _this = this;
+            var _this2 = this;
 
             /*
              * set the dirty flags so we will know we need to save or submit the
@@ -457,7 +490,7 @@ var OpenResponseController = function () {
 
             // create a component state populated with the student data
             this.createComponentState(action).then(function (componentState) {
-                _this.$scope.$emit('componentStudentDataChanged', { componentId: componentId, componentState: componentState });
+                _this2.$scope.$emit('componentStudentDataChanged', { componentId: componentId, componentState: componentState });
             });
         }
     }, {
@@ -532,7 +565,7 @@ var OpenResponseController = function () {
          * e.g. 'submit', 'save', 'change'
          */
         value: function createComponentStateAdditionalProcessing(deferred, componentState, action) {
-            var _this2 = this;
+            var _this3 = this;
 
             var performCRaterScoring = false;
 
@@ -560,6 +593,16 @@ var OpenResponseController = function () {
                 var cRaterResponseId = new Date().getTime();
                 var studentData = this.studentResponse;
 
+                /*
+                 * display a dialog message while the student waits for their work 
+                 * to be scored by CRater
+                 */
+                this.messageDialog = this.$mdDialog.show({
+                    template: '<md-dialog aria-label="Please Wait"><md-dialog-content><div class="md-dialog-content">Please wait, we are scoring your work.</div></md-dialog-content></md-dialog>',
+                    fullscreen: true,
+                    escapeToClose: false
+                });
+
                 // make the CRater request to score the student data
                 this.CRaterService.makeCRaterRequest(cRaterItemType, cRaterItemId, cRaterRequestType, cRaterResponseId, studentData).then(function (result) {
 
@@ -584,15 +627,15 @@ var OpenResponseController = function () {
                                 // create the auto score annotation
                                 var autoScoreAnnotationData = {};
                                 autoScoreAnnotationData.value = score;
-                                autoScoreAnnotationData.maxAutoScore = _this2.ProjectService.getMaxScoreForComponent(_this2.nodeId, _this2.componentId);
+                                autoScoreAnnotationData.maxAutoScore = _this3.ProjectService.getMaxScoreForComponent(_this3.nodeId, _this3.componentId);
                                 autoScoreAnnotationData.concepts = concepts;
                                 autoScoreAnnotationData.autoGrader = 'cRater';
 
-                                var autoScoreAnnotation = _this2.createAutoScoreAnnotation(autoScoreAnnotationData);
+                                var autoScoreAnnotation = _this3.createAutoScoreAnnotation(autoScoreAnnotationData);
                                 componentState.annotations.push(autoScoreAnnotation);
 
                                 // get the feedback text
-                                var autoComment = _this2.CRaterService.getCRaterFeedbackTextByScore(_this2.componentContent, score);
+                                var autoComment = _this3.CRaterService.getCRaterFeedbackTextByScore(_this3.componentContent, score);
 
                                 if (autoComment != null) {
                                     // create the auto comment annotation
@@ -601,11 +644,19 @@ var OpenResponseController = function () {
                                     autoCommentAnnotationData.concepts = concepts;
                                     autoCommentAnnotationData.autoGrader = 'cRater';
 
-                                    var autoCommentAnnotation = _this2.createAutoCommentAnnotation(autoCommentAnnotationData);
+                                    var autoCommentAnnotation = _this3.createAutoCommentAnnotation(autoCommentAnnotationData);
                                     componentState.annotations.push(autoCommentAnnotation);
                                 }
                             }
                         }
+                    }
+
+                    if (_this3.messageDialog != null) {
+                        /*
+                         * hide the dialog that tells the student to wait since 
+                         * the work has been scored.
+                         */
+                        _this3.$mdDialog.hide(_this3.messageDialog);
                     }
 
                     // resolve the promise now that we are done performing additional processing
@@ -778,7 +829,7 @@ var OpenResponseController = function () {
          * @param studentAsset
          */
         value: function attachStudentAsset(studentAsset) {
-            var _this3 = this;
+            var _this4 = this;
 
             if (studentAsset != null) {
                 this.StudentAssetService.copyAssetForReference(studentAsset).then(function (copiedAsset) {
@@ -788,8 +839,8 @@ var OpenResponseController = function () {
                             iconURL: copiedAsset.iconURL
                         };
 
-                        _this3.attachments.push(attachment);
-                        _this3.studentDataChanged();
+                        _this4.attachments.push(attachment);
+                        _this4.studentDataChanged();
                     }
                 });
             }
@@ -1180,7 +1231,7 @@ var OpenResponseController = function () {
 
 ;
 
-OpenResponseController.$inject = ['$injector', '$q', '$rootScope', '$scope', 'AnnotationService', 'ConfigService', 'CRaterService', 'NodeService', 'OpenResponseService', 'ProjectService', 'StudentAssetService', 'StudentDataService'];
+OpenResponseController.$inject = ['$injector', '$mdDialog', '$q', '$rootScope', '$scope', 'AnnotationService', 'ConfigService', 'CRaterService', 'NodeService', 'OpenResponseService', 'ProjectService', 'StudentAssetService', 'StudentDataService'];
 
 exports.default = OpenResponseController;
 //# sourceMappingURL=openResponseController.js.map

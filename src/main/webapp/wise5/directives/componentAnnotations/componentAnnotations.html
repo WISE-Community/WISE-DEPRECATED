@@ -1,15 +1,15 @@
 <div class="annotations--student md-body-1" layout="row"
-     ng-if="componentAnnotationsCtrl.score || componentAnnotationsCtrl.comment">
+     ng-if="componentAnnotationsCtrl.scoreAnnotation || componentAnnotationsCtrl.commentAnnotation">
     <div>
-        <span ng-if="componentAnnotationsCtrl.comment" class="accent-1"><md-icon class="annotations--student__icon">chat</md-icon> <span translate="teacherFeedbackLabel"></span> </span>
-        <span ng-if="componentAnnotationsCtrl.comment" class="gray-dark">{{componentAnnotationsCtrl.comment}}</span>
-        <span ng-if="componentAnnotationsCtrl.hasScore && componentAnnotationsCtrl.comment && !componentAnnotationsCtrl.smScreen && !componentAnnotationsCtrl.hideComponentScores"
-              class="annotations--student__score md-body-2"><span translate="scoreLabelAndValue" translate-value-score="{{componentAnnotationsCtrl.score}}{{componentAnnotationsCtrl.maxScoreDisplay}}"></span>
+        <span ng-if="componentAnnotationsCtrl.commentAnnotation.data.value" class="accent-1"><md-icon class="annotations--student__icon">chat</md-icon> <span translate="teacherFeedbackLabel"></span> </span>
+        <span ng-if="componentAnnotationsCtrl.commentAnnotation.data.value" class="gray-dark" compile="componentAnnotationsCtrl.commentAnnotation.data.value"></span>
+        <span ng-if="componentAnnotationsCtrl.hasScore && componentAnnotationsCtrl.commentAnnotation.data.value && !componentAnnotationsCtrl.smScreen && !componentAnnotationsCtrl.hideComponentScores"
+              class="annotations--student__score md-body-2"><span translate="scoreLabelAndValue" translate-value-score="{{componentAnnotationsCtrl.scoreAnnotation.data.value}}{{componentAnnotationsCtrl.maxScoreDisplay}}"></span>
         </span>
     </div>
     <span flex></span>
-    <div ng-if="componentAnnotationsCtrl.hasScore && !componentAnnotationsCtrl.hideComponentScores && (componentAnnotationsCtrl.smScreen || !componentAnnotationsCtrl.comment)"
+    <div ng-if="componentAnnotationsCtrl.scoreAnnotation.data.value && !componentAnnotationsCtrl.hideComponentScores && (componentAnnotationsCtrl.smScreen || !componentAnnotationsCtrl.commentAnnotation.data.value)"
           class="annotations--student__score md-body-2">
-          <span translate="scoreLabelAndValue" translate-value-score="{{componentAnnotationsCtrl.score}}{{componentAnnotationsCtrl.maxScoreDisplay}}"></span>
+          <span translate="scoreLabelAndValue" translate-value-score="{{componentAnnotationsCtrl.scoreAnnotation.data.value}}{{componentAnnotationsCtrl.maxScoreDisplay}}"></span>
     </div>
 </div>

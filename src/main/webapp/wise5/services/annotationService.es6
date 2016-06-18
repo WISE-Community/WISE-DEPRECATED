@@ -11,6 +11,13 @@ class AnnotationService {
     }
 
     /**
+     * Get all the annotations
+     */
+    getAnnotations() {
+        return this.annotations;
+    }
+
+    /**
      * Get the latest annotation with the given params
      * @param params an object containing the params to match
      * @returns the latest annotation that matches the params
@@ -411,8 +418,152 @@ class AnnotationService {
         
         return annotation;
     }
+    
+    /**
+     * Get the latest score annotation
+     * @param nodeId the node id
+     * @param componentId the component id
+     * @param workgroupId the workgroup id
+     * @param scoreType (optional) the type of score 
+     * e.g.
+     * 'autoScore' for auto graded score
+     * 'score' for teacher graded score
+     * 'any' for auto graded score or teacher graded score
+     * @returns the latest score annotation
+     */
+    getLatestScoreAnnotation(nodeId, componentId, workgroupId, scoreType) {
+        
+        var annotation = null;
+        
+        var annotations = this.getAnnotations();
+        
+        if (scoreType == null) {
+            // default to 'any'
+            scoreType = 'any';
+        }
+        
+        // loop through all the annotations from newest to oldest
+        for (var a = annotations.length - 1; a >= 0; a--) {
+            var tempAnnotation = annotations[a];
+            
+            if (tempAnnotation != null) {
+                var acceptAnnotation = false;
+                var tempNodeId = tempAnnotation.nodeId;
+                var tempComponentId = tempAnnotation.componentId;
+                var tempToWorkgroupId = tempAnnotation.toWorkgroupId;
+                var tempAnnotationType = tempAnnotation.type;
+                
+                // make sure the annotation values match what we are looking for
+                if (nodeId == tempNodeId && componentId == tempComponentId && workgroupId == tempToWorkgroupId) {
+                    
+                    if (scoreType === 'any' && (tempAnnotationType === 'autoScore' || tempAnnotationType === 'score')) {
+                        // we are looking for an auto score or teacher score and have found one
+                        acceptAnnotation = true;
+                    } else if (scoreType === 'autoScore' && tempAnnotationType === 'autoScore') {
+                        // we are looking for an auto score and have found one
+                        acceptAnnotation = true;
+                    } else if (scoreType === 'score' && tempAnnotationType === 'score') {
+                        // we are looking for a teacher score and have found one
+                        acceptAnnotation = true;
+                    }
+                    
+                    if (acceptAnnotation) {
+                        // we have found the latest score annotation of the type we want
+                        annotation = tempAnnotation;
+                        break;
+                    }
+                }
+            }
+        }
+        
+        return annotation;
+    }
+    
+    /**
+     * Get the latest comment annotation
+     * @param nodeId the node id
+     * @param componentId the component id
+     * @param workgroupId the workgroup id
+     * @param commentType (optional) the type of comment 
+     * e.g.
+     * 'autoComment' for auto graded comment
+     * 'comment' for teacher graded comment
+     * 'any' for auto graded comment or teacher graded comment
+     * @returns the latest comment annotation
+     */
+    getLatestCommentAnnotation(nodeId, componentId, workgroupId, scoreType) {
+        
+        var annotation = null;
+        
+        var annotations = this.getAnnotations();
+        
+        if (scoreType == null) {
+            // default to 'any'
+            scoreType = 'any';
+        }
+        
+        // loop through all the annotations from newest to oldest
+        for (var a = annotations.length - 1; a >= 0; a--) {
+            var tempAnnotation = annotations[a];
+            
+            if (tempAnnotation != null) {
+                var acceptAnnotation = false;
+                var tempNodeId = tempAnnotation.nodeId;
+                var tempComponentId = tempAnnotation.componentId;
+                var tempToWorkgroupId = tempAnnotation.toWorkgroupId;
+                var tempAnnotationType = tempAnnotation.type;
+                
+                // make sure the annotation values match what we are looking for
+                if (nodeId == tempNodeId && componentId == tempComponentId && workgroupId == tempToWorkgroupId) {
+                    
+                    if (scoreType === 'any' && (tempAnnotationType === 'autoComment' || tempAnnotationType === 'comment')) {
+                        // we are looking for an auto comment or teacher comment and have found one
+                        acceptAnnotation = true;
+                    } else if (scoreType === 'autoComment' && tempAnnotationType === 'autoComment') {
+                        // we are looking for an auto comment and have found one
+                        acceptAnnotation = true;
+                    } else if (scoreType === 'comment' && tempAnnotationType === 'comment') {
+                        // we are looking for a teacher comment and have found one
+                        acceptAnnotation = true;
+                    }
+                    
+                    if (acceptAnnotation) {
+                        // we have found the latest comment annotation of the type we want
+                        annotation = tempAnnotation;
+                        break;
+                    }
+                }
+            }
+        }
+        
+        return annotation;
+    }
+    
+    /**
+     * Get the score value from the score annotation
+     * @param scoreAnnotation a score annotation
+     * @returns the score value e.g. 5
+     */
+    getScoreValueFromScoreAnnotation(scoreAnnotation) {
+        var scoreValue = null;
+        
+        if (scoreAnnotation != null) {
+            var data = scoreAnnotation.data;
+            
+            if (data != null) {
+                scoreValue = data.value;
+            }
+        }
+        
+        return scoreValue;
+    }
 }
 
-AnnotationService.$inject = ['$http', '$rootScope', 'ConfigService', 'UtilService'];
+AnnotationService.$inject = [
+    '$http',
+    '$rootScope',
+    'ConfigService',
+    'UtilService'
+];
 
 export default AnnotationService;

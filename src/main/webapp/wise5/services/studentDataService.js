@@ -49,6 +49,9 @@ var StudentDataService = function () {
                 this.studentData.userName = 'Preview Student';
                 this.studentData.userId = '0';
 
+                // set the annotations into the annotation service
+                this.AnnotationService.setAnnotations(this.studentData.annotations);
+
                 // populate the student history
                 this.populateHistories(this.studentData.events);
 
@@ -541,6 +544,8 @@ var StudentDataService = function () {
                     result = this.evaluateChoiceChosenCriteria(criteria);
                 } else if (functionName === 'isPlanningActivityCompleted') {
                     result = this.evaluateIsPlanningActivityCompletedCriteria(criteria);
+                } else if (functionName === 'score') {
+                    result = this.evaluateScoreCriteria(criteria);
                 } else if (functionName === '') {}
             }
 
@@ -797,7 +802,7 @@ var StudentDataService = function () {
         /**
          * Evaluate the choice chosen criteria
          * @param criteria the criteria to evaluate
-         * @returns a boolena value whether the criteria was satisfied or not
+         * @returns a boolean value whether the criteria was satisfied or not
          */
 
     }, {
@@ -815,6 +820,53 @@ var StudentDataService = function () {
 
                 // check if the criteria was satisfied
                 result = service.choiceChosen(criteria);
+            }
+
+            return result;
+        }
+    }, {
+        key: 'evaluateScoreCriteria',
+
+
+        /**
+         * Evaluate the score criteria
+         * @param criteria the criteria to evaluate
+         * @returns a boolean value whether the criteria was satisfied or not
+         */
+        value: function evaluateScoreCriteria(criteria) {
+
+            var result = false;
+
+            var params = criteria.params;
+
+            if (params != null) {
+
+                var nodeId = params.nodeId;
+                var componentId = params.componentId;
+                var scores = params.scores;
+                var workgroupId = this.ConfigService.getWorkgroupId();
+                var scoreType = 'any';
+
+                if (nodeId != null && componentId != null && scores != null) {
+
+                    // get the latest score annotation
+                    var latestScoreAnnotation = this.AnnotationService.getLatestScoreAnnotation(nodeId, componentId, workgroupId, scoreType);
+
+                    if (latestScoreAnnotation != null) {
+
+                        // get the score value
+                        var scoreValue = this.AnnotationService.getScoreValueFromScoreAnnotation(latestScoreAnnotation);
+
+                        // check if the score value matches what the criteria is looking for
+                        if (scores.indexOf(scoreValue) != -1) {
+                            /*
+                             * the student has received a score that matches a score
+                             * we're looking for
+                             */
+                            result = true;
+                        }
+                    }
+                }
             }
 
             return result;
@@ -2139,6 +2191,23 @@ var StudentDataService = function () {
 
             // return the next available planning node instance node id
             return 'planningNode' + this.maxPlanningNodeNumber;
+        }
+
+        /**
+         * Get the annotations
+         * @returns the annotations
+         */
+
+    }, {
+        key: 'getAnnotations',
+        value: function getAnnotations() {
+            var annotations = null;
+
+            if (this.studentData != null && this.studentData.annotations != null) {
+                annotations = this.studentData.annotations;
+            }
+
+            return annotations;
         }
     }]);
 

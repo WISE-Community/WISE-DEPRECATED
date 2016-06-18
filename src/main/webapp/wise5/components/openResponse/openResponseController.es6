@@ -3,6 +3,7 @@
 class OpenResponseController {
 
     constructor($injector,
+                $mdDialog,
                 $q,
                 $rootScope,
                 $scope,
@@ -16,6 +17,7 @@ class OpenResponseController {
                 StudentDataService) {
 
         this.$injector = $injector;
+        this.$mdDialog = $mdDialog;
         this.$q = $q;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
@@ -85,6 +87,9 @@ class OpenResponseController {
 
         // the latest annotations
         this.latestAnnotations = null;
+        
+        // used to hold a message dialog if we need to use one
+        this.messageDialog = null;
 
         //var scope = this;
         let themePath = this.ProjectService.getThemePath();
@@ -326,6 +331,34 @@ class OpenResponseController {
                 }
             }
         }));
+        
+        /**
+         * Listen for the 'annotationSavedToServer' event which is fired when
+         * we receive the response from saving an annotation to the server
+         */
+        this.$scope.$on('annotationSavedToServer', (event, args) => {
+            
+            if (args != null ) {
+                
+                // get the annotation that was saved to the server
+                var annotation = args.annotation;
+                
+                if (annotation != null) {
+                    
+                    // get the node id and component id of the annotation
+                    var annotationNodeId = annotation.nodeId;
+                    var annotationComponentId = annotation.componentId;
+                    
+                    // make sure the annotation was for this component
+                    if (this.nodeId === annotationNodeId && 
+                        this.componentId === annotationComponentId) {
+                        
+                        // get latest score and comment annotations for this component
+                        this.latestAnnotations = this.$scope.$parent.nodeController.getLatestComponentAnnotations(this.componentId);
+                    }
+                }
+            }
+        });
 
         /**
          * Listen for the 'exitNode' event which is fired when the student
@@ -538,6 +571,16 @@ class OpenResponseController {
             var cRaterResponseId = new Date().getTime();
             var studentData = this.studentResponse;
             
+            /*
+             * display a dialog message while the student waits for their work 
+             * to be scored by CRater
+             */
+            this.messageDialog = this.$mdDialog.show({
+                template: '<md-dialog aria-label="Please Wait"><md-dialog-content><div class="md-dialog-content">Please wait, we are scoring your work.</div></md-dialog-content></md-dialog>',
+                fullscreen: true,
+                escapeToClose: false
+            });
+            
             // make the CRater request to score the student data
             this.CRaterService.makeCRaterRequest(cRaterItemType, cRaterItemId, cRaterRequestType, cRaterResponseId, studentData).then((result) => {
                 
@@ -584,6 +627,14 @@ class OpenResponseController {
                             }
                         }
                     }
+                }
+                
+                if (this.messageDialog != null) {
+                    /*
+                     * hide the dialog that tells the student to wait since 
+                     * the work has been scored.
+                     */
+                    this.$mdDialog.hide(this.messageDialog);
                 }
                 
                 // resolve the promise now that we are done performing additional processing
@@ -1070,6 +1121,7 @@ class OpenResponseController {
 
 OpenResponseController.$inject = [
     '$injector',
+    '$mdDialog',
     '$q',
     '$rootScope',
     '$scope',

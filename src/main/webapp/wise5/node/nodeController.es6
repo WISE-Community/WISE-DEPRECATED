@@ -670,6 +670,30 @@ class NodeController {
                             // this node has transition logic
                             this.NodeService.evaluateTransitionLogic();
                         }
+                        
+                        // check if this node has transition logic that should be run when the student score changes
+                        if (this.NodeService.hasTransitionLogic() && this.NodeService.evaluateTransitionLogicOn('scoreChanged')) {
+                            
+                            if (componentAnnotations != null && componentAnnotations.length > 0) {
+                                var evaluateTransitionLogic = false;
+                                
+                                // loop through all the annotations and check if any were score annotations
+                                for (var c = 0; c < componentAnnotations.length; c++) {
+                                    var componentAnnotation = componentAnnotations[c];
+                                    
+                                    if (componentAnnotation != null) {
+                                        if (componentAnnotation.type === 'autoScore') {
+                                            evaluateTransitionLogic = true;
+                                        }
+                                    }
+                                }
+                                
+                                if (evaluateTransitionLogic) {
+                                    // the student score has changed so we will evaluate the transition logic
+                                    this.NodeService.evaluateTransitionLogic();
+                                }
+                            }
+                        }
 
                         let studentWorkList = savedStudentDataResponse.studentWorkList;
                         if (!componentId && studentWorkList && studentWorkList.length) {
@@ -824,18 +848,15 @@ class NodeController {
     getLatestComponentAnnotations(componentId) {
         let latestScoreAnnotation = null;
         let latestCommentAnnotation = null;
-        let annotationParams = {};
-        annotationParams.nodeId = this.nodeId;
-        annotationParams.componentId = componentId;
-        annotationParams.fromWorkgroupId = this.teacherWorkgroupId;
-        annotationParams.toWorkgroupId = this.workgroupId;
+        
+        let nodeId = this.nodeId;
+        let workgroupId = this.workgroupId;
 
-        // get the latest annotations for this component
-        annotationParams.type = "score";
-        latestScoreAnnotation = this.AnnotationService.getLatestAnnotation(annotationParams);
+        // get the latest score annotation for this component
+        latestScoreAnnotation = this.AnnotationService.getLatestScoreAnnotation(nodeId, componentId, workgroupId, 'any');
 
-        annotationParams.type = "comment";
-        latestCommentAnnotation = this.AnnotationService.getLatestAnnotation(annotationParams);
+        // get the latest comment annotation for this component
+        latestCommentAnnotation = this.AnnotationService.getLatestCommentAnnotation(nodeId, componentId, workgroupId, 'any');
 
         return {
             'score': latestScoreAnnotation,

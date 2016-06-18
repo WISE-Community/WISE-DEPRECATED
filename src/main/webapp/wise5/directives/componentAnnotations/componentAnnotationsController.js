@@ -14,12 +14,12 @@ var ComponentAnnotationsController = function ComponentAnnotationsController($sc
     this.ProjectService = ProjectService;
 
     // the score annotation
-    this.score = this.scoreAnnotation ? this.scoreAnnotation.data.value : null;
-    this.hasScore = parseInt(this.score) > -1;
+    //this.score = this.scoreAnnotation ? this.scoreAnnotation.data.value : null;
+    //this.hasScore = (parseInt(this.score) > -1);
     this.maxScoreDisplay = parseInt(this.maxScore) > 0 ? '/' + this.maxScore : '';
 
     // the comment annotation
-    this.comment = this.commentAnnotation ? this.commentAnnotation.data.value : null;
+    //this.comment = this.commentAnnotation ? this.commentAnnotation.data.value : null;
 
     this.themeSettings = this.ProjectService.getThemeSettings();
     this.hideComponentScores = this.themeSettings.hideComponentScores;
@@ -32,7 +32,6 @@ var ComponentAnnotationsController = function ComponentAnnotationsController($sc
     });
 
     // TODO: differentiate between teacher, automated, and peer annotations in the future
-    // TODO: watch for annotation updates
 };
 
 ComponentAnnotationsController.$inject = ['$scope', '$element', 'ProjectService', '$mdMedia'];

@@ -8,12 +8,12 @@ class ComponentAnnotationsController {
         this.ProjectService = ProjectService;
 
         // the score annotation
-        this.score = this.scoreAnnotation ? this.scoreAnnotation.data.value : null;
-        this.hasScore = (parseInt(this.score) > -1);
+        //this.score = this.scoreAnnotation ? this.scoreAnnotation.data.value : null;
+        //this.hasScore = (parseInt(this.score) > -1);
         this.maxScoreDisplay = (parseInt(this.maxScore) > 0) ? '/' + this.maxScore : '';
 
         // the comment annotation
-        this.comment = this.commentAnnotation ? this.commentAnnotation.data.value : null;
+        //this.comment = this.commentAnnotation ? this.commentAnnotation.data.value : null;
 
         this.themeSettings = this.ProjectService.getThemeSettings();
         this.hideComponentScores = this.themeSettings.hideComponentScores;
@@ -22,9 +22,8 @@ class ComponentAnnotationsController {
         $scope.$watch(() => { return $mdMedia('gt-xs'); }, (sm) => {
             this.smScreen = sm;
         });
-
+        
         // TODO: differentiate between teacher, automated, and peer annotations in the future
-        // TODO: watch for annotation updates
     }
 }
 
