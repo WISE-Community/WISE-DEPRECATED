@@ -56,7 +56,14 @@ OpenResponseNode.prototype.getCriteriaValue = function() {
 	if (this.content.getContentJSON().cRater != null && this.content.getContentJSON().cRater != "") {
 		// if this step is CRater/Henry open response step, return the last score they received from CRater for this step.
 		// the score is stored in the annotation for the step.
-		var nodeAnnotationsArray = this.getNodeAnnotations();
+		
+		/*
+		 * get all the node annotations including the ones we don't want to
+		 * show to the student
+		 */
+		var getAllNodeAnnotations = true;
+		var nodeAnnotationsArray = this.getNodeAnnotations(getAllNodeAnnotations);
+		
 		if (nodeAnnotationsArray != null) {
 			for (var i=0; i<nodeAnnotationsArray.length; i++) {
 				var nodeAnnotation = nodeAnnotationsArray[i];

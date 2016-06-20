@@ -15,9 +15,12 @@ View.prototype.showNodeAnnotations = function(nodeId, feedbackHTML) {
 	var currentNode = this.getProject().getNodeById(nodeId);  //get the node
 	var currentNodeAnnotations = [];
 
-	if(currentNode.getNodeAnnotations() != null) {
-		//get the node annotations
-		currentNodeAnnotations = currentNode.getNodeAnnotations();
+	// only get the node annotations we want to show to the student
+	var getAllNodeAnnotations = false;
+	currentNodeAnnotations = currentNode.getNodeAnnotations(getAllNodeAnnotations);
+	
+	if (currentNodeAnnotations == null) {
+		currentNodeAnnotations = [];
 	}
 
 	//get any persistent feedback we want to show from the step
@@ -226,8 +229,11 @@ View.prototype.displayNodeAnnotation = function(nodeId){
 	/* set annotation link in nav bar if annotation exists for this step
 	 * populate annotation panel with current node's annotation
 	 * */
+	
+	// only get the node annotations we want to show to the student
+	var getAllNodeAnnotations = false;
 	var currentNode = this.getProject().getNodeById(nodeId); //get the node the student is currently on
-	var currentNodeAnnotations = currentNode.getNodeAnnotations();
+	var currentNodeAnnotations = currentNode.getNodeAnnotations(getAllNodeAnnotations);
 
 	//get any persistent feedback we want to show from the step
 	var stepFeedback = currentNode.getFeedback();

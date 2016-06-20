@@ -156,9 +156,14 @@ Node.prototype.getHints = function() {
 /**
  * Retrieves the annotations for this node, if exists. Returns only annotations of
  * type {score,comment,cRater,autoGraded} for the logged in user. 
+ * @param getAllNodeAnnotations boolean value whether to get all the score, 
+ * comment, cRater, and autoGraded node annotations.
+ * if this is set to false, we will only obtain the node annotations that we 
+ * want to show to the student. if this is set to true, we will obtain all the 
+ * node annotations, even the ones we don't want to show to the student.
  * @return Annotations if exists. if not exist, return null
  */
-Node.prototype.getNodeAnnotations = function() {
+Node.prototype.getNodeAnnotations = function(getAllNodeAnnotations) {
 	if (this.view &&
 			this.view.getAnnotations() && this.view.getAnnotations() != null &&
 			this.view.getAnnotations().getAnnotationsByNodeId(this.id) != null) {
@@ -170,19 +175,28 @@ Node.prototype.getNodeAnnotations = function() {
 			if (nodeAnnotation.type == "score" || nodeAnnotation.type == "comment" || nodeAnnotation.type == "cRater" || nodeAnnotation.type == "autoGraded") {
 				if (nodeAnnotation.toWorkgroup == loggedInWorkgroupId) {
 
-                    if (nodeAnnotation.type == "autoGraded") {
-                        /*
-                         * this is an auto graded annotation but we only want to
-                         * show it if the step is authored to show auto score or
-                         * auto feedback
-                         */
-                        if (this.showAutoScore() || this.showAutoFeedback()) {
-                            // the step is authored to show auto score or auto feedback
-                            filteredNodeAnnotations.push(nodeAnnotation);
-                        }
-                    } else {
-                        filteredNodeAnnotations.push(nodeAnnotation);
-                    }
+					if (getAllNodeAnnotations) {
+						// get all the score, comment, cRater, and autoGraded annotations
+						filteredNodeAnnotations.push(nodeAnnotation);
+					} else {
+						/*
+						 * only get the score, comment, cRater, and autoGraded annotations 
+						 * that we want to show to the student
+						 */
+						if (nodeAnnotation.type == "autoGraded") {
+							/*
+							 * this is an auto graded annotation but we only want to
+							 * show it if the step is authored to show auto score or
+							 * auto feedback
+							 */
+							if (this.showAutoScore() || this.showAutoFeedback()) {
+								// the step is authored to show auto score or auto feedback
+								filteredNodeAnnotations.push(nodeAnnotation);
+							}
+						} else {
+							filteredNodeAnnotations.push(nodeAnnotation);
+						}
+					}
 				}
 			}
 		}
@@ -190,7 +204,6 @@ Node.prototype.getNodeAnnotations = function() {
 	}
 	return null;
 };
-
 
 /**
  * Retrieves the question/prompt the student reads for this step.
