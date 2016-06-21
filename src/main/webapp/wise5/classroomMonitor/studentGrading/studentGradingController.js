@@ -24,13 +24,39 @@ var StudentGradingController = function () {
 
         this.workgroupId = parseInt(this.$stateParams.workgroupId);
 
-        this.userName = this.ConfigService.getUserNameByWorkgroupId(this.workgroupId);
-
         this.nodeIds = this.ProjectService.getFlattenedProjectAsNodeIds();
 
         this.branches = this.ProjectService.getBranches();
 
         this.teacherWorkgroupId = this.ConfigService.getWorkgroupId();
+
+        this.canViewStudentNames = true;
+        this.canGradeStudentWork = true;
+
+        // get the role of the teacher for the run e.g. 'owner', 'write', 'read'
+        var role = this.ConfigService.getTeacherRole(this.teacherWorkgroupId);
+
+        if (role === 'owner') {
+            // the teacher is the owner of the run and has full access
+            this.canViewStudentNames = true;
+            this.canGradeStudentWork = true;
+        } else if (role === 'write') {
+            // the teacher is a shared teacher that can grade the student work
+            this.canViewStudentNames = true;
+            this.canGradeStudentWork = true;
+        } else if (role === 'read') {
+            // the teacher is a shared teacher that can only view the student work
+            this.canViewStudentNames = false;
+            this.canGradeStudentWork = false;
+        }
+
+        if (this.canViewStudentNames) {
+            // display the student name
+            this.userName = this.ConfigService.getUserNameByWorkgroupId(this.workgroupId);
+        } else {
+            // do not display the student name. instead display the workgroup id.
+            this.userName = this.workgroupId;
+        }
 
         // scroll to the top of the page when the page loads2
         document.body.scrollTop = document.documentElement.scrollTop = 0;

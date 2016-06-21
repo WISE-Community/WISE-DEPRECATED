@@ -42,7 +42,8 @@
         ng-repeat="workgroup in studentProgressController.workgroups"
         ng-click="studentProgressController.studentRowClicked(workgroup)"
         ng-show="studentProgressController.getCurrentPeriod().periodName == 'All' || workgroup.periodId == studentProgressController.getCurrentPeriod().periodId">
-        <td>{{workgroup.userName}} ({{workgroup.workgroupId}})</td>
+        <td ng-if="studentProgressController.canViewStudentNames">{{workgroup.userName}} ({{workgroup.workgroupId}})</td>
+        <td ng-if="!studentProgressController.canViewStudentNames">{{workgroup.workgroupId}}</td>
         <td>{{studentProgressController.getCurrentNodeForWorkgroupId(workgroup.workgroupId)}}</td>
         <td align='right'><div ng-show='studentProgressController.isWorkgroupOnline(workgroup.workgroupId)'>{{studentProgressController.getStudentTimeSpent(workgroup.workgroupId)}}</div></td>
         <td align='right'><div ng-if='studentProgressController.getStudentProjectCompletion(workgroup.workgroupId)'>{{studentProgressController.getStudentProjectCompletion(workgroup.workgroupId)}}%</div></td>

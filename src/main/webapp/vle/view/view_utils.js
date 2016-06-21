@@ -2285,7 +2285,7 @@ View.prototype.isSignedInUserSharedTeacherWithRole = function(role) {
                         //the logged in user is a shared teacher
 
                         if(sharedTeacherUserInfo.role == role) {
-                            //the shared teacher has grading privilege
+                            //the shared teacher has the specified role
                             result = true;
                         }
                     }
