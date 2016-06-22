@@ -48,7 +48,7 @@ public class TeacherDataController {
             @RequestParam(value = "componentType", required = false) String componentType,
             HttpServletResponse response) {
         try {
-            if ("allStudentWork".equals(exportType)) {
+            if ("allStudentWork".equals(exportType) || "latestStudentWork".equals(exportType)) {
                 JSONArray resultArray = vleService.getStudentWorkExport(runId);
                 PrintWriter writer = response.getWriter();
                 writer.write(resultArray.toString());

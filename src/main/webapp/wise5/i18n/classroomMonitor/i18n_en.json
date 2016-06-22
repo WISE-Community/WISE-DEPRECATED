@@ -1,6 +1,7 @@
 {
   "averageScore": "Average Score",
-  "downloadStudentWork": "Download Student Work",
+  "downloadLatestStudentWork": "Download Latest Work",
+  "downloadStudentWork": "Download All Work",
   "gradeByStep": "Grade By Step",
   "gradeByWorkgroup": "Grade By Workgroup",
   "newWorkCounter": "New Work Count: {{count}}",
