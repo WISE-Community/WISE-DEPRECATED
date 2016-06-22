@@ -378,7 +378,7 @@
 						    <td>
 							 <ul class="actionList">
 							    	<spring:message code="teacher.run.recentactivity.gradingAndFeedback" var="gradingAndFeedback"/>
-									<sec:accesscontrollist domainObject="${run}" hasPermission="2">
+									<sec:accesscontrollist domainObject="${run}" hasPermission="1">
 										<li style="font-size:1.1em; padding-bottom:3px;"><a class="classroomMonitor" wiseVersion="${run.project.wiseVersion == null ? 4 : run.project.wiseVersion}" title="<spring:message code="teacher.run.recentactivity.classroomMonitor"/>: ${run.name} (<spring:message code="teacher.run.recentactivity.runId2"/> ${run.id})" runId="${run.id}" id="runId=${run.id}&gradingType=monitor"><img class="icon" alt="monitor" src="${contextPath}/<spring:theme code="bar_chart"/>" /><span><spring:message code="teacher.management.projectruntabs.gradingTool"/></span></a></li>
 									</sec:accesscontrollist>
 									 <c:if test="${run.project.wiseVersion == null || run.project.wiseVersion == 4}">

@@ -227,6 +227,21 @@ class ConfigService {
         }
         return teacherUserInfo;
     };
+    
+    /**
+     * Get the shared teacher user infos for the run
+     */
+    getSharedTeacherUserInfos() {
+        var sharedTeacherUserInfos = null;
+        var myUserInfo = this.getMyUserInfo();
+        if (myUserInfo != null) {
+            var myClassInfo = myUserInfo.myClassInfo;
+            if (myClassInfo != null) {
+                sharedTeacherUserInfos = myClassInfo.sharedTeacherUserInfos;
+            }
+        }
+        return sharedTeacherUserInfos;
+    }
 
     getClassmateWorkgroupIds(includeSelf) {
         var workgroupIds = [];
@@ -456,6 +471,107 @@ class ConfigService {
         var clientTimestamp = serverTimestamp + timestampDiff;
 
         return clientTimestamp;
+    }
+    
+    /**
+     * Check if the workgroup is the owner of the run
+     * @param workgroupId the workgroup id
+     * @returns whether the workgroup is the owner of the run
+     */
+    isRunOwner(workgroupId) {
+        
+        var result = false;
+        
+        if (workgroupId != null) {
+            var teacherUserInfo = this.getTeacherUserInfo();
+            
+            if (teacherUserInfo != null) {
+                
+                if (workgroupId == teacherUserInfo.workgroupId) {
+                    result = true;
+                }
+            }
+        }
+        
+        return result;
+    }
+    
+    /**
+     * Check if the workgroup is a shared teacher for the run
+     * @param workgroupId the workgroup id
+     * @returns whether the workgroup is a shared teacher of the run
+     */
+    isRunSharedTeacher(workgroupId) {
+        
+        var result = false;
+        
+        if (workgroupId != null) {
+            var sharedTeacherUserInfos = this.getSharedTeacherUserInfos();
+            
+            if (sharedTeacherUserInfos != null) {
+                
+                for (var s = 0; s < sharedTeacherUserInfos.length; s++) {
+                    var sharedTeacherUserInfo = sharedTeacherUserInfos[s];
+                    
+                    if (sharedTeacherUserInfo != null) {
+                        if (workgroupId == sharedTeacherUserInfo.workgroupId) {
+                            result = true;
+                        }
+                    }
+                }
+            }
+        }
+        
+        return result;
+    }
+    
+    /**
+     * Get the teacher role for the run
+     * @param workgroupId the workgroup id
+     * @returns the role of the teacher for the run. the possible values are
+     * 'owner', 'write', 'read'
+     */
+    getTeacherRole(workgroupId) {
+        var role = null;
+        
+        if (this.isRunOwner(workgroupId)) {
+            // the teacher is the owner of the run
+            role = 'owner';
+        } else if (this.isRunSharedTeacher(workgroupId)) {
+            // the teacher is a shared teacher so their role may be 'write' or 'read'
+            role = this.getSharedTeacherRole(workgroupId);
+        }
+        
+        return role;
+    }
+    
+    /**
+     * Get the shared teacher role for the run
+     * @param workgroupId the workgroup id
+     * @returns the shared teacher role for the run. the possible values are
+     * 'write' or 'read'
+     */
+    getSharedTeacherRole(workgroupId) {
+        var role = null;
+        
+        if (workgroupId != null) {
+            var sharedTeacherUserInfos = this.getSharedTeacherUserInfos();
+            
+            if (sharedTeacherUserInfos != null) {
+                
+                for (var s = 0; s < sharedTeacherUserInfos.length; s++) {
+                    var sharedTeacherUserInfo = sharedTeacherUserInfos[s];
+                    
+                    if (sharedTeacherUserInfo != null) {
+                        if (workgroupId == sharedTeacherUserInfo.workgroupId) {
+                            role = sharedTeacherUserInfo.role;
+                        }
+                    }
+                }
+            }
+        }
+        
+        return role;
     }
 };
 
