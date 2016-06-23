@@ -81,6 +81,10 @@ var ClassroomMonitorController = function () {
             var _this2 = this;
 
             this.TeacherDataService.getExport(exportType).then(function (result) {
+                if (result == null) {
+                    alert("Error retrieving result");
+                    return;
+                }
                 var COLUMN_INDEX_NODE_ID = 1;
                 var COLUMN_INDEX_COMPONENT_ID = 2;
                 var COLUMN_INDEX_STEP_NUMBER = 4;
@@ -97,17 +101,18 @@ var ClassroomMonitorController = function () {
 
                 var exportFilename = "";
                 if (exportType === "latestStudentWork") {
-                    // Reduce the entire student work to just the latest student work. Assume that key = (nodeId, componentId, workgroupId)
-                    result = result.reduce(function (previousValue, currentValue, currentIndex, array) {
-                        var rowsAfter = array.slice(currentIndex + 1);
-                        if (rowsAfter.filter(function (row) {
-                            return row[COLUMN_INDEX_NODE_ID] == currentValue[COLUMN_INDEX_NODE_ID] && row[COLUMN_INDEX_COMPONENT_ID] == currentValue[COLUMN_INDEX_COMPONENT_ID] && row[COLUMN_INDEX_WORKGROUP_ID] == currentValue[COLUMN_INDEX_WORKGROUP_ID];
-                        }).length == 0) {
-                            previousValue.push(currentValue);
+                    var hash = {}; // store latestStudentWork. Assume that key = (nodeId, componentId, workgroupId)
+                    result = result.reverse().filter(function (studentWorkRow) {
+                        var hashKey = studentWorkRow[COLUMN_INDEX_NODE_ID] + "_" + studentWorkRow[COLUMN_INDEX_COMPONENT_ID] + "_" + studentWorkRow[COLUMN_INDEX_WORKGROUP_ID];
+                        if (!hash.hasOwnProperty(hashKey)) {
+                            // remember in hash
+                            hash[hashKey] = studentWorkRow;
+                            return true;
+                        } else {
+                            // we already have the latest, so we can disregard this studentWorkRow.
+                            return false;
                         }
-                        return previousValue;
-                    }, []);
-
+                    }).reverse();
                     exportFilename = "latest_work_" + runId + ".csv";
                 } else {
                     exportFilename = "all_work_" + runId + ".csv";
