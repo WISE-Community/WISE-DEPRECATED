@@ -109,12 +109,16 @@ var NotificationService = function () {
                 return this.$http(config).then(function (response) {
                     _this2.notifications = response.data;
                     // populate nodePosition and nodePositionAndTitle, where applicable
-                    _this2.notifications.map(function (notification) {
-                        if (notification.nodeId != null) {
-                            notification.nodePosition = _this2.ProjectService.getNodePositionById(notification.nodeId);
-                            notification.nodePositionAndTitle = _this2.ProjectService.getNodePositionAndTitleByNodeId(notification.nodeId);
-                        }
-                    });
+                    if (_this2.notifications != null) {
+                        _this2.notifications.map(function (notification) {
+                            if (notification.nodeId != null) {
+                                notification.nodePosition = _this2.ProjectService.getNodePositionById(notification.nodeId);
+                                notification.nodePositionAndTitle = _this2.ProjectService.getNodePositionAndTitleByNodeId(notification.nodeId);
+                            }
+                        });
+                    } else {
+                        _this2.notifications = [];
+                    }
 
                     return _this2.notifications;
                 });

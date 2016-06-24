@@ -83,12 +83,16 @@ class NotificationService {
             return this.$http(config).then((response) => {
                 this.notifications = response.data;
                 // populate nodePosition and nodePositionAndTitle, where applicable
-                this.notifications.map((notification) => {
-                    if (notification.nodeId != null) {
-                        notification.nodePosition = this.ProjectService.getNodePositionById(notification.nodeId);
-                        notification.nodePositionAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(notification.nodeId);
-                    }
-                });
+                if (this.notifications != null) {
+                    this.notifications.map((notification) => {
+                        if (notification.nodeId != null) {
+                            notification.nodePosition = this.ProjectService.getNodePositionById(notification.nodeId);
+                            notification.nodePositionAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(notification.nodeId);
+                        }
+                    });
+                } else {
+                    this.notifications = [];
+                }
 
                 return this.notifications;
             });

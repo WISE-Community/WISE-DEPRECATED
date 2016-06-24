@@ -81,19 +81,45 @@ var ClassroomMonitorController = function () {
             var _this2 = this;
 
             this.TeacherDataService.getExport(exportType).then(function (result) {
+                if (result == null) {
+                    alert("Error retrieving result");
+                    return;
+                }
                 var COLUMN_INDEX_NODE_ID = 1;
                 var COLUMN_INDEX_COMPONENT_ID = 2;
                 var COLUMN_INDEX_STEP_NUMBER = 4;
                 var COLUMN_INDEX_STEP_TITLE = 5;
                 var COLUMN_INDEX_COMPONENT_PART_NUMBER = 6;
                 var COLUMN_INDEX_STUDENT_DATA = 11;
+                var COLUMN_INDEX_WORKGROUP_ID = 14;
                 var COLUMN_INDEX_WISE_IDS = 18;
                 var COLUMN_INDEX_WISE_ID_1 = 18;
                 var COLUMN_INDEX_WISE_ID_2 = 19;
                 var COLUMN_INDEX_WISE_ID_3 = 20;
                 var COLUMN_INDEX_STUDENT_RESPONSE = 21;
+                var runId = _this2.ConfigService.getRunId();
 
-                var csvString = "";
+                var exportFilename = "";
+                if (exportType === "latestStudentWork") {
+                    var hash = {}; // store latestStudentWork. Assume that key = (nodeId, componentId, workgroupId)
+                    result = result.reverse().filter(function (studentWorkRow) {
+                        var hashKey = studentWorkRow[COLUMN_INDEX_NODE_ID] + "_" + studentWorkRow[COLUMN_INDEX_COMPONENT_ID] + "_" + studentWorkRow[COLUMN_INDEX_WORKGROUP_ID];
+                        if (!hash.hasOwnProperty(hashKey)) {
+                            // remember in hash
+                            hash[hashKey] = studentWorkRow;
+                            return true;
+                        } else {
+                            // we already have the latest, so we can disregard this studentWorkRow.
+                            return false;
+                        }
+                    }).reverse();
+                    exportFilename = "latest_work_" + runId + ".csv";
+                } else {
+                    exportFilename = "all_work_" + runId + ".csv";
+                }
+
+                var csvString = ""; // resulting csv string
+
                 for (var rowIndex = 0; rowIndex < result.length; rowIndex++) {
 
                     var row = result[rowIndex];
@@ -111,6 +137,7 @@ var ClassroomMonitorController = function () {
                         row[COLUMN_INDEX_STEP_NUMBER] = _this2.ProjectService.getNodePositionById(nodeId);
                         row[COLUMN_INDEX_STEP_TITLE] = _this2.ProjectService.getNodeTitleByNodeId(nodeId);
                         row[COLUMN_INDEX_COMPONENT_PART_NUMBER] = _this2.ProjectService.getComponentPositionByNodeIdAndComponentId(nodeId, componentId) + 1; // make it 1-indexed for researchers
+                        var workgroupId = row[COLUMN_INDEX_WORKGROUP_ID];
                         var wiseIDs = row[COLUMN_INDEX_WISE_IDS];
                         var wiseIDsArray = wiseIDs.split(",");
                         row[COLUMN_INDEX_WISE_ID_1] = wiseIDsArray[0];
@@ -135,13 +162,12 @@ var ClassroomMonitorController = function () {
                     csvString += "\r\n";
                 }
 
-                var runId = _this2.ConfigService.getRunId();
                 var csvBlob = new Blob([csvString], { type: 'text/csv' });
                 var csvUrl = URL.createObjectURL(csvBlob);
                 var a = document.createElement("a");
                 document.body.appendChild(a);
                 a.href = csvUrl;
-                a.download = "export_" + runId + ".csv";
+                a.download = exportFilename;
                 a.click();
 
                 // timeout is required for FF.
