@@ -26,7 +26,13 @@ package org.wise.portal.dao.work.impl;
 import org.hibernate.Criteria;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
+import org.hibernate.criterion.Conjunction;
+import org.hibernate.criterion.Disjunction;
+import org.hibernate.criterion.LogicalExpression;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.SimpleExpression;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.stereotype.Repository;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.dao.work.StudentWorkDao;
@@ -84,7 +90,8 @@ public class HibernateStudentWorkDao extends AbstractHibernateDao<StudentWork> i
     public List<StudentWork> getStudentWorkListByParams(
             Integer id, Run run, Group period, WISEWorkgroup workgroup,
             Boolean isAutoSave, Boolean isSubmit,
-            String nodeId, String componentId, String componentType) {
+            String nodeId, String componentId, String componentType,
+            List<JSONObject> components) {
 
         Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
         Criteria sessionCriteria = session.createCriteria(StudentWork.class);
@@ -115,6 +122,39 @@ public class HibernateStudentWorkDao extends AbstractHibernateDao<StudentWork> i
         }
         if (componentType != null) {
             sessionCriteria.add(Restrictions.eq("componentType", componentType));
+        }
+        if (components != null) {
+            
+            // create the criteria to accept any of the components by using an 'or' conditional
+            Disjunction disjunction = Restrictions.disjunction();
+            
+            // loop through all the components
+            for (int c = 0; c < components.size(); c++) {
+                JSONObject component = components.get(c);
+                
+                if (component != null) {
+                    try {
+                        // get the node id and component id of the component
+                        String tempNodeId = component.getString("nodeId");
+                        String tempComponentId = component.getString("componentId");
+                        
+                        // create restrictions to match the node id and component id
+                        SimpleExpression nodeIdRestriction = Restrictions.eq("nodeId", tempNodeId);
+                        SimpleExpression componentIdRestriction = Restrictions.eq("componentId", tempComponentId);
+                        
+                        // require the node id and component id to match by using an 'and' conditional
+                        Conjunction conjunction = Restrictions.conjunction(nodeIdRestriction, componentIdRestriction);
+                        
+                        // add the restriction to the 'or' conditional
+                        disjunction.add(conjunction);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            
+            // add the restriction to the main criteria
+            sessionCriteria.add(disjunction);
         }
 
         return sessionCriteria.list();

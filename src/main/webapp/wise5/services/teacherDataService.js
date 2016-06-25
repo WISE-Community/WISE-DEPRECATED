@@ -9,13 +9,14 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var TeacherDataService = function () {
-    function TeacherDataService($http, $rootScope, AnnotationService, ConfigService) {
+    function TeacherDataService($http, $rootScope, AnnotationService, ConfigService, ProjectService) {
         _classCallCheck(this, TeacherDataService);
 
         this.$http = $http;
         this.$rootScope = $rootScope;
         this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
+        this.ProjectService = ProjectService;
 
         this.studentData = {};
         this.currentPeriod = null;
@@ -66,11 +67,21 @@ var TeacherDataService = function () {
                 periodId = this.currentPeriod.periodId;
             }
 
+            // get the node ids and component ids in the node
+            var nodeIdsAndComponentIds = this.ProjectService.getNodeIdsAndComponentIds(nodeId);
+
+            // get the show previous work node ids and component ids in the node
+            var showPreviousWorkNodeIdsAndComponentIds = this.ProjectService.getShowPreviousWorkNodeIdsAndComponentIds(nodeId);
+
+            var components = [];
+            components = components.concat(nodeIdsAndComponentIds);
+            components = components.concat(showPreviousWorkNodeIdsAndComponentIds);
+
             var params = {};
             params.runId = this.ConfigService.getRunId();
             params.periodId = periodId;
-            params.nodeId = nodeId;
             params.workgroupId = null;
+            params.components = components;
 
             return this.retrieveStudentData(params);
         }
@@ -271,7 +282,7 @@ var TeacherDataService = function () {
         key: 'getComponentStatesByWorkgroupId',
         value: function getComponentStatesByWorkgroupId(workgroupId) {
             if (this.studentData.componentStatesByWorkgroupId == null) {
-                debugger;
+                //debugger;
             }
             var componentStatesByWorkgroupId = this.studentData.componentStatesByWorkgroupId[workgroupId];
             if (componentStatesByWorkgroupId != null) {
@@ -646,7 +657,7 @@ var TeacherDataService = function () {
     return TeacherDataService;
 }();
 
-TeacherDataService.$inject = ['$http', '$rootScope', 'AnnotationService', 'ConfigService'];
+TeacherDataService.$inject = ['$http', '$rootScope', 'AnnotationService', 'ConfigService', 'ProjectService'];
 
 exports.default = TeacherDataService;
 //# sourceMappingURL=teacherDataService.js.map

@@ -306,7 +306,7 @@ var mainModule = _angular2.default.module('classroomMonitor', ['angularMoment', 
         controller: 'NodeGradingController',
         controllerAs: 'nodeGradingController',
         resolve: {
-            studentData: function studentData($stateParams, TeacherDataService, config) {
+            studentData: function studentData($stateParams, TeacherDataService, config, project) {
                 return TeacherDataService.retrieveStudentDataByNodeId($stateParams.nodeId);
             }
         }

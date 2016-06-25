@@ -81,12 +81,15 @@ public class StudentDataController {
             @RequestParam(value = "fromWorkgroupId", required = false) Integer fromWorkgroupId,
             @RequestParam(value = "toWorkgroupId", required = false) Integer toWorkgroupId,
             @RequestParam(value = "studentWorkId", required = false) Integer studentWorkId,
-            @RequestParam(value = "annotationType", required = false) String annotationType
+            @RequestParam(value = "annotationType", required = false) String annotationType,
+            @RequestParam(value = "components", required = false) List<JSONObject> components
             ) {
+
         JSONObject result = new JSONObject();
+
         if (getStudentWork) {
             List<StudentWork> studentWorkList = vleService.getStudentWorkList(id, runId, periodId, workgroupId,
-                    isAutoSave, isSubmit, nodeId, componentId, componentType);
+                    isAutoSave, isSubmit, nodeId, componentId, componentType, components);
 
             JSONArray studentWorkJSONArray = new JSONArray();
 

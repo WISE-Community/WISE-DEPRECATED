@@ -24,6 +24,7 @@
 package org.wise.portal.service.vle.wise5;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.vle.domain.annotation.wise5.Annotation;
 import org.wise.vle.domain.notification.Notification;
@@ -45,7 +46,8 @@ public interface VLEService {
 	 * return an empty list.
 	 */
 	List<StudentWork> getStudentWorkList(Integer id, Integer runId, Integer periodId, Integer workgroupId,
-                                            Boolean isAutoSave, Boolean isSubmit, String nodeId, String componentId, String componentType);
+                                            Boolean isAutoSave, Boolean isSubmit, String nodeId, String componentId, String componentType,
+                                            List<JSONObject> components);
 
     /**
      * @return JSONArray of student work for researcher export

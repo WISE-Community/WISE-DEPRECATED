@@ -6217,6 +6217,97 @@ class ProjectService {
             }
         }
     }
+    
+    /**
+     * Get the node ids and component ids in a node
+     * @param nodeId get the node ids and component ids in this node
+     * @returns an array of objects. the objects contain a node id
+     * and component id.
+     */
+    getNodeIdsAndComponentIds(nodeId) {
+        
+        var nodeIdAndComponentIds = [];
+        
+        if (nodeId != null) {
+            
+            var nodeContent = this.getNodeContentByNodeId(nodeId);
+            
+            if (nodeContent != null) {
+                
+                var components = nodeContent.components;
+                
+                if (components != null) {
+                    
+                    // loop through all the components in the node
+                    for (var c = 0; c < components.length; c++) {
+                        var component = components[c];
+                        
+                        if (component != null) {
+                            
+                            var componentId = component.id;
+                            
+                            // create an object to hold the node id and component id
+                            var nodeIdAndComponentId = {};
+                            nodeIdAndComponentId.nodeId = nodeId;
+                            nodeIdAndComponentId.componentId = componentId;
+                            
+                            // add the object to the array
+                            nodeIdAndComponentIds.push(nodeIdAndComponentId);
+                        }
+                    }
+                }
+            }
+        }
+        
+        return nodeIdAndComponentIds;
+    }
+    
+    /**
+     * Get the show previous work node ids and component ids in a node
+     * @param nodeId get the show previous work node ids and component ids in 
+     * this node
+     * @returns an array of objects. the objects contain a node id
+     * and component id.
+     */
+    getShowPreviousWorkNodeIdsAndComponentIds(nodeId) {
+        
+        var nodeIdAndComponentIds = [];
+        
+        if (nodeId != null) {
+            var nodeContent = this.getNodeContentByNodeId(nodeId);
+            
+            if (nodeContent != null) {
+                
+                var components = nodeContent.components;
+                
+                if (components != null) {
+                    
+                    // loop through all the components
+                    for (var c = 0; c < components.length; c++) {
+                        var component = components[c];
+                        
+                        if (component != null) {
+                            var showPreviousWorkNodeId = component.showPreviousWorkNodeId;
+                            var showPreviousWorkComponentId = component.showPreviousWorkComponentId;
+                            
+                            if (showPreviousWorkNodeId != null && showPreviousWorkComponentId != null) {
+                                
+                                // create and object to hold the node id and component id
+                                var nodeIdAndComponentId = {};
+                                nodeIdAndComponentId.nodeId = showPreviousWorkNodeId;
+                                nodeIdAndComponentId.componentId = showPreviousWorkComponentId;
+                                
+                                // add the object to the array
+                                nodeIdAndComponentIds.push(nodeIdAndComponentId);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        return nodeIdAndComponentIds;
+    }
 }
 
 ProjectService.$inject = [

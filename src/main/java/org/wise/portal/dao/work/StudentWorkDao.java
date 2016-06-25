@@ -23,6 +23,7 @@
  */
 package org.wise.portal.dao.work;
 
+import org.json.JSONObject;
 import org.wise.portal.dao.SimpleDao;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.run.Run;
@@ -39,7 +40,8 @@ public interface StudentWorkDao<T extends StudentWork> extends SimpleDao<T> {
 
     List<StudentWork> getStudentWorkListByParams(Integer id, Run run, Group period, WISEWorkgroup workgroup,
                                                     Boolean isAutoSave, Boolean isSubmit,
-                                                    String nodeId, String componentId, String componentType);
+                                                    String nodeId, String componentId, String componentType,
+                                                    List<JSONObject> components);
 
     List<Object[]> getStudentWorkExport(Integer runId);
 

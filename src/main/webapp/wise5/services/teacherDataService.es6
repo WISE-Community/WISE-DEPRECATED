@@ -5,11 +5,13 @@ class TeacherDataService {
     constructor($http,
                 $rootScope,
                 AnnotationService,
-                ConfigService) {
+                ConfigService,
+                ProjectService) {
         this.$http = $http;
         this.$rootScope = $rootScope;
         this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
+        this.ProjectService = ProjectService;
 
         this.studentData = {};
         this.currentPeriod = null;
@@ -52,12 +54,22 @@ class TeacherDataService {
         if (this.currentPeriod != null && this.currentPeriod.periodName != 'All') {
             periodId = this.currentPeriod.periodId;
         }
+        
+        // get the node ids and component ids in the node
+        var nodeIdsAndComponentIds = this.ProjectService.getNodeIdsAndComponentIds(nodeId);
+        
+        // get the show previous work node ids and component ids in the node
+        var showPreviousWorkNodeIdsAndComponentIds = this.ProjectService.getShowPreviousWorkNodeIdsAndComponentIds(nodeId);
+
+        var components = [];
+        components = components.concat(nodeIdsAndComponentIds);
+        components = components.concat(showPreviousWorkNodeIdsAndComponentIds);
 
         var params = {};
         params.runId = this.ConfigService.getRunId();
         params.periodId = periodId;
-        params.nodeId = nodeId;
         params.workgroupId = null;
+        params.components = components;
 
         return this.retrieveStudentData(params);
     };
@@ -241,7 +253,7 @@ class TeacherDataService {
 
     getComponentStatesByWorkgroupId(workgroupId) {
         if (this.studentData.componentStatesByWorkgroupId == null) {
-            debugger;
+            //debugger;
         }
         var componentStatesByWorkgroupId = this.studentData.componentStatesByWorkgroupId[workgroupId];
         if (componentStatesByWorkgroupId != null) {
@@ -582,6 +594,8 @@ class TeacherDataService {
 TeacherDataService.$inject = ['$http',
     '$rootScope',
     'AnnotationService',
-    'ConfigService'];
+    'ConfigService',
+    'ProjectService'
+];
 
 export default TeacherDataService;

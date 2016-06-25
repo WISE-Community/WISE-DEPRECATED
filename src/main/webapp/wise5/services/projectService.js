@@ -1522,5 +1522,22 @@ for(var tfc=0;tfc<transitionsFromChild.length;tfc++){var transitionFromChild=tra
 var toNodeIdParentGroupId=this.getParentGroupId(toNodeId);if(groupIdWeAreMoving===toNodeIdParentGroupId){ // the transition is to a child in the group we are moving
 if(groupNode.startId==null){ // change the transition to point to the after group
 transitionFromChild.to=firstNodeToRemoveTransitionToNodeId;}else { // change the transition to point to the start id of the after group
-transitionFromChild.to=groupNode.startId;}}}}}}}}}}}}}]);return ProjectService;}();ProjectService.$inject=['$http','$injector','$q','$rootScope','ConfigService'];exports.default=ProjectService;
+transitionFromChild.to=groupNode.startId;}}}}}}}}}}}} /**
+     * Get the node ids and component ids in a node
+     * @param nodeId get the node ids and component ids in this node
+     * @returns an array of objects. the objects contain a node id
+     * and component id.
+     */},{key:'getNodeIdsAndComponentIds',value:function getNodeIdsAndComponentIds(nodeId){var nodeIdAndComponentIds=[];if(nodeId!=null){var nodeContent=this.getNodeContentByNodeId(nodeId);if(nodeContent!=null){var components=nodeContent.components;if(components!=null){ // loop through all the components in the node
+for(var c=0;c<components.length;c++){var component=components[c];if(component!=null){var componentId=component.id; // create an object to hold the node id and component id
+var nodeIdAndComponentId={};nodeIdAndComponentId.nodeId=nodeId;nodeIdAndComponentId.componentId=componentId; // add the object to the array
+nodeIdAndComponentIds.push(nodeIdAndComponentId);}}}}}return nodeIdAndComponentIds;} /**
+     * Get the show previous work node ids and component ids in a node
+     * @param nodeId get the show previous work node ids and component ids in 
+     * this node
+     * @returns an array of objects. the objects contain a node id
+     * and component id.
+     */},{key:'getShowPreviousWorkNodeIdsAndComponentIds',value:function getShowPreviousWorkNodeIdsAndComponentIds(nodeId){var nodeIdAndComponentIds=[];if(nodeId!=null){var nodeContent=this.getNodeContentByNodeId(nodeId);if(nodeContent!=null){var components=nodeContent.components;if(components!=null){ // loop through all the components
+for(var c=0;c<components.length;c++){var component=components[c];if(component!=null){var showPreviousWorkNodeId=component.showPreviousWorkNodeId;var showPreviousWorkComponentId=component.showPreviousWorkComponentId;if(showPreviousWorkNodeId!=null&&showPreviousWorkComponentId!=null){ // create and object to hold the node id and component id
+var nodeIdAndComponentId={};nodeIdAndComponentId.nodeId=showPreviousWorkNodeId;nodeIdAndComponentId.componentId=showPreviousWorkComponentId; // add the object to the array
+nodeIdAndComponentIds.push(nodeIdAndComponentId);}}}}}}return nodeIdAndComponentIds;}}]);return ProjectService;}();ProjectService.$inject=['$http','$injector','$q','$rootScope','ConfigService'];exports.default=ProjectService;
 //# sourceMappingURL=projectService.js.map

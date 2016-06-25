@@ -46,7 +46,9 @@ public class TeacherDataController {
             @RequestParam(value = "nodeId", required = false) String nodeId,
             @RequestParam(value = "componentId", required = false) String componentId,
             @RequestParam(value = "componentType", required = false) String componentType,
+            @RequestParam(value = "components", required = false) String[] components,
             HttpServletResponse response) {
+
         try {
             if ("allStudentWork".equals(exportType) || "latestStudentWork".equals(exportType)) {
                 JSONArray resultArray = vleService.getStudentWorkExport(runId);
@@ -80,14 +82,16 @@ public class TeacherDataController {
             @RequestParam(value = "fromWorkgroupId", required = false) Integer fromWorkgroupId,
             @RequestParam(value = "toWorkgroupId", required = false) Integer toWorkgroupId,
             @RequestParam(value = "studentWorkId", required = false) Integer studentWorkId,
-            @RequestParam(value = "annotationType", required = false) String annotationType
+            @RequestParam(value = "annotationType", required = false) String annotationType,
+            @RequestParam(value = "components", required = false) List<JSONObject> components
 
     ) {
+
         JSONObject result = new JSONObject();
         if (getStudentWork) {
             List<StudentWork> studentWorkList = vleService.getStudentWorkList(id, runId, periodId, workgroupId,
-                    isAutoSave, isSubmit, nodeId, componentId, componentType);
-
+                    isAutoSave, isSubmit, nodeId, componentId, componentType, components);
+            
             JSONArray studentWorkJSONArray = new JSONArray();
 
             // loop through all the component states
@@ -160,10 +164,6 @@ public class TeacherDataController {
             @RequestParam(value = "runId", required = true) Integer runId,
             @RequestParam(value = "annotations", required = true) String annotations
     ) {
-        System.out.println("postWISETeacherData");
-        System.out.println("workgroupId=" + workgroupId);
-        System.out.println("runId=" + runId);
-        System.out.println("annotations=" + annotations);
 
         JSONObject result = new JSONObject();
 

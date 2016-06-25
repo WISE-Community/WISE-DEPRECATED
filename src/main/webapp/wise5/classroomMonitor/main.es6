@@ -204,7 +204,7 @@ let mainModule = angular.module('classroomMonitor', [
                     controller: 'NodeGradingController',
                     controllerAs: 'nodeGradingController',
                     resolve: {
-                        studentData: function($stateParams, TeacherDataService, config) {
+                        studentData: function($stateParams, TeacherDataService, config, project) {
                             return TeacherDataService.retrieveStudentDataByNodeId($stateParams.nodeId);
                         }
                     }
