@@ -77,6 +77,9 @@ class ClassroomMonitorController {
         });
     };
 
+    /**
+     * Export all or latest work for this run in CSV format
+     */
     export(exportType) {
         this.TeacherDataService.getExport(exportType).then((result) => {
             if (result == null) {
@@ -203,6 +206,84 @@ class ClassroomMonitorController {
                 alert("Server error: " + request.responseText);
             });
             */
+        });
+    }
+
+    /**
+     * Export all events for this run in CSV format
+     */
+    exportEvents() {
+        this.TeacherDataService.getExport("events").then((result) => {
+            if (result == null) {
+                alert("Error retrieving result");
+                return;
+            }
+            var COLUMN_INDEX_NODE_ID = 1;
+            var COLUMN_INDEX_COMPONENT_ID = 2;
+            var COLUMN_INDEX_STEP_NUMBER = 4;
+            var COLUMN_INDEX_STEP_TITLE = 5;
+            var COLUMN_INDEX_COMPONENT_PART_NUMBER = 6;
+            var COLUMN_INDEX_DATA = 12;
+            var COLUMN_INDEX_WORKGROUP_ID = 15;
+            var COLUMN_INDEX_WISE_IDS = 19;
+            var COLUMN_INDEX_WISE_ID_1 = 19;
+            var COLUMN_INDEX_WISE_ID_2 = 20;
+            var COLUMN_INDEX_WISE_ID_3 = 21;
+            var runId = this.ConfigService.getRunId();
+
+            var exportFilename = "events_" + runId + ".csv";
+
+            var csvString = "";  // resulting csv string
+
+            for (var rowIndex = 0; rowIndex < result.length; rowIndex++) {
+
+                var row = result[rowIndex];
+
+                if (rowIndex === 0) {
+                    // append additional header columns
+                    row[COLUMN_INDEX_WISE_ID_1] = "WISE ID 1";
+                    row[COLUMN_INDEX_WISE_ID_2] = "WISE ID 2";
+                    row[COLUMN_INDEX_WISE_ID_3] = "WISE ID 3";
+                } else {
+                    // for all non-header rows, fill in step numbers, titles, and component part numbers.
+                    var nodeId = row[COLUMN_INDEX_NODE_ID];
+                    var componentId = row[COLUMN_INDEX_COMPONENT_ID];
+                    row[COLUMN_INDEX_STEP_NUMBER] = this.ProjectService.getNodePositionById(nodeId);
+                    row[COLUMN_INDEX_STEP_TITLE] = this.ProjectService.getNodeTitleByNodeId(nodeId);
+                    row[COLUMN_INDEX_COMPONENT_PART_NUMBER] = this.ProjectService.getComponentPositionByNodeIdAndComponentId(nodeId, componentId) + 1; // make it 1-indexed for researchers
+                    var workgroupId = row[COLUMN_INDEX_WORKGROUP_ID];
+                    var wiseIDs = row[COLUMN_INDEX_WISE_IDS];
+                    var wiseIDsArray = wiseIDs.split(",");
+                    row[COLUMN_INDEX_WISE_ID_1] = wiseIDsArray[0];
+                    row[COLUMN_INDEX_WISE_ID_2] = wiseIDsArray[1] || "";
+                    row[COLUMN_INDEX_WISE_ID_3] = wiseIDsArray[2] || "";
+                }
+
+                // append row to csvString
+                for (var cellIndex = 0; cellIndex < row.length; cellIndex++) {
+                    var cell = row[cellIndex];
+                    if (typeof cell === "object") {
+                        cell = "\"" + JSON.stringify(cell).replace(/"/g, '""') + "\"";
+                    } else if (typeof cell === "string") {
+                        cell = "\"" + cell + "\"";
+                    }
+                    csvString += cell + ",";
+                }
+                csvString += "\r\n";
+            }
+
+            var csvBlob = new Blob([csvString], {type: 'text/csv'});
+            var csvUrl = URL.createObjectURL(csvBlob);
+            var a = document.createElement("a");
+            document.body.appendChild(a);
+            a.href = csvUrl;
+            a.download = exportFilename;
+            a.click();
+
+            // timeout is required for FF.
+            window.setTimeout(() => {
+                URL.revokeObjectURL(csvUrl);  // tell browser to release URL reference
+            }, 3000);
         });
     }
 

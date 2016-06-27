@@ -155,6 +155,29 @@ public class VLEServiceImpl implements VLEService {
         return new JSONArray(studentWorkExport);
     }
 
+    public JSONArray getStudentEventExport(Integer runId) {
+        SimpleDateFormat df = new SimpleDateFormat("YYYY/MM/dd HH:mm:ss");
+        List<Object[]> studentEventExport = studentWorkDao.getStudentEventExport(runId);
+        for (int i = 1; i < studentEventExport.size(); i++) {
+            // skip header row
+            Object[] studentEventExportRow = studentEventExport.get(i);
+
+            // format the timestamps so they don't have a trailing ".0" at the end and mess up display in excel
+            Timestamp studentEventExportRowClientSaveTimeTimestamp = (Timestamp) studentEventExportRow[7];
+            studentEventExportRow[7] = df.format(studentEventExportRowClientSaveTimeTimestamp);
+            Timestamp studentEventExportRowServerSaveTimeTimestamp = (Timestamp) studentEventExportRow[8];
+            studentEventExportRow[8] = df.format(studentEventExportRowServerSaveTimeTimestamp);
+
+            String studentEventExportRowDataString = (String) studentEventExportRow[12];
+            try {
+                studentEventExportRow[12] = new JSONObject(studentEventExportRowDataString);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return new JSONArray(studentEventExport);
+    }
+
     @Override
     public StudentWork saveStudentWork(Integer id, Integer runId, Integer periodId, Integer workgroupId,
                                              Boolean isAutoSave, Boolean isSubmit,

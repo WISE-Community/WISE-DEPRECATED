@@ -72,6 +72,11 @@ public interface VLEService {
             String context, String category, String event);
 
     /**
+     * @return JSONArray of student events for researcher export
+     */
+    public JSONArray getStudentEventExport(Integer runId);
+
+    /**
      * Saves Event in the data store
      */
     Event saveEvent(
