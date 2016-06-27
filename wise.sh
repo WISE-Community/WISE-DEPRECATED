@@ -41,7 +41,7 @@ else
         echo "hibernate.hbm2ddl.auto=create" >> $PROPERTIES_FILE
 
         # start embedded tomcat
-        mvn tomcat7:run
+        mvn clean compile tomcat7:run
     else
         if [ $1 = "run" ]
         then
@@ -50,7 +50,7 @@ else
             echo "hibernate.hbm2ddl.auto=none" >> $PROPERTIES_FILE
 
             # start embedded tomcat
-            mvn tomcat7:run
+            mvn clean compile tomcat7:run
         fi
     fi
 fi
