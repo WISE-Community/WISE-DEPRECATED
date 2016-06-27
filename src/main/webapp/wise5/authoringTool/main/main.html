@@ -15,3 +15,14 @@
     <button ng-click="authoringToolMainController.previewProject(project.id)" translate="preview"></button>
     <button ng-click="authoringToolMainController.copyProject(project.id)" translate="copy"></button>
 </div>
+
+<h3 translate="sharedProjectsHeading"></h3>
+<div ng-show="authoringToolMainController.sharedProjects.length == 0" translate="noSharedProjectsMessage"></div>
+<div class="projectItem" style="padding:2px" ng-repeat='project in authoringToolMainController.sharedProjects'>
+    {{project.id}}
+    {{project.name}}
+    <span ng-if="project.runId != null">(Run ID: {{project.runId}})</span>
+    <button ng-show="project.canEdit" ng-click="authoringToolMainController.openProject(project.id)" translate="open"></button>
+    <button ng-click="authoringToolMainController.previewProject(project.id)" translate="preview"></button>
+    <button ng-click="authoringToolMainController.copyProject(project.id)" translate="copy"></button>
+</div>

@@ -16,8 +16,9 @@ var AuthoringToolMainController = function () {
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
 
-        // get list of projects owned by this user
+        // get list of projects owned by this user and shared with this
         this.projects = this.ConfigService.getConfigParam("projects");
+        this.sharedProjects = this.ConfigService.getConfigParam("sharedProjects");
     }
 
     _createClass(AuthoringToolMainController, [{
