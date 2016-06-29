@@ -55,6 +55,11 @@ public class TeacherDataController {
                 PrintWriter writer = response.getWriter();
                 writer.write(resultArray.toString());
                 writer.close();
+            } else if ("events".equals(exportType)) {
+                JSONArray resultArray = vleService.getStudentEventExport(runId);
+                PrintWriter writer = response.getWriter();
+                writer.write(resultArray.toString());
+                writer.close();
             }
         } catch (IOException e) {
             e.printStackTrace();

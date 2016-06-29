@@ -489,6 +489,36 @@ public class WISE5AuthorProjectController {
             }
             config.put("projects", wise5ProjectsOwnedByUser);
 
+            // get a list of projects this user has shared access to
+            List<Project> sharedProjects = projectService.getSharedProjectList(user);
+            List<JSONObject> wise5SharedProjects = new ArrayList<JSONObject>();
+            for (Project project : sharedProjects) {
+                if (new Integer(5).equals(project.getWiseVersion())) {
+
+                    JSONObject projectJSONObject = new JSONObject();
+                    projectJSONObject.put("id", project.getId());
+                    projectJSONObject.put("name", project.getName());
+
+                    // get the project id
+                    String projectIdString = project.getId().toString();
+                    Long projectId = new Long(projectIdString);
+
+                    // get the run id if it exists
+                    Long runId = this.getRunId(projectId);
+
+                    if (runId != null) {
+                        projectJSONObject.put("runId", runId);
+                    }
+
+                    if (projectService.canAuthorProject(project, user)) {
+                        projectJSONObject.put("canEdit", true);
+                    }
+
+                    wise5SharedProjects.add(projectJSONObject);
+                }
+            }
+            config.put("sharedProjects", wise5SharedProjects);
+
             // set user's locale
             Locale locale = request.getLocale();
             if (user != null) {

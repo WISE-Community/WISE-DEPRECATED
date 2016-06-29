@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2016 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -45,4 +45,8 @@ public interface StudentWorkDao<T extends StudentWork> extends SimpleDao<T> {
 
     List<Object[]> getStudentWorkExport(Integer runId);
 
+    /**
+     * Returns a list of events for the specified runs in an exportable format
+     */
+    List<Object[]> getStudentEventExport(Integer runId);
 }

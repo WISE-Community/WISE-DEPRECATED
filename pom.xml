@@ -480,9 +480,9 @@
 		</plugins>
 	</reporting>
 	<properties>
-		<org.springframework.version>4.2.0.RELEASE</org.springframework.version>
-		<org.springframework.security.version>4.0.2.RELEASE</org.springframework.security.version>
-		<org.hibernate.version>4.3.10.Final</org.hibernate.version>
+		<org.springframework.version>4.3.0.RELEASE</org.springframework.version>
+		<org.springframework.security.version>4.1.0.RELEASE</org.springframework.security.version>
+		<org.hibernate.version>4.3.11.Final</org.hibernate.version>
 		<startup.listeners>
 		</startup.listeners>
 	</properties>

@@ -86,6 +86,34 @@ public class HibernateStudentWorkDao extends AbstractHibernateDao<StudentWork> i
         return resultList;
     }
 
+    public List<Object[]> getStudentEventExport(Integer runId) {
+        String queryString =
+                "SELECT e.id, e.nodeId, e.componentId, e.componentType, 'step number', 'step title', 'component part number', " +
+                "e.clientSaveTime, e.serverSaveTime, e.category, e.context, e.event, e.data, e.periodId, e.runId, e.workgroupId, " +
+                "g.name 'Period Name', ud.username 'Teacher Username', r.project_fk 'Project ID', GROUP_CONCAT(gu.user_fk SEPARATOR ', ') 'WISE IDs' " +
+        "FROM events e, " +
+                "workgroups w, " +
+                "groups_related_to_users gu, " +
+                "groups g, " +
+                "runs r, " +
+                "users u, " +
+                "user_details ud " +
+                "where e.runId = :runId and e.workgroupId = w.id and w.group_fk = gu.group_fk and g.id = e.periodId and " +
+                "e.runId = r.id and r.owner_fk = u.id and u.user_details_fk = ud.id " +
+                "group by e.id order by workgroupId ";
+
+        Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
+        SQLQuery query = session.createSQLQuery(queryString);
+        query.setParameter("runId", runId);
+        List resultList = new ArrayList<Object[]>();
+        Object[] headerRow = new String[]{"id","node id","component id","component type","step number","step title","component part number",
+                "client save time","server save time","category", "context", "event", "data","period id","run id","workgroup id",
+                "period name", "teacher username", "project id", "WISE ids"};
+        resultList.add(headerRow);
+        resultList.addAll(query.list());
+        return resultList;
+    }
+
     @Override
     public List<StudentWork> getStudentWorkListByParams(
             Integer id, Run run, Group period, WISEWorkgroup workgroup,
