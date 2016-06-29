@@ -6292,7 +6292,7 @@ class ProjectService {
                             
                             if (showPreviousWorkNodeId != null && showPreviousWorkComponentId != null) {
                                 
-                                // create and object to hold the node id and component id
+                                // create an object to hold the node id and component id
                                 var nodeIdAndComponentId = {};
                                 nodeIdAndComponentId.nodeId = showPreviousWorkNodeId;
                                 nodeIdAndComponentId.componentId = showPreviousWorkComponentId;

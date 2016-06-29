@@ -51,7 +51,10 @@ class StepToolsCtrl {
             this.nodeStatus = this.nodeStatuses[this.nodeId];
 
             this.prevId = this.NodeService.getPrevNodeId();
-            this.nextId = this.NodeService.getNextNodeId();
+            this.nextId = null;
+            this.NodeService.getNextNodeId().then((nodeId) => {
+                this.nextId = nodeId;
+            });
 
             // model variable for selected node id
             this.toNodeId = this.nodeId;

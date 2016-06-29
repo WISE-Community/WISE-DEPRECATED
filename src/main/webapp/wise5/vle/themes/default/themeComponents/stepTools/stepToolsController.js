@@ -53,13 +53,18 @@ var StepToolsCtrl = function () {
     }, {
         key: 'updateModel',
         value: function updateModel() {
+            var _this2 = this;
+
             var nodeId = this.StudentDataService.getCurrentNodeId();
             if (!this.ProjectService.isGroupNode(nodeId)) {
                 this.nodeId = nodeId;
                 this.nodeStatus = this.nodeStatuses[this.nodeId];
 
                 this.prevId = this.NodeService.getPrevNodeId();
-                this.nextId = this.NodeService.getNextNodeId();
+                this.nextId = null;
+                this.NodeService.getNextNodeId().then(function (nodeId) {
+                    _this2.nextId = nodeId;
+                });
 
                 // model variable for selected node id
                 this.toNodeId = this.nodeId;

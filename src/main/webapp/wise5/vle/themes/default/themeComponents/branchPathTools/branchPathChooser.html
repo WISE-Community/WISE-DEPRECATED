@@ -1,0 +1,16 @@
+<md-dialog aria-label="Choose a Branch Path">
+    <md-toolbar md-theme="light">
+        <div class="md-toolbar-tools">
+            <h2 class="md-title">Choose a Branch Path</h2>
+        </div>
+    </md-toolbar>
+    <md-dialog-content class="md-padding">
+        <p>Note: This is only available in preview mode. Students will not see this in a real run.</p>
+        <md-list>
+            <md-list-item ng-repeat="availableTransition in availableTransitions"
+                          ng-click="chooseBranchPath(availableTransition)">
+                      {{getNodePositionAndTitleByNodeId(availableTransition.to)}}
+            </md-list-item>
+        </md-list>
+    </md-dialog-content>
+</md-dialog>
