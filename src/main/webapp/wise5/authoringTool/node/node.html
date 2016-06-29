@@ -137,7 +137,7 @@ TODO: implement me. Allow authors to view assets while authoring node conent. Pe
         <md-select id="stepSelectMenu" md-theme="default" class="node-select md-subhead" ng-model="nodeController.node.transitionLogic.canChangePath"
                    aria-label="canChangePath" style="margin-left:30px; width:600px">
             <md-option ng-repeat="item in nodeController.canChangePathOptions"
-                       value="{{ item }}">
+                       ng-value="item">
                 <span layout="row" layout-align="start center">
                     <span class="node-select__text">{{item}}</span>
                 </span>
