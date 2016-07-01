@@ -216,11 +216,6 @@ var VLEController = function () {
     }
 
     _createClass(VLEController, [{
-        key: 'visitNode',
-        value: function visitNode(nodeId) {
-            this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(nodeId);
-        }
-    }, {
         key: 'isNotebookEnabled',
         value: function isNotebookEnabled() {
             return this.NotebookService.isNotebookEnabled();
@@ -412,6 +407,22 @@ var VLEController = function () {
         value: function dismissNotification(notification) {
             notification.timeDismissed = Date.parse(new Date());
             this.NotificationService.saveNotificationToServer(notification); // also save to server
+        }
+
+        /**
+         * Dismiss the specified notification and visit the node
+         * @param nodeId
+         */
+
+    }, {
+        key: 'dismissNotificationAndVisitNode',
+        value: function dismissNotificationAndVisitNode(notification) {
+            this.dismissNotification(notification);
+
+            var goToNodeId = notification.nodeId;
+            if (goToNodeId != null) {
+                this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(goToNodeId);
+            }
         }
 
         /**

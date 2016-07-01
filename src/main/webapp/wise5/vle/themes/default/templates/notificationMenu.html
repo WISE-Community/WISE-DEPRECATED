@@ -16,7 +16,7 @@
         <div class="md-padding center" ng-if="!vleController.getNewNotifications().length"><span class="md-body-1">Congratulations, you have no alerts!</span></div>
         <md-list class="notification-list" ng-if="vleController.getNewNotifications().length">
             <md-list-item ng-repeat="notification in vleController.getNewNotifications() track by $index"
-                          ng-click="vleController.visitNode(notification.nodeId)"
+                          ng-click="vleController.dismissNotificationAndVisitNode(notification)"
                           md-autofocus="$first"
                           class="md-2-line">
                 <div class="md-list-item-text">

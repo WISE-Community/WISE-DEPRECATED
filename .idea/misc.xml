@@ -5,6 +5,8 @@
   </component>
   <component name="FrameworkDetectionExcludesConfiguration">
     <file type="web" url="file://$PROJECT_DIR$" />
+    <type id="appengine-java" />
+    <type id="jpa" />
   </component>
   <component name="JavaScriptSettings">
     <option name="languageLevel" value="ES6" />
