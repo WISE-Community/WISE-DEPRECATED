@@ -409,7 +409,7 @@ class EmbeddedController {
      * Create a new component state populated with the student data
      * @return the componentState after it has been populated
      */
-    createComponentState() {
+    createComponentState(action) {
 
         // create a new component state
         var componentState = this.NodeService.createNewComponentState();

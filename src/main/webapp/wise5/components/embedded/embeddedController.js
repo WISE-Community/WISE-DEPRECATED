@@ -432,7 +432,7 @@ var EmbeddedController = function () {
          * Create a new component state populated with the student data
          * @return the componentState after it has been populated
          */
-        value: function createComponentState() {
+        value: function createComponentState(action) {
 
             // create a new component state
             var componentState = this.NodeService.createNewComponentState();
