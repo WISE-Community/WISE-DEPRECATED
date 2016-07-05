@@ -220,10 +220,6 @@ class VLEController {
         }
     }
 
-    visitNode(nodeId) {
-        this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(nodeId);
-    }
-
     isNotebookEnabled() {
         return this.NotebookService.isNotebookEnabled();
     }
@@ -393,6 +389,19 @@ class VLEController {
     dismissNotification(notification) {
         notification.timeDismissed = Date.parse(new Date());
         this.NotificationService.saveNotificationToServer(notification);  // also save to server
+    }
+
+    /**
+     * Dismiss the specified notification and visit the node
+     * @param nodeId
+     */
+    dismissNotificationAndVisitNode(notification) {
+        this.dismissNotification(notification);
+
+        let goToNodeId = notification.nodeId;
+        if (goToNodeId != null) {
+            this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(goToNodeId);
+        }
     }
 
     /**
