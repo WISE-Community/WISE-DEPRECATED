@@ -68,6 +68,16 @@ class StudentWebSocketService {
             this.$rootScope.$broadcast('unPauseScreen', {data: data});
         } else if (messageType === 'notification') {
             this.$rootScope.$broadcast('newNotification', data.data);
+        } else if (messageType === 'annotationNotification') {
+            // a new annotation + notification combo object was sent over websocket
+            
+            // save the new annotation locally
+            let annotationData = data.annotationData;
+            this.StudentDataService.AnnotationService.addOrUpdateAnnotation(annotationData);
+
+            // fire the new notification
+            let notificationData = data.notificationData;
+            this.$rootScope.$broadcast('newNotification', notificationData);
         }
 
         this.handleWebSocketMessageReceived(data);

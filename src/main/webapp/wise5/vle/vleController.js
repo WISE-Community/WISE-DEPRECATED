@@ -54,7 +54,7 @@ var VLEController = function () {
             _this.StudentDataService.updateVisitedNodesHistory(currentNodeId);
             _this.StudentDataService.updateNodeStatuses();
 
-            _this.StudentWebSocketService.sendStudentStatus();
+            _this.StudentWebSocketService.sendStudentStatus(); // TODO: change this so we POST the status and send websocket message from Controller.handlePOST on the server
             _this.$state.go('root.vle', { nodeId: currentNodeId });
 
             var componentId, componentType, category, eventName, eventData, eventNodeId;
