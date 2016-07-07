@@ -3,7 +3,7 @@
     <label for="comment_{{annotationController.componentStateId}}" translate="commentLabel"></label>
     <textarea name="comment_{{annotationController.componentStateId}}" ng-model="annotationController.value"
               ng-disabled="!annotationController.active" ng-change="annotationController.postAnnotation()"
-              ng-model-options="{ debounce: 2000 }"
+              ng-model-options="{ debounce: 10000 }"
               rows="5"/>
 </div>
 
@@ -13,7 +13,7 @@
     <input type="number" size="10"
            name="score_{{annotationController.componentStateId}}" ng-model="annotationController.value"
            ng-disabled="!annotationController.active" ng-change="annotationController.postAnnotation()"
-           ng-model-options="{ debounce: 2000 }"/>/{{annotationController.gradingMaxScore}}
+           ng-model-options="{ debounce: 5000 }"/>/{{annotationController.gradingMaxScore}}
 </div>
 
 <span ng-if="annotationController.mode === 'student' && annotationController.type === 'comment' && annotationController.value">{{annotationController.value}}</span>

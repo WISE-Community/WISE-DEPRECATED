@@ -6,32 +6,42 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.socket.WebSocketHandler;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.vle.wise5.VLEService;
+import org.wise.portal.service.websocket.WISEWebSocketHandler;
 import org.wise.vle.domain.annotation.wise5.Annotation;
+import org.wise.vle.domain.notification.Notification;
 import org.wise.vle.domain.work.Event;
 import org.wise.vle.domain.work.StudentWork;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
 
 /**
- *
+ * Controller for handling GET and POST of WISE5 Teacher related data
+ * like annotations.
  */
 @Controller("wise5TeacherDataController")
 public class TeacherDataController {
+
     @Autowired
     private VLEService vleService;
 
     @Autowired
     private RunService runService;
+
+    @Autowired
+    private WebSocketHandler webSocketHandler;
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/teacher/export/{runId}/{exportType}")
@@ -204,13 +214,37 @@ public class TeacherDataController {
                                     annotationJSONObject.isNull("data") ? null : annotationJSONObject.getString("data"),
                                     annotationJSONObject.isNull("clientSaveTime") ? null : annotationJSONObject.getString("clientSaveTime"));
 
-
                             // before returning saved Annotation, strip all fields except id, responseToken, and serverSaveTime to minimize response size
                             JSONObject savedAnnotationJSONObject = new JSONObject();
                             savedAnnotationJSONObject.put("id", annotation.getId());
                             savedAnnotationJSONObject.put("requestToken", requestToken);
                             savedAnnotationJSONObject.put("serverSaveTime", annotation.getServerSaveTime().getTime());
                             annotationsResultJSONArray.put(savedAnnotationJSONObject);
+
+                            // create notification for each annotation so the students will be notified
+                            // and send it in real-time over the websocket
+                            try {
+                                Notification notification = this.createNotificationForAnnotation(annotation);
+                                if (webSocketHandler != null) {
+                                    WISEWebSocketHandler wiseWebSocketHandler = (WISEWebSocketHandler) webSocketHandler;
+
+                                    if (wiseWebSocketHandler != null) {
+                                        // send this message to websockets
+                                        JSONObject notificationJSON = notification.toJSON();
+                                        JSONObject webSocketMessageJSON = new JSONObject();
+                                        webSocketMessageJSON.put("messageType", "annotationNotification");
+                                        webSocketMessageJSON.put("messageParticipants", "teacherToStudent");
+                                        webSocketMessageJSON.put("toWorkgroupId", notification.getToWorkgroup().getId());
+                                        webSocketMessageJSON.put("notificationData", notificationJSON);
+                                        webSocketMessageJSON.put("annotationData", annotation.toJSON());
+                                        wiseWebSocketHandler.handleMessage(signedInUser, webSocketMessageJSON.toString());
+                                    }
+                                }
+
+                            } catch (Exception e) {
+                                // if something fails during creating annotation and sending to websocket,
+                                // allow the rest to continue
+                            }
 
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -233,5 +267,52 @@ public class TeacherDataController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Saves and returns a notification for the specified annotation
+     * @param annotation Annotation to create the notification for
+     * @return Notification notification for the specified annotation
+     */
+    private Notification createNotificationForAnnotation(Annotation annotation) {
+        Integer notificationId = null;
+        Integer runId = annotation.getRun().getId().intValue();
+        Integer periodId = annotation.getPeriod().getId().intValue();
+        Integer fromWorkgroupId = annotation.getFromWorkgroup().getId().intValue();
+        Integer toWorkgroupId = annotation.getToWorkgroup().getId().intValue();
+        String nodeId = annotation.getNodeId();
+        String componentId = annotation.getComponentId();
+        String componentType = null;
+        String type = "teacherToStudent";
+        String message = "You have new feedback from your teacher!";
+        String data = null;
+        try {
+            // save annotation id in the data
+            JSONObject dataJSONObject = new JSONObject();
+            dataJSONObject.put("annotationId", annotation.getId());
+            data = dataJSONObject.toString();
+        } catch (JSONException je) {
+
+        }
+        Calendar now = Calendar.getInstance();
+        String timeGenerated = String.valueOf(now.getTimeInMillis());
+        String timeDismissed = null;
+
+        Notification notification = vleService.saveNotification(
+                notificationId,
+                runId,
+                periodId,
+                fromWorkgroupId,
+                toWorkgroupId,
+                nodeId,
+                componentId,
+                componentType,
+                type,
+                message,
+                data,
+                timeGenerated,
+                timeDismissed
+        );
+        return notification;
     }
 }

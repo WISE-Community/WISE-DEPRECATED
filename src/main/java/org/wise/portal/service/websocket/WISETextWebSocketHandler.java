@@ -553,6 +553,52 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
     	return studentConnectionsForRun;
     }
 
+	/**
+	 * Get the specific student connection for a run
+	 * @param runId the run id
+	 * @param workgroupId the workgroup id
+	 * @return a set of student connections for the run
+	 */
+	private WISEWebSocketSession getStudentConnection(Long runId, Long workgroupId) {
+		Set<WISEWebSocketSession> studentConnectionsForRun = null;
+		WISEWebSocketSession studentConnectionResult = null;
+
+		//get the set of student connections for the run
+		studentConnectionsForRun = runToStudentConnections.get(runId);
+
+		if (studentConnectionsForRun == null) {
+			//the set does not exist for the run so we will create a set
+			studentConnectionsForRun = new CopyOnWriteArraySet<WISEWebSocketSession>();
+
+			//put the set of student connections into the hashtable that maps run to student connection sets
+			runToStudentConnections.put(runId, studentConnectionsForRun);
+		}
+
+		//loop through all the student connections for the run
+		Iterator<WISEWebSocketSession> studentConnectionsForRunIter = studentConnectionsForRun.iterator();
+
+		while(studentConnectionsForRunIter.hasNext()) {
+			//get a student connection
+			WISEWebSocketSession studentConnection = studentConnectionsForRunIter.next();
+
+			//get the period id of the student connection
+			Long studentConnectionWorkgroupId = studentConnection.getWorkgroupId();
+
+			//check if the period id matches the one we want
+			if (workgroupId.equals(studentConnectionWorkgroupId)) {
+    			/*
+    			 * the period id matches so we will add this student connection to
+    			 * our set of student connections to return
+    			 */
+				studentConnectionResult = studentConnection;
+				break;
+			}
+		}
+
+		//return the set of student connections for the run
+		return studentConnectionResult;
+	}
+
     /**
      * Get the student connections for a period
      * @param runId the run id
@@ -599,8 +645,8 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
     }
 
 	/**
-	 * Get the teacher connections for a run
-	 * @param runId the run id
+	 * Get the sessions of authors who are currently authoring the project
+	 * @param projectId the projectId
 	 * @return a set of teacher connections
 	 */
 	private Set<WISEWebSocketSession> getAuthorConnectionsForProject(Long projectId) {
@@ -814,7 +860,7 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
     				} else if (messageParticipants.equals("studentToGroup")) {
     					//TODO
     				} else if (messageParticipants.equals("teacherToStudent")) {
-    					//TODO
+						sendTeacherToStudentMessage(session, messageJSON);
     				} else if (messageParticipants.equals("teacherToGroup")) {
     					//TODO
     				} else if (messageParticipants.equals("teacherToStudentsInPeriod")) {
@@ -1460,6 +1506,42 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
 			e.printStackTrace();
 		}
     }
+
+	/**
+	 * Handle the message that a teacher is sending to a student
+	 * @param session the websocket session
+	 * @param messageJSON the message to send
+	 */
+	private void sendTeacherToStudentMessage(WebSocketSession session, JSONObject messageJSON) {
+		try {
+			//get the wiseWebSocketSession related to the given session
+			WISEWebSocketSession wiseWebSocketSession = sessionToWISEWebSocketSession.get(session);
+
+			Long runId = wiseWebSocketSession.getRunId();
+
+			//add the run id into the message
+			messageJSON.put("runId", runId);
+
+			Long toWorkgroupId = messageJSON.getLong("toWorkgroupId");
+
+			//get the message as a string
+			String message = messageJSON.toString();
+
+			//get all the currently connected students for the run
+			WISEWebSocketSession studentConnection = getStudentConnection(runId, toWorkgroupId);
+
+			//create a set to combine all the connections
+			Set<WISEWebSocketSession> connections = new CopyOnWriteArraySet<WISEWebSocketSession>();
+
+			//gather all the connections
+			connections.add(studentConnection);
+
+			//send the message to all the currently connected students for the run
+			sendMessageToConnections(message, connections);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
 
     /**
      * Handle the message that a teacher is sending to the students of a period

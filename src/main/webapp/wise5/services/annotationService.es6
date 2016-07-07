@@ -210,6 +210,7 @@ class AnnotationService {
                             tempAnnotation.data = annotation.data;
                             tempAnnotation.clientSaveTime = annotation.clientSaveTime;
                             tempAnnotation.serverSaveTime = annotation.serverSaveTime;
+                            updated = true;
                         }
                     }
                 }
