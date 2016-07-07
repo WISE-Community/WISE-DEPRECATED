@@ -491,15 +491,15 @@ class AnnotationService {
      * 'any' for auto graded comment or teacher graded comment
      * @returns the latest comment annotation
      */
-    getLatestCommentAnnotation(nodeId, componentId, workgroupId, scoreType) {
+    getLatestCommentAnnotation(nodeId, componentId, workgroupId, commentType) {
         
         var annotation = null;
         
         var annotations = this.getAnnotations();
         
-        if (scoreType == null) {
+        if (commentType == null) {
             // default to 'any'
-            scoreType = 'any';
+            commentType = 'any';
         }
         
         // loop through all the annotations from newest to oldest
@@ -516,13 +516,13 @@ class AnnotationService {
                 // make sure the annotation values match what we are looking for
                 if (nodeId == tempNodeId && componentId == tempComponentId && workgroupId == tempToWorkgroupId) {
                     
-                    if (scoreType === 'any' && (tempAnnotationType === 'autoComment' || tempAnnotationType === 'comment')) {
+                    if (commentType === 'any' && (tempAnnotationType === 'autoComment' || tempAnnotationType === 'comment')) {
                         // we are looking for an auto comment or teacher comment and have found one
                         acceptAnnotation = true;
-                    } else if (scoreType === 'autoComment' && tempAnnotationType === 'autoComment') {
+                    } else if (commentType === 'autoComment' && tempAnnotationType === 'autoComment') {
                         // we are looking for an auto comment and have found one
                         acceptAnnotation = true;
-                    } else if (scoreType === 'comment' && tempAnnotationType === 'comment') {
+                    } else if (commentType === 'comment' && tempAnnotationType === 'comment') {
                         // we are looking for a teacher comment and have found one
                         acceptAnnotation = true;
                     }
