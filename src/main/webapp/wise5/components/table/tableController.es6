@@ -1,7 +1,9 @@
 import html2canvas from 'html2canvas';
 
 class TableController {
-    constructor($q,
+    constructor($anchorScroll,
+                $location,
+                $q,
                 $rootScope,
                 $scope,
                 NodeService,
@@ -11,6 +13,8 @@ class TableController {
                 TableService,
                 UtilService) {
 
+        this.$anchorScroll = $anchorScroll;
+        this.$location = $location;
         this.$q = $q;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
@@ -1422,24 +1426,74 @@ class TableController {
      */
     snipTable($event) {
         
-        // get the table element
+        // get the table element. this will obtain an array.
         var tableElement = angular.element('#' + this.componentId + ' table');
         
         if (tableElement != null && tableElement.length > 0) {
+            
+            // hide all the iframes otherwise html2canvas may cut off the table
+            this.UtilService.hideIFrames();
+            
+            // scroll to the component so html2canvas doesn't cut off the table
+            this.$location.hash(this.componentId);
+            this.$anchorScroll();
+            
+            // get the table element
             tableElement = tableElement[0];
             
-            // convert the table element to a canvas element
-            html2canvas(tableElement).then((canvas) => {
+            try {
+                // convert the table element to a canvas element
+                html2canvas(tableElement).then((canvas) => {
+                    
+                    // get the canvas as a base64 string
+                    var img_b64 = canvas.toDataURL('image/png');
+                    
+                    // get the image object
+                    var imageObject = this.UtilService.getImageObjectFromBase64String(img_b64);
+                    
+                    // create a notebook item with the image populated into it
+                    this.NotebookService.addNewItem($event, imageObject);
+                    
+                    // we are done capturing the table so we will show the iframes again
+                    this.UtilService.showIFrames();
+                    
+                    /*
+                     * scroll to the component in case the view has shifted after
+                     * showing the iframe
+                     */
+                    this.$location.hash(this.componentId);
+                    this.$anchorScroll();
+                }).catch(() => {
+                    
+                    /*
+                     * an error occurred while trying to capture the table so we
+                     * will show the iframes again
+                     */
+                    this.UtilService.showIFrames();
+                    
+                    /*
+                     * scroll to the component in case the view has shifted after
+                     * showing the iframe
+                     */
+                    this.$location.hash(this.componentId);
+                    this.$anchorScroll();
+                });
+            } catch(e) {
                 
-                // get the canvas as a base64 string
-                var img_b64 = canvas.toDataURL('image/png');
+                /*
+                 * an error occurred while trying to capture the table so we
+                 * will show the iframes again
+                 */
+                this.UtilService.showIFrames();
                 
-                // get the image object
-                var imageObject = this.UtilService.getImageObjectFromBase64String(img_b64);
-                
-                // create a notebook item with the image populated into it
-                this.NotebookService.addNewItem($event, imageObject);
-            });
+                /*
+                 * scroll to the component in case the view has shifted after
+                 * showing the iframe
+                 */
+                this.$location.hash(this.componentId);
+                this.$anchorScroll();
+            }
+            
         }
     }
     
@@ -1506,6 +1560,8 @@ class TableController {
 }
 
 TableController.$inject = [
+    '$anchorScroll',
+    '$location',
     '$q',
     '$rootScope',
     '$scope',

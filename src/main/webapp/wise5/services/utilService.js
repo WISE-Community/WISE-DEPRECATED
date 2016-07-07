@@ -163,6 +163,56 @@ var UtilService = function () {
 
             return imageObject;
         }
+
+        /**
+         * Hide all the iframes. This is used before a student snips something
+         * to put into their notebook. Iframes shift the position of elements
+         * below it which causes issues when html2canvas tries to capture
+         * certain elements.
+         */
+
+    }, {
+        key: "hideIFrames",
+        value: function hideIFrames() {
+
+            // get all the iframes
+            var iframes = angular.element('iframe');
+
+            // loop through all the iframes
+            for (var i = 0; i < iframes.length; i++) {
+                var iframe = iframes[i];
+
+                if (iframe != null) {
+                    // hide the iframe
+                    iframe.style.display = 'none';
+                }
+            }
+        }
+
+        /**
+         * Show all the iframes. This is used after the student snips something
+         * to put into their notebook. Iframes shift the position of elements
+         * below it which causes issues when html2canvas tries to capture
+         * certain elements.
+         */
+
+    }, {
+        key: "showIFrames",
+        value: function showIFrames() {
+
+            // get all the iframes
+            var iframes = angular.element('iframe');
+
+            // loop through all the iframes
+            for (var i = 0; i < iframes.length; i++) {
+                var iframe = iframes[i];
+
+                if (iframe != null) {
+                    // show the iframe
+                    iframe.style.display = '';
+                }
+            }
+        }
     }]);
 
     return UtilService;
