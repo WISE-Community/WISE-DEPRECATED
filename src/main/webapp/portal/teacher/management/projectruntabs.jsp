@@ -142,7 +142,9 @@
 											<sec:accesscontrollist domainObject="${run}" hasPermission="16">
 												<li><a id="shareRun_${run.id}" class="shareRun" title="<spring:message code="teacher.management.projectruntabs.sharingPermissionsTitle"/> ${run.name} (<spring:message code="run_id"/> ${run.id})"><img class="icon" alt="share" src="${contextPath}/<spring:theme code="agent"/>" /><span><spring:message code="teacher.management.projectruntabs.sharingPermissions"/></span></a></li>
 											</sec:accesscontrollist>
-											<li><a class="researchTools" title="<spring:message code="teacher.management.projectruntabs.researcherTools"/>: ${run.name} (<spring:message code="run_id"/> ${run.id})" id="runId=${run.id}&gradingType=export"><img class="icon" alt="export" src="${contextPath}/<spring:theme code="save"/>" /><span><spring:message code="teacher.management.projectruntabs.researcherTools"/> <spring:message code="teacher.management.projectruntabs.exportStudentData"/></span></a></li>
+											<c:if test="${run.project.wiseVersion == null || run.project.wiseVersion == 4}">
+												<li><a class="researchTools" title="<spring:message code="teacher.management.projectruntabs.researcherTools"/>: ${run.name} (<spring:message code="run_id"/> ${run.id})" id="runId=${run.id}&gradingType=export"><img class="icon" alt="export" src="${contextPath}/<spring:theme code="save"/>" /><span><spring:message code="teacher.management.projectruntabs.researcherTools"/> <spring:message code="teacher.management.projectruntabs.exportStudentData"/></span></a></li>
+											</c:if>
 											<li><a href="${contextPath}/contact/contactwise.html?projectId=${run.project.id}&runId=${run.id}"><img class="icon" alt="contact" src="${contextPath}/<spring:theme code="email"/>" /><span><spring:message code="teacher.management.projectruntabs.reportProblem"/></span></a></li>
 											<sec:accesscontrollist domainObject="${run}" hasPermission="16">
 												<li><a class="archiveRun" id="archiveRun_runId=${run.id}&runName=<c:out value="${fn:escapeXml(run.name)}" />" title="<spring:message code="teacher.management.projectruntabs.archive_title"/> ${run.name} (<spring:message code="run_id"/> ${run.id})"><img class="icon" alt="archive" src="${contextPath}/<spring:theme code="lock"/>" /><span><spring:message code="teacher.management.projectruntabs.archive"/></span></a></li>
@@ -277,7 +279,9 @@
 											<sec:accesscontrollist domainObject="${run}" hasPermission="16">
 												<li><a class="activateRun" id="activateRun_runId=${run.id}&runName=<c:out value="${fn:escapeXml(run.name)}" />" title="<spring:message code="teacher.management.projectruntabs.restore_title"/> ${run.name} (<spring:message code="run_id_label"/> ${run.id})"><img class="icon" alt="archive" src="${contextPath}/<spring:theme code="unlock"/>" /><span><spring:message code="teacher.management.projectruntabs.restore"/></span></a></li>
 											</sec:accesscontrollist>
-											<li><a class="researchTools" title="<spring:message code="teacher.management.projectruntabs.researcherTools"/>: ${run.name} (<spring:message code="run_id_label"/> ${run.id})" id="runId=${run.id}&gradingType=export"><img class="icon" alt="export" src="${contextPath}/<spring:theme code="save"/>" /><span><spring:message code="teacher.management.projectruntabs.researcherTools"/> <spring:message code="teacher.management.projectruntabs.exportStudentData"/></span></a></li>
+											<c:if test="${run.project.wiseVersion == null || run.project.wiseVersion == 4}">
+												<li><a class="researchTools" title="<spring:message code="teacher.management.projectruntabs.researcherTools"/>: ${run.name} (<spring:message code="run_id_label"/> ${run.id})" id="runId=${run.id}&gradingType=export"><img class="icon" alt="export" src="${contextPath}/<spring:theme code="save"/>" /><span><spring:message code="teacher.management.projectruntabs.researcherTools"/> <spring:message code="teacher.management.projectruntabs.exportStudentData"/></span></a></li>
+											</c:if>
 										</ul>
 									</td>
 									<td style="display:none;">${run.starttime}</td>
