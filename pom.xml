@@ -14,7 +14,7 @@
 	this library; if not, write to the Free Software * Foundation, Inc., 51 Franklin 
 	Street, Fifth Floor, Boston, MA 02110-1301 USA -->
 
-<!-- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+<!-- * Copyright (c) 2008-2016 Regents of the University of California (Regents).
 	Created * by TELS, Graduate School of Education, University of California 
 	at Berkeley. * * This software is distributed under the GNU General Public 
 	License, v3. * * Permission is hereby granted, without written agreement 
@@ -254,18 +254,6 @@
 			<id>jgit-repository</id>
 			<url>http://download.eclipse.org/jgit/maven</url>
 		</repository>
-		<repository>
-			<id>concord-jnlp</id>
-			<url>http://jnlp.concord.org/dev/</url>
-		</repository>
-		<repository>
-			<id>concord-repo-internal-snapshot</id>
-			<name>concord internal repository snapshot</name>
-			<url>http://source.concord.org/maven2/internal_snapshot/</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
 	</repositories>
 	<pluginRepositories>
 		<pluginRepository>
@@ -454,7 +442,7 @@
 		<dependency>
 			<groupId>org.eclipse.jgit</groupId>
 			<artifactId>org.eclipse.jgit</artifactId>
-			<version>4.0.1.201506240215-r</version>
+			<version>4.4.0.201606070830-r</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
