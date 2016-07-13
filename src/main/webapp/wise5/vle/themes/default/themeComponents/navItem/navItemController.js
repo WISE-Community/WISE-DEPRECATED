@@ -23,6 +23,7 @@ var NavItemController = function () {
         this.ProjectService = ProjectService;
         this.StudentDataService = StudentDataService;
         this.$mdDialog = $mdDialog;
+        this.autoScroll = require('dom-autoscroller');
 
         this.expanded = false;
 
@@ -135,20 +136,36 @@ var NavItemController = function () {
             }
         });
 
-        this.$scope.$on('planning.drop-model', function (el, target, source) {
+        var dragId = 'planning_' + this.nodeId;
+        // handle item drop events
+        var dropEvent = dragId + '.drop-model';
+        this.$scope.$on(dropEvent, function (el, target, source) {
             var nodeChangedId = target.data().nodeid;
-            this.planningNodeItemsChanged(nodeChangedId);
-        }.bind(this));
+            _this.planningNodeItemsChanged(nodeChangedId);
+        });
 
-        this.dragulaService.options($scope, 'planning', {
-            moves: function (el, source, handle, sibling) {
-                if (!this.planningMode) {
+        this.dragulaService.options(this.$scope, dragId, {
+            moves: function moves(el, source, handle, sibling) {
+                if (!_this.planningMode) {
                     return false;
                 }
 
                 var nodeId = el.getAttribute('data-nodeid');
-                return this.ProjectService.isPlanningInstance(nodeId);
-            }.bind(this)
+                return _this.ProjectService.isPlanningInstance(nodeId);
+            }
+        });
+
+        var drake = dragulaService.find(this.$scope, dragId).drake;
+
+        // support scroll while dragging
+        var scroll = this.autoScroll([document.querySelector('#content')], {
+            margin: 30,
+            pixels: 50,
+            scrollWhenOutside: true,
+            autoScroll: function autoScroll() {
+                // Only scroll when the pointer is down, and there is a child being dragged
+                return this.down && drake.dragging;
+            }
         });
 
         this.setExpanded();

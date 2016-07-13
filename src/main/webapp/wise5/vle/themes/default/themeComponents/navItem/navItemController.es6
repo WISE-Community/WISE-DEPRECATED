@@ -20,6 +20,7 @@ class NavItemController {
         this.ProjectService = ProjectService;
         this.StudentDataService = StudentDataService;
         this.$mdDialog = $mdDialog;
+        this.autoScroll = require('dom-autoscroller');
 
         this.expanded = false;
 
@@ -137,21 +138,37 @@ class NavItemController {
             }
         });
 
-
-        this.$scope.$on('planning.drop-model', function (el, target, source) {
+        let dragId = 'planning_' + this.nodeId ;
+        // handle item drop events
+        let dropEvent = dragId + '.drop-model';
+        this.$scope.$on(dropEvent, (el, target, source) => {
             let nodeChangedId = target.data().nodeid;
             this.planningNodeItemsChanged(nodeChangedId);
-        }.bind(this));
+        });
 
-        this.dragulaService.options($scope, 'planning', {
-            moves: function (el, source, handle, sibling) {
+        this.dragulaService.options(this.$scope, dragId, {
+            moves: (el, source, handle, sibling) => {
                 if (!this.planningMode) {
                     return false;
                 }
 
                 let nodeId = el.getAttribute('data-nodeid');
                 return this.ProjectService.isPlanningInstance(nodeId);
-            }.bind(this)
+            }
+        });
+
+        let drake = dragulaService.find(this.$scope, dragId).drake;
+
+        // support scroll while dragging
+        let scroll = this.autoScroll(
+            [document.querySelector('#content')], {
+            margin: 30,
+            pixels: 50,
+            scrollWhenOutside: true,
+            autoScroll: function() {
+                // Only scroll when the pointer is down, and there is a child being dragged
+                return this.down && drake.dragging;
+            }
         });
 
         this.setExpanded();

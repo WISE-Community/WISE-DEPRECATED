@@ -194,21 +194,23 @@ var MatchController = function () {
             }
         }
 
+        var dragId = 'match_' + this.componentId;
         // handle choice drop events
-        var dropEvent = this.componentId + '.drop-model';
+        var dropEvent = dragId + '.drop-model';
         this.$scope.$on(dropEvent, function (e, el, container, source) {
             // choice item has been dropped in new location, so run studentDataChanged function
             _this.$scope.matchController.studentDataChanged();
         });
 
         // drag and drop options
-        this.dragulaService.options(this.$scope, this.componentId, {
+        this.dragulaService.options(this.$scope, dragId, {
             moves: function moves(el, source, handle, sibling) {
                 return !_this.$scope.matchController.isDisabled;
             }
         });
 
-        var drake = dragulaService.find(this.$scope, this.componentId).drake;
+        // provide visual indicator when choice is dragged over a new bucket
+        var drake = dragulaService.find(this.$scope, dragId).drake;
         drake.on('over', function (el, container, source) {
             if (source !== container) {
                 container.className += ' match-bucket__contents--over';
@@ -219,6 +221,7 @@ var MatchController = function () {
             }
         });
 
+        // support scroll while dragging
         var scroll = this.autoScroll([document.querySelector('#content')], {
             margin: 30,
             pixels: 50,

@@ -22,7 +22,7 @@
                     </md-switch>
                 </div>
                 <md-list class="nav-contents__list">
-                    <div dragula="'planning'" dragula-model="navitemCtrl.item.ids">
+                    <div dragula="'planning_{{navitemCtrl.nodeId}}'" dragula-model="navitemCtrl.item.ids">
                         <nav-item ng-repeat="childId in navitemCtrl.item.ids"
                                   ng-class="{'expanded': itemExpanded, 'prev': isPrevStep}"
                                   aria-label="{{ isPrevNode ? 'Last Visited Item' : null }}"
