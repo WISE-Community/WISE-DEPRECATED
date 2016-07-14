@@ -108,17 +108,24 @@ class NavItemController {
         );
 
         this.$scope.$watch(
-            function () { return this.expanded; }.bind(this),
-            function (value) {
+            () => { return this.expanded; },
+            (value) => {
                 this.$scope.$parent.itemExpanded = value;
                 if (value) {
                     this.zoomToElement();
                 }
-            }.bind(this)
+            }
+        );
+
+        this.$scope.$watch(
+            () => { return this.planningMode; },
+            (value) => {
+                this.$scope.$parent.planningMode = value;
+            }
         );
 
         // a group node has turned on or off planning mode
-        this.$rootScope.$on('togglePlanningModeClicked', (event, args) => {
+        this.$rootScope.$on('togglePlanningMode', (event, args) => {
 
             // get the group node that has had its planning node changed
             let planningModeClickedNodeId = args.nodeId;
@@ -479,14 +486,7 @@ class NavItemController {
             title = node.title;
         }
 
-        // get the position
-        var position = this.ProjectService.idToPosition[nodeId];
-
-        if (position == null) {
-            return title;
-        } else {
-            return position + ': ' + title;
-        }
+        return title;
     }
 
     /**
@@ -644,7 +644,7 @@ class NavItemController {
         this.StudentDataService.saveVLEEvent(eventNodeId, componentId, componentType, category, eventName, eventData);
 
         // notify the child nodes that the planning mode of this group node has changed
-        this.$rootScope.$broadcast('togglePlanningModeClicked', { nodeId: this.nodeId, planningMode: this.planningMode });
+        this.$rootScope.$broadcast('togglePlanningMode', { nodeId: this.nodeId, planningMode: this.planningMode });
     }
 
     /**

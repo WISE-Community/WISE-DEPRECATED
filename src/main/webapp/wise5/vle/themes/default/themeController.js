@@ -57,6 +57,8 @@ var ThemeController = function () {
 
         this.currentNode = this.StudentDataService.getCurrentNode();
 
+        this.planningMode = false;
+
         // set current notebook type filter to first enabled type
         if (this.notebookConfig.enabled) {
             for (var type in this.notebookConfig.itemTypes) {
@@ -241,6 +243,11 @@ var ThemeController = function () {
             var ev = args.ev;
             var file = args.file;
             _this.editNote(null, true, file, ev);
+        });
+
+        // a group node has turned on or off planning mode
+        this.$scope.$on('togglePlanningMode', function (event, args) {
+            _this.planningMode = args.planningMode;
         });
 
         // capture notebook open/close events
