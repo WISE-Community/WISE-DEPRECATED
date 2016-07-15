@@ -54,6 +54,8 @@ class ThemeController {
 
         this.currentNode = this.StudentDataService.getCurrentNode();
 
+        this.planningMode = false;
+
         // set current notebook type filter to first enabled type
         if (this.notebookConfig.enabled) {
             for (var type in this.notebookConfig.itemTypes) {
@@ -256,6 +258,11 @@ class ThemeController {
             this.editNote(null, true, file, ev);
         });
 
+        // a group node has turned on or off planning mode
+        this.$scope.$on('togglePlanningMode', (event, args) => {
+            this.planningMode = args.planningMode;
+        });
+
         // capture notebook open/close events
         this.$mdComponentRegistry.when('notebook').then(it => {
             this.$scope.$watch(() => {
@@ -361,7 +368,7 @@ class ThemeController {
             }
         });
     }
-    
+
     /**
      * The user has moved the mouse so we will notify the Session Service
      * so that it can refresh the session

@@ -107,16 +107,22 @@ var NavItemController = function () {
         }.bind(this));
 
         this.$scope.$watch(function () {
-            return this.expanded;
-        }.bind(this), function (value) {
-            this.$scope.$parent.itemExpanded = value;
+            return _this.expanded;
+        }, function (value) {
+            _this.$scope.$parent.itemExpanded = value;
             if (value) {
-                this.zoomToElement();
+                _this.zoomToElement();
             }
-        }.bind(this));
+        });
+
+        this.$scope.$watch(function () {
+            return _this.planningMode;
+        }, function (value) {
+            _this.$scope.$parent.planningMode = value;
+        });
 
         // a group node has turned on or off planning mode
-        this.$rootScope.$on('togglePlanningModeClicked', function (event, args) {
+        this.$rootScope.$on('togglePlanningMode', function (event, args) {
 
             // get the group node that has had its planning node changed
             var planningModeClickedNodeId = args.nodeId;
@@ -500,14 +506,7 @@ var NavItemController = function () {
                 title = node.title;
             }
 
-            // get the position
-            var position = this.ProjectService.idToPosition[nodeId];
-
-            if (position == null) {
-                return title;
-            } else {
-                return position + ': ' + title;
-            }
+            return title;
         }
 
         /**
@@ -682,7 +681,7 @@ var NavItemController = function () {
             this.StudentDataService.saveVLEEvent(eventNodeId, componentId, componentType, category, eventName, eventData);
 
             // notify the child nodes that the planning mode of this group node has changed
-            this.$rootScope.$broadcast('togglePlanningModeClicked', { nodeId: this.nodeId, planningMode: this.planningMode });
+            this.$rootScope.$broadcast('togglePlanningMode', { nodeId: this.nodeId, planningMode: this.planningMode });
         }
 
         /**

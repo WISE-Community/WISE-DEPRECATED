@@ -1,7 +1,26 @@
 #nav {
+    position: relative;
     transition: all 400ms ease-out;
 
-    &.ng-hide, &.ng-hide-animate {
+    &.ng-hide {
+        opacity: 0;
+    }
+}
+
+.nav {
+    margin-bottom: 16px;
+}
+
+.nav-mask {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0,0,0,0.25);
+    z-index: 1;
+
+    &.ng-hide {
         opacity: 0;
     }
 }
@@ -45,6 +64,11 @@
             }
         }
     }
+}
+
+.nav-item__status-icon {
+    margin-left: 2px;
+    vertical-align: bottom;
 }
 
 .nav-item--card__content {
@@ -92,6 +116,8 @@
 }
 
 .nav-item--planning-mode {
+    z-index: 2;
+
     button._md-no-style {
         cursor: move;
     }
