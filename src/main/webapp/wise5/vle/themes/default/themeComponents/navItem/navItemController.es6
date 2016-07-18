@@ -31,6 +31,7 @@ class NavItemController {
 
         this.nodeTitle = this.showPosition ? (this.ProjectService.idToPosition[this.nodeId] + ': ' + this.item.title) : this.item.title;
         this.currentNode = this.StudentDataService.currentNode;
+        this.previousNode = null;
         this.isCurrentNode = (this.currentNode.id === this.nodeId);
         this.setNewNode = false;
 
@@ -82,36 +83,52 @@ class NavItemController {
             this.availablePlanningNodes = this.ProjectService.getAvailablePlanningNodes(this.parentGroupId);
 
             this.$scope.$watch(
-                function () {
+                () => {
                     // watch the position of this node
                     return this.ProjectService.idToPosition[this.nodeId];
-                }.bind(this),
-                function(value) {
+                },
+                (value) => {
                     // the position has changed for this node so we will update it in the UI
                     this.nodeTitle = this.showPosition ? (this.ProjectService.idToPosition[this.nodeId] + ': ' + this.item.title) : this.item.title;
-                }.bind(this)
+                }
             );
         }
 
         this.$scope.$watch(
-            function () { return this.StudentDataService.currentNode; }.bind(this),
-            function (newNode) {
+            () => { return this.StudentDataService.currentNode; },
+            (newNode, oldNode) => {
                 this.currentNode = newNode;
-                if (this.StudentDataService.previousStep) {
-                    this.$scope.$parent.isPrevStep = (this.nodeId === this.StudentDataService.previousStep.id);
+                this.previousNode = oldNode;
+                this.isCurrentNode = (this.nodeId === newNode.id);
+
+                if (this.ProjectService.isApplicationNode(newNode.id)) {
+                    return;
                 }
-                this.isCurrentNode = (this.currentNode.id === this.nodeId);
-                if (this.isCurrentNode || this.ProjectService.isApplicationNode(newNode.id) || newNode.id === this.ProjectService.rootNode.id) {
+
+                let isPrev = false;
+                if (oldNode) {
+                    isPrev = (this.nodeId === oldNode.id);
+                    this.$scope.$parent.isPrevStep = isPrev;
+
+                    if (isPrev && !this.isGroup) {
+                        this.zoomToElement();
+                    }
+                }
+
+                if (this.isGroup) {
+                    if (!oldNode || this.ProjectService.isGroupNode(oldNode.id)) {
+                        this.setNewNode = true;
+                    }
                     this.setExpanded();
                 }
-            }.bind(this)
+            }
         );
 
         this.$scope.$watch(
             () => { return this.expanded; },
             (value) => {
                 this.$scope.$parent.itemExpanded = value;
-                if (value) {
+                if (value && this.setNewNode) {
                     this.zoomToElement();
                 }
             }
@@ -187,25 +204,18 @@ class NavItemController {
 
     setExpanded() {
         this.$scope.expanded = (this.isCurrentNode || (this.$scope.isGroup && this.ProjectService.isNodeDescendentOfGroup(this.$scope.currentNode, this.$scope.item)));
-        if (this.$scope.expanded && this.isCurrentNode) {
-            this.expanded = true;
-            this.zoomToElement();
-        }
+        this.expanded = this.$scope.expanded;
     };
 
     zoomToElement() {
         setTimeout(()=> {
             // smooth scroll to expanded group's page location
-            let location = this.isGroup ? this.$element[0].offsetTop - 32 : 0;
-            let delay = this.isGroup ? 350 : 0;
+            let top = this.$element[0].offsetTop;
+            let location = this.isGroup ? top - 32 : top - 80;
+            let delay = 350;
             $('#content').animate({
                 scrollTop: location
-            }, delay, 'linear', ()=> {
-                if (this.setNewNode) {
-                    this.setNewNode = false;
-                    this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(this.nodeId);
-                }
-            });
+            }, delay, 'linear');
         }, 250);
     };
 

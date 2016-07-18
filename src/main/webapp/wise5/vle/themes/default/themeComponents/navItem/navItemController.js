@@ -34,6 +34,7 @@ var NavItemController = function () {
 
         this.nodeTitle = this.showPosition ? this.ProjectService.idToPosition[this.nodeId] + ': ' + this.item.title : this.item.title;
         this.currentNode = this.StudentDataService.currentNode;
+        this.previousNode = null;
         this.isCurrentNode = this.currentNode.id === this.nodeId;
         this.setNewNode = false;
 
@@ -86,31 +87,47 @@ var NavItemController = function () {
 
             this.$scope.$watch(function () {
                 // watch the position of this node
-                return this.ProjectService.idToPosition[this.nodeId];
-            }.bind(this), function (value) {
+                return _this.ProjectService.idToPosition[_this.nodeId];
+            }, function (value) {
                 // the position has changed for this node so we will update it in the UI
-                this.nodeTitle = this.showPosition ? this.ProjectService.idToPosition[this.nodeId] + ': ' + this.item.title : this.item.title;
-            }.bind(this));
+                _this.nodeTitle = _this.showPosition ? _this.ProjectService.idToPosition[_this.nodeId] + ': ' + _this.item.title : _this.item.title;
+            });
         }
 
         this.$scope.$watch(function () {
-            return this.StudentDataService.currentNode;
-        }.bind(this), function (newNode) {
-            this.currentNode = newNode;
-            if (this.StudentDataService.previousStep) {
-                this.$scope.$parent.isPrevStep = this.nodeId === this.StudentDataService.previousStep.id;
+            return _this.StudentDataService.currentNode;
+        }, function (newNode, oldNode) {
+            _this.currentNode = newNode;
+            _this.previousNode = oldNode;
+            _this.isCurrentNode = _this.nodeId === newNode.id;
+
+            if (_this.ProjectService.isApplicationNode(newNode.id)) {
+                return;
             }
-            this.isCurrentNode = this.currentNode.id === this.nodeId;
-            if (this.isCurrentNode || this.ProjectService.isApplicationNode(newNode.id) || newNode.id === this.ProjectService.rootNode.id) {
-                this.setExpanded();
+
+            var isPrev = false;
+            if (oldNode) {
+                isPrev = _this.nodeId === oldNode.id;
+                _this.$scope.$parent.isPrevStep = isPrev;
+
+                if (isPrev && !_this.isGroup) {
+                    _this.zoomToElement();
+                }
             }
-        }.bind(this));
+
+            if (_this.isGroup) {
+                if (!oldNode || _this.ProjectService.isGroupNode(oldNode.id)) {
+                    _this.setNewNode = true;
+                }
+                _this.setExpanded();
+            }
+        });
 
         this.$scope.$watch(function () {
             return _this.expanded;
         }, function (value) {
             _this.$scope.$parent.itemExpanded = value;
-            if (value) {
+            if (value && _this.setNewNode) {
                 _this.zoomToElement();
             }
         });
@@ -186,10 +203,7 @@ var NavItemController = function () {
         key: 'setExpanded',
         value: function setExpanded() {
             this.$scope.expanded = this.isCurrentNode || this.$scope.isGroup && this.ProjectService.isNodeDescendentOfGroup(this.$scope.currentNode, this.$scope.item);
-            if (this.$scope.expanded && this.isCurrentNode) {
-                this.expanded = true;
-                this.zoomToElement();
-            }
+            this.expanded = this.$scope.expanded;
         }
     }, {
         key: 'zoomToElement',
@@ -198,16 +212,12 @@ var NavItemController = function () {
 
             setTimeout(function () {
                 // smooth scroll to expanded group's page location
-                var location = _this2.isGroup ? _this2.$element[0].offsetTop - 32 : 0;
-                var delay = _this2.isGroup ? 350 : 0;
+                var top = _this2.$element[0].offsetTop;
+                var location = _this2.isGroup ? top - 32 : top - 80;
+                var delay = 350;
                 $('#content').animate({
                     scrollTop: location
-                }, delay, 'linear', function () {
-                    if (_this2.setNewNode) {
-                        _this2.setNewNode = false;
-                        _this2.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(_this2.nodeId);
-                    }
-                });
+                }, delay, 'linear');
             }, 250);
         }
     }, {
