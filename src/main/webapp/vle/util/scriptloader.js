@@ -422,7 +422,7 @@ var scriptloader = function(){
 	              bootstrapSrc,
 	              'vle/lib/bootstrap/bootstrap-dialog/dist/js/bootstrap-dialog.min.js'],
 	    teacherWebSocket: [jqueryUISrc_interactions,
-	         		       'vle/lib/jquery/js/jquery.ui.touch-punch.min.js',
+	         		       //'vle/lib/jquery/js/jquery.ui.touch-punch.min.js',
 	         		       bootstrapSrc, // TODO: move to vle bootstrap sources when using globally
 	                       //'vle/lib/bootstrap/bootstrap-switch/dist/js/bootstrap-switch.min.js', // TODO: move to vle bootstrap sources when using globally
 	                       'vle/lib/bootstrap/bootbox/bootbox.min.js',  // TODO: move to vle bootstrap sources when using globally
