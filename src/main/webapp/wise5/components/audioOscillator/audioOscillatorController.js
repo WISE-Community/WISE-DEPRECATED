@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var AudioOscillatorController = function () {
-    function AudioOscillatorController($injector, $q, $rootScope, $scope, $timeout, NodeService, AudioOscillatorService, ProjectService, StudentAssetService, StudentDataService) {
+    function AudioOscillatorController($injector, $q, $rootScope, $scope, $timeout, ConfigService, NodeService, AudioOscillatorService, ProjectService, StudentAssetService, StudentDataService) {
         var _this2 = this;
 
         _classCallCheck(this, AudioOscillatorController);
@@ -19,6 +19,7 @@ var AudioOscillatorController = function () {
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$timeout = $timeout;
+        this.ConfigService = ConfigService;
         this.NodeService = NodeService;
         this.AudioOscillatorService = AudioOscillatorService;
         this.ProjectService = ProjectService;
@@ -312,7 +313,8 @@ var AudioOscillatorController = function () {
 
                 var isAutoSave = componentState.isAutoSave;
                 var isSubmit = componentState.isSubmit;
-                var clientSaveTime = componentState.clientSaveTime;
+                var serverSaveTime = componentState.serverSaveTime;
+                var clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
 
                 // set save message
                 if (isSubmit) {
@@ -421,18 +423,20 @@ var AudioOscillatorController = function () {
             var latestState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
 
             if (latestState) {
+                var serverSaveTime = latestState.serverSaveTime;
+                var clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
                 if (latestState.isSubmit) {
                     // latest state is a submission, so set isSubmitDirty to false and notify node
                     this.isSubmitDirty = false;
                     this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: false });
                     // set save message
-                    this.setSaveMessage('Last submitted', latestState.clientSaveTime);
+                    this.setSaveMessage('Last submitted', clientSaveTime);
                 } else {
                     // latest state is not a submission, so set isSubmitDirty to true and notify node
                     this.isSubmitDirty = true;
                     this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: true });
                     // set save message
-                    this.setSaveMessage('Last saved', latestState.clientSaveTime);
+                    this.setSaveMessage('Last saved', clientSaveTime);
                 }
             }
         }
@@ -795,7 +799,7 @@ var AudioOscillatorController = function () {
             this.oscillator.start();
 
             /*
-             * reset the goodDraw boolean value to false because we need 
+             * reset the goodDraw boolean value to false because we need
              * to find a good draw again
              */
             this.goodDraw = false;
@@ -892,11 +896,11 @@ var AudioOscillatorController = function () {
                 if (foundFirstRisingZeroCrossing) {
                     /*
                      * we have found the first rising zero crossing so we can start
-                     * drawing the points. 
+                     * drawing the points.
                      */
 
                     /*
-                     * get the height of the point. we need to perform this 
+                     * get the height of the point. we need to perform this
                      * subtraction of 128 to flip the value since canvas
                      * positioning is relative to the upper left corner being 0,0.
                      */
@@ -1229,7 +1233,7 @@ var AudioOscillatorController = function () {
             if (this.authoringComponentContent.showPreviousWorkNodeId == null || this.authoringComponentContent.showPreviousWorkNodeId == '') {
 
                 /*
-                 * the show previous work node id is null so we will also set the 
+                 * the show previous work node id is null so we will also set the
                  * show previous component id to null
                  */
                 this.authoringComponentContent.showPreviousWorkComponentId = '';
@@ -1339,7 +1343,7 @@ var AudioOscillatorController = function () {
 
 ;
 
-AudioOscillatorController.$inject = ['$injector', '$q', '$rootScope', '$scope', '$timeout', 'NodeService', 'AudioOscillatorService', 'ProjectService', 'StudentAssetService', 'StudentDataService'];
+AudioOscillatorController.$inject = ['$injector', '$q', '$rootScope', '$scope', '$timeout', 'ConfigService', 'NodeService', 'AudioOscillatorService', 'ProjectService', 'StudentAssetService', 'StudentDataService'];
 
 exports.default = AudioOscillatorController;
 //# sourceMappingURL=audioOscillatorController.js.map

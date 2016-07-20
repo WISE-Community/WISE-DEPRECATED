@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var MatchController = function () {
-    function MatchController($q, $rootScope, $scope, dragulaService, MatchService, NodeService, ProjectService, StudentDataService, UtilService, $mdMedia) {
+    function MatchController($q, $rootScope, $scope, dragulaService, ConfigService, MatchService, NodeService, ProjectService, StudentDataService, UtilService, $mdMedia) {
         var _this = this;
 
         _classCallCheck(this, MatchController);
@@ -18,6 +18,7 @@ var MatchController = function () {
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.dragulaService = dragulaService;
+        this.ConfigService = ConfigService;
         this.MatchService = MatchService;
         this.NodeService = NodeService;
         this.ProjectService = ProjectService;
@@ -312,7 +313,8 @@ var MatchController = function () {
 
                 var isAutoSave = componentState.isAutoSave;
                 var isSubmit = componentState.isSubmit;
-                var clientSaveTime = componentState.clientSaveTime;
+                var serverSaveTime = componentState.serverSaveTime;
+                var clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
 
                 // set save message
                 if (isSubmit) {
@@ -491,18 +493,22 @@ var MatchController = function () {
             if (onload && numStates) {
                 var latestState = componentStates[numStates - 1];
 
-                if (latestState.isSubmit) {
-                    // latest state is a submission, so set isSubmitDirty to false and notify node
-                    this.isSubmitDirty = false;
-                    this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: false });
-                    // set save message
-                    this.setSaveMessage('Last submitted', latestState.clientSaveTime);
-                } else {
-                    // latest state is not a submission, so set isSubmitDirty to true and notify node
-                    this.isSubmitDirty = true;
-                    this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: true });
-                    // set save message
-                    this.setSaveMessage('Last saved', latestState.clientSaveTime);
+                if (latestState) {
+                    var serverSaveTime = latestState.serverSaveTime;
+                    var clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
+                    if (latestState.isSubmit) {
+                        // latest state is a submission, so set isSubmitDirty to false and notify node
+                        this.isSubmitDirty = false;
+                        this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: false });
+                        // set save message
+                        this.setSaveMessage('Last submitted', clientSaveTime);
+                    } else {
+                        // latest state is not a submission, so set isSubmitDirty to true and notify node
+                        this.isSubmitDirty = true;
+                        this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: true });
+                        // set save message
+                        this.setSaveMessage('Last saved', clientSaveTime);
+                    }
                 }
             }
         }
@@ -1789,7 +1795,7 @@ var MatchController = function () {
     return MatchController;
 }();
 
-MatchController.$inject = ['$q', '$rootScope', '$scope', 'dragulaService', 'MatchService', 'NodeService', 'ProjectService', 'StudentDataService', 'UtilService', '$mdMedia'];
+MatchController.$inject = ['$q', '$rootScope', '$scope', 'dragulaService', 'ConfigService', 'MatchService', 'NodeService', 'ProjectService', 'StudentDataService', 'UtilService', '$mdMedia'];
 
 exports.default = MatchController;
 //# sourceMappingURL=matchController.js.map

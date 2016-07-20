@@ -6,6 +6,7 @@ class EmbeddedController {
                 $scope,
                 $sce,
                 $window,
+                ConfigService,
                 NodeService,
                 NotebookService,
                 EmbeddedService,
@@ -17,6 +18,7 @@ class EmbeddedController {
         this.$scope = $scope;
         this.$sce = $sce;
         this.$window = $window;
+        this.ConfigService = ConfigService;
         this.NodeService = NodeService;
         this.NotebookService = NotebookService;
         this.EmbeddedService = EmbeddedService;
@@ -53,7 +55,7 @@ class EmbeddedController {
 
         // whether the student work has changed since last submit
         this.isSubmitDirty = false;
-        
+
         // whether the snip model button is shown or not
         this.isSnipModelButtonVisible = true;
 
@@ -112,6 +114,8 @@ class EmbeddedController {
                 // application has finished loading, so send latest component state to application
                 this.sendLatestWorkToApplication();
                 this.processLatestSubmit();
+
+                // activate iframe-resizer on the embedded app's iframe
                 $('#' + this.embeddedApplicationIFrameId).iFrameResize({scrolling: true});
             } else if (messageEventData.messageType === "componentDirty") {
                 let isDirty = messageEventData.isDirty;
@@ -243,7 +247,8 @@ class EmbeddedController {
 
                     let isAutoSave = currentState.isAutoSave;
                     let isSubmit = currentState.isSubmit;
-                    let clientSaveTime = componentState.clientSaveTime;
+                    let serverSaveTime = componentState.serverSaveTime;
+                    let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
 
                     // set save message
                     if (isSubmit) {
@@ -299,7 +304,7 @@ class EmbeddedController {
                     action = 'save';
                 }
             }
-            
+
             if (getState) {
                 // create a component state populated with the student data
                 this.$scope.embeddedController.createComponentState(action).then((componentState) => {
@@ -313,7 +318,7 @@ class EmbeddedController {
                  */
                 deferred.resolve();
             }
-            
+
             return deferred.promise;
         }.bind(this);
 
@@ -336,18 +341,20 @@ class EmbeddedController {
         let latestState = this.$scope.componentState;
 
         if (latestState) {
+            let serverSaveTime = latestState.serverSaveTime;
+            let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
             if (latestState.isSubmit) {
                 // latest state is a submission, so set isSubmitDirty to false and notify node
                 this.isSubmitDirty = false;
                 this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: false});
                 // set save message
-                this.setSaveMessage('Last submitted', latestState.clientSaveTime);
+                this.setSaveMessage('Last submitted', clientSaveTime);
             } else {
                 // latest state is not a submission, so set isSubmitDirty to true and notify node
                 this.isSubmitDirty = true;
                 this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: true});
                 // set save message
-                this.setSaveMessage('Last saved', latestState.clientSaveTime);
+                this.setSaveMessage('Last saved', clientSaveTime);
             }
         }
     };
@@ -390,7 +397,7 @@ class EmbeddedController {
 
         // get this part id
         var componentId = this.getComponentId();
-        
+
         /*
          * the student work in this component has changed so we will tell
          * the parent node that the student data will need to be saved.
@@ -398,7 +405,7 @@ class EmbeddedController {
          * data has changed.
          */
         var action = 'change';
-        
+
         // create a component state populated with the student data
         this.createComponentState(action).then((componentState) => {
             this.$scope.$emit('componentStudentDataChanged', {componentId: componentId, componentState: componentState});
@@ -429,13 +436,13 @@ class EmbeddedController {
         componentState.studentData = this.studentData;
 
         var deferred = this.$q.defer();
-        
+
         /*
          * perform any additional processing that is required before returning
          * the component state
          */
         this.createComponentStateAdditionalProcessing(deferred, componentState, action);
-        
+
         return deferred.promise;
     };
 
@@ -541,40 +548,40 @@ class EmbeddedController {
     updateAdvancedAuthoringView() {
         this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
     };
-    
+
     /**
      * Snip the model by converting it to an image
      * @param $event the click event
      */
     snipModel($event) {
-        
+
         // get the iframe
         var iframe = $('#componentApp_' + this.componentId);
-        
+
         if (iframe != null && iframe.length > 0) {
-            
+
             //get the html from the iframe
             var modelElement = iframe.contents().find('html');
-            
+
             if (modelElement != null && modelElement.length > 0) {
                 modelElement = modelElement[0];
-                
+
                 // convert the model element to a canvas element
                 html2canvas(modelElement).then((canvas) => {
-                    
+
                     // get the canvas as a base64 string
                     var img_b64 = canvas.toDataURL('image/png');
-                    
+
                     // get the image object
                     var imageObject = this.UtilService.getImageObjectFromBase64String(img_b64);
-                    
+
                     // create a notebook item with the image populated into it
                     this.NotebookService.addNewItem($event, imageObject);
                 });
             }
         }
     }
-    
+
     /**
      * Check whether we need to show the snip model button
      * @return whether to show the snip model button
@@ -605,6 +612,7 @@ EmbeddedController.$inject = [
     '$scope',
     '$sce',
     '$window',
+    'ConfigService',
     'NodeService',
     'NotebookService',
     'EmbeddedService',

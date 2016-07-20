@@ -4,7 +4,6 @@ class VLEController {
     constructor($scope,
                 $rootScope,
                 $mdDialog,
-                $mdMedia,
                 $state,
                 $translate,
                 ConfigService,
@@ -19,7 +18,6 @@ class VLEController {
         this.$scope = $scope;
         this.$rootScope = $rootScope;
         this.$mdDialog = $mdDialog;
-        this.$mdMedia = $mdMedia;
         this.$state = $state;
         this.$translate = $translate;
         this.ConfigService = ConfigService;
@@ -451,7 +449,6 @@ VLEController.$inject = [
     '$scope',
     '$rootScope',
     '$mdDialog',
-    '$mdMedia',
     '$state',
     '$translate',
     'ConfigService',

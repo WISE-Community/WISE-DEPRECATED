@@ -9,6 +9,7 @@ class GraphController {
     constructor($q,
                 $rootScope,
                 $scope,
+                ConfigService,
                 GraphService,
                 NodeService,
                 ProjectService,
@@ -19,6 +20,7 @@ class GraphController {
         this.$q = $q;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
+        this.ConfigService = ConfigService;
         this.GraphService = GraphService;
         this.NodeService = NodeService;
         this.ProjectService = ProjectService;
@@ -98,10 +100,10 @@ class GraphController {
 
         // the id of the chart element
         this.chartId = 'chart1';
-        
+
         // the width of the graph
         this.width = 800;
-        
+
         // the height of the graph
         this.height = 500;
 
@@ -321,7 +323,7 @@ class GraphController {
                  */
                 deferred.resolve();
             }
-            
+
             return deferred.promise;
         }.bind(this);
 
@@ -357,7 +359,8 @@ class GraphController {
 
                 let isAutoSave = componentState.isAutoSave;
                 let isSubmit = componentState.isSubmit;
-                let clientSaveTime = componentState.clientSaveTime;
+                let serverSaveTime = componentState.serverSaveTime;
+                let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
 
                 // set save message
                 if (isSubmit) {
@@ -420,12 +423,12 @@ class GraphController {
             xAxis = this.componentContent.xAxis;
             this.xAxis = xAxis;
         }
-        
+
         if (this.xAxis != null) {
             // do not display decimals on the x axis
             this.xAxis.allowDecimals = false;
         }
-        
+
         if (this.yAxis == null && this.componentContent.yAxis != null) {
             /*
              * the student does not have y axis data so we will use the
@@ -434,17 +437,17 @@ class GraphController {
             yAxis = this.componentContent.yAxis;
             this.yAxis = yAxis;
         }
-        
+
         if (this.yAxis != null) {
             // do not display decimals on the y axis
             this.yAxis.allowDecimals = false;
         }
-        
+
         if (this.componentContent.width != null) {
             // set the width of the graph
             this.width = this.componentContent.width;
         }
-        
+
         if (this.componentContent.height != null) {
             // set the height of the graph
             this.height = this.componentContent.height;
@@ -914,20 +917,20 @@ class GraphController {
     getSeries() {
         return this.series;
     };
-    
+
     /**
      * Set the series at the given index
      * @param series the series object
      * @param index the index the series will be placed in
      */
     setSeriesByIndex(series, index) {
-        
+
         if (series != null && index != null) {
             // set the series in the array of series
             this.series[index] = series;
         }
     }
-    
+
     /**
      * Get the series at the given index
      * @param index the index to get the series at
@@ -1022,51 +1025,51 @@ class GraphController {
          */
         this.studentDataChanged();
     };
-    
+
     /**
      * Reset the active series
      */
     resetSeries() {
-        
+
         var confirmMessage = '';
-        
+
         // get the series name
         var seriesName = this.activeSeries.name;
-        
+
         if (seriesName == null || seriesName == '') {
             confirmMessage = 'Are you sure you want to reset the series?';
         } else {
             confirmMessage = 'Are you sure you want to reset the "' + seriesName + '" series?';
         }
-        
+
         // ask the student if they are sure they want to reset the series
         var answer = confirm(confirmMessage);
-        
+
         if (answer) {
             // the student answer yes to reset the series
-            
+
             // get the index of the active series
             var activeSeriesIndex  = this.getSeriesIndex(this.activeSeries);
-            
+
             if (activeSeriesIndex != null) {
-                
+
                 // get the original series from the component content
                 var originalSeries = this.componentContent.series[activeSeriesIndex];
-                
+
                 if (originalSeries != null) {
-                    
+
                     // make a copy of the series
                     originalSeries = this.UtilService.makeCopyOfJSONObject(originalSeries);
-                    
+
                     // set the series
                     this.setSeriesByIndex(originalSeries, activeSeriesIndex);
-                    
+
                     /*
                      * set the active series index so that the the active series
                      * is the same as before.
                      */
                     this.setActiveSeriesByIndex(activeSeriesIndex);
-                    
+
                     /*
                      * notify the controller that the student data has changed
                      * so that the graph will be redrawn
@@ -1107,18 +1110,20 @@ class GraphController {
         let latestState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
 
         if (latestState) {
+            let serverSaveTime = latestState.serverSaveTime;
+            let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
             if (latestState.isSubmit) {
                 // latest state is a submission, so set isSubmitDirty to false and notify node
                 this.isSubmitDirty = false;
                 this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: false});
                 // set save message
-                this.setSaveMessage('Last submitted', latestState.clientSaveTime);
+                this.setSaveMessage('Last submitted', clientSaveTime);
             } else {
                 // latest state is not a submission, so set isSubmitDirty to true and notify node
                 this.isSubmitDirty = true;
                 this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: true});
                 // set save message
-                this.setSaveMessage('Last saved', latestState.clientSaveTime);
+                this.setSaveMessage('Last saved', clientSaveTime);
             }
         }
     };
@@ -1180,7 +1185,7 @@ class GraphController {
 
         // get this component id
         var componentId = this.getComponentId();
-        
+
         /*
          * the student work in this component has changed so we will tell
          * the parent node that the student data will need to be saved.
@@ -1188,7 +1193,7 @@ class GraphController {
          * data has changed.
          */
         var action = 'change';
-        
+
         // create a component state populated with the student data
         this.createComponentState(action).then((componentState) => {
 
@@ -1197,7 +1202,7 @@ class GraphController {
                 // digest is not in progress so we can force a redraw
                 this.$scope.$apply();
             }
-            
+
             this.$scope.$emit('componentStudentDataChanged', {componentId: componentId, componentState: componentState});
         });
     };
@@ -1254,13 +1259,13 @@ class GraphController {
         }
 
         var deferred = this.$q.defer();
-        
+
         /*
          * perform any additional processing that is required before returning
          * the component state
          */
         this.createComponentStateAdditionalProcessing(deferred, componentState, action);
-        
+
         return deferred.promise;
     };
 
@@ -1369,18 +1374,18 @@ class GraphController {
 
         return show;
     };
-    
+
     /**
      * Check whether we need to show the reset series button
      * @return whether to show the reset series button
      */
     showResetSeriesButton() {
         var show = false;
-        
+
         if (this.isResetSeriesButtonVisible) {
             show = true;
         }
-        
+
         return show;
     }
 
@@ -1411,7 +1416,7 @@ class GraphController {
 
         if (this.originalComponentContent != null) {
             // this is a show previous work component
-            
+
             if (this.originalComponentContent.showPreviousWorkPrompt) {
                 // show the prompt from the previous work component
                 prompt = this.componentContent.prompt;
@@ -1887,36 +1892,36 @@ class GraphController {
     updateAdvancedAuthoringView() {
         this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
     };
-    
+
     /**
      * The show previous work node id has changed
      */
     authoringShowPreviousWorkNodeIdChanged() {
-        
+
         if (this.authoringComponentContent.showPreviousWorkNodeId == null ||
             this.authoringComponentContent.showPreviousWorkNodeId == '') {
 
             /*
-             * the show previous work node id is null so we will also set the 
+             * the show previous work node id is null so we will also set the
              * show previous component id to null
              */
             this.authoringComponentContent.showPreviousWorkComponentId = '';
         }
-        
+
         // the authoring component content has changed so we will save the project
         this.authoringViewComponentChanged();
     }
-    
+
     /**
      * Get all the step node ids in the project
      * @returns all the step node ids
      */
     getStepNodeIds() {
         var stepNodeIds = this.ProjectService.getNodeIds();
-        
+
         return stepNodeIds;
     }
-    
+
     /**
      * Get the step number and title
      * @param nodeId get the step number and title for this node
@@ -1924,10 +1929,10 @@ class GraphController {
      */
     getNodePositionAndTitleByNodeId(nodeId) {
         var nodePositionAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
-        
+
         return nodePositionAndTitle;
     }
-    
+
     /**
      * Get the components in a step
      * @param nodeId get the components in the step
@@ -1935,10 +1940,10 @@ class GraphController {
      */
     getComponentsByNodeId(nodeId) {
         var components = this.ProjectService.getComponentsByNodeId(nodeId);
-        
+
         return components;
     }
-    
+
     /**
      * Check if a node is a step node
      * @param nodeId the node id to check
@@ -1946,7 +1951,7 @@ class GraphController {
      */
     isApplicationNode(nodeId) {
         var result = this.ProjectService.isApplicationNode(nodeId);
-        
+
         return result;
     }
 
@@ -2083,6 +2088,7 @@ GraphController.$inject = [
     '$q',
     '$rootScope',
     '$scope',
+    'ConfigService',
     'GraphService',
     'NodeService',
     'ProjectService',

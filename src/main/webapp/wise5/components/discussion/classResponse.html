@@ -4,7 +4,7 @@
             <div class="md-avatar discussion-post__avatar"><md-icon class="md-48" style="color: {{getAvatarColorForWorkgroupId(response.workgroupId)}};"> account_circle </md-icon></div>
             <div flex>
                 <div class="discussion-post__user">{{ response.userNames }}</div>
-                <div class="md-body-1 discussion-post__date"><span class="component__actions__more"><md-tooltip md-direction="right">{{ response.clientSaveTime | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip>{{ response.clientSaveTime | amCalendar }}</span></div>
+                <div class="md-body-1 discussion-post__date"><span class="component__actions__more"><md-tooltip md-direction="right">{{ adjustClientSaveTime(response.serverSaveTime) | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip>{{ adjustClientSaveTime(response.serverSaveTime) | amCalendar }}</span></div>
             </div>
         </div>
         <div class="md-content discussion-post__content md-body-1" ng-bind-html="response.studentData.response"></div>
@@ -25,7 +25,7 @@
                               ng-show="$last || expanded">
                     <div class="md-avatar discussion-post__avatar--reply discussion-post__avatar"><md-icon class="md-36" style="color: {{getAvatarColorForWorkgroupId(reply.workgroupId)}}"> account_circle </md-icon></div>
                     <div class="md-list-item-text discusstion-reply__details">
-                        <h3 class="discussion-post__user discussion-post__user--reply" flex>{{ reply.userNames }} <span class="md-caption discussion-post__date discussion-post__date--reply component__actions__more"><md-tooltip md-direction="right">{{ reply.clientSaveTime | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="reply.clientSaveTime"></span></span></h3>
+                        <h3 class="discussion-post__user discussion-post__user--reply" flex>{{ reply.userNames }} <span class="md-caption discussion-post__date discussion-post__date--reply component__actions__more"><md-tooltip md-direction="right">{{ adjustClientSaveTime(reply.serverSaveTime) | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="{{adjustClientSaveTime(reply.serverSaveTime)}}"></span></span></h3>
                         <div class="discusstion-reply__content md-body-1" ng-bind-html="reply.studentData.response"></div>
                     </div>
                 </md-list-item>
@@ -48,7 +48,7 @@
                 </md-button>-->
                 <a class="md-button md-primary discussion-new-reply__submit"
                            ng-disabled="!response.replyText"
-                           ng-click="submitButtonClicked(response)">Post</a>
+                           ng-click="submitButtonClicked(response)">Reply</a>
             </div>
         </div>
     </div>

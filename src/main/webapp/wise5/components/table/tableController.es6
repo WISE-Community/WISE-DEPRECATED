@@ -6,6 +6,7 @@ class TableController {
                 $q,
                 $rootScope,
                 $scope,
+                ConfigService,
                 NodeService,
                 NotebookService,
                 ProjectService,
@@ -18,6 +19,7 @@ class TableController {
         this.$q = $q;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
+        this.ConfigService = ConfigService;
         this.NodeService = NodeService;
         this.NotebookService = NotebookService;
         this.ProjectService = ProjectService;
@@ -82,7 +84,7 @@ class TableController {
 
         // whether the snip table button is shown or not
         this.isSnipTableButtonVisible = true;
-        
+
         // get the current node and node id
         var currentNode = this.StudentDataService.getCurrentNode();
         if (currentNode != null) {
@@ -105,7 +107,7 @@ class TableController {
 
         // the mode to load the component in e.g. 'student', 'grading', 'onlyShowWork'
         this.mode = this.$scope.mode;
-        
+
         this.latestConnectedComponentState = null;
         this.latestConnectedComponentParams = null;
 
@@ -208,7 +210,7 @@ class TableController {
                 if (connectedComponentParams.updateOn === 'change') {
                     // get the component type that has changed
                     var componentType = connectedComponent.type;
-                    
+
                     /*
                      * make a copy of the component state so we don't accidentally
                      * change any values in the referenced object
@@ -219,7 +221,7 @@ class TableController {
 
                         // set the table data
                         this.$scope.tableController.setStudentWork(componentState);
-                        
+
                         // the table has changed
                         this.$scope.tableController.isDirty = true;
                     } else if (componentType === 'Graph') {
@@ -279,7 +281,7 @@ class TableController {
                  */
                 deferred.resolve();
             }
-            
+
             return deferred.promise;
         }.bind(this);
 
@@ -315,7 +317,8 @@ class TableController {
 
                 let isAutoSave = componentState.isAutoSave;
                 let isSubmit = componentState.isSubmit;
-                let clientSaveTime = componentState.clientSaveTime;
+                let serverSaveTime = componentState.serverSaveTime;
+                let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
 
                 // set save message
                 if (isSubmit) {
@@ -332,26 +335,26 @@ class TableController {
                     this.setSaveMessage('Saved', clientSaveTime);
                 }
             }
-            
+
             // check if the component state is from a connected component
             if (this.ProjectService.isConnectedComponent(this.nodeId, this.componentId, componentState.componentId)) {
-                
+
                 // get the connected component params
                 var connectedComponentParams = this.ProjectService.getConnectedComponentParams(this.componentContent, componentState.componentId);
-                
+
                 if (connectedComponentParams != null) {
-                    
+
                     if (connectedComponentParams.updateOn === 'save' ||
                         (connectedComponentParams.updateOn === 'submit' && componentState.isSubmit)) {
-                            
+
                         var performUpdate = false;
-                        
+
                         /*
                          * make a copy of the component state so we don't accidentally
                          * change any values in the referenced object
                          */
                         componentState = this.UtilService.makeCopyOfJSONObject(componentState);
-                        
+
                         /*
                          * make sure the student hasn't entered any values into the
                          * table so that we don't overwrite any of their work.
@@ -369,7 +372,7 @@ class TableController {
                              */
                             /*
                             var answer = confirm('Do you want to update the connected table?');
-                            
+
                             if (answer) {
                                 // the student answered yes
                                 performUpdate = true;
@@ -377,16 +380,16 @@ class TableController {
                             */
                             performUpdate = true;
                         }
-                        
+
                         if (performUpdate) {
                             // set the table data
                             this.$scope.tableController.setStudentWork(componentState);
-                            
+
                             // the table has changed
                             this.$scope.tableController.isDirty = true;
                             this.$scope.tableController.isSubmitDirty = true;
                         }
-                        
+
                         /*
                          * remember the component state and connected component params
                          * in case we need to use them again later
@@ -409,12 +412,12 @@ class TableController {
 
         this.$scope.getNumber = function(num) {
             var array = new Array();
-            
+
             // make sure num is a valid number
             if (num != null && !isNaN(num)) {
                 array = new Array(parseInt(num));
             }
-            
+
             return array;
         }
     }
@@ -458,7 +461,7 @@ class TableController {
      * Reset the table data to its initial state from the component content
      */
     resetTable() {
-        
+
         // get the original table from the step content
         this.tableData = this.getCopyOfTableData(this.componentContent.tableData);
 
@@ -500,18 +503,20 @@ class TableController {
         let latestState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
 
         if (latestState) {
+            let serverSaveTime = latestState.serverSaveTime;
+            let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
             if (latestState.isSubmit) {
                 // latest state is a submission, so set isSubmitDirty to false and notify node
                 this.isSubmitDirty = false;
                 this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: false});
                 // set save message
-                this.setSaveMessage('Last submitted', latestState.clientSaveTime);
+                this.setSaveMessage('Last submitted', clientSaveTime);
             } else {
                 // latest state is not a submission, so set isSubmitDirty to true and notify node
                 this.isSubmitDirty = true;
                 this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: true});
                 // set save message
-                this.setSaveMessage('Last saved', latestState.clientSaveTime);
+                this.setSaveMessage('Last saved', clientSaveTime);
             }
         }
     };
@@ -570,7 +575,7 @@ class TableController {
          * data has changed.
          */
         var action = 'change';
-        
+
         // create a component state populated with the student data
         this.createComponentState(action).then((componentState) => {
             this.$scope.$emit('componentStudentDataChanged', {componentId: componentId, componentState: componentState});
@@ -608,15 +613,15 @@ class TableController {
             // set the student data into the component state
             componentState.studentData = studentData;
         }
-        
+
         var deferred = this.$q.defer();
-        
+
         /*
          * perform any additional processing that is required before returning
          * the component state
          */
         this.createComponentStateAdditionalProcessing(deferred, componentState, action);
-        
+
         return deferred.promise;
     };
 
@@ -729,7 +734,7 @@ class TableController {
 
         if (this.originalComponentContent != null) {
             // this is a show previous work component
-            
+
             if (this.originalComponentContent.showPreviousWorkPrompt) {
                 // show the prompt from the previous work component
                 prompt = this.componentContent.prompt;
@@ -782,16 +787,16 @@ class TableController {
                         /*
                         // create a component state with no table data
                         var defaultComponentState = this.createComponentState();
-                        
+
                         if (defaultComponentState != null && defaultComponentState.studentData != null) {
                             // set the authored component content table data into the component state
                             defaultComponentState.studentData.tableData = this.getCopyOfTableData(this.componentContent.tableData);
                         }
-                        
+
                         // copy the cell text values into the default component state
                         var mergedComponentState = this.copyTableDataCellText(populatedComponentState, defaultComponentState);
                         */
-                        
+
                         // populate the component state into this component
                         this.setStudentWork(populatedComponentState);
                     }
@@ -945,7 +950,7 @@ class TableController {
             }
         }
     };
-    
+
     /**
      * Get the value of a cell in the table
      * @param x the x coordinate
@@ -955,14 +960,14 @@ class TableController {
      * @returns the cell value (text or a number)
      */
     getTableDataCellValue(x, y, table) {
-        
+
         var cellValue = null;
-        
+
         if (table == null) {
             // get the table data rows
             table = this.getTableDataRows();
         }
-        
+
         if (table != null) {
 
             // get the row we want
@@ -980,7 +985,7 @@ class TableController {
                 }
             }
         }
-        
+
         return cellValue;
     }
 
@@ -1273,17 +1278,17 @@ class TableController {
             this.authoringViewComponentChanged();
         }
     }
-    
+
     /**
      * Get all the step node ids in the project
      * @returns all the step node ids
      */
     getStepNodeIds() {
         var stepNodeIds = this.ProjectService.getNodeIds();
-        
+
         return stepNodeIds;
     }
-    
+
     /**
      * Get the step number and title
      * @param nodeId get the step number and title for this node
@@ -1291,10 +1296,10 @@ class TableController {
      */
     getNodePositionAndTitleByNodeId(nodeId) {
         var nodePositionAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
-        
+
         return nodePositionAndTitle;
     }
-    
+
     /**
      * Get the components in a step
      * @param nodeId get the components in the step
@@ -1302,10 +1307,10 @@ class TableController {
      */
     getComponentsByNodeId(nodeId) {
         var components = this.ProjectService.getComponentsByNodeId(nodeId);
-        
+
         return components;
     }
-    
+
     /**
      * Check if a node is a step node
      * @param nodeId the node id to check
@@ -1313,7 +1318,7 @@ class TableController {
      */
     isApplicationNode(nodeId) {
         var result = this.ProjectService.isApplicationNode(nodeId);
-        
+
         return result;
     }
 
@@ -1326,7 +1331,7 @@ class TableController {
         this.saveMessage.text = message;
         this.saveMessage.time = time;
     };
-    
+
     /**
      * Get the number of rows in the table
      * @returns the number of rows in the table
@@ -1334,7 +1339,7 @@ class TableController {
     getNumRows() {
         return this.componentContent.numRows;
     }
-    
+
     /**
      * Get the number of columns in the table
      * @returns the number of columns in the table
@@ -1342,42 +1347,42 @@ class TableController {
     getNumColumns() {
         return this.componentContent.numColumns;
     }
-    
+
     /**
-     * Check if the table is empty. The table is empty if all the 
+     * Check if the table is empty. The table is empty if all the
      * cells are empty string.
      * @returns whether the table is empty
      */
     isTableEmpty() {
         var result = true;
-        
+
         var numRows = this.getNumRows();
         var numColumns = this.getNumColumns();
-        
+
         // loop through all the rows
         for (var r = 0; r < numRows; r++) {
-            
+
             // loop through all the cells in the row
             for (var c = 0; c < numColumns; c++) {
-                
+
                 // get a cell value
                 var cellValue = this.getTableDataCellValue(c, r);
-                
+
                 if (cellValue != null && cellValue != '') {
                     // the cell is not empty so the table is not empty
                     result = false;
                     break;
                 }
             }
-            
+
             if (result == false) {
                 break;
             }
         }
-        
+
         return result;
     }
-    
+
     /**
      * Check if the table is set to the default values. The table
      * is set to the default values if all the cells match the
@@ -1386,77 +1391,77 @@ class TableController {
      */
     isTableReset() {
         var result = true;
-        
+
         var numRows = this.getNumRows();
         var numColumns = this.getNumColumns();
-        
+
         // get the default table
         var defaultTable = this.componentContent.tableData;
-        
+
         // loop through all the rows
         for (var r = 0; r < numRows; r++) {
-            
+
             // loop through all the cells in the row
             for (var c = 0; c < numColumns; c++) {
-                
+
                 // get the cell value from the student table
                 var cellValue = this.getTableDataCellValue(c, r);
-                
+
                 // get the cell value from the default table
                 var defaultCellValue = this.getTableDataCellValue(c, r, defaultTable);
-                
+
                 if (cellValue != defaultCellValue) {
                     // the cell values do not match so the table is not set to the default values
                     result = false;
                     break;
                 }
             }
-            
+
             if (result == false) {
                 break;
             }
         }
-        
+
         return result;
     }
-    
+
     /**
      * Snip the table by converting it to an image
      * @param $event the click event
      */
     snipTable($event) {
-        
+
         // get the table element. this will obtain an array.
         var tableElement = angular.element('#' + this.componentId + ' table');
-        
+
         if (tableElement != null && tableElement.length > 0) {
-            
+
             // hide all the iframes otherwise html2canvas may cut off the table
             this.UtilService.hideIFrames();
-            
+
             // scroll to the component so html2canvas doesn't cut off the table
             this.$location.hash(this.componentId);
             this.$anchorScroll();
-            
+
             // get the table element
             tableElement = tableElement[0];
-            
+
             try {
                 // convert the table element to a canvas element
                 html2canvas(tableElement).then((canvas) => {
-                    
+
                     // get the canvas as a base64 string
                     var img_b64 = canvas.toDataURL('image/png');
-                    
+
                     // get the image object
                     var imageObject = this.UtilService.getImageObjectFromBase64String(img_b64);
-                    
+
                     // create a notebook item with the image populated into it
                     this.NotebookService.addNewItem($event, imageObject);
-                    
+
                     // we are done capturing the table so we will show the iframes again
                     this.UtilService.showIFrames();
-                    
+
                     /*
                      * scroll to the component in case the view has shifted after
                      * showing the iframe
@@ -1464,13 +1469,13 @@ class TableController {
                     this.$location.hash(this.componentId);
                     this.$anchorScroll();
                 }).catch(() => {
-                    
+
                     /*
                      * an error occurred while trying to capture the table so we
                      * will show the iframes again
                      */
                     this.UtilService.showIFrames();
-                    
+
                     /*
                      * scroll to the component in case the view has shifted after
                      * showing the iframe
@@ -1479,13 +1484,13 @@ class TableController {
                     this.$anchorScroll();
                 });
             } catch(e) {
-                
+
                 /*
                  * an error occurred while trying to capture the table so we
                  * will show the iframes again
                  */
                 this.UtilService.showIFrames();
-                
+
                 /*
                  * scroll to the component in case the view has shifted after
                  * showing the iframe
@@ -1493,10 +1498,10 @@ class TableController {
                 this.$location.hash(this.componentId);
                 this.$anchorScroll();
             }
-            
+
         }
     }
-    
+
     /**
      * Check whether we need to show the snip table button
      * @return whether to show the snip table button
@@ -1504,33 +1509,33 @@ class TableController {
     showSnipTableButton() {
         return this.isSnipTableButtonVisible;
     }
-    
+
     /**
      * Copy the table data cell text from one component state to another
      * @param fromComponentState get the cell text values from this component state
      * @param toComponentState set the cell text values in this component state
      */
     copyTableDataCellText(fromComponentState, toComponentState) {
-        
+
         if (fromComponentState != null && toComponentState != null) {
             var fromStudentData = fromComponentState.studentData;
             var toStudentData = toComponentState.studentData;
-            
+
             if (fromStudentData != null && toStudentData != null) {
                 var fromTableData = fromStudentData.tableData;
                 var toTableData = toStudentData.tableData;
-                
+
                 if (fromTableData != null & toTableData != null) {
-                    
+
                     // loop through all the rows
                     for (var y = 0; y < this.getNumRows(); y++) {
-                        
+
                         // loop through all the columns
                         for (var x = 0; x < this.getNumColumns(); x++) {
-                            
+
                             // get the cell value
                             var cellValue = this.getTableDataCellValue(x, y, fromTableData);
-                            
+
                             // set the cell value
                             this.setTableDataCellValue(x, y, toTableData, cellValue);
                         }
@@ -1538,7 +1543,7 @@ class TableController {
                 }
             }
         }
-        
+
         return toComponentState;
     }
 
@@ -1565,6 +1570,7 @@ TableController.$inject = [
     '$q',
     '$rootScope',
     '$scope',
+    'ConfigService',
     'NodeService',
     'NotebookService',
     'ProjectService',

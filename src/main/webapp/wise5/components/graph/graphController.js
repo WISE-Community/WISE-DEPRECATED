@@ -17,7 +17,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 //import draggablePoints from 'highcharts/draggable-points';
 
 var GraphController = function () {
-    function GraphController($q, $rootScope, $scope, GraphService, NodeService, ProjectService, StudentAssetService, StudentDataService, UtilService) {
+    function GraphController($q, $rootScope, $scope, ConfigService, GraphService, NodeService, ProjectService, StudentAssetService, StudentDataService, UtilService) {
         var _this = this;
 
         _classCallCheck(this, GraphController);
@@ -25,6 +25,7 @@ var GraphController = function () {
         this.$q = $q;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
+        this.ConfigService = ConfigService;
         this.GraphService = GraphService;
         this.NodeService = NodeService;
         this.ProjectService = ProjectService;
@@ -362,7 +363,8 @@ var GraphController = function () {
 
                 var isAutoSave = componentState.isAutoSave;
                 var isSubmit = componentState.isSubmit;
-                var clientSaveTime = componentState.clientSaveTime;
+                var serverSaveTime = componentState.serverSaveTime;
+                var clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
 
                 // set save message
                 if (isSubmit) {
@@ -1173,18 +1175,20 @@ var GraphController = function () {
             var latestState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
 
             if (latestState) {
+                var serverSaveTime = latestState.serverSaveTime;
+                var clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
                 if (latestState.isSubmit) {
                     // latest state is a submission, so set isSubmitDirty to false and notify node
                     this.isSubmitDirty = false;
                     this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: false });
                     // set save message
-                    this.setSaveMessage('Last submitted', latestState.clientSaveTime);
+                    this.setSaveMessage('Last submitted', clientSaveTime);
                 } else {
                     // latest state is not a submission, so set isSubmitDirty to true and notify node
                     this.isSubmitDirty = true;
                     this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: true });
                     // set save message
-                    this.setSaveMessage('Last saved', latestState.clientSaveTime);
+                    this.setSaveMessage('Last saved', clientSaveTime);
                 }
             }
         }
@@ -2045,7 +2049,7 @@ var GraphController = function () {
             if (this.authoringComponentContent.showPreviousWorkNodeId == null || this.authoringComponentContent.showPreviousWorkNodeId == '') {
 
                 /*
-                 * the show previous work node id is null so we will also set the 
+                 * the show previous work node id is null so we will also set the
                  * show previous component id to null
                  */
                 this.authoringComponentContent.showPreviousWorkComponentId = '';
@@ -2265,7 +2269,7 @@ var GraphController = function () {
     return GraphController;
 }();
 
-GraphController.$inject = ['$q', '$rootScope', '$scope', 'GraphService', 'NodeService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'UtilService'];
+GraphController.$inject = ['$q', '$rootScope', '$scope', 'ConfigService', 'GraphService', 'NodeService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'UtilService'];
 
 exports.default = GraphController;
 //# sourceMappingURL=graphController.js.map

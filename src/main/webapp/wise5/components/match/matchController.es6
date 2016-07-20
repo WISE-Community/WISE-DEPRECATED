@@ -4,6 +4,7 @@ class MatchController {
                 $rootScope,
                 $scope,
                 dragulaService,
+                ConfigService,
                 MatchService,
                 NodeService,
                 ProjectService,
@@ -15,6 +16,7 @@ class MatchController {
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.dragulaService = dragulaService;
+        this.ConfigService = ConfigService;
         this.MatchService = MatchService;
         this.NodeService = NodeService;
         this.ProjectService = ProjectService;
@@ -311,7 +313,8 @@ class MatchController {
 
                 let isAutoSave = componentState.isAutoSave;
                 let isSubmit = componentState.isSubmit;
-                let clientSaveTime = componentState.clientSaveTime;
+                let serverSaveTime = componentState.serverSaveTime;
+                let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
 
                 // set save message
                 if (isSubmit) {
@@ -469,18 +472,22 @@ class MatchController {
         if (onload && numStates) {
             let latestState = componentStates[numStates-1];
 
-            if (latestState.isSubmit) {
-                // latest state is a submission, so set isSubmitDirty to false and notify node
-                this.isSubmitDirty = false;
-                this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: false});
-                // set save message
-                this.setSaveMessage('Last submitted', latestState.clientSaveTime);
-            } else {
-                // latest state is not a submission, so set isSubmitDirty to true and notify node
-                this.isSubmitDirty = true;
-                this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: true});
-                // set save message
-                this.setSaveMessage('Last saved', latestState.clientSaveTime);
+            if (latestState) {
+                let serverSaveTime = latestState.serverSaveTime;
+                let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
+                if (latestState.isSubmit) {
+                    // latest state is a submission, so set isSubmitDirty to false and notify node
+                    this.isSubmitDirty = false;
+                    this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: false});
+                    // set save message
+                    this.setSaveMessage('Last submitted', clientSaveTime);
+                } else {
+                    // latest state is not a submission, so set isSubmitDirty to true and notify node
+                    this.isSubmitDirty = true;
+                    this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: true});
+                    // set save message
+                    this.setSaveMessage('Last saved', clientSaveTime);
+                }
             }
         }
     };
@@ -1638,6 +1645,7 @@ MatchController.$inject = [
     '$rootScope',
     '$scope',
     'dragulaService',
+    'ConfigService',
     'MatchService',
     'NodeService',
     'ProjectService',

@@ -1,6 +1,7 @@
 class MultipleChoiceController {
     constructor($q,
                 $scope,
+                ConfigService,
                 MultipleChoiceService,
                 NodeService,
                 ProjectService,
@@ -9,6 +10,7 @@ class MultipleChoiceController {
 
         this.$q = $q;
         this.$scope = $scope;
+        this.ConfigService = ConfigService;
         this.MultipleChoiceService = MultipleChoiceService;
         this.NodeService = NodeService;
         this.ProjectService = ProjectService;
@@ -69,7 +71,7 @@ class MultipleChoiceController {
 
         // whether the submit button is shown or not
         this.isSubmitButtonVisible = false;
-        
+
         // whether to show the feedback or not
         this.showFeedback = true;
 
@@ -139,7 +141,7 @@ class MultipleChoiceController {
                     this.componentContent = this.ProjectService.injectAssetPaths(newValue);
                 }.bind(this), true);
             }
-            
+
             this.showFeedback = this.componentContent.showFeedback;
 
             // get the component type
@@ -202,7 +204,7 @@ class MultipleChoiceController {
                     action = 'save';
                 }
             }
-            
+
             if (getState) {
                 // create a component state populated with the student data
                 this.$scope.multipleChoiceController.createComponentState(action).then((componentState) => {
@@ -216,7 +218,7 @@ class MultipleChoiceController {
                  */
                 deferred.resolve();
             }
-            
+
             return deferred.promise;
         }.bind(this);
 
@@ -259,7 +261,8 @@ class MultipleChoiceController {
 
                 let isAutoSave = componentState.isAutoSave;
                 let isSubmit = componentState.isSubmit;
-                let clientSaveTime = componentState.clientSaveTime;
+                let serverSaveTime = componentState.serverSaveTime;
+                let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
 
                 // set save message
                 if (isSubmit) {
@@ -338,18 +341,20 @@ class MultipleChoiceController {
         let latestState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
 
         if (latestState) {
+            let serverSaveTime = latestState.serverSaveTime;
+            let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
             if (latestState.isSubmit) {
                 // latest state is a submission, so set isSubmitDirty to false and notify node
                 this.isSubmitDirty = false;
                 this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: false});
                 // set save message
-                this.setSaveMessage('Last submitted', latestState.clientSaveTime);
+                this.setSaveMessage('Last submitted', clientSaveTime);
             } else {
                 // latest state is not a submission, so set isSubmitDirty to true and notify node
                 this.isSubmitDirty = true;
                 this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: true});
                 // set save message
-                this.setSaveMessage('Last saved', latestState.clientSaveTime);
+                this.setSaveMessage('Last saved', clientSaveTime);
             }
         }
     };
@@ -646,7 +651,7 @@ class MultipleChoiceController {
 
             isCorrect = isCorrectSoFar;
         }
-        
+
         if (this.hasCorrectChoices()) {
             this.isCorrect = isCorrect;
         }
@@ -714,7 +719,7 @@ class MultipleChoiceController {
          * data has changed.
          */
         var action = 'change';
-        
+
         // create a component state populated with the student data
         this.createComponentState(action).then((componentState) => {
             this.$scope.$emit('componentStudentDataChanged', {componentId: componentId, componentState: componentState});
@@ -738,7 +743,7 @@ class MultipleChoiceController {
 
             // set the student choices into the component state
             studentData.studentChoices = this.getStudentChoiceObjects();
-            
+
             if (action === 'submit' || action === 'save') {
                 /*
                  * the student has clicked submit or save so we will
@@ -746,7 +751,7 @@ class MultipleChoiceController {
                  * the isCorrect value will be stored in this.isCorrect.
                  */
                 this.checkAnswer();
-                
+
                 if (this.isCorrect != null) {
                     // set the isCorrect value into the student data
                     studentData.isCorrect = this.isCorrect;
@@ -771,7 +776,7 @@ class MultipleChoiceController {
                     this.isSubmit = false;
                 }
             }
-            
+
             if (this.numberOfAttempts != null) {
                 // set the number of attempts the student has made
                 studentData.numberOfAttempts = this.numberOfAttempts;
@@ -781,13 +786,13 @@ class MultipleChoiceController {
         }
 
         var deferred = this.$q.defer();
-        
+
         /*
          * perform any additional processing that is required before returning
          * the component state
          */
         this.createComponentStateAdditionalProcessing(deferred, componentState, action);
-        
+
         return deferred.promise;
     };
 
@@ -932,7 +937,7 @@ class MultipleChoiceController {
 
         return result;
     };
-    
+
     /**
      * Check if there is any feedback
      * @returns whether there is any feedback
@@ -1137,7 +1142,7 @@ class MultipleChoiceController {
 
         if (this.originalComponentContent != null) {
             // this is a show previous work component
-            
+
             if (this.originalComponentContent.showPreviousWorkPrompt) {
                 // show the prompt from the previous work component
                 prompt = this.componentContent.prompt;
@@ -1207,10 +1212,10 @@ class MultipleChoiceController {
      * The author has changed the feedback so we will enable the submit button
      */
     authoringViewFeedbackChanged() {
-        
+
         // enable the submit button
         this.authoringComponentContent.showSubmitButton = true;
-        
+
         // save the component
         this.authoringViewComponentChanged();
     }
@@ -1268,17 +1273,17 @@ class MultipleChoiceController {
     updateAdvancedAuthoringView() {
         this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
     };
-    
+
     /**
      * Get all the step node ids in the project
      * @returns all the step node ids
      */
     getStepNodeIds() {
         var stepNodeIds = this.ProjectService.getNodeIds();
-        
+
         return stepNodeIds;
     }
-    
+
     /**
      * Get the step number and title
      * @param nodeId get the step number and title for this node
@@ -1286,10 +1291,10 @@ class MultipleChoiceController {
      */
     getNodePositionAndTitleByNodeId(nodeId) {
         var nodePositionAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
-        
+
         return nodePositionAndTitle;
     }
-    
+
     /**
      * Get the components in a step
      * @param nodeId get the components in the step
@@ -1297,10 +1302,10 @@ class MultipleChoiceController {
      */
     getComponentsByNodeId(nodeId) {
         var components = this.ProjectService.getComponentsByNodeId(nodeId);
-        
+
         return components;
     }
-    
+
     /**
      * Check if a node is a step node
      * @param nodeId the node id to check
@@ -1308,7 +1313,7 @@ class MultipleChoiceController {
      */
     isApplicationNode(nodeId) {
         var result = this.ProjectService.isApplicationNode(nodeId);
-        
+
         return result;
     }
 
@@ -1419,6 +1424,7 @@ class MultipleChoiceController {
 MultipleChoiceController.$inject = [
     '$q',
     '$scope',
+    'ConfigService',
     'MultipleChoiceService',
     'NodeService',
     'ProjectService',
