@@ -368,8 +368,8 @@ var DiscussionController = function () {
                         var userNamesArray = _this2.ConfigService.getUserNamesByWorkgroupId(fromWorkgroupId);
                         var userNames = userNamesArray.map(function (obj) {
                             return obj.name;
-                        }).join(' and ');
-                        var notificationMessage = userNames + " posted a message to a discussion you were in!";
+                        }).join(', ');
+                        var notificationMessage = userNames + " replied to a discussion you were in!";
 
                         var workgroupsNotifiedSoFar = []; // keep track of workgroups we've already notified, in case a workgroup posts twice on a thread we only want to notify once.
                         // check if we have the component state that was replied to

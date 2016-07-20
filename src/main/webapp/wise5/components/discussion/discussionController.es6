@@ -276,7 +276,7 @@ class DiscussionController {
 
                     // set isDirty to false since this student work is about to be saved
                     this.$scope.discussionController.isDirty = false;
-                    
+
                     deferred.resolve(componentState);
                 });
             } else {
@@ -287,7 +287,7 @@ class DiscussionController {
                  */
                 deferred.resolve();
             }
-            
+
             return deferred.promise;
         }.bind(this);
 
@@ -367,8 +367,8 @@ class DiscussionController {
                         let userNamesArray = this.ConfigService.getUserNamesByWorkgroupId(fromWorkgroupId);
                         let userNames = userNamesArray.map( (obj) => {
                             return obj.name;
-                        }).join(' and ');
-                        let notificationMessage = userNames + " posted a message to a discussion you were in!";
+                        }).join(', ');
+                        let notificationMessage = userNames + " replied to a discussion you were in!";
 
                         let workgroupsNotifiedSoFar = [];  // keep track of workgroups we've already notified, in case a workgroup posts twice on a thread we only want to notify once.
                         // check if we have the component state that was replied to
@@ -573,7 +573,7 @@ class DiscussionController {
          * data has changed.
          */
         var action = 'change';
-        
+
         // create a component state populated with the student data
         this.createComponentState(action).then((componentState) => {
             this.$scope.$emit('componentStudentDataChanged', {componentId: componentId, componentState: componentState});
@@ -624,13 +624,13 @@ class DiscussionController {
         }
 
         var deferred = this.$q.defer();
-        
+
         /*
          * perform any additional processing that is required before returning
          * the component state
          */
         this.createComponentStateAdditionalProcessing(deferred, componentState, action);
-        
+
         return deferred.promise;
     };
 
@@ -810,7 +810,7 @@ class DiscussionController {
 
         if (this.originalComponentContent != null) {
             // this is a show previous work component
-            
+
             if (this.originalComponentContent.showPreviousWorkPrompt) {
                 // show the prompt from the previous work component
                 prompt = this.componentContent.prompt;
