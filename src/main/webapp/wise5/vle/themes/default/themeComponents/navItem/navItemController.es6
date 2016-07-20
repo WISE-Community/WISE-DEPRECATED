@@ -33,7 +33,6 @@ class NavItemController {
         this.currentNode = this.StudentDataService.currentNode;
         this.previousNode = null;
         this.isCurrentNode = (this.currentNode.id === this.nodeId);
-        this.setNewNode = false;
 
         // whether this node is a planning node
         this.isPlanning = this.ProjectService.isPlanning(this.nodeId);
@@ -105,10 +104,12 @@ class NavItemController {
                     return;
                 }
 
-                let isPrev = false;
                 if (oldNode) {
-                    isPrev = (this.nodeId === oldNode.id);
-                    this.$scope.$parent.isPrevStep = isPrev;
+                    let isPrev = (this.nodeId === oldNode.id);
+
+                    if (this.StudentDataService.previousStep) {
+                        this.$scope.$parent.isPrevStep = (this.nodeId === this.StudentDataService.previousStep.id);
+                    }
 
                     if (isPrev && !this.isGroup) {
                         this.zoomToElement();
@@ -116,10 +117,19 @@ class NavItemController {
                 }
 
                 if (this.isGroup) {
-                    if (!oldNode || this.ProjectService.isGroupNode(oldNode.id)) {
-                        this.setNewNode = true;
+                    let prevNodeisGroup = (!oldNode || this.ProjectService.isGroupNode(oldNode.id));
+                    if (this.isCurrentNode) {
+                        this.expanded = true;
+                        if (prevNodeisGroup) {
+                            this.zoomToElement();
+                        }
+                    } else if (!prevNodeisGroup) {
+                        if (this.ProjectService.isNodeDescendentOfGroup(oldNode, this.item)) {
+                            this.expanded = true;
+                        } else {
+                            this.expanded = false;
+                        }
                     }
-                    this.setExpanded();
                 }
             }
         );
@@ -128,9 +138,6 @@ class NavItemController {
             () => { return this.expanded; },
             (value) => {
                 this.$scope.$parent.itemExpanded = value;
-                if (value && this.setNewNode) {
-                    this.zoomToElement();
-                }
             }
         );
 
@@ -194,17 +201,10 @@ class NavItemController {
                 return this.down && drake.dragging;
             }
         });
-
-        this.setExpanded();
     }
 
     getTemplateUrl(){
         return this.ProjectService.getThemePath() + '/themeComponents/navItem/navItem.html';
-    };
-
-    setExpanded() {
-        this.$scope.expanded = (this.isCurrentNode || (this.$scope.isGroup && this.ProjectService.isNodeDescendentOfGroup(this.$scope.currentNode, this.$scope.item)));
-        this.expanded = this.$scope.expanded;
     };
 
     zoomToElement() {
@@ -221,10 +221,14 @@ class NavItemController {
 
     itemClicked(event) {
         if (this.isGroup) {
-            if (!this.expanded) {
-                this.setNewNode = true;
-            }
             this.expanded = !this.expanded;
+            if (this.expanded) {
+                if (this.isCurrentNode) {
+                    this.zoomToElement();
+                } else {
+                    this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(this.nodeId);
+                }
+            }
         } else {
             if (this.StudentDataService.planningMode) {
                 // Don't allow students to enter planning steps while in planning mode
