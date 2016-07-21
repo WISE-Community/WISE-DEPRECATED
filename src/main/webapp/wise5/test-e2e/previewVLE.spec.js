@@ -9,26 +9,6 @@ describe('WISE5 Student VLE Preview', function () {
         });
     };
 
-    /**
-     * @name waitForUrlToChangeTo
-     * @description Wait until the URL changes to match a provided regex
-     * @param {RegExp} urlRegex wait until the URL changes to match this regex
-     * @returns {!webdriver.promise.Promise} Promise
-     */
-    function waitForUrlToChangeTo(urlRegex) {
-        var currentUrl;
-
-        return browser.getCurrentUrl().then(function storeCurrentUrl(url) {
-            currentUrl = url;
-        }).then(function waitForUrlToChangeTo() {
-            return browser.wait(function waitForUrlToChangeTo() {
-                return browser.getCurrentUrl().then(function compareCurrentUrl(url) {
-                    return urlRegex.test(url);
-                });
-            });
-        });
-    };
-
     browser.get('http://localhost:8080/wise/project/demo#/vle/node1');
     var previousButton = element(by.xpath('//button[@aria-label="Previous Item"]'));
     var nextButton = element(by.xpath('//button[@aria-label="Next Item"]'));
@@ -80,7 +60,7 @@ describe('WISE5 Student VLE Preview', function () {
         });
     });
 
-    it('should display the group view and allow user to collapse/expand views', function () {
+    it('should display the group view and allow user to collapse/expand group navitems', function () {
         // Click on the close button and expect to go to the group view
         closeButton.click();
         browser.waitForAngular(); // wait for Angular to load
@@ -121,6 +101,10 @@ describe('WISE5 Student VLE Preview', function () {
                 // step 2.1 should be completed because it's an HTML step and we visited it
                 expect(stepNavItems[0].getText()).toBe('chrome_reader_mode\n2.1: Newton Scooter Concepts check_circle');
                 expect(stepNavItems[0].element(by.cssContainingText('.material-icons', 'check_circle')).isPresent()).toBeTruthy();
+
+                // step 2.4 node6 (the previous step we were on) should be highlighted because we came from it
+                expect(stepNavItems[3].getText()).toBe('assignment\n2.4: What is potential energy?');
+                expect(hasClass(stepNavItems[3], 'prev')).toBe(true); // should have 'prev' class
 
                 expect(stepNavItems[2].getText()).toBe('gamepad\n2.3: Explore the concepts');
                 stepNavItems[2].element(by.tagName('button')).click(); // Go to step 2.3.

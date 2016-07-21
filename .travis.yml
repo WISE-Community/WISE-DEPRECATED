@@ -7,7 +7,7 @@ before_install:
 before_script:
 - npm install -g jspm
 - ./wise.sh setup &
-- sleep 240
+- sleep 180
 script:
 - npm test
 - npm run test-e2e
