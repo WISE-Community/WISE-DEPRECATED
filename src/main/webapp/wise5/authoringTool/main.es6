@@ -2,10 +2,10 @@
 
 import $ from 'jquery';
 import angular from 'angular';
+import angularDragula from 'angular-dragula';
 import angularFileUpload from 'ng-file-upload';
 import angularHighcharts from 'highcharts-ng';
 import angularUIRouter from 'angular-ui-router';
-import angularUITree from 'angular-ui-tree';
 import angularMaterial from 'angular-material';
 import angularMoment from 'angular-moment';
 import angularSanitize from 'angular-sanitize';
@@ -64,6 +64,7 @@ import TeacherDataService from '../services/teacherDataService';
 import UtilService from '../services/utilService';
 
 let mainModule = angular.module('authoring', [
+    angularDragula(angular),
     'angularMoment',
     'angular-toArrayFilter',
     'directives',
@@ -76,8 +77,7 @@ let mainModule = angular.module('authoring', [
     'ngSanitize',
     'ngWebSocket',
     'pascalprecht.translate',
-    'ui.router',
-    'ui.tree'
+    'ui.router'
 ])
     .service(AnnotationService.name, AnnotationService)
     .service(AudioOscillatorService.name, AudioOscillatorService)
