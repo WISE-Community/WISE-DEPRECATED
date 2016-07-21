@@ -158,10 +158,10 @@ describe('WISE5 Student VLE Preview', () => {
             expect(workgroupNames[0].getText()).toBe('Preview Team');
         });
 
-        var exitButton = $("#exitButton");
+        var exitButton = element(by.xpath('//button[@aria-label="Exit"]'));
         expect(exitButton.isPresent()).toBeTruthy();
         expect(exitButton.getText()).toEqual("EXIT");
-        var logOutButton = $("#logOutButton");
+        var logOutButton = element(by.xpath('//button[@aria-label="Sign Out"]'));
         expect(logOutButton.isPresent()).toBeTruthy();
         expect(logOutButton.getText()).toEqual("SIGN OUT");
 
