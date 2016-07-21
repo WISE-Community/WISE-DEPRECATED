@@ -1565,6 +1565,21 @@ var StudentDataService = function () {
             return componentStatesByNodeIdAndComponentId;
         }
     }, {
+        key: 'getEvents',
+
+
+        /**
+         * Get all events
+         * @returns all events for the student
+         */
+        value: function getEvents() {
+            if (this.studentData != null && this.studentData.events != null) {
+                return this.studentData.events;
+            } else {
+                return [];
+            }
+        }
+    }, {
         key: 'getEventsByNodeId',
 
 

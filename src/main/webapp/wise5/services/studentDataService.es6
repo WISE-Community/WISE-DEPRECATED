@@ -1476,6 +1476,18 @@ class StudentDataService {
     };
 
     /**
+     * Get all events
+     * @returns all events for the student
+     */
+    getEvents() {
+        if (this.studentData != null && this.studentData.events != null) {
+            return this.studentData.events;
+        } else {
+            return [];
+        }
+    };
+
+    /**
      * Get the events for a node id
      * @param nodeId the node id
      * @returns the events for the node id
