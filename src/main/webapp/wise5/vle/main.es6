@@ -12,7 +12,6 @@ import angularToArrayFilter from 'lib/angular-toArrayFilter/toArrayFilter';
 import angularTranslate from 'angular-translate';
 import angularTranslateLoaderPartial from 'angular-translate-loader-partial';
 import angularUIRouter from 'angular-ui-router';
-import angularUITree from 'angular-ui-tree';
 import angularUIScrollpoint from 'angular-ui-scrollpoint';
 import angularWebSocket from 'angular-websocket';
 import AnnotationService from '../services/annotationService';
@@ -90,8 +89,7 @@ let mainModule = angular.module('vle', [
     'studentAsset',
     'summernote',
     'ui.router',
-    'ui.scrollpoint',
-    'ui.tree'
+    'ui.scrollpoint'
     ])
 
     .service(AnnotationService.name, AnnotationService)
