@@ -6,7 +6,7 @@ before_install:
 - nvm use 5.0
 before_script:
 - npm install -g jspm
-- ./wise.sh setup &
+- ./wise.sh run &
 - sleep 180
 script:
 - npm test
