@@ -261,7 +261,7 @@ let mainModule = angular.module('vle', [
                 urlTemplate: 'wise5/i18n/{part}/i18n_{lang}.json'
             });
             $translateProvider.fallbackLanguage(['en']);
-            $translateProvider.registerAvailableLanguageKeys(['en','ja','ko','pt','zh_CN'], {
+            $translateProvider.registerAvailableLanguageKeys(['en','ja','ko','pt','tr','zh_CN'], {
                 'en_US': 'en',
                 'en_UK': 'en'
             });

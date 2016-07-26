@@ -370,7 +370,7 @@ var mainModule = _angular2.default.module('vle', [(0, _angularDragula2.default)(
         urlTemplate: 'wise5/i18n/{part}/i18n_{lang}.json'
     });
     $translateProvider.fallbackLanguage(['en']);
-    $translateProvider.registerAvailableLanguageKeys(['en', 'ja', 'ko', 'pt', 'zh_CN'], {
+    $translateProvider.registerAvailableLanguageKeys(['en', 'ja', 'ko', 'pt', 'tr', 'zh_CN'], {
         'en_US': 'en',
         'en_UK': 'en'
     });

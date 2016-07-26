@@ -362,7 +362,7 @@ var mainModule = _angular2.default.module('authoring', [(0, _angularDragula2.def
         urlTemplate: 'wise5/i18n/{part}/i18n_{lang}.json'
     });
     $translateProvider.fallbackLanguage(['en']);
-    $translateProvider.registerAvailableLanguageKeys(['en', 'es', 'ja', 'ko', 'pt', 'zh_CN'], {
+    $translateProvider.registerAvailableLanguageKeys(['en', 'es', 'ja', 'ko', 'pt', 'tr', 'zh_CN'], {
         'en_US': 'en',
         'en_UK': 'en'
     });
