@@ -1597,6 +1597,7 @@ LabelController.$inject = [
     '$q',
     '$scope',
     '$timeout',
+    'ConfigService',
     'LabelService',
     'NodeService',
     'NotebookService',

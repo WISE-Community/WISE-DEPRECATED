@@ -1730,7 +1730,7 @@ var LabelController = function () {
     return LabelController;
 }();
 
-LabelController.$inject = ['$injector', '$q', '$scope', '$timeout', 'LabelService', 'NodeService', 'NotebookService', 'OpenResponseService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'UtilService'];
+LabelController.$inject = ['$injector', '$q', '$scope', '$timeout', 'ConfigService', 'LabelService', 'NodeService', 'NotebookService', 'OpenResponseService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'UtilService'];
 
 exports.default = LabelController;
 //# sourceMappingURL=labelController.js.map
