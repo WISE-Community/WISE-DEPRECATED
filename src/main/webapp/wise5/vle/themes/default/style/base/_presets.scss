@@ -33,6 +33,13 @@ p {
     }
 }
 
+// Set classes for each named color in the $colors map
+@each $key, $value in $colors {
+    .#{$key}-bg {
+      background-color: $value;
+    }
+}
+
 // Links
 a {
   color: color('primary');

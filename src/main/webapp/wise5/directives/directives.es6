@@ -98,7 +98,7 @@ class ComponentDirective {
 }
 
 class ClassResponseDirective {
-    constructor(StudentStatusService) {
+    constructor(StudentStatusService, ConfigService) {
         this.restrict = 'E';
         this.scope = {
             response: '=',
@@ -107,10 +107,11 @@ class ClassResponseDirective {
         };
         this.templateUrl = 'wise5/components/discussion/classResponse.html';
         this.StudentStatusService = StudentStatusService;
+        this.ConfigService = ConfigService;
     }
 
-    static directiveFactory(StudentStatusService) {
-        ClassResponseDirective.instance = new ClassResponseDirective(StudentStatusService);
+    static directiveFactory(StudentStatusService, ConfigService) {
+        ClassResponseDirective.instance = new ClassResponseDirective(StudentStatusService, ConfigService);
         return ClassResponseDirective.instance;
     }
 
@@ -150,6 +151,10 @@ class ClassResponseDirective {
                     $clist.animate({scrollTop: $clist.height()}, 250);
                 }, 250);
             }
+        };
+
+        $scope.adjustClientSaveTime = function(time) {
+            return ClassResponseDirective.instance.ConfigService.convertToClientTimestamp(time);
         };
     };
 }
@@ -559,7 +564,7 @@ const PossibleScore = {
 
 let Directives = angular.module('directives', []);
 
-ClassResponseDirective.directiveFactory.$inject = ['StudentStatusService'];
+ClassResponseDirective.directiveFactory.$inject = ['StudentStatusService', 'ConfigService'];
 CompileDirective.directiveFactory.$inject = ['$compile'];
 ComponentDirective.directiveFactory.$inject = ['$injector', '$compile', 'NodeService', 'ProjectService', 'StudentDataService'];
 ConfirmNumberDecrease.directiveFactory.$inject = [];

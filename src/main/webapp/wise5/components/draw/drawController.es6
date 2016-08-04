@@ -7,6 +7,7 @@ class DrawController {
                 $rootScope,
                 $scope,
                 $timeout,
+                ConfigService,
                 DrawService,
                 NodeService,
                 NotebookService,
@@ -20,6 +21,7 @@ class DrawController {
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$timeout = $timeout;
+        this.ConfigService = ConfigService;
         this.DrawService = DrawService;
         this.NodeService = NodeService;
         this.NotebookService = NotebookService;
@@ -55,10 +57,10 @@ class DrawController {
 
         // whether the submit button is shown or not
         this.isSubmitButtonVisible = false;
-        
+
         // whether the reset button is visible or not
         this.isResetButtonVisible = false;
-        
+
         // whether the snip drawing button is shown or not
         this.isSnipDrawingButtonVisible = true;
 
@@ -97,7 +99,7 @@ class DrawController {
 
         this.workgroupId = this.$scope.workgroupId;
         this.teacherWorkgroupId = this.$scope.teacherWorkgroupId;
-        
+
         this.latestConnectedComponentState = null;
         this.latestConnectedComponentParams = null;
 
@@ -247,7 +249,7 @@ class DrawController {
                     // we're in show student work mode, so hide the toolbar and make the drawing non-editable
                     $(".dt-tools").hide();
                 }
-                
+
                 // show or hide the draw tools
                 this.setupTools();
             }));
@@ -291,7 +293,7 @@ class DrawController {
                  */
                 deferred.resolve();
             }
-            
+
             return deferred.promise;
         }.bind(this);
 
@@ -327,7 +329,8 @@ class DrawController {
 
                 let isAutoSave = componentState.isAutoSave;
                 let isSubmit = componentState.isSubmit;
-                let clientSaveTime = componentState.clientSaveTime;
+                let serverSaveTime = componentState.serverSaveTime;
+                let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
 
                 // set save message
                 if (isSubmit) {
@@ -344,28 +347,28 @@ class DrawController {
                     this.setSaveMessage('Saved', clientSaveTime);
                 }
             }
-            
+
             // check if the component state is from a connected component
             if (this.ProjectService.isConnectedComponent(this.nodeId, this.componentId, componentState.componentId)) {
-                
+
                 // get the connected component params
                 var connectedComponentParams = this.ProjectService.getConnectedComponentParams(this.componentContent, componentState.componentId);
-                
+
                 if (connectedComponentParams != null) {
-                    
+
                     if (connectedComponentParams.updateOn === 'save' ||
                         (connectedComponentParams.updateOn === 'submit' && componentState.isSubmit)) {
-                        
+
                         var performUpdate = false;
-                        
+
                         /*
                          * make a copy of the component state so we don't accidentally
                          * change any values in the referenced object
                          */
                         componentState = this.UtilService.makeCopyOfJSONObject(componentState);
-                        
+
                         /*
-                         * check if the the canvas is empty which means the student has 
+                         * check if the the canvas is empty which means the student has
                          * not drawn anything yet
                          */
                         if (this.isCanvasEmpty()) {
@@ -376,28 +379,28 @@ class DrawController {
                              * will ask them if they want to update it
                              */
                             var answer = confirm('Do you want to update the connected drawing?');
-                            
+
                             if (answer) {
                                 // the student answered yes
                                 performUpdate = true;
                             }
                         }
-                        
+
                         if (performUpdate) {
-                            
+
                             if (!connectedComponentParams.includeBackground) {
                                 // remove the background from the draw data
                                 this.DrawService.removeBackgroundFromComponentState(componentState);
                             }
-                            
+
                             // update the draw data
                             this.setDrawData(componentState);
-                            
+
                             // the table has changed
                             this.$scope.drawController.isDirty = true;
                             this.$scope.drawController.isSubmitDirty = true;
                         }
-                        
+
                         /*
                          * remember the component state and connected component params
                          * in case we need to use them again later
@@ -408,7 +411,7 @@ class DrawController {
                 }
             }
         }));
-        
+
         /*
          * Listen for the requestImage event which is fired when something needs
          * an image representation of the student data from a specific
@@ -418,19 +421,19 @@ class DrawController {
             // get the node id and component id from the args
             var nodeId = args.nodeId;
             var componentId = args.componentId;
-            
+
             // check if the image is being requested from this component
             if (this.nodeId === nodeId && this.componentId === componentId) {
-                
+
                 // obtain the image blob
                 var imageObject = this.getImageObject();
-                
+
                 if (imageObject != null) {
                     var args = {};
                     args.nodeId = nodeId;
                     args.componentId = componentId;
                     args.imageObject = imageObject;
-                    
+
                     // fire an event that contains the image object
                     this.$scope.$emit('requestImageCallback', args);
                 }
@@ -452,144 +455,144 @@ class DrawController {
      * Setup the tools that we will make available to the student
      */
     setupTools() {
-        
+
         // get the tools values from the authored content
         var tools = this.componentContent.tools;
-        
+
         if (tools == null) {
             // we will display all the tools
         } else {
             // we will only display the tools the authored specified to show
-            
+
             // the title for the select button
             var selectTitle = "Select tool";
-            
+
             if (tools.select) {
                 $('#' + this.componentId).find('[title="' + selectTitle + '"]').show();
             } else {
                 $('#' + this.componentId).find('[title="' + selectTitle + '"]').hide();
             }
-            
+
             // the title for the line button
             var lineTitle = "Line tool (click and hold to show available line types)";
-            
+
             if (tools.line) {
                 $('#' + this.componentId).find('[title="' + lineTitle + '"]').show();
             } else {
                 $('#' + this.componentId).find('[title="' + lineTitle + '"]').hide();
             }
-            
+
             // the title for the shape button
             var shapeTitle = "Basic shape tool (click and hold to show available shapes)";
-            
+
             if (tools.shape) {
                 $('#' + this.componentId).find('[title="' + shapeTitle + '"]').show();
             } else {
                 $('#' + this.componentId).find('[title="' + shapeTitle + '"]').hide();
             }
-            
+
             // the title for the free hand button
             var freeHandTitle = "Free hand drawing tool";
-            
+
             if (tools.freeHand) {
                 $('#' + this.componentId).find('[title="' + freeHandTitle + '"]').show();
             } else {
                 $('#' + this.componentId).find('[title="' + freeHandTitle + '"]').hide();
             }
-            
+
             // the title for the text button
             var textTitle = "Text tool (click and hold to show available font sizes)";
-            
+
             if (tools.text) {
                 $('#' + this.componentId).find('[title="' + textTitle + '"]').show();
             } else {
                 $('#' + this.componentId).find('[title="' + textTitle + '"]').hide();
             }
-            
+
             // the title for the stamp button
             var stampTitle = "Stamp tool (click and hold to show available categories)";
-            
+
             if (tools.stamp) {
                 $('#' + this.componentId).find('[title="' + stampTitle + '"]').show();
             } else {
                 $('#' + this.componentId).find('[title="' + stampTitle + '"]').hide();
             }
-            
+
             // the title for the clone button
             var cloneTitle = "Clone tool";
-            
+
             if (tools.clone) {
                 $('#' + this.componentId).find('[title="' + cloneTitle + '"]').show();
             } else {
                 $('#' + this.componentId).find('[title="' + cloneTitle + '"]').hide();
             }
-            
+
             // the title for the stroke color button
             var strokeColorTitle = "Stroke color (click and hold to show available colors)";
-            
+
             if (tools.strokeColor) {
                 $('#' + this.componentId).find('[title="' + strokeColorTitle + '"]').show();
             } else {
                 $('#' + this.componentId).find('[title="' + strokeColorTitle + '"]').hide();
             }
-            
+
             // the title for the fill color button
             var fillColorTitle = "Fill color (click and hold to show available colors)";
-            
+
             if (tools.fillColor) {
                 $('#' + this.componentId).find('[title="' + fillColorTitle + '"]').show();
             } else {
                 $('#' + this.componentId).find('[title="' + fillColorTitle + '"]').hide();
             }
-            
+
             // the title for the stroke width button
             var strokeWidthTitle = "Stroke width (click and hold to show available options)";
-            
+
             if (tools.strokeWidth) {
                 $('#' + this.componentId).find('[title="' + strokeWidthTitle + '"]').show();
             } else {
                 $('#' + this.componentId).find('[title="' + strokeWidthTitle + '"]').hide();
             }
-            
+
             // the title for the send back button
             var sendBackTitle = "Send selected objects to back";
-            
+
             if (tools.sendBack) {
                 $('#' + this.componentId).find('[title="' + sendBackTitle + '"]').show();
             } else {
                 $('#' + this.componentId).find('[title="' + sendBackTitle + '"]').hide();
             }
-            
+
             // the title for the send forward button
             var sendForwardTitle = "Send selected objects to front";
-            
+
             if (tools.sendForward) {
                 $('#' + this.componentId).find('[title="' + sendForwardTitle + '"]').show();
             } else {
                 $('#' + this.componentId).find('[title="' + sendForwardTitle + '"]').hide();
             }
-            
-            // the title for the undo button 
+
+            // the title for the undo button
             var undoTitle = "Undo";
-            
+
             if (tools.undo) {
                 $('#' + this.componentId).find('[title="' + undoTitle + '"]').show();
             } else {
                 $('#' + this.componentId).find('[title="' + undoTitle + '"]').hide();
             }
-            
+
             // the title for the redo button
             var redoTitle = "Redo";
-            
+
             if (tools.redo) {
                 $('#' + this.componentId).find('[title="' + redoTitle + '"]').show();
             } else {
                 $('#' + this.componentId).find('[title="' + redoTitle + '"]').hide();
             }
-            
+
             // the title for the delete button
             var deleteTitle = "Delete selected objects";
-            
+
             if (tools.delete) {
                 $('#' + this.componentId).find('[title="' + deleteTitle + '"]').show();
             } else {
@@ -624,18 +627,20 @@ class DrawController {
         let latestState = this.$scope.componentState;
 
         if (latestState) {
+            let serverSaveTime = latestState.serverSaveTime;
+            let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
             if (latestState.isSubmit) {
                 // latest state is a submission, so set isSubmitDirty to false and notify node
                 this.isSubmitDirty = false;
                 this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: false});
                 // set save message
-                this.setSaveMessage('Last submitted', latestState.clientSaveTime);
+                this.setSaveMessage('Last submitted', clientSaveTime);
             } else {
                 // latest state is not a submission, so set isSubmitDirty to true and notify node
                 this.isSubmitDirty = true;
                 this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: true});
                 // set save message
-                this.setSaveMessage('Last saved', latestState.clientSaveTime);
+                this.setSaveMessage('Last saved', clientSaveTime);
             }
         }
     };
@@ -659,23 +664,23 @@ class DrawController {
         // tell the parent node that this component wants to submit
         this.$scope.$emit('componentSubmitTriggered', {nodeId: this.nodeId, componentId: this.componentId});
     };
-    
+
     /**
      * The reset button was clicked
      */
     resetButtonClicked() {
-        
+
         // ask the student if they are sure they want to clear the drawing
         var result = confirm('Are you sure you want to clear your drawing?');
-        
+
         if (result) {
             // clear the drawing
             this.drawingTool.clear();
-            
+
             // check if we need to reload student data from a connected component
             var latestConnectedComponentState = this.latestConnectedComponentState;
             var latestConnectedComponentParams = this.latestConnectedComponentParams;
-            
+
             if (latestConnectedComponentState && latestConnectedComponentParams) {
                 // reload the student data from the connected component
                 this.setDrawData(latestConnectedComponentState, latestConnectedComponentParams);
@@ -709,7 +714,7 @@ class DrawController {
 
         // get this part id
         var componentId = this.getComponentId();
-        
+
         /*
          * the student work in this component has changed so we will tell
          * the parent node that the student data will need to be saved.
@@ -717,7 +722,7 @@ class DrawController {
          * data has changed.
          */
         var action = 'change';
-        
+
         // create a component state populated with the student data
         this.createComponentState(action).then((componentState) => {
             this.$scope.$emit('componentStudentDataChanged', {componentId: componentId, componentState: componentState});
@@ -758,15 +763,15 @@ class DrawController {
             // set the student data into the component state
             componentState.studentData = studentData;
         }
-        
+
         var deferred = this.$q.defer();
-        
+
         /*
          * perform any additional processing that is required before returning
          * the component state
          */
         this.createComponentStateAdditionalProcessing(deferred, componentState, action);
-        
+
         return deferred.promise;
     };
 
@@ -909,7 +914,7 @@ class DrawController {
 
         if (this.originalComponentContent != null) {
             // this is a show previous work component
-            
+
             if (this.originalComponentContent.showPreviousWorkPrompt) {
                 // show the prompt from the previous work component
                 prompt = this.componentContent.prompt;
@@ -1037,36 +1042,36 @@ class DrawController {
     updateAdvancedAuthoringView() {
         this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
     };
-    
+
     /**
      * The show previous work node id has changed
      */
     authoringShowPreviousWorkNodeIdChanged() {
-        
+
         if (this.authoringComponentContent.showPreviousWorkNodeId == null ||
             this.authoringComponentContent.showPreviousWorkNodeId == '') {
 
             /*
-             * the show previous work node id is null so we will also set the 
+             * the show previous work node id is null so we will also set the
              * show previous component id to null
              */
             this.authoringComponentContent.showPreviousWorkComponentId = '';
         }
-        
+
         // the authoring component content has changed so we will save the project
         this.authoringViewComponentChanged();
     }
-    
+
     /**
      * Get all the step node ids in the project
      * @returns all the step node ids
      */
     getStepNodeIds() {
         var stepNodeIds = this.ProjectService.getNodeIds();
-        
+
         return stepNodeIds;
     }
-    
+
     /**
      * Get the step number and title
      * @param nodeId get the step number and title for this node
@@ -1074,10 +1079,10 @@ class DrawController {
      */
     getNodePositionAndTitleByNodeId(nodeId) {
         var nodePositionAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
-        
+
         return nodePositionAndTitle;
     }
-    
+
     /**
      * Get the components in a step
      * @param nodeId get the components in the step
@@ -1085,10 +1090,10 @@ class DrawController {
      */
     getComponentsByNodeId(nodeId) {
         var components = this.ProjectService.getComponentsByNodeId(nodeId);
-        
+
         return components;
     }
-    
+
     /**
      * Check if a node is a step node
      * @param nodeId the node id to check
@@ -1096,29 +1101,29 @@ class DrawController {
      */
     isApplicationNode(nodeId) {
         var result = this.ProjectService.isApplicationNode(nodeId);
-        
+
         return result;
     }
-    
+
     /**
      * Get the image object representation of the student data
      * @returns an image object
      */
     getImageObject() {
         var pngFile = null;
-        
+
         if (this.drawingTool != null && this.drawingTool.canvas != null) {
-            
+
             // get the image as a base64 string
             var img_b64 = this.drawingTool.canvas.toDataURL('image/png');
-            
+
             // get the image object
             pngFile = this.UtilService.getImageObjectFromBase64String(img_b64);
         }
-        
+
         return pngFile;
     }
-    
+
     /**
      * Set the draw data
      * @param componentState the component state
@@ -1141,29 +1146,29 @@ class DrawController {
             }
         }
     }
-    
+
     /**
      * Check if the student has drawn anything
      * @returns whether the canvas is empty
      */
     isCanvasEmpty() {
-        
+
         var result = true;
-        
+
         if (this.drawingTool != null && this.drawingTool.canvas != null) {
-            
+
             // get the objects in the canvas where the student draws
             var objects = this.drawingTool.canvas.getObjects();
-            
+
             if (objects != null && objects.length > 0) {
-                // there are objects in the canvas 
+                // there are objects in the canvas
                 result = false;
             }
         }
-        
+
         return result;
     }
-    
+
     /**
      * Set the message next to the save button
      * @param message the message to display
@@ -1182,32 +1187,32 @@ class DrawController {
     showSnipDrawingButton() {
         return this.isSnipDrawingButtonVisible;
     }
-    
+
     /**
      * Snip the drawing by converting it to an image
      * @param $event the click event
      */
     snipDrawing($event) {
-        
+
         // get the canvas element
         var canvas = angular.element('#' + this.componentId + ' canvas');
-        
+
         if (canvas != null && canvas.length > 0) {
-            
+
             // get the top canvas
             canvas = canvas[0];
-            
+
             // get the canvas as a base64 string
             var img_b64 = canvas.toDataURL('image/png');
-            
+
             // get the image object
             var imageObject = this.UtilService.getImageObjectFromBase64String(img_b64);
-            
+
             // create a notebook item with the image populated into it
             this.NotebookService.addNewItem($event, imageObject);
         }
     }
-    
+
     /**
      * Register the the listener that will listen for the exit event
      * so that we can perform saving before exiting.
@@ -1232,6 +1237,7 @@ DrawController.$inject = [
     '$rootScope',
     '$scope',
     '$timeout',
+    'ConfigService',
     'DrawService',
     'NodeService',
     'NotebookService',

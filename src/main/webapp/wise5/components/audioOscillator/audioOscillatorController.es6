@@ -7,6 +7,7 @@ class AudioOscillatorController {
                 $rootScope,
                 $scope,
                 $timeout,
+                ConfigService,
                 NodeService,
                 AudioOscillatorService,
                 ProjectService,
@@ -18,6 +19,7 @@ class AudioOscillatorController {
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$timeout = $timeout;
+        this.ConfigService = ConfigService;
         this.NodeService = NodeService;
         this.AudioOscillatorService = AudioOscillatorService;
         this.ProjectService = ProjectService;
@@ -75,31 +77,31 @@ class AudioOscillatorController {
 
         // whether the submit button is shown or not
         this.isSubmitButtonVisible = false;
-        
+
         // whether the audio is playing
         this.isPlaying = false;
-        
+
         // default oscillator type to sine
         this.oscillatorType = "sine";
-        
+
         // default frequency is 440
         this.frequency = 440;
-        
+
         // holds the oscillator types the student can choose
         this.oscillatorTypes = [];
-        
+
         // the default dimensions of the oscilloscope
         this.oscilloscopeId = 'oscilloscope';
         this.oscilloscopeWidth = 800;
         this.oscilloscopeHeight = 400;
         this.gridCellSize = 50;
-        
+
         // create the audio context
         this.audioContext = new AudioContext();
-        
+
         // whether we should stop drawing after a good draw
         this.stopAfterGoodDraw = true;
-        
+
         this.showOscillatorTypeChooser = false;
         this.availableOscillatorTypes = [
             'sine',
@@ -163,20 +165,20 @@ class AudioOscillatorController {
                 }.bind(this), function(newValue, oldValue) {
                     // stop the audio if it is playing
                     this.stop();
-                    
+
                     // inject asset paths if necessary
                     this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-                    
+
                     // load the parameters into the component
                     this.setParametersFromComponentContent();
-                    
+
                     // draw the oscilloscope gride after the view has rendered
                     $timeout(() => {this.drawOscilloscopeGrid()}, 0);
                 }.bind(this), true);
             }
-            
+
             this.oscilloscopeId = 'oscilloscope' + this.componentId;
-            
+
             // load the parameters into the component
             this.setParametersFromComponentContent();
 
@@ -220,7 +222,7 @@ class AudioOscillatorController {
                 // register this component with the parent node
                 this.$scope.$parent.registerComponentController(this.$scope, this.componentContent);
             }
-            
+
             /*
              * draw the oscilloscope grid after angular has finished rendering
              * the view. we need to wait until after angular has set the
@@ -275,7 +277,7 @@ class AudioOscillatorController {
                  */
                 deferred.resolve();
             }
-            
+
             return deferred.promise;
         }.bind(this);
 
@@ -311,7 +313,8 @@ class AudioOscillatorController {
 
                 let isAutoSave = componentState.isAutoSave;
                 let isSubmit = componentState.isSubmit;
-                let clientSaveTime = componentState.clientSaveTime;
+                let serverSaveTime = componentState.serverSaveTime;
+                let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
 
                 // set save message
                 if (isSubmit) {
@@ -341,7 +344,7 @@ class AudioOscillatorController {
             this.audioContext.close();
         }.bind(this));
     }
-    
+
     /**
      * Load the parameters from the component content object
      */
@@ -349,27 +352,27 @@ class AudioOscillatorController {
         if (this.componentContent.startingFrequency != null) {
             this.frequency = this.componentContent.startingFrequency;
         }
-        
+
         if (this.componentContent.oscillatorTypes != null) {
             this.oscillatorTypes = this.componentContent.oscillatorTypes;
-            
+
             if (this.componentContent.oscillatorTypes.length > 0) {
                 this.oscillatorType = this.componentContent.oscillatorTypes[0];
             }
         }
-        
+
         if (this.componentContent.oscilloscopeWidth != null) {
             this.oscilloscopeWidth = this.componentContent.oscilloscopeWidth;
         }
-        
+
         if (this.componentContent.oscilloscopeHeight != null) {
             this.oscilloscopeHeight = this.componentContent.oscilloscopeHeight;
         }
-        
+
         if (this.componentContent.gridCellSize != null) {
             this.gridCellSize = this.componentContent.gridCellSize;
         }
-        
+
         if (this.componentContent.stopAfterGoodDraw != null) {
             this.stopAfterGoodDraw = this.componentContent.stopAfterGoodDraw;
         }
@@ -410,18 +413,20 @@ class AudioOscillatorController {
         let latestState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
 
         if (latestState) {
+            let serverSaveTime = latestState.serverSaveTime;
+            let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
             if (latestState.isSubmit) {
                 // latest state is a submission, so set isSubmitDirty to false and notify node
                 this.isSubmitDirty = false;
                 this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: false});
                 // set save message
-                this.setSaveMessage('Last submitted', latestState.clientSaveTime);
+                this.setSaveMessage('Last submitted', clientSaveTime);
             } else {
                 // latest state is not a submission, so set isSubmitDirty to true and notify node
                 this.isSubmitDirty = true;
                 this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: true});
                 // set save message
-                this.setSaveMessage('Last saved', latestState.clientSaveTime);
+                this.setSaveMessage('Last saved', clientSaveTime);
             }
         }
     };
@@ -480,7 +485,7 @@ class AudioOscillatorController {
          * data has changed.
          */
         var action = 'change';
-        
+
         // create a component state populated with the student data
         this.createComponentState(action).then((componentState) => {
             this.$scope.$emit('componentStudentDataChanged', {componentId: componentId, componentState: componentState});
@@ -664,7 +669,7 @@ class AudioOscillatorController {
 
         if (this.originalComponentContent != null) {
             // this is a show previous work component
-            
+
             if (this.originalComponentContent.showPreviousWorkPrompt) {
                 // show the prompt from the previous work component
                 prompt = this.componentContent.prompt;
@@ -691,12 +696,12 @@ class AudioOscillatorController {
 
         return response;
     };
-    
+
     /**
      * The play/stop button was clicked
      */
     playStopClicked() {
-        
+
         if (this.isPlaying) {
             // the audio is playing so we will now stop it
             this.stop();
@@ -705,42 +710,42 @@ class AudioOscillatorController {
             this.play();
         }
     };
-    
+
     /**
      * Start playing the audio and draw the oscilloscope
      */
     play() {
-        
+
         // create the oscillator
         this.oscillator = this.audioContext.createOscillator();
         this.oscillator.type = this.oscillatorType;
         this.oscillator.frequency.value = this.frequency;
-        
+
         this.gain = this.audioContext.createGain();
         this.gain.gain.value = 0.5;
         this.destination = this.audioContext.destination;
         this.analyser = this.audioContext.createAnalyser();
         this.analyser.fftSize = 2048;
-        
+
         // connect the audio components together
         this.oscillator.connect(this.gain);
         this.gain.connect(this.destination);
         this.gain.connect(this.analyser);
-        
+
         this.oscillator.start();
-        
+
         /*
-         * reset the goodDraw boolean value to false because we need 
+         * reset the goodDraw boolean value to false because we need
          * to find a good draw again
          */
         this.goodDraw = false;
-        
+
         // draw the oscilloscope
         this.drawOscilloscope(this.analyser);
-        
+
         this.isPlaying = true;
     }
-    
+
     /**
      * Stop the audio
      */
@@ -748,33 +753,33 @@ class AudioOscillatorController {
         if (this.oscillator != null) {
             this.oscillator.stop();
         }
-        
+
         this.isPlaying = false;
     }
-    
+
     /**
      * Draw the oscilloscope
      */
     drawOscilloscope() {
-        
+
         // get the analyser to obtain the oscillator data
         var analyser = this.analyser;
-        
+
         // get the oscilloscope canvas context
         var ctx = document.getElementById(this.oscilloscopeId).getContext('2d');
-        
+
         var width = ctx.canvas.width;
         var height = ctx.canvas.height;
-        
+
         // get the number of samples, this will be half the fftSize
         var bufferLength = analyser.frequencyBinCount;
-        
+
         // create an array to hold the oscillator data
         var timeData = new Uint8Array(bufferLength);
 
         // populate the oscillator data into the timeData array
         analyser.getByteTimeDomainData(timeData);
-        
+
         // draw the grid
         this.drawOscilloscopeGrid();
 
@@ -787,7 +792,7 @@ class AudioOscillatorController {
         var x = 0;
         var v = 0;
         var y = 0;
-        
+
         /*
          * we want to start drawing the audio signal such that the first point
          * is at 0,0 on the oscilloscope and the signal rises after that.
@@ -800,7 +805,7 @@ class AudioOscillatorController {
         var foundFirstRisingZeroCrossing = false;
         var firstRisingZeroCrossingIndex = null;
         var firstPointDrawn = false;
-        
+
         /*
          * loop through all the points and draw the signal from the first
          * rising zero crossing to the end of the buffer
@@ -808,30 +813,30 @@ class AudioOscillatorController {
         for (var i = 0; i < bufferLength; i++) {
             var currentY = timeData[i] - 128;
             var nextY = timeData[i + 1] - 128;
-            
+
             // check if the current data point is the first rising zero crossing
-            if (!foundFirstRisingZeroCrossing && 
+            if (!foundFirstRisingZeroCrossing &&
                 (currentY < 0 || currentY == 0) && nextY > 0) {
-                    
+
                 // the point is the first rising zero crossing
                 foundFirstRisingZeroCrossing = true;
                 firstRisingZeroCrossingIndex = i;
             }
-            
+
             if (foundFirstRisingZeroCrossing) {
                 /*
                  * we have found the first rising zero crossing so we can start
-                 * drawing the points. 
+                 * drawing the points.
                  */
-                
+
                 /*
-                 * get the height of the point. we need to perform this 
+                 * get the height of the point. we need to perform this
                  * subtraction of 128 to flip the value since canvas
                  * positioning is relative to the upper left corner being 0,0.
                  */
                 v = (128 - (timeData[i] - 128)) / 128.0;
                 y = v * height / 2;
-                
+
                 if (firstPointDrawn) {
                     // this is not the first point to be drawn
                     ctx.lineTo(x, y);
@@ -840,12 +845,12 @@ class AudioOscillatorController {
                     ctx.moveTo(x, y);
                     firstPointDrawn = true;
                 }
-                
+
                 // update the x position we are drawing at
                 x += sliceWidth;
             }
         }
-        
+
         if (firstRisingZeroCrossingIndex > 0 && firstRisingZeroCrossingIndex < 10) {
             /*
              * we want the first rising zero crossing index to be close to zero
@@ -855,10 +860,10 @@ class AudioOscillatorController {
              */
             this.goodDraw = true;
         }
-        
+
         // draw the lines on the canvas
         ctx.stroke();
-        
+
         if (!this.stopAfterGoodDraw || (this.stopAfterGoodDraw && !this.goodDraw)) {
             /*
              * the draw was not good so we will try to draw it again by
@@ -870,96 +875,96 @@ class AudioOscillatorController {
             });
         }
     }
-    
+
     /**
      * Draw the oscilloscope gride
      */
     drawOscilloscopeGrid() {
         // get the oscilliscope canvas context
         var ctx = document.getElementById(this.oscilloscopeId).getContext('2d');
-        
+
         var width = ctx.canvas.width;
         var height = ctx.canvas.height;
         var gridCellSize = this.gridCellSize;
-        
+
         // draw a white background
         ctx.fillStyle = 'white';
         ctx.fillRect(0, 0, width, height);
-        
+
         ctx.lineWidth = 2;
         ctx.strokeStyle = 'lightgrey';
         ctx.beginPath();
-        
+
         var x = 0;
-        
+
         // draw the vertical lines
         while (x < width) {
-            
+
             // draw a vertical line
             ctx.moveTo(x, 0);
             ctx.lineTo(x, height);
-            
+
             // move the x position to the right
             x += gridCellSize;
         }
-        
+
         // start by drawing the line in the middle
         var y = height / 2;
-        
+
         // draw the horizontal lines above and including the middle line
         while (y >= 0) {
-            
+
             // draw a horizontal line
             ctx.moveTo(0, y);
             ctx.lineTo(width, y);
-            
+
             // move the y position up (this is up because of canvas positioning)
             y -= gridCellSize;
         }
-        
+
         y = height / 2;
-        
+
         // draw the horizontal lines below the middle line
         while (y <= height) {
-            
+
             // draw a horizontal line
             ctx.moveTo(0, y);
             ctx.lineTo(width, y);
-            
+
             // move the y position down (this is down because of canvas positioning)
             y += gridCellSize;
         }
-        
+
         // draw the lines on the canvas
         ctx.stroke();
     }
-    
+
     /**
      * The oscillator type changed
      */
     oscillatorTypeChanged() {
-        
+
         // clear the grid
         this.drawOscilloscopeGrid();
-        
+
         if(this.isPlaying) {
             this.restartPlayer();
         }
     }
-    
+
     /**
      * The frequency changed
      */
     frequencyChanged() {
-        
+
         // clear the grid
         this.drawOscilloscopeGrid();
-        
+
         if(this.isPlaying) {
             this.restartPlayer();
         }
     }
-    
+
     /**
      * Restart the player
      */
@@ -974,29 +979,29 @@ class AudioOscillatorController {
     authoringOpenAddOscillatorType() {
         this.showOscillatorTypeChooser = true;
     }
-    
+
     /**
      * The author has clicked the add button to add an oscillator type
      */
     authoringAddOscillatorTypeClicked() {
         var oscillatorTypeToAdd = this.oscillatorTypeToAdd;
-        
+
         if (this.authoringComponentContent.oscillatorTypes.indexOf(oscillatorTypeToAdd) != -1) {
             // the oscillator type is already in the array of oscillator types
-            
+
             alert('Error: You have already added ' + oscillatorTypeToAdd);
         } else {
             // the oscillator type is not already in the array of oscillator types
             this.authoringComponentContent.oscillatorTypes.push(oscillatorTypeToAdd);
-            
+
             // hide the oscillator type chooser
             this.showOscillatorTypeChooser = false;
-            
+
             // perform preview updating and project saving
             this.authoringViewComponentChanged();
         }
     }
-    
+
     /**
      * The author has clicked the cancel button for adding an oscillator type
      */
@@ -1004,16 +1009,16 @@ class AudioOscillatorController {
         // hide the oscillator type chooser
         this.showOscillatorTypeChooser = false;
     }
-    
+
     /**
      * The author has clicked the delete button for removing an oscillator type
      * @param index the index of the oscillator type to remove
      */
     authoringDeleteOscillatorTypeClicked(index) {
-        
+
         // remove the oscillator type at the given index
         this.authoringComponentContent.oscillatorTypes.splice(index, 1);
-        
+
         // perform preview updating and project saving
         this.authoringViewComponentChanged();
     }
@@ -1112,36 +1117,36 @@ class AudioOscillatorController {
 
         }
     };
-    
+
     /**
      * The show previous work node id has changed
      */
     authoringShowPreviousWorkNodeIdChanged() {
-        
+
         if (this.authoringComponentContent.showPreviousWorkNodeId == null ||
             this.authoringComponentContent.showPreviousWorkNodeId == '') {
 
             /*
-             * the show previous work node id is null so we will also set the 
+             * the show previous work node id is null so we will also set the
              * show previous component id to null
              */
             this.authoringComponentContent.showPreviousWorkComponentId = '';
         }
-        
+
         // the authoring component content has changed so we will save the project
         this.authoringViewComponentChanged();
     }
-    
+
     /**
      * Get all the step node ids in the project
      * @returns all the step node ids
      */
     getStepNodeIds() {
         var stepNodeIds = this.ProjectService.getNodeIds();
-        
+
         return stepNodeIds;
     }
-    
+
     /**
      * Get the step number and title
      * @param nodeId get the step number and title for this node
@@ -1149,10 +1154,10 @@ class AudioOscillatorController {
      */
     getNodePositionAndTitleByNodeId(nodeId) {
         var nodePositionAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
-        
+
         return nodePositionAndTitle;
     }
-    
+
     /**
      * Get the components in a step
      * @param nodeId get the components in the step
@@ -1160,10 +1165,10 @@ class AudioOscillatorController {
      */
     getComponentsByNodeId(nodeId) {
         var components = this.ProjectService.getComponentsByNodeId(nodeId);
-        
+
         return components;
     }
-    
+
     /**
      * Check if a node is a step node
      * @param nodeId the node id to check
@@ -1171,10 +1176,10 @@ class AudioOscillatorController {
      */
     isApplicationNode(nodeId) {
         var result = this.ProjectService.isApplicationNode(nodeId);
-        
+
         return result;
     }
-    
+
     /**
      * Update the component JSON string that will be displayed in the advanced authoring view textarea
      */
@@ -1214,6 +1219,7 @@ AudioOscillatorController.$inject = [
     '$rootScope',
     '$scope',
     '$timeout',
+    'ConfigService',
     'NodeService',
     'AudioOscillatorService',
     'ProjectService',

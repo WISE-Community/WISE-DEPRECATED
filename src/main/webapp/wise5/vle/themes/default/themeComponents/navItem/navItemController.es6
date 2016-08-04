@@ -20,6 +20,7 @@ class NavItemController {
         this.ProjectService = ProjectService;
         this.StudentDataService = StudentDataService;
         this.$mdDialog = $mdDialog;
+        this.autoScroll = require('dom-autoscroller');
 
         this.expanded = false;
 
@@ -30,8 +31,8 @@ class NavItemController {
 
         this.nodeTitle = this.showPosition ? (this.ProjectService.idToPosition[this.nodeId] + ': ' + this.item.title) : this.item.title;
         this.currentNode = this.StudentDataService.currentNode;
+        this.previousNode = null;
         this.isCurrentNode = (this.currentNode.id === this.nodeId);
-        this.setNewNode = false;
 
         // whether this node is a planning node
         this.isPlanning = this.ProjectService.isPlanning(this.nodeId);
@@ -81,43 +82,74 @@ class NavItemController {
             this.availablePlanningNodes = this.ProjectService.getAvailablePlanningNodes(this.parentGroupId);
 
             this.$scope.$watch(
-                function () {
+                () => {
                     // watch the position of this node
                     return this.ProjectService.idToPosition[this.nodeId];
-                }.bind(this),
-                function(value) {
+                },
+                (value) => {
                     // the position has changed for this node so we will update it in the UI
                     this.nodeTitle = this.showPosition ? (this.ProjectService.idToPosition[this.nodeId] + ': ' + this.item.title) : this.item.title;
-                }.bind(this)
+                }
             );
         }
 
         this.$scope.$watch(
-            function () { return this.StudentDataService.currentNode; }.bind(this),
-            function (newNode) {
+            () => { return this.StudentDataService.currentNode; },
+            (newNode, oldNode) => {
                 this.currentNode = newNode;
-                if (this.StudentDataService.previousStep) {
-                    this.$scope.$parent.isPrevStep = (this.nodeId === this.StudentDataService.previousStep.id);
+                this.previousNode = oldNode;
+                this.isCurrentNode = (this.nodeId === newNode.id);
+
+                if (this.ProjectService.isApplicationNode(newNode.id)) {
+                    return;
                 }
-                this.isCurrentNode = (this.currentNode.id === this.nodeId);
-                if (this.isCurrentNode || this.ProjectService.isApplicationNode(newNode.id) || newNode.id === this.ProjectService.rootNode.id) {
-                    this.setExpanded();
+
+                if (oldNode) {
+                    let isPrev = (this.nodeId === oldNode.id);
+
+                    if (this.StudentDataService.previousStep) {
+                        this.$scope.$parent.isPrevStep = (this.nodeId === this.StudentDataService.previousStep.id);
+                    }
+
+                    if (isPrev && !this.isGroup) {
+                        this.zoomToElement();
+                    }
                 }
-            }.bind(this)
+
+                if (this.isGroup) {
+                    let prevNodeisGroup = (!oldNode || this.ProjectService.isGroupNode(oldNode.id));
+                    if (this.isCurrentNode) {
+                        this.expanded = true;
+                        if (prevNodeisGroup) {
+                            this.zoomToElement();
+                        }
+                    } else if (!prevNodeisGroup) {
+                        if (this.ProjectService.isNodeDescendentOfGroup(oldNode, this.item)) {
+                            this.expanded = true;
+                        } else {
+                            this.expanded = false;
+                        }
+                    }
+                }
+            }
         );
 
         this.$scope.$watch(
-            function () { return this.expanded; }.bind(this),
-            function (value) {
+            () => { return this.expanded; },
+            (value) => {
                 this.$scope.$parent.itemExpanded = value;
-                if (value) {
-                    this.zoomToElement();
-                }
-            }.bind(this)
+            }
+        );
+
+        this.$scope.$watch(
+            () => { return this.planningMode; },
+            (value) => {
+                this.$scope.$parent.planningMode = value;
+            }
         );
 
         // a group node has turned on or off planning mode
-        this.$rootScope.$on('togglePlanningModeClicked', (event, args) => {
+        this.$rootScope.$on('togglePlanningMode', (event, args) => {
 
             // get the group node that has had its planning node changed
             let planningModeClickedNodeId = args.nodeId;
@@ -137,60 +169,66 @@ class NavItemController {
             }
         });
 
-
-        this.$scope.$on('planning.drop-model', function (el, target, source) {
+        let dragId = 'planning_' + this.nodeId ;
+        // handle item drop events
+        let dropEvent = dragId + '.drop-model';
+        this.$scope.$on(dropEvent, (el, target, source) => {
             let nodeChangedId = target.data().nodeid;
             this.planningNodeItemsChanged(nodeChangedId);
-        }.bind(this));
+        });
 
-        this.dragulaService.options($scope, 'planning', {
-            moves: function (el, source, handle, sibling) {
+        this.dragulaService.options(this.$scope, dragId, {
+            moves: (el, source, handle, sibling) => {
                 if (!this.planningMode) {
                     return false;
                 }
 
                 let nodeId = el.getAttribute('data-nodeid');
                 return this.ProjectService.isPlanningInstance(nodeId);
-            }.bind(this)
+            }
         });
 
-        this.setExpanded();
+        let drake = dragulaService.find(this.$scope, dragId).drake;
+
+        // support scroll while dragging
+        let scroll = this.autoScroll(
+            [document.querySelector('#content')], {
+            margin: 30,
+            pixels: 50,
+            scrollWhenOutside: true,
+            autoScroll: function() {
+                // Only scroll when the pointer is down, and there is a child being dragged
+                return this.down && drake.dragging;
+            }
+        });
     }
 
     getTemplateUrl(){
         return this.ProjectService.getThemePath() + '/themeComponents/navItem/navItem.html';
     };
 
-    setExpanded() {
-        this.$scope.expanded = (this.isCurrentNode || (this.$scope.isGroup && this.ProjectService.isNodeDescendentOfGroup(this.$scope.currentNode, this.$scope.item)));
-        if (this.$scope.expanded && this.isCurrentNode) {
-            this.expanded = true;
-            this.zoomToElement();
-        }
-    };
-
     zoomToElement() {
         setTimeout(()=> {
             // smooth scroll to expanded group's page location
-            let location = this.isGroup ? this.$element[0].offsetTop - 32 : 0;
-            let delay = this.isGroup ? 350 : 0;
+            let top = this.$element[0].offsetTop;
+            let location = this.isGroup ? top - 32 : top - 80;
+            let delay = 350;
             $('#content').animate({
                 scrollTop: location
-            }, delay, 'linear', ()=> {
-                if (this.setNewNode) {
-                    this.setNewNode = false;
-                    this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(this.nodeId);
-                }
-            });
+            }, delay, 'linear');
         }, 250);
     };
 
     itemClicked(event) {
         if (this.isGroup) {
-            if (!this.expanded) {
-                this.setNewNode = true;
-            }
             this.expanded = !this.expanded;
+            if (this.expanded) {
+                if (this.isCurrentNode) {
+                    this.zoomToElement();
+                } else {
+                    this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(this.nodeId);
+                }
+            }
         } else {
             if (this.StudentDataService.planningMode) {
                 // Don't allow students to enter planning steps while in planning mode
@@ -462,14 +500,7 @@ class NavItemController {
             title = node.title;
         }
 
-        // get the position
-        var position = this.ProjectService.idToPosition[nodeId];
-
-        if (position == null) {
-            return title;
-        } else {
-            return position + ': ' + title;
-        }
+        return title;
     }
 
     /**
@@ -627,7 +658,7 @@ class NavItemController {
         this.StudentDataService.saveVLEEvent(eventNodeId, componentId, componentType, category, eventName, eventData);
 
         // notify the child nodes that the planning mode of this group node has changed
-        this.$rootScope.$broadcast('togglePlanningModeClicked', { nodeId: this.nodeId, planningMode: this.planningMode });
+        this.$rootScope.$broadcast('togglePlanningMode', { nodeId: this.nodeId, planningMode: this.planningMode });
     }
 
     /**

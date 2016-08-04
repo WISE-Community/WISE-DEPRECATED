@@ -72,7 +72,7 @@
         <select ng-model='matchController.authoringComponentContent.showPreviousWorkNodeId'
                 ng-change='matchController.authoringShowPreviousWorkNodeIdChanged()'>
             <option></option>
-            <option ng-repeat='item in matchController.idToOrder | toArray | orderBy : "order"' 
+            <option ng-repeat='item in matchController.idToOrder | toArray | orderBy : "order"'
                     value='{{item.$key}}'
                     ng-if='matchController.isApplicationNode(item.$key)'>{{matchController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
         </select>
@@ -101,46 +101,77 @@
         <possible-score max-score="matchController.componentContent.maxScore"
                         ng-if="matchController.mode === 'student' && !matchController.latestAnnotations.score"></possible-score>
     </div>
-    <div class="md-padding match-content" ui-tree='options'>
+    <div class="md-padding match-content">
         <component-annotations ng-if="matchController.mode === 'student'"
                                class="annotations--inside"
                                score-annotation='matchController.latestAnnotations.score'
                                comment-annotation='matchController.latestAnnotations.comment'
                                max-score="matchController.componentContent.maxScore"></component-annotations>
-        <ol ui-tree-nodes data-type='bucket' ng-model='matchController.buckets'>
-            <li ui-tree-node ng-repeat='bucket in matchController.buckets' class='bucket' ng-if="$index === 0">
-                <div ui-tree-handle class='group-title angular-ui-tree-handle' data-nodrag>
-                    <div compile='bucket.value'></div>
-                </div>
-                <ol ui-tree-nodes data-type='choice' ng-model='bucket.items'>
-                    <li ng-repeat='item in bucket.items' ui-tree-node>
-                        <div ui-tree-handle class='category-title angular-ui-tree-handle' data-nodrag='{{matchController.isDisabled}}'>
-                            <div compile='item.value'></div>
-                        </div>
-                    </li>
-                </ol>
-            </li>
-        </ol>
-        <ol ui-tree-nodes data-type='bucket' ng-model='matchController.buckets'>
-            <li ui-tree-node ng-repeat='bucket in matchController.buckets' class='bucket' ng-if="$index > 0" flex>
-                <div ui-tree-handle class='group-title angular-ui-tree-handle' data-nodrag>
-                    <div compile='bucket.value'></div>
-                </div>
-                <ol ui-tree-nodes data-type='choice' ng-model='bucket.items'>
-                    <li ng-repeat='item in bucket.items' ui-tree-node>
-                        <div ui-tree-handle class='category-title angular-ui-tree-handle' data-nodrag='{{matchController.isDisabled}}'>
-                            <div compile='item.value'></div>
-                            <div class="match-feedback md-body-2" ng-show="item.feedback" ng-class='{"success": item.isCorrect, "info": item.isIncorrectPosition, "warn": !item.isCorrect}'>
-                                <md-icon ng-if="item.isCorrect" class="success"> check_circle </md-icon>
-                                <md-icon ng-if="item.isIncorrectPosition" class="info"> warning </md-icon>
-                                <md-icon ng-if="!item.isCorrect && !item.isIncorrectPosition" class="warn"> error </md-icon>
-                                <span compile='item.feedback'></span>
+        <div layout="row" layout-wrap>
+            <div class="match-bucket match-bucket--choices"
+                 flex="100" flex-gt-sm="{{matchController.horizontal ? 50: 100}}">
+                <md-card>
+                    <md-card-title class="match-bucket__header">
+                        <md-card-title-text compile='matchController.buckets[0].value'></md-card-title-text>
+                    </md-card-title>
+                    <md-card-content>
+                        <md-list class="match-bucket__contents"
+                                 dragula="'match_{{matchController.componentId}}'"
+                                 dragula-model='matchController.buckets[0].items'
+                                 style="{{!matchController.horizontal ? 'column-count:' + matchController.choiceColumns : ''}}">
+                            <div class="match-bucket__item" ng-repeat='item in matchController.buckets[0].items'>
+                                <md-list-item class="match-bucket__item__contents md-whiteframe-1dp">
+                                    <div class="md-list-item-text">
+                                        <div flex layout="row" layout-align="start center">
+                                            <span class="match-bucket__item__contents__text" compile='item.value'></span>
+                                            <span flex></span>
+                                            <md-icon>open_with</md-icon>
+                                        </div>
+                                    </div>
+                                </md-list-item>
                             </div>
-                        </div>
-                    </li>
-                </ol>
-            </li>
-        </ol>
+                        </md-list>
+                    </md-card-content>
+                </md-card>
+                <md-divider class="match-divider {{matchController.horizontal ? 'match-divider--horizontal' : ''}}"></md-divider>
+            </div>
+            <div layout="row" layout-wrap layout-align="center start" flex="100" flex-gt-sm="{{matchController.horizontal ? 50 : 100}}">
+                <div ng-repeat='bucket in matchController.buckets'
+                     ng-if="$index > 0"
+                     class="match-bucket"
+                     flex="100" flex-gt-sm="{{matchController.horizontal ? 100 : matchController.bucketWidth}}">
+                    <md-card>
+                        <md-card-title class="match-bucket__header">
+                            <md-card-title-text compile='bucket.value'></md-card-title-text>
+                        </md-card-title>
+                        <md-card-content>
+                            <md-list class="match-bucket__contents"
+                                     dragula="'match_{{matchController.componentId}}'"
+                                     dragula-model='bucket.items'
+                                     style="{{$index === 0 ? 'column-count:' + matchController.choiceColumns : ''}}">
+                                <div class="match-bucket__item" ng-repeat='item in bucket.items'>
+                                    <md-list-item class="match-bucket__item__contents md-whiteframe-1dp">
+                                        <div class="md-list-item-text">
+                                            <div flex layout="row" layout-align="start center">
+                                                <span class="match-bucket__item__contents__text" compile='item.value'></span>
+                                                <span flex></span>
+                                                <md-icon>open_with</md-icon>
+                                            </div>
+                                            <p class="match-feedback md-body-2" ng-show="item.feedback" ng-class='{"success-bg": item.isCorrect, "info-bg": item.isIncorrectPosition, "warn-bg": !item.isCorrect}'>
+                                                <md-icon ng-if="item.isCorrect"> check </md-icon>
+                                                <md-icon ng-if="item.isIncorrectPosition"> warning </md-icon>
+                                                <md-icon ng-if="!item.isCorrect && !item.isIncorrectPosition"> clear </md-icon>
+                                                <span compile='item.feedback'></span>
+                                            </p>
+                                        </div>
+                                    </md-list-item>
+                                </div>
+                            </md-list>
+                        </md-card-content>
+                    </md-card>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="component__actions" layout="row" layout-align="start center">
         <md-button class="md-raised md-primary"

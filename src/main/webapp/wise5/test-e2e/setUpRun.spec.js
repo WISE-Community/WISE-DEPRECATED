@@ -9,26 +9,6 @@ describe('WISE Setting Up a Run', function () {
         });
     };
 
-    /**
-     * @name waitForUrlToChangeTo
-     * @description Wait until the URL changes to match a provided regex
-     * @param {RegExp} urlRegex wait until the URL changes to match this regex
-     * @returns {!webdriver.promise.Promise} Promise
-     */
-    function waitForUrlToChangeTo(urlRegex) {
-        var currentUrl;
-
-        return browser.getCurrentUrl().then(function storeCurrentUrl(url) {
-            currentUrl = url;
-        }).then(function waitForUrlToChangeTo() {
-            return browser.wait(function waitForUrlToChangeTo() {
-                return browser.getCurrentUrl().then(function compareCurrentUrl(url) {
-                    return urlRegex.test(url);
-                });
-            });
-        });
-    };
-
     it('should require teacher user to log in to view the project library', function () {
         browser.ignoreSynchronization = true; // doesn't use Angular
         browser.get('http://localhost:8080/wise/login');
@@ -54,13 +34,13 @@ describe('WISE Setting Up a Run', function () {
         expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/teacher/management/library.html');
 
         // search for the newly created project
-        var keywordFilterInput = $("input[type=text]");
+        var keywordFilterInput = $("#activeProjects input[type=text]");
         expect(keywordFilterInput.isPresent()).toBeTruthy();
         keywordFilterInput.sendKeys("My Science Project");
         keywordFilterInput.sendKeys(protractor.Key.ENTER);
 
         // filter by owned project
-        var ownedSearch = $("#owned_search_0 a");
+        var ownedSearch = $("#activeProjects #owned_search_0 a");
         expect(ownedSearch.isPresent()).toBeTruthy();
         ownedSearch.click();
 

@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var VLEController = function () {
-    function VLEController($scope, $rootScope, $mdDialog, $mdMedia, $state, $translate, ConfigService, NotebookService, NotificationService, ProjectService, SessionService, StudentDataService, StudentWebSocketService, UtilService) {
+    function VLEController($scope, $rootScope, $mdDialog, $state, $translate, ConfigService, NotebookService, NotificationService, ProjectService, SessionService, StudentDataService, StudentWebSocketService, UtilService) {
         var _this = this;
 
         _classCallCheck(this, VLEController);
@@ -17,7 +17,6 @@ var VLEController = function () {
         this.$scope = $scope;
         this.$rootScope = $rootScope;
         this.$mdDialog = $mdDialog;
-        this.$mdMedia = $mdMedia;
         this.$state = $state;
         this.$translate = $translate;
         this.ConfigService = ConfigService;
@@ -480,7 +479,7 @@ var VLEController = function () {
     return VLEController;
 }();
 
-VLEController.$inject = ['$scope', '$rootScope', '$mdDialog', '$mdMedia', '$state', '$translate', 'ConfigService', 'NotebookService', 'NotificationService', 'ProjectService', 'SessionService', 'StudentDataService', 'StudentWebSocketService', 'UtilService'];
+VLEController.$inject = ['$scope', '$rootScope', '$mdDialog', '$state', '$translate', 'ConfigService', 'NotebookService', 'NotificationService', 'ProjectService', 'SessionService', 'StudentDataService', 'StudentWebSocketService', 'UtilService'];
 
 exports.default = VLEController;
 //# sourceMappingURL=vleController.js.map

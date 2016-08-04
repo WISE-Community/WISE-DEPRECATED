@@ -4,7 +4,7 @@
       "angular": "github:angular/bower-angular@^1.5.3",
       "angular-animate": "github:angular/bower-angular-animate@^1.5.3",
       "angular-dragula": "npm:angular-dragula@^1.2.6",
-      "angular-material": "github:angular/bower-material@^1.1.0-rc3",
+      "angular-material": "github:angular/bower-material@1.1.0-rc4-master-e638c51",
       "angular-mocks": "github:angular/bower-angular-mocks@^1.5.3",
       "angular-moment": "npm:angular-moment@^1.0.0-beta.3",
       "angular-sanitize": "github:angular/bower-angular-sanitize@^1.5.3",
@@ -12,8 +12,8 @@
       "angular-translate-loader-partial": "github:angular-translate/bower-angular-translate-loader-partial@^2.11.0",
       "angular-ui-router": "github:angular-ui/ui-router@^0.2.15",
       "angular-ui-scrollpoint": "npm:angular-ui-scrollpoint@^2.1.1",
-      "angular-ui-tree": "github:angular-ui-tree/angular-ui-tree@^2.5",
       "angular-websocket": "npm:angular-websocket@1.0.14",
+      "dom-autoscroller": "npm:dom-autoscroller@^1.3.1",
       "highcharts-ng": "npm:highcharts-ng@^0.0.11",
       "highcharts/draggable-points": "github:highcharts/draggable-points@master",
       "html2canvas": "npm:html2canvas@^0.5.0-beta4",
@@ -46,11 +46,6 @@
       "github:angular/bower-angular-animate@1.5.3": {
         "dependencies": {
           "angular": "1.5.3"
-        }
-      },
-      "github:angular-ui-tree/angular-ui-tree@2.5.0": {
-        "dependencies": {
-          "angular": "jspm:angular@1.5.3"
         }
       },
       "github:angular/bower-angular-sanitize@1.5.3": {

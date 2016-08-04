@@ -4,6 +4,7 @@ class LabelController {
         $q,
         $scope,
         $timeout,
+        ConfigService,
         LabelService,
         NodeService,
         NotebookService,
@@ -18,6 +19,7 @@ class LabelController {
         this.$q = $q;
         this.$scope = $scope;
         this.$timeout = $timeout;
+        this.ConfigService = ConfigService;
         this.LabelService = LabelService;
         this.NodeService = NodeService;
         this.NotebookService = NotebookService;
@@ -84,7 +86,7 @@ class LabelController {
 
         // whether the cancel button is shown or not
         this.isCancelButtonVisible = false;
-        
+
         // whether the snip image button is shown or not
         this.isSnipImageButtonVisible = true;
 
@@ -307,7 +309,7 @@ class LabelController {
                  */
                 deferred.resolve();
             }
-            
+
             return deferred.promise;
         }.bind(this);
 
@@ -343,7 +345,8 @@ class LabelController {
 
                 let isAutoSave = componentState.isAutoSave;
                 let isSubmit = componentState.isSubmit;
-                let clientSaveTime = componentState.clientSaveTime;
+                let serverSaveTime = componentState.serverSaveTime;
+                let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
 
                 // set save message
                 if (isSubmit) {
@@ -368,23 +371,23 @@ class LabelController {
          * component.
          */
         this.$scope.$on('requestImage', (event, args) => {
-            
+
             // get the node id and component id from the args
             var nodeId = args.nodeId;
             var componentId = args.componentId;
-            
+
             // check if the image is being requested from this component
             if (this.nodeId === nodeId && this.componentId === componentId) {
-                
+
                 // obtain the image blob
                 var imageObject = this.getImageObject();
-                
+
                 if (imageObject != null) {
                     var args = {};
                     args.nodeId = nodeId;
                     args.componentId = componentId;
                     args.imageObject = imageObject;
-                    
+
                     // fire an event that contains the image object
                     this.$scope.$emit('requestImageCallback', args);
                 }
@@ -496,18 +499,20 @@ class LabelController {
         let latestState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
 
         if (latestState) {
+            let serverSaveTime = latestState.serverSaveTime;
+            let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
             if (latestState.isSubmit) {
                 // latest state is a submission, so set isSubmitDirty to false and notify node
                 this.isSubmitDirty = false;
                 this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: false});
                 // set save message
-                this.setSaveMessage('Last submitted', latestState.clientSaveTime);
+                this.setSaveMessage('Last submitted', clientSaveTime);
             } else {
                 // latest state is not a submission, so set isSubmitDirty to true and notify node
                 this.isSubmitDirty = true;
                 this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: true});
                 // set save message
-                this.setSaveMessage('Last saved', latestState.clientSaveTime);
+                this.setSaveMessage('Last saved', clientSaveTime);
             }
         }
     };
@@ -617,7 +622,7 @@ class LabelController {
          * data has changed.
          */
         var action = 'change';
-        
+
         // create a component state populated with the student data
         this.createComponentState(action).then((componentState) => {
 
@@ -756,13 +761,13 @@ class LabelController {
         componentState.studentData = studentData;
 
         var deferred = this.$q.defer();
-        
+
         /*
          * perform any additional processing that is required before returning
          * the component state
          */
         this.createComponentStateAdditionalProcessing(deferred, componentState, action);
-        
+
         return deferred.promise;
     };
 
@@ -903,7 +908,7 @@ class LabelController {
 
         if (this.originalComponentContent != null) {
             // this is a show previous work component
-            
+
             if (this.originalComponentContent.showPreviousWorkPrompt) {
                 // show the prompt from the previous work component
                 prompt = this.componentContent.prompt;
@@ -998,7 +1003,7 @@ class LabelController {
         // set the width and height of the canvas
         canvas.setWidth(this.canvasWidth);
         canvas.setHeight(this.canvasHeight);
-        
+
         // set the height on the parent div so that a vertical scrollbar doesn't show up
         $('#canvasParent_' + this.canvasId).css('height', this.canvasHeight + 2);
 
@@ -1412,36 +1417,36 @@ class LabelController {
     updateAdvancedAuthoringView() {
         this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
     };
-    
+
     /**
      * The show previous work node id has changed
      */
     authoringShowPreviousWorkNodeIdChanged() {
-        
+
         if (this.authoringComponentContent.showPreviousWorkNodeId == null ||
             this.authoringComponentContent.showPreviousWorkNodeId == '') {
 
             /*
-             * the show previous work node id is null so we will also set the 
+             * the show previous work node id is null so we will also set the
              * show previous component id to null
              */
             this.authoringComponentContent.showPreviousWorkComponentId = '';
         }
-        
+
         // the authoring component content has changed so we will save the project
         this.authoringViewComponentChanged();
     }
-    
+
     /**
      * Get all the step node ids in the project
      * @returns all the step node ids
      */
     getStepNodeIds() {
         var stepNodeIds = this.ProjectService.getNodeIds();
-        
+
         return stepNodeIds;
     }
-    
+
     /**
      * Get the step number and title
      * @param nodeId get the step number and title for this node
@@ -1449,10 +1454,10 @@ class LabelController {
      */
     getNodePositionAndTitleByNodeId(nodeId) {
         var nodePositionAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
-        
+
         return nodePositionAndTitle;
     }
-    
+
     /**
      * Get the components in a step
      * @param nodeId get the components in the step
@@ -1460,10 +1465,10 @@ class LabelController {
      */
     getComponentsByNodeId(nodeId) {
         var components = this.ProjectService.getComponentsByNodeId(nodeId);
-        
+
         return components;
     }
-    
+
     /**
      * Check if a node is a step node
      * @param nodeId the node id to check
@@ -1471,7 +1476,7 @@ class LabelController {
      */
     isApplicationNode(nodeId) {
         var result = this.ProjectService.isApplicationNode(nodeId);
-        
+
         return result;
     }
 
@@ -1508,23 +1513,23 @@ class LabelController {
         // save the project
         this.authoringViewComponentChanged();
     }
-    
+
     /**
      * Get the image object representation of the student data
      * @returns an image object
      */
     getImageObject() {
         var pngFile = null;
-        
+
         if (this.canvas != null) {
-            
+
             // get the image as a base64 string
             var img_b64 = this.canvas.toDataURL('image/png');
-            
+
             // get the image object
             pngFile = this.UtilService.getImageObjectFromBase64String(img_b64);
         }
-        
+
         return pngFile;
     }
 
@@ -1545,32 +1550,32 @@ class LabelController {
     showSnipImageButton() {
         return this.isSnipImageButtonVisible;
     }
-    
+
     /**
      * Snip the labels by converting it to an image
      * @param $event the click event
      */
     snipImage($event) {
-        
+
         // get the canvas element
         var canvas = angular.element('#' + this.componentId + ' canvas');
-        
+
         if (canvas != null && canvas.length > 0) {
-            
+
             // get the top canvas
             canvas = canvas[0];
-            
+
             // get the canvas as a base64 string
             var img_b64 = canvas.toDataURL('image/png');
-            
+
             // get the image object
             var imageObject = this.UtilService.getImageObjectFromBase64String(img_b64);
-            
+
             // create a notebook item with the image populated into it
             this.NotebookService.addNewItem($event, imageObject);
         }
     }
-    
+
     /**
      * Register the the listener that will listen for the exit event
      * so that we can perform saving before exiting.

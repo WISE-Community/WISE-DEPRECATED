@@ -41,7 +41,7 @@
 </div>
 <md-divider></md-divider>
 <div class="account-menu__actions" layout="row">
-    <md-button id="exitButton" class="md-primary" ng-click="vleController.goHome()"><span translate="exit" /></md-button>
+    <md-button class="md-primary" ng-click="vleController.goHome()" aria-label="{{'exit' | translate}}"><span translate="exit" /></md-button>
     <span flex></span>
-    <md-button id="logOutButton" class="md-primary" ng-click="vleController.logOut()"><span translate="signOut" /></md-button>
+    <md-button class="md-primary" ng-click="vleController.logOut()" aria-label="{{'signOut' | translate}}"><span translate="signOut" /></md-button>
 </div>

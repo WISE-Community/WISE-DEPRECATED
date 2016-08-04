@@ -124,7 +124,7 @@
                 <select ng-model='drawController.authoringComponentContent.showPreviousWorkNodeId'
                         ng-change='drawController.authoringShowPreviousWorkNodeIdChanged()'>
                     <option></option>
-                    <option ng-repeat='item in drawController.idToOrder | toArray | orderBy : "order"' 
+                    <option ng-repeat='item in drawController.idToOrder | toArray | orderBy : "order"'
                             value='{{item.$key}}'
                             ng-if='drawController.isApplicationNode(item.$key)'>{{drawController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
                 </select>
@@ -168,8 +168,7 @@
             ng-show='drawController.showSnipDrawingButton()'>
         <md-icon> content_cut </md-icon> Add to Notebook
     </md-button>
-    <div class="container"
-         data-drop="true"
+    <div data-drop="true"
          jqyoui-droppable="{onDrop: 'drawController.dropCallback(item, $index)'}">
         <div id="{{drawController.drawingToolId}}"></div>
         <!--
@@ -199,13 +198,14 @@
     </md-button>
     <div class="component__actions" layout="row" layout-align="start center">
       <md-button class="md-raised md-primary"
-              ng-click='drawController.submitButtonClicked()'
-              ng-disabled='drawController.isDisabled || !drawController.isSubmitDirty'
-              ng-show='drawController.showSubmitButton()'>Submit</md-button>
-      <md-button class="md-primary md-raised"
-           ng-click='drawController.saveButtonClicked()'
-           ng-disabled='drawController.isDisabled || !drawController.isDirty'
-           ng-show='drawController.showSaveButton()'>Save</md-button>
+                 ng-click='drawController.submitButtonClicked()'
+                 ng-disabled='drawController.isDisabled || !drawController.isSubmitDirty'
+                 ng-show='drawController.showSubmitButton()'>Submit</md-button>
+      <md-button class="md-primary"
+                 ng-class="{'md-raised': !drawController.showSubmitButton()}"
+                 ng-click='drawController.saveButtonClicked()'
+                 ng-disabled='drawController.isDisabled || !drawController.isDirty'
+                 ng-show='drawController.showSaveButton()'>Save</md-button>
            <span ng-if="drawController.showSaveButton() || drawController.showSubmitButton()"
                  ng-show="drawController.saveMessage.text"
                  class="component__actions__info md-caption">

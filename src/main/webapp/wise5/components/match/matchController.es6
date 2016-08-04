@@ -3,6 +3,8 @@ class MatchController {
     constructor($q,
                 $rootScope,
                 $scope,
+                dragulaService,
+                ConfigService,
                 MatchService,
                 NodeService,
                 ProjectService,
@@ -13,6 +15,8 @@ class MatchController {
         this.$q = $q;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
+        this.dragulaService = dragulaService;
+        this.ConfigService = ConfigService;
         this.MatchService = MatchService;
         this.NodeService = NodeService;
         this.ProjectService = ProjectService;
@@ -20,6 +24,7 @@ class MatchController {
         this.UtilService = UtilService;
         this.$mdMedia = $mdMedia;
         this.idToOrder = this.ProjectService.idToOrder;
+        this.autoScroll = require('dom-autoscroller');
 
         // the node id of the current node
         this.nodeId = null;
@@ -60,6 +65,15 @@ class MatchController {
         // whether the student has correctly placed the choices
         this.isCorrect = null;
 
+        // the flex (%) width for displaying the buckets
+        this.bucketWidth = 100;
+
+        // the number of columns for displaying the choices
+        this.choiceColumns = 1;
+
+        // whether to orient the choices and buckets side-by-side
+        this.horizontal = false;
+
         // message to show next to save/submit buttons
         this.saveMessage = {
             text: '',
@@ -99,6 +113,7 @@ class MatchController {
 
             // get the component id
             this.componentId = this.componentContent.id;
+            this.horizontal = this.componentContent.horizontal;
 
             if (this.mode === 'student') {
                 this.isPromptVisible = true;
@@ -178,35 +193,44 @@ class MatchController {
             }
         }
 
-        this.$scope.options = {
-            accept: (sourceNode, destNodes, destIndex) => {
-                var result = false;
+        let dragId = 'match_' + this.componentId;
+        // handle choice drop events
+        let dropEvent = dragId + '.drop-model';
+        this.$scope.$on(dropEvent, (e, el, container, source) => {
+            // choice item has been dropped in new location, so run studentDataChanged function
+            this.$scope.matchController.studentDataChanged();
+        });
 
-                // get the value of the source node
-                var data = sourceNode.$modelValue;
-
-                // get the type of the nodes in the destination
-                var destType = destNodes.$element.attr('data-type');
-
-                if (data != null) {
-
-                    // check if the types match
-                    if (data.type === destType) {
-                        // the types match so we will accept it
-                        result = true
-                    }
-                }
-
-                return result;
-            },
-            dropped: event => {
-                if (event.source.nodesScope.$id !== event.dest.nodesScope.$id || event.source.index !== event.dest.index) {
-                    // TODO: not sure why this check is necessary, as angular-ui-tree is not supposed to fire the dropped event unless position has changed
-                    // tell the controller that the student data has changed
-                    this.$scope.matchController.studentDataChanged();
-                }
+        // drag and drop options
+        this.dragulaService.options(this.$scope, dragId, {
+            moves: (el, source, handle, sibling) => {
+                return !this.$scope.matchController.isDisabled;
             }
-        };
+        });
+
+        // provide visual indicator when choice is dragged over a new bucket
+        let drake = dragulaService.find(this.$scope, dragId).drake;
+        drake.on('over', (el, container, source) => {
+            if (source !== container) {
+                container.className += ' match-bucket__contents--over';
+            }
+        }).on('out', (el, container, source) => {
+            if (source !== container) {
+                container.className = container.className.replace('match-bucket__contents--over', '');;
+            }
+        });
+
+        // support scroll while dragging
+        let scroll = this.autoScroll(
+            [document.querySelector('#content')], {
+            margin: 30,
+            pixels: 50,
+            scrollWhenOutside: true,
+            autoScroll: function() {
+                // Only scroll when the pointer is down, and there is a child being dragged
+                return this.down && drake.dragging;
+            }
+        });
 
         /**
          * Get the component state from this component. The parent node will
@@ -232,7 +256,7 @@ class MatchController {
                     action = 'save';
                 }
             }
-            
+
             if (getState) {
                 // create a component state populated with the student data
                 this.$scope.matchController.createComponentState(action).then((componentState) => {
@@ -246,7 +270,7 @@ class MatchController {
                  */
                 deferred.resolve();
             }
-            
+
             return deferred.promise;
         }.bind(this);
 
@@ -289,7 +313,8 @@ class MatchController {
 
                 let isAutoSave = componentState.isAutoSave;
                 let isSubmit = componentState.isSubmit;
-                let clientSaveTime = componentState.clientSaveTime;
+                let serverSaveTime = componentState.serverSaveTime;
+                let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
 
                 // set save message
                 if (isSubmit) {
@@ -447,18 +472,22 @@ class MatchController {
         if (onload && numStates) {
             let latestState = componentStates[numStates-1];
 
-            if (latestState.isSubmit) {
-                // latest state is a submission, so set isSubmitDirty to false and notify node
-                this.isSubmitDirty = false;
-                this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: false});
-                // set save message
-                this.setSaveMessage('Last submitted', latestState.clientSaveTime);
-            } else {
-                // latest state is not a submission, so set isSubmitDirty to true and notify node
-                this.isSubmitDirty = true;
-                this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: true});
-                // set save message
-                this.setSaveMessage('Last saved', latestState.clientSaveTime);
+            if (latestState) {
+                let serverSaveTime = latestState.serverSaveTime;
+                let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
+                if (latestState.isSubmit) {
+                    // latest state is a submission, so set isSubmitDirty to false and notify node
+                    this.isSubmitDirty = false;
+                    this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: false});
+                    // set save message
+                    this.setSaveMessage('Last submitted', clientSaveTime);
+                } else {
+                    // latest state is not a submission, so set isSubmitDirty to true and notify node
+                    this.isSubmitDirty = true;
+                    this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: true});
+                    // set save message
+                    this.setSaveMessage('Last saved', clientSaveTime);
+                }
             }
         }
     };
@@ -489,26 +518,45 @@ class MatchController {
 
         this.buckets = [];
 
-        if(this.componentContent != null && this.componentContent.buckets != null) {
+        if (this.componentContent != null && this.componentContent.buckets != null) {
 
             // get the buckets from the component content
-            var buckets = this.componentContent.buckets;
+            let buckets = this.componentContent.buckets;
+
+            if (this.horizontal) {
+                this.bucketWidth = 100;
+                this.choiceColumns = 1;
+            } else {
+                if (this.componentContent.bucketWidth) {
+                    this.bucketWidth = this.componentContent.bucketWidth;
+                    this.choiceColumns = Math.round(100/this.componentContent.bucketWidth);
+                } else {
+                    let n = buckets.length;
+                    if (n % 3 === 0 || n % 3 === 2) {
+                        this.bucketWidth = Math.round(100/3);
+                        this.choiceColumns = 3;
+                    } else if (n % 2 === 0) {
+                        this.bucketWidth = 100/2;
+                        this.choiceColumns = 2;
+                    }
+                }
+            }
 
             /*
              * create a bucket that will contain the choices when
              * the student first starts working
              */
-            var originBucket = {};
+            let originBucket = {};
             originBucket.id = 0;
             originBucket.value = this.componentContent.choicesLabel ? this.componentContent.choicesLabel : 'Choices';
             originBucket.type = 'bucket';
             originBucket.items = [];
 
-            var choices = this.getChoices();
+            let choices = this.getChoices();
 
             // add all the choices to the origin bucket
-            for (var c = 0; c < choices.length; c++) {
-                var choice = choices[c];
+            for (let c = 0; c < choices.length; c++) {
+                let choice = choices[c];
 
                 originBucket.items.push(choice);
             }
@@ -517,8 +565,8 @@ class MatchController {
             this.buckets.push(originBucket);
 
             // add all the other buckets to our array of buckets
-            for (var b = 0; b < buckets.length; b++) {
-                var bucket = buckets[b];
+            for (let b = 0; b < buckets.length; b++) {
+                let bucket = buckets[b];
 
                 bucket.items = [];
 
@@ -837,7 +885,7 @@ class MatchController {
          * data has changed.
          */
         var action = 'change';
-        
+
         // create a component state populated with the student data
         this.createComponentState(action).then((componentState) => {
 
@@ -855,11 +903,11 @@ class MatchController {
     createComponentState(action) {
 
         // create a new component state
-        var componentState = this.NodeService.createNewComponentState();
+        let componentState = this.NodeService.createNewComponentState();
 
         if (componentState != null) {
 
-            var studentData = {};
+            let studentData = {};
 
             // set the buckets into the student data
             studentData.buckets = this.getCopyOfBuckets();
@@ -887,14 +935,14 @@ class MatchController {
             componentState.studentData = studentData;
         }
 
-        var deferred = this.$q.defer();
-        
+        let deferred = this.$q.defer();
+
         /*
          * perform any additional processing that is required before returning
          * the component state
          */
         this.createComponentStateAdditionalProcessing(deferred, componentState, action);
-        
+
         return deferred.promise;
     };
 
@@ -1010,7 +1058,7 @@ class MatchController {
 
         if (this.originalComponentContent != null) {
             // this is a show previous work component
-            
+
             if (this.originalComponentContent.showPreviousWorkPrompt) {
                 // show the prompt from the previous work component
                 prompt = this.componentContent.prompt;
@@ -1129,36 +1177,36 @@ class MatchController {
     updateAdvancedAuthoringView() {
         this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
     };
-    
+
     /**
      * The show previous work node id has changed
      */
     authoringShowPreviousWorkNodeIdChanged() {
-        
+
         if (this.authoringComponentContent.showPreviousWorkNodeId == null ||
             this.authoringComponentContent.showPreviousWorkNodeId == '') {
 
             /*
-             * the show previous work node id is null so we will also set the 
+             * the show previous work node id is null so we will also set the
              * show previous component id to null
              */
             this.authoringComponentContent.showPreviousWorkComponentId = '';
         }
-        
+
         // the authoring component content has changed so we will save the project
         this.authoringViewComponentChanged();
     }
-    
+
     /**
      * Get all the step node ids in the project
      * @returns all the step node ids
      */
     getStepNodeIds() {
         var stepNodeIds = this.ProjectService.getNodeIds();
-        
+
         return stepNodeIds;
     }
-    
+
     /**
      * Get the step number and title
      * @param nodeId get the step number and title for this node
@@ -1166,10 +1214,10 @@ class MatchController {
      */
     getNodePositionAndTitleByNodeId(nodeId) {
         var nodePositionAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
-        
+
         return nodePositionAndTitle;
     }
-    
+
     /**
      * Get the components in a step
      * @param nodeId get the components in the step
@@ -1177,10 +1225,10 @@ class MatchController {
      */
     getComponentsByNodeId(nodeId) {
         var components = this.ProjectService.getComponentsByNodeId(nodeId);
-        
+
         return components;
     }
-    
+
     /**
      * Check if a node is a step node
      * @param nodeId the node id to check
@@ -1188,7 +1236,7 @@ class MatchController {
      */
     isApplicationNode(nodeId) {
         var result = this.ProjectService.isApplicationNode(nodeId);
-        
+
         return result;
     }
 
@@ -1596,6 +1644,8 @@ MatchController.$inject = [
     '$q',
     '$rootScope',
     '$scope',
+    'dragulaService',
+    'ConfigService',
     'MatchService',
     'NodeService',
     'ProjectService',

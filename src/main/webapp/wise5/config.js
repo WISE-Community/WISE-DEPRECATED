@@ -32,11 +32,11 @@ System.config({
     "angular-translate-loader-partial": "github:angular-translate/bower-angular-translate-loader-partial@2.11.0",
     "angular-ui-router": "github:angular-ui/ui-router@0.2.18",
     "angular-ui-scrollpoint": "npm:angular-ui-scrollpoint@2.1.1",
-    "angular-ui-tree": "github:angular-ui-tree/angular-ui-tree@2.14.0",
     "angular-websocket": "npm:angular-websocket@1.0.14",
     "babel": "npm:babel-core@5.8.38",
     "babel-runtime": "npm:babel-runtime@5.8.38",
     "core-js": "npm:core-js@1.2.6",
+    "dom-autoscroller": "npm:dom-autoscroller@1.3.1",
     "highcharts-ng": "npm:highcharts-ng@0.0.11",
     "highcharts/draggable-points": "github:highcharts/draggable-points@master",
     "html2canvas": "npm:html2canvas@0.5.0-beta4",
@@ -51,9 +51,6 @@ System.config({
       "angular-translate": "github:angular-translate/bower-angular-translate@2.11.0"
     },
     "github:angular-translate/bower-angular-translate@2.11.0": {
-      "angular": "github:angular/bower-angular@1.5.3"
-    },
-    "github:angular-ui-tree/angular-ui-tree@2.14.0": {
       "angular": "github:angular/bower-angular@1.5.3"
     },
     "github:angular-ui/ui-router@0.2.18": {
@@ -114,7 +111,7 @@ System.config({
       "path-browserify": "npm:path-browserify@0.0.0"
     },
     "github:jspm/nodelibs-process@0.1.2": {
-      "process": "npm:process@0.11.3"
+      "process": "npm:process@0.11.5"
     },
     "github:jspm/nodelibs-stream@0.1.0": {
       "stream-browserify": "npm:stream-browserify@1.0.0"
@@ -323,6 +320,9 @@ System.config({
       "randombytes": "npm:randombytes@2.0.3",
       "systemjs-json": "github:systemjs/plugin-json@0.1.2"
     },
+    "npm:dom-autoscroller@1.3.1": {
+      "create-point-cb": "npm:create-point-cb@1.0.0"
+    },
     "npm:dragula@3.6.8": {
       "contra": "npm:contra@1.9.1",
       "crossvent": "npm:crossvent@1.5.4"
@@ -410,8 +410,10 @@ System.config({
     "npm:process-nextick-args@1.0.6": {
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
-    "npm:process@0.11.3": {
-      "assert": "github:jspm/nodelibs-assert@0.1.0"
+    "npm:process@0.11.5": {
+      "assert": "github:jspm/nodelibs-assert@0.1.0",
+      "fs": "github:jspm/nodelibs-fs@0.1.2",
+      "vm": "github:jspm/nodelibs-vm@0.1.0"
     },
     "npm:public-encrypt@4.0.0": {
       "bn.js": "npm:bn.js@4.11.1",

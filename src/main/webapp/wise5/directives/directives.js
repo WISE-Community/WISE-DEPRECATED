@@ -121,7 +121,7 @@ var ComponentDirective = function () {
 }();
 
 var ClassResponseDirective = function () {
-    function ClassResponseDirective(StudentStatusService) {
+    function ClassResponseDirective(StudentStatusService, ConfigService) {
         _classCallCheck(this, ClassResponseDirective);
 
         this.restrict = 'E';
@@ -132,6 +132,7 @@ var ClassResponseDirective = function () {
         };
         this.templateUrl = 'wise5/components/discussion/classResponse.html';
         this.StudentStatusService = StudentStatusService;
+        this.ConfigService = ConfigService;
     }
 
     _createClass(ClassResponseDirective, [{
@@ -172,11 +173,15 @@ var ClassResponseDirective = function () {
                     }, 250);
                 }
             };
+
+            $scope.adjustClientSaveTime = function (time) {
+                return ClassResponseDirective.instance.ConfigService.convertToClientTimestamp(time);
+            };
         }
     }], [{
         key: 'directiveFactory',
-        value: function directiveFactory(StudentStatusService) {
-            ClassResponseDirective.instance = new ClassResponseDirective(StudentStatusService);
+        value: function directiveFactory(StudentStatusService, ConfigService) {
+            ClassResponseDirective.instance = new ClassResponseDirective(StudentStatusService, ConfigService);
             return ClassResponseDirective.instance;
         }
     }]);
@@ -630,7 +635,7 @@ var PossibleScore = {
 
 var Directives = angular.module('directives', []);
 
-ClassResponseDirective.directiveFactory.$inject = ['StudentStatusService'];
+ClassResponseDirective.directiveFactory.$inject = ['StudentStatusService', 'ConfigService'];
 CompileDirective.directiveFactory.$inject = ['$compile'];
 ComponentDirective.directiveFactory.$inject = ['$injector', '$compile', 'NodeService', 'ProjectService', 'StudentDataService'];
 ConfirmNumberDecrease.directiveFactory.$inject = [];

@@ -6,9 +6,7 @@ exports.config = {
     sauceKey: process.env.SAUCE_ACCESS_KEY,
     //seleniumAddress: 'http://localhost:4444/wd/hub',
 
-    specs: ['previewVLE.spec.js',
-    /*'notebook.spec.js', commented out until notebook behavior settles */
-    'authoringTool.spec.js', 'setUpRun.spec.js', 'classroomMonitor.spec.js'],
+    specs: ['previewVLE.spec.js', 'notebook.spec.js', 'authoringTool.spec.js', 'setUpRun.spec.js', 'classroomMonitor.spec.js'],
     multiCapabilities: [{
         'browserName': 'chrome',
         'tunnel-identifier': process.env.TRAVIS_JOB_NUMBER,

@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var MatchController = function () {
-    function MatchController($q, $rootScope, $scope, MatchService, NodeService, ProjectService, StudentDataService, UtilService, $mdMedia) {
+    function MatchController($q, $rootScope, $scope, dragulaService, ConfigService, MatchService, NodeService, ProjectService, StudentDataService, UtilService, $mdMedia) {
         var _this = this;
 
         _classCallCheck(this, MatchController);
@@ -17,6 +17,8 @@ var MatchController = function () {
         this.$q = $q;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
+        this.dragulaService = dragulaService;
+        this.ConfigService = ConfigService;
         this.MatchService = MatchService;
         this.NodeService = NodeService;
         this.ProjectService = ProjectService;
@@ -24,6 +26,7 @@ var MatchController = function () {
         this.UtilService = UtilService;
         this.$mdMedia = $mdMedia;
         this.idToOrder = this.ProjectService.idToOrder;
+        this.autoScroll = require('dom-autoscroller');
 
         // the node id of the current node
         this.nodeId = null;
@@ -64,6 +67,15 @@ var MatchController = function () {
         // whether the student has correctly placed the choices
         this.isCorrect = null;
 
+        // the flex (%) width for displaying the buckets
+        this.bucketWidth = 100;
+
+        // the number of columns for displaying the choices
+        this.choiceColumns = 1;
+
+        // whether to orient the choices and buckets side-by-side
+        this.horizontal = false;
+
         // message to show next to save/submit buttons
         this.saveMessage = {
             text: '',
@@ -103,6 +115,7 @@ var MatchController = function () {
 
             // get the component id
             this.componentId = this.componentContent.id;
+            this.horizontal = this.componentContent.horizontal;
 
             if (this.mode === 'student') {
                 this.isPromptVisible = true;
@@ -182,35 +195,43 @@ var MatchController = function () {
             }
         }
 
-        this.$scope.options = {
-            accept: function accept(sourceNode, destNodes, destIndex) {
-                var result = false;
+        var dragId = 'match_' + this.componentId;
+        // handle choice drop events
+        var dropEvent = dragId + '.drop-model';
+        this.$scope.$on(dropEvent, function (e, el, container, source) {
+            // choice item has been dropped in new location, so run studentDataChanged function
+            _this.$scope.matchController.studentDataChanged();
+        });
 
-                // get the value of the source node
-                var data = sourceNode.$modelValue;
-
-                // get the type of the nodes in the destination
-                var destType = destNodes.$element.attr('data-type');
-
-                if (data != null) {
-
-                    // check if the types match
-                    if (data.type === destType) {
-                        // the types match so we will accept it
-                        result = true;
-                    }
-                }
-
-                return result;
-            },
-            dropped: function dropped(event) {
-                if (event.source.nodesScope.$id !== event.dest.nodesScope.$id || event.source.index !== event.dest.index) {
-                    // TODO: not sure why this check is necessary, as angular-ui-tree is not supposed to fire the dropped event unless position has changed
-                    // tell the controller that the student data has changed
-                    _this.$scope.matchController.studentDataChanged();
-                }
+        // drag and drop options
+        this.dragulaService.options(this.$scope, dragId, {
+            moves: function moves(el, source, handle, sibling) {
+                return !_this.$scope.matchController.isDisabled;
             }
-        };
+        });
+
+        // provide visual indicator when choice is dragged over a new bucket
+        var drake = dragulaService.find(this.$scope, dragId).drake;
+        drake.on('over', function (el, container, source) {
+            if (source !== container) {
+                container.className += ' match-bucket__contents--over';
+            }
+        }).on('out', function (el, container, source) {
+            if (source !== container) {
+                container.className = container.className.replace('match-bucket__contents--over', '');;
+            }
+        });
+
+        // support scroll while dragging
+        var scroll = this.autoScroll([document.querySelector('#content')], {
+            margin: 30,
+            pixels: 50,
+            scrollWhenOutside: true,
+            autoScroll: function autoScroll() {
+                // Only scroll when the pointer is down, and there is a child being dragged
+                return this.down && drake.dragging;
+            }
+        });
 
         /**
          * Get the component state from this component. The parent node will
@@ -292,7 +313,8 @@ var MatchController = function () {
 
                 var isAutoSave = componentState.isAutoSave;
                 var isSubmit = componentState.isSubmit;
-                var clientSaveTime = componentState.clientSaveTime;
+                var serverSaveTime = componentState.serverSaveTime;
+                var clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
 
                 // set save message
                 if (isSubmit) {
@@ -471,18 +493,22 @@ var MatchController = function () {
             if (onload && numStates) {
                 var latestState = componentStates[numStates - 1];
 
-                if (latestState.isSubmit) {
-                    // latest state is a submission, so set isSubmitDirty to false and notify node
-                    this.isSubmitDirty = false;
-                    this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: false });
-                    // set save message
-                    this.setSaveMessage('Last submitted', latestState.clientSaveTime);
-                } else {
-                    // latest state is not a submission, so set isSubmitDirty to true and notify node
-                    this.isSubmitDirty = true;
-                    this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: true });
-                    // set save message
-                    this.setSaveMessage('Last saved', latestState.clientSaveTime);
+                if (latestState) {
+                    var serverSaveTime = latestState.serverSaveTime;
+                    var clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
+                    if (latestState.isSubmit) {
+                        // latest state is a submission, so set isSubmitDirty to false and notify node
+                        this.isSubmitDirty = false;
+                        this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: false });
+                        // set save message
+                        this.setSaveMessage('Last submitted', clientSaveTime);
+                    } else {
+                        // latest state is not a submission, so set isSubmitDirty to true and notify node
+                        this.isSubmitDirty = true;
+                        this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: true });
+                        // set save message
+                        this.setSaveMessage('Last saved', clientSaveTime);
+                    }
                 }
             }
         }
@@ -526,6 +552,25 @@ var MatchController = function () {
 
                 // get the buckets from the component content
                 var buckets = this.componentContent.buckets;
+
+                if (this.horizontal) {
+                    this.bucketWidth = 100;
+                    this.choiceColumns = 1;
+                } else {
+                    if (this.componentContent.bucketWidth) {
+                        this.bucketWidth = this.componentContent.bucketWidth;
+                        this.choiceColumns = Math.round(100 / this.componentContent.bucketWidth);
+                    } else {
+                        var n = buckets.length;
+                        if (n % 3 === 0 || n % 3 === 2) {
+                            this.bucketWidth = Math.round(100 / 3);
+                            this.choiceColumns = 3;
+                        } else if (n % 2 === 0) {
+                            this.bucketWidth = 100 / 2;
+                            this.choiceColumns = 2;
+                        }
+                    }
+                }
 
                 /*
                  * create a bucket that will contain the choices when
@@ -1237,7 +1282,7 @@ var MatchController = function () {
             if (this.authoringComponentContent.showPreviousWorkNodeId == null || this.authoringComponentContent.showPreviousWorkNodeId == '') {
 
                 /*
-                 * the show previous work node id is null so we will also set the 
+                 * the show previous work node id is null so we will also set the
                  * show previous component id to null
                  */
                 this.authoringComponentContent.showPreviousWorkComponentId = '';
@@ -1750,7 +1795,7 @@ var MatchController = function () {
     return MatchController;
 }();
 
-MatchController.$inject = ['$q', '$rootScope', '$scope', 'MatchService', 'NodeService', 'ProjectService', 'StudentDataService', 'UtilService', '$mdMedia'];
+MatchController.$inject = ['$q', '$rootScope', '$scope', 'dragulaService', 'ConfigService', 'MatchService', 'NodeService', 'ProjectService', 'StudentDataService', 'UtilService', '$mdMedia'];
 
 exports.default = MatchController;
 //# sourceMappingURL=matchController.js.map

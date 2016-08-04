@@ -19,13 +19,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var EmbeddedController = function () {
-    function EmbeddedController($q, $scope, $sce, $window, NodeService, NotebookService, EmbeddedService, ProjectService, StudentDataService, UtilService) {
+    function EmbeddedController($q, $scope, $sce, $window, ConfigService, NodeService, NotebookService, EmbeddedService, ProjectService, StudentDataService, UtilService) {
         _classCallCheck(this, EmbeddedController);
 
         this.$q = $q;
         this.$scope = $scope;
         this.$sce = $sce;
         this.$window = $window;
+        this.ConfigService = ConfigService;
         this.NodeService = NodeService;
         this.NotebookService = NotebookService;
         this.EmbeddedService = EmbeddedService;
@@ -121,6 +122,8 @@ var EmbeddedController = function () {
                 // application has finished loading, so send latest component state to application
                 this.sendLatestWorkToApplication();
                 this.processLatestSubmit();
+
+                // activate iframe-resizer on the embedded app's iframe
                 $('#' + this.embeddedApplicationIFrameId).iFrameResize({ scrolling: true });
             } else if (messageEventData.messageType === "componentDirty") {
                 var _isDirty = messageEventData.isDirty;
@@ -252,7 +255,8 @@ var EmbeddedController = function () {
 
                     var isAutoSave = currentState.isAutoSave;
                     var isSubmit = currentState.isSubmit;
-                    var clientSaveTime = componentState.clientSaveTime;
+                    var serverSaveTime = componentState.serverSaveTime;
+                    var clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
 
                     // set save message
                     if (isSubmit) {
@@ -348,18 +352,20 @@ var EmbeddedController = function () {
             var latestState = this.$scope.componentState;
 
             if (latestState) {
+                var serverSaveTime = latestState.serverSaveTime;
+                var clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
                 if (latestState.isSubmit) {
                     // latest state is a submission, so set isSubmitDirty to false and notify node
                     this.isSubmitDirty = false;
                     this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: false });
                     // set save message
-                    this.setSaveMessage('Last submitted', latestState.clientSaveTime);
+                    this.setSaveMessage('Last submitted', clientSaveTime);
                 } else {
                     // latest state is not a submission, so set isSubmitDirty to true and notify node
                     this.isSubmitDirty = true;
                     this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: true });
                     // set save message
-                    this.setSaveMessage('Last saved', latestState.clientSaveTime);
+                    this.setSaveMessage('Last saved', clientSaveTime);
                 }
             }
         }
@@ -651,7 +657,7 @@ var EmbeddedController = function () {
     return EmbeddedController;
 }();
 
-EmbeddedController.$inject = ['$q', '$scope', '$sce', '$window', 'NodeService', 'NotebookService', 'EmbeddedService', 'ProjectService', 'StudentDataService', 'UtilService'];
+EmbeddedController.$inject = ['$q', '$scope', '$sce', '$window', 'ConfigService', 'NodeService', 'NotebookService', 'EmbeddedService', 'ProjectService', 'StudentDataService', 'UtilService'];
 
 exports.default = EmbeddedController;
 //# sourceMappingURL=embeddedController.js.map

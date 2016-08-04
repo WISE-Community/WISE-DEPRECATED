@@ -1,17 +1,20 @@
-<div class="l-constrained l-constrained-md md-padding" layout="column" ng-controller="NavigationController as navCtrl">
+<div class="nav-mask" ng-if="themeCtrl.planningMode"></div>
+<div class="l-constrained l-constrained-md md-padding nav" layout="column" ng-controller="NavigationController as navCtrl">
     <div class="md-toolbar-tools auto-width">
         <div class="md-subhead nav-head">
-            <span translate="projectPlan" />
+            <span ng-click="navCtrl.showStudentStatistics()" translate="projectPlan" />
         </div>
         <span flex></span>
     </div>
 
     <div class="nav-contents nav-contents--root">
         <div layout="row" layout-wrap layout-align="center start">
-            <nav-item ng-repeat="id in navCtrl.rootNode.ids" ng-class="{'expanded': itemExpanded}" class="nav-item nav-item--root"
+            <nav-item ng-repeat="id in navCtrl.rootNode.ids"
+                      class="nav-item nav-item--root"
+                      ng-class="{'expanded': itemExpanded, 'nav-item--planning-mode': planningMode}"
                       show-position="themeCtrl.numberProject"
                       node-id="id" type="'card'"
-                      flex="100" flex-md="50" flex-lg="50" flex-gt-lg="50"></nav-item>
+                      flex="100" flex-sm="50" flex-gt-sm="50"></nav-item>
         </div>
     </div>
 </div>
