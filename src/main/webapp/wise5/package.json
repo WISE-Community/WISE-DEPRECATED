@@ -22,6 +22,8 @@
       "moment": "npm:moment@^2.11.1",
       "ng-file-upload": "npm:ng-file-upload@^10.1.11",
       "oclazyload": "npm:oclazyload@^1.0.9",
+      "svg.draggable.js": "npm:svg.draggable.js@^2.2.0",
+      "svg.js": "github:wout/svg.js@^2.3.2",
       "webfontloader": "npm:webfontloader@^1.6.20"
     },
     "devDependencies": {
@@ -54,6 +56,11 @@
       "github:angular/bower-angular-sanitize@1.5.3": {
         "dependencies": {
           "angular": "1.5.3"
+        }
+      },
+      "npm:svg.draggable.js@2.2.0": {
+        "dependencies": {
+          "svg.js": "2.3.2"
         }
       }
     }

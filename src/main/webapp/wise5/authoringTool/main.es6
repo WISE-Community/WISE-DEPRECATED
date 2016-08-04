@@ -20,6 +20,8 @@ import AuthoringToolController from './authoringToolController';
 import AuthoringToolMainController from './main/authoringToolMainController';
 import AuthoringToolNewProjectController from './main/authoringToolNewProjectController';
 import AuthorWebSocketService from '../services/authorWebSocketService';
+import ConceptMapController from '../components/conceptMap/conceptMapController';
+import ConceptMapService from '../components/conceptMap/conceptMapService';
 import ConfigService from '../services/configService';
 import CRaterService from '../services/cRaterService';
 import Directives from '../directives/directives';
@@ -82,6 +84,7 @@ let mainModule = angular.module('authoring', [
     .service(AnnotationService.name, AnnotationService)
     .service(AudioOscillatorService.name, AudioOscillatorService)
     .service(AuthorWebSocketService.name, AuthorWebSocketService)
+    .service(ConceptMapService.name, ConceptMapService)
     .service(ConfigService.name, ConfigService)
     .service(CRaterService.name, CRaterService)
     .service(DiscussionService.name, DiscussionService)
@@ -110,6 +113,7 @@ let mainModule = angular.module('authoring', [
     .controller(AuthoringToolController.name, AuthoringToolController)
     .controller(AuthoringToolMainController.name, AuthoringToolMainController)
     .controller(AuthoringToolNewProjectController.name, AuthoringToolNewProjectController)
+    .controller(ConceptMapController.name, ConceptMapController)
     .controller(DiscussionController.name, DiscussionController)
     .controller(DrawController.name, DrawController)
     .controller(EmbeddedController.name, EmbeddedController)

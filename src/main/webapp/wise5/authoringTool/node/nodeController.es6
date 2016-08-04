@@ -37,6 +37,7 @@ class NodeController {
         // the array of component types that can be created
         this.componentTypes = [
             {componentType: 'AudioOscillator', componentName: 'Audio Oscillator'},
+            {componentType: 'ConceptMap', componentName: 'Concept Map'},
             {componentType: 'Discussion', componentName: 'Discussion'},
             {componentType: 'Draw', componentName: 'Draw'},
             {componentType: 'Embedded', componentName: 'Embedded'},

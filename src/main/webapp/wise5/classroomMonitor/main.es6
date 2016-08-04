@@ -15,6 +15,8 @@ import AnnotationService from '../services/annotationService';
 import AudioOscillatorController from '../components/audioOscillator/audioOscillatorController';
 import AudioOscillatorService from '../components/audioOscillator/audioOscillatorService';
 import ClassroomMonitorController from './classroomMonitorController';
+import ConceptMapController from '../components/conceptMap/conceptMapController';
+import ConceptMapService from '../components/conceptMap/conceptMapService';
 import ConfigService from '../services/configService';
 import CRaterService from '../services/cRaterService';
 import Directives from '../directives/directives';
@@ -74,6 +76,7 @@ let mainModule = angular.module('classroomMonitor', [
     ])
     .service(AnnotationService.name, AnnotationService)
     .service(AudioOscillatorService.name, AudioOscillatorService)
+    .service(ConceptMapService.name, ConceptMapService)
     .service(ConfigService.name, ConfigService)
     .service(CRaterService.name, CRaterService)
     .service(DiscussionService.name, DiscussionService)
@@ -100,6 +103,7 @@ let mainModule = angular.module('classroomMonitor', [
     .service(UtilService.name, UtilService)
     .controller(AudioOscillatorController.name, AudioOscillatorController)
     .controller(ClassroomMonitorController.name, ClassroomMonitorController)
+    .controller(ConceptMapController.name, ConceptMapController)
     .controller(DiscussionController.name, DiscussionController)
     .controller(DrawController.name, DrawController)
     .controller(EmbeddedController.name, EmbeddedController)
