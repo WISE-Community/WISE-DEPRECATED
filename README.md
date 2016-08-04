@@ -2,6 +2,8 @@ Web-based Inquiry Science Education (WISE)
 ====
 [![Build Status](https://travis-ci.org/WISE-Community/WISE.svg?branch=master)](https://travis-ci.org/WISE-Community/WISE)
 
+Get WISE running locally using Docker: https://github.com/WISE-Community/WISE/wiki/WISE-Docker
+
 Setup WISE Local Development
 * Develop WISE without IDE (quick and easy, suitable for most): https://github.com/WISE-Community/WISE/wiki/How-to-Setup-WISE:-Local-Development-Environment-without-using-IDE
 * Develop WISE with Eclipse (longer to set up but provides more debugging options): https://github.com/WISE-Community/WISE/wiki/How-to-Setup-WISE:-Local-Development-Environment-using-Eclipse
