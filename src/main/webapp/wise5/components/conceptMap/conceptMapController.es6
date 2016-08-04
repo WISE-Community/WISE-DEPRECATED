@@ -14,7 +14,6 @@ class ConceptMapController {
                 ConceptMapService,
                 ConfigService,
                 CRaterService,
-                dragulaService,
                 NodeService,
                 ProjectService,
                 StudentAssetService,
@@ -29,7 +28,6 @@ class ConceptMapController {
         this.ConceptMapService = ConceptMapService;
         this.ConfigService = ConfigService;
         this.CRaterService = CRaterService;
-        this.dragulaService = dragulaService;
         this.NodeService = NodeService;
         this.ProjectService = ProjectService;
         this.StudentAssetService = StudentAssetService;
@@ -2065,9 +2063,6 @@ class ConceptMapController {
                          * the source node is different than the destination
                          * node so we will connect the link
                          */
-                         
-                        // add the link as an incoming link to the destination node
-                        node.addIncomingLink(this.activeLink);
                         
                         // set the destination node of the link
                         this.activeLink.setDestination(node);
@@ -2330,7 +2325,6 @@ ConceptMapController.$inject = [
     'ConceptMapService',
     'ConfigService',
     'CRaterService',
-    'dragulaService',
     'NodeService',
     'ProjectService',
     'StudentAssetService',

@@ -13,7 +13,7 @@ require('svg.draggable.js');
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var ConceptMapController = function () {
-    function ConceptMapController($injector, $mdDialog, $q, $rootScope, $scope, AnnotationService, ConceptMapService, ConfigService, CRaterService, dragulaService, NodeService, ProjectService, StudentAssetService, StudentDataService) {
+    function ConceptMapController($injector, $mdDialog, $q, $rootScope, $scope, AnnotationService, ConceptMapService, ConfigService, CRaterService, NodeService, ProjectService, StudentAssetService, StudentDataService) {
         var _this = this;
 
         _classCallCheck(this, ConceptMapController);
@@ -27,7 +27,6 @@ var ConceptMapController = function () {
         this.ConceptMapService = ConceptMapService;
         this.ConfigService = ConfigService;
         this.CRaterService = CRaterService;
-        this.dragulaService = dragulaService;
         this.NodeService = NodeService;
         this.ProjectService = ProjectService;
         this.StudentAssetService = StudentAssetService;
@@ -2277,9 +2276,6 @@ var ConceptMapController = function () {
                              * node so we will connect the link
                              */
 
-                            // add the link as an incoming link to the destination node
-                            node.addIncomingLink(this.activeLink);
-
                             // set the destination node of the link
                             this.activeLink.setDestination(node);
 
@@ -2561,7 +2557,7 @@ var ConceptMapController = function () {
 
 ;
 
-ConceptMapController.$inject = ['$injector', '$mdDialog', '$q', '$rootScope', '$scope', 'AnnotationService', 'ConceptMapService', 'ConfigService', 'CRaterService', 'dragulaService', 'NodeService', 'ProjectService', 'StudentAssetService', 'StudentDataService'];
+ConceptMapController.$inject = ['$injector', '$mdDialog', '$q', '$rootScope', '$scope', 'AnnotationService', 'ConceptMapService', 'ConfigService', 'CRaterService', 'NodeService', 'ProjectService', 'StudentAssetService', 'StudentDataService'];
 
 exports.default = ConceptMapController;
 //# sourceMappingURL=conceptMapController.js.map
