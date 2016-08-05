@@ -159,6 +159,7 @@ var ConceptMapService = function (_NodeService) {
         /**
          * Create an instance of the ConceptMapNode class
          * @param draw the svg.js draw object
+         * @param id the node id
          * @param fileName the file name of the image
          * @param nodeName the name of the node
          * @param x the x coordinate
@@ -167,13 +168,14 @@ var ConceptMapService = function (_NodeService) {
          * @param height the height of the image
          * @param a ConceptMapNode
          */
-        value: function newConceptMapNode(draw, fileName, nodeName, x, y, width, height) {
-            return new ConceptMapNode(this, draw, fileName, nodeName, x, y, width, height);
+        value: function newConceptMapNode(draw, id, fileName, nodeName, x, y, width, height) {
+            return new ConceptMapNode(this, draw, id, fileName, nodeName, x, y, width, height);
         }
 
         /**
          * Create an instance of the ConceptMapLink class
          * @param draw the svg.js draw object
+         * @param id the link id
          * @param node the source ConceptMapNode that the link is coming out of
          * @param x the x position of the tail
          * @param y the y position of the tail
@@ -182,8 +184,8 @@ var ConceptMapService = function (_NodeService) {
 
     }, {
         key: 'newConceptMapLink',
-        value: function newConceptMapLink(draw, node, x, y) {
-            return new ConceptMapLink(this, draw, node, x, y);
+        value: function newConceptMapLink(draw, id, node, x, y) {
+            return new ConceptMapLink(this, draw, id, node, x, y);
         }
 
         /**
@@ -385,13 +387,16 @@ var ConceptMapNode = function () {
      * @param height the height of the node
      */
 
-    function ConceptMapNode(ConceptMapService, draw, fileName, nodeName, x, y, width, height) {
+    function ConceptMapNode(ConceptMapService, draw, id, fileName, nodeName, x, y, width, height) {
         var _this2 = this;
 
         _classCallCheck(this, ConceptMapNode);
 
         // remember the svg.js draw object so we can draw onto it
         this.draw = draw;
+
+        // set the id
+        this.id = id;
 
         // remember the node name
         this.nodeName = nodeName;
@@ -559,20 +564,31 @@ var ConceptMapNode = function () {
 
         /**
          * Get the id of the node
-         * @returns the id of the node (which is the id of the svg group)
+         * @returns the id of the node
          */
 
     }, {
-        key: 'id',
-        value: function id() {
-            var id = null;
+        key: 'getId',
+        value: function getId() {
+            return this.id;
+        }
+
+        /**
+         * Get the group id of the node
+         * @returns the group id of the node
+         */
+
+    }, {
+        key: 'getGroupId',
+        value: function getGroupId() {
+            var groupId = null;
 
             if (this.group != null) {
                 // get the id of the group which we will use as the id of the node
-                id = this.group.id();
+                groupId = this.group.id();
             }
 
-            return id;
+            return groupId;
         }
 
         /**
@@ -1176,7 +1192,7 @@ var ConceptMapLink = function () {
      * @param node the source ConceptMapNode
      */
 
-    function ConceptMapLink(ConceptMapService, draw, node) {
+    function ConceptMapLink(ConceptMapService, draw, id, node) {
         _classCallCheck(this, ConceptMapLink);
 
         // remember the ConceptMapService
@@ -1184,6 +1200,8 @@ var ConceptMapLink = function () {
 
         // remember the svg.js draw object
         this.draw = draw;
+
+        this.id = id;
 
         // the arrow head of the link
         this.head = null;
@@ -1285,13 +1303,24 @@ var ConceptMapLink = function () {
 
     /**
      * Get the id of the link
-     * @returns the id of the link which is the id of the group
+     * @returns the id of the link
      */
 
 
     _createClass(ConceptMapLink, [{
-        key: 'id',
-        value: function id() {
+        key: 'getId',
+        value: function getId() {
+            return this.id;
+        }
+
+        /**
+         * Get the id of the group
+         * @returns the id of the group
+         */
+
+    }, {
+        key: 'getGroupId',
+        value: function getGroupId() {
             return this.group.id();
         }
 
@@ -1551,6 +1580,7 @@ var ConceptMapLink = function () {
     }, {
         key: 'setDestination',
         value: function setDestination(destinationNode) {
+
             if (destinationNode != null) {
                 var x1 = null;
                 var y1 = null;

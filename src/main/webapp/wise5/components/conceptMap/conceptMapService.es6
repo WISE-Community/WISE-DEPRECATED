@@ -120,6 +120,7 @@ class ConceptMapService extends NodeService {
     /**
      * Create an instance of the ConceptMapNode class
      * @param draw the svg.js draw object
+     * @param id the node id
      * @param fileName the file name of the image
      * @param nodeName the name of the node
      * @param x the x coordinate
@@ -128,20 +129,21 @@ class ConceptMapService extends NodeService {
      * @param height the height of the image
      * @param a ConceptMapNode
      */
-    newConceptMapNode(draw, fileName, nodeName, x, y, width, height) {
-        return new ConceptMapNode(this, draw, fileName, nodeName, x, y, width, height);
+    newConceptMapNode(draw, id, fileName, nodeName, x, y, width, height) {
+        return new ConceptMapNode(this, draw, id, fileName, nodeName, x, y, width, height);
     }
     
     /**
      * Create an instance of the ConceptMapLink class
      * @param draw the svg.js draw object
+     * @param id the link id
      * @param node the source ConceptMapNode that the link is coming out of
      * @param x the x position of the tail
      * @param y the y position of the tail
      * @returns a ConceptMapLink
      */
-    newConceptMapLink(draw, node, x, y) {
-        return new ConceptMapLink(this, draw, node, x, y);
+    newConceptMapLink(draw, id, node, x, y) {
+        return new ConceptMapLink(this, draw, id, node, x, y);
     }
     
     /**
@@ -312,10 +314,13 @@ class ConceptMapNode {
      * @param width the the width of the node
      * @param height the height of the node
      */
-    constructor(ConceptMapService, draw, fileName, nodeName, x, y, width, height) {
+    constructor(ConceptMapService, draw, id, fileName, nodeName, x, y, width, height) {
 
         // remember the svg.js draw object so we can draw onto it
         this.draw = draw;
+        
+        // set the id
+        this.id = id;
         
         // remember the node name
         this.nodeName = nodeName;
@@ -473,17 +478,25 @@ class ConceptMapNode {
     
     /**
      * Get the id of the node
-     * @returns the id of the node (which is the id of the svg group)
+     * @returns the id of the node
      */
-    id() {
-        var id = null;
+    getId() {
+        return this.id;
+    }
+    
+    /**
+     * Get the group id of the node
+     * @returns the group id of the node
+     */
+    getGroupId() {
+        var groupId = null;
         
         if (this.group != null) {
             // get the id of the group which we will use as the id of the node
-            id = this.group.id();
+            groupId = this.group.id();
         }
         
-        return id;
+        return groupId;
     }
     
     /**
@@ -991,13 +1004,15 @@ class ConceptMapLink {
      * @param draw the svg.js draw object
      * @param node the source ConceptMapNode
      */
-    constructor(ConceptMapService, draw, node) {
+    constructor(ConceptMapService, draw, id, node) {
         
         // remember the ConceptMapService
         this.ConceptMapService = ConceptMapService;
         
         // remember the svg.js draw object
         this.draw = draw;
+        
+        this.id = id;
         
         // the arrow head of the link
         this.head = null;
@@ -1099,9 +1114,17 @@ class ConceptMapLink {
     
     /**
      * Get the id of the link
-     * @returns the id of the link which is the id of the group
+     * @returns the id of the link
      */
-    id() {
+    getId() {
+        return this.id;
+    }
+    
+    /**
+     * Get the id of the group
+     * @returns the id of the group
+     */
+    getGroupId() {
         return this.group.id();
     }
     
@@ -1331,6 +1354,7 @@ class ConceptMapLink {
      * @param destinationNode the destination ConceptMapNode object
      */
     setDestination(destinationNode) {
+        
         if (destinationNode != null) {
             var x1 = null;
             var y1 = null;

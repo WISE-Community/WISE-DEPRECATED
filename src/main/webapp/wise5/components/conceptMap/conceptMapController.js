@@ -100,6 +100,9 @@ var ConceptMapController = function () {
         // the available nodes the students can choose
         this.availableNodes = [];
 
+        // the available links the students can choose
+        this.availableLinks = [];
+
         // the node instances the students create
         this.nodes = [];
 
@@ -186,6 +189,7 @@ var ConceptMapController = function () {
                 this.isSaveButtonVisible = this.componentContent.showSaveButton;
                 this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
                 this.availableNodes = this.componentContent.nodes;
+                this.availableLinks = this.componentContent.links;
                 // get the latest annotations
                 // TODO: watch for new annotations and update accordingly
                 this.latestAnnotations = this.$scope.$parent.nodeController.getLatestComponentAnnotations(this.componentId);
@@ -1256,39 +1260,38 @@ var ConceptMapController = function () {
         }
     }, {
         key: 'linkTypeSelected',
+
+
+        /**
+         * A link type was selected in the link type chooser popup
+         * @param linkType the authored link object that was selected
+         */
         value: function linkTypeSelected(linkType) {
-            //console.log(name);
 
             if (this.highlightedElement != null && this.highlightedElement.constructor.name == 'ConceptMapLink') {
 
+                // get the ConceptMapLink object
                 var link = this.highlightedElement;
-                //console.log(this.highlightedElement);
+
+                // get the link name and color
                 var linkTypeName = linkType.name;
                 var linkTypeColor = linkType.color;
 
-                link.setColor(linkTypeColor);
+                // set the name and color into the link
                 link.setText(linkTypeName);
+                link.setColor(linkTypeColor);
                 link.setLinkType(linkTypeName);
             }
 
-            /*
-            this.displayLinkTypeChooser = false;
-            this.displayLinkTypeChooserModalOverlay = false;
-            this.newlyCreatedLink = null;
-            */
+            // hide the link type chooser
             this.hideLinkTypeChooser();
         }
-    }, {
-        key: 'getLinkTypes',
-        value: function getLinkTypes() {
-            var linkTypes = [];
 
-            if (this.componentContent != null) {
-                linkTypes = this.componentContent.linkTypes;
-            }
+        /**
+         * Get the links title
+         * @returns the links title
+         */
 
-            return linkTypes;
-        }
     }, {
         key: 'getLinksTitle',
         value: function getLinksTitle() {
@@ -1300,19 +1303,34 @@ var ConceptMapController = function () {
 
             return linksTitle;
         }
+
+        /**
+         * Show the link type chooser popup
+         */
+
     }, {
         key: 'showLinkTypeChooser',
         value: function showLinkTypeChooser() {
+
+            // check if we have initialized the popup
             if (!this.initializedDisplayLinkTypeChooserModalOverlay) {
+                // we have not initialized the popup so we will do so now
                 this.setLinkTypeChooserOverlayStyle();
                 this.initializedDisplayLinkTypeChooserModalOverlay = true;
             }
 
             this.displayLinkTypeChooser = true;
         }
+
+        /**
+         * Hide the link type chooser popup
+         */
+
     }, {
         key: 'hideLinkTypeChooser',
         value: function hideLinkTypeChooser() {
+
+            // hide the link type chooser
             this.displayLinkTypeChooser = false;
             this.displayLinkTypeChooserModalOverlay = false;
             this.newlyCreatedLink = null;
@@ -1739,8 +1757,11 @@ var ConceptMapController = function () {
                 var x = event.offsetX - this.tempOffsetX;
                 var y = event.offsetY - this.tempOffsetY;
 
+                // get a new ConceptMapNodeId e.g. 'studentNode3'
+                var newConceptMapNodeId = this.getNewConceptMapNodeId();
+
                 // create a ConceptMapNode
-                var conceptMapNode = this.ConceptMapService.newConceptMapNode(this.draw, fileName, nodeName, x, y, width, height);
+                var conceptMapNode = this.ConceptMapService.newConceptMapNode(this.draw, newConceptMapNodeId, fileName, nodeName, x, y, width, height);
 
                 // add the node to our array of nodes
                 this.addNode(conceptMapNode);
@@ -1754,6 +1775,108 @@ var ConceptMapController = function () {
 
             // enable node draggin
             this.enableNodeDragging();
+        }
+
+        /**
+         * Get a new ConceptMapNode id that isn't being used
+         * @returns a new ConceptMapNode id e.g. 'studentNode3'
+         */
+
+    }, {
+        key: 'getNewConceptMapNodeId',
+        value: function getNewConceptMapNodeId() {
+
+            var nextAvailableNodeIdNumber = 1;
+
+            // array to remember the numbers that have been used in node ids already
+            var usedNumbers = [];
+
+            // loop through all the nodes
+            for (var x = 0; x < this.nodes.length; x++) {
+                var node = this.nodes[x];
+
+                if (node != null) {
+
+                    // get the node id
+                    var nodeId = node.getId();
+
+                    if (nodeId != null) {
+
+                        // get the number from the node id
+                        var nodeIdNumber = parseInt(nodeId.replace('studentNode', ''));
+
+                        if (nodeIdNumber != null) {
+                            // add the number to the array of used numbers
+                            usedNumbers.push(nodeIdNumber);
+                        }
+                    }
+                }
+            }
+
+            if (usedNumbers.length > 0) {
+                // get the max number used
+                var maxNumberUsed = Math.max.apply(Math, usedNumbers);
+
+                if (!isNaN(maxNumberUsed)) {
+                    // increment the number by 1 to get the next available number
+                    nextAvailableNodeIdNumber = maxNumberUsed + 1;
+                }
+            }
+
+            var newId = 'studentNode' + nextAvailableNodeIdNumber;
+
+            return newId;
+        }
+
+        /**
+         * Get a new ConceptMapLink id that isn't being used
+         * @returns a new ConceptMapLink id e.g. 'studentLink3'
+         */
+
+    }, {
+        key: 'getNewConceptMapLinkId',
+        value: function getNewConceptMapLinkId() {
+
+            var nextAvailableLinkIdNumber = 1;
+
+            // array to remember the numbers that have been used in link ids already
+            var usedNumbers = [];
+
+            // loop through all the nodes
+            for (var x = 0; x < this.nodes.length; x++) {
+                var node = this.nodes[x];
+
+                if (node != null) {
+
+                    // get the node id
+                    var nodeId = node.getId();
+
+                    if (nodeId != null) {
+
+                        // get the number from the node id
+                        var nodeIdNumber = parseInt(nodeId.replace('studentLink', ''));
+
+                        if (nodeIdNumber != null) {
+                            // add the number to the array of used numbers
+                            usedNumbers.push(nodeIdNumber);
+                        }
+                    }
+                }
+            }
+
+            if (usedNumbers.length > 0) {
+                // get the max number used
+                var maxNumberUsed = Math.max.apply(Math, usedNumbers);
+
+                if (!isNaN(maxNumberUsed)) {
+                    // increment the number by 1 to get the next available number
+                    nextAvailableLinkIdNumber = maxNumberUsed + 1;
+                }
+            }
+
+            var newId = 'studentLink' + nextAvailableLinkIdNumber;
+
+            return newId;
         }
 
         /**
@@ -2006,14 +2129,14 @@ var ConceptMapController = function () {
         }
 
         /**
-         * Get a node by id. The id of a node is the same as its svg group id.
-         * @param groupId the svg group id
+         * Get a node by id.
+         * @param id the node id
          * @returns the node with the given id or null
          */
 
     }, {
         key: 'getNodeById',
-        value: function getNodeById(groupId) {
+        value: function getNodeById(id) {
             var node = null;
 
             if (groupId != null) {
@@ -2021,9 +2144,9 @@ var ConceptMapController = function () {
                 // loop through all the nodes
                 for (var n = 0; n < this.nodes.length; n++) {
                     var tempNode = this.nodes[n];
-                    var tempNodeId = tempNode.id();
+                    var tempNodeId = tempNode.getId();
 
-                    if (groupId == tempNodeId) {
+                    if (id == tempNodeId) {
                         // we have found the node we want
                         node = tempNode;
                         break;
@@ -2035,14 +2158,72 @@ var ConceptMapController = function () {
         }
 
         /**
-         * Get a link by id. The id of a link is the same as its svg group id.
+         * Get a node by id.
          * @param groupId the svg group id
+         * @returns the node with the given id or null
+         */
+
+    }, {
+        key: 'getNodeByGroupId',
+        value: function getNodeByGroupId(groupId) {
+            var node = null;
+
+            if (groupId != null) {
+
+                // loop through all the nodes
+                for (var n = 0; n < this.nodes.length; n++) {
+                    var tempNode = this.nodes[n];
+                    var tempNodeGroupId = tempNode.getGroupId();
+
+                    if (groupId == tempNodeGroupId) {
+                        // we have found the node we want
+                        node = tempNode;
+                        break;
+                    }
+                }
+            }
+
+            return node;
+        }
+
+        /**
+         * Get a link by id.
+         * @param id the link id
          * @returns the link with the given id or null
          */
 
     }, {
         key: 'getLinkById',
-        value: function getLinkById(groupId) {
+        value: function getLinkById(id) {
+            var link = null;
+
+            if (id != null) {
+
+                // loop through all the links
+                for (var l = 0; l < this.links.length; l++) {
+                    var tempLink = this.links[l];
+                    var tempLinkId = tempLink.getId();
+
+                    if (groupId == tempLinkId) {
+                        // we have found the link we want
+                        link = tempLink;
+                        break;
+                    }
+                }
+            }
+
+            return link;
+        }
+
+        /**
+         * Get a link by group id.
+         * @param groupId the svg group id
+         * @returns the link with the given group id or null
+         */
+
+    }, {
+        key: 'getLinkByGroupId',
+        value: function getLinkByGroupId(groupId) {
             var link = null;
 
             if (groupId != null) {
@@ -2050,9 +2231,9 @@ var ConceptMapController = function () {
                 // loop through all the links
                 for (var l = 0; l < this.links.length; l++) {
                     var tempLink = this.links[l];
-                    var tempLinkId = tempLink.id();
+                    var tempLinkGroupId = tempLink.getGroupId();
 
-                    if (groupId == tempLinkId) {
+                    if (groupId == tempLinkGroupId) {
                         // we have found the link we want
                         link = tempLink;
                         break;
@@ -2107,7 +2288,7 @@ var ConceptMapController = function () {
                 // loop through all the nodse
                 for (var n = 0; n < this.nodes.length; n++) {
                     var tempNode = this.nodes[n];
-                    var tempNodeId = tempNode.id();
+                    var tempNodeId = tempNode.getId();
 
                     if (groupId == tempNodeId) {
                         // we have found the node we want to remove
@@ -2170,7 +2351,7 @@ var ConceptMapController = function () {
             if (groupId != null) {
 
                 // get the node
-                var node = this.getNodeById(groupId);
+                var node = this.getNodeByGroupId(groupId);
 
                 if (node != null) {
                     /*
@@ -2197,7 +2378,7 @@ var ConceptMapController = function () {
             if (groupId != null) {
 
                 // get the node
-                var node = this.getNodeById(groupId);
+                var node = this.getNodeByGroupId(groupId);
 
                 if (node != null) {
                     // make the node inactive by clearing the active node
@@ -2223,7 +2404,7 @@ var ConceptMapController = function () {
                 if (groupId != null) {
 
                     // get the node
-                    var node = this.getNodeById(groupId);
+                    var node = this.getNodeByGroupId(groupId);
 
                     if (node != null) {
                         // make the node highlighted
@@ -2255,15 +2436,15 @@ var ConceptMapController = function () {
                 if (groupId != null) {
 
                     // get the node
-                    var node = this.getNodeById(groupId);
+                    var node = this.getNodeByGroupId(groupId);
 
                     if (node != null) {
 
                         // get the source node of the link
                         var sourceNode = this.activeLink.sourceNode;
-                        var sourceNodeId = sourceNode.id();
+                        var sourceNodeGroupId = sourceNode.getGroupId();
 
-                        if (sourceNodeId == groupId) {
+                        if (sourceNodeGroupId == groupId) {
                             /* 
                              * if the source of the link is the same as the 
                              * destination node, we will not connect the link
@@ -2362,8 +2543,11 @@ var ConceptMapController = function () {
             var x = node.cx();
             var y = node.cy();
 
+            // get a new ConceptMapLinkId e.g. 'studentLink3'
+            var newConceptMapLinkId = this.getNewConceptMapLinkId();
+
             // create a link that comes out of the node
-            var link = this.ConceptMapService.newConceptMapLink(this.draw, node, x, y);
+            var link = this.ConceptMapService.newConceptMapLink(this.draw, newConceptMapLinkId, node, x, y);
 
             // set the link mouse down listener
             link.setLinkMouseDown(function (event) {
@@ -2406,7 +2590,7 @@ var ConceptMapController = function () {
             var groupId = this.getGroupId(event.target);
 
             // get the link
-            var link = this.getLinkById(groupId);
+            var link = this.getLinkByGroupId(groupId);
 
             if (link != null) {
                 // make the link highlighted
@@ -2427,7 +2611,7 @@ var ConceptMapController = function () {
             var groupId = this.getGroupId(event.target);
 
             // get the link
-            var link = this.getLinkById(groupId);
+            var link = this.getLinkByGroupId(groupId);
 
             if (link != null) {
                 // show the delete button for the link
@@ -2448,7 +2632,7 @@ var ConceptMapController = function () {
             var groupId = this.getGroupId(event.target);
 
             // get the link
-            var link = this.getLinkById(groupId);
+            var link = this.getLinkByGroupId(groupId);
 
             // hide the delete button if the link is not the highlighted link
             if (link != null && link != this.highlightedElement) {
@@ -2471,7 +2655,7 @@ var ConceptMapController = function () {
                 var groupId = event.target.parentElement.parentElement.id;
 
                 // get the node
-                var node = this.getNodeById(groupId);
+                var node = this.getNodeByGroupId(groupId);
 
                 if (node != null) {
                     // remove the node from the svg
@@ -2496,7 +2680,7 @@ var ConceptMapController = function () {
             var groupId = event.target.parentElement.parentElement.id;
 
             // get the node
-            var node = this.getNodeById(groupId);
+            var node = this.getNodeByGroupId(groupId);
 
             if (node != null) {
                 // show the delete button

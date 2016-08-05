@@ -91,13 +91,13 @@
                         <div style="display: inline-block;"><span>{{conceptMapController.getLinksTitle()}}</span></div>
                         <md-radio-group ng-model="conceptMapController.selectedLinkType"
                                         ng-change="conceptMapController.studentDataChanged()">
-                            <div ng-repeat="linkType in conceptMapController.getLinkTypes()">
+                            <div ng-repeat="link in conceptMapController.availableLinks">
                                 <md-radio-button class="md-primary"
-                                                 ng-value="linkType.name"
-                                                 ng-click="conceptMapController.isDisabled || conceptMapController.linkTypeSelected(linkType)"
+                                                 ng-value="link.name"
+                                                 ng-click="conceptMapController.isDisabled || conceptMapController.linkTypeSelected(link)"
                                                  ng-disabled="conceptMapController.isDisabled"
                                                  style="display: inline-block; margin: 8px;">
-                                    <div style="background-color: {{linkType.color}}; width: 30px; height: 15px; display: inline-block; margin-right: 4px"></div><span compile="linkType.name"></span>
+                                    <div style="background-color: {{link.color}}; width: 30px; height: 15px; display: inline-block; margin-right: 4px"></div><span compile="link.name"></span>
                                 </md-radio-button>
                             </div>
                         </md-radio-group>
