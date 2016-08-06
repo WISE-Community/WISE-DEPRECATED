@@ -45,6 +45,8 @@ System.config({
     "moment": "npm:moment@2.12.0",
     "ng-file-upload": "npm:ng-file-upload@10.1.14",
     "oclazyload": "npm:oclazyload@1.0.9",
+    "svg.draggable.js": "npm:svg.draggable.js@2.2.0",
+    "svg.js": "github:wout/svg.js@2.3.4",
     "webfontloader": "npm:webfontloader@1.6.24",
     "github:angular-translate/bower-angular-translate-loader-partial@2.11.0": {
       "angular": "github:angular/bower-angular@1.5.3",
@@ -470,6 +472,14 @@ System.config({
     },
     "npm:string_decoder@0.10.31": {
       "buffer": "github:jspm/nodelibs-buffer@0.1.0"
+    },
+    "npm:svg.draggable.js@2.2.0": {
+      "svg.js": "npm:svg.js@2.3.2"
+    },
+    "npm:svg.js@2.3.2": {
+      "fs": "github:jspm/nodelibs-fs@0.1.2",
+      "process": "github:jspm/nodelibs-process@0.1.2",
+      "systemjs-json": "github:systemjs/plugin-json@0.1.2"
     },
     "npm:ticky@1.0.0": {
       "process": "github:jspm/nodelibs-process@0.1.2"

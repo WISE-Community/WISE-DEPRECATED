@@ -24,6 +24,7 @@
     "gulp-sass": "^2.1.1",
     "gulp-sourcemaps": "^1.6.0",
     "jasmine-core": "^2.4.1",
+    "jspm": "^0.16.42",
     "karma": "^0.13.19",
     "karma-babel-preprocessor": "^6.0.1",
     "karma-chrome-launcher": "^0.2.2",
@@ -38,7 +39,7 @@
   },
   "scripts": {
     "browser-sync": "./node_modules/browser-sync/bin/browser-sync.js start --config bs-config.js",
-    "postinstall": "cd src/main/webapp/wise5; npm install jspm; jspm install -y",
+    "postinstall": "./node_modules/jspm/jspm.js install -y",
     "watch-all": "npm run transpile & npm run watch-sass",
     "transpile": "./node_modules/babel-cli/bin/babel.js --extensions .es6 --source-maps --presets babel-preset-es2015 --watch src/main/webapp/wise5/ --only wise5/services,wise5/classroomMonitor,wise5/authoringTool,wise5/directives,wise5/components,wise5/filters,wise5/vle,wise5/controllers,wise5/node/,wise5/test-unit,wise5/test-e2e --out-dir src/main/webapp/wise5/",
     "watch-sass": "gulp",
@@ -68,18 +69,66 @@
   "homepage": "https://github.com/WISE-Community/WISE#readme",
   "jspm": {
     "directories": {
-      "baseURL": "src/main/webapp/wise5",
-      "packages": "jspm_packages"
+      "baseURL": "src/main/webapp/wise5"
     },
     "dependencies": {
-      "jquery": "github:components/jquery@^2.1.4",
-      "angular": "github:angular/bower-angular@^1.5.0",
-      "angular-mocks": "github:angular/bower-angular-mocks@^1.5.0"
+      "angular": "github:angular/bower-angular@^1.5.3",
+      "angular-animate": "github:angular/bower-angular-animate@^1.5.3",
+      "angular-dragula": "npm:angular-dragula@^1.2.6",
+      "angular-material": "github:angular/bower-material@1.1.0-rc4-master-e638c51",
+      "angular-mocks": "github:angular/bower-angular-mocks@^1.5.3",
+      "angular-moment": "npm:angular-moment@^1.0.0-beta.3",
+      "angular-sanitize": "github:angular/bower-angular-sanitize@^1.5.3",
+      "angular-translate": "github:angular-translate/bower-angular-translate@^2.11.0",
+      "angular-translate-loader-partial": "github:angular-translate/bower-angular-translate-loader-partial@^2.11.0",
+      "angular-ui-router": "github:angular-ui/ui-router@^0.2.15",
+      "angular-ui-scrollpoint": "npm:angular-ui-scrollpoint@^2.1.1",
+      "angular-websocket": "npm:angular-websocket@1.0.14",
+      "dom-autoscroller": "npm:dom-autoscroller@^1.3.1",
+      "highcharts-ng": "npm:highcharts-ng@^0.0.11",
+      "highcharts/draggable-points": "github:highcharts/draggable-points@master",
+      "html2canvas": "npm:html2canvas@^0.5.0-beta4",
+      "iframe-resizer": "npm:iframe-resizer@^3.5.3",
+      "jquery": "npm:jquery@^2.2.0",
+      "moment": "npm:moment@^2.11.1",
+      "ng-file-upload": "npm:ng-file-upload@^10.1.11",
+      "oclazyload": "npm:oclazyload@^1.0.9",
+      "svg.draggable.js": "npm:svg.draggable.js@^2.2.0",
+      "svg.js": "github:wout/svg.js@^2.3.2",
+      "webfontloader": "npm:webfontloader@^1.6.20"
     },
     "devDependencies": {
       "babel": "npm:babel-core@^5.8.24",
       "babel-runtime": "npm:babel-runtime@^5.8.24",
       "core-js": "npm:core-js@^1.1.4"
+    },
+    "overrides": {
+      "npm:highcharts-ng@0.0.11": {
+        "dependencies": {}
+      },
+      "github:highcharts/draggable-points@master": {
+        "dependencies": {}
+      },
+      "npm:oclazyload@1.0.9": {
+        "dependencies": {
+          "angular": "1.5.3"
+        }
+      },
+      "github:angular/bower-angular-animate@1.5.3": {
+        "dependencies": {
+          "angular": "1.5.3"
+        }
+      },
+      "github:angular/bower-angular-sanitize@1.5.3": {
+        "dependencies": {
+          "angular": "1.5.3"
+        }
+      },
+      "npm:svg.draggable.js@2.2.0": {
+        "dependencies": {
+          "svg.js": "2.3.2"
+        }
+      }
     }
   }
 }
