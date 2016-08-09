@@ -43,10 +43,11 @@ GrapherNode.prototype.supportedLocales = {
 	"es":"es",
 	"ko":"ko",
 	"iw":"he",
-	"zh_CN":"zh_CN",
 	"nl":"nl",
 	"nl_GE":"nl",
-	"nl_DE":"nl"	
+	"nl_DE":"nl",
+	"tr":"tr",
+	"zh_CN":"zh_CN"
 };
 
 GrapherNode.tagMapFunctions = [

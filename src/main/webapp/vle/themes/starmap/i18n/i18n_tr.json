@@ -1,18 +1,18 @@
 {
     "toggle_nav_button_text": {
-        "value": "Harita göster",
+        "value": "Haritayı Göster",
         "description": "Text on the Toggle Navigation button when navigation UI is on (visible)"
     },
     "toggle_nav_button_title": {
-        "value": "Yıldız haritayı aç",
+        "value": "Yıldız Haritayı Aç",
         "description": "Text for mouse hover title on the Toggle Navigation button when navigation UI is on (visible)"
     },
     "toggle_nav_button_text_off": {
-        "value": "Harita göster",
+        "value": "Haritayı Göster",
         "description": "Text on the Toggle Navigation button when navigation UI is off (hidden)"
     },
     "toggle_nav_button_title_off": {
-        "value": "Yıldız haritayı aç",
+        "value": "Yıldız Haritayı Aç",
         "description": "Text for mouse hover title on the Toggle Navigation button when navigation UI is on (visible)"
     }
 }
