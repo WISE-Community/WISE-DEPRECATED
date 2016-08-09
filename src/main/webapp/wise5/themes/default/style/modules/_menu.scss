@@ -26,5 +26,11 @@
 
 .side-menu__item {
     font-weight: 600;
-    color: color('text-secondary');
+    //color: color('text-secondary');
+}
+
+.side-menu__icon {
+    margin-top: 12px !important;
+    margin-right: 12px !important;
+    margin-left: 12px;
 }
