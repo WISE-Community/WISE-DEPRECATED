@@ -18,6 +18,7 @@ MatchSequenceNode.prototype.supportedLocales = {
 		"nl":"nl",
 		"nl_GE":"nl",
 		"nl_DE":"nl",
+		"tr":"tr",
 		"zh_CN":"zh_CN"
 };
 

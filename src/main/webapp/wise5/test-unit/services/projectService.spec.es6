@@ -176,7 +176,7 @@ describe('ProjectService Unit Test', () => {
         it('should get default theme path when theme is not defined in the project', () => {
             spyOn(ConfigService, "getConfigParam").and.returnValue(wiseBaseURL);
             ProjectService.setProject(scootersProjectJSON);  // Set the sample project and parse it
-            let expectedThemePath = wiseBaseURL + "/wise5/vle/themes/default";
+            let expectedThemePath = wiseBaseURL + "/wise5/themes/default";
             let actualThemePath = ProjectService.getThemePath();
             expect(ConfigService.getConfigParam).toHaveBeenCalledWith("wiseBaseURL");
             expect(actualThemePath).toEqual(expectedThemePath);
@@ -186,7 +186,7 @@ describe('ProjectService Unit Test', () => {
             spyOn(ConfigService, "getConfigParam").and.returnValue(wiseBaseURL);
             ProjectService.setProject(demoProjectJSON);  // Set the sample project and parse it
             let demoProjectTheme = demoProjectJSON.theme;  // Demo Project has a theme defined
-            let expectedThemePath = wiseBaseURL + "/wise5/vle/themes/" + demoProjectTheme;
+            let expectedThemePath = wiseBaseURL + "/wise5/themes/" + demoProjectTheme;
             let actualThemePath = ProjectService.getThemePath();
             expect(ConfigService.getConfigParam).toHaveBeenCalledWith("wiseBaseURL");
             expect(actualThemePath).toEqual(expectedThemePath);

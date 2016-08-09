@@ -1,6 +1,6 @@
 {
     "enlarge": {
-        "value": "Genişlet",
+        "value": "genişlet",
         "description": "'enlarge' link text in the grading tool for viewing flash in a bigger window"
     },
     "error_student_data_not_found": {

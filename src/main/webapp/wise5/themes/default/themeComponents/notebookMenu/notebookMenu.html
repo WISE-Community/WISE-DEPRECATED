@@ -71,14 +71,14 @@
                       aria-label="View {{item.label.link}}"
                       ng-click="notebookMenuCtrl.setNotebookFilter($event, item.$key)"
                       ng-class="{'active': notebookMenuCtrl.notebookFilter === item.$key}">
-            <md-icon style="color: {{item.label.color}} !important"> {{item.label.icon}} </md-icon>
+            <md-icon class="side-menu__icon" style="color: {{item.label.color}} !important"> {{item.label.icon}} </md-icon>
             <p class="side-menu__item" style="color: {{item.label.color}}">{{item.label.link}}</p>
         </md-list-item>
     </md-list>
     <md-divider></md-divider>
     <md-list>
         <md-list-item aria-label="Close {{notebookMenuCtrl.notebookConfig.label}}" ng-click="notebookMenuCtrl.toggleNotebook($event)">
-            <md-icon> close </md-icon>
+            <md-icon class="side-menu__icon"> close </md-icon>
             <p class="side-menu__item">Close</p>
         </md-list-item>
     </md-list>

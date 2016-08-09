@@ -10,6 +10,11 @@
 
   .logo-link {
     min-width: auto;
+    display: none;
+
+    @media only screen and (min-width: ($layout-breakpoint-xs)) {
+        display: block;
+    }
 
     &:hover, &:focus {
       border: 0 none;

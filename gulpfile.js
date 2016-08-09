@@ -20,7 +20,7 @@ var print = require('gulp-print');
 // -----------------------------------------------------------------------------
 
 var sassOptions = { style: 'compact' };
-var paths = ['./src/main/webapp/wise5/style/**/*.scss', './src/main/webapp/wise5/vle/themes/*/style/**/*.scss'];
+var paths = ['./src/main/webapp/wise5/style/**/*.scss', './src/main/webapp/wise5/themes/*/style/**/*.scss'];
 var autoprefixerOptions = { browsers: ['> 5%', 'last 2 versions', 'Firefox ESR', 'not ie <= 10'] };
 
 // -----------------------------------------------------------------------------

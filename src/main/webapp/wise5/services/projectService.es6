@@ -72,13 +72,13 @@ class ProjectService {
         var name = this.getProjectMetadata().title;
         return name ? name : 'A WISE Project (No name)';
     };
-    
+
     /**
      * Set the project title
      */
     setProjectTitle(projectTitle) {
         var metadata = this.getProjectMetadata();
-        
+
         if (metadata != null) {
             metadata.title = projectTitle;
         }
@@ -631,7 +631,7 @@ class ProjectService {
 
         return contentString;
     };
-    
+
     /**
      * Inject the ng-click attribute that will call the snipImage function
      * @param content the content
@@ -660,35 +660,35 @@ class ProjectService {
 
         return content;
     }
-    
+
     /**
      * Inject the ng-click attribute that will call the snipImage function
      * @param contentString the content in string format
      * @returns the modified content string
      */
     injectClickToSnipImageIntoContentString(contentString) {
-        
+
         if (contentString != null) {
-            
+
             // regex to match image elements
             var imgMatcher = new RegExp('<img.*?src=\\\\?[\'"](.*?)\\\\?[\'"].*?>', 'gi');
-            
+
             // replace all instances that match
             contentString = contentString.replace(imgMatcher,
                 (matchedString, matchGroup1) => {
-                    
+
                     /*
                      * insert the ng-click attribute
                      * Before: <img src="abc.png"/>
                      * After: <img ng-click="vleController.snipImage($event)"/>
                      */
                     var newString = matchedString.replace('img', 'img ng-click=\\\"vleController.snipImage($event)\\\"');
-                    
+
                     return newString;
                 }
             );
         }
-        
+
         return contentString;
     }
 
@@ -1545,7 +1545,7 @@ class ProjectService {
             })
         });
     }
-    
+
     /**
      * Perform any necessary cleanup before we save the project.
      * For example we need to remove the checked field in the inactive node
@@ -1553,13 +1553,13 @@ class ProjectService {
      */
     cleanupBeforeSave() {
         var inactiveNodes = this.project.inactiveNodes;
-        
+
         if (inactiveNodes != null) {
-            
+
             // loop through all the inactive nodes
             for (var i = 0; i < inactiveNodes.length; i++) {
                 var inactiveNode = inactiveNodes[i];
-                
+
                 if (inactiveNode != null) {
                     // remove the checked field
                     delete inactiveNode.checked;
@@ -1651,14 +1651,14 @@ class ProjectService {
      * Returns the theme path for the current project
      */
     getThemePath() {
-        var wiseBaseURL = this.ConfigService.getWISEBaseURL();
-        var project = this.project;
+        let wiseBaseURL = this.ConfigService.getWISEBaseURL();
+        let project = this.project;
         if (project && project.theme) {
             // TODO: check if this is a valid theme (using ConfigService) rather than just truthy
-            return wiseBaseURL + '/wise5/vle/themes/' + project.theme;
+            return wiseBaseURL + '/wise5/themes/' + project.theme;
         } else {
             // TODO: get default theme name from ConfigService
-            return wiseBaseURL + '/wise5/vle/themes/default';
+            return wiseBaseURL + '/wise5/themes/default';
         }
     };
 
@@ -1671,8 +1671,10 @@ class ProjectService {
 
         if (project && project.themeSettings) {
             if (project.theme) {
+                // TODO: check if this is a valid theme (using ConfigService) rather than just truthy
                 themeSettings = project.themeSettings[project.theme];
             } else {
+                // TODO: get default theme name from ConfigService
                 themeSettings = project.themeSettings["default"];
             }
         }
@@ -3747,10 +3749,10 @@ class ProjectService {
 
             if (movingNodeIsActive && stationaryNodeIsActive) {
                 // we are moving from active to active
-                
+
                 // remove the transitions
                 this.removeNodeIdFromTransitions(tempNodeId);
-                
+
                 // remove the node from the group
                 this.removeNodeIdFromGroups(tempNodeId);
 
@@ -3771,20 +3773,20 @@ class ProjectService {
                 }
             } else if (movingNodeIsActive && !stationaryNodeIsActive) {
                 // we are moving from active to inactive
-                
+
                 // remove the transitions
                 this.removeNodeIdFromTransitions(tempNodeId);
-                
+
                 // remove the node from the group
                 this.removeNodeIdFromGroups(tempNodeId);
-                
+
                 // move the node to the inactive array
                 this.moveToInactive(tempNode, nodeId);
             } else if (!movingNodeIsActive && stationaryNodeIsActive) {
                 // we are moving from inactive to active
-                
+
                 this.moveToActive(tempNode);
-                
+
                 if (n == 0) {
                     /*
                      * this is the first node we are moving so we will insert it
@@ -3802,7 +3804,7 @@ class ProjectService {
                 }
             } else if (!movingNodeIsActive && !stationaryNodeIsActive) {
                 // we are moving from inactive to inactive
-                
+
                 // move the node within the inactive nodes
                 this.moveInactiveNode(tempNode, nodeId);
             }
@@ -3828,19 +3830,19 @@ class ProjectService {
             // get the node we are moving
             var tempNodeId = nodeIds[n];
             var node = this.getNodeById(tempNodeId);
-            
+
             var movingNodeIsActive = this.isActive(tempNodeId);
             var stationaryNodeIsActive = this.isActive(nodeId);
 
             if (movingNodeIsActive && stationaryNodeIsActive) {
                 // we are moving from active to active
-                
+
                 // remove the transitions
                 this.removeNodeIdFromTransitions(tempNodeId);
 
                 // remove the node from the groups
                 this.removeNodeIdFromGroups(tempNodeId);
-                
+
                 // insert the node into the parent group
                 this.insertNodeAfterInGroups(tempNodeId, nodeId);
 
@@ -3848,21 +3850,21 @@ class ProjectService {
                 this.insertNodeAfterInTransitions(node, nodeId);
             } else if (movingNodeIsActive && !stationaryNodeIsActive) {
                 // we are moving from active to inactive
-                
+
                 // remove the transitions
                 this.removeNodeIdFromTransitions(tempNodeId);
 
                 // remove the node from the groups
                 this.removeNodeIdFromGroups(tempNodeId);
-                
+
                 // move the node to the inactive array
                 this.moveToInactive(node, nodeId);
             } else if (!movingNodeIsActive && stationaryNodeIsActive) {
                 // we are moving from inactive to active
-                
+
                 // move the node to the active nodes array
                 this.moveToActive(node);
-                
+
                 // insert the node into the parent group
                 this.insertNodeAfterInGroups(tempNodeId, nodeId);
 
@@ -3870,7 +3872,7 @@ class ProjectService {
                 this.insertNodeAfterInTransitions(node, nodeId);
             } else if (!movingNodeIsActive && !stationaryNodeIsActive) {
                 // we are moving from inactive to inactive
-                
+
                 // move the node within the inactive nodes
                 this.moveInactiveNode(node, nodeId);
             }
@@ -4194,7 +4196,7 @@ class ProjectService {
 
                             // insert the transitions from the node we are removing
                             transitions = transitions.concat(transitionsCopy);
-                            
+
                             // check if the node we are moving is a group
                             if (this.isGroupNode(nodeId)) {
                                 /*
@@ -4218,13 +4220,13 @@ class ProjectService {
             // clear the transitions of the node we are removing
             nodeToRemoveTransitionLogic.transitions = [];
         }
-        
+
         if (this.isGroupNode(nodeId)) {
             /*
              * this is a group node so we will remove all child transitions that
              * go out of this group
              */
-            
+
             //this.removeTransitionsIntoGroup(nodeId);
             this.removeTransitionsOutOfGroup(nodeId);
         }
@@ -4333,25 +4335,25 @@ class ProjectService {
             }
         }
     }
-    
+
     /**
      * Remove the node from the inactive nodes array
      * @param nodeId the node to remove from the inactive nodes array
      */
     removeNodeIdFromInactiveNodes(nodeId) {
-        
+
         // get the inactive nodes array
         var inactiveNodes = this.project.inactiveNodes;
-        
+
         if (inactiveNodes != null) {
-            
+
             // loop through the inactive nodes
             for (var i = 0; i < inactiveNodes.length; i++) {
                 var inactiveNode = inactiveNodes[i];
-                
+
                 if (inactiveNode != null) {
                     var inactiveNodeId = inactiveNode.id;
-                    
+
                     if (nodeId === inactiveNodeId) {
                         /*
                          * we have found the node we are looking for so we will
@@ -4596,7 +4598,7 @@ class ProjectService {
 
         return maxScore;
     }
-    
+
     /**
      * Get the max score for a component
      * @param nodeId get the max score from a component in this node
@@ -4604,13 +4606,13 @@ class ProjectService {
      */
     getMaxScoreForComponent(nodeId, componentId) {
         var maxScore = null;
-        
+
         var component = this.getComponentByNodeIdAndComponentId(nodeId, componentId);
-        
+
         if (component != null) {
             maxScore = component.maxScore;
         }
-        
+
         return maxScore;
     }
 
@@ -5566,7 +5568,7 @@ class ProjectService {
             }
         }
     }
-    
+
     /**
      * Check if a component is a connected component
      * @param nodeId the node id of the component
@@ -5575,22 +5577,22 @@ class ProjectService {
      * @returns whether the componentId is connected to the connectedComponentId
      */
     isConnectedComponent(nodeId, componentId, connectedComponentId) {
-        
+
         var result = false;
-        
+
         // get the component
         var component = this.getComponentByNodeIdAndComponentId(nodeId, componentId);
-        
+
         if (component != null) {
-            
+
             var connectedComponents = component.connectedComponents;
-            
+
             if (connectedComponents != null) {
-                
+
                 // loop through all the connected components
                 for (var c = 0; c < connectedComponents.length; c++) {
                     var connectedComponent = connectedComponents[c];
-                    
+
                     if (connectedComponent != null) {
                         if (connectedComponentId === connectedComponent.id) {
                             // we have found the connected component id we are looking for
@@ -5601,33 +5603,33 @@ class ProjectService {
                 }
             }
         }
-        
+
         return result;
     }
-    
+
     /**
      * Get a connected component params
      * @param componentId the connected component id
      * @returns the params for the connected component
      */
     getConnectedComponentParams(componentContent, componentId) {
-        
+
         var connectedComponentParams = null;
-        
+
         if (componentContent != null && componentId != null) {
-            
+
             // get the connected components
             var connectedComponents = componentContent.connectedComponents;
-            
+
             if (connectedComponents != null) {
-                
+
                 // loop through all the connected components
                 for (var c = 0; c < connectedComponents.length; c++) {
                     var connectedComponent = connectedComponents[c];
-                    
+
                     if (connectedComponent != null) {
                         var tempComponentId = connectedComponent.id;
-                        
+
                         if (componentId === tempComponentId) {
                             // we have found the connected component we are looking for
                             connectedComponentParams = connectedComponent;
@@ -5636,48 +5638,48 @@ class ProjectService {
                 }
             }
         }
-        
+
         return connectedComponentParams;
     }
-    
+
     /**
      * Get the inactive groups
      * @returns the inactive groups
      */
     getInactiveGroups() {
         var inactiveGroups = [];
-        
+
         if (this.project != null) {
-            
+
             if (this.project.inactiveGroups == null) {
                 this.project.inactiveGroups = [];
             }
-            
+
             inactiveGroups = this.project.inactiveGroups;
         }
-        
+
         return inactiveGroups;
     }
-    
+
     /**
      * Get the inactive nodes
      * @returns the inactive nodes
      */
     getInactiveNodes() {
         var inactiveNodes = [];
-        
+
         if (this.project != null) {
-            
+
             if (this.project.inactiveNodes == null) {
                 this.project.inactiveNodes = [];
             }
-            
+
             inactiveNodes = this.project.inactiveNodes;
         }
-        
+
         return inactiveNodes;
     }
-    
+
     /**
      * Remove the node from the active nodes
      * @param nodeId the node to remove
@@ -5685,23 +5687,23 @@ class ProjectService {
      */
     removeNodeFromActiveNodes(nodeId) {
         var node = null;
-        
+
         if (nodeId != null) {
-            
+
             // get the active nodes
             var activeNodes = this.project.nodes;
-            
+
             if (activeNodes != null) {
-                
+
                 // loop through all the active nodes
                 for (var a = 0; a < activeNodes.length; a++) {
                     var activeNode = activeNodes[a];
-                    
+
                     if (activeNode != null) {
                         if (nodeId === activeNode.id) {
                             // we have found the node we want to remove
                             node = activeNode;
-                            
+
                             // remove the node from the array
                             activeNodes.splice(a, 1);
                             break;
@@ -5710,10 +5712,10 @@ class ProjectService {
                 }
             }
         }
-        
+
         return node;
     }
-    
+
     /**
      * Remove the node from the inactive nodes array
      * @param nodeId the node to remove
@@ -5721,23 +5723,23 @@ class ProjectService {
      */
     removeNodeFromInactiveNodes(nodeId) {
         var node = null;
-        
+
         if (nodeId != null) {
-            
+
             // get all the inactive nodes
             var inactiveNodes = this.project.inactiveNodes;
-            
+
             if (inactiveNodes != null) {
-                
+
                 // loop through all the inactive nodes
                 for (var i = 0; i < inactiveNodes.length; i++) {
                     var inactiveNode = inactiveNodes[i];
-                    
+
                     if (inactiveNode != null) {
                         if (nodeId === inactiveNode.id) {
                             // we have found the node we want to remove
                             node = inactiveNode;
-                            
+
                             // remove the node from the array
                             inactiveNodes.splice(i, 1);
                             break;
@@ -5746,23 +5748,23 @@ class ProjectService {
                 }
             }
         }
-        
+
         return node;
     }
-    
+
     /**
      * Load the inactive nodes
      * @param nodes the inactive nodes
      */
     loadInactiveNodes(nodes) {
-        
+
         if (nodes != null) {
             for (var n = 0; n < nodes.length; n++) {
                 var node = nodes[n];
-                
+
                 if (node != null) {
                     var nodeId = node.id;
-                    
+
                     // set the node into the mapping data structures
                     this.setIdToNode(nodeId, node);
                     this.setIdToElement(nodeId, node);
@@ -5770,18 +5772,18 @@ class ProjectService {
             }
         }
     }
-    
+
     /**
      * Check if the node is active
      * @param nodeId the node to check
      * @returns whether the node is in the active array
      */
     isActive(nodeId) {
-        
+
         var result = true;
-        
+
         if (nodeId != null) {
-            
+
             if (nodeId === 'inactiveNodes') {
                 // this occurs when the author puts a step into the inactive nodes
                 result = false;
@@ -5793,16 +5795,16 @@ class ProjectService {
                 // TODO: implement this
             } else {
                 // the node is a step node
-                
+
                 // get the inactive nodes
                 var inactiveNodes = this.project.inactiveNodes;
-                
+
                 if (inactiveNodes != null) {
-                    
+
                     // loop through all the inactive nodes
                     for (var i = 0; i < inactiveNodes.length; i++) {
                         var inactiveNode = inactiveNodes[i];
-                        
+
                         if (inactiveNode != null) {
                             if (nodeId === inactiveNode.id) {
                                 // we have found the node in the inactive nodes
@@ -5814,29 +5816,29 @@ class ProjectService {
                 }
             }
         }
-        
+
         return result;
     }
-    
+
     /**
      * Move the node to the active nodes array
      */
     moveToActive(node) {
         if (node != null) {
-            
+
             // make sure the node is inactive
             if (!this.isActive(node.id)) {
                 // the node is inactive so we will move it to the active array
-                
+
                 // remove the node from inactive nodes array
                 this.removeNodeFromInactiveNodes(node.id);
-                
+
                 // add the node to the active array
                 this.addNode(node);
             }
         }
     }
-    
+
     /**
      * Move the node to the inactive nodes array
      * @param node the node to move
@@ -5844,20 +5846,20 @@ class ProjectService {
      */
     moveToInactive(node, nodeIdToInsertAfter) {
         if (node != null) {
-            
+
             // make sure the node is active
             if (this.isActive(node.id)) {
                 // the node is active so we will move it to the inactive array
-                
+
                 // remove the node from the active array
                 this.removeNodeFromActiveNodes(node.id);
-                
+
                 // add the node to the inactive array
                 this.addInactiveNode(node, nodeIdToInsertAfter);
             }
         }
     }
-    
+
     /**
      * Add the node to the inactive nodes array
      * @param node the node to move
@@ -5866,21 +5868,21 @@ class ProjectService {
     addInactiveNode(node, nodeIdToInsertAfter) {
         if (node != null) {
             var inactiveNodes = this.project.inactiveNodes;
-            
+
             if (inactiveNodes != null) {
-                
+
                 if (nodeIdToInsertAfter == null || nodeIdToInsertAfter === 'inactiveSteps') {
                     // put the node at the beginning of the inactive steps
                     inactiveNodes.splice(0, 0, node);
                 } else {
                     // put the node after one of the inactive nodes
-                    
+
                     var added = false;
-                    
+
                     // loop through all the inactive nodes
                     for (var i = 0; i < inactiveNodes.length; i++) {
                         var inactiveNode = inactiveNodes[i];
-                        
+
                         if (inactiveNode != null) {
                             if (nodeIdToInsertAfter === inactiveNode.id) {
                                 // we have found the position to place the node
@@ -5889,10 +5891,10 @@ class ProjectService {
                             }
                         }
                     }
-                    
+
                     if (!added) {
                         /*
-                         * we haven't added the node yet so we will just add it 
+                         * we haven't added the node yet so we will just add it
                          * to the end of the array
                          */
                         inactiveNodes.push(node);
@@ -5901,25 +5903,25 @@ class ProjectService {
             }
         }
     }
-    
+
     /**
      * Move an inactive node within the inactive nodes array
      * @param node the node to move
      * @param nodeIdToInsertAfter place the node after this
      */
     moveInactiveNode(node, nodeIdToInsertAfter) {
-        
+
         if (node != null) {
             var inactiveNodes = this.project.inactiveNodes;
-            
+
             if (inactiveNodes != null) {
-                
+
                 // remove the node from inactive nodes
-                
+
                 // loop through all the inactive nodes
                 for (var i = 0; i < inactiveNodes.length; i++) {
                     var inactiveNode = inactiveNodes[i];
-                    
+
                     if (inactiveNode != null) {
                         if (node.id === inactiveNode.id) {
                             // we have found the node we want to remove
@@ -5927,21 +5929,21 @@ class ProjectService {
                         }
                     }
                 }
-                
+
                 // add the node back into the inactive nodes
-                
+
                 if (nodeIdToInsertAfter == null || nodeIdToInsertAfter === 'inactiveSteps') {
                     // put the node at the beginning of the inactive nodes
                     inactiveNodes.splice(0, 0, node);
                 } else {
                     // put the node after one of the inactive nodes
-                    
+
                     var added = false;
-                    
+
                     // loop through all the inactive nodes
                     for (var i = 0; i < inactiveNodes.length; i++) {
                         var inactiveNode = inactiveNodes[i];
-                        
+
                         if (inactiveNode != null) {
                             if (nodeIdToInsertAfter === inactiveNode.id) {
                                 // we have found the position to place the node
@@ -5950,10 +5952,10 @@ class ProjectService {
                             }
                         }
                     }
-                    
+
                     if (!added) {
                         /*
-                         * we haven't added the node yet so we will just add it 
+                         * we haven't added the node yet so we will just add it
                          * to the end of the array
                          */
                         inactiveNodes.push(node);
@@ -5962,26 +5964,26 @@ class ProjectService {
             }
         }
     }
-    
+
     /**
      * Remove transitions that go into the group
      * @param nodeId the group id
      */
     removeTransitionsIntoGroup(nodeId) {
-        
+
         if (nodeId != null) {
-            
+
             var group = this.getNodeById(nodeId);
-            
+
             if (group != null) {
                 var childIds = group.ids;
-                
+
                 if (childIds != null) {
-                    
+
                     // loop through all the children
                     for (var c = 0; c < childIds.length; c++) {
                         var childId = childIds[c];
-                        
+
                         if (childId != null) {
                             this.removeTransitionsThatPointToNodeIdFromOutsideGroup(childId);
                         }
@@ -5990,33 +5992,33 @@ class ProjectService {
             }
         }
     }
-    
+
     /**
      * Remove the transitions that point to the node that does not have
      * the same parent
      * @param nodeId remove transitions to this node
      */
     removeTransitionsThatPointToNodeIdFromOutsideGroup(nodeId) {
-        
+
         if (nodeId != null) {
-            
+
             // get the parent of the node
             var parentGroupId = this.getParentGroupId(nodeId);
-            
+
             // get all the nodes that point to the node
             var nodesThatPointToTargetNode = this.getNodesByToNodeId(nodeId);
-            
+
             if (nodesThatPointToTargetNode != null) {
-                
+
                 // loop through all the nodes that point to the node
                 for (var n = 0; n < nodesThatPointToTargetNode.length; n++) {
                     var nodeThatPointsToTargetNode = nodesThatPointToTargetNode[n];
-                    
+
                     if (nodeThatPointsToTargetNode != null) {
-                        
+
                         // get the parent of the node that points to the node target node
                         var nodeThatPointsToTargetNodeParentGroupId = this.getParentGroupId(nodeThatPointsToTargetNode.id);
-                        
+
                         if (parentGroupId != nodeThatPointsToTargetNodeParentGroupId) {
                             /*
                              * the parent groups are different so we will remove
@@ -6029,31 +6031,31 @@ class ProjectService {
             }
         }
     }
-    
+
     /**
      * Remove a transition
      * @param node remove a transition in this node
      * @param toNodeId remove the transition that goes to this node id
      */
     removeTransition(node, toNodeId) {
-        
+
         if (node != null && toNodeId != null) {
-            
+
             var transitionLogic = node.transitionLogic;
-            
+
             if (transitionLogic != null) {
                 var transitions = transitionLogic.transitions;
-                
+
                 if (transitions != null) {
-                    
+
                     // loop through all the transitions
                     for (var t = 0; t < transitions.length; t++) {
                         var transition = transitions[t];
-                        
+
                         if (transition != null) {
                             if (toNodeId === transition.to) {
                                 // we have found a transition that goes to the toNodeId
-                                
+
                                 // remove the transition
                                 transitions.splice(t, 1);
                                 t--;
@@ -6064,7 +6066,7 @@ class ProjectService {
             }
         }
     }
-    
+
     /**
      * Remove transitions that go out of the group
      * @param nodeId the group id
@@ -6072,43 +6074,43 @@ class ProjectService {
     removeTransitionsOutOfGroup(nodeId) {
         if (nodeId != null) {
             var group = this.getNodeById(nodeId);
-            
+
             if (group != null) {
                 var childIds = group.ids;
-                
+
                 if (childIds != null) {
-                    
+
                     // loop through all the child ids
                     for (var c = 0; c < childIds.length; c++) {
                         var childId = childIds[c];
-                        
+
                         if (childId != null) {
-                            
+
                             // get the transitions of the child
                             var transitions = this.getTransitionsByFromNodeId(childId);
-                            
+
                             if (transitions != null) {
-                                
+
                                 // loop through all the transitions
                                 for (var t = 0; t < transitions.length; t++) {
                                     var transition = transitions[t];
-                                    
+
                                     if (transition != null) {
-                                        
+
                                         // get the to node id of the transition
                                         var toNodeId = transition.to;
-                                        
+
                                         if (toNodeId != null) {
-                                            
+
                                             // get the parent group id of the toNodeId
                                             var toNodeIdParentGroupId = this.getParentGroupId(toNodeId);
-                                            
+
                                             if (nodeId != toNodeIdParentGroupId) {
                                                 /*
-                                                 * the parent group is different which means it is a 
+                                                 * the parent group is different which means it is a
                                                  * transition that goes out of the group
                                                  */
-                                                 
+
                                                 // remove the transition
                                                 transitions.splice(t, 1);
                                                 t--;
@@ -6136,20 +6138,20 @@ class ProjectService {
      * group1 has children node1 and node2 (node2 transitions to node5)
      * group3 has children node5 and node6
      * group2 has children node3 and node4 (node4 transitions to node5)
-     * note: the (node4 transition to node5) will be removed later 
+     * note: the (node4 transition to node5) will be removed later
      * when is called removeTransitionsOutOfGroup
      * note: when group2 is added in a later function call, we will add
      * the node6 to node3 transition
-     * @param groupThatTransitionsToGroupWeAreMoving the group object 
+     * @param groupThatTransitionsToGroupWeAreMoving the group object
      * that transitions to the group we are moving. we may need to update
      * the transitions of this group's children.
      * @param groupIdWeAreMoving the group id of the group we are moving
      */
     updateChildrenTransitionsIntoGroupWeAreMoving(groupThatTransitionsToGroupWeAreMoving, groupIdWeAreMoving) {
-        
+
         if (groupThatTransitionsToGroupWeAreMoving != null && groupIdWeAreMoving != null) {
             var group = this.getNodeById(groupIdWeAreMoving);
-            
+
             if (group != null) {
                 // get all the nodes that have a transition to the node we are removing
                 var nodesByToNodeId = this.getNodesByToNodeId(groupIdWeAreMoving);
@@ -6161,44 +6163,44 @@ class ProjectService {
                 if (nodeToRemoveTransitionLogic != null && nodeToRemoveTransitionLogic.transitions != null) {
                     nodeToRemoveTransitions = nodeToRemoveTransitionLogic.transitions;
                 }
-                
+
                 if (nodeToRemoveTransitions.length > 0) {
-                    
+
                     // get the first group that comes after the group we are removing
                     var firstNodeToRemoveTransition = nodeToRemoveTransitions[0];
                     var firstNodeToRemoveTransitionToNodeId = firstNodeToRemoveTransition.to;
-                    
+
                     if (this.isGroupNode(firstNodeToRemoveTransitionToNodeId)) {
-                        
+
                         // get the group that comes after the group we are moving
                         var groupNode = this.getNodeById(firstNodeToRemoveTransitionToNodeId);
-                        
+
                         // get child ids of the group that comes before the group we are moving
                         var childIds = groupThatTransitionsToGroupWeAreMoving.ids;
-                        
+
                         if (childIds != null) {
-                            
+
                             // loop through all the children
                             for (var c = 0; c < childIds.length; c++) {
                                 var childId = childIds[c];
-                                
+
                                 var transitionsFromChild = this.getTransitionsByFromNodeId(childId);
-                                
+
                                 if (transitionsFromChild != null) {
-                                    
+
                                     // loop through all the transitions from the child
                                     for (var tfc = 0; tfc < transitionsFromChild.length; tfc++) {
                                         var transitionFromChild = transitionsFromChild[tfc];
-                                        
+
                                         if (transitionFromChild != null) {
                                             var toNodeId = transitionFromChild.to;
-                                            
+
                                             // get the parent group id of the toNodeId
                                             var toNodeIdParentGroupId = this.getParentGroupId(toNodeId);
-                                            
+
                                             if (groupIdWeAreMoving === toNodeIdParentGroupId) {
                                                 // the transition is to a child in the group we are moving
-                                                
+
                                                 if (groupNode.startId == null) {
                                                     // change the transition to point to the after group
                                                     transitionFromChild.to = firstNodeToRemoveTransitionToNodeId;
@@ -6217,7 +6219,7 @@ class ProjectService {
             }
         }
     }
-    
+
     /**
      * Get the node ids and component ids in a node
      * @param nodeId get the node ids and component ids in this node
@@ -6225,32 +6227,32 @@ class ProjectService {
      * and component id.
      */
     getNodeIdsAndComponentIds(nodeId) {
-        
+
         var nodeIdAndComponentIds = [];
-        
+
         if (nodeId != null) {
-            
+
             var nodeContent = this.getNodeContentByNodeId(nodeId);
-            
+
             if (nodeContent != null) {
-                
+
                 var components = nodeContent.components;
-                
+
                 if (components != null) {
-                    
+
                     // loop through all the components in the node
                     for (var c = 0; c < components.length; c++) {
                         var component = components[c];
-                        
+
                         if (component != null) {
-                            
+
                             var componentId = component.id;
-                            
+
                             // create an object to hold the node id and component id
                             var nodeIdAndComponentId = {};
                             nodeIdAndComponentId.nodeId = nodeId;
                             nodeIdAndComponentId.componentId = componentId;
-                            
+
                             // add the object to the array
                             nodeIdAndComponentIds.push(nodeIdAndComponentId);
                         }
@@ -6258,45 +6260,45 @@ class ProjectService {
                 }
             }
         }
-        
+
         return nodeIdAndComponentIds;
     }
-    
+
     /**
      * Get the show previous work node ids and component ids in a node
-     * @param nodeId get the show previous work node ids and component ids in 
+     * @param nodeId get the show previous work node ids and component ids in
      * this node
      * @returns an array of objects. the objects contain a node id
      * and component id.
      */
     getShowPreviousWorkNodeIdsAndComponentIds(nodeId) {
-        
+
         var nodeIdAndComponentIds = [];
-        
+
         if (nodeId != null) {
             var nodeContent = this.getNodeContentByNodeId(nodeId);
-            
+
             if (nodeContent != null) {
-                
+
                 var components = nodeContent.components;
-                
+
                 if (components != null) {
-                    
+
                     // loop through all the components
                     for (var c = 0; c < components.length; c++) {
                         var component = components[c];
-                        
+
                         if (component != null) {
                             var showPreviousWorkNodeId = component.showPreviousWorkNodeId;
                             var showPreviousWorkComponentId = component.showPreviousWorkComponentId;
-                            
+
                             if (showPreviousWorkNodeId != null && showPreviousWorkComponentId != null) {
-                                
+
                                 // create an object to hold the node id and component id
                                 var nodeIdAndComponentId = {};
                                 nodeIdAndComponentId.nodeId = showPreviousWorkNodeId;
                                 nodeIdAndComponentId.componentId = showPreviousWorkComponentId;
-                                
+
                                 // add the object to the array
                                 nodeIdAndComponentIds.push(nodeIdAndComponentId);
                             }
@@ -6305,7 +6307,7 @@ class ProjectService {
                 }
             }
         }
-        
+
         return nodeIdAndComponentIds;
     }
 }

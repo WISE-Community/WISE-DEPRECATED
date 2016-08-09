@@ -25,14 +25,8 @@ else
   if [ ! -f $PROPERTIES_FILE ]
   then
     # properties file does not exist, assume this is a fresh install
-    # install npm dependencies
+    # install npm dependencies and jspm depedencies (happens in postinstall)
     npm install
-
-    # install jspm dependencies
-    cd src/main/webapp/wise5
-    npm install jspm
-    jspm install
-    cd -
 
     # copy sample property file and set paths automatically
     cp $SAMPLE_PROPERTIES_FILE $PROPERTIES_FILE
