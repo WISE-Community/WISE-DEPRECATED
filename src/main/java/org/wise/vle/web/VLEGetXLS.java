@@ -6801,6 +6801,8 @@ public class VLEGetXLS {
 	    	headerColumnNames.add("Idea X Position");
 	    	headerColumnNames.add("Idea Y Position");
 	    	headerColumnNames.add("Idea Color");
+			headerColumnNames.add("Idea Width");
+			headerColumnNames.add("Idea Height");
 	    	
 	    	//add all the header column names to the row
 	    	for (int y=0; y<headerColumnNames.size(); y++) {
@@ -6944,7 +6946,19 @@ public class VLEGetXLS {
 							    	columnCounter = setCellValue(ideaRow, ideaRowVector, columnCounter, explanationIdea.getLong("xpos"));
 							    	columnCounter = setCellValue(ideaRow, ideaRowVector, columnCounter, explanationIdea.getLong("ypos"));
 							    	columnCounter = setCellValue(ideaRow, ideaRowVector, columnCounter, getColorNameFromRBGString(explanationIdea.getString("color")));
-							    	
+									
+									if (explanationIdea.has("width")) {
+										columnCounter = setCellValue(ideaRow, ideaRowVector, columnCounter, explanationIdea.getLong("width"));
+									} else {
+										columnCounter++;
+									}
+									
+									if (explanationIdea.has("height")) {
+										columnCounter = setCellValue(ideaRow, ideaRowVector, columnCounter, explanationIdea.getLong("height"));
+									} else {
+										columnCounter++;
+									}
+									
 							    	//write the csv row if we are generating a csv file
 							    	writeCSV(ideaRowVector);
 								}
