@@ -237,10 +237,12 @@ JSON.parse(projectJSONString);}catch(e){throw new Error("Invalid projectJSONStri
      */value:function getCommitHistory(){var commitProjectURL=this.ConfigService.getConfigParam('commitProjectURL');return this.$http({url:commitProjectURL,method:'GET'}).then(function(result){return result.data;});}},{key:'getThemePath', /**
      * Returns the theme path for the current project
      */value:function getThemePath(){var wiseBaseURL=this.ConfigService.getWISEBaseURL();var project=this.project;if(project&&project.theme){ // TODO: check if this is a valid theme (using ConfigService) rather than just truthy
-return wiseBaseURL+'/wise5/vle/themes/'+project.theme;}else { // TODO: get default theme name from ConfigService
-return wiseBaseURL+'/wise5/vle/themes/default';}}},{key:'getThemeSettings', /**
+return wiseBaseURL+'/wise5/themes/'+project.theme;}else { // TODO: get default theme name from ConfigService
+return wiseBaseURL+'/wise5/themes/default';}}},{key:'getThemeSettings', /**
      * Returns the theme settings for the current project
-     */value:function getThemeSettings(){var themeSettings={};var project=this.project;if(project&&project.themeSettings){if(project.theme){themeSettings=project.themeSettings[project.theme];}else {themeSettings=project.themeSettings["default"];}}return themeSettings?themeSettings:{};}},{key:'getFlattenedProjectAsNodeIds', /**
+     */value:function getThemeSettings(){var themeSettings={};var project=this.project;if(project&&project.themeSettings){if(project.theme){ // TODO: check if this is a valid theme (using ConfigService) rather than just truthy
+themeSettings=project.themeSettings[project.theme];}else { // TODO: get default theme name from ConfigService
+themeSettings=project.themeSettings["default"];}}return themeSettings?themeSettings:{};}},{key:'getFlattenedProjectAsNodeIds', /**
      * Flatten the project to obtain a list of node ids
      */value:function getFlattenedProjectAsNodeIds(){var nodeIds=[]; // get the start node id
 var startNodeId=this.getStartNodeId(); /*
@@ -1440,7 +1442,7 @@ inactiveNodes.splice(0,0,node);}else { // put the node after one of the inactive
 var added=false; // loop through all the inactive nodes
 for(var i=0;i<inactiveNodes.length;i++){var inactiveNode=inactiveNodes[i];if(inactiveNode!=null){if(nodeIdToInsertAfter===inactiveNode.id){ // we have found the position to place the node
 inactiveNodes.splice(i+1,0,node);added=true;}}}if(!added){ /*
-                         * we haven't added the node yet so we will just add it 
+                         * we haven't added the node yet so we will just add it
                          * to the end of the array
                          */inactiveNodes.push(node);}}}}} /**
      * Move an inactive node within the inactive nodes array
@@ -1455,7 +1457,7 @@ inactiveNodes.splice(0,0,node);}else { // put the node after one of the inactive
 var added=false; // loop through all the inactive nodes
 for(var i=0;i<inactiveNodes.length;i++){var inactiveNode=inactiveNodes[i];if(inactiveNode!=null){if(nodeIdToInsertAfter===inactiveNode.id){ // we have found the position to place the node
 inactiveNodes.splice(i+1,0,node);added=true;}}}if(!added){ /*
-                         * we haven't added the node yet so we will just add it 
+                         * we haven't added the node yet so we will just add it
                          * to the end of the array
                          */inactiveNodes.push(node);}}}}} /**
      * Remove transitions that go into the group
@@ -1488,7 +1490,7 @@ var transitions=this.getTransitionsByFromNodeId(childId);if(transitions!=null){ 
 for(var t=0;t<transitions.length;t++){var transition=transitions[t];if(transition!=null){ // get the to node id of the transition
 var toNodeId=transition.to;if(toNodeId!=null){ // get the parent group id of the toNodeId
 var toNodeIdParentGroupId=this.getParentGroupId(toNodeId);if(nodeId!=toNodeIdParentGroupId){ /*
-                                                 * the parent group is different which means it is a 
+                                                 * the parent group is different which means it is a
                                                  * transition that goes out of the group
                                                  */ // remove the transition
 transitions.splice(t,1);t--;}}}}}}}}}}} /*
@@ -1503,11 +1505,11 @@ transitions.splice(t,1);t--;}}}}}}}}}}} /*
      * group1 has children node1 and node2 (node2 transitions to node5)
      * group3 has children node5 and node6
      * group2 has children node3 and node4 (node4 transitions to node5)
-     * note: the (node4 transition to node5) will be removed later 
+     * note: the (node4 transition to node5) will be removed later
      * when is called removeTransitionsOutOfGroup
      * note: when group2 is added in a later function call, we will add
      * the node6 to node3 transition
-     * @param groupThatTransitionsToGroupWeAreMoving the group object 
+     * @param groupThatTransitionsToGroupWeAreMoving the group object
      * that transitions to the group we are moving. we may need to update
      * the transitions of this group's children.
      * @param groupIdWeAreMoving the group id of the group we are moving
@@ -1532,7 +1534,7 @@ for(var c=0;c<components.length;c++){var component=components[c];if(component!=n
 var nodeIdAndComponentId={};nodeIdAndComponentId.nodeId=nodeId;nodeIdAndComponentId.componentId=componentId; // add the object to the array
 nodeIdAndComponentIds.push(nodeIdAndComponentId);}}}}}return nodeIdAndComponentIds;} /**
      * Get the show previous work node ids and component ids in a node
-     * @param nodeId get the show previous work node ids and component ids in 
+     * @param nodeId get the show previous work node ids and component ids in
      * this node
      * @returns an array of objects. the objects contain a node id
      * and component id.

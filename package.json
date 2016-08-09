@@ -41,7 +41,7 @@
     "browser-sync": "./node_modules/browser-sync/bin/browser-sync.js start --config bs-config.js",
     "postinstall": "./node_modules/jspm/jspm.js install -y",
     "watch-all": "npm run transpile & npm run watch-sass",
-    "transpile": "./node_modules/babel-cli/bin/babel.js --extensions .es6 --source-maps --presets babel-preset-es2015 --watch src/main/webapp/wise5/ --only wise5/services,wise5/classroomMonitor,wise5/authoringTool,wise5/directives,wise5/components,wise5/filters,wise5/vle,wise5/controllers,wise5/node/,wise5/test-unit,wise5/test-e2e --out-dir src/main/webapp/wise5/",
+    "transpile": "./node_modules/babel-cli/bin/babel.js --extensions .es6 --source-maps --presets babel-preset-es2015 --watch src/main/webapp/wise5/ --only wise5/services,wise5/classroomMonitor,wise5/authoringTool,wise5/directives,wise5/components,wise5/filters,wise5/vle,wise5/controllers,wise5/node/,wise5/themes,wise5/test-unit,wise5/test-e2e --out-dir src/main/webapp/wise5/",
     "watch-sass": "gulp",
     "compile-sass": "gulp compile-sass",
     "test": "./node_modules/karma/bin/karma start --single-run --browsers PhantomJS",
