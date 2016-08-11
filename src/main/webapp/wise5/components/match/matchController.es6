@@ -532,7 +532,7 @@ class MatchController {
                     this.choiceColumns = Math.round(100/this.componentContent.bucketWidth);
                 } else {
                     let n = buckets.length;
-                    if (n % 3 === 0 || n % 3 === 2) {
+                    if (n % 3 === 0 || n > 4) {
                         this.bucketWidth = Math.round(100/3);
                         this.choiceColumns = 3;
                     } else if (n % 2 === 0) {
