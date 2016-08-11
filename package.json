@@ -4,7 +4,6 @@
   "description": "Web-based Inquiry Science Environment",
   "main": "app.js",
   "dependencies": {
-    "compass": "^0.1.1",
     "eslint": "^1.7.3",
     "jspm": "^0.16.19",
     "sass": "^0.5.0"
@@ -24,7 +23,6 @@
     "gulp-sass": "^2.1.1",
     "gulp-sourcemaps": "^1.6.0",
     "jasmine-core": "^2.4.1",
-    "jspm": "^0.16.42",
     "karma": "^0.13.19",
     "karma-babel-preprocessor": "^6.0.1",
     "karma-chrome-launcher": "^0.2.2",
