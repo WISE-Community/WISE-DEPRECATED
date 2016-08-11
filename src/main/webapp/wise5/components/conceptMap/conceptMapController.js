@@ -13,7 +13,7 @@ require('svg.draggable.js');
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var ConceptMapController = function () {
-    function ConceptMapController($injector, $mdDialog, $q, $rootScope, $scope, AnnotationService, ConceptMapService, ConfigService, CRaterService, NodeService, ProjectService, StudentAssetService, StudentDataService) {
+    function ConceptMapController($injector, $mdDialog, $q, $rootScope, $scope, $timeout, AnnotationService, ConceptMapService, ConfigService, CRaterService, NodeService, ProjectService, StudentAssetService, StudentDataService) {
         var _this = this;
 
         _classCallCheck(this, ConceptMapController);
@@ -23,6 +23,7 @@ var ConceptMapController = function () {
         this.$q = $q;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
+        this.$timeout = $timeout;
         this.AnnotationService = AnnotationService;
         this.ConceptMapService = ConceptMapService;
         this.ConfigService = ConfigService;
@@ -411,11 +412,12 @@ var ConceptMapController = function () {
                 var studentData = componentState.studentData;
 
                 if (studentData != null) {
-                    var response = studentData.response;
+                    var conceptMapData = studentData.conceptMapData;
 
-                    if (response != null) {
-                        // populate the text the student previously typed
-                        this.studentResponse = response;
+                    if (conceptMapData != null) {
+
+                        // populate the concept map data into the component
+                        this.populateConceptMapData(conceptMapData);
                     }
 
                     var attachments = studentData.attachments;
@@ -429,12 +431,134 @@ var ConceptMapController = function () {
             }
         }
     }, {
-        key: 'processLatestSubmit',
+        key: 'populateConceptMapData',
 
+
+        /**
+         * Populate the concept map data into the component
+         * @param conceptMapData the concept map data which contains an array
+         * of nodes and an array of links
+         */
+        value: function populateConceptMapData(conceptMapData) {
+            var _this2 = this;
+
+            if (conceptMapData != null) {
+                var nodes = conceptMapData.nodes;
+
+                if (nodes != null) {
+
+                    // loop through all the nodes
+                    for (var n = 0; n < nodes.length; n++) {
+                        var node = nodes[n];
+
+                        var instanceId = node.instanceId;
+                        var originalId = node.originalId;
+                        var fileName = node.fileName;
+                        var label = node.label;
+                        var x = node.x;
+                        var y = node.y;
+                        var width = node.width;
+                        var height = node.height;
+
+                        // create a ConceptMapNode
+                        var conceptMapNode = this.ConceptMapService.newConceptMapNode(this.draw, instanceId, originalId, fileName, label, x, y, width, height);
+
+                        // add the node to our array of nodes
+                        this.addNode(conceptMapNode);
+
+                        // set the mouse events on the node
+                        this.setNodeMouseEvents(conceptMapNode);
+                    }
+                }
+
+                var links = conceptMapData.links;
+
+                if (links != null) {
+
+                    // loop through all the links
+                    for (var l = 0; l < links.length; l++) {
+                        var link = links[l];
+
+                        var instanceId = link.instanceId;
+                        var originalId = link.originalId;
+                        var sourceNodeId = link.sourceNodeInstanceId;
+                        var destinationNodeId = link.destinationNodeInstanceId;
+                        var label = link.label;
+                        var color = link.color;
+                        var sourceNode = null;
+                        var destinationNode = null;
+
+                        if (sourceNodeId != null) {
+                            sourceNode = this.getNodeById(sourceNodeId);
+                        }
+
+                        if (destinationNodeId != null) {
+                            destinationNode = this.getNodeById(destinationNodeId);
+                        }
+
+                        // create a ConceptMapLink
+                        var conceptMapLink = this.ConceptMapService.newConceptMapLink(this.draw, instanceId, originalId, sourceNode, destinationNode, label, color);
+
+                        // add the link to our array of links
+                        this.addLink(conceptMapLink);
+
+                        // set the mouse events on the link
+                        this.setLinkMouseEvents(conceptMapLink);
+                    }
+                }
+
+                // move the nodes to the front so that they are on top of links
+                this.moveNodesToFront();
+
+                /*
+                 * set a timeout to refresh the link labels so that the rectangles
+                 * around the labels are properly resized
+                 */
+                this.$timeout(function () {
+                    _this2.refreshLinkLabels();
+                });
+            }
+        }
+
+        /**
+         * Refresh the link labels so that the rectangles around the text
+         * labels are resized to fit the text properly. This is required because
+         * the rectangles are not properly sized when the ConceptMapLinks are
+         * initialized. The rectangles need to be rendered first and then the
+         * labels need to be set in order for the rectangles to be resized properly.
+         * This is why this function is called in a $timeout.
+         */
+
+    }, {
+        key: 'refreshLinkLabels',
+        value: function refreshLinkLabels() {
+
+            if (this.links != null) {
+
+                // loop throgh all the links
+                for (var l = 0; l < this.links.length; l++) {
+                    var link = this.links[l];
+
+                    if (link != null) {
+                        // get the label from the link
+                        var label = link.getLabel();
+
+                        /*
+                         * set the label back into the link so that the rectangle
+                         * around the text label is resized to the text
+                         */
+                        link.setLabel(label);
+                    }
+                }
+            }
+        }
 
         /**
          * Check if latest component state is a submission and set isSubmitDirty accordingly
          */
+
+    }, {
+        key: 'processLatestSubmit',
         value: function processLatestSubmit() {
             var latestState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
 
@@ -496,7 +620,7 @@ var ConceptMapController = function () {
          * Called when the student changes their work
          */
         value: function studentDataChanged() {
-            var _this2 = this;
+            var _this3 = this;
 
             /*
              * set the dirty flags so we will know we need to save or submit the
@@ -524,7 +648,7 @@ var ConceptMapController = function () {
 
             // create a component state populated with the student data
             this.createComponentState(action).then(function (componentState) {
-                _this2.$scope.$emit('componentStudentDataChanged', { componentId: componentId, componentState: componentState });
+                _this3.$scope.$emit('componentStudentDataChanged', { componentId: componentId, componentState: componentState });
             });
         }
     }, {
@@ -559,8 +683,8 @@ var ConceptMapController = function () {
 
             // set the response into the component state
             var studentData = {};
-            studentData.response = response;
-            studentData.attachments = angular.copy(this.attachments); // create a copy without reference to original array
+            var conceptMapData = this.getConceptMapData();
+            studentData.conceptMapData = conceptMapData;
 
             if (this.isSubmit) {
                 // the student submitted this work
@@ -585,8 +709,40 @@ var ConceptMapController = function () {
             return deferred.promise;
         }
     }, {
-        key: 'createComponentStateAdditionalProcessing',
+        key: 'getConceptMapData',
 
+
+        /**
+         * Get the concept map data
+         * @returns an object containing a array of nodes and an array of links
+         */
+        value: function getConceptMapData() {
+            var studentData = {};
+            studentData.nodes = [];
+            studentData.links = [];
+
+            // loop through all the nodes
+            for (var n = 0; n < this.nodes.length; n++) {
+                var node = this.nodes[n];
+
+                // get the JSON representation of the node
+                var nodeJSON = node.toJSONObject();
+
+                studentData.nodes.push(nodeJSON);
+            }
+
+            // loop through all the links
+            for (var l = 0; l < this.links.length; l++) {
+                var link = this.links[l];
+
+                // get the JSON representation of the link
+                var linkJSON = link.toJSONObject();
+
+                studentData.links.push(linkJSON);
+            }
+
+            return studentData;
+        }
 
         /**
          * Perform any additional processing that is required before returning the
@@ -598,8 +754,11 @@ var ConceptMapController = function () {
          * @param action the action that we are creating the component state for
          * e.g. 'submit', 'save', 'change'
          */
+
+    }, {
+        key: 'createComponentStateAdditionalProcessing',
         value: function createComponentStateAdditionalProcessing(deferred, componentState, action) {
-            var _this3 = this;
+            var _this4 = this;
 
             var performCRaterScoring = false;
 
@@ -661,15 +820,15 @@ var ConceptMapController = function () {
                                 // create the auto score annotation
                                 var autoScoreAnnotationData = {};
                                 autoScoreAnnotationData.value = score;
-                                autoScoreAnnotationData.maxAutoScore = _this3.ProjectService.getMaxScoreForComponent(_this3.nodeId, _this3.componentId);
+                                autoScoreAnnotationData.maxAutoScore = _this4.ProjectService.getMaxScoreForComponent(_this4.nodeId, _this4.componentId);
                                 autoScoreAnnotationData.concepts = concepts;
                                 autoScoreAnnotationData.autoGrader = 'cRater';
 
-                                var autoScoreAnnotation = _this3.createAutoScoreAnnotation(autoScoreAnnotationData);
+                                var autoScoreAnnotation = _this4.createAutoScoreAnnotation(autoScoreAnnotationData);
                                 componentState.annotations.push(autoScoreAnnotation);
 
                                 // get the feedback text
-                                var autoComment = _this3.CRaterService.getCRaterFeedbackTextByScore(_this3.componentContent, score);
+                                var autoComment = _this4.CRaterService.getCRaterFeedbackTextByScore(_this4.componentContent, score);
 
                                 if (autoComment != null) {
                                     // create the auto comment annotation
@@ -678,19 +837,19 @@ var ConceptMapController = function () {
                                     autoCommentAnnotationData.concepts = concepts;
                                     autoCommentAnnotationData.autoGrader = 'cRater';
 
-                                    var autoCommentAnnotation = _this3.createAutoCommentAnnotation(autoCommentAnnotationData);
+                                    var autoCommentAnnotation = _this4.createAutoCommentAnnotation(autoCommentAnnotationData);
                                     componentState.annotations.push(autoCommentAnnotation);
                                 }
                             }
                         }
                     }
 
-                    if (_this3.messageDialog != null) {
+                    if (_this4.messageDialog != null) {
                         /*
                          * hide the dialog that tells the student to wait since 
                          * the work has been scored.
                          */
-                        _this3.$mdDialog.hide(_this3.messageDialog);
+                        _this4.$mdDialog.hide(_this4.messageDialog);
                     }
 
                     // resolve the promise now that we are done performing additional processing
@@ -863,7 +1022,7 @@ var ConceptMapController = function () {
          * @param studentAsset
          */
         value: function attachStudentAsset(studentAsset) {
-            var _this4 = this;
+            var _this5 = this;
 
             if (studentAsset != null) {
                 this.StudentAssetService.copyAssetForReference(studentAsset).then(function (copiedAsset) {
@@ -873,8 +1032,8 @@ var ConceptMapController = function () {
                             iconURL: copiedAsset.iconURL
                         };
 
-                        _this4.attachments.push(attachment);
-                        _this4.studentDataChanged();
+                        _this5.attachments.push(attachment);
+                        _this5.studentDataChanged();
                     }
                 });
             }
@@ -1266,21 +1425,25 @@ var ConceptMapController = function () {
          * A link type was selected in the link type chooser popup
          * @param linkType the authored link object that was selected
          */
-        value: function linkTypeSelected(linkType) {
+        value: function linkTypeSelected(selectedLink) {
 
             if (this.highlightedElement != null && this.highlightedElement.constructor.name == 'ConceptMapLink') {
 
-                // get the ConceptMapLink object
+                /*
+                 * get the ConceptMapLink object that we are setting the link type
+                 * for
+                 */
                 var link = this.highlightedElement;
 
-                // get the link name and color
-                var linkTypeName = linkType.name;
-                var linkTypeColor = linkType.color;
+                // get the label, color, and original id
+                var label = selectedLink.label;
+                var color = selectedLink.color;
+                var originalId = selectedLink.id;
 
-                // set the name and color into the link
-                link.setText(linkTypeName);
-                link.setColor(linkTypeColor);
-                link.setLinkType(linkTypeName);
+                // set the label, color, and original id into the link
+                link.setLabel(label);
+                link.setColor(color);
+                link.setOriginalId(originalId);
             }
 
             // hide the link type chooser
@@ -1347,7 +1510,7 @@ var ConceptMapController = function () {
     }, {
         key: 'setupSVG',
         value: function setupSVG() {
-            var _this5 = this;
+            var _this6 = this;
 
             // get the svg1 element in the svg.js world
             this.draw = SVG('svg1');
@@ -1362,17 +1525,17 @@ var ConceptMapController = function () {
 
             // set the mouse down listener
             this.draw.mousedown(function (event) {
-                _this5.svgMouseDown(event);
+                _this6.svgMouseDown(event);
             });
 
             // set the mouse up listener
             this.draw.mouseup(function (event) {
-                _this5.svgMouseUp(event);
+                _this6.svgMouseUp(event);
             });
 
             // set the mouse move listener
             this.draw.mousemove(function (event) {
-                _this5.svgMouseMove(event);
+                _this6.svgMouseMove(event);
             });
 
             // get the svg1 element in the angular world
@@ -1383,7 +1546,7 @@ var ConceptMapController = function () {
              * a new node onto the svg
              */
             svg1[0].addEventListener('drop', function (event) {
-                _this5.newNodeDropped(event);
+                _this6.newNodeDropped(event);
             });
 
             // set the link type chooser style
@@ -1586,7 +1749,7 @@ var ConceptMapController = function () {
             if (this.activeLink != null) {
                 /*
                  * there is an active link which means the student has created a
-                 * new link and is in the process of choosing the links destination
+                 * new link and is in the process of choosing the link's destination
                  * node
                  */
 
@@ -1747,11 +1910,14 @@ var ConceptMapController = function () {
                 var fileName = selectedNode.fileName;
 
                 // get the node name
-                var nodeName = selectedNode.name;
+                var label = selectedNode.label;
 
                 // get the width and height of the node
                 var width = selectedNode.width;
                 var height = selectedNode.height;
+
+                // get the original authored id
+                var originalId = selectedNode.id;
 
                 // get the position we should drop the node at
                 var x = event.offsetX - this.tempOffsetX;
@@ -1761,7 +1927,7 @@ var ConceptMapController = function () {
                 var newConceptMapNodeId = this.getNewConceptMapNodeId();
 
                 // create a ConceptMapNode
-                var conceptMapNode = this.ConceptMapService.newConceptMapNode(this.draw, newConceptMapNodeId, fileName, nodeName, x, y, width, height);
+                var conceptMapNode = this.ConceptMapService.newConceptMapNode(this.draw, newConceptMapNodeId, originalId, fileName, label, x, y, width, height);
 
                 // add the node to our array of nodes
                 this.addNode(conceptMapNode);
@@ -1771,6 +1937,9 @@ var ConceptMapController = function () {
 
                 // make the node highlighted
                 this.setHighlightedElement(conceptMapNode);
+
+                // handle the student data changing
+                this.studentDataChanged();
             }
 
             // enable node draggin
@@ -1887,42 +2056,52 @@ var ConceptMapController = function () {
     }, {
         key: 'setNodeMouseEvents',
         value: function setNodeMouseEvents(conceptMapNode) {
-            var _this6 = this;
+            var _this7 = this;
 
             // set the node mouse over event
             conceptMapNode.setNodeMouseOver(function (event) {
-                _this6.nodeMouseOver(event);
+                _this7.nodeMouseOver(event);
             });
 
             // set the node mouse out event
             conceptMapNode.setNodeMouseOut(function (event) {
-                _this6.nodeMouseOut(event);
+                _this7.nodeMouseOut(event);
             });
 
             // set the connector mouse down event
             conceptMapNode.setConnectorMouseDown(function (event) {
-                _this6.disableNodeDragging();
-                _this6.connectorMouseDown(event);
+                _this7.disableNodeDragging();
+                _this7.connectorMouseDown(event);
             });
 
             // set the node mouse down event
             conceptMapNode.setNodeMouseDown(function (event) {
-                _this6.nodeMouseDown(event);
+                _this7.nodeMouseDown(event);
             });
 
             // set the node mouse up event
             conceptMapNode.setNodeMouseUp(function (event) {
-                _this6.nodeMouseUp(event);
+                _this7.nodeMouseUp(event);
             });
 
             // set the delete button mouse down event
             conceptMapNode.setDeleteButtonMouseDown(function (event) {
-                _this6.nodeDeleteButtonMouseDown(event);
+                _this7.nodeDeleteButtonMouseDown(event);
             });
 
             // set the delete button mouse over event
             conceptMapNode.setDeleteButtonMouseOver(function (event) {
-                _this6.nodeDeleteButtonMouseOver(event);
+                _this7.nodeDeleteButtonMouseOver(event);
+            });
+
+            // set the delete button mouse out event
+            conceptMapNode.setDeleteButtonMouseOut(function (event) {
+                _this7.nodeDeleteButtonMouseOut(event);
+            });
+
+            // set node drag move event
+            conceptMapNode.setDragMove(function (event) {
+                _this7.nodeDragMove(event);
             });
         }
 
@@ -1964,7 +2143,7 @@ var ConceptMapController = function () {
                     this.showLinkTypeChooser();
 
                     // select the link type that was previously chosen for the link
-                    this.selectedLinkType = element.getLinkType();
+                    this.selectedLinkType = element.getOriginalId();
                 }
             }
         }
@@ -2139,7 +2318,7 @@ var ConceptMapController = function () {
         value: function getNodeById(id) {
             var node = null;
 
-            if (groupId != null) {
+            if (id != null) {
 
                 // loop through all the nodes
                 for (var n = 0; n < this.nodes.length; n++) {
@@ -2422,7 +2601,6 @@ var ConceptMapController = function () {
     }, {
         key: 'nodeMouseUp',
         value: function nodeMouseUp(event) {
-            var _this7 = this;
 
             if (this.drawingLink && this.activeLink != null) {
                 /*
@@ -2476,12 +2654,8 @@ var ConceptMapController = function () {
                             // display the modal overlay
                             this.displayLinkTypeChooserModalOverlay = true;
 
-                            var link = this.activeLink;
-
-                            // set the delete button clicked event for the link
-                            this.activeLink.setDeleteButtonClicked(function (event) {
-                                _this7.linkDeleteButtonClicked(event, link);
-                            });
+                            // handle the student data changing
+                            this.studentDataChanged();
                         }
                     }
                 }
@@ -2507,6 +2681,9 @@ var ConceptMapController = function () {
 
                 // remove the link from our array of links
                 this.removeLink(link);
+
+                // handle the student data changing
+                this.studentDataChanged();
             }
 
             // hide the link type chooser
@@ -2522,7 +2699,6 @@ var ConceptMapController = function () {
     }, {
         key: 'connectorMouseDown',
         value: function connectorMouseDown(event) {
-            var _this8 = this;
 
             // set the flag that we are drawing a link
             this.drawingLink = true;
@@ -2539,15 +2715,47 @@ var ConceptMapController = function () {
             // get the node
             var node = this.getNodeByConnectorId(connector.id);
 
-            // get the center of the node
+            // get the center of the image
             var x = node.cx();
             var y = node.cy();
 
             // get a new ConceptMapLinkId e.g. 'studentLink3'
             var newConceptMapLinkId = this.getNewConceptMapLinkId();
 
+            /*
+             * we will not know what the original id is until the student has
+             * selected a link type
+             */
+            var originalId = null;
+
             // create a link that comes out of the node
-            var link = this.ConceptMapService.newConceptMapLink(this.draw, newConceptMapLinkId, node, x, y);
+            var link = this.ConceptMapService.newConceptMapLink(this.draw, newConceptMapLinkId, originalId, node);
+
+            // set the link mouse events
+            this.setLinkMouseEvents(link);
+
+            // remember the active link
+            this.activeLink = link;
+
+            // highlight the link
+            this.setHighlightedElement(link);
+
+            // clear the active node
+            this.clearActiveNode();
+
+            // make the source node the active node
+            this.setActiveNode(node);
+        }
+
+        /**
+         * Set the link mouse events for a link
+         * @param link the ConceptMapLink
+         */
+
+    }, {
+        key: 'setLinkMouseEvents',
+        value: function setLinkMouseEvents(link) {
+            var _this8 = this;
 
             // set the link mouse down listener
             link.setLinkMouseDown(function (event) {
@@ -2564,17 +2772,10 @@ var ConceptMapController = function () {
                 _this8.linkMouseOut(event);
             });
 
-            // remember the active link
-            this.activeLink = link;
-
-            // highlight the link
-            this.setHighlightedElement(link);
-
-            // clear the active node
-            this.clearActiveNode();
-
-            // make the source node the active node
-            this.setActiveNode(node);
+            // set the delete button clicked event for the link
+            link.setDeleteButtonClicked(function (event) {
+                _this8.linkDeleteButtonClicked(event, link);
+            });
         }
 
         /**
@@ -2663,6 +2864,9 @@ var ConceptMapController = function () {
 
                     // remove the node from our array of nodes
                     this.removeNode(node);
+
+                    // handle the student data changing
+                    this.studentDataChanged();
                 }
             }
         }
@@ -2676,6 +2880,33 @@ var ConceptMapController = function () {
         key: 'nodeDeleteButtonMouseOver',
         value: function nodeDeleteButtonMouseOver(event) {
 
+            // get the node group id
+            var groupId = event.target.parentElement.parentElement.id;
+
+            if (groupId != null) {
+
+                // get the node
+                var node = this.getNodeByGroupId(groupId);
+
+                if (node != null) {
+                    /*
+                     * make the node active so that the border and delete button
+                     * shows
+                     */
+                    this.setActiveNode(node);
+                }
+            }
+        }
+
+        /**
+         * Called when the mouse moves out of a node delete button
+         * @param event the mouse over event
+         */
+
+    }, {
+        key: 'nodeDeleteButtonMouseOut',
+        value: function nodeDeleteButtonMouseOut(event) {
+
             // get the group id
             var groupId = event.target.parentElement.parentElement.id;
 
@@ -2683,9 +2914,33 @@ var ConceptMapController = function () {
             var node = this.getNodeByGroupId(groupId);
 
             if (node != null) {
-                // show the delete button
-                node.showDeleteButton();
+                // make the node inactive by clearing the active node
+                this.clearActiveNode(node);
             }
+        }
+
+        /**
+         * Called when the node is dragged
+         * @param event the drag event
+         */
+
+    }, {
+        key: 'nodeDragMove',
+        value: function nodeDragMove(event) {
+
+            // get the group id
+            var groupId = event.target.id;
+
+            // get the node
+            var node = this.getNodeByGroupId(groupId);
+
+            if (node != null) {
+                // handle the node being dragged
+                node.dragMove(event);
+            }
+
+            // handle the student data changing
+            this.studentDataChanged();
         }
 
         /**
@@ -2741,7 +2996,7 @@ var ConceptMapController = function () {
 
 ;
 
-ConceptMapController.$inject = ['$injector', '$mdDialog', '$q', '$rootScope', '$scope', 'AnnotationService', 'ConceptMapService', 'ConfigService', 'CRaterService', 'NodeService', 'ProjectService', 'StudentAssetService', 'StudentDataService'];
+ConceptMapController.$inject = ['$injector', '$mdDialog', '$q', '$rootScope', '$scope', '$timeout', 'AnnotationService', 'ConceptMapService', 'ConfigService', 'CRaterService', 'NodeService', 'ProjectService', 'StudentAssetService', 'StudentDataService'];
 
 exports.default = ConceptMapController;
 //# sourceMappingURL=conceptMapController.js.map

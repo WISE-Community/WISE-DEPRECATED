@@ -161,15 +161,15 @@ var ConceptMapService = function (_NodeService) {
          * @param draw the svg.js draw object
          * @param id the node id
          * @param fileName the file name of the image
-         * @param nodeName the name of the node
+         * @param label the label of the node
          * @param x the x coordinate
          * @param y the y coordinate
          * @param width the width of the image
          * @param height the height of the image
          * @param a ConceptMapNode
          */
-        value: function newConceptMapNode(draw, id, fileName, nodeName, x, y, width, height) {
-            return new ConceptMapNode(this, draw, id, fileName, nodeName, x, y, width, height);
+        value: function newConceptMapNode(draw, id, originalId, fileName, label, x, y, width, height) {
+            return new ConceptMapNode(this, draw, id, originalId, fileName, label, x, y, width, height);
         }
 
         /**
@@ -184,8 +184,8 @@ var ConceptMapService = function (_NodeService) {
 
     }, {
         key: 'newConceptMapLink',
-        value: function newConceptMapLink(draw, id, node, x, y) {
-            return new ConceptMapLink(this, draw, id, node, x, y);
+        value: function newConceptMapLink(draw, id, originalId, sourceNode, destinationNode, label, color) {
+            return new ConceptMapLink(this, draw, id, originalId, sourceNode, destinationNode, label, color);
         }
 
         /**
@@ -380,16 +380,14 @@ var ConceptMapNode = function () {
      * @param ConceptMapService the ConceptMapService
      * @param draw the svg.js draw object
      * @param fileName the name of the image file that represents the node
-     * @param nodeName the name of the node
+     * @param label the label of the node
      * @param x the x position of the node
      * @param y the y position of the node
      * @param width the the width of the node
      * @param height the height of the node
      */
 
-    function ConceptMapNode(ConceptMapService, draw, id, fileName, nodeName, x, y, width, height) {
-        var _this2 = this;
-
+    function ConceptMapNode(ConceptMapService, draw, id, originalId, fileName, label, x, y, width, height) {
         _classCallCheck(this, ConceptMapNode);
 
         // remember the svg.js draw object so we can draw onto it
@@ -398,8 +396,14 @@ var ConceptMapNode = function () {
         // set the id
         this.id = id;
 
-        // remember the node name
-        this.nodeName = nodeName;
+        // set the original id
+        this.originalId = originalId;
+
+        // remember the file name
+        this.fileName = fileName;
+
+        // remember the label
+        this.label = label;
 
         // create the svg image object
         this.image = this.draw.image(fileName, width, height);
@@ -445,24 +449,84 @@ var ConceptMapNode = function () {
         this.group.add(this.connector);
         this.group.add(this.deleteButtonGroup);
 
+        // hide the border and delete button
+        this.border.hide();
+        this.deleteButtonGroup.hide();
+
         // set the position of the group
         this.group.x(x);
         this.group.y(y);
-
-        // set a listener for when the node is dragged
-        this.group.on('dragmove', function (event) {
-            _this2.dragMove(event);
-        });
     }
 
     /**
-     * Create the border that displays when the node is highlighted or
-     * moused over.
-     * @returns the svg rectangle that represents the border
+     * Get the JSON object representation of the ConceptMapNode
+     * @returns a JSON object containing the data of the ConceptMapNode
      */
 
 
     _createClass(ConceptMapNode, [{
+        key: 'toJSONObject',
+        value: function toJSONObject() {
+            var jsonObject = {};
+
+            jsonObject.instanceId = this.id;
+            jsonObject.originalId = this.originalId;
+            jsonObject.fileName = this.fileName;
+            jsonObject.label = this.label;
+            jsonObject.x = this.x;
+            jsonObject.y = this.y;
+            jsonObject.width = this.width;
+            jsonObject.height = this.height;
+
+            jsonObject.outgoingLinks = [];
+            jsonObject.incomingLinks = [];
+
+            // loop through all the outgoing links
+            for (var ol = 0; ol < this.outgoingLinks.length; ol++) {
+                var outgoingLink = this.outgoingLinks[ol];
+
+                var instanceId = outgoingLink.getId();
+                var originalId = outgoingLink.getOriginalId();
+
+                /*
+                 * create an object containing the instance id and original id
+                 * of the link
+                 */
+                var tempLinkObject = {};
+                tempLinkObject.instanceId = instanceId;
+                tempLinkObject.originalId = originalId;
+
+                jsonObject.outgoingLinks.push(tempLinkObject);
+            }
+
+            // loop through all the incoming links
+            for (var il = 0; il < this.incomingLinks.length; il++) {
+                var incomingLink = this.incomingLinks[il];
+
+                var instanceId = incomingLink.getId();
+                var originalId = incomingLink.getOriginalId();
+
+                /*
+                 * create an object containing the instance id and original id
+                 * of the link
+                 */
+                var tempLinkObject = {};
+                tempLinkObject.instanceId = instanceId;
+                tempLinkObject.originalId = originalId;
+
+                jsonObject.incomingLinks.push(tempLinkObject);
+            }
+
+            return jsonObject;
+        }
+
+        /**
+         * Create the border that displays when the node is highlighted or
+         * moused over.
+         * @returns the svg rectangle that represents the border
+         */
+
+    }, {
         key: 'createBorder',
         value: function createBorder() {
 
@@ -520,25 +584,21 @@ var ConceptMapNode = function () {
 
             // create the x by first creating a + and then rotating it 45 degrees
 
-            // get the midpoint of the circle
-            var deleteButtonMidpointX = this.deleteButtonCircle.cx();
-            var deleteButtonMidpointY = this.deleteButtonCircle.cy();
-
             // get the top location of the +
-            var topX = deleteButtonMidpointX;
-            var topY = deleteButtonMidpointY - deleteButtonRadius * 0.7;
+            var topX = 0;
+            var topY = 0 - deleteButtonRadius * 0.7;
 
             // get the bottom location of the +
-            var bottomX = deleteButtonMidpointX;
-            var bottomY = deleteButtonMidpointY + deleteButtonRadius * 0.7;
+            var bottomX = 0;
+            var bottomY = 0 + deleteButtonRadius * 0.7;
 
             // get the left position of the +
-            var leftX = deleteButtonMidpointX - deleteButtonRadius * 0.7;
-            var leftY = deleteButtonMidpointY;
+            var leftX = 0 - deleteButtonRadius * 0.7;
+            var leftY = 0;
 
             // get the right position of the +
-            var rightX = deleteButtonMidpointX + deleteButtonRadius * 0.7;
-            var rightY = deleteButtonMidpointY;
+            var rightX = 0 + deleteButtonRadius * 0.7;
+            var rightY = 0;
 
             // draw the +
             var deleteButtonXPath = 'M' + topX + ',' + topY + 'L' + bottomX + ',' + bottomY + 'M' + leftX + ',' + leftY + 'L' + rightX + ',' + rightY;
@@ -547,6 +607,9 @@ var ConceptMapNode = function () {
 
             // rotate the + to turn it into an x
             this.deleteButtonX.transform({ rotation: 45 });
+
+            // move the x to the upper right of the group
+            this.deleteButtonX.translate(this.width, 0);
 
             /*
              * disable pointer events on the x so that clicks will pass through
@@ -571,6 +634,17 @@ var ConceptMapNode = function () {
         key: 'getId',
         value: function getId() {
             return this.id;
+        }
+
+        /**
+         * Get the original id of the node
+         * @returns the original id of the node
+         */
+
+    }, {
+        key: 'getOriginalId',
+        value: function getOriginalId() {
+            return this.originalId;
         }
 
         /**
@@ -942,6 +1016,37 @@ var ConceptMapNode = function () {
         }
 
         /**
+         * Set the mouseout listener for the delete button
+         * @param deleteButtonMouseOutFunction the function to call when the mouse
+         * moves out of the delete button
+         */
+
+    }, {
+        key: 'setDeleteButtonMouseOut',
+        value: function setDeleteButtonMouseOut(deleteButtonMouseOutFunction) {
+
+            if (this.deleteButtonCircle != null) {
+                this.deleteButtonCircle.mouseout(deleteButtonMouseOutFunction);
+            }
+        }
+
+        /**
+         * Set the dragmove listener for the group
+         * @param dragMoveFunction the function to call when the group is dragged
+         */
+
+    }, {
+        key: 'setDragMove',
+        value: function setDragMove(dragMoveFunction) {
+
+            if (this.group != null) {
+
+                // set a listener for when the node is dragged
+                this.group.on('dragmove', dragMoveFunction);
+            }
+        }
+
+        /**
          * Set the x position
          * @param x the x position
          */
@@ -1055,9 +1160,9 @@ var ConceptMapNode = function () {
             // get the group
             var group = this.getGroup();
 
-            // get the x and y coordinates of the center of the group
-            var cx = group.cx();
-            var cy = group.cy();
+            // get the x and y coordinates of the center of the image
+            var cx = this.cx();
+            var cy = this.cy();
 
             // update the local x, y values of the node for bookkeeping
             this.x = group.x();
@@ -1080,7 +1185,7 @@ var ConceptMapNode = function () {
                     var y1 = cy;
 
                     // calculate the nearest point to the destination node
-                    var nearestPoint = outgoingLink.getNearestPointToDestinationNode();
+                    var nearestPoint = outgoingLink.getNearestPointToDestinationNode(x1, y1);
                     x2 = nearestPoint.x;
                     y2 = nearestPoint.y;
 
@@ -1099,13 +1204,18 @@ var ConceptMapNode = function () {
                     var y1 = incomingLink.y1();
 
                     // calculate the nearest point to the source node
-                    var nearestPoint = incomingLink.getNearestPointToDestinationNode();
+                    var nearestPoint = incomingLink.getNearestPointToDestinationNode(x1, y1);
                     var x2 = nearestPoint.x;
                     var y2 = nearestPoint.y;
 
                     // update the coordinates of the link
                     incomingLink.updateCoordinates(x1, y1, x2, y2);
                 }
+            }
+
+            if (this.controller != null) {
+                // handle the student data changing
+                this.controller.studentDataChanged();
             }
 
             // move the group to the front so that it shows up above other elements
@@ -1192,7 +1302,7 @@ var ConceptMapLink = function () {
      * @param node the source ConceptMapNode
      */
 
-    function ConceptMapLink(ConceptMapService, draw, id, node) {
+    function ConceptMapLink(ConceptMapService, draw, id, originalId, sourceNode, destinationNode, label, color) {
         _classCallCheck(this, ConceptMapLink);
 
         // remember the ConceptMapService
@@ -1201,7 +1311,11 @@ var ConceptMapLink = function () {
         // remember the svg.js draw object
         this.draw = draw;
 
+        // set the id
         this.id = id;
+
+        // set the original id
+        this.originalId = originalId;
 
         // the arrow head of the link
         this.head = null;
@@ -1209,8 +1323,13 @@ var ConceptMapLink = function () {
         // the line of the link
         this.path = null;
 
-        // the initial color of the link
-        this.color = 'blue';
+        // set the color of the link
+        this.color = color;
+
+        if (this.color == null) {
+            // if no color is specified, use a default color
+            this.color = 'blue';
+        }
 
         // whether the link is highlighted
         this.highlighted = false;
@@ -1218,20 +1337,17 @@ var ConceptMapLink = function () {
         // create a group to contain the path and head
         this.group = this.draw.group();
 
-        // text that describes the type of link chosen by the student
-        this.linkType = null;
-
         // where to place the text of the link along the line
         this.textPercentageLocationOnLink = 0.6;
 
         // remember the source node
-        this.sourceNode = node;
+        this.sourceNode = sourceNode;
 
         /*
          * used to remember the destination node later after the destination
          * node has been chosen
          */
-        this.destinationNode = null;
+        this.destinationNode = destinationNode;
 
         // set the link to curve down
         this.startCurveUp = true;
@@ -1249,15 +1365,26 @@ var ConceptMapLink = function () {
         // create a curved link
         this.curvedLink = true;
 
-        // get the center x and y coordinate of the node
-        var x = node.cx();
-        var y = node.cy();
-
         // initialize the coordinates of both ends of the link
-        var x1 = x;
-        var y1 = y;
-        var x2 = x;
-        var y2 = y;
+        var x1 = this.sourceNode.cx();
+        var y1 = this.sourceNode.cy();
+        var x2 = x1;
+        var y2 = y1;
+
+        if (this.destinationNode != null) {
+
+            /*
+             * get the nearest point from the center of the source node to the 
+             * destination  node along the perimeter of the destination node 
+             * image
+             */
+            var nearestPoint = this.getNearestPointToDestinationNode(x1, y1);
+            x2 = nearestPoint.x;
+            y2 = nearestPoint.y;
+
+            // connect the link to the nodes
+            this.connectLinkToNodes();
+        }
 
         if (this.curvedLink) {
             // create a curved link
@@ -1299,18 +1426,68 @@ var ConceptMapLink = function () {
         // add the tail and head to the group
         this.group.add(this.path);
         this.group.add(this.head);
+
+        // create the text group for the link
+        this.createTextGroup();
+
+        // text that describes the type of link chosen by the student
+        this.setLabel(label);
+
+        if (this.label == null || this.label == '') {
+            // there is no label so we will hide the text group
+            this.hideTextGroup();
+        } else {
+            // there is a label so we will show the text group
+            this.showTextGroup();
+        }
+
+        // create the delete button group
+        this.createDeleteButtonGroup();
     }
 
     /**
-     * Get the id of the link
-     * @returns the id of the link
+     * Get the JSON object representation of the ConceptMapLink
+     * @returns a JSON object containing the data of the ConceptMapLink
      */
 
 
     _createClass(ConceptMapLink, [{
+        key: 'toJSONObject',
+        value: function toJSONObject() {
+            var jsonObject = {};
+
+            jsonObject.instanceId = this.id;
+            jsonObject.originalId = this.originalId;
+            jsonObject.color = this.color;
+            jsonObject.label = this.label;
+            jsonObject.sourceNodeInstanceId = this.sourceNode.getId();
+            jsonObject.destinationNodeInstanceId = this.destinationNode.getId();
+            jsonObject.sourceNodeOriginalId = this.sourceNode.getOriginalId();
+            jsonObject.destinationNodeOriginalId = this.destinationNode.getOriginalId();
+
+            return jsonObject;
+        }
+
+        /**
+         * Get the id of the link
+         * @returns the id of the link
+         */
+
+    }, {
         key: 'getId',
         value: function getId() {
             return this.id;
+        }
+
+        /**
+         * Get the original id of the node
+         * @returns the original id of the node
+         */
+
+    }, {
+        key: 'getOriginalId',
+        value: function getOriginalId() {
+            return this.originalId;
         }
 
         /**
@@ -1369,28 +1546,25 @@ var ConceptMapLink = function () {
         }
 
         /**
-         * Set the link type
-         * @param linkType the text for the link
+         * Set the original id
+         * @param originalId the original id
          */
 
     }, {
-        key: 'setLinkType',
-        value: function setLinkType(linkType) {
-
-            if (linkType != null) {
-                this.linkType = linkType;
-            }
+        key: 'setOriginalId',
+        value: function setOriginalId(originalId) {
+            this.originalId = originalId;
         }
 
         /**
-         * Get the link type
-         * @returns the link type
+         * Get the label
+         * @returns the label
          */
 
     }, {
-        key: 'getLinkType',
-        value: function getLinkType() {
-            return this.linkType;
+        key: 'getLabel',
+        value: function getLabel() {
+            return this.label;
         }
 
         /**
@@ -1582,17 +1756,20 @@ var ConceptMapLink = function () {
         value: function setDestination(destinationNode) {
 
             if (destinationNode != null) {
-                var x1 = null;
-                var y1 = null;
+
+                // get x and y of the tail
+                var x1 = this.path.attr('x1');
+                var y1 = this.path.attr('y1');
 
                 // remember the destination node
                 this.destinationNode = destinationNode;
 
                 /*
-                 * get the nearest point from the source node to the destination 
-                 * node along the perimeter of the destination node image
+                 * get the nearest point from the center of the source node to the 
+                 * destination node along the perimeter of the destination node 
+                 * image
                  */
-                var nearestPoint = this.getNearestPointToDestinationNode();
+                var nearestPoint = this.getNearestPointToDestinationNode(x1, y1);
                 var x2 = nearestPoint.x;
                 var y2 = nearestPoint.y;
 
@@ -1603,25 +1780,21 @@ var ConceptMapLink = function () {
                 // connect the link to the nodes
                 this.connectLinkToNodes();
 
-                // create the delete button for the link
-                this.createDeleteButton();
-
                 // hide the delete button
                 this.hideDeleteButton();
-
-                // create the text group for the link
-                this.createTextGroup();
             }
         }
 
         /**
-         * Get the nearest point to the destination node
+         * Get the nearest point to the destination node from a given x, y point
+         * @param x the x value of the source point
+         * @param y the y value of the source point
          * @returns an object containing an x and y field
          */
 
     }, {
         key: 'getNearestPointToDestinationNode',
-        value: function getNearestPointToDestinationNode() {
+        value: function getNearestPointToDestinationNode(x, y) {
 
             // get the coordinates of the upper left corner of the image
             var rectMinX = this.destinationNode.getImageX();
@@ -1631,9 +1804,11 @@ var ConceptMapLink = function () {
             var width = this.destinationNode.getImageWidth();
             var height = this.destinationNode.getImageHeight();
 
-            // get the coordinates of the source
-            var x = this.path.attr('x1');
-            var y = this.path.attr('y1');
+            if (x == null && y == null) {
+                // get the coordinates of the source if x and y were not provided
+                x = this.path.attr('x1');
+                y = this.path.attr('y1');
+            }
 
             /*
              * find the nearest point from the source to anywhere along the 
@@ -1721,18 +1896,21 @@ var ConceptMapLink = function () {
         }
 
         /**
-         * Set the text
-         * @param name the text
+         * Set the label
+         * @param label the text label
          */
 
     }, {
-        key: 'setText',
-        value: function setText(name) {
+        key: 'setLabel',
+        value: function setLabel(label) {
 
-            if (name != null) {
+            if (label != null) {
 
-                // set the text
-                this.text.text(name);
+                // remember the label
+                this.label = label;
+
+                // set the text into the text element
+                this.text.text(label);
 
                 // reset the width to adjust to the new text length
                 var textBBox = this.text.node.getBBox();
@@ -1745,7 +1923,8 @@ var ConceptMapLink = function () {
                 this.textGroup.cx(midPoint.x);
                 this.textGroup.cy(midPoint.y);
 
-                this.textGroup.show();
+                // show the text group now that it has a label
+                this.showTextGroup();
             }
         }
 
@@ -1772,9 +1951,9 @@ var ConceptMapLink = function () {
          */
 
     }, {
-        key: 'createDeleteButton',
-        value: function createDeleteButton() {
-            var _this3 = this;
+        key: 'createDeleteButtonGroup',
+        value: function createDeleteButtonGroup() {
+            var _this2 = this;
 
             // create a group to contain the elements of the delete button
             this.deleteButtonGroup = this.draw.group();
@@ -1852,12 +2031,12 @@ var ConceptMapLink = function () {
 
             // set the listener for when the mouse is over the group
             this.deleteButtonGroup.mouseover(function (event) {
-                _this3.deleteButtonGroupMouseOver(event);
+                _this2.deleteButtonGroupMouseOver(event);
             });
 
             // set the listener for when the mouse moves out of the group
             this.deleteButtonGroup.mouseout(function (event) {
-                _this3.deleteButtonGroupMouseOut(event);
+                _this2.deleteButtonGroupMouseOut(event);
             });
 
             // add the delete button group to the link group
@@ -2093,6 +2272,32 @@ var ConceptMapLink = function () {
 
             // hide the text group until the student has chosen a link type
             this.textGroup.hide();
+        }
+
+        /**
+         * Show the text group
+         */
+
+    }, {
+        key: 'showTextGroup',
+        value: function showTextGroup() {
+
+            if (this.textGroup != null) {
+                this.textGroup.show();
+            }
+        }
+
+        /**
+         * Hide the text group
+         */
+
+    }, {
+        key: 'hideTextGroup',
+        value: function hideTextGroup() {
+
+            if (this.textGroup != null) {
+                this.textGroup.hide();
+            }
         }
 
         /**
