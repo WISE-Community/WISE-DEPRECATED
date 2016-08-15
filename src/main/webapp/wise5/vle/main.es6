@@ -30,7 +30,7 @@ import EmbeddedController from '../components/embedded/embeddedController';
 import EmbeddedService from '../components/embedded/embeddedService';
 import Filters from '../filters/filters';
 import Highcharts from '../lib/highcharts@4.2.1';
-import draggablePoints from '../vendor/draggable-points/draggable-points';
+import draggablePoints from '../lib/draggable-points/draggable-points';
 import GraphController from '../components/graph/graphController';
 import GraphService from '../components/graph/graphService';
 import HTMLService from '../components/html/htmlService';
@@ -64,7 +64,6 @@ import TableService from '../components/table/tableService';
 import TeacherDataService from '../services/teacherDataService';
 import UtilService from '../services/utilService';
 import VLEController from './vleController';
-
 import ocLazyLoad from 'oclazyload';
 import moment from 'moment';
 
@@ -79,7 +78,6 @@ let mainModule = angular.module('vle', [
     'directives',
     'filters',
     'highcharts-ng',
-    //'ngAudio',
     'ngAria',
     'ngFileUpload',
     'ngMaterial',
