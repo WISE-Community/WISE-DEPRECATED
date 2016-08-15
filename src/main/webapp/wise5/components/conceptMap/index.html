@@ -43,6 +43,55 @@
                        ng-model='conceptMapController.authoringComponentContent.showPreviousWorkPrompt'
                        ng-change='conceptMapController.authoringViewComponentChanged()'/>
                 <br/>
+                Background Image: <input ng-model='conceptMapController.authoringComponentContent.background'
+                                         ng-change='conceptMapController.authoringViewComponentChanged()'
+                                         size='80' />
+                <br/>
+                Stretch Background: <input type='checkbox'
+                                           ng-model='conceptMapController.authoringComponentContent.stretchBackground'
+                                           ng-change='conceptMapController.authoringViewComponentChanged()' />
+                <br/>
+                <br/>
+                Node <button ng-click='conceptMapController.authoringViewAddNode()'>Add Node</button>
+                <br/>
+                <div ng-repeat='node in conceptMapController.authoringComponentContent.nodes'>
+                    File Name: 
+                    <input ng-model='node.fileName'
+                           ng-change='conceptMapController.authoringViewComponentChanged()'
+                           size='30'/>
+                    Label: 
+                    <input ng-model='node.label'
+                           ng-change='conceptMapController.authoringViewComponentChanged()'
+                           size='30'/>
+                    Width: 
+                    <input ng-model='node.width'
+                           ng-change='conceptMapController.authoringViewComponentChanged()'
+                           size='10'/>
+                    Height: 
+                    <input ng-model='node.height'
+                           ng-change='conceptMapController.authoringViewComponentChanged()'
+                           size='10'/>
+                    <button ng-click='conceptMapController.authoringViewNodeUpButtonClicked($index)'>Up</button>
+                    <button ng-click='conceptMapController.authoringViewNodeDownButtonClicked($index)'>Down</button>
+                    <button ng-click='conceptMapController.authoringViewNodeDeleteButtonClicked($index)'>Delete</button>
+                </div>
+                <br/>
+                Links <button ng-click='conceptMapController.authoringViewAddLink()'>Add Link</button>
+                <br/>
+                <div ng-repeat='link in conceptMapController.authoringComponentContent.links'>
+                    Label:
+                    <input ng-model='link.label'
+                           ng-change='conceptMapController.authoringViewComponentChanged()'
+                           size='30'/>
+                    Color:
+                    <input ng-model='link.color'
+                           ng-change='conceptMapController.authoringViewComponentChanged()'
+                           size='30'/>
+                    <button ng-click='conceptMapController.authoringViewLinkUpButtonClicked($index)'>Up</button>
+                    <button ng-click='conceptMapController.authoringViewLinkDownButtonClicked($index)'>Down</button>
+                    <button ng-click='conceptMapController.authoringViewLinkDeleteButtonClicked($index)'>Delete</button>
+                </div>
+                <br/>
                 <textarea ng-model='conceptMapController.authoringComponentContentJSONString'
                           ng-change='conceptMapController.advancedAuthoringViewComponentChanged()'
                           ng-model-options='{ debounce: 1000 }'
@@ -63,7 +112,7 @@
                     <div ng-if="conceptMapController.isRichTextEnabled && conceptMapController.isDisabled"
                          class="input--textarea input--textarea--disabled">
                     </div>
-                    <div style="display: flex">
+                    <div id="conceptMapContainer" style="display: flex">
                         <div id="selectNodeBar" style="flex: 10; border: 1px solid black">
                             <div ng-repeat="availableNode in conceptMapController.availableNodes" 
                                  style="text-align: center; border: 1px solid black">
@@ -80,41 +129,43 @@
                             <svg id="svg1" 
                                  width="800" 
                                  height="600" 
-                                 style="border: 1px solid black; -moz-user-select: none; -webkit-user-select: none; -ms-user-select:none; user-select:none;-o-user-select:none;">
+                                 style="background-image: url('{{conceptMapController.componentContent.background}}'); background-size: {{conceptMapController.backgroundSize}}; background-repeat: no-repeat; border: 1px solid black; -moz-user-select: none; -webkit-user-select: none; -ms-user-select:none; user-select:none; -o-user-select:none;">
                             </svg>
                         </div>
-                    </div>
-                    <div id="linkTypeChooserModalOverlay" 
-                        ng-show="conceptMapController.displayLinkTypeChooserModalOverlay"
-                        ng-style="conceptMapController.linkTypeChooserModalOverlayStyle"></div>
-                    <div id="linkTypeChooser" draggable container-width="conceptMapController.modalWidth" container-height="conceptMapController.modalHeight" ng-show="conceptMapController.displayLinkTypeChooser" class="ng-modal" ng-style="conceptMapController.linkTypeChooserStyle">
-                        <div style="display: inline-block;"><span>{{conceptMapController.getLinksTitle()}}</span></div>
-                        <md-radio-group ng-model="conceptMapController.selectedLinkType"
-                                        ng-change="conceptMapController.studentDataChanged()">
-                            <div ng-repeat="link in conceptMapController.availableLinks">
-                                <md-radio-button class="md-primary"
-                                                 ng-value="link.id"
-                                                 ng-click="conceptMapController.isDisabled || conceptMapController.linkTypeSelected(link)"
-                                                 ng-disabled="conceptMapController.isDisabled"
-                                                 style="display: inline-block; margin: 8px;">
-                                    <div style="background-color: {{link.color}}; width: 30px; height: 15px; display: inline-block; margin-right: 4px"></div><span compile="link.label"></span>
-                                </md-radio-button>
-                            </div>
-                        </md-radio-group>
-                        <div style="display: flex">
-                            <div style="margin-right: auto;"><md-button class="md-primary md-button md-raised" ng-click="conceptMapController.cancelLinkTypeChooser()">Cancel</md-button></div>
-                            <div style="display: flex; margin-right: 16px;">
-                                <md-tooltip md-direction="left" 
-                                            style="z-index: 10001;">
-                                    Drag Me
-                                </md-tooltip>
-                                <md-icon style="transform: rotate(45deg)" 
-                                        ng-click="conceptMapController.dragIconClicked()">
-                                    zoom_out_map
-                                </md-icon>
+                        <div id="linkTypeChooserModalOverlay" 
+                            ng-show="conceptMapController.displayLinkTypeChooserModalOverlay"
+                            ng-style="conceptMapController.linkTypeChooserModalOverlayStyle">
+                        </div>
+                        <div id="linkTypeChooser" draggable container-width="conceptMapController.modalWidth" container-height="conceptMapController.modalHeight" ng-show="conceptMapController.displayLinkTypeChooser" class="ng-modal" ng-style="conceptMapController.linkTypeChooserStyle">
+                            <div style="display: inline-block;"><span>{{conceptMapController.getLinksTitle()}}</span></div>
+                            <md-radio-group ng-model="conceptMapController.selectedLinkType"
+                                            ng-change="conceptMapController.studentDataChanged()">
+                                <div ng-repeat="link in conceptMapController.availableLinks">
+                                    <md-radio-button class="md-primary"
+                                                     ng-value="link.id"
+                                                     ng-click="conceptMapController.isDisabled || conceptMapController.linkTypeSelected(link)"
+                                                     ng-disabled="conceptMapController.isDisabled"
+                                                     style="display: inline-block; margin: 8px;">
+                                        <div style="background-color: {{link.color}}; width: 30px; height: 15px; display: inline-block; margin-right: 4px"></div><span compile="link.label"></span>
+                                    </md-radio-button>
+                                </div>
+                            </md-radio-group>
+                            <div style="display: flex">
+                                <div style="margin-right: auto;"><md-button class="md-primary md-button md-raised" ng-click="conceptMapController.cancelLinkTypeChooser()">Cancel</md-button></div>
+                                <div style="display: flex; margin-right: 16px;">
+                                    <md-tooltip md-direction="left" 
+                                                style="z-index: 10001;">
+                                        Drag Me
+                                    </md-tooltip>
+                                    <md-icon style="transform: rotate(45deg)" 
+                                            ng-click="conceptMapController.dragIconClicked()">
+                                        zoom_out_map
+                                    </md-icon>
+                                </div>
                             </div>
                         </div>
                     </div>
+                    
                     <md-button class="input--textarea__action input--textarea__action--revision md-icon-button"
                                ng-click='nodeController.showRevisions($event, component.id, conceptMapController.isDisabled)'
                                ng-if="nodeController.getRevisions(component.id).length > 1">

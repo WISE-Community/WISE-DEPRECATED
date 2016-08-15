@@ -515,6 +515,29 @@ var DraggableDirective = function () {
                 var x = event.pageX - startX;
                 var y = event.pageY - startY;
 
+                var top = 0;
+
+                if (element.scope().conceptMapController.mode == 'authoring') {
+                    /*
+                     * if we are in authoring mode we need to include the offset of
+                     * the container for some reason.
+                     * TODO: figure out why the offset is required in authoring mode
+                     * but not in student mode.
+                     */
+
+                    // get the concept map container
+                    var conceptMapContainer = angular.element('#conceptMapContainer');
+
+                    // get the offset of the container relative to the whole page
+                    var offset = conceptMapContainer.offset();
+
+                    // get the top offset
+                    var offsetTop = offset.top;
+
+                    // set the top to the offset
+                    top = offsetTop;
+                }
+
                 if (x < 0) {
                     /* 
                      * the x position that we have calculated for the left
@@ -533,22 +556,22 @@ var DraggableDirective = function () {
                     x = overlayWidth - linkTypeChooserWidth;
                 }
 
-                if (y < 0) {
+                if (y < top) {
                     /* 
                      * the y position that we have calculated for the top
                      * side of the element is past the top side of the parent
                      * container so we will set the y position to 0 so that the
                      * element is up against the top side of the parent container
                      */
-                    y = 0;
-                } else if (y + linkTypeChooserHeight > overlayHeight) {
+                    y = top;
+                } else if (y + linkTypeChooserHeight > overlayHeight + top) {
                     /* 
                      * the y position that we have calculated for the bottom
                      * side of the element is past the bottom side of the parent
                      * container so we will set the y position so that the element
                      * is up against the bottom side of the parent container
                      */
-                    y = overlayHeight - linkTypeChooserHeight;
+                    y = overlayHeight + top - linkTypeChooserHeight;
                 }
 
                 // move the element to the new position

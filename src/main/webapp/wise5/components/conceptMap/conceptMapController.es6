@@ -213,12 +213,18 @@ class ConceptMapController {
                 this.isSubmitButtonVisible = false;
                 this.isDisabled = true;
             } else if (this.mode === 'authoring') {
+                this.availableNodes = this.componentContent.nodes;
+                this.availableLinks = this.componentContent.links;
+                
                 this.updateAdvancedAuthoringView();
 
                 $scope.$watch(function() {
                     return this.authoringComponentContent;
                 }.bind(this), function(newValue, oldValue) {
                     this.componentContent = this.ProjectService.injectAssetPaths(newValue);
+                    this.availableNodes = this.componentContent.nodes;
+                    this.availableLinks = this.componentContent.links;
+                    this.setupSVG();
                 }.bind(this), true);
             }
 
@@ -1100,7 +1106,7 @@ class ConceptMapController {
 
         // update the JSON string in the advanced authoring view textarea
         this.updateAdvancedAuthoringView();
-
+        
         /*
          * notify the parent node that the content has changed which will save
          * the project to the server
@@ -1126,7 +1132,7 @@ class ConceptMapController {
 
             // set the new component into the controller
             this.componentContent = editedComponentContent;
-
+            
             /*
              * notify the parent node that the content has changed which will save
              * the project to the server
@@ -1154,6 +1160,380 @@ class ConceptMapController {
         
         // the authoring component content has changed so we will save the project
         this.authoringViewComponentChanged();
+    }
+    
+    /**
+     * A node up button was clicked in the authoring tool so we will move the 
+     * node up
+     * @param index the index of the node that we will move
+     */
+    authoringViewNodeUpButtonClicked(index) {
+        
+        // check if the node is at the top
+        if (index != 0) {
+            // the node is not at the top so we can move it up
+            
+            // get the nodes
+            var nodes = this.authoringComponentContent.nodes;
+            
+            if (nodes != null) {
+                
+                // get the node at the given index
+                var node = nodes[index];
+                
+                // remove the node
+                nodes.splice(index, 1);
+                
+                // insert the node back in one index back
+                nodes.splice(index - 1, 0, node);
+                
+                /*
+                 * the author has made changes so we will save the component
+                 * content
+                 */
+                this.authoringViewComponentChanged();
+            }
+        }
+    }
+    
+    /**
+     * A node down button was clicked in the authoring tool so we will move the
+     * node down
+     * @param index the index of the node that we will move
+     */
+    authoringViewNodeDownButtonClicked(index) {
+        
+        // check if the node is at the bottom
+        if (index != nodes.length - 1) {
+            // the node is not at the bottom so we can move it down
+            
+            // get the nodes
+            var nodes = this.authoringComponentContent.nodes;
+            
+            if (nodes != null) {
+                
+                // get the node at the given index
+                var node = nodes[index];
+                
+                // remove the node
+                nodes.splice(index, 1);
+                
+                // insert the node back in one index ahead
+                nodes.splice(index + 1, 0, node);
+                
+                /*
+                 * the author has made changes so we will save the component
+                 * content
+                 */
+                this.authoringViewComponentChanged();
+            }
+        }
+    }
+    
+    /**
+     * A node delete button was clicked in the authoring tool so we will remove
+     * the node
+     * @param index the index of the node that we will delete
+     */
+    authoringViewNodeDeleteButtonClicked(index) {
+        
+        // get the nodes
+        var nodes = this.authoringComponentContent.nodes;
+        
+        if (nodes != null) {
+            
+            // get the node
+            var node = nodes[index];
+            
+            if (node != null) {
+                
+                // get the file name and label
+                var nodeFileName = node.fileName;
+                var nodeLabel = node.label;
+                
+                // confirm with the author that they really want to delete the node
+                var answer = confirm('Are you sure you want to delete this node?\n\nFile Name: ' + nodeFileName + '\nLabel: ' + nodeLabel);
+                
+                if (answer) {
+                    /*
+                     * the author is sure they want to delete the node so we
+                     * will remove it from the array
+                     */
+                    nodes.splice(index, 1);
+                    
+                    /*
+                     * the author has made changes so we will save the component
+                     * content
+                     */
+                    this.authoringViewComponentChanged();
+                }
+            }
+        }
+    }
+    
+    /**
+     * A link up button was clicked in the authoring tool so we will move the 
+     * link up
+     * @param index the index of the link
+     */
+    authoringViewLinkUpButtonClicked(index) {
+        
+        // check if the link is at the top
+        if (index != 0) {
+            
+            // get the links
+            var links = this.authoringComponentContent.links;
+            
+            if (links != null) {
+                
+                // get a link
+                var link = links[index];
+                
+                if (link != null) {
+                    
+                    // remove the link
+                    links.splice(index, 1);
+                    
+                    // add the link back in one index back
+                    links.splice(index - 1, 0, link);
+                    
+                    /*
+                     * the author has made changes so we will save the component
+                     * content
+                     */
+                    this.authoringViewComponentChanged();
+                }
+            }
+        }
+    }
+    
+    /**
+     * A link down button was clicked in the authoring tool so we will move the 
+     * link down
+     * @param index the index of the link
+     */
+    authoringViewLinkDownButtonClicked(index) {
+        
+        // check if the link is at the bottom
+        if (index != links.length - 1) {
+            // the node is not at the bottom so we can move it down
+            
+            // get the links
+            var links = this.authoringComponentContent.links;
+            
+            if (links != null) {
+                
+                // get the link
+                var link = links[index];
+                
+                if (link != null) {
+                    
+                    // remove the link
+                    links.splice(index, 1);
+                    
+                    // add the link back in one index ahead
+                    links.splice(index + 1, 0, link);
+                    
+                    /*
+                     * the author has made changes so we will save the component
+                     * content
+                     */
+                    this.authoringViewComponentChanged();
+                }
+            }
+        }
+    }
+    
+    /**
+     * A link delete button was clicked in the authoring tool so we remove the
+     * link
+     * @param index the index of the link
+     */
+    authoringViewLinkDeleteButtonClicked(index) {
+        
+        // get the links
+        var links = this.authoringComponentContent.links;
+        
+        if (links != null) {
+            
+            // get a link
+            var link = links[index];
+            
+            if (link != null) {
+                
+                // get the link label
+                var linkLabel = link.label;
+                
+                // confirm with the author that they really want to delete the link
+                var answer = confirm('Are you sure you want to delete this link?\n\nLabel: ' + linkLabel);
+                
+                if (answer) {
+                    /*
+                     * the author is sure they want to delete the link so we
+                     * will remove it from the array
+                     */
+                    links.splice(index, 1);
+                    
+                    /*
+                     * the author has made changes so we will save the component
+                     * content
+                     */
+                    this.authoringViewComponentChanged();
+                }
+            }
+        }
+    }
+    
+    /**
+     * Add a node in the authoring tool
+     */
+    authoringViewAddNode() {
+        
+        // get a new node id
+        var id = this.authoringGetNewConceptMapNodeId();
+        
+        // create the new node
+        var newNode = {};
+        newNode.id = id;
+        newNode.label = '';
+        newNode.fileName = '';
+        newNode.width = 100;
+        newNode.height = 100;
+        
+        // get the nodes
+        var nodes = this.authoringComponentContent.nodes;
+        
+        // add the new node
+        nodes.push(newNode);
+        
+        /*
+         * the author has made changes so we will save the component
+         * content
+         */
+        this.authoringViewComponentChanged();
+    }
+    
+    /**
+     * Add a link in the authoring tool
+     */
+    authoringViewAddLink() {
+        
+        // get a new link id
+        var id = this.authoringGetNewConceptMapLinkId();
+        
+        // create a new link
+        var newLink = {};
+        newLink.id = id;
+        newLink.label = '';
+        newLink.color = '';
+        
+        // get the links
+        var links = this.authoringComponentContent.links;
+        
+        // add the new link
+        links.push(newLink);
+        
+        /*
+         * the author has made changes so we will save the component
+         * content
+         */
+        this.authoringViewComponentChanged();
+    }
+    
+    /**
+     * Get a new ConceptMapNode id that isn't being used
+     * @returns a new ConceptMapNode id e.g. 'node3'
+     */
+    authoringGetNewConceptMapNodeId() {
+        
+        var nextAvailableNodeIdNumber = 1;
+        
+        // array to remember the numbers that have been used in node ids already
+        var usedNumbers = [];
+        
+        // loop through all the nodes
+        for (var x = 0; x < this.authoringComponentContent.nodes.length; x++) {
+            var node = this.authoringComponentContent.nodes[x];
+            
+            if (node != null) {
+                
+                // get the node id
+                var nodeId = node.id;
+                
+                if (nodeId != null) {
+                    
+                    // get the number from the node id
+                    var nodeIdNumber = parseInt(nodeId.replace('node', ''));
+                    
+                    if (nodeIdNumber != null) {
+                        // add the number to the array of used numbers
+                        usedNumbers.push(nodeIdNumber);
+                    }
+                }
+            }
+        }
+        
+        if (usedNumbers.length > 0) {
+            // get the max number used
+            var maxNumberUsed = Math.max.apply(Math, usedNumbers);
+            
+            if (!isNaN(maxNumberUsed)) {
+                // increment the number by 1 to get the next available number
+                nextAvailableNodeIdNumber = maxNumberUsed + 1;
+            }
+        }
+        
+        var newId = 'node' + nextAvailableNodeIdNumber;
+        
+        return newId;
+    }
+    
+    /**
+     * Get a new ConceptMapLink id that isn't being used
+     * @returns a new ConceptMapLink id e.g. 'link3'
+     */
+    authoringGetNewConceptMapLinkId() {
+        
+        var nextAvailableLinkIdNumber = 1;
+        
+        // array to remember the numbers that have been used in link ids already
+        var usedNumbers = [];
+        
+        // loop through all the nodes
+        for (var x = 0; x < this.authoringComponentContent.links.length; x++) {
+            var link = this.authoringComponentContent.links[x];
+            
+            if (link != null) {
+                
+                // get the node id
+                var nodeId = link.id;
+                
+                if (nodeId != null) {
+                    
+                    // get the number from the node id
+                    var nodeIdNumber = parseInt(nodeId.replace('link', ''));
+                    
+                    if (nodeIdNumber != null) {
+                        // add the number to the array of used numbers
+                        usedNumbers.push(nodeIdNumber);
+                    }
+                }
+            }
+        }
+        
+        if (usedNumbers.length > 0) {
+            // get the max number used
+            var maxNumberUsed = Math.max.apply(Math, usedNumbers);
+            
+            if (!isNaN(maxNumberUsed)) {
+                // increment the number by 1 to get the next available number
+                nextAvailableLinkIdNumber = maxNumberUsed + 1;
+            }
+        }
+        
+        var newId = 'link' + nextAvailableLinkIdNumber;
+        
+        return newId;
     }
     
     /**
@@ -1357,6 +1737,42 @@ class ConceptMapController {
             this.initializedDisplayLinkTypeChooserModalOverlay = true;
         }
         
+        /*
+         * initialize the top left of the link chooser popup to show up on
+         * the top right of the svg element
+         */
+        var leftNumber = 600;
+        var topNumber = 20;
+        
+        var left = leftNumber + 'px';
+        var top = topNumber + 'px';
+        
+        if (this.mode === 'authoring') {
+            /*
+             * if we are in authoring mode we need to include the offset of
+             * the container for some reason.
+             * TODO: figure out why the offset is required in authoring mode
+             * but not in student mode.
+             */
+            
+            // get the concept map container
+            var conceptMapContainer = angular.element('#conceptMapContainer');
+            
+            // get the offset of the container relative to the whole page
+            var offset = conceptMapContainer.offset();
+            
+            // get the left and top of the offset
+            var offsetLeft = offset.left;
+            var offsetTop = offset.top;
+            
+            // add the offset to the left and top values
+            left = leftNumber + offsetLeft + 'px';
+            top = topNumber + offsetTop + 'px';
+        }
+        
+        this.linkTypeChooserStyle['top'] = top;
+        this.linkTypeChooserStyle['left'] = left;
+        
         this.displayLinkTypeChooser = true;
     }
     
@@ -1409,15 +1825,63 @@ class ConceptMapController {
         var svg1 = angular.element('#svg1');
         
         /*
-         * listen for the drop event which occurs when the student drops
-         * a new node onto the svg
+         * check if we have already added the dragover listener so we don't
+         * add multiple listeners for the same event. adding multiple listeners
+         * to the same event may occur in the authoring tool.
          */
-        svg1[0].addEventListener('drop', (event) => {
-            this.newNodeDropped(event);
-        });
+        if (!this.addedDragOverListener) {
+            /*
+             * listen for the dragover event which occurs when the user is
+             * dragging a node onto the svg
+             */
+            svg1[0].addEventListener('dragover', (event) => {
+                /*
+                 * prevent the default because if we don't, the user won't
+                 * be able to drop a new node instance onto the svg in the
+                 * authoring mode
+                 */
+                event.preventDefault();
+            });
+            
+            this.addedDragOverListener = true;
+        }
+        
+        /*
+         * check if we have already added the dop listener so we don't
+         * add multiple listeners for the same event. adding multiple listeners
+         * to the same event may occur in the authoring tool.
+         */
+        if (!this.addedDropListener) {
+            /*
+             * listen for the drop event which occurs when the student drops
+             * a new node onto the svg
+             */
+            svg1[0].addEventListener('drop', (event) => {
+                
+                /*
+                 * the user has dropped a new node onto the svg to create a
+                 * new instance of a node
+                 */
+                this.newNodeDropped(event);
+            });
+            
+            this.addedDropListener = true;
+        }
         
         // set the link type chooser style
         this.setLinkTypeChooserStyle();
+        
+        // check if there is a background specified
+        if (this.componentContent.background != null) {
+            
+            if (this.componentContent.stretchBackground) {
+                // stretch the background to fit the whole svg element
+                this.backgroundSize = '100% 100%';
+            } else {
+                // use the original dimensions of the background image
+                this.backgroundSize = '';
+            }
+        }
     }
     
     /**
@@ -1425,12 +1889,24 @@ class ConceptMapController {
      */
     setLinkTypeChooserStyle() {
         
-        var width = '300px';
-        var top = '20px';
-        var left = '600px';
+        /*
+         * set the link type chooser popup to show up in the upper right of
+         * the svg element
+         */
+        var leftNumber = 600;
+        var topNumber = 20;
+        
+        // get the bounding rectangle of the svg element
+        var boundingClientRect = angular.element('#svg1')[0].getBoundingClientRect();
+        var offsetLeft = boundingClientRect.left;
+        var offsetTop = boundingClientRect.top;
+        
+        // add the values together to obtain the absolute left and top positions
+        var left = leftNumber + offsetLeft + 'px';
+        var top = topNumber + offsetTop + 'px';
         
         this.linkTypeChooserStyle = {
-            'width': width,
+            'width': '300px',
             'position': 'absolute',
             'top': top,
             'left': left,
@@ -1451,15 +1927,24 @@ class ConceptMapController {
         this.modalWidth = this.getModalWidth();
         this.modalHeight = this.getModalHeight();
         
-        var overlayWidth = this.modalWidth + 'px';
+        //var overlayWidth = this.modalWidth + 'px';
+        var overlayWidth = this.modalWidth;
+        
+        var conceptMapContainer = angular.element('#conceptMapContainer');
+        var width = conceptMapContainer.width();
+        var height = conceptMapContainer.height();
+        var offset = conceptMapContainer.offset();
+        
+        var offsetLeft = offset.left;
+        var offsetTop = offset.top;
+        offsetLeft = 0;
+        offsetTop = 0;
         
         this.linkTypeChooserModalOverlayStyle = {
             'position': 'absolute',
             'z-index': 9999,
-            'top': 0,
-            'left': 0,
             'width': overlayWidth,
-            'height': '100%',
+            'height': height,
             'background-color': '#000000',
             'opacity': 0.4
         }

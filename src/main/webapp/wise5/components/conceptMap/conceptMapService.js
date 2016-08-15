@@ -820,13 +820,14 @@ var ConceptMapNode = function () {
         }
 
         /**
-         * Get the x position of the image within the svg
-         * @returns the x position of the image
+         * Get the x position of the group within the svg
+         * @returns the x position of the group
          */
 
     }, {
-        key: 'getImageX',
-        value: function getImageX() {
+        key: 'getGroupX',
+        value: function getGroupX() {
+
             var x = 0;
 
             if (this.group != null) {
@@ -841,13 +842,13 @@ var ConceptMapNode = function () {
         }
 
         /**
-         * Get the y position of the image within the svg
-         * @returns the y position of the image
+         * Get the y position of the group within the svg
+         * @returns the y position of the group
          */
 
     }, {
-        key: 'getImageY',
-        value: function getImageY() {
+        key: 'getGroupY',
+        value: function getGroupY() {
             var y = 0;
 
             if (this.group != null) {
@@ -859,6 +860,80 @@ var ConceptMapNode = function () {
             }
 
             return y;
+        }
+
+        /**
+         * Get the x position of the image within the svg
+         * @returns the x position of the image
+         */
+
+    }, {
+        key: 'getImageX',
+        value: function getImageX() {
+
+            // get the x position of the group
+            var groupX = this.getGroupX();
+
+            // get the x position of the image relative to the group
+            var imageRelativeX = this.image.x();
+
+            // add the values together to get the absolute x position of the image
+            var imageX = groupX + imageRelativeX;
+
+            // get the group
+            var group = this.getGroup();
+
+            // check if the group is shifted
+            if (group != null) {
+                // get the bounding box of the group
+                var bbox = group.bbox();
+
+                if (bbox != null) {
+                    // get the x position of the bounding box on the group
+                    var bboxX = bbox.x;
+
+                    // compensate for the shift of the group
+                    imageX = imageX - bboxX;
+                }
+            }
+
+            return imageX;
+        }
+
+        /**
+         * Get the y position of the image within the svg
+         * @returns the y position of the image
+         */
+
+    }, {
+        key: 'getImageY',
+        value: function getImageY() {
+
+            // get the y position of the group
+            var groupY = this.getGroupY();
+
+            // get the y position of the image relative to the group
+            var imageRelativeY = this.image.y();
+
+            // add the values together to get the absolute y position of the image
+            var imageY = groupY + imageRelativeY;
+
+            // get the group
+            var group = this.getGroup();
+
+            // check if the group is shifted
+            if (group != null) {
+                // get the bounding box of the group
+                var bbox = group.bbox();
+
+                // get the y position of the bounding box on the group
+                var bboxY = bbox.y;
+
+                // compensate for the shift of the group
+                imageY = imageY - bboxY;
+            }
+
+            return imageY;
         }
 
         /**
