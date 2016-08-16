@@ -508,6 +508,9 @@ class ConceptMapController {
                     var destinationNodeId = link.destinationNodeInstanceId;
                     var label = link.label;
                     var color = link.color;
+                    var curvature = link.curvature;
+                    var startCurveUp = link.startCurveUp;
+                    var startCurveDown = link.startCurveDown;
                     var sourceNode = null;
                     var destinationNode = null;
                     
@@ -520,7 +523,7 @@ class ConceptMapController {
                     }
                     
                     // create a ConceptMapLink
-                    var conceptMapLink = this.ConceptMapService.newConceptMapLink(this.draw, instanceId, originalId, sourceNode, destinationNode, label, color);
+                    var conceptMapLink = this.ConceptMapService.newConceptMapLink(this.draw, instanceId, originalId, sourceNode, destinationNode, label, color, curvature, startCurveUp, startCurveDown);
                     
                     // add the link to our array of links
                     this.addLink(conceptMapLink);
@@ -2273,7 +2276,7 @@ class ConceptMapController {
             this.studentDataChanged();
         }
         
-        // enable node draggin
+        // enable node dragging
         this.enableNodeDragging();
     }
     
@@ -2587,12 +2590,54 @@ class ConceptMapController {
     }
     
     /**
-     * Remove a node from our array of nodes
+     * Remove a node from the svg and our array of nodes
      * @param node the node to remove
      */
     removeNode(node) {
         
         if (node != null) {
+            
+            // get the outgoing links from the node
+            var outgoingLinks = node.getOutgoingLinks();
+            
+            if (outgoingLinks != null) {
+                
+                // get the number of outgoing links
+                var numOutgoingLinks = outgoingLinks.length;
+                
+                // loop until we have removed all the outgoing links
+                while (numOutgoingLinks > 0) {
+                    // get an outgoing link
+                    var outgoingLink = outgoingLinks[0];
+                    
+                    // remove the link from the svg and from our array of links
+                    this.removeLink(outgoingLink);
+                    
+                    // decrement the number of outgoing links counter
+                    numOutgoingLinks--;
+                }
+            }
+            
+            // get the incoming links to the node
+            var incomingLinks = node.getIncomingLinks();
+            
+            if (incomingLinks != null) {
+                
+                // get the number of incoming links
+                var numIncomingLinks = incomingLinks.length;
+                
+                // loop until we have removed all the incoming links
+                while (numIncomingLinks > 0) {
+                    // get an incoming link
+                    var incomingLink = incomingLinks[0];
+                    
+                    // remove the link from the svg and from our array of links
+                    this.removeLink(incomingLink);
+                    
+                    // decrement the number of incoming links counter
+                    numIncomingLinks--;
+                }
+            }
             
             // remove the node from the svg
             node.remove();
@@ -2791,7 +2836,7 @@ class ConceptMapController {
     }
     
     /**
-     * Remove a link from our array of links
+     * Remove a link from the svg and our array of links
      * @param link the link to remove
      */
     removeLink(link) {

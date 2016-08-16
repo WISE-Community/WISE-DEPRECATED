@@ -120,8 +120,8 @@ for(var n=0;n<nodes.length;n++){var node=nodes[n];var instanceId=node.instanceId
 var conceptMapNode=this.ConceptMapService.newConceptMapNode(this.draw,instanceId,originalId,filePath,label,x,y,width,height); // add the node to our array of nodes
 this.addNode(conceptMapNode); // set the mouse events on the node
 this.setNodeMouseEvents(conceptMapNode);}}var links=conceptMapData.links;if(links!=null){ // loop through all the links
-for(var l=0;l<links.length;l++){var link=links[l];var instanceId=link.instanceId;var originalId=link.originalId;var sourceNodeId=link.sourceNodeInstanceId;var destinationNodeId=link.destinationNodeInstanceId;var label=link.label;var color=link.color;var sourceNode=null;var destinationNode=null;if(sourceNodeId!=null){sourceNode=this.getNodeById(sourceNodeId);}if(destinationNodeId!=null){destinationNode=this.getNodeById(destinationNodeId);} // create a ConceptMapLink
-var conceptMapLink=this.ConceptMapService.newConceptMapLink(this.draw,instanceId,originalId,sourceNode,destinationNode,label,color); // add the link to our array of links
+for(var l=0;l<links.length;l++){var link=links[l];var instanceId=link.instanceId;var originalId=link.originalId;var sourceNodeId=link.sourceNodeInstanceId;var destinationNodeId=link.destinationNodeInstanceId;var label=link.label;var color=link.color;var curvature=link.curvature;var startCurveUp=link.startCurveUp;var startCurveDown=link.startCurveDown;var sourceNode=null;var destinationNode=null;if(sourceNodeId!=null){sourceNode=this.getNodeById(sourceNodeId);}if(destinationNodeId!=null){destinationNode=this.getNodeById(destinationNodeId);} // create a ConceptMapLink
+var conceptMapLink=this.ConceptMapService.newConceptMapLink(this.draw,instanceId,originalId,sourceNode,destinationNode,label,color,curvature,startCurveUp,startCurveDown); // add the link to our array of links
 this.addLink(conceptMapLink); // set the mouse events on the link
 this.setLinkMouseEvents(conceptMapLink);}} // move the nodes to the front so that they are on top of links
 this.moveNodesToFront(); /*
@@ -648,7 +648,7 @@ var conceptMapNode=this.ConceptMapService.newConceptMapNode(this.draw,newConcept
 this.addNode(conceptMapNode); // set the mouse events on the node
 this.setNodeMouseEvents(conceptMapNode); // make the node highlighted
 this.setHighlightedElement(conceptMapNode); // handle the student data changing
-this.studentDataChanged();} // enable node draggin
+this.studentDataChanged();} // enable node dragging
 this.enableNodeDragging();} /**
      * Get a new ConceptMapNode id that isn't being used
      * @returns a new ConceptMapNode id e.g. 'studentNode3'
@@ -727,9 +727,21 @@ group.front();}}}} /**
      * Add a node to our array of nodes
      * @param node the node to add
      */},{key:'addNode',value:function addNode(node){if(node!=null){this.nodes.push(node);}} /**
-     * Remove a node from our array of nodes
+     * Remove a node from the svg and our array of nodes
      * @param node the node to remove
-     */},{key:'removeNode',value:function removeNode(node){if(node!=null){ // remove the node from the svg
+     */},{key:'removeNode',value:function removeNode(node){if(node!=null){ // get the outgoing links from the node
+var outgoingLinks=node.getOutgoingLinks();if(outgoingLinks!=null){ // get the number of outgoing links
+var numOutgoingLinks=outgoingLinks.length; // loop until we have removed all the outgoing links
+while(numOutgoingLinks>0){ // get an outgoing link
+var outgoingLink=outgoingLinks[0]; // remove the link from the svg and from our array of links
+this.removeLink(outgoingLink); // decrement the number of outgoing links counter
+numOutgoingLinks--;}} // get the incoming links to the node
+var incomingLinks=node.getIncomingLinks();if(incomingLinks!=null){ // get the number of incoming links
+var numIncomingLinks=incomingLinks.length; // loop until we have removed all the incoming links
+while(numIncomingLinks>0){ // get an incoming link
+var incomingLink=incomingLinks[0]; // remove the link from the svg and from our array of links
+this.removeLink(incomingLink); // decrement the number of incoming links counter
+numIncomingLinks--;}} // remove the node from the svg
 node.remove(); // loop through all the nodes
 for(var n=0;n<this.nodes.length;n++){var tempNode=this.nodes[n];if(tempNode==node){ // we have found the node we want to remove
 this.nodes.splice(n,1);break;}}}} /**
@@ -777,7 +789,7 @@ this.nodes.splice(n,1);break;}}}} /**
      * Add a link to our array of links
      * @param link the link to add
      */},{key:'addLink',value:function addLink(link){if(link!=null){this.links.push(link);}} /**
-     * Remove a link from our array of links
+     * Remove a link from the svg and our array of links
      * @param link the link to remove
      */},{key:'removeLink',value:function removeLink(link){if(link!=null){ // remove the link from the svg
 link.remove(); // loop through all the links

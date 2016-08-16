@@ -184,8 +184,8 @@ var ConceptMapService = function (_NodeService) {
 
     }, {
         key: 'newConceptMapLink',
-        value: function newConceptMapLink(draw, id, originalId, sourceNode, destinationNode, label, color) {
-            return new ConceptMapLink(this, draw, id, originalId, sourceNode, destinationNode, label, color);
+        value: function newConceptMapLink(draw, id, originalId, sourceNode, destinationNode, label, color, curvature, startCurveUp, startCurveDown) {
+            return new ConceptMapLink(this, draw, id, originalId, sourceNode, destinationNode, label, color, curvature, startCurveUp, startCurveDown);
         }
 
         /**
@@ -1191,6 +1191,17 @@ var ConceptMapNode = function () {
         }
 
         /**
+         * Get the outgoing links
+         * @return the outgoing links
+         */
+
+    }, {
+        key: 'getOutgoingLinks',
+        value: function getOutgoingLinks() {
+            return this.outgoingLinks;
+        }
+
+        /**
          * Add an incoming link to the node
          * @param incomingLink a ConceptMapLink object
          */
@@ -1227,6 +1238,17 @@ var ConceptMapNode = function () {
                     }
                 }
             }
+        }
+
+        /**
+         * Get the incoming links
+         * @return the incoming links
+         */
+
+    }, {
+        key: 'getIncomingLinks',
+        value: function getIncomingLinks() {
+            return this.incomingLinks;
         }
 
         /**
@@ -1383,7 +1405,7 @@ var ConceptMapLink = function () {
      * @param node the source ConceptMapNode
      */
 
-    function ConceptMapLink(ConceptMapService, draw, id, originalId, sourceNode, destinationNode, label, color) {
+    function ConceptMapLink(ConceptMapService, draw, id, originalId, sourceNode, destinationNode, label, color, curvature, startCurveUp, startCurveDown) {
         _classCallCheck(this, ConceptMapLink);
 
         // remember the ConceptMapService
@@ -1430,17 +1452,36 @@ var ConceptMapLink = function () {
          */
         this.destinationNode = destinationNode;
 
+        // remember the curvature
+        this.curvature = curvature;
+
+        if (this.curvature == null) {
+            // curvature has not been specified so we will set it at random
+            this.curvature = Math.random();
+        }
+
         // set the link to curve down
-        this.startCurveUp = true;
-        this.endCurveUp = true;
+        this.startCurveUp = startCurveUp;
+        this.endCurveUp = startCurveDown;
 
-        // choose a random integer 0 or 1
-        var randInt = Math.floor(Math.random() * 2);
+        if (this.startCurveUp == null || this.endCurveUp == null) {
+            /*
+             * start and end curve up have not been specified so we will set
+             * it at random
+             */
 
-        if (randInt == 0) {
-            // set the link to curve up
-            this.startCurveUp = false;
-            this.endCurveUp = false;
+            // choose a random integer 0 or 1
+            var randInt = Math.floor(Math.random() * 2);
+
+            if (randInt == 0) {
+                // set the link to curve down
+                this.startCurveUp = false;
+                this.endCurveUp = false;
+            } else {
+                // set the link to curve up
+                this.startCurveUp = true;
+                this.endCurveUp = true;
+            }
         }
 
         // create a curved link
@@ -1541,6 +1582,9 @@ var ConceptMapLink = function () {
             jsonObject.instanceId = this.id;
             jsonObject.color = this.color;
             jsonObject.label = this.label;
+            jsonObject.curvature = this.curvature;
+            jsonObject.startCurveUp = this.startCurveUp;
+            jsonObject.startCurveDown = this.startCurveDown;
             jsonObject.sourceNodeOriginalId = this.sourceNode.getOriginalId();
             jsonObject.sourceNodeInstanceId = this.sourceNode.getId();
             jsonObject.destinationNodeOriginalId = this.destinationNode.getOriginalId();
@@ -1816,6 +1860,9 @@ var ConceptMapLink = function () {
             var angle = 45;
             var curvature = 0.5;
             var nodeRadius = 10;
+
+            // set the amount of curvature of the line
+            curvature = this.curvature;
 
             // whether the link should curve up or down
             startCurveUp = this.startCurveUp;
