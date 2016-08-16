@@ -121,7 +121,7 @@ class ConceptMapService extends NodeService {
      * Create an instance of the ConceptMapNode class
      * @param draw the svg.js draw object
      * @param id the node id
-     * @param fileName the file name of the image
+     * @param filePath the file path of the image
      * @param label the label of the node
      * @param x the x coordinate
      * @param y the y coordinate
@@ -129,8 +129,8 @@ class ConceptMapService extends NodeService {
      * @param height the height of the image
      * @param a ConceptMapNode
      */
-    newConceptMapNode(draw, id, originalId, fileName, label, x, y, width, height) {
-        return new ConceptMapNode(this, draw, id, originalId, fileName, label, x, y, width, height);
+    newConceptMapNode(draw, id, originalId, filePath, label, x, y, width, height) {
+        return new ConceptMapNode(this, draw, id, originalId, filePath, label, x, y, width, height);
     }
     
     /**
@@ -307,14 +307,14 @@ class ConceptMapNode {
      * The constructor for creating ConceptMapNodes
      * @param ConceptMapService the ConceptMapService
      * @param draw the svg.js draw object
-     * @param fileName the name of the image file that represents the node
+     * @param filePath the path of the image file that represents the node
      * @param label the label of the node
      * @param x the x position of the node
      * @param y the y position of the node
      * @param width the the width of the node
      * @param height the height of the node
      */
-    constructor(ConceptMapService, draw, id, originalId, fileName, label, x, y, width, height) {
+    constructor(ConceptMapService, draw, id, originalId, filePath, label, x, y, width, height) {
 
         // remember the svg.js draw object so we can draw onto it
         this.draw = draw;
@@ -325,14 +325,19 @@ class ConceptMapNode {
         // set the original id
         this.originalId = originalId;
         
-        // remember the file name
-        this.fileName = fileName;
+        // remember the file path e.g. "/wise/curriculum/108/assets/Space.png"
+        this.filePath = filePath;
+        
+        if (this.filePath != null) {
+            // get the file name e.g. "Space.png"
+            this.fileName = this.filePath.substring(this.filePath.lastIndexOf('/') + 1);
+        }
         
         // remember the label
         this.label = label;
         
         // create the svg image object
-        this.image = this.draw.image(fileName, width, height);
+        this.image = this.draw.image(this.filePath, width, height);
         
         // remember the width
         this.width = width;
@@ -391,9 +396,10 @@ class ConceptMapNode {
     toJSONObject() {
         var jsonObject = {};
         
-        jsonObject.instanceId = this.id;
         jsonObject.originalId = this.originalId;
+        jsonObject.instanceId = this.id;
         jsonObject.fileName = this.fileName;
+        jsonObject.filePath = this.filePath;
         jsonObject.label = this.label;
         jsonObject.x = this.x;
         jsonObject.y = this.y;
@@ -415,8 +421,8 @@ class ConceptMapNode {
              * of the link
              */
             var tempLinkObject = {};
-            tempLinkObject.instanceId = instanceId;
             tempLinkObject.originalId = originalId;
+            tempLinkObject.instanceId = instanceId;
             
             jsonObject.outgoingLinks.push(tempLinkObject);
         }
@@ -433,8 +439,8 @@ class ConceptMapNode {
              * of the link
              */
             var tempLinkObject = {};
-            tempLinkObject.instanceId = instanceId;
             tempLinkObject.originalId = originalId;
+            tempLinkObject.instanceId = instanceId;
             
             jsonObject.incomingLinks.push(tempLinkObject);
         }
@@ -1322,14 +1328,14 @@ class ConceptMapLink {
     toJSONObject() {
         var jsonObject = {};
         
-        jsonObject.instanceId = this.id;
         jsonObject.originalId = this.originalId;
+        jsonObject.instanceId = this.id;
         jsonObject.color = this.color;
         jsonObject.label = this.label;
-        jsonObject.sourceNodeInstanceId = this.sourceNode.getId();
-        jsonObject.destinationNodeInstanceId = this.destinationNode.getId();
         jsonObject.sourceNodeOriginalId = this.sourceNode.getOriginalId();
+        jsonObject.sourceNodeInstanceId = this.sourceNode.getId();
         jsonObject.destinationNodeOriginalId = this.destinationNode.getOriginalId();
+        jsonObject.destinationNodeInstanceId = this.destinationNode.getId();
         
         return jsonObject;
     }

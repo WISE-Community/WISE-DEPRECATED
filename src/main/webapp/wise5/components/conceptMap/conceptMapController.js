@@ -54,10 +54,21 @@ componentState=this.$scope.componentState;if(componentState==null){ /*
                  * work for this component
                  */ // check if we need to import work
 var importWorkNodeId=this.componentContent.importWorkNodeId;var importWorkComponentId=this.componentContent.importWorkComponentId;if(importWorkNodeId!=null&&importWorkComponentId!=null){ // import the work from the other component
-this.importWork();}else if(this.componentContent.starterSentence!=null){ /*
-                     * the student has not done any work and there is a starter sentence
-                     * so we will populate the textarea with the starter sentence
-                     */this.studentResponse=this.componentContent.starterSentence;}}else { // populate the student work into this component
+this.importWork();}else if(this.componentContent.starterConceptMap!=null){ /*
+                     * the student has not done any work and there is a starter 
+                     * concept map so we will populate the concept map with
+                     * the starter
+                     */ // get the starter concept map
+var conceptMapData=this.componentContent.starterConceptMap; // populate the concept map data into the component
+this.populateConceptMapData(conceptMapData);}}else { // the student has work for this component
+/*
+                 * inject the asset path so that the file name is changed to
+                 * a relative path
+                 * e.g.
+                 * "Sun.png"
+                 * will be changed to
+                 * "/wise/curriculum/108/assets/Sun.png"
+                 */componentState=this.ProjectService.injectAssetPaths(componentState); // populate the student work into this component
 this.setStudentWork(componentState);} // check if we need to lock this component
 this.calculateDisabled();if(this.$scope.$parent.registerComponentController!=null){ // register this component with the parent node
 this.$scope.$parent.registerComponentController(this.$scope,this.componentContent);}} /**
@@ -105,8 +116,8 @@ this.populateConceptMapData(conceptMapData);}var attachments=studentData.attachm
      * @param conceptMapData the concept map data which contains an array
      * of nodes and an array of links
      */value:function populateConceptMapData(conceptMapData){var _this2=this;if(conceptMapData!=null){var nodes=conceptMapData.nodes;if(nodes!=null){ // loop through all the nodes
-for(var n=0;n<nodes.length;n++){var node=nodes[n];var instanceId=node.instanceId;var originalId=node.originalId;var fileName=node.fileName;var label=node.label;var x=node.x;var y=node.y;var width=node.width;var height=node.height; // create a ConceptMapNode
-var conceptMapNode=this.ConceptMapService.newConceptMapNode(this.draw,instanceId,originalId,fileName,label,x,y,width,height); // add the node to our array of nodes
+for(var n=0;n<nodes.length;n++){var node=nodes[n];var instanceId=node.instanceId;var originalId=node.originalId;var filePath=node.fileName;var label=node.label;var x=node.x;var y=node.y;var width=node.width;var height=node.height; // create a ConceptMapNode
+var conceptMapNode=this.ConceptMapService.newConceptMapNode(this.draw,instanceId,originalId,filePath,label,x,y,width,height); // add the node to our array of nodes
 this.addNode(conceptMapNode); // set the mouse events on the node
 this.setNodeMouseEvents(conceptMapNode);}}var links=conceptMapData.links;if(links!=null){ // loop through all the links
 for(var l=0;l<links.length;l++){var link=links[l];var instanceId=link.instanceId;var originalId=link.originalId;var sourceNodeId=link.sourceNodeInstanceId;var destinationNodeId=link.destinationNodeInstanceId;var label=link.label;var color=link.color;var sourceNode=null;var destinationNode=null;if(sourceNodeId!=null){sourceNode=this.getNodeById(sourceNodeId);}if(destinationNodeId!=null){destinationNode=this.getNodeById(destinationNodeId);} // create a ConceptMapLink
@@ -627,13 +638,13 @@ this.selectedNode=node; /*
      * @param event the drop event
      */},{key:'newNodeDropped',value:function newNodeDropped(event){ // get the selected node
 var selectedNode=this.selectedNode;if(selectedNode!=null){ // get the file name
-var fileName=selectedNode.fileName; // get the node name
+var filePath=selectedNode.fileName; // get the node name
 var label=selectedNode.label; // get the width and height of the node
 var width=selectedNode.width;var height=selectedNode.height; // get the original authored id
 var originalId=selectedNode.id; // get the position we should drop the node at
 var x=event.offsetX-this.tempOffsetX;var y=event.offsetY-this.tempOffsetY; // get a new ConceptMapNodeId e.g. 'studentNode3'
 var newConceptMapNodeId=this.getNewConceptMapNodeId(); // create a ConceptMapNode
-var conceptMapNode=this.ConceptMapService.newConceptMapNode(this.draw,newConceptMapNodeId,originalId,fileName,label,x,y,width,height); // add the node to our array of nodes
+var conceptMapNode=this.ConceptMapService.newConceptMapNode(this.draw,newConceptMapNodeId,originalId,filePath,label,x,y,width,height); // add the node to our array of nodes
 this.addNode(conceptMapNode); // set the mouse events on the node
 this.setNodeMouseEvents(conceptMapNode); // make the node highlighted
 this.setHighlightedElement(conceptMapNode); // handle the student data changing
@@ -718,9 +729,15 @@ group.front();}}}} /**
      */},{key:'addNode',value:function addNode(node){if(node!=null){this.nodes.push(node);}} /**
      * Remove a node from our array of nodes
      * @param node the node to remove
-     */},{key:'removeNode',value:function removeNode(node){if(node!=null){ // loop through all the nodes
+     */},{key:'removeNode',value:function removeNode(node){if(node!=null){ // remove the node from the svg
+node.remove(); // loop through all the nodes
 for(var n=0;n<this.nodes.length;n++){var tempNode=this.nodes[n];if(tempNode==node){ // we have found the node we want to remove
 this.nodes.splice(n,1);break;}}}} /**
+     * Remove all nodes from the svg and our array of nodes
+     */},{key:'removeAllNodes',value:function removeAllNodes(){ // loop through all the nodes
+for(var n=0;n<this.nodes.length;n++){var tempNode=this.nodes[n]; // remove the node from the svg
+tempNode.remove();} // clear the nodes array
+this.nodes=[];} /**
      * Get a node by id.
      * @param id the node id
      * @returns the node with the given id or null
@@ -762,9 +779,15 @@ this.nodes.splice(n,1);break;}}}} /**
      */},{key:'addLink',value:function addLink(link){if(link!=null){this.links.push(link);}} /**
      * Remove a link from our array of links
      * @param link the link to remove
-     */},{key:'removeLink',value:function removeLink(link){if(link!=null){ // loop through all the links
+     */},{key:'removeLink',value:function removeLink(link){if(link!=null){ // remove the link from the svg
+link.remove(); // loop through all the links
 for(var l=0;l<this.links.length;l++){var tempLink=this.links[l];if(link==tempLink){ // we have found the link we want to remove
 this.links.splice(l,1);break;}}}} /**
+     * Remove all the links from the svg and from our array of links
+     */},{key:'removeAllLinks',value:function removeAllLinks(){ // loop through all the links
+for(var l=0;l<this.links.length;l++){var tempLink=this.links[l]; // remove the link from the svg
+tempLink.remove();} // clear the links array
+this.links=[];} /**
      * Called when the mouse moves over a node
      * @param event the mouse over event
      */},{key:'nodeMouseOver',value:function nodeMouseOver(event){ // get the node group id
@@ -813,8 +836,7 @@ this.drawingLink=false;} /**
      * Called when a link delete button is clicked
      * @param event the mouse click event
      * @param link the link to delete
-     */},{key:'linkDeleteButtonClicked',value:function linkDeleteButtonClicked(event,link){if(link!=null){ // remove the link from the svg
-link.remove(); // remove the link from our array of links
+     */},{key:'linkDeleteButtonClicked',value:function linkDeleteButtonClicked(event,link){if(link!=null){ // remove the link from our array of links
 this.removeLink(link); // handle the student data changing
 this.studentDataChanged();} // hide the link type chooser
 this.hideLinkTypeChooser();} /**
@@ -868,8 +890,7 @@ if(link!=null&&link!=this.highlightedElement){link.hideDeleteButton();}} /**
      * @param event the mouse down event
      */},{key:'nodeDeleteButtonMouseDown',value:function nodeDeleteButtonMouseDown(event){if(event.target.parentElement!=null){ // get the group id
 var groupId=event.target.parentElement.parentElement.id; // get the node
-var node=this.getNodeByGroupId(groupId);if(node!=null){ // remove the node from the svg
-node.remove(); // remove the node from our array of nodes
+var node=this.getNodeByGroupId(groupId);if(node!=null){ // remove the node from our array of nodes
 this.removeNode(node); // handle the student data changing
 this.studentDataChanged();}}} /**
      * Called when the mouse is over a node delete button
@@ -911,5 +932,23 @@ currentElement=null;}else { // remember the element id
 previousId=currentElement.id; /*
                  * set the current element to the parent to continue searching
                  * up the hierarchy
-                 */currentElement=currentElement.parentElement;}}return groupId;}}]);return ConceptMapController;}();;ConceptMapController.$inject=['$injector','$mdDialog','$q','$rootScope','$scope','$timeout','AnnotationService','ConceptMapService','ConfigService','CRaterService','NodeService','ProjectService','StudentAssetService','StudentDataService'];exports.default=ConceptMapController;
+                 */currentElement=currentElement.parentElement;}}return groupId;} /**
+     * Save the starter concept map
+     */},{key:'saveStarterConceptMap',value:function saveStarterConceptMap(){ // get the concept map data
+var conceptMapData=this.getConceptMapData(); // set the starter concept map data
+this.authoringComponentContent.starterConceptMap=conceptMapData; /*
+         * the author has made changes so we will save the component
+         * content
+         */this.authoringViewComponentChanged();} /**
+     * Delete the starter concept map
+     */},{key:'deleteStarterConceptMap',value:function deleteStarterConceptMap(){ // set the starter concept map data
+this.authoringComponentContent.starterConceptMap=null; // clear the concept map
+this.clearConceptMap(); /*
+         * the author has made changes so we will save the component
+         * content
+         */this.authoringViewComponentChanged();} /**
+     * Remove all the links and nodes
+     */},{key:'clearConceptMap',value:function clearConceptMap(){ // remove all the links from the svg and the array of links
+this.removeAllLinks(); // remove all the nodes from the svg and the array of nodes
+this.removeAllNodes();}}]);return ConceptMapController;}();;ConceptMapController.$inject=['$injector','$mdDialog','$q','$rootScope','$scope','$timeout','AnnotationService','ConceptMapService','ConfigService','CRaterService','NodeService','ProjectService','StudentAssetService','StudentDataService'];exports.default=ConceptMapController;
 //# sourceMappingURL=conceptMapController.js.map

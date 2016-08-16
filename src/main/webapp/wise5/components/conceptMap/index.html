@@ -92,6 +92,10 @@
                     <button ng-click='conceptMapController.authoringViewLinkDeleteButtonClicked($index)'>Delete</button>
                 </div>
                 <br/>
+                <button ng-click='conceptMapController.saveStarterConceptMap()'>Save Starter Concept Map</button>
+                <button ng-click='conceptMapController.deleteStarterConceptMap()'>Delete Starter Concept Map</button>
+                <br/>
+                <br/>
                 <textarea ng-model='conceptMapController.authoringComponentContentJSONString'
                           ng-change='conceptMapController.advancedAuthoringViewComponentChanged()'
                           ng-model-options='{ debounce: 1000 }'
@@ -112,6 +116,7 @@
                     <div ng-if="conceptMapController.isRichTextEnabled && conceptMapController.isDisabled"
                          class="input--textarea input--textarea--disabled">
                     </div>
+                    <button ng-click="conceptMapController.clearConceptMap()">Clear</button>
                     <div id="conceptMapContainer" style="display: flex">
                         <div id="selectNodeBar" style="flex: 10; border: 1px solid black">
                             <div ng-repeat="availableNode in conceptMapController.availableNodes" 

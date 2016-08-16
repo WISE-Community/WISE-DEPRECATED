@@ -252,14 +252,32 @@ class ConceptMapController {
                 if (importWorkNodeId != null && importWorkComponentId != null) {
                     // import the work from the other component
                     this.importWork();
-                } else if (this.componentContent.starterSentence != null) {
+                } else if (this.componentContent.starterConceptMap != null) {
                     /*
-                     * the student has not done any work and there is a starter sentence
-                     * so we will populate the textarea with the starter sentence
+                     * the student has not done any work and there is a starter 
+                     * concept map so we will populate the concept map with
+                     * the starter
                      */
-                    this.studentResponse = this.componentContent.starterSentence;
+                    
+                    // get the starter concept map
+                    var conceptMapData = this.componentContent.starterConceptMap;
+                    
+                    // populate the concept map data into the component
+                    this.populateConceptMapData(conceptMapData);
                 }
             } else {
+                // the student has work for this component
+                
+                /*
+                 * inject the asset path so that the file name is changed to
+                 * a relative path
+                 * e.g.
+                 * "Sun.png"
+                 * will be changed to
+                 * "/wise/curriculum/108/assets/Sun.png"
+                 */
+                componentState = this.ProjectService.injectAssetPaths(componentState);
+                
                 // populate the student work into this component
                 this.setStudentWork(componentState);
             }
@@ -458,7 +476,7 @@ class ConceptMapController {
                     
                     var instanceId = node.instanceId;
                     var originalId = node.originalId;
-                    var fileName = node.fileName;
+                    var filePath = node.fileName;
                     var label = node.label;
                     var x = node.x;
                     var y = node.y;
@@ -466,7 +484,7 @@ class ConceptMapController {
                     var height = node.height
                     
                     // create a ConceptMapNode
-                    var conceptMapNode = this.ConceptMapService.newConceptMapNode(this.draw, instanceId, originalId, fileName, label, x, y, width, height);
+                    var conceptMapNode = this.ConceptMapService.newConceptMapNode(this.draw, instanceId, originalId, filePath, label, x, y, width, height);
                     
                     // add the node to our array of nodes
                     this.addNode(conceptMapNode);
@@ -2220,7 +2238,7 @@ class ConceptMapController {
         
         if (selectedNode != null) {
             // get the file name
-            var fileName = selectedNode.fileName;
+            var filePath = selectedNode.fileName;
             
             // get the node name
             var label = selectedNode.label;
@@ -2240,7 +2258,7 @@ class ConceptMapController {
             var newConceptMapNodeId = this.getNewConceptMapNodeId();
             
             // create a ConceptMapNode
-            var conceptMapNode = this.ConceptMapService.newConceptMapNode(this.draw, newConceptMapNodeId, originalId, fileName, label, x, y, width, height);
+            var conceptMapNode = this.ConceptMapService.newConceptMapNode(this.draw, newConceptMapNodeId, originalId, filePath, label, x, y, width, height);
             
             // add the node to our array of nodes
             this.addNode(conceptMapNode);
@@ -2576,6 +2594,9 @@ class ConceptMapController {
         
         if (node != null) {
             
+            // remove the node from the svg
+            node.remove();
+            
             // loop through all the nodes
             for (var n = 0; n < this.nodes.length; n++) {
                 var tempNode = this.nodes[n];
@@ -2587,6 +2608,23 @@ class ConceptMapController {
                 }
             }
         }
+    }
+    
+    /**
+     * Remove all nodes from the svg and our array of nodes
+     */
+    removeAllNodes() {
+        
+        // loop through all the nodes
+        for (var n = 0; n < this.nodes.length; n++) {
+            var tempNode = this.nodes[n];
+            
+            // remove the node from the svg
+            tempNode.remove();
+        }
+        
+        // clear the nodes array
+        this.nodes = [];
     }
     
     /**
@@ -2760,6 +2798,9 @@ class ConceptMapController {
         
         if (link != null) {
             
+            // remove the link from the svg
+            link.remove();
+            
             // loop through all the links
             for (var l = 0; l < this.links.length; l++) {
                 var tempLink = this.links[l];
@@ -2771,6 +2812,23 @@ class ConceptMapController {
                 }
             }
         }
+    }
+    
+    /**
+     * Remove all the links from the svg and from our array of links
+     */
+    removeAllLinks() {
+        
+        // loop through all the links
+        for (var l = 0; l < this.links.length; l++) {
+            var tempLink = this.links[l];
+            
+            // remove the link from the svg
+            tempLink.remove();
+        }
+        
+        // clear the links array
+        this.links = [];
     }
     
     /**
@@ -2919,8 +2977,6 @@ class ConceptMapController {
     linkDeleteButtonClicked(event, link) {
         
         if (link != null) {
-            // remove the link from the svg
-            link.remove();
             
             // remove the link from our array of links
             this.removeLink(link);
@@ -3083,8 +3139,6 @@ class ConceptMapController {
             var node = this.getNodeByGroupId(groupId);
             
             if (node != null) {
-                // remove the node from the svg
-                node.remove();
                 
                 // remove the node from our array of nodes
                 this.removeNode(node);
@@ -3200,6 +3254,54 @@ class ConceptMapController {
         }
         
         return groupId;
+    }
+    
+    /**
+     * Save the starter concept map
+     */
+    saveStarterConceptMap() {
+        
+        // get the concept map data
+        var conceptMapData = this.getConceptMapData();
+        
+        // set the starter concept map data
+        this.authoringComponentContent.starterConceptMap = conceptMapData;
+        
+        /*
+         * the author has made changes so we will save the component
+         * content
+         */
+        this.authoringViewComponentChanged();
+    }
+    
+    /**
+     * Delete the starter concept map
+     */
+    deleteStarterConceptMap() {
+        
+        // set the starter concept map data
+        this.authoringComponentContent.starterConceptMap = null;
+        
+        // clear the concept map
+        this.clearConceptMap();
+        
+        /*
+         * the author has made changes so we will save the component
+         * content
+         */
+        this.authoringViewComponentChanged();
+    }
+    
+    /**
+     * Remove all the links and nodes
+     */
+    clearConceptMap() {
+        
+        // remove all the links from the svg and the array of links
+        this.removeAllLinks();
+        
+        // remove all the nodes from the svg and the array of nodes
+        this.removeAllNodes();
     }
 };
 
