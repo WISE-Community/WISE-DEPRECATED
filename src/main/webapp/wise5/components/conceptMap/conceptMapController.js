@@ -664,10 +664,10 @@ nextAvailableNodeIdNumber=maxNumberUsed+1;}}var newId='studentNode'+nextAvailabl
      * @returns a new ConceptMapLink id e.g. 'studentLink3'
      */},{key:'getNewConceptMapLinkId',value:function getNewConceptMapLinkId(){var nextAvailableLinkIdNumber=1; // array to remember the numbers that have been used in link ids already
 var usedNumbers=[]; // loop through all the nodes
-for(var x=0;x<this.nodes.length;x++){var node=this.nodes[x];if(node!=null){ // get the node id
-var nodeId=node.getId();if(nodeId!=null){ // get the number from the node id
-var nodeIdNumber=parseInt(nodeId.replace('studentLink',''));if(nodeIdNumber!=null){ // add the number to the array of used numbers
-usedNumbers.push(nodeIdNumber);}}}}if(usedNumbers.length>0){ // get the max number used
+for(var x=0;x<this.links.length;x++){var link=this.links[x];if(link!=null){ // get the node id
+var linkId=link.getId();if(linkId!=null){ // get the number from the link id
+var linkIdNumber=parseInt(linkId.replace('studentLink',''));if(linkIdNumber!=null){ // add the number to the array of used numbers
+usedNumbers.push(linkIdNumber);}}}}if(usedNumbers.length>0){ // get the max number used
 var maxNumberUsed=Math.max.apply(Math,usedNumbers);if(!isNaN(maxNumberUsed)){ // increment the number by 1 to get the next available number
 nextAvailableLinkIdNumber=maxNumberUsed+1;}}var newId='studentLink'+nextAvailableLinkIdNumber;return newId;} /**
      * Set the mouse events on a newly created node

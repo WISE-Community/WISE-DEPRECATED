@@ -2340,22 +2340,22 @@ class ConceptMapController {
         var usedNumbers = [];
         
         // loop through all the nodes
-        for (var x = 0; x < this.nodes.length; x++) {
-            var node = this.nodes[x];
+        for (var x = 0; x < this.links.length; x++) {
+            var link = this.links[x];
             
-            if (node != null) {
+            if (link != null) {
                 
                 // get the node id
-                var nodeId = node.getId();
+                var linkId = link.getId();
                 
-                if (nodeId != null) {
+                if (linkId != null) {
                     
-                    // get the number from the node id
-                    var nodeIdNumber = parseInt(nodeId.replace('studentLink', ''));
+                    // get the number from the link id
+                    var linkIdNumber = parseInt(linkId.replace('studentLink', ''));
                     
-                    if (nodeIdNumber != null) {
+                    if (linkIdNumber != null) {
                         // add the number to the array of used numbers
-                        usedNumbers.push(nodeIdNumber);
+                        usedNumbers.push(linkIdNumber);
                     }
                 }
             }
