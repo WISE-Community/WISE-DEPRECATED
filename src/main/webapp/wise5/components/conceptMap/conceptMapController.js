@@ -120,8 +120,8 @@ for(var n=0;n<nodes.length;n++){var node=nodes[n];var instanceId=node.instanceId
 var conceptMapNode=this.ConceptMapService.newConceptMapNode(this.draw,instanceId,originalId,filePath,label,x,y,width,height); // add the node to our array of nodes
 this.addNode(conceptMapNode); // set the mouse events on the node
 this.setNodeMouseEvents(conceptMapNode);}}var links=conceptMapData.links;if(links!=null){ // loop through all the links
-for(var l=0;l<links.length;l++){var link=links[l];var instanceId=link.instanceId;var originalId=link.originalId;var sourceNodeId=link.sourceNodeInstanceId;var destinationNodeId=link.destinationNodeInstanceId;var label=link.label;var color=link.color;var curvature=link.curvature;var startCurveUp=link.startCurveUp;var startCurveDown=link.startCurveDown;var sourceNode=null;var destinationNode=null;if(sourceNodeId!=null){sourceNode=this.getNodeById(sourceNodeId);}if(destinationNodeId!=null){destinationNode=this.getNodeById(destinationNodeId);} // create a ConceptMapLink
-var conceptMapLink=this.ConceptMapService.newConceptMapLink(this.draw,instanceId,originalId,sourceNode,destinationNode,label,color,curvature,startCurveUp,startCurveDown); // add the link to our array of links
+for(var l=0;l<links.length;l++){var link=links[l];var instanceId=link.instanceId;var originalId=link.originalId;var sourceNodeId=link.sourceNodeInstanceId;var destinationNodeId=link.destinationNodeInstanceId;var label=link.label;var color=link.color;var curvature=link.curvature;var startCurveUp=link.startCurveUp;var endCurveUp=link.endCurveUp;var sourceNode=null;var destinationNode=null;if(sourceNodeId!=null){sourceNode=this.getNodeById(sourceNodeId);}if(destinationNodeId!=null){destinationNode=this.getNodeById(destinationNodeId);} // create a ConceptMapLink
+var conceptMapLink=this.ConceptMapService.newConceptMapLink(this.draw,instanceId,originalId,sourceNode,destinationNode,label,color,curvature,startCurveUp,endCurveUp); // add the link to our array of links
 this.addLink(conceptMapLink); // set the mouse events on the link
 this.setLinkMouseEvents(conceptMapLink);}} // move the nodes to the front so that they are on top of links
 this.moveNodesToFront(); /*
@@ -590,7 +590,42 @@ this.moveNodesToFront();} /**
              * new link and is in the process of choosing the link's destination
              * node
              */ // get the coordinates that the link should be updated to
-var coordinates=this.getRelativeCoordinatesByEvent(event);var x1=null;var y1=null;var x2=coordinates.x;var y2=coordinates.y;var isDragging=true; // redraw the link with the new coordinates
+var coordinates=this.getRelativeCoordinatesByEvent(event);var x1=null;var y1=null;var x2=coordinates.x;var y2=coordinates.y; /*
+             * get the location of the center of the connector that the link
+             * originated from
+             */var startX=this.activeLinkStartX;var startY=this.activeLinkStartY; /*
+             * get the distance from the start to the current position of the
+             * mouse
+             */var distance=this.ConceptMapService.calculateDistance(startX,startY,x2,y2); /*
+             * check if we have set the curvature yet and that the mouse
+             * is more than 20 pixels away from the start.
+             *
+             * we will determine the curvature of the link based upon how
+             * the user has dragged the mouse in relation to the center 
+             * of the connector. if they start drawing the link horizontally
+             * we will create a straight line with no curvature. if they
+             * start drawing the link by moving the mouse up, we will create
+             * a line that curves up. if they start drawing the link by 
+             * moving the mouse down, we will create a line that curves down.
+             */if(!this.linkCurvatureSet&&distance>20){ /*
+                 * get the slope of the line from the start to the location
+                 * of the mouse
+                 */var slope=Math.abs(this.ConceptMapService.getSlope(startX,startY,x2,y2));if(y2<startY){ // the user has moved the mouse above the connector
+if(slope==null){ /*
+                         * the slope is infinite so we will default the 
+                         * curvature to 0.5
+                         */this.activeLink.curvature=0.5;}else if(slope<1.0){ // make the link straight
+this.activeLink.curvature=0.0;}else { // make the link curved
+this.activeLink.curvature=0.5;} // make the link curve up
+this.activeLink.startCurveUp=true;this.activeLink.endCurveUp=true;}else if(y2>startY){ // the user has moved the mouse below the connector
+if(slope==null){ /*
+                         * the slope is infinite so we will default the 
+                         * curvature to 0.5
+                         */this.activeLink.curvature=0.5;}else if(slope<1.0){ // make the link straight
+this.activeLink.curvature=0.0;}else { // make the link curved
+this.activeLink.curvature=0.5;} // make the link curve down
+this.activeLink.startCurveUp=false;this.activeLink.endCurveUp=false;} // remember that we have set the curvature
+this.linkCurvatureSet=true;}var isDragging=true; // redraw the link with the new coordinates
 this.activeLink.updateCoordinates(x1,y1,x2,y2,isDragging);}} /**
      * Set the active node. This is called when the student places the mouse
      * over a node. When a node becomes active, we show the delete button and
@@ -869,7 +904,9 @@ var newConceptMapLinkId=this.getNewConceptMapLinkId(); /*
          */var originalId=null; // create a link that comes out of the node
 var link=this.ConceptMapService.newConceptMapLink(this.draw,newConceptMapLinkId,originalId,node); // set the link mouse events
 this.setLinkMouseEvents(link); // remember the active link
-this.activeLink=link; // highlight the link
+this.activeLink=link; // flag for determining if we have set the link curvature
+this.linkCurvatureSet=false; // remember the location of the center of the connector
+this.activeLinkStartX=node.connectorCX();this.activeLinkStartY=node.connectorCY(); // highlight the link
 this.setHighlightedElement(link); // clear the active node
 this.clearActiveNode(); // make the source node the active node
 this.setActiveNode(node);} /**

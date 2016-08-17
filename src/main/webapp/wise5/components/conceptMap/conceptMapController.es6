@@ -510,7 +510,7 @@ class ConceptMapController {
                     var color = link.color;
                     var curvature = link.curvature;
                     var startCurveUp = link.startCurveUp;
-                    var startCurveDown = link.startCurveDown;
+                    var endCurveUp = link.endCurveUp;
                     var sourceNode = null;
                     var destinationNode = null;
                     
@@ -523,7 +523,7 @@ class ConceptMapController {
                     }
                     
                     // create a ConceptMapLink
-                    var conceptMapLink = this.ConceptMapService.newConceptMapLink(this.draw, instanceId, originalId, sourceNode, destinationNode, label, color, curvature, startCurveUp, startCurveDown);
+                    var conceptMapLink = this.ConceptMapService.newConceptMapLink(this.draw, instanceId, originalId, sourceNode, destinationNode, label, color, curvature, startCurveUp, endCurveUp);
                     
                     // add the link to our array of links
                     this.addLink(conceptMapLink);
@@ -2109,6 +2109,85 @@ class ConceptMapController {
             var x2 = coordinates.x;
             var y2 = coordinates.y;
             
+            /*
+             * get the location of the center of the connector that the link
+             * originated from
+             */
+            var startX = this.activeLinkStartX;
+            var startY = this.activeLinkStartY;
+            
+            /*
+             * get the distance from the start to the current position of the
+             * mouse
+             */
+            var distance = this.ConceptMapService.calculateDistance(startX, startY, x2, y2);
+            
+            /*
+             * check if we have set the curvature yet and that the mouse
+             * is more than 20 pixels away from the start.
+             *
+             * we will determine the curvature of the link based upon how
+             * the user has dragged the mouse in relation to the center 
+             * of the connector. if they start drawing the link horizontally
+             * we will create a straight line with no curvature. if they
+             * start drawing the link by moving the mouse up, we will create
+             * a line that curves up. if they start drawing the link by 
+             * moving the mouse down, we will create a line that curves down.
+             */
+            if (!this.linkCurvatureSet && distance > 20) {
+                
+                /*
+                 * get the slope of the line from the start to the location
+                 * of the mouse
+                 */
+                var slope = Math.abs(this.ConceptMapService.getSlope(startX, startY, x2, y2));
+                
+                if (y2 < startY) {
+                    // the user has moved the mouse above the connector
+                    
+                    if (slope == null) {
+                        /*
+                         * the slope is infinite so we will default the 
+                         * curvature to 0.5
+                         */
+                        this.activeLink.curvature = 0.5;
+                    } else if (slope < 1.0) {
+                        // make the link straight
+                        this.activeLink.curvature = 0.0;
+                    } else {
+                        // make the link curved
+                        this.activeLink.curvature = 0.5;
+                    }
+                    
+                    // make the link curve up
+                    this.activeLink.startCurveUp = true;
+                    this.activeLink.endCurveUp = true;
+                } else if (y2 > startY) {
+                    // the user has moved the mouse below the connector
+                    
+                    if (slope == null) {
+                        /*
+                         * the slope is infinite so we will default the 
+                         * curvature to 0.5
+                         */
+                        this.activeLink.curvature = 0.5;
+                    } else if (slope < 1.0) {
+                        // make the link straight
+                        this.activeLink.curvature = 0.0;
+                    } else {
+                        // make the link curved
+                        this.activeLink.curvature = 0.5;
+                    }
+                    
+                    // make the link curve down
+                    this.activeLink.startCurveUp = false;
+                    this.activeLink.endCurveUp = false;
+                }
+                
+                // remember that we have set the curvature
+                this.linkCurvatureSet = true;
+            }
+            
             var isDragging = true;
             
             // redraw the link with the new coordinates
@@ -3077,6 +3156,13 @@ class ConceptMapController {
         
         // remember the active link
         this.activeLink = link;
+        
+        // flag for determining if we have set the link curvature
+        this.linkCurvatureSet = false;
+        
+        // remember the location of the center of the connector
+        this.activeLinkStartX = node.connectorCX();
+        this.activeLinkStartY = node.connectorCY();
         
         // highlight the link
         this.setHighlightedElement(link);

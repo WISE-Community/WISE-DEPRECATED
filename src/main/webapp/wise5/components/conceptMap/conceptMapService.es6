@@ -147,6 +147,45 @@ class ConceptMapService extends NodeService {
     }
     
     /**
+     * Get the slope of the line between two points
+     * @param x1 x position of the first point
+     * @param y1 y position of the first point
+     * @param x2 x position of the second point
+     * @param y2 y position of the second point
+     * @returns the slope of the line or null if the slope is infinite
+     */
+    getSlope(x1, y1, x2, y2) {
+        
+        var slope = null;
+        
+        if ((x2 - x1) == 0) {
+            // the slope is infinite so we will return null
+            slope = null;
+        } else {
+            // calculate the slope
+            slope = (y2 - y1) / (x2 - x1);
+        }
+        
+        return slope;
+    }
+    
+    /**
+     * Calculate the euclidean distance between two points
+     * @param x1 x position of the first point
+     * @param y1 y position of the first point
+     * @param x2 x position of the second point
+     * @param y2 y position of the second point
+     * @returns the distance between the two points
+     */
+    calculateDistance(x1, y1, x2, y2) {
+        
+        // calculate the distance
+        var distance = Math.sqrt(Math.pow((x2 - x1), 2) + Math.pow((y2 - y1), 2));
+        
+        return distance;
+    }
+    
+    /**
     
     Returns an array representation of the path elements for an arrow
     
@@ -618,6 +657,60 @@ class ConceptMapNode {
              * this will be equal to half the height of the image.
              */
             var imageCY = this.image.cy();
+            
+            /*
+             * get the y coordinate of the center of the group relative to the
+             * svg parent
+             */
+            val = groupY + imageCY;
+        }
+        
+        return val;
+    }
+    
+    /**
+     * Get the center x coordinate of the group
+     */
+    connectorCX() {
+        var val = 0;
+        
+        if (this.group != null && this.image != null) {
+            
+            // get the group
+            var groupX = this.group.x();
+            
+            /*
+             * get the center x coordinate of the image relative to the group. 
+             * this will be equal to half the width of the image.
+             */
+            var imageCX = this.connector.cx();
+            
+            /*
+             * get the x coordinate of the center of the group relative to the
+             * svg parent
+             */
+            val = groupX + imageCX;
+        }
+        
+        return val;
+    }
+    
+    /**
+     * Get the center y coordinate of the group
+     */
+    connectorCY() {
+        var val = 0;
+        
+        if (this.group != null && this.image != null) {
+            
+            // get the group
+            var groupY = this.group.y();
+            
+            /*
+             * get the center y coordinate of the image relative to the group. 
+             * this will be equal to half the height of the image.
+             */
+            var imageCY = this.connector.cy();
             
             /*
              * get the y coordinate of the center of the group relative to the
@@ -1193,9 +1286,17 @@ class ConceptMapLink {
      * The constructor to create a ConceptMapLink object
      * @param ConceptMapService the ConceptMapService
      * @param draw the svg.js draw object
-     * @param node the source ConceptMapNode
+     * @param id the instance id of the link
+     * @param originalId the original authored id of the link
+     * @param sourceNode the source ConceptMapNode
+     * @param destinationNode the destination ConceptMapNode
+     * @param label the text label
+     * @param color the color of the link
+     * @param curvature the curvature of the link
+     * @param startCurveUp whether the start of the link curves up
+     * @param endCurveUp whether the end of the link curves up
      */
-    constructor(ConceptMapService, draw, id, originalId, sourceNode, destinationNode, label, color, curvature, startCurveUp, startCurveDown) {
+    constructor(ConceptMapService, draw, id, originalId, sourceNode, destinationNode, label, color, curvature, startCurveUp, endCurveUp) {
         
         // remember the ConceptMapService
         this.ConceptMapService = ConceptMapService;
@@ -1244,14 +1345,9 @@ class ConceptMapLink {
         // remember the curvature
         this.curvature = curvature;
         
-        if (this.curvature == null) {
-            // curvature has not been specified so we will set it at random
-            this.curvature = Math.random();
-        }
-        
-        // set the link to curve down
+        // set whether the link curves up or down
         this.startCurveUp = startCurveUp;
-        this.endCurveUp = startCurveDown;
+        this.endCurveUp = endCurveUp;
         
         if (this.startCurveUp == null || this.endCurveUp == null) {
             /*
@@ -1286,7 +1382,7 @@ class ConceptMapLink {
             
             /*
              * get the nearest point from the center of the source node to the 
-             * destination  node along the perimeter of the destination node 
+             * destination node along the perimeter of the destination node 
              * image
              */
             var nearestPoint = this.getNearestPointToDestinationNode(x1, y1);
@@ -1369,7 +1465,7 @@ class ConceptMapLink {
         jsonObject.label = this.label;
         jsonObject.curvature = this.curvature;
         jsonObject.startCurveUp = this.startCurveUp;
-        jsonObject.startCurveDown = this.startCurveDown;
+        jsonObject.endCurveUp = this.endCurveUp;
         jsonObject.sourceNodeOriginalId = this.sourceNode.getOriginalId();
         jsonObject.sourceNodeInstanceId = this.sourceNode.getId();
         jsonObject.destinationNodeOriginalId = this.destinationNode.getOriginalId();
