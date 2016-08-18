@@ -81,7 +81,7 @@
       "angular-translate-loader-partial": "github:angular-translate/bower-angular-translate-loader-partial@^2.11.1",
       "angular-ui-router": "github:angular-ui/ui-router@^0.3.1",
       "angular-ui-scrollpoint": "npm:angular-ui-scrollpoint@^2.1.1",
-      "angular-websocket": "npm:angular-websocket@^1.1.0",
+      "angular-websocket": "npm:angular-websocket@1.0.14",
       "dom-autoscroller": "npm:dom-autoscroller@^1.3.1",
       "highcharts-ng": "npm:highcharts-ng@^0.0.11",
       "highcharts/draggable-points": "github:highcharts/draggable-points@master",

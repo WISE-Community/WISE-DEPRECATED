@@ -32,7 +32,7 @@ System.config({
     "angular-translate-loader-partial": "github:angular-translate/bower-angular-translate-loader-partial@2.11.1",
     "angular-ui-router": "github:angular-ui/ui-router@0.3.1",
     "angular-ui-scrollpoint": "npm:angular-ui-scrollpoint@2.1.1",
-    "angular-websocket": "npm:angular-websocket@1.1.0",
+    "angular-websocket": "npm:angular-websocket@1.0.14",
     "babel": "npm:babel-core@5.8.38",
     "babel-runtime": "npm:babel-runtime@5.8.38",
     "core-js": "npm:core-js@1.2.7",
@@ -143,10 +143,10 @@ System.config({
       "process": "github:jspm/nodelibs-process@0.1.2",
       "systemjs-json": "github:systemjs/plugin-json@0.1.2"
     },
-    "npm:angular-websocket@1.1.0": {
+    "npm:angular-websocket@1.0.14": {
       "angular": "npm:angular@1.5.8",
       "process": "github:jspm/nodelibs-process@0.1.2",
-      "ws": "npm:ws@1.1.1"
+      "ws": "npm:ws@0.7.2"
     },
     "npm:asn1.js@4.8.0": {
       "assert": "github:jspm/nodelibs-assert@0.1.0",
@@ -241,9 +241,9 @@ System.config({
       "isarray": "npm:isarray@1.0.0",
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
-    "npm:bufferutil@1.2.1": {
+    "npm:bufferutil@1.1.0": {
       "bindings": "npm:bindings@1.2.1",
-      "nan": "npm:nan@2.4.0"
+      "nan": "npm:nan@1.8.4"
     },
     "npm:cipher-base@1.0.2": {
       "buffer": "github:jspm/nodelibs-buffer@0.1.0",
@@ -365,11 +365,8 @@ System.config({
       "bn.js": "npm:bn.js@4.11.6",
       "brorand": "npm:brorand@1.0.5"
     },
-    "npm:nan@2.4.0": {
-      "buffer": "github:jspm/nodelibs-buffer@0.1.0",
-      "fs": "github:jspm/nodelibs-fs@0.1.2",
-      "path": "github:jspm/nodelibs-path@0.1.0",
-      "process": "github:jspm/nodelibs-process@0.1.2"
+    "npm:nan@1.8.4": {
+      "path": "github:jspm/nodelibs-path@0.1.0"
     },
     "npm:ng-file-upload@12.0.4": {
       "process": "github:jspm/nodelibs-process@0.1.2"
@@ -494,9 +491,9 @@ System.config({
       "querystring": "npm:querystring@0.2.0",
       "util": "github:jspm/nodelibs-util@0.1.0"
     },
-    "npm:utf-8-validate@1.2.1": {
+    "npm:utf-8-validate@1.1.0": {
       "bindings": "npm:bindings@1.2.1",
-      "nan": "npm:nan@2.4.0"
+      "nan": "npm:nan@1.8.4"
     },
     "npm:util-deprecate@1.0.2": {
       "util": "github:jspm/nodelibs-util@0.1.0"
@@ -511,9 +508,9 @@ System.config({
     "npm:webfontloader@1.6.26": {
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
-    "npm:ws@1.1.1": {
+    "npm:ws@0.7.2": {
       "buffer": "github:jspm/nodelibs-buffer@0.1.0",
-      "bufferutil": "npm:bufferutil@1.2.1",
+      "bufferutil": "npm:bufferutil@1.1.0",
       "crypto": "github:jspm/nodelibs-crypto@0.1.0",
       "events": "github:jspm/nodelibs-events@0.1.1",
       "http": "github:jspm/nodelibs-http@1.7.1",
@@ -524,7 +521,7 @@ System.config({
       "tls": "github:jspm/nodelibs-tls@0.1.0",
       "ultron": "npm:ultron@1.0.2",
       "url": "github:jspm/nodelibs-url@0.1.0",
-      "utf-8-validate": "npm:utf-8-validate@1.2.1",
+      "utf-8-validate": "npm:utf-8-validate@1.1.0",
       "util": "github:jspm/nodelibs-util@0.1.0",
       "zlib": "github:jspm/nodelibs-zlib@0.1.0"
     }
