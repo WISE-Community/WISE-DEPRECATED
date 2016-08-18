@@ -479,6 +479,9 @@ var ConceptMapNode = function () {
         // create the delete button
         this.deleteButtonGroup = this.createDeleteButtonGroup();
 
+        // create the text group
+        this.textGroup = this.createTextGroup();
+
         /*
          * create the border that displays when the node is highighted or
          * moused over
@@ -498,6 +501,7 @@ var ConceptMapNode = function () {
         this.group.add(this.image);
         this.group.add(this.connector);
         this.group.add(this.deleteButtonGroup);
+        this.group.add(this.textGroup);
 
         // hide the border and delete button
         this.border.hide();
@@ -674,6 +678,70 @@ var ConceptMapNode = function () {
             this.deleteButtonGroup.add(this.deleteButtonX);
 
             return this.deleteButtonGroup;
+        }
+
+        /**
+         * Create the text group
+         * @returns the text group
+         */
+
+    }, {
+        key: 'createTextGroup',
+        value: function createTextGroup() {
+
+            // create the group
+            this.textGroup = this.draw.group();
+
+            // create a rectangle to surround the text
+            this.textRect = this.draw.rect(100, 15);
+            this.textRect.attr('fill', 'white');
+            this.textRect.attr('stroke', 'black');
+            this.textRect.attr('x', 0);
+            this.textRect.attr('y', 10);
+            this.textRect.attr('width', 100);
+            this.textRect.attr('height', 20);
+            this.textRect.radius(5);
+
+            // create the text element
+            this.text = this.draw.text(this.label);
+            this.text.attr('x', 5);
+            //this.text.attr('x', 0);
+            this.text.attr('y', 9);
+            this.text.font({
+                family: 'Arial',
+                size: 12
+            });
+
+            // prevent the text from being highlighted when the user drags the mouse
+            this.text.style('user-select:none');
+            this.text.node.setAttribute('user-select', 'none');
+            this.text.node.setAttribute('style', 'user-select:none');
+
+            // get the bounding box around the text element
+            var textBBox = this.text.node.getBBox();
+
+            /*
+             * set the width of the rectangle to be a little larger than the width
+             * of the text element
+             */
+            var width = textBBox.width;
+            this.textRect.attr('width', width + 10);
+
+            // add the rectangle and text to the group
+            this.textGroup.add(this.textRect);
+            this.textGroup.add(this.text);
+
+            // get the x and y position
+            var x = this.cx();
+            var y = this.cy() + this.height / 2;
+
+            this.textGroup.cx(x);
+            this.textGroup.cy(y);
+
+            // add the text group to the link group
+            this.group.add(this.textGroup);
+
+            return this.textGroup;
         }
 
         /**
@@ -2040,6 +2108,17 @@ var ConceptMapLink = function () {
             var width = this.destinationNode.getImageWidth();
             var height = this.destinationNode.getImageHeight();
 
+            /*
+            var destinationNodeGroup = this.destinationNode.getGroup();
+            var destinationNodeGroupBBox = destinationNodeGroup.bbox();
+            
+            rectMinX = this.destinationNode.getGroupX();
+            rectMinY = this.destinationNode.getGroupY();
+            
+            width = destinationNodeGroupBBox.width;
+            height = destinationNodeGroupBBox.height;
+            */
+
             if (x == null && y == null) {
                 // get the coordinates of the source if x and y were not provided
                 x = this.path.attr('x1');
@@ -2450,6 +2529,7 @@ var ConceptMapLink = function () {
 
         /**
          * Create the text group
+         * @returns the text group
          */
 
     }, {
@@ -2508,6 +2588,8 @@ var ConceptMapLink = function () {
 
             // hide the text group until the student has chosen a link type
             this.textGroup.hide();
+
+            return this.textGroup;
         }
 
         /**
