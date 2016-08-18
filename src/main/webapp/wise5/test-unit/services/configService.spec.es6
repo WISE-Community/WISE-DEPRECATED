@@ -27,7 +27,7 @@ describe('ConfigService Unit Test', () => {
         var i18nURL_common_en = "wise5/i18n/common/i18n_en.json";
         var i18nURL_vle_en = "wise5/i18n/vle/i18n_en.json";
 
-        it('should retrieve config', () => {
+        xit('should retrieve config', () => {
             spyOn(ConfigService, "setConfig").and.callThrough();
             spyOn(ConfigService, "sortClassmateUserInfosAlphabeticallyByName");
             $httpBackend.when('GET', configURL).respond(sampleConfig1);
