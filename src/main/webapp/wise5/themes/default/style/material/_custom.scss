@@ -1,4 +1,8 @@
 // Angular Material customizations and additions
+body {
+    font-size: rem(1.6); // TODO: remove when bootstrap is not being loaded
+}
+
 h1 {
   font-size: $display-3-font-size-base;
 }

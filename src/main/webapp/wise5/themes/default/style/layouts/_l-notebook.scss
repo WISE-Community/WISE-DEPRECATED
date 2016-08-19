@@ -2,12 +2,6 @@
 
 // 2. Base
 .l-notebook {
-  margin-top: $wise-toolbar-height;
-  background-color: color('body-bg') !important;
-  transition: all 0s;
-
-  &.notebook-nav-open {
-      margin-top: 0;
-      padding-top: $wise-toolbar-height;
-  }
+    margin-top: $wise-toolbar-height;
+    background-color: color('body-bg') !important;
 }

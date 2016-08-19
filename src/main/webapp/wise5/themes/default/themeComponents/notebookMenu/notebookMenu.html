@@ -59,8 +59,8 @@
 </md-toolbar>
 
 <md-content ng-if="notebookMenuCtrl.viewMode === 'nav'">
-    <md-toolbar class="md-toolbar--wise" md-theme="light">
-        <div class="md-toolbar-tools accent-2">
+    <md-toolbar class="md-toolbar--sidenav">
+        <div class="md-toolbar-tools">
             {{notebookMenuCtrl.notebookConfig.label}}
         </div>
     </md-toolbar>
@@ -71,23 +71,23 @@
                       aria-label="View {{item.label.link}}"
                       ng-click="notebookMenuCtrl.setNotebookFilter($event, item.$key)"
                       ng-class="{'active': notebookMenuCtrl.notebookFilter === item.$key}">
-            <md-icon class="side-menu__icon" style="color: {{item.label.color}} !important"> {{item.label.icon}} </md-icon>
-            <p class="side-menu__item" style="color: {{item.label.color}}">{{item.label.link}}</p>
+            <md-icon class="menu-sidenav__icon" style="color: {{item.label.color}} !important"> {{item.label.icon}} </md-icon>
+            <p class="menu-sidenav__item" style="color: {{item.label.color}}">{{item.label.link}}</p>
         </md-list-item>
     </md-list>
     <md-divider></md-divider>
     <md-list>
         <md-list-item aria-label="Close {{notebookMenuCtrl.notebookConfig.label}}" ng-click="notebookMenuCtrl.toggleNotebook($event)">
-            <md-icon class="side-menu__icon"> close </md-icon>
-            <p class="side-menu__item">Close</p>
+            <md-icon class="menu-sidenav__icon"> close </md-icon>
+            <p class="menu-sidenav__item">Close</p>
         </md-list-item>
     </md-list>
 </md-content>
 
-<div class="notebook-sidebar" ng-if="notebookMenuCtrl.viewMode === 'sidebar'">
+<div class="menu-sidebar" ng-if="notebookMenuCtrl.viewMode === 'sidebar'">
     <md-button ng-repeat="item in notebookMenuCtrl.notebookConfig.itemTypes | toArray | orderBy: ''"
                ng-if="item.enabled"
-               class="md-icon-button notebook-sidebar__link"
+               class="md-icon-button menu-sidebar__link"
                aria-label="View {{item.label.link}}"
                ng-click="notebookMenuCtrl.openNotebook($event, item.$key)">
         <md-icon style="color: {{notebookMenuCtrl.notebookFilter === item.$key ? item.label.color + ' !important' : 'auto'}}"> {{item.label.icon}} </md-icon>

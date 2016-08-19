@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
     value: true
@@ -25,6 +25,14 @@ var NavigationController = function () {
             if (toNodeId && fromNodeId && toNodeId !== fromNodeId) {
                 this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(toNodeId);
             }
+
+            if (toState.name === 'root.vle') {
+                var nodeId = toParams.nodeId;
+                if (this.ProjectService.isApplicationNode(nodeId)) {
+                    // scroll to top when viewing a new step
+                    document.getElementById('content').scrollTop = 0;
+                }
+            }
         }.bind(this));
     }
 
@@ -34,7 +42,7 @@ var NavigationController = function () {
 
 
     _createClass(NavigationController, [{
-        key: "showStudentStatistics",
+        key: 'showStudentStatistics',
         value: function showStudentStatistics() {
             var openCPUURL = this.ConfigService.getOpenCPUURL();
             if (openCPUURL != null) {

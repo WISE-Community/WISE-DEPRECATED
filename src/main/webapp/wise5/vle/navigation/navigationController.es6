@@ -17,6 +17,14 @@ class NavigationController {
             if (toNodeId && fromNodeId && toNodeId !== fromNodeId) {
                 this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(toNodeId);
             }
+
+            if (toState.name === 'root.vle') {
+                let nodeId = toParams.nodeId;
+                if (this.ProjectService.isApplicationNode(nodeId)) {
+                    // scroll to top when viewing a new step
+                    document.getElementById('content').scrollTop = 0;
+                }
+            }
         }.bind(this));
     }
 

@@ -13,19 +13,32 @@
     }
 }
 
+.md-toolbar-tools {
+    font-size: 18px;
+}
+
+.md-toolbar--sidenav {
+    background-color: color('gray-darkest') !important;
+
+    .md-toolbar-tools {
+        font-size: rem(1.6);
+        font-weight: 500;
+    }
+}
+
 .layout-toolbar {
     position: fixed;
     left: 0;
     right: 0;
     top: $toolbar-height;
     transition: 250ms linear all;
-    transition-delay: 250ms;
+    //transition-delay: 250ms;
 }
 
 
 .layout-tools {
     transition: 250ms linear all;
-    transition-delay: 250ms;
+    //transition-delay: 250ms;
 
     &.ng-hide-add, &.ng-hide-add-active,
     &.ng-hide-remove, &.ng-hide-remove-active  {
@@ -38,4 +51,10 @@
             }
         }
     }
+}
+
+.toolbar-title {
+    margin-left: 8px;
+    font-size: rem(1.6);
+    font-weight: 500;
 }
