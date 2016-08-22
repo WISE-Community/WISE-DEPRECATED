@@ -3519,13 +3519,21 @@ class ConceptMapController {
         var resultString = "";
         
         if (thisResult.score != null) {
-            resultString += "Score: " + thisResult.score + ".";
+            // display the score
+            resultString += "Score: " + thisResult.score;
         }
         
         if (thisResult.feedback != null) {
-            resultString += "Feedback: " + thisResult.feedback + ".";
+            if (resultString != "") {
+                // add a new line if the result string is not empty
+                resultString += "\n";
+            }
+            
+            // display the feedback
+            resultString += "Feedback: " + thisResult.feedback;
         }
         
+        // show the result to the student
         alert(resultString);
     }
 };
