@@ -131,15 +131,15 @@ var NodeService = function () {
             if (componentType == null) {
                 // error
             } else if (this.isStringUpperCase(componentType)) {
-                    /*
-                     * the component type is all uppercase so we will convert it to all
-                     * lowercase
-                     */
-                    componentType = componentType.toLowerCase();
-                } else {
-                    // get the component type in camel case
-                    componentType = this.toCamelCase(componentType);
-                }
+                /*
+                 * the component type is all uppercase so we will convert it to all
+                 * lowercase
+                 */
+                componentType = componentType.toLowerCase();
+            } else {
+                // get the component type in camel case
+                componentType = this.toCamelCase(componentType);
+            }
             var wiseBaseURL = this.ConfigService.getWISEBaseURL();
             return wiseBaseURL + '/wise5/components/' + componentType + '/index.html';
         }
@@ -585,76 +585,75 @@ var NodeService = function () {
                                  * not ask them again
                                  */
                             } else {
+
+                                /**
+                                 * Controller that handles the dialog popup that lets the user 
+                                 * which branch path to go to.
+                                 * @param $scope the scope
+                                 * @param $mdDialog the dialog popup object
+                                 * @param availableTransitions the branch paths
+                                 * @param deferred used to resolve the promise once the user
+                                 * has chosen a branch path
+                                 * @param nodeId the current node
+                                 */
+                                var ChooseBranchPathController = function ChooseBranchPathController($scope, $mdDialog, availableTransitions, deferred, nodeId) {
                                     var _this3 = this;
 
-                                    /**
-                                     * Controller that handles the dialog popup that lets the user 
-                                     * which branch path to go to.
-                                     * @param $scope the scope
-                                     * @param $mdDialog the dialog popup object
-                                     * @param availableTransitions the branch paths
-                                     * @param deferred used to resolve the promise once the user
-                                     * has chosen a branch path
-                                     * @param nodeId the current node
-                                     */
+                                    $scope.availableTransitions = availableTransitions;
 
-                                    var ChooseBranchPathController = function ChooseBranchPathController($scope, $mdDialog, availableTransitions, deferred, nodeId) {
+                                    // called when the user clicks on a branch path
+                                    $scope.chooseBranchPath = function (transitionResult) {
+                                        // remember the transition that was chosen
+                                        _this3.setTransitionResult(nodeId, transitionResult);
 
-                                        $scope.availableTransitions = availableTransitions;
+                                        // resolve the promise
+                                        deferred.resolve(transitionResult);
 
-                                        // called when the user clicks on a branch path
-                                        $scope.chooseBranchPath = function (transitionResult) {
-                                            // remember the transition that was chosen
-                                            _this3.setTransitionResult(nodeId, transitionResult);
+                                        /*
+                                         * don't remember the promise for this step anymore
+                                         * since we have resolved it
+                                         */
+                                        _this3.setChooseTransitionPromise(nodeId, null);
 
-                                            // resolve the promise
-                                            deferred.resolve(transitionResult);
-
-                                            /*
-                                             * don't remember the promise for this step anymore
-                                             * since we have resolved it
-                                             */
-                                            _this3.setChooseTransitionPromise(nodeId, null);
-
-                                            // close the dialog
-                                            $mdDialog.hide();
-                                        };
-
-                                        // obtains the step number and title
-                                        $scope.getNodePositionAndTitleByNodeId = function (nodeId) {
-                                            return _this3.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
-                                        };
-
-                                        // called when the dialog is closed
-                                        $scope.close = function () {
-                                            $mdDialog.hide();
-                                        };
+                                        // close the dialog
+                                        $mdDialog.hide();
                                     };
 
-                                    // ask the user which branch path to go to
-
-                                    resolvePromiseNow = false;
-
-                                    var chooseBranchPathTemplateUrl = this.ProjectService.getThemePath() + '/themeComponents/branchPathTools/branchPathChooser.html';
-
-                                    var dialogOptions = {
-                                        templateUrl: chooseBranchPathTemplateUrl,
-                                        controller: ChooseBranchPathController,
-                                        locals: {
-                                            availableTransitions: availableTransitions,
-                                            deferred: deferred,
-                                            nodeId: nodeId
-                                        }
+                                    // obtains the step number and title
+                                    $scope.getNodePositionAndTitleByNodeId = function (nodeId) {
+                                        return _this3.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
                                     };
 
-                                    ChooseBranchPathController.$inject = ['$scope', '$mdDialog', 'availableTransitions', 'deferred', 'nodeId'];
+                                    // called when the dialog is closed
+                                    $scope.close = function () {
+                                        $mdDialog.hide();
+                                    };
+                                };
 
-                                    /*
-                                     * show the popup dialog that lets the user choose the
-                                     * branch path
-                                     */
-                                    this.$mdDialog.show(dialogOptions);
-                                }
+                                // ask the user which branch path to go to
+
+                                resolvePromiseNow = false;
+
+                                var chooseBranchPathTemplateUrl = this.ProjectService.getThemePath() + '/themeComponents/branchPathTools/branchPathChooser.html';
+
+                                var dialogOptions = {
+                                    templateUrl: chooseBranchPathTemplateUrl,
+                                    controller: ChooseBranchPathController,
+                                    locals: {
+                                        availableTransitions: availableTransitions,
+                                        deferred: deferred,
+                                        nodeId: nodeId
+                                    }
+                                };
+
+                                ChooseBranchPathController.$inject = ['$scope', '$mdDialog', 'availableTransitions', 'deferred', 'nodeId'];
+
+                                /*
+                                 * show the popup dialog that lets the user choose the
+                                 * branch path
+                                 */
+                                this.$mdDialog.show(dialogOptions);
+                            }
                         } else {
                             /*
                              * we are in regular student run mode so we will choose
@@ -784,20 +783,20 @@ var NodeService = function () {
 
                         }
                     } else {
-                            // student has not branched yet
+                        // student has not branched yet
 
-                            // choose a transition
-                            this.chooseTransition(nodeId, transitionLogic).then(function (transition) {
+                        // choose a transition
+                        this.chooseTransition(nodeId, transitionLogic).then(function (transition) {
 
-                                if (transition != null) {
-                                    fromNodeId = currentNode.id;
-                                    toNodeId = transition.to;
+                            if (transition != null) {
+                                fromNodeId = currentNode.id;
+                                toNodeId = transition.to;
 
-                                    // create a branchPathTaken event to signify taking the branch path
-                                    _this4.createBranchPathTakenEvent(fromNodeId, toNodeId);
-                                }
-                            });
-                        }
+                                // create a branchPathTaken event to signify taking the branch path
+                                _this4.createBranchPathTakenEvent(fromNodeId, toNodeId);
+                            }
+                        });
+                    }
                 }
             }
         }

@@ -47,6 +47,8 @@ var TeacherWebSocketService = function () {
                 this.handleStudentsOnlineReceived(data);
             } else if (messageType === 'studentConnected') {} else if (messageType === 'studentDisconnected') {
                 this.handleStudentDisconnected(data);
+            } else if (messageType === 'notification' || messageType === 'CRaterResultNotification') {
+                this.$rootScope.$broadcast('newNotification', data.data);
             }
         }
     }, {

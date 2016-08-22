@@ -15,7 +15,20 @@ class NotificationService {
                 if (this.ConfigService.getWorkgroupId() === notification.toWorkgroupId) {
                     notification.nodePosition = this.ProjectService.getNodePositionById(notification.nodeId);
                     notification.nodePositionAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(notification.nodeId);
-                    this.notifications.push(notification);
+                    // check if this notification is new or is an update
+                    var isNotificationNew = true;
+                    for (var n = 0; n < this.notifications.length; n++) {
+                        var currentNotification = this.notifications[n];
+                        if (currentNotification.id == notification.id) {
+                            // existing notification (with same id) found, so it's an update
+                            this.notifications[n] = notification;
+                            isNotificationNew = false;
+                        }
+                    }
+                    if (isNotificationNew) {
+                        // this is a new notification
+                        this.notifications.push(notification);
+                    }
                 }
             }
         });
@@ -30,9 +43,10 @@ class NotificationService {
      * @param toWorkgroupId id of workgroup this notification is for
      * @param message notification message
      * @param data other extra information about this notification
+     * @param groupId id that groups multiple notifications together
      * @returns newly created notification object
      */
-    createNewNotification(notificationType, nodeId, componentId, fromWorkgroupId, toWorkgroupId, message, data=null) {
+    createNewNotification(notificationType, nodeId, componentId, fromWorkgroupId, toWorkgroupId, message, data=null, groupId=null) {
         let nodePosition = this.ProjectService.getNodePositionById(nodeId);
         let nodePositionAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
         let component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
@@ -44,6 +58,7 @@ class NotificationService {
             id: null,
             type: notificationType,
             nodeId: nodeId,
+            groupId: groupId,
             componentId: componentId,
             componentType: componentType,
             nodePosition: nodePosition,
@@ -88,6 +103,11 @@ class NotificationService {
                         if (notification.nodeId != null) {
                             notification.nodePosition = this.ProjectService.getNodePositionById(notification.nodeId);
                             notification.nodePositionAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(notification.nodeId);
+
+                            if (notification.data != null) {
+                                // parse the data string into a JSON object
+                                notification.data = angular.fromJson(notification.data);
+                            }
                         }
                     });
                 } else {
@@ -97,6 +117,14 @@ class NotificationService {
                 return this.notifications;
             });
         }
+    }
+
+    /**
+     * Dismisses the specified notification
+     * @param notification
+     */
+    dismissNotification(notification) {
+        this.dismissNotificationToServer(notification);
     }
 
     /**
@@ -125,6 +153,9 @@ class NotificationService {
         if (notification.data != null) {
             params.data = angular.toJson(notification.data);
         }
+        if (notification.groupId != null) {
+            params.groupId = notification.groupId;
+        }
         params.timeGenerated = notification.timeGenerated;
         if (notification.timeDismissed != null) {
             params.timeDismissed = notification.timeDismissed;
@@ -133,6 +164,51 @@ class NotificationService {
 
         return this.$http(config).then((result) => {
             let notification = result.data;
+            if (notification.data != null) {
+                // parse the data string into a JSON object
+                notification.data = angular.fromJson(notification.data);
+            }
+            return notification;
+        })
+    }
+
+    /**
+     * Saves the notification for the logged-in user
+     * @param notification
+     */
+    dismissNotificationToServer(notification) {
+
+        if (notification.id == null) {
+            // cannot dismiss a notification that hasn't been saved to db yet
+            return;
+        }
+
+        let timeNow = Date.parse(new Date());
+        notification.timeDismissed = timeNow;
+
+        let config = {};
+        config.method = 'POST';
+        config.url = this.ConfigService.getNotificationURL() + "/dismiss";
+        config.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
+
+        let params = {};
+        params.notificationId = notification.id;
+        params.periodId = this.ConfigService.getPeriodId();
+        params.fromWorkgroupId = notification.fromWorkgroupId;
+        params.toWorkgroupId = notification.toWorkgroupId;
+        params.type = notification.type;
+        if (notification.groupId != null) {
+            params.groupId = notification.groupId;
+        }
+        params.timeDismissed = notification.timeDismissed;
+        config.data = $.param(params);
+
+        return this.$http(config).then((result) => {
+            let notification = result.data;
+            if (notification.data != null) {
+                // parse the data string into a JSON object
+                notification.data = angular.fromJson(notification.data);
+            }
             return notification;
         })
     }

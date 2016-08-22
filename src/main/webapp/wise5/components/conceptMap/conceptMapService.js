@@ -431,7 +431,6 @@ var ConceptMapNode = function () {
      * @param width the the width of the node
      * @param height the height of the node
      */
-
     function ConceptMapNode(ConceptMapService, draw, id, originalId, filePath, label, x, y, width, height) {
         _classCallCheck(this, ConceptMapNode);
 
@@ -1585,7 +1584,6 @@ var ConceptMapLink = function () {
      * @param startCurveUp whether the start of the link curves up
      * @param endCurveUp whether the end of the link curves up
      */
-
     function ConceptMapLink(ConceptMapService, draw, id, originalId, sourceNode, destinationNode, label, color, curvature, startCurveUp, endCurveUp) {
         _classCallCheck(this, ConceptMapLink);
 
@@ -2485,10 +2483,10 @@ var ConceptMapLink = function () {
                 y = p1.y - scale * dx;
                 //occluded = NO;
             } else {
-                    x = 0;
-                    y = 0;
-                    //occluded = YES;
-                }
+                x = 0;
+                y = 0;
+                //occluded = YES;
+            }
 
             /*
             this.set('removeButtonX', x);

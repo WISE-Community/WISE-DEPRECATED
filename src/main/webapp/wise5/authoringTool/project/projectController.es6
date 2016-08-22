@@ -28,6 +28,7 @@ class ProjectController {
             if (currentAuthors.length == 0) {
                 this.currentAuthorsMessage = "";
             } else {
+                // TODO: internationalize me
                 this.currentAuthorsMessage = currentAuthors.join(",") + " is currently editing this project.";
                 alert(currentAuthors.join(",") + " is currently editing this project. Please be careful not to overwrite each other's work!");
             }

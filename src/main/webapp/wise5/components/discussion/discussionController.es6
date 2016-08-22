@@ -360,7 +360,7 @@ class DiscussionController {
                     if (componentStateIdReplyingTo != null) {
                         // populate fields of the notification
                         let fromWorkgroupId = componentState.workgroupId;
-                        let notificationType = "component";
+                        let notificationType = "DiscussionReply";
                         let nodeId = componentState.nodeId;
                         let componentId = componentState.componentId;
                         // add the user names to the component state so we can display next to the response

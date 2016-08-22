@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var OpenResponseController = function () {
-    function OpenResponseController($injector, $mdDialog, $q, $rootScope, $scope, AnnotationService, ConfigService, CRaterService, NodeService, OpenResponseService, ProjectService, StudentAssetService, StudentDataService) {
+    function OpenResponseController($injector, $mdDialog, $q, $rootScope, $scope, AnnotationService, ConfigService, CRaterService, NodeService, NotificationService, OpenResponseService, ProjectService, StudentAssetService, StudentDataService, StudentWebSocketService, UtilService) {
         var _this = this;
 
         _classCallCheck(this, OpenResponseController);
@@ -23,10 +23,13 @@ var OpenResponseController = function () {
         this.ConfigService = ConfigService;
         this.CRaterService = CRaterService;
         this.NodeService = NodeService;
+        this.NotificationService = NotificationService;
         this.OpenResponseService = OpenResponseService;
         this.ProjectService = ProjectService;
         this.StudentAssetService = StudentAssetService;
         this.StudentDataService = StudentDataService;
+        this.StudentWebSocketService = StudentWebSocketService;
+        this.UtilService = UtilService;
         this.idToOrder = this.ProjectService.idToOrder;
 
         // the node id of the current node
@@ -650,6 +653,47 @@ var OpenResponseController = function () {
                                     var autoCommentAnnotation = _this3.createAutoCommentAnnotation(autoCommentAnnotationData);
                                     componentState.annotations.push(autoCommentAnnotation);
                                 }
+
+                                // get the notification
+                                var notificationsForScore = _this3.CRaterService.getNotificationsByScore(_this3.componentContent, score);
+
+                                if (notificationsForScore != null) {
+                                    for (var n = 0; n < notificationsForScore.length; n++) {
+                                        var notificationForScore = notificationsForScore[n];
+                                        var notificationType = notificationForScore.notificationType;
+                                        if (notificationForScore.isNotifyTeacher && notificationForScore.isNotifyStudent) {
+                                            // notify both teacher and student at the same time
+                                            var fromWorkgroupId = _this3.ConfigService.getWorkgroupId();
+                                            var toWorkgroupId = _this3.ConfigService.getWorkgroupId();
+                                            var notificationMessageToStudent = notificationForScore.notificationMessageToStudent;
+                                            var notificationMessageToTeacher = notificationForScore.notificationMessageToTeacher;
+                                            // replace variables like {{score}} and {{dismissCode}} with actual values
+                                            notificationMessageToStudent = notificationMessageToStudent.replace("{{score}}", score);
+                                            notificationMessageToStudent = notificationMessageToStudent.replace("{{dismissCode}}", notificationForScore.dismissCode);
+                                            notificationMessageToTeacher = notificationMessageToTeacher.replace("{{score}}", score);
+                                            notificationMessageToTeacher = notificationMessageToTeacher.replace("{{dismissCode}}", notificationForScore.dismissCode);
+                                            var notificationGroupId = _this3.ConfigService.getRunId() + "_" + _this3.UtilService.generateKey(10); // links student and teacher notifications together
+                                            var notificationData = {};
+                                            if (notificationForScore.isAmbient && notificationForScore.dismissCode != null) {
+                                                notificationData.isAmbient = true;
+                                                notificationData.dismissCode = notificationForScore.dismissCode;
+                                            }
+                                            var notificationToStudent = _this3.NotificationService.createNewNotification(notificationType, _this3.nodeId, _this3.componentId, fromWorkgroupId, toWorkgroupId, notificationMessageToStudent, notificationData, notificationGroupId);
+                                            _this3.NotificationService.saveNotificationToServer(notificationToStudent).then(function (savedNotification) {
+                                                // show local notification
+                                                _this3.$rootScope.$broadcast('newNotification', savedNotification);
+                                            });
+                                            // also send notification to teacher
+                                            toWorkgroupId = _this3.ConfigService.getTeacherWorkgroupId();
+                                            var notificationToTeacher = _this3.NotificationService.createNewNotification(notificationType, _this3.nodeId, _this3.componentId, fromWorkgroupId, toWorkgroupId, notificationMessageToTeacher, notificationData, notificationGroupId);
+                                            _this3.NotificationService.saveNotificationToServer(notificationToTeacher).then(function (savedNotification) {
+                                                // send notification in real-time so teacher sees this right away
+                                                var messageType = "CRaterResultNotification";
+                                                _this3.StudentWebSocketService.sendStudentToTeacherMessage(messageType, savedNotification);
+                                            });
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -1225,7 +1269,7 @@ var OpenResponseController = function () {
              * Listen for the 'exit' event which is fired when the student exits
              * the VLE. This will perform saving before the VLE exits.
              */
-            exitListener = this.$scope.$on('exit', angular.bind(this, function (event, args) {}));
+            this.exitListener = this.$scope.$on('exit', function (event, args) {});
         }
     }]);
 
@@ -1234,7 +1278,7 @@ var OpenResponseController = function () {
 
 ;
 
-OpenResponseController.$inject = ['$injector', '$mdDialog', '$q', '$rootScope', '$scope', 'AnnotationService', 'ConfigService', 'CRaterService', 'NodeService', 'OpenResponseService', 'ProjectService', 'StudentAssetService', 'StudentDataService'];
+OpenResponseController.$inject = ['$injector', '$mdDialog', '$q', '$rootScope', '$scope', 'AnnotationService', 'ConfigService', 'CRaterService', 'NodeService', 'NotificationService', 'OpenResponseService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'StudentWebSocketService', 'UtilService'];
 
 exports.default = OpenResponseController;
 //# sourceMappingURL=openResponseController.js.map

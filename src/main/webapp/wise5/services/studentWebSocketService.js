@@ -33,25 +33,25 @@ var StudentWebSocketService = function () {
             if (this.ConfigService.isPreview()) {
                 // We are previewing the project. Don't initialize websocket.
             } else {
-                    // We are in a run. Get the parameters for initializing the websocket connection
-                    var runId = this.ConfigService.getRunId();
-                    var periodId = this.ConfigService.getPeriodId();
-                    var workgroupId = this.ConfigService.getWorkgroupId();
-                    var webSocketURL = this.ConfigService.getWebSocketURL();
-                    webSocketURL += "?runId=" + runId + "&periodId=" + periodId + "&workgroupId=" + workgroupId;
+                // We are in a run. Get the parameters for initializing the websocket connection
+                var runId = this.ConfigService.getRunId();
+                var periodId = this.ConfigService.getPeriodId();
+                var workgroupId = this.ConfigService.getWorkgroupId();
+                var webSocketURL = this.ConfigService.getWebSocketURL();
+                webSocketURL += "?runId=" + runId + "&periodId=" + periodId + "&workgroupId=" + workgroupId;
 
-                    try {
-                        // start the websocket connection
-                        this.dataStream = this.$websocket(webSocketURL);
+                try {
+                    // start the websocket connection
+                    this.dataStream = this.$websocket(webSocketURL);
 
-                        // this is the function that handles messages we receive from web sockets
-                        this.dataStream.onMessage(function (message) {
-                            _this.handleMessage(message);
-                        });
-                    } catch (e) {
-                        console.log(e);
-                    }
+                    // this is the function that handles messages we receive from web sockets
+                    this.dataStream.onMessage(function (message) {
+                        _this.handleMessage(message);
+                    });
+                } catch (e) {
+                    console.log(e);
                 }
+            }
         }
     }, {
         key: "handleWebSocketMessageReceived",
@@ -130,6 +130,33 @@ var StudentWebSocketService = function () {
                 messageJSON.previousComponentState = latestComponentState;
                 messageJSON.nodeStatuses = nodeStatuses;
                 messageJSON.projectCompletion = projectCompletion;
+
+                // send the websocket message
+                this.dataStream.send(messageJSON);
+            }
+        }
+    }, {
+        key: "sendStudentToTeacherMessage",
+
+
+        /**
+         * Send a message to teacher
+         * @param data the data to send to the teacher
+         */
+        value: function sendStudentToTeacherMessage(messageType, data) {
+
+            if (!this.ConfigService.isPreview()) {
+                // we are in a run
+
+                // get the current node id
+                var currentNodeId = this.StudentDataService.getCurrentNodeId();
+
+                // make the websocket message
+                var messageJSON = {};
+                messageJSON.messageType = messageType;
+                messageJSON.messageParticipants = 'studentToTeachers';
+                messageJSON.currentNodeId = currentNodeId;
+                messageJSON.data = data;
 
                 // send the websocket message
                 this.dataStream.send(messageJSON);

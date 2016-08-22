@@ -60,6 +60,7 @@ import SessionService from '../services/sessionService';
 import StudentAssetService from '../services/studentAssetService';
 import StudentDataService from '../services/studentDataService';
 import StudentStatusService from '../services/studentStatusService';
+import StudentWebSocketService from '../services/studentWebSocketService';
 import TableController from '../components/table/tableController';
 import TableService from '../components/table/tableService';
 import TeacherDataService from '../services/teacherDataService';
@@ -106,6 +107,7 @@ let mainModule = angular.module('authoring', [
     .service(StudentAssetService.name, StudentAssetService)
     .service(StudentDataService.name, StudentDataService)
     .service(StudentStatusService.name, StudentStatusService)
+    .service(StudentWebSocketService.name, StudentWebSocketService)
     .service(TableService.name, TableService)
     .service(TeacherDataService.name, TeacherDataService)
     .service(UtilService.name, UtilService)

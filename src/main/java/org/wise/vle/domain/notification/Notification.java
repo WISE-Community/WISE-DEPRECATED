@@ -68,6 +68,9 @@ public class Notification extends PersistableDomain {
     @JoinColumn(name = "fromWorkgroupId")
     private WISEWorkgroup fromWorkgroup;  // who this notification is from
 
+    @Column(name = "groupId", length = 30)
+    private String groupId;  // id of the group of notifications this notification belongs to, if any.
+
     @Column(name = "nodeId", length = 30)
     private String nodeId;  // which node created this notification, if any
 
@@ -139,6 +142,14 @@ public class Notification extends PersistableDomain {
 
     public void setFromWorkgroup(WISEWorkgroup fromWorkgroup) {
         this.fromWorkgroup = fromWorkgroup;
+    }
+
+    public String getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
     }
 
     public String getNodeId() {
@@ -245,6 +256,10 @@ public class Notification extends PersistableDomain {
             if (this.fromWorkgroup != null) {
                 Long fromWorkgroupId = this.fromWorkgroup.getId();
                 notificationJSONObject.put("fromWorkgroupId", fromWorkgroupId);
+            }
+
+            if (this.groupId != null) {
+                notificationJSONObject.put("groupId", this.groupId);
             }
 
             if (this.nodeId != null) {

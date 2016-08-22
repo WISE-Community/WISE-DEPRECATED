@@ -39,6 +39,7 @@ var ProjectController = function () {
             if (currentAuthors.length == 0) {
                 _this.currentAuthorsMessage = "";
             } else {
+                // TODO: internationalize me
                 _this.currentAuthorsMessage = currentAuthors.join(",") + " is currently editing this project.";
                 alert(currentAuthors.join(",") + " is currently editing this project. Please be careful not to overwrite each other's work!");
             }

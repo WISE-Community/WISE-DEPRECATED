@@ -369,15 +369,16 @@ var VLEController = function () {
 
             if (this.getNewNotifications().length > 1) {
                 this.$translate(["dismissNotificationsTitle", "dismissNotificationsMessage", "yes", "no"]).then(function (translations) {
+
                     var confirm = _this2.$mdDialog.confirm().parent(angular.element($('._md-open-menu-container._md-active'))) // TODO: hack for now (showing md-dialog on top of md-menu)
                     .ariaLabel(translations.dismissNotificationsTitle).textContent(translations.dismissNotificationsMessage).targetEvent(ev).ok(translations.yes).cancel(translations.no);
 
                     _this2.$mdDialog.show(confirm).then(function () {
-                        _this2.dismissAllNotifications();
+                        _this2.dismissAllNotifications(ev);
                     });
                 });
             } else {
-                this.dismissAllNotifications();
+                this.dismissAllNotifications(ev);
             }
         }
 
@@ -387,12 +388,15 @@ var VLEController = function () {
 
     }, {
         key: 'dismissAllNotifications',
-        value: function dismissAllNotifications() {
+        value: function dismissAllNotifications(ev) {
             var _this3 = this;
 
             var newNotifications = this.getNewNotifications();
             newNotifications.map(function (newNotification) {
-                _this3.dismissNotification(newNotification);
+                // only dismiss notifications that don't require a dismiss code
+                if (newNotification.data == null || newNotification.data.dismissCode == null) {
+                    _this3.dismissNotification(ev, newNotification);
+                }
             });
         }
 
@@ -403,9 +407,47 @@ var VLEController = function () {
 
     }, {
         key: 'dismissNotification',
-        value: function dismissNotification(notification) {
-            notification.timeDismissed = Date.parse(new Date());
-            this.NotificationService.saveNotificationToServer(notification); // also save to server
+        value: function dismissNotification(event, notification) {
+            var _this4 = this;
+
+            if (notification.data == null || notification.data.dismissCode == null) {
+                // no dismiss code needed, so we can dismiss it
+                this.NotificationService.dismissNotification(notification);
+            } else {
+                // ask user to input dimiss code before dimissing it.
+                this.$translate(["dismissNotificationDismissCodeTitle", "dismissNotificationDismissCodeMessage", "ok", "cancel"]).then(function (translations) {
+                    var dismissCodePrompt = {
+                        parent: angular.element($('._md-open-menu-container._md-active')),
+                        targetEvent: event,
+                        template: '<md-dialog>' + '  <md-dialog-content>' + '     <h5>Teacher Dismiss Code Required</h5>' + '     Dismiss Code: <input ng-model="dismissCodeInput" type="password"/>' + '     <div style="color:red">{{message}}</div>' + '  </md-dialog-content>' + '  <md-dialog-actions>' + '    <md-button ng-click="checkDismissCode()" class="md-primary">' + '      Dismiss' + '    </md-button>' + '    <md-button ng-click="closeDialog()" class="md-primary">' + '      Cancel' + '    </md-button>' + '  </md-dialog-actions>' + '</md-dialog>',
+                        locals: {
+                            notification: notification
+                        },
+                        controller: DismissCodeDialogController
+                    };
+                    DismissCodeDialogController.$inject = ['$scope', '$mdDialog', '$translate', 'NotificationService', 'notification'];
+
+                    function DismissCodeDialogController($scope, $mdDialog, $translate, NotificationService, notification) {
+                        $scope.dismissCodeInput = "";
+                        $scope.message = "";
+                        $scope.checkDismissCode = function () {
+                            if ($scope.dismissCodeInput == notification.data.dismissCode) {
+                                NotificationService.dismissNotification(notification);
+                                $mdDialog.hide();
+                            } else {
+                                $translate(["dismissNotificationInvalidDismissCode"]).then(function (translations) {
+                                    $scope.message = translations.dismissNotificationInvalidDismissCode;
+                                });
+                            }
+                        };
+                        $scope.closeDialog = function () {
+                            $mdDialog.hide();
+                        };
+                    }
+
+                    _this4.$mdDialog.show(dismissCodePrompt);
+                });
+            }
         }
 
         /**
@@ -415,8 +457,11 @@ var VLEController = function () {
 
     }, {
         key: 'dismissNotificationAndVisitNode',
-        value: function dismissNotificationAndVisitNode(notification) {
-            this.dismissNotification(notification);
+        value: function dismissNotificationAndVisitNode(event, notification) {
+            if (notification.data == null || notification.data.dismissCode == null) {
+                // only dismiss notifications that don't require a dismiss code, but still allow them to move to the node
+                this.dismissNotification(event, notification);
+            }
 
             var goToNodeId = notification.nodeId;
             if (goToNodeId != null) {

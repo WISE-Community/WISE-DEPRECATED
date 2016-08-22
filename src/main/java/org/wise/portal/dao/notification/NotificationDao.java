@@ -16,5 +16,5 @@ public interface NotificationDao<T extends Notification> extends SimpleDao<T> {
 
     List<Notification> getNotificationListByParams(
             Integer id, Run run, Group period, WISEWorkgroup toWorkgroup,
-            String nodeId, String componentId);
+            String groupId, String nodeId, String componentId);
 }

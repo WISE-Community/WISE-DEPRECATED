@@ -890,6 +890,7 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
     			}
     		} else {
     			//message string was null or empty string so we will output the session information to System.out
+				// TODO: is this necessary, or can we just pass in a JSONObject to this method?
     			outputSessionInformation(session, messageString);
     		}
 		} catch (JSONException e) {

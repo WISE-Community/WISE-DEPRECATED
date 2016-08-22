@@ -325,6 +325,30 @@ var CRaterService = function () {
 
             return feedbackText;
         }
+
+        /**
+         * Get the notification for the given score, if exists.
+         * @param component the component content
+         * @param score the score we want notification for
+         * @returns the notification for the given score
+         */
+
+    }, {
+        key: 'getNotificationsByScore',
+        value: function getNotificationsByScore(component, score) {
+
+            var notifications = null;
+
+            // get the scoring rule for the given score
+            var scoringRule = this.getCRaterScoringRuleByScore(component, score);
+
+            if (scoringRule != null) {
+                // get the feedback text
+                notifications = scoringRule.notifications;
+            }
+
+            return notifications;
+        }
     }]);
 
     return CRaterService;

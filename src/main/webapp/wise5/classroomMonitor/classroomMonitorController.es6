@@ -9,6 +9,7 @@ class ClassroomMonitorController {
                 $stateParams,
                 $translate,
                 ConfigService,
+                NotificationService,
                 ProjectService,
                 SessionService,
                 TeacherDataService,
@@ -19,6 +20,7 @@ class ClassroomMonitorController {
         this.$stateParams = $stateParams;
         this.$translate = $translate;
         this.ConfigService = ConfigService;
+        this.NotificationService = NotificationService;
         this.ProjectService = ProjectService;
         this.SessionService = SessionService;
         this.TeacherDataService = TeacherDataService;
@@ -51,6 +53,19 @@ class ClassroomMonitorController {
 
         // update the text of the pause/unpause button
         this.updatePauseButton();
+
+        this.themePath = this.ProjectService.getThemePath();
+
+        this.notifications = this.NotificationService.notifications;
+        // watch for changes in notifications
+        this.$scope.$watch(
+            () => {
+                return this.NotificationService.notifications.length;
+            },
+            (newValue, oldValue) => {
+                this.notifications = this.NotificationService.notifications;
+            }
+        );
     };
 
     hello() {
@@ -363,7 +378,66 @@ class ClassroomMonitorController {
             this.pauseScreenButtonText = unPauseStudentScreens;
         });
     }
-    
+
+    /**
+     * Returns true iff there are new notifications
+     */
+    hasNewNotifications() {
+        return this.getNewNotifications().length > 0;
+    }
+
+    /**
+     * Returns all notifications that have not been dismissed yet
+     */
+    getNewNotifications() {
+        return this.notifications.filter(
+            function(notification) {
+                return notification.timeDismissed == null;
+            }
+        );
+    }
+
+    /**
+     * Show confirmation dialog before dismissing all notifications
+     */
+    confirmDismissAllNotifications(ev) {
+        if (this.getNewNotifications().length > 1) {
+            this.$translate(["dismissNotificationsTitle", "dismissNotificationsMessage", "yes", "no"]).then((translations) => {
+                let confirm = this.$mdDialog.confirm()
+                    .parent(angular.element($('._md-open-menu-container._md-active')))// TODO: hack for now (showing md-dialog on top of md-menu)
+                    .ariaLabel(translations.dismissNotificationsTitle)
+                    .textContent(translations.dismissNotificationsMessage)
+                    .targetEvent(ev)
+                    .ok(translations.yes)
+                    .cancel(translations.no);
+
+                this.$mdDialog.show(confirm).then(() => {
+                    this.dismissAllNotifications();
+                });
+            });
+        } else {
+            this.dismissAllNotifications();
+        }
+    }
+
+    /**
+     * Dismiss all new notifications
+     */
+    dismissAllNotifications() {
+        let newNotifications = this.getNewNotifications();
+        newNotifications.map((newNotification) => {
+            this.dismissNotification(newNotification);
+        });
+    }
+
+    /**
+     * Dismiss the specified notification
+     * @param notification
+     */
+    dismissNotification(notification) {
+        this.NotificationService.dismissNotification(notification);
+    }
+
     /**
      * The user has moved the mouse so we will notify the Session Service
      * so that it can refresh the session
@@ -385,6 +459,7 @@ ClassroomMonitorController.$inject = [
     '$stateParams',
     '$translate',
     'ConfigService',
+    'NotificationService',
     'ProjectService',
     'SessionService',
     'TeacherDataService',
