@@ -280,6 +280,7 @@ public class TeacherDataController {
         Integer periodId = annotation.getPeriod().getId().intValue();
         Integer fromWorkgroupId = annotation.getFromWorkgroup().getId().intValue();
         Integer toWorkgroupId = annotation.getToWorkgroup().getId().intValue();
+        String groupId = null;
         String nodeId = annotation.getNodeId();
         String componentId = annotation.getComponentId();
         String componentType = null;
@@ -304,6 +305,7 @@ public class TeacherDataController {
                 periodId,
                 fromWorkgroupId,
                 toWorkgroupId,
+                groupId,
                 nodeId,
                 componentId,
                 componentType,

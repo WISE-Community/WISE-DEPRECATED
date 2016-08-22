@@ -34,7 +34,7 @@ public class HibernateNotificationDao
     @Override
     public List<Notification> getNotificationListByParams(
             Integer id, Run run, Group period, WISEWorkgroup toWorkgroup,
-            String nodeId, String componentId) {
+            String groupId, String nodeId, String componentId) {
 
         Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
         Criteria sessionCriteria = session.createCriteria(Notification.class);
@@ -49,6 +49,9 @@ public class HibernateNotificationDao
         }
         if (toWorkgroup != null) {
             sessionCriteria.add(Restrictions.eq("toWorkgroup", toWorkgroup));
+        }
+        if (groupId != null) {
+            sessionCriteria.add(Restrictions.eq("groupId", groupId));
         }
         if (nodeId != null) {
             sessionCriteria.add(Restrictions.eq("nodeId", nodeId));

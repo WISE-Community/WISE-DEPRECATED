@@ -267,6 +267,9 @@ var mainModule = _angular2.default.module('classroomMonitor', ['angularMoment', 
             studentStatuses: function studentStatuses(StudentStatusService, config) {
                 return StudentStatusService.retrieveStudentStatuses();
             },
+            notifications: function notifications(NotificationService, studentStatuses, config, project) {
+                return NotificationService.retrieveNotifications();
+            },
             webSocket: function webSocket(TeacherWebSocketService, config) {
                 return TeacherWebSocketService.initialize();
             },

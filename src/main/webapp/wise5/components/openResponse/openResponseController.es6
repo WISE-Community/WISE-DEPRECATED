@@ -11,10 +11,13 @@ class OpenResponseController {
                 ConfigService,
                 CRaterService,
                 NodeService,
+                NotificationService,
                 OpenResponseService,
                 ProjectService,
                 StudentAssetService,
-                StudentDataService) {
+                StudentDataService,
+                StudentWebSocketService,
+                UtilService) {
 
         this.$injector = $injector;
         this.$mdDialog = $mdDialog;
@@ -25,10 +28,13 @@ class OpenResponseController {
         this.ConfigService = ConfigService;
         this.CRaterService = CRaterService;
         this.NodeService = NodeService;
+        this.NotificationService = NotificationService;
         this.OpenResponseService = OpenResponseService;
         this.ProjectService = ProjectService;
         this.StudentAssetService = StudentAssetService;
         this.StudentDataService = StudentDataService;
+        this.StudentWebSocketService = StudentWebSocketService;
+        this.UtilService = UtilService;
         this.idToOrder = this.ProjectService.idToOrder;
 
         // the node id of the current node
@@ -628,6 +634,49 @@ class OpenResponseController {
                                 var autoCommentAnnotation = this.createAutoCommentAnnotation(autoCommentAnnotationData);
                                 componentState.annotations.push(autoCommentAnnotation);
                             }
+
+                            // get the notification
+                            var notificationsForScore = this.CRaterService.getNotificationsByScore(this.componentContent, score);
+
+                            if (notificationsForScore != null) {
+                                for (var n = 0; n < notificationsForScore.length; n++) {
+                                    var notificationForScore = notificationsForScore[n];
+                                    let notificationType = notificationForScore.notificationType;
+                                    if (notificationForScore.isNotifyTeacher && notificationForScore.isNotifyStudent) {
+                                        // notify both teacher and student at the same time
+                                        let fromWorkgroupId = this.ConfigService.getWorkgroupId();
+                                        let toWorkgroupId = this.ConfigService.getWorkgroupId();
+                                        let notificationMessageToStudent = notificationForScore.notificationMessageToStudent;
+                                        let notificationMessageToTeacher = notificationForScore.notificationMessageToTeacher;
+                                        // replace variables like {{score}} and {{dismissCode}} with actual values
+                                        notificationMessageToStudent = notificationMessageToStudent.replace("{{score}}", score);
+                                        notificationMessageToStudent = notificationMessageToStudent.replace("{{dismissCode}}", notificationForScore.dismissCode);
+                                        notificationMessageToTeacher = notificationMessageToTeacher.replace("{{score}}", score);
+                                        notificationMessageToTeacher = notificationMessageToTeacher.replace("{{dismissCode}}", notificationForScore.dismissCode);
+                                        let notificationGroupId = this.ConfigService.getRunId() + "_" + this.UtilService.generateKey(10);  // links student and teacher notifications together
+                                        let notificationData = {};
+                                        if (notificationForScore.isAmbient && notificationForScore.dismissCode != null) {
+                                            notificationData.isAmbient = true;
+                                            notificationData.dismissCode = notificationForScore.dismissCode;
+                                        }
+                                        let notificationToStudent = this.NotificationService.createNewNotification(
+                                            notificationType, this.nodeId, this.componentId, fromWorkgroupId, toWorkgroupId, notificationMessageToStudent, notificationData, notificationGroupId);
+                                        this.NotificationService.saveNotificationToServer(notificationToStudent).then((savedNotification) => {
+                                            // show local notification
+                                            this.$rootScope.$broadcast('newNotification', savedNotification);
+                                        });
+                                        // also send notification to teacher
+                                        toWorkgroupId = this.ConfigService.getTeacherWorkgroupId();
+                                        let notificationToTeacher = this.NotificationService.createNewNotification(
+                                            notificationType, this.nodeId, this.componentId, fromWorkgroupId, toWorkgroupId, notificationMessageToTeacher, notificationData, notificationGroupId);
+                                        this.NotificationService.saveNotificationToServer(notificationToTeacher).then((savedNotification) => {
+                                            // send notification in real-time so teacher sees this right away
+                                            let messageType = "CRaterResultNotification";
+                                            this.StudentWebSocketService.sendStudentToTeacherMessage(messageType, savedNotification);
+                                        });
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -1116,9 +1165,9 @@ class OpenResponseController {
          * Listen for the 'exit' event which is fired when the student exits
          * the VLE. This will perform saving before the VLE exits.
          */
-        exitListener = this.$scope.$on('exit', angular.bind(this, function(event, args) {
+        this.exitListener = this.$scope.$on('exit', (event, args) => {
 
-        }));
+        });
     };
 };
 
@@ -1132,10 +1181,13 @@ OpenResponseController.$inject = [
     'ConfigService',
     'CRaterService',
     'NodeService',
+    'NotificationService',
     'OpenResponseService',
     'ProjectService',
     'StudentAssetService',
-    'StudentDataService'
+    'StudentDataService',
+    'StudentWebSocketService',
+    'UtilService'
 ];
 
 export default OpenResponseController;

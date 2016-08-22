@@ -361,7 +361,7 @@ var DiscussionController = function () {
                     if (componentStateIdReplyingTo != null) {
                         // populate fields of the notification
                         var fromWorkgroupId = componentState.workgroupId;
-                        var notificationType = "component";
+                        var notificationType = "DiscussionReply";
                         var nodeId = componentState.nodeId;
                         var componentId = componentState.componentId;
                         // add the user names to the component state so we can display next to the response

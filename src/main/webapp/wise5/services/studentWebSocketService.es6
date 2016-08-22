@@ -118,6 +118,30 @@ class StudentWebSocketService {
     };
 
     /**
+     * Send a message to teacher
+     * @param data the data to send to the teacher
+     */
+    sendStudentToTeacherMessage(messageType, data) {
+
+        if (!this.ConfigService.isPreview()) {
+            // we are in a run
+
+            // get the current node id
+            var currentNodeId = this.StudentDataService.getCurrentNodeId();
+
+            // make the websocket message
+            var messageJSON = {};
+            messageJSON.messageType = messageType;
+            messageJSON.messageParticipants = 'studentToTeachers';
+            messageJSON.currentNodeId = currentNodeId;
+            messageJSON.data = data;
+
+            // send the websocket message
+            this.dataStream.send(messageJSON);
+        }
+    };
+
+    /**
      * Send a message to classmates in the period
      * @param data the data to send to the classmates
      */

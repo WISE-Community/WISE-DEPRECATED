@@ -196,9 +196,9 @@ var SessionService = function () {
             if (this.checkMouseEvent()) {
                 // a mouse event has occurred recently so we don't need to show the warning
             } else {
-                    // a mouse event has not occurred recently so we will show the warning
-                    this.$rootScope.$broadcast('showSessionWarning');
-                }
+                // a mouse event has not occurred recently so we will show the warning
+                this.$rootScope.$broadcast('showSessionWarning');
+            }
         }
     }, {
         key: 'renewSession',
@@ -315,10 +315,10 @@ var SessionService = function () {
             if (this.checkMouseEvent()) {
                 // a mouse event has occurred so we will not log out the user
             } else {
-                    // a mouse event has not occurred recently so we will log out the user
-                    this.clearTimers();
-                    this.$rootScope.$broadcast('logOut');
-                }
+                // a mouse event has not occurred recently so we will log out the user
+                this.clearTimers();
+                this.$rootScope.$broadcast('logOut');
+            }
         }
     }, {
         key: 'attemptExit',
@@ -341,54 +341,54 @@ var SessionService = function () {
             if (exitListenerCount != null && exitListenerCount > 0) {
                 // don't log out yet because there are still listeners
             } else {
-                    // there are no more listeners so we will exit
-                    var mainHomePageURL = this.ConfigService.getMainHomePageURL();
+                // there are no more listeners so we will exit
+                var mainHomePageURL = this.ConfigService.getMainHomePageURL();
 
-                    // save sessionEnded event
-                    var nodeId = null;
-                    var componentId = null;
-                    var componentType = null;
-                    var category = "Navigation";
-                    var event = "sessionEnded";
-                    var eventData = {};
-                    //this.StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
+                // save sessionEnded event
+                var nodeId = null;
+                var componentId = null;
+                var componentType = null;
+                var category = "Navigation";
+                var event = "sessionEnded";
+                var eventData = {};
+                //this.StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
 
-                    if (this.performLogOut) {
-                        // log out the user and bring them to the home page
+                if (this.performLogOut) {
+                    // log out the user and bring them to the home page
 
-                        // get the url that will log out the user
-                        var sessionLogOutURL = this.ConfigService.getSessionLogOutURL();
+                    // get the url that will log out the user
+                    var sessionLogOutURL = this.ConfigService.getSessionLogOutURL();
 
-                        // take user to log out url
-                        window.location.href = sessionLogOutURL;
+                    // take user to log out url
+                    window.location.href = sessionLogOutURL;
+                } else {
+                    /*
+                     * bring the user to the student or teacher home page but
+                     * do not log them out
+                     */
+
+                    // Get the wiseBaseURL e.g. /wise
+                    var wiseBaseURL = this.ConfigService.getWISEBaseURL();
+
+                    var homePageURL = '';
+
+                    // get the user type
+                    var userType = this.ConfigService.getConfigParam('userType');
+
+                    if (userType === 'student') {
+                        // send the user to the student home page
+                        homePageURL = wiseBaseURL + '/student';
+                    } else if (userType === 'teacher') {
+                        // send the user to the teacher home page
+                        homePageURL = wiseBaseURL + '/teacher';
                     } else {
-                        /*
-                         * bring the user to the student or teacher home page but
-                         * do not log them out
-                         */
-
-                        // Get the wiseBaseURL e.g. /wise
-                        var wiseBaseURL = this.ConfigService.getWISEBaseURL();
-
-                        var homePageURL = '';
-
-                        // get the user type
-                        var userType = this.ConfigService.getConfigParam('userType');
-
-                        if (userType === 'student') {
-                            // send the user to the student home page
-                            homePageURL = wiseBaseURL + '/student';
-                        } else if (userType === 'teacher') {
-                            // send the user to the teacher home page
-                            homePageURL = wiseBaseURL + '/teacher';
-                        } else {
-                            // send the user to the main home page
-                            homePageURL = mainHomePageURL;
-                        }
-
-                        window.location.href = homePageURL;
+                        // send the user to the main home page
+                        homePageURL = mainHomePageURL;
                     }
+
+                    window.location.href = homePageURL;
                 }
+            }
         }
     }]);
 

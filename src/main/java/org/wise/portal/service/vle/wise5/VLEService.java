@@ -150,11 +150,18 @@ public interface VLEService {
     Notification getNotificationById(Integer notificationId) throws ObjectNotFoundException;
 
     /**
+     * @param groupId id of the group
+     * @return the Notifications that are in the specified group
+     * @throws ObjectNotFoundException
+     */
+    List<Notification> getNotificationsByGroupId(String groupId) throws ObjectNotFoundException;
+
+    /**
      * @return NotebookItems from data store that match specified params
      */
     List<Notification> getNotifications(
             Integer id, Integer runId, Integer periodId, Integer toWorkgroupId,
-            String nodeId, String componentId);
+            String groupId, String nodeId, String componentId);
 
     /**
      * Save Notification in the data store
@@ -163,6 +170,7 @@ public interface VLEService {
      * @param periodId
      * @param fromWorkgroupId
      * @param toWorkgroupId
+     * @param groupId
      * @param nodeId
      * @param componentId
      * @param componentType
@@ -176,7 +184,15 @@ public interface VLEService {
     Notification saveNotification(
             Integer id, Integer runId, Integer periodId,
             Integer fromWorkgroupId, Integer toWorkgroupId,
-            String nodeId, String componentId, String componentType,
+            String groupId, String nodeId, String componentId, String componentType,
             String type, String message, String data,
             String timeGenerated, String timeDismissed);
+
+    /**
+     * Dismiss the given notification
+     * @param notification
+     * @param timeDismissed
+     * @return Notification dismissed notification
+     */
+    Notification dismissNotification(Notification notification, String timeDismissed);
 }
