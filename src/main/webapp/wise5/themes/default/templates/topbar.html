@@ -1,0 +1,30 @@
+<md-toolbar class="l-header" ng-class="{'md-whiteframe-z1': themeCtrl.layoutState === 'nav'}">
+    <div class="md-toolbar-tools">
+        <a ng-click="vleController.loadRoot()" class="md-button logo-link">
+            <img ng-src="{{vleController.themePath}}/images/WISE-logo-1b8ca8.svg" alt="WISE Logo" class="logo" />
+        </a>
+        <h3>
+            <span>{{vleController.projectName}}</span>
+        </h3>
+        <span flex></span>
+        <md-menu md-position-mode="target-right target" md-offset="40 26">
+            <md-button aria-label="View notifications" class="md-icon-button notification-btn" ng-click="$mdOpenMenu()">
+                <span ng-show="vleController.hasNewNotifications()" class="notification-count">{{vleController.getNewNotifications().length}}</span>
+                <md-icon md-menu-origin> notifications </md-icon>
+            </md-button>
+            <md-menu-content width="5" class="account-menu">
+                <ng-include src="vleController.themePath + '/templates/notificationMenu.html'"></ng-include>
+            </md-menu-content>
+        </md-menu>
+        <md-progress-circular class="menu-progress" md-mode="determinate" md-diameter="26" value="{{ themeCtrl.rootNodeStatus.progress.completionPct }}"></md-progress-circular>
+        <div class="menu-progress-bg"></div>
+        <md-menu id='accountMenu' md-position-mode="target-right target" md-offset="8 26">
+            <md-button aria-label="Open user menu" class="md-icon-button" ng-click="$mdOpenMenu()">
+                <md-icon md-menu-origin> account_circle </md-icon>
+            </md-button>
+            <md-menu-content width="5" class="account-menu">
+                <ng-include src="vleController.themePath + '/templates/accountMenu.html'"></ng-include>
+            </md-menu-content>
+        </md-menu>
+    </div>
+</md-toolbar>
