@@ -95,12 +95,17 @@
                 <button ng-click='conceptMapController.saveStarterConceptMap()'>Save Starter Concept Map</button>
                 <button ng-click='conceptMapController.deleteStarterConceptMap()'>Delete Starter Concept Map</button>
                 <br/>
+                <textarea ng-model='conceptMapController.authoringComponentContent.customRuleEvaluator'
+                          ng-change='conceptMapController.authoringViewComponentChanged()'
+                          rows='10'
+                          cols='200'></textarea>
+                <br/>
                 <br/>
                 <textarea ng-model='conceptMapController.authoringComponentContentJSONString'
                           ng-change='conceptMapController.advancedAuthoringViewComponentChanged()'
                           ng-model-options='{ debounce: 1000 }'
                           rows='10'
-                          cols='100'></textarea>
+                          cols='200'></textarea>
             </div>
             <md-input-container class="input-container md-block input-container--open-response input-container--component md-no-float">
                 <label class="input-label md-no-float" ng-disabled="conceptMapController.isDisabled"
@@ -117,6 +122,7 @@
                          class="input--textarea input--textarea--disabled">
                     </div>
                     <button ng-click="conceptMapController.clearConceptMap()">Clear</button>
+                    <button ng-click="conceptMapController.checkAnswer()">Check Answer</button>
                     <div id="conceptMapContainer" style="display: flex">
                         <div id="selectNodeBar" style="flex: 10; border: 1px solid black">
                             <div ng-repeat="availableNode in conceptMapController.availableNodes" 

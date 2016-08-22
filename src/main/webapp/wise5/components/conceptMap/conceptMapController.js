@@ -134,7 +134,12 @@ this.moveNodesToFront(); /*
      * initialized. The rectangles need to be rendered first and then the
      * labels need to be set in order for the rectangles to be resized properly.
      * This is why this function is called in a $timeout.
-     */},{key:'refreshLinkLabels',value:function refreshLinkLabels(){if(this.links!=null){ // loop throgh all the links
+     */},{key:'refreshLinkLabels',value:function refreshLinkLabels(){if(this.nodes!=null){ // loop through all the nodes
+for(var n=0;n<this.nodes.length;n++){var node=this.nodes[n];if(node!=null){ // get the label from the node
+var label=node.getLabel(); /*
+                     * set the label back into the node so that the rectangle
+                     * around the text label is resized to the text
+                     */node.setLabel(label);}}}if(this.links!=null){ // loop throgh all the links
 for(var l=0;l<this.links.length;l++){var link=this.links[l];if(link!=null){ // get the label from the link
 var label=link.getLabel(); /*
                      * set the label back into the link so that the rectangle
@@ -999,5 +1004,37 @@ this.clearConceptMap(); /*
      * Remove all the links and nodes
      */},{key:'clearConceptMap',value:function clearConceptMap(){ // remove all the links from the svg and the array of links
 this.removeAllLinks(); // remove all the nodes from the svg and the array of nodes
-this.removeAllNodes();}}]);return ConceptMapController;}();;ConceptMapController.$inject=['$injector','$mdDialog','$q','$rootScope','$scope','$timeout','AnnotationService','ConceptMapService','ConfigService','CRaterService','NodeService','ProjectService','StudentAssetService','StudentDataService'];exports.default=ConceptMapController;
+this.removeAllNodes();} /**
+     * Check the student concept map against the custom rule evaluator
+     */},{key:'checkAnswer',value:function checkAnswer(){ // get the custom rule evaluator code that was authored
+var customRuleEvaluator=this.componentContent.customRuleEvaluator; // get the component content
+var componentContent=this.componentContent; // get the student concept map
+var conceptMapData=this.getConceptMapData();var thisConceptMapService=this.ConceptMapService; // the result will be stored in this variable
+var thisResult={}; /*
+         * create the any function that can be called in the custom rule 
+         * evaluator code. the arguments to the any function are rule names.
+         * for example if we are looking for any of the links below 
+         * Sun (Infrared Radiation) Space
+         * Sun (Heat) Space
+         * Sun (Solar Radiation) Space
+         * we will call the any function like this
+         * any("Sun (Infrared Radiation) Space", "Sun (Heat) Space", "Sun (Solar Radiation) Space")
+         * these dynamic arguments will be placed in the arguments variable
+         */var any=function any(){return thisConceptMapService.any(componentContent,conceptMapData,arguments);}; /*
+         * create the all function that can be called in the custom rule 
+         * evaluator code. the arguments to the all function are rule names.
+         * for example if we are looking for all of the links below
+         * Sun (Infrared Radiation) Space
+         * Sun (Heat) Space
+         * Sun (Solar Radiation) Space
+         * we will call the any function like this
+         * all("Sun (Infrared Radiation) Space", "Sun (Heat) Space", "Sun (Solar Radiation) Space")
+         * these dynamic arguments will be placed in the arguments variable
+         */var all=function all(){return thisConceptMapService.all(componentContent,conceptMapData,arguments);}; /*
+         * create the setResult function that can be called in the custom rule 
+         * evaluator code
+         */var setResult=function setResult(result){thisResult=result;}; // run the custom rule evaluator
+eval(customRuleEvaluator); //console.log("thisResult.score=" + thisResult.score);
+//console.log("thisResult.feedback=" + thisResult.feedback);
+var resultString="";if(thisResult.score!=null){resultString+="Score: "+thisResult.score+".";}if(thisResult.feedback!=null){resultString+="Feedback: "+thisResult.feedback+".";}alert(resultString);}}]);return ConceptMapController;}();;ConceptMapController.$inject=['$injector','$mdDialog','$q','$rootScope','$scope','$timeout','AnnotationService','ConceptMapService','ConfigService','CRaterService','NodeService','ProjectService','StudentAssetService','StudentDataService'];exports.default=ConceptMapController;
 //# sourceMappingURL=conceptMapController.js.map

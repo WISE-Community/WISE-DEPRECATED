@@ -334,6 +334,304 @@ class ConceptMapService extends NodeService {
     B2(t) { return 3*t*t*(1-t); }
     B3(t) { return 3*t*(1-t)*(1-t); }
     B4(t) { return (1-t)*(1-t)*(1-t); }
+    
+    /**
+     * Evaluate a rule name
+     * @param componentContent the component content
+     * @param conceptMapData the student concept map data
+     * @param ruleName the rule name
+     * @returns whether the rule was satisfied
+     */
+    evaluateRuleByRuleName(componentContent, conceptMapData, ruleName) {
+        
+        // get the rule
+        var rule = this.getRuleByRuleName(componentContent, ruleName);
+        
+        // evaluate the rule
+        var result = this.evaluateRule(conceptMapData, rule);
+        
+        return result;
+    }
+    
+    /**
+     * Evaluate a rule
+     * @param conceptMapData the concept map student data
+     * @param rule the rule object
+     * @returns whether the rule was satisfied
+     */
+    evaluateRule(conceptMapData, rule) {
+        
+        var result = false;
+        
+        if (rule != null) {
+            
+            if (rule.type == 'node') {
+                // this is a node rule
+                
+                // get the node we are looking for
+                var nodeLabel = rule.nodeLabel;
+                
+                // get all the nodes with the given label
+                var nodes = this.getNodesByLabel(conceptMapData, nodeLabel);
+                
+                // get the number of nodes with the given label
+                var nodeCount = nodes.length;
+                
+                /*
+                 * the comparison for the number which can be "exactly",
+                 * "more than", or "less than"
+                 */
+                var comparison = rule.comparison;
+                
+                // the number to compare to
+                var number = rule.number;
+                
+                if (comparison == 'exactly') {
+                    /*
+                     * we are looking for an exact number of nodes with the 
+                     * given label
+                     */
+                    if (nodeCount == number) {
+                        result = true;
+                    }
+                } else if (comparison == 'more than') {
+                    /*
+                     * we are looking for more than a certain number of nodes
+                     * with the given label
+                     */
+                    if (nodeCount > number) {
+                        result = true;
+                    }
+                } else if (comparison == 'less than') {
+                    /*
+                     * we are looking for less than a certain number of nodes
+                     * with the given label
+                     */
+                    if (nodeCount < number) {
+                        result = true;
+                    }
+                }
+                
+            } else if (rule.type == 'link') {
+                // this is a link rule
+                
+                // get the source node label
+                var nodeLabel = rule.nodeLabel;
+                
+                // get the link label
+                var linkLabel = rule.linkLabel;
+                
+                // get the destination node label
+                var otherNodeLabel = rule.otherNodeLabel;
+                
+                // get all the links with the matching labels
+                var links = this.getLinksByLabels(conceptMapData, nodeLabel, linkLabel, otherNodeLabel);
+                
+                // get the number of links with the matching labels
+                var linkCount = links.length;
+                
+                /*
+                 * the comparison for the number which can be "exactly",
+                 * "more than", or "less than"
+                 */
+                var comparison = rule.comparison;
+                
+                // the number to compare to
+                var number = rule.number;
+                
+                if (comparison == 'exactly') {
+                    // we are looking for an exact number of links
+                    if (linkCount == number) {
+                        result = true;
+                    }
+                } else if (comparison == 'more than') {
+                    // we are looking for more than a certain number of links
+                    if (linkCount > number) {
+                        result = true;
+                    }
+                } else if (comparison == 'less than') {
+                    // we are looking for less than a certain number of links
+                    if (linkCount < number) {
+                        result = true;
+                    }
+                }
+            }
+        }
+        
+        return result;
+    }
+    
+    /**
+     * Get a rule by the rule name
+     * @param componentContent the concept map component content
+     * @param ruleName the rule name
+     * @returns the rule with the given rule name
+     */
+    getRuleByRuleName(componentContent, ruleName) {
+        
+        var rule = null;
+        
+        if (ruleName != null) {
+            
+            // get the rules
+            var rules = componentContent.rules;
+            
+            if (rules != null) {
+                
+                // loop through all the rules
+                for (var r = 0; r < rules.length; r++) {
+                    
+                    // get a rule
+                    var tempRule = rules[r];
+                    
+                    if (tempRule != null) {
+                        
+                        if (ruleName == tempRule.name) {
+                            // we have found the rule with the name we want
+                            rule = tempRule;
+                        }
+                    }
+                }
+            }
+        }
+        
+        return rule;
+    }
+    
+    /**
+     * Get nodes by label
+     * @param conceptMapData the concept map student data
+     * @param label the node label to look for
+     * @returns all the nodes with the given label
+     */
+    getNodesByLabel(conceptMapData, label) {
+        
+        var nodesByLabel = [];
+        
+        if (conceptMapData != null) {
+            
+            var nodes = conceptMapData.nodes;
+            
+            if (nodes != null) {
+                
+                // loop through all the nodes
+                for (var n = 0; n < nodes.length; n++) {
+                    var node = nodes[n];
+                    
+                    if (node != null) {
+                        
+                        if (label == node.label) {
+                            /*
+                             * we have found a node with the label we are 
+                             * looking for
+                             */
+                            nodesByLabel.push(node);
+                        }
+                    }
+                }
+            }
+        }
+        
+        return nodesByLabel;
+    }
+    
+    /**
+     * Get links with the given source node label, link label, and destination
+     * node label
+     * @param conceptMapData the concept map student data
+     * @param nodeLabel the source node label
+     * @param linkLabel the link label
+     * @param otherNodeLabel the destination node label
+     * @returns the links with the given source node label, link label, and 
+     * destination node label
+     */
+    getLinksByLabels(conceptMapData, nodeLabel, linkLabel, otherNodeLabel) {
+        
+        var resultLinks = [];
+        
+        if (conceptMapData != null) {
+            
+            var links = conceptMapData.links;
+            
+            if (links != null) {
+                
+                // loop through all the links
+                for (var l = 0; l < links.length; l++) {
+                    var tempLink = links[l];
+                    
+                    if (tempLink != null) {
+                        
+                        // get the labels
+                        var tempLinkLabel = tempLink.label;
+                        var sourceNodeLabel = tempLink.sourceNodeLabel;
+                        var destinationNodeLabel = tempLink.destinationNodeLabel;
+                        
+                        if (nodeLabel == sourceNodeLabel && 
+                            linkLabel == tempLinkLabel && 
+                            otherNodeLabel == destinationNodeLabel) {
+                                
+                            // the labels match the ones we are looking for
+                            resultLinks.push(tempLink);
+                        }
+                    }
+                }
+            }
+        }
+        
+        return resultLinks;
+    }
+    
+    /**
+     * Check if any of the rules are satisfied
+     * @param componentContent the concept map component content
+     * @param conceptMapData the concept map student data
+     * @param args an array of rule names
+     * @returns true if any of the rules are satisifed
+     * false if none of the rules are satisified
+     */
+    any(componentContent, conceptMapData, args) {
+        
+        // loop through all the rule names
+        for (var n = 0; n < args.length; n++) {
+            
+            // get a rule name
+            var ruleName = args[n];
+            
+            // check if the rule is satisifed
+            var ruleResult = this.evaluateRuleByRuleName(componentContent, conceptMapData, ruleName);
+            
+            if (ruleResult) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    /**
+     * Check if all the rules are satisfied
+     * @param componentContent the concept map component content
+     * @param conceptMapData the concept map student data
+     * @param args an array of rule names
+     * @returns true if all the rules are satisifed
+     * false if any of the rules are not satisfied
+     */
+    all(componentContent, conceptMapData, args) {
+        var result = true;
+        
+        // loop through all the rule names
+        for (var n = 0; n < args.length; n++) {
+            
+            // get a rule name
+            var ruleName = args[n];
+            
+            // check if the rule is satisfied
+            var ruleResult = this.evaluateRuleByRuleName(componentContent, conceptMapData, ruleName);
+            
+            result = result && ruleResult;
+        }
+        return result;
+    }
 }
 
 
@@ -458,14 +756,16 @@ class ConceptMapNode {
             
             var instanceId = outgoingLink.getId();
             var originalId = outgoingLink.getOriginalId();
+            var label = outgoingLink.getLabel();
             
             /*
-             * create an object containing the instance id and original id
-             * of the link
+             * create an object containing the instance id, original id
+             * and label of the link
              */
             var tempLinkObject = {};
             tempLinkObject.originalId = originalId;
             tempLinkObject.instanceId = instanceId;
+            tempLinkObject.label = label;
             
             jsonObject.outgoingLinks.push(tempLinkObject);
         }
@@ -476,14 +776,16 @@ class ConceptMapNode {
             
             var instanceId = incomingLink.getId();
             var originalId = incomingLink.getOriginalId();
+            var label = incomingLink.getLabel();
             
             /*
-             * create an object containing the instance id and original id
-             * of the link
+             * create an object containing the instance id, original id
+             * and label of the link
              */
             var tempLinkObject = {};
             tempLinkObject.originalId = originalId;
             tempLinkObject.instanceId = instanceId;
+            tempLinkObject.label = label;
             
             jsonObject.incomingLinks.push(tempLinkObject);
         }
@@ -635,15 +937,14 @@ class ConceptMapNode {
         this.textGroup.add(this.textRect);
         this.textGroup.add(this.text);
         
-        // get the x and y position
-        var x = this.cx();
-        var y = this.cy() + (this.height / 2);
-        
-        this.textGroup.cx(x);
-        this.textGroup.cy(y);
-        
         // add the text group to the link group
         this.group.add(this.textGroup);
+        
+        // set the position of the text group
+        var x = this.getImageWidth() / 2;
+        var y = this.getImageHeight();
+        this.textGroup.cx(x);
+        this.textGroup.cy(y);
         
         return this.textGroup;
     }
@@ -677,6 +978,43 @@ class ConceptMapNode {
         }
         
         return groupId;
+    }
+    
+    /**
+     * Get the label
+     * @returns the label of the node
+     */
+    getLabel() {
+        return this.label;
+    }
+    
+    /**
+     * Set the label of the node
+     * @param label the label of the node
+     */
+    setLabel(label) {
+        
+        // remember the label
+        this.label = label;
+        
+        // set the label into the text element
+        this.text.text(label);
+        
+        // get the bounding box around the text element
+        var textBBox = this.text.node.getBBox();
+        
+        /*
+         * set the width of the rectangle to be a little larger than the width
+         * of the text element
+         */
+        var width = textBBox.width;
+        this.textRect.attr('width', width + 10);
+        
+        // set the position of the text group
+        var x = this.getImageWidth() / 2;
+        var y = this.getImageHeight();
+        this.textGroup.cx(x);
+        this.textGroup.cy(y);
     }
     
     /**
@@ -1533,8 +1871,10 @@ class ConceptMapLink {
         jsonObject.endCurveUp = this.endCurveUp;
         jsonObject.sourceNodeOriginalId = this.sourceNode.getOriginalId();
         jsonObject.sourceNodeInstanceId = this.sourceNode.getId();
+        jsonObject.sourceNodeLabel = this.sourceNode.getLabel();
         jsonObject.destinationNodeOriginalId = this.destinationNode.getOriginalId();
         jsonObject.destinationNodeInstanceId = this.destinationNode.getId();
+        jsonObject.destinationNodeLabel = this.destinationNode.getLabel();
         
         return jsonObject;
     }

@@ -556,6 +556,25 @@ class ConceptMapController {
      */
     refreshLinkLabels() {
         
+        if (this.nodes != null) {
+            
+            // loop through all the nodes
+            for (var n = 0; n < this.nodes.length; n++) {
+                var node = this.nodes[n];
+                
+                if (node != null) {
+                    // get the label from the node
+                    var label = node.getLabel();
+                    
+                    /*
+                     * set the label back into the node so that the rectangle
+                     * around the text label is resized to the text
+                     */
+                    node.setLabel(label);
+                }
+            }
+        }
+        
         if (this.links != null) {
             
             // loop throgh all the links
@@ -3433,6 +3452,81 @@ class ConceptMapController {
         
         // remove all the nodes from the svg and the array of nodes
         this.removeAllNodes();
+    }
+    
+    /**
+     * Check the student concept map against the custom rule evaluator
+     */
+    checkAnswer() {
+        
+        // get the custom rule evaluator code that was authored
+        var customRuleEvaluator = this.componentContent.customRuleEvaluator;
+        
+        // get the component content
+        var componentContent = this.componentContent;
+        
+        // get the student concept map
+        var conceptMapData = this.getConceptMapData();
+        
+        var thisConceptMapService = this.ConceptMapService;
+        
+        // the result will be stored in this variable
+        var thisResult = {};
+        
+        /*
+         * create the any function that can be called in the custom rule 
+         * evaluator code. the arguments to the any function are rule names.
+         * for example if we are looking for any of the links below 
+         * Sun (Infrared Radiation) Space
+         * Sun (Heat) Space
+         * Sun (Solar Radiation) Space
+         * we will call the any function like this
+         * any("Sun (Infrared Radiation) Space", "Sun (Heat) Space", "Sun (Solar Radiation) Space")
+         * these dynamic arguments will be placed in the arguments variable
+         */
+        var any = function() {
+            return thisConceptMapService.any(componentContent, conceptMapData, arguments);
+        };
+
+        /*
+         * create the all function that can be called in the custom rule 
+         * evaluator code. the arguments to the all function are rule names.
+         * for example if we are looking for all of the links below
+         * Sun (Infrared Radiation) Space
+         * Sun (Heat) Space
+         * Sun (Solar Radiation) Space
+         * we will call the any function like this
+         * all("Sun (Infrared Radiation) Space", "Sun (Heat) Space", "Sun (Solar Radiation) Space")
+         * these dynamic arguments will be placed in the arguments variable
+         */
+        var all = function() {
+            return thisConceptMapService.all(componentContent, conceptMapData, arguments);
+        }
+        
+        /*
+         * create the setResult function that can be called in the custom rule 
+         * evaluator code
+         */
+        var setResult = function(result) {
+            thisResult = result;
+        }
+        
+        // run the custom rule evaluator
+        eval(customRuleEvaluator);
+        
+        //console.log("thisResult.score=" + thisResult.score);
+        //console.log("thisResult.feedback=" + thisResult.feedback);
+        var resultString = "";
+        
+        if (thisResult.score != null) {
+            resultString += "Score: " + thisResult.score + ".";
+        }
+        
+        if (thisResult.feedback != null) {
+            resultString += "Feedback: " + thisResult.feedback + ".";
+        }
+        
+        alert(resultString);
     }
 };
 
