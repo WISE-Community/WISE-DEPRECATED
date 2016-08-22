@@ -284,7 +284,7 @@ var StudentDataService = function () {
 
                 if (this.ConfigService.getConfigParam('constraints') == false) {
                     /*
-                     * constraints have been disabled, most likely because we are 
+                     * constraints have been disabled, most likely because we are
                      * in preview without constraints mode
                      */
                     constraintsForNode = null;
@@ -1804,14 +1804,20 @@ var StudentDataService = function () {
 
                     // check that all the nodes in the group are visible and completed
                     var nodeIds = this.ProjectService.getChildNodeIdsById(nodeId);
-                    for (var n = 0; n < nodeIds.length; n++) {
-                        var id = nodeIds[n];
 
-                        if (this.nodeStatuses[id] == null || !this.nodeStatuses[id].isVisible || !this.nodeStatuses[id].isCompleted) {
-                            // the child is not visible or not completed so the group is not completed
-                            tempResult = false;
-                            break;
+                    if (nodeIds.length) {
+                        for (var n = 0; n < nodeIds.length; n++) {
+                            var id = nodeIds[n];
+
+                            if (this.nodeStatuses[id] == null || !this.nodeStatuses[id].isVisible || !this.nodeStatuses[id].isCompleted) {
+                                // the child is not visible or not completed so the group is not completed
+                                tempResult = false;
+                                break;
+                            }
                         }
+                    } else {
+                        // there are no nodes in the group (could be a planning activity, for example), so set isCompleted to false
+                        tempResult = false;
                     }
 
                     result = tempResult;

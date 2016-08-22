@@ -127,6 +127,7 @@ describe('WISE Authoring Tool', function () {
 
     // TODO: add test for copying a step
 
+
     it('should exit the authoring tool and then sign out', function () {
         exitAuthoringToolButton.click();
 

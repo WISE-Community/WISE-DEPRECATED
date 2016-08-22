@@ -11,7 +11,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var ClassroomMonitorController = function () {
-    function ClassroomMonitorController($mdDialog, $rootScope, $scope, $state, $stateParams, $translate, ConfigService, ProjectService, SessionService, TeacherDataService, TeacherWebSocketService) {
+    function ClassroomMonitorController($mdDialog, $rootScope, $scope, $state, $stateParams, $translate, ConfigService, NotificationService, ProjectService, SessionService, TeacherDataService, TeacherWebSocketService) {
         var _this = this;
 
         _classCallCheck(this, ClassroomMonitorController);
@@ -22,6 +22,7 @@ var ClassroomMonitorController = function () {
         this.$stateParams = $stateParams;
         this.$translate = $translate;
         this.ConfigService = ConfigService;
+        this.NotificationService = NotificationService;
         this.ProjectService = ProjectService;
         this.SessionService = SessionService;
         this.TeacherDataService = TeacherDataService;
@@ -48,6 +49,16 @@ var ClassroomMonitorController = function () {
 
         // update the text of the pause/unpause button
         this.updatePauseButton();
+
+        this.themePath = this.ProjectService.getThemePath();
+
+        this.notifications = this.NotificationService.notifications;
+        // watch for changes in notifications
+        this.$scope.$watch(function () {
+            return _this.NotificationService.notifications.length;
+        }, function (newValue, oldValue) {
+            _this.notifications = _this.NotificationService.notifications;
+        });
     }
 
     _createClass(ClassroomMonitorController, [{
@@ -387,6 +398,77 @@ var ClassroomMonitorController = function () {
         }
 
         /**
+         * Returns true iff there are new notifications
+         */
+
+    }, {
+        key: 'hasNewNotifications',
+        value: function hasNewNotifications() {
+            return this.getNewNotifications().length > 0;
+        }
+
+        /**
+         * Returns all notifications that have not been dismissed yet
+         */
+
+    }, {
+        key: 'getNewNotifications',
+        value: function getNewNotifications() {
+            return this.notifications.filter(function (notification) {
+                return notification.timeDismissed == null;
+            });
+        }
+
+        /**
+         * Show confirmation dialog before dismissing all notifications
+         */
+
+    }, {
+        key: 'confirmDismissAllNotifications',
+        value: function confirmDismissAllNotifications(ev) {
+            var _this6 = this;
+
+            if (this.getNewNotifications().length > 1) {
+                this.$translate(["dismissNotificationsTitle", "dismissNotificationsMessage", "yes", "no"]).then(function (translations) {
+                    var confirm = _this6.$mdDialog.confirm().parent(angular.element($('._md-open-menu-container._md-active'))) // TODO: hack for now (showing md-dialog on top of md-menu)
+                    .ariaLabel(translations.dismissNotificationsTitle).textContent(translations.dismissNotificationsMessage).targetEvent(ev).ok(translations.yes).cancel(translations.no);
+
+                    _this6.$mdDialog.show(confirm).then(function () {
+                        _this6.dismissAllNotifications();
+                    });
+                });
+            } else {
+                this.dismissAllNotifications();
+            }
+        }
+
+        /**
+         * Dismiss all new notifications
+         */
+
+    }, {
+        key: 'dismissAllNotifications',
+        value: function dismissAllNotifications() {
+            var _this7 = this;
+
+            var newNotifications = this.getNewNotifications();
+            newNotifications.map(function (newNotification) {
+                _this7.dismissNotification(newNotification);
+            });
+        }
+
+        /**
+         * Dismiss the specified notification
+         * @param notification
+         */
+
+    }, {
+        key: 'dismissNotification',
+        value: function dismissNotification(notification) {
+            this.NotificationService.dismissNotification(notification);
+        }
+
+        /**
          * The user has moved the mouse so we will notify the Session Service
          * so that it can refresh the session
          */
@@ -405,7 +487,7 @@ var ClassroomMonitorController = function () {
     return ClassroomMonitorController;
 }();
 
-ClassroomMonitorController.$inject = ['$mdDialog', '$rootScope', '$scope', '$state', '$stateParams', '$translate', 'ConfigService', 'ProjectService', 'SessionService', 'TeacherDataService', 'TeacherWebSocketService'];
+ClassroomMonitorController.$inject = ['$mdDialog', '$rootScope', '$scope', '$state', '$stateParams', '$translate', 'ConfigService', 'NotificationService', 'ProjectService', 'SessionService', 'TeacherDataService', 'TeacherWebSocketService'];
 
 exports.default = ClassroomMonitorController;
 //# sourceMappingURL=classroomMonitorController.js.map

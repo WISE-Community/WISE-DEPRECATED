@@ -19,6 +19,9 @@ $color: (
   'text': rgba(0, 0, 0, 0.87),
   'text-secondary': rgba(0, 0, 0, 0.54),
   'text-disabled': rgba(0, 0, 0, 0.26),
+  'text-light': rgba(255, 255, 255, 0.87),
+  'text-light-secondary': rgba(255, 255, 255, 0.54),
+  'text-light-disabled': rgba(255, 255, 255, 0.26),
   'selected-bg': lighten($_primary-color, 59%),
   'score': #FFC107
 );

@@ -587,28 +587,28 @@ var TeacherDataService = function () {
                 //set all the periods to the value as well
                 //this.setAllPeriodsPaused(value);
             } else {
-                    //we are updating a specific period
+                //we are updating a specific period
 
-                    //get all the periods
-                    var periods = runStatus.periods;
+                //get all the periods
+                var periods = runStatus.periods;
 
-                    if (periods != null) {
-                        //loop through all the periods
-                        for (var x = 0; x < periods.length; x++) {
-                            //get a period
-                            var tempPeriod = periods[x];
+                if (periods != null) {
+                    //loop through all the periods
+                    for (var x = 0; x < periods.length; x++) {
+                        //get a period
+                        var tempPeriod = periods[x];
 
-                            //get the period id
-                            var tempPeriodId = tempPeriod.periodId;
+                        //get the period id
+                        var tempPeriodId = tempPeriod.periodId;
 
-                            //check if the period id matches the one we need to update
-                            if (periodId == tempPeriodId) {
-                                //we have found the period we want to update
-                                tempPeriod.paused = value;
-                            }
+                        //check if the period id matches the one we need to update
+                        if (periodId == tempPeriodId) {
+                            //we have found the period we want to update
+                            tempPeriod.paused = value;
                         }
                     }
                 }
+            }
         }
 
         /**

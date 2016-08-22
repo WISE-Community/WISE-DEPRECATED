@@ -34,7 +34,7 @@ class StudentDataService {
             this.studentData.annotations = [];
             this.studentData.userName = 'Preview Student';
             this.studentData.userId = '0';
-            
+
             // set the annotations into the annotation service
             this.AnnotationService.setAnnotations(this.studentData.annotations);
 
@@ -256,10 +256,10 @@ class StudentDataService {
 
             // get the constraints that affect this node
             var constraintsForNode = this.ProjectService.getConstraintsForNode(node);
-            
+
             if (this.ConfigService.getConfigParam('constraints') == false) {
                 /*
-                 * constraints have been disabled, most likely because we are 
+                 * constraints have been disabled, most likely because we are
                  * in preview without constraints mode
                  */
                 constraintsForNode = null;
@@ -780,7 +780,7 @@ class StudentDataService {
 
         return result;
     };
-    
+
     /**
      * Evaluate the score criteria
      * @param criteria the criteria to evaluate
@@ -789,27 +789,27 @@ class StudentDataService {
     evaluateScoreCriteria(criteria) {
 
         var result = false;
-        
+
         var params = criteria.params;
-        
+
         if (params != null) {
-            
+
             var nodeId = params.nodeId;
             var componentId = params.componentId;
             var scores = params.scores;
             var workgroupId = this.ConfigService.getWorkgroupId();
             var scoreType = 'any';
-            
+
             if (nodeId != null && componentId != null && scores != null) {
-                
+
                 // get the latest score annotation
                 var latestScoreAnnotation = this.AnnotationService.getLatestScoreAnnotation(nodeId, componentId, workgroupId, scoreType);
-                
+
                 if (latestScoreAnnotation != null) {
-                    
+
                     // get the score value
                     var scoreValue = this.AnnotationService.getScoreValueFromScoreAnnotation(latestScoreAnnotation);
-                    
+
                     // check if the score value matches what the criteria is looking for
                     if (scores.indexOf(scoreValue) != -1) {
                         /*
@@ -1694,14 +1694,20 @@ class StudentDataService {
 
                 // check that all the nodes in the group are visible and completed
                 var nodeIds = this.ProjectService.getChildNodeIdsById(nodeId);
-                for (var n=0; n<nodeIds.length; n++) {
-                    var id = nodeIds[n];
 
-                    if (this.nodeStatuses[id] == null || !this.nodeStatuses[id].isVisible || !this.nodeStatuses[id].isCompleted) {
-                        // the child is not visible or not completed so the group is not completed
-                        tempResult = false;
-                        break;
+                if (nodeIds.length) {
+                    for (var n=0; n<nodeIds.length; n++) {
+                        var id = nodeIds[n];
+
+                        if (this.nodeStatuses[id] == null || !this.nodeStatuses[id].isVisible || !this.nodeStatuses[id].isCompleted) {
+                            // the child is not visible or not completed so the group is not completed
+                            tempResult = false;
+                            break;
+                        }
                     }
+                } else {
+                    // there are no nodes in the group (could be a planning activity, for example), so set isCompleted to false
+                    tempResult = false;
                 }
 
                 result = tempResult;
@@ -2073,18 +2079,18 @@ class StudentDataService {
         // return the next available planning node instance node id
         return 'planningNode' + this.maxPlanningNodeNumber;
     }
-    
+
     /**
      * Get the annotations
      * @returns the annotations
      */
     getAnnotations() {
         var annotations = null;
-        
+
         if (this.studentData != null && this.studentData.annotations != null) {
             annotations = this.studentData.annotations;
         }
-        
+
         return annotations;
     }
 }

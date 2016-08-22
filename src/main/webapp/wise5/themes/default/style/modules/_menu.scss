@@ -1,3 +1,7 @@
+// 1. Variables
+$menu-sidebar-width: 56px;
+
+// 2. Base
 .menu-progress {
     width: 26px;
     height: 26px;
@@ -20,17 +24,46 @@
     right: 15px;
 }
 
-.side-menu {
+.menu-sidenav {
 
 }
 
-.side-menu__item {
+.menu-sidenav__item {
     font-weight: 600;
     //color: color('text-secondary');
+    font-size: rem(1.4);
 }
 
-.side-menu__icon {
+.menu-sidenav__icon {
     margin-top: 12px !important;
     margin-right: 12px !important;
     margin-left: 12px;
+}
+
+.active {
+    .menu-sidenav__icon, .menu-sidenav__item {
+        color: color('primary');
+    }
+}
+
+.menu-sidebar {
+    position: absolute;
+    top: $wise-toolbar-height + $toolbar-height;
+    bottom: 0;
+    left: 0;
+    background-color: #fff;
+    width: $menu-sidebar-width;
+    overflow: hidden;
+    padding: 8px 0;
+    text-align: center;
+    border-right: 1px solid color('gray');
+
+    @media only screen and (max-width: ($layout-breakpoint-xs - 1)) {
+        display: none;
+    }
+}
+
+.md-button.md-icon-button.menu-sidebar__link {
+    margin-top: 6px;
+    margin-bottom: 6px;
 }

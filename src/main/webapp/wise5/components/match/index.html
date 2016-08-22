@@ -114,7 +114,7 @@
                     <md-card-title class="match-bucket__header">
                         <md-card-title-text compile='matchController.buckets[0].value'></md-card-title-text>
                     </md-card-title>
-                    <md-card-content>
+                    <md-card-content class="match-bucket__content">
                         <md-list class="match-bucket__contents"
                                  dragula="'match_{{matchController.componentId}}'"
                                  dragula-model='matchController.buckets[0].items'
@@ -144,7 +144,7 @@
                         <md-card-title class="match-bucket__header">
                             <md-card-title-text compile='bucket.value'></md-card-title-text>
                         </md-card-title>
-                        <md-card-content>
+                        <md-card-content class="match-bucket__content">
                             <md-list class="match-bucket__contents"
                                      dragula="'match_{{matchController.componentId}}'"
                                      dragula-model='bucket.items'

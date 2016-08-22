@@ -3,6 +3,7 @@
 // Base
 .match-content {
     background-color: color('gray-light');
+    margin-bottom: 16px;
 }
 
 .match-divider {
@@ -17,9 +18,13 @@
 }
 
 .match-bucket__header {
-    padding-top: 16px;
+    padding: 12px;
     font-weight: 500;
     color: color('primary');
+}
+
+.match-bucket__content {
+    padding: 0 12px 12px;
 }
 
 .match-bucket--choices {

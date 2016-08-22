@@ -791,9 +791,14 @@ public class VLEServiceImpl implements VLEService {
     }
 
     @Override
+    public List<Notification> getNotificationsByGroupId(String groupId) throws ObjectNotFoundException {
+        return this.getNotifications(null, null, null, null, groupId, null, null);
+    }
+
+    @Override
     public List<Notification> getNotifications(
             Integer id, Integer runId, Integer periodId, Integer toWorkgroupId,
-            String nodeId, String componentId) {
+            String groupId, String nodeId, String componentId) {
 
         Run run = null;
         if (runId != null) {
@@ -823,14 +828,14 @@ public class VLEServiceImpl implements VLEService {
 
         return notificationDao.getNotificationListByParams(
                 id, run, period, workgroup,
-                nodeId, componentId);
+                groupId, nodeId, componentId);
     }
 
     @Override
     public Notification saveNotification(
             Integer id, Integer runId, Integer periodId,
             Integer fromWorkgroupId, Integer toWorkgroupId,
-            String nodeId, String componentId, String componentType,
+            String groupId, String nodeId, String componentId, String componentType,
             String type, String message, String data,
             String timeGenerated, String timeDismissed) {
         Notification notification;
@@ -875,6 +880,9 @@ public class VLEServiceImpl implements VLEService {
                 e.printStackTrace();
             }
         }
+        if (groupId != null) {
+            notification.setGroupId(groupId);
+        }
         if (nodeId != null) {
             notification.setNodeId(nodeId);
         }
@@ -906,6 +914,16 @@ public class VLEServiceImpl implements VLEService {
         Timestamp serverSaveTimestamp = new Timestamp(now.getTimeInMillis());
         notification.setServerSaveTime(serverSaveTimestamp);
 
+        notificationDao.save(notification);
+        return notification;
+    }
+
+    @Override
+    public Notification dismissNotification(Notification notification, String timeDismissed) {
+        if (timeDismissed != null) {
+            Timestamp timeDismissedTimestamp = new Timestamp(new Long(timeDismissed));
+            notification.setTimeDismissed(timeDismissedTimestamp);
+        }
         notificationDao.save(notification);
         return notification;
     }

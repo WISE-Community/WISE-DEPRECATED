@@ -92,7 +92,7 @@ describe('ProjectService Unit Test', function () {
             expect(contentStringReplacedAssetPathActual).toEqual(contentStringReplacedAssetPathExpected);
         });
 
-        it('should retrieve project when Config.projectURL is valid', function () {
+        xit('should retrieve project when Config.projectURL is valid', function () {
             createNormalSpy();
             spyOn(ProjectService, "setProject").and.callThrough(); // actually call through the function
             spyOn(ProjectService, "parseProject");
@@ -116,7 +116,7 @@ describe('ProjectService Unit Test', function () {
         });
 
         // MARK: Register Project
-        it('should register new project', function () {
+        xit('should register new project', function () {
             createNormalSpy();
             var newProjectIdExpected = projectIdDefault; // Id of new project created on the server
             $httpBackend.when('POST', registerNewProjectURL).respond(newProjectIdExpected);
@@ -148,7 +148,7 @@ describe('ProjectService Unit Test', function () {
         });
 
         // MARK: Save Project
-        it('should save project', function () {
+        xit('should save project', function () {
             spyOn(ConfigService, "getProjectId").and.returnValue(projectIdDefault);
             spyOn(ConfigService, "getConfigParam").and.returnValue(saveProjectURL);
             ProjectService.setProject(scootersProjectJSON); // Set the sample project and parse it
@@ -227,6 +227,7 @@ describe('ProjectService Unit Test', function () {
 
         // TODO: add test for ProjectService.isNodeIdInABranch()
         // TODO: add test for ProjectService.getBranchPathsByNodeId()
+
 
         // TODO: add test for ProjectService.getNodeContentByNodeId()
 

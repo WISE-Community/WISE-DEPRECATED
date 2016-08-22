@@ -208,6 +208,7 @@
         componentType varchar(30),
         data mediumtext,
         message varchar(255) not null,
+        groupId varchar(30),
         nodeId varchar(30),
         serverSaveTime timestamp not null,
         timeDismissed timestamp,

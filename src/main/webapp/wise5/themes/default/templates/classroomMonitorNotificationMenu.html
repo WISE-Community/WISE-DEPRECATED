@@ -6,25 +6,25 @@
         <md-button class="md-icon-button"
                    aria-label="Clear all notifications"
                    md-prevent-menu-close="md-prevent-menu-close"
-                   ng-disabled="vleController.getNewNotifications().length < 1"
-                   ng-click="vleController.confirmDismissAllNotifications($event)">
+                   ng-disabled="classroomMonitorController.getNewNotifications().length < 1"
+                   ng-click="classroomMonitorController.confirmDismissAllNotifications($event)">
             <md-icon> clear_all </md-icon>
         </md-button>
     </md-toolbar>
     <md-divider></md-divider>
     <md-content class="account-menu__actions" flex>
-        <div class="md-padding center" ng-if="!vleController.getNewNotifications().length"><span class="md-body-1">Congratulations, you have no alerts!</span></div>
-        <md-list class="notification-list" ng-if="vleController.getNewNotifications().length">
-            <md-list-item ng-repeat="notification in vleController.getNewNotifications() track by $index"
-                          ng-click="vleController.dismissNotificationAndVisitNode($event, notification)"
+        <div class="md-padding center" ng-if="!classroomMonitorController.getNewNotifications().length"><span class="md-body-1">Congratulations, you have no alerts!</span></div>
+        <md-list class="notification-list" ng-if="classroomMonitorController.getNewNotifications().length">
+            <md-list-item ng-repeat="notification in classroomMonitorController.getNewNotifications() track by $index"
+                          ng-click="classroomMonitorController.dismissNotificationAndVisitNode(notification)"
                           md-autofocus="$first"
                           class="md-2-line">
                 <div class="md-list-item-text">
                     <div class="md-body-1 primary">{{notification.message}}</div>
-                    <h4 class="notification-list-item__source">{{vleController.ProjectService.getNodePositionAndTitleByNodeId(notification.nodeId)}}</h4>
+                    <h4 class="notification-list-item__source">{{classroomMonitorController.ProjectService.getNodePositionAndTitleByNodeId(notification.nodeId)}}</h4>
                 </div>
                 <md-button class="md-icon-button" md-prevent-menu-close="md-prevent-menu-close"
-                           ng-click="vleController.dismissNotification($event, notification)">
+                           ng-click="classroomMonitorController.dismissNotification(notification)">
                     <md-icon>clear</md-icon>
                 </md-button>
             </md-list-item>
