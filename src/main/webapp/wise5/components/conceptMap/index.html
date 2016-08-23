@@ -58,19 +58,23 @@
                     File Name: 
                     <input ng-model='node.fileName'
                            ng-change='conceptMapController.authoringViewComponentChanged()'
-                           size='30'/>
+                           size='30'
+                           ng-model-options='{ debounce: 1000 }'/>
                     Label: 
                     <input ng-model='node.label'
                            ng-change='conceptMapController.authoringViewComponentChanged()'
-                           size='30'/>
+                           size='30'
+                           ng-model-options='{ debounce: 1000 }'/>
                     Width: 
                     <input ng-model='node.width'
                            ng-change='conceptMapController.authoringViewComponentChanged()'
-                           size='10'/>
+                           size='10'
+                           ng-model-options='{ debounce: 1000 }'/>
                     Height: 
                     <input ng-model='node.height'
                            ng-change='conceptMapController.authoringViewComponentChanged()'
-                           size='10'/>
+                           size='10'
+                           ng-model-options='{ debounce: 1000 }'/>
                     <button ng-click='conceptMapController.authoringViewNodeUpButtonClicked($index)'>Up</button>
                     <button ng-click='conceptMapController.authoringViewNodeDownButtonClicked($index)'>Down</button>
                     <button ng-click='conceptMapController.authoringViewNodeDeleteButtonClicked($index)'>Delete</button>
@@ -82,11 +86,13 @@
                     Label:
                     <input ng-model='link.label'
                            ng-change='conceptMapController.authoringViewComponentChanged()'
-                           size='30'/>
+                           size='30'
+                           ng-model-options='{ debounce: 1000 }'/>
                     Color:
                     <input ng-model='link.color'
                            ng-change='conceptMapController.authoringViewComponentChanged()'
-                           size='30'/>
+                           size='30'
+                           ng-model-options='{ debounce: 1000 }'/>
                     <button ng-click='conceptMapController.authoringViewLinkUpButtonClicked($index)'>Up</button>
                     <button ng-click='conceptMapController.authoringViewLinkDownButtonClicked($index)'>Down</button>
                     <button ng-click='conceptMapController.authoringViewLinkDeleteButtonClicked($index)'>Delete</button>
@@ -95,11 +101,57 @@
                 <button ng-click='conceptMapController.saveStarterConceptMap()'>Save Starter Concept Map</button>
                 <button ng-click='conceptMapController.deleteStarterConceptMap()'>Delete Starter Concept Map</button>
                 <br/>
+                <br/>
+                Rules <button ng-click='conceptMapController.authoringAddRule()'>Add Rule</button>
+                <div ng-repeat='rule in conceptMapController.authoringComponentContent.rules'>
+                    Rule Name: 
+                    <input ng-model='rule.name' 
+                           size='30' 
+                           ng-change='conceptMapController.authoringViewComponentChanged()' 
+                           ng-model-options='{ debounce: 1000 }'/> contains 
+                    <select ng-model='rule.comparison' 
+                            ng-change='conceptMapController.authoringViewComponentChanged()'>
+                        <option value='exactly'>exactly</option>
+                        <option value='more than'>more than</option>
+                        <option value='less than'>less than</option>
+                    </select> 
+                    <input ng-model='rule.number' 
+                           size='3' 
+                           ng-change='conceptMapController.authoringViewComponentChanged()'/>
+                    <select ng-model='rule.nodeLabel' 
+                            ng-change='conceptMapController.authoringViewComponentChanged()'>
+                        <option></option>
+                        <option ng-repeat='node in conceptMapController.authoringComponentContent.nodes' 
+                                value='{{node.label}}'>{{node.label}}</option>
+                    </select>
+                    with link
+                    <input type='checkbox' 
+                           ng-model='rule.type' 
+                           ng-true-value="'link'" 
+                           ng-false-value="'node'" 
+                           ng-change='conceptMapController.authoringRuleLinkCheckboxClicked($index)'/>
+                    <select ng-model='rule.linkLabel' 
+                            ng-change='conceptMapController.authoringViewComponentChanged()'>
+                        <option></option>
+                        <option ng-repeat='link in conceptMapController.authoringComponentContent.links' 
+                                value='{{link.label}}'>{{link.label}}</option>
+                    </select>
+                    <select ng-model='rule.otherNodeLabel' 
+                            ng-change='conceptMapController.authoringViewComponentChanged()'>
+                        <option></option>
+                        <option ng-repeat='node in conceptMapController.authoringComponentContent.nodes' 
+                                value='{{node.label}}'>{{node.label}}</option>
+                    </select>
+                    <button ng-click='conceptMapController.authoringDeleteRule($index)'>Delete Rule</button>
+                </div>
+                <br/>
+                Custom Rule Evaluator
+                <br/>
                 <textarea ng-model='conceptMapController.authoringComponentContent.customRuleEvaluator'
                           ng-change='conceptMapController.authoringViewComponentChanged()'
                           rows='10'
-                          cols='200'></textarea>
-                <br/>
+                          cols='200'
+                          ng-model-options='{ debounce: 1000 }'></textarea>
                 <br/>
                 <textarea ng-model='conceptMapController.authoringComponentContentJSONString'
                           ng-change='conceptMapController.advancedAuthoringViewComponentChanged()'

@@ -1577,6 +1577,65 @@ class ConceptMapController {
     }
     
     /**
+     * A "with link" checkbox was checked
+     * @param ruleIndex the index of the rule
+     */
+    authoringRuleLinkCheckboxClicked(ruleIndex) {
+        
+        // get the rule that was checked
+        var rule = this.authoringComponentContent.rules[ruleIndex];
+        
+        if (rule != null) {
+            if (rule.type == 'node') {
+                /* 
+                 * the rule has been set to 'node' instead of 'link' so we
+                 * will remove the link label and other node label
+                 */
+                
+                delete rule.linkLabel;
+                delete rule.otherNodeLabel;
+            }
+        }
+        
+        // perform updating and saving
+        this.authoringViewComponentChanged();
+    }
+    
+    /**
+     * Add a new rule
+     */
+    authoringAddRule() {
+        
+        // create the new rule
+        var newRule = {};
+        newRule.name = "";
+        newRule.type = "node";
+        newRule.category = "";
+        newRule.nodeLabel = "";
+        newRule.comparison = "exactly";
+        newRule.number = 1;
+        
+        // add the rule to the array of rules
+        this.authoringComponentContent.rules.push(newRule);
+        
+        // perform updating and saving
+        this.authoringViewComponentChanged();
+    }
+    
+    /*
+     * Delete a rule
+     * @param index the index of the rule to delete
+     */
+    authoringDeleteRule(index) {
+        
+        // remove the rule at the given index
+        this.authoringComponentContent.rules.splice(index, 1);
+        
+        // perform updating and saving
+        this.authoringViewComponentChanged();
+    }
+    
+    /**
      * Get all the step node ids in the project
      * @returns all the step node ids
      */
