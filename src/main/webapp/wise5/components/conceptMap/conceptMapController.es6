@@ -466,6 +466,10 @@ class ConceptMapController {
     populateConceptMapData(conceptMapData) {
         
         if (conceptMapData != null) {
+            
+            // clear the existing nodes in the student view
+            this.nodes = [];
+            
             var nodes = conceptMapData.nodes;
             
             if (nodes != null) {
@@ -493,6 +497,9 @@ class ConceptMapController {
                     this.setNodeMouseEvents(conceptMapNode);
                 }
             }
+            
+            // clear the existing links in the student view
+            this.links = [];
             
             var links = conceptMapData.links;
             
@@ -1243,30 +1250,27 @@ class ConceptMapController {
      */
     authoringViewNodeDownButtonClicked(index) {
         
+        // get the nodes
+        var nodes = this.authoringComponentContent.nodes;
+        
         // check if the node is at the bottom
-        if (index != nodes.length - 1) {
+        if (nodes != null && index != nodes.length - 1) {
             // the node is not at the bottom so we can move it down
             
-            // get the nodes
-            var nodes = this.authoringComponentContent.nodes;
+            // get the node at the given index
+            var node = nodes[index];
             
-            if (nodes != null) {
-                
-                // get the node at the given index
-                var node = nodes[index];
-                
-                // remove the node
-                nodes.splice(index, 1);
-                
-                // insert the node back in one index ahead
-                nodes.splice(index + 1, 0, node);
-                
-                /*
-                 * the author has made changes so we will save the component
-                 * content
-                 */
-                this.authoringViewComponentChanged();
-            }
+            // remove the node
+            nodes.splice(index, 1);
+            
+            // insert the node back in one index ahead
+            nodes.splice(index + 1, 0, node);
+            
+            /*
+             * the author has made changes so we will save the component
+             * content
+             */
+            this.authoringViewComponentChanged();
         }
     }
     
@@ -1354,12 +1358,12 @@ class ConceptMapController {
      */
     authoringViewLinkDownButtonClicked(index) {
         
+        // get the links
+        var links = this.authoringComponentContent.links;
+        
         // check if the link is at the bottom
-        if (index != links.length - 1) {
+        if (links != null && index != links.length - 1) {
             // the node is not at the bottom so we can move it down
-            
-            // get the links
-            var links = this.authoringComponentContent.links;
             
             if (links != null) {
                 
@@ -1622,11 +1626,74 @@ class ConceptMapController {
         this.authoringViewComponentChanged();
     }
     
+    /**
+     * Move a rule up
+     * @param index the index of the rule
+     */
+    authoringViewRuleUpButtonClicked(index) {
+        
+        // check if the rule is at the top
+        if (index != 0) {
+            // the rule is not at the top so we can move it up
+            
+            // get the rules
+            var rules = this.authoringComponentContent.rules;
+            
+            if (rules != null) {
+                
+                // get the rule at the given index
+                var rule = rules[index];
+                
+                // remove the rule
+                rules.splice(index, 1);
+                
+                // insert the rule back in one index back
+                rules.splice(index - 1, 0, rule);
+                
+                /*
+                 * the author has made changes so we will save the component
+                 * content
+                 */
+                this.authoringViewComponentChanged();
+            }
+        }
+    }
+    
+    /**
+     * Move a rule down
+     * @param index the index of the rule
+     */
+    authoringViewRuleDownButtonClicked(index) {
+        
+        // get the rules
+        var rules = this.authoringComponentContent.rules;
+        
+        // check if the rule is at the bottom
+        if (rules != null && index != rules.length - 1) {
+            // the rule is not at the bottom so we can move it down
+            
+            // get the rule at the given index
+            var rule = rules[index];
+            
+            // remove the rule
+            rules.splice(index, 1);
+            
+            // insert the rule back in one index ahead
+            rules.splice(index + 1, 0, rule);
+            
+            /*
+             * the author has made changes so we will save the component
+             * content
+             */
+            this.authoringViewComponentChanged();
+        }
+    }
+    
     /*
      * Delete a rule
      * @param index the index of the rule to delete
      */
-    authoringDeleteRule(index) {
+    authoringViewRuleDeleteButtonClicked(index) {
         
         // remove the rule at the given index
         this.authoringComponentContent.rules.splice(index, 1);
@@ -3511,6 +3578,25 @@ class ConceptMapController {
         
         // remove all the nodes from the svg and the array of nodes
         this.removeAllNodes();
+    }
+    
+    /**
+     * Reset the concept map data. We will clear the concept map data and
+     * if there is starter concept map data we will set it into the concept map.
+     */
+    resetConceptMap() {
+        
+        // clear the concept map
+        this.clearConceptMap();
+        
+        if (this.componentContent.starterConceptMap != null) {
+            
+            // get the starter concept map
+            var conceptMapData = this.componentContent.starterConceptMap;
+            
+            // populate the starter concept map data into the component
+            this.populateConceptMapData(conceptMapData);
+        }
     }
     
     /**

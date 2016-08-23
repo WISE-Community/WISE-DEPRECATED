@@ -142,7 +142,9 @@
                         <option ng-repeat='node in conceptMapController.authoringComponentContent.nodes' 
                                 value='{{node.label}}'>{{node.label}}</option>
                     </select>
-                    <button ng-click='conceptMapController.authoringDeleteRule($index)'>Delete Rule</button>
+                    <button ng-click='conceptMapController.authoringViewRuleUpButtonClicked($index)'>Up</button>
+                    <button ng-click='conceptMapController.authoringViewRuleDownButtonClicked($index)'>Down</button>
+                    <button ng-click='conceptMapController.authoringViewRuleDeleteButtonClicked($index)'>Delete Rule</button>
                 </div>
                 <br/>
                 Custom Rule Evaluator
@@ -173,7 +175,7 @@
                     <div ng-if="conceptMapController.isRichTextEnabled && conceptMapController.isDisabled"
                          class="input--textarea input--textarea--disabled">
                     </div>
-                    <button ng-click="conceptMapController.clearConceptMap()">Clear</button>
+                    <button ng-click="conceptMapController.resetConceptMap()">Reset</button>
                     <button ng-click="conceptMapController.checkAnswer()">Check Answer</button>
                     <div id="conceptMapContainer" style="display: flex">
                         <div id="selectNodeBar" style="flex: 10; border: 1px solid black">

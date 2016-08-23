@@ -115,11 +115,13 @@ this.populateConceptMapData(conceptMapData);}var attachments=studentData.attachm
      * Populate the concept map data into the component
      * @param conceptMapData the concept map data which contains an array
      * of nodes and an array of links
-     */value:function populateConceptMapData(conceptMapData){var _this2=this;if(conceptMapData!=null){var nodes=conceptMapData.nodes;if(nodes!=null){ // loop through all the nodes
+     */value:function populateConceptMapData(conceptMapData){var _this2=this;if(conceptMapData!=null){ // clear the existing nodes in the student view
+this.nodes=[];var nodes=conceptMapData.nodes;if(nodes!=null){ // loop through all the nodes
 for(var n=0;n<nodes.length;n++){var node=nodes[n];var instanceId=node.instanceId;var originalId=node.originalId;var filePath=node.fileName;var label=node.label;var x=node.x;var y=node.y;var width=node.width;var height=node.height; // create a ConceptMapNode
 var conceptMapNode=this.ConceptMapService.newConceptMapNode(this.draw,instanceId,originalId,filePath,label,x,y,width,height); // add the node to our array of nodes
 this.addNode(conceptMapNode); // set the mouse events on the node
-this.setNodeMouseEvents(conceptMapNode);}}var links=conceptMapData.links;if(links!=null){ // loop through all the links
+this.setNodeMouseEvents(conceptMapNode);}} // clear the existing links in the student view
+this.links=[];var links=conceptMapData.links;if(links!=null){ // loop through all the links
 for(var l=0;l<links.length;l++){var link=links[l];var instanceId=link.instanceId;var originalId=link.originalId;var sourceNodeId=link.sourceNodeInstanceId;var destinationNodeId=link.destinationNodeInstanceId;var label=link.label;var color=link.color;var curvature=link.curvature;var startCurveUp=link.startCurveUp;var endCurveUp=link.endCurveUp;var sourceNode=null;var destinationNode=null;if(sourceNodeId!=null){sourceNode=this.getNodeById(sourceNodeId);}if(destinationNodeId!=null){destinationNode=this.getNodeById(destinationNodeId);} // create a ConceptMapLink
 var conceptMapLink=this.ConceptMapService.newConceptMapLink(this.draw,instanceId,originalId,sourceNode,destinationNode,label,color,curvature,startCurveUp,endCurveUp); // add the link to our array of links
 this.addLink(conceptMapLink); // set the mouse events on the link
@@ -337,16 +339,16 @@ nodes.splice(index-1,0,node); /*
      * A node down button was clicked in the authoring tool so we will move the
      * node down
      * @param index the index of the node that we will move
-     */},{key:'authoringViewNodeDownButtonClicked',value:function authoringViewNodeDownButtonClicked(index){ // check if the node is at the bottom
-if(index!=nodes.length-1){ // the node is not at the bottom so we can move it down
-// get the nodes
-var nodes=this.authoringComponentContent.nodes;if(nodes!=null){ // get the node at the given index
+     */},{key:'authoringViewNodeDownButtonClicked',value:function authoringViewNodeDownButtonClicked(index){ // get the nodes
+var nodes=this.authoringComponentContent.nodes; // check if the node is at the bottom
+if(nodes!=null&&index!=nodes.length-1){ // the node is not at the bottom so we can move it down
+// get the node at the given index
 var node=nodes[index]; // remove the node
 nodes.splice(index,1); // insert the node back in one index ahead
 nodes.splice(index+1,0,node); /*
-                 * the author has made changes so we will save the component
-                 * content
-                 */this.authoringViewComponentChanged();}}} /**
+             * the author has made changes so we will save the component
+             * content
+             */this.authoringViewComponentChanged();}} /**
      * A node delete button was clicked in the authoring tool so we will remove
      * the node
      * @param index the index of the node that we will delete
@@ -376,10 +378,10 @@ links.splice(index-1,0,link); /*
      * A link down button was clicked in the authoring tool so we will move the 
      * link down
      * @param index the index of the link
-     */},{key:'authoringViewLinkDownButtonClicked',value:function authoringViewLinkDownButtonClicked(index){ // check if the link is at the bottom
-if(index!=links.length-1){ // the node is not at the bottom so we can move it down
-// get the links
-var links=this.authoringComponentContent.links;if(links!=null){ // get the link
+     */},{key:'authoringViewLinkDownButtonClicked',value:function authoringViewLinkDownButtonClicked(index){ // get the links
+var links=this.authoringComponentContent.links; // check if the link is at the bottom
+if(links!=null&&index!=links.length-1){ // the node is not at the bottom so we can move it down
+if(links!=null){ // get the link
 var link=links[index];if(link!=null){ // remove the link
 links.splice(index,1); // add the link back in one index ahead
 links.splice(index+1,0,link); /*
@@ -450,10 +452,34 @@ this.authoringViewComponentChanged();} /**
      */},{key:'authoringAddRule',value:function authoringAddRule(){ // create the new rule
 var newRule={};newRule.name="";newRule.type="node";newRule.category="";newRule.nodeLabel="";newRule.comparison="exactly";newRule.number=1; // add the rule to the array of rules
 this.authoringComponentContent.rules.push(newRule); // perform updating and saving
-this.authoringViewComponentChanged();} /*
+this.authoringViewComponentChanged();} /**
+     * Move a rule up
+     * @param index the index of the rule
+     */},{key:'authoringViewRuleUpButtonClicked',value:function authoringViewRuleUpButtonClicked(index){ // check if the rule is at the top
+if(index!=0){ // the rule is not at the top so we can move it up
+// get the rules
+var rules=this.authoringComponentContent.rules;if(rules!=null){ // get the rule at the given index
+var rule=rules[index]; // remove the rule
+rules.splice(index,1); // insert the rule back in one index back
+rules.splice(index-1,0,rule); /*
+                 * the author has made changes so we will save the component
+                 * content
+                 */this.authoringViewComponentChanged();}}} /**
+     * Move a rule down
+     * @param index the index of the rule
+     */},{key:'authoringViewRuleDownButtonClicked',value:function authoringViewRuleDownButtonClicked(index){ // get the rules
+var rules=this.authoringComponentContent.rules; // check if the rule is at the bottom
+if(rules!=null&&index!=rules.length-1){ // the rule is not at the bottom so we can move it down
+// get the rule at the given index
+var rule=rules[index]; // remove the rule
+rules.splice(index,1); // insert the rule back in one index ahead
+rules.splice(index+1,0,rule); /*
+             * the author has made changes so we will save the component
+             * content
+             */this.authoringViewComponentChanged();}} /*
      * Delete a rule
      * @param index the index of the rule to delete
-     */},{key:'authoringDeleteRule',value:function authoringDeleteRule(index){ // remove the rule at the given index
+     */},{key:'authoringViewRuleDeleteButtonClicked',value:function authoringViewRuleDeleteButtonClicked(index){ // remove the rule at the given index
 this.authoringComponentContent.rules.splice(index,1); // perform updating and saving
 this.authoringViewComponentChanged();} /**
      * Get all the step node ids in the project
@@ -1023,6 +1049,12 @@ this.clearConceptMap(); /*
      */},{key:'clearConceptMap',value:function clearConceptMap(){ // remove all the links from the svg and the array of links
 this.removeAllLinks(); // remove all the nodes from the svg and the array of nodes
 this.removeAllNodes();} /**
+     * Reset the concept map data. We will clear the concept map data and
+     * if there is starter concept map data we will set it into the concept map.
+     */},{key:'resetConceptMap',value:function resetConceptMap(){ // clear the concept map
+this.clearConceptMap();if(this.componentContent.starterConceptMap!=null){ // get the starter concept map
+var conceptMapData=this.componentContent.starterConceptMap; // populate the starter concept map data into the component
+this.populateConceptMapData(conceptMapData);}} /**
      * Check the student concept map against the custom rule evaluator
      */},{key:'checkAnswer',value:function checkAnswer(){ // get the custom rule evaluator code that was authored
 var customRuleEvaluator=this.componentContent.customRuleEvaluator; // get the component content
