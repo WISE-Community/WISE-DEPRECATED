@@ -69,7 +69,8 @@ this.populateConceptMapData(conceptMapData);}}else { // the student has work for
                  * will be changed to
                  * "/wise/curriculum/108/assets/Sun.png"
                  */componentState=this.ProjectService.injectAssetPaths(componentState); // populate the student work into this component
-this.setStudentWork(componentState);} // check if we need to lock this component
+this.setStudentWork(componentState);} // make the nodes draggable
+this.enableNodeDragging(); // check if we need to lock this component
 this.calculateDisabled();if(this.$scope.$parent.registerComponentController!=null){ // register this component with the parent node
 this.$scope.$parent.registerComponentController(this.$scope,this.componentContent);}} /**
          * Returns true iff there is student work that hasn't been saved yet
