@@ -201,7 +201,11 @@ componentState.studentData=studentData; /*
 for(var n=0;n<this.nodes.length;n++){var node=this.nodes[n]; // get the JSON representation of the node
 var nodeJSON=node.toJSONObject();studentData.nodes.push(nodeJSON);} // loop through all the links
 for(var l=0;l<this.links.length;l++){var link=this.links[l]; // get the JSON representation of the link
-var linkJSON=link.toJSONObject();studentData.links.push(linkJSON);}return studentData;} /**
+var linkJSON=link.toJSONObject();studentData.links.push(linkJSON);} // set the background data into the student data
+if(this.componentContent.background!=null){ // this is the background file name e.g. background.png
+studentData.background=this.authoringComponentContent.background; // this is the background path e.g. /wise/curriculum/108/assets/background.png
+studentData.backgroundPath=this.componentContent.background; // whether to stretch the background to fill the svg element
+studentData.stretchBackground=this.authoringComponentContent.stretchBackground;}return studentData;} /**
      * Perform any additional processing that is required before returning the
      * component state
      * Note: this function must call deferred.resolve() otherwise student work
