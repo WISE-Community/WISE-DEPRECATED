@@ -733,8 +733,9 @@ var selectedNode=this.selectedNode;if(selectedNode!=null){ // get the file name
 var filePath=selectedNode.fileName; // get the node name
 var label=selectedNode.label; // get the width and height of the node
 var width=selectedNode.width;var height=selectedNode.height; // get the original authored id
-var originalId=selectedNode.id; // get the position we should drop the node at
-var x=event.offsetX-this.tempOffsetX;var y=event.offsetY-this.tempOffsetY; // get a new ConceptMapNodeId e.g. 'studentNode3'
+var originalId=selectedNode.id; // get the coordinates relative to the svg element
+var coordinates=this.getRelativeCoordinatesByEvent(event); // get the position we should drop the node at
+var x=coordinates.x-this.tempOffsetX;var y=coordinates.y-this.tempOffsetY; // get a new ConceptMapNodeId e.g. 'studentNode3'
 var newConceptMapNodeId=this.getNewConceptMapNodeId(); // create a ConceptMapNode
 var conceptMapNode=this.ConceptMapService.newConceptMapNode(this.draw,newConceptMapNodeId,originalId,filePath,label,x,y,width,height); // add the node to our array of nodes
 this.addNode(conceptMapNode); // set the mouse events on the node

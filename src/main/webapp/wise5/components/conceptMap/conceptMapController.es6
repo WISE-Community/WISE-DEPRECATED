@@ -2499,9 +2499,12 @@ class ConceptMapController {
             // get the original authored id
             var originalId = selectedNode.id;
             
+            // get the coordinates relative to the svg element
+            var coordinates = this.getRelativeCoordinatesByEvent(event);
+            
             // get the position we should drop the node at
-            var x = event.offsetX - this.tempOffsetX;
-            var y = event.offsetY - this.tempOffsetY;
+            var x = coordinates.x - this.tempOffsetX;
+            var y = coordinates.y - this.tempOffsetY;
             
             // get a new ConceptMapNodeId e.g. 'studentNode3'
             var newConceptMapNodeId = this.getNewConceptMapNodeId();
