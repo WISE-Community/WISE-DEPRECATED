@@ -540,6 +540,12 @@ class ConceptMapController {
                 }
             }
             
+            /*
+             * move the link text group to the front so that they are on top
+             * of links
+             */
+            this.moveLinkTextToFront();
+            
             // move the nodes to the front so that they are on top of links
             this.moveNodesToFront();
             
@@ -2229,7 +2235,7 @@ class ConceptMapController {
         
         // enable node draggin
         this.enableNodeDragging();
-        
+        this.moveLinkTextToFront();
         // move the nodes to the front so that they are on top of links
         this.moveNodesToFront();
     }
@@ -2777,6 +2783,22 @@ class ConceptMapController {
                     // make the group not draggable
                     group.draggable(false);
                 }
+            }
+        }
+    }
+    
+    /**
+     * Move the link text group to the front
+     */
+    moveLinkTextToFront() {
+        
+        // loop through all the links
+        for (var l = 0; l < this.links.length; l++) {
+            var link = this.links[l];
+            
+            if (link != null) {
+                // move the link text group to the front
+                link.moveTextGroupToFront();
             }
         }
     }
@@ -3330,6 +3352,11 @@ class ConceptMapController {
             this.linkMouseDown(event);
         });
         
+        // set the link text mouse down listener
+        link.setLinkTextMouseDown((event) => {
+            this.linkTextMouseDown(event);
+        });
+        
         // set the link mouse over listener
         link.setLinkMouseOver((event) => {
             this.linkMouseOver(event);
@@ -3362,6 +3389,41 @@ class ConceptMapController {
             // make the link highlighted
             this.setHighlightedElement(link);
         }
+    }
+    
+    /**
+     * Called when the mouse is clicked down on a link text
+     * @param event the mouse down event
+     */
+    linkTextMouseDown(event) {
+        
+        var linkGroupId = null;
+        
+        /*
+         * the link group id is set into the text group in the linkGroupId
+         * variable. the text group hierarchy looks like this
+         * text group > text > tspan
+         * text group > rect
+         */
+        if (event.target.nodeName == 'tspan') {
+            linkGroupId = event.target.parentElement.parentElement.linkGroupId;
+        } else if (event.target.nodeName == 'text') {
+            linkGroupId = event.target.parentElement.linkGroupId;
+        } else if (event.target.nodeName == 'rect') {
+            linkGroupId = event.target.parentElement.linkGroupId;
+        }
+            
+        if (linkGroupId != null) {
+            
+            // get the link
+            var link = this.getLinkByGroupId(linkGroupId);
+            
+            if (link != null) {
+                // make the link highlighted
+                this.setHighlightedElement(link);
+            }
+        }
+        
     }
     
     /**

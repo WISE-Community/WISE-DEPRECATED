@@ -2404,6 +2404,12 @@ class ConceptMapLink {
         
         // add the delete button group to the link group
         this.group.add(this.deleteButtonGroup);
+        
+        /*
+         * hide the delete button. we only need to show the delete button
+         * when the link is active.
+         */
+        this.deleteButtonGroup.hide();
     }
     
     /**
@@ -2442,12 +2448,29 @@ class ConceptMapLink {
      * clicked down on the group
      */
     setLinkMouseDown(linkMouseDownFunction) {
+        
         if (this.group != null) {
             /*
              * listen for the mousedown event on the group to call
              * the function
              */
             this.group.mousedown(linkMouseDownFunction);
+        }
+    }
+    
+    /**
+     * Called when the mouse is clicked down on the link text group
+     * @param linkTextMouseDownFunction the function to call when the mouse is
+     * clicked down on the link text group
+     */
+    setLinkTextMouseDown(linkTextMouseDownFunction) {
+        
+        if (this.textGroup != null) {
+            /*
+             * listen for the mousedown event on the link text group to call
+             * the function
+             */
+            this.textGroup.mousedown(linkTextMouseDownFunction);
         }
     }
     
@@ -2602,13 +2625,24 @@ class ConceptMapLink {
         this.textGroup.cx(midPoint.x);
         this.textGroup.cy(midPoint.y);
         
-        // add the text group to the link group
-        this.group.add(this.textGroup);
-        
         // hide the text group until the student has chosen a link type
         this.textGroup.hide();
         
+        /*
+         * set the link group id into the text group so we can look it up
+         * later when the mouse is clicked down on the text group
+         */
+        this.textGroup.node.linkGroupId = this.group.id();
+        
         return this.textGroup;
+    }
+    
+    /**
+     * Move the text group to the front so that it won't be blocked behind
+     * another element when the student tries to click on the text group.
+     */
+    moveTextGroupToFront() {
+        this.textGroup.front();
     }
     
     /**

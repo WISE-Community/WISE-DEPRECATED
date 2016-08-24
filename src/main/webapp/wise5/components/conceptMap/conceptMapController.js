@@ -125,7 +125,10 @@ this.links=[];var links=conceptMapData.links;if(links!=null){ // loop through al
 for(var l=0;l<links.length;l++){var link=links[l];var instanceId=link.instanceId;var originalId=link.originalId;var sourceNodeId=link.sourceNodeInstanceId;var destinationNodeId=link.destinationNodeInstanceId;var label=link.label;var color=link.color;var curvature=link.curvature;var startCurveUp=link.startCurveUp;var endCurveUp=link.endCurveUp;var sourceNode=null;var destinationNode=null;if(sourceNodeId!=null){sourceNode=this.getNodeById(sourceNodeId);}if(destinationNodeId!=null){destinationNode=this.getNodeById(destinationNodeId);} // create a ConceptMapLink
 var conceptMapLink=this.ConceptMapService.newConceptMapLink(this.draw,instanceId,originalId,sourceNode,destinationNode,label,color,curvature,startCurveUp,endCurveUp); // add the link to our array of links
 this.addLink(conceptMapLink); // set the mouse events on the link
-this.setLinkMouseEvents(conceptMapLink);}} // move the nodes to the front so that they are on top of links
+this.setLinkMouseEvents(conceptMapLink);}} /*
+             * move the link text group to the front so that they are on top
+             * of links
+             */this.moveLinkTextToFront(); // move the nodes to the front so that they are on top of links
 this.moveNodesToFront(); /*
              * set a timeout to refresh the link labels so that the rectangles
              * around the labels are properly resized
@@ -630,7 +633,7 @@ this.clearHighlightedElement();}} /**
              */this.activeLink.remove();} // we are no longer drawing a link
 this.drawingLink=false; // there is no longer an active link
 this.activeLink=null; // enable node draggin
-this.enableNodeDragging(); // move the nodes to the front so that they are on top of links
+this.enableNodeDragging();this.moveLinkTextToFront(); // move the nodes to the front so that they are on top of links
 this.moveNodesToFront();} /**
      * Called when the mouse is moved
      * @param event the mouse move event
@@ -803,6 +806,10 @@ group.draggable(options);}}}} /**
 for(var n=0;n<this.nodes.length;n++){var node=this.nodes[n];if(node!=null){ // get a node group
 var group=node.getGroup();if(group!=null){ // make the group not draggable
 group.draggable(false);}}}} /**
+     * Move the link text group to the front
+     */},{key:'moveLinkTextToFront',value:function moveLinkTextToFront(){ // loop through all the links
+for(var l=0;l<this.links.length;l++){var link=this.links[l];if(link!=null){ // move the link text group to the front
+link.moveTextGroupToFront();}}} /**
      * Move the nodes to the front so that they show up above links
      */},{key:'moveNodesToFront',value:function moveNodesToFront(){ // loop through all the nodes
 for(var n=0;n<this.nodes.length;n++){var node=this.nodes[n];if(node!=null){ // get a node group
@@ -962,7 +969,8 @@ this.setActiveNode(node);} /**
      * Set the link mouse events for a link
      * @param link the ConceptMapLink
      */},{key:'setLinkMouseEvents',value:function setLinkMouseEvents(link){var _this8=this; // set the link mouse down listener
-link.setLinkMouseDown(function(event){_this8.linkMouseDown(event);}); // set the link mouse over listener
+link.setLinkMouseDown(function(event){_this8.linkMouseDown(event);}); // set the link text mouse down listener
+link.setLinkTextMouseDown(function(event){_this8.linkTextMouseDown(event);}); // set the link mouse over listener
 link.setLinkMouseOver(function(event){_this8.linkMouseOver(event);}); // set the link mouse out listener
 link.setLinkMouseOut(function(event){_this8.linkMouseOut(event);}); // set the delete button clicked event for the link
 link.setDeleteButtonClicked(function(event){_this8.linkDeleteButtonClicked(event,link);});} /**
@@ -972,6 +980,16 @@ link.setDeleteButtonClicked(function(event){_this8.linkDeleteButtonClicked(event
 var groupId=this.getGroupId(event.target); // get the link
 var link=this.getLinkByGroupId(groupId);if(link!=null){ // make the link highlighted
 this.setHighlightedElement(link);}} /**
+     * Called when the mouse is clicked down on a link text
+     * @param event the mouse down event
+     */},{key:'linkTextMouseDown',value:function linkTextMouseDown(event){var linkGroupId=null; /*
+         * the link group id is set into the text group in the linkGroupId
+         * variable. the text group hierarchy looks like this
+         * text group > text > tspan
+         * text group > rect
+         */if(event.target.nodeName=='tspan'){linkGroupId=event.target.parentElement.parentElement.linkGroupId;}else if(event.target.nodeName=='text'){linkGroupId=event.target.parentElement.linkGroupId;}else if(event.target.nodeName=='rect'){linkGroupId=event.target.parentElement.linkGroupId;}if(linkGroupId!=null){ // get the link
+var link=this.getLinkByGroupId(linkGroupId);if(link!=null){ // make the link highlighted
+this.setHighlightedElement(link);}}} /**
      * Called when the mouse is over a link
      * @param event the mouse over event
      */},{key:'linkMouseOver',value:function linkMouseOver(event){ // get the group id
