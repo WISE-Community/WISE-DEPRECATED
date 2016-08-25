@@ -344,11 +344,66 @@ class ConceptMapService extends NodeService {
      */
     evaluateRuleByRuleName(componentContent, conceptMapData, ruleName) {
         
+        var result = false;
+        
         // get the rule
         var rule = this.getRuleByRuleName(componentContent, ruleName);
         
-        // evaluate the rule
-        var result = this.evaluateRule(conceptMapData, rule);
+        if (rule == null) {
+            /*
+             * we didn't find a rule with the given rule name so we will look
+             * for a category with that name
+             */
+            
+            // get the rules that are in the category
+            var rules = this.getRulesByCategoryName(componentContent, ruleName);
+            
+            var firstRule = true;
+            
+            if (rules != null) {
+                
+                /*
+                 * loop through all the rules in the category. we will say the
+                 * category is satisfied if all the rules in the category
+                 * evaluate to true.
+                 */
+                for (var r = 0; r < rules.length; r++) {
+                    var tempRule = rules[r];
+                    
+                    // evaluate the rule
+                    var tempResult = this.evaluateRule(conceptMapData, tempRule);
+                    
+                    if (firstRule) {
+                        /*
+                         * this is the first rule so we will set the value
+                         * of the rule to the result
+                         */
+                        result = tempResult;
+                        firstRule = false;
+                    } else {
+                        /*
+                         * this is not the first rule so we will compute the 
+                         * "logical and" of the result so far and this rule's
+                         * result
+                         */
+                        result = result && tempResult;
+                    }
+                    
+                    if (!result) {
+                        /*
+                         * the result is false so we can short circuit and
+                         * stop looping since we have now just found that
+                         * one of the rules is not satisfied which means
+                         * the category is not satisfied.
+                         */
+                        break;
+                    }
+                }
+            }
+        } else {
+            // evaluate the rule
+            result = this.evaluateRule(conceptMapData, rule);
+        }
         
         return result;
     }
@@ -496,6 +551,56 @@ class ConceptMapService extends NodeService {
         }
         
         return rule;
+    }
+    
+    /**
+     * Get the rules in the category
+     * @param componentContent the component content
+     * @param category the category name
+     * @returns the rules in the category
+     */
+    getRulesByCategoryName(componentContent, category) {
+        
+        var rules = [];
+        
+        if (componentContent != null) {
+            
+            // get all the rules
+            var tempRules = componentContent.rules;
+            
+            if (tempRules != null) {
+                
+                // loop through all the rules
+                for (var r = 0; r < tempRules.length; r++) {
+                    var rule = tempRules[r];
+                    
+                    if (rule != null) {
+                        
+                        // get the categories the rule is in
+                        var categories = rule.categories;
+                        
+                        if (categories != null) {
+                            
+                            // loop through categories the rule is in
+                            for (var c = 0; c < categories.length; c++) {
+                                var tempCategory = categories[c];
+                                
+                                if (category == tempCategory) {
+                                    /*
+                                     * the rule is in the category we are
+                                     * searching for
+                                     */
+                                    rules.push(rule);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        return rules;
     }
     
     /**

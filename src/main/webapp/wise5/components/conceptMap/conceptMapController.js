@@ -458,7 +458,7 @@ var rule=this.authoringComponentContent.rules[ruleIndex];if(rule!=null){if(rule.
 this.authoringViewComponentChanged();} /**
      * Add a new rule
      */},{key:'authoringAddRule',value:function authoringAddRule(){ // create the new rule
-var newRule={};newRule.name="";newRule.type="node";newRule.category="";newRule.nodeLabel="";newRule.comparison="exactly";newRule.number=1; // add the rule to the array of rules
+var newRule={};newRule.name="";newRule.type="node";newRule.categories=[];newRule.nodeLabel="";newRule.comparison="exactly";newRule.number=1; // add the rule to the array of rules
 this.authoringComponentContent.rules.push(newRule); // perform updating and saving
 this.authoringViewComponentChanged();} /**
      * Move a rule up
@@ -489,6 +489,17 @@ rules.splice(index+1,0,rule); /*
      * @param index the index of the rule to delete
      */},{key:'authoringViewRuleDeleteButtonClicked',value:function authoringViewRuleDeleteButtonClicked(index){ // remove the rule at the given index
 this.authoringComponentContent.rules.splice(index,1); // perform updating and saving
+this.authoringViewComponentChanged();} /**
+     * Add a category to a rule
+     * @param rule the rule
+     */},{key:'authoringViewAddCategoryClicked',value:function authoringViewAddCategoryClicked(rule){if(rule!=null){ // add an empty category name
+rule.categories.push("");} // perform updating and saving
+this.authoringViewComponentChanged();} /**
+     * Delete a category from a rule
+     * @param rule delete a category from this rule
+     * @param index the index of the category
+     */},{key:'authoringViewDeleteCategoryClicked',value:function authoringViewDeleteCategoryClicked(rule,index){if(rule!=null){ // remove the category at the index
+rule.categories.splice(index,1);} // perform updating and saving
 this.authoringViewComponentChanged();} /**
      * Get all the step node ids in the project
      * @returns all the step node ids

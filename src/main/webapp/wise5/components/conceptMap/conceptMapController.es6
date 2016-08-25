@@ -1636,7 +1636,7 @@ class ConceptMapController {
         var newRule = {};
         newRule.name = "";
         newRule.type = "node";
-        newRule.category = "";
+        newRule.categories = [];
         newRule.nodeLabel = "";
         newRule.comparison = "exactly";
         newRule.number = 1;
@@ -1719,6 +1719,37 @@ class ConceptMapController {
         
         // remove the rule at the given index
         this.authoringComponentContent.rules.splice(index, 1);
+        
+        // perform updating and saving
+        this.authoringViewComponentChanged();
+    }
+    
+    /**
+     * Add a category to a rule
+     * @param rule the rule
+     */
+    authoringViewAddCategoryClicked(rule) {
+        
+        if (rule != null) {
+            // add an empty category name
+            rule.categories.push("");
+        }
+        
+        // perform updating and saving
+        this.authoringViewComponentChanged();
+    }
+    
+    /**
+     * Delete a category from a rule
+     * @param rule delete a category from this rule
+     * @param index the index of the category
+     */
+    authoringViewDeleteCategoryClicked(rule, index) {
+        
+        if (rule != null) {
+            // remove the category at the index
+            rule.categories.splice(index, 1);
+        }
         
         // perform updating and saving
         this.authoringViewComponentChanged();

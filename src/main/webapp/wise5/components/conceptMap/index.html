@@ -145,6 +145,17 @@
                     <button ng-click='conceptMapController.authoringViewRuleUpButtonClicked($index)'>Up</button>
                     <button ng-click='conceptMapController.authoringViewRuleDownButtonClicked($index)'>Down</button>
                     <button ng-click='conceptMapController.authoringViewRuleDeleteButtonClicked($index)'>Delete Rule</button>
+                    <br/>
+                    <div style='text-indent: 80px'>
+                        <button ng-click='conceptMapController.authoringViewAddCategoryClicked(rule)'>Add Category (Optional)</button>
+                        <span ng-repeat='category in rule.categories track by $index'>
+                            <input ng-model='rule.categories[$index]'
+                                   ng-change='conceptMapController.authoringViewComponentChanged()'
+                                   ng-model-options='{ debounce: 1000 }'/>
+                            <button ng-click='conceptMapController.authoringViewDeleteCategoryClicked(rule, $index)'>x</button>
+                        </span>
+                    </div>
+                    <br/>
                 </div>
                 <br/>
                 Custom Rule Evaluator
