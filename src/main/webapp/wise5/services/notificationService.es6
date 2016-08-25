@@ -78,9 +78,9 @@ class NotificationService {
      * Retrieves notifications from the server
      */
     retrieveNotifications(toWorkgroupId = null) {
-        
+
         var notificationURL = this.ConfigService.getNotificationURL();
-        
+
         if (notificationURL == null) {
             // the notification url is null most likely because we are in preview mode
             return Promise.resolve(this.notifications);
@@ -96,7 +96,7 @@ class NotificationService {
                 config.params.toWorkgroupId = this.ConfigService.getWorkgroupId();
                 config.params.periodId = this.ConfigService.getPeriodId();
             }
-            
+
             return this.$http(config).then((response) => {
                 this.notifications = response.data;
                 // populate nodePosition and nodePositionAndTitle, where applicable
@@ -146,8 +146,10 @@ class NotificationService {
             notificationMessageToStudent = notificationMessageToStudent.replace("{{dismissCode}}", notificationForScore.dismissCode);
             let notificationGroupId = this.ConfigService.getRunId() + "_" + this.UtilService.generateKey(10);  // links student and teacher notifications together
             let notificationData = {};
-            if (notificationForScore.isAmbient && notificationForScore.dismissCode != null) {
+            if (notificationForScore.isAmbient) {
                 notificationData.isAmbient = true;
+            }
+            if (notificationForScore.dismissCode != null) {
                 notificationData.dismissCode = notificationForScore.dismissCode;
             }
             // send notification to student

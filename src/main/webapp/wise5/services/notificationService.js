@@ -181,8 +181,10 @@ var NotificationService = function () {
                 notificationMessageToStudent = notificationMessageToStudent.replace("{{dismissCode}}", notificationForScore.dismissCode);
                 var notificationGroupId = this.ConfigService.getRunId() + "_" + this.UtilService.generateKey(10); // links student and teacher notifications together
                 var notificationData = {};
-                if (notificationForScore.isAmbient && notificationForScore.dismissCode != null) {
+                if (notificationForScore.isAmbient) {
                     notificationData.isAmbient = true;
+                }
+                if (notificationForScore.dismissCode != null) {
                     notificationData.dismissCode = notificationForScore.dismissCode;
                 }
                 // send notification to student
