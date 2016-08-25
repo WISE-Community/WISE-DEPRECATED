@@ -4,182 +4,190 @@ body {
 }
 
 h1 {
-  font-size: $display-3-font-size-base;
+    font-size: $display-3-font-size-base;
 }
 
 h2 {
-  font-size: $display-2-font-size-base;
+    font-size: $display-2-font-size-base;
 }
 
 h3 {
-  font-size: $display-1-font-size-base;
+    font-size: $display-1-font-size-base;
 }
 
 h4 {
-  font-size: $headline-font-size-base;
+    font-size: $headline-font-size-base;
 }
 
 h5 {
-  font-size: $title-font-size-base;
+    font-size: $title-font-size-base;
 }
 
 h6 {
-  font-size: $subhead-font-size-base;
+    font-size: $subhead-font-size-base;
 }
 
 // Rules for sizing material icons
 md-icon {
-  &.md-18 {
-    font-size: 18px;
-    width: 18px;
-    height: 18px;
-  }
-  &.md-24 {
-    font-size: 24px;
-    width: 24px;
-    height: 24px;
-  }
-  &.md-36 {
-    font-size: 36px;
-    width: 36px;
-    height: 36px;
-  }
-  &.md-48 {
-    font-size: 48px;
-    width: 48px;
-    height: 48px;
-  }
+    &.md-18 {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+        min-width: 0;
+    }
+    &.md-24 {
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
+        min-width: 0;
+    }
+    &.md-36 {
+        font-size: 36px;
+        width: 36px;
+        height: 36px;
+        min-width: 0;
+    }
+    &.md-48 {
+        font-size: 48px;
+        width: 48px;
+        height: 48px;
+        min-width: 0;
+    }
 
-  // Rules for using material icons as black on a light background
-  &.md-dark {
-    color: rgba(0, 0, 0, 0.54);
-  }
-  &.md-dark.md-inactive {
-    color: rgba(0, 0, 0, 0.26);
-  }
-  // Rules for using material icons as white on a dark background
-  &.md-light {
-    color: rgba(255, 255, 255, 1);
-  }
-  &.md-light.md-inactive {
-    color: rgba(255, 255, 255, 0.3);
-  }
+    // Rules for using material icons as black on a light background
+    &.md-dark {
+        color: rgba(0, 0, 0, 0.54);
+    }
+    &.md-dark.md-inactive {
+        color: rgba(0, 0, 0, 0.26);
+    }
+    // Rules for using material icons as white on a dark background
+    &.md-light {
+        color: rgba(255, 255, 255, 1);
+    }
+    &.md-light.md-inactive {
+        color: rgba(255, 255, 255, 0.3);
+    }
 }
 
 md-toolbar {
-  min-height: $baseline-grid * 6.5;
+    min-height: $baseline-grid * 6.5;
 
-  .md-menu {
-    padding-top: 0;
-    padding-bottom: 0;
-  }
+    .md-menu {
+        padding-top: 0;
+        padding-bottom: 0;
+    }
 }
 
 .md-toolbar-tools--fit {
-  width: auto;
-  padding: 0;
+    width: auto;
+    padding: 0;
 
-  .md-button {
-    align-self: flex-start;
-  }
+    .md-button {
+        align-self: flex-start;
+    }
 
-  h1, h2, h3 {
-    padding: $baseline-grid 0;
-  }
+    h1, h2, h3 {
+        padding: $baseline-grid 0;
+    }
 }
 
 md-card[md-ink-ripple], md-card-content[md-ink-ripple] {
-  position: relative;
-  cursor: pointer;
+    position: relative;
+    cursor: pointer;
 }
 
 md-card {
-  border-radius: $card-border-radius;
+    border-radius: $card-border-radius;
 }
 
 md-progress-linear:not([md-mode="indeterminate"]) {
 
-  .md-container.md-ready {
-    transform: none;
-  }
+    .md-container.md-ready {
+        transform: none;
+    }
 
-  .md-container {
-    transition: none;
-  }
+    .md-container {
+        transition: none;
+    }
 }
 
 md-list-item ._md-list-item-inner p {
-  line-height: 24px;
+    line-height: 24px;
 }
 
 md-list-item ._md-list-item-inner>.md-avatar:first-child, md-list-item>.md-avatar:first-child {
-  display: flex;
+    display: flex;
 }
 
 md-input-container {
-  &.md-no-float {
-    margin-top: 0;
-    padding-top: 0;
+    &.md-no-float {
+        margin-top: 0;
+        padding-top: 0;
 
-    .md-input {
-      margin-top: 8px;
+        .md-input {
+            margin-top: 8px;
+        }
+
+        label {
+            position: relative;
+            padding-left: 0;
+        }
+
+        md-radio-button, md-checkbox {
+            margin: 16px;
+            display: block;
+        }
     }
 
-    label {
-      position: relative;
-      padding-left: 0;
+    &:not(.md-input-invalid):not(.md-input-focused).md-input-has-value label {
+        color: rgba(0, 0, 0, 0.87) !important;
     }
-
-    md-radio-button, md-checkbox {
-      margin: 16px;
-      display: block;
-    }
-  }
-
-  &:not(.md-input-invalid):not(.md-input-focused).md-input-has-value label {
-    color: rgba(0, 0, 0, 0.87) !important;
-  }
 }
 
 .md-button {
-  /*@media (max-width: $layout-breakpoint-sm - 1) {
+    /*@media (max-width: $layout-breakpoint-sm - 1) {
     min-width: 60px;
     min-height: 28px;
     line-height: 28px;
-  }*/
+}*/
 
-  > md-icon {
+> md-icon {
     margin-top: -2px;
-  }
+}
 }
 
 md-select-menu md-option[selected] {
-  font-weight: 600;
+    font-weight: 600;
 }
 
 md-dialog {
-  max-width: 90%;
+    max-width: 90%;
+
+    .md-dialog-content {
+        padding: 16px;
+    }
 }
 
 md-radio-button {
-  outline: none;
+    outline: none;
 }
 
 // TODO: remove when fixed
 .md-scroll-mask {
-  z-index: 10 !important;
+    z-index: 10 !important;
 }
 
 md-toast {
-  @media (max-width: $layout-breakpoint-sm - 1) {
-    padding: 0;
+    @media (max-width: $layout-breakpoint-sm - 1) {
+        padding: 0;
 
-    .md-toast-content {
-      border-radius: 0;
-      padding-left: 12px;
-      padding-right: 12px;
+        .md-toast-content {
+            border-radius: 0;
+            padding-left: 12px;
+            padding-right: 12px;
+        }
     }
-  }
 }
 
 $tooltip-fontsize-lg: rem(1);
@@ -193,14 +201,14 @@ $tooltip-lr-padding-sm: rem(0.8);
 $tooltip-max-width: rem(3.20);
 
 md-tooltip {
-  font-size: $tooltip-fontsize-sm;
+    font-size: $tooltip-fontsize-sm;
 
-  .md-content {
-    height: $tooltip-height-sm;
-    line-height: $tooltip-height-sm;
-    padding-left: $tooltip-lr-padding-sm;
-    padding-right: $tooltip-lr-padding-sm;
-  }
+    .md-content {
+        height: $tooltip-height-sm;
+        line-height: $tooltip-height-sm;
+        padding-left: $tooltip-lr-padding-sm;
+        padding-right: $tooltip-lr-padding-sm;
+    }
 }
 
 .md-open-menu-container {

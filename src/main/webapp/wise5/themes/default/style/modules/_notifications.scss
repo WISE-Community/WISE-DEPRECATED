@@ -33,11 +33,19 @@
     padding: 8px 0;
 }
 
+.notification-dismiss {
+    width: 500px;
+}
+
+.notification-dismiss__input {
+    margin-bottom: 0;
+}
+
 md-list md-list-item .md-list-item-text h4,
 md-list md-list-item.md-2-line .md-list-item-text h4,
 md-list md-list-item.md-3-line .md-list-item-text h4 {
     &.notification-list-item__source {
-        color: color('gray-dark');
+        color: color('text-secondary');
         font-size: rem(1.2);
 
         md-icon {

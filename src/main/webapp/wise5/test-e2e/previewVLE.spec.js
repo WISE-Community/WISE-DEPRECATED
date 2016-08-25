@@ -115,8 +115,10 @@ describe('WISE5 Student VLE Preview', function () {
 
     it('should allow user to jump to a step by changing the URL path', function () {
         browser.get('http://localhost:8080/wise/project/demo#/vle/node24'); // User changes the URL
-        browser.waitForAngular(); // wait for Angular to load
-        expect(element(by.model("stepToolsCtrl.toNodeId")).getText()).toBe('3.4: Feature Selection');
+        var nodeDropDownMenu = element(by.model("stepToolsCtrl.toNodeId"));
+        browser.wait(nodeDropDownMenu.isPresent(), 5000); // give it at most 5 seconds to load.
+        expect(browser.getTitle()).toEqual('WISE');
+        expect(nodeDropDownMenu.getText()).toBe('3.4: Feature Selection');
 
         // Click on the next button and expect to go to the next step
         nextButton.click();

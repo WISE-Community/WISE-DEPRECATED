@@ -157,8 +157,8 @@ let mainModule = angular.module('classroomMonitor', [
                         studentStatuses: function(StudentStatusService, config) {
                             return StudentStatusService.retrieveStudentStatuses();
                         },
-                        notifications: function (NotificationService, studentStatuses, config, project) {
-                            return NotificationService.retrieveNotifications();
+                        notifications: function (NotificationService, ConfigService, studentStatuses, config, project) {
+                            return NotificationService.retrieveNotifications(ConfigService.getWorkgroupId());
                         },
                         webSocket: function(TeacherWebSocketService, config) {
                             return TeacherWebSocketService.initialize();
