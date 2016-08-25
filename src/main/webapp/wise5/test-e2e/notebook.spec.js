@@ -32,7 +32,7 @@ describe('WISE5 Notebook in Preview Mode', function () {
         // check that UI elements are displayed
         var closeNotebookButton = element(by.xpath('//md-toolbar/div/button[@aria-label="Close Notebook"]'));
         expect(closeNotebookButton.isPresent()).toBeTruthy();
-        var notebookTitle = $(".notebook-title");
+        var notebookTitle = $(".toolbar-title");
         expect(notebookTitle.getText()).toBe("Notes");
 
         // Clicking on the closeNotebookButton should dismiss the notebook and bring user back to original step
