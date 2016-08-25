@@ -170,7 +170,7 @@ public class NotificationController {
     protected void dismissNotification(
             @PathVariable Integer runId,
             @RequestParam(value = "notificationId", required = true) Integer notificationId,
-            @RequestParam(value = "periodId", required = true) Integer periodId,
+            @RequestParam(value = "periodId", required = false) Integer periodId,
             @RequestParam(value = "type", required = true) String type,
             @RequestParam(value = "fromWorkgroupId", required = false) Integer fromWorkgroupId,
             @RequestParam(value = "toWorkgroupId", required = false) Integer toWorkgroupId,

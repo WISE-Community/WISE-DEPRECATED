@@ -1,10 +1,12 @@
 class NotificationService {
-    constructor($http, $rootScope, ConfigService, ProjectService) {
+    constructor($http, $rootScope, ConfigService, ProjectService, StudentWebSocketService, UtilService) {
 
         this.$http = $http;
         this.$rootScope = $rootScope;
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
+        this.StudentWebSocketService = StudentWebSocketService;
+        this.UtilService = UtilService;
         this.notifications = [];  // an array of notifications that students haven't seen yet.
 
         /**
@@ -128,6 +130,51 @@ class NotificationService {
     }
 
     /**
+     * Handle creating notification for score
+     * @param notificationForScore
+     */
+    sendNotificationForScore(notificationForScore) {
+        let notificationType = notificationForScore.notificationType;
+        if (notificationForScore.isNotifyTeacher && notificationForScore.isNotifyStudent) {
+            // notify both teacher and student at the same time
+            let fromWorkgroupId = this.ConfigService.getWorkgroupId();
+            let toWorkgroupId = this.ConfigService.getWorkgroupId();
+            let notificationMessageToStudent = notificationForScore.notificationMessageToStudent;
+            // replace variables like {{score}} and {{dismissCode}} with actual values
+            notificationMessageToStudent = notificationMessageToStudent.replace("{{username}}", this.ConfigService.getUserNameByWorkgroupId(fromWorkgroupId));
+            notificationMessageToStudent = notificationMessageToStudent.replace("{{score}}", notificationForScore.score);
+            notificationMessageToStudent = notificationMessageToStudent.replace("{{dismissCode}}", notificationForScore.dismissCode);
+            let notificationGroupId = this.ConfigService.getRunId() + "_" + this.UtilService.generateKey(10);  // links student and teacher notifications together
+            let notificationData = {};
+            if (notificationForScore.isAmbient && notificationForScore.dismissCode != null) {
+                notificationData.isAmbient = true;
+                notificationData.dismissCode = notificationForScore.dismissCode;
+            }
+            // send notification to student
+            let notificationToStudent = this.createNewNotification(
+                notificationType, notificationForScore.nodeId, notificationForScore.componentId, fromWorkgroupId, toWorkgroupId, notificationMessageToStudent, notificationData, notificationGroupId);
+            this.saveNotificationToServer(notificationToStudent).then((savedNotification) => {
+                // show local notification
+                this.$rootScope.$broadcast('newNotification', savedNotification);
+            });
+
+            // also send notification to teacher
+            let notificationMessageToTeacher = notificationForScore.notificationMessageToTeacher;
+            toWorkgroupId = this.ConfigService.getTeacherWorkgroupId();
+            notificationMessageToTeacher = notificationMessageToTeacher.replace("{{username}}", this.ConfigService.getUserNameByWorkgroupId(fromWorkgroupId));
+            notificationMessageToTeacher = notificationMessageToTeacher.replace("{{score}}", notificationForScore.score);
+            notificationMessageToTeacher = notificationMessageToTeacher.replace("{{dismissCode}}", notificationForScore.dismissCode);
+            let notificationToTeacher = this.createNewNotification(
+                notificationType, notificationForScore.nodeId, notificationForScore.componentId, fromWorkgroupId, toWorkgroupId, notificationMessageToTeacher, notificationData, notificationGroupId);
+            this.saveNotificationToServer(notificationToTeacher).then((savedNotification) => {
+                // send notification in real-time so teacher sees this right away
+                let messageType = "CRaterResultNotification";
+                this.StudentWebSocketService.sendStudentToTeacherMessage(messageType, savedNotification);
+            });
+        }
+    }
+
+    /**
      * Saves the notification for the logged-in user
      * @param notification
      */
@@ -193,7 +240,6 @@ class NotificationService {
 
         let params = {};
         params.notificationId = notification.id;
-        params.periodId = this.ConfigService.getPeriodId();
         params.fromWorkgroupId = notification.fromWorkgroupId;
         params.toWorkgroupId = notification.toWorkgroupId;
         params.type = notification.type;
@@ -218,7 +264,9 @@ NotificationService.$inject = [
     '$http',
     '$rootScope',
     'ConfigService',
-    'ProjectService'
+    'ProjectService',
+    'StudentWebSocketService',
+    'UtilService'
 ];
 
 export default NotificationService;
