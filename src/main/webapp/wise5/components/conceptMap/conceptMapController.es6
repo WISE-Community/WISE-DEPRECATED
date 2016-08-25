@@ -1717,11 +1717,25 @@ class ConceptMapController {
      */
     authoringViewRuleDeleteButtonClicked(index) {
         
-        // remove the rule at the given index
-        this.authoringComponentContent.rules.splice(index, 1);
+        // get the rule
+        var rule = this.authoringComponentContent.rules[index];
         
-        // perform updating and saving
-        this.authoringViewComponentChanged();
+        if (rule != null) {
+            
+            // get the rule name
+            var ruleName = rule.name;
+            
+            // confirm with the author that they really want to delete the rule
+            var answer = confirm('Are you sure you want to delete this rule?\n\nRule Name: ' + ruleName);
+            
+            if (answer) {
+                // remove the rule at the given index
+                this.authoringComponentContent.rules.splice(index, 1);
+                
+                // perform updating and saving
+                this.authoringViewComponentChanged();
+            }
+        }
     }
     
     /**
@@ -1747,12 +1761,24 @@ class ConceptMapController {
     authoringViewDeleteCategoryClicked(rule, index) {
         
         if (rule != null) {
-            // remove the category at the index
-            rule.categories.splice(index, 1);
+            
+            // get the rule name
+            var ruleName = rule.name;
+            
+            // get the category name
+            var categoryName = rule.categories[index];
+            
+            // confirm with the author that they really want to delete the category from the rule
+            var answer = confirm('Are you sure you want to delete the category from this rule?\n\nRule Name: ' + ruleName + '\nCategory Name: ' + categoryName);
+            
+            if (answer) {
+                // remove the category at the index
+                rule.categories.splice(index, 1);
+                
+                // perform updating and saving
+                this.authoringViewComponentChanged();
+            }
         }
-        
-        // perform updating and saving
-        this.authoringViewComponentChanged();
     }
     
     /**

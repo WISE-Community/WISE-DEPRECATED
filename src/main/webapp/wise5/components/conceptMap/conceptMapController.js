@@ -487,9 +487,12 @@ rules.splice(index+1,0,rule); /*
              */this.authoringViewComponentChanged();}} /*
      * Delete a rule
      * @param index the index of the rule to delete
-     */},{key:'authoringViewRuleDeleteButtonClicked',value:function authoringViewRuleDeleteButtonClicked(index){ // remove the rule at the given index
+     */},{key:'authoringViewRuleDeleteButtonClicked',value:function authoringViewRuleDeleteButtonClicked(index){ // get the rule
+var rule=this.authoringComponentContent.rules[index];if(rule!=null){ // get the rule name
+var ruleName=rule.name; // confirm with the author that they really want to delete the rule
+var answer=confirm('Are you sure you want to delete this rule?\n\nRule Name: '+ruleName);if(answer){ // remove the rule at the given index
 this.authoringComponentContent.rules.splice(index,1); // perform updating and saving
-this.authoringViewComponentChanged();} /**
+this.authoringViewComponentChanged();}}} /**
      * Add a category to a rule
      * @param rule the rule
      */},{key:'authoringViewAddCategoryClicked',value:function authoringViewAddCategoryClicked(rule){if(rule!=null){ // add an empty category name
@@ -498,9 +501,12 @@ this.authoringViewComponentChanged();} /**
      * Delete a category from a rule
      * @param rule delete a category from this rule
      * @param index the index of the category
-     */},{key:'authoringViewDeleteCategoryClicked',value:function authoringViewDeleteCategoryClicked(rule,index){if(rule!=null){ // remove the category at the index
-rule.categories.splice(index,1);} // perform updating and saving
-this.authoringViewComponentChanged();} /**
+     */},{key:'authoringViewDeleteCategoryClicked',value:function authoringViewDeleteCategoryClicked(rule,index){if(rule!=null){ // get the rule name
+var ruleName=rule.name; // get the category name
+var categoryName=rule.categories[index]; // confirm with the author that they really want to delete the category from the rule
+var answer=confirm('Are you sure you want to delete the category from this rule?\n\nRule Name: '+ruleName+'\nCategory Name: '+categoryName);if(answer){ // remove the category at the index
+rule.categories.splice(index,1); // perform updating and saving
+this.authoringViewComponentChanged();}}} /**
      * Get all the step node ids in the project
      * @returns all the step node ids
      */},{key:'getStepNodeIds',value:function getStepNodeIds(){var stepNodeIds=this.ProjectService.getNodeIds();return stepNodeIds;} /**
