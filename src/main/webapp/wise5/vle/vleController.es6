@@ -4,6 +4,7 @@ class VLEController {
     constructor($scope,
                 $rootScope,
                 $mdDialog,
+                $mdMenu,
                 $state,
                 $translate,
                 ConfigService,
@@ -18,6 +19,7 @@ class VLEController {
         this.$scope = $scope;
         this.$rootScope = $rootScope;
         this.$mdDialog = $mdDialog;
+        this.$mdMenu = $mdMenu;
         this.$state = $state;
         this.$translate = $translate;
         this.ConfigService = ConfigService;
@@ -337,12 +339,31 @@ class VLEController {
     }
 
     /**
+     * Returns true iff there are new notifications of type 'ambient'
+     */
+    hasNewAmbientNotifications() {
+        return this.getNewAmbientNotifications().length > 0;
+    }
+
+    /**
      * Returns all notifications that have not been dismissed yet
      */
     getNewNotifications() {
         return this.notifications.filter(
             function(notification) {
                 return notification.timeDismissed == null;
+            }
+        );
+    }
+
+    /**
+     * Returns all ambient notifications that have not been dismissed yet
+     */
+    getNewAmbientNotifications() {
+        return this.notifications.filter(
+            function(notification) {
+                let isAmbient = notification.data ? notification.data.isAmbient : false;
+                return (notification.timeDismissed == null && isAmbient);
             }
         );
     }
@@ -393,53 +414,29 @@ class VLEController {
             // no dismiss code needed, so we can dismiss it
             this.NotificationService.dismissNotification(notification);
         } else {
-            // ask user to input dimiss code before dimissing it.
-            this.$translate(["dismissNotificationDismissCodeTitle", "dismissNotificationDismissCodeMessage", "ok", "cancel"]).then((translations) => {
-                let dismissCodePrompt = {
-                    parent: angular.element($('._md-open-menu-container._md-active')),
-                    targetEvent: event,
-                    template: '<md-dialog>' +
-                                '  <md-dialog-content>' +
-                                '     <h5>Teacher Dismiss Code Required</h5>' +
-                                '     Dismiss Code: <input ng-model="dismissCodeInput" type="password"/>' +
-                                '     <div style="color:red">{{message}}</div>' +
-                                '  </md-dialog-content>' +
-                                '  <md-dialog-actions>' +
-                                '    <md-button ng-click="checkDismissCode()" class="md-primary">' +
-                                '      Dismiss' +
-                                '    </md-button>' +
-                                '    <md-button ng-click="closeDialog()" class="md-primary">' +
-                                '      Cancel' +
-                                '    </md-button>' +
-                                '  </md-dialog-actions>' +
-                                '</md-dialog>',
-                    locals: {
-                        notification: notification
-                    },
-                    controller: DismissCodeDialogController
-                };
-                DismissCodeDialogController.$inject = ['$scope', '$mdDialog', '$translate', 'NotificationService', 'notification'];
+            // ask user to input dimiss code before dimissing it
+            let args = {};
+            args.event = event;
+            args.notification = notification;
+            this.$rootScope.$broadcast('viewCurrentAmbientNotification', args);
 
-                function DismissCodeDialogController($scope, $mdDialog, $translate, NotificationService, notification) {
-                    $scope.dismissCodeInput = "";
-                    $scope.message = "";
-                    $scope.checkDismissCode = function() {
-                        if ($scope.dismissCodeInput == notification.data.dismissCode) {
-                            NotificationService.dismissNotification(notification);
-                            $mdDialog.hide();
-                        } else {
-                            $translate(["dismissNotificationInvalidDismissCode"]).then((translations) => {
-                                $scope.message = translations.dismissNotificationInvalidDismissCode;
-                            });
-                        }
-                    }
-                    $scope.closeDialog = function() {
-                        $mdDialog.hide();
-                    }
-                }
+            // hide any open menus (i.e. the notifications menu)
+            this.$mdMenu.hide();
+        }
+    }
 
-                this.$mdDialog.show(dismissCodePrompt);
-            });
+    /**
+     * View the most recent ambient notification and allow teacher to input
+     * dismiss code
+     */
+    viewCurrentAmbientNotification(event) {
+        let ambientNotifications = this.getNewAmbientNotifications();
+        if (ambientNotifications.length) {
+            let currentNotification = ambientNotifications[0];
+            let args = {};
+            args.event = event;
+            args.notification = currentNotification;
+            this.$rootScope.$broadcast('viewCurrentAmbientNotification', args);
         }
     }
 
@@ -506,6 +503,7 @@ VLEController.$inject = [
     '$scope',
     '$rootScope',
     '$mdDialog',
+    '$mdMenu',
     '$state',
     '$translate',
     'ConfigService',

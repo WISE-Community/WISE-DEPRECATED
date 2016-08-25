@@ -582,7 +582,6 @@ class OpenResponseController {
              */
             this.messageDialog = this.$mdDialog.show({
                 template: '<md-dialog aria-label="Please Wait"><md-dialog-content><div class="md-dialog-content">Please wait, we are scoring your work.</div></md-dialog-content></md-dialog>',
-                fullscreen: true,
                 escapeToClose: false
             });
 

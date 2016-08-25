@@ -250,6 +250,69 @@ var ThemeController = function () {
             _this.planningMode = args.planningMode;
         });
 
+        // handle request for notification dismiss codes
+        this.$scope.$on('viewCurrentAmbientNotification', function (event, args) {
+            var notification = args.notification;
+            var ev = args.event;
+            var notificationDismissDialogTemplateUrl = _this.themePath + '/templates/notificationDismissDialog.html';
+
+            _this.$translate(["dismissNotificationDismissCodeTitle", "dismissNotificationDismissCodeMessage", "ok", "cancel"]).then(function (translations) {
+                var dismissCodePrompt = {
+                    parent: angular.element(document.body),
+                    targetEvent: ev,
+                    templateUrl: notificationDismissDialogTemplateUrl,
+                    locals: {
+                        notification: notification
+                    },
+                    controller: DismissCodeDialogController
+                };
+                DismissCodeDialogController.$inject = ['$scope', '$mdDialog', '$translate', 'NotificationService', 'ProjectService', 'StudentDataService', 'notification'];
+
+                function DismissCodeDialogController($scope, $mdDialog, $translate, NotificationService, ProjectService, StudentDataService, notification) {
+                    $scope.input = {
+                        dismissCode: ""
+                    };
+                    $scope.message = "";
+                    $scope.notification = notification;
+                    $scope.hasDismissCode = false;
+                    if (notification.data) {
+                        if (notification.data.dismissCode) {
+                            $scope.hasDismissCode = true;
+                        }
+                    }
+                    $scope.nodePositionAndTitle = ProjectService.getNodePositionAndTitleByNodeId(notification.nodeId);
+
+                    $scope.checkDismissCode = function () {
+                        if (!$scope.hasDismissCode || $scope.input.dismissCode == notification.data.dismissCode) {
+                            NotificationService.dismissNotification(notification);
+                            $mdDialog.hide();
+                        } else {
+                            $translate(["dismissNotificationInvalidDismissCode"]).then(function (translations) {
+                                $scope.errorMessage = translations.dismissNotificationInvalidDismissCode;
+                            });
+                        }
+                    };
+                    $scope.visitNode = function () {
+                        if (!$scope.hasDismissCode) {
+                            // only dismiss notifications that don't require a dismiss code, but still allow them to move to the node
+                            NotificationService.dismissNotification(null, $scope.notification);
+                        }
+
+                        var goToNodeId = $scope.notification.nodeId;
+                        if (goToNodeId != null) {
+                            StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(goToNodeId);
+                        }
+                    };
+
+                    $scope.closeDialog = function () {
+                        $mdDialog.hide();
+                    };
+                }
+
+                _this.$mdDialog.show(dismissCodePrompt);
+            });
+        });
+
         // capture notebook open/close events
         this.$mdComponentRegistry.when('notebook').then(function (it) {
             _this.$scope.$watch(function () {

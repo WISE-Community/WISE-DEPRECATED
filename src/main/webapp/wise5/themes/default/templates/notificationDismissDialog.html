@@ -1,0 +1,28 @@
+<md-dialog aria-label="View alert" class="notification-dismiss">
+    <md-toolbar md-theme="light" class="_md md-light-theme">
+        <div class="md-toolbar-tools">
+            <h2 translate="actionRequired"></h2>
+        </div>
+    </md-toolbar>
+    <md-dialog-content class="md-dialog-content">
+        <p class="center">{{notification.message}}</p>
+        <p class="center md-title"><a ng-click="visitNode()">{{nodePositionAndTitle}}</a></p>
+        <div ng-if="hasDismissCode">
+            <hr />
+            <div class="md-body-1">
+                <p class="accent-2 center" translate="dismissNotificationDismissCodeMessage"></p>
+                <md-input-container md-no-float class="md-block notification-dismiss__input">
+                    <input ng-model="input.dismissCode" type="password" placeholder="{{'dismissNotificationDismissCode' | translate}}">
+                    <div class="md-input-message-animation">
+                        {{errorMessage}}
+                    </div>
+                </md-input-container>
+            </div>
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <md-button ng-click="closeDialog()" class="md-primary" aria-label="{{'cancel' | translate}}" translate="cancel"></md-button>
+        <md-button ng-if="hasDismissCode" ng-click="checkDismissCode()" ng-disabled="!input.dismissCode" class="md-primary" aria-label="{{'dismiss' | translate}}" translate="dismiss"></md-button>
+        <md-button ng-if="!hasDismissCode" ng-click="checkDismissCode()" class="md-primary" aria-label="{{'dismiss' | translate}}" translate="dismiss"></md-button>
+    </div>
+</md-dialog>

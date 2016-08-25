@@ -21,6 +21,21 @@ p {
   margin-bottom: 0.5rem;
 }
 
+blockquote {
+    background-color: color('gray-lightest');
+    padding: 8px 12px;
+    margin: 16px 0;
+    border-left: 2px solid color('primary');
+}
+
+// TODO: remove once bootstrap dependency is removed
+label {
+    font-weight: 400;
+    display: inherit;
+    max-width: none;
+    margin-bottom: none;
+}
+
 .center {
     text-align: center;
 }
