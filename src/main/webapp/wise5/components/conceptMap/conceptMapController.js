@@ -69,7 +69,8 @@ this.populateConceptMapData(conceptMapData);}}else { // the student has work for
                  * will be changed to
                  * "/wise/curriculum/108/assets/Sun.png"
                  */componentState=this.ProjectService.injectAssetPaths(componentState); // populate the student work into this component
-this.setStudentWork(componentState);} // check if we need to lock this component
+this.setStudentWork(componentState);} // make the nodes draggable
+this.enableNodeDragging(); // check if we need to lock this component
 this.calculateDisabled();if(this.$scope.$parent.registerComponentController!=null){ // register this component with the parent node
 this.$scope.$parent.registerComponentController(this.$scope,this.componentContent);}} /**
          * Returns true iff there is student work that hasn't been saved yet
@@ -200,7 +201,11 @@ componentState.studentData=studentData; /*
 for(var n=0;n<this.nodes.length;n++){var node=this.nodes[n]; // get the JSON representation of the node
 var nodeJSON=node.toJSONObject();studentData.nodes.push(nodeJSON);} // loop through all the links
 for(var l=0;l<this.links.length;l++){var link=this.links[l]; // get the JSON representation of the link
-var linkJSON=link.toJSONObject();studentData.links.push(linkJSON);}return studentData;} /**
+var linkJSON=link.toJSONObject();studentData.links.push(linkJSON);} // set the background data into the student data
+if(this.componentContent.background!=null){ // this is the background file name e.g. background.png
+studentData.background=this.authoringComponentContent.background; // this is the background path e.g. /wise/curriculum/108/assets/background.png
+studentData.backgroundPath=this.componentContent.background; // whether to stretch the background to fill the svg element
+studentData.stretchBackground=this.authoringComponentContent.stretchBackground;}return studentData;} /**
      * Perform any additional processing that is required before returning the
      * component state
      * Note: this function must call deferred.resolve() otherwise student work
@@ -728,8 +733,9 @@ var selectedNode=this.selectedNode;if(selectedNode!=null){ // get the file name
 var filePath=selectedNode.fileName; // get the node name
 var label=selectedNode.label; // get the width and height of the node
 var width=selectedNode.width;var height=selectedNode.height; // get the original authored id
-var originalId=selectedNode.id; // get the position we should drop the node at
-var x=event.offsetX-this.tempOffsetX;var y=event.offsetY-this.tempOffsetY; // get a new ConceptMapNodeId e.g. 'studentNode3'
+var originalId=selectedNode.id; // get the coordinates relative to the svg element
+var coordinates=this.getRelativeCoordinatesByEvent(event); // get the position we should drop the node at
+var x=coordinates.x-this.tempOffsetX;var y=coordinates.y-this.tempOffsetY; // get a new ConceptMapNodeId e.g. 'studentNode3'
 var newConceptMapNodeId=this.getNewConceptMapNodeId(); // create a ConceptMapNode
 var conceptMapNode=this.ConceptMapService.newConceptMapNode(this.draw,newConceptMapNodeId,originalId,filePath,label,x,y,width,height); // add the node to our array of nodes
 this.addNode(conceptMapNode); // set the mouse events on the node

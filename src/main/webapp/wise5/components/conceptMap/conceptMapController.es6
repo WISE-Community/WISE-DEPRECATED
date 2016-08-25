@@ -281,10 +281,14 @@ class ConceptMapController {
                 // populate the student work into this component
                 this.setStudentWork(componentState);
             }
-
+            
+            // make the nodes draggable
+            this.enableNodeDragging();
+                        
             // check if we need to lock this component
             this.calculateDisabled();
 
+            
             if (this.$scope.$parent.registerComponentController != null) {
                 // register this component with the parent node
                 this.$scope.$parent.registerComponentController(this.$scope, this.componentContent);
@@ -770,6 +774,18 @@ class ConceptMapController {
             var linkJSON = link.toJSONObject();
             
             studentData.links.push(linkJSON);
+        }
+        
+        // set the background data into the student data
+        if (this.componentContent.background != null) {
+            // this is the background file name e.g. background.png
+            studentData.background = this.authoringComponentContent.background;
+            
+            // this is the background path e.g. /wise/curriculum/108/assets/background.png
+            studentData.backgroundPath = this.componentContent.background;
+            
+            // whether to stretch the background to fill the svg element
+            studentData.stretchBackground = this.authoringComponentContent.stretchBackground;
         }
         
         return studentData;
@@ -2483,9 +2499,12 @@ class ConceptMapController {
             // get the original authored id
             var originalId = selectedNode.id;
             
+            // get the coordinates relative to the svg element
+            var coordinates = this.getRelativeCoordinatesByEvent(event);
+            
             // get the position we should drop the node at
-            var x = event.offsetX - this.tempOffsetX;
-            var y = event.offsetY - this.tempOffsetY;
+            var x = coordinates.x - this.tempOffsetX;
+            var y = coordinates.y - this.tempOffsetY;
             
             // get a new ConceptMapNodeId e.g. 'studentNode3'
             var newConceptMapNodeId = this.getNewConceptMapNodeId();
