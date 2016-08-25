@@ -1,16 +1,16 @@
 /*!
- * Bootstrap v3.3.5 (http://getbootstrap.com)
+ * Bootstrap v3.3.7 (http://getbootstrap.com)
  * Copyright 2011-2016 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  */
 
 /*!
- * Generated using the Bootstrap Customizer (http://getbootstrap.com/customize/?id=130895a6db15db02888460bd7b970e0f)
- * Config saved to config.json and https://gist.github.com/130895a6db15db02888460bd7b970e0f
+ * Generated using the Bootstrap Customizer (http://getbootstrap.com/customize/?id=8180f6258358c1210bc7ac5d3ef7a3fd)
+ * Config saved to config.json and https://gist.github.com/8180f6258358c1210bc7ac5d3ef7a3fd
  */
 /*!
- * Bootstrap v3.3.6 (http://getbootstrap.com)
- * Copyright 2011-2015 Twitter, Inc.
+ * Bootstrap v3.3.7 (http://getbootstrap.com)
+ * Copyright 2011-2016 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  */
 /*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
@@ -1031,16 +1031,15 @@ textarea {
   line-height: inherit;
 }
 a {
-  color: #337ab7;
+  color: #1c8ca8;
   text-decoration: none;
 }
 a:hover,
 a:focus {
-  color: #23527c;
+  color: #1c8ca8;
   text-decoration: none;
 }
 a:focus {
-  outline: thin dotted;
   outline: 5px auto -webkit-focus-ring-color;
   outline-offset: -2px;
 }
@@ -2111,7 +2110,6 @@ select[size] {
 input[type="file"]:focus,
 input[type="radio"]:focus,
 input[type="checkbox"]:focus {
-  outline: thin dotted;
   outline: 5px auto -webkit-focus-ring-color;
   outline-offset: -2px;
 }
@@ -2603,7 +2601,6 @@ select[multiple].input-lg {
 .btn.focus,
 .btn:active.focus,
 .btn.active.focus {
-  outline: thin dotted;
   outline: 5px auto -webkit-focus-ring-color;
   outline-offset: -2px;
 }
@@ -2692,26 +2689,26 @@ fieldset[disabled] .btn-default.focus {
 }
 .btn-primary {
   color: #ffffff;
-  background-color: #337ab7;
-  border-color: #2e6da4;
+  background-color: #1c8ca8;
+  border-color: #187a92;
 }
 .btn-primary:focus,
 .btn-primary.focus {
   color: #ffffff;
-  background-color: #286090;
-  border-color: #122b40;
+  background-color: #15687c;
+  border-color: #061f25;
 }
 .btn-primary:hover {
   color: #ffffff;
-  background-color: #286090;
-  border-color: #204d74;
+  background-color: #15687c;
+  border-color: #104e5e;
 }
 .btn-primary:active,
 .btn-primary.active,
 .open > .dropdown-toggle.btn-primary {
   color: #ffffff;
-  background-color: #286090;
-  border-color: #204d74;
+  background-color: #15687c;
+  border-color: #104e5e;
 }
 .btn-primary:active:hover,
 .btn-primary.active:hover,
@@ -2723,8 +2720,8 @@ fieldset[disabled] .btn-default.focus {
 .btn-primary.active.focus,
 .open > .dropdown-toggle.btn-primary.focus {
   color: #ffffff;
-  background-color: #204d74;
-  border-color: #122b40;
+  background-color: #104e5e;
+  border-color: #061f25;
 }
 .btn-primary:active,
 .btn-primary.active,
@@ -2740,11 +2737,11 @@ fieldset[disabled] .btn-primary:focus,
 .btn-primary.disabled.focus,
 .btn-primary[disabled].focus,
 fieldset[disabled] .btn-primary.focus {
-  background-color: #337ab7;
-  border-color: #2e6da4;
+  background-color: #1c8ca8;
+  border-color: #187a92;
 }
 .btn-primary .badge {
-  color: #337ab7;
+  color: #1c8ca8;
   background-color: #ffffff;
 }
 .btn-success {
@@ -2976,7 +2973,7 @@ fieldset[disabled] .btn-danger.focus {
   background-color: #ffffff;
 }
 .btn-link {
-  color: #337ab7;
+  color: #1c8ca8;
   font-weight: normal;
   border-radius: 0;
 }
@@ -2997,7 +2994,7 @@ fieldset[disabled] .btn-link {
 }
 .btn-link:hover,
 .btn-link:focus {
-  color: #23527c;
+  color: #1c8ca8;
   text-decoration: none;
   background-color: transparent;
 }
@@ -3147,7 +3144,7 @@ tbody.collapse.in {
   color: #ffffff;
   text-decoration: none;
   outline: 0;
-  background-color: #337ab7;
+  background-color: #1c8ca8;
 }
 .dropdown-menu > .disabled > a,
 .dropdown-menu > .disabled > a:hover,
@@ -3802,22 +3799,22 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   border-bottom-color: #dddddd;
 }
 .panel-primary {
-  border-color: #337ab7;
+  border-color: #1c8ca8;
 }
 .panel-primary > .panel-heading {
   color: #ffffff;
-  background-color: #337ab7;
-  border-color: #337ab7;
+  background-color: #1c8ca8;
+  border-color: #1c8ca8;
 }
 .panel-primary > .panel-heading + .panel-collapse > .panel-body {
-  border-top-color: #337ab7;
+  border-top-color: #1c8ca8;
 }
 .panel-primary > .panel-heading .badge {
-  color: #337ab7;
+  color: #1c8ca8;
   background-color: #ffffff;
 }
 .panel-primary > .panel-footer + .panel-collapse > .panel-body {
-  border-bottom-color: #337ab7;
+  border-bottom-color: #1c8ca8;
 }
 .panel-success {
   border-color: #d6e9c6;
