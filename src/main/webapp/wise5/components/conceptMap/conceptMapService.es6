@@ -20,6 +20,16 @@ class ConceptMapService extends NodeService {
         component.showSaveButton = false;
         component.showSubmitButton = false;
         component.isStudentAttachmentEnabled = false;
+        component.width = 800;
+        component.height = 600;
+        component.background = null;
+        component.stretchBackground = null;
+        component.nodes = [];
+        component.linksTitle = "";
+        component.links = [];
+        component.rules = [];
+        component.starterConceptMap = null;
+        component.customRuleEvaluator = "";
         return component;
     }
 
