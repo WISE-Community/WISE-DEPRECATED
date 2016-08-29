@@ -171,6 +171,15 @@ class ConceptMapController {
         this.workgroupId = this.$scope.workgroupId;
         this.teacherWorkgroupId = this.$scope.teacherWorkgroupId;
         
+        // the options for authoring the should or should not value in rules
+        this.shouldOptions = [
+            {
+                value: false, label: 'should'
+            },
+            {
+                value: true, label: 'should not'
+            }
+        ];
         
         if (this.componentContent != null) {
 
@@ -1640,6 +1649,7 @@ class ConceptMapController {
         newRule.nodeLabel = "";
         newRule.comparison = "exactly";
         newRule.number = 1;
+        newRule.not = false;
         
         // add the rule to the array of rules
         this.authoringComponentContent.rules.push(newRule);

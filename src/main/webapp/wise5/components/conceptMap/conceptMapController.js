@@ -42,7 +42,8 @@ this.authoringComponentContent=this.$scope.authoringComponentContent; /*
          * get the original component content. this is used when showing
          * previous work from another component.
          */this.originalComponentContent=this.$scope.originalComponentContent; // the mode to load the component in e.g. 'student', 'grading', 'onlyShowWork'
-this.mode=this.$scope.mode;this.workgroupId=this.$scope.workgroupId;this.teacherWorkgroupId=this.$scope.teacherWorkgroupId;if(this.componentContent!=null){ // get the component id
+this.mode=this.$scope.mode;this.workgroupId=this.$scope.workgroupId;this.teacherWorkgroupId=this.$scope.teacherWorkgroupId; // the options for authoring the should or should not value in rules
+this.shouldOptions=[{value:false,label:'should'},{value:true,label:'should not'}];if(this.componentContent!=null){ // get the component id
 this.componentId=this.componentContent.id;if(this.componentContent.width!=null){this.width=this.componentContent.width;}if(this.componentContent.height!=null){this.height=this.componentContent.height;} // setup the svg
 this.setupSVG();if(this.mode==='student'){this.isPromptVisible=true;this.isSaveButtonVisible=this.componentContent.showSaveButton;this.isSubmitButtonVisible=this.componentContent.showSubmitButton;this.availableNodes=this.componentContent.nodes;this.availableLinks=this.componentContent.links; // get the latest annotations
 // TODO: watch for new annotations and update accordingly
@@ -458,7 +459,7 @@ var rule=this.authoringComponentContent.rules[ruleIndex];if(rule!=null){if(rule.
 this.authoringViewComponentChanged();} /**
      * Add a new rule
      */},{key:'authoringAddRule',value:function authoringAddRule(){ // create the new rule
-var newRule={};newRule.name="";newRule.type="node";newRule.categories=[];newRule.nodeLabel="";newRule.comparison="exactly";newRule.number=1; // add the rule to the array of rules
+var newRule={};newRule.name="";newRule.type="node";newRule.categories=[];newRule.nodeLabel="";newRule.comparison="exactly";newRule.number=1;newRule.not=false; // add the rule to the array of rules
 this.authoringComponentContent.rules.push(newRule); // perform updating and saving
 this.authoringViewComponentChanged();} /**
      * Move a rule up

@@ -108,7 +108,12 @@
                     <input ng-model='rule.name' 
                            size='30' 
                            ng-change='conceptMapController.authoringViewComponentChanged()' 
-                           ng-model-options='{ debounce: 1000 }'/> contains 
+                           ng-model-options='{ debounce: 1000 }'/>
+                    <select ng-model='rule.not'
+                            ng-change='conceptMapController.authoringViewComponentChanged()'
+                            ng-options='option.value as option.label for option in conceptMapController.shouldOptions'>
+                    </select>
+                    contain 
                     <select ng-model='rule.comparison' 
                             ng-change='conceptMapController.authoringViewComponentChanged()'>
                         <option value='exactly'>exactly</option>

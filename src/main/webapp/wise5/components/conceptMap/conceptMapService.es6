@@ -477,6 +477,14 @@ class ConceptMapService extends NodeService {
                     }
                 }
                 
+                if (rule.not) {
+                    /*
+                     * the rule is satisfied if the result is false so we will
+                     * negate the result
+                     */
+                    result = !result;
+                }
+                
             } else if (rule.type == 'link') {
                 // this is a link rule
                 
@@ -519,6 +527,14 @@ class ConceptMapService extends NodeService {
                     if (linkCount < number) {
                         result = true;
                     }
+                }
+                
+                if (rule.not) {
+                    /*
+                     * the rule is satisfied if the result is false so we will
+                     * negate the result
+                     */
+                    result = !result;
                 }
             }
         }
