@@ -121,6 +121,7 @@
                     <select ng-model='rule.nodeLabel' 
                             ng-change='conceptMapController.authoringViewComponentChanged()'>
                         <option></option>
+                        <option value='any'>any</option>
                         <option ng-repeat='node in conceptMapController.authoringComponentContent.nodes' 
                                 value='{{node.label}}'>{{node.label}}</option>
                     </select>
@@ -131,14 +132,18 @@
                            ng-false-value="'node'" 
                            ng-change='conceptMapController.authoringRuleLinkCheckboxClicked($index)'/>
                     <select ng-model='rule.linkLabel' 
-                            ng-change='conceptMapController.authoringViewComponentChanged()'>
+                            ng-change='conceptMapController.authoringViewComponentChanged()'
+                            ng-show='rule.type == "link"'>
                         <option></option>
+                        <option value='any'>any</option>
                         <option ng-repeat='link in conceptMapController.authoringComponentContent.links' 
                                 value='{{link.label}}'>{{link.label}}</option>
                     </select>
                     <select ng-model='rule.otherNodeLabel' 
-                            ng-change='conceptMapController.authoringViewComponentChanged()'>
+                            ng-change='conceptMapController.authoringViewComponentChanged()'
+                            ng-show='rule.type == "link"'>
                         <option></option>
+                        <option value='any'>any</option>
                         <option ng-repeat='node in conceptMapController.authoringComponentContent.nodes' 
                                 value='{{node.label}}'>{{node.label}}</option>
                     </select>

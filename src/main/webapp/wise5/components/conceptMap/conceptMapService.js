@@ -723,7 +723,7 @@ var ConceptMapService = function (_NodeService) {
 
                         if (node != null) {
 
-                            if (label == node.label) {
+                            if (label == node.label || label == 'any') {
                                 /*
                                  * we have found a node with the label we are 
                                  * looking for
@@ -772,7 +772,7 @@ var ConceptMapService = function (_NodeService) {
                             var sourceNodeLabel = tempLink.sourceNodeLabel;
                             var destinationNodeLabel = tempLink.destinationNodeLabel;
 
-                            if (nodeLabel == sourceNodeLabel && linkLabel == tempLinkLabel && otherNodeLabel == destinationNodeLabel) {
+                            if ((nodeLabel == sourceNodeLabel || nodeLabel == 'any') && (linkLabel == tempLinkLabel || linkLabel == 'any') && (otherNodeLabel == destinationNodeLabel || otherNodeLabel == 'any')) {
 
                                 // the labels match the ones we are looking for
                                 resultLinks.push(tempLink);
