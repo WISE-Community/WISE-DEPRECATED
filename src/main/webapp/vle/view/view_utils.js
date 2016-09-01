@@ -2124,6 +2124,30 @@ View.prototype.replaceWISEVariables = function(text) {
 				text = text.replace(/{{studentFirstNames}}/g, studentFirstNames);
 			}
 		}
+		if (text.indexOf("{{firstNameOfFirstStudent}}")) {
+			// display the first name of the first student
+			if (this.getUserAndClassInfo && this.getUserAndClassInfo() != null) {
+				var workgroupId = this.getUserAndClassInfo().getWorkgroupId();
+				var firstName = this.getUserAndClassInfo().getFirstNameOfFirstStudentByWorkgroupId(workgroupId);
+				text = text.replace(/{{firstNameOfFirstStudent}}/g, firstName);
+			}
+		}
+		if (text.indexOf("{{firstNameOfSecondStudent}}")) {
+			// display the first name of the second student
+			if (this.getUserAndClassInfo && this.getUserAndClassInfo() != null) {
+				var workgroupId = this.getUserAndClassInfo().getWorkgroupId();
+				var firstName = this.getUserAndClassInfo().getFirstNameOfSecondStudentByWorkgroupId(workgroupId);
+				text = text.replace(/{{firstNameOfSecondStudent}}/g, firstName);
+			}
+		}
+		if (text.indexOf("{{firstNameOfThirdStudent}}")) {
+			// display the first name of the third student
+			if (this.getUserAndClassInfo && this.getUserAndClassInfo() != null) {
+				var workgroupId = this.getUserAndClassInfo().getWorkgroupId();
+				var firstName = this.getUserAndClassInfo().getFirstNameOfThirdStudentByWorkgroupId(workgroupId);
+				text = text.replace(/{{firstNameOfThirdStudent}}/g, firstName);
+			}
+		}
 		if (text.indexOf("{{link") >= 0) {
 			text = text.replace(/{{link\|([^}}]*)\|([^}}]*)}}/g, "<a onclick=\\\"view.goToStep('$1')\\\">$2</a>")
 		}

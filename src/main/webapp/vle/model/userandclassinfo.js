@@ -628,6 +628,77 @@ View.prototype.createUserAndClassInfo = function(myUserInfo, periods, classmateU
 			
 			return studentNames;
 		}
+		
+		/**
+		 * Get the first name of the nth student.
+		 * first student n = 1
+		 * second student n = 2
+		 * third student n = 3
+		 * @param workgroupId the workgroup id
+		 * @return the first name of the nth student
+		 */
+		var getFirstNameOfNthStudentByWorkgroupId = function(workgroupId, n) {
+			var firstName = "First Name";
+			
+			//get the user names for the workgroup e.g. "Spongebob Squarepants (SpongebobS0101):Patrick Star (PatrickS0101)"
+			var userNames = getUserNameByUserId(workgroupId);
+			
+			if(userNames != null) {
+				//split the user names string by ':'
+				var userNamesSplit = userNames.split(':');
+				
+				if(userNamesSplit != null) {
+					
+					if (n > userNamesSplit.length) {
+						/*
+						 * if n is greater than the number of students in the 
+						 * workgroup, we will just use the last student
+						 */
+						n = userNamesSplit.length;
+					}
+					
+					if (n != null && n > 0) {
+						//get a user name e.g. "Spongebob Squarepants (spongebobs0101)"
+						var userName = userNamesSplit[n - 1];
+						
+						//get the index of the first empty space
+						var indexOfSpace = userName.indexOf(' ');
+						
+						//get the student first name e.g. "Spongebob"
+						firstName = userName.substring(0, indexOfSpace);
+					}
+				}
+			}
+			
+			return firstName;
+		}
+		
+		/**
+		 * Get the first name of the first student in the workgroup
+		 * @param workgroupId the workgroup id
+		 * @return the first name of the first student in the workgroup
+		 */
+		var getFirstNameOfFirstStudentByWorkgroupId = function(workgroupId) {
+			return getFirstNameOfNthStudentByWorkgroupId(workgroupId, 1);
+		}
+		
+		/**
+		 * Get the first name of the second student in the workgroup
+		 * @param workgroupId the workgroup id
+		 * @return the first name of the second student in the workgroup
+		 */
+		var getFirstNameOfSecondStudentByWorkgroupId = function(workgroupId) {
+			return getFirstNameOfNthStudentByWorkgroupId(workgroupId, 2);
+		}
+		
+		/**
+		 * Get the first name of the third student in the workgroup
+		 * @param workgroupId the workgroup id
+		 * @return the first name of the third student in the workgroup
+		 */
+		var getFirstNameOfThirdStudentByWorkgroupId = function(workgroupId) {
+			return getFirstNameOfNthStudentByWorkgroupId(workgroupId, 3);
+		}
 
         /**
          * Get the WISE ids for a workgroup
@@ -745,6 +816,15 @@ View.prototype.createUserAndClassInfo = function(myUserInfo, periods, classmateU
 			},
 			getStudentFirstNamesByWorkgroupId:function(workgroupId) {
 				return getStudentFirstNamesByWorkgroupId(workgroupId);
+			},
+			getFirstNameOfFirstStudentByWorkgroupId:function(workgroupId) {
+				return getFirstNameOfFirstStudentByWorkgroupId(workgroupId);
+			},
+			getFirstNameOfSecondStudentByWorkgroupId:function(workgroupId) {
+				return getFirstNameOfSecondStudentByWorkgroupId(workgroupId);
+			},
+			getFirstNameOfThirdStudentByWorkgroupId:function(workgroupId) {
+				return getFirstNameOfThirdStudentByWorkgroupId(workgroupId);
 			},
             getWISEIdsByWorkgroupId:function(workgroupId) {
                 return getWISEIdsByWorkgroupId(workgroupId);
