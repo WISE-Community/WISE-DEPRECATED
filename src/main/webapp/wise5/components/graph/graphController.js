@@ -138,6 +138,10 @@ var GraphController = function () {
         this.workgroupId = this.$scope.workgroupId;
         this.teacherWorkgroupId = this.$scope.teacherWorkgroupId;
 
+        this.trials = [];
+        this.activeTrial = null;
+        this.studentDataVersion = 2;
+
         if (this.componentContent != null) {
 
             // get the component id
@@ -213,6 +217,13 @@ var GraphController = function () {
                 if (importWorkNodeId != null && importWorkComponentId != null) {
                     // import the work from the other component
                     this.importWork();
+                } else {
+
+                    /* 
+                     * trials are enabled so we will create an empty trial
+                     * since there is no student work
+                     */
+                    this.newTrial();
                 }
             } else {
                 // populate the student work into this component
@@ -549,7 +560,7 @@ var GraphController = function () {
             //this.setSeriesIds(regressionSeries);
             allSeries = allSeries.concat(regressionSeries);
 
-            //this.setSeriesIds(allSeries);
+            this.setSeriesIds(allSeries);
 
             this.chartConfig = {
                 options: {
@@ -976,6 +987,78 @@ var GraphController = function () {
         }
 
         /**
+         * Set the trials
+         * @param trials the trials
+         */
+
+    }, {
+        key: 'setTrials',
+        value: function setTrials(trials) {
+            this.trials = trials;
+        }
+
+        /**
+         * Get the trials
+         * @return the trials
+         */
+
+    }, {
+        key: 'getTrials',
+        value: function getTrials() {
+            return this.trials;
+        }
+
+        /**
+         * Get the index of the trial
+         * @param trial the trial object
+         * @return the index of the trial within the trials array
+         */
+
+    }, {
+        key: 'getTrialIndex',
+        value: function getTrialIndex(trial) {
+
+            var index = -1;
+
+            if (trial != null) {
+
+                // loop through all the trials
+                for (var t = 0; t < this.trials.length; t++) {
+                    var tempTrial = this.trials[t];
+
+                    if (trial == tempTrial) {
+                        // we have found the trial we are looking for
+                        index = t;
+                        break;
+                    }
+                }
+            }
+
+            return index;
+        }
+
+        /**
+         * Set the active trial
+         * @param index the index of the trial to make active
+         */
+
+    }, {
+        key: 'setActiveTrialByIndex',
+        value: function setActiveTrialByIndex(index) {
+
+            if (index != null) {
+
+                // get the trial
+                var trial = this.trials[index];
+
+                if (trial != null) {
+                    // make the trial the active trial
+                    this.activeTrial = trial;
+                }
+            }
+        }
+
+        /**
          * Set the xAxis object
          * @param xAxis the xAxis object that can be used to render the graph
          */
@@ -1154,8 +1237,54 @@ var GraphController = function () {
                 var studentData = componentState.studentData;
 
                 if (studentData != null) {
-                    // populate the student data into the component
-                    this.setSeries(this.UtilService.makeCopyOfJSONObject(studentData.series));
+
+                    if (studentData.version == null || studentData.version == 1) {
+                        // the student data is version 1 which has no trials
+                        this.studentDataVersion = 1;
+
+                        // populate the student data into the component
+                        this.setSeries(this.UtilService.makeCopyOfJSONObject(studentData.series));
+                    } else {
+                        // the student data is the newer version that has trials
+
+                        this.studentDataVersion = studentData.version;
+
+                        if (studentData.trials != null) {
+
+                            // make a copy of the trials
+                            var trialsCopy = this.UtilService.makeCopyOfJSONObject(studentData.trials);
+
+                            // remember the trials
+                            this.setTrials(trialsCopy);
+
+                            // get the trial to show
+                            var activeTrialIndex = studentData.activeTrialIndex;
+
+                            if (activeTrialIndex == null) {
+                                /*
+                                 * there is no active trial index so we will show the
+                                 * last trial
+                                 */
+
+                                if (trialsCopy.length > 0) {
+                                    //make the last trial the active trial to show
+                                    this.setActiveTrialByIndex(studentData.trials.length - 1);
+                                }
+                            } else {
+                                // there is an active trial index
+                                this.setActiveTrialByIndex(activeTrialIndex);
+                            }
+
+                            if (this.activeTrial != null && this.activeTrial.series != null) {
+                                // set the active trial series to be the series to display
+                                this.series = this.activeTrial.series;
+                            }
+
+                            // redraw the graph
+                            this.setupGraph();
+                        }
+                    }
+
                     this.setXAxis(studentData.xAxis);
                     this.setYAxis(studentData.yAxis);
                     this.setActiveSeriesByIndex(studentData.activeSeriesIndex);
@@ -1304,14 +1433,30 @@ var GraphController = function () {
             if (componentState != null) {
                 var studentData = {};
 
-                // insert the series data
-                studentData.series = this.UtilService.makeCopyOfJSONObject(this.getSeries());
+                studentData.version = this.studentDataVersion;
 
+                if (this.studentDataVersion == 1) {
+                    // insert the series data
+                    studentData.series = this.UtilService.makeCopyOfJSONObject(this.getSeries());
+                } else {
+                    if (this.trials != null) {
+                        // make a copy of the trials
+                        studentData.trials = this.UtilService.makeCopyOfJSONObject(this.trials);
+
+                        // remember which trial is being shown
+                        var activeTrialIndex = this.getTrialIndex(this.activeTrial);
+                        studentData.activeTrialIndex = activeTrialIndex;
+                    }
+                }
+
+                /*
+                
                 // remove high-charts assigned id's from each series before saving
                 for (var s = 0; s < studentData.series.length; s++) {
                     var series = studentData.series[s];
                     //series.id = null;
                 }
+                */
 
                 // insert the x axis data
                 studentData.xAxis = this.getXAxis();
@@ -1834,16 +1979,32 @@ var GraphController = function () {
 
             if (allSeries != null) {
 
-                // loop through all the series
+                /*
+                 * loop through all the series to get the existing ids that are
+                 * being used
+                 */
                 for (var x = 0; x < allSeries.length; x++) {
                     var series = allSeries[x];
 
                     // get the series id if it is set
                     var seriesId = series.id;
 
+                    if (seriesId != null) {
+                        // remember the series id
+                        usedSeriesIds.push(seriesId);
+                    }
+                }
+
+                // loop through all the series
+                for (var y = 0; y < allSeries.length; y++) {
+                    var series = allSeries[y];
+
+                    // get the series id if it is set
+                    var seriesId = series.id;
+
                     if (seriesId == null) {
                         // the series doesn't have a series id so we will give it one
-                        var nextSeriesId = getNextSeriesId(usedSeriesIds);
+                        var nextSeriesId = this.getNextSeriesId(usedSeriesIds);
                         series.id = nextSeriesId;
                         usedSeriesIds.push(nextSeriesId);
                     }
@@ -2263,6 +2424,165 @@ var GraphController = function () {
             }
 
             return show;
+        }
+
+        /**
+         * Create a new trial
+         */
+
+    }, {
+        key: 'newTrial',
+        value: function newTrial() {
+
+            // get the index of the active series
+            var activeSeriesIndex = this.getSeriesIndex(this.activeSeries);
+
+            // get the current number of trials
+            var trialCount = this.trials.length;
+
+            // make a copy of the original series (most likely blank with no points)
+            var series = this.UtilService.makeCopyOfJSONObject(this.componentContent.series);
+
+            // regex to find the trial number from the trial names
+            var trialNameRegex = /Trial (\d*)/;
+            var trialNumbers = [];
+
+            // loop through all the trials
+            for (var t = 0; t < this.trials.length; t++) {
+                var tempTrial = this.trials[t];
+
+                if (tempTrial != null) {
+                    // get a trial name
+                    var tempTrialName = tempTrial.name;
+
+                    // run the regex matcher on the trial name
+                    var match = trialNameRegex.exec(tempTrialName);
+                    var tempTrialNumber = match[1];
+
+                    if (tempTrialNumber != null) {
+                        /*
+                         * get the number e.g. if the trial name is "Trial 2",
+                         * the trial number is 2
+                         */
+                        trialNumbers.push(parseInt(tempTrialNumber));
+                    }
+                }
+            }
+
+            // sort the trial numbers from smallest to largest
+            trialNumbers.sort();
+
+            var maxTrialNumber = 0;
+
+            if (trialNumbers.length > 0) {
+                // get the highest trial number
+                maxTrialNumber = trialNumbers[trialNumbers.length - 1];
+            }
+
+            // make a new trial with a trial number one larger than the existing max
+            var trial = {};
+            trial.name = 'Trial ' + (maxTrialNumber + 1);
+            trial.series = series;
+
+            // add the trial to the array of trials
+            this.trials.push(trial);
+
+            // set the new trial to be the active trial
+            this.activeTrial = trial;
+
+            // set the series to be displayed
+            this.series = series;
+
+            /*
+             * set the active series index so that the the active series
+             * is the same as before.
+             */
+            this.setActiveSeriesByIndex(activeSeriesIndex);
+
+            // redraw the graph
+            this.setupGraph();
+
+            // tell the parent node that this component wants to save
+            this.$scope.$emit('componentSaveTriggered', { nodeId: this.nodeId, componentId: this.componentId });
+        }
+
+        /**
+         * Delete a trial
+         */
+
+    }, {
+        key: 'deleteTrial',
+        value: function deleteTrial() {
+
+            /*
+             * get the index of the active trial which will be the trial we are
+             * going to delete
+             */
+            var trialIndex = this.trials.indexOf(this.activeTrial);
+
+            if (trialIndex != null && trialIndex != -1) {
+
+                // remove the trial from the array of trials
+                this.trials.splice(trialIndex, 1);
+
+                if (this.trials.length == 0) {
+                    // there are no more trials so we will create a new empty trial
+                    this.newTrial();
+                } else if (this.trials.length > 0) {
+                    // set the active trial to the next highest trial number
+                    if (trialIndex > this.trials.length - 1) {
+                        /*
+                         * the trial index is higher than any available index
+                         * in the trials array so we will just use the last index
+                         */
+                        this.activeTrial = this.trials[this.trials.length - 1];
+                        this.activeTrialChanged(this.trials.length - 1);
+                    } else {
+                        // make the next highest trial the active trial
+                        this.activeTrial = this.trials[trialIndex];
+                        this.activeTrialChanged(trialIndex);
+                    }
+                }
+            }
+
+            // tell the parent node that this component wants to save
+            this.$scope.$emit('componentSaveTriggered', { nodeId: this.nodeId, componentId: this.componentId });
+        }
+
+        /**
+         * The student has selected a different trial to view
+         */
+
+    }, {
+        key: 'activeTrialChanged',
+        value: function activeTrialChanged() {
+
+            // get the index of the active series
+            var activeSeriesIndex = this.getSeriesIndex(this.activeSeries);
+
+            // get the active trial
+            var activeTrial = this.activeTrial;
+
+            if (activeTrial != null) {
+
+                // get the series from the trial
+                var series = activeTrial.series;
+
+                // set the series to be displayed
+                this.series = series;
+
+                /*
+                 * set the active series index so that the the active series
+                 * is the same as before.
+                 */
+                this.setActiveSeriesByIndex(activeSeriesIndex);
+
+                // redraw the graph
+                this.setupGraph();
+            }
+
+            // tell the parent node that this component wants to save
+            this.$scope.$emit('componentSaveTriggered', { nodeId: this.nodeId, componentId: this.componentId });
         }
     }]);
 

@@ -110,6 +110,21 @@
                 ng-change='graphController.activeSeriesChanged()'
                 ng-show='graphController.showSelectSeries()'>
         </select>
+        <select ng-model='graphController.activeTrial'
+                ng-options='trial as trial.name for trial in graphController.trials'
+                ng-change='graphController.activeTrialChanged()'
+                ng-if='graphController.componentContent.enableTrials'>
+        </select>
+        <md-button class="md-accent"
+                   ng-click='graphController.newTrial()'
+                   ng-show='graphController.componentContent.enableTrials'>
+            <md-icon> add </md-icon> New Trial
+        </md-button>
+        <md-button class="md-accent"
+                   ng-click='graphController.deleteTrial()'
+                   ng-show='graphController.componentContent.enableTrials'>
+            <md-icon> delete </md-icon> Delete Trial
+        </md-button>
         <md-button class="md-accent"
                    ng-click='graphController.resetGraph()'
                    ng-show='graphController.showResetGraphButton()'>
