@@ -272,17 +272,43 @@ class GraphController {
 
                             if (seriesIndex != null) {
 
-                                // get the series
-                                var series = this.$scope.graphController.series[seriesIndex];
+                                var studentDataVersion = this.$scope.graphController.studentDataVersion;
+                                
+                                if (studentDataVersion == null || studentDataVersion == 1) {
+                                    // the student data is version 1 which has no trials
+                                    
+                                    // get the series
+                                    var series = this.$scope.graphController.series[seriesIndex];
 
-                                if (series == null) {
-                                    // the series is null so we will create a series
-                                    series = {};
-                                    this.$scope.graphController.series[seriesIndex] = series;
+                                    if (series == null) {
+                                        // the series is null so we will create a series
+                                        series = {};
+                                        this.$scope.graphController.series[seriesIndex] = series;
+                                    }
+
+                                    // set the data into the series
+                                    series.data = data;
+                                } else {
+                                    // the student data is the newer version that has trials
+                                    
+                                    // get the active trial
+                                    var trial = this.$scope.graphController.activeTrial;
+                                    
+                                    if (trial != null && trial.series != null) {
+                                        
+                                        // get the series
+                                        var series = trial.series[seriesIndex];
+                                        
+                                        if (series == null) {
+                                            // the series is null so we will create a series
+                                            series = {};
+                                            this.$scope.graphController.series[seriesIndex] = series;
+                                        }
+
+                                        // set the data into the series
+                                        series.data = data;
+                                    }
                                 }
-
-                                // set the data into the series
-                                series.data = data;
                             }
 
                             // render the graph
@@ -291,6 +317,24 @@ class GraphController {
                             // the graph has changed
                             this.$scope.graphController.isDirty = true;
                         }
+                    }
+                } else if (componentType == 'Embedded') {
+                    
+                    // convert the embedded data to series data
+                    if (componentState != null) {
+
+                        /*
+                         * make a copy of the component state so that we don't
+                         * reference the exact component state object from the
+                         * other component in case field values change.
+                         */
+                        componentState = this.UtilService.makeCopyOfJSONObject(componentState);
+
+                        // get the student data
+                        var studentData = componentState.studentData;
+                        
+                        // parse the trials and set it into the component
+                        this.parseTrials(studentData);
                     }
                 }
             }
@@ -2379,6 +2423,87 @@ class GraphController {
         
         // tell the parent node that this component wants to save
         this.$scope.$emit('componentSaveTriggered', {nodeId: this.nodeId, componentId: this.componentId});
+    }
+    
+    /**
+     * Parse the trials and set it into the component
+     * @param studentData the student data object that has a trials field
+     */
+    parseTrials(studentData) {
+        
+        if (studentData != null) {
+            
+            // get the trials
+            var trials = studentData.trials;
+            
+            if (trials != null) {
+                
+                this.trials = [];
+                
+                // loop through all the trials in the student data
+                for (var t = 0; t < trials.length; t++) {
+                    var tempTrial = trials[t];
+                    
+                    if (tempTrial != null) {
+                        
+                        // create a trial object
+                        var newTrial = {};
+                        
+                        if (tempTrial.name != null) {
+                            
+                            // set the trial name
+                            newTrial.name = tempTrial.name;
+                        }
+                        
+                        if (tempTrial.series != null) {
+                            
+                            // set the trial series
+                            newTrial.series = [];
+                            
+                            var tempSeries = tempTrial.series;
+                            
+                            if (tempSeries != null) {
+                                
+                                // loop through all the series in the trial
+                                for (var s = 0; s < tempSeries.length; s++) {
+                                    
+                                    // get a single series
+                                    var singleSeries = tempSeries[s];
+                                    
+                                    if (singleSeries != null) {
+                                        
+                                        // get the series name and data
+                                        var seriesName = singleSeries.name;
+                                        var seriesData = singleSeries.data;
+                                        
+                                        // make a series object
+                                        var newSeries = {};
+                                        newSeries.name = seriesName;
+                                        newSeries.data = seriesData;
+                                        newSeries.canEdit = false;
+                                        newSeries.allowPointSelect = false;
+                                        
+                                        // add the series to the trial
+                                        newTrial.series.push(newSeries);
+                                    }
+                                }
+                            }
+                        }
+                        
+                        // add the trial to the array of trials
+                        this.trials.push(newTrial);
+                    }
+                }
+                
+                if (trials.length > 0) {
+                    // make the last trial the active trial
+                    this.activeTrial = this.trials[trials.length - 1];
+                }
+            }
+            
+            // redraw the graph so that the active trial gets displayed
+            this.activeTrialChanged();
+        }
     }
 }
 
