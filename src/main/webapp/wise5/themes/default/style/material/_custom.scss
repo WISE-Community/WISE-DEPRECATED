@@ -190,27 +190,6 @@ md-toast {
     }
 }
 
-$tooltip-fontsize-lg: rem(1);
-$tooltip-fontsize-sm: rem(1);
-$tooltip-height-lg: rem(2.2);
-$tooltip-height-sm: rem(2.2);
-$tooltip-top-margin-lg: rem(1.4);
-$tooltip-top-margin-sm: rem(1.4);
-$tooltip-lr-padding-lg: rem(0.8);
-$tooltip-lr-padding-sm: rem(0.8);
-$tooltip-max-width: rem(3.20);
-
-md-tooltip {
-    font-size: $tooltip-fontsize-sm;
-
-    .md-content {
-        height: $tooltip-height-sm;
-        line-height: $tooltip-height-sm;
-        padding-left: $tooltip-lr-padding-sm;
-        padding-right: $tooltip-lr-padding-sm;
-    }
-}
-
 .md-open-menu-container {
     border-radius: $card-border-radius;
 }

@@ -13,7 +13,7 @@ $toolbar-indent-margin: 52px;
 $toolbar-height-mobile-portrait: 52px;
 $toolbar-height-mobile-landscape: 52px;
 
-$caption-font-size-base:   rem(1.300) !default;
+$caption-font-size-base:   rem(1.300);
 
 //$list-item-height: 56px;
 
@@ -25,3 +25,13 @@ $layout-breakpoint-md:     1280px;
 $layout-breakpoint-lg:     1920px;
 
 $button-border-radius: 3px;
+
+//$tooltip-fontsize-lg: rem(1);
+$tooltip-fontsize-sm: rem(1);
+//$tooltip-height-lg: rem(2.2);
+$tooltip-height-sm: rem(2.2);
+//$tooltip-top-margin-lg: rem(1.4);
+$tooltip-top-margin-sm: rem(1.4);
+//$tooltip-lr-padding-lg: rem(0.8);
+$tooltip-lr-padding-sm: rem(0.8);
+//$tooltip-max-width: rem(3.20);
