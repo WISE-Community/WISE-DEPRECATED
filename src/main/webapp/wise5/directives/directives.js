@@ -144,6 +144,14 @@ var ClassResponseDirective = function () {
                 return ClassResponseDirective.instance.StudentStatusService.getAvatarColorForWorkgroupId(workgroupId);
             };
 
+            $scope.replyEntered = function ($event, response) {
+                if ($event.keyCode === 13) {
+                    if (response.replyText) {
+                        $scope.submitButtonClicked(response);
+                    }
+                }
+            };
+
             // handle the submit button click
             $scope.submitButtonClicked = function (response) {
                 $scope.submitbuttonclicked({ r: response });
@@ -156,6 +164,7 @@ var ClassResponseDirective = function () {
             }, function (oldValue, newValue) {
                 if (newValue !== oldValue) {
                     $scope.toggleExpanded(true);
+                    $scope.response.replyText = '';
                 }
             });
 
@@ -330,12 +339,12 @@ var DisableDeleteKeypress = function () {
                          * allow the delete key press
                          */
                     } else {
-                        /*
-                         * the user is not typing in an input element so we will
-                         * not allow the delete key press
-                         */
-                        e.preventDefault();
-                    }
+                            /*
+                             * the user is not typing in an input element so we will
+                             * not allow the delete key press
+                             */
+                            e.preventDefault();
+                        }
                 }
             });
         }
@@ -458,7 +467,7 @@ var DraggableDirective = function () {
                     /*
                      * get the position of the mouse and subtract the distance from
                      * the upper left corner of the parent container to the upper
-                     * left corner of the element. 
+                     * left corner of the element.
                      * this will be equal to the sum of two values.
                      * the first value is the x and y difference between the upper
                      * left corner of the browser screen to the upper left corner
@@ -507,7 +516,7 @@ var DraggableDirective = function () {
                 /*
                  * calculate the x and y position of where the element should be
                  * placed. we will calculate the position by taking the mouse
-                 * position and subtracting the value we previously calculated 
+                 * position and subtracting the value we previously calculated
                  * in the mousedown event. performing the subtraction will give
                  * us the x and y difference between the upper left corner of the
                  * parent container and the upper left corner of the element.
@@ -539,7 +548,7 @@ var DraggableDirective = function () {
                 }
 
                 if (x < 0) {
-                    /* 
+                    /*
                      * the x position that we have calculated for the left
                      * side of the element is past the left side of the parent
                      * container so we will set the x position to 0 so that the
@@ -547,7 +556,7 @@ var DraggableDirective = function () {
                      */
                     x = 0;
                 } else if (x + linkTypeChooserWidth > overlayWidth) {
-                    /* 
+                    /*
                      * the x position that we have calculated for the right
                      * side of the element is past the right side of the parent
                      * container so we will set the x position so that the element
@@ -557,7 +566,7 @@ var DraggableDirective = function () {
                 }
 
                 if (y < top) {
-                    /* 
+                    /*
                      * the y position that we have calculated for the top
                      * side of the element is past the top side of the parent
                      * container so we will set the y position to 0 so that the
@@ -565,7 +574,7 @@ var DraggableDirective = function () {
                      */
                     y = top;
                 } else if (y + linkTypeChooserHeight > overlayHeight + top) {
-                    /* 
+                    /*
                      * the y position that we have calculated for the bottom
                      * side of the element is past the bottom side of the parent
                      * container so we will set the y position so that the element

@@ -38,7 +38,8 @@
                           ng-model='response.replyText'
                           ng-model-options='{ debounce: 100 }'
                           placeholder="Add comment..."
-                          aria-label="Add comment"></textarea>
+                          aria-label="Add comment"
+                          ng-keyup="replyEntered($event, response)"></textarea>
             </md-input-container>
             <div class="discussion-new__actions discussion-new-reply__actions">
                 <!--<md-button class="md-accent"
@@ -46,9 +47,9 @@
                            aria-label="Add file">
                     <md-icon>image</md-icon>
                 </md-button>-->
-                <a class="md-button md-primary discussion-new-reply__submit"
+                <md-button class="md-primary discussion-new-reply__submit"
                            ng-disabled="!response.replyText"
-                           ng-click="submitButtonClicked(response)">Reply</a>
+                           ng-click="submitButtonClicked(response)">Reply</md-button>
             </div>
         </div>
     </div>
