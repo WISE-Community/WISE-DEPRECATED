@@ -26,7 +26,7 @@
                 <select ng-model='openResponseController.authoringComponentContent.showPreviousWorkNodeId'
                         ng-change='openResponseController.authoringShowPreviousWorkNodeIdChanged()'>
                     <option></option>
-                    <option ng-repeat='item in openResponseController.idToOrder | toArray | orderBy : "order"' 
+                    <option ng-repeat='item in openResponseController.idToOrder | toArray | orderBy : "order"'
                             value='{{item.$key}}'
                             ng-if='openResponseController.isApplicationNode(item.$key)'>{{openResponseController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
                 </select>
@@ -77,10 +77,6 @@
                         <md-tooltip md-direction="left">{{nodeController.getRevisions(component.id).length}} Versions</md-tooltip>
                     </md-button>
                 </div>
-                <component-annotations ng-if="openResponseController.mode === 'student'"
-                                       score-annotation='openResponseController.latestAnnotations.score'
-                                       comment-annotation='openResponseController.latestAnnotations.comment'
-                                       max-score="openResponseController.componentContent.maxScore"></component-annotations>
             </md-input-container>
             <div class="component__actions" ng-show="openResponseController.isStudentAttachmentEnabled" layout="row" layout-wrap="true">
                 <div class="component__add-attachment">
@@ -113,6 +109,10 @@
                       {{openResponseController.saveMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ openResponseController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="openResponseController.saveMessage.time"></span></span>
                 </span>
             </div>
+            <component-annotations ng-if="openResponseController.mode === 'student'"
+                                   score-annotation='openResponseController.latestAnnotations.score'
+                                   comment-annotation='openResponseController.latestAnnotations.comment'
+                                   max-score="openResponseController.componentContent.maxScore"></component-annotations>
             <div ng-if='openResponseController.mode === "grading"'>
                 <annotation ng-if='openResponseController.componentContent.maxScore > -1'
                             type='score'

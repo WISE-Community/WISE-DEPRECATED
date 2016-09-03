@@ -2,31 +2,33 @@
 
 // 2. Base
 .l-header {
-  .logo {
-    margin-left: 0 !important;
-    height: 36px;
-    width: 36px;
-  }
+    z-index: 3;
 
-  .logo-link {
-    min-width: auto;
-    display: none;
-
-    @media only screen and (min-width: ($layout-breakpoint-xs)) {
-        display: block;
+    .logo {
+        margin-left: 0 !important;
+        height: 36px;
+        width: 36px;
     }
 
-    &:hover, &:focus {
-      border: 0 none;
-    }
-  }
+    .logo-link {
+        min-width: auto;
+        display: none;
 
-  // Handle mobile portrait
-  @media only screen and (max-width: ($layout-breakpoint-xs - 1)) {
-    .md-toolbar-tools {
-      h1, h2, h3 {
-        font-size: $body-font-size-base;
-      }
+        @media only screen and (min-width: ($layout-breakpoint-xs)) {
+            display: block;
+        }
+
+        &:hover, &:focus {
+            border: 0 none;
+        }
     }
-  }
+
+    // Handle mobile portrait
+    @media only screen and (max-width: ($layout-breakpoint-xs - 1)) {
+        .md-toolbar-tools {
+            h1, h2, h3 {
+                font-size: $body-font-size-base;
+            }
+        }
+    }
 }

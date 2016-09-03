@@ -1,15 +1,28 @@
-<div class="annotations--student md-body-1" layout="row"
-     ng-if="componentAnnotationsCtrl.scoreAnnotation || componentAnnotationsCtrl.commentAnnotation">
-    <div>
-        <span ng-if="componentAnnotationsCtrl.commentAnnotation.data.value" class="accent-1"><md-icon class="annotations--student__icon">chat</md-icon> <span translate="teacherFeedbackLabel"></span> </span>
-        <span ng-if="componentAnnotationsCtrl.commentAnnotation.data.value" class="gray-dark" compile="componentAnnotationsCtrl.commentAnnotation.data.value"></span>
-        <span ng-if="componentAnnotationsCtrl.hasScore && componentAnnotationsCtrl.commentAnnotation.data.value && !componentAnnotationsCtrl.smScreen && !componentAnnotationsCtrl.hideComponentScores"
-              class="annotations--student__score md-body-2"><span translate="scoreLabelAndValue" translate-value-score="{{componentAnnotationsCtrl.scoreAnnotation.data.value}}{{componentAnnotationsCtrl.maxScoreDisplay}}"></span>
-        </span>
-    </div>
-    <span flex></span>
-    <div ng-if="componentAnnotationsCtrl.scoreAnnotation.data.value && !componentAnnotationsCtrl.hideComponentScores && (componentAnnotationsCtrl.smScreen || !componentAnnotationsCtrl.commentAnnotation.data.value)"
-          class="annotations--student__score md-body-2">
-          <span translate="scoreLabelAndValue" translate-value-score="{{componentAnnotationsCtrl.scoreAnnotation.data.value}}{{componentAnnotationsCtrl.maxScoreDisplay}}"></span>
-    </div>
-</div>
+<md-card class="annotations--student"
+         ng-if="componentAnnotationsCtrl.scoreAnnotation || componentAnnotationsCtrl.commentAnnotation">
+    <md-card-title class="annotations--student__header"
+                   ng-class="{'info-bg': componentAnnotationsCtrl.isNewAnnotation(), 'gray-darker-bg': !componentAnnotationsCtrl.isNewAnnotation()}">
+        <div class="annotations--student__avatar avatar--icon avatar--square md-48 avatar md-whiteframe-1dp">
+            <md-icon class="annotations--student__icon md-48 accent-1">{{componentAnnotationsCtrl.icon}}</md-icon>
+        </div>
+        <div class="annotations--student__title" layout="row" flex>
+            <span>{{componentAnnotationsCtrl.label}}</span>
+            <span flex></span>
+            <span ng-if="componentAnnotationsCtrl.isNewAnnotation()" class="badge annotations--student__status info" translate="new"></span>
+        </div>
+    </md-card-title>
+    <md-card-content class="annotations--student__body md-body-1">
+        <div ng-if="componentAnnotationsCtrl.commentAnnotation.data.value" compile="componentAnnotationsCtrl.commentAnnotation.data.value"></div>
+        <hr ng-if="componentAnnotationsCtrl.commentAnnotation" />
+        <div class="annotations--student__score md-body-2"
+             layout="row" laoyut-align="start center">
+            <span ng-if="componentAnnotationsCtrl.scoreAnnotation" translate="scoreLabelAndValue" translate-value-score="{{componentAnnotationsCtrl.scoreAnnotation.data.value}}{{componentAnnotationsCtrl.maxScoreDisplay}}"></span>
+            <span flex></span>
+            <span>
+                <span class="annotations__info" am-time-ago="componentAnnotationsCtrl.getLatestAnnotationTime()"></span>
+                <md-tooltip md-direction="top">{{ componentAnnotationsCtrl.getLatestAnnotationTime() | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip>
+            </span>
+        </div>
+        <!--<md-icon class="annotations--student__new md-18">new_releases</md-icon>-->
+    </md-card-content>
+</md-card>

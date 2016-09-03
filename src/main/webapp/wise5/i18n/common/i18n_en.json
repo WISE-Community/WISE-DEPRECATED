@@ -21,8 +21,9 @@
   "dismissNotificationInvalidDismissCode": "Invalid dismiss code. Please try again.",
   "dropAssetMessage": "Drop image or file here or click to upload!",
   "exit": "Exit",
-  "ok": "ok",
+  "ok": "OK",
   "move": "Move",
+  "new": "New",
   "no": "No",
   "notebook": "Notebook",
   "open": "Open",
@@ -43,7 +44,8 @@
   "step": "Step",
   "submit": "Submit",
   "team": "Team",
-  "teacherFeedbackLabel": "Teacher Feedback:",
+  "teacherFeedbackLabel": "Teacher Feedback",
+  "automatedFeedbackLabel": "Computer Feedback",
   "timeSpent": "Time Spent",
   "yes": "Yes"
 }

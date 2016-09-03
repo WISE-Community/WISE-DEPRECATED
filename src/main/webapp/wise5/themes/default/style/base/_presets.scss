@@ -22,10 +22,12 @@ p {
 }
 
 blockquote {
-    background-color: color('gray-lightest');
+    background-color: lighten(color('primary'), 56%);
     padding: 8px 12px;
     margin: 16px 0;
-    border-left: 2px solid color('primary');
+    border-style: solid;
+    border-color: color('primary');
+    border-width: 0 0 0 3px;
 }
 
 // TODO: remove once bootstrap dependency is removed
@@ -34,6 +36,16 @@ label {
     display: inherit;
     max-width: none;
     margin-bottom: none;
+}
+
+.badge {
+    border-radius: $card-border-radius;
+    padding: 0 6px;
+    font-size: rem(1.2);
+    font-weight: 600;
+    height: 20px;
+    line-height: 20px;
+    background-color: color('gray-light');
 }
 
 .center {

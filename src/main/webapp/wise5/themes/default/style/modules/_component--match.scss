@@ -2,13 +2,13 @@
 
 // Base
 .match-content {
-    background-color: color('gray-light');
+    background-color: color('gray-lighter');
     margin-bottom: 16px;
+    padding: 8px;
 }
 
 .match-divider {
-    margin: 24px 0 16px;
-    border-color: color('gray-dark');
+    margin: 16px 0 8px;
 }
 
 .match-divider--horizontal {
@@ -24,7 +24,7 @@
 }
 
 .match-bucket__content {
-    padding: 0 12px 12px;
+    padding: 0;
 }
 
 .match-bucket--choices {
@@ -44,8 +44,10 @@
     min-height: 120px;
     //margin: 0;
     padding: 0 8px 8px;
-    background-color: color('gray');
+    background-color: color('gray-light');
     transition: background-color 250ms;
+    border-bottom-left-radius: $card-border-radius;
+    border-bottom-right-radius: $card-border-radius;
 
     img {
         max-width: 100%;

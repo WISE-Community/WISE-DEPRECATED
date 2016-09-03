@@ -57,7 +57,7 @@
                 Symbol: <input ng-model='series.marker.symbol'
                                ng-change='graphController.authoringViewComponentChanged()'/>
                 <br/>
-                Can Student Edit: <input type='checkbox' 
+                Can Student Edit: <input type='checkbox'
                                          ng-model='series.canEdit'
                                          ng-change='graphController.authoringViewComponentChanged()'/>
                 <br/>
@@ -75,7 +75,7 @@
             <select ng-model='graphController.authoringComponentContent.showPreviousWorkNodeId'
                     ng-change='graphController.authoringShowPreviousWorkNodeIdChanged()'>
                 <option></option>
-                <option ng-repeat='item in graphController.idToOrder | toArray | orderBy : "order"' 
+                <option ng-repeat='item in graphController.idToOrder | toArray | orderBy : "order"'
                         value='{{item.$key}}'
                         ng-if='graphController.isApplicationNode(item.$key)'>{{graphController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
             </select>
@@ -140,10 +140,6 @@
             <md-icon> restore </md-icon> Reset Series
         </md-button>
         <highchart id="{{graphController.chartId}}" config="graphController.chartConfig" class="span10" style="width:80%"></highchart>
-        <component-annotations ng-if="graphController.mode === 'student'"
-                               score-annotation='graphController.latestAnnotations.score'
-                               comment-annotation='graphController.latestAnnotations.comment'
-                               max-score="graphController.componentContent.maxScore"></component-annotations>
         <div class="component__actions" layout="row" layout-align="start center">
             <md-button class="md-raised md-primary"
                        ng-click='graphController.submitButtonClicked()'
@@ -160,6 +156,10 @@
                       {{graphController.saveMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ graphController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="graphController.saveMessage.time"></span></span>
             </span>
         </div>
+        <component-annotations ng-if="graphController.mode === 'student'"
+                               score-annotation='graphController.latestAnnotations.score'
+                               comment-annotation='graphController.latestAnnotations.comment'
+                               max-score="graphController.componentContent.maxScore"></component-annotations>
     </div>
     <div ng-if='graphController.mode === "grading"'>
         <annotation ng-if='graphController.componentContent.maxScore > -1'

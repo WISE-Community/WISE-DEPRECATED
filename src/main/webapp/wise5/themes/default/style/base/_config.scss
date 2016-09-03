@@ -51,3 +51,9 @@ $menu-item-height: 6 * $baseline-grid !default;
 $dense-menu-item-height: 4 * $baseline-grid !default;
 $max-menu-height: 2 * $baseline-grid + $max-visible-items * $menu-item-height !default;
 $max-dense-menu-height: 2 * $baseline-grid + $max-visible-items * $dense-menu-item-height !default;
+
+// Cards
+$card-border-radius: 4px;
+
+// Buttons
+$button-border-radius: 3px;

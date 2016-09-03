@@ -6,12 +6,8 @@
 }
 
 .discussion-content {
-  background-color: color('gray-light');
+  background-color: color('gray-lighter');
   margin: 0 0 -16px;
-
-  @media only screen and (max-width: ($layout-breakpoint-xs - 1)) {
-    padding: 0;
-  }
 }
 
 .discussion-posts {
@@ -161,6 +157,7 @@ md-input-container.discussion-new__input-container {
   font-size: ($body-font-size-base) - 1;
   border: 0 none;
   margin-left: -1px;
+  margin-bottom: 0;
 }
 
 .discussion-reply, md-list-item.md-3-line.md-long-text.discussion-reply {

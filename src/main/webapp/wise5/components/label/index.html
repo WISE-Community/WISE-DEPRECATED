@@ -77,7 +77,7 @@
         <select ng-model='labelController.authoringComponentContent.showPreviousWorkNodeId'
                 ng-change='labelController.authoringShowPreviousWorkNodeIdChanged()'>
             <option></option>
-            <option ng-repeat='item in labelController.idToOrder | toArray | orderBy : "order"' 
+            <option ng-repeat='item in labelController.idToOrder | toArray | orderBy : "order"'
                     value='{{item.$key}}'
                     ng-if='labelController.isApplicationNode(item.$key)'>{{labelController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
         </select>
@@ -116,7 +116,7 @@
                    ng-disabled="labelController.isDisabled"
                    ng-if="labelController.showCancelButton()">Cancel</md-button>
         <md-button class="md-accent md-primary"
-                ng-click='labelController.snipImage($event)' 
+                ng-click='labelController.snipImage($event)'
                 ng-show='labelController.showSnipImageButton()'>
             <md-icon> content_cut </md-icon> Add to Notebook
         </md-button>
@@ -136,10 +136,6 @@
                 <md-button class="component__attachment__delete" ng-click='labelController.removeAttachment(attachment)' title="Remove file"><md-icon>cancel</md-icon></md-button>
             </div>
         </div>
-        <component-annotations ng-if="labelController.mode === 'student'"
-                               score-annotation='labelController.latestAnnotations.score'
-                               comment-annotation='labelController.latestAnnotations.comment'
-                               max-score="labelController.componentContent.maxScore"></component-annotations>
         <div class="component__actions" layout="row" layout-align="start center">
             <md-button class="md-raised md-primary"
                        ng-click='labelController.submitButtonClicked()'
@@ -156,6 +152,10 @@
                      {{labelController.saveMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ labelController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="labelController.saveMessage.time"></span></span>
             </span>
         </div>
+        <component-annotations ng-if="labelController.mode === 'student'"
+                               score-annotation='labelController.latestAnnotations.score'
+                               comment-annotation='labelController.latestAnnotations.comment'
+                               max-score="labelController.componentContent.maxScore"></component-annotations>
     </div>
     <div ng-if='labelController.mode === "grading"'>
         <annotation ng-if='labelController.componentContent.maxScore > -1'

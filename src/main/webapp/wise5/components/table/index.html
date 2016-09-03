@@ -61,7 +61,7 @@
                     <select ng-model='tableController.authoringComponentContent.showPreviousWorkNodeId'
                             ng-change='tableController.authoringShowPreviousWorkNodeIdChanged()'>
                         <option></option>
-                        <option ng-repeat='item in tableController.idToOrder | toArray | orderBy : "order"' 
+                        <option ng-repeat='item in tableController.idToOrder | toArray | orderBy : "order"'
                                 value='{{item.$key}}'
                                 ng-if='tableController.isApplicationNode(item.$key)'>{{tableController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
                     </select>
@@ -114,10 +114,6 @@
                 </td>
             </tr>
         </table>
-        <component-annotations ng-if="tableController.mode === 'student'"
-                               score-annotation='tableController.latestAnnotations.score'
-                               comment-annotation='tableController.latestAnnotations.comment'
-                               max-score="tableController.componentContent.maxScore"></component-annotations>
         <div class="component__actions" layout="row" layout-align="start center">
             <md-button class="md-raised md-primary"
                        ng-click='tableController.submitButtonClicked()'
@@ -137,6 +133,10 @@
                   {{tableController.saveMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ tableController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="tableController.saveMessage.time"></span></span>
             </span>
         </div>
+        <component-annotations ng-if="tableController.mode === 'student'"
+                               score-annotation='tableController.latestAnnotations.score'
+                               comment-annotation='tableController.latestAnnotations.comment'
+                               max-score="tableController.componentContent.maxScore"></component-annotations>
     </div>
     <div ng-if='tableController.mode === "grading"'>
         <annotation ng-if='tableController.componentContent.maxScore > -1'

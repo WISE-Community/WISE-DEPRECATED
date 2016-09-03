@@ -1,10 +1,91 @@
 .annotations--student {
-    padding: 8px 0;
-    border-bottom: 1px dotted color(gray-light);
+    margin: 12px 2px;
+
+    @media only screen and (min-width: ($layout-breakpoint-xs)) {
+        margin-left: 16px;
+        margin-right: 16px;
+    }
+
+    @media only screen and (min-width: ($layout-breakpoint-sm)) {
+        margin-left: 24px;
+        margin-right: 24px;
+    }
+
+    hr {
+        margin: 8px 0;
+        border-color: rgba(0,0,0,.12);
+    }
 }
 
-.annotations--student__score {
+.annotations--student__header {
+    position: relative;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    padding: 12px;
+    font-weight: 500;
+    transition: all 1s;
+}
+
+.annotations--student__avatar {
+    background-color: #ffffff;
+    padding: 2px;
+    position: absolute;
+}
+
+.annotations--student__icon {
+    transition: all 1s;
+}
+
+.annotations--student__title {
+    margin-left: 64px;
+    color: #ffffff;
+
+    //padding: 8px 12px;
+    //border-radius: 4px;
+    //z-index: 1;
+
+    //background-color: #ffffff;
+    //transition: 250ms;
+}
+
+.annotations--student__body {
+    //margin-top: -6px;
+    //padding: 12px 16px;
+    //border-top: 1px solid color('gray-light');
+    padding: 32px 16px 12px;
+    //background-color: color('gray-lightest');
+    border-bottom-left-radius: $card-border-radius;
+    border-bottom-right-radius: $card-border-radius;
+
+    //position: relative;
+
+    /*&::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        border-style: solid;
+        border-width: 0 36px 36px 0;
+        border-color: transparent color('info') transparent transparent;
+    }*/
+}
+
+.annotations--student__status {
+    background-color: #ffffff;
     display: inline-block;
+    margin-left: 8px;
+
+    &.ng-enter, &.ng-leave {
+        transition: all 1s;
+    }
+
+    &.ng-enter, &.ng-leave.ng-leave-active {
+        opacity:0;
+    }
+
+    &.ng-leave, &.ng-enter.ng-enter-active {
+        opacity:1;
+    }
 }
 
 .annotations--grading__score {
@@ -13,20 +94,26 @@
     }
 }
 
-.annotations--student__icon {
-    color: color('accent-1') !important;
+.annotations__info {
+    font-style: italic;
+    opacity: 0.8;
+    color: color('text-secondary');
+    border-bottom: 1px dotted;
+    font-size: rem(1.2);
 }
 
 .annotations--inside {
-    @media only screen and (max-width: ($layout-breakpoint-xs - 1)) {
-        padding: 8px 8px 0;
-        display: block;
-    }
-
     .annotations--student {
-        background-color: #ffffff;
-        padding: 8px;
-        margin-bottom: 8px;
-        border: 0 none;
+        margin: 8px 8px 12px;
+
+        @media only screen and (min-width: ($layout-breakpoint-xs)) {
+            margin-left: 16px;
+            margin-right: 16px;
+        }
+
+        @media only screen and (min-width: ($layout-breakpoint-sm)) {
+            margin-left: 24px;
+            margin-right: 24px;
+        }
     }
 }

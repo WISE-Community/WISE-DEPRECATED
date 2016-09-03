@@ -48,7 +48,7 @@
                 <select ng-model='multipleChoiceController.authoringComponentContent.showPreviousWorkNodeId'
                         ng-change='multipleChoiceController.authoringShowPreviousWorkNodeIdChanged()'>
                     <option></option>
-                    <option ng-repeat='item in multipleChoiceController.idToOrder | toArray | orderBy : "order"' 
+                    <option ng-repeat='item in multipleChoiceController.idToOrder | toArray | orderBy : "order"'
                             value='{{item.$key}}'
                             ng-if='multipleChoiceController.isApplicationNode(item.$key)'>{{multipleChoiceController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
                 </select>
@@ -110,11 +110,6 @@
                 <div class="md-caption" ng-if="multipleChoiceController.hasCorrectChoices() && multipleChoiceController.showFeedback" ng-show="multipleChoiceController.numberOfAttempts != null">Number of Attempts: {{multipleChoiceController.numberOfAttempts}}</div>
                 <div ng-if="multipleChoiceController.hasCorrectChoices() && multipleChoiceController.showFeedback && multipleChoiceController.isCorrect != null && multipleChoiceController.isCorrect">Correct!</div>
                 <div ng-if="multipleChoiceController.hasCorrectChoices() && multipleChoiceController.showFeedback && multipleChoiceController.isCorrect != null && !multipleChoiceController.isCorrect">Incorrect</div>
-
-                <component-annotations ng-if="multipleChoiceController.mode === 'student'"
-                                       score-annotation='multipleChoiceController.latestAnnotations.score'
-                                       comment-annotation='multipleChoiceController.latestAnnotations.comment'
-                                       max-score="multipleChoiceController.componentContent.maxScore"></component-annotations>
             </md-input-container>
 
             <div ng-if="multipleChoiceController.showSaveButton() || multipleChoiceController.showSubmitButton()"
@@ -136,26 +131,31 @@
                       class="component__actions__info md-caption">
                       {{multipleChoiceController.saveMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ multipleChoiceController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="multipleChoiceController.saveMessage.time"></span></span>
                 </span>
-        </div>
-        <div ng-if='multipleChoiceController.mode === "grading"'>
-            <annotation ng-if='multipleChoiceController.componentContent.maxScore > -1'
-                        type='score'
-                        mode='multipleChoiceController.mode'
-                        node-id='multipleChoiceController.nodeId'
-                        component-id='multipleChoiceController.componentId'
-                        from-workgroup-id='teacherWorkgroupId'
-                        to-workgroup-id='workgroupId'
-                        component-state-id='componentState.id'
-                        active='true'></annotation>
-            <br ng-if='multipleChoiceController.componentContent.maxScore > -1'/>
-            <annotation type='comment'
-                        mode='multipleChoiceController.mode'
-                        node-id='multipleChoiceController.nodeId'
-                        component-id='multipleChoiceController.componentId'
-                        from-workgroup-id='teacherWorkgroupId'
-                        to-workgroup-id='workgroupId'
-                        component-state-id='componentState.id'
-                        active='true'></annotation>
+            </div>
+            <component-annotations ng-if="multipleChoiceController.mode === 'student'"
+                                   score-annotation='multipleChoiceController.latestAnnotations.score'
+                                   comment-annotation='multipleChoiceController.latestAnnotations.comment'
+                                   max-score="multipleChoiceController.componentContent.maxScore"></component-annotations>
+            <div ng-if='multipleChoiceController.mode === "grading"'>
+                <annotation ng-if='multipleChoiceController.componentContent.maxScore > -1'
+                            type='score'
+                            mode='multipleChoiceController.mode'
+                            node-id='multipleChoiceController.nodeId'
+                            component-id='multipleChoiceController.componentId'
+                            from-workgroup-id='teacherWorkgroupId'
+                            to-workgroup-id='workgroupId'
+                            component-state-id='componentState.id'
+                            active='true'></annotation>
+                <br ng-if='multipleChoiceController.componentContent.maxScore > -1'/>
+                <annotation type='comment'
+                            mode='multipleChoiceController.mode'
+                            node-id='multipleChoiceController.nodeId'
+                            component-id='multipleChoiceController.componentId'
+                            from-workgroup-id='teacherWorkgroupId'
+                            to-workgroup-id='workgroupId'
+                            component-state-id='componentState.id'
+                            active='true'></annotation>
+            </div>
         </div>
     </body>
 </html>

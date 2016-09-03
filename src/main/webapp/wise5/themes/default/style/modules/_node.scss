@@ -31,6 +31,7 @@ $input-action-vertical-offset-richtext: -7px;
 .node-content {
     padding: 0 0 24px;
     background-color: #ffffff;
+    border-radius: $button-border-radius;
 
     @media only screen and (max-width: $layout-breakpoint-xs - 1) {
         box-shadow: none;

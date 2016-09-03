@@ -187,10 +187,6 @@
         </div>
         -->
     </div>
-    <component-annotations ng-if="drawController.mode === 'student'"
-                           score-annotation='drawController.latestAnnotations.score'
-                           comment-annotation='drawController.latestAnnotations.comment'
-                           max-score="drawController.componentContent.maxScore"></component-annotations>
     <md-button class="revision md-icon-button" ng-click='nodeController.showRevisions($event, component.id)'
                ng-if="nodeController.getRevisions(component.id).length > 1">
         <md-icon> history </md-icon>
@@ -212,6 +208,10 @@
                  {{drawController.saveMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ drawController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="drawController.saveMessage.time"></span></span>
            </span>
     </div>
+    <component-annotations ng-if="drawController.mode === 'student'"
+                           score-annotation='drawController.latestAnnotations.score'
+                           comment-annotation='drawController.latestAnnotations.comment'
+                           max-score="drawController.componentContent.maxScore"></component-annotations>
     <div ng-if='drawController.mode === "grading"'>
         <annotation ng-if='drawController.componentContent.maxScore > -1'
                     type='score'
