@@ -209,8 +209,7 @@
            </span>
     </div>
     <component-annotations ng-if="drawController.mode === 'student'"
-                           score-annotation='drawController.latestAnnotations.score'
-                           comment-annotation='drawController.latestAnnotations.comment'
+                           annotations='drawController.latestAnnotations'
                            max-score="drawController.componentContent.maxScore"></component-annotations>
     <div ng-if='drawController.mode === "grading"'>
         <annotation ng-if='drawController.componentContent.maxScore > -1'

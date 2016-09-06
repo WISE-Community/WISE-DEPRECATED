@@ -59,7 +59,7 @@
             <select ng-model='audioOscillatorController.authoringComponentContent.showPreviousWorkNodeId'
                     ng-change='audioOscillatorController.authoringShowPreviousWorkNodeIdChanged()'>
                 <option></option>
-                <option ng-repeat='item in audioOscillatorController.idToOrder | toArray | orderBy : "order"' 
+                <option ng-repeat='item in audioOscillatorController.idToOrder | toArray | orderBy : "order"'
                         value='{{item.$key}}'
                         ng-if='audioOscillatorController.isApplicationNode(item.$key)'>{{audioOscillatorController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
             </select>
@@ -124,6 +124,9 @@
                       {{audioOscillatorController.saveMessage.text}} <span class="component-content__actions__more"><md-tooltip md-direction="top">{{ audioOscillatorController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="audioOscillatorController.saveMessage.time"></span></span>
             </span>
         </div>
+        <component-annotations ng-if="audioOscillatorController.mode === 'student'"
+                               annotations='audioOscillatorController.latestAnnotations'
+                               max-score="audioOscillatorController.componentContent.maxScore"></component-annotations>
     </div>
     <div ng-if='audioOscillatorController.mode == "grading"'>
         <annotation ng-if='audioOscillatorController.componentContent.maxScore > -1'

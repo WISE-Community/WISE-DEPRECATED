@@ -649,8 +649,7 @@ var Annotation = {
 
 var ComponentAnnotations = {
     bindings: {
-        scoreAnnotation: '<',
-        commentAnnotation: '<',
+        annotations: '<',
         maxScore: '<'
     },
     templateUrl: 'wise5/directives/componentAnnotations/componentAnnotations.html',

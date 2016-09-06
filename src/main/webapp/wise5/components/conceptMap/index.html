@@ -26,7 +26,7 @@
                 <select ng-model='conceptMapController.authoringComponentContent.showPreviousWorkNodeId'
                         ng-change='conceptMapController.authoringShowPreviousWorkNodeIdChanged()'>
                     <option></option>
-                    <option ng-repeat='item in conceptMapController.idToOrder | toArray | orderBy : "order"' 
+                    <option ng-repeat='item in conceptMapController.idToOrder | toArray | orderBy : "order"'
                             value='{{item.$key}}'
                             ng-if='conceptMapController.isApplicationNode(item.$key)'>{{conceptMapController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
                 </select>
@@ -55,22 +55,22 @@
                 Node <button ng-click='conceptMapController.authoringViewAddNode()'>Add Node</button>
                 <br/>
                 <div ng-repeat='node in conceptMapController.authoringComponentContent.nodes'>
-                    File Name: 
+                    File Name:
                     <input ng-model='node.fileName'
                            ng-change='conceptMapController.authoringViewComponentChanged()'
                            size='30'
                            ng-model-options='{ debounce: 1000 }'/>
-                    Label: 
+                    Label:
                     <input ng-model='node.label'
                            ng-change='conceptMapController.authoringViewComponentChanged()'
                            size='30'
                            ng-model-options='{ debounce: 1000 }'/>
-                    Width: 
+                    Width:
                     <input ng-model='node.width'
                            ng-change='conceptMapController.authoringViewComponentChanged()'
                            size='10'
                            ng-model-options='{ debounce: 1000 }'/>
-                    Height: 
+                    Height:
                     <input ng-model='node.height'
                            ng-change='conceptMapController.authoringViewComponentChanged()'
                            size='10'
@@ -104,52 +104,52 @@
                 <br/>
                 Rules <button ng-click='conceptMapController.authoringAddRule()'>Add Rule</button>
                 <div ng-repeat='rule in conceptMapController.authoringComponentContent.rules'>
-                    Rule Name: 
-                    <input ng-model='rule.name' 
-                           size='30' 
-                           ng-change='conceptMapController.authoringViewComponentChanged()' 
+                    Rule Name:
+                    <input ng-model='rule.name'
+                           size='30'
+                           ng-change='conceptMapController.authoringViewComponentChanged()'
                            ng-model-options='{ debounce: 1000 }'/>
                     <select ng-model='rule.not'
                             ng-change='conceptMapController.authoringViewComponentChanged()'
                             ng-options='option.value as option.label for option in conceptMapController.shouldOptions'>
                     </select>
-                    contain 
-                    <select ng-model='rule.comparison' 
+                    contain
+                    <select ng-model='rule.comparison'
                             ng-change='conceptMapController.authoringViewComponentChanged()'>
                         <option value='exactly'>exactly</option>
                         <option value='more than'>more than</option>
                         <option value='less than'>less than</option>
-                    </select> 
-                    <input ng-model='rule.number' 
-                           size='3' 
+                    </select>
+                    <input ng-model='rule.number'
+                           size='3'
                            ng-change='conceptMapController.authoringViewComponentChanged()'/>
-                    <select ng-model='rule.nodeLabel' 
+                    <select ng-model='rule.nodeLabel'
                             ng-change='conceptMapController.authoringViewComponentChanged()'>
                         <option></option>
                         <option value='any'>any</option>
-                        <option ng-repeat='node in conceptMapController.authoringComponentContent.nodes' 
+                        <option ng-repeat='node in conceptMapController.authoringComponentContent.nodes'
                                 value='{{node.label}}'>{{node.label}}</option>
                     </select>
                     with link
-                    <input type='checkbox' 
-                           ng-model='rule.type' 
-                           ng-true-value="'link'" 
-                           ng-false-value="'node'" 
+                    <input type='checkbox'
+                           ng-model='rule.type'
+                           ng-true-value="'link'"
+                           ng-false-value="'node'"
                            ng-change='conceptMapController.authoringRuleLinkCheckboxClicked($index)'/>
-                    <select ng-model='rule.linkLabel' 
+                    <select ng-model='rule.linkLabel'
                             ng-change='conceptMapController.authoringViewComponentChanged()'
                             ng-show='rule.type == "link"'>
                         <option></option>
                         <option value='any'>any</option>
-                        <option ng-repeat='link in conceptMapController.authoringComponentContent.links' 
+                        <option ng-repeat='link in conceptMapController.authoringComponentContent.links'
                                 value='{{link.label}}'>{{link.label}}</option>
                     </select>
-                    <select ng-model='rule.otherNodeLabel' 
+                    <select ng-model='rule.otherNodeLabel'
                             ng-change='conceptMapController.authoringViewComponentChanged()'
                             ng-show='rule.type == "link"'>
                         <option></option>
                         <option value='any'>any</option>
-                        <option ng-repeat='node in conceptMapController.authoringComponentContent.nodes' 
+                        <option ng-repeat='node in conceptMapController.authoringComponentContent.nodes'
                                 value='{{node.label}}'>{{node.label}}</option>
                     </select>
                     <button ng-click='conceptMapController.authoringViewRuleUpButtonClicked($index)'>Up</button>
@@ -200,10 +200,10 @@
                     <button ng-click="conceptMapController.checkAnswer()">Check Answer</button>
                     <div id="conceptMapContainer" style="display: flex">
                         <div id="selectNodeBar" style="flex: 10; border: 1px solid black">
-                            <div ng-repeat="availableNode in conceptMapController.availableNodes" 
+                            <div ng-repeat="availableNode in conceptMapController.availableNodes"
                                  style="text-align: center; border: 1px solid black">
-                                <img src="{{availableNode.fileName}}" 
-                                    style="cursor: pointer" 
+                                <img src="{{availableNode.fileName}}"
+                                    style="cursor: pointer"
                                     ng-mousedown="conceptMapController.selectNode($event, availableNode)"
                                     width="{{availableNode.width}}"
                                     height="{{availableNode.height}}"/>
@@ -212,13 +212,13 @@
                             </div>
                         </div>
                         <div id="svgDiv" style="flex: 90">
-                            <svg id="svg1" 
-                                 width="800" 
-                                 height="600" 
+                            <svg id="svg1"
+                                 width="800"
+                                 height="600"
                                  style="background-image: url('{{conceptMapController.componentContent.background}}'); background-size: {{conceptMapController.backgroundSize}}; background-repeat: no-repeat; border: 1px solid black; -moz-user-select: none; -webkit-user-select: none; -ms-user-select:none; user-select:none; -o-user-select:none;">
                             </svg>
                         </div>
-                        <div id="linkTypeChooserModalOverlay" 
+                        <div id="linkTypeChooserModalOverlay"
                             ng-show="conceptMapController.displayLinkTypeChooserModalOverlay"
                             ng-style="conceptMapController.linkTypeChooserModalOverlayStyle">
                         </div>
@@ -239,11 +239,11 @@
                             <div style="display: flex">
                                 <div style="margin-right: auto;"><md-button class="md-primary md-button md-raised" ng-click="conceptMapController.cancelLinkTypeChooser()">Cancel</md-button></div>
                                 <div style="display: flex; margin-right: 16px;">
-                                    <md-tooltip md-direction="left" 
+                                    <md-tooltip md-direction="left"
                                                 style="z-index: 10001;">
                                         Drag Me
                                     </md-tooltip>
-                                    <md-icon style="transform: rotate(45deg)" 
+                                    <md-icon style="transform: rotate(45deg)"
                                             ng-click="conceptMapController.dragIconClicked()">
                                         zoom_out_map
                                     </md-icon>
@@ -251,7 +251,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <md-button class="input--textarea__action input--textarea__action--revision md-icon-button"
                                ng-click='nodeController.showRevisions($event, component.id, conceptMapController.isDisabled)'
                                ng-if="nodeController.getRevisions(component.id).length > 1">
@@ -259,10 +259,6 @@
                         <md-tooltip md-direction="left">{{nodeController.getRevisions(component.id).length}} Versions</md-tooltip>
                     </md-button>
                 </div>
-                <component-annotations ng-if="conceptMapController.mode === 'student'"
-                                       score-annotation='conceptMapController.latestAnnotations.score'
-                                       comment-annotation='conceptMapController.latestAnnotations.comment'
-                                       max-score="conceptMapController.componentContent.maxScore"></component-annotations>
             </md-input-container>
             <div class="component__actions" ng-show="conceptMapController.isStudentAttachmentEnabled" layout="row" layout-wrap="true">
                 <div class="component__add-attachment">
@@ -295,6 +291,9 @@
                       {{conceptMapController.saveMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ conceptMapController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="conceptMapController.saveMessage.time"></span></span>
                 </span>
             </div>
+            <component-annotations ng-if="conceptMapController.mode === 'student'"
+                                   annotations='conceptMapController.latestAnnotations'
+                                   max-score="conceptMapController.componentContent.maxScore"></component-annotations>
             <div ng-if='conceptMapController.mode === "grading"'>
                 <annotation ng-if='conceptMapController.componentContent.maxScore > -1'
                             type='score'

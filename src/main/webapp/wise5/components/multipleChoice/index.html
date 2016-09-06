@@ -133,8 +133,7 @@
                 </span>
             </div>
             <component-annotations ng-if="multipleChoiceController.mode === 'student'"
-                                   score-annotation='multipleChoiceController.latestAnnotations.score'
-                                   comment-annotation='multipleChoiceController.latestAnnotations.comment'
+                                   annotations='multipleChoiceController.latestAnnotations'
                                    max-score="multipleChoiceController.componentContent.maxScore"></component-annotations>
             <div ng-if='multipleChoiceController.mode === "grading"'>
                 <annotation ng-if='multipleChoiceController.componentContent.maxScore > -1'

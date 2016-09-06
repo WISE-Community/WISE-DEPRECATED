@@ -78,6 +78,9 @@ class AudioOscillatorController {
         // whether the submit button is shown or not
         this.isSubmitButtonVisible = false;
 
+        // the latest annotations
+        this.latestAnnotations = null;
+
         // whether the audio is playing
         this.isPlaying = false;
 
@@ -142,6 +145,9 @@ class AudioOscillatorController {
                 this.isPromptVisible = true;
                 this.isSaveButtonVisible = this.componentContent.showSaveButton;
                 this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+
+                // get the latest annotations
+                this.latestAnnotations = this.$scope.$parent.nodeController.getLatestComponentAnnotations(this.componentId);
             } else if (this.mode === 'grading') {
                 this.isPromptVisible = true;
                 this.isSaveButtonVisible = false;
@@ -332,6 +338,34 @@ class AudioOscillatorController {
                 }
             }
         }));
+
+        /**
+         * Listen for the 'annotationSavedToServer' event which is fired when
+         * we receive the response from saving an annotation to the server
+         */
+        this.$scope.$on('annotationSavedToServer', (event, args) => {
+
+            if (args != null ) {
+
+                // get the annotation that was saved to the server
+                var annotation = args.annotation;
+
+                if (annotation != null) {
+
+                    // get the node id and component id of the annotation
+                    var annotationNodeId = annotation.nodeId;
+                    var annotationComponentId = annotation.componentId;
+
+                    // make sure the annotation was for this component
+                    if (this.nodeId === annotationNodeId &&
+                        this.componentId === annotationComponentId) {
+
+                        // get latest score and comment annotations for this component
+                        this.latestAnnotations = this.$scope.$parent.nodeController.getLatestComponentAnnotations(this.componentId);
+                    }
+                }
+            }
+        });
 
         /**
          * Listen for the 'exitNode' event which is fired when the student

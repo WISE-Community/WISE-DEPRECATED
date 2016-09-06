@@ -157,8 +157,7 @@
             </span>
         </div>
         <component-annotations ng-if="graphController.mode === 'student'"
-                               score-annotation='graphController.latestAnnotations.score'
-                               comment-annotation='graphController.latestAnnotations.comment'
+                               annotations='graphController.latestAnnotations'
                                max-score="graphController.componentContent.maxScore"></component-annotations>
     </div>
     <div ng-if='graphController.mode === "grading"'>
