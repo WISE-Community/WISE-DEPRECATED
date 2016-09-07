@@ -1,25 +1,27 @@
 <div class="l-constrained">
     <md-content class="node-content md-whiteframe-1dp" style="border-color: {{nodeController.nodeStatus.icon.color}}"
-                ng-class="{'node-sidebar-active': vleController.isNotebookEnabled()}">
-        <div id="{{component.id}}" ng-repeat='component in nodeController.getComponents()'>
+                ng-class="{'node-sidebar-active': vleController.isNotebookEnabled()}" layout="row" layout-wrap>
+        <div id="{{component.id}}" class="component-section"
+             ng-repeat='component in nodeController.getComponents()'
+             flex="100" flex-gt-sm="{{component.width ? component.width : 100}}">
             <component ng-if='component.showPreviousWorkNodeId != null && component.showPreviousWorkComponentId != null'
-                         nodeid='{{component.showPreviousWorkNodeId}}'
-                         componentid='{{component.showPreviousWorkComponentId}}'
-                         componentstate='{{nodeController.getComponentStateByNodeIdAndComponentId(component.showPreviousWorkNodeId, component.showPreviousWorkComponentId)}}'
-                         workgroupid='{{nodeController.workgroupId}}'
-                         teacherworkgroupid='{{nodeController.teacherWorkgroupId}}'
-                         originalnodeid={{nodeController.nodeId}}
-                         originalcomponentid={{component.id}}
-                         mode='showPreviousWork'></component>
+                       nodeid='{{component.showPreviousWorkNodeId}}'
+                       componentid='{{component.showPreviousWorkComponentId}}'
+                       componentstate='{{nodeController.getComponentStateByNodeIdAndComponentId(component.showPreviousWorkNodeId, component.showPreviousWorkComponentId)}}'
+                       workgroupid='{{nodeController.workgroupId}}'
+                       teacherworkgroupid='{{nodeController.teacherWorkgroupId}}'
+                       originalnodeid={{nodeController.nodeId}}
+                       originalcomponentid={{component.id}}
+                       mode='showPreviousWork'></component>
             <component ng-if='component.showPreviousWorkNodeId == null || component.showPreviousWorkComponentId == null'
-                         nodeid='{{nodeController.nodeId}}'
-                         componentid='{{component.id}}'
-                         componentstate='{{nodeController.getComponentStateByComponentId(component.id)}}'
-                         workgroupid='{{nodeController.workgroupId}}'
-                         teacherworkgroupid='{{nodeController.teacherWorkgroupId}}'
-                         mode='student'></component>
+                       nodeid='{{nodeController.nodeId}}'
+                       componentid='{{component.id}}'
+                       componentstate='{{nodeController.getComponentStateByComponentId(component.id)}}'
+                       workgroupid='{{nodeController.workgroupId}}'
+                       teacherworkgroupid='{{nodeController.teacherWorkgroupId}}'
+                       mode='student'></component>
         </div>
-        <div class="node-content__actions" layout="row" layout-align="start center">
+        <div class="node-content__actions" layout="row" layout-align="start center" flex="100">
              <md-button class="md-raised md-primary"
                   ng-click='nodeController.submitButtonClicked()'
                   ng-disabled='nodeController.isDisabled || !nodeController.dirtySubmitComponentIds.length'

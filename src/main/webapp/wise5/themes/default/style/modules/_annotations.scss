@@ -1,19 +1,23 @@
 .annotations--student {
     margin: 12px 2px;
 
-    @media only screen and (min-width: ($layout-breakpoint-xs)) {
-        margin-left: 16px;
-        margin-right: 16px;
-    }
-
-    @media only screen and (min-width: ($layout-breakpoint-sm)) {
-        margin-left: 24px;
-        margin-right: 24px;
-    }
-
     hr {
         margin: 8px 0;
         border-color: rgba(0,0,0,.12);
+    }
+}
+
+.component-section.flex-gt-sm-100 {
+    .annotations--student {
+        @media only screen and (min-width: ($layout-breakpoint-xs)) {
+            margin-left: 16px;
+            margin-right: 16px;
+        }
+
+        @media only screen and (min-width: ($layout-breakpoint-sm)) {
+            margin-left: 24px;
+            margin-right: 24px;
+        }
     }
 }
 
