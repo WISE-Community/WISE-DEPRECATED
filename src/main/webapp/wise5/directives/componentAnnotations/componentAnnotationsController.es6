@@ -43,7 +43,10 @@ class ComponentAnnotationsController {
         });
 
         this.$onChanges = (changes) => {
-            this.processAnnotations();
+            //if (changes.annotations) {
+                //this.annotations = angular.copy(changes.annotations.currentValue);
+                this.processAnnotations();
+            //}
         };
     }
 
@@ -54,14 +57,14 @@ class ComponentAnnotationsController {
     getLatestAnnotation() {
         let latest = null;
 
-        if (this.commentAnnotation || this.scoreAnnotation) {
-            let commentSaveTime = this.commentAnnotation ? this.commentAnnotation.serverSaveTime : 0;
-            let scoreSaveTime = this.scoreAnnotation ? this.scoreAnnotation.serverSaveTime : 0;
+        if (this.annotations.comment || this.annotations.score) {
+            let commentSaveTime = this.annotations.comment ? this.annotations.comment.serverSaveTime : 0;
+            let scoreSaveTime = this.annotations.score ? this.annotations.score.serverSaveTime : 0;
 
             if (commentSaveTime >= scoreSaveTime) {
-                latest = this.commentAnnotation;
+                latest = this.annotations.comment;
             } else if (scoreSaveTime > commentSaveTime) {
-                latest = this.scoreAnnotation;
+                latest = this.annotations.score;
             }
         }
 
@@ -164,9 +167,9 @@ class ComponentAnnotationsController {
     };
 
     processAnnotations() {
-        if (this.commentAnnotation || this.scoreAnnotation) {
-            this.nodeId = this.commentAnnotation ? this.commentAnnotation.nodeId : this.scoreAnnotation.nodeId;
-            this.componentId = this.commentAnnotation ? this.commentAnnotation.componentId : this.scoreAnnotation.nodeId;
+        if (this.annotations.comment || this.annotations.score) {
+            this.nodeId = this.annotations.comment ? this.annotations.comment.nodeId : this.annotations.score.nodeId;
+            this.componentId = this.annotations.comment ? this.annotations.comment.componentId : this.annotations.score.nodeId;
 
             // set the latest annotation time
             //this.latestAnnotationTime = this.getLatestAnnotationTime();
