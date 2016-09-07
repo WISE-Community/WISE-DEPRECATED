@@ -2055,6 +2055,37 @@ var ConceptMapNode = function () {
                 }
             }
         }
+
+        /**
+         * Get the links from this node to a given destination node
+         * @param destinationNode the destination node
+         */
+
+    }, {
+        key: 'getLinksToDestination',
+        value: function getLinksToDestination(destinationNode) {
+
+            var linksToDestination = [];
+
+            // loop through all the outgoing links
+            for (var ol = 0; ol < this.outgoingLinks.length; ol++) {
+
+                // get an outgoing link
+                var outgoingLink = this.outgoingLinks[ol];
+
+                if (outgoingLink != null) {
+                    if (destinationNode == outgoingLink.destinationNode) {
+                        /* 
+                         * the destination of the link is the destination we are
+                         * looking for
+                         */
+                        linksToDestination.push(outgoingLink);
+                    }
+                }
+            }
+
+            return linksToDestination;
+        }
     }]);
 
     return ConceptMapNode;
@@ -2565,6 +2596,112 @@ var ConceptMapLink = function () {
 
                 // remember the destination node
                 this.destinationNode = destinationNode;
+
+                /* 
+                 * check if there are any links with that have the same source,
+                 * destination, and direction. if there is a link that has the
+                 * same source, destination, and direction, we will try to use
+                 * a different direction that hasn't already been used. if all
+                 * directions have already been used, we will use the original
+                 * direction the user specified. there are three link directions, 
+                 * up, straight, and down.
+                 *      ___
+                 * up  /   \
+                 *    o    o
+                 *
+                 * straight o------o
+                 *
+                 *      o   o
+                 * down \__/
+                 */
+
+                var directionAlreadyUsed = false;
+                var direction = '';
+
+                if (this.curvature == 0) {
+                    // the user has created the curve to be straight
+                    direction = 'straight';
+                } else if (this.startCurveUp && this.endCurveUp) {
+                    // the user has created the curve that starts by pointing up
+                    direction = 'up';
+                } else if (!this.startCurveUp && !this.endCurveUp) {
+                    // the user has created the curve that starts by pointing down
+                    direction = 'down';
+                }
+
+                // get all the links that have the same source and destination
+                var parallelLinks = this.sourceNode.getLinksToDestination(destinationNode);
+
+                var usedDirections = [];
+
+                // loop through all the links that have the same source and destination
+                for (var p = 0; p < parallelLinks.length; p++) {
+                    var parallelLink = parallelLinks[p];
+
+                    if (parallelLink != null) {
+
+                        var curvature = parallelLink.curvature;
+                        var startCurveUp = parallelLink.startCurveUp;
+                        var endCurveUp = parallelLink.endCurveUp;
+
+                        var tempDirection = '';
+
+                        if (curvature == 0) {
+                            // the other link is straight
+                            tempDirection = 'straight';
+                        } else if (startCurveUp && endCurveUp) {
+                            // the other link points up
+                            tempDirection = 'up';
+                        } else if (!startCurveUp && !endCurveUp) {
+                            // the other link points down
+                            tempDirection = 'down';
+                        }
+
+                        if (direction == tempDirection) {
+                            /*
+                             * the direction is the same as the direction the user
+                             * has specified
+                             */
+                            directionAlreadyUsed = true;
+                        }
+
+                        // keep track of the directions that were used
+                        usedDirections.push(tempDirection);
+                    }
+                }
+
+                if (directionAlreadyUsed) {
+                    /*
+                     * the direction the user specified is already used so we will
+                     * try to find a direction that hasn't been used
+                     */
+
+                    if (usedDirections.indexOf('up') == -1) {
+                        /*
+                         * we have not used the up direction yet so we will make
+                         * the link point up
+                         */
+                        this.curvature = 0.5;
+                        this.startCurveUp = true;
+                        this.endCurveUp = true;
+                    } else if (usedDirections.indexOf('straight') == -1) {
+                        /*
+                         * we have not used the straight direction yet so we will
+                         * make the link point straight
+                         */
+                        this.curvature = 0.0;
+                        this.startCurveUp = true;
+                        this.endCurveUp = true;
+                    } else if (usedDirections.indexOf('down') == -1) {
+                        /*
+                         * we have not used the down direction yet so we will make
+                         * the link point down
+                         */
+                        this.curvature = 0.5;
+                        this.startCurveUp = false;
+                        this.endCurveUp = false;
+                    }
+                }
 
                 /*
                  * get the nearest point from the center of the source node to the 
