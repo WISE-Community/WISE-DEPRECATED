@@ -4,6 +4,8 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -649,6 +651,80 @@ var ConfigService = function () {
             }
 
             return role;
+        }
+
+        /** 
+         * Replace student names in the content.
+         * For example, we will replace instances of {{firstStudentFirstName}} 
+         * with the actual first name of the first student in the workgroup.
+         * @param content a content object or string
+         * @return an updated content object or string
+         */
+
+    }, {
+        key: 'replaceStudentNames',
+        value: function replaceStudentNames(content) {
+            if (content != null) {
+
+                var contentString = content;
+
+                if ((typeof content === 'undefined' ? 'undefined' : _typeof(content)) === 'object') {
+                    // get the content as a string
+                    contentString = JSON.stringify(content);
+                }
+
+                if (contentString != null) {
+
+                    // get the workgroup id
+                    var workgroupId = this.getWorkgroupId();
+
+                    // get all the first names
+                    var firstNames = this.getStudentFirstNamesByWorkgroupId(workgroupId);
+
+                    if (firstNames.length >= 1) {
+                        /*
+                         * there are 1 or more students in the workgroup so we can 
+                         * replace the first student first name with the actual
+                         * name
+                         */
+                        contentString = contentString.replace(new RegExp('{{firstStudentFirstName}}', 'gi'), firstNames[0]);
+
+                        /*
+                         * there are 1 or more students in the workgroup so we can 
+                         * replace the student first names with the actual names
+                         */
+                        contentString = contentString.replace(new RegExp('{{studentFirstNames}}', 'gi'), firstNames.join(", "));
+                    }
+
+                    if (firstNames.length >= 2) {
+                        /*
+                         * there are 2 or more students in the workgroup so we can 
+                         * replace the second student first name with the actual
+                         * name
+                         */
+                        contentString = contentString.replace(new RegExp('{{secondStudentFirstName}}', 'gi'), firstNames[1]);
+                    }
+
+                    if (firstNames.length >= 3) {
+                        /*
+                         * there are 3 or more students in the workgroup so we can 
+                         * replace the third student first name with the actual
+                         * name
+                         */
+                        contentString = contentString.replace(new RegExp('{{thirdStudentFirstName}}', 'gi'), firstNames[2]);
+                    }
+                }
+
+                if ((typeof content === 'undefined' ? 'undefined' : _typeof(content)) === 'object') {
+                    // convert the content string back into an object
+                    content = JSON.parse(contentString);
+                } else if (typeof content === 'string') {
+                    // the content was a string so we can just use the content string
+                    content = contentString;
+                }
+            }
+
+            return content;
         }
     }]);
 

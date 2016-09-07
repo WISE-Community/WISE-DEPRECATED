@@ -573,6 +573,77 @@ class ConfigService {
         
         return role;
     }
+    
+    /** 
+     * Replace student names in the content.
+     * For example, we will replace instances of {{firstStudentFirstName}} 
+     * with the actual first name of the first student in the workgroup.
+     * @param content a content object or string
+     * @return an updated content object or string
+     */
+    replaceStudentNames(content) {
+        if (content != null) {
+
+            var contentString = content;
+
+            if (typeof content === 'object') {
+                // get the content as a string
+                contentString = JSON.stringify(content);
+            }
+            
+            if (contentString != null) {
+
+                // get the workgroup id
+                var workgroupId = this.getWorkgroupId();
+                
+                // get all the first names
+                var firstNames = this.getStudentFirstNamesByWorkgroupId(workgroupId);
+                
+                if (firstNames.length >= 1) {
+                    /*
+                     * there are 1 or more students in the workgroup so we can 
+                     * replace the first student first name with the actual
+                     * name
+                     */
+                    contentString = contentString.replace(new RegExp('{{firstStudentFirstName}}', 'gi'), firstNames[0]);
+                    
+                    /*
+                     * there are 1 or more students in the workgroup so we can 
+                     * replace the student first names with the actual names
+                     */
+                    contentString = contentString.replace(new RegExp('{{studentFirstNames}}', 'gi'), firstNames.join(", "));
+                }
+                
+                if (firstNames.length >= 2) {
+                    /*
+                     * there are 2 or more students in the workgroup so we can 
+                     * replace the second student first name with the actual
+                     * name
+                     */
+                    contentString = contentString.replace(new RegExp('{{secondStudentFirstName}}', 'gi'), firstNames[1]);
+                }
+                
+                if (firstNames.length >= 3) {
+                    /*
+                     * there are 3 or more students in the workgroup so we can 
+                     * replace the third student first name with the actual
+                     * name
+                     */
+                    contentString = contentString.replace(new RegExp('{{thirdStudentFirstName}}', 'gi'), firstNames[2]);
+                }
+            }
+            
+            if (typeof content === 'object') {
+                // convert the content string back into an object
+                content = JSON.parse(contentString);
+            } else if (typeof content === 'string') {
+                // the content was a string so we can just use the content string
+                content = contentString;
+            }
+        }
+
+        return content;
+    }
 };
 
 ConfigService.$inject = [

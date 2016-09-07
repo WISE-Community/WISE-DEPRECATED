@@ -27,12 +27,13 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var ComponentDirective = function () {
-    function ComponentDirective($injector, $compile, NodeService, ProjectService, StudentDataService) {
+    function ComponentDirective($injector, $compile, ConfigService, NodeService, ProjectService, StudentDataService) {
         _classCallCheck(this, ComponentDirective);
 
         this.restrict = 'E';
         this.$injector = $injector;
         this.$compile = $compile;
+        this.ConfigService = ConfigService;
         this.NodeService = NodeService;
         this.ProjectService = ProjectService;
         this.StudentDataService = StudentDataService;
@@ -77,6 +78,9 @@ var ComponentDirective = function () {
             var authoringComponentContent = ComponentDirective.instance.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
             var componentContent = ComponentDirective.instance.ProjectService.injectAssetPaths(authoringComponentContent);
 
+            // replace any student names in the component content
+            componentContent = ComponentDirective.instance.ConfigService.replaceStudentNames(componentContent);
+
             // inject the click attribute that will snip the image when the image is clicked
             componentContent = ComponentDirective.instance.ProjectService.injectClickToSnipImage(componentContent);
 
@@ -111,8 +115,8 @@ var ComponentDirective = function () {
         }
     }], [{
         key: 'directiveFactory',
-        value: function directiveFactory($injector, $compile, NodeService, ProjectService, StudentDataService) {
-            ComponentDirective.instance = new ComponentDirective($injector, $compile, NodeService, ProjectService, StudentDataService);
+        value: function directiveFactory($injector, $compile, ConfigService, NodeService, ProjectService, StudentDataService) {
+            ComponentDirective.instance = new ComponentDirective($injector, $compile, ConfigService, NodeService, ProjectService, StudentDataService);
             return ComponentDirective.instance;
         }
     }]);
@@ -668,7 +672,7 @@ var Directives = angular.module('directives', []);
 
 ClassResponseDirective.directiveFactory.$inject = ['StudentStatusService', 'ConfigService'];
 CompileDirective.directiveFactory.$inject = ['$compile'];
-ComponentDirective.directiveFactory.$inject = ['$injector', '$compile', 'NodeService', 'ProjectService', 'StudentDataService'];
+ComponentDirective.directiveFactory.$inject = ['$injector', '$compile', 'ConfigService', 'NodeService', 'ProjectService', 'StudentDataService'];
 ConfirmNumberDecrease.directiveFactory.$inject = [];
 DisableDeleteKeypress.directiveFactory.$inject = ['$document'];
 ListenForDeleteKeypress.directiveFactory.$inject = ['$document'];
