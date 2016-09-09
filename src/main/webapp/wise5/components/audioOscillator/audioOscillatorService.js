@@ -24,7 +24,7 @@ var AudioOscillatorService = function (_NodeService) {
     function AudioOscillatorService(StudentDataService, UtilService) {
         _classCallCheck(this, AudioOscillatorService);
 
-        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(AudioOscillatorService).call(this));
+        var _this = _possibleConstructorReturn(this, (AudioOscillatorService.__proto__ || Object.getPrototypeOf(AudioOscillatorService)).call(this));
 
         _this.StudentDataService = StudentDataService;
         _this.UtilService = UtilService;

@@ -24,7 +24,7 @@ var OutsideURLService = function (_NodeService) {
     function OutsideURLService(UtilService) {
         _classCallCheck(this, OutsideURLService);
 
-        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(OutsideURLService).call(this));
+        var _this = _possibleConstructorReturn(this, (OutsideURLService.__proto__ || Object.getPrototypeOf(OutsideURLService)).call(this));
 
         _this.UtilService = UtilService;
         return _this;

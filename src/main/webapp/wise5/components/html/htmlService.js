@@ -24,7 +24,7 @@ var HTMLService = function (_NodeService) {
     function HTMLService(StudentDataService, UtilService) {
         _classCallCheck(this, HTMLService);
 
-        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(HTMLService).call(this));
+        var _this = _possibleConstructorReturn(this, (HTMLService.__proto__ || Object.getPrototypeOf(HTMLService)).call(this));
 
         _this.StudentDataService = StudentDataService;
         _this.UtilService = UtilService;

@@ -24,7 +24,7 @@ var DrawService = function (_NodeService) {
     function DrawService(StudentDataService, UtilService) {
         _classCallCheck(this, DrawService);
 
-        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(DrawService).call(this));
+        var _this = _possibleConstructorReturn(this, (DrawService.__proto__ || Object.getPrototypeOf(DrawService)).call(this));
 
         _this.StudentDataService = StudentDataService;
         _this.UtilService = UtilService;

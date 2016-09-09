@@ -24,7 +24,7 @@ var DiscussionService = function (_NodeService) {
     function DiscussionService($http, $rootScope, $q, ConfigService, NotificationService, StudentDataService, TeacherDataService, UtilService) {
         _classCallCheck(this, DiscussionService);
 
-        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(DiscussionService).call(this));
+        var _this = _possibleConstructorReturn(this, (DiscussionService.__proto__ || Object.getPrototypeOf(DiscussionService)).call(this));
 
         _this.$http = $http;
         _this.$rootScope = $rootScope;

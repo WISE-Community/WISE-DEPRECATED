@@ -24,7 +24,7 @@ var MatchService = function (_NodeService) {
     function MatchService(StudentDataService, UtilService) {
         _classCallCheck(this, MatchService);
 
-        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(MatchService).call(this));
+        var _this = _possibleConstructorReturn(this, (MatchService.__proto__ || Object.getPrototypeOf(MatchService)).call(this));
 
         _this.StudentDataService = StudentDataService;
         _this.UtilService = UtilService;

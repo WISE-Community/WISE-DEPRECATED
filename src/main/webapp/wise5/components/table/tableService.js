@@ -24,7 +24,7 @@ var TableService = function (_NodeService) {
     function TableService(StudentDataService, UtilService) {
         _classCallCheck(this, TableService);
 
-        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(TableService).call(this));
+        var _this = _possibleConstructorReturn(this, (TableService.__proto__ || Object.getPrototypeOf(TableService)).call(this));
 
         _this.StudentDataService = StudentDataService;
         _this.UtilService = UtilService;

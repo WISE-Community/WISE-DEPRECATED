@@ -24,7 +24,7 @@ var MultipleChoiceService = function (_NodeService) {
     function MultipleChoiceService(StudentDataService, UtilService) {
         _classCallCheck(this, MultipleChoiceService);
 
-        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(MultipleChoiceService).call(this));
+        var _this = _possibleConstructorReturn(this, (MultipleChoiceService.__proto__ || Object.getPrototypeOf(MultipleChoiceService)).call(this));
 
         _this.StudentDataService = StudentDataService;
         _this.UtilService = UtilService;

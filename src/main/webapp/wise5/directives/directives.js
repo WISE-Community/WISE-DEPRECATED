@@ -343,12 +343,12 @@ var DisableDeleteKeypress = function () {
                          * allow the delete key press
                          */
                     } else {
-                            /*
-                             * the user is not typing in an input element so we will
-                             * not allow the delete key press
-                             */
-                            e.preventDefault();
-                        }
+                        /*
+                         * the user is not typing in an input element so we will
+                         * not allow the delete key press
+                         */
+                        e.preventDefault();
+                    }
                 }
             });
         }

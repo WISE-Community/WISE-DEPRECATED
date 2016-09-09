@@ -24,7 +24,7 @@ var LabelService = function (_NodeService) {
     function LabelService(StudentDataService, UtilService) {
         _classCallCheck(this, LabelService);
 
-        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(LabelService).call(this));
+        var _this = _possibleConstructorReturn(this, (LabelService.__proto__ || Object.getPrototypeOf(LabelService)).call(this));
 
         _this.StudentDataService = StudentDataService;
         _this.UtilService = UtilService;

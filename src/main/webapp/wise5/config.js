@@ -28,8 +28,8 @@ System.config({
     "angular-mocks": "github:angular/bower-angular-mocks@1.5.8",
     "angular-moment": "npm:angular-moment@1.0.0-beta.6",
     "angular-sanitize": "github:angular/bower-angular-sanitize@1.5.8",
-    "angular-translate": "github:angular-translate/bower-angular-translate@2.11.1",
-    "angular-translate-loader-partial": "github:angular-translate/bower-angular-translate-loader-partial@2.11.1",
+    "angular-translate": "github:angular-translate/bower-angular-translate@2.12.0",
+    "angular-translate-loader-partial": "github:angular-translate/bower-angular-translate-loader-partial@2.12.0",
     "angular-ui-router": "github:angular-ui/ui-router@0.3.1",
     "angular-ui-scrollpoint": "npm:angular-ui-scrollpoint@2.1.1",
     "angular-websocket": "npm:angular-websocket@1.0.14",
@@ -43,16 +43,16 @@ System.config({
     "iframe-resizer": "npm:iframe-resizer@3.5.5",
     "jquery": "npm:jquery@2.2.4",
     "moment": "npm:moment@2.14.1",
-    "ng-file-upload": "npm:ng-file-upload@12.0.4",
+    "ng-file-upload": "npm:ng-file-upload@12.2.8",
     "oclazyload": "npm:oclazyload@1.0.9",
     "svg.draggable.js": "npm:svg.draggable.js@2.2.0",
     "svg.js": "github:wout/svg.js@2.3.4",
     "webfontloader": "npm:webfontloader@1.6.26",
-    "github:angular-translate/bower-angular-translate-loader-partial@2.11.1": {
+    "github:angular-translate/bower-angular-translate-loader-partial@2.12.0": {
       "angular": "github:angular/bower-angular@1.5.8",
-      "angular-translate": "github:angular-translate/bower-angular-translate@2.11.1"
+      "angular-translate": "github:angular-translate/bower-angular-translate@2.12.0"
     },
-    "github:angular-translate/bower-angular-translate@2.11.1": {
+    "github:angular-translate/bower-angular-translate@2.12.0": {
       "angular": "github:angular/bower-angular@1.5.8"
     },
     "github:angular/bower-angular-animate@1.5.8": {
@@ -75,7 +75,7 @@ System.config({
       "angular-animate": "github:angular/bower-angular-animate@1.5.8",
       "angular-aria": "github:angular/bower-angular-aria@1.5.8",
       "angular-messages": "github:angular/bower-angular-messages@1.5.8",
-      "css": "github:systemjs/plugin-css@0.1.26"
+      "css": "github:systemjs/plugin-css@0.1.27"
     },
     "github:highcharts/draggable-points@master": {
       "process": "github:jspm/nodelibs-process@0.1.2"
@@ -110,7 +110,7 @@ System.config({
       "path-browserify": "npm:path-browserify@0.0.0"
     },
     "github:jspm/nodelibs-process@0.1.2": {
-      "process": "npm:process@0.11.8"
+      "process": "npm:process@0.11.9"
     },
     "github:jspm/nodelibs-stream@0.1.0": {
       "stream-browserify": "npm:stream-browserify@1.0.0"
@@ -223,7 +223,7 @@ System.config({
       "buffer": "github:jspm/nodelibs-buffer@0.1.0",
       "pako": "npm:pako@0.2.9",
       "process": "github:jspm/nodelibs-process@0.1.2",
-      "readable-stream": "npm:readable-stream@2.1.4",
+      "readable-stream": "npm:readable-stream@2.1.5",
       "util": "github:jspm/nodelibs-util@0.1.0"
     },
     "npm:buffer-shims@1.0.0": {
@@ -331,7 +331,7 @@ System.config({
     },
     "npm:elliptic@6.3.1": {
       "bn.js": "npm:bn.js@4.11.6",
-      "brorand": "npm:brorand@1.0.5",
+      "brorand": "npm:brorand@1.0.6",
       "hash.js": "npm:hash.js@1.0.3",
       "inherits": "npm:inherits@2.0.1",
       "systemjs-json": "github:systemjs/plugin-json@0.1.2"
@@ -363,12 +363,12 @@ System.config({
     },
     "npm:miller-rabin@4.0.0": {
       "bn.js": "npm:bn.js@4.11.6",
-      "brorand": "npm:brorand@1.0.5"
+      "brorand": "npm:brorand@1.0.6"
     },
     "npm:nan@1.8.4": {
       "path": "github:jspm/nodelibs-path@0.1.0"
     },
-    "npm:ng-file-upload@12.0.4": {
+    "npm:ng-file-upload@12.2.8": {
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
     "npm:oclazyload@1.0.9": {
@@ -409,7 +409,7 @@ System.config({
     "npm:process-nextick-args@1.0.7": {
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
-    "npm:process@0.11.8": {
+    "npm:process@0.11.9": {
       "assert": "github:jspm/nodelibs-assert@0.1.0",
       "fs": "github:jspm/nodelibs-fs@0.1.2",
       "vm": "github:jspm/nodelibs-vm@0.1.0"
@@ -441,7 +441,7 @@ System.config({
       "stream-browserify": "npm:stream-browserify@1.0.0",
       "string_decoder": "npm:string_decoder@0.10.31"
     },
-    "npm:readable-stream@2.1.4": {
+    "npm:readable-stream@2.1.5": {
       "buffer": "github:jspm/nodelibs-buffer@0.1.0",
       "buffer-shims": "npm:buffer-shims@1.0.0",
       "core-util-is": "npm:core-util-is@1.0.2",

@@ -24,7 +24,7 @@ var ConceptMapService = function (_NodeService) {
     function ConceptMapService(StudentDataService, UtilService) {
         _classCallCheck(this, ConceptMapService);
 
-        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ConceptMapService).call(this));
+        var _this = _possibleConstructorReturn(this, (ConceptMapService.__proto__ || Object.getPrototypeOf(ConceptMapService)).call(this));
 
         _this.StudentDataService = StudentDataService;
         _this.UtilService = UtilService;
@@ -881,7 +881,6 @@ var ConceptMapNode = function () {
      * @param width the the width of the node
      * @param height the height of the node
      */
-
     function ConceptMapNode(ConceptMapService, draw, id, originalId, filePath, label, x, y, width, height) {
         _classCallCheck(this, ConceptMapNode);
 
@@ -2112,7 +2111,6 @@ var ConceptMapLink = function () {
      * @param startCurveUp whether the start of the link curves up
      * @param endCurveUp whether the end of the link curves up
      */
-
     function ConceptMapLink(ConceptMapService, draw, id, originalId, sourceNode, destinationNode, label, color, curvature, startCurveUp, endCurveUp) {
         _classCallCheck(this, ConceptMapLink);
 
@@ -3146,10 +3144,10 @@ var ConceptMapLink = function () {
                 y = p1.y - scale * dx;
                 //occluded = NO;
             } else {
-                    x = 0;
-                    y = 0;
-                    //occluded = YES;
-                }
+                x = 0;
+                y = 0;
+                //occluded = YES;
+            }
 
             /*
             this.set('removeButtonX', x);

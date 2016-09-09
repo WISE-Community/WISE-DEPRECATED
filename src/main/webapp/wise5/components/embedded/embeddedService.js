@@ -24,7 +24,7 @@ var EmbeddedService = function (_NodeService) {
     function EmbeddedService(UtilService) {
         _classCallCheck(this, EmbeddedService);
 
-        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(EmbeddedService).call(this));
+        var _this = _possibleConstructorReturn(this, (EmbeddedService.__proto__ || Object.getPrototypeOf(EmbeddedService)).call(this));
 
         _this.UtilService = UtilService;
         return _this;
