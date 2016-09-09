@@ -24,7 +24,7 @@ var OpenResponseService = function (_NodeService) {
     function OpenResponseService(StudentDataService, UtilService) {
         _classCallCheck(this, OpenResponseService);
 
-        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(OpenResponseService).call(this));
+        var _this = _possibleConstructorReturn(this, (OpenResponseService.__proto__ || Object.getPrototypeOf(OpenResponseService)).call(this));
 
         _this.StudentDataService = StudentDataService;
         _this.UtilService = UtilService;
@@ -147,6 +147,41 @@ var OpenResponseService = function (_NodeService) {
                             // there is a response so the component is completed
                             result = true;
                         }
+                    }
+                }
+            }
+
+            return result;
+        }
+    }, {
+        key: 'displayAnnotation',
+
+
+        /**
+         * Check if we need to display the annotation to the student
+         * @param componentContent the component content
+         * @param annotation the annotation
+         * @returns whether we need to display the annotation to the student
+         */
+        value: function displayAnnotation(componentContent, annotation) {
+
+            var result = true;
+
+            if (componentContent != null && annotation != null) {
+
+                if (annotation.type == 'score') {} else if (annotation.type == 'comment') {} else if (annotation.type == 'autoScore') {
+                    // this is an auto graded score annotation
+
+                    if (componentContent.cRater != null && !componentContent.cRater.showScore) {
+                        // we do not want to show the CRater score
+                        result = false;
+                    }
+                } else if (annotation.type == 'autoComment') {
+                    // this is an auto graded comment annotation
+
+                    if (componentContent.cRater != null && !componentContent.cRater.showFeedback) {
+                        // we do not want to show the CRater comment
+                        result = false;
                     }
                 }
             }

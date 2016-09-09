@@ -6310,6 +6310,38 @@ class ProjectService {
 
         return nodeIdAndComponentIds;
     }
+    
+    /**
+     * Check if we need to display the annotation to the student
+     * @param annotation the annotation
+     * @returns whether we need to display the annotation to the student
+     */
+    displayAnnotation(annotation) {
+        
+        var result = true;
+        
+        if (annotation != null) {
+            var nodeId = annotation.nodeId;
+            var componentId = annotation.componentId;
+            
+            // get the component content
+            var component = this.getComponentByNodeIdAndComponentId(nodeId, componentId);
+            
+            if (component != null) {
+                var componentType = component.type;
+                
+                // get the component service
+                var componentService = this.$injector.get(componentType + 'Service');
+                
+                if (componentService != null && componentService.displayAnnotation != null) {
+                    // check if we need to display the annotation to the student
+                    result = componentService.displayAnnotation(component, annotation);
+                }
+            }
+        }
+        
+        return result;
+    }
 }
 
 ProjectService.$inject = [

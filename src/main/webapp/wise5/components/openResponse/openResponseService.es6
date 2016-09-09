@@ -118,6 +118,41 @@ class OpenResponseService extends NodeService {
         return result;
     };
 
+    /**
+     * Check if we need to display the annotation to the student
+     * @param componentContent the component content
+     * @param annotation the annotation
+     * @returns whether we need to display the annotation to the student
+     */
+    displayAnnotation(componentContent, annotation) {
+        
+        var result = true;
+        
+        if (componentContent != null && annotation != null) {
+            
+            if (annotation.type == 'score') {
+                
+            } else if (annotation.type == 'comment') {
+                
+            } else if (annotation.type == 'autoScore') {
+                // this is an auto graded score annotation
+                
+                if (componentContent.cRater != null && !componentContent.cRater.showScore) {
+                    // we do not want to show the CRater score
+                    result = false;
+                }
+            } else if (annotation.type == 'autoComment') {
+                // this is an auto graded comment annotation
+                
+                if (componentContent.cRater != null && !componentContent.cRater.showFeedback) {
+                    // we do not want to show the CRater comment
+                    result = false;
+                }
+            }
+        }
+        
+        return result;
+    }
 }
 
 OpenResponseService.$inject = [

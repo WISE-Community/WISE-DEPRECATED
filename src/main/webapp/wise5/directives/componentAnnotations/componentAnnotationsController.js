@@ -40,6 +40,9 @@ var ComponentAnnotationsController = function () {
         // the avatar icon (default to person/teacher)
         this.icon = 'person';
 
+        this.showScore = true;
+        this.showComment = true;
+
         // watch for new component states
         this.$scope.$on('studentWorkSavedToServer', function (event, args) {
             var nodeId = args.studentWork.nodeId;
@@ -196,18 +199,24 @@ var ComponentAnnotationsController = function () {
     }, {
         key: 'processAnnotations',
         value: function processAnnotations() {
-            if (this.annotations.comment || this.annotations.score) {
-                this.nodeId = this.annotations.comment ? this.annotations.comment.nodeId : this.annotations.score.nodeId;
-                this.componentId = this.annotations.comment ? this.annotations.comment.componentId : this.annotations.score.nodeId;
+            if (this.annotations != null) {
+                if (this.annotations.comment || this.annotations.score) {
+                    this.nodeId = this.annotations.comment ? this.annotations.comment.nodeId : this.annotations.score.nodeId;
+                    this.componentId = this.annotations.comment ? this.annotations.comment.componentId : this.annotations.score.nodeId;
 
-                // set the latest annotation time
-                //this.latestAnnotationTime = this.getLatestAnnotationTime();
+                    if (!this.ProjectService.displayAnnotation(this.annotations.score)) {
+                        // we do not want to show the score
+                        this.showScore = false;
+                    }
 
-                // set whether the annotation is new or not
-                //this.isNew = this.isNewAnnotation();
+                    if (!this.ProjectService.displayAnnotation(this.annotations.comment)) {
+                        // we do not want to show the comment
+                        this.showComment = false;
+                    }
 
-                // set the annotation label and icon
-                this.setLabelAndIcon();
+                    // set the annotation label and icon
+                    this.setLabelAndIcon();
+                }
             }
         }
     }]);

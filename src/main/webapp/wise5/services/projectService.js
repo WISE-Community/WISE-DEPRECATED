@@ -1541,5 +1541,12 @@ nodeIdAndComponentIds.push(nodeIdAndComponentId);}}}}}return nodeIdAndComponentI
      */},{key:'getShowPreviousWorkNodeIdsAndComponentIds',value:function getShowPreviousWorkNodeIdsAndComponentIds(nodeId){var nodeIdAndComponentIds=[];if(nodeId!=null){var nodeContent=this.getNodeContentByNodeId(nodeId);if(nodeContent!=null){var components=nodeContent.components;if(components!=null){// loop through all the components
 for(var c=0;c<components.length;c++){var component=components[c];if(component!=null){var showPreviousWorkNodeId=component.showPreviousWorkNodeId;var showPreviousWorkComponentId=component.showPreviousWorkComponentId;if(showPreviousWorkNodeId!=null&&showPreviousWorkComponentId!=null){// create an object to hold the node id and component id
 var nodeIdAndComponentId={};nodeIdAndComponentId.nodeId=showPreviousWorkNodeId;nodeIdAndComponentId.componentId=showPreviousWorkComponentId;// add the object to the array
-nodeIdAndComponentIds.push(nodeIdAndComponentId);}}}}}}return nodeIdAndComponentIds;}}]);return ProjectService;}();ProjectService.$inject=['$http','$injector','$q','$rootScope','ConfigService'];exports.default=ProjectService;
+nodeIdAndComponentIds.push(nodeIdAndComponentId);}}}}}}return nodeIdAndComponentIds;}/**
+     * Check if we need to display the annotation to the student
+     * @param annotation the annotation
+     * @returns whether we need to display the annotation to the student
+     */},{key:'displayAnnotation',value:function displayAnnotation(annotation){var result=true;if(annotation!=null){var nodeId=annotation.nodeId;var componentId=annotation.componentId;// get the component content
+var component=this.getComponentByNodeIdAndComponentId(nodeId,componentId);if(component!=null){var componentType=component.type;// get the component service
+var componentService=this.$injector.get(componentType+'Service');if(componentService!=null&&componentService.displayAnnotation!=null){// check if we need to display the annotation to the student
+result=componentService.displayAnnotation(component,annotation);}}}return result;}}]);return ProjectService;}();ProjectService.$inject=['$http','$injector','$q','$rootScope','ConfigService'];exports.default=ProjectService;
 //# sourceMappingURL=projectService.js.map
