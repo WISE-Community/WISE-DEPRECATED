@@ -469,143 +469,143 @@ var DrawController = function () {
             if (tools == null) {
                 // we will display all the tools
             } else {
-                    // we will only display the tools the authored specified to show
+                // we will only display the tools the authored specified to show
 
-                    // the title for the select button
-                    var selectTitle = "Select tool";
+                // the title for the select button
+                var selectTitle = "Select tool";
 
-                    if (tools.select) {
-                        $('#' + this.componentId).find('[title="' + selectTitle + '"]').show();
-                    } else {
-                        $('#' + this.componentId).find('[title="' + selectTitle + '"]').hide();
-                    }
-
-                    // the title for the line button
-                    var lineTitle = "Line tool (click and hold to show available line types)";
-
-                    if (tools.line) {
-                        $('#' + this.componentId).find('[title="' + lineTitle + '"]').show();
-                    } else {
-                        $('#' + this.componentId).find('[title="' + lineTitle + '"]').hide();
-                    }
-
-                    // the title for the shape button
-                    var shapeTitle = "Basic shape tool (click and hold to show available shapes)";
-
-                    if (tools.shape) {
-                        $('#' + this.componentId).find('[title="' + shapeTitle + '"]').show();
-                    } else {
-                        $('#' + this.componentId).find('[title="' + shapeTitle + '"]').hide();
-                    }
-
-                    // the title for the free hand button
-                    var freeHandTitle = "Free hand drawing tool";
-
-                    if (tools.freeHand) {
-                        $('#' + this.componentId).find('[title="' + freeHandTitle + '"]').show();
-                    } else {
-                        $('#' + this.componentId).find('[title="' + freeHandTitle + '"]').hide();
-                    }
-
-                    // the title for the text button
-                    var textTitle = "Text tool (click and hold to show available font sizes)";
-
-                    if (tools.text) {
-                        $('#' + this.componentId).find('[title="' + textTitle + '"]').show();
-                    } else {
-                        $('#' + this.componentId).find('[title="' + textTitle + '"]').hide();
-                    }
-
-                    // the title for the stamp button
-                    var stampTitle = "Stamp tool (click and hold to show available categories)";
-
-                    if (tools.stamp) {
-                        $('#' + this.componentId).find('[title="' + stampTitle + '"]').show();
-                    } else {
-                        $('#' + this.componentId).find('[title="' + stampTitle + '"]').hide();
-                    }
-
-                    // the title for the clone button
-                    var cloneTitle = "Clone tool";
-
-                    if (tools.clone) {
-                        $('#' + this.componentId).find('[title="' + cloneTitle + '"]').show();
-                    } else {
-                        $('#' + this.componentId).find('[title="' + cloneTitle + '"]').hide();
-                    }
-
-                    // the title for the stroke color button
-                    var strokeColorTitle = "Stroke color (click and hold to show available colors)";
-
-                    if (tools.strokeColor) {
-                        $('#' + this.componentId).find('[title="' + strokeColorTitle + '"]').show();
-                    } else {
-                        $('#' + this.componentId).find('[title="' + strokeColorTitle + '"]').hide();
-                    }
-
-                    // the title for the fill color button
-                    var fillColorTitle = "Fill color (click and hold to show available colors)";
-
-                    if (tools.fillColor) {
-                        $('#' + this.componentId).find('[title="' + fillColorTitle + '"]').show();
-                    } else {
-                        $('#' + this.componentId).find('[title="' + fillColorTitle + '"]').hide();
-                    }
-
-                    // the title for the stroke width button
-                    var strokeWidthTitle = "Stroke width (click and hold to show available options)";
-
-                    if (tools.strokeWidth) {
-                        $('#' + this.componentId).find('[title="' + strokeWidthTitle + '"]').show();
-                    } else {
-                        $('#' + this.componentId).find('[title="' + strokeWidthTitle + '"]').hide();
-                    }
-
-                    // the title for the send back button
-                    var sendBackTitle = "Send selected objects to back";
-
-                    if (tools.sendBack) {
-                        $('#' + this.componentId).find('[title="' + sendBackTitle + '"]').show();
-                    } else {
-                        $('#' + this.componentId).find('[title="' + sendBackTitle + '"]').hide();
-                    }
-
-                    // the title for the send forward button
-                    var sendForwardTitle = "Send selected objects to front";
-
-                    if (tools.sendForward) {
-                        $('#' + this.componentId).find('[title="' + sendForwardTitle + '"]').show();
-                    } else {
-                        $('#' + this.componentId).find('[title="' + sendForwardTitle + '"]').hide();
-                    }
-
-                    // the title for the undo button
-                    var undoTitle = "Undo";
-
-                    if (tools.undo) {
-                        $('#' + this.componentId).find('[title="' + undoTitle + '"]').show();
-                    } else {
-                        $('#' + this.componentId).find('[title="' + undoTitle + '"]').hide();
-                    }
-
-                    // the title for the redo button
-                    var redoTitle = "Redo";
-
-                    if (tools.redo) {
-                        $('#' + this.componentId).find('[title="' + redoTitle + '"]').show();
-                    } else {
-                        $('#' + this.componentId).find('[title="' + redoTitle + '"]').hide();
-                    }
-
-                    // the title for the delete button
-                    var deleteTitle = "Delete selected objects";
-
-                    if (tools.delete) {
-                        $('#' + this.componentId).find('[title="' + deleteTitle + '"]').show();
-                    } else {
-                        $('#' + this.componentId).find('[title="' + deleteTitle + '"]').hide();
-                    }
+                if (tools.select) {
+                    $('#' + this.componentId).find('[title="' + selectTitle + '"]').show();
+                } else {
+                    $('#' + this.componentId).find('[title="' + selectTitle + '"]').hide();
                 }
+
+                // the title for the line button
+                var lineTitle = "Line tool (click and hold to show available line types)";
+
+                if (tools.line) {
+                    $('#' + this.componentId).find('[title="' + lineTitle + '"]').show();
+                } else {
+                    $('#' + this.componentId).find('[title="' + lineTitle + '"]').hide();
+                }
+
+                // the title for the shape button
+                var shapeTitle = "Basic shape tool (click and hold to show available shapes)";
+
+                if (tools.shape) {
+                    $('#' + this.componentId).find('[title="' + shapeTitle + '"]').show();
+                } else {
+                    $('#' + this.componentId).find('[title="' + shapeTitle + '"]').hide();
+                }
+
+                // the title for the free hand button
+                var freeHandTitle = "Free hand drawing tool";
+
+                if (tools.freeHand) {
+                    $('#' + this.componentId).find('[title="' + freeHandTitle + '"]').show();
+                } else {
+                    $('#' + this.componentId).find('[title="' + freeHandTitle + '"]').hide();
+                }
+
+                // the title for the text button
+                var textTitle = "Text tool (click and hold to show available font sizes)";
+
+                if (tools.text) {
+                    $('#' + this.componentId).find('[title="' + textTitle + '"]').show();
+                } else {
+                    $('#' + this.componentId).find('[title="' + textTitle + '"]').hide();
+                }
+
+                // the title for the stamp button
+                var stampTitle = "Stamp tool (click and hold to show available categories)";
+
+                if (tools.stamp) {
+                    $('#' + this.componentId).find('[title="' + stampTitle + '"]').show();
+                } else {
+                    $('#' + this.componentId).find('[title="' + stampTitle + '"]').hide();
+                }
+
+                // the title for the clone button
+                var cloneTitle = "Clone tool";
+
+                if (tools.clone) {
+                    $('#' + this.componentId).find('[title="' + cloneTitle + '"]').show();
+                } else {
+                    $('#' + this.componentId).find('[title="' + cloneTitle + '"]').hide();
+                }
+
+                // the title for the stroke color button
+                var strokeColorTitle = "Stroke color (click and hold to show available colors)";
+
+                if (tools.strokeColor) {
+                    $('#' + this.componentId).find('[title="' + strokeColorTitle + '"]').show();
+                } else {
+                    $('#' + this.componentId).find('[title="' + strokeColorTitle + '"]').hide();
+                }
+
+                // the title for the fill color button
+                var fillColorTitle = "Fill color (click and hold to show available colors)";
+
+                if (tools.fillColor) {
+                    $('#' + this.componentId).find('[title="' + fillColorTitle + '"]').show();
+                } else {
+                    $('#' + this.componentId).find('[title="' + fillColorTitle + '"]').hide();
+                }
+
+                // the title for the stroke width button
+                var strokeWidthTitle = "Stroke width (click and hold to show available options)";
+
+                if (tools.strokeWidth) {
+                    $('#' + this.componentId).find('[title="' + strokeWidthTitle + '"]').show();
+                } else {
+                    $('#' + this.componentId).find('[title="' + strokeWidthTitle + '"]').hide();
+                }
+
+                // the title for the send back button
+                var sendBackTitle = "Send selected objects to back";
+
+                if (tools.sendBack) {
+                    $('#' + this.componentId).find('[title="' + sendBackTitle + '"]').show();
+                } else {
+                    $('#' + this.componentId).find('[title="' + sendBackTitle + '"]').hide();
+                }
+
+                // the title for the send forward button
+                var sendForwardTitle = "Send selected objects to front";
+
+                if (tools.sendForward) {
+                    $('#' + this.componentId).find('[title="' + sendForwardTitle + '"]').show();
+                } else {
+                    $('#' + this.componentId).find('[title="' + sendForwardTitle + '"]').hide();
+                }
+
+                // the title for the undo button
+                var undoTitle = "Undo";
+
+                if (tools.undo) {
+                    $('#' + this.componentId).find('[title="' + undoTitle + '"]').show();
+                } else {
+                    $('#' + this.componentId).find('[title="' + undoTitle + '"]').hide();
+                }
+
+                // the title for the redo button
+                var redoTitle = "Redo";
+
+                if (tools.redo) {
+                    $('#' + this.componentId).find('[title="' + redoTitle + '"]').show();
+                } else {
+                    $('#' + this.componentId).find('[title="' + redoTitle + '"]').hide();
+                }
+
+                // the title for the delete button
+                var deleteTitle = "Delete selected objects";
+
+                if (tools.delete) {
+                    $('#' + this.componentId).find('[title="' + deleteTitle + '"]').show();
+                } else {
+                    $('#' + this.componentId).find('[title="' + deleteTitle + '"]').hide();
+                }
+            }
         }
 
         /**
