@@ -27,7 +27,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var ComponentDirective = function () {
-    function ComponentDirective($injector, $compile, ConfigService, NodeService, ProjectService, StudentDataService) {
+    function ComponentDirective($injector, $compile, ConfigService, NodeService, NotebookService, ProjectService, StudentDataService) {
         _classCallCheck(this, ComponentDirective);
 
         this.restrict = 'E';
@@ -35,6 +35,7 @@ var ComponentDirective = function () {
         this.$compile = $compile;
         this.ConfigService = ConfigService;
         this.NodeService = NodeService;
+        this.NotebookService = NotebookService;
         this.ProjectService = ProjectService;
         this.StudentDataService = StudentDataService;
     }
@@ -81,8 +82,10 @@ var ComponentDirective = function () {
             // replace any student names in the component content
             componentContent = ComponentDirective.instance.ConfigService.replaceStudentNames(componentContent);
 
-            // inject the click attribute that will snip the image when the image is clicked
-            componentContent = ComponentDirective.instance.ProjectService.injectClickToSnipImage(componentContent);
+            if (this.NotebookService.isNotebookEnabled()) {
+                // inject the click attribute that will snip the image when the image is clicked
+                componentContent = ComponentDirective.instance.ProjectService.injectClickToSnipImage(componentContent);
+            }
 
             $scope.componentContent = componentContent;
             $scope.authoringComponentContent = authoringComponentContent;
@@ -115,8 +118,8 @@ var ComponentDirective = function () {
         }
     }], [{
         key: 'directiveFactory',
-        value: function directiveFactory($injector, $compile, ConfigService, NodeService, ProjectService, StudentDataService) {
-            ComponentDirective.instance = new ComponentDirective($injector, $compile, ConfigService, NodeService, ProjectService, StudentDataService);
+        value: function directiveFactory($injector, $compile, ConfigService, NodeService, NotebookService, ProjectService, StudentDataService) {
+            ComponentDirective.instance = new ComponentDirective($injector, $compile, ConfigService, NodeService, NotebookService, ProjectService, StudentDataService);
             return ComponentDirective.instance;
         }
     }]);
@@ -343,12 +346,12 @@ var DisableDeleteKeypress = function () {
                          * allow the delete key press
                          */
                     } else {
-                        /*
-                         * the user is not typing in an input element so we will
-                         * not allow the delete key press
-                         */
-                        e.preventDefault();
-                    }
+                            /*
+                             * the user is not typing in an input element so we will
+                             * not allow the delete key press
+                             */
+                            e.preventDefault();
+                        }
                 }
             });
         }
@@ -672,7 +675,7 @@ var Directives = angular.module('directives', []);
 
 ClassResponseDirective.directiveFactory.$inject = ['StudentStatusService', 'ConfigService'];
 CompileDirective.directiveFactory.$inject = ['$compile'];
-ComponentDirective.directiveFactory.$inject = ['$injector', '$compile', 'ConfigService', 'NodeService', 'ProjectService', 'StudentDataService'];
+ComponentDirective.directiveFactory.$inject = ['$injector', '$compile', 'ConfigService', 'NodeService', 'NotebookService', 'ProjectService', 'StudentDataService'];
 ConfirmNumberDecrease.directiveFactory.$inject = [];
 DisableDeleteKeypress.directiveFactory.$inject = ['$document'];
 ListenForDeleteKeypress.directiveFactory.$inject = ['$document'];

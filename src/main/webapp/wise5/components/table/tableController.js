@@ -1642,7 +1642,11 @@ var TableController = function () {
     }, {
         key: 'showSnipTableButton',
         value: function showSnipTableButton() {
-            return this.isSnipTableButtonVisible;
+            if (this.NotebookService.isNotebookEnabled() && this.isSnipTableButtonVisible) {
+                return true;
+            } else {
+                return false;
+            }
         }
 
         /**

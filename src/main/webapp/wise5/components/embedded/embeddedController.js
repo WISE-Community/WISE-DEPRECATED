@@ -634,7 +634,11 @@ var EmbeddedController = function () {
     }, {
         key: 'showSnipModelButton',
         value: function showSnipModelButton() {
-            return this.isSnipModelButtonVisible;
+            if (this.NotebookService.isNotebookEnabled() && this.isSnipModelButtonVisible) {
+                return true;
+            } else {
+                return false;
+            }
         }
 
         /**

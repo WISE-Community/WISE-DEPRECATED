@@ -587,7 +587,11 @@ class EmbeddedController {
      * @return whether to show the snip model button
      */
     showSnipModelButton() {
-        return this.isSnipModelButtonVisible;
+        if (this.NotebookService.isNotebookEnabled() && this.isSnipModelButtonVisible) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**

@@ -1507,7 +1507,11 @@ class TableController {
      * @return whether to show the snip table button
      */
     showSnipTableButton() {
-        return this.isSnipTableButtonVisible;
+        if (this.NotebookService.isNotebookEnabled() && this.isSnipTableButtonVisible) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
