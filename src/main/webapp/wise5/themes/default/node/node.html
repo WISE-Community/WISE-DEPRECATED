@@ -3,7 +3,7 @@
                 ng-class="{'node-sidebar-active': vleController.isNotebookEnabled()}" layout="row" layout-wrap>
         <div id="{{component.id}}" class="component-section"
              ng-repeat='component in nodeController.getComponents()'
-             flex="100" flex-gt-sm="{{component.width ? component.width : 100}}">
+             flex="100" flex-gt-sm="{{component.componentWidth ? component.componentWidth : 100}}">
             <component ng-if='component.showPreviousWorkNodeId != null && component.showPreviousWorkComponentId != null'
                        nodeid='{{component.showPreviousWorkNodeId}}'
                        componentid='{{component.showPreviousWorkComponentId}}'
