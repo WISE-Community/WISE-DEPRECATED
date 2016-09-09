@@ -564,14 +564,16 @@ class NodeService {
                               * has chosen a branch path
                               * @param nodeId the current node
                               */
-                             function ChooseBranchPathController($scope, $mdDialog, availableTransitions, deferred, nodeId) {
+                             function ChooseBranchPathController($scope, $mdDialog, NodeService, ProjectService, availableTransitions, deferred, nodeId) {
                                  
                                  $scope.availableTransitions = availableTransitions;
+                                 $scope.NodeService = NodeService;
+                                 $scope.ProjectService = ProjectService;
                                  
                                  // called when the user clicks on a branch path
                                  $scope.chooseBranchPath = (transitionResult) => {
                                      // remember the transition that was chosen
-                                     this.setTransitionResult(nodeId, transitionResult);
+                                     $scope.NodeService.setTransitionResult(nodeId, transitionResult);
                                      
                                      // resolve the promise
                                      deferred.resolve(transitionResult);
@@ -580,7 +582,7 @@ class NodeService {
                                       * don't remember the promise for this step anymore
                                       * since we have resolved it
                                       */
-                                     this.setChooseTransitionPromise(nodeId, null);
+                                     $scope.NodeService.setChooseTransitionPromise(nodeId, null);
                                      
                                      // close the dialog
                                      $mdDialog.hide();
@@ -588,7 +590,7 @@ class NodeService {
                                  
                                  // obtains the step number and title
                                  $scope.getNodePositionAndTitleByNodeId = (nodeId) => {
-                                     return this.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
+                                     return $scope.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
                                  }
                                  
                                  // called when the dialog is closed
@@ -597,7 +599,7 @@ class NodeService {
                                  }
                              }
                              
-                             ChooseBranchPathController.$inject = ['$scope', '$mdDialog', 'availableTransitions', 'deferred', 'nodeId'];
+                             ChooseBranchPathController.$inject = ['$scope', '$mdDialog', 'NodeService', 'ProjectService', 'availableTransitions', 'deferred', 'nodeId'];
                              
                              /*
                               * show the popup dialog that lets the user choose the

@@ -596,15 +596,16 @@ var NodeService = function () {
                                  * has chosen a branch path
                                  * @param nodeId the current node
                                  */
-                                var ChooseBranchPathController = function ChooseBranchPathController($scope, $mdDialog, availableTransitions, deferred, nodeId) {
-                                    var _this3 = this;
+                                var ChooseBranchPathController = function ChooseBranchPathController($scope, $mdDialog, NodeService, ProjectService, availableTransitions, deferred, nodeId) {
 
                                     $scope.availableTransitions = availableTransitions;
+                                    $scope.NodeService = NodeService;
+                                    $scope.ProjectService = ProjectService;
 
                                     // called when the user clicks on a branch path
                                     $scope.chooseBranchPath = function (transitionResult) {
                                         // remember the transition that was chosen
-                                        _this3.setTransitionResult(nodeId, transitionResult);
+                                        $scope.NodeService.setTransitionResult(nodeId, transitionResult);
 
                                         // resolve the promise
                                         deferred.resolve(transitionResult);
@@ -613,7 +614,7 @@ var NodeService = function () {
                                          * don't remember the promise for this step anymore
                                          * since we have resolved it
                                          */
-                                        _this3.setChooseTransitionPromise(nodeId, null);
+                                        $scope.NodeService.setChooseTransitionPromise(nodeId, null);
 
                                         // close the dialog
                                         $mdDialog.hide();
@@ -621,7 +622,7 @@ var NodeService = function () {
 
                                     // obtains the step number and title
                                     $scope.getNodePositionAndTitleByNodeId = function (nodeId) {
-                                        return _this3.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
+                                        return $scope.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
                                     };
 
                                     // called when the dialog is closed
@@ -646,7 +647,7 @@ var NodeService = function () {
                                     }
                                 };
 
-                                ChooseBranchPathController.$inject = ['$scope', '$mdDialog', 'availableTransitions', 'deferred', 'nodeId'];
+                                ChooseBranchPathController.$inject = ['$scope', '$mdDialog', 'NodeService', 'ProjectService', 'availableTransitions', 'deferred', 'nodeId'];
 
                                 /*
                                  * show the popup dialog that lets the user choose the
@@ -734,7 +735,7 @@ var NodeService = function () {
          * path taken events if necessary.
          */
         value: function evaluateTransitionLogic() {
-            var _this4 = this;
+            var _this3 = this;
 
             // get the current node
             var currentNode = this.StudentDataService.getCurrentNode();
@@ -775,7 +776,7 @@ var NodeService = function () {
                                     toNodeId = transition.to;
 
                                     // create a branchPathTaken event to signify taking the branch path
-                                    _this4.createBranchPathTakenEvent(fromNodeId, toNodeId);
+                                    _this3.createBranchPathTakenEvent(fromNodeId, toNodeId);
                                 }
                             });
                         } else {
@@ -793,7 +794,7 @@ var NodeService = function () {
                                 toNodeId = transition.to;
 
                                 // create a branchPathTaken event to signify taking the branch path
-                                _this4.createBranchPathTakenEvent(fromNodeId, toNodeId);
+                                _this3.createBranchPathTakenEvent(fromNodeId, toNodeId);
                             }
                         });
                     }
