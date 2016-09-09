@@ -23,13 +23,13 @@
                       cols='100'></textarea>
         </div>
         <md-button class="md-accent md-primary"
-                    ng-click='embeddedController.snipModel($event)' 
+                    ng-click='embeddedController.snipModel($event)'
                     ng-show='embeddedController.showSnipModelButton()'>
             <md-icon> content_cut </md-icon> Add to Notebook
         </md-button>
         <iframe ng-attr-id="{{'componentApp_' + embeddedController.componentId}}" ng-src='{{embeddedController.url}}'
                 class="embedded-content__iframe"
-                style="max-width: {{embeddedController.maxWidth}}; max-height: {{embeddedController.maxHeight}};"></iframe>
+                style="width: {{embeddedController.width}}; height: {{embeddedController.height}}; max-width: {{embeddedController.maxWidth}}; max-height: {{embeddedController.maxHeight}};"></iframe>
         <component-annotations ng-if="embeddedController.mode === 'student'"
                                score-annotation='embeddedController.latestAnnotations.score'
                                comment-annotation='embeddedController.latestAnnotations.comment'
