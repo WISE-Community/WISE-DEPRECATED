@@ -1283,7 +1283,11 @@ var DrawController = function () {
          * @return whether to show the snip drawing button
          */
         value: function showSnipDrawingButton() {
-            return this.isSnipDrawingButtonVisible;
+            if (this.NotebookService.isNotebookEnabled() && this.isSnipDrawingButtonVisible) {
+                return true;
+            } else {
+                return false;
+            }
         }
 
         /**

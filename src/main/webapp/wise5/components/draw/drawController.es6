@@ -1185,7 +1185,11 @@ class DrawController {
      * @return whether to show the snip drawing button
      */
     showSnipDrawingButton() {
-        return this.isSnipDrawingButtonVisible;
+        if (this.NotebookService.isNotebookEnabled() && this.isSnipDrawingButtonVisible) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**

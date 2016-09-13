@@ -12,7 +12,9 @@
     {{vleController.projectStyle}}
 </style>
 
-<div disable-delete-keypress ng-controller="ThemeController as themeCtrl" role="main" layout="column" ng-mousemove="themeCtrl.mouseMoved()" layout-fill>
+<div disable-delete-keypress ng-controller="ThemeController as themeCtrl" role="main" layout="column"
+     ng-mousemove="themeCtrl.mouseMoved()" layout-fill
+     ng-class="{'notebook-enabled': vleController.isNotebookEnabled()}">
     <ng-include src="vleController.themePath + '/templates/topbar.html'"></ng-include>
     <step-tools class="layout-tools" show-position="themeCtrl.numberProject"
                 ng-show="themeCtrl.layoutState === 'node'"></step-tools>

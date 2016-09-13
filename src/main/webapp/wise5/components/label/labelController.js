@@ -1679,7 +1679,11 @@ var LabelController = function () {
          * @return whether to show the snip image button
          */
         value: function showSnipImageButton() {
-            return this.isSnipImageButtonVisible;
+            if (this.NotebookService.isNotebookEnabled() && this.isSnipImageButtonVisible) {
+                return true;
+            } else {
+                return false;
+            }
         }
 
         /**

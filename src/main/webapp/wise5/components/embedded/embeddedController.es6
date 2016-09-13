@@ -44,6 +44,12 @@ class EmbeddedController {
         // the url to the web page to display
         this.url = null;
 
+        // the width of the iframe (optional)
+        this.width = null;
+
+        // the height of the iframe (optional)
+        this.height = null;
+
         // the max width of the iframe
         this.maxWidth = null;
 
@@ -202,6 +208,12 @@ class EmbeddedController {
                 // set the url
                 this.setURL(this.componentContent.url);
             }
+
+            // get the width
+            this.width = this.componentContent.width ? this.componentContent.width : "100%";
+
+            // get the height
+            this.height = this.componentContent.height ? this.componentContent.height : "100%";
 
             // get the max width
             this.maxWidth = this.componentContent.maxWidth ? this.componentContent.maxWidth : "none";
@@ -593,7 +605,11 @@ class EmbeddedController {
      * @return whether to show the snip model button
      */
     showSnipModelButton() {
-        return this.isSnipModelButtonVisible;
+        if (this.NotebookService.isNotebookEnabled() && this.isSnipModelButtonVisible) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**

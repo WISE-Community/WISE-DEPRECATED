@@ -119,7 +119,7 @@
                                  dragula-model='matchController.buckets[0].items'
                                  style="{{!matchController.horizontal ? 'column-count:' + matchController.choiceColumns : ''}}">
                             <div class="match-bucket__item" ng-repeat='item in matchController.buckets[0].items'>
-                                <md-list-item class="match-bucket__item__contents md-whiteframe-1dp">
+                                <md-list-item class="match-bucket__item__contents">
                                     <div class="md-list-item-text">
                                         <div flex layout="row" layout-align="start center">
                                             <span class="match-bucket__item__contents__text" compile='item.value'></span>
@@ -149,7 +149,7 @@
                                      dragula-model='bucket.items'
                                      style="{{$index === 0 ? 'column-count:' + matchController.choiceColumns : ''}}">
                                 <div class="match-bucket__item" ng-repeat='item in bucket.items'>
-                                    <md-list-item class="match-bucket__item__contents md-whiteframe-1dp">
+                                    <md-list-item class="match-bucket__item__contents">
                                         <div class="md-list-item-text">
                                             <div flex layout="row" layout-align="start center">
                                                 <span class="match-bucket__item__contents__text" compile='item.value'></span>

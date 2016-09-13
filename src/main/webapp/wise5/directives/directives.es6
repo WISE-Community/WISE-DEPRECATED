@@ -6,18 +6,19 @@ import PossibleScoreController from './possibleScore/possibleScoreController';
 import WiselinkController from './wiselink/wiselinkController';
 
 class ComponentDirective {
-    constructor($injector, $compile, ConfigService, NodeService, ProjectService, StudentDataService) {
+    constructor($injector, $compile, ConfigService, NodeService, NotebookService, ProjectService, StudentDataService) {
         this.restrict = 'E';
         this.$injector = $injector;
         this.$compile = $compile;
         this.ConfigService = ConfigService;
         this.NodeService = NodeService;
+        this.NotebookService = NotebookService;
         this.ProjectService = ProjectService;
         this.StudentDataService = StudentDataService;
     }
 
-    static directiveFactory($injector, $compile, ConfigService, NodeService, ProjectService, StudentDataService) {
-        ComponentDirective.instance = new ComponentDirective($injector, $compile, ConfigService, NodeService, ProjectService, StudentDataService);
+    static directiveFactory($injector, $compile, ConfigService, NodeService, NotebookService, ProjectService, StudentDataService) {
+        ComponentDirective.instance = new ComponentDirective($injector, $compile, ConfigService, NodeService, NotebookService, ProjectService, StudentDataService);
         return ComponentDirective.instance;
     }
 
@@ -62,12 +63,14 @@ class ComponentDirective {
 
         var authoringComponentContent = ComponentDirective.instance.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
         var componentContent = ComponentDirective.instance.ProjectService.injectAssetPaths(authoringComponentContent);
-        
+
         // replace any student names in the component content
         componentContent = ComponentDirective.instance.ConfigService.replaceStudentNames(componentContent);
-        
-        // inject the click attribute that will snip the image when the image is clicked
-        componentContent = ComponentDirective.instance.ProjectService.injectClickToSnipImage(componentContent);
+
+        if (this.NotebookService.isNotebookEnabled()) {
+            // inject the click attribute that will snip the image when the image is clicked
+            componentContent = ComponentDirective.instance.ProjectService.injectClickToSnipImage(componentContent);
+        }
 
         $scope.componentContent = componentContent;
         $scope.authoringComponentContent = authoringComponentContent;
@@ -601,7 +604,7 @@ let Directives = angular.module('directives', []);
 
 ClassResponseDirective.directiveFactory.$inject = ['StudentStatusService', 'ConfigService'];
 CompileDirective.directiveFactory.$inject = ['$compile'];
-ComponentDirective.directiveFactory.$inject = ['$injector', '$compile', 'ConfigService', 'NodeService', 'ProjectService', 'StudentDataService'];
+ComponentDirective.directiveFactory.$inject = ['$injector', '$compile', 'ConfigService', 'NodeService', 'NotebookService', 'ProjectService', 'StudentDataService'];
 ConfirmNumberDecrease.directiveFactory.$inject = [];
 DisableDeleteKeypress.directiveFactory.$inject = ['$document'];
 ListenForDeleteKeypress.directiveFactory.$inject = ['$document'];
