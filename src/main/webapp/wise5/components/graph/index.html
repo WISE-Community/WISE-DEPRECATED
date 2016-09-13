@@ -39,9 +39,27 @@
                           ng-model='graphController.authoringComponentContent.yAxis.max'
                           ng-change='graphController.authoringViewComponentChanged()'/>
             <br/>
+            <br/>
             Enable Trials <input type='checkbox'
                                  ng-model='graphController.authoringComponentContent.enableTrials'
                                  ng-change='graphController.authoringViewComponentChanged()'/>
+            <br/>
+            <div ng-show='graphController.authoringComponentContent.enableTrials'>
+                Can Student Create Trials <input type='checkbox'
+                                     ng-model='graphController.authoringComponentContent.canCreateNewTrials'
+                                     ng-show='graphController.authoringComponentContent.enableTrials'
+                                     ng-change='graphController.authoringViewComponentChanged()'/>
+                <br/>
+                Can Student Delete Trials <input type='checkbox'
+                                     ng-model='graphController.authoringComponentContent.canDeleteTrials'
+                                     ng-show='graphController.authoringComponentContent.enableTrials'
+                                     ng-change='graphController.authoringViewComponentChanged()'/>
+                <br/>
+                Show All Trials At Once <input type='checkbox'
+                                     ng-model='graphController.authoringComponentContent.showAllTrialsAtOnce'
+                                     ng-show='graphController.authoringComponentContent.enableTrials'
+                                     ng-change='graphController.authoringViewComponentChanged()'/>
+            </div>
             <br/>
             Series
             <button ng-click='graphController.authoringAddSeriesClicked()'>Add Series</button>
@@ -109,11 +127,6 @@
                 <md-icon>image</md-icon> Import Data
             </md-button>
         </div>
-        <select ng-model='graphController.activeSeries'
-                ng-options='series as series.name for series in graphController.series'
-                ng-change='graphController.activeSeriesChanged()'
-                ng-show='graphController.showSelectSeries()'>
-        </select>
         <select ng-model='graphController.activeTrial'
                 ng-options='trial as trial.name for trial in graphController.trials'
                 ng-change='graphController.activeTrialChanged()'
@@ -121,12 +134,12 @@
         </select>
         <md-button class="md-accent"
                    ng-click='graphController.newTrial()'
-                   ng-show='graphController.componentContent.enableTrials'>
+                   ng-show='graphController.componentContent.canCreateNewTrials'>
             <md-icon> add </md-icon> New Trial
         </md-button>
         <md-button class="md-accent"
                    ng-click='graphController.deleteTrial()'
-                   ng-show='graphController.componentContent.enableTrials'>
+                   ng-show='graphController.componentContent.canDeleteTrials'>
             <md-icon> delete </md-icon> Delete Trial
         </md-button>
         <md-button class="md-accent"
@@ -134,9 +147,15 @@
                    ng-show='graphController.showResetGraphButton()'>
             <md-icon> restore </md-icon> Reset Graph
         </md-button>
+        <br/>
+        <select ng-model='graphController.activeSeries'
+                ng-options='series as series.name for series in graphController.series'
+                ng-change='graphController.activeSeriesChanged()'
+                ng-show='graphController.showSelectSeries()'>
+        </select>
         <md-button class="md-accent"
                    ng-click='graphController.resetSeries()'
-                   ng-show='graphController.showResetSeriesButton()'>
+                   ng-show='graphController.showResetSeriesButton() && graphController.activeSeries.canEdit'>
             <md-icon> restore </md-icon> Reset Series
         </md-button>
         <highchart id="{{graphController.chartId}}" config="graphController.chartConfig" class="span10" style="width:80%"></highchart>

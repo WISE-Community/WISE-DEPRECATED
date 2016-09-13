@@ -107,7 +107,10 @@ class EmbeddedController {
                 }
 
                 this.isDirty = true;
-
+                
+                // the student data in the model has changed
+                this.studentDataChanged(messageEventData.studentData);
+                
                 // tell the parent node that this component wants to save
                 this.$scope.$emit('componentSaveTriggered', {nodeId: this.nodeId, componentId: this.componentId});
             } else if (messageEventData.messageType === "applicationInitialized") {
@@ -405,7 +408,10 @@ class EmbeddedController {
          * data has changed.
          */
         var action = 'change';
-
+        
+        // remember the student data
+        this.studentData = data;
+        
         // create a component state populated with the student data
         this.createComponentState(action).then((componentState) => {
             this.$scope.$emit('componentStudentDataChanged', {componentId: componentId, componentState: componentState});

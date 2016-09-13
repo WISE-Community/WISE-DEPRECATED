@@ -136,6 +136,10 @@ class GraphController {
         this.trials = [];
         this.activeTrial = null;
         this.studentDataVersion = 2;
+        
+        this.canCreateNewTrials = false;
+        this.canDeleteTrials = false;
+        this.showAllTrialsAtOnce = false;
 
         if (this.componentContent != null) {
 
@@ -144,6 +148,18 @@ class GraphController {
 
             // set the chart id
             this.chartId = 'chart' + this.componentId;
+            
+            if (this.componentContent.showAllTrialsAtOnce) {
+                this.showAllTrialsAtOnce = this.componentContent.showAllTrialsAtOnce;
+            }
+            
+            if (this.componentContent.canCreateNewTrials) {
+                this.canCreateNewTrials = this.componentContent.canCreateNewTrials;
+            }
+            
+            if (this.componentContent.canDeleteTrials) {
+                this.canDeleteTrials = this.componentContent.canDeleteTrials;
+            }
 
             if (this.mode === 'student') {
                 this.isPromptVisible = true;
@@ -333,8 +349,14 @@ class GraphController {
                         // get the student data
                         var studentData = componentState.studentData;
                         
-                        // parse the trials and set it into the component
-                        this.parseTrials(studentData);
+                        // parse the latest trial and set it into the component
+                        this.parseLatestTrial(studentData);
+                        
+                        /*
+                         * notify the controller that the student data has 
+                         * changed so that it will perform any necessary saving
+                         */
+                        this.studentDataChanged();
                     }
                 }
             }
@@ -597,6 +619,12 @@ class GraphController {
         allSeries = allSeries.concat(regressionSeries);
 
         this.setSeriesIds(allSeries);
+        
+        /*
+         * update the min and max x and y values if necessary so that all
+         * points are visible
+         */
+        this.updateMinMaxAxisValues(allSeries, xAxis, yAxis);
 
         this.chartConfig = {
             options: {
@@ -1219,7 +1247,7 @@ class GraphController {
                     
                     this.studentDataVersion = studentData.version;
                     
-                    if (studentData.trials != null) {
+                    if (studentData.trials != null && studentData.trials.length > 0) {
                         
                         // make a copy of the trials
                         var trialsCopy = this.UtilService.makeCopyOfJSONObject(studentData.trials);
@@ -1315,6 +1343,9 @@ class GraphController {
     activeSeriesChanged() {
         // the student data has changed
         this.studentDataChanged();
+        
+        // tell the parent node that this component wants to save
+        //this.$scope.$emit('componentSaveTriggered', {nodeId: this.nodeId, componentId: this.componentId});
     };
 
     submit() {
@@ -2264,7 +2295,7 @@ class GraphController {
     showSelectSeries() {
         var show = false;
 
-        if (this.isSelectSeriesVisible && this.series.length > 1) {
+        if (this.hasEditableSeries() && this.isSelectSeriesVisible && this.series.length > 1) {
             /*
              * we are in a mode the shows the select series input and there is
              * more than one series
@@ -2348,8 +2379,14 @@ class GraphController {
         // redraw the graph
         this.setupGraph();
         
+        /*
+         * notify the controller that the student data has 
+         * changed so that it will perform any necessary saving
+         */
+        this.studentDataChanged();
+        
         // tell the parent node that this component wants to save
-        this.$scope.$emit('componentSaveTriggered', {nodeId: this.nodeId, componentId: this.componentId});
+        //this.$scope.$emit('componentSaveTriggered', {nodeId: this.nodeId, componentId: this.componentId});
     }
     
     /**
@@ -2388,8 +2425,14 @@ class GraphController {
             }
         }
         
+        /*
+         * notify the controller that the student data has 
+         * changed so that it will perform any necessary saving
+         */
+        this.studentDataChanged();
+        
         // tell the parent node that this component wants to save
-        this.$scope.$emit('componentSaveTriggered', {nodeId: this.nodeId, componentId: this.componentId});
+        //this.$scope.$emit('componentSaveTriggered', {nodeId: this.nodeId, componentId: this.componentId});
     }
     
     /**
@@ -2408,6 +2451,29 @@ class GraphController {
             // get the series from the trial
             var series = activeTrial.series;
             
+            if (this.showAllTrialsAtOnce) {
+                // show all the series from all the trials together
+                
+                series = [];
+                
+                // loop through all the trial
+                for (var t = 0; t < this.trials.length; t++) {
+                    var trial = this.trials[t];
+                    
+                    if (trial != null) {
+                        
+                        // get a series
+                        var trialSeries = trial.series;
+                        
+                        if (trialSeries != null) {
+                            
+                            // concat the series to our array of all series
+                            series = series.concat(trialSeries);
+                        }
+                    }
+                }
+            }
+            
             // set the series to be displayed
             this.series = series;
             
@@ -2421,8 +2487,14 @@ class GraphController {
             this.setupGraph();
         }
         
+        /*
+         * notify the controller that the student data has 
+         * changed so that it will perform any necessary saving
+         */
+        this.studentDataChanged();
+        
         // tell the parent node that this component wants to save
-        this.$scope.$emit('componentSaveTriggered', {nodeId: this.nodeId, componentId: this.componentId});
+        //this.$scope.$emit('componentSaveTriggered', {nodeId: this.nodeId, componentId: this.componentId});
     }
     
     /**
@@ -2504,6 +2576,347 @@ class GraphController {
             // redraw the graph so that the active trial gets displayed
             this.activeTrialChanged();
         }
+    }
+    
+    /**
+     * Parse the latest trial and set it into the component
+     * @param studentData the student data object that has a trials field
+     */
+    parseLatestTrial(studentData) {
+        
+        if (studentData != null) {
+            
+            var latestStudentDataTrial = null;
+            
+            if (studentData.trial != null) {
+                // the student data only has one trial
+                latestStudentDataTrial = studentData.trial;
+            }
+            
+            if (studentData.trials != null && studentData.trials.length > 0) {
+                // the student data has an array of trials
+                latestStudentDataTrial = studentData.trials[studentData.trials.length - 1];
+            }
+            
+            if (latestStudentDataTrial != null) {
+                
+                /*
+                 * remove the first default trial that is automatically created
+                 * when the student first visits the component otherwise there
+                 * will be a blank trial.
+                 */
+                if (this.trials.length > 0) {
+                    
+                    // get the first trial
+                    var firstTrial = this.trials[0];
+                    
+                    if (firstTrial != null) {
+                        
+                        /*
+                         * check if the trial has an id. if the trial doesn't
+                         * have an id it means it was automatically created by
+                         * the component.
+                         */
+                        if (firstTrial.id == null) {
+                            // delete the first trial
+                            this.trials.shift();
+                        }
+                    }
+                }
+                
+                // get the latest student data trial id
+                var latestStudentDataTrialId = latestStudentDataTrial.id;
+                
+                // get the trial with the given trial id
+                var latestTrial = this.getTrialById(latestStudentDataTrialId);
+                
+                if (latestTrial == null) {
+                    /* 
+                     * we did not find a trial with the given id which means
+                     * this is a new trial
+                     */
+                    
+                    // create the new trial
+                    latestTrial = {};
+                    
+                    latestTrial.id = latestStudentDataTrialId;
+                    
+                    // add the trial to the array of trials
+                    this.trials.push(latestTrial);
+                }
+                
+                if (latestStudentDataTrial.name != null) {
+                    
+                    // set the trial name
+                    latestTrial.name = latestStudentDataTrial.name;
+                }
+                
+                if (latestStudentDataTrial.series != null) {
+                    
+                    // set the trial series
+                    latestTrial.series = [];
+                    
+                    var tempSeries = latestStudentDataTrial.series;
+                    
+                    if (tempSeries != null) {
+                        
+                        // loop through all the series in the trial
+                        for (var s = 0; s < tempSeries.length; s++) {
+                            
+                            // get a single series
+                            var singleSeries = tempSeries[s];
+                            
+                            if (singleSeries != null) {
+                                
+                                // get the series name and data
+                                var seriesName = singleSeries.name;
+                                var seriesData = singleSeries.data;
+                                var seriesColor = singleSeries.color;
+                                
+                                // make a series object
+                                var newSeries = {};
+                                newSeries.name = seriesName;
+                                newSeries.data = seriesData;
+                                newSeries.color = seriesColor;
+                                newSeries.canEdit = false;
+                                newSeries.allowPointSelect = false;
+                                
+                                // add the series to the trial
+                                latestTrial.series.push(newSeries);
+                            }
+                        }
+                    }
+                }
+            }
+            
+            if (this.trials.length > 0) {
+                // make the last trial the active trial
+                this.activeTrial = this.trials[this.trials.length - 1];
+            }
+            
+            // redraw the graph so that the active trial gets displayed
+            this.activeTrialChanged();
+        }
+    }
+    
+    /**
+     * Get the trial by id
+     * @param id the trial id
+     * @returns the trial with the given id or null
+     */
+    getTrialById(id) {
+        
+        var trial = null;
+        
+        if (id != null) {
+            
+            // loop through all the trials
+            for (var t = 0; t < this.trials.length; t++) {
+                var tempTrial = this.trials[t];
+                
+                if (tempTrial != null && tempTrial.id == id) {
+                    // we have found the trial with the id we want
+                    trial = tempTrial;
+                    break;
+                }
+            }
+        }
+        
+        return trial;
+    }
+    
+    /**
+     * Check if there is an editable series
+     * @return whether there is an editable series
+     */
+    hasEditableSeries() {
+        
+        var result = false;
+        
+        // get the array of series
+        var series = this.getSeries();
+        
+        if (series != null) {
+            
+            // loop through all the lines
+            for (var s = 0; s < series.length; s++) {
+                var tempSeries = series[s];
+                
+                if (tempSeries != null) {
+                    
+                    if (tempSeries.canEdit) {
+                        // this line can be edited
+                        result = true;
+                    }
+                }
+            }
+        }
+        
+        return result;
+    }
+    
+    /**
+     * Update the x and y axis min and max values if necessary to make sure
+     * all points are visible in the graph view.
+     * @param series the an array of series
+     * @param xAxis the x axis object
+     * @param yAxis the y axis object
+     */
+    updateMinMaxAxisValues(series, xAxis, yAxis) {
+        
+        // get the min and max x and y values
+        var minMaxValues = this.getMinMaxValues(series);
+        
+        if (minMaxValues != null) {
+            
+            if (xAxis != null) {
+                if (minMaxValues.xMin < xAxis.min) {
+                    /*
+                     * there is a point that has a smaller x value than the
+                     * specified x axis min. we will remove the min value from
+                     * the xAxis object so that highcharts will automatically
+                     * set the min x value automatically
+                     */
+                    xAxis.min = null;
+                    xAxis.minPadding = 0.2;
+                }
+                
+                if (minMaxValues.xMax > xAxis.max) {
+                    /*
+                     * there is a point that has a larger x value than the
+                     * specified x axis max. we will remove the max value from
+                     * the xAxis object so that highcharts will automatically
+                     * set the max x value automatically
+                     */
+                    xAxis.max = null;
+                    xAxis.maxPadding = 0.2;
+                }
+            }
+            
+            if (yAxis != null) {
+                if (minMaxValues.yMin < yAxis.min) {
+                    /*
+                     * there is a point that has a smaller y value than the
+                     * specified y axis min. we will remove the min value from
+                     * the yAxis object so that highcharts will automatically
+                     * set the min y value automatically
+                     */
+                    yAxis.min = null;
+                    yAxis.minPadding = 0.2;
+                }
+                
+                if (minMaxValues.yMax > yAxis.max) {
+                    /*
+                     * there is a point that has a larger y value than the
+                     * specified y axis max. we will remove the max value from
+                     * the yAxis object so that highcharts will automatically
+                     * set the max y value automatically
+                     */
+                    yAxis.max = null;
+                    yAxis.maxPadding = 0.2;
+                }
+            }
+        }
+    }
+    
+    /**
+     * Get the min and max x and y values
+     * @param series an array of series
+     * @returns an object containing the min and max x and y values from the
+     * series data
+     */
+    getMinMaxValues(series) {
+        
+        var result = {};
+        var xMin = 0;
+        var xMax = 0;
+        var yMin = 0;
+        var yMax = 0;
+        
+        if (series != null) {
+            
+            // loop through all the series
+            for (var s = 0; s < series.length; s++) {
+                
+                // get a single series
+                var tempSeries = series[s];
+                
+                if (tempSeries != null) {
+                    
+                    // get the data from the single series
+                    var data = tempSeries.data;
+                    
+                    if (data != null) {
+                        
+                        // loop through all the data points in the single series
+                        for (var d = 0; d < data.length; d++) {
+                            var tempData = data[d];
+                            
+                            var tempX = null;
+                            var tempY = null;
+                            
+                            if (tempData != null) {
+                                if (tempData.constructor.name == 'Object') {
+                                    /*
+                                     * the element is an object so we will get
+                                     * the x and y fields
+                                     */
+                                    tempX = tempData.x;
+                                    tempY = tempData.y;
+                                } else if (tempData.constructor.name == 'Array') {
+                                    /*
+                                     * the element is an array so we will get
+                                     * the first and second element in the array
+                                     * which correspond to the x and y values
+                                     */
+                                    tempX = tempData[0];
+                                    tempY = tempData[1];
+                                }
+                            }
+                            
+                            if (tempX > xMax) {
+                                /*
+                                 * we have found a data point with a greater x
+                                 * value than what we have previously found
+                                 */
+                                xMax = tempX;
+                            }
+                            
+                            if (tempX < xMin) {
+                                /*
+                                 * we have found a data point with a smaller x
+                                 * value than what we have previously found
+                                 */
+                                xMin = tempX
+                            }
+                            
+                            if (tempY > yMax) {
+                                /*
+                                 * we have found a data point with a greater y
+                                 * value than what we have previously found
+                                 */
+                                yMax = tempY;
+                            }
+                            
+                            if (tempY < yMin) {
+                                /*
+                                 * we have found a data point with a smaller y
+                                 * value than what we have previously found
+                                 */
+                                yMin = tempY;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        result.xMin = xMin;
+        result.xMax = xMax;
+        result.yMin = yMin;
+        result.yMax = yMax;
+        
+        return result;
     }
 }
 
