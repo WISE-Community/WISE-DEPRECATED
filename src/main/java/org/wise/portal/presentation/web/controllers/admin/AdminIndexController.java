@@ -57,9 +57,9 @@ import org.wise.portal.service.portal.PortalService;
 @RequestMapping("/admin")
 public class AdminIndexController {
 
-	private static final String MASTER_GET_WISE_INFO_URL = "http://wise4.org/getWISEInfo.php";
+	private static final String MASTER_GET_WISE_INFO_URL = "http://wise5.org/getWISEInfo.php";
 	
-	private static final String WISE_UPDATE_URL = "http://wise4.org";
+	private static final String WISE_UPDATE_URL = "http://wise5.org";
 	
 	// where to get commit history information
 	private static final String WISE_COMMIT_HISTORY_URL = "https://api.github.com/repos/WISE-Community/WISE/commits?page=1&per_page=20";
