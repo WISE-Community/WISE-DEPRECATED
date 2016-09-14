@@ -74,6 +74,9 @@ class MatchController {
         // whether to orient the choices and buckets side-by-side
         this.horizontal = false;
 
+        // css style for the choice items
+        this.choiceStyle = '';
+
         // message to show next to save/submit buttons
         this.saveMessage = {
             text: '',
@@ -540,6 +543,12 @@ class MatchController {
                         this.choiceColumns = 2;
                     }
                 }
+
+                this.choiceStyle = {
+                    '-moz-column-count': this.choiceColumns,
+                    '-webkit-column-count': this.choiceColumns,
+                    'column-count':this.choiceColumns
+                };
             }
 
             /*
