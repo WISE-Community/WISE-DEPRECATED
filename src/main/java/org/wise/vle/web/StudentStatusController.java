@@ -41,9 +41,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.socket.WebSocketHandler;
+import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
+import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.vle.VLEService;
+import org.wise.portal.service.websocket.WISEWebSocketHandler;
 import org.wise.vle.domain.status.StudentStatus;
 
 @Controller
@@ -52,7 +56,13 @@ public class StudentStatusController {
 
 	@Autowired
 	private VLEService vleService;
-	
+
+	@Autowired
+	private RunService runService;
+
+	@Autowired
+	private WebSocketHandler webSocketHandler;
+
 	/**
 	 * Handles GET requests from the teacher when a teacher requests for all the student
 	 * statuses for a given run id
@@ -158,6 +168,9 @@ public class StudentStatusController {
 	/**
 	 * Handles POST requests from students when they send their status to the server
 	 * so we can keep track of their latest status
+	 *
+	 * If the student status is for a WISE5 run, also notify the teachers over websocket.
+	 *
 	 * @param request
 	 * @param response
 	 * @throws IOException 
@@ -228,6 +241,41 @@ public class StudentStatusController {
 		
 		//save the student status to the database
 		vleService.saveStudentStatus(studentStatus);
+
+		// Send message to teachers if this is a WISE5 run
+		// so this can be displayed in classroom monitor in real-time
+		try {
+			Run run = runService.retrieveById(runId);
+			Integer wiseVersion = run.getProject().getWiseVersion();
+			if (wiseVersion != null && wiseVersion == 5) {
+				if (webSocketHandler != null) {
+					WISEWebSocketHandler wiseWebSocketHandler = (WISEWebSocketHandler) webSocketHandler;
+
+					if (wiseWebSocketHandler != null) {
+						// send this message to websockets
+						JSONObject webSocketMessageJSON = new JSONObject();
+						JSONObject studentStatusJSON = new JSONObject(status);
+						webSocketMessageJSON.put("messageType", "studentStatus");
+						webSocketMessageJSON.put("messageParticipants", "studentToTeachers");
+						if (studentStatusJSON.has("currentNodeId")) {
+							webSocketMessageJSON.put("currentNodeId", studentStatusJSON.get("currentNodeId"));
+						}
+						if (studentStatusJSON.has("previousComponentState")) {
+							webSocketMessageJSON.put("previousComponentState", studentStatusJSON.get("previousComponentState"));
+						}
+						if (studentStatusJSON.has("nodeStatuses")) {
+							webSocketMessageJSON.put("nodeStatuses", studentStatusJSON.get("nodeStatuses"));
+						}
+						if (studentStatusJSON.has("projectCompletion")) {
+							webSocketMessageJSON.put("projectCompletion", studentStatusJSON.get("projectCompletion"));
+						}
+						wiseWebSocketHandler.handleMessage(signedInUser, webSocketMessageJSON.toString());
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 		return null;
 	}

@@ -13,7 +13,6 @@ class VLEController {
                 ProjectService,
                 SessionService,
                 StudentDataService,
-                StudentWebSocketService,
                 UtilService) {
 
         this.$scope = $scope;
@@ -28,7 +27,6 @@ class VLEController {
         this.ProjectService = ProjectService;
         this.SessionService = SessionService;
         this.StudentDataService = StudentDataService;
-        this.StudentWebSocketService = StudentWebSocketService;
         this.UtilService = UtilService;
 
         this.currentNode = null;
@@ -55,8 +53,8 @@ class VLEController {
             this.StudentDataService.updateStackHistory(currentNodeId);
             this.StudentDataService.updateVisitedNodesHistory(currentNodeId);
             this.StudentDataService.updateNodeStatuses();
+            this.StudentDataService.saveStudentStatus();
 
-            this.StudentWebSocketService.sendStudentStatus();  // TODO: change this so we POST the status and send websocket message from Controller.handlePOST on the server
             this.$state.go('root.vle', {nodeId:currentNodeId});
 
             var componentId, componentType, category, eventName, eventData, eventNodeId;
@@ -512,7 +510,6 @@ VLEController.$inject = [
     'ProjectService',
     'SessionService',
     'StudentDataService',
-    'StudentWebSocketService',
     'UtilService'
 ];
 
