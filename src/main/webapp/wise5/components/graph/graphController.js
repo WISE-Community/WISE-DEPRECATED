@@ -138,7 +138,12 @@ this.height=this.componentContent.height;}/*
          * remember this graph controller so we can access it in the click
          * event for the graph
          */var thisGraphController=this;// get all the series from the student data
-var series=this.getSeries();if((series==null||series.length===0)&&this.componentContent.series!=null){/*
+var series=this.getSeries();if(this.componentContent.enableTrials){/*
+             * trials are enabled so we will show the ones the student 
+             * has checked
+             */series=[];var trials=this.trials;// loop through all the trials
+for(var t=0;t<trials.length;t++){var trial=trials[t];if(trial!=null&&trial.show){// show this trial
+var tempSeries=trial.series;series=series.concat(tempSeries);}}}if((series==null||series.length===0)&&this.componentContent.series!=null){/*
              * use the series from the component content if the student does not
              * have any series data
              */series=this.UtilService.makeCopyOfJSONObject(this.componentContent.series);this.setSeries(series);}// add the event that will remove a point when clicked
@@ -695,10 +700,11 @@ this.setupGraph();/*
 //this.$scope.$emit('componentSaveTriggered', {nodeId: this.nodeId, componentId: this.componentId});
 }/**
      * Delete a trial
-     */},{key:'deleteTrial',value:function deleteTrial(){/*
+     */},{key:'deleteTrial',value:function deleteTrial(trialIndex){/*
          * get the index of the active trial which will be the trial we are
          * going to delete
-         */var trialIndex=this.trials.indexOf(this.activeTrial);if(trialIndex!=null&&trialIndex!=-1){// remove the trial from the array of trials
+         *///var trialIndex = this.trials.indexOf(this.activeTrial);
+if(trialIndex==null){trialIndex=this.trials.indexOf(this.activeTrial);}if(trialIndex!=null&&trialIndex!=-1){// remove the trial from the array of trials
 this.trials.splice(trialIndex,1);if(this.trials.length==0){// there are no more trials so we will create a new empty trial
 this.newTrial();}else if(this.trials.length>0){// set the active trial to the next highest trial number
 if(trialIndex>this.trials.length-1){/*
@@ -766,7 +772,7 @@ var latestTrial=this.getTrialById(latestStudentDataTrialId);if(latestTrial==null
                      * we did not find a trial with the given id which means
                      * this is a new trial
                      */// create the new trial
-latestTrial={};latestTrial.id=latestStudentDataTrialId;// add the trial to the array of trials
+latestTrial={};latestTrial.id=latestStudentDataTrialId;latestTrial.show=true;// add the trial to the array of trials
 this.trials.push(latestTrial);}if(latestStudentDataTrial.name!=null){// set the trial name
 latestTrial.name=latestStudentDataTrial.name;}if(latestStudentDataTrial.series!=null){// set the trial series
 latestTrial.series=[];var tempSeries=latestStudentDataTrial.series;if(tempSeries!=null){// loop through all the series in the trial

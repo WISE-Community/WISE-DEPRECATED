@@ -148,6 +148,19 @@
             <md-icon> restore </md-icon> Reset Graph
         </md-button>
         <br/>
+        <div ng-show='graphController.componentContent.enableTrials'>
+            <div ng-repeat='trial in graphController.trials'>
+                <input type='checkbox'
+                       ng-model='trial.show'
+                       ng-change='graphController.studentDataChanged()'/>
+                {{trial.name}}
+                <md-button class='md-accent'
+                           ng-click='graphController.deleteTrial($index)'>
+                    <md-icon> delete </md-icon>
+                </md-button>
+            </div>
+        </div>
+        <br/>
         <select ng-model='graphController.activeSeries'
                 ng-options='series as series.name for series in graphController.series'
                 ng-change='graphController.activeSeriesChanged()'

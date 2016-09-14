@@ -538,6 +538,28 @@ class GraphController {
 
         // get all the series from the student data
         var series = this.getSeries();
+        
+        if (this.componentContent.enableTrials) {
+            /*
+             * trials are enabled so we will show the ones the student 
+             * has checked
+             */
+            series = [];
+            
+            var trials = this.trials;
+            
+            // loop through all the trials
+            for (var t = 0; t < trials.length; t++) {
+                var trial = trials[t];
+                
+                if (trial != null && trial.show) {
+                    // show this trial
+                    
+                    var tempSeries = trial.series;
+                    series = series.concat(tempSeries);
+                }
+            }
+        }
 
         if ((series == null || series.length === 0) && this.componentContent.series != null) {
             /*
@@ -2392,13 +2414,17 @@ class GraphController {
     /**
      * Delete a trial
      */
-    deleteTrial() {
+    deleteTrial(trialIndex) {
         
         /*
          * get the index of the active trial which will be the trial we are
          * going to delete
          */
-        var trialIndex = this.trials.indexOf(this.activeTrial);
+        //var trialIndex = this.trials.indexOf(this.activeTrial);
+        
+        if (trialIndex == null) {
+            trialIndex = this.trials.indexOf(this.activeTrial);
+        }
         
         if (trialIndex != null && trialIndex != -1) {
             
@@ -2640,6 +2666,8 @@ class GraphController {
                     latestTrial = {};
                     
                     latestTrial.id = latestStudentDataTrialId;
+                    
+                    latestTrial.show = true;
                     
                     // add the trial to the array of trials
                     this.trials.push(latestTrial);
