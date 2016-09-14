@@ -15,6 +15,14 @@
                           rows='10'
                           cols='100'></textarea>
                 <br/>
+                Starter Sentence (Optional):
+                <br/>
+                <textarea ng-model='openResponseController.authoringComponentContent.starterSentence'
+                          ng-change='openResponseController.authoringViewComponentChanged()'
+                          ng-model-options='{ debounce: 1000 }'
+                          rows='2'
+                          cols='100'></textarea>
+                <br/>
                 Max Score:
                 <input type='number'
                        ng-model='openResponseController.authoringComponentContent.maxScore'
