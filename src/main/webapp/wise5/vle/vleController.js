@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var VLEController = function () {
-    function VLEController($scope, $rootScope, $mdDialog, $mdMenu, $state, $translate, ConfigService, NotebookService, NotificationService, ProjectService, SessionService, StudentDataService, StudentWebSocketService, UtilService) {
+    function VLEController($scope, $rootScope, $mdDialog, $mdMenu, $state, $translate, ConfigService, NotebookService, NotificationService, ProjectService, SessionService, StudentDataService, UtilService) {
         var _this = this;
 
         _classCallCheck(this, VLEController);
@@ -26,7 +26,6 @@ var VLEController = function () {
         this.ProjectService = ProjectService;
         this.SessionService = SessionService;
         this.StudentDataService = StudentDataService;
-        this.StudentWebSocketService = StudentWebSocketService;
         this.UtilService = UtilService;
 
         this.currentNode = null;
@@ -53,8 +52,8 @@ var VLEController = function () {
             _this.StudentDataService.updateStackHistory(currentNodeId);
             _this.StudentDataService.updateVisitedNodesHistory(currentNodeId);
             _this.StudentDataService.updateNodeStatuses();
+            _this.StudentDataService.saveStudentStatus();
 
-            _this.StudentWebSocketService.sendStudentStatus(); // TODO: change this so we POST the status and send websocket message from Controller.handlePOST on the server
             _this.$state.go('root.vle', { nodeId: currentNodeId });
 
             var componentId, componentType, category, eventName, eventData, eventNodeId;
@@ -539,7 +538,7 @@ var VLEController = function () {
     return VLEController;
 }();
 
-VLEController.$inject = ['$scope', '$rootScope', '$mdDialog', '$mdMenu', '$state', '$translate', 'ConfigService', 'NotebookService', 'NotificationService', 'ProjectService', 'SessionService', 'StudentDataService', 'StudentWebSocketService', 'UtilService'];
+VLEController.$inject = ['$scope', '$rootScope', '$mdDialog', '$mdMenu', '$state', '$translate', 'ConfigService', 'NotebookService', 'NotificationService', 'ProjectService', 'SessionService', 'StudentDataService', 'UtilService'];
 
 exports.default = VLEController;
 //# sourceMappingURL=vleController.js.map

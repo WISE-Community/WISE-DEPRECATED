@@ -1249,6 +1249,76 @@ class StudentDataService {
 
     };
 
+    /**
+     * POSTs student status to server
+     * Returns a promise of the POST request
+     */
+    saveStudentStatus() {
+
+        if (!this.ConfigService.isPreview()) {
+            // we are in a run
+            var studentStatusURL = this.ConfigService.getStudentStatusURL();
+            if (studentStatusURL != null) {
+                var runId = this.ConfigService.getRunId();
+                var periodId = this.ConfigService.getPeriodId();
+                var workgroupId = this.ConfigService.getWorkgroupId();
+
+                // get the current node id
+                var currentNodeId = this.getCurrentNodeId();
+
+                // get the node statuses
+                var nodeStatuses = this.getNodeStatuses();
+
+                // get the latest component state
+                var latestComponentState = this.getLatestComponentState();
+
+                // get the project completion percentage
+                var projectCompletion = this.getProjectCompletion();
+
+                // create the JSON that will be saved to the database
+                var studentStatusJSON = {};
+                studentStatusJSON.runId = runId;
+                studentStatusJSON.periodId = periodId;
+                studentStatusJSON.workgroupId = workgroupId;
+                studentStatusJSON.currentNodeId = currentNodeId;
+                studentStatusJSON.previousComponentState = latestComponentState;
+                studentStatusJSON.nodeStatuses = nodeStatuses;
+                studentStatusJSON.projectCompletion = projectCompletion;
+
+                // get the student status as a string
+                var status = angular.toJson(studentStatusJSON);
+
+                /*
+                 * create the params for the message that will be sent
+                 * to the StudentStatusController and saved in the
+                 * database
+                 */
+                var studentStatusParams = {};
+                studentStatusParams.runId = runId;
+                studentStatusParams.periodId = periodId;
+                studentStatusParams.workgroupId = workgroupId;
+                studentStatusParams.status = status;
+
+                // get the url to POST the student data
+                var httpParams = {};
+                httpParams.method = 'POST';
+                httpParams.url = studentStatusURL;
+                httpParams.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
+                httpParams.data = $.param(studentStatusParams);
+
+                // make the request to post the student status
+                return this.$http(httpParams).then(
+                    result => {
+                        return true;
+                    }, result => {
+                        // a server error occured
+                        return false;
+                    }
+                );
+            }
+        }
+    };
+
     retrieveComponentStates(runId, periodId, workgroupId) {
 
     };

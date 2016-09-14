@@ -84,40 +84,6 @@ class StudentWebSocketService {
     }
 
     /**
-     * Send the student status to the server through websockets
-     */
-    sendStudentStatus() {
-
-        if (!this.ConfigService.isPreview()) {
-            // we are in a run
-
-            // get the current node id
-            var currentNodeId = this.StudentDataService.getCurrentNodeId();
-
-            // get the node statuses
-            var nodeStatuses = this.StudentDataService.getNodeStatuses();
-
-            // get the latest component state
-            var latestComponentState = this.StudentDataService.getLatestComponentState();
-
-            // get the project completion percentage
-            var projectCompletion = this.StudentDataService.getProjectCompletion();
-
-            // make the websocket message
-            var messageJSON = {};
-            messageJSON.messageType = 'studentStatus';
-            messageJSON.messageParticipants = 'studentToTeachers';
-            messageJSON.currentNodeId = currentNodeId;
-            messageJSON.previousComponentState = latestComponentState;
-            messageJSON.nodeStatuses = nodeStatuses;
-            messageJSON.projectCompletion = projectCompletion;
-
-            // send the websocket message
-            this.dataStream.send(messageJSON);
-        }
-    };
-
-    /**
      * Send a message to teacher
      * @param data the data to send to the teacher
      */
