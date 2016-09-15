@@ -34,21 +34,16 @@ import java.util.TreeMap;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
-import org.springframework.web.servlet.ModelAndView;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.module.impl.CurnitGetCurnitUrlVisitor;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.util.KeyGenerator;
 import org.wise.portal.presentation.util.http.Base64;
-import org.wise.portal.presentation.web.listeners.WISESessionListener;
-import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.project.ProjectService;
 
 /**
@@ -58,7 +53,7 @@ import org.wise.portal.service.project.ProjectService;
  * 
  * @author Patrick Lawler
  */
-@Controller
+@Component
 public final class CredentialManager {
 
 	private static ProjectService projectService;
@@ -69,7 +64,7 @@ public final class CredentialManager {
 	public void setProjectService(ProjectService projectService){
 		CredentialManager.projectService = projectService;
 	}
-	
+
 	@Autowired
 	public void setWiseProperties(Properties wiseProperties){
 		CredentialManager.wiseProperties = wiseProperties;
@@ -124,82 +119,16 @@ public final class CredentialManager {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	public static void authenticate(HttpServletRequest request, HttpServletResponse response){
-		boolean authenticated = false;
-
-		/* get credentials from the request - decode and parse */
-		String baseCredentials = (String) request.getParameter("credentials");
-		if(baseCredentials != null){
-			try{
-				String key = baseCredentials.split("~")[1];
-				String username = (String) Base64.decodeToObject(baseCredentials.split("~")[0]);
-
-				/* if key and username are not null retrieve the session id from the context and check username against session */
-				if(key != null && username != null){
-					Map<String,String> keyToSessionIds = (Map<String,String>) request.getSession().getServletContext().getAttribute("keyToSessionIds");
-					if(keyToSessionIds.containsKey(key)){
-						String sId = keyToSessionIds.get(key);
-						keyToSessionIds.remove(key);
-
-						/* check all logged in users to see if that user is associated with that session id */
-						Map<String,User> sessionIdsToUsers = (Map<String,User>) request.getSession().getServletContext().getAttribute(WISESessionListener.ALL_LOGGED_IN_USERS);
-						if(sessionIdsToUsers != null && sessionIdsToUsers.containsKey(sId)){
-							User user = sessionIdsToUsers.get(sId);
-							/* check the user against the sessionId, also get the user from the session and check because
-							 * of the ability of administrators to log in as other users */
-							if(user != null && user.getUserDetails().getUsername().equals(username)){
-								authenticated = true;
-							} else if(user.getUserDetails().hasGrantedAuthority(UserDetailsService.ADMIN_ROLE)){
-								/* then the user is an admin and has logged in as another user */
-								authenticated = true;
-							}
-						}
-					}
-				}
-			} catch(ClassNotFoundException e){
-				e.printStackTrace();
-			} catch(IOException e){
-				e.printStackTrace();
-			}
-		}
-
-		/* write authentication success to the response */
-		try{
-			if(authenticated){
-				response.getWriter().write("true");
-			} else {
-				response.getWriter().write("false");
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	@RequestMapping("/authorize.html")
-	protected ModelAndView handleRequestInternal(
-			HttpServletRequest request, 
-			HttpServletResponse response) throws Exception {
-		String authenticate = request.getParameter(AUTHENTICATE);
-
-		/* catch authentication requests */
-		if(authenticate != null){
-			CredentialManager.authenticate(request, response);
-		}
-
-		return null;
-	}
-
 	public static String getAllowedPathAccess(HttpServletRequest request) {
 		String idStr = request.getParameter(PROJECTID);
 		String accessPath = wiseProperties.getProperty("curriculum_base_dir");
 
-		if("studentAssetUpload".equals(request.getParameter("cmd")) || "studentAssetCopyForReference".equals(request.getParameter("command"))) {
+		if ("studentAssetUpload".equals(request.getParameter("cmd")) || "studentAssetCopyForReference".equals(request.getParameter("command"))) {
 			accessPath = wiseProperties.getProperty("studentuploads_base_dir");
 		}
 
 		/* if there is a project id parameter, set access level to the project dir */
-		if(idStr != null && !idStr.equals("") && !idStr.equals("none")){
+		if (idStr != null && !idStr.equals("") && !idStr.equals("none")){
 			try{
 				Project project = projectService.getById(Long.parseLong(idStr));
 				String projectPath = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());

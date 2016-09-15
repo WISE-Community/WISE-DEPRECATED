@@ -33,7 +33,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -41,9 +40,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -52,6 +48,8 @@ import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.commons.CommonsFileUploadSupport;
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
@@ -534,18 +532,8 @@ public class AuthorProjectController {
 							response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 						}
 					} else if (forward.equals("assetmanager")) {
-
-						if (command == null && ServletFileUpload.isMultipartContent(request)) {
+						if (command == null && request.getContentType() != null && request.getContentType().toLowerCase().indexOf("multipart/") > -1 ) {
 							//user is uploading a file
-
-							ServletFileUpload uploader = new ServletFileUpload(new DiskFileItemFactory());
-							List<?> fileList = null;
-							try {
-								//get a list of the files the user is uploading
-								fileList = uploader.parseRequest(request);
-							} catch (FileUploadException e) {
-								e.printStackTrace();
-							}
 
 							//get the project folder path
 							String projectFolderPath = FileManager.getProjectFolderPath(project);
@@ -588,7 +576,7 @@ public class AuthorProjectController {
 							}
 
 							//tell the asset manager to handle the file upload
-							String result = AssetManager.uploadAsset(fileList, fileMap, projectFolderPath, dirName, pathToCheckSize, projectMaxTotalAssetsSize);
+							String result = AssetManager.uploadAsset(fileMap, projectFolderPath, dirName, pathToCheckSize, projectMaxTotalAssetsSize);
 							response.getWriter().write(result);
 						} else if (command.equals("remove")) {
 							//get the project folder path
