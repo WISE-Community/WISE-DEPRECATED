@@ -139,7 +139,6 @@ class GraphController {
         
         this.canCreateNewTrials = false;
         this.canDeleteTrials = false;
-        this.showAllTrialsAtOnce = false;
 
         if (this.componentContent != null) {
 
@@ -148,10 +147,6 @@ class GraphController {
 
             // set the chart id
             this.chartId = 'chart' + this.componentId;
-            
-            if (this.componentContent.showAllTrialsAtOnce) {
-                this.showAllTrialsAtOnce = this.componentContent.showAllTrialsAtOnce;
-            }
             
             if (this.componentContent.canCreateNewTrials) {
                 this.canCreateNewTrials = this.componentContent.canCreateNewTrials;
@@ -552,11 +547,16 @@ class GraphController {
             for (var t = 0; t < trials.length; t++) {
                 var trial = trials[t];
                 
-                if (trial != null && trial.show) {
-                    // show this trial
+                if (trial != null) {
                     
-                    var tempSeries = trial.series;
-                    series = series.concat(tempSeries);
+                    if (trial.show) {
+                        /*
+                         * we want to show this trial so we will append the
+                         * series from it
+                         */
+                        var tempSeries = trial.series;
+                        series = series.concat(tempSeries);
+                    }
                 }
             }
         }
@@ -640,6 +640,10 @@ class GraphController {
         //this.setSeriesIds(regressionSeries);
         allSeries = allSeries.concat(regressionSeries);
 
+        // clear all the series ids
+        this.clearSeriesIds(allSeries);
+        
+        // give all series ids
         this.setSeriesIds(allSeries);
         
         /*
@@ -1110,7 +1114,7 @@ class GraphController {
      * @param xAxis the xAxis object that can be used to render the graph
      */
     setXAxis(xAxis) {
-        this.xAxis = xAxis;
+        this.xAxis = this.UtilService.makeCopyOfJSONObject(xAxis);
     };
 
     /**
@@ -1126,7 +1130,7 @@ class GraphController {
      * @param yAxis the yAxis object that can be used to render the graph
      */
     setYAxis(yAxis) {
-        this.yAxis = yAxis;
+        this.yAxis = this.UtilService.makeCopyOfJSONObject(yAxis);
     };
 
     /**
@@ -2333,9 +2337,6 @@ class GraphController {
      */
     newTrial() {
         
-        // get the index of the active series
-        var activeSeriesIndex = this.getSeriesIndex(this.activeSeries);
-        
         // get the current number of trials
         var trialCount = this.trials.length;
         
@@ -2356,14 +2357,23 @@ class GraphController {
                 
                 // run the regex matcher on the trial name
                 var match = trialNameRegex.exec(tempTrialName);
-                var tempTrialNumber = match[1];
                 
-                if (tempTrialNumber != null) {
+                if (match != null && match.length > 0) {
+                    // we have found a trial name that looks like "Trial X"
+                    
                     /*
-                     * get the number e.g. if the trial name is "Trial 2",
-                     * the trial number is 2
+                     * get the trial number e.g. if the trial name is "Trial 3",
+                     * the trial number is 3
                      */
-                    trialNumbers.push(parseInt(tempTrialNumber));
+                    var tempTrialNumber = match[1];
+                    
+                    if (tempTrialNumber != null) {
+                        /*
+                         * get the number e.g. if the trial name is "Trial 2",
+                         * the trial number is 2
+                         */
+                        trialNumbers.push(parseInt(tempTrialNumber));
+                    }
                 }
             }
         }
@@ -2378,10 +2388,24 @@ class GraphController {
             maxTrialNumber = trialNumbers[trialNumbers.length - 1];
         }
         
+        if (!this.componentContent.showAllTrialsOnNewTrial) {
+            // we only want to show the latest trial
+            
+            // loop through all the existing trials and hide them
+            for (var t = 0; t < this.trials.length; t++) {
+                var tempTrial = this.trials[t];
+                
+                if (tempTrial != null) {
+                    tempTrial.show = false;
+                }
+            }
+        }
+        
         // make a new trial with a trial number one larger than the existing max
         var trial = {};
         trial.name = 'Trial ' + (maxTrialNumber + 1);
         trial.series = series;
+        trial.show = true;
         
         // add the trial to the array of trials
         this.trials.push(trial);
@@ -2392,10 +2416,13 @@ class GraphController {
         // set the series to be displayed
         this.series = series;
         
-        /*
-         * set the active series index so that the the active series
-         * is the same as before.
-         */
+        var activeSeriesIndex = 0;
+        
+        if (this.activeSeries != null) {
+            // get the index of the active series
+            activeSeriesIndex = this.getSeriesIndex(this.activeSeries);
+        }
+        
         this.setActiveSeriesByIndex(activeSeriesIndex);
         
         // redraw the graph
@@ -2434,6 +2461,10 @@ class GraphController {
             if (this.trials.length == 0) {
                 // there are no more trials so we will create a new empty trial
                 this.newTrial();
+                
+                // reset the axis limits
+                this.setXAxis(this.componentContent.xAxis);
+                this.setYAxis(this.componentContent.yAxis);
             } else if (this.trials.length > 0) {
                 // set the active trial to the next highest trial number
                 if (trialIndex > (this.trials.length - 1)) {
@@ -2476,30 +2507,7 @@ class GraphController {
             
             // get the series from the trial
             var series = activeTrial.series;
-            
-            if (this.showAllTrialsAtOnce) {
-                // show all the series from all the trials together
-                
-                series = [];
-                
-                // loop through all the trial
-                for (var t = 0; t < this.trials.length; t++) {
-                    var trial = this.trials[t];
-                    
-                    if (trial != null) {
-                        
-                        // get a series
-                        var trialSeries = trial.series;
-                        
-                        if (trialSeries != null) {
-                            
-                            // concat the series to our array of all series
-                            series = series.concat(trialSeries);
-                        }
-                    }
-                }
-            }
-            
+
             // set the series to be displayed
             this.series = series;
             
@@ -2527,7 +2535,7 @@ class GraphController {
      * Parse the trials and set it into the component
      * @param studentData the student data object that has a trials field
      */
-    parseTrials(studentData) {
+    parseTrials0(studentData) {
         
         if (studentData != null) {
             
@@ -2662,12 +2670,28 @@ class GraphController {
                      * this is a new trial
                      */
                     
+                    if (!this.componentContent.showAllTrialsOnNewTrial) {
+                        // we only show the latest trial when a new trial starts
+                        
+                        // loop through all the existing trials and hide them
+                        for (var t = 0; t < this.trials.length; t++) {
+                            var tempTrial = this.trials[t];
+                            
+                            if (tempTrial != null) {
+                                tempTrial.show = false;
+                            }
+                        }
+                    }
+                    
                     // create the new trial
                     latestTrial = {};
                     
                     latestTrial.id = latestStudentDataTrialId;
                     
                     latestTrial.show = true;
+                    
+                    this.setXAxis(this.componentContent.xAxis);
+                    this.setYAxis(this.componentContent.yAxis);
                     
                     // add the trial to the array of trials
                     this.trials.push(latestTrial);
@@ -2720,6 +2744,7 @@ class GraphController {
             if (this.trials.length > 0) {
                 // make the last trial the active trial
                 this.activeTrial = this.trials[this.trials.length - 1];
+                this.activeTrial.show = true;
             }
             
             // redraw the graph so that the active trial gets displayed
@@ -2809,7 +2834,7 @@ class GraphController {
                     xAxis.minPadding = 0.2;
                 }
                 
-                if (minMaxValues.xMax > xAxis.max) {
+                if (minMaxValues.xMax >= xAxis.max) {
                     /*
                      * there is a point that has a larger x value than the
                      * specified x axis max. we will remove the max value from
@@ -2833,7 +2858,7 @@ class GraphController {
                     yAxis.minPadding = 0.2;
                 }
                 
-                if (minMaxValues.yMax > yAxis.max) {
+                if (minMaxValues.yMax >= yAxis.max) {
                     /*
                      * there is a point that has a larger y value than the
                      * specified y axis max. we will remove the max value from
@@ -2945,6 +2970,45 @@ class GraphController {
         result.yMax = yMax;
         
         return result;
+    }
+    
+    /**
+     * Clear all the series ids
+     * @param allSeries all of the series
+     */
+    clearSeriesIds(allSeries) {
+        
+        if (allSeries != null) {
+            
+            // loop through all the series
+            for (var s = 0; s < allSeries.length; s++) {
+                var tempSeries = allSeries[s];
+                
+                if (tempSeries != null) {
+                    // clear the id
+                    tempSeries.id = null;
+                }
+            }
+        }
+    }
+    
+    /**
+     * The "Enable Trials" checkbox was clicked
+     */
+    authoringViewEnableTrialsClicked() {
+        
+        if (this.authoringComponentContent.enableTrials) {
+            // trials are now enabled
+            this.authoringComponentContent.canCreateNewTrials = true;
+            this.authoringComponentContent.canDeleteTrials = true;
+        } else {
+            // trials are now disabled
+            this.authoringComponentContent.canCreateNewTrials = false;
+            this.authoringComponentContent.canDeleteTrials = false;
+            this.authoringComponentContent.showAllTrialsOnNewTrial = false;
+        }
+        
+        this.authoringViewComponentChanged();
     }
 }
 

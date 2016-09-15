@@ -50,6 +50,10 @@ var GraphService = function (_NodeService) {
             component.title = 'Enter graph title here';
             component.width = 800;
             component.height = 500;
+            component.enableTrials = false;
+            component.canCreateNewTrials = false;
+            component.canDeleteTrials = false;
+            component.showAllTrialsOnNewTrial = false;
             component.xAxis = {
                 title: {
                     text: 'Time (seconds)'

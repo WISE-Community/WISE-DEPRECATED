@@ -42,7 +42,7 @@
             <br/>
             Enable Trials <input type='checkbox'
                                  ng-model='graphController.authoringComponentContent.enableTrials'
-                                 ng-change='graphController.authoringViewComponentChanged()'/>
+                                 ng-change='graphController.authoringViewEnableTrialsClicked()'/>
             <br/>
             <div ng-show='graphController.authoringComponentContent.enableTrials'>
                 Can Student Create Trials <input type='checkbox'
@@ -55,8 +55,8 @@
                                      ng-show='graphController.authoringComponentContent.enableTrials'
                                      ng-change='graphController.authoringViewComponentChanged()'/>
                 <br/>
-                Show All Trials At Once <input type='checkbox'
-                                     ng-model='graphController.authoringComponentContent.showAllTrialsAtOnce'
+                Show All Trials On New Trial <input type='checkbox'
+                                     ng-model='graphController.authoringComponentContent.showAllTrialsOnNewTrial'
                                      ng-show='graphController.authoringComponentContent.enableTrials'
                                      ng-change='graphController.authoringViewComponentChanged()'/>
             </div>
