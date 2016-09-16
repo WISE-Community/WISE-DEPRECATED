@@ -14,43 +14,31 @@ import angularTranslate from 'angular-translate';
 import angularTranslateLoaderPartial from 'angular-translate-loader-partial';
 import angularWebSocket from 'angular-websocket';
 import AnnotationService from '../services/annotationService';
-import AudioOscillatorController from '../components/audioOscillator/audioOscillatorController';
-import AudioOscillatorService from '../components/audioOscillator/audioOscillatorService';
+import AudioOscillatorComponentModule from '../components/audioOscillator/audioOscillatorComponentModule';
 import AuthoringToolController from './authoringToolController';
 import AuthoringToolMainController from './main/authoringToolMainController';
 import AuthoringToolNewProjectController from './main/authoringToolNewProjectController';
 import AuthorWebSocketService from '../services/authorWebSocketService';
-import ConceptMapController from '../components/conceptMap/conceptMapController';
-import ConceptMapService from '../components/conceptMap/conceptMapService';
+import ConceptMapComponentModule from '../components/conceptMap/conceptMapComponentModule';
 import ConfigService from '../services/configService';
 import CRaterService from '../services/cRaterService';
 import Directives from '../directives/directives';
-import DiscussionController from '../components/discussion/discussionController';
-import DiscussionService from '../components/discussion/discussionService';
-import DrawController from '../components/draw/drawController';
-import DrawService from '../components/draw/drawService';
-import EmbeddedController from '../components/embedded/embeddedController';
-import EmbeddedService from '../components/embedded/embeddedService';
+import DiscussionComponentModule from '../components/discussion/discussionComponentModule';
+import DrawComponentModule from '../components/draw/drawComponentModule';
+import EmbeddedComponentModule from '../components/embedded/embeddedComponentModule';
 import Filters from '../filters/filters';
-import GraphController from '../components/graph/graphController';
-import GraphService from '../components/graph/graphService';
 import Highcharts from '../lib/highcharts@4.2.1';
-import HTMLController from '../components/html/htmlController';
-import HTMLService from '../components/html/htmlService';
-import LabelController from '../components/label/labelController';
-import LabelService from '../components/label/labelService';
-import MatchController from '../components/match/matchController';
-import MatchService from '../components/match/matchService';
-import MultipleChoiceController from '../components/multipleChoice/multipleChoiceController';
-import MultipleChoiceService from '../components/multipleChoice/multipleChoiceService';
+import GraphComponentModule from '../components/graph/graphComponentModule';
+import HTMLComponentModule from '../components/html/htmlComponentModule';
+import LabelComponentModule from '../components/label/labelComponentModule';
+import MatchComponentModule from '../components/match/matchComponentModule';
+import MultipleChoiceComponentModule from '../components/multipleChoice/multipleChoiceComponentModule';
 import NodeController from './node/nodeController';
 import NodeService from '../services/nodeService';
 import NotebookService from '../services/notebookService';
 import NotificationService from '../services/notificationService';
-import OpenResponseController from '../components/openResponse/openResponseController';
-import OpenResponseService from '../components/openResponse/openResponseService';
-import OutsideURLController from '../components/outsideURL/outsideURLController';
-import OutsideURLService from '../components/outsideURL/outsideURLService';
+import OpenResponseComponentModule from '../components/openResponse/openResponseComponentModule';
+import OutsideURLComponentModule from '../components/outsideURL/outsideURLComponentModule';
 import ProjectAssetController from './asset/projectAssetController';
 import ProjectAssetService from '../services/projectAssetService';
 import ProjectController from './project/projectController';
@@ -61,8 +49,7 @@ import StudentAssetService from '../services/studentAssetService';
 import StudentDataService from '../services/studentDataService';
 import StudentStatusService from '../services/studentStatusService';
 import StudentWebSocketService from '../services/studentWebSocketService';
-import TableController from '../components/table/tableController';
-import TableService from '../components/table/tableService';
+import TableComponentModule from '../components/table/tableComponentModule';
 import TeacherDataService from '../services/teacherDataService';
 import UtilService from '../services/utilService';
 
@@ -70,37 +57,38 @@ let mainModule = angular.module('authoring', [
     angularDragula(angular),
     'angularMoment',
     'angular-toArrayFilter',
+    'audioOscillatorComponentModule',
+    'conceptMapComponentModule',
     'directives',
+    'discussionComponentModule',
+    'drawComponentModule',
+    'embeddedComponentModule',
     'filters',
+    'graphComponentModule',
     'highcharts-ng',
+    'htmlComponentModule',
+    'labelComponentModule',
+    'matchComponentModule',
+    'multipleChoiceComponentModule',
     'ngAnimate',
     'ngAria',
     'ngFileUpload',
     'ngMaterial',
     'ngSanitize',
     'ngWebSocket',
+    'openResponseComponentModule',
+    'outsideURLComponentModule',
     'pascalprecht.translate',
+    'tableComponentModule',
     'ui.router'
 ])
     .service(AnnotationService.name, AnnotationService)
-    .service(AudioOscillatorService.name, AudioOscillatorService)
     .service(AuthorWebSocketService.name, AuthorWebSocketService)
-    .service(ConceptMapService.name, ConceptMapService)
     .service(ConfigService.name, ConfigService)
     .service(CRaterService.name, CRaterService)
-    .service(DiscussionService.name, DiscussionService)
-    .service(DrawService.name, DrawService)
-    .service(EmbeddedService.name, EmbeddedService)
-    .service(GraphService.name, GraphService)
-    .service(HTMLService.name, HTMLService)
-    .service(LabelService.name, LabelService)
-    .service(MatchService.name, MatchService)
-    .service(MultipleChoiceService.name, MultipleChoiceService)
     .service(NodeService.name, NodeService)
     .service(NotebookService.name, NotebookService)
     .service(NotificationService.name, NotificationService)
-    .service(OpenResponseService.name, OpenResponseService)
-    .service(OutsideURLService.name, OutsideURLService)
     .service(ProjectService.name, ProjectService)
     .service(ProjectAssetService.name, ProjectAssetService)
     .service(SessionService.name, SessionService)
@@ -108,29 +96,15 @@ let mainModule = angular.module('authoring', [
     .service(StudentDataService.name, StudentDataService)
     .service(StudentStatusService.name, StudentStatusService)
     .service(StudentWebSocketService.name, StudentWebSocketService)
-    .service(TableService.name, TableService)
     .service(TeacherDataService.name, TeacherDataService)
     .service(UtilService.name, UtilService)
-    .controller(AudioOscillatorController.name, AudioOscillatorController)
     .controller(AuthoringToolController.name, AuthoringToolController)
     .controller(AuthoringToolMainController.name, AuthoringToolMainController)
     .controller(AuthoringToolNewProjectController.name, AuthoringToolNewProjectController)
-    .controller(ConceptMapController.name, ConceptMapController)
-    .controller(DiscussionController.name, DiscussionController)
-    .controller(DrawController.name, DrawController)
-    .controller(EmbeddedController.name, EmbeddedController)
-    .controller(GraphController.name, GraphController)
-    .controller(HTMLController.name, HTMLController)
-    .controller(LabelController.name, LabelController)
-    .controller(MatchController.name, MatchController)
-    .controller(MultipleChoiceController.name, MultipleChoiceController)
     .controller(NodeController.name, NodeController)
-    .controller(OpenResponseController.name, OpenResponseController)
-    .controller(OutsideURLController.name, OutsideURLController)
     .controller(ProjectAssetController.name, ProjectAssetController)
     .controller(ProjectController.name, ProjectController)
     .controller(ProjectHistoryController.name, ProjectHistoryController)
-    .controller(TableController.name, TableController)
     .config(['$urlRouterProvider',
         '$stateProvider',
         '$translateProvider',

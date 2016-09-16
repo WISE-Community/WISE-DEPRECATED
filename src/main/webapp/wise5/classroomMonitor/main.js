@@ -56,25 +56,17 @@ var _annotationService = require('../services/annotationService');
 
 var _annotationService2 = _interopRequireDefault(_annotationService);
 
-var _audioOscillatorController = require('../components/audioOscillator/audioOscillatorController');
+var _audioOscillatorComponentModule = require('../components/audioOscillator/audioOscillatorComponentModule');
 
-var _audioOscillatorController2 = _interopRequireDefault(_audioOscillatorController);
-
-var _audioOscillatorService = require('../components/audioOscillator/audioOscillatorService');
-
-var _audioOscillatorService2 = _interopRequireDefault(_audioOscillatorService);
+var _audioOscillatorComponentModule2 = _interopRequireDefault(_audioOscillatorComponentModule);
 
 var _classroomMonitorController = require('./classroomMonitorController');
 
 var _classroomMonitorController2 = _interopRequireDefault(_classroomMonitorController);
 
-var _conceptMapController = require('../components/conceptMap/conceptMapController');
+var _conceptMapComponentModule = require('../components/conceptMap/conceptMapComponentModule');
 
-var _conceptMapController2 = _interopRequireDefault(_conceptMapController);
-
-var _conceptMapService = require('../components/conceptMap/conceptMapService');
-
-var _conceptMapService2 = _interopRequireDefault(_conceptMapService);
+var _conceptMapComponentModule2 = _interopRequireDefault(_conceptMapComponentModule);
 
 var _configService = require('../services/configService');
 
@@ -88,37 +80,21 @@ var _directives = require('../directives/directives');
 
 var _directives2 = _interopRequireDefault(_directives);
 
-var _discussionController = require('../components/discussion/discussionController');
+var _discussionComponentModule = require('../components/discussion/discussionComponentModule');
 
-var _discussionController2 = _interopRequireDefault(_discussionController);
+var _discussionComponentModule2 = _interopRequireDefault(_discussionComponentModule);
 
-var _discussionService = require('../components/discussion/discussionService');
+var _drawComponentModule = require('../components/draw/drawComponentModule');
 
-var _discussionService2 = _interopRequireDefault(_discussionService);
+var _drawComponentModule2 = _interopRequireDefault(_drawComponentModule);
 
-var _drawController = require('../components/draw/drawController');
+var _embeddedComponentModule = require('../components/embedded/embeddedComponentModule');
 
-var _drawController2 = _interopRequireDefault(_drawController);
+var _embeddedComponentModule2 = _interopRequireDefault(_embeddedComponentModule);
 
-var _drawService = require('../components/draw/drawService');
+var _graphComponentModule = require('../components/graph/graphComponentModule');
 
-var _drawService2 = _interopRequireDefault(_drawService);
-
-var _embeddedController = require('../components/embedded/embeddedController');
-
-var _embeddedController2 = _interopRequireDefault(_embeddedController);
-
-var _embeddedService = require('../components/embedded/embeddedService');
-
-var _embeddedService2 = _interopRequireDefault(_embeddedService);
-
-var _graphController = require('../components/graph/graphController');
-
-var _graphController2 = _interopRequireDefault(_graphController);
-
-var _graphService = require('../components/graph/graphService');
-
-var _graphService2 = _interopRequireDefault(_graphService);
+var _graphComponentModule2 = _interopRequireDefault(_graphComponentModule);
 
 var _highcharts = require('../lib/highcharts@4.2.1');
 
@@ -128,33 +104,21 @@ var _highchartsNg = require('highcharts-ng');
 
 var _highchartsNg2 = _interopRequireDefault(_highchartsNg);
 
-var _htmlController = require('../components/html/htmlController');
+var _htmlComponentModule = require('../components/html/htmlComponentModule');
 
-var _htmlController2 = _interopRequireDefault(_htmlController);
+var _htmlComponentModule2 = _interopRequireDefault(_htmlComponentModule);
 
-var _labelController = require('../components/label/labelController');
+var _labelComponentModule = require('../components/label/labelComponentModule');
 
-var _labelController2 = _interopRequireDefault(_labelController);
+var _labelComponentModule2 = _interopRequireDefault(_labelComponentModule);
 
-var _labelService = require('../components/label/labelService');
+var _matchComponentModule = require('../components/match/matchComponentModule');
 
-var _labelService2 = _interopRequireDefault(_labelService);
+var _matchComponentModule2 = _interopRequireDefault(_matchComponentModule);
 
-var _matchController = require('../components/match/matchController');
+var _multipleChoiceComponentModule = require('../components/multipleChoice/multipleChoiceComponentModule');
 
-var _matchController2 = _interopRequireDefault(_matchController);
-
-var _matchService = require('../components/match/matchService');
-
-var _matchService2 = _interopRequireDefault(_matchService);
-
-var _multipleChoiceController = require('../components/multipleChoice/multipleChoiceController');
-
-var _multipleChoiceController2 = _interopRequireDefault(_multipleChoiceController);
-
-var _multipleChoiceService = require('../components/multipleChoice/multipleChoiceService');
-
-var _multipleChoiceService2 = _interopRequireDefault(_multipleChoiceService);
+var _multipleChoiceComponentModule2 = _interopRequireDefault(_multipleChoiceComponentModule);
 
 var _nodeProgressController = require('./nodeProgress/nodeProgressController');
 
@@ -176,21 +140,13 @@ var _notificationService = require('../services/notificationService');
 
 var _notificationService2 = _interopRequireDefault(_notificationService);
 
-var _openResponseController = require('../components/openResponse/openResponseController');
+var _openResponseComponentModule = require('../components/openResponse/openResponseComponentModule');
 
-var _openResponseController2 = _interopRequireDefault(_openResponseController);
+var _openResponseComponentModule2 = _interopRequireDefault(_openResponseComponentModule);
 
-var _openResponseService = require('../components/openResponse/openResponseService');
+var _outsideURLComponentModule = require('../components/outsideURL/outsideURLComponentModule');
 
-var _openResponseService2 = _interopRequireDefault(_openResponseService);
-
-var _outsideURLController = require('../components/outsideURL/outsideURLController');
-
-var _outsideURLController2 = _interopRequireDefault(_outsideURLController);
-
-var _outsideURLService = require('../components/outsideURL/outsideURLService');
-
-var _outsideURLService2 = _interopRequireDefault(_outsideURLService);
+var _outsideURLComponentModule2 = _interopRequireDefault(_outsideURLComponentModule);
 
 var _projectService = require('../services/projectService');
 
@@ -224,13 +180,9 @@ var _studentWebSocketService = require('../services/studentWebSocketService');
 
 var _studentWebSocketService2 = _interopRequireDefault(_studentWebSocketService);
 
-var _tableController = require('../components/table/tableController');
+var _tableComponentModule = require('../components/table/tableComponentModule');
 
-var _tableController2 = _interopRequireDefault(_tableController);
-
-var _tableService = require('../components/table/tableService');
-
-var _tableService2 = _interopRequireDefault(_tableService);
+var _tableComponentModule2 = _interopRequireDefault(_tableComponentModule);
 
 var _teacherDataService = require('../services/teacherDataService');
 
@@ -246,7 +198,7 @@ var _utilService2 = _interopRequireDefault(_utilService);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var mainModule = _angular2.default.module('classroomMonitor', [(0, _angularDragula2.default)(_angular2.default), 'angularMoment', 'angular-toArrayFilter', 'directives', 'highcharts-ng', 'ngAnimate', 'ngAria', 'ngFileUpload', 'ngMaterial', 'ngSanitize', 'ngWebSocket', 'pascalprecht.translate', 'ui.router']).service(_annotationService2.default.name, _annotationService2.default).service(_audioOscillatorService2.default.name, _audioOscillatorService2.default).service(_conceptMapService2.default.name, _conceptMapService2.default).service(_configService2.default.name, _configService2.default).service(_cRaterService2.default.name, _cRaterService2.default).service(_discussionService2.default.name, _discussionService2.default).service(_drawService2.default.name, _drawService2.default).service(_embeddedService2.default.name, _embeddedService2.default).service(_graphService2.default.name, _graphService2.default).service(_labelService2.default.name, _labelService2.default).service(_matchService2.default.name, _matchService2.default).service(_multipleChoiceService2.default.name, _multipleChoiceService2.default).service(_nodeService2.default.name, _nodeService2.default).service(_notebookService2.default.name, _notebookService2.default).service(_notificationService2.default.name, _notificationService2.default).service(_openResponseService2.default.name, _openResponseService2.default).service(_outsideURLService2.default.name, _outsideURLService2.default).service(_projectService2.default.name, _projectService2.default).service(_sessionService2.default.name, _sessionService2.default).service(_studentAssetService2.default.name, _studentAssetService2.default).service(_studentDataService2.default.name, _studentDataService2.default).service(_studentStatusService2.default.name, _studentStatusService2.default).service(_studentWebSocketService2.default.name, _studentWebSocketService2.default).service(_tableService2.default.name, _tableService2.default).service(_teacherDataService2.default.name, _teacherDataService2.default).service(_teacherWebSocketService2.default.name, _teacherWebSocketService2.default).service(_utilService2.default.name, _utilService2.default).controller(_audioOscillatorController2.default.name, _audioOscillatorController2.default).controller(_classroomMonitorController2.default.name, _classroomMonitorController2.default).controller(_conceptMapController2.default.name, _conceptMapController2.default).controller(_discussionController2.default.name, _discussionController2.default).controller(_drawController2.default.name, _drawController2.default).controller(_embeddedController2.default.name, _embeddedController2.default).controller(_graphController2.default.name, _graphController2.default).controller(_htmlController2.default.name, _htmlController2.default).controller(_labelController2.default.name, _labelController2.default).controller(_matchController2.default.name, _matchController2.default).controller(_multipleChoiceController2.default.name, _multipleChoiceController2.default).controller(_nodeGradingController2.default.name, _nodeGradingController2.default).controller(_nodeProgressController2.default.name, _nodeProgressController2.default).controller(_openResponseController2.default.name, _openResponseController2.default).controller(_outsideURLController2.default.name, _outsideURLController2.default).controller(_studentGradingController2.default.name, _studentGradingController2.default).controller(_studentProgressController2.default.name, _studentProgressController2.default).controller(_tableController2.default.name, _tableController2.default).config(['$urlRouterProvider', '$stateProvider', '$translateProvider', '$translatePartialLoaderProvider', '$controllerProvider', '$mdThemingProvider', function ($urlRouterProvider, $stateProvider, $translateProvider, $translatePartialLoaderProvider, $controllerProvider, $mdThemingProvider) {
+var mainModule = _angular2.default.module('classroomMonitor', [(0, _angularDragula2.default)(_angular2.default), 'angularMoment', 'angular-toArrayFilter', 'audioOscillatorComponentModule', 'conceptMapComponentModule', 'directives', 'discussionComponentModule', 'drawComponentModule', 'embeddedComponentModule', 'graphComponentModule', 'highcharts-ng', 'htmlComponentModule', 'labelComponentModule', 'matchComponentModule', 'multipleChoiceComponentModule', 'ngAnimate', 'ngAria', 'ngFileUpload', 'ngMaterial', 'ngSanitize', 'ngWebSocket', 'openResponseComponentModule', 'outsideURLComponentModule', 'pascalprecht.translate', 'tableComponentModule', 'ui.router']).service(_annotationService2.default.name, _annotationService2.default).service(_configService2.default.name, _configService2.default).service(_cRaterService2.default.name, _cRaterService2.default).service(_nodeService2.default.name, _nodeService2.default).service(_notebookService2.default.name, _notebookService2.default).service(_notificationService2.default.name, _notificationService2.default).service(_projectService2.default.name, _projectService2.default).service(_sessionService2.default.name, _sessionService2.default).service(_studentAssetService2.default.name, _studentAssetService2.default).service(_studentDataService2.default.name, _studentDataService2.default).service(_studentStatusService2.default.name, _studentStatusService2.default).service(_studentWebSocketService2.default.name, _studentWebSocketService2.default).service(_teacherDataService2.default.name, _teacherDataService2.default).service(_teacherWebSocketService2.default.name, _teacherWebSocketService2.default).service(_utilService2.default.name, _utilService2.default).controller(_classroomMonitorController2.default.name, _classroomMonitorController2.default).controller(_nodeGradingController2.default.name, _nodeGradingController2.default).controller(_nodeProgressController2.default.name, _nodeProgressController2.default).controller(_studentGradingController2.default.name, _studentGradingController2.default).controller(_studentProgressController2.default.name, _studentProgressController2.default).config(['$urlRouterProvider', '$stateProvider', '$translateProvider', '$translatePartialLoaderProvider', '$controllerProvider', '$mdThemingProvider', function ($urlRouterProvider, $stateProvider, $translateProvider, $translatePartialLoaderProvider, $controllerProvider, $mdThemingProvider) {
 
     $urlRouterProvider.otherwise('/studentProgress');
 
