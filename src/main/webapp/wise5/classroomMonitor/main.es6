@@ -2,6 +2,7 @@
 
 import $ from 'jquery';
 import angular from 'angular';
+import angularDragula from 'angular-dragula';
 import angularMoment from 'angular-moment';
 import angularToArrayFilter from 'lib/angular-toArrayFilter/toArrayFilter';
 import angularUIRouter from 'angular-ui-router';
@@ -61,6 +62,7 @@ import TeacherWebSocketService from '../services/teacherWebSocketService';
 import UtilService from '../services/utilService';
 
 let mainModule = angular.module('classroomMonitor', [
+        angularDragula(angular),
         'angularMoment',
         'angular-toArrayFilter',
         'directives',
