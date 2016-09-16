@@ -45,10 +45,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
@@ -296,15 +292,6 @@ public class AssetManager {
 			} else if ("uploadAsset".equals(command)) {
 				// the student is uploading an asset
 
-				ServletFileUpload uploader = new ServletFileUpload(new DiskFileItemFactory());
-				List<?> fileList = null;
-				try {
-					// get a list of the files that are being uploaded
-					fileList = uploader.parseRequest(request);
-				} catch (FileUploadException e) {
-					e.printStackTrace();
-				}
-
 				User user = ControllerUtil.getSignedInUser();
 
 				// get the run
@@ -335,7 +322,7 @@ public class AssetManager {
 				Map<String, MultipartFile> fileMap = multiRequest.getFileMap();
 
 				// upload the files
-				String result = uploadAsset(fileList, fileMap, path, dirName, pathToCheckSize, studentMaxTotalAssetsSize);
+				String result = uploadAsset(fileMap, path, dirName, pathToCheckSize, studentMaxTotalAssetsSize);
 
 				response.getWriter().write(result);
 			}
@@ -437,8 +424,6 @@ public class AssetManager {
 
 		String unreferencedAssetsDirName = dirName;
 		String referencedAssetsDirName = referencedDirName;
-
-		//String studentUploadsBaseDirStr = (String) request.getAttribute("studentuploads_base_dir");
 		String studentUploadsBaseDirStr = wiseProperties.getProperty("studentuploads_base_dir");
 
 		/* file upload is coming from the portal so we need to read the bytes
@@ -516,7 +501,6 @@ public class AssetManager {
 
 	/**
 	 * Uploads the specified file to the given path.
-	 * @param fileList a list of files that are to be uploaded
 	 * @param fileMap the files that are to be uploaded
 	 * @param path the path to the project folder or the student uploads base directory
 	 * @param dirName the folder name to upload to which will be assets or the directory
@@ -528,127 +512,89 @@ public class AssetManager {
 	 * @return the message of the status of the upload
 	 */
 	@SuppressWarnings("unchecked")
-	public static String uploadAsset(List<?> fileList, Map<String,MultipartFile> fileMap,
+	public static String uploadAsset(Map<String,MultipartFile> fileMap,
 	        String path, String dirName, String pathToCheckSize, Long maxTotalAssetsSize) {
 
-		try{
-			/* if request was forwarded from the portal, the fileList will be empty because
-			 * Spring already retrieved the list (it can only be done once). But Spring wrapped
-			 * the request so we can get the file another way now */
-			if (fileList.size() > 0) {
-				Iterator<?> fileIterator = fileList.iterator();
-				while(fileIterator.hasNext()) {
-					FileItem item = (FileItem) fileIterator.next();
-					if (item.isFormField()) { //get path and set var
-						if (item.getFieldName().equals(PATH)) {
-							path = item.getString();
-						} else if (item.getFieldName().equals("forward") || item.getFieldName().equals("projectId")) {
-							// do nothing
+		try {
+			/* file upload is coming from the portal so we need to read the bytes
+			 * that the portal set in the attribute
+			 */
+			File projectDir = new File(path);
+			File assetsDir = new File(projectDir, dirName);
+			if (!assetsDir.exists()) {
+				assetsDir.mkdirs();
+			}
+
+			if (SecurityUtils.isAllowedAccess(path, assetsDir)) {
+				String successMessage = "";
+
+				if (fileMap != null && fileMap.size() > 0) {
+					Set<String> keySet = fileMap.keySet();
+					Iterator<String> iter = keySet.iterator();
+					while (iter.hasNext()) {
+						String key = iter.next();
+						MultipartFile file = fileMap.get(key);
+						String filename = file.getOriginalFilename();
+						File asset = new File(assetsDir, filename);
+						byte[] content = file.getBytes();
+
+						if (Long.parseLong(getFolderSize(pathToCheckSize)) + content.length > maxTotalAssetsSize) {
+							successMessage += "Uploading " + filename + " of size " + appropriateSize(content.length) + " would exceed your maximum storage capacity of "  + appropriateSize(maxTotalAssetsSize) + ". Operation aborted.";
 						} else {
-							throw new ServletException("I do not know what to do with multipart form field of name: " + item.getFieldName() + ". Cannot upload asset.");
-						}
-					} else { //do upload
-						if (path != null) {
-							if (!ensureAssetPath(path, dirName)) {
-								throw new ServletException("Unable to find or setup path to upload file. Operation aborted.");
-							} else {
-								File projectDir = new File(path);
-								File assetsDir = new File(projectDir, dirName);
-								if (Long.parseLong(getFolderSize(pathToCheckSize)) + item.getSize() > maxTotalAssetsSize) {
-									return "Uploading " + item.getName() + " of size " + appropriateSize(item.getSize()) + " would exceed maximum storage capacity of " + appropriateSize(maxTotalAssetsSize) + ". Operation aborted.";
-								}
-								File asset = new File(assetsDir, item.getName());
-								item.write(asset);
-								return asset.getName() + " was successfully uploaded!";
-							}
-						} else {
-							throw new ServletException("Path or file name for upload not specified.  Unable to upload file.");
-						}
-					}
-				}
-			} else {
-				/* file upload is coming from the portal so we need to read the bytes
-				 * that the portal set in the attribute
-				 */
-				File projectDir = new File(path);
-				File assetsDir = new File(projectDir, dirName);
-				if (!assetsDir.exists()) {
-					assetsDir.mkdirs();
-				}
-
-				if (SecurityUtils.isAllowedAccess(path, assetsDir)) {
-					String successMessage = "";
-
-					if (fileMap != null && fileMap.size() > 0) {
-					    Set<String> keySet = fileMap.keySet();
-					    Iterator<String> iter = keySet.iterator();
-						while (iter.hasNext()) {
-							String key = iter.next();
-							MultipartFile file = fileMap.get(key);
-							String filename = file.getOriginalFilename();
-							File asset = new File(assetsDir, filename);
-							byte[] content = file.getBytes();
-
-							if (Long.parseLong(getFolderSize(pathToCheckSize)) + content.length > maxTotalAssetsSize) {
-								successMessage += "Uploading " + filename + " of size " + appropriateSize(content.length) + " would exceed your maximum storage capacity of "  + appropriateSize(maxTotalAssetsSize) + ". Operation aborted.";
-							} else {
-								if (!asset.exists()) {
-									asset.createNewFile();
-								}
-
-								FileOutputStream fos = new FileOutputStream(asset);
-								fos.write(content);
-								fos.flush();
-								fos.close();
-								successMessage += asset.getName() + " was successfully uploaded! ";
+							if (!asset.exists()) {
+								asset.createNewFile();
 							}
 
-							if ("application/zip".equals(file.getContentType()) ||
+							FileOutputStream fos = new FileOutputStream(asset);
+							fos.write(content);
+							fos.flush();
+							fos.close();
+							successMessage += asset.getName() + " was successfully uploaded! ";
+						}
+
+						if ("application/zip".equals(file.getContentType()) ||
 								"application/x-zip".equals(file.getContentType()) ||
 								"application/x-zip-compressed".equals(file.getContentType())) {
-								// check if unzipped folder already exists. If so, delete it first.
-								String unzippedFolderName = filename.substring(0, filename.lastIndexOf(".zip"));
-								File unzippedFolder = new File(assetsDir, unzippedFolderName);
-								if (unzippedFolder.exists()) {
-									FileUtils.deleteDirectory(unzippedFolder);
-								}
-								// if user uploaded a zip file, unzip it
-								ZipFile zipFile = new ZipFile(asset);
-								Enumeration<? extends ZipEntry> entries = zipFile.entries();
-								while (entries.hasMoreElements()) {
-									ZipEntry entry = entries.nextElement();
-									File entryDestination = new File(assetsDir, entry.getName());
-									if (entry.isDirectory()) {
-										entryDestination.mkdirs();
-									} else {
-										File parent = entryDestination.getParentFile();										
-										if (!parent.exists() && !parent.mkdirs()) {
-										    throw new IllegalStateException("Couldn't create dir: " + parent);
-										}
-										InputStream in = zipFile.getInputStream(entry);
-										OutputStream out = new FileOutputStream(entryDestination);
-										IOUtils.copy(in, out);
-										IOUtils.closeQuietly(in);
-										IOUtils.closeQuietly(out);
-									}
-								}								
-								successMessage += "WISE also extracted files from the zip file! ";
-							} else {
+							// check if unzipped folder already exists. If so, delete it first.
+							String unzippedFolderName = filename.substring(0, filename.lastIndexOf(".zip"));
+							File unzippedFolder = new File(assetsDir, unzippedFolderName);
+							if (unzippedFolder.exists()) {
+								FileUtils.deleteDirectory(unzippedFolder);
 							}
+							// if user uploaded a zip file, unzip it
+							ZipFile zipFile = new ZipFile(asset);
+							Enumeration<? extends ZipEntry> entries = zipFile.entries();
+							while (entries.hasMoreElements()) {
+								ZipEntry entry = entries.nextElement();
+								File entryDestination = new File(assetsDir, entry.getName());
+								if (entry.isDirectory()) {
+									entryDestination.mkdirs();
+								} else {
+									File parent = entryDestination.getParentFile();
+									if (!parent.exists() && !parent.mkdirs()) {
+										throw new IllegalStateException("Couldn't create dir: " + parent);
+									}
+									InputStream in = zipFile.getInputStream(entry);
+									OutputStream out = new FileOutputStream(entryDestination);
+									IOUtils.copy(in, out);
+									IOUtils.closeQuietly(in);
+									IOUtils.closeQuietly(out);
+								}
+							}
+							successMessage += "WISE also extracted files from the zip file! ";
+						} else {
 						}
 					}
-
-					return successMessage;
-				} else {
-					return "Access to path is denied.";
 				}
+
+				return successMessage;
+			} else {
+				return "Access to path is denied.";
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			return e.getMessage();
 		}
-
-		return FAILED;
 	}
 
 	/**
