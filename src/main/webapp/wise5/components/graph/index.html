@@ -171,6 +171,11 @@
                    ng-show='graphController.showResetSeriesButton() && graphController.activeSeries.canEdit'>
             <md-icon> restore </md-icon> Reset Series
         </md-button>
+        <md-button class="md-accent md-primary"
+                ng-click='graphController.snipDrawing($event)'
+                ng-if='graphController.showSnipDrawingButton()'>
+            <md-icon> content_cut </md-icon> Add to Notebook
+        </md-button>
         <highchart id="{{graphController.chartId}}" config="graphController.chartConfig" class="span10" style="width:80%"></highchart>
         <div class="component__actions" layout="row" layout-align="start center">
             <md-button class="md-raised md-primary"

@@ -1,3 +1,4 @@
+import html2canvas from 'html2canvas';
 
 //import $ from 'jquery';
 //import Highcharts from 'highcharts';
@@ -12,6 +13,7 @@ class GraphController {
                 ConfigService,
                 GraphService,
                 NodeService,
+                NotebookService,
                 ProjectService,
                 StudentAssetService,
                 StudentDataService,
@@ -23,6 +25,7 @@ class GraphController {
         this.ConfigService = ConfigService;
         this.GraphService = GraphService;
         this.NodeService = NodeService;
+        this.NotebookService = NotebookService;
         this.ProjectService = ProjectService;
         this.StudentAssetService = StudentAssetService;
         this.StudentDataService = StudentDataService;
@@ -97,6 +100,9 @@ class GraphController {
 
         // whether the select series input is shown or not
         this.isSelectSeriesVisible = false;
+        
+        // whether the snip drawing button is shown or not
+        this.isSnipDrawingButtonVisible = true;
 
         // the id of the chart element
         this.chartId = 'chart1';
@@ -175,6 +181,7 @@ class GraphController {
                 this.isResetSeriesButtonVisible = false;
                 this.isSelectSeriesVisible = false;
                 this.isDisabled = true;
+                this.isSnipDrawingButtonVisible = false;
             } else if (this.mode === 'onlyShowWork') {
                 this.isPromptVisible = true;
                 this.isSaveButtonVisible = false;
@@ -183,6 +190,7 @@ class GraphController {
                 this.isResetSeriesButtonVisible = false;
                 this.isSelectSeriesVisible = false;
                 this.isDisabled = true;
+                this.isSnipDrawingButtonVisible = false;
             } else if (this.mode === 'showPreviousWork') {
                 this.isPromptVisible = true;
                 this.isSaveButtonVisible = false;
@@ -3010,6 +3018,45 @@ class GraphController {
         
         this.authoringViewComponentChanged();
     }
+    
+    /**
+     * Check whether we need to show the snip drawing button
+     * @return whether to show the snip drawing button
+     */
+    showSnipDrawingButton() {
+        if (this.NotebookService.isNotebookEnabled() && this.isSnipDrawingButtonVisible) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * Snip the drawing by converting it to an image
+     * @param $event the click event
+     */
+    snipDrawing($event) {
+
+        // get the highcharts div
+        var highchartsDiv = angular.element('#' + this.chartId).find('.highcharts-container');
+        
+        if (highchartsDiv != null && highcharts.length > 0) {
+            highchartsDiv = highchartsDiv[0];
+            
+            // convert the model element to a canvas element
+            html2canvas(highchartsDiv).then((canvas) => {
+
+                // get the canvas as a base64 string
+                var img_b64 = canvas.toDataURL('image/png');
+
+                // get the image object
+                var imageObject = this.UtilService.getImageObjectFromBase64String(img_b64);
+
+                // create a notebook item with the image populated into it
+                this.NotebookService.addNewItem($event, imageObject);
+            });
+        }
+    }
 }
 
 
@@ -3020,6 +3067,7 @@ GraphController.$inject = [
     'ConfigService',
     'GraphService',
     'NodeService',
+    'NotebookService',
     'ProjectService',
     'StudentAssetService',
     'StudentDataService',
