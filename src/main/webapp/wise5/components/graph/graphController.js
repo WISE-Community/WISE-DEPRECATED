@@ -1,9 +1,9 @@
-'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _typeof=typeof Symbol==="function"&&typeof Symbol.iterator==="symbol"?function(obj){return typeof obj;}:function(obj){return obj&&typeof Symbol==="function"&&obj.constructor===Symbol?"symbol":typeof obj;};var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if("value"in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError("Cannot call a class as a function");}}//import $ from 'jquery';
+'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _typeof=typeof Symbol==="function"&&typeof Symbol.iterator==="symbol"?function(obj){return typeof obj;}:function(obj){return obj&&typeof Symbol==="function"&&obj.constructor===Symbol?"symbol":typeof obj;};var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if("value"in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();var _html2canvas=require('html2canvas');var _html2canvas2=_interopRequireDefault(_html2canvas);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError("Cannot call a class as a function");}}//import $ from 'jquery';
 //import Highcharts from 'highcharts';
 //import angularHighcharts from 'highcharts-ng';
 //import Highcharts from '../../lib/highcharts@4.2.1';
 //import draggablePoints from 'highcharts/draggable-points';
-var GraphController=function(){function GraphController($q,$rootScope,$scope,ConfigService,GraphService,NodeService,ProjectService,StudentAssetService,StudentDataService,UtilService){var _this=this;_classCallCheck(this,GraphController);this.$q=$q;this.$rootScope=$rootScope;this.$scope=$scope;this.ConfigService=ConfigService;this.GraphService=GraphService;this.NodeService=NodeService;this.ProjectService=ProjectService;this.StudentAssetService=StudentAssetService;this.StudentDataService=StudentDataService;this.UtilService=UtilService;this.idToOrder=this.ProjectService.idToOrder;// the node id of the current node
+var GraphController=function(){function GraphController($q,$rootScope,$scope,ConfigService,GraphService,NodeService,NotebookService,ProjectService,StudentAssetService,StudentDataService,UtilService){var _this=this;_classCallCheck(this,GraphController);this.$q=$q;this.$rootScope=$rootScope;this.$scope=$scope;this.ConfigService=ConfigService;this.GraphService=GraphService;this.NodeService=NodeService;this.NotebookService=NotebookService;this.ProjectService=ProjectService;this.StudentAssetService=StudentAssetService;this.StudentDataService=StudentDataService;this.UtilService=UtilService;this.idToOrder=this.ProjectService.idToOrder;// the node id of the current node
 this.nodeId=null;// the component id
 this.componentId=null;// field that will hold the component content
 this.componentContent=null;// field that will hold the authoring component content
@@ -25,7 +25,8 @@ this.isSaveButtonVisible=false;// whether the submit button is shown or not
 this.isSubmitButtonVisible=false;// the latest annotations
 this.latestAnnotations=null;// whether the reset graph button is shown or not
 this.isResetGraphButtonVisible=false;// whether the select series input is shown or not
-this.isSelectSeriesVisible=false;// the id of the chart element
+this.isSelectSeriesVisible=false;// whether the snip drawing button is shown or not
+this.isSnipDrawingButtonVisible=true;// the id of the chart element
 this.chartId='chart1';// the width of the graph
 this.width=800;// the height of the graph
 this.height=500;// get the current node and node id
@@ -41,7 +42,7 @@ this.chartId='chart'+this.componentId;if(this.componentContent.canCreateNewTrial
 this.isResetSeriesButtonVisible=true;this.isSelectSeriesVisible=true;// get the latest annotations
 // TODO: watch for new annotations and update accordingly
 this.latestAnnotations=this.$scope.$parent.nodeController.getLatestComponentAnnotations(this.componentId);}else if(this.mode==='grading'){this.isPromptVisible=true;this.isSaveButtonVisible=false;this.isSubmitButtonVisible=false;//this.isResetGraphButtonVisible = false;
-this.isResetSeriesButtonVisible=false;this.isSelectSeriesVisible=false;this.isDisabled=true;}else if(this.mode==='onlyShowWork'){this.isPromptVisible=true;this.isSaveButtonVisible=false;this.isSubmitButtonVisible=false;this.isResetGraphButtonVisible=false;this.isResetSeriesButtonVisible=false;this.isSelectSeriesVisible=false;this.isDisabled=true;}else if(this.mode==='showPreviousWork'){this.isPromptVisible=true;this.isSaveButtonVisible=false;this.isSubmitButtonVisible=false;this.isDisabled=true;}else if(this.mode==='authoring'){this.updateAdvancedAuthoringView();$scope.$watch(function(){return this.authoringComponentContent;}.bind(this),function(newValue,oldValue){this.componentContent=this.ProjectService.injectAssetPaths(newValue);this.series=null;this.xAxis=null;this.yAxis=null;this.setupGraph();}.bind(this),true);}var componentState=null;// get the component state from the scope
+this.isResetSeriesButtonVisible=false;this.isSelectSeriesVisible=false;this.isDisabled=true;this.isSnipDrawingButtonVisible=false;}else if(this.mode==='onlyShowWork'){this.isPromptVisible=true;this.isSaveButtonVisible=false;this.isSubmitButtonVisible=false;this.isResetGraphButtonVisible=false;this.isResetSeriesButtonVisible=false;this.isSelectSeriesVisible=false;this.isDisabled=true;this.isSnipDrawingButtonVisible=false;}else if(this.mode==='showPreviousWork'){this.isPromptVisible=true;this.isSaveButtonVisible=false;this.isSubmitButtonVisible=false;this.isDisabled=true;}else if(this.mode==='authoring'){this.updateAdvancedAuthoringView();$scope.$watch(function(){return this.authoringComponentContent;}.bind(this),function(newValue,oldValue){this.componentContent=this.ProjectService.injectAssetPaths(newValue);this.series=null;this.xAxis=null;this.yAxis=null;this.setupGraph();}.bind(this),true);}var componentState=null;// get the component state from the scope
 componentState=this.$scope.componentState;// set whether studentAttachment is enabled
 this.isStudentAttachmentEnabled=this.componentContent.isStudentAttachmentEnabled;if(componentState==null){/*
                  * only import work if the student does not already have
@@ -864,5 +865,16 @@ tempSeries.id=null;}}}}/**
      * The "Enable Trials" checkbox was clicked
      */},{key:'authoringViewEnableTrialsClicked',value:function authoringViewEnableTrialsClicked(){if(this.authoringComponentContent.enableTrials){// trials are now enabled
 this.authoringComponentContent.canCreateNewTrials=true;this.authoringComponentContent.canDeleteTrials=true;}else{// trials are now disabled
-this.authoringComponentContent.canCreateNewTrials=false;this.authoringComponentContent.canDeleteTrials=false;this.authoringComponentContent.showAllTrialsOnNewTrial=false;}this.authoringViewComponentChanged();}}]);return GraphController;}();GraphController.$inject=['$q','$rootScope','$scope','ConfigService','GraphService','NodeService','ProjectService','StudentAssetService','StudentDataService','UtilService'];exports.default=GraphController;
+this.authoringComponentContent.canCreateNewTrials=false;this.authoringComponentContent.canDeleteTrials=false;this.authoringComponentContent.showAllTrialsOnNewTrial=false;}this.authoringViewComponentChanged();}/**
+     * Check whether we need to show the snip drawing button
+     * @return whether to show the snip drawing button
+     */},{key:'showSnipDrawingButton',value:function showSnipDrawingButton(){if(this.NotebookService.isNotebookEnabled()&&this.isSnipDrawingButtonVisible){return true;}else{return false;}}/**
+     * Snip the drawing by converting it to an image
+     * @param $event the click event
+     */},{key:'snipDrawing',value:function snipDrawing($event){var _this4=this;// get the highcharts div
+var highchartsDiv=angular.element('#'+this.chartId).find('.highcharts-container');if(highchartsDiv!=null&&highcharts.length>0){highchartsDiv=highchartsDiv[0];// convert the model element to a canvas element
+(0,_html2canvas2.default)(highchartsDiv).then(function(canvas){// get the canvas as a base64 string
+var img_b64=canvas.toDataURL('image/png');// get the image object
+var imageObject=_this4.UtilService.getImageObjectFromBase64String(img_b64);// create a notebook item with the image populated into it
+_this4.NotebookService.addNewItem($event,imageObject);});}}}]);return GraphController;}();GraphController.$inject=['$q','$rootScope','$scope','ConfigService','GraphService','NodeService','NotebookService','ProjectService','StudentAssetService','StudentDataService','UtilService'];exports.default=GraphController;
 //# sourceMappingURL=graphController.js.map
