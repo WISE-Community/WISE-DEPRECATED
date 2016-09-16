@@ -185,7 +185,7 @@ this.setSeriesIds(allSeries);/*
 var currentTime=new Date().getTime();// check if a drop event recently occurred
 if(thisGraphController.lastDropTime!=null){// check if the last drop event was not within the last 100 milliseconds
 if(currentTime-thisGraphController.lastDropTime<100){/*
-                                     * the last drope event was within the last 100 milliseconds so we
+                                     * the last drop event was within the last 100 milliseconds so we
                                      * will not register this click. we need to do this because when
                                      * students drag points, a click event is fired when they release
                                      * the mouse button. we don't want that click event to create a new
@@ -872,7 +872,7 @@ this.authoringComponentContent.canCreateNewTrials=false;this.authoringComponentC
      * Snip the drawing by converting it to an image
      * @param $event the click event
      */},{key:'snipDrawing',value:function snipDrawing($event){var _this4=this;// get the highcharts div
-var highchartsDiv=angular.element('#'+this.chartId).find('.highcharts-container');if(highchartsDiv!=null&&highcharts.length>0){highchartsDiv=highchartsDiv[0];// convert the model element to a canvas element
+var highchartsDiv=angular.element('#'+this.chartId).find('.highcharts-container');if(highchartsDiv!=null&&highchartsDiv.length>0){highchartsDiv=highchartsDiv[0];// convert the model element to a canvas element
 (0,_html2canvas2.default)(highchartsDiv).then(function(canvas){// get the canvas as a base64 string
 var img_b64=canvas.toDataURL('image/png');// get the image object
 var imageObject=_this4.UtilService.getImageObjectFromBase64String(img_b64);// create a notebook item with the image populated into it

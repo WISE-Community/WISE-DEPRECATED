@@ -692,7 +692,7 @@ class GraphController {
                                 // check if the last drop event was not within the last 100 milliseconds
                                 if ((currentTime - thisGraphController.lastDropTime) < 100) {
                                     /*
-                                     * the last drope event was within the last 100 milliseconds so we
+                                     * the last drop event was within the last 100 milliseconds so we
                                      * will not register this click. we need to do this because when
                                      * students drag points, a click event is fired when they release
                                      * the mouse button. we don't want that click event to create a new
@@ -3040,7 +3040,7 @@ class GraphController {
         // get the highcharts div
         var highchartsDiv = angular.element('#' + this.chartId).find('.highcharts-container');
         
-        if (highchartsDiv != null && highcharts.length > 0) {
+        if (highchartsDiv != null && highchartsDiv.length > 0) {
             highchartsDiv = highchartsDiv[0];
             
             // convert the model element to a canvas element
