@@ -181,6 +181,9 @@ class ConceptMapController {
             }
         ];
         
+        // the auto feedback string
+        this.autoFeedbackString = '';
+        
         if (this.componentContent != null) {
 
             // get the component id
@@ -3819,7 +3822,7 @@ class ConceptMapController {
         if (thisResult.feedback != null) {
             if (resultString != "") {
                 // add a new line if the result string is not empty
-                resultString += "\n";
+                resultString += "<br/>";
             }
             
             // display the feedback
@@ -3827,7 +3830,39 @@ class ConceptMapController {
         }
         
         // show the result to the student
-        alert(resultString);
+        //alert(resultString);
+        
+        // remember the feedback string
+        this.autoFeedbackString = resultString;
+        
+        // show the auto feedback in a modal dialog
+        this.$mdDialog.show(
+            this.$mdDialog.alert()
+            .parent(angular.element(document.querySelector('#feedbackDiv')))
+            .clickOutsideToClose(true)
+            .title('Feedback')
+            .htmlContent(resultString)
+            .ariaLabel('Feedback')
+            .ok('Close')
+        );
+    }
+    
+    /**
+     * Show the auto feedback that was generated when the student previously
+     * clicked "Check Answer".
+     */
+    showAutoFeedback() {
+        
+        // show the auto feedback in a modal dialog
+        this.$mdDialog.show(
+            this.$mdDialog.alert()
+            .parent(angular.element(document.querySelector('#feedbackDiv')))
+            .clickOutsideToClose(true)
+            .title('Feedback')
+            .htmlContent(this.autoFeedbackString)
+            .ariaLabel('Feedback')
+            .ok('Close')
+        );
     }
 };
 

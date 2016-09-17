@@ -198,6 +198,10 @@
                     </div>
                     <button ng-click="conceptMapController.resetConceptMap()">Reset</button>
                     <button ng-click="conceptMapController.checkAnswer()">Check Answer</button>
+                    <button ng-click="conceptMapController.showAutoFeedback()"
+                            ng-show="conceptMapController.autoFeedbackString != null && conceptMapController.autoFeedbackString != ''">
+                            Show Feedback
+                    </button>
                     <div id="conceptMapContainer" style="display: flex">
                         <div id="selectNodeBar" style="flex: 10; border: 1px solid black">
                             <div ng-repeat="availableNode in conceptMapController.availableNodes"
@@ -251,7 +255,7 @@
                             </div>
                         </div>
                     </div>
-
+                    <div id="feedbackDiv"></div>
                     <md-button class="input--textarea__action input--textarea__action--revision md-icon-button"
                                ng-click='nodeController.showRevisions($event, component.id, conceptMapController.isDisabled)'
                                ng-if="nodeController.getRevisions(component.id).length > 1">
