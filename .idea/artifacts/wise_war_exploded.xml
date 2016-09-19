@@ -55,7 +55,7 @@
           <element id="library" level="project" name="Maven: commons-httpclient:commons-httpclient:3.0.1" />
           <element id="library" level="project" name="Maven: junit:junit:3.8.1" />
           <element id="library" level="project" name="Maven: commons-codec:commons-codec:1.2" />
-          <element id="library" level="project" name="Maven: commons-lang:commons-lang:2.2" />
+          <element id="library" level="project" name="Maven: org.apache.commons:commons-lang3:3.4" />
           <element id="library" level="project" name="Maven: com.ibm.icu:icu4j:49.1" />
           <element id="library" level="project" name="Maven: javax.mail:mail:1.4.7" />
           <element id="library" level="project" name="Maven: javax.activation:activation:1.1" />
