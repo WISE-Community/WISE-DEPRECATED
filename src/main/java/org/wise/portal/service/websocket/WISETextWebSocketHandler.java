@@ -29,12 +29,11 @@ import java.sql.Timestamp;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-import javax.transaction.Transactional;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
