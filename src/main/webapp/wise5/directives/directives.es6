@@ -104,77 +104,6 @@ class ComponentDirective {
     }
 }
 
-class ClassResponseDirective {
-    constructor(StudentStatusService, ConfigService) {
-        this.restrict = 'E';
-        this.scope = {
-            response: '=',
-            submitbuttonclicked: '&',
-            studentdatachanged: '&'
-        };
-        this.templateUrl = 'wise5/components/discussion/classResponse.html';
-        this.StudentStatusService = StudentStatusService;
-        this.ConfigService = ConfigService;
-    }
-
-    static directiveFactory(StudentStatusService, ConfigService) {
-        ClassResponseDirective.instance = new ClassResponseDirective(StudentStatusService, ConfigService);
-        return ClassResponseDirective.instance;
-    }
-
-    link($scope, $element, attrs) {
-        $scope.element = $element[0];
-
-        $scope.getAvatarColorForWorkgroupId = function (workgroupId) {
-            return ClassResponseDirective.instance.StudentStatusService.getAvatarColorForWorkgroupId(workgroupId);
-        };
-
-        $scope.replyEntered = function($event, response) {
-            if ($event.keyCode === 13) {
-                if (response.replyText) {
-                    $scope.submitButtonClicked(response);
-                }
-            }
-        }
-
-        // handle the submit button click
-        $scope.submitButtonClicked = function(response) {
-            $scope.submitbuttonclicked({r: response});
-        };
-
-        $scope.expanded = false;
-
-        $scope.$watch(
-            function () { return $scope.response.replies.length; },
-            function (oldValue, newValue) {
-                if (newValue !== oldValue) {
-                    $scope.toggleExpanded(true);
-                    $scope.response.replyText = '';
-                }
-            }
-        );
-
-        $scope.toggleExpanded = function (open) {
-            if (open) {
-                $scope.expanded = true;
-            } else {
-                $scope.expanded = !$scope.expanded;
-            }
-
-            if ($scope.expanded) {
-                var $clist = $($scope.element).find('.discussion-comments__list');
-                setTimeout(function () {
-                    $clist.animate({scrollTop: $clist.height()}, 250);
-                }, 250);
-            }
-        };
-
-        $scope.adjustClientSaveTime = function(time) {
-            return ClassResponseDirective.instance.ConfigService.convertToClientTimestamp(time);
-        };
-    };
-}
-
 class CompileDirective {
     constructor($compile) {
 
@@ -602,7 +531,6 @@ const PossibleScore = {
 
 let Directives = angular.module('directives', []);
 
-ClassResponseDirective.directiveFactory.$inject = ['StudentStatusService', 'ConfigService'];
 CompileDirective.directiveFactory.$inject = ['$compile'];
 ComponentDirective.directiveFactory.$inject = ['$injector', '$compile', 'ConfigService', 'NodeService', 'NotebookService', 'ProjectService', 'StudentDataService'];
 ConfirmNumberDecrease.directiveFactory.$inject = [];
@@ -618,7 +546,6 @@ Directives.controller('PossibleScoreController', PossibleScoreController);
 Directives.component('wiselink', Wiselink);
 Directives.controller('WiselinkController', WiselinkController);
 Directives.component('possibleScore', PossibleScore);
-Directives.directive('classResponse', ClassResponseDirective.directiveFactory);
 Directives.directive('compile', CompileDirective.directiveFactory);
 Directives.directive('component', ComponentDirective.directiveFactory);
 Directives.directive('confirmNumberDecrease', ConfirmNumberDecrease.directiveFactory);
