@@ -25,7 +25,7 @@ package org.wise.portal.domain.project.impl;
 
 import java.io.Serializable;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * A Projectcode is a <code>String</code> concatenation of:

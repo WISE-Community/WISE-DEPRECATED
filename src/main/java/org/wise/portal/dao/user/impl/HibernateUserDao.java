@@ -20,10 +20,14 @@
  */
 package org.wise.portal.dao.user.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.hibernate.Query;
+import org.hibernate.Session;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -165,37 +169,42 @@ public class HibernateUserDao extends AbstractHibernateDao<User> implements
      */
     @SuppressWarnings("unchecked")
     public List<User> retrieveByFields(String[] fields, String[] values, String classVar) {
-    	Vector<Object> objectValues = new Vector<Object>();
-    	
-    	StringBuffer query = new StringBuffer();
-    	
-    	//make the beginning of the query
+		HashMap<String, Object> params = new HashMap<>();
+		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
+		StringBuffer query = new StringBuffer();
+
+    	// make the beginning of the query
     	query.append("select user from UserImpl user, " + capitalizeFirst(classVar) + " " + classVar + " where ");
     	query.append("user.userDetails.id=" + classVar + ".id");
-    	
-    	//loop through all the fields so we can add more constraints to the 'where' clause
-    	for(int x=0; x<fields.length; x++) {
+
+    	// loop through all the fields so we can add more constraints to the 'where' clause
+    	for (int x = 0; x < fields.length; x++) {
     		query.append(" and ");
-    		
-    		if(fields[x] != null && (fields[x].equals("birthmonth") || fields[x].equals("birthday"))) {
+
+    		if (fields[x] != null && (fields[x].equals("birthmonth") || fields[x].equals("birthday"))) {
     			//field is a birth month or birth day so we need to use a special function call
-    			if(fields[x].equals("birthmonth")) {
-    				query.append("month(" + classVar + ".birthday)=?");
+    			if (fields[x].equals("birthmonth")) {
+    				query.append("month(" + classVar + ".birthday)=:birthmonth");
+					params.put("birthmonth", Integer.parseInt(values[x]));
     			} else if(fields[x].equals("birthday")) {
-    				query.append("day(" + classVar + ".birthday)=?");    				
+    				query.append("day(" + classVar + ".birthday)=:birthday");
+					params.put("birthday", Integer.parseInt(values[x]));
     			}
-    			
-    			//number values must be Integer objects in the array we pass to the find() below
-    			objectValues.add(Integer.parseInt(values[x]));
     		} else {
     			//add the constraint
-    			query.append(classVar + "." + fields[x] + "=?");
-    			objectValues.add(values[x]);
+    			query.append(classVar + "." + fields[x] + "=:" + fields[x]);
+				params.put(fields[x], values[x]);
     		}
     	}
-    	
-    	//run the query and return the results
-    	return (List<User>) this.getHibernateTemplate().find(query.toString(), objectValues.toArray());
+
+		Query queryObject = session.createQuery(query.toString());
+		for (Map.Entry<String, Object> entry : params.entrySet()) {
+			queryObject.setParameter(entry.getKey(), entry.getValue());
+		}
+
+		// run the query and return the results
+		List<User> result = queryObject.list();
+    	return result;
     }
 
     /**

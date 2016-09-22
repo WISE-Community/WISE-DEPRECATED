@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- * Copyright (c) 2006-2015 Encore Research Group, University of Toronto
+ * Copyright (c) 2006-2016 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -111,7 +111,7 @@
 	<bean id="httpSessionContextIntegrationFilter" class="org.springframework.security.web.context.SecurityContextPersistenceFilter">
 	</bean>
 
-	<bean id="openSessionInViewFilter" class="org.springframework.orm.hibernate4.support.OpenSessionInViewFilter" />
+	<bean id="openSessionInViewFilter" class="org.springframework.orm.hibernate5.support.OpenSessionInViewFilter" />
 
 	<bean id="logoutFilter" class="org.springframework.security.web.authentication.logout.LogoutFilter">
 		<constructor-arg value="/" />
@@ -774,7 +774,7 @@
 	<!-- enable the configuration of transactional behavior based on annotations -->
 	<tx:annotation-driven transaction-manager="transactionManager" />
 
-	<bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+	<bean id="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
@@ -893,7 +893,7 @@
 
 	<bean id="javaMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl" />
 
-	<bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
 		<property name="dataSource" ref="dataSource" />
 		<property name="hibernateProperties">
 			<props>
@@ -901,6 +901,7 @@
 				<prop key="hibernate.connection.release_mode">auto</prop>
 				<prop key="hibernate.dialect">${hibernate.dialect}</prop>
 				<prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
+				<prop key="hibernate.id.new_generator_mappings">false</prop> <!-- set to false for upgrade compatibility, see here: http://docs.jboss.org/hibernate/orm/5.1/javadocs/org/hibernate/cfg/AvailableSettings.html#USE_NEW_ID_GENERATOR_MAPPINGS -->
 				<!-- Force Hibernate to order SQL updates by the primary key value of the items being updated. This will result in fewer
 					transaction deadlocks in highly concurrent systems. -->
 				<prop key="hibernate.order_updates">true</prop>

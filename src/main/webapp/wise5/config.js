@@ -1,19 +1,7 @@
 System.config({
   baseURL: "wise5",
   defaultJSExtensions: true,
-  transpiler: "babel",
-  babelOptions: {
-    "only": [
-      "/wise/wise5/classroomMonitor/",
-      "/wise/wise5/services",
-      "/wise/wise5/directives",
-      "/wise/wise5/components"
-    ],
-    "optional": [
-      "runtime",
-      "optimisation.modules.system"
-    ]
-  },
+  transpiler: false,
   paths: {
     "github:*": "jspm_packages/github/*",
     "npm:*": "jspm_packages/npm/*"
@@ -33,8 +21,6 @@ System.config({
     "angular-ui-router": "github:angular-ui/ui-router@0.3.1",
     "angular-ui-scrollpoint": "npm:angular-ui-scrollpoint@2.1.1",
     "angular-websocket": "npm:angular-websocket@1.0.14",
-    "babel": "npm:babel-core@5.8.38",
-    "babel-runtime": "npm:babel-runtime@5.8.38",
     "core-js": "npm:core-js@1.2.7",
     "dom-autoscroller": "npm:dom-autoscroller@1.3.1",
     "highcharts-ng": "npm:highcharts-ng@0.0.11",
@@ -162,9 +148,6 @@ System.config({
       "buffer": "github:jspm/nodelibs-buffer@0.1.0",
       "process": "github:jspm/nodelibs-process@0.1.2",
       "util": "npm:util@0.10.3"
-    },
-    "npm:babel-runtime@5.8.38": {
-      "process": "github:jspm/nodelibs-process@0.1.2"
     },
     "npm:bindings@1.2.1": {
       "fs": "github:jspm/nodelibs-fs@0.1.2",

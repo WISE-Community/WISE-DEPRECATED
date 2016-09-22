@@ -14,7 +14,6 @@
 		<link rel="apple-touch-icon" href="apple-touch-icon.png">
 	    <script src="${contextPath}/wise5/jspm_packages/system.js"></script>
     	<script src="${contextPath}/wise5/config.js"></script>
-		<!-- TODO: figure out how to make textboxio into a module so we can load it in main.js instead of here. -->
 		<script>
         	System.import('${contextPath}/wise5/vle/bootstrap');
 	    </script>

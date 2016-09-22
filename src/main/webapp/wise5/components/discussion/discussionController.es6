@@ -216,7 +216,7 @@ class DiscussionController {
             if (response) {
                 // this submit button was clicked for a reply
 
-                if(response.replyText){
+                if (response.replyText){
                     var componentState = response;
 
                     // get the component state id
