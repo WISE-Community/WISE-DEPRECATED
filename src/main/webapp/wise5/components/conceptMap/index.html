@@ -102,6 +102,14 @@
                 <button ng-click='conceptMapController.deleteStarterConceptMap()'>Delete Starter Concept Map</button>
                 <br/>
                 <br/>
+                Show Auto Score: <input type='checkbox'
+                                        ng-model='conceptMapController.authoringComponentContent.showAutoScore'
+                                        ng-change='conceptMapController.authoringViewComponentChanged()'/>
+                <br/>
+                Show Auto Feedback: <input type='checkbox'
+                                        ng-model='conceptMapController.authoringComponentContent.showAutoFeedback'
+                                        ng-change='conceptMapController.authoringViewComponentChanged()'/>
+                <br/>
                 Rules <button ng-click='conceptMapController.authoringAddRule()'>Add Rule</button>
                 <div ng-repeat='rule in conceptMapController.authoringComponentContent.rules'>
                     Rule Name:
