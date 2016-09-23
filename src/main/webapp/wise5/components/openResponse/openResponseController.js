@@ -90,6 +90,9 @@ var OpenResponseController = function () {
         // used to hold a message dialog if we need to use one
         this.messageDialog = null;
 
+        // counter to keep track of the number of submits
+        this.submitCounter = 0;
+
         //var scope = this;
         var themePath = this.ProjectService.getThemePath();
 
@@ -386,6 +389,13 @@ var OpenResponseController = function () {
                         this.studentResponse = response;
                     }
 
+                    var submitCounter = studentData.submitCounter;
+
+                    if (submitCounter != null) {
+                        // populate the submit counter
+                        this.submitCounter = submitCounter;
+                    }
+
                     var attachments = studentData.attachments;
 
                     if (attachments != null) {
@@ -536,12 +546,18 @@ var OpenResponseController = function () {
                 // the student submitted this work
                 componentState.isSubmit = this.isSubmit;
 
+                // increment the submit counter
+                this.submitCounter++;
+
                 /*
                  * reset the isSubmit value so that the next component state
                  * doesn't maintain the same value
                  */
                 this.isSubmit = false;
             }
+
+            // set the submit counter
+            studentData.submitCounter = this.submitCounter;
 
             // set the student data into the component state
             componentState.studentData = studentData;
@@ -627,6 +643,7 @@ var OpenResponseController = function () {
                             var concepts = data.concepts;
 
                             if (score != null) {
+
                                 // create the auto score annotation
                                 var autoScoreAnnotationData = {};
                                 autoScoreAnnotationData.value = score;
@@ -637,8 +654,34 @@ var OpenResponseController = function () {
                                 var autoScoreAnnotation = _this3.createAutoScoreAnnotation(autoScoreAnnotationData);
                                 componentState.annotations.push(autoScoreAnnotation);
 
-                                // get the feedback text
-                                var autoComment = _this3.CRaterService.getCRaterFeedbackTextByScore(_this3.componentContent, score);
+                                var autoComment = null;
+
+                                // get the submit counter
+                                var submitCounter = _this3.submitCounter;
+
+                                if (_this3.componentContent.cRater.enableMultipleAttemptScoringRules && submitCounter > 1) {
+                                    /*
+                                     * this step has multiple attempt scoring rules and this is
+                                     * a subsequent submit
+                                     */
+
+                                    // get the previous score and comment annotations
+                                    var latestAnnotations = _this3.$scope.$parent.nodeController.getLatestComponentAnnotations(_this3.componentId);
+
+                                    var previousScore = null;
+
+                                    if (latestAnnotations != null && latestAnnotations.score != null && latestAnnotations.score.data != null) {
+
+                                        // get the previous score annotation value
+                                        previousScore = latestAnnotations.score.data.value;
+                                    }
+
+                                    // get the feedback based upon the previous score and current score
+                                    autoComment = _this3.CRaterService.getMultipleAttemptCRaterFeedbackTextByScore(_this3.componentContent, previousScore, score);
+                                } else {
+                                    // get the feedback text
+                                    autoComment = _this3.CRaterService.getCRaterFeedbackTextByScore(_this3.componentContent, score);
+                                }
 
                                 if (autoComment != null) {
                                     // create the auto comment annotation

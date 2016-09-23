@@ -310,6 +310,87 @@ class CRaterService {
 
         return notifications;
     }
+    
+    /**
+     * Get the feedback text for the given previous score and current score
+     * @param component the component content
+     * @param previousScore the score from the last submit
+     * @param currentScore the score from the current submit
+     * @returns the feedback text for the given previous score and current score
+     */
+    getMultipleAttemptCRaterFeedbackTextByScore(component, previousScore, currentScore) {
+        
+        var feedbackText = null;
+        
+        // get the scoring rule for the given score
+        var scoringRule = this.getMultipleAttemptCRaterScoringRuleByScore(component, previousScore, currentScore);
+        
+        if (scoringRule != null) {
+            // get the feedback text
+            feedbackText = scoringRule.feedbackText;
+        }
+        
+        return feedbackText;
+    }
+    
+    /**
+     * Get the multiple attempt CRater scoring rule by previous score and
+     * current score
+     * @param component the component content
+     * @param previousScore the score from the last submit
+     * @param currentScore the score from the current submit
+     * @returns the scoring rule for the given previous score and current score
+     */
+    getMultipleAttemptCRaterScoringRuleByScore(component, previousScore, currentScore) {
+        var scoringRule = null;
+        
+        if (component != null && previousScore != null && currentScore != null) {
+            var cRater = component.cRater;
+            
+            if (cRater != null) {
+                
+                // get the multiple attempt scoring rules
+                var multipleAttemptScoringRules = cRater.multipleAttemptScoringRules;
+                
+                if (multipleAttemptScoringRules != null) {
+                    
+                    // loop through all the multiple attempt scoring rules
+                    for (var m = 0; m < multipleAttemptScoringRules.length; m++) {
+                        var multipleAttemptScoringRule = multipleAttemptScoringRules[m];
+                        
+                        if (multipleAttemptScoringRule != null) {
+                            
+                            // get a multiple attempt scoring rule
+                            var scoreSequence = multipleAttemptScoringRule.scoreSequence;
+                            
+                            if (scoreSequence != null) {
+                                
+                                /*
+                                 * get the expected previous score and current score
+                                 * that will satisfy the rule
+                                 */
+                                var previousScoreMatch = scoreSequence[0];
+                                var currentScoreMatch = scoreSequence[1];
+                                
+                                if (previousScore.toString().match("[" + previousScoreMatch + "]") && 
+                                    currentScore.toString().match("[" + currentScoreMatch + "]")) {
+                                    
+                                    /*
+                                     * the previous score and current score match the 
+                                     * expected scores so we have found the rule we want
+                                     */
+                                    scoringRule = multipleAttemptScoringRule;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        return scoringRule;
+    }
 }
 
 CRaterService.$inject = [
