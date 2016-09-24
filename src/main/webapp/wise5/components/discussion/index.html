@@ -20,7 +20,7 @@
                       cols='100'></textarea>
     </div>
     <div class="component__prompt">
-        <div class="component__prompt__content" compile='discussionController.getPrompt()'></div>
+        <div class="component__prompt__content"><compile data='discussionController.getPrompt()'></compile></div>
         <possible-score max-score="discussionController.componentContent.maxScore"
                         ng-if="discussionController.mode === 'student' && !discussionController.latestAnnotations.score"></possible-score>
     </div>

@@ -156,5 +156,23 @@ var AnnotationController = function () {
 
 AnnotationController.$inject = ['$scope', '$element', '$attrs', 'AnnotationService', 'ConfigService', 'ProjectService', 'UtilService'];
 
-exports.default = AnnotationController;
-//# sourceMappingURL=annotationController.js.map
+var Annotation = {
+    bindings: {
+        annotation: '<',
+        type: '@',
+        mode: '<',
+        nodeId: '<',
+        componentId: '<',
+        fromWorkgroupId: '<',
+        toWorkgroupId: '<',
+        componentStateId: '<',
+        active: '<',
+        maxScore: '<'
+    },
+    templateUrl: 'wise5/directives/annotation/annotation.html',
+    controller: AnnotationController,
+    controllerAs: 'annotationController'
+};
+
+exports.default = Annotation;
+//# sourceMappingURL=annotation.js.map

@@ -52,10 +52,11 @@ var HTMLController = function () {
         }
 
         // get the component content from the scope
-        this.componentContent = $scope.componentContent;
+        this.componentContent = this.$scope.componentContent;
 
         // get the authoring component content
         this.authoringComponentContent = this.$scope.authoringComponentContent;
+        this.authoringComponentContentJSONString = this.$scope.authoringComponentContentJSONString;
 
         /*
          * get the original component content. this is used when showing
@@ -70,15 +71,7 @@ var HTMLController = function () {
             // get the component id
             this.componentId = this.componentContent.id;
 
-            if (this.mode === 'authoring') {
-                this.updateAdvancedAuthoringView();
-
-                $scope.$watch(function () {
-                    return this.authoringComponentContent;
-                }.bind(this), function (newValue, oldValue) {
-                    this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-                }.bind(this), true);
-            } else if (this.mode === 'grading') {
+            if (this.mode === 'authoring') {} else if (this.mode === 'grading') {
                 /*
                  * do not display the html in the grading tool. we may want to
                  * change this in the future to allow the teacher to toggle
@@ -137,12 +130,17 @@ var HTMLController = function () {
 
             // update the JSON string in the advanced authoring view textarea
             this.updateAdvancedAuthoringView();
+        }
+    }, {
+        key: 'updateAdvancedAuthoringView',
 
-            /*
-             * notify the parent node that the content has changed which will save
-             * the project to the server
-             */
-            this.$scope.$parent.nodeController.authoringViewNodeChanged();
+
+        /**
+         * Update the component JSON string that will be displayed in the advanced authoring view textarea
+         */
+        value: function updateAdvancedAuthoringView() {
+            this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
+            this.advancedAuthoringViewComponentChanged();
         }
     }, {
         key: 'advancedAuthoringViewComponentChanged',
@@ -171,18 +169,8 @@ var HTMLController = function () {
                  * notify the parent node that the content has changed which will save
                  * the project to the server
                  */
-                this.$scope.$parent.nodeController.authoringViewNodeChanged();
+                this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();
             } catch (e) {}
-        }
-    }, {
-        key: 'updateAdvancedAuthoringView',
-
-
-        /**
-         * Update the component JSON string that will be displayed in the advanced authoring view textarea
-         */
-        value: function updateAdvancedAuthoringView() {
-            this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
         }
     }, {
         key: 'getImageObjects',

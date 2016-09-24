@@ -15,6 +15,7 @@
         Choices <button ng-click='matchController.authoringAddChoice()'>Add Choice</button>
         <div ng-repeat='choice in matchController.authoringComponentContent.choices track by $index'>
             <input ng-model='choice.value'
+                   ng-model-options='{ debounce: 1000 }'
                    ng-change='matchController.authoringViewComponentChanged()'
                    size='100'/>
             <button ng-click='matchController.authoringDeleteChoice($index)'>Delete Choice</button>
@@ -23,6 +24,7 @@
         Buckets <button ng-click='matchController.authoringAddBucket()'>Add Bucket</button>
         <div ng-repeat='bucket in matchController.authoringComponentContent.buckets track by $index'>
             <input ng-model='bucket.value'
+                   ng-model-options='{ debounce: 1000 }'
                    ng-change='matchController.authoringViewComponentChanged()'
                    size='100'/>
             <button ng-click='matchController.authoringDeleteBucket($index)'>Delete Bucket</button>
@@ -41,6 +43,7 @@
                 <span>{{matchController.getChoiceValueById(choiceFeedback.choiceId)}}</span>
                 <br/>
                 Feedback: <input ng-model='choiceFeedback.feedback'
+                                 ng-model-options='{ debounce: 1000 }'
                        ng-change='matchController.authoringViewComponentChanged()'
                        size='60'/>
                 <br/>
@@ -51,9 +54,11 @@
                 <span ng-show='matchController.authoringComponentContent.ordered && choiceFeedback.isCorrect'>
                     Position: <input type='number'
                                  ng-model='choiceFeedback.position'
+                                 ng-model-options='{ debounce: 1000 }'
                                  ng-change='matchController.authoringViewComponentChanged()'
                                  style='width: 3em'/>
                     Incorrect Position Feedback: <input ng-model='choiceFeedback.incorrectPositionFeedback'
+                                                        ng-model-options='{ debounce: 1000 }'
                                                         ng-change='matchController.authoringViewComponentChanged()'
                                                         size='60'/>
                 </span>
@@ -97,7 +102,7 @@
     </div>
 
     <div class="component__prompt">
-        <div class="component__prompt__content" compile='matchController.getPrompt()'></div>
+        <div class="component__prompt__content"><compile data='matchController.getPrompt()'></compile></div>
         <possible-score max-score="matchController.componentContent.maxScore"
                         ng-if="matchController.mode === 'student' && !matchController.latestAnnotations.score"></possible-score>
     </div>
@@ -111,7 +116,7 @@
                  flex="100" flex-gt-sm="{{matchController.horizontal ? 50: 100}}">
                 <md-card>
                     <md-card-title class="match-bucket__header">
-                        <md-card-title-text compile='matchController.buckets[0].value'></md-card-title-text>
+                        <md-card-title-text><compile data='matchController.buckets[0].value'></compile></md-card-title-text>
                     </md-card-title>
                     <md-card-content class="match-bucket__content">
                         <md-list class="match-bucket__contents"
@@ -122,7 +127,7 @@
                                 <md-list-item class="match-bucket__item__contents">
                                     <div class="md-list-item-text">
                                         <div flex layout="row" layout-align="start center">
-                                            <span class="match-bucket__item__contents__text" compile='item.value'></span>
+                                            <span class="match-bucket__item__contents__text"><compile data='item.value'></compile></span>
                                             <span flex></span>
                                             <md-icon>open_with</md-icon>
                                         </div>
@@ -141,7 +146,7 @@
                      flex="100" flex-gt-sm="{{matchController.horizontal ? 100 : matchController.bucketWidth}}">
                     <md-card>
                         <md-card-title class="match-bucket__header">
-                            <md-card-title-text compile='bucket.value'></md-card-title-text>
+                            <md-card-title-text><compile data='bucket.value'></compile></md-card-title-text>
                         </md-card-title>
                         <md-card-content class="match-bucket__content">
                             <md-list class="match-bucket__contents"
@@ -152,7 +157,7 @@
                                     <md-list-item class="match-bucket__item__contents">
                                         <div class="md-list-item-text">
                                             <div flex layout="row" layout-align="start center">
-                                                <span class="match-bucket__item__contents__text" compile='item.value'></span>
+                                                <span class="match-bucket__item__contents__text"><compile data='item.value'></compile></span>
                                                 <span flex></span>
                                                 <md-icon>open_with</md-icon>
                                             </div>
@@ -160,7 +165,7 @@
                                                 <md-icon ng-if="item.isCorrect"> check </md-icon>
                                                 <md-icon ng-if="item.isIncorrectPosition"> warning </md-icon>
                                                 <md-icon ng-if="!item.isCorrect && !item.isIncorrectPosition"> clear </md-icon>
-                                                <span compile='item.feedback'></span>
+                                                <span><compile data='item.feedback'></compile></span>
                                             </p>
                                         </div>
                                     </md-list-item>

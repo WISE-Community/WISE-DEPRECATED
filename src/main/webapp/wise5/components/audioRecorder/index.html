@@ -1,7 +1,7 @@
 <script src="wise5/components/audioRecorder/recordmp3.js"></script>
 
 <div ng-controller='AudioRecorderController as audioRecorderController'>
-    <div id='prompt' compile='audioRecorderController.getPrompt()'></div>
+    <div id='prompt'><compile data='audioRecorderController.getPrompt()'></compile></div>
     
     <button id='toggleRecordingButton' ng-click="audioRecorderController.toggleRecording();">Start Recording</button>
     <span id='statusMessage'>{{audioRecorderController.statusMessage}}</span>

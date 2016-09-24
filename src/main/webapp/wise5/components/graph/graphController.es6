@@ -126,6 +126,7 @@ class GraphController {
 
         // get the authoring component content
         this.authoringComponentContent = this.$scope.authoringComponentContent;
+        this.authoringComponentContentJSONString = this.$scope.authoringComponentContentJSONString;
 
         /*
          * get the original component content. this is used when showing
@@ -197,17 +198,6 @@ class GraphController {
                 this.isSubmitButtonVisible = false;
                 this.isDisabled = true;
             } else if (this.mode === 'authoring') {
-                this.updateAdvancedAuthoringView()
-
-                $scope.$watch(function() {
-                    return this.authoringComponentContent;
-                }.bind(this), function(newValue, oldValue) {
-                    this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-                    this.series = null;
-                    this.xAxis = null;
-                    this.yAxis = null;
-                    this.setupGraph();
-                }.bind(this), true);
             }
 
             var componentState = null;
@@ -250,9 +240,9 @@ class GraphController {
             // setup the graph
             this.setupGraph();
 
-            if (this.$scope.$parent.registerComponentController != null) {
+            if (this.$scope.$parent.nodeController != null) {
                 // register this component with the parent node
-                this.$scope.$parent.registerComponentController(this.$scope, this.componentContent);
+                this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
             }
         }
 
@@ -1426,7 +1416,10 @@ class GraphController {
             // check if a digest is in progress
             if(!this.$scope.$$phase) {
                 // digest is not in progress so we can force a redraw
-                this.$scope.$apply();
+                // TODO GK (from HT) this line was causing a lot of js errors ( $digest already in progress ), so I commented it out
+                // and it still seems to work. Do we need this line?
+                // see here: http://stackoverflow.com/questions/12729122/angularjs-prevent-error-digest-already-in-progress-when-calling-scope-apply
+                //this.$scope.$apply();
             }
 
             this.$scope.$emit('componentStudentDataChanged', {componentId: componentId, componentState: componentState});
@@ -2104,12 +2097,14 @@ class GraphController {
 
         // update the JSON string in the advanced authoring view textarea
         this.updateAdvancedAuthoringView();
+    };
 
-        /*
-         * notify the parent node that the content has changed which will save
-         * the project to the server
-         */
-        this.$scope.$parent.nodeController.authoringViewNodeChanged();
+    /**
+     * Update the component JSON string that will be displayed in the advanced authoring view textarea
+     */
+    updateAdvancedAuthoringView() {
+        this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
+        this.advancedAuthoringViewComponentChanged();
     };
 
     /**
@@ -2128,27 +2123,16 @@ class GraphController {
             // replace the component in the project
             this.ProjectService.replaceComponent(this.nodeId, this.componentId, authoringComponentContent);
 
-            // set the new authoring component content
-            this.authoringComponentContent = authoringComponentContent;
-
             // set the new component into the controller
-            this.componentContent = editedComponentContent;
+            this.componentContent = authoringComponentContent;
 
             /*
              * notify the parent node that the content has changed which will save
              * the project to the server
              */
-            this.$scope.$parent.nodeController.authoringViewNodeChanged();
+            this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();
         } catch(e) {
-
         }
-    };
-
-    /**
-     * Update the component JSON string that will be displayed in the advanced authoring view textarea
-     */
-    updateAdvancedAuthoringView() {
-        this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
     };
 
     /**

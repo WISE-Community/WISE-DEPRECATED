@@ -1,48 +1,48 @@
 <div style="float: right">
 <!--
 TODO: implement me. Allow authors to view assets while authoring node conent. Perhaps make ProjectAssets into a directive.
-    <button ng-click='nodeController.viewProjectAssets()'>View Assets</button>
+    <button ng-click='nodeAuthoringController.viewProjectAssets()'>View Assets</button>
     -->
-    <button ng-click="nodeController.previewStep()"
-            ng-show="!projectController.isGroupNode(nodeController.node.id)"
-            ng-disabled="nodeController.showEditTransitions"
+    <button ng-click="nodeAuthoringController.previewStep()"
+            ng-show="!projectController.isGroupNode(nodeAuthoringController.node.id)"
+            ng-disabled="nodeAuthoringController.showEditTransitions"
             translate="previewStep"></button>
-    <button ng-click="nodeController.previewStepWithoutConstraints()"
-            ng-show="!projectController.isGroupNode(nodeController.node.id)"
-            ng-disabled="nodeController.showEditTransitions"
+    <button ng-click="nodeAuthoringController.previewStepWithoutConstraints()"
+            ng-show="!projectController.isGroupNode(nodeAuthoringController.node.id)"
+            ng-disabled="nodeAuthoringController.showEditTransitions"
             translate="previewStepWithoutConstraints"></button>
-    <button ng-click="nodeController.undo()"
-            ng-show="!projectController.isGroupNode(nodeController.node.id)"
-            ng-disabled="nodeController.undoStack.length == 0"
+    <button ng-click="nodeAuthoringController.undo()"
+            ng-show="!projectController.isGroupNode(nodeAuthoringController.node.id)"
+            ng-disabled="nodeAuthoringController.undoStack.length == 0"
             translate="undo"></button>
-    <button ng-click="nodeController.close()"
+    <button ng-click="nodeAuthoringController.close()"
             translate="saveAndClose"
-            ng-disabled="nodeController.showEditTransitions"></button>
-    <button ng-click="nodeController.cancel()" translate="close"></button>
+            ng-disabled="nodeAuthoringController.showEditTransitions"></button>
+    <button ng-click="nodeAuthoringController.cancel()" translate="close"></button>
 </div>
-<div><span ng-show="!projectController.isGroupNode(nodeController.node.id)" translate="stepTitle"></span>
-     <span ng-show="projectController.isGroupNode(nodeController.node.id)" translate="activityTitle"></span>
-     {{nodeController.nodePosition}}:
-     <input ng-model='nodeController.node.title' ng-change='nodeController.authoringViewNodeChanged()' ng-model-options='{ debounce: 1000 }' size='60' />
+<div><span ng-show="!projectController.isGroupNode(nodeAuthoringController.node.id)" translate="stepTitle"></span>
+     <span ng-show="projectController.isGroupNode(nodeAuthoringController.node.id)" translate="activityTitle"></span>
+     {{nodeAuthoringController.nodePosition}}:
+     <input ng-model='nodeAuthoringController.node.title' ng-change='nodeAuthoringController.authoringViewNodeChanged()' ng-model-options='{ debounce: 1000 }' size='60' />
 </div>
-<button ng-click='nodeController.showCreateComponent = true'
-        ng-show='!projectController.isGroupNode(nodeController.node.id) && !nodeController.showCreateComponent && !nodeController.showEditTransitions'
+<button ng-click='nodeAuthoringController.showCreateComponent = true'
+        ng-show='!projectController.isGroupNode(nodeAuthoringController.node.id) && !nodeAuthoringController.showCreateComponent && !nodeAuthoringController.showEditTransitions'
         translate="addNewComponent"></button>
-<div ng-show='nodeController.showCreateComponent'>
-    <select ng-model='nodeController.selectedComponent'>
-        <option ng-repeat='componentType in nodeController.componentTypes' value='{{componentType.componentType}}'>
+<div ng-show='nodeAuthoringController.showCreateComponent'>
+    <select ng-model='nodeAuthoringController.selectedComponent'>
+        <option ng-repeat='componentType in nodeAuthoringController.componentTypes' value='{{componentType.componentType}}'>
             {{componentType.componentName}}
         </option>
     </select>
-    <button ng-click='nodeController.createComponent()' translate="add"></button>
-    <button ng-click='nodeController.showCreateComponent = false' translate="cancel"></button>
+    <button ng-click='nodeAuthoringController.createComponent()' translate="add"></button>
+    <button ng-click='nodeAuthoringController.showCreateComponent = false' translate="cancel"></button>
 </div>
 
-<button ng-click='nodeController.showEditTransitions = true'
-        ng-show='!projectController.isGroupNode(nodeController.node.id) && !nodeController.showCreateComponent && !nodeController.showEditTransitions' translate="editTransitions"></button>
-<div ng-show='nodeController.showEditTransitions'>
+<button ng-click='nodeAuthoringController.showEditTransitions = true'
+        ng-show='!projectController.isGroupNode(nodeAuthoringController.node.id) && !nodeAuthoringController.showCreateComponent && !nodeAuthoringController.showEditTransitions' translate="editTransitions"></button>
+<div ng-show='nodeAuthoringController.showEditTransitions'>
     <span>{{'transitions' | translate}}:</span>
-    <div id="transitions" style="margin-left:40px; margin-bottom:10px; background-color:lightgray; width:700px" ng-repeat='transition in nodeController.node.transitionLogic.transitions track by $index'>
+    <div id="transitions" style="margin-left:40px; margin-bottom:10px; background-color:lightgray; width:700px" ng-repeat='transition in nodeAuthoringController.node.transitionLogic.transitions track by $index'>
         {{$index+1}}. {{'transitionToStep' | translate}}:
         <md-select id="stepSelectMenu" md-theme="default" class="node-select md-subhead" ng-model="transition.to"
                    aria-label="Transitions" style="margin-left:30px; width:600px">
@@ -101,16 +101,16 @@ TODO: implement me. Allow authors to view assets while authoring node conent. Pe
             </md-select>
             </div>
         </div>
-        <button ng-click="nodeController.addNewTransitionCriteria(transition)" translate="addNewTransitionCriteria"></button><br/><br/>
-        <button ng-click="nodeController.deleteTransition(transition)" translate="deleteTransition"></button>
+        <button ng-click="nodeAuthoringController.addNewTransitionCriteria(transition)" translate="addNewTransitionCriteria"></button><br/><br/>
+        <button ng-click="nodeAuthoringController.deleteTransition(transition)" translate="deleteTransition"></button>
     </div>
-    <button style="margin-left:40px; margin-bottom:10px" ng-click='nodeController.addNewTransition()' translate="addNewTransition"></button>
+    <button style="margin-left:40px; margin-bottom:10px" ng-click='nodeAuthoringController.addNewTransition()' translate="addNewTransition"></button>
 
     <div id="howToChooseAmongAvailablePaths" style="margin-left:40px">
         <span>{{'howToChooseAmongAvailablePaths' | translate}}:</span>
-        <md-select id="stepSelectMenu" md-theme="default" class="node-select md-subhead" ng-model="nodeController.node.transitionLogic.howToChooseAmongAvailablePaths"
+        <md-select id="stepSelectMenu" md-theme="default" class="node-select md-subhead" ng-model="nodeAuthoringController.node.transitionLogic.howToChooseAmongAvailablePaths"
                    aria-label="howToChooseAmongAvailablePaths" style="margin-left:30px; width:600px">
-            <md-option ng-repeat="item in nodeController.howToChooseAmongAvailablePathsOptions"
+            <md-option ng-repeat="item in nodeAuthoringController.howToChooseAmongAvailablePathsOptions"
                        value="{{ item }}">
                 <span layout="row" layout-align="start center">
                     <span class="node-select__text">{{item}}</span>
@@ -121,9 +121,9 @@ TODO: implement me. Allow authors to view assets while authoring node conent. Pe
 
     <div id="whenToChoosePath" style="margin-left:40px">
         <span>{{'whenToChoosePath' | translate}}:</span>
-        <md-select id="stepSelectMenu" md-theme="default" class="node-select md-subhead" ng-model="nodeController.node.transitionLogic.whenToChoosePath"
+        <md-select id="stepSelectMenu" md-theme="default" class="node-select md-subhead" ng-model="nodeAuthoringController.node.transitionLogic.whenToChoosePath"
                    aria-label="whenToChoosePath" style="margin-left:30px; width:600px">
-            <md-option ng-repeat="item in nodeController.whenToChoosePathOptions"
+            <md-option ng-repeat="item in nodeAuthoringController.whenToChoosePathOptions"
                        value="{{ item }}">
                 <span layout="row" layout-align="start center">
                     <span class="node-select__text">{{item}}</span>
@@ -134,9 +134,9 @@ TODO: implement me. Allow authors to view assets while authoring node conent. Pe
 
     <div id="canChangePath" style="margin-left:40px">
         <span>{{'canChangePath' | translate}}:</span>
-        <md-select id="stepSelectMenu" md-theme="default" class="node-select md-subhead" ng-model="nodeController.node.transitionLogic.canChangePath"
+        <md-select id="stepSelectMenu" md-theme="default" class="node-select md-subhead" ng-model="nodeAuthoringController.node.transitionLogic.canChangePath"
                    aria-label="canChangePath" style="margin-left:30px; width:600px">
-            <md-option ng-repeat="item in nodeController.canChangePathOptions"
+            <md-option ng-repeat="item in nodeAuthoringController.canChangePathOptions"
                        ng-value="item">
                 <span layout="row" layout-align="start center">
                     <span class="node-select__text">{{item}}</span>
@@ -146,18 +146,18 @@ TODO: implement me. Allow authors to view assets while authoring node conent. Pe
     </div>
 
     <div><span translate="maxPathsVisitable"></span> :
-        <input ng-model='nodeController.node.transitionLogic.maxPathsVisitable' ng-model-options='{ debounce: 1000 }' size='60' />
+        <input ng-model='nodeAuthoringController.node.transitionLogic.maxPathsVisitable' ng-model-options='{ debounce: 1000 }' size='60' />
     </div>
 
-    <button ng-click='nodeController.saveTransitions()' translate="save"></button>
+    <button ng-click='nodeAuthoringController.saveTransitions()' translate="save"></button>
 </div>
 
-<div ng-repeat='component in nodeController.components'>
+<div ng-repeat='component in nodeAuthoringController.components'>
     <div style="margin-top: 7px; border-top: 2px dotted black">
         {{component.type}}
-        <button ng-click='nodeController.moveComponentUp(component.id)' ng-disabled='nodeController.components.length <= 1' translate="moveUp"></button>
-        <button ng-click='nodeController.moveComponentDown(component.id)' ng-disabled='nodeController.components.length <= 1' translate="moveDown"></button>
-        <button ng-click='nodeController.deleteComponent(component.id)' translate="delete"></button>
+        <button ng-click='nodeAuthoringController.moveComponentUp(component.id)' ng-disabled='nodeAuthoringController.components.length <= 1' translate="moveUp"></button>
+        <button ng-click='nodeAuthoringController.moveComponentDown(component.id)' ng-disabled='nodeAuthoringController.components.length <= 1' translate="moveDown"></button>
+        <button ng-click='nodeAuthoringController.deleteComponent(component.id)' translate="delete"></button>
     </div>
-    <component nodeid='{{nodeController.nodeId}}' componentid='{{component.id}}' mode='authoring'></component>
+    <component node-id='{{nodeAuthoringController.nodeId}}' component-id='{{component.id}}' mode='authoring'></component>
 </div>

@@ -10,8 +10,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var OutsideURLController = function () {
     function OutsideURLController($q, $scope, $sce, NodeService, OutsideURLService, ProjectService, StudentDataService) {
-        var _this = this;
-
         _classCallCheck(this, OutsideURLController);
 
         this.$q = $q;
@@ -56,6 +54,7 @@ var OutsideURLController = function () {
 
         // get the authoring component content
         this.authoringComponentContent = this.$scope.authoringComponentContent;
+        this.authoringComponentContentJSONString = this.$scope.authoringComponentContentJSONString;
 
         /*
          * get the original component content. this is used when showing
@@ -70,19 +69,6 @@ var OutsideURLController = function () {
             // get the component id
             this.componentId = this.componentContent.id;
 
-            if (this.mode === 'authoring') {
-                this.updateAdvancedAuthoringView();
-
-                $scope.$watch(function () {
-                    return _this.authoringComponentContent;
-                }, function (newValue, oldValue) {
-                    _this.componentContent = _this.ProjectService.injectAssetPaths(newValue);
-
-                    // set the url
-                    _this.setURL(_this.authoringComponentContent.url);
-                }, true);
-            }
-
             if (this.componentContent != null) {
                 // set the url
                 this.setURL(this.componentContent.url);
@@ -94,9 +80,9 @@ var OutsideURLController = function () {
             // get the max height
             this.maxHeight = this.componentContent.maxHeight ? this.componentContent.maxHeight : "none";
 
-            if (this.$scope.$parent.registerComponentController != null) {
+            if (this.$scope.$parent.nodeController != null) {
                 // register this component with the parent node
-                this.$scope.$parent.registerComponentController(this.$scope, this.componentContent);
+                this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
             }
         }
 
@@ -143,17 +129,19 @@ var OutsideURLController = function () {
          */
         value: function authoringViewComponentChanged() {
 
-            // set the url
-            //this.setURL(this.authoringComponentContent.url);
-
             // update the JSON string in the advanced authoring view textarea
             this.updateAdvancedAuthoringView();
+        }
+    }, {
+        key: "updateAdvancedAuthoringView",
 
-            /*
-             * notify the parent node that the content has changed which will save
-             * the project to the server
-             */
-            this.$scope.$parent.nodeController.authoringViewNodeChanged();
+
+        /**
+         * Update the component JSON string that will be displayed in the advanced authoring view textarea
+         */
+        value: function updateAdvancedAuthoringView() {
+            this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
+            this.advancedAuthoringViewComponentChanged();
         }
     }, {
         key: "advancedAuthoringViewComponentChanged",
@@ -175,30 +163,17 @@ var OutsideURLController = function () {
                 // replace the component in the project
                 this.ProjectService.replaceComponent(this.nodeId, this.componentId, authoringComponentContent);
 
-                // set the new authoring component content
-                this.authoringComponentContent = authoringComponentContent;
-
                 // set the component content
-                this.componentContent = this.ProjectService.injectAssetPaths(authoringComponentContent);
+                this.componentContent = authoringComponentContent;
 
                 /*
                  * notify the parent node that the content has changed which will save
                  * the project to the server
                  */
-                this.$scope.$parent.nodeController.authoringViewNodeChanged();
+                this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();
             } catch (e) {
                 console.error(e.toString());
             }
-        }
-    }, {
-        key: "updateAdvancedAuthoringView",
-
-
-        /**
-         * Update the component JSON string that will be displayed in the advanced authoring view textarea
-         */
-        value: function updateAdvancedAuthoringView() {
-            this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
         }
     }, {
         key: "registerExitListener",

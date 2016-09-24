@@ -10,7 +10,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var AudioOscillatorController = function () {
     function AudioOscillatorController($injector, $q, $rootScope, $scope, $timeout, ConfigService, NodeService, AudioOscillatorService, ProjectService, StudentAssetService, StudentDataService) {
-        var _this2 = this;
+        var _this = this;
 
         _classCallCheck(this, AudioOscillatorController);
 
@@ -122,6 +122,7 @@ var AudioOscillatorController = function () {
 
         // get the authoring component content
         this.authoringComponentContent = this.$scope.authoringComponentContent;
+        this.authoringComponentContentJSONString = this.$scope.authoringComponentContentJSONString;
 
         /*
          * get the original component content. this is used when showing
@@ -158,29 +159,7 @@ var AudioOscillatorController = function () {
                 this.isSaveButtonVisible = false;
                 this.isSubmitButtonVisible = false;
                 this.isDisabled = true;
-            } else if (this.mode === 'authoring') {
-                this.updateAdvancedAuthoringView();
-
-                $scope.$watch(function () {
-                    return this.authoringComponentContent;
-                }.bind(this), function (newValue, oldValue) {
-                    var _this = this;
-
-                    // stop the audio if it is playing
-                    this.stop();
-
-                    // inject asset paths if necessary
-                    this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-
-                    // load the parameters into the component
-                    this.setParametersFromComponentContent();
-
-                    // draw the oscilloscope gride after the view has rendered
-                    $timeout(function () {
-                        _this.drawOscilloscopeGrid();
-                    }, 0);
-                }.bind(this), true);
-            }
+            } else if (this.mode === 'authoring') {}
 
             this.oscilloscopeId = 'oscilloscope' + this.componentId;
 
@@ -223,9 +202,9 @@ var AudioOscillatorController = function () {
             // check if we need to lock this component
             this.calculateDisabled();
 
-            if (this.$scope.$parent.registerComponentController != null) {
+            if (this.$scope.$parent.nodeController != null) {
                 // register this component with the parent node
-                this.$scope.$parent.registerComponentController(this.$scope, this.componentContent);
+                this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
             }
 
             /*
@@ -235,7 +214,7 @@ var AudioOscillatorController = function () {
              * dimensions of the canvas will erase it.
              */
             $timeout(function () {
-                _this2.drawOscilloscopeGrid();
+                _this.drawOscilloscopeGrid();
             }, 0);
         }
 
@@ -357,10 +336,10 @@ var AudioOscillatorController = function () {
                     var annotationComponentId = annotation.componentId;
 
                     // make sure the annotation was for this component
-                    if (_this2.nodeId === annotationNodeId && _this2.componentId === annotationComponentId) {
+                    if (_this.nodeId === annotationNodeId && _this.componentId === annotationComponentId) {
 
                         // get latest score and comment annotations for this component
-                        _this2.latestAnnotations = _this2.$scope.$parent.nodeController.getLatestComponentAnnotations(_this2.componentId);
+                        _this.latestAnnotations = _this.$scope.$parent.nodeController.getLatestComponentAnnotations(_this.componentId);
                     }
                 }
             }
@@ -515,7 +494,7 @@ var AudioOscillatorController = function () {
          * Called when the student changes their work
          */
         value: function studentDataChanged() {
-            var _this3 = this;
+            var _this2 = this;
 
             /*
              * set the dirty flags so we will know we need to save or submit the
@@ -543,7 +522,7 @@ var AudioOscillatorController = function () {
 
             // create a component state populated with the student data
             this.createComponentState(action).then(function (componentState) {
-                _this3.$scope.$emit('componentStudentDataChanged', { componentId: componentId, componentState: componentState });
+                _this2.$scope.$emit('componentStudentDataChanged', { componentId: componentId, componentState: componentState });
             });
         }
     }, {
@@ -729,7 +708,7 @@ var AudioOscillatorController = function () {
          * @param studentAsset
          */
         value: function attachStudentAsset(studentAsset) {
-            var _this4 = this;
+            var _this3 = this;
 
             if (studentAsset != null) {
                 this.StudentAssetService.copyAssetForReference(studentAsset).then(function (copiedAsset) {
@@ -739,8 +718,8 @@ var AudioOscillatorController = function () {
                             iconURL: copiedAsset.iconURL
                         };
 
-                        _this4.attachments.push(attachment);
-                        _this4.studentDataChanged();
+                        _this3.attachments.push(attachment);
+                        _this3.studentDataChanged();
                     }
                 });
             }
@@ -864,7 +843,7 @@ var AudioOscillatorController = function () {
     }, {
         key: 'drawOscilloscope',
         value: function drawOscilloscope() {
-            var _this5 = this;
+            var _this4 = this;
 
             // get the analyser to obtain the oscillator data
             var analyser = this.analyser;
@@ -974,7 +953,7 @@ var AudioOscillatorController = function () {
                  * draw was good we will stop drawing.
                  */
                 requestAnimationFrame(function () {
-                    _this5.drawOscilloscope();
+                    _this4.drawOscilloscope();
                 });
             }
         }
@@ -1217,12 +1196,17 @@ var AudioOscillatorController = function () {
 
             // update the JSON string in the advanced authoring view textarea
             this.updateAdvancedAuthoringView();
+        }
+    }, {
+        key: 'updateAdvancedAuthoringView',
 
-            /*
-             * notify the parent node that the content has changed which will save
-             * the project to the server
-             */
-            this.$scope.$parent.nodeController.authoringViewNodeChanged();
+
+        /**
+         * Update the component JSON string that will be displayed in the advanced authoring view textarea
+         */
+        value: function updateAdvancedAuthoringView() {
+            this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
+            this.advancedAuthoringViewComponentChanged();
         }
     }, {
         key: 'advancedAuthoringViewComponentChanged',
@@ -1251,7 +1235,7 @@ var AudioOscillatorController = function () {
                  * notify the parent node that the content has changed which will save
                  * the project to the server
                  */
-                this.$scope.$parent.nodeController.authoringViewNodeChanged();
+                this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();
             } catch (e) {}
         }
     }, {
@@ -1332,23 +1316,13 @@ var AudioOscillatorController = function () {
         }
 
         /**
-         * Update the component JSON string that will be displayed in the advanced authoring view textarea
-         */
-
-    }, {
-        key: 'updateAdvancedAuthoringView',
-        value: function updateAdvancedAuthoringView() {
-            this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
-        }
-    }, {
-        key: 'setSaveMessage',
-
-
-        /**
          * Set the message next to the save button
          * @param message the message to display
          * @param time the time to display
          */
+
+    }, {
+        key: 'setSaveMessage',
         value: function setSaveMessage(message, time) {
             this.saveMessage.text = message;
             this.saveMessage.time = time;

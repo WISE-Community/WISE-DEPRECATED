@@ -16,5 +16,14 @@ var PossibleScoreController = function PossibleScoreController($scope, $element,
 
 PossibleScoreController.$inject = ['$scope', '$element', 'ProjectService'];
 
-exports.default = PossibleScoreController;
-//# sourceMappingURL=possibleScoreController.js.map
+var PossibleScore = {
+    bindings: {
+        maxScore: '<'
+    },
+    templateUrl: 'wise5/directives/possibleScore/possibleScore.html',
+    controller: PossibleScoreController,
+    controllerAs: 'possibleScoreCtrl'
+};
+
+exports.default = PossibleScore;
+//# sourceMappingURL=possibleScore.js.map

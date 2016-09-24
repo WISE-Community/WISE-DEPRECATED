@@ -148,7 +148,7 @@
                           cols='100'></textarea>
     </div>
     <div class="component__prompt">
-        <div class="component__prompt__content" compile='drawController.getPrompt()'></div>
+        <div class="component__prompt__content"><compile data='drawController.getPrompt()'></compile></div>
         <possible-score max-score="drawController.componentContent.maxScore"
                         ng-if="drawController.mode === 'student' && !drawController.latestAnnotations.score"></possible-score>
     </div>

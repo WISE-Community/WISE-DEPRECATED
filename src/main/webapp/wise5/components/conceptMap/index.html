@@ -184,7 +184,7 @@
             </div>
             <md-input-container class="input-container md-block input-container--open-response input-container--component md-no-float">
                 <label class="input-label md-no-float" ng-disabled="conceptMapController.isDisabled"
-                       compile="conceptMapController.getPrompt()" ng-if="conceptMapController.showPrompt()"></label>
+                       ng-if="conceptMapController.showPrompt()"><compile data="conceptMapController.getPrompt()"></compile></label>
                 <possible-score max-score="conceptMapController.componentContent.maxScore"
                                 ng-if="conceptMapController.mode === 'student' && !conceptMapController.latestAnnotations.score"></possible-score>
                 <div class="input-wrapper" ng-class="{'input-wrapper--richtext': conceptMapController.isRichTextEnabled}">
@@ -226,7 +226,7 @@
                             ng-show="conceptMapController.displayLinkTypeChooserModalOverlay"
                             ng-style="conceptMapController.linkTypeChooserModalOverlayStyle">
                         </div>
-                        <div id="linkTypeChooser" draggable container-width="conceptMapController.modalWidth" container-height="conceptMapController.modalHeight" ng-show="conceptMapController.displayLinkTypeChooser" class="ng-modal" ng-style="conceptMapController.linkTypeChooserStyle">
+                        <draggable id="linkTypeChooser" container-width="conceptMapController.modalWidth" container-height="conceptMapController.modalHeight" ng-show="conceptMapController.displayLinkTypeChooser" class="ng-modal" ng-style="conceptMapController.linkTypeChooserStyle">
                             <div style="display: inline-block;"><span>{{conceptMapController.getLinksTitle()}}</span></div>
                             <md-radio-group ng-model="conceptMapController.selectedLinkType"
                                             ng-change="conceptMapController.studentDataChanged()">
@@ -236,7 +236,7 @@
                                                      ng-click="conceptMapController.isDisabled || conceptMapController.linkTypeSelected(link)"
                                                      ng-disabled="conceptMapController.isDisabled"
                                                      style="display: inline-block; margin: 8px;">
-                                        <div style="background-color: {{link.color}}; width: 30px; height: 15px; display: inline-block; margin-right: 4px"></div><span compile="link.label"></span>
+                                        <div style="background-color: {{link.color}}; width: 30px; height: 15px; display: inline-block; margin-right: 4px"></div><span><compile data="link.label"></compile></span>
                                     </md-radio-button>
                                 </div>
                             </md-radio-group>
@@ -253,7 +253,7 @@
                                     </md-icon>
                                 </div>
                             </div>
-                        </div>
+                        </draggable>
                     </div>
                     <div id="feedbackDiv"></div>
                     <md-button class="input--textarea__action input--textarea__action--revision md-icon-button"

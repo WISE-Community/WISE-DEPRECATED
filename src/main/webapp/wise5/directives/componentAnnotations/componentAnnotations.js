@@ -226,5 +226,15 @@ var ComponentAnnotationsController = function () {
 
 ComponentAnnotationsController.$inject = ['$scope', '$element', '$translate', 'ConfigService', 'ProjectService', 'StudentDataService'];
 
-exports.default = ComponentAnnotationsController;
-//# sourceMappingURL=componentAnnotationsController.js.map
+var ComponentAnnotations = {
+    bindings: {
+        annotations: '<',
+        maxScore: '<'
+    },
+    templateUrl: 'wise5/directives/componentAnnotations/componentAnnotations.html',
+    controller: ComponentAnnotationsController,
+    controllerAs: 'componentAnnotationsCtrl'
+};
+
+exports.default = ComponentAnnotations;
+//# sourceMappingURL=componentAnnotations.js.map

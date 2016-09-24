@@ -1,5 +1,5 @@
-import mainModule from './main';
+import classroomMonitorModule from './main';
 
 angular.element(document).ready(() => {
-    angular.bootstrap(document, [mainModule.name], { strictDi: true});
+    angular.bootstrap(document, [classroomMonitorModule.name], { strictDi: true});
 });

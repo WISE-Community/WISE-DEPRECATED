@@ -92,6 +92,7 @@ var DrawController = function () {
 
         // get the authoring component content
         this.authoringComponentContent = this.$scope.authoringComponentContent;
+        this.authoringComponentContentJSONString = this.$scope.authoringComponentContentJSONString;
 
         /*
          * get the original component content. this is used when showing
@@ -157,13 +158,6 @@ var DrawController = function () {
                 this.isDisabled = true;
             } else if (this.mode === 'authoring') {
                 this.drawingToolId = "drawingtool_" + this.nodeId + "_" + this.componentId;
-                this.updateAdvancedAuthoringView();
-
-                $scope.$watch(function () {
-                    return this.authoringComponentContent;
-                }.bind(this), function (newValue, oldValue) {
-                    this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-                }.bind(this), true);
             }
 
             this.$timeout(angular.bind(this, function () {
@@ -236,8 +230,8 @@ var DrawController = function () {
                 this.calculateDisabled();
 
                 // register this component with the parent node
-                if (this.$scope.$parent && this.$scope.$parent.registerComponentController) {
-                    this.$scope.$parent.registerComponentController(this.$scope, this.componentContent);
+                if (this.$scope.$parent && this.$scope.$parent.nodeController != null) {
+                    this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
                 }
 
                 // listen for the drawing changed event
@@ -1065,12 +1059,17 @@ var DrawController = function () {
 
             // update the JSON string in the advanced authoring view textarea
             this.updateAdvancedAuthoringView();
+        }
+    }, {
+        key: 'updateAdvancedAuthoringView',
 
-            /*
-             * notify the parent node that the content has changed which will save
-             * the project to the server
-             */
-            this.$scope.$parent.nodeController.authoringViewNodeChanged();
+
+        /**
+         * Update the component JSON string that will be displayed in the advanced authoring view textarea
+         */
+        value: function updateAdvancedAuthoringView() {
+            this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
+            this.advancedAuthoringViewComponentChanged();
         }
     }, {
         key: 'advancedAuthoringViewComponentChanged',
@@ -1099,18 +1098,8 @@ var DrawController = function () {
                  * notify the parent node that the content has changed which will save
                  * the project to the server
                  */
-                this.$scope.$parent.nodeController.authoringViewNodeChanged();
+                this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();
             } catch (e) {}
-        }
-    }, {
-        key: 'updateAdvancedAuthoringView',
-
-
-        /**
-         * Update the component JSON string that will be displayed in the advanced authoring view textarea
-         */
-        value: function updateAdvancedAuthoringView() {
-            this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
         }
     }, {
         key: 'authoringShowPreviousWorkNodeIdChanged',

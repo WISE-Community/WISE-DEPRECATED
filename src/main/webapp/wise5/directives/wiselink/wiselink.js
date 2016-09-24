@@ -27,5 +27,22 @@ var WiselinkController = function () {
 
 WiselinkController.$inject = ['$scope', '$element', 'StudentDataService'];
 
-exports.default = WiselinkController;
-//# sourceMappingURL=wiselinkController.js.map
+/**
+ * Creates a link or button that the student can click on to navigate to
+ * another step or activity in the project.
+ */
+var Wiselink = {
+    bindings: {
+        nodeId: '@',
+        linkText: '@',
+        tooltip: '@',
+        linkClass: '@',
+        type: '@'
+    },
+    templateUrl: 'wise5/directives/wiselink/wiselink.html',
+    controller: WiselinkController,
+    controllerAs: 'wiselinkCtrl'
+};
+
+exports.default = Wiselink;
+//# sourceMappingURL=wiselink.js.map

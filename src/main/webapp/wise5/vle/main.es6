@@ -19,7 +19,7 @@ import AudioOscillatorComponentModule from '../components/audioOscillator/audioO
 import ConceptMapComponentModule from '../components/conceptMap/conceptMapComponentModule';
 import ConfigService from '../services/configService';
 import CRaterService from '../services/cRaterService';
-import Directives from '../directives/directives';
+import Components from '../directives/components';
 import DiscussionComponentModule from '../components/discussion/discussionComponentModule';
 import DrawComponentModule from '../components/draw/drawComponentModule';
 import EmbeddedComponentModule from '../components/embedded/embeddedComponentModule';
@@ -58,13 +58,13 @@ import moment from 'moment';
 //import summernote from 'summernote';
 import angularSummernote from 'lib/angular-summernote/dist/angular-summernote.min';
 
-let mainModule = angular.module('vle', [
+let vleModule = angular.module('vle', [
     angularDragula(angular),
     'angularMoment',
     'angular-toArrayFilter',
     'audioOscillatorComponentModule',
+    'components',
     'conceptMapComponentModule',
-    'directives',
     'discussionComponentModule',
     'drawComponentModule',
     'embeddedComponentModule',
@@ -338,4 +338,4 @@ let mainModule = angular.module('vle', [
         }
     ]);
 
-export default mainModule;
+export default vleModule;

@@ -73,7 +73,7 @@
             </div>
             <md-input-container class="input-container md-block input-container--open-response input-container--component md-no-float"
                                 ng-switch on="multipleChoiceController.getChoiceType()">
-                <label class="input-label md-no-float" ng-if="multipleChoiceController.showPrompt()" compile="multipleChoiceController.getPrompt()"></label>
+                <label class="input-label md-no-float" ng-if="multipleChoiceController.showPrompt()"><compile data="multipleChoiceController.getPrompt()"></compile></label>
                 <possible-score max-score="multipleChoiceController.componentContent.maxScore"
                                 ng-if="multipleChoiceController.mode === 'student' && !multipleChoiceController.latestAnnotations.score"></possible-score>
                 <md-radio-group ng-switch-when="radio" ng-model="multipleChoiceController.studentChoices"
@@ -83,7 +83,7 @@
                                          ng-value="choice.id"
                                          ng-click="multipleChoiceController.isDisabled || multipleChoiceController.radioChoiceSelected(choice.id)"
                                          ng-disabled="multipleChoiceController.isDisabled">
-                            <span compile="choice.text"></span>
+                            <span><compile data="choice.text"></compile></span>
                             <span ng-if="multipleChoiceController.showFeedback"
                                   ng-show="choice.showFeedback"
                                   ng-class="{'success': multipleChoiceController.hasCorrectChoices() && choice.isCorrect, 'warn': multipleChoiceController.hasCorrectChoices() && !choice.isCorrect, 'info': !multipleChoiceController.hasCorrectChoices()}">
@@ -98,7 +98,7 @@
                                      ng-checked="multipleChoiceController.isChecked(choice.id)"
                                      ng-click="multipleChoiceController.isDisabled || multipleChoiceController.toggleSelection(choice.id)"
                                      ng-disabled="multipleChoiceController.isDisabled">
-                            <span compile="choice.text"></span>
+                            <span><compile data="choice.text"></compile></span>
                             <span ng-show="choice.showFeedback"
                                   ng-class="{'success': multipleChoiceController.hasCorrectChoices() && choice.isCorrect, 'warn': multipleChoiceController.hasCorrectChoices() && !choice.isCorrect, 'info': !multipleChoiceController.hasCorrectChoices()}">
                                   {{choice.feedbackToShow}}
