@@ -57,6 +57,8 @@ var ConceptMapService = function (_NodeService) {
             component.rules = [];
             component.starterConceptMap = null;
             component.customRuleEvaluator = "";
+            component.showAutoScore = true;
+            component.showAutoFeedback = true;
             return component;
         }
 
@@ -1170,6 +1172,10 @@ var ConceptMapNode = function () {
             this.text.node.setAttribute('user-select', 'none');
             this.text.node.setAttribute('style', 'user-select:none');
 
+            // add the rectangle and text to the group
+            this.textGroup.add(this.textRect);
+            this.textGroup.add(this.text);
+
             // get the bounding box around the text element
             var textBBox = this.text.node.getBBox();
 
@@ -1179,10 +1185,6 @@ var ConceptMapNode = function () {
              */
             var width = textBBox.width;
             this.textRect.attr('width', width + 10);
-
-            // add the rectangle and text to the group
-            this.textGroup.add(this.textRect);
-            this.textGroup.add(this.text);
 
             // add the text group to the link group
             this.group.add(this.textGroup);
@@ -2161,6 +2163,10 @@ var ConceptMapLink = function () {
         // remember the curvature
         this.curvature = curvature;
 
+        if (this.curvature == null) {
+            this.curvature = 0.5;
+        }
+
         // set whether the link curves up or down
         this.startCurveUp = startCurveUp;
         this.endCurveUp = endCurveUp;
@@ -2860,6 +2866,9 @@ var ConceptMapLink = function () {
                 // set the text into the text element
                 this.text.text(label);
 
+                // show the text group now that it has a label
+                this.showTextGroup();
+
                 // reset the width to adjust to the new text length
                 var textBBox = this.text.node.getBBox();
                 var width = textBBox.width;
@@ -2870,9 +2879,6 @@ var ConceptMapLink = function () {
                 var midPoint = this.path.node.getPointAtLength(totalLength * this.textPercentageLocationOnLink);
                 this.textGroup.cx(midPoint.x);
                 this.textGroup.cy(midPoint.y);
-
-                // show the text group now that it has a label
-                this.showTextGroup();
             }
         }
 
@@ -3222,6 +3228,10 @@ var ConceptMapLink = function () {
             this.text.node.setAttribute('user-select', 'none');
             this.text.node.setAttribute('style', 'user-select:none');
 
+            // add the rectangle and text to the group
+            this.textGroup.add(this.textRect);
+            this.textGroup.add(this.text);
+
             // get the bounding box around the text element
             var textBBox = this.text.node.getBBox();
 
@@ -3231,10 +3241,6 @@ var ConceptMapLink = function () {
              */
             var width = textBBox.width;
             this.textRect.attr('width', width + 10);
-
-            // add the rectangle and text to the group
-            this.textGroup.add(this.textRect);
-            this.textGroup.add(this.text);
 
             // set the location of the text to be somewhere along the line of the link
             var totalLength = this.path.node.getTotalLength();

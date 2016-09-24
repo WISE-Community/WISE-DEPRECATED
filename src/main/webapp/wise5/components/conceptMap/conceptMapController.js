@@ -592,7 +592,7 @@ var svg1=angular.element('#svg1');/*
                  * be able to drop a new node instance onto the svg in the
                  * authoring mode
                  */event.preventDefault();});this.addedDragOverListener=true;}/*
-         * check if we have already added the dop listener so we don't
+         * check if we have already added the drop listener so we don't
          * add multiple listeners for the same event. adding multiple listeners
          * to the same event may occur in the authoring tool.
          */if(!this.addedDropListener){/*
@@ -713,21 +713,45 @@ for(var n=0;n<this.nodes.length;n++){var tempNode=this.nodes[n];if(tempNode==thi
      * @param event a mouse event
      * @returns an object containing x and y values
      */},{key:'getRelativeCoordinatesByEvent',value:function getRelativeCoordinatesByEvent(event){// get the offset of the mouse from its parent
-var offsetX=event.offsetX;var offsetY=event.offsetY;var matrix=null;if(event.target.tagName=='svg'){// the target is the svg element
-matrix=event.target.getCTM();}else if(event.target.tagName=='circle'){/*
-             * the target is a node connector circle so we will get the matrix
-             * of the node group
-             */matrix=event.target.parentElement.getCTM();}else if(event.target.tagName=='image'){/*
-             * the target is a node image so we will get the matrix of the node
-             * group
-             */matrix=event.target.parentElement.getCTM();}else{/*
-             * the target is something else so we will get the matrix of its
-             * parent
-             */matrix=event.target.parentElement.getCTM();}// get the x and y coordinates of the matrix element
-var e=matrix.e;var f=matrix.f;/*
-         * add the offset values to the coordinate to get the coordinate
-         * relative to the svg element
-         */var x=e+offsetX;var y=f+offsetY;var returnObject={};returnObject.x=x;returnObject.y=y;return returnObject;}/**
+var offsetX=event.offsetX;var offsetY=event.offsetY;var parentOffsetX=0;var parentOffsetY=0;// get the user agent so we can determine which browser the user is using
+var userAgent=navigator.userAgent;if(event.target.tagName=='svg'){// the target is the svg element
+if(userAgent!=null&&userAgent.indexOf('Chrome')!=-1){// the user is using Chrome
+var matrix=event.target.getCTM();parentOffsetX=matrix.e;parentOffsetY=matrix.f;}else if(userAgent!=null&&userAgent.indexOf('Firefox')!=-1){// the user is using Firefox
+matrix=event.target.createSVGMatrix();parentOffsetX=matrix.e;parentOffsetY=matrix.f;}else{// the user is using some other browser
+matrix=event.target.getCTM();parentOffsetX=matrix.e;parentOffsetY=matrix.f;}}else if(event.target.tagName=='circle'){// the target is a node connector circle or delete circle
+if(userAgent!=null&&userAgent.indexOf('Chrome')!=-1){// the user is using Chrome
+}else if(userAgent!=null&&userAgent.indexOf('Firefox')!=-1){// the user is using Firefox
+// get the matrix of the group
+var matrix=event.target.getCTM();// get the bounding box of the circle
+var bbox=event.target.getBBox();/*
+                 * get the bounding box of the circle so we can get the
+                 * coordinates of the circle within the group
+                 */var x=bbox.x;var y=bbox.y;// get the absolute coordinates of the circle
+parentOffsetX=matrix.e+bbox.x;parentOffsetY=matrix.f+bbox.y;}}else if(event.target.tagName=='rect'){// the target is the rectangle that outlines the image
+if(userAgent!=null&&userAgent.indexOf('Chrome')!=-1){// the user is using Chrome
+}else if(userAgent!=null&&userAgent.indexOf('Firefox')!=-1){// the user is using Firefox
+// get the matrix of the group
+var matrix=event.target.getCTM();// get the bounding box of the rect
+var bbox=event.target.getBBox();/*
+                 * get the bounding box of the rect so we can get the
+                 * coordinates of the rect within the group
+                 */var x=bbox.x;var y=bbox.y;// get the absolute coordinates of the rect
+parentOffsetX=matrix.e+x;parentOffsetY=matrix.f+y;}}else if(event.target.tagName=='image'){// the target is an image
+if(userAgent.indexOf('Chrome')!=-1){}else if(userAgent.indexOf('Firefox')!=-1){// get the matrix of the group
+var matrix=event.target.parentElement.getCTM();// get the coordinates of the upper left corner of the group
+parentOffsetX=matrix.e;parentOffsetY=matrix.f;}}else if(event.target.tagName=='path'){/*
+             * the target is the link line. sometimes the mouse can be over the
+             * link if the student is moving the mouse around quickly.
+             */if(userAgent!=null&&userAgent.indexOf('Chrome')!=-1){// the user is using Chrome
+}else if(userAgent!=null&&userAgent.indexOf('Firefox')!=-1){// the user is using Firefox
+// get the coordinates of the head of the link
+var x2=event.target.attributes['x2'];var y2=event.target.attributes['y2'];if(x2!=null&&y2!=null){parentOffsetX=parseInt(x2.value);parentOffsetY=parseInt(y2.value);}}}else{// the target is something else
+if(userAgent!=null&&userAgent.indexOf('Chrome')!=-1){// the user is using Chrome
+}else if(userAgent!=null&&userAgent.indexOf('Firefox')!=-1){// the user is using Firefox
+var matrix=event.target.getCTM();parentOffsetX=matrix.e;parentOffsetY=matrix.f;}}/*
+         * add the parent offset values to the relative offset values to obtain 
+         * the x and y values relative to the upper left corner of the svg
+         */var x=parentOffsetX+offsetX;var y=parentOffsetY+offsetY;var returnObject={};returnObject.x=x;returnObject.y=y;return returnObject;}/**
      * Called when the student clicks down on a node in the left node bar
      * @param $event the mouse down event
      * @param node the node the student clicked down on
@@ -1121,14 +1145,14 @@ var thisResult={};/*
          */var setResult=function setResult(result){thisResult=result;};// run the custom rule evaluator
 eval(customRuleEvaluator);//console.log("thisResult.score=" + thisResult.score);
 //console.log("thisResult.feedback=" + thisResult.feedback);
-var resultString="";if(thisResult.score!=null){// display the score
-resultString+="Score: "+thisResult.score;}if(thisResult.feedback!=null){if(resultString!=""){// add a new line if the result string is not empty
+var resultString="";if(this.componentContent.showAutoScore&&thisResult.score!=null){// display the score
+resultString+="Score: "+thisResult.score;}if(this.componentContent.showAutoFeedback&&thisResult.feedback!=null){if(resultString!=""){// add a new line if the result string is not empty
 resultString+="<br/>";}// display the feedback
 resultString+="Feedback: "+thisResult.feedback;}// show the result to the student
 //alert(resultString);
-// remember the feedback string
-this.autoFeedbackString=resultString;// show the auto feedback in a modal dialog
-this.$mdDialog.show(this.$mdDialog.alert().parent(angular.element(document.querySelector('#feedbackDiv'))).clickOutsideToClose(true).title('Feedback').htmlContent(resultString).ariaLabel('Feedback').ok('Close'));}/**
+if(resultString!=""){// show the auto feedback in a modal dialog
+this.$mdDialog.show(this.$mdDialog.alert().parent(angular.element(document.querySelector('#feedbackDiv'))).clickOutsideToClose(true).title('Feedback').htmlContent(resultString).ariaLabel('Feedback').ok('Close'));}// remember the feedback string
+this.autoFeedbackString=resultString;}/**
      * Show the auto feedback that was generated when the student previously
      * clicked "Check Answer".
      */},{key:'showAutoFeedback',value:function showAutoFeedback(){// show the auto feedback in a modal dialog
